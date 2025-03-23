@@ -1,0 +1,51 @@
+package solid.humank.genaidemo.examples.order.events;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import solid.humank.genaidemo.ddd.events.DomainEvent;
+import solid.humank.genaidemo.examples.order.Money;
+import solid.humank.genaidemo.examples.order.OrderId;
+
+public record OrderItemAddedEvent(
+    UUID eventId,
+    Instant occurredOn,
+    String eventType,
+    OrderId orderId,
+    String productId,
+    int quantity,
+    Money unitPrice
+) implements DomainEvent {
+
+    public OrderItemAddedEvent(
+        OrderId orderId,
+        String productId,
+        int quantity,
+        Money unitPrice
+    ) {
+        this(
+            UUID.randomUUID(),
+            Instant.now(),
+            "OrderItemAdded",
+            orderId,
+            productId,
+            quantity,
+            unitPrice
+        );
+    }
+
+    @Override
+    public UUID getEventId() {
+        return eventId;
+    }
+
+    @Override
+    public Instant getOccurredOn() {
+        return occurredOn;
+    }
+
+    @Override
+    public String getEventType() {
+        return eventType;
+    }
+}
