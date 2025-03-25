@@ -36,26 +36,40 @@ public class OrderProcessingService {
      * - Business Rules（通過 Specification）
      * - Domain Policies
      * 
+     * 遵循 Tell, Don't Ask 原則，讓訂單自己負責大部分業務邏輯
+     * 
      * @param order 要處理的訂單
      * @return 處理結果，包含可能的錯誤訊息和折扣後金額
+     * @throws IllegalArgumentException 如果訂單為空
      */
     public OrderProcessingResult process(Order order) {
-        // 1. 驗證領域不變條件
+        // 前置條件檢查
+        if (order == null) {
+            throw new IllegalArgumentException("訂單不能為空");
+        }
+        
         try {
-            validator.validate(order);
+            // 1. 告訴訂單自己執行驗證和業務邏輯
+            order.process();
+
+            // 2. 應用折扣政策（使用了 Specification）
+            Money finalAmount = discountPolicy.apply(order);
+
+            // 3. 告訴訂單應用折扣
+            order.applyDiscount(finalAmount);
+
+            // 4. 觸發支付流程
+            UUID paymentId = UUID.randomUUID();
+            eventBus.publish(new PaymentRequestedEvent(paymentId, order.getId(), finalAmount));
+
+            // 5. 回傳處理結果
+            return OrderProcessingResult.success(finalAmount);
         } catch (ValidationException e) {
             return OrderProcessingResult.failure(e.getErrors());
+        } catch (Exception e) {
+            // 統一處理未預期的異常
+            return OrderProcessingResult.failure(List.of("處理訂單時發生錯誤: " + e.getMessage()));
         }
-
-        // 2. 應用折扣政策（使用了 Specification）
-        Money finalAmount = discountPolicy.apply(order);
-
-        // 3. 訂單處理成功，觸發支付流程
-        order.setFinalAmount(finalAmount);
-        eventBus.publish(new PaymentRequestedEvent(UUID.randomUUID(), order.getId(), finalAmount));
-
-        // 4. 回傳處理結果
-        return OrderProcessingResult.success(finalAmount);
     }
 
     /**
