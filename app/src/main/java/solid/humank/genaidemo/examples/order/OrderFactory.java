@@ -1,54 +1,130 @@
 package solid.humank.genaidemo.examples.order;
 
-import java.util.List;
-
-import solid.humank.genaidemo.ddd.annotations.DomainService;
+import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.ddd.factories.DomainFactory;
 
-@DomainService
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * 訂單工廠
+ * 負責創建訂單聚合根
+ */
+@Component
 public class OrderFactory implements DomainFactory<Order, OrderFactory.OrderCreationParams> {
     
-    public record OrderCreationParams(
-        String customerId,
-        List<OrderItemParams> items
-    ) {
-        public static OrderCreationParams of(String customerId, List<OrderItemParams> items) {
-            return new OrderCreationParams(customerId, items);
-        }
-    }
-
-    public record OrderItemParams(
-        String productId,
-        String productName,
-        int quantity,
-        Money unitPrice
-    ) {}
-
     @Override
     public Order create(OrderCreationParams params) {
-        Order order = new Order(params.customerId());
-        
-        params.items().forEach(item -> 
-            order.addItem(
-                item.productId(),
-                item.productName(),
-                item.quantity(),
-                item.unitPrice()
-            )
+        // 創建新訂單
+        Order order = new Order(
+                OrderId.generate(),
+                params.customerId,
+                params.shippingAddress
         );
+        
+        // 如果有初始項目，添加到訂單
+        if (params.initialItems != null && !params.initialItems.isEmpty()) {
+            for (OrderItemParams item : params.initialItems) {
+                order.addItem(
+                        item.productId,
+                        item.productName,
+                        item.quantity,
+                        item.price
+                );
+            }
+        }
         
         return order;
     }
-
+    
     @Override
     public Order reconstitute(OrderCreationParams params) {
-        // 這個方法通常用於從持久化資料重建物件
-        // 在這個簡單的例子中，我們先使用與 create 相同的邏輯
-        return create(params);
+        // 從現有數據重建訂單
+        Order order = new Order(
+                OrderId.generate(), // 在實際應用中，這裡應該使用來自持久化數據的已有ID
+                params.customerId,
+                params.shippingAddress
+        );
+        
+        // 添加所有訂單項
+        if (params.initialItems != null) {
+            for (OrderItemParams item : params.initialItems) {
+                order.addItem(
+                        item.productId,
+                        item.productName,
+                        item.quantity,
+                        item.price
+                );
+            }
+        }
+        
+        return order;
     }
-
-    // 提供便利的建立方法
-    public Order createOrder(String customerId, OrderItemParams... items) {
-        return create(OrderCreationParams.of(customerId, List.of(items)));
+    
+    /**
+     * 訂單創建參數
+     */
+    public static class OrderCreationParams {
+        private final String customerId;
+        private final String shippingAddress;
+        private final List<OrderItemParams> initialItems;
+        
+        public OrderCreationParams(String customerId, String shippingAddress) {
+            this(customerId, shippingAddress, Collections.emptyList());
+        }
+        
+        public OrderCreationParams(String customerId, String shippingAddress, List<OrderItemParams> initialItems) {
+            this.customerId = customerId;
+            this.shippingAddress = shippingAddress;
+            this.initialItems = initialItems != null ? 
+                    Collections.unmodifiableList(new ArrayList<>(initialItems)) : 
+                    Collections.emptyList();
+        }
+        
+        public String getCustomerId() {
+            return customerId;
+        }
+        
+        public String getShippingAddress() {
+            return shippingAddress;
+        }
+        
+        public List<OrderItemParams> getInitialItems() {
+            return initialItems;
+        }
+    }
+    
+    /**
+     * 訂單項參數
+     */
+    public static class OrderItemParams {
+        private final String productId;
+        private final String productName;
+        private final int quantity;
+        private final Money price;
+        
+        public OrderItemParams(String productId, String productName, int quantity, Money price) {
+            this.productId = productId;
+            this.productName = productName;
+            this.quantity = quantity;
+            this.price = price;
+        }
+        
+        public String getProductId() {
+            return productId;
+        }
+        
+        public String getProductName() {
+            return productName;
+        }
+        
+        public int getQuantity() {
+            return quantity;
+        }
+        
+        public Money getPrice() {
+            return price;
+        }
     }
 }

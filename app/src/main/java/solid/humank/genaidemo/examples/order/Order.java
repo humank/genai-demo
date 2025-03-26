@@ -1,183 +1,225 @@
 package solid.humank.genaidemo.examples.order;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
 
 import solid.humank.genaidemo.ddd.annotations.AggregateRoot;
-import solid.humank.genaidemo.ddd.lifecycle.AggregateLifecycle;
-import solid.humank.genaidemo.ddd.lifecycle.AggregateLifecycle.ManagedLifecycle;
-import solid.humank.genaidemo.examples.order.events.OrderCreatedEvent;
-import solid.humank.genaidemo.examples.order.events.OrderItemAddedEvent;
-import solid.humank.genaidemo.exceptions.ValidationException;
 
+/**
+ * 訂單聚合根
+ */
 @AggregateRoot
-@ManagedLifecycle
 public class Order {
-    private final OrderId orderId;
+    private final OrderId id;
     private final String customerId;
+    private final String shippingAddress;
     private final List<OrderItem> items;
-    private Money totalAmount;
-    private Money finalAmount;
-    private final OrderStatus status;
+    private OrderStatus status;
+    private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    protected Order() {
-        this.orderId = OrderId.generate();
-        this.customerId = "";
+    // 額外的效果金額（用於存儲折扣後的金額）
+    private Money effectiveAmount;
+    
+    /**
+     * 根據訂單ID字串建立訂單
+     */
+    public Order(String orderId) {
+        this(OrderId.of(orderId), "", "");
+    }
+    
+    /**
+     * 根據客戶ID建立訂單
+     */
+    public Order(String customerId, String shippingAddress) {
+        this(OrderId.generate(), customerId, shippingAddress);
+    }
+    
+    /**
+     * 完整建構子
+     */
+    public Order(OrderId id, String customerId, String shippingAddress) {
+        this.id = Objects.requireNonNull(id, "Order ID cannot be null");
+        this.customerId = Objects.requireNonNull(customerId, "Customer ID cannot be null");
+        this.shippingAddress = Objects.requireNonNull(shippingAddress, "Shipping address cannot be null");
         this.items = new ArrayList<>();
-        this.totalAmount = Money.twd(0);
         this.status = OrderStatus.CREATED;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
+        
+        // 事件已註解，專注於核心業務邏輯
+        // AggregateLifecycle.apply(new OrderCreatedEvent(this.id, customerId, createdAt));
     }
 
-    public Order(String customerId) {
-        // 前置條件檢查
-        if (customerId == null || customerId.isBlank()) {
-            throw new IllegalArgumentException("客戶ID不能為空");
+    /**
+     * 添加訂單項
+     */
+    public void addItem(String productId, String productName, int quantity, Money price) {
+        if (status != OrderStatus.CREATED) {
+            throw new IllegalStateException("Cannot add items to an order that is not in CREATED state");
         }
         
-        this.orderId = OrderId.generate();
-        this.customerId = customerId;
-        this.items = new ArrayList<>();
-        this.totalAmount = Money.twd(0);
-        this.status = OrderStatus.CREATED;
-
-        // 發布訂單建立事件
-        AggregateLifecycle.apply(new OrderCreatedEvent(
-            this.orderId,
-            this.customerId,
-            this.totalAmount,
-            new ArrayList<>()
-        ));
+        OrderItem newItem = new OrderItem(productId, productName, quantity, price);
+        this.items.add(newItem);
+        this.updatedAt = LocalDateTime.now();
+        
+        // 事件已註解，專注於核心業務邏輯
+        // AggregateLifecycle.apply(new OrderItemAddedEvent(this.id, productId, quantity, price));
     }
 
-    public void addItem(String productId, String productName, int quantity, Money unitPrice) {
-        // 參數驗證：雖然 OrderItem 構造函數會驗證，但這裡再次驗證是防禦性編程的良好實踐
-        if (productId == null || productId.isBlank()) {
-            throw new IllegalArgumentException("商品ID不能為空");
-        }
-        if (productName == null || productName.isBlank()) {
-            throw new IllegalArgumentException("商品名稱不能為空");
-        }
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("商品數量必須大於零");
-        }
-        if (unitPrice == null) {
-            throw new IllegalArgumentException("單價不能為空");
+    /**
+     * 提交訂單
+     */
+    public void submit() {
+        if (items.isEmpty()) {
+            throw new IllegalStateException("Cannot submit an order with no items");
         }
         
-        OrderItem item = new OrderItem(productId, productName, quantity, unitPrice);
-        items.add(item);
-        recalculateTotal();
+        if (status != OrderStatus.CREATED) {
+            throw new IllegalStateException("Only orders in CREATED state can be submitted");
+        }
         
-        // 發布商品添加事件
-        AggregateLifecycle.apply(new OrderItemAddedEvent(
-            this.orderId,
-            productId,
-            quantity,
-            unitPrice
-        ));
+        transitionState(OrderStatus.PENDING);
     }
 
-    private void recalculateTotal() {
-        this.totalAmount = items.stream()
-            .map(OrderItem::getSubtotal)
-            .reduce(Money.twd(0), Money::add);
+    /**
+     * 確認訂單
+     */
+    public void confirm() {
+        if (status != OrderStatus.PENDING) {
+            throw new IllegalStateException("Only orders in PENDING state can be confirmed");
+        }
+        
+        transitionState(OrderStatus.CONFIRMED);
     }
 
-    public List<Map<String, Object>> getItemsAsMap() {
+    /**
+     * 支付訂單
+     */
+    public void markAsPaid() {
+        if (status != OrderStatus.CONFIRMED) {
+            throw new IllegalStateException("Only orders in CONFIRMED state can be marked as paid");
+        }
+        
+        transitionState(OrderStatus.PAID);
+    }
+
+    /**
+     * 開始配送
+     */
+    public void ship() {
+        if (status != OrderStatus.PAID) {
+            throw new IllegalStateException("Only orders in PAID state can be shipped");
+        }
+        
+        transitionState(OrderStatus.SHIPPING);
+    }
+
+    /**
+     * 訂單送達
+     */
+    public void deliver() {
+        if (status != OrderStatus.SHIPPING) {
+            throw new IllegalStateException("Only orders in SHIPPING state can be delivered");
+        }
+        
+        transitionState(OrderStatus.DELIVERED);
+    }
+
+    /**
+     * 取消訂單
+     */
+    public void cancel() {
+        if (status == OrderStatus.DELIVERED || status == OrderStatus.CANCELLED) {
+            throw new IllegalStateException("Cannot cancel an order that is already delivered or cancelled");
+        }
+        
+        transitionState(OrderStatus.CANCELLED);
+    }
+
+    /**
+     * 狀態轉換
+     */
+    private void transitionState(OrderStatus newStatus) {
+        if (!status.canTransitionTo(newStatus)) {
+            throw new IllegalStateException("Cannot transition from " + status + " to " + newStatus);
+        }
+        
+        this.status = newStatus;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 計算訂單總金額
+     */
+    public Money getTotalAmount() {
         return items.stream()
-            .map(item -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("productId", item.productId());
-                map.put("productName", item.productName());
-                map.put("quantity", item.quantity());
-                map.put("unitPrice", item.unitPrice());
-                map.put("subtotal", item.getSubtotal());
-                return map;
-            })
-            .toList();
+                .map(OrderItem::getSubtotal)
+                .reduce(Money.zero(), Money::add);
     }
 
     // Getters
+    public OrderId getId() {
+        return id;
+    }
+    
     public OrderId getOrderId() {
-        return orderId;
+        return getId();
     }
 
     public String getCustomerId() {
         return customerId;
     }
 
-    public List<OrderItem> getItems() {
-        return new ArrayList<>(items);
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
-    public Money getTotalAmount() {
-        return totalAmount;
+    public List<OrderItem> getItems() {
+        return Collections.unmodifiableList(items);
     }
 
     public OrderStatus getStatus() {
         return status;
     }
 
-    public void applyDiscount(Money discountedAmount) {
-        // 參數驗證
-        if (discountedAmount == null) {
-            throw new IllegalArgumentException("折扣金額不能為空");
-        }
-        
-        // 業務規則檢查：折扣後金額不應為負數
-        if (discountedAmount.amount().compareTo(java.math.BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("折扣後金額不能為負數");
-        }
-        
-        this.finalAmount = discountedAmount;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
-    
-    /**
-     * 驗證訂單是否可以被處理
-     * 
-     * @throws ValidationException 如果訂單無效則拋出此異常
-     */
-    public void validateForProcessing() {
-        List<String> errors = new ArrayList<>();
-        
-        if (items.isEmpty()) {
-            errors.add("訂單沒有商品項目");
-        }
-        
-        if (!errors.isEmpty()) {
-            throw new ValidationException(errors);
-        }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
     
     /**
      * 處理訂單
-     * 這個方法遵循 Tell, Don't Ask 原則，讓聚合根自己執行業務邏輯
      */
     public void process() {
-        validateForProcessing();
-        // 訂單處理的其他業務邏輯可以在這裡添加
+        if (status != OrderStatus.CREATED) {
+            throw new IllegalStateException("只有處於建立狀態的訂單可以處理");
+        }
+        submit();
     }
-
-    public Money getFinalAmount() {
-        return finalAmount;
+    
+    /**
+     * 套用折扣
+     */
+    public void applyDiscount(Money discountAmount) {
+        Money totalAmount = getTotalAmount();
+        if (discountAmount.isGreaterThan(totalAmount)) {
+            throw new IllegalArgumentException("折扣金額不能大於訂單總金額");
+        }
+        
+        this.effectiveAmount = totalAmount.subtract(discountAmount);
     }
-
-    public UUID getId() {
-        return this.orderId.id();
-    }
-
-    @Override
-    public String toString() {
-        return String.format(
-            "訂單 ID: %s%n客戶 ID: %s%n狀態: %s%n總金額: %s%n品項數量: %d",
-            orderId,
-            customerId,
-            status,
-            totalAmount,
-            items.size()
-        );
+    
+    /**
+     * 取得有效金額（套用折扣後）
+     */
+    public Money getEffectiveAmount() {
+        return effectiveAmount != null ? effectiveAmount : getTotalAmount();
     }
 }

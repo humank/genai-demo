@@ -4,66 +4,69 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import solid.humank.genaidemo.ddd.annotations.DomainService;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
 import solid.humank.genaidemo.examples.order.Money;
 import solid.humank.genaidemo.examples.order.Order;
 import solid.humank.genaidemo.examples.order.policy.OrderDiscountPolicy;
-import solid.humank.genaidemo.examples.order.validation.OrderValidator;
 import solid.humank.genaidemo.examples.payment.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.exceptions.ValidationException;
+import solid.humank.genaidemo.utils.Preconditions;
 
 /**
  * 訂單處理服務
  * 協調各種領域規則和政策的應用
  */
+@Service
 @DomainService
 public class OrderProcessingService {
-    private final OrderValidator validator;
     private final OrderDiscountPolicy discountPolicy;
     private final DomainEventBus eventBus;
 
-    public OrderProcessingService(DomainEventBus eventBus) {
-        this.validator = new OrderValidator();
-        this.discountPolicy = OrderDiscountPolicy.weekendDiscount();
+    /**
+     * 建立訂單處理服務
+     * 
+     * @param discountPolicy 折扣政策
+     * @param eventBus 領域事件總線
+     */
+    public OrderProcessingService(
+            OrderDiscountPolicy discountPolicy,
+            DomainEventBus eventBus) {
+        Preconditions.requireNonNull(discountPolicy, "折扣政策不能為空");
+        Preconditions.requireNonNull(eventBus, "事件總線不能為空");
+        
+        this.discountPolicy = discountPolicy;
         this.eventBus = eventBus;
     }
 
     /**
-     * 處理訂單
-     * 展示如何組合使用各種 DDD 戰術模式：
-     * - Domain Invariants（通過 Validator）
-     * - Business Rules（通過 Specification）
-     * - Domain Policies
-     * 
-     * 遵循 Tell, Don't Ask 原則，讓訂單自己負責大部分業務邏輯
+     * 處理訂單並應用相關業務規則
      * 
      * @param order 要處理的訂單
-     * @return 處理結果，包含可能的錯誤訊息和折扣後金額
+     * @return 處理結果，包含可能的錯誤訊息和最終金額
      * @throws IllegalArgumentException 如果訂單為空
      */
     public OrderProcessingResult process(Order order) {
         // 前置條件檢查
-        if (order == null) {
-            throw new IllegalArgumentException("訂單不能為空");
-        }
+        Preconditions.requireNonNull(order, "訂單不能為空");
         
         try {
-            // 1. 告訴訂單自己執行驗證和業務邏輯
+            // 驗證訂單
             order.process();
-
-            // 2. 應用折扣政策（使用了 Specification）
+            
+            // 計算折扣
             Money finalAmount = discountPolicy.apply(order);
-
-            // 3. 告訴訂單應用折扣
             order.applyDiscount(finalAmount);
-
-            // 4. 觸發支付流程
+            
+            // 處理支付
+            Money effectiveAmount = order.getEffectiveAmount();
             UUID paymentId = UUID.randomUUID();
-            eventBus.publish(new PaymentRequestedEvent(paymentId, order.getId(), finalAmount));
-
-            // 5. 回傳處理結果
-            return OrderProcessingResult.success(finalAmount);
+            eventBus.publish(new PaymentRequestedEvent(paymentId, order.getId().getValue(), effectiveAmount));
+            
+            // 返回結果
+            return OrderProcessingResult.success(effectiveAmount);
         } catch (ValidationException e) {
             return OrderProcessingResult.failure(e.getErrors());
         } catch (Exception e) {

@@ -7,20 +7,19 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
+import org.springframework.stereotype.Component;
+
 /**
  * 領域事件匯流排
  * 用於處理領域事件的發布和訂閱
+ * 使用 Spring 的依賴注入代替單例模式
  */
+@Component
 public class DomainEventBus {
-    private static final DomainEventBus INSTANCE = new DomainEventBus();
     private final Map<Class<? extends DomainEvent>, List<Consumer<DomainEvent>>> subscribers;
 
-    private DomainEventBus() {
+    public DomainEventBus() {
         this.subscribers = new HashMap<>();
-    }
-
-    public static DomainEventBus getInstance() {
-        return INSTANCE;
     }
 
     /**

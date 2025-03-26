@@ -8,32 +8,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
-
-import solid.humank.genaidemo.examples.order.Money;
 import solid.humank.genaidemo.examples.order.Order;
 import solid.humank.genaidemo.examples.order.application.OrderApplicationService;
 import solid.humank.genaidemo.examples.order.controller.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.CreateOrderRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.OrderResponse;
 import solid.humank.genaidemo.examples.order.service.OrderProcessingService.OrderProcessingResult;
+import solid.humank.genaidemo.utils.Preconditions;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
+    // 常量定義，避免字符串重複
+    private static final String ORDER_ID_REQUIRED = "訂單ID不能為空";
+    private static final String REQUEST_REQUIRED = "請求內容不能為空";
     private final OrderApplicationService orderApplicationService;
+    private final ResponseFactory responseFactory;
 
-    public OrderController(OrderApplicationService orderApplicationService) {
+    public OrderController(OrderApplicationService orderApplicationService, ResponseFactory responseFactory) {
         this.orderApplicationService = orderApplicationService;
+        this.responseFactory = responseFactory;
     }
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
         // 前置條件檢查：防禦性編程
-        Objects.requireNonNull(request, "請求內容不能為空");
+        Preconditions.requireNonNull(request, REQUEST_REQUIRED);
         
-        Order order = new Order(request.customerId());
-        return ResponseEntity.ok(OrderResponse.fromDomain(order));
+        Order order = new Order(request.customerId(), request.shippingAddress());
+        return responseFactory.createOrderResponse(order);
     }
 
     @PostMapping("/{orderId}/items")
@@ -45,19 +48,17 @@ public class OrderController {
         // 這裡簡化實作，只建立新訂單
         
         // 前置條件檢查：防禦性編程
-        Objects.requireNonNull(request, "請求內容不能為空");
-        if (orderId == null || orderId.isBlank()) {
-            throw new IllegalArgumentException("訂單ID不能為空");
-        }
+        Preconditions.requireNonNull(request, REQUEST_REQUIRED);
+        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
         
         Order order = new Order(orderId);
         order.addItem(
             request.productId(),
             request.productName(),
             request.quantity(),
-            Money.twd(request.unitPrice().doubleValue())
+            request.unitPrice()
         );
-        return ResponseEntity.ok(OrderResponse.fromDomain(order));
+        return responseFactory.createOrderResponse(order);
     }
 
     @PostMapping("/{orderId}/process")
@@ -66,13 +67,11 @@ public class OrderController {
         // 這裡簡化實作，只建立新訂單
         
         // 前置條件檢查：防禦性編程
-        if (orderId == null || orderId.isBlank()) {
-            throw new IllegalArgumentException("訂單ID不能為空");
-        }
+        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
         
         Order order = new Order(orderId);
         OrderProcessingResult result = orderApplicationService.processOrder(order);
-        return OrderApplicationService.createResponse(result, order);
+        return responseFactory.createOrderProcessingResponse(result, order);
     }
 
     @GetMapping("/{orderId}")
@@ -81,11 +80,9 @@ public class OrderController {
         // 這裡簡化實作，只建立新訂單
         
         // 前置條件檢查：防禦性編程
-        if (orderId == null || orderId.isBlank()) {
-            throw new IllegalArgumentException("訂單ID不能為空");
-        }
+        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
         
         Order order = new Order(orderId);
-        return ResponseEntity.ok(OrderResponse.fromDomain(order));
+        return responseFactory.createOrderResponse(order);
     }
 }

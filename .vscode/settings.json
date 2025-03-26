@@ -1,0 +1,11 @@
+{
+    "cSpell.words": [
+        "genaidemo"
+    ],
+    "java.autobuild.enabled": true,
+    "java.completion.enabled": true,
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "editor.formatOnSave": true
+}

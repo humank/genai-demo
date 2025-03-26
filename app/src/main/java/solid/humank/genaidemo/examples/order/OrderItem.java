@@ -1,41 +1,75 @@
 package solid.humank.genaidemo.examples.order;
 
-import solid.humank.genaidemo.ddd.annotations.Entity;
+import solid.humank.genaidemo.ddd.annotations.ValueObject;
 
-@Entity
-public record OrderItem(
-    String productId,
-    String productName,
-    int quantity,
-    Money unitPrice
-) {
-    public OrderItem {
-        if (productId == null || productId.isBlank()) {
-            throw new IllegalArgumentException("商品ID不能為空");
-        }
-        if (productName == null || productName.isBlank()) {
-            throw new IllegalArgumentException("商品名稱不能為空");
-        }
+import java.util.Objects;
+
+/**
+ * 訂單項值對象
+ */
+@ValueObject
+public class OrderItem {
+    private final String productId;
+    private final String productName;
+    private final int quantity;
+    private final Money price;
+
+    public OrderItem(String productId, String productName, int quantity, Money price) {
         if (quantity <= 0) {
-            throw new IllegalArgumentException("數量必須大於0");
+            throw new IllegalArgumentException("Quantity must be positive");
         }
-        if (unitPrice == null) {
-            throw new IllegalArgumentException("單價不能為空");
-        }
+        this.productId = Objects.requireNonNull(productId, "Product ID cannot be null");
+        this.productName = Objects.requireNonNull(productName, "Product name cannot be null");
+        this.price = Objects.requireNonNull(price, "Price cannot be null");
+        this.quantity = quantity;
     }
 
+    public String getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    /**
+     * 計算訂單項小計金額
+     */
     public Money getSubtotal() {
-        return unitPrice.multiply(quantity);
+        return price.multiply(quantity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return quantity == orderItem.quantity &&
+                Objects.equals(productId, orderItem.productId) &&
+                Objects.equals(productName, orderItem.productName) &&
+                Objects.equals(price, orderItem.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId, productName, quantity, price);
     }
 
     @Override
     public String toString() {
-        return String.format(
-            "%s (數量: %d, 單價: %s, 小計: %s)",
-            productName,
-            quantity,
-            unitPrice,
-            getSubtotal()
-        );
+        return "OrderItem{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
 }

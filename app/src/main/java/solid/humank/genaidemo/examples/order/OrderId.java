@@ -1,21 +1,52 @@
 package solid.humank.genaidemo.examples.order;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import solid.humank.genaidemo.ddd.annotations.ValueObject;
 
+/**
+ * 訂單ID值對象
+ */
 @ValueObject
-public record OrderId(UUID id) {
+public class OrderId {
+    private final UUID value;
+
+    public OrderId(UUID value) {
+        this.value = Objects.requireNonNull(value, "Order ID cannot be null");
+    }
+
+    public OrderId(String value) {
+        this(UUID.fromString(value));
+    }
+
     public static OrderId generate() {
         return new OrderId(UUID.randomUUID());
     }
+    
+    public static OrderId of(String value) {
+        return new OrderId(value);
+    }
 
-    public static OrderId of(String id) {
-        return new OrderId(UUID.fromString(id));
+    public UUID getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return id.toString();
+        return value.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderId orderId = (OrderId) o;
+        return Objects.equals(value, orderId.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
