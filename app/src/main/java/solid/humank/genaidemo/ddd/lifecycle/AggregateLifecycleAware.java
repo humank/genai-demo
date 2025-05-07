@@ -37,7 +37,7 @@ public class AggregateLifecycleAware {
         Objects.requireNonNull(event, "Event cannot be null");
         
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.fine(() -> String.format("Applying event via static method: %s", event.getClass().getSimpleName()));
+            LOGGER.fine(String.format("Applying event via static method: %s", event.getClass().getSimpleName()));
         }
         
         getLifecycle().apply(event);

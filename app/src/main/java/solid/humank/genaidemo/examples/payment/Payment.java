@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import solid.humank.genaidemo.ddd.annotations.AggregateRoot;
 import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
-import solid.humank.genaidemo.ddd.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.examples.order.Money;
 import solid.humank.genaidemo.examples.payment.events.PaymentFailedEvent;
 import solid.humank.genaidemo.examples.payment.events.PaymentRequestedEvent;

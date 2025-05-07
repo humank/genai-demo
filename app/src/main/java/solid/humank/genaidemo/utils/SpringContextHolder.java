@@ -43,7 +43,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         }
         
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.info(() -> String.format(
+            LOGGER.info(String.format(
                 "SpringContextHolder initialized with ApplicationContext: %s", 
                 applicationContext.getDisplayName()
             ));
@@ -74,7 +74,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         checkApplicationContext();
         
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.fine(() -> String.format("Getting bean of type: %s", clazz.getName()));
+            LOGGER.fine(String.format("Getting bean of type: %s", clazz.getName()));
         }
         
         return applicationContext.getBean(clazz);
@@ -96,7 +96,7 @@ public class SpringContextHolder implements ApplicationContextAware {
         checkApplicationContext();
         
         if (LOGGER.isLoggable(Level.FINE)) {
-            LOGGER.fine(() -> String.format("Getting bean with name: %s and type: %s", name, clazz.getName()));
+            LOGGER.fine(String.format("Getting bean with name: %s and type: %s", name, clazz.getName()));
         }
         
         return applicationContext.getBean(name, clazz);
