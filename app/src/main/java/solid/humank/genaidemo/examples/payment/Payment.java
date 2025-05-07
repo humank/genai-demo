@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import solid.humank.genaidemo.ddd.annotations.AggregateRoot;
-import solid.humank.genaidemo.ddd.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
+import solid.humank.genaidemo.ddd.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.examples.order.Money;
 import solid.humank.genaidemo.examples.payment.events.PaymentFailedEvent;
 import solid.humank.genaidemo.examples.payment.events.PaymentRequestedEvent;
@@ -20,28 +21,34 @@ public class Payment {
     private LocalDateTime updatedAt;
 
     
-        public Payment(UUID orderId, Money amount) {
-            this.id = UUID.randomUUID();
-            this.orderId = orderId;
-            this.amount = amount;
-            this.status = PaymentStatus.PENDING;
-            this.createdAt = LocalDateTime.now();
-            this.updatedAt = LocalDateTime.now();
-    
-            AggregateLifecycle.apply(new PaymentRequestedEvent(this.id, this.orderId, this.amount));
-        }
-    
-        public void markAsCompleted() {
-            this.status = PaymentStatus.COMPLETED;
-            this.updatedAt = LocalDateTime.now();
-        }
+    public Payment(UUID orderId, Money amount) {
+        this.id = UUID.randomUUID();
+        this.orderId = orderId;
+        this.amount = amount;
+        this.status = PaymentStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+
+        // 使用 DomainEventPublisherService 發布事件
+        DomainEventPublisherService.publishEvent(
+            new PaymentRequestedEvent(this.id, this.orderId, this.amount)
+        );
+    }
+
+    public void markAsCompleted() {
+        this.status = PaymentStatus.COMPLETED;
+        this.updatedAt = LocalDateTime.now();
+    }
     
     public void markAsFailed(String reason) {
         this.status = PaymentStatus.FAILED;
         this.failureReason = reason;
         this.updatedAt = LocalDateTime.now();
         
-        AggregateLifecycle.apply(new PaymentFailedEvent(this.id, this.orderId, reason));
+        // 使用 DomainEventPublisherService 發布事件
+        DomainEventPublisherService.publishEvent(
+            new PaymentFailedEvent(this.id, this.orderId, reason)
+        );
     }
 
     public String getFailureReason() {

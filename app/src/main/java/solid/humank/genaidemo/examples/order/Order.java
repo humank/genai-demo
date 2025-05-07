@@ -3,10 +3,16 @@ package solid.humank.genaidemo.examples.order;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.ddd.annotations.AggregateRoot;
+import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
+import solid.humank.genaidemo.examples.order.events.OrderCreatedEvent;
+import solid.humank.genaidemo.examples.order.events.OrderItemAddedEvent;
 
 /**
  * 訂單聚合根
@@ -50,8 +56,15 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         
-        // 事件已註解，專注於核心業務邏輯
-        // AggregateLifecycle.apply(new OrderCreatedEvent(this.id, customerId, createdAt));
+        // 使用 DomainEventPublisherService 發布事件
+        DomainEventPublisherService.publishEvent(
+            new OrderCreatedEvent(
+                this.id, 
+                customerId, 
+                Money.zero(), 
+                Collections.emptyList()
+            )
+        );
     }
 
     /**
@@ -66,8 +79,10 @@ public class Order {
         this.items.add(newItem);
         this.updatedAt = LocalDateTime.now();
         
-        // 事件已註解，專注於核心業務邏輯
-        // AggregateLifecycle.apply(new OrderItemAddedEvent(this.id, productId, quantity, price));
+        // 使用 DomainEventPublisherService 發布事件
+        DomainEventPublisherService.publishEvent(
+            new OrderItemAddedEvent(this.id, productId, quantity, price)
+        );
     }
 
     /**

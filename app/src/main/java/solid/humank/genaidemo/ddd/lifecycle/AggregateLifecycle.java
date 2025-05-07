@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import solid.humank.genaidemo.ddd.events.DomainEvent;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
+import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
  * 聚合生命週期管理器
@@ -17,20 +17,14 @@ import solid.humank.genaidemo.ddd.events.DomainEventBus;
 @Service
 public class AggregateLifecycle {
     private static final ThreadLocal<List<DomainEvent>> PENDING_EVENTS = ThreadLocal.withInitial(ArrayList::new);
-    private static DomainEventBus eventBus;
-
+    
     @Autowired
-    private DomainEventBus autowiredEventBus;
-
-    @PostConstruct
-    public void init() {
-        eventBus = autowiredEventBus;
-    }
+    private DomainEventBus eventBus;
 
     /**
      * 套用聚合狀態變更並發布事件
      */
-    public static void apply(DomainEvent event) {
+    public void apply(DomainEvent event) {
         if (event == null) {
             throw new IllegalArgumentException("Event cannot be null");
         }
@@ -41,11 +35,7 @@ public class AggregateLifecycle {
     /**
      * 提交所有待處理的事件
      */
-    public static void commit() {
-        if (eventBus == null) {
-            throw new IllegalStateException("EventBus not initialized");
-        }
-
+    public void commit() {
         List<DomainEvent> events = PENDING_EVENTS.get();
         try {
             // 發布所有待處理的事件
@@ -59,21 +49,37 @@ public class AggregateLifecycle {
     /**
      * 取消所有待處理的事件
      */
-    public static void rollback() {
+    public void rollback() {
         PENDING_EVENTS.get().clear();
     }
 
     /**
      * 取得目前待處理的事件
      */
-    public static List<DomainEvent> getPendingEvents() {
+    public List<DomainEvent> getPendingEvents() {
         return new ArrayList<>(PENDING_EVENTS.get());
     }
 
     /**
      * 清理 ThreadLocal 資源
      */
-    public static void clear() {
+    public void clear() {
+        PENDING_EVENTS.remove();
+    }
+    
+    /**
+     * 獲取 ThreadLocal 中的待處理事件列表
+     * 這是唯一需要保持靜態的方法，因為 ThreadLocal 本身是靜態的
+     */
+    public static List<DomainEvent> getCurrentThreadPendingEvents() {
+        return PENDING_EVENTS.get();
+    }
+    
+    /**
+     * 清理當前線程的 ThreadLocal 資源
+     * 這是唯一需要保持靜態的方法，因為 ThreadLocal 本身是靜態的
+     */
+    public static void clearCurrentThreadEvents() {
         PENDING_EVENTS.remove();
     }
 

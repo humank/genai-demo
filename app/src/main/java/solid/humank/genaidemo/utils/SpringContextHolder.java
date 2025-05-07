@@ -3,19 +3,36 @@ package solid.humank.genaidemo.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
+import java.util.logging.Logger;
 
 /**
  * Spring Context 持有者
  * 用於在非Spring管理的類中獲取Spring Bean
+ * 
+ * 注意：這個類使用靜態變數存儲 ApplicationContext，
+ * 這是一個特例，因為它的目的就是提供靜態訪問 Spring 上下文的能力。
  */
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
+    private static final Logger LOGGER = Logger.getLogger(SpringContextHolder.class.getName());
     private static ApplicationContext applicationContext;
+    
+    // 用於檢測是否已初始化
+    private static boolean initialized = false;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         SpringContextHolder.applicationContext = applicationContext;
+        initialized = true;
+        LOGGER.info("SpringContextHolder initialized with ApplicationContext: " + applicationContext.getDisplayName());
+    }
+    
+    @PostConstruct
+    public void init() {
+        LOGGER.info("SpringContextHolder bean created");
     }
 
     /**
@@ -26,9 +43,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @return Bean實例
      */
     public static <T> T getBean(Class<T> clazz) {
-        if (applicationContext == null) {
-            throw new IllegalStateException("ApplicationContext has not been initialized");
-        }
+        checkApplicationContext();
         return applicationContext.getBean(clazz);
     }
 
@@ -41,10 +56,29 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @return Bean實例
      */
     public static <T> T getBean(String name, Class<T> clazz) {
-        if (applicationContext == null) {
-            throw new IllegalStateException("ApplicationContext has not been initialized");
-        }
+        checkApplicationContext();
         return applicationContext.getBean(name, clazz);
+    }
+    
+    /**
+     * 檢查 ApplicationContext 是否已初始化
+     */
+    private static void checkApplicationContext() {
+        if (applicationContext == null) {
+            throw new IllegalStateException(
+                "ApplicationContext has not been initialized. " +
+                "Make sure SpringContextHolder is properly registered as a Spring bean."
+            );
+        }
+    }
+
+    /**
+     * 檢查是否已初始化
+     * 
+     * @return 是否已初始化
+     */
+    public static boolean isInitialized() {
+        return initialized;
     }
 
     /**
@@ -53,5 +87,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      */
     public static void clearContext() {
         applicationContext = null;
+        initialized = false;
+        LOGGER.info("SpringContextHolder context cleared");
     }
 }
