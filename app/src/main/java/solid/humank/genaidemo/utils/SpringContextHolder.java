@@ -1,6 +1,8 @@
 package solid.humank.genaidemo.utils;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,16 +18,18 @@ import jakarta.annotation.PostConstruct;
  * Spring Context 持有者
  * 用於在非Spring管理的類中獲取Spring Bean
  * 
- * 注意：這個類使用靜態變數存儲 ApplicationContext，
+ * 注意：這個類使用線程安全的原子引用存儲 ApplicationContext，
  * 這是一個特例，因為它的目的就是提供靜態訪問 Spring 上下文的能力。
  */
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
     private static final Logger LOGGER = Logger.getLogger(SpringContextHolder.class.getName());
-    private static volatile ApplicationContext applicationContext;
     
-    // 用於檢測是否已初始化
-    private static volatile boolean initialized = false;
+    // 使用 AtomicReference 替代 volatile 變量，確保線程安全
+    private static final AtomicReference<ApplicationContext> applicationContext = new AtomicReference<>();
+    
+    // 用於檢測是否已初始化，使用 AtomicBoolean 確保線程安全
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
     /**
      * 設置應用上下文
@@ -37,10 +41,9 @@ public class SpringContextHolder implements ApplicationContextAware {
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         Objects.requireNonNull(applicationContext, "ApplicationContext must not be null");
         
-        synchronized (SpringContextHolder.class) {
-            SpringContextHolder.applicationContext = applicationContext;
-            initialized = true;
-        }
+        // 使用原子操作設置 applicationContext 和 initialized
+        SpringContextHolder.applicationContext.set(applicationContext);
+        initialized.set(true);
         
         if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info(String.format(
@@ -71,13 +74,13 @@ public class SpringContextHolder implements ApplicationContextAware {
      */
     public static <T> T getBean(Class<T> clazz) {
         Objects.requireNonNull(clazz, "Bean class must not be null");
-        checkApplicationContext();
+        ApplicationContext context = checkApplicationContext();
         
         if (LOGGER.isLoggable(Level.FINE)) {
             LOGGER.fine(String.format("Getting bean of type: %s", clazz.getName()));
         }
         
-        return applicationContext.getBean(clazz);
+        return context.getBean(clazz);
     }
 
     /**
@@ -93,28 +96,31 @@ public class SpringContextHolder implements ApplicationContextAware {
     public static <T> T getBean(String name, Class<T> clazz) {
         Objects.requireNonNull(name, "Bean name must not be null");
         Objects.requireNonNull(clazz, "Bean class must not be null");
-        checkApplicationContext();
+        ApplicationContext context = checkApplicationContext();
         
         if (LOGGER.isLoggable(Level.FINE)) {
             LOGGER.fine(String.format("Getting bean with name: %s and type: %s", name, clazz.getName()));
         }
         
-        return applicationContext.getBean(name, clazz);
+        return context.getBean(name, clazz);
     }
     
     /**
      * 檢查 ApplicationContext 是否已初始化
      * 
+     * @return ApplicationContext 實例
      * @throws IllegalStateException 如果 ApplicationContext 未初始化
      */
-    private static void checkApplicationContext() {
-        if (applicationContext == null) {
+    private static ApplicationContext checkApplicationContext() {
+        ApplicationContext context = applicationContext.get();
+        if (context == null) {
             LOGGER.severe("ApplicationContext has not been initialized");
             throw new IllegalStateException(
                 "ApplicationContext has not been initialized. " +
                 "Make sure SpringContextHolder is properly registered as a Spring bean."
             );
         }
+        return context;
     }
 
     /**
@@ -123,7 +129,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @return 是否已初始化
      */
     public static boolean isInitialized() {
-        return initialized;
+        return initialized.get();
     }
 
     /**
@@ -131,10 +137,8 @@ public class SpringContextHolder implements ApplicationContextAware {
      * 主要用於單元測試
      */
     public static void clearContext() {
-        synchronized (SpringContextHolder.class) {
-            applicationContext = null;
-            initialized = false;
-        }
+        applicationContext.set(null);
+        initialized.set(false);
         
         if (LOGGER.isLoggable(Level.INFO)) {
             LOGGER.info("SpringContextHolder context cleared");

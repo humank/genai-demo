@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -66,11 +69,20 @@ class DomainEventPublisherServiceTest {
      * 用於在測試中訪問私有靜態字段的工具類
      */
     static class ReflectionTestUtilsWrapper {
+        @SuppressWarnings("unchecked")
         public static void setField(Class<?> targetClass, String fieldName, Object value) {
             try {
                 java.lang.reflect.Field field = targetClass.getDeclaredField(fieldName);
                 field.setAccessible(true);
-                field.set(null, value);
+                
+                // 根據字段類型設置值
+                if (field.getType() == AtomicReference.class && value != null) {
+                    ((AtomicReference<Object>) field.get(null)).set(value);
+                } else if (field.getType() == AtomicBoolean.class && value instanceof Boolean) {
+                    ((AtomicBoolean) field.get(null)).set((Boolean) value);
+                } else {
+                    field.set(null, value);
+                }
             } catch (Exception e) {
                 throw new RuntimeException("Failed to set field: " + fieldName, e);
             }

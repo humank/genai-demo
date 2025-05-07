@@ -100,7 +100,7 @@ public class AggregateLifecycleAware {
             
             return lifecycle;
         } catch (IllegalStateException e) {
-            LOGGER.severe("Failed to get AggregateLifecycle bean: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Failed to get AggregateLifecycle bean: {0}", e.getMessage());
             throw e;
         }
     }
