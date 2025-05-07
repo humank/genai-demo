@@ -1,26 +1,13 @@
 {
-  "java.configuration.updateBuildConfiguration": "automatic",
-  "java.compile.nullAnalysis.mode": "disabled",
-  "java.format.enabled": true,
-  "java.import.gradle.enabled": true,
-  "java.import.gradle.wrapper.enabled": true,
-  "java.import.gradle.version": "wrapper",
-  "java.import.gradle.home": null,
-  "java.import.gradle.arguments": [],
-  "java.import.gradle.jvmArguments": [],
-  "java.import.gradle.user.home": null,
-  "java.import.gradle.offline.enabled": false,
-  "java.project.referencedLibraries": [],
-  "java.project.sourcePaths": [
-    "src"
-  ],
-  "java.project.outputPath": "bin",
-  "java.dependency.packagePresentation": "hierarchical",
-  "java.dependency.syncWithFolderExplorer": true,
-  "java.server.launchMode": "Standard",
-  "problems.decorations.enabled": false,
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
+  "java.silentNotification": true,
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.import.generatesMetadataFilesAtProjectRoot": true,
+  "files.exclude": {
+    "**/.project": true,
+    "**/.classpath": true,
+    "**/.settings/": true
+  },
+  "java.problems.exclude": {
+    "**/*.java": ["lombok.*"]
   }
 }
