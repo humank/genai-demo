@@ -17,22 +17,44 @@ import solid.humank.genaidemo.utils.SpringContextHolder;
 @Component
 public class AggregateLifecycleAware {
     
+    private AggregateLifecycleAware() {
+        // 私有構造函數，防止實例化
+    }
+    
     /**
      * 提供給領域實體使用的靜態方法
      * 內部使用 SpringContextHolder 獲取 AggregateLifecycle 實例
+     * 
+     * @param event 要應用的領域事件
+     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     public static void apply(DomainEvent event) {
         getLifecycle().apply(event);
     }
 
+    /**
+     * 提交所有待處理的事件
+     * 
+     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
+     */
     public static void commit() {
         getLifecycle().commit();
     }
 
+    /**
+     * 取消所有待處理的事件
+     * 
+     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
+     */
     public static void rollback() {
         getLifecycle().rollback();
     }
 
+    /**
+     * 清理 ThreadLocal 資源
+     * 
+     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
+     */
     public static void clear() {
         getLifecycle().clear();
     }
@@ -40,6 +62,9 @@ public class AggregateLifecycleAware {
     /**
      * 獲取 AggregateLifecycle 實例
      * 直接從 Spring 上下文獲取實例
+     * 
+     * @return AggregateLifecycle 實例
+     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     private static AggregateLifecycle getLifecycle() {
         // 從 Spring 上下文獲取實例
@@ -53,6 +78,8 @@ public class AggregateLifecycleAware {
     
     /**
      * 獲取當前線程的待處理事件
+     * 
+     * @return 當前線程的待處理事件列表
      */
     public static List<DomainEvent> getPendingEvents() {
         return AggregateLifecycle.getCurrentThreadPendingEvents();

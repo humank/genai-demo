@@ -25,6 +25,12 @@ public class SpringContextHolder implements ApplicationContextAware {
     // 用於檢測是否已初始化
     private static boolean initialized = false;
 
+    /**
+     * 設置應用上下文
+     * 
+     * @param applicationContext Spring 應用上下文
+     * @throws BeansException 如果設置過程中發生錯誤
+     */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         SpringContextHolder.applicationContext = applicationContext;
@@ -32,6 +38,9 @@ public class SpringContextHolder implements ApplicationContextAware {
         LOGGER.info("SpringContextHolder initialized with ApplicationContext: " + applicationContext.getDisplayName());
     }
     
+    /**
+     * 初始化後的處理
+     */
     @PostConstruct
     public void init() {
         LOGGER.info("SpringContextHolder bean created");
@@ -43,6 +52,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @param <T> Bean類型
      * @param clazz Bean類
      * @return Bean實例
+     * @throws IllegalStateException 如果 ApplicationContext 未初始化
      */
     public static <T> T getBean(Class<T> clazz) {
         checkApplicationContext();
@@ -56,6 +66,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @param name Bean名稱
      * @param clazz Bean類
      * @return Bean實例
+     * @throws IllegalStateException 如果 ApplicationContext 未初始化
      */
     public static <T> T getBean(String name, Class<T> clazz) {
         checkApplicationContext();
@@ -64,6 +75,8 @@ public class SpringContextHolder implements ApplicationContextAware {
     
     /**
      * 檢查 ApplicationContext 是否已初始化
+     * 
+     * @throws IllegalStateException 如果 ApplicationContext 未初始化
      */
     private static void checkApplicationContext() {
         if (applicationContext == null) {

@@ -26,6 +26,9 @@ public class AggregateLifecycle {
 
     /**
      * 套用聚合狀態變更並發布事件
+     * 
+     * @param event 要應用的領域事件
+     * @throws IllegalArgumentException 如果事件為 null
      */
     public void apply(DomainEvent event) {
         if (event == null) {
@@ -58,6 +61,8 @@ public class AggregateLifecycle {
 
     /**
      * 取得目前待處理的事件
+     * 
+     * @return 待處理事件的副本列表
      */
     public List<DomainEvent> getPendingEvents() {
         return new ArrayList<>(PENDING_EVENTS.get());
@@ -73,6 +78,8 @@ public class AggregateLifecycle {
     /**
      * 獲取 ThreadLocal 中的待處理事件列表
      * 這是唯一需要保持靜態的方法，因為 ThreadLocal 本身是靜態的
+     * 
+     * @return 當前線程的待處理事件列表
      */
     public static List<DomainEvent> getCurrentThreadPendingEvents() {
         return PENDING_EVENTS.get();
