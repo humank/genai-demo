@@ -1,6 +1,5 @@
 package solid.humank.genaidemo.ddd.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.utils.SpringContextHolder;
@@ -13,7 +12,7 @@ import solid.humank.genaidemo.utils.SpringContextHolder;
 public class DomainEventPublisherService {
     private final DomainEventBus eventBus;
 
-    @Autowired
+    
     public DomainEventPublisherService(DomainEventBus eventBus) {
         this.eventBus = eventBus;
     }
