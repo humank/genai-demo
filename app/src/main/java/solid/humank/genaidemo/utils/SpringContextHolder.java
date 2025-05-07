@@ -1,12 +1,14 @@
 package solid.humank.genaidemo.utils;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+
 import jakarta.annotation.PostConstruct;
-import java.util.logging.Logger;
 
 /**
  * Spring Context 持有者

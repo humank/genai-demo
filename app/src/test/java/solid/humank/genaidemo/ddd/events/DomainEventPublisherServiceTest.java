@@ -1,7 +1,8 @@
 package solid.humank.genaidemo.ddd.events;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class DomainEventPublisherServiceTest {
     private ApplicationContext applicationContext;
     
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         publisherService = new DomainEventPublisherService(eventBus);
         
@@ -49,9 +50,7 @@ class DomainEventPublisherServiceTest {
     @Test
     void testPublishWithNullEvent() {
         // 驗證拋出異常
-        assertThrows(IllegalArgumentException.class, () -> {
-            publisherService.publish(null);
-        });
+        assertThrows(IllegalArgumentException.class, () -> publisherService.publish(null));
     }
     
     @Test

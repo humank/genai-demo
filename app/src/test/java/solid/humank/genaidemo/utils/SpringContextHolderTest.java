@@ -1,7 +1,11 @@
 package solid.humank.genaidemo.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,9 +79,9 @@ class SpringContextHolderTest {
     @Test
     void testGetBeanWithoutInitialization() {
         // 驗證拋出異常
-        assertThrows(IllegalStateException.class, () -> {
-            SpringContextHolder.getBean(TestBean.class);
-        });
+        assertThrows(IllegalStateException.class, () -> 
+            SpringContextHolder.getBean(TestBean.class)
+        );
     }
     
     @Test
@@ -91,9 +95,9 @@ class SpringContextHolderTest {
         
         // 驗證
         assertFalse(SpringContextHolder.isInitialized());
-        assertThrows(IllegalStateException.class, () -> {
-            SpringContextHolder.getBean(TestBean.class);
-        });
+        assertThrows(IllegalStateException.class, () -> 
+            SpringContextHolder.getBean(TestBean.class)
+        );
     }
     
     // 測試用的 Bean 類

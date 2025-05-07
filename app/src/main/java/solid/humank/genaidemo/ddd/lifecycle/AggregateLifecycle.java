@@ -1,5 +1,9 @@
 package solid.humank.genaidemo.ddd.lifecycle;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
-import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
  * 聚合生命週期管理器
@@ -86,14 +89,14 @@ public class AggregateLifecycle {
     /**
      * 用於標記聚合根要使用生命週期管理的註解
      */
-    @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(java.lang.annotation.ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
     public @interface ManagedLifecycle {}
 
     /**
      * 用於標記聚合根中會產生事件的方法
      */
-    @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-    @java.lang.annotation.Target(java.lang.annotation.ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
     public @interface EventSourcing {}
 }

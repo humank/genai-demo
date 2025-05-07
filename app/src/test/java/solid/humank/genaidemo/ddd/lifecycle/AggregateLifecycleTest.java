@@ -1,7 +1,11 @@
 package solid.humank.genaidemo.ddd.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
@@ -13,7 +17,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
-import solid.humank.genaidemo.utils.SpringContextHolder;
 
 class AggregateLifecycleTest {
 

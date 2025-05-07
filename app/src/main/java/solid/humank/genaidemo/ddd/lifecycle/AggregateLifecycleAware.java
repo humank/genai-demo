@@ -1,5 +1,7 @@
 package solid.humank.genaidemo.ddd.lifecycle;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
@@ -52,7 +54,7 @@ public class AggregateLifecycleAware {
     /**
      * 獲取當前線程的待處理事件
      */
-    public static java.util.List<DomainEvent> getPendingEvents() {
+    public static List<DomainEvent> getPendingEvents() {
         return AggregateLifecycle.getCurrentThreadPendingEvents();
     }
     

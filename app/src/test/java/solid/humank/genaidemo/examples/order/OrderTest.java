@@ -1,30 +1,24 @@
 package solid.humank.genaidemo.examples.order;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import java.math.BigDecimal;
+import static org.mockito.Mockito.mockStatic;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 
 import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
 import solid.humank.genaidemo.examples.order.events.OrderCreatedEvent;
 import solid.humank.genaidemo.examples.order.events.OrderItemAddedEvent;
-import solid.humank.genaidemo.utils.SpringContextHolder;
 
 class OrderTest {
 
     @Mock
     private DomainEventPublisherService publisherService;
-    
-    @Mock
-    private ApplicationContext applicationContext;
     
     @BeforeEach
     void setUp() {

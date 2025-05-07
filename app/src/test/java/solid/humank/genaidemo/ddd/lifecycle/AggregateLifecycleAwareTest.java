@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.ddd.lifecycle;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class AggregateLifecycleAwareTest {
     private ApplicationContext applicationContext;
     
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         
         // 模擬 SpringContextHolder

@@ -3,6 +3,8 @@ package solid.humank.genaidemo.ddd.events;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import solid.humank.genaidemo.utils.SpringContextHolder;
+
 /**
  * 領域事件發布服務
  * 提供統一的事件發布機制
@@ -34,8 +36,6 @@ public class DomainEventPublisherService {
      * @param event 要發布的領域事件
      */
     public static void publishEvent(DomainEvent event) {
-        solid.humank.genaidemo.utils.SpringContextHolder
-            .getBean(DomainEventPublisherService.class)
-            .publish(event);
+        SpringContextHolder.getBean(DomainEventPublisherService.class).publish(event);
     }
 }
