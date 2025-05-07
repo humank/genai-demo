@@ -1,6 +1,9 @@
 package solid.humank.genaidemo.ddd.lifecycle;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Component;
 
@@ -16,6 +19,7 @@ import solid.humank.genaidemo.utils.SpringContextHolder;
  */
 @Component
 public class AggregateLifecycleAware {
+    private static final Logger LOGGER = Logger.getLogger(AggregateLifecycleAware.class.getName());
     
     private AggregateLifecycleAware() {
         // 私有構造函數，防止實例化
@@ -26,9 +30,16 @@ public class AggregateLifecycleAware {
      * 內部使用 SpringContextHolder 獲取 AggregateLifecycle 實例
      * 
      * @param event 要應用的領域事件
+     * @throws IllegalArgumentException 如果事件為 null
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     public static void apply(DomainEvent event) {
+        Objects.requireNonNull(event, "Event cannot be null");
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Applying event via static method: %s", event.getClass().getSimpleName()));
+        }
+        
         getLifecycle().apply(event);
     }
 
@@ -38,6 +49,10 @@ public class AggregateLifecycleAware {
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     public static void commit() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Committing events via static method");
+        }
+        
         getLifecycle().commit();
     }
 
@@ -47,6 +62,10 @@ public class AggregateLifecycleAware {
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     public static void rollback() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Rolling back events via static method");
+        }
+        
         getLifecycle().rollback();
     }
 
@@ -56,6 +75,10 @@ public class AggregateLifecycleAware {
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     public static void clear() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Clearing resources via static method");
+        }
+        
         getLifecycle().clear();
     }
     
@@ -67,13 +90,19 @@ public class AggregateLifecycleAware {
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     private static AggregateLifecycle getLifecycle() {
-        // 從 Spring 上下文獲取實例
-        AggregateLifecycle lifecycle = SpringContextHolder.getBean(AggregateLifecycle.class);
-        if (lifecycle == null) {
-            throw new IllegalStateException("AggregateLifecycle not initialized");
+        try {
+            AggregateLifecycle lifecycle = SpringContextHolder.getBean(AggregateLifecycle.class);
+            
+            if (lifecycle == null) {
+                LOGGER.severe("AggregateLifecycle bean is null");
+                throw new IllegalStateException("AggregateLifecycle not initialized");
+            }
+            
+            return lifecycle;
+        } catch (IllegalStateException e) {
+            LOGGER.severe("Failed to get AggregateLifecycle bean: " + e.getMessage());
+            throw e;
         }
-        
-        return lifecycle;
     }
     
     /**
@@ -82,6 +111,10 @@ public class AggregateLifecycleAware {
      * @return 當前線程的待處理事件列表
      */
     public static List<DomainEvent> getPendingEvents() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Getting pending events");
+        }
+        
         return AggregateLifecycle.getCurrentThreadPendingEvents();
     }
     
@@ -89,6 +122,10 @@ public class AggregateLifecycleAware {
      * 清理當前線程的 ThreadLocal 資源
      */
     public static void clearThreadLocalEvents() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Clearing thread local events");
+        }
+        
         AggregateLifecycle.clearCurrentThreadEvents();
     }
 }

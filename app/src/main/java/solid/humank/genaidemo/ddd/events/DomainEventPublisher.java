@@ -1,9 +1,9 @@
 package solid.humank.genaidemo.ddd.events;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.exceptions.BusinessException;
@@ -23,7 +23,6 @@ public class DomainEventPublisher {
      * 
      * @param eventBus 領域事件匯流排
      */
-    @Autowired
     public DomainEventPublisher(DomainEventBus eventBus) {
         this.eventBus = eventBus;
     }
@@ -36,17 +35,23 @@ public class DomainEventPublisher {
      * @throws BusinessException 如果事件發布失敗
      */
     public void publish(DomainEvent event) {
-        if (event == null) {
-            throw new IllegalArgumentException("事件不能為空");
-        }
+        Objects.requireNonNull(event, "事件不能為空");
+        
+        String eventName = event.getClass().getSimpleName();
         
         try {
-            LOGGER.fine("Publishing event: " + event.getClass().getSimpleName());
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.fine(() -> String.format("Publishing event: %s", eventName));
+            }
+            
             eventBus.publish(event);
-            LOGGER.fine("Event published successfully: " + event.getClass().getSimpleName());
+            
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.fine(() -> String.format("Event published successfully: %s", eventName));
+            }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to publish event: " + event.getClass().getSimpleName(), e);
-            throw new BusinessException("事件發布失敗: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, String.format("Failed to publish event: %s", eventName), e);
+            throw new BusinessException("事件發布失敗: " + e.getMessage(), e);
         }
     }
 }

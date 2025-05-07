@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Component;
 
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DomainEventBus {
+    private static final Logger LOGGER = Logger.getLogger(DomainEventBus.class.getName());
+    
     private final Map<Class<? extends DomainEvent>, List<Consumer<DomainEvent>>> subscribers;
 
     /**
@@ -31,16 +36,17 @@ public class DomainEventBus {
      * @param <T> 事件類型
      * @param eventType 事件類
      * @param handler 事件處理器
+     * @throws IllegalArgumentException 如果事件類型或處理器為 null
      */
     public <T extends DomainEvent> void subscribe(
         Class<T> eventType, 
         Consumer<DomainEvent> handler
     ) {
-        if (eventType == null) {
-            throw new IllegalArgumentException("Event type cannot be null");
-        }
-        if (handler == null) {
-            throw new IllegalArgumentException("Event handler cannot be null");
+        Objects.requireNonNull(eventType, "Event type cannot be null");
+        Objects.requireNonNull(handler, "Event handler cannot be null");
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(String.format("Subscribing to event type: %s", eventType.getSimpleName()));
         }
         
         subscribers
@@ -56,26 +62,36 @@ public class DomainEventBus {
      * @throws DomainEventHandlingException 如果事件處理過程中發生錯誤
      */
     public void publish(DomainEvent event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Event cannot be null");
+        Objects.requireNonNull(event, "Event cannot be null");
+
+        String eventName = event.getClass().getSimpleName();
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(String.format("Publishing event: %s", eventName));
         }
 
         List<Exception> exceptions = new ArrayList<>();
 
         // 通知所有訂閱者
-        subscribers.getOrDefault(event.getClass(), List.of())
-            .forEach(handler -> {
-                try {
-                    handler.accept(event);
-                } catch (Exception e) {
-                    exceptions.add(e);
-                }
-            });
+        List<Consumer<DomainEvent>> handlers = subscribers.getOrDefault(event.getClass(), List.of());
+        
+        if (handlers.isEmpty() && LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.warning(String.format("No handlers found for event: %s", eventName));
+        }
+        
+        handlers.forEach(handler -> {
+            try {
+                handler.accept(event);
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, String.format("Error handling event %s", eventName), e);
+                exceptions.add(e);
+            }
+        });
 
         // 如果有任何處理器出錯，拋出組合異常
         if (!exceptions.isEmpty()) {
             throw new DomainEventHandlingException(
-                "Error handling event: " + event.getClass().getSimpleName(),
+                String.format("Error handling event: %s", eventName),
                 exceptions
             );
         }
@@ -96,6 +112,10 @@ public class DomainEventBus {
             return;
         }
         
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(String.format("Unsubscribing from event type: %s", eventType.getSimpleName()));
+        }
+        
         subscribers.computeIfPresent(eventType, (key, handlers) -> {
             handlers.remove(handler);
             return handlers.isEmpty() ? null : handlers;
@@ -106,6 +126,9 @@ public class DomainEventBus {
      * 清除所有訂閱
      */
     public void clear() {
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.info("Clearing all event subscriptions");
+        }
         subscribers.clear();
     }
 }
@@ -125,7 +148,7 @@ class DomainEventHandlingException extends RuntimeException {
      * @param exceptions 異常列表
      */
     public DomainEventHandlingException(String message, List<Exception> exceptions) {
-        super(message + ": " + exceptions.size() + " handlers failed");
+        super(String.format("%s: %d handlers failed", message, exceptions.size()));
         this.exceptions = new ArrayList<>(exceptions);
     }
 

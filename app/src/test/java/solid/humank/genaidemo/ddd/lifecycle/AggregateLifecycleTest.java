@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
@@ -31,8 +30,7 @@ class AggregateLifecycleTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        aggregateLifecycle = new AggregateLifecycle();
-        ReflectionTestUtils.setField(aggregateLifecycle, "eventBus", eventBus);
+        aggregateLifecycle = new AggregateLifecycle(eventBus);
         
         // 清理 ThreadLocal 資源
         AggregateLifecycle.clearCurrentThreadEvents();

@@ -1,6 +1,8 @@
 package solid.humank.genaidemo.ddd.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.utils.SpringContextHolder;
@@ -11,6 +13,8 @@ import solid.humank.genaidemo.utils.SpringContextHolder;
  */
 @Service
 public class DomainEventPublisherService {
+    private static final Logger LOGGER = Logger.getLogger(DomainEventPublisherService.class.getName());
+    
     private final DomainEventBus eventBus;
 
     /**
@@ -18,7 +22,6 @@ public class DomainEventPublisherService {
      * 
      * @param eventBus 領域事件匯流排
      */
-    @Autowired
     public DomainEventPublisherService(DomainEventBus eventBus) {
         this.eventBus = eventBus;
     }
@@ -33,6 +36,11 @@ public class DomainEventPublisherService {
         if (event == null) {
             throw new IllegalArgumentException("事件不能為空");
         }
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Publishing event via service: %s", event.getClass().getSimpleName()));
+        }
+        
         eventBus.publish(event);
     }
     
@@ -47,6 +55,11 @@ public class DomainEventPublisherService {
         if (event == null) {
             throw new IllegalArgumentException("事件不能為空");
         }
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Publishing event via static method: %s", event.getClass().getSimpleName()));
+        }
+        
         SpringContextHolder.getBean(DomainEventPublisherService.class).publish(event);
     }
 }

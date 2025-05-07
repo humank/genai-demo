@@ -6,8 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
@@ -19,10 +21,19 @@ import solid.humank.genaidemo.ddd.events.DomainEventBus;
  */
 @Service
 public class AggregateLifecycle {
+    private static final Logger LOGGER = Logger.getLogger(AggregateLifecycle.class.getName());
     private static final ThreadLocal<List<DomainEvent>> PENDING_EVENTS = ThreadLocal.withInitial(ArrayList::new);
     
-    @Autowired
-    private DomainEventBus eventBus;
+    private final DomainEventBus eventBus;
+
+    /**
+     * 構造函數
+     * 
+     * @param eventBus 領域事件匯流排
+     */
+    public AggregateLifecycle(DomainEventBus eventBus) {
+        this.eventBus = eventBus;
+    }
 
     /**
      * 套用聚合狀態變更並發布事件
@@ -31,9 +42,12 @@ public class AggregateLifecycle {
      * @throws IllegalArgumentException 如果事件為 null
      */
     public void apply(DomainEvent event) {
-        if (event == null) {
-            throw new IllegalArgumentException("Event cannot be null");
+        Objects.requireNonNull(event, "Event cannot be null");
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Applying event: %s", event.getClass().getSimpleName()));
         }
+        
         // 將事件加入待處理列表
         PENDING_EVENTS.get().add(event);
     }
@@ -43,6 +57,18 @@ public class AggregateLifecycle {
      */
     public void commit() {
         List<DomainEvent> events = PENDING_EVENTS.get();
+        
+        if (events.isEmpty()) {
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.fine("No pending events to commit");
+            }
+            return;
+        }
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Committing %d pending events", events.size()));
+        }
+        
         try {
             // 發布所有待處理的事件
             events.forEach(eventBus::publish);
@@ -56,7 +82,13 @@ public class AggregateLifecycle {
      * 取消所有待處理的事件
      */
     public void rollback() {
-        PENDING_EVENTS.get().clear();
+        List<DomainEvent> events = PENDING_EVENTS.get();
+        
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine(() -> String.format("Rolling back %d pending events", events.size()));
+        }
+        
+        events.clear();
     }
 
     /**
@@ -72,6 +104,10 @@ public class AggregateLifecycle {
      * 清理 ThreadLocal 資源
      */
     public void clear() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Clearing ThreadLocal resources");
+        }
+        
         PENDING_EVENTS.remove();
     }
     
@@ -90,6 +126,10 @@ public class AggregateLifecycle {
      * 這是唯一需要保持靜態的方法，因為 ThreadLocal 本身是靜態的
      */
     public static void clearCurrentThreadEvents() {
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.fine("Clearing current thread events");
+        }
+        
         PENDING_EVENTS.remove();
     }
 
