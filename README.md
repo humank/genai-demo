@@ -265,6 +265,15 @@ app/src/test/java/solid/humank/genaidemo/architecture/
 └── PackageStructureTest.java   # 確保包結構符合 DDD 最佳實踐
 ```
 
+### 如何解讀測試結果
+
+如果架構測試失敗，錯誤訊息會指出哪些類別違反了架構規則。例如：
+
+```text
+Architecture Violation: Rule 'classes that reside in a package '..domain..' should not depend on classes that reside in any package ['..application..', '..infrastructure..', '..interfaces..']' was violated (1 times):
+Method solid.humank.genaidemo.domain.order.model.Order.process() calls method solid.humank.genaidemo.application.order.service.OrderApplicationService.processOrder()
+```
+
 ## 快速開始
 
 ### 環境需求
@@ -410,6 +419,7 @@ A: 可以使用以下方式：
 為確保測試的獨立性和可靠性，我們採用以下技巧：
 
 1. **測試專用配置**：
+
    ```java
    @TestConfiguration
    public class TestConfig {
@@ -422,12 +432,14 @@ A: 可以使用以下方式：
    ```
 
 2. **測試專用配置文件**：
+
    ```properties
    # application-test.properties
    spring.main.allow-bean-definition-overriding=true
    ```
 
 3. **模擬外部依賴**：
+
    ```java
    @MockBean
    private OrderPersistencePort orderPersistencePort;
@@ -504,19 +516,6 @@ class OrderControllerMockTest {
         // 測試代碼...
     }
 }
-```
-
-### 架構測試
-
-本專案使用 ArchUnit 進行架構測試，確保代碼遵循 DDD 最佳實踐。
-
-### 如何解讀測試結果
-
-如果架構測試失敗，錯誤訊息會指出哪些類別違反了架構規則。例如：
-
-```english
-Architecture Violation: Rule 'classes that reside in a package '..domain..' should not depend on classes that reside in any package ['..application..', '..infrastructure..', '..interfaces..']' was violated (1 times):
-Method solid.humank.genaidemo.domain.order.model.Order.process() calls method solid.humank.genaidemo.application.order.service.OrderApplicationService.processOrder()
 ```
 
 ### 常見架構違規及解決方案
@@ -629,6 +628,7 @@ public class OrderRepositoryAdapter implements OrderPersistencePort {
 ```
 
 這種架構帶來的好處：
+
 - 應用核心不依賴於基礎設施細節
 - 便於替換外部組件（如數據庫、消息隊列）
 - 提高可測試性，可以輕鬆模擬外部依賴
@@ -642,6 +642,7 @@ public class OrderRepositoryAdapter implements OrderPersistencePort {
 **問題**：多個適配器實現同一個端口接口，導致 Spring 容器中存在多個相同類型的 Bean。
 
 **解決方案**：
+
 - 使用 `@Primary` 標記主要實現
 - 使用 `@Qualifier` 明確指定注入的 Bean
 - 重命名適配器類，避免名稱衝突
@@ -651,6 +652,7 @@ public class OrderRepositoryAdapter implements OrderPersistencePort {
 **問題**：層與層之間的邊界不清晰，導致架構測試失敗。
 
 **解決方案**：
+
 - 明確定義每一層的職責
 - 使用包結構強制執行架構規則
 - 實現架構測試驗證邊界
@@ -660,6 +662,7 @@ public class OrderRepositoryAdapter implements OrderPersistencePort {
 **問題**：過度依賴整合測試，導致測試運行緩慢且脆弱。
 
 **解決方案**：
+
 - 優先使用單元測試
 - 針對核心業務邏輯編寫豐富的單元測試
 - 使用模擬對象隔離外部依賴
