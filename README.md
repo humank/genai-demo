@@ -384,6 +384,68 @@ A: 可以使用以下方式：
 - 領域政策處理可變規則
 - 領域服務處理跨聚合的邏輯
 
+## 測試最佳實踐
+
+### 測試策略分層
+
+本專案採用以下測試策略：
+
+1. **領域模型測試**：
+   - 專注於測試聚合根和值物件的業務邏輯
+   - 驗證核心業務規則的正確性
+   - 不依賴外部系統或框架
+
+2. **控制器測試**：
+   - 使用 Mockito 模擬應用服務
+   - 驗證控制器的請求處理和響應生成
+   - 簡化測試環境準備，不啟動 Spring 容器
+
+3. **架構測試保障**：
+   - 使用 ArchUnit 驗證架構規則
+   - 防止架構腐化
+   - 確保 DDD 最佳實踐的遵循
+
+### 測試隔離技巧
+
+為確保測試的獨立性和可靠性，我們採用以下技巧：
+
+1. **測試專用配置**：
+   ```java
+   @TestConfiguration
+   public class TestConfig {
+       @Bean
+       @Primary
+       public OrderManagementUseCase orderManagementUseCase() {
+           return mock(OrderManagementUseCase.class);
+       }
+   }
+   ```
+
+2. **測試專用配置文件**：
+   ```properties
+   # application-test.properties
+   spring.main.allow-bean-definition-overriding=true
+   ```
+
+3. **模擬外部依賴**：
+   ```java
+   @MockBean
+   private OrderPersistencePort orderPersistencePort;
+   ```
+
+### 執行測試
+
+```bash
+# 執行所有測試
+./gradlew test
+
+# 僅執行單元測試
+./gradlew test --tests "*Mock*"
+
+# 僅執行架構測試
+./gradlew test --tests "*Architecture*"
+```
+
 ## 貢獻指南
 
 1. Fork 本專案
@@ -398,7 +460,53 @@ A: 可以使用以下方式：
 - 錯誤修復
 - 測試案例
 
-## 架構測試詳解
+## 測試策略
+
+本專案採用多層次的測試策略，確保代碼質量和架構完整性。
+
+### 單元測試
+
+單元測試主要專注於測試領域模型（特別是聚合根）的業務邏輯，確保核心業務規則的正確性：
+
+```java
+class OrderTest {
+    @Test
+    @DisplayName("添加訂單項目應正確計算總金額")
+    void addItemShouldCalculateTotalAmountCorrectly() {
+        // 準備
+        Order order = new Order(OrderId.generate(), "customer-123", "台北市信義區");
+        
+        // 執行
+        order.addItem("product-1", "iPhone 15", 1, Money.of(new BigDecimal("30000")));
+        
+        // 驗證
+        assertEquals(new BigDecimal("30000"), order.getTotalAmount().getAmount());
+    }
+}
+```
+
+### 控制器測試
+
+為了簡化測試環境的準備，控制器測試採用 Mockito 進行模擬，不依賴 Spring 容器：
+
+```java
+@ExtendWith(MockitoExtension.class)
+class OrderControllerMockTest {
+    @Mock
+    private OrderManagementUseCase orderManagementUseCase;
+
+    @InjectMocks
+    private OrderController orderController;
+
+    @Test
+    @DisplayName("創建訂單應返回201狀態碼和訂單詳情")
+    void createOrderShouldReturn201AndOrderDetails() {
+        // 測試代碼...
+    }
+}
+```
+
+### 架構測試
 
 本專案使用 ArchUnit 進行架構測試，確保代碼遵循 DDD 最佳實踐。
 
@@ -442,6 +550,119 @@ Method solid.humank.genaidemo.domain.order.model.Order.process() calls method so
 - 使用儲存庫模式隔離持久化邏輯
 - 使用依賴倒置定義接口
 - 將技術細節移到基礎設施層
+
+## 六邊形架構實現
+
+本專案採用六邊形架構（Hexagonal Architecture，又稱為端口和適配器架構），將應用核心與外部依賴隔離：
+
+### 端口（Ports）
+
+端口定義了應用核心與外部世界交互的接口：
+
+1. **入站端口（Inbound/Primary Ports）**：
+   - 定義應用核心提供的服務
+   - 位於 `application.*.port.incoming` 包中
+   - 例如：`OrderManagementUseCase`
+
+```java
+public interface OrderManagementUseCase {
+    OrderResponse createOrder(CreateOrderRequestDto request);
+    OrderResponse addOrderItem(AddOrderItemRequestDto request);
+    OrderResponse submitOrder(String orderId);
+    // ...
+}
+```
+
+1. **出站端口（Outbound/Secondary Ports）**：
+   - 定義應用核心需要的外部服務
+   - 位於 `application.*.port.outgoing` 包中
+   - 例如：`OrderPersistencePort`
+
+```java
+public interface OrderPersistencePort {
+    void save(Order order);
+    Optional<Order> findById(OrderId orderId);
+    List<Order> findAll();
+    // ...
+}
+```
+
+### 適配器（Adapters）
+
+適配器實現端口接口，連接應用核心與外部世界：
+
+1. **入站適配器（Inbound/Primary Adapters）**：
+   - 將外部請求轉換為應用核心可理解的格式
+   - 位於 `interfaces.web.*` 包中
+   - 例如：`OrderController`
+
+```java
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
+    private final OrderManagementUseCase orderService;
+    
+    // 實現入站適配器邏輯
+}
+```
+
+1. **出站適配器（Outbound/Secondary Adapters）**：
+   - 實現應用核心定義的出站端口
+   - 位於 `infrastructure.*.persistence` 和 `infrastructure.*.external` 包中
+   - 例如：`OrderRepositoryAdapter`
+
+```java
+@Component
+public class OrderRepositoryAdapter implements OrderPersistencePort {
+    private final OrderRepository orderRepository;
+    
+    // 實現出站適配器邏輯
+}
+```
+
+### 依賴倒置
+
+六邊形架構通過依賴倒置原則實現核心邏輯與外部依賴的解耦：
+
+```text
+外部世界 → 適配器 → 端口 ← 應用核心
+```
+
+這種架構帶來的好處：
+- 應用核心不依賴於基礎設施細節
+- 便於替換外部組件（如數據庫、消息隊列）
+- 提高可測試性，可以輕鬆模擬外部依賴
+
+## 常見架構問題及解決方案
+
+在實現 DDD 和六邊形架構時，可能遇到以下常見問題：
+
+### 1. Bean 定義衝突
+
+**問題**：多個適配器實現同一個端口接口，導致 Spring 容器中存在多個相同類型的 Bean。
+
+**解決方案**：
+- 使用 `@Primary` 標記主要實現
+- 使用 `@Qualifier` 明確指定注入的 Bean
+- 重命名適配器類，避免名稱衝突
+
+### 2. 架構邊界模糊
+
+**問題**：層與層之間的邊界不清晰，導致架構測試失敗。
+
+**解決方案**：
+- 明確定義每一層的職責
+- 使用包結構強制執行架構規則
+- 實現架構測試驗證邊界
+
+### 3. 測試策略不當
+
+**問題**：過度依賴整合測試，導致測試運行緩慢且脆弱。
+
+**解決方案**：
+- 優先使用單元測試
+- 針對核心業務邏輯編寫豐富的單元測試
+- 使用模擬對象隔離外部依賴
 
 ## 配置說明
 
