@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.infrastructure.order.persistence;
 
 import org.springframework.stereotype.Repository;
-import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
+import solid.humank.genaidemo.domain.order.repository.OrderRepository;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
 
@@ -12,12 +12,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 訂單持久化適配器
- * 實作 OrderPersistencePort 接口
+ * 訂單儲存庫實現
+ * 實作領域層定義的OrderRepository接口
  * 注意：這是一個簡化的內存實現，實際應用中會使用真實的資料庫
  */
 @Repository
-public class OrderRepositoryImpl implements OrderPersistencePort {
+public class OrderRepositoryImpl implements OrderRepository {
 
     // 模擬數據存儲
     private final Map<OrderId, Order> orderStore = new HashMap<>();
@@ -38,14 +38,13 @@ public class OrderRepositoryImpl implements OrderPersistencePort {
     }
 
     @Override
-    public void delete(OrderId orderId) {
-        orderStore.remove(orderId);
+    public void delete(Order order) {
+        orderStore.remove(order.getId());
     }
 
     @Override
-    public void update(Order order) {
-        // 在記憶體實現中，更新和保存是一樣的
-        save(order);
+    public void delete(OrderId orderId) {
+        orderStore.remove(orderId);
     }
 
     @Override

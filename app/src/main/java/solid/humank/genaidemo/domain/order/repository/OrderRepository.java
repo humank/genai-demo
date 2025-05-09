@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.order.repository;
 
+import solid.humank.genaidemo.domain.common.repository.Repository;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
 
@@ -8,16 +9,16 @@ import java.util.Optional;
 
 /**
  * 訂單儲存庫接口
- * 定義訂單聚合根的持久化操作
+ * 定義在領域層，由基礎設施層實現
  */
-public interface OrderRepository {
+public interface OrderRepository extends Repository<Order, OrderId> {
     /**
      * 保存訂單
      */
     void save(Order order);
 
     /**
-     * 根據ID查找訂單
+     * 根據ID查詢訂單
      */
     Optional<Order> findById(OrderId orderId);
 
@@ -30,11 +31,6 @@ public interface OrderRepository {
      * 刪除訂單
      */
     void delete(OrderId orderId);
-
-    /**
-     * 更新訂單
-     */
-    void update(Order order);
 
     /**
      * 檢查訂單是否存在

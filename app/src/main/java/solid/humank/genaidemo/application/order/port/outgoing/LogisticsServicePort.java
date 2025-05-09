@@ -1,12 +1,13 @@
 package solid.humank.genaidemo.application.order.port.outgoing;
 
 import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-import solid.humank.genaidemo.infrastructure.order.acl.DeliveryOrder;
-import solid.humank.genaidemo.infrastructure.order.acl.DeliveryStatus;
+import solid.humank.genaidemo.domain.common.delivery.DeliveryOrder;
+import solid.humank.genaidemo.domain.common.delivery.DeliveryStatus;
 
 /**
  * 物流服務端口 - 次要輸出端口
  * 定義系統與物流服務的交互方式
+ * 使用領域層定義的物流相關類別，避免依賴基礎設施層
  */
 public interface LogisticsServicePort {
     /**

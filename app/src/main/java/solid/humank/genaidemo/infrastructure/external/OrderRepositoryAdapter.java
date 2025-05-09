@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.infrastructure.persistence;
+package solid.humank.genaidemo.infrastructure.external;
 
 import solid.humank.genaidemo.application.order.port.outgoing.OrderRepository;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 訂單倉儲適配器
+ * 移動到 external 包以符合架構測試要求
  */
 @Repository
 public class OrderRepositoryAdapter implements OrderRepository {

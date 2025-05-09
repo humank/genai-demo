@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.order.model.valueobject.Money;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
 
@@ -13,7 +12,6 @@ import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
  * 支付聚合根
  */
 @AggregateRoot
-@Entity
 public class Payment {
     private final UUID id;
     private final UUID orderId;

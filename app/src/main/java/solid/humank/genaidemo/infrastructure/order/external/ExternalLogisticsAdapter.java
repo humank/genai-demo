@@ -2,8 +2,8 @@ package solid.humank.genaidemo.infrastructure.order.external;
 
 import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-import solid.humank.genaidemo.infrastructure.order.acl.DeliveryOrder;
-import solid.humank.genaidemo.infrastructure.order.acl.DeliveryStatus;
+import solid.humank.genaidemo.domain.common.delivery.DeliveryOrder;
+import solid.humank.genaidemo.domain.common.delivery.DeliveryStatus;
 import solid.humank.genaidemo.application.order.port.outgoing.LogisticsServicePort;
 
 /**
@@ -28,7 +28,7 @@ public class ExternalLogisticsAdapter implements LogisticsServicePort {
         // 模擬創建物流訂單
         return new DeliveryOrder(
             orderId,
-            DeliveryStatus.CREATED,
+            DeliveryStatus.PROCESSING,
             "TRK-" + System.currentTimeMillis(),
             LocalDateTime.now().plusDays(3)
         );
@@ -60,7 +60,7 @@ public class ExternalLogisticsAdapter implements LogisticsServicePort {
             return DeliveryStatus.IN_TRANSIT;
         } catch (Exception e) {
             // 處理異常
-            return DeliveryStatus.UNKNOWN;
+            return DeliveryStatus.CANCELLED;
         }
     }
     

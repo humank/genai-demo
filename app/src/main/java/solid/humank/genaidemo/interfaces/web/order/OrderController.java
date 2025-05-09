@@ -1,64 +1,61 @@
 package solid.humank.genaidemo.interfaces.web.order;
 
-
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
+import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
+import solid.humank.genaidemo.application.order.dto.OrderResponse;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
 import solid.humank.genaidemo.interfaces.web.order.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.interfaces.web.order.dto.CreateOrderRequest;
-import solid.humank.genaidemo.application.order.dto.OrderResponse;
 
 /**
  * 訂單控制器
- * 處理訂單相關的HTTP請求
  */
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-    private final OrderManagementUseCase orderManagementUseCase;
 
-    public OrderController(OrderManagementUseCase orderManagementUseCase) {
-        this.orderManagementUseCase = orderManagementUseCase;
+    private final OrderManagementUseCase orderService;
+
+    public OrderController(OrderManagementUseCase orderService) {
+        this.orderService = orderService;
     }
 
     /**
-     * 創建新訂單
+     * 創建訂單
      */
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
-        OrderResponse response = orderManagementUseCase.createOrder(request);
+        // 將介面層DTO轉換為應用層DTO
+        CreateOrderRequestDto dto = CreateOrderRequestDto.from(
+            request.getCustomerId(),
+            request.getShippingAddress()
+        );
+        
+        OrderResponse response = orderService.createOrder(dto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
-     * 添加訂單項
+     * 添加訂單項目
      */
     @PostMapping("/{orderId}/items")
     public ResponseEntity<OrderResponse> addOrderItem(
             @PathVariable String orderId,
             @RequestBody AddOrderItemRequest request) {
-        // 確保請求中包含訂單ID
-        if (request.getOrderId() == null) {
-            // 創建一個新的請求對象，包含訂單ID
-            request = AddOrderItemRequest.of(
-                    orderId,
-                    request.getProductId(),
-                    request.getProductName(),
-                    request.getQuantity(),
-                    request.getPrice().getAmount()
-            );
-        }
+        // 將介面層DTO轉換為應用層DTO
+        AddOrderItemRequestDto dto = AddOrderItemRequestDto.from(
+            request.getOrderId(),
+            request.getProductId(),
+            request.getProductName(),
+            request.getQuantity(),
+            request.getPrice()
+        );
         
-        OrderResponse response = orderManagementUseCase.addOrderItem(request);
+        OrderResponse response = orderService.addOrderItem(dto);
         return ResponseEntity.ok(response);
     }
 
@@ -67,7 +64,7 @@ public class OrderController {
      */
     @PostMapping("/{orderId}/submit")
     public ResponseEntity<OrderResponse> submitOrder(@PathVariable String orderId) {
-        OrderResponse response = orderManagementUseCase.submitOrder(orderId);
+        OrderResponse response = orderService.submitOrder(orderId);
         return ResponseEntity.ok(response);
     }
 
@@ -76,7 +73,7 @@ public class OrderController {
      */
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(@PathVariable String orderId) {
-        OrderResponse response = orderManagementUseCase.cancelOrder(orderId);
+        OrderResponse response = orderService.cancelOrder(orderId);
         return ResponseEntity.ok(response);
     }
 
@@ -85,16 +82,16 @@ public class OrderController {
      */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable String orderId) {
-        OrderResponse response = orderManagementUseCase.getOrder(orderId);
+        OrderResponse response = orderService.getOrder(orderId);
         return ResponseEntity.ok(response);
     }
 
     /**
-     * 處理訂單不存在異常
+     * 處理異常
      */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleException(RuntimeException ex) {
-        if (ex.getMessage().contains("Order not found")) {
+        if (ex.getMessage().contains("not found")) {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
