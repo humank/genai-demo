@@ -320,6 +320,11 @@ A: 可以使用以下方式：
 
 本專案採用 MIT 授權。
 
+
+## 發佈至DeepWiki做更多詳細內容說明
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
+
 ## 聯繫方式
 
 如有問題或建議，歡迎提出 Issue。
