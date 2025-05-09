@@ -1,0 +1,30 @@
+@startuml 訂單系統使用案例圖
+left to right direction
+skinparam actorStyle awesome
+
+:客戶: as Customer
+:支付系統: as PaymentSystem
+:物流系統: as LogisticsSystem
+
+rectangle 訂單管理系統 {
+    usecase "建立訂單" as CreateOrder
+    usecase "新增訂單項目" as AddOrderItem
+    usecase "處理支付" as ProcessPayment
+    usecase "安排配送" as ArrangeDelivery
+    usecase "查詢訂單狀態" as CheckOrderStatus
+    usecase "套用折扣" as ApplyDiscount
+}
+
+Customer --> CreateOrder
+Customer --> AddOrderItem
+Customer --> CheckOrderStatus
+
+CreateOrder --> ProcessPayment
+ProcessPayment --> PaymentSystem
+
+ProcessPayment --> ArrangeDelivery
+ArrangeDelivery --> LogisticsSystem
+
+CreateOrder --> ApplyDiscount
+
+@enduml

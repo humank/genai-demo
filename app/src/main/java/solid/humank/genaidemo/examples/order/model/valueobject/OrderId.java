@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.examples.order;
+package solid.humank.genaidemo.examples.order.model.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;

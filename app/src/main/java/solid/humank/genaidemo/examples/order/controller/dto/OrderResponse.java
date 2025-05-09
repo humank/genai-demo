@@ -3,9 +3,10 @@ package solid.humank.genaidemo.examples.order.controller.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.OrderItem;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderStatus;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderItem;
 
 /**
  * 訂單響應 DTO
@@ -14,21 +15,15 @@ public class OrderResponse {
     private final String orderId;
     private final String customerId;
     private final String shippingAddress;
-    private final List<OrderItemDto> items;
+    private final List<OrderItemResponse> items;
     private final Money totalAmount;
-    private final String status;
+    private final OrderStatus status;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public OrderResponse(
-            String orderId,
-            String customerId,
-            String shippingAddress,
-            List<OrderItemDto> items,
-            Money totalAmount,
-            String status,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
+    public OrderResponse(String orderId, String customerId, String shippingAddress,
+                        List<OrderItemResponse> items, Money totalAmount, OrderStatus status,
+                        LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.shippingAddress = shippingAddress;
@@ -39,12 +34,9 @@ public class OrderResponse {
         this.updatedAt = updatedAt;
     }
 
-    /**
-     * 將領域模型轉換為DTO
-     */
-    public static OrderResponse fromDomain(Order order) {
-        List<OrderItemDto> items = order.getItems().stream()
-                .map(OrderItemDto::fromOrderItem)
+    public static OrderResponse fromOrder(Order order) {
+        List<OrderItemResponse> items = order.getItems().stream()
+                .map(OrderItemResponse::fromOrderItem)
                 .toList();
 
         return new OrderResponse(
@@ -53,13 +45,16 @@ public class OrderResponse {
                 order.getShippingAddress(),
                 items,
                 order.getTotalAmount(),
-                order.getStatus().name(),
+                order.getStatus(),
                 order.getCreatedAt(),
                 order.getUpdatedAt()
         );
     }
+    
+    public static OrderResponse fromDomain(Order order) {
+        return fromOrder(order);
+    }
 
-    // Getters
     public String getOrderId() {
         return orderId;
     }
@@ -72,7 +67,7 @@ public class OrderResponse {
         return shippingAddress;
     }
 
-    public List<OrderItemDto> getItems() {
+    public List<OrderItemResponse> getItems() {
         return items;
     }
 
@@ -80,7 +75,7 @@ public class OrderResponse {
         return totalAmount;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
@@ -92,17 +87,14 @@ public class OrderResponse {
         return updatedAt;
     }
 
-    /**
-     * 訂單項 DTO
-     */
-    public static class OrderItemDto {
+    public static class OrderItemResponse {
         private final String productId;
         private final String productName;
         private final int quantity;
         private final Money price;
         private final Money subtotal;
 
-        public OrderItemDto(String productId, String productName, int quantity, Money price, Money subtotal) {
+        private OrderItemResponse(String productId, String productName, int quantity, Money price, Money subtotal) {
             this.productId = productId;
             this.productName = productName;
             this.quantity = quantity;
@@ -110,8 +102,8 @@ public class OrderResponse {
             this.subtotal = subtotal;
         }
 
-        public static OrderItemDto fromOrderItem(OrderItem item) {
-            return new OrderItemDto(
+        public static OrderItemResponse fromOrderItem(OrderItem item) {
+            return new OrderItemResponse(
                     item.getProductId(),
                     item.getProductName(),
                     item.getQuantity(),
@@ -120,7 +112,6 @@ public class OrderResponse {
             );
         }
 
-        // Getters
         public String getProductId() {
             return productId;
         }

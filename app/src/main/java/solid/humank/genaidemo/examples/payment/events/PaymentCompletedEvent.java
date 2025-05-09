@@ -4,25 +4,28 @@ import java.time.Instant;
 import java.util.UUID;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
 
 /**
- * 支付失敗事件
+ * 支付完成事件
  */
-public class PaymentFailedEvent implements DomainEvent {
+public class PaymentCompletedEvent implements DomainEvent {
     private final UUID eventId;
     private final Instant occurredOn;
     private final String eventType;
     private final UUID paymentId;
     private final UUID orderId;
-    private final String errorMessage;
+    private final Money amount;
+    private final String transactionId;
     
-    public PaymentFailedEvent(UUID paymentId, UUID orderId, String errorMessage) {
+    public PaymentCompletedEvent(UUID paymentId, UUID orderId, Money amount, String transactionId) {
         this.eventId = UUID.randomUUID();
         this.occurredOn = Instant.now();
-        this.eventType = "PaymentFailed";
+        this.eventType = "PaymentCompleted";
         this.paymentId = paymentId;
         this.orderId = orderId;
-        this.errorMessage = errorMessage;
+        this.amount = amount;
+        this.transactionId = transactionId;
     }
     
     @Override
@@ -48,7 +51,11 @@ public class PaymentFailedEvent implements DomainEvent {
         return orderId;
     }
     
-    public String getErrorMessage() {
-        return errorMessage;
+    public Money getAmount() {
+        return amount;
+    }
+    
+    public String getTransactionId() {
+        return transactionId;
     }
 }

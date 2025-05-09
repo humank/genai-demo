@@ -1,0 +1,73 @@
+@startuml 訂單系統類別圖
+skinparam classAttributeIconSize 0
+
+class Order {
+    -OrderId id
+    -List<OrderItem> items
+    -OrderStatus status
+    -Money totalAmount
+    +addItem(OrderItem item)
+    +updateStatus(OrderStatus status)
+    +calculateTotal()
+}
+
+class OrderItem {
+    -String productId
+    -int quantity
+    -Money unitPrice
+    +calculateSubtotal()
+}
+
+class Money {
+    -BigDecimal amount
+    -Currency currency
+    +add(Money other)
+    +multiply(int quantity)
+}
+
+enum OrderStatus {
+    CREATED
+    PENDING_PAYMENT
+    CONFIRMED
+    FAILED
+    DELIVERED
+}
+
+class OrderApplicationService {
+    -OrderFactory orderFactory
+    -PaymentService paymentService
+    -LogisticsService logisticsService
+    +createOrder(CreateOrderCommand cmd)
+    +addOrderItem(AddOrderItemCommand cmd)
+    +processOrder(OrderId orderId)
+}
+
+class OrderFactory {
+    +createOrder()
+    +createOrderItem()
+}
+
+interface DomainEvent {
+    +getEventId()
+    +getTimestamp()
+}
+
+class OrderCreatedEvent {
+    -OrderId orderId
+    -DateTime createdAt
+}
+
+Order "1" *--> "*" OrderItem : contains
+Order --> OrderStatus
+Order --> Money
+OrderItem --> Money
+OrderApplicationService --> OrderFactory
+OrderApplicationService --> Order
+Order --> OrderCreatedEvent
+OrderCreatedEvent ..|> DomainEvent
+
+note right of Order : "訂單聚合根"
+note right of OrderStatus : "訂單狀態"
+note right of DomainEvent : "領域事件介面"
+
+@enduml

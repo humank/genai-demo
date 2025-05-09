@@ -1,12 +1,12 @@
-package solid.humank.genaidemo.examples.order.policy;
+package solid.humank.genaidemo.examples.order.model.policy;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import solid.humank.genaidemo.ddd.policy.DomainPolicy;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.specification.OrderDiscountSpecification;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.specification.OrderDiscountSpecification;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
 
 /**
  * 訂單折扣政策

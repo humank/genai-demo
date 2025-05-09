@@ -1,71 +1,71 @@
 package solid.humank.genaidemo.examples.order.validation;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
 import solid.humank.genaidemo.ddd.validation.DomainValidator;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.exceptions.ValidationException;
-import solid.humank.genaidemo.utils.Preconditions;
 
+/**
+ * 訂單驗證器
+ */
 public class OrderValidator extends DomainValidator<Order> {
     private final int maxItems;
     private final Money maxTotal;
-
+    
     /**
-     * 使用預設參數創建驗證器
+     * 建立訂單驗證器
+     * 
+     * @param maxItems 最大訂單項數量
      */
-    public OrderValidator() {
-        this(100, Money.twd(1000000)); // 預設: 最多100項，最大金額100萬
+    public OrderValidator(int maxItems) {
+        this(maxItems, Money.twd(100000));
     }
     
     /**
-     * 使用指定參數創建驗證器
-     *
-     * @param maxItems 最大項目數
+     * 建立訂單驗證器
+     * 
+     * @param maxItems 最大訂單項數量
      * @param maxTotal 最大訂單金額
      */
     public OrderValidator(int maxItems, Money maxTotal) {
-        Preconditions.requirePositive(maxItems, "最大項目數必須大於零");
-        Preconditions.requireNonNull(maxTotal, "最大訂單金額不能為空");
-        
         this.maxItems = maxItems;
         this.maxTotal = maxTotal;
     }
 
     @Override
     protected void doValidate(Order order) {
+        List<String> errors = new ArrayList<>();
+        
         validateBasicInfo(order);
         validateItems(order);
         validateAmount(order);
-
-        if (hasErrors()) {
-            throw new ValidationException(getErrors());
+        
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException(String.join(", ", errors));
         }
     }
-
+    
     private void validateBasicInfo(Order order) {
         if (order.getCustomerId() == null || order.getCustomerId().isBlank()) {
-            addError("客戶ID不能為空");
+            addError("Customer ID cannot be empty");
         }
     }
-
+    
     private void validateItems(Order order) {
         if (order.getItems().isEmpty()) {
-            addError("訂單必須至少包含一個商品項目");
+            addError("Order must have at least one item");
         }
+        
         if (order.getItems().size() > maxItems) {
-            addError("訂單商品項目不能超過 " + maxItems + " 個");
+            addError("Order cannot have more than " + maxItems + " items");
         }
     }
-
+    
     private void validateAmount(Order order) {
-        Money totalAmount = order.getTotalAmount();
-        if (totalAmount.amount().compareTo(BigDecimal.ZERO) < 0) {
-            addError("訂單金額不能為負數");
-        }
-        if (totalAmount.amount().compareTo(maxTotal.amount()) > 0) {
-            addError("訂單金額不能超過 " + maxTotal);
+        if (order.getTotalAmount().isGreaterThan(maxTotal)) {
+            addError("Order total amount cannot exceed " + maxTotal);
         }
     }
 }

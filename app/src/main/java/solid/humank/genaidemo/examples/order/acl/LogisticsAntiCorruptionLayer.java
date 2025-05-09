@@ -2,8 +2,8 @@ package solid.humank.genaidemo.examples.order.acl;
 
 import java.util.Map;
 
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.OrderId;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 /**
  * 物流防腐層

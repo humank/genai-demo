@@ -1,0 +1,75 @@
+@startuml 訂單系統套件圖
+skinparam packageStyle rectangle
+
+package "應用層" as Application {
+    [OrderApplicationService]
+    package "port" {
+        package "incoming" {
+            [OrderManagementUseCase]
+        }
+        package "outgoing" {
+            [OrderPersistencePort]
+            [PaymentServicePort]
+            [LogisticsServicePort]
+        }
+    }
+    package "dto" {
+        [CreateOrderCommand]
+        [OrderResponse]
+    }
+}
+
+package "領域層" as Domain {
+    [Order]
+    [OrderItem]
+    [Money]
+    package "events" {
+        [DomainEvent]
+        [OrderCreatedEvent]
+    }
+    package "policy" {
+        [OrderDiscountPolicy]
+    }
+}
+
+package "基礎設施層" as Infrastructure {
+    package "persistence" {
+        [JpaOrderRepository]
+    }
+    package "external" {
+        [PaymentAdapter]
+        [LogisticsAdapter]
+    }
+    package "web" {
+        [OrderController]
+    }
+}
+
+package "介面層" as Interface {
+    [OrderController]
+    package "dto" {
+        [CreateOrderRequest]
+        [OrderResponse]
+    }
+}
+
+' 層級間依賴關係
+Interface .[#blue]..> Application : uses
+Application .[#blue]..> Domain : uses
+Infrastructure .[#blue]..> Application : implements
+Infrastructure .[#blue]..> Domain : implements
+
+' 模組內部依賴
+OrderApplicationService .[#red]..> OrderManagementUseCase
+OrderApplicationService .[#red]..> OrderPersistencePort
+OrderApplicationService .[#red]..> CreateOrderCommand
+
+Order .[#green]..> OrderItem
+Order .[#green]..> Money
+Order .[#green]..> OrderCreatedEvent
+Order .[#green]..> OrderDiscountPolicy
+
+JpaOrderRepository .[#orange]..> PaymentAdapter
+PaymentAdapter .[#orange]..> LogisticsAdapter
+
+@enduml

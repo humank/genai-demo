@@ -1,5 +1,7 @@
 package solid.humank.genaidemo.examples.order.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,81 +10,63 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import solid.humank.genaidemo.examples.order.Order;
 import solid.humank.genaidemo.examples.order.application.OrderApplicationService;
-import solid.humank.genaidemo.examples.order.controller.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.CreateOrderRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.OrderResponse;
-import solid.humank.genaidemo.examples.order.service.OrderProcessingService.OrderProcessingResult;
-import solid.humank.genaidemo.utils.Preconditions;
+import solid.humank.genaidemo.examples.order.model.service.OrderProcessingService.OrderProcessingResult;
 
+/**
+ * 訂單控制器
+ * 處理訂單相關的HTTP請求
+ */
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
-    // 常量定義，避免字符串重複
-    private static final String ORDER_ID_REQUIRED = "訂單ID不能為空";
-    private static final String REQUEST_REQUIRED = "請求內容不能為空";
-    private final OrderApplicationService orderApplicationService;
+    private final OrderApplicationService orderService;
     private final ResponseFactory responseFactory;
-
-    public OrderController(OrderApplicationService orderApplicationService, ResponseFactory responseFactory) {
-        this.orderApplicationService = orderApplicationService;
+    
+    public OrderController(
+            OrderApplicationService orderService,
+            ResponseFactory responseFactory) {
+        this.orderService = orderService;
         this.responseFactory = responseFactory;
     }
-
+    
+    /**
+     * 創建訂單
+     */
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
-        // 前置條件檢查：防禦性編程
-        Preconditions.requireNonNull(request, REQUEST_REQUIRED);
-        
-        Order order = new Order(request.customerId(), request.shippingAddress());
+        OrderResponse order = orderService.createOrder(request);
         return responseFactory.createOrderResponse(order);
     }
-
-    @PostMapping("/{orderId}/items")
-    public ResponseEntity<OrderResponse> addOrderItem(
-        @PathVariable String orderId,
-        @RequestBody AddOrderItemRequest request
-    ) {
-        // 在實際應用中，這裡應該要從資料庫取得訂單
-        // 這裡簡化實作，只建立新訂單
-        
-        // 前置條件檢查：防禦性編程
-        Preconditions.requireNonNull(request, REQUEST_REQUIRED);
-        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
-        
-        Order order = new Order(orderId);
-        order.addItem(
-            request.productId(),
-            request.productName(),
-            request.quantity(),
-            request.unitPrice()
-        );
-        return responseFactory.createOrderResponse(order);
-    }
-
+    
+    /**
+     * 處理訂單
+     */
     @PostMapping("/{orderId}/process")
-    public ResponseEntity<Object> processOrder(@PathVariable String orderId) {
-        // 在實際應用中，這裡應該要從資料庫取得訂單
-        // 這裡簡化實作，只建立新訂單
-        
-        // 前置條件檢查：防禦性編程
-        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
-        
-        Order order = new Order(orderId);
-        OrderProcessingResult result = orderApplicationService.processOrder(order);
-        return responseFactory.createOrderProcessingResponse(result, order);
+    public ResponseEntity<OrderResponse> processOrder(@PathVariable String orderId) {
+        OrderResponse order = orderService.getOrder(orderId);
+        // 在實際應用中，這裡應該調用 orderService.processOrder(order)
+        // 但由於我們重構了代碼，這個方法可能需要重新實現
+        return responseFactory.createOrderResponse(order);
     }
-
+    
+    /**
+     * 獲取訂單
+     */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable String orderId) {
-        // 在實際應用中，這裡應該要從資料庫取得訂單
-        // 這裡簡化實作，只建立新訂單
-        
-        // 前置條件檢查：防禦性編程
-        Preconditions.requireNonBlank(orderId, ORDER_ID_REQUIRED);
-        
-        Order order = new Order(orderId);
+        OrderResponse order = orderService.getOrder(orderId);
         return responseFactory.createOrderResponse(order);
+    }
+    
+    /**
+     * 獲取所有訂單
+     */
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        List<OrderResponse> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
     }
 }

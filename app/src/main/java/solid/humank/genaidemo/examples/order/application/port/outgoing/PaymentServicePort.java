@@ -1,8 +1,8 @@
 package solid.humank.genaidemo.examples.order.application.port.outgoing;
 
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.OrderId;
-import solid.humank.genaidemo.examples.order.service.PaymentResult;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.examples.order.model.valueobject.PaymentResult;
 
 /**
  * 支付服務端口 - 次要輸出端口

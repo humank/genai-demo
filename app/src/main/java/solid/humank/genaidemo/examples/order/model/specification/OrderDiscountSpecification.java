@@ -1,11 +1,11 @@
-package solid.humank.genaidemo.examples.order.specification;
+package solid.humank.genaidemo.examples.order.model.specification;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 import solid.humank.genaidemo.ddd.specification.Specification;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.Order;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
 
 /**
  * 訂單折扣規格

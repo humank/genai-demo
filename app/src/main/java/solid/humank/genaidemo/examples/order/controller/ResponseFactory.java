@@ -1,50 +1,61 @@
 package solid.humank.genaidemo.examples.order.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import solid.humank.genaidemo.examples.order.Order;
 import solid.humank.genaidemo.examples.order.controller.dto.ErrorResponse;
 import solid.humank.genaidemo.examples.order.controller.dto.OrderResponse;
-import solid.humank.genaidemo.examples.order.service.OrderProcessingService.OrderProcessingResult;
-import solid.humank.genaidemo.utils.Preconditions;
+import solid.humank.genaidemo.examples.order.model.service.OrderProcessingService.OrderProcessingResult;
 
 /**
  * 響應工廠
- * 專門負責將領域結果轉換為 HTTP 響應格式
- * 移除應用服務對 HTTP 響應的耦合
+ * 負責創建HTTP響應
  */
 @Component
 public class ResponseFactory {
-
+    
     /**
-     * 為領域處理結果創建 HTTP 響應
-     *
-     * @param result 處理結果
-     * @param order 訂單實體
-     * @return HTTP 響應
+     * 創建錯誤響應
      */
-    public ResponseEntity<Object> createOrderProcessingResponse(OrderProcessingResult result, Order order) {
-        // 前置條件檢查
-        Preconditions.requireNonNull(result, "處理結果不能為空");
-        
-        if (result.success()) {
-            Preconditions.requireNonNull(order, "成功響應需要有效的訂單");
-            return ResponseEntity.ok(OrderResponse.fromDomain(order));
-        } else {
-            return ResponseEntity.badRequest()
-                .body(new ErrorResponse(result.errors()));
-        }
+    public ResponseEntity<ErrorResponse> createErrorResponse(String message) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(message));
     }
     
     /**
-     * 為訂單創建成功響應
-     *
-     * @param order 訂單實體
-     * @return HTTP 響應
+     * 創建訂單處理響應
      */
-    public ResponseEntity<OrderResponse> createOrderResponse(Order order) {
-        Preconditions.requireNonNull(order, "訂單不能為空");
-        return ResponseEntity.ok(OrderResponse.fromDomain(order));
+    public ResponseEntity<Object> createOrderProcessingResponse(OrderProcessingResult result, OrderResponse order) {
+        if (!result.success()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(result.errors()));
+        }
+        
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(order);
+    }
+    
+    /**
+     * 創建訂單響應
+     */
+    public ResponseEntity<OrderResponse> createOrderResponse(OrderResponse order) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(order);
+    }
+    
+    /**
+     * 創建訂單列表響應
+     */
+    public ResponseEntity<List<OrderResponse>> createOrderListResponse(List<OrderResponse> orders) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orders);
     }
 }

@@ -2,7 +2,7 @@ package solid.humank.genaidemo.examples.order.controller.dto;
 
 import java.math.BigDecimal;
 
-import solid.humank.genaidemo.examples.order.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
 
 /**
  * 添加訂單項請求 DTO

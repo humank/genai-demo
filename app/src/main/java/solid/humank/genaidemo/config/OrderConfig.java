@@ -1,45 +1,56 @@
 package solid.humank.genaidemo.config;
 
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.ComponentScan;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.policy.OrderDiscountPolicy;
-import solid.humank.genaidemo.examples.order.validation.OrderValidator;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.policy.OrderDiscountPolicy;
 
 /**
- * 訂單相關的配置類
- * 將訂單處理相關的參數抽取到配置中，避免硬編碼
+ * 訂單相關配置
+ * 提供訂單相關的Bean定義
  */
 @Configuration
-@ComponentScan
-@EnableConfigurationProperties(OrderProperties.class)
 public class OrderConfig {
     
-    private final OrderProperties orderProperties;
-    
-    public OrderConfig(OrderProperties orderProperties) {
-        this.orderProperties = orderProperties;
-    }
-    
     /**
-     * 訂單驗證器
+     * 定義最大訂單項數量
+     * 用於訂單驗證
      */
     @Bean
-    public OrderValidator orderValidator() {
-        return new OrderValidator(
-            orderProperties.getValidation().getMaxItems(),
-            Money.twd(orderProperties.getValidation().getMaxAmount())
-        );
+    public int maxOrderItems() {
+        return 20;
     }
     
     /**
-     * 訂單折扣政策 - 週末折扣
+     * 定義最大訂單金額
+     * 用於訂單驗證
+     */
+    @Bean
+    public Money maxOrderAmount() {
+        return Money.twd(100000);
+    }
+    
+    /**
+     * 定義折扣率
+     * 用於折扣計算
+     */
+    @Bean
+    public BigDecimal discountRate() {
+        return new BigDecimal("0.1");
+    }
+    
+    /**
+     * 定義週末折扣政策
      */
     @Bean
     public OrderDiscountPolicy weekendDiscountPolicy() {
-        return OrderDiscountPolicy.weekendDiscount();
+        return new OrderDiscountPolicy(
+            LocalDateTime.now(),
+            discountRate()
+        );
     }
 }

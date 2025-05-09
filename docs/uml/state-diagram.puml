@@ -1,0 +1,54 @@
+@startuml 訂單狀態圖
+skinparam state {
+    BackgroundColor<<initial>> #85BBF0
+    BackgroundColor<<final>> #FFA07A
+}
+
+[*] --> CREATED : 建立訂單
+state CREATED : 初始狀態
+CREATED --> PENDING_PAYMENT : 提交訂單
+
+state PENDING_PAYMENT {
+    state "驗證訂單" as VALIDATING
+    state "處理中" as PROCESSING
+    [*] --> VALIDATING
+    VALIDATING --> PROCESSING : 驗證通過
+    PROCESSING --> [*] : 處理完成
+}
+
+PENDING_PAYMENT --> CONFIRMED : 支付成功
+PENDING_PAYMENT --> FAILED : 支付失敗
+
+state CONFIRMED {
+    state "安排配送" as ARRANGING_DELIVERY
+    state "配送中" as SHIPPING
+    [*] --> ARRANGING_DELIVERY
+    ARRANGING_DELIVERY --> SHIPPING : 開始配送
+    SHIPPING --> [*] : 配送中
+}
+
+CONFIRMED --> DELIVERED : 物流配送完成
+DELIVERED --> [*]
+FAILED --> [*]
+
+note right of CREATED
+  訂單剛建立的狀態
+end note
+
+note right of PENDING_PAYMENT
+  等待支付完成
+end note
+
+note right of CONFIRMED
+  訂單已確認
+end note
+
+note right of DELIVERED
+  訂單已完成
+end note
+
+note right of FAILED
+  訂單處理失敗
+end note
+
+@enduml

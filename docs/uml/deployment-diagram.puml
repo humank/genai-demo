@@ -1,0 +1,63 @@
+@startuml 訂單系統部署圖
+skinparam node {
+    BackgroundColor<<frontend>> #85BBF0
+    BackgroundColor<<service>> #98FB98
+    BackgroundColor<<database>> #FFB6C1
+    BackgroundColor<<messagebus>> #DDA0DD
+    BackgroundColor<<external>> #F0E68C
+}
+
+node "客戶端" as Client <<frontend>> {
+    component [Web瀏覽器]
+}
+
+node "應用服務器群集" as AppServer <<service>> {
+    component [訂單服務] as OrderService
+    component [支付服務] as PaymentService
+    component [物流服務] as LogisticsService
+}
+
+node "資料庫群集" as Database <<database>> {
+    database "訂單資料庫" as OrderDB
+    database "支付資料庫" as PaymentDB
+}
+
+node "消息中間件" as MessageBroker <<messagebus>> {
+    queue "事件總線" as EventBus
+}
+
+node "外部服務" as External <<external>> {
+    component [支付網關] as PaymentGateway
+    component [物流服務商] as LogisticsProvider
+}
+
+' 連接關係
+Client -down-> AppServer : "HTTP/REST"
+
+OrderService -down-> OrderDB : "JDBC"
+PaymentService -down-> PaymentDB : "JDBC"
+
+OrderService -right-> EventBus : "非同步事件"
+PaymentService -right-> EventBus : "非同步事件"
+LogisticsService -right-> EventBus : "非同步事件"
+
+PaymentService -down-> PaymentGateway : "API"
+LogisticsService -down-> LogisticsProvider : "API"
+
+' 註解
+note right of AppServer
+  使用容器化部署
+  支援水平擴展
+end note
+
+note right of Database
+  使用主從複製
+  支援故障轉移
+end note
+
+note right of MessageBroker
+  使用消息佇列
+  確保可靠性傳遞
+end note
+
+@enduml

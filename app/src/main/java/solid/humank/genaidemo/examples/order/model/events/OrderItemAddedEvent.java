@@ -1,11 +1,11 @@
-package solid.humank.genaidemo.examples.order.events;
+package solid.humank.genaidemo.examples.order.model.events;
 
 import java.time.Instant;
 import java.util.UUID;
 
 import solid.humank.genaidemo.ddd.events.DomainEvent;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.OrderId;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 public record OrderItemAddedEvent(
     UUID eventId,

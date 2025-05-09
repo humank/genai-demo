@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.examples.order.application.port.outgoing;
 
-import solid.humank.genaidemo.examples.order.OrderId;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 import solid.humank.genaidemo.examples.order.acl.DeliveryOrder;
 import solid.humank.genaidemo.examples.order.acl.DeliveryStatus;
 

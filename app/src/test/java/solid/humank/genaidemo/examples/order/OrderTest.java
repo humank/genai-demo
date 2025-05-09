@@ -13,8 +13,12 @@ import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
 import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
-import solid.humank.genaidemo.examples.order.events.OrderCreatedEvent;
-import solid.humank.genaidemo.examples.order.events.OrderItemAddedEvent;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.events.OrderCreatedEvent;
+import solid.humank.genaidemo.examples.order.model.events.OrderItemAddedEvent;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderItem;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderStatus;
 
 /**
  * Order 聚合根的單元測試

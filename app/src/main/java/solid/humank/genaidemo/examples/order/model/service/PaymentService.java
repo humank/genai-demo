@@ -1,6 +1,7 @@
-package solid.humank.genaidemo.examples.order.service;
+package solid.humank.genaidemo.examples.order.model.service;
 
-import solid.humank.genaidemo.examples.order.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.PaymentResult;
 
 /**
  * 支付服務介面

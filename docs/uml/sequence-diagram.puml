@@ -1,0 +1,54 @@
+@startuml 訂單處理時序圖
+skinparam responseMessageBelowArrow true
+
+participant "Client" as C
+participant "OrderController" as OC
+participant "OrderApplicationService" as OAS
+participant "OrderFactory" as OF
+participant "Order" as O
+participant "PaymentService" as PS
+participant "LogisticsService" as LS
+participant "EventBus" as EB
+
+C -> OC: createOrder(CreateOrderRequest)
+activate OC
+
+OC -> OAS: createOrder(CreateOrderCommand)
+activate OAS
+
+OAS -> OF: createOrder()
+activate OF
+
+OF -> O: new Order()
+activate O
+
+O -> EB: publish(OrderCreatedEvent)
+activate EB
+deactivate EB
+
+OAS -> PS: processPayment()
+activate PS
+PS --> OAS: PaymentResult
+deactivate PS
+
+alt 支付成功
+    OAS -> LS: arrangeDelivery()
+    activate LS
+    LS --> OAS: DeliveryStatus
+    deactivate LS
+    OAS -> O: updateStatus(CONFIRMED)
+else 支付失敗
+    OAS -> O: updateStatus(FAILED)
+end
+
+O -> EB: publish(StatusChangedEvent)
+activate EB
+deactivate EB
+
+OAS --> OC: OrderResponse
+deactivate OAS
+
+OC --> C: OrderResponse
+deactivate OC
+
+@enduml

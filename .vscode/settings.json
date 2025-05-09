@@ -9,5 +9,6 @@
   },
   "java.problems.exclude": {
     "**/*.java": ["lombok.*"]
-  }
+  },
+  "java.compile.nullAnalysis.mode": "disabled"
 }

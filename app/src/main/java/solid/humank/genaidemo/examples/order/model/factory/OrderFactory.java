@@ -1,7 +1,10 @@
-package solid.humank.genaidemo.examples.order;
+package solid.humank.genaidemo.examples.order.model.factory;
 
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.ddd.factories.DomainFactory;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 import java.util.ArrayList;
 import java.util.Collections;

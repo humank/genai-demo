@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
+
 /**
  * OrderId 值對象的單元測試
  */

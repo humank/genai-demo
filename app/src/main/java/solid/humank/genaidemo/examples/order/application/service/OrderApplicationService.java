@@ -3,9 +3,6 @@ package solid.humank.genaidemo.examples.order.application.service;
 import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.ddd.annotations.DomainService;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.OrderFactory;
-import solid.humank.genaidemo.examples.order.OrderId;
 import solid.humank.genaidemo.examples.order.application.port.incoming.OrderManagementUseCase;
 import solid.humank.genaidemo.examples.order.application.port.outgoing.LogisticsServicePort;
 import solid.humank.genaidemo.examples.order.application.port.outgoing.OrderPersistencePort;
@@ -13,6 +10,9 @@ import solid.humank.genaidemo.examples.order.application.port.outgoing.PaymentSe
 import solid.humank.genaidemo.examples.order.controller.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.CreateOrderRequest;
 import solid.humank.genaidemo.examples.order.controller.dto.OrderResponse;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.factory.OrderFactory;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 /**
  * 訂單應用服務

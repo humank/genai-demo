@@ -1,12 +1,12 @@
 package solid.humank.genaidemo.examples.order.application.dto;
 
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.OrderStatus;
-import solid.humank.genaidemo.examples.order.OrderItem;
-
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderStatus;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderItem;
 
 /**
  * 訂單響應 DTO
@@ -18,30 +18,41 @@ public class OrderResponse {
     private final List<OrderItemResponse> items;
     private final Money totalAmount;
     private final OrderStatus status;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
 
-    private OrderResponse(String orderId, String customerId, String shippingAddress,
-                        List<OrderItemResponse> items, Money totalAmount, OrderStatus status) {
+    public OrderResponse(String orderId, String customerId, String shippingAddress,
+                        List<OrderItemResponse> items, Money totalAmount, OrderStatus status,
+                        LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.shippingAddress = shippingAddress;
         this.items = items;
         this.totalAmount = totalAmount;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static OrderResponse fromOrder(Order order) {
         List<OrderItemResponse> items = order.getItems().stream()
                 .map(OrderItemResponse::fromOrderItem)
-                .collect(Collectors.toList());
+                .toList();
 
         return new OrderResponse(
-            order.getId().toString(),
-            order.getCustomerId(),
-            order.getShippingAddress(),
-            items,
-            order.getTotalAmount(),
-            order.getStatus()
+                order.getId().toString(),
+                order.getCustomerId(),
+                order.getShippingAddress(),
+                items,
+                order.getTotalAmount(),
+                order.getStatus(),
+                order.getCreatedAt(),
+                order.getUpdatedAt()
         );
+    }
+    
+    public static OrderResponse fromDomain(Order order) {
+        return fromOrder(order);
     }
 
     public String getOrderId() {
@@ -68,9 +79,14 @@ public class OrderResponse {
         return status;
     }
 
-    /**
-     * 訂單項響應 DTO
-     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
     public static class OrderItemResponse {
         private final String productId;
         private final String productName;
@@ -88,11 +104,11 @@ public class OrderResponse {
 
         public static OrderItemResponse fromOrderItem(OrderItem item) {
             return new OrderItemResponse(
-                item.getProductId(),
-                item.getProductName(),
-                item.getQuantity(),
-                item.getPrice(),
-                item.getSubtotal()
+                    item.getProductId(),
+                    item.getProductName(),
+                    item.getQuantity(),
+                    item.getPrice(),
+                    item.getSubtotal()
             );
         }
 

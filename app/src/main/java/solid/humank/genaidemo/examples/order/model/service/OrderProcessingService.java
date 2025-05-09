@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.examples.order.service;
+package solid.humank.genaidemo.examples.order.model.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.ddd.annotations.DomainService;
 import solid.humank.genaidemo.ddd.events.DomainEventBus;
-import solid.humank.genaidemo.examples.order.Money;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.policy.OrderDiscountPolicy;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.policy.OrderDiscountPolicy;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
 import solid.humank.genaidemo.examples.payment.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.exceptions.ValidationException;
 import solid.humank.genaidemo.utils.Preconditions;

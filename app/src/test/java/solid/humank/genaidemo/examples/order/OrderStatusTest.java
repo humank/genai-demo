@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderStatus;
+
 /**
  * OrderStatus 枚舉的單元測試
  */

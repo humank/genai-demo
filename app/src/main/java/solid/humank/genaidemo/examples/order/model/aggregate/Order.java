@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.examples.order;
+package solid.humank.genaidemo.examples.order.model.aggregate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,8 +8,13 @@ import java.util.Objects;
 
 import solid.humank.genaidemo.ddd.annotations.AggregateRoot;
 import solid.humank.genaidemo.ddd.events.DomainEventPublisherService;
-import solid.humank.genaidemo.examples.order.events.OrderCreatedEvent;
-import solid.humank.genaidemo.examples.order.events.OrderItemAddedEvent;
+import solid.humank.genaidemo.examples.order.model.events.OrderCreatedEvent;
+import solid.humank.genaidemo.examples.order.model.events.OrderItemAddedEvent;
+import solid.humank.genaidemo.examples.order.model.valueobject.Currency;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderItem;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderStatus;
 
 /**
  * 訂單聚合根

@@ -8,6 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import solid.humank.genaidemo.examples.order.model.valueobject.Currency;
+import solid.humank.genaidemo.examples.order.model.valueobject.Money;
+
 /**
  * Money 值對象的單元測試
  */

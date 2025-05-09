@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.examples.order;
+package solid.humank.genaidemo.examples.order.model.valueobject;
 
 /**
  * 訂單狀態枚舉

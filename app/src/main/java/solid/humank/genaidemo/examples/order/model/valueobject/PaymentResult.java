@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.examples.order.service;
+package solid.humank.genaidemo.examples.order.model.valueobject;
 
 import solid.humank.genaidemo.ddd.annotations.ValueObject;
 

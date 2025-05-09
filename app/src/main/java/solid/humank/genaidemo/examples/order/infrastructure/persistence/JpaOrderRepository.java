@@ -1,9 +1,9 @@
 package solid.humank.genaidemo.examples.order.infrastructure.persistence;
 
 import org.springframework.stereotype.Repository;
-import solid.humank.genaidemo.examples.order.Order;
-import solid.humank.genaidemo.examples.order.OrderId;
 import solid.humank.genaidemo.examples.order.application.port.outgoing.OrderPersistencePort;
+import solid.humank.genaidemo.examples.order.model.aggregate.Order;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 import java.util.HashMap;
 import java.util.List;

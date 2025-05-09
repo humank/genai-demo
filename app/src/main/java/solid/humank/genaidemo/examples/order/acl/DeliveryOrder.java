@@ -1,23 +1,43 @@
 package solid.humank.genaidemo.examples.order.acl;
 
-import solid.humank.genaidemo.ddd.annotations.ValueObject;
-import solid.humank.genaidemo.examples.order.OrderId;
+import java.time.LocalDateTime;
+import solid.humank.genaidemo.examples.order.model.valueobject.OrderId;
 
 /**
- * 配送訂單值物件
- * 在防腐層中用於表示物流系統中的配送訂單
+ * 配送訂單
+ * 用於與外部物流系統交互的數據結構
  */
-@ValueObject
 public record DeliveryOrder(
     OrderId orderId,
-    DeliveryStatus status
+    DeliveryStatus status,
+    String trackingNumber,
+    LocalDateTime estimatedDeliveryTime
 ) {
-    public DeliveryOrder {
-        if (orderId == null) {
-            throw new IllegalArgumentException("訂單ID不能為空");
-        }
-        if (status == null) {
-            throw new IllegalArgumentException("配送狀態不能為空");
-        }
+    /**
+     * 建立配送訂單
+     */
+    public DeliveryOrder(OrderId orderId, DeliveryStatus status) {
+        this(orderId, status, null, null);
+    }
+    
+    /**
+     * 建立配送訂單
+     */
+    public DeliveryOrder withTrackingNumber(String trackingNumber) {
+        return new DeliveryOrder(orderId, status, trackingNumber, estimatedDeliveryTime);
+    }
+    
+    /**
+     * 建立配送訂單
+     */
+    public DeliveryOrder withEstimatedDeliveryTime(LocalDateTime estimatedDeliveryTime) {
+        return new DeliveryOrder(orderId, status, trackingNumber, estimatedDeliveryTime);
+    }
+    
+    /**
+     * 建立配送訂單
+     */
+    public DeliveryOrder withStatus(DeliveryStatus status) {
+        return new DeliveryOrder(orderId, status, trackingNumber, estimatedDeliveryTime);
     }
 }
