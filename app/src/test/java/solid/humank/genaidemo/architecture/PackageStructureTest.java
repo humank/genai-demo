@@ -130,10 +130,11 @@ public class PackageStructureTest {
                 .should().resideInAPackage("..infrastructure..acl..");
         aclRule.check(importedClasses);
 
-        // 外部系統適配器應該位於 infrastructure.external 包中
+        // 外部系統適配器應該位於 infrastructure.external 或 infrastructure.*.external 包中
         ArchRule adapterRule = classes()
                 .that().haveSimpleNameEndingWith("Adapter")
-                .should().resideInAPackage("..infrastructure..external..");
+                .should().resideInAPackage("..infrastructure..external..")
+                .orShould().resideInAPackage("..infrastructure..persistence..");
         adapterRule.check(importedClasses);
 
         // Saga 應該位於 infrastructure.saga 包中

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
     "solid.humank.genaidemo.domain",
     "solid.humank.genaidemo.application",
     "solid.humank.genaidemo.infrastructure",
-    "solid.humank.genaidemo.interface"
+    "solid.humank.genaidemo.interfaces"
 })
 public class GenAiDemoApplication {
     public static void main(String[] args) {
