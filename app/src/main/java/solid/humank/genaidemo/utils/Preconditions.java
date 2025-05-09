@@ -28,6 +28,21 @@ public final class Preconditions {
     }
     
     /**
+     * 確保字符串不為空（null 或空字符串）
+     * 
+     * @param value 要檢查的字符串
+     * @param message 錯誤信息
+     * @return 輸入的字符串，方便鏈式調用
+     * @throws IllegalArgumentException 如果字符串為空
+     */
+    public static String requireNonEmpty(String value, String message) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+    
+    /**
      * 確保對象不為 null
      * 
      * @param <T> 對象類型

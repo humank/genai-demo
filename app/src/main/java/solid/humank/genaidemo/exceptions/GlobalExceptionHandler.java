@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import solid.humank.genaidemo.examples.order.controller.dto.ErrorResponse;
+import solid.humank.genaidemo.interfaces.web.order.dto.ErrorResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

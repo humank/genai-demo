@@ -354,6 +354,18 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit/1.2.1/b5fe7bfd133782737852021c42708dde6e01b477/archunit-1.2.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit/1.2.1/88eb2ebfa22da27f1ef26591c2783d15a20ab408/archunit-1.2.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-engine-api/1.2.1/c68cf7d5e6cc5bd318696588f33cd5ec02876e77/archunit-junit5-engine-api-1.2.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-engine-api/1.2.1/65d8f78d7de63c55a25a7510812c5128adb58000/archunit-junit5-engine-api-1.2.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.10.0/1355088731b4ec2107ff7f319f0d7445d916bab/xmlunit-core-2.10.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.10.0/d9d3dc9261f5790b80545b39d9f8c9a6dee7c51d/xmlunit-core-2.10.0-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -396,6 +408,18 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-engine/1.2.1/add90647697da17b0d29f8f2feaba8f5721872ed/archunit-junit5-engine-1.2.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-engine/1.2.1/11883a4ba9d50a5bba107b9780be6954c5a10fe7/archunit-junit5-engine-1.2.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5/1.2.1/4097b54dd49442ad64f61dfee623cfee95016077/archunit-junit5-1.2.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5/1.2.1/4097b54dd49442ad64f61dfee623cfee95016077/archunit-junit5-1.2.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-junit-jupiter/5.14.2/3cfc377d4bb9fe729f3dd9098d9a9b27da58324a/mockito-junit-jupiter-5.14.2.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-junit-jupiter/5.14.2/f2541ac9fa097ce660fff3634263fb15fb4134f3/mockito-junit-jupiter-5.14.2-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -415,6 +439,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/3.4.5/5029e995e6d69785f3125ba9ea043490b80cbe83/spring-boot-test-3.4.5.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/3.4.5/93754de413293f2ec81b1a86ff37224c76c3a0fd/spring-boot-test-3.4.5-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-api/1.2.1/d6bea95e6373ad3fd40a5dd24643546c611fba73/archunit-junit5-api-1.2.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-api/1.2.1/db8f4debd53e7fdb7370f34e9bc1d701e742831/archunit-junit5-api-1.2.1-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
 			<attribute name="gradle.buildServer" value="true"/>

@@ -23,6 +23,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.38'
     annotationProcessor 'org.projectlombok:lombok:1.18.38'
     
+    // ArchUnit - 架構測試工具
+    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.1'
+    
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

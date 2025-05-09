@@ -2,12 +2,18 @@ package solid.humank.genaidemo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.ComponentScan;
 
-import solid.humank.genaidemo.config.OrderProperties;
-
+/**
+ * 應用程式入口點
+ */
 @SpringBootApplication
-@EnableConfigurationProperties(OrderProperties.class)
+@ComponentScan(basePackages = {
+    "solid.humank.genaidemo.domain",
+    "solid.humank.genaidemo.application",
+    "solid.humank.genaidemo.infrastructure",
+    "solid.humank.genaidemo.interface"
+})
 public class GenAiDemoApplication {
     public static void main(String[] args) {
         SpringApplication.run(GenAiDemoApplication.class, args);
