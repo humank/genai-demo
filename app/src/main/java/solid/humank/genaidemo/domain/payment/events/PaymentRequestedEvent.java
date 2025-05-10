@@ -14,10 +14,10 @@ public class PaymentRequestedEvent implements DomainEvent {
     private final Instant occurredOn;
     private final String eventType;
     private final UUID paymentId;
-    private final UUID orderId;
+    private final String orderId;
     private final Money amount;
     
-    public PaymentRequestedEvent(UUID paymentId, UUID orderId, Money amount) {
+    public PaymentRequestedEvent(UUID paymentId, String orderId, Money amount) {
         this.eventId = UUID.randomUUID();
         this.occurredOn = Instant.now();
         this.eventType = "PaymentRequested";
@@ -45,7 +45,7 @@ public class PaymentRequestedEvent implements DomainEvent {
         return paymentId;
     }
     
-    public UUID getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
     

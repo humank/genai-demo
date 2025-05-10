@@ -44,7 +44,8 @@ public class PaymentService {
     private void handlePaymentRequestedEvent(DomainEvent event) {
         if (event instanceof PaymentRequestedEvent) {
             PaymentRequestedEvent paymentEvent = (PaymentRequestedEvent) event;
-            requestPayment(paymentEvent.getOrderId(), paymentEvent.getAmount());
+            UUID orderId = UUID.fromString(paymentEvent.getOrderId());
+            requestPayment(orderId, paymentEvent.getAmount());
         }
     }
     

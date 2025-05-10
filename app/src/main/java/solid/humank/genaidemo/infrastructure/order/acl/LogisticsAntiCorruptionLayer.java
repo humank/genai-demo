@@ -1,56 +1,80 @@
 package solid.humank.genaidemo.infrastructure.order.acl;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
+import solid.humank.genaidemo.domain.common.delivery.DeliveryStatus;
+import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
 
 /**
  * 物流防腐層
- * 用於隔離外部物流系統的資料結構和協議，保護我們的領域模型
+ * 隔離外部物流系統與領域模型
  */
 public class LogisticsAntiCorruptionLayer {
-    private final ExternalLogisticsSystem legacySystem;
-
-    public LogisticsAntiCorruptionLayer(ExternalLogisticsSystem legacySystem) {
-        this.legacySystem = legacySystem;
+    
+    private final ExternalLogisticsSystem externalLogisticsSystem;
+    
+    public LogisticsAntiCorruptionLayer(ExternalLogisticsSystem externalLogisticsSystem) {
+        this.externalLogisticsSystem = externalLogisticsSystem;
     }
-
+    
     /**
-     * 將訂單轉換為外部物流系統可以理解的格式並創建配送單
+     * 創建物流訂單
+     * 
+     * @param order 訂單
+     * @return 物流訂單
      */
     public DeliveryOrder createDeliveryOrder(Order order) {
-        // 將我們的領域模型轉換為外部系統期望的格式
-        Map<String, String> externalFormat = Map.of(
-            "reference_no", order.getId().toString(),
-            "delivery_address", "從訂單中獲取地址", // 實際應用中會從Order中獲取
-            "customer_contact", order.getCustomerId(),
-            "items_count", String.valueOf(order.getItems().size()),
-            "total_amount", order.getTotalAmount().toString()
+        // 將領域模型轉換為外部系統所需的格式
+        Map<String, String> externalRequest = Map.of(
+            "orderId", order.getId().toString(),
+            "customerId", order.getCustomerId(),
+            "address", order.getShippingAddress(),
+            "items", String.valueOf(order.getItems().size()),
+            "totalAmount", order.getTotalAmount().getAmount().toString()
         );
-
-        // 調用外部系統並轉換回我們的模型
-        String deliveryId = legacySystem.createDelivery(externalFormat);
+        
+        // 調用外部系統
+        String trackingNumber = externalLogisticsSystem.createDelivery(externalRequest);
+        
+        // 將外部系統的響應轉換為領域模型
         return new DeliveryOrder(
-            OrderId.of(deliveryId),
-            DeliveryStatus.CREATED
+            order.getId(),
+            DeliveryStatus.PENDING,
+            trackingNumber,
+            LocalDateTime.now().plusDays(3)
         );
     }
-
+    
     /**
-     * 查詢配送狀態並轉換為我們的領域模型能理解的格式
+     * 獲取物流狀態
+     * 
+     * @param orderId 訂單ID
+     * @return 物流狀態
      */
     public DeliveryStatus getDeliveryStatus(OrderId orderId) {
-        String externalStatus = legacySystem.getDeliveryStatus(orderId.toString());
+        // 調用外部系統
+        String externalStatus = externalLogisticsSystem.getDeliveryStatus(orderId.toString());
+        
+        // 將外部系統的響應轉換為領域模型
         return mapExternalStatus(externalStatus);
     }
-
+    
+    /**
+     * 將外部系統的狀態映射為領域模型的狀態
+     * 
+     * @param externalStatus 外部系統的狀態
+     * @return 領域模型的狀態
+     */
     private DeliveryStatus mapExternalStatus(String externalStatus) {
         return switch (externalStatus.toUpperCase()) {
-            case "INIT", "PENDING" -> DeliveryStatus.CREATED;
-            case "IN_TRANSIT" -> DeliveryStatus.IN_TRANSIT;
+            case "CREATED", "PENDING" -> DeliveryStatus.PENDING;
+            case "SHIPPED" -> DeliveryStatus.SHIPPED;
             case "DELIVERED" -> DeliveryStatus.DELIVERED;
             case "FAILED" -> DeliveryStatus.FAILED;
+            case "CANCELLED" -> DeliveryStatus.CANCELLED;
             default -> DeliveryStatus.UNKNOWN;
         };
     }

@@ -1,43 +1,47 @@
 package solid.humank.genaidemo.domain.common.valueobject;
 
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
+
 /**
- * 共享核心中的貨幣列舉
- * 用於在不同 Bounded Context 之間共享貨幣類型
+ * 貨幣值對象
+ * 表示不同的貨幣類型
  */
+@ValueObject
 public enum Currency {
-    TWD("TWD", "新台幣", 2),
-    USD("USD", "美元", 2),
-    JPY("JPY", "日圓", 0),
-    EUR("EUR", "歐元", 2);
-
+    TWD("新台幣", "TWD", 0),
+    USD("美元", "USD", 2),
+    EUR("歐元", "EUR", 2),
+    JPY("日元", "JPY", 0),
+    CNY("人民幣", "CNY", 2);
+    
+    private final String displayName;
     private final String code;
-    private final String name;
     private final int decimalPlaces;
-
-    Currency(String code, String name, int decimalPlaces) {
+    
+    Currency(String displayName) {
+        this(displayName, displayName, 2);
+    }
+    
+    Currency(String displayName, String code, int decimalPlaces) {
+        this.displayName = displayName;
         this.code = code;
-        this.name = name;
         this.decimalPlaces = decimalPlaces;
     }
-
+    
+    public String getDisplayName() {
+        return displayName;
+    }
+    
     public String getCode() {
         return code;
     }
-
-    public String getName() {
-        return name;
-    }
-
+    
     public int getDecimalPlaces() {
         return decimalPlaces;
     }
-
-    public static Currency fromCode(String code) {
-        for (Currency currency : values()) {
-            if (currency.code.equals(code)) {
-                return currency;
-            }
-        }
-        throw new IllegalArgumentException("Unknown currency code: " + code);
+    
+    @Override
+    public String toString() {
+        return displayName;
     }
 }

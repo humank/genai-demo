@@ -27,13 +27,14 @@ public class PackageStructureTest {
     }
 
     @Test
-    @Disabled("暫時禁用此測試，因為 Entity 註解類問題")
+    @Disabled("暫時禁用此測試，因為需要更多的重構工作來修復值對象的包結構")
     @DisplayName("領域模型應該組織在正確的包結構中")
     void domainModelShouldBeOrganizedInCorrectPackageStructure() {
         // 聚合根應該位於 aggregate 包中
         ArchRule aggregateRootRule = classes()
                 .that().haveSimpleNameEndingWith("Aggregate")
                 .or().areAnnotatedWith("solid.humank.genaidemo.domain.common.annotations.AggregateRoot")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..aggregate..");
         aggregateRootRule.check(importedClasses);
 
@@ -41,6 +42,7 @@ public class PackageStructureTest {
         ArchRule entityRule = classes()
                 .that().haveSimpleNameEndingWith("Entity")
                 .or().areAnnotatedWith("solid.humank.genaidemo.domain.common.annotations.Entity")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..entity..");
         entityRule.check(importedClasses);
 
@@ -48,6 +50,7 @@ public class PackageStructureTest {
         ArchRule valueObjectRule = classes()
                 .that().haveSimpleNameEndingWith("ValueObject")
                 .or().areAnnotatedWith("solid.humank.genaidemo.domain.common.annotations.ValueObject")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..valueobject..");
         valueObjectRule.check(importedClasses);
 
@@ -55,6 +58,7 @@ public class PackageStructureTest {
         ArchRule domainEventRule = classes()
                 .that().haveSimpleNameEndingWith("Event")
                 .and().resideInAPackage("..domain..")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..events..");
         domainEventRule.check(importedClasses);
 
@@ -62,6 +66,7 @@ public class PackageStructureTest {
         ArchRule domainServiceRule = classes()
                 .that().haveSimpleNameEndingWith("Service")
                 .and().resideInAPackage("..domain..")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..service..");
         domainServiceRule.check(importedClasses);
 
@@ -69,6 +74,7 @@ public class PackageStructureTest {
         ArchRule repositoryRule = classes()
                 .that().haveSimpleNameEndingWith("Repository")
                 .and().resideInAPackage("..domain..")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..repository..");
         repositoryRule.check(importedClasses);
 
@@ -76,6 +82,7 @@ public class PackageStructureTest {
         ArchRule factoryRule = classes()
                 .that().haveSimpleNameEndingWith("Factory")
                 .and().resideInAPackage("..domain..")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..factory..");
         factoryRule.check(importedClasses);
 
@@ -83,6 +90,7 @@ public class PackageStructureTest {
         ArchRule specificationRule = classes()
                 .that().haveSimpleNameEndingWith("Specification")
                 .and().resideInAPackage("..domain..")
+                .and().areNotAnnotations()
                 .should().resideInAPackage("..domain..specification..");
         specificationRule.check(importedClasses);
     }
