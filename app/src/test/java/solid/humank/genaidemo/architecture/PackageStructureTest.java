@@ -1,16 +1,13 @@
 package solid.humank.genaidemo.architecture;
 
-import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.core.importer.ImportOption;
-import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
+import com.tngtech.archunit.lang.ArchRule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
 /**
@@ -27,15 +24,6 @@ public class PackageStructureTest {
     private static final String DOMAIN_COMMON_PACKAGE = "solid.humank.genaidemo.domain.common";
     private static JavaClasses importedClasses;
     
-    // 允許特定類不遵循包結構規則的例外列表
-    private static final List<String> COMMON_EXCEPTIONS = Arrays.asList(
-        "solid.humank.genaidemo.domain.common.annotations.ValueObject",
-        "solid.humank.genaidemo.domain.common.annotations.Entity",
-        "solid.humank.genaidemo.domain.common.annotations.AggregateRoot",
-        "solid.humank.genaidemo.domain.common.annotations.DomainService",
-        "solid.humank.genaidemo.domain.common.entity.EntityAnnotation"
-    );
-
     @BeforeAll
     static void setup() {
         importedClasses = new ClassFileImporter()
