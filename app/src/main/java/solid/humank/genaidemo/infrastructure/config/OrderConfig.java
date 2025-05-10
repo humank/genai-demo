@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
 
 /**

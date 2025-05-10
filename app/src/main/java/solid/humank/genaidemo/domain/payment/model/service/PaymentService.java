@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.events.DomainEvent;
 import solid.humank.genaidemo.domain.common.events.DomainEventBus;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.events.PaymentCompletedEvent;
 import solid.humank.genaidemo.domain.payment.events.PaymentFailedEvent;

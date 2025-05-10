@@ -3,7 +3,7 @@ package solid.humank.genaidemo.infrastructure.order.persistence;
 import org.springframework.stereotype.Repository;
 import solid.humank.genaidemo.domain.order.repository.OrderRepository;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.HashMap;
 import java.util.List;

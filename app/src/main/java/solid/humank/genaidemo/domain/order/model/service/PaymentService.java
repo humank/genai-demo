@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.domain.order.model.service;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.PaymentResult;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 
 /**
  * 支付服務介面

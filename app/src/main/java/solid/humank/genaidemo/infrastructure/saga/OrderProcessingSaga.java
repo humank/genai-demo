@@ -3,7 +3,7 @@ package solid.humank.genaidemo.infrastructure.saga;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.infrastructure.saga.definition.SagaDefinition;
-import solid.humank.genaidemo.domain.order.model.valueobject.PaymentResult;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 
 /**

@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.application.payment.port.incoming;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 
 import java.util.List;

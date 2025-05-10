@@ -6,7 +6,6 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
@@ -27,7 +26,6 @@ public class PackageStructureTest {
     }
 
     @Test
-    @Disabled("暫時禁用此測試，因為需要更多的重構工作來修復值對象的包結構")
     @DisplayName("領域模型應該組織在正確的包結構中")
     void domainModelShouldBeOrganizedInCorrectPackageStructure() {
         // 聚合根應該位於 aggregate 包中
@@ -46,11 +44,12 @@ public class PackageStructureTest {
                 .should().resideInAPackage("..domain..entity..");
         entityRule.check(importedClasses);
 
-        // 值對象應該位於 valueobject 包中
+        // 值對象應該位於 valueobject 包中，但排除註解類
         ArchRule valueObjectRule = classes()
                 .that().haveSimpleNameEndingWith("ValueObject")
                 .or().areAnnotatedWith("solid.humank.genaidemo.domain.common.annotations.ValueObject")
                 .and().areNotAnnotations()
+                .and().doNotHaveFullyQualifiedName("solid.humank.genaidemo.domain.common.annotations.ValueObject")
                 .should().resideInAPackage("..domain..valueobject..");
         valueObjectRule.check(importedClasses);
 

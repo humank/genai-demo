@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.domain.order.model.valueobject;
+package solid.humank.genaidemo.domain.common.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -7,7 +7,10 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /**
  * 訂單ID值對象
- * 不可變的訂單唯一標識
+ * 
+ * 不可變的訂單唯一標識。
+ * 作為值對象，它是不可變的，所有屬性在創建後不能被修改。
+ * 提供了多種創建方式，包括從UUID或字符串創建。
  */
 @ValueObject
 public class OrderId {

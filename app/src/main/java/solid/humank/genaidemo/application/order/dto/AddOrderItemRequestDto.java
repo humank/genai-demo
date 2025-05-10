@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.application.order.dto;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 /**
  * 添加訂單項目請求DTO

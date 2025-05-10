@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.policy.DomainPolicy;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.specification.OrderDiscountSpecification;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 /**
  * 訂單折扣政策

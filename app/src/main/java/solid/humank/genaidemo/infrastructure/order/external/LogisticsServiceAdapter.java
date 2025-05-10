@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.application.order.port.outgoing.LogisticsServicePort;
 import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 /**
  * 物流服務適配器

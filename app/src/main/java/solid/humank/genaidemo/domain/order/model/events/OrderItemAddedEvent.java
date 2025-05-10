@@ -4,8 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.events.DomainEvent;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 public record OrderItemAddedEvent(
     UUID eventId,

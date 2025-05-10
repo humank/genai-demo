@@ -2,9 +2,9 @@ package solid.humank.genaidemo.infrastructure.order.external;
 
 import java.time.LocalDateTime;
 
-import solid.humank.genaidemo.domain.common.delivery.DeliveryStatus;
+import solid.humank.genaidemo.domain.common.valueobject.DeliveryStatus;
 import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 /**
  * 外部物流適配器

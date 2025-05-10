@@ -2,8 +2,8 @@ package solid.humank.genaidemo.domain.payment.model.aggregate;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 
 import java.util.UUID;
 

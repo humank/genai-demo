@@ -1,8 +1,8 @@
 package solid.humank.genaidemo.application.order.port.outgoing;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-import solid.humank.genaidemo.domain.order.model.valueobject.PaymentResult;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 
 /**
  * 支付服務端口 - 次要輸出端口

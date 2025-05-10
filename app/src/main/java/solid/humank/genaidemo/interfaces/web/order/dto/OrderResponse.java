@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderStatus;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderItem;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
+import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
 
 /**
  * 訂單響應 DTO

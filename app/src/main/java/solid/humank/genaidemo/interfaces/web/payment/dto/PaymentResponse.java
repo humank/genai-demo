@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.interfaces.web.payment.dto;
 
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
-import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

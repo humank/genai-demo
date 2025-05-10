@@ -2,7 +2,7 @@ package solid.humank.genaidemo.domain.order.repository;
 
 import solid.humank.genaidemo.domain.common.repository.Repository;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.List;
 import java.util.Optional;

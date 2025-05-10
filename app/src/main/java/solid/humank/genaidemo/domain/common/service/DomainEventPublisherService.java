@@ -1,15 +1,19 @@
-package solid.humank.genaidemo.domain.common.events;
+package solid.humank.genaidemo.domain.common.service;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import solid.humank.genaidemo.domain.common.events.DomainEvent;
+import solid.humank.genaidemo.domain.common.events.DomainEventBus;
 import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
  * 領域事件發布服務
- * 提供統一的事件發布機制
+ * 
+ * 提供統一的事件發布機制，負責將領域事件發布到事件匯流排。
+ * 支持通過依賴注入或靜態方法訪問。
  */
 @Service
 public class DomainEventPublisherService {

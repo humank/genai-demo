@@ -5,8 +5,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.annotations.Entity;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 
 /**
  * 支付實體

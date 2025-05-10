@@ -9,9 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagementUseCase;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
-import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentRequest;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentResponse;
 

@@ -1,9 +1,12 @@
-package solid.humank.genaidemo.domain.order.model.valueobject;
+package solid.humank.genaidemo.domain.common.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /**
- * 訂單狀態枚舉
+ * 訂單狀態值對象
+ * 
+ * 表示訂單在生命週期中的不同狀態。
+ * 提供了狀態轉換的規則，確保訂單狀態的變更符合業務邏輯。
  */
 @ValueObject
 public enum OrderStatus {
@@ -17,14 +20,30 @@ public enum OrderStatus {
 
     private final String description;
 
+    /**
+     * 建立訂單狀態
+     * 
+     * @param description 狀態描述
+     */
     OrderStatus(String description) {
         this.description = description;
     }
 
+    /**
+     * 獲取狀態描述
+     * 
+     * @return 狀態描述
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * 檢查是否可以轉換到下一個狀態
+     * 
+     * @param nextStatus 下一個狀態
+     * @return 是否可以轉換
+     */
     public boolean canTransitionTo(OrderStatus nextStatus) {
         switch (this) {
             case CREATED:

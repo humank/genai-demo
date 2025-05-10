@@ -3,10 +3,10 @@ package solid.humank.genaidemo.infrastructure.order.acl;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import solid.humank.genaidemo.domain.common.delivery.DeliveryStatus;
+import solid.humank.genaidemo.domain.common.valueobject.DeliveryStatus;
 import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 /**
  * 物流防腐層

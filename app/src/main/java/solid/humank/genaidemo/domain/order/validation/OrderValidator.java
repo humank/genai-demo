@@ -3,7 +3,7 @@ package solid.humank.genaidemo.domain.order.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.validation.DomainValidator;
 

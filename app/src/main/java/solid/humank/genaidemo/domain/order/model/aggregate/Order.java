@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Objects;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.common.events.DomainEventPublisherService;
-import solid.humank.genaidemo.domain.order.events.OrderCreatedEvent;
-import solid.humank.genaidemo.domain.order.events.OrderItemAddedEvent;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderItem;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderStatus;
+import solid.humank.genaidemo.domain.common.service.DomainEventPublisherService;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
+import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
+import solid.humank.genaidemo.domain.order.model.events.OrderCreatedEvent;
+import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
 import solid.humank.genaidemo.utils.Preconditions;
 
 /**

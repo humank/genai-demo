@@ -12,8 +12,8 @@ import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
 import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
 import solid.humank.genaidemo.application.order.dto.OrderResponse;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderStatus;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
 import solid.humank.genaidemo.interfaces.web.order.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.interfaces.web.order.dto.CreateOrderRequest;
 
@@ -90,7 +90,7 @@ class OrderControllerMockTest {
                 "台北市信義區",
                 Collections.singletonList(
                     OrderResponse.OrderItemResponse.fromOrderItem(
-                        new solid.humank.genaidemo.domain.order.model.valueobject.OrderItem(
+                        new solid.humank.genaidemo.domain.common.valueobject.OrderItem(
                             "product-1", 
                             "iPhone 15", 
                             1, 

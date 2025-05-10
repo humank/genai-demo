@@ -10,7 +10,7 @@ import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.events.DomainEventBus;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.payment.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.exceptions.ValidationException;
 import solid.humank.genaidemo.utils.Preconditions;

@@ -7,8 +7,11 @@ import java.util.Objects;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /**
- * 共享金額值對象
- * 不可變的金額表示，包含金額和幣別
+ * 金額值對象
+ * 
+ * 不可變的金額表示，包含金額和幣別。
+ * 作為值對象，它是不可變的，所有屬性在創建後不能被修改。
+ * 提供了豐富的金額計算和比較操作，確保貨幣運算的正確性。
  */
 @ValueObject
 public final class Money {
@@ -46,6 +49,7 @@ public final class Money {
      * 建立金額
      * 
      * @param amount 金額
+     * @return 金額值對象
      */
     public static Money of(double amount) {
         return new Money(BigDecimal.valueOf(amount));
@@ -55,6 +59,7 @@ public final class Money {
      * 建立金額
      * 
      * @param amount 金額
+     * @return 金額值對象
      */
     public static Money of(BigDecimal amount) {
         return new Money(amount);
@@ -64,6 +69,7 @@ public final class Money {
      * 建立台幣金額
      * 
      * @param amount 金額
+     * @return 台幣金額值對象
      */
     public static Money twd(double amount) {
         return new Money(BigDecimal.valueOf(amount), Currency.TWD);
@@ -73,6 +79,7 @@ public final class Money {
      * 建立台幣金額
      * 
      * @param amount 金額
+     * @return 台幣金額值對象
      */
     public static Money twd(int amount) {
         return new Money(BigDecimal.valueOf(amount), Currency.TWD);
@@ -82,6 +89,7 @@ public final class Money {
      * 建立美金金額
      * 
      * @param amount 金額
+     * @return 美金金額值對象
      */
     public static Money usd(double amount) {
         return new Money(BigDecimal.valueOf(amount), Currency.USD);
@@ -89,6 +97,8 @@ public final class Money {
 
     /**
      * 建立零金額
+     * 
+     * @return 零金額值對象
      */
     public static Money zero() {
         return new Money(BigDecimal.ZERO);
@@ -99,6 +109,7 @@ public final class Money {
      * 
      * @param other 另一個金額
      * @return 相加後的金額
+     * @throws IllegalArgumentException 如果幣別不同
      */
     public Money add(Money other) {
         if (!this.currency.equals(other.currency)) {
@@ -112,6 +123,7 @@ public final class Money {
      * 
      * @param other 另一個金額
      * @return 相減後的金額
+     * @throws IllegalArgumentException 如果幣別不同
      */
     public Money subtract(Money other) {
         if (!this.currency.equals(other.currency)) {
@@ -150,10 +162,20 @@ public final class Money {
     }
 
     /**
+     * 是否為負數或零
+     * 
+     * @return 是否為負數或零
+     */
+    public boolean isNegativeOrZero() {
+        return this.amount.compareTo(BigDecimal.ZERO) <= 0;
+    }
+
+    /**
      * 是否大於另一個金額
      * 
      * @param other 另一個金額
      * @return 是否大於
+     * @throws IllegalArgumentException 如果幣別不同
      */
     public boolean isGreaterThan(Money other) {
         if (!this.currency.equals(other.currency)) {
@@ -167,6 +189,7 @@ public final class Money {
      * 
      * @param other 另一個金額
      * @return 是否小於
+     * @throws IllegalArgumentException 如果幣別不同
      */
     public boolean isLessThan(Money other) {
         if (!this.currency.equals(other.currency)) {

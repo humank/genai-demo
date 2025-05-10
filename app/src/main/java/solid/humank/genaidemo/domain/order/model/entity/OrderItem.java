@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.domain.order.model.entity;
 
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 import java.util.UUID;
 

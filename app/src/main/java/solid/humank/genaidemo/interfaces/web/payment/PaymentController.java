@@ -3,7 +3,7 @@ package solid.humank.genaidemo.interfaces.web.payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagementUseCase;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentRequest;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentResponse;

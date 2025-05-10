@@ -1,8 +1,12 @@
-package solid.humank.genaidemo.domain.common.delivery;
+package solid.humank.genaidemo.domain.common.valueobject;
+
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /**
- * 物流狀態枚舉
+ * 物流狀態值對象
+ * 表示物流訂單的不同狀態
  */
+@ValueObject
 public enum DeliveryStatus {
     PENDING("待處理"),
     SHIPPED("已發貨"),

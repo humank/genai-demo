@@ -1,6 +1,9 @@
 package solid.humank.genaidemo.application.order.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+
 import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
 import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
 import solid.humank.genaidemo.application.order.dto.OrderResponse;
@@ -8,13 +11,9 @@ import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUse
 import solid.humank.genaidemo.application.order.port.outgoing.LogisticsServicePort;
 import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.factory.OrderFactory;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 訂單應用服務

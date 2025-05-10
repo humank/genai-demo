@@ -2,9 +2,9 @@ package solid.humank.genaidemo.infrastructure.order.external;
 
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
-import solid.humank.genaidemo.domain.order.model.valueobject.PaymentResult;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 
 /**
  * 支付服務適配器

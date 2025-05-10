@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.infrastructure.order.acl;
 
 import java.time.LocalDateTime;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 /**
  * 配送訂單

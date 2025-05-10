@@ -2,7 +2,7 @@ package solid.humank.genaidemo.application.payment.service;
 
 import org.springframework.stereotype.Service;
 import solid.humank.genaidemo.domain.common.events.DomainEventBus;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagementUseCase;
 import solid.humank.genaidemo.application.payment.port.outgoing.PaymentPersistencePort;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;

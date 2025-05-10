@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.domain.payment.events;
 
 import solid.humank.genaidemo.domain.common.events.DomainEvent;
-import solid.humank.genaidemo.domain.order.model.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.application.order.port.outgoing;
 
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
-import solid.humank.genaidemo.domain.order.model.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.Optional;
 import java.util.List;
