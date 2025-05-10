@@ -1,92 +1,54 @@
-# DDD 架構測試
+# 架構測試說明
 
-本目錄包含使用 ArchUnit 實現的架構測試，用於確保專案遵循領域驅動設計 (DDD) 的最佳實踐。
+本目錄包含用於確保專案架構符合 DDD 最佳實踐的測試。
 
-## 測試類別說明
+## 包結構規則
 
-### 1. DddArchitectureTest
+1. `solid.humank.genaidemo.domain.common` - 通用和共用的物件
+2. `solid.humank.genaidemo.domain.order` 和 `solid.humank.genaidemo.domain.payment` - 子領域
+   - 子領域下的 `model` 包含 DDD 戰術設計中的領域模型層元素
 
-確保專案遵循 DDD 分層架構的設計原則，包括：
+## 測試內容
 
-- 領域層 (Domain Layer)：包含業務邏輯和規則的核心層
-- 應用層 (Application Layer)：協調領域對象完成用戶的實際任務
-- 基礎設施層 (Infrastructure Layer)：提供技術能力支持其他層
-- 介面層 (Interface Layer)：負責向用戶或外部系統展示信息並接收輸入
-
-這些測試確保各層之間的依賴關係符合 DDD 的原則：外層可以依賴內層，但內層不能依賴外層。
-
-### 2. DddTacticalPatternsTest
-
-確保正確實現 DDD 戰術模式，包括：
-
-- 值對象 (Value Objects)：應該是不可變的
-- 實體 (Entities)：應該有唯一標識
-- 聚合根 (Aggregate Roots)：應該控制其內部實體的訪問
-- 領域事件 (Domain Events)：應該是不可變的
-- 儲存庫 (Repositories)：應該操作聚合根
-- 工廠 (Factories)：應該創建聚合或複雜值對象
-- 領域服務 (Domain Services)：應該是無狀態的
-- 規格 (Specifications)：應該實現 Specification 接口
-- 防腐層 (Anti-corruption Layer)：應該隔離外部系統
-
-### 3. PackageStructureTest
+### PackageStructureTest
 
 確保專案的包結構符合 DDD 最佳實踐，包括：
 
-- 領域模型應該組織在正確的包結構中
-- 應用層應該組織在正確的包結構中
-- 基礎設施層應該組織在正確的包結構中
-- 介面層應該組織在正確的包結構中
+1. **領域模型組織**：
+   - 聚合根位於 `model.aggregate` 包中
+   - 實體位於 `model.entity` 包中
+   - 值對象位於 `common.valueobject` 或 `model.valueobject` 包中
+   - 領域事件位於 `events` 或 `model.events` 包中
+   - 領域服務位於 `service` 或 `model.service` 包中
+   - 儲存庫接口位於 `repository` 包中
+   - 工廠位於 `factory` 或 `model.factory` 包中
+   - 規格位於 `specification` 或 `model.specification` 包中
 
-## 如何運行測試
+2. **子領域模型結構**：
+   - 子領域的模型元素位於 `model` 包中
+   - 子領域的聚合根位於 `model.aggregate` 包中
 
-使用 Gradle 運行測試：
+3. **應用層組織**：
+   - 應用服務位於 `application.service` 包中
+   - DTO 位於 `application.dto` 包中
+   - 端口位於 `application.port` 包中
 
-```bash
-./gradlew test --tests "solid.humank.genaidemo.architecture.*"
-```
+4. **基礎設施層組織**：
+   - 儲存庫實現位於 `infrastructure.persistence` 包中
+   - 防腐層位於 `infrastructure.acl` 包中
+   - 外部系統適配器位於 `infrastructure.external` 或 `infrastructure.*.external` 包中
+   - Saga 位於 `infrastructure.saga` 包中
 
-## 如何解讀測試結果
+5. **介面層組織**：
+   - 控制器位於 `interfaces.web` 包中
+   - 請求/響應 DTO 位於 `interfaces.web.dto` 包中
 
-如果測試失敗，錯誤訊息會指出哪些類別違反了架構規則
+## 靈活性
 
-## 如何修復架構違規
+測試規則允許一些例外情況，例如：
 
-1. **識別問題**：理解錯誤訊息中指出的具體違規。
-2. **分析依賴**：確定為什麼會有這種依賴關係。
-3. **重構代碼**：
-   - 如果內層依賴外層，考慮使用依賴倒置原則。
-   - 如果類別位於錯誤的包中，將其移動到正確的包。
-   - 如果設計模式使用不當，重新設計以符合 DDD 原則。
+- 通用註解類不需要遵循包結構規則
+- 共用物件可以位於 `domain.common` 包中
+- 值對象可以位於 `common.valueobject` 或 `model.valueobject` 包中
 
-## 常見架構違規及解決方案
-
-### 1. 領域層依賴應用層
-
-**問題**：領域模型不應該依賴應用服務。
-
-**解決方案**：
-
-- 將應用層邏輯移到應用服務中
-- 使用領域事件進行通信
-- 使用依賴倒置原則定義接口
-
-### 2. 聚合根直接訪問其他聚合根
-
-**問題**：聚合根應該通過ID引用其他聚合根，而不是直接引用。
-
-**解決方案**：
-
-- 使用ID引用其他聚合根
-- 使用領域事件進行聚合間通信
-- 使用領域服務協調多個聚合
-
-### 3. 基礎設施關注點滲透到領域層
-
-**問題**：領域模型不應該包含持久化或技術細節。
-
-**解決方案**：
-
-- 使用儲存庫模式隔離持久化邏輯
-- 使用依賴倒置定義接口
-- 將技術細節移到基礎設施層
+這些靈活性使得架構測試能夠適應實際開發需求，同時確保整體架構符合 DDD 最佳實踐。
