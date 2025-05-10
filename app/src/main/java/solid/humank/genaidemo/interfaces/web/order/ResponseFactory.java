@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import solid.humank.genaidemo.interfaces.web.order.dto.ErrorResponse;
-import solid.humank.genaidemo.application.order.dto.OrderResponse;
-import solid.humank.genaidemo.domain.order.model.service.OrderProcessingService.OrderProcessingResult;
+import solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse;
 
 /**
  * 響應工廠
@@ -20,20 +18,20 @@ public class ResponseFactory {
     /**
      * 創建錯誤響應
      */
-    public ResponseEntity<ErrorResponse> createErrorResponse(String message) {
+    public ResponseEntity<ApiErrorResponse> createErrorResponse(String message) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(message));
+                .body(new ApiErrorResponse(message));
     }
     
     /**
      * 創建訂單處理響應
      */
-    public ResponseEntity<Object> createOrderProcessingResponse(OrderProcessingResult result, OrderResponse order) {
-        if (!result.success()) {
+    public ResponseEntity<Object> createOrderProcessingResponse(boolean success, List<String> errors, OrderResponse order) {
+        if (!success) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse(result.errors()));
+                    .body(new ApiErrorResponse(errors));
         }
         
         return ResponseEntity
@@ -57,5 +55,25 @@ public class ResponseFactory {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orders);
+    }
+    
+    /**
+     * API錯誤響應
+     * 在響應工廠中定義，避免跨層依賴
+     */
+    public static class ApiErrorResponse {
+        private final List<String> errors;
+
+        public ApiErrorResponse(String error) {
+            this.errors = List.of(error);
+        }
+
+        public ApiErrorResponse(List<String> errors) {
+            this.errors = errors;
+        }
+
+        public List<String> getErrors() {
+            return errors;
+        }
     }
 }

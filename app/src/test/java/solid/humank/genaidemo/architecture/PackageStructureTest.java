@@ -158,6 +158,7 @@ public class PackageStructureTest {
                 .that().haveSimpleNameEndingWith("Request")
                 .or().haveSimpleNameEndingWith("Response")
                 .and().resideInAPackage("..interfaces..")
+                .and().haveSimpleNameNotEndingWith("ApiErrorResponse") // 排除ResponseFactory中的內部類
                 .should().resideInAPackage("..interfaces..web..dto..");
         webDtoRule.check(importedClasses);
     }

@@ -2,6 +2,7 @@ package solid.humank.genaidemo.interfaces.web.order.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.valueobject.Money;
@@ -15,14 +16,14 @@ public class OrderResponse {
     private final String orderId;
     private final String customerId;
     private final String shippingAddress;
-    private final List<OrderItemResponse> items;
+    private final List<WebOrderItemResponse> items;
     private final Money totalAmount;
     private final OrderStatus status;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
     public OrderResponse(String orderId, String customerId, String shippingAddress,
-                        List<OrderItemResponse> items, Money totalAmount, OrderStatus status,
+                        List<WebOrderItemResponse> items, Money totalAmount, OrderStatus status,
                         LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.orderId = orderId;
         this.customerId = customerId;
@@ -35,9 +36,9 @@ public class OrderResponse {
     }
 
     public static OrderResponse fromOrder(Order order) {
-        List<OrderItemResponse> items = order.getItems().stream()
-                .map(OrderItemResponse::fromOrderItem)
-                .toList();
+        List<WebOrderItemResponse> items = order.getItems().stream()
+                .map(WebOrderItemResponse::fromOrderItem)
+                .collect(Collectors.toList());
 
         return new OrderResponse(
                 order.getId().toString(),
@@ -67,7 +68,7 @@ public class OrderResponse {
         return shippingAddress;
     }
 
-    public List<OrderItemResponse> getItems() {
+    public List<WebOrderItemResponse> getItems() {
         return items;
     }
 
@@ -87,14 +88,17 @@ public class OrderResponse {
         return updatedAt;
     }
 
-    public static class OrderItemResponse {
+    /**
+     * 介面層訂單項目響應DTO
+     */
+    public static class WebOrderItemResponse {
         private final String productId;
         private final String productName;
         private final int quantity;
         private final Money price;
         private final Money subtotal;
 
-        private OrderItemResponse(String productId, String productName, int quantity, Money price, Money subtotal) {
+        private WebOrderItemResponse(String productId, String productName, int quantity, Money price, Money subtotal) {
             this.productId = productId;
             this.productName = productName;
             this.quantity = quantity;
@@ -102,8 +106,8 @@ public class OrderResponse {
             this.subtotal = subtotal;
         }
 
-        public static OrderItemResponse fromOrderItem(OrderItem item) {
-            return new OrderItemResponse(
+        public static WebOrderItemResponse fromOrderItem(OrderItem item) {
+            return new WebOrderItemResponse(
                     item.getProductId(),
                     item.getProductName(),
                     item.getQuantity(),

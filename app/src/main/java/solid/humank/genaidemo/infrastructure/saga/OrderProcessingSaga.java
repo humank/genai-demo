@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.infrastructure.saga.definition.SagaDefinition;
 import solid.humank.genaidemo.domain.order.model.valueobject.PaymentResult;
-import solid.humank.genaidemo.domain.order.model.service.PaymentService;
+import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 
 /**
  * 訂單處理 Saga
@@ -12,15 +12,15 @@ import solid.humank.genaidemo.domain.order.model.service.PaymentService;
  */
 @Component
 public class OrderProcessingSaga implements SagaDefinition<OrderSagaContext> {
-    private final PaymentService paymentService;
+    private final PaymentServicePort paymentServicePort;
     
     /**
      * 建立訂單處理 Saga
      */
     public OrderProcessingSaga(
-        PaymentService paymentService
+        PaymentServicePort paymentServicePort
     ) {
-        this.paymentService = paymentService;
+        this.paymentServicePort = paymentServicePort;
     }
     
     @Override
@@ -39,8 +39,8 @@ public class OrderProcessingSaga implements SagaDefinition<OrderSagaContext> {
         Order order = context.getOrder();
         
         // 處理支付
-        PaymentResult result = paymentService.processPayment(
-            order.getId().toString(),
+        PaymentResult result = paymentServicePort.processPayment(
+            order.getId(),
             order.getTotalAmount()
         );
         
@@ -68,7 +68,8 @@ public class OrderProcessingSaga implements SagaDefinition<OrderSagaContext> {
     public void compensate(OrderSagaContext context, Exception exception) {
         // 補償邏輯
         if (context.getPaymentId() != null) {
-            paymentService.refundPayment(context.getPaymentId());
+            // 使用應用層端口進行退款
+            paymentServicePort.processRefund(context.getOrder().getId(), context.getOrder().getTotalAmount());
         }
         
         // 取消訂單

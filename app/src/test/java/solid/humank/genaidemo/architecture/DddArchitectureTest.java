@@ -34,11 +34,18 @@ public class DddArchitectureTest {
     }
 
     @Test
-    @Disabled("暫時禁用此測試，因為標準庫依賴問題")
     @DisplayName("應該遵循分層架構")
     void shouldFollowLayeredArchitecture() {
         ArchRule rule = layeredArchitecture()
-                .consideringAllDependencies()
+                .consideringOnlyDependenciesInAnyPackage(BASE_PACKAGE)
+                .ignoreDependency(Object.class, Object.class) // 忽略標準庫依賴
+                .ignoreDependency(java.util.UUID.class, java.util.UUID.class)
+                .ignoreDependency(java.util.List.class, java.util.List.class)
+                .ignoreDependency(java.util.Map.class, java.util.Map.class)
+                .ignoreDependency(java.util.Optional.class, java.util.Optional.class)
+                .ignoreDependency(java.lang.String.class, java.lang.String.class)
+                .ignoreDependency(java.time.LocalDateTime.class, java.time.LocalDateTime.class)
+                .ignoreDependency(java.math.BigDecimal.class, java.math.BigDecimal.class)
                 .layer("Domain").definedBy(DOMAIN_PACKAGE)
                 .layer("Application").definedBy(APPLICATION_PACKAGE)
                 .layer("Infrastructure").definedBy(INFRASTRUCTURE_PACKAGE)
