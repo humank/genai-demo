@@ -50,13 +50,19 @@ class DomainEventPublisherServiceTest {
     @Test
     @DisplayName("發布空事件時應該拋出IllegalArgumentException")
     void shouldThrowExceptionWhenPublishingNullEvent() {
-        // Act
+        // Act & Assert
+        verifyNullEventException();
+    }
+    
+    /**
+     * 輔助方法：驗證發布空事件時拋出的異常
+     */
+    private void verifyNullEventException() {
         IllegalArgumentException exception = assertThrows(
             IllegalArgumentException.class, 
             () -> publisherService.publish(null)
         );
         
-        // Assert
         assertEquals("事件不能為空", exception.getMessage(), "異常訊息應該指出事件不能為空");
     }
     
@@ -85,14 +91,8 @@ class DomainEventPublisherServiceTest {
         // 由於無法直接測試靜態方法，這裡只測試實例方法的行為
         // 因為靜態方法內部也會執行相同的空檢查邏輯
         
-        // Act
-        IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class, 
-            () -> publisherService.publish(null)
-        );
-        
-        // Assert
-        assertEquals("事件不能為空", exception.getMessage(), "異常訊息應該指出事件不能為空");
+        // Act & Assert
+        verifyNullEventException();
     }
     
     @Test
@@ -178,10 +178,6 @@ class DomainEventPublisherServiceTest {
         @Override
         public String getEventType() {
             return eventType;
-        }
-        
-        public String getMessage() {
-            return message;
         }
     }
 }
