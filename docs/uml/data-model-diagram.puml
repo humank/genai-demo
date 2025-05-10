@@ -1,0 +1,207 @@
+@startuml Data Model Diagram
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+!define foreign_key(x) <i>x</i>
+!define unique(x) <b>x</b>
+!define not_null(x) <b>x</b>
+!define index(x) <color:blue>x</color>
+
+hide methods
+hide stereotypes
+
+skinparam class {
+    BackgroundColor #ECECEC
+    ArrowColor #333333
+    BorderColor #333333
+}
+
+title Order System Data Model
+
+' Order Tables
+package "Order Context" {
+    table(orders) {
+        primary_key(id) VARCHAR
+        foreign_key(customer_id) VARCHAR
+        not_null(status) VARCHAR
+        not_null(total_amount) DECIMAL
+        not_null(currency) VARCHAR
+        not_null(created_at) TIMESTAMP
+        updated_at TIMESTAMP
+        version INT
+    }
+    
+    table(order_items) {
+        primary_key(id) VARCHAR
+        foreign_key(order_id) VARCHAR
+        not_null(product_id) VARCHAR
+        not_null(product_name) VARCHAR
+        not_null(quantity) INT
+        not_null(unit_price) DECIMAL
+        not_null(currency) VARCHAR
+    }
+    
+    table(order_events) {
+        primary_key(id) VARCHAR
+        foreign_key(order_id) VARCHAR
+        not_null(event_type) VARCHAR
+        not_null(event_data) JSON
+        not_null(created_at) TIMESTAMP
+        not_null(sequence) INT
+    }
+}
+
+' Payment Tables
+package "Payment Context" {
+    table(payments) {
+        primary_key(id) VARCHAR
+        foreign_key(order_id) VARCHAR
+        not_null(amount) DECIMAL
+        not_null(currency) VARCHAR
+        not_null(status) VARCHAR
+        not_null(payment_method) VARCHAR
+        payment_reference VARCHAR
+        not_null(created_at) TIMESTAMP
+        updated_at TIMESTAMP
+    }
+    
+    table(refunds) {
+        primary_key(id) VARCHAR
+        foreign_key(payment_id) VARCHAR
+        not_null(amount) DECIMAL
+        not_null(currency) VARCHAR
+        not_null(status) VARCHAR
+        reason VARCHAR
+        not_null(created_at) TIMESTAMP
+        updated_at TIMESTAMP
+    }
+    
+    table(payment_events) {
+        primary_key(id) VARCHAR
+        foreign_key(payment_id) VARCHAR
+        not_null(event_type) VARCHAR
+        not_null(event_data) JSON
+        not_null(created_at) TIMESTAMP
+        not_null(sequence) INT
+    }
+}
+
+' Delivery Tables
+package "Delivery Context" {
+    table(deliveries) {
+        primary_key(id) VARCHAR
+        foreign_key(order_id) VARCHAR
+        not_null(status) VARCHAR
+        not_null(address_line1) VARCHAR
+        address_line2 VARCHAR
+        not_null(city) VARCHAR
+        not_null(state) VARCHAR
+        not_null(country) VARCHAR
+        not_null(postal_code) VARCHAR
+        tracking_number VARCHAR
+        estimated_delivery_date DATE
+        actual_delivery_date DATE
+        not_null(created_at) TIMESTAMP
+        updated_at TIMESTAMP
+    }
+    
+    table(delivery_events) {
+        primary_key(id) VARCHAR
+        foreign_key(delivery_id) VARCHAR
+        not_null(event_type) VARCHAR
+        not_null(event_data) JSON
+        not_null(created_at) TIMESTAMP
+        not_null(sequence) INT
+    }
+}
+
+' Customer Tables
+package "Customer Context" {
+    table(customers) {
+        primary_key(id) VARCHAR
+        not_null(email) VARCHAR
+        not_null(first_name) VARCHAR
+        not_null(last_name) VARCHAR
+        phone_number VARCHAR
+        not_null(created_at) TIMESTAMP
+        updated_at TIMESTAMP
+    }
+    
+    table(addresses) {
+        primary_key(id) VARCHAR
+        foreign_key(customer_id) VARCHAR
+        not_null(address_type) VARCHAR
+        not_null(address_line1) VARCHAR
+        address_line2 VARCHAR
+        not_null(city) VARCHAR
+        not_null(state) VARCHAR
+        not_null(country) VARCHAR
+        not_null(postal_code) VARCHAR
+        is_default BOOLEAN
+    }
+}
+
+' Inventory Tables
+package "Inventory Context" {
+    table(inventory_items) {
+        primary_key(id) VARCHAR
+        not_null(product_id) VARCHAR
+        not_null(quantity_available) INT
+        not_null(quantity_reserved) INT
+        not_null(updated_at) TIMESTAMP
+        version INT
+    }
+    
+    table(inventory_reservations) {
+        primary_key(id) VARCHAR
+        foreign_key(order_id) VARCHAR
+        foreign_key(product_id) VARCHAR
+        not_null(quantity) INT
+        not_null(status) VARCHAR
+        not_null(created_at) TIMESTAMP
+        expiration_time TIMESTAMP
+    }
+}
+
+' Relationships
+orders "1" -- "0..*" order_items : contains
+orders "1" -- "0..*" order_events : generates
+orders "1" -- "0..1" payments : has
+payments "1" -- "0..*" refunds : has
+payments "1" -- "0..*" payment_events : generates
+orders "1" -- "0..1" deliveries : has
+deliveries "1" -- "0..*" delivery_events : generates
+customers "1" -- "0..*" orders : places
+customers "1" -- "0..*" addresses : has
+orders "1" -- "0..*" inventory_reservations : reserves
+
+' Indexes
+note right of orders
+  <b>Indexes:</b>
+  - customer_id
+  - status, created_at
+end note
+
+note right of payments
+  <b>Indexes:</b>
+  - order_id
+  - status, created_at
+end note
+
+note right of deliveries
+  <b>Indexes:</b>
+  - order_id
+  - status
+  - tracking_number
+end note
+
+note right of customers
+  <b>Indexes:</b>
+  - email (unique)
+end note
+
+note right of inventory_items
+  <b>Indexes:</b>
+  - product_id (unique)
+end note
+
+@enduml

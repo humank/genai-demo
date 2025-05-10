@@ -5,41 +5,78 @@ LAYOUT_WITH_LEGEND()
 
 title 訂單系統組件圖
 
-Component(rest_api, "REST API控制器", "Spring MVC", "提供HTTP端點")
-Component(app_service, "應用服務", "Spring Service", "處理業務邏輯")
-Component(domain_model, "領域模型", "Domain", "核心業務邏輯")
+Container_Boundary(interfaces, "介面層") {
+    Component(rest_api, "REST API控制器", "Spring MVC", "提供HTTP端點")
+    Component(order_controller, "OrderController", "Controller", "處理訂單相關請求")
+    Component(payment_controller, "PaymentController", "Controller", "處理支付相關請求")
+}
+
+Container_Boundary(application, "應用層") {
+    Component(order_app_service, "OrderApplicationService", "Service", "處理訂單業務邏輯")
+    Component(payment_app_service, "PaymentApplicationService", "Service", "處理支付業務邏輯")
+}
 
 Container_Boundary(ports, "端口") {
-    Component(in_port, "OrderManagementUseCase", "Port", "入站端口")
-    Component(out_port_db, "OrderPersistencePort", "Port", "出站端口 - 持久化")
+    Component(in_port_order, "OrderManagementUseCase", "Port", "訂單入站端口")
+    Component(in_port_payment, "PaymentManagementUseCase", "Port", "支付入站端口")
+    Component(out_port_db_order, "OrderPersistencePort", "Port", "訂單出站端口 - 持久化")
+    Component(out_port_db_payment, "PaymentPersistencePort", "Port", "支付出站端口 - 持久化")
     Component(out_port_payment, "PaymentServicePort", "Port", "出站端口 - 支付")
     Component(out_port_logistics, "LogisticsServicePort", "Port", "出站端口 - 物流")
 }
 
-Container_Boundary(adapters, "適配器") {
-    Component(jpa_repo, "JPA儲存庫", "Spring Data", "資料持久化")
-    Component(payment_adapter, "支付適配器", "Adapter", "支付服務整合")
-    Component(logistics_adapter, "物流適配器", "Adapter", "物流服務整合")
+Container_Boundary(domain, "領域層") {
+    Component(order_aggregate, "Order", "Aggregate", "訂單聚合根")
+    Component(payment_aggregate, "Payment", "Aggregate", "支付聚合根")
+    Component(order_factory, "OrderFactory", "Factory", "建立訂單")
+    Component(domain_events, "DomainEvents", "Events", "領域事件")
+    Component(order_service, "OrderProcessingService", "Service", "訂單處理服務")
+    Component(payment_service, "PaymentService", "Service", "支付處理服務")
 }
 
-Container_Boundary(core, "核心領域") {
-    Component(order_aggregate, "訂單聚合根", "Aggregate", "訂單核心邏輯")
-    Component(order_factory, "訂單工廠", "Factory", "建立訂單")
-    Component(domain_events, "領域事件", "Events", "領域事件發布")
+Container_Boundary(infrastructure, "基礎設施層") {
+    Component(order_persistence, "OrderPersistenceAdapter", "Adapter", "訂單持久化適配器")
+    Component(payment_persistence, "PaymentPersistenceAdapter", "Adapter", "支付持久化適配器")
+    Component(payment_adapter, "PaymentServiceAdapter", "Adapter", "支付服務適配器")
+    Component(logistics_adapter, "LogisticsServiceAdapter", "Adapter", "物流服務適配器")
+    Component(jpa_order_repo, "JpaOrderRepository", "Repository", "訂單JPA儲存庫")
+    Component(jpa_payment_repo, "JpaPaymentRepository", "Repository", "支付JPA儲存庫")
+    Component(acl, "LogisticsAntiCorruptionLayer", "ACL", "物流防腐層")
 }
 
-Rel(rest_api, in_port, "使用")
-Rel(in_port, app_service, "實現")
-Rel(app_service, domain_model, "使用")
-Rel(domain_model, out_port_db, "使用")
-Rel(domain_model, out_port_payment, "使用")
-Rel(domain_model, out_port_logistics, "使用")
+' 介面層與應用層的關係
+Rel(order_controller, in_port_order, "使用")
+Rel(payment_controller, in_port_payment, "使用")
 
-Rel(jpa_repo, out_port_db, "實現")
+' 應用層與端口的關係
+Rel(order_app_service, in_port_order, "實現")
+Rel(payment_app_service, in_port_payment, "實現")
+Rel(order_app_service, out_port_db_order, "使用")
+Rel(order_app_service, out_port_payment, "使用")
+Rel(order_app_service, out_port_logistics, "使用")
+Rel(payment_app_service, out_port_db_payment, "使用")
+
+' 應用層與領域層的關係
+Rel(order_app_service, order_aggregate, "使用")
+Rel(order_app_service, order_factory, "使用")
+Rel(payment_app_service, payment_aggregate, "使用")
+
+' 領域層內部關係
+Rel(order_aggregate, domain_events, "發布事件")
+Rel(payment_aggregate, domain_events, "發布事件")
+Rel(order_factory, order_aggregate, "建立")
+Rel(order_service, order_aggregate, "操作")
+Rel(payment_service, payment_aggregate, "操作")
+
+' 基礎設施層與端口的關係
+Rel(order_persistence, out_port_db_order, "實現")
+Rel(payment_persistence, out_port_db_payment, "實現")
 Rel(payment_adapter, out_port_payment, "實現")
 Rel(logistics_adapter, out_port_logistics, "實現")
 
-Rel(order_factory, order_aggregate, "建立")
-Rel(order_aggregate, domain_events, "發布事件")
+' 基礎設施層內部關係
+Rel(order_persistence, jpa_order_repo, "使用")
+Rel(payment_persistence, jpa_payment_repo, "使用")
+Rel(logistics_adapter, acl, "使用")
 
 @enduml

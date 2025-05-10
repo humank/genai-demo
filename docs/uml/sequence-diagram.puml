@@ -1,15 +1,17 @@
 @startuml 訂單處理時序圖
 skinparam responseMessageBelowArrow true
 
-participant "Client" as C
+actor "Client" as C
 participant "OrderController" as OC
 participant "OrderApplicationService" as OAS
 participant "OrderFactory" as OF
 participant "Order" as O
-participant "PaymentService" as PS
-participant "LogisticsService" as LS
-participant "EventBus" as EB
+participant "OrderRepository" as OR
+participant "PaymentServicePort" as PSP
+participant "LogisticsServicePort" as LSP
+participant "DomainEventPublisher" as DEP
 
+== 建立訂單 ==
 C -> OC: createOrder(CreateOrderRequest)
 activate OC
 
@@ -18,32 +20,117 @@ activate OAS
 
 OAS -> OF: createOrder()
 activate OF
+OF --> OAS: Order
+deactivate OF
 
-OF -> O: new Order()
+OAS -> O: addItems(items)
 activate O
+O --> OAS: void
+deactivate O
 
-O -> EB: publish(OrderCreatedEvent)
-activate EB
-deactivate EB
+OAS -> OR: save(order)
+activate OR
+OR --> OAS: Order
+deactivate OR
 
-OAS -> PS: processPayment()
-activate PS
-PS --> OAS: PaymentResult
-deactivate PS
+OAS -> O: create()
+activate O
+O -> DEP: publish(OrderCreatedEvent)
+activate DEP
+DEP --> O: void
+deactivate DEP
+O --> OAS: void
+deactivate O
+
+OAS --> OC: OrderResponse
+deactivate OAS
+
+OC --> C: OrderResponse
+deactivate OC
+
+== 處理支付 ==
+C -> OC: processOrder(orderId)
+activate OC
+
+OC -> OAS: processOrder(orderId)
+activate OAS
+
+OAS -> OR: findById(orderId)
+activate OR
+OR --> OAS: Order
+deactivate OR
+
+OAS -> PSP: processPayment(order)
+activate PSP
+PSP --> OAS: PaymentResult
+deactivate PSP
 
 alt 支付成功
-    OAS -> LS: arrangeDelivery()
-    activate LS
-    LS --> OAS: DeliveryStatus
-    deactivate LS
     OAS -> O: updateStatus(CONFIRMED)
+    activate O
+    O -> DEP: publish(StatusChangedEvent)
+    activate DEP
+    DEP --> O: void
+    deactivate DEP
+    O --> OAS: void
+    deactivate O
+    
+    OAS -> LSP: arrangeDelivery(order)
+    activate LSP
+    LSP --> OAS: DeliveryStatus
+    deactivate LSP
 else 支付失敗
     OAS -> O: updateStatus(FAILED)
+    activate O
+    O -> DEP: publish(StatusChangedEvent)
+    activate DEP
+    DEP --> O: void
+    deactivate DEP
+    O --> OAS: void
+    deactivate O
 end
 
-O -> EB: publish(StatusChangedEvent)
-activate EB
-deactivate EB
+OAS -> OR: save(order)
+activate OR
+OR --> OAS: Order
+deactivate OR
+
+OAS --> OC: OrderResponse
+deactivate OAS
+
+OC --> C: OrderResponse
+deactivate OC
+
+== 添加訂單項目 ==
+C -> OC: addOrderItem(AddOrderItemRequest)
+activate OC
+
+OC -> OAS: addOrderItem(AddOrderItemCommand)
+activate OAS
+
+OAS -> OR: findById(orderId)
+activate OR
+OR --> OAS: Order
+deactivate OR
+
+OAS -> OF: createOrderItem(productId, quantity, price)
+activate OF
+OF --> OAS: OrderItem
+deactivate OF
+
+OAS -> O: addItem(orderItem)
+activate O
+O -> DEP: publish(OrderItemAddedEvent)
+activate DEP
+DEP --> O: void
+deactivate DEP
+O --> OAS: void
+deactivate O
+
+OAS -> OR: save(order)
+activate OR
+OR --> OAS: Order
+deactivate OR
 
 OAS --> OC: OrderResponse
 deactivate OAS

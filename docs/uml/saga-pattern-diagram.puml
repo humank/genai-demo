@@ -1,0 +1,143 @@
+@startuml 訂單處理Saga模式圖
+skinparam sequenceMessageAlign center
+skinparam sequenceGroupBorderColor #4682B4
+skinparam sequenceGroupBackgroundColor #E0FFFF
+skinparam sequenceReferenceBackgroundColor #FFFACD
+skinparam sequenceReferenceHeaderBackgroundColor #FFE4B5
+skinparam sequenceReferenceArrowColor #4682B4
+skinparam sequenceLifeLineBorderColor #4682B4
+
+title 訂單處理Saga模式
+
+participant "OrderService" as OS
+participant "OrderSaga" as OSaga
+participant "PaymentService" as PS
+participant "LogisticsService" as LS
+participant "InventoryService" as IS
+participant "NotificationService" as NS
+participant "EventBus" as EB
+
+== 訂單創建階段 ==
+[-> OS: createOrder()
+activate OS
+OS -> EB: publish(OrderCreatedEvent)
+activate EB
+EB -> OSaga: handle(OrderCreatedEvent)
+deactivate EB
+activate OSaga
+
+group 訂單處理Saga
+    == 庫存檢查階段 ==
+    OSaga -> IS: checkInventory(orderId)
+    activate IS
+    
+    alt 庫存充足
+        IS --> OSaga: InventoryReservedEvent
+        deactivate IS
+        
+        == 支付處理階段 ==
+        OSaga -> PS: processPayment(orderId)
+        activate PS
+        
+        alt 支付成功
+            PS --> OSaga: PaymentCompletedEvent
+            deactivate PS
+            
+            == 物流處理階段 ==
+            OSaga -> LS: arrangeDelivery(orderId)
+            activate LS
+            
+            alt 物流安排成功
+                LS --> OSaga: DeliveryArrangedEvent
+                deactivate LS
+                
+                == 完成訂單階段 ==
+                OSaga -> OS: completeOrder(orderId)
+                activate OS
+                OS --> OSaga: OrderCompletedEvent
+                deactivate OS
+                
+                OSaga -> NS: sendOrderConfirmation(orderId)
+                activate NS
+                NS --> OSaga: NotificationSentEvent
+                deactivate NS
+                
+            else 物流安排失敗
+                LS --> OSaga: DeliveryFailedEvent
+                deactivate LS
+                
+                == 補償事務: 取消支付 ==
+                OSaga -> PS: refundPayment(orderId)
+                activate PS
+                PS --> OSaga: PaymentRefundedEvent
+                deactivate PS
+                
+                == 補償事務: 釋放庫存 ==
+                OSaga -> IS: releaseInventory(orderId)
+                activate IS
+                IS --> OSaga: InventoryReleasedEvent
+                deactivate IS
+                
+                == 取消訂單 ==
+                OSaga -> OS: cancelOrder(orderId, "物流安排失敗")
+                activate OS
+                OS --> OSaga: OrderCancelledEvent
+                deactivate OS
+                
+                OSaga -> NS: sendOrderCancellationNotice(orderId, "物流安排失敗")
+                activate NS
+                NS --> OSaga: NotificationSentEvent
+                deactivate NS
+            end
+            
+        else 支付失敗
+            PS --> OSaga: PaymentFailedEvent
+            deactivate PS
+            
+            == 補償事務: 釋放庫存 ==
+            OSaga -> IS: releaseInventory(orderId)
+            activate IS
+            IS --> OSaga: InventoryReleasedEvent
+            deactivate IS
+            
+            == 取消訂單 ==
+            OSaga -> OS: cancelOrder(orderId, "支付失敗")
+            activate OS
+            OS --> OSaga: OrderCancelledEvent
+            deactivate OS
+            
+            OSaga -> NS: sendOrderCancellationNotice(orderId, "支付失敗")
+            activate NS
+            NS --> OSaga: NotificationSentEvent
+            deactivate NS
+        end
+        
+    else 庫存不足
+        IS --> OSaga: InventoryInsufficientEvent
+        deactivate IS
+        
+        == 取消訂單 ==
+        OSaga -> OS: cancelOrder(orderId, "庫存不足")
+        activate OS
+        OS --> OSaga: OrderCancelledEvent
+        deactivate OS
+        
+        OSaga -> NS: sendOrderCancellationNotice(orderId, "庫存不足")
+        activate NS
+        NS --> OSaga: NotificationSentEvent
+        deactivate NS
+    end
+end
+
+deactivate OSaga
+[<-- OS: OrderResponse
+deactivate OS
+
+note over OSaga
+  Saga協調器負責:
+  1. 協調多個微服務之間的事務
+  2. 處理補償事務
+  3. 維護Saga狀態
+end note
+
+@enduml

@@ -1,0 +1,153 @@
+@startuml 六角形架構圖
+
+' C4 Model Definitions
+!define LAYOUT_WITH_LEGEND
+!define SHOW_PERSON_PORTRAIT
+
+' C4 Element Styles
+!define C4_COMPONENT_FONT_COLOR #000000
+!define C4_COMPONENT_BG_COLOR #85BBF0
+!define C4_CONTAINER_FONT_COLOR #000000
+!define C4_CONTAINER_BG_COLOR #438DD5
+!define C4_SYSTEM_FONT_COLOR #FFFFFF
+!define C4_SYSTEM_BG_COLOR #1168BD
+!define C4_PERSON_FONT_COLOR #FFFFFF
+!define C4_PERSON_BG_COLOR #08427B
+!define C4_BOUNDARY_COLOR #444444
+
+' C4 Element Macros
+!define Person(e_alias, e_label, e_descr) actor "==e_label\n\ne_descr" as e_alias
+!define System_Boundary(e_alias, e_label) rectangle "==e_label" <<boundary>> as e_alias
+!define Container_Boundary(e_alias, e_label) rectangle "==e_label" <<boundary>> as e_alias
+!define Component(e_alias, e_label, e_techn, e_descr) rectangle "==e_label\n<size:12>[e_techn]</size>\n\ne_descr" <<component>> as e_alias
+!define System_Ext(e_alias, e_label, e_descr) rectangle "==e_label\n\ne_descr" <<external_system>> as e_alias
+!define SystemDb_Ext(e_alias, e_label, e_descr) database "==e_label\n\ne_descr" <<external_system>> as e_alias
+!define Rel(e_from, e_to, e_label, e_techn) e_from --> e_to : "e_label\n//<size:10>[e_techn]</size>//"
+!define Rel(e_from, e_to, e_label) e_from --> e_to : "e_label"
+
+' Styling
+skinparam rectangle {
+    FontColor<<component>> C4_COMPONENT_FONT_COLOR
+    BackgroundColor<<component>> C4_COMPONENT_BG_COLOR
+    FontColor<<boundary>> #444444
+    BorderColor<<boundary>> C4_BOUNDARY_COLOR
+    BorderStyle<<boundary>> dashed
+    FontColor<<external_system>> C4_SYSTEM_FONT_COLOR
+    BackgroundColor<<external_system>> #999999
+}
+
+skinparam database {
+    BackgroundColor C4_COMPONENT_BG_COLOR
+}
+
+skinparam actor {
+    BackgroundColor C4_PERSON_BG_COLOR
+    FontColor C4_PERSON_FONT_COLOR
+}
+
+title 訂單系統六角形架構圖
+
+Person(customer, "客戶", "使用系統的用戶")
+
+System_Boundary(system, "訂單系統") {
+    ' 外部適配器 (驅動適配器)
+    Container_Boundary(driving_adapters, "驅動適配器 (Primary/Left)") {
+        Component(rest_api, "REST API", "Spring MVC", "處理HTTP請求")
+        Component(graphql_api, "GraphQL API", "GraphQL", "處理GraphQL查詢")
+        Component(message_consumer, "消息消費者", "Kafka/RabbitMQ", "處理異步消息")
+        Component(scheduler, "定時任務", "Spring Scheduler", "處理定時任務")
+    }
+    
+    ' 應用核心
+    Container_Boundary(application_core, "應用核心") {
+        ' 入站端口
+        Container_Boundary(inbound_ports, "入站端口 (Primary/Left)") {
+            Component(order_use_case, "OrderManagementUseCase", "Interface", "訂單管理用例")
+            Component(payment_use_case, "PaymentManagementUseCase", "Interface", "支付管理用例")
+        }
+        
+        ' 應用服務
+        Container_Boundary(application_services, "應用服務") {
+            Component(order_app_service, "OrderApplicationService", "Service", "訂單應用服務")
+            Component(payment_app_service, "PaymentApplicationService", "Service", "支付應用服務")
+        }
+        
+        ' 領域層
+        Container_Boundary(domain_layer, "領域層") {
+            Component(order_aggregate, "Order", "Aggregate", "訂單聚合根")
+            Component(payment_aggregate, "Payment", "Aggregate", "支付聚合根")
+            Component(domain_services, "Domain Services", "Services", "領域服務")
+            Component(domain_events, "Domain Events", "Events", "領域事件")
+        }
+        
+        ' 出站端口
+        Container_Boundary(outbound_ports, "出站端口 (Secondary/Right)") {
+            Component(order_repo_port, "OrderRepository", "Interface", "訂單儲存庫端口")
+            Component(payment_repo_port, "PaymentRepository", "Interface", "支付儲存庫端口")
+            Component(payment_service_port, "PaymentServicePort", "Interface", "支付服務端口")
+            Component(logistics_service_port, "LogisticsServicePort", "Interface", "物流服務端口")
+            Component(notification_port, "NotificationPort", "Interface", "通知服務端口")
+        }
+    }
+    
+    ' 外部適配器 (被驅動適配器)
+    Container_Boundary(driven_adapters, "被驅動適配器 (Secondary/Right)") {
+        Component(order_persistence, "OrderPersistenceAdapter", "JPA", "訂單持久化適配器")
+        Component(payment_persistence, "PaymentPersistenceAdapter", "JPA", "支付持久化適配器")
+        Component(payment_gateway, "PaymentGatewayAdapter", "HTTP Client", "支付網關適配器")
+        Component(logistics_adapter, "LogisticsAdapter", "HTTP Client", "物流服務適配器")
+        Component(notification_adapter, "NotificationAdapter", "HTTP Client", "通知服務適配器")
+    }
+}
+
+' 外部系統
+System_Ext(payment_system, "支付系統", "處理支付交易")
+System_Ext(logistics_system, "物流系統", "處理物流配送")
+System_Ext(notification_system, "通知系統", "處理消息通知")
+SystemDb_Ext(database, "資料庫", "儲存系統數據")
+
+' 關係連接
+Rel(customer, rest_api, "使用", "HTTP/JSON")
+Rel(customer, graphql_api, "使用", "HTTP/GraphQL")
+
+' 驅動適配器與入站端口的關係
+Rel(rest_api, order_use_case, "使用")
+Rel(rest_api, payment_use_case, "使用")
+Rel(graphql_api, order_use_case, "使用")
+Rel(message_consumer, order_use_case, "使用")
+Rel(scheduler, order_use_case, "使用")
+
+' 入站端口與應用服務的關係
+Rel(order_use_case, order_app_service, "實現")
+Rel(payment_use_case, payment_app_service, "實現")
+
+' 應用服務與領域層的關係
+Rel(order_app_service, order_aggregate, "使用")
+Rel(payment_app_service, payment_aggregate, "使用")
+Rel(order_app_service, domain_services, "使用")
+Rel(payment_app_service, domain_services, "使用")
+
+' 領域層與出站端口的關係
+Rel(order_aggregate, domain_events, "發布")
+Rel(payment_aggregate, domain_events, "發布")
+Rel(order_app_service, order_repo_port, "使用")
+Rel(order_app_service, payment_service_port, "使用")
+Rel(order_app_service, logistics_service_port, "使用")
+Rel(order_app_service, notification_port, "使用")
+Rel(payment_app_service, payment_repo_port, "使用")
+
+' 出站端口與被驅動適配器的關係
+Rel(order_repo_port, order_persistence, "實現")
+Rel(payment_repo_port, payment_persistence, "實現")
+Rel(payment_service_port, payment_gateway, "實現")
+Rel(logistics_service_port, logistics_adapter, "實現")
+Rel(notification_port, notification_adapter, "實現")
+
+' 被驅動適配器與外部系統的關係
+Rel(order_persistence, database, "使用", "SQL/JPA")
+Rel(payment_persistence, database, "使用", "SQL/JPA")
+Rel(payment_gateway, payment_system, "調用", "HTTP/REST")
+Rel(logistics_adapter, logistics_system, "調用", "HTTP/REST")
+Rel(notification_adapter, notification_system, "調用", "HTTP/REST")
+
+@enduml

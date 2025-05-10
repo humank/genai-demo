@@ -5,59 +5,122 @@ skinparam node {
     BackgroundColor<<database>> #FFB6C1
     BackgroundColor<<messagebus>> #DDA0DD
     BackgroundColor<<external>> #F0E68C
+    BackgroundColor<<cache>> #FFDAB9
+    BackgroundColor<<monitoring>> #D3D3D3
 }
 
 node "客戶端" as Client <<frontend>> {
-    component [Web瀏覽器]
+    component [Web瀏覽器] as WebBrowser
+    component [移動應用] as MobileApp
+}
+
+cloud "負載均衡器" as LoadBalancer {
+    component [API Gateway] as ApiGateway
 }
 
 node "應用服務器群集" as AppServer <<service>> {
-    component [訂單服務] as OrderService
-    component [支付服務] as PaymentService
-    component [物流服務] as LogisticsService
+    node "服務容器 1" as Container1 {
+        component [訂單服務] as OrderService1
+        component [支付服務] as PaymentService1
+    }
+    
+    node "服務容器 2" as Container2 {
+        component [訂單服務] as OrderService2
+        component [支付服務] as PaymentService2
+    }
+    
+    node "服務容器 3" as Container3 {
+        component [物流服務] as LogisticsService
+    }
 }
 
 node "資料庫群集" as Database <<database>> {
-    database "訂單資料庫" as OrderDB
+    database "訂單資料庫主節點" as OrderDBMaster
+    database "訂單資料庫從節點" as OrderDBSlave
     database "支付資料庫" as PaymentDB
+}
+
+node "快取服務" as Cache <<cache>> {
+    database "Redis集群" as Redis
 }
 
 node "消息中間件" as MessageBroker <<messagebus>> {
     queue "事件總線" as EventBus
+    queue "死信隊列" as DeadLetterQueue
 }
 
 node "外部服務" as External <<external>> {
     component [支付網關] as PaymentGateway
     component [物流服務商] as LogisticsProvider
+    component [通知服務] as NotificationService
+}
+
+node "監控與日誌" as Monitoring <<monitoring>> {
+    component [日誌收集器] as LogCollector
+    component [監控儀表板] as Dashboard
+    component [告警系統] as AlertSystem
 }
 
 ' 連接關係
-Client -down-> AppServer : "HTTP/REST"
+Client -down-> LoadBalancer : "HTTPS"
+LoadBalancer -down-> AppServer : "HTTP/REST"
 
-OrderService -down-> OrderDB : "JDBC"
-PaymentService -down-> PaymentDB : "JDBC"
+OrderService1 -down-> OrderDBMaster : "JDBC/R+W"
+OrderService2 -down-> OrderDBMaster : "JDBC/R+W"
+OrderDBMaster -right-> OrderDBSlave : "複製"
+PaymentService1 -down-> PaymentDB : "JDBC"
+PaymentService2 -down-> PaymentDB : "JDBC"
 
-OrderService -right-> EventBus : "非同步事件"
-PaymentService -right-> EventBus : "非同步事件"
-LogisticsService -right-> EventBus : "非同步事件"
+OrderService1 -right-> Redis : "讀取/寫入快取"
+OrderService2 -right-> Redis : "讀取/寫入快取"
 
-PaymentService -down-> PaymentGateway : "API"
-LogisticsService -down-> LogisticsProvider : "API"
+OrderService1 -right-> EventBus : "發布事件"
+OrderService2 -right-> EventBus : "發布事件"
+PaymentService1 -right-> EventBus : "發布/訂閱事件"
+PaymentService2 -right-> EventBus : "發布/訂閱事件"
+LogisticsService -right-> EventBus : "訂閱事件"
+EventBus -down-> DeadLetterQueue : "失敗消息"
+
+PaymentService1 -down-> PaymentGateway : "HTTPS/API"
+PaymentService2 -down-> PaymentGateway : "HTTPS/API"
+LogisticsService -down-> LogisticsProvider : "HTTPS/API"
+EventBus -down-> NotificationService : "HTTPS/API"
+
+AppServer -up-> LogCollector : "發送日誌"
+Database -up-> LogCollector : "發送日誌"
+MessageBroker -up-> LogCollector : "發送日誌"
+LogCollector -right-> Dashboard : "展示數據"
+Dashboard -right-> AlertSystem : "觸發告警"
 
 ' 註解
 note right of AppServer
-  使用容器化部署
+  使用Docker容器化部署
+  Kubernetes編排
   支援水平擴展
 end note
 
 note right of Database
   使用主從複製
   支援故障轉移
+  定期備份
 end note
 
 note right of MessageBroker
-  使用消息佇列
+  使用Kafka/RabbitMQ
   確保可靠性傳遞
+  支援消息持久化
+end note
+
+note right of Cache
+  分散式快取
+  提高讀取性能
+  減輕資料庫負載
+end note
+
+note right of Monitoring
+  ELK/Prometheus
+  即時監控
+  異常告警
 end note
 
 @enduml

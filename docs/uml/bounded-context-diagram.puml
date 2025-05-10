@@ -1,0 +1,115 @@
+@startuml 限界上下文圖
+
+' C4 Model Definitions
+!define LAYOUT_WITH_LEGEND
+!define SHOW_PERSON_PORTRAIT
+
+' C4 Element Styles
+!define C4_COMPONENT_FONT_COLOR #000000
+!define C4_COMPONENT_BG_COLOR #85BBF0
+!define C4_CONTAINER_FONT_COLOR #000000
+!define C4_CONTAINER_BG_COLOR #438DD5
+!define C4_SYSTEM_FONT_COLOR #FFFFFF
+!define C4_SYSTEM_BG_COLOR #1168BD
+!define C4_PERSON_FONT_COLOR #FFFFFF
+!define C4_PERSON_BG_COLOR #08427B
+!define C4_BOUNDARY_COLOR #444444
+
+' C4 Element Macros
+!define Container_Boundary(e_alias, e_label) rectangle "==e_label" <<boundary>> as e_alias
+!define Component(e_alias, e_label, e_techn, e_descr) rectangle "==e_label\n<size:12>[e_techn]</size>\n\ne_descr" <<component>> as e_alias
+!define Rel_D(e_from, e_to, e_label, e_techn) e_from -down-> e_to : "e_label\n//<size:10>[e_techn]</size>//"
+!define Rel_U(e_from, e_to, e_label) e_from -up-> e_to : "e_label"
+
+' Styling
+skinparam rectangle {
+    FontColor<<component>> C4_COMPONENT_FONT_COLOR
+    BackgroundColor<<component>> C4_COMPONENT_BG_COLOR
+    BorderColor<<boundary>> C4_BOUNDARY_COLOR
+    FontColor<<boundary>> #444444
+    BorderStyle<<boundary>> dashed
+}
+
+title 訂單系統限界上下文圖
+
+Container_Boundary(order_context, "訂單上下文") {
+    Component(order_aggregate, "訂單聚合根", "Aggregate", "訂單核心邏輯")
+    Component(order_factory, "訂單工廠", "Factory", "建立訂單")
+    Component(order_repository, "訂單儲存庫", "Repository", "訂單持久化")
+    Component(order_service, "訂單服務", "Service", "訂單處理邏輯")
+    Component(order_policy, "訂單策略", "Policy", "訂單折扣策略")
+}
+
+Container_Boundary(payment_context, "支付上下文") {
+    Component(payment_aggregate, "支付聚合根", "Aggregate", "支付核心邏輯")
+    Component(payment_repository, "支付儲存庫", "Repository", "支付持久化")
+    Component(payment_service, "支付服務", "Service", "支付處理邏輯")
+    Component(payment_gateway, "支付網關", "Gateway", "外部支付整合")
+}
+
+Container_Boundary(logistics_context, "物流上下文") {
+    Component(delivery_aggregate, "配送聚合根", "Aggregate", "配送核心邏輯")
+    Component(delivery_repository, "配送儲存庫", "Repository", "配送持久化")
+    Component(logistics_service, "物流服務", "Service", "物流處理邏輯")
+    Component(logistics_provider, "物流提供商", "Provider", "外部物流整合")
+}
+
+Container_Boundary(inventory_context, "庫存上下文") {
+    Component(inventory_aggregate, "庫存聚合根", "Aggregate", "庫存核心邏輯")
+    Component(inventory_repository, "庫存儲存庫", "Repository", "庫存持久化")
+    Component(inventory_service, "庫存服務", "Service", "庫存處理邏輯")
+}
+
+Container_Boundary(customer_context, "客戶上下文") {
+    Component(customer_aggregate, "客戶聚合根", "Aggregate", "客戶核心邏輯")
+    Component(customer_repository, "客戶儲存庫", "Repository", "客戶持久化")
+    Component(customer_service, "客戶服務", "Service", "客戶處理邏輯")
+}
+
+Container_Boundary(notification_context, "通知上下文") {
+    Component(notification_service, "通知服務", "Service", "通知處理邏輯")
+    Component(notification_template, "通知模板", "Template", "通知內容模板")
+    Component(notification_channel, "通知渠道", "Channel", "通知發送渠道")
+}
+
+Container_Boundary(integration_layer, "整合層") {
+    Component(event_bus, "事件總線", "EventBus", "領域事件發布與訂閱")
+    Component(saga_coordinator, "Saga協調器", "Coordinator", "分布式事務協調")
+    Component(acl, "防腐層", "ACL", "上下文間轉換")
+}
+
+' 上下文間關係
+Rel_D(order_context, payment_context, "使用", "客戶關係 (Customer-Supplier)")
+Rel_D(order_context, logistics_context, "使用", "客戶關係 (Customer-Supplier)")
+Rel_D(order_context, inventory_context, "使用", "客戶關係 (Customer-Supplier)")
+Rel_D(order_context, customer_context, "使用", "合作關係 (Partnership)")
+Rel_D(payment_context, notification_context, "使用", "客戶關係 (Customer-Supplier)")
+Rel_D(logistics_context, notification_context, "使用", "客戶關係 (Customer-Supplier)")
+
+' 整合層關係
+Rel_U(order_context, event_bus, "發布/訂閱事件")
+Rel_U(payment_context, event_bus, "發布/訂閱事件")
+Rel_U(logistics_context, event_bus, "發布/訂閱事件")
+Rel_U(inventory_context, event_bus, "發布/訂閱事件")
+Rel_U(notification_context, event_bus, "訂閱事件")
+
+Rel_U(order_context, saga_coordinator, "參與Saga")
+Rel_U(payment_context, saga_coordinator, "參與Saga")
+Rel_U(logistics_context, saga_coordinator, "參與Saga")
+Rel_U(inventory_context, saga_coordinator, "參與Saga")
+
+Rel_U(logistics_context, acl, "通過ACL轉換")
+
+' 註解
+note as N1
+  上下文間關係類型:
+  - 合作關係 (Partnership): 雙向依賴，共同開發
+  - 共享內核 (Shared Kernel): 共享部分模型
+  - 客戶-供應商 (Customer-Supplier): 單向依賴
+  - 遵奉者 (Conformist): 下游適應上游
+  - 防腐層 (ACL): 通過轉換層隔離
+  - 開放主機服務 (OHS): 通過API提供服務
+  - 發布語言 (Published Language): 共享交換格式
+end note
+
+@enduml

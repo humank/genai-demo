@@ -1,30 +1,86 @@
 @startuml 訂單系統使用案例圖
 left to right direction
 skinparam actorStyle awesome
-
-:客戶: as Customer
-:支付系統: as PaymentSystem
-:物流系統: as LogisticsSystem
-
-rectangle 訂單管理系統 {
-    usecase "建立訂單" as CreateOrder
-    usecase "新增訂單項目" as AddOrderItem
-    usecase "處理支付" as ProcessPayment
-    usecase "安排配送" as ArrangeDelivery
-    usecase "查詢訂單狀態" as CheckOrderStatus
-    usecase "套用折扣" as ApplyDiscount
+skinparam usecase {
+  BackgroundColor<<core>> #FEFECE
+  BackgroundColor<<extension>> #B4EEB4
+  BorderColor<<core>> #FF6347
+  BorderColor<<extension>> #3CB371
 }
 
+:客戶: as Customer
+:系統管理員: as Admin
+:支付系統: as PaymentSystem
+:物流系統: as LogisticsSystem
+:通知系統: as NotificationSystem
+
+rectangle 訂單管理系統 {
+    usecase "註冊帳戶" as Register
+    usecase "登入系統" as Login
+    usecase "瀏覽商品" as BrowseProducts
+    usecase "搜索商品" as SearchProducts
+    usecase "建立訂單" as CreateOrder <<core>>
+    usecase "新增訂單項目" as AddOrderItem <<core>>
+    usecase "移除訂單項目" as RemoveOrderItem <<core>>
+    usecase "處理支付" as ProcessPayment <<core>>
+    usecase "安排配送" as ArrangeDelivery <<core>>
+    usecase "查詢訂單狀態" as CheckOrderStatus
+    usecase "取消訂單" as CancelOrder <<extension>>
+    usecase "套用折扣" as ApplyDiscount <<extension>>
+    usecase "申請退款" as RequestRefund <<extension>>
+    usecase "評價訂單" as RateOrder <<extension>>
+    usecase "管理訂單" as ManageOrders
+    usecase "生成報表" as GenerateReports
+    usecase "發送通知" as SendNotification
+}
+
+' 客戶使用案例關係
+Customer --> Register
+Customer --> Login
+Login --> BrowseProducts : <<include>>
+Login --> SearchProducts : <<include>>
 Customer --> CreateOrder
 Customer --> AddOrderItem
+Customer --> RemoveOrderItem
 Customer --> CheckOrderStatus
+Customer --> CancelOrder
+Customer --> RequestRefund
+Customer --> RateOrder
 
-CreateOrder --> ProcessPayment
-ProcessPayment --> PaymentSystem
+' 管理員使用案例關係
+Admin --> Login
+Admin --> ManageOrders
+Admin --> GenerateReports
 
-ProcessPayment --> ArrangeDelivery
-ArrangeDelivery --> LogisticsSystem
+' 核心流程關係
+CreateOrder ..> ApplyDiscount : <<extend>>
+CreateOrder --> ProcessPayment : <<include>>
+ProcessPayment --> PaymentSystem : <<communicate>>
+ProcessPayment --> ArrangeDelivery : <<include>>
+ArrangeDelivery --> LogisticsSystem : <<communicate>>
+ProcessPayment ..> SendNotification : <<include>>
+ArrangeDelivery ..> SendNotification : <<include>>
+SendNotification --> NotificationSystem : <<communicate>>
 
-CreateOrder --> ApplyDiscount
+' 擴展流程關係
+CancelOrder ..> ProcessPayment : <<extend>>
+RequestRefund ..> ProcessPayment : <<extend>>
+
+' 分組和註解
+note "核心業務流程" as N1
+note "擴展功能" as N2
+note "管理功能" as N3
+
+CreateOrder .. N1
+ProcessPayment .. N1
+ArrangeDelivery .. N1
+
+CancelOrder .. N2
+RequestRefund .. N2
+ApplyDiscount .. N2
+RateOrder .. N2
+
+ManageOrders .. N3
+GenerateReports .. N3
 
 @enduml

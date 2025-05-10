@@ -1,7 +1,8 @@
 @startuml 訂單系統類別圖
 skinparam classAttributeIconSize 0
 
-class Order {
+package "domain.order.model.aggregate" {
+  class Order {
     -OrderId id
     -List<OrderItem> items
     -OrderStatus status
@@ -9,65 +10,117 @@ class Order {
     +addItem(OrderItem item)
     +updateStatus(OrderStatus status)
     +calculateTotal()
+    +create()
+    +processPayment()
+  }
 }
 
-class OrderItem {
+package "domain.common.valueobject" {
+  class OrderItem {
     -String productId
     -int quantity
     -Money unitPrice
     +calculateSubtotal()
-}
+  }
 
-class Money {
+  class Money {
     -BigDecimal amount
     -Currency currency
     +add(Money other)
     +multiply(int quantity)
-}
+  }
 
-enum OrderStatus {
+  enum OrderStatus {
     CREATED
     PENDING_PAYMENT
     CONFIRMED
     FAILED
     DELIVERED
+  }
+
+  class OrderId {
+    -String value
+    +toString()
+  }
 }
 
-class OrderApplicationService {
+package "application.order.service" {
+  class OrderApplicationService {
     -OrderFactory orderFactory
-    -PaymentService paymentService
-    -LogisticsService logisticsService
+    -OrderRepository orderRepository
+    -PaymentServicePort paymentService
+    -LogisticsServicePort logisticsService
     +createOrder(CreateOrderCommand cmd)
     +addOrderItem(AddOrderItemCommand cmd)
     +processOrder(OrderId orderId)
+  }
 }
 
-class OrderFactory {
+package "domain.order.model.factory" {
+  class OrderFactory {
     +createOrder()
-    +createOrderItem()
+    +createOrderItem(String productId, int quantity, Money unitPrice)
+  }
 }
 
-interface DomainEvent {
+package "domain.common.events" {
+  interface DomainEvent {
     +getEventId()
     +getTimestamp()
+  }
 }
 
-class OrderCreatedEvent {
+package "domain.order.model.events" {
+  class OrderCreatedEvent {
     -OrderId orderId
     -DateTime createdAt
+  }
+
+  class OrderItemAddedEvent {
+    -OrderId orderId
+    -OrderItem item
+    -DateTime addedAt
+  }
+}
+
+package "domain.payment.model.aggregate" {
+  class Payment {
+    -String paymentId
+    -OrderId orderId
+    -Money amount
+    -PaymentStatus status
+    +process()
+    +complete()
+    +fail()
+  }
+}
+
+package "domain.common.valueobject" {
+  enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+  }
 }
 
 Order "1" *--> "*" OrderItem : contains
 Order --> OrderStatus
 Order --> Money
+Order --> OrderId
 OrderItem --> Money
 OrderApplicationService --> OrderFactory
 OrderApplicationService --> Order
-Order --> OrderCreatedEvent
+Order ..> OrderCreatedEvent : publishes
+Order ..> OrderItemAddedEvent : publishes
 OrderCreatedEvent ..|> DomainEvent
+OrderItemAddedEvent ..|> DomainEvent
+Payment --> PaymentStatus
+Payment --> Money
+Payment --> OrderId
 
 note right of Order : "訂單聚合根"
 note right of OrderStatus : "訂單狀態"
 note right of DomainEvent : "領域事件介面"
+note right of Payment : "支付聚合根"
 
 @enduml

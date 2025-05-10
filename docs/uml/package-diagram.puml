@@ -1,75 +1,197 @@
 @startuml 訂單系統套件圖
 skinparam packageStyle rectangle
 
-package "應用層" as Application {
-    [OrderApplicationService]
-    package "port" {
-        package "incoming" {
-            [OrderManagementUseCase]
-        }
-        package "outgoing" {
-            [OrderPersistencePort]
-            [PaymentServicePort]
-            [LogisticsServicePort]
-        }
-    }
-    package "dto" {
-        [CreateOrderCommand]
-        [OrderResponse]
-    }
-}
-
-package "領域層" as Domain {
-    [Order]
-    [OrderItem]
-    [Money]
-    package "events" {
-        [DomainEvent]
-        [OrderCreatedEvent]
-    }
-    package "policy" {
-        [OrderDiscountPolicy]
-    }
-}
-
-package "基礎設施層" as Infrastructure {
-    package "persistence" {
-        [JpaOrderRepository]
-    }
-    package "external" {
-        [PaymentAdapter]
-        [LogisticsAdapter]
-    }
+package "interfaces" as Interface {
     package "web" {
-        [OrderController]
+        package "order" {
+            [OrderController]
+            package "dto" {
+                [CreateOrderRequest]
+                [AddOrderItemRequest]
+                [OrderResponse]
+            }
+        }
+        package "payment" {
+            [PaymentController]
+            package "dto" {
+                [PaymentRequest]
+                [PaymentResponse]
+            }
+        }
     }
 }
 
-package "介面層" as Interface {
-    [OrderController]
-    package "dto" {
-        [CreateOrderRequest]
-        [OrderResponse]
+package "application" as Application {
+    package "order" {
+        [OrderApplicationService]
+        package "dto" {
+            [CreateOrderCommand]
+            [AddOrderItemCommand]
+            [OrderResponse]
+        }
+        package "port" {
+            package "incoming" {
+                [OrderManagementUseCase]
+            }
+            package "outgoing" {
+                [OrderPersistencePort]
+                [PaymentServicePort]
+                [LogisticsServicePort]
+            }
+        }
+    }
+    package "payment" {
+        [PaymentApplicationService]
+        package "port" {
+            package "incoming" {
+                [PaymentManagementUseCase]
+            }
+            package "outgoing" {
+                [PaymentPersistencePort]
+            }
+        }
+    }
+}
+
+package "domain" as Domain {
+    package "common" {
+        package "annotations" {
+            [AggregateRoot]
+            [Entity]
+            [ValueObject]
+        }
+        package "events" {
+            [DomainEvent]
+            [DomainEventPublisher]
+        }
+        package "valueobject" {
+            [Money]
+            [OrderId]
+            [OrderStatus]
+            [PaymentStatus]
+        }
+    }
+    
+    package "order" {
+        package "model" {
+            package "aggregate" {
+                [Order]
+            }
+            package "entity" {
+                [OrderItem]
+            }
+            package "events" {
+                [OrderCreatedEvent]
+                [OrderItemAddedEvent]
+            }
+            package "factory" {
+                [OrderFactory]
+            }
+            package "service" {
+                [OrderProcessingService]
+            }
+            package "policy" {
+                [OrderDiscountPolicy]
+            }
+        }
+        package "repository" {
+            [OrderRepository]
+        }
+    }
+    
+    package "payment" {
+        package "model" {
+            package "aggregate" {
+                [Payment]
+            }
+            package "events" {
+                [PaymentCompletedEvent]
+                [PaymentFailedEvent]
+            }
+            package "service" {
+                [PaymentService]
+            }
+        }
+        package "repository" {
+            [PaymentRepository]
+        }
+    }
+}
+
+package "infrastructure" as Infrastructure {
+    package "config" {
+        [OrderConfig]
+        [OrderProperties]
+    }
+    
+    package "order" {
+        package "persistence" {
+            [OrderPersistenceAdapter]
+            [JpaOrderRepository]
+        }
+        package "external" {
+            [LogisticsServiceAdapter]
+            [PaymentServiceAdapter]
+        }
+        package "acl" {
+            [LogisticsAntiCorruptionLayer]
+        }
+    }
+    
+    package "payment" {
+        package "persistence" {
+            [PaymentPersistenceAdapter]
+            [JpaPaymentRepository]
+        }
+    }
+    
+    package "saga" {
+        [OrderProcessingSaga]
+        [SagaDefinition]
     }
 }
 
 ' 層級間依賴關係
 Interface .[#blue]..> Application : uses
 Application .[#blue]..> Domain : uses
-Infrastructure .[#blue]..> Application : implements
-Infrastructure .[#blue]..> Domain : implements
+Infrastructure .[#blue]..> Application : implements ports
+Infrastructure .[#blue]..> Domain : implements repositories
 
 ' 模組內部依賴
-OrderApplicationService .[#red]..> OrderManagementUseCase
-OrderApplicationService .[#red]..> OrderPersistencePort
-OrderApplicationService .[#red]..> CreateOrderCommand
+OrderController .[#red]..> OrderManagementUseCase : uses
+OrderApplicationService .[#red]..> OrderManagementUseCase : implements
+OrderApplicationService .[#red]..> OrderPersistencePort : uses
+OrderApplicationService .[#red]..> PaymentServicePort : uses
+OrderApplicationService .[#red]..> LogisticsServicePort : uses
+OrderApplicationService .[#red]..> Order : uses
+OrderApplicationService .[#red]..> OrderFactory : uses
 
-Order .[#green]..> OrderItem
-Order .[#green]..> Money
-Order .[#green]..> OrderCreatedEvent
-Order .[#green]..> OrderDiscountPolicy
+PaymentController .[#red]..> PaymentManagementUseCase : uses
+PaymentApplicationService .[#red]..> PaymentManagementUseCase : implements
+PaymentApplicationService .[#red]..> PaymentPersistencePort : uses
+PaymentApplicationService .[#red]..> Payment : uses
 
-JpaOrderRepository .[#orange]..> PaymentAdapter
-PaymentAdapter .[#orange]..> LogisticsAdapter
+Order .[#green]..> OrderItem : contains
+Order .[#green]..> Money : uses
+Order .[#green]..> OrderStatus : uses
+Order .[#green]..> OrderCreatedEvent : publishes
+Order .[#green]..> OrderItemAddedEvent : publishes
+OrderProcessingService .[#green]..> Order : operates on
+
+Payment .[#green]..> Money : uses
+Payment .[#green]..> PaymentStatus : uses
+Payment .[#green]..> PaymentCompletedEvent : publishes
+Payment .[#green]..> PaymentFailedEvent : publishes
+
+OrderPersistenceAdapter .[#orange]..> OrderPersistencePort : implements
+OrderPersistenceAdapter .[#orange]..> JpaOrderRepository : uses
+PaymentPersistenceAdapter .[#orange]..> PaymentPersistencePort : implements
+PaymentPersistenceAdapter .[#orange]..> JpaPaymentRepository : uses
+LogisticsServiceAdapter .[#orange]..> LogisticsServicePort : implements
+LogisticsServiceAdapter .[#orange]..> LogisticsAntiCorruptionLayer : uses
+PaymentServiceAdapter .[#orange]..> PaymentServicePort : implements
+
+OrderProcessingSaga .[#purple]..> Order : uses
+OrderProcessingSaga .[#purple]..> Payment : uses
 
 @enduml

@@ -10,6 +10,38 @@
 - 實際的業務場景示例
 - 模組化的設計
 
+## UML 文檔
+
+本專案包含完整的 UML 文檔，用於描述系統的架構、設計和行為。所有 UML 圖表都位於 `docs/uml/` 目錄下。
+
+### 主要 UML 圖表
+
+#### 基礎圖表
+- **類別圖** ([class-diagram.svg](docs/uml/class-diagram.svg)): 展示系統中的主要類別及其關係
+- **組件圖** ([component-diagram.svg](docs/uml/component-diagram.svg)): 展示系統的主要組件及其交互
+- **部署圖** ([deployment-diagram.svg](docs/uml/deployment-diagram.svg)): 描述系統的部署架構
+- **套件圖** ([package-diagram.svg](docs/uml/package-diagram.svg)): 展示系統的套件結構和依賴關係
+- **時序圖** ([sequence-diagram.svg](docs/uml/sequence-diagram.svg)): 描述訂單處理的主要流程
+- **狀態圖** ([state-diagram.svg](docs/uml/state-diagram.svg)): 展示訂單在不同狀態之間的轉換
+- **使用案例圖** ([use-case-diagram.svg](docs/uml/use-case-diagram.svg)): 描述系統的主要功能和參與者
+
+#### 領域驅動設計圖表
+- **領域模型圖** ([domain-model-diagram.svg](docs/uml/domain-model-diagram.svg)): 詳細展示系統中的聚合根、實體、值對象和領域服務
+- **六角形架構圖** ([hexagonal-architecture-diagram.svg](docs/uml/hexagonal-architecture-diagram.svg)): 詳細展示系統的端口和適配器模式
+- **Saga模式圖** ([saga-pattern-diagram.svg](docs/uml/saga-pattern-diagram.svg)): 展示分布式事務處理流程
+- **限界上下文圖** ([bounded-context-diagram.svg](docs/uml/bounded-context-diagram.svg)): 展示系統中不同上下文之間的關係
+- **事件風暴圖** ([event-storming-diagram.svg](docs/uml/event-storming-diagram.svg)): 展示系統中的命令、事件、聚合根、策略和讀模型
+
+#### 進階架構圖表
+- **CQRS模式圖** ([cqrs-pattern-diagram.svg](docs/uml/cqrs-pattern-diagram.svg)): 展示命令和查詢責任分離模式
+- **事件溯源圖** ([event-sourcing-diagram.svg](docs/uml/event-sourcing-diagram.svg)): 展示事件的存儲和重放機制
+- **API接口圖** ([api-interface-diagram.svg](docs/uml/api-interface-diagram.svg)): 展示系統對外提供的API接口
+- **數據模型圖** ([data-model-diagram.svg](docs/uml/data-model-diagram.svg)): 展示系統的數據庫模型和關係
+- **安全架構圖** ([security-architecture-diagram.svg](docs/uml/security-architecture-diagram.svg)): 展示系統的安全機制和認證授權流程
+- **可觀測性架構圖** ([observability-diagram.svg](docs/uml/observability-diagram.svg)): 展示系統的監控、日誌和可觀測性架構
+
+更多關於 UML 文檔的詳細說明，請參閱 [UML 文檔說明](docs/uml/README.md)。
+
 ## 核心概念和模式
 
 ### 1. 值物件（Value Objects）
@@ -345,40 +377,8 @@ Method solid.humank.genaidemo.domain.order.model.Order.process() calls method so
 # 創建訂單
 curl -X POST http://localhost:8080/api/orders \
   -H "Content-Type: application/json" \
-  -d '{"customerId":"customer123","items":[{"productId":"prod1","quantity":2}]}'
-
-# 查詢訂單
-curl http://localhost:8080/api/orders/{orderId}
+  -d '{"customerId":"customer123","items":[{"productId":"prod-1","quantity":2}]}'
 ```
-
-### 運行架構測試
-
-確保專案遵循 DDD 最佳實踐：
-
-```bash
-./gradlew test --tests "solid.humank.genaidemo.architecture.*"
-```
-
-## 最佳實踐和建議
-
-1. **界限上下文的劃分**
-   - 根據業務邊界明確劃分
-   - 使用防腐層隔離外部系統
-   - 謹慎共享模型
-
-2. **領域模型的設計**
-   - 保持聚合根的邊界清晰
-   - 使用值物件提高不可變性
-   - 通過領域事件實現鬆耦合
-
-3. **代碼組織**
-   - 依照 DDD 概念組織包結構
-   - 使用註解明確標記模式
-   - 保持測試覆蓋
-
-4. **性能考量**
-   - 適當使用懶加載
-   - 注意聚合大小
    - 考慮緩存策略
 
 ## 學習路徑建議
@@ -485,9 +485,6 @@ A: 可以使用以下方式：
 ```bash
 # 執行所有測試
 ./gradlew test
-
-# 僅執行單元測試
-./gradlew test --tests "*Mock*"
 
 # 僅執行架構測試
 ./gradlew test --tests "*Architecture*"

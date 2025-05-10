@@ -1,0 +1,135 @@
+@startuml 事件風暴圖
+skinparam rectangle {
+    RoundCorner 25
+    BorderColor black
+    FontStyle bold
+}
+
+skinparam title {
+    FontSize 20
+    FontStyle bold
+}
+
+title 訂單系統事件風暴圖
+
+' 定義參與者
+rectangle "客戶" as Customer #CCFFFF
+rectangle "系統管理員" as Admin #CCFFFF
+
+' 定義外部系統
+rectangle "支付網關" as PaymentGateway #CCFFCC
+rectangle "物流系統" as LogisticsSystem #CCFFCC
+rectangle "庫存系統" as InventorySystem #CCFFCC
+rectangle "通知系統" as NotificationSystem #CCFFCC
+
+' 定義命令
+rectangle "建立訂單" as CreateOrderCommand #FFCC99
+rectangle "添加訂單項目" as AddOrderItemCommand #FFCC99
+rectangle "提交訂單" as SubmitOrderCommand #FFCC99
+rectangle "處理支付" as ProcessPaymentCommand #FFCC99
+rectangle "安排配送" as ArrangeDeliveryCommand #FFCC99
+rectangle "取消訂單" as CancelOrderCommand #FFCC99
+rectangle "確認訂單" as ConfirmOrderCommand #FFCC99
+rectangle "申請退款" as RequestRefundCommand #FFCC99
+
+' 定義事件
+rectangle "訂單已建立" as OrderCreatedEvent #FFFF99
+rectangle "訂單項目已添加" as OrderItemAddedEvent #FFFF99
+rectangle "訂單已提交" as OrderSubmittedEvent #FFFF99
+rectangle "庫存已確認" as InventoryConfirmedEvent #FFFF99
+rectangle "庫存不足" as InventoryInsufficientEvent #FFFF99
+rectangle "支付已處理" as PaymentProcessedEvent #FFFF99
+rectangle "支付已完成" as PaymentCompletedEvent #FFFF99
+rectangle "支付已失敗" as PaymentFailedEvent #FFFF99
+rectangle "配送已安排" as DeliveryArrangedEvent #FFFF99
+rectangle "配送已完成" as DeliveryCompletedEvent #FFFF99
+rectangle "訂單已確認" as OrderConfirmedEvent #FFFF99
+rectangle "訂單已取消" as OrderCancelledEvent #FFFF99
+rectangle "退款已申請" as RefundRequestedEvent #FFFF99
+rectangle "退款已處理" as RefundProcessedEvent #FFFF99
+rectangle "通知已發送" as NotificationSentEvent #FFFF99
+
+' 定義聚合根
+rectangle "訂單" as OrderAggregate #99CCFF
+rectangle "支付" as PaymentAggregate #99CCFF
+rectangle "配送" as DeliveryAggregate #99CCFF
+rectangle "庫存" as InventoryAggregate #99CCFF
+
+' 定義策略
+rectangle "訂單折扣策略" as OrderDiscountPolicy #CCCCFF
+rectangle "庫存檢查策略" as InventoryCheckPolicy #CCCCFF
+rectangle "支付失敗策略" as PaymentFailurePolicy #CCCCFF
+rectangle "配送策略" as DeliveryPolicy #CCCCFF
+
+' 定義讀模型
+rectangle "訂單摘要" as OrderSummaryReadModel #FFCCFF
+rectangle "訂單詳情" as OrderDetailReadModel #FFCCFF
+rectangle "支付狀態" as PaymentStatusReadModel #FFCCFF
+rectangle "配送狀態" as DeliveryStatusReadModel #FFCCFF
+
+' 定義熱點/問題
+rectangle "支付超時處理?" as PaymentTimeoutHotspot #FF6666
+rectangle "庫存鎖定策略?" as InventoryLockHotspot #FF6666
+rectangle "並發訂單處理?" as ConcurrentOrderHotspot #FF6666
+
+' 關係連接
+Customer --> CreateOrderCommand
+Customer --> AddOrderItemCommand
+Customer --> SubmitOrderCommand
+Customer --> CancelOrderCommand
+Customer --> RequestRefundCommand
+
+Admin --> ConfirmOrderCommand
+
+CreateOrderCommand --> OrderAggregate
+AddOrderItemCommand --> OrderAggregate
+SubmitOrderCommand --> OrderAggregate
+CancelOrderCommand --> OrderAggregate
+ConfirmOrderCommand --> OrderAggregate
+RequestRefundCommand --> PaymentAggregate
+
+OrderAggregate --> OrderCreatedEvent
+OrderAggregate --> OrderItemAddedEvent
+OrderAggregate --> OrderSubmittedEvent
+OrderAggregate --> OrderConfirmedEvent
+OrderAggregate --> OrderCancelledEvent
+
+OrderSubmittedEvent --> InventoryCheckPolicy
+InventoryCheckPolicy --> InventoryAggregate
+InventoryAggregate --> InventoryConfirmedEvent
+InventoryAggregate --> InventoryInsufficientEvent
+
+InventoryConfirmedEvent --> ProcessPaymentCommand
+ProcessPaymentCommand --> PaymentAggregate
+PaymentAggregate --> PaymentProcessedEvent
+PaymentAggregate --> PaymentCompletedEvent
+PaymentAggregate --> PaymentFailedEvent
+
+PaymentCompletedEvent --> ArrangeDeliveryCommand
+ArrangeDeliveryCommand --> DeliveryAggregate
+DeliveryAggregate --> DeliveryArrangedEvent
+DeliveryAggregate --> DeliveryCompletedEvent
+
+PaymentFailedEvent --> PaymentFailurePolicy
+PaymentFailurePolicy --> CancelOrderCommand
+
+OrderCreatedEvent --> OrderDiscountPolicy
+OrderDiscountPolicy --> OrderAggregate
+
+OrderCreatedEvent --> OrderSummaryReadModel
+OrderItemAddedEvent --> OrderDetailReadModel
+PaymentProcessedEvent --> PaymentStatusReadModel
+DeliveryArrangedEvent --> DeliveryStatusReadModel
+
+PaymentAggregate --> PaymentGateway
+DeliveryAggregate --> LogisticsSystem
+InventoryAggregate --> InventorySystem
+OrderConfirmedEvent --> NotificationSystem
+OrderCancelledEvent --> NotificationSystem
+NotificationSystem --> NotificationSentEvent
+
+PaymentTimeoutHotspot --> PaymentAggregate
+InventoryLockHotspot --> InventoryAggregate
+ConcurrentOrderHotspot --> OrderAggregate
+
+@enduml
