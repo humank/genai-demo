@@ -101,14 +101,49 @@ public class OrderDiscountSpecification implements Specification<Order> {
 
 ```java
 public class LogisticsAntiCorruptionLayer {
+    private final ExternalLogisticsSystem legacySystem;
+
+    public LogisticsAntiCorruptionLayer(ExternalLogisticsSystem legacySystem) {
+        this.legacySystem = legacySystem;
+    }
+
+    /**
+     * 將訂單轉換為外部物流系統可以理解的格式並創建配送單
+     */
     public DeliveryOrder createDeliveryOrder(Order order) {
-        // 將內部訂單模型轉換為外部系統期望的格式
+        // 將我們的領域模型轉換為外部系統期望的格式
         Map<String, String> externalFormat = Map.of(
-            "reference_no", order.getOrderId().toString(),
-            "delivery_address", "...",
-            // ...
+            "reference_no", order.getId().toString(),
+            "delivery_address", "從訂單中獲取地址", // 實際應用中會從Order中獲取
+            "customer_contact", order.getCustomerId(),
+            "items_count", String.valueOf(order.getItems().size()),
+            "total_amount", order.getTotalAmount().toString()
         );
-        // ...
+
+        // 調用外部系統並轉換回我們的模型
+        String deliveryId = legacySystem.createDelivery(externalFormat);
+        return new DeliveryOrder(
+            OrderId.of(deliveryId),
+            DeliveryStatus.CREATED
+        );
+    }
+
+    /**
+     * 查詢配送狀態並轉換為我們的領域模型能理解的格式
+     */
+    public DeliveryStatus getDeliveryStatus(OrderId orderId) {
+        String externalStatus = legacySystem.getDeliveryStatus(orderId.toString());
+        return mapExternalStatus(externalStatus);
+    }
+
+    private DeliveryStatus mapExternalStatus(String externalStatus) {
+        return switch (externalStatus.toUpperCase()) {
+            case "INIT", "PENDING" -> DeliveryStatus.CREATED;
+            case "IN_TRANSIT" -> DeliveryStatus.IN_TRANSIT;
+            case "DELIVERED" -> DeliveryStatus.DELIVERED;
+            case "FAILED" -> DeliveryStatus.FAILED;
+            default -> DeliveryStatus.UNKNOWN;
+        };
     }
 }
 ```
