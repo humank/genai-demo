@@ -8,7 +8,6 @@ import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
 import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
 import solid.humank.genaidemo.application.order.dto.OrderResponse;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
-import solid.humank.genaidemo.application.order.port.outgoing.LogisticsServicePort;
 import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -22,18 +21,16 @@ import solid.humank.genaidemo.domain.order.model.factory.OrderFactory;
 @Service
 public class OrderApplicationService implements OrderManagementUseCase {
 
+    private static final String ORDER_NOT_FOUND = "Order not found: ";
     private final OrderPersistencePort orderPersistencePort;
     private final PaymentServicePort paymentServicePort;
-    private final LogisticsServicePort logisticsServicePort;
     private final OrderFactory orderFactory;
 
     public OrderApplicationService(OrderPersistencePort orderPersistencePort,
                                   PaymentServicePort paymentServicePort,
-                                  LogisticsServicePort logisticsServicePort,
                                   OrderFactory orderFactory) {
         this.orderPersistencePort = orderPersistencePort;
         this.paymentServicePort = paymentServicePort;
-        this.logisticsServicePort = logisticsServicePort;
         this.orderFactory = orderFactory;
     }
 
@@ -60,7 +57,7 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 查找訂單
         OrderId orderId = OrderId.of(request.getOrderId());
         Optional<Order> orderOpt = orderPersistencePort.findById(orderId);
-        Order order = orderOpt.orElseThrow(() -> new RuntimeException("Order not found: " + orderId));
+        Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + orderId));
 
         // 添加訂單項目
         order.addItem(
@@ -82,7 +79,7 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 查找訂單
         OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
-        Order order = orderOpt.orElseThrow(() -> new RuntimeException("Order not found: " + id));
+        Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 提交訂單
         order.submit();
@@ -102,7 +99,7 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 查找訂單
         OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
-        Order order = orderOpt.orElseThrow(() -> new RuntimeException("Order not found: " + id));
+        Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 取消訂單
         order.cancel();
@@ -122,7 +119,7 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 查找訂單
         OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
-        Order order = orderOpt.orElseThrow(() -> new RuntimeException("Order not found: " + id));
+        Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 返回響應
         return OrderResponse.fromOrder(order);
