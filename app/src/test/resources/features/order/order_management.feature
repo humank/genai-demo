@@ -1,9 +1,7 @@
 # language: en
 # Original language: zh-TW
+@order
 Feature: Order Management
-  # 作為一個客戶
-  # 我希望能夠創建和管理訂單
-  # 以便購買商品並追蹤訂單狀態
   As a customer
   I want to create and manage orders
   So that I can purchase products and track order status

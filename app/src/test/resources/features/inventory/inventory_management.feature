@@ -1,9 +1,6 @@
 # language: en
 # Original language: zh-TW
 Feature: Inventory Management
-  # 作為一個訂單系統
-  # 我需要檢查和管理商品庫存
-  # 以確保訂單中的商品有足夠庫存可供配送
   As an order system
   I need to check and manage product inventory
   So that products in orders have sufficient stock for delivery

@@ -1,9 +1,6 @@
 # language: en
 # Original language: zh-TW
 Feature: Order Workflow
-  # 作為一個訂單系統
-  # 我需要管理訂單的完整生命週期
-  # 從創建到完成或取消
   As an order system
   I need to manage the complete order lifecycle
   From creation to completion or cancellation

@@ -45,6 +45,55 @@
 
 更多關於 UML 文檔的詳細說明，請參閱 [UML 文檔說明](docs/uml/README.md)。
 
+## 行為驅動開發 (BDD)
+
+本專案使用行為驅動開發方法，通過 Cucumber 實現可執行規範。所有的功能規範都位於 `app/src/test/resources/features/` 目錄下。
+
+### 功能規範
+
+功能規範使用 Gherkin 語法編寫，涵蓋以下業務領域：
+
+- **訂單管理** ([order_management.feature](app/src/test/resources/features/order/order_management.feature)): 訂單創建、添加商品、驗證等功能
+- **訂單工作流程** ([order_workflow.feature](app/src/test/resources/features/order/order_workflow.feature)): 完整的訂單生命週期
+- **支付處理** ([payment_processing.feature](app/src/test/resources/features/payment/payment_processing.feature)): 支付相關的各種場景
+- **配送管理** ([delivery_management.feature](app/src/test/resources/features/logistics/delivery_management.feature)): 訂單配送的完整流程
+- **庫存管理** ([inventory_management.feature](app/src/test/resources/features/inventory/inventory_management.feature)): 庫存檢查和管理
+- **通知服務** ([notification_service.feature](app/src/test/resources/features/notification/notification_service.feature)): 系統向客戶發送各類通知
+
+### 運行測試
+
+您可以通過以下方式運行測試：
+
+1. **運行所有 JUnit 測試**:
+   ```bash
+   ./gradlew test
+   ```
+
+2. **運行 Cucumber 測試**:
+   ```bash
+   ./gradlew cucumber --no-configuration-cache
+   ```
+
+3. **運行特定的測試類**:
+   ```bash
+   ./gradlew test --tests "solid.humank.genaidemo.bdd.GherkinSyntaxValidator"
+   ```
+
+4. **運行所有測試（包含 JUnit 和 Cucumber）**:
+   ```bash
+   ./gradlew test allTests
+   ```
+
+### 測試報告
+
+測試執行後，報告將生成在以下位置：
+- HTML 報告: `build/reports/cucumber/report.html`
+- JSON 報告: `build/reports/cucumber/report.json`
+
+### 步驟定義
+
+步驟定義類位於 `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄下，實現了 Gherkin 步驟與實際代碼的映射。
+
 ## 核心概念和模式
 
 ### 1. 值物件（Value Objects）
@@ -359,6 +408,7 @@ Method solid.humank.genaidemo.domain.order.model.Order.process() calls method so
 - **H2 Database**: 內存資料庫，用於開發和測試
 - **Lombok**: 減少樣板代碼
 - **ArchUnit**: 架構測試工具
+- **Cucumber**: BDD 測試框架
 
 ### 構建專案
 

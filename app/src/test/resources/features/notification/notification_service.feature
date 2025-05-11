@@ -1,9 +1,6 @@
 # language: en
 # Original language: zh-TW
 Feature: Notification Service
-  # 作為一個訂單系統
-  # 我需要向客戶發送各種通知
-  # 以便客戶了解訂單的最新狀態
   As an order system
   I need to send various notifications to customers
   So that customers are informed about the latest status of their orders

@@ -27,6 +27,20 @@ dependencies {
     testImplementation 'com.tngtech.archunit:archunit:1.2.1'
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.1'
     
+    // Cucumber - BDD 測試框架 (JUnit 5 相容版本)
+    def cucumberVersion = '7.15.0'
+    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-core:${cucumberVersion}"
+    testImplementation "io.cucumber:cucumber-junit-platform-engine:${cucumberVersion}"
+    
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    
+    // JUnit Platform Suite
+    testImplementation 'org.junit.platform:junit-platform-suite-api:1.10.2'
+    testImplementation 'org.junit.platform:junit-platform-suite-engine:1.10.2'
+    testImplementation 'org.junit.platform:junit-platform-suite-commons:1.10.2'
+    
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
@@ -34,6 +48,58 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:5.2.0'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    systemProperty("cucumber.filter.tags", "@order")
+    
+    // 排除特定的測試類，避免重複執行
+    exclude '**/FeatureFileValidatorNoSpringNoTest.class'
+}
+
+// 定義一個新的測試任務，用於運行所有測試（包含 JUnit 和 Cucumber）
+task allTests(type: Test) {
+    // 明確設置測試類路徑和測試類目錄，避免使用棄用的約定
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    
+    useJUnitPlatform()
+    
+    // 包含 AllTestsSuite 類，它會運行 JUnit 和 Cucumber 測試
+    include '**/AllTestsSuite.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    systemProperty("cucumber.filter.tags", "@order")
+}
+
+// Cucumber 配置
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+// 使用 JavaExec 類型的任務替代自定義任務
+task cucumber(type: JavaExec) {
+    dependsOn assemble, testClasses
+    
+    description = "運行 Cucumber BDD 測試"
+    group = "verification"
+    
+    mainClass = "io.cucumber.core.cli.Main"
+    classpath = sourceSets.main.output + sourceSets.test.output + configurations.cucumberRuntime
+    
+    args = [
+        '--plugin', 'pretty',
+        '--plugin', "html:${buildDir}/reports/cucumber/report.html",
+        '--plugin', "json:${buildDir}/reports/cucumber/report.json",
+        '--glue', 'solid.humank.genaidemo.bdd',
+        '--tags', '@order',
+        'src/test/resources/features'
+    ]
+    
+    systemProperty('cucumber.publish.quiet', 'true')
 }

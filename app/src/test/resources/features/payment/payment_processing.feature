@@ -1,9 +1,6 @@
 # language: en
 # Original language: zh-TW
 Feature: Payment Processing
-  # 作為一個客戶
-  # 我希望能夠為我的訂單進行支付
-  # 以便完成購買流程
   As a customer
   I want to make payments for my orders
   So that I can complete the purchase process

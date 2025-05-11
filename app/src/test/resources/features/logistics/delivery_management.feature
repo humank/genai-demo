@@ -1,9 +1,6 @@
 # language: en
 # Original language: zh-TW
 Feature: Delivery Management
-  # 作為一個客戶
-  # 我希望能夠追蹤我的訂單配送狀態
-  # 以便知道何時能收到商品
   As a customer
   I want to track the delivery status of my order
   So that I know when I will receive my products
