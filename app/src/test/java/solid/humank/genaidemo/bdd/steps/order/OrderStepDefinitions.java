@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.bdd;
+package solid.humank.genaidemo.bdd.steps.order;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

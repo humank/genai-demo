@@ -1,8 +1,5 @@
 package solid.humank.genaidemo.bdd;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,12 +11,14 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 /**
  * Gherkin 語法驗證器
  * 用於檢查 feature 文件的語法是否正確
  */
-public class GherkinSyntaxValidator {
+public class GherkinSyntaxValidatorTest {
 
     @Test
     @DisplayName("驗證所有 Feature 文件的 Gherkin 語法")

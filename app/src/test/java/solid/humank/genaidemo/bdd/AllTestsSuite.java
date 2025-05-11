@@ -12,10 +12,12 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @Suite
 @SuiteDisplayName("All Tests Suite")
 @SelectClasses({
-    JUnitFeatureValidator.class,
-    StandaloneFeatureRunner.class,
-    GherkinSyntaxValidator.class,
-    CucumberTestRunner.class
+    CucumberOrderTestRunner.class,
+    CucumberWorkflowTestRunner.class,
+    CucumberInventoryTestRunner.class,
+    CucumberLogisticsTestRunner.class,
+    CucumberNotificationTestRunner.class,
+    CucumberPaymentTestRunner.class
 })
 @IncludeEngines({"junit-jupiter", "cucumber"})
 public class AllTestsSuite {

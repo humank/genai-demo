@@ -1,5 +1,6 @@
 # language: en
 # Original language: zh-TW
+@payment
 Feature: Payment Processing
   As a customer
   I want to make payments for my orders

@@ -1,5 +1,6 @@
 # language: en
 # Original language: zh-TW
+@inventory
 Feature: Inventory Management
   As an order system
   I need to check and manage product inventory

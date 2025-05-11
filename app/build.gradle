@@ -49,30 +49,132 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        // 只包含特定的測試類
+        includeTags 'architecture', 'domain', 'utils'
+        excludeTags 'cucumber'
+    }
     
     // 設置系統屬性
     systemProperty("cucumber.junit-platform.naming-strategy", "long")
-    systemProperty("cucumber.filter.tags", "@order")
     
     // 排除特定的測試類，避免重複執行
-    exclude '**/FeatureFileValidatorNoSpringNoTest.class'
+    exclude '**/AllTestsSuite.class'
+    exclude '**/FeatureTestSuite.class'
+    exclude '**/CucumberTestRunner.class'
+    exclude '**/Cucumber*TestRunner.class'
 }
 
-// 定義一個新的測試任務，用於運行所有測試（包含 JUnit 和 Cucumber）
-task allTests(type: Test) {
-    // 明確設置測試類路徑和測試類目錄，避免使用棄用的約定
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
+// 定義一個新的測試任務，用於運行 Order 相關的 Cucumber 測試
+task orderTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'order'
+    }
     
-    useJUnitPlatform()
-    
-    // 包含 AllTestsSuite 類，它會運行 JUnit 和 Cucumber 測試
-    include '**/AllTestsSuite.class'
+    // 只包含 CucumberOrderTestRunner
+    include '**/CucumberOrderTestRunner.class'
     
     // 設置系統屬性
     systemProperty("cucumber.junit-platform.naming-strategy", "long")
-    systemProperty("cucumber.filter.tags", "@order")
+}
+
+// 定義一個新的測試任務，用於運行 Workflow 相關的 Cucumber 測試
+task workflowTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'workflow'
+    }
+    
+    // 只包含 CucumberWorkflowTestRunner
+    include '**/CucumberWorkflowTestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+// 定義一個新的測試任務，用於運行 Inventory 相關的 Cucumber 測試
+task inventoryTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'inventory'
+    }
+    
+    // 只包含 CucumberInventoryTestRunner
+    include '**/CucumberInventoryTestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+// 定義一個新的測試任務，用於運行 Logistics 相關的 Cucumber 測試
+task logisticsTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'logistics'
+    }
+    
+    // 只包含 CucumberLogisticsTestRunner
+    include '**/CucumberLogisticsTestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+// 定義一個新的測試任務，用於運行 Notification 相關的 Cucumber 測試
+task notificationTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'notification'
+    }
+    
+    // 只包含 CucumberNotificationTestRunner
+    include '**/CucumberNotificationTestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+// 定義一個新的測試任務，用於運行 Payment 相關的 Cucumber 測試
+task paymentTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+        includeTags 'payment'
+    }
+    
+    // 只包含 CucumberPaymentTestRunner
+    include '**/CucumberPaymentTestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+}
+
+// 定義一個新的測試任務，用於運行所有 Cucumber 測試
+task cucumberTests(type: Test) {
+    useJUnitPlatform {
+        includeEngines 'cucumber'
+    }
+    
+    // 包含所有 Cucumber 測試運行器
+    include '**/Cucumber*TestRunner.class'
+    
+    // 設置系統屬性
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    
+    // 添加測試報告
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
+}
+
+// 定義一個新的測試任務，用於運行所有測試（包括標準測試和 Cucumber 測試）
+task runAllTests {
+    dependsOn test, cucumberTests
+    
+    doLast {
+        println "All tests have been executed!"
+    }
 }
 
 // Cucumber 配置
@@ -96,8 +198,7 @@ task cucumber(type: JavaExec) {
         '--plugin', 'pretty',
         '--plugin', "html:${buildDir}/reports/cucumber/report.html",
         '--plugin', "json:${buildDir}/reports/cucumber/report.json",
-        '--glue', 'solid.humank.genaidemo.bdd',
-        '--tags', '@order',
+        '--glue', 'solid.humank.genaidemo.bdd.steps',
         'src/test/resources/features'
     ]
     

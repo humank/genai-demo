@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.bdd;
 
 import org.junit.platform.suite.api.IncludeClassNamePatterns;
-import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
@@ -11,11 +11,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
  */
 @Suite
 @SuiteDisplayName("Feature File Validation Test Suite")
-@SelectClasses({
-    JUnitFeatureValidator.class,
-    StandaloneFeatureRunner.class,
-    GherkinSyntaxValidator.class
-})
+@SelectPackages("solid.humank.genaidemo.bdd.steps")
 public class FeatureTestSuite {
     // 此類不需要任何內容，僅作為測試套件的入口點
 }

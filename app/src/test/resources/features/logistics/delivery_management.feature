@@ -1,5 +1,6 @@
 # language: en
 # Original language: zh-TW
+@logistics
 Feature: Delivery Management
   As a customer
   I want to track the delivery status of my order

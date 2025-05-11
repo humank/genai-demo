@@ -54,7 +54,7 @@
 功能規範使用 Gherkin 語法編寫，涵蓋以下業務領域：
 
 - **訂單管理** ([order_management.feature](app/src/test/resources/features/order/order_management.feature)): 訂單創建、添加商品、驗證等功能
-- **訂單工作流程** ([order_workflow.feature](app/src/test/resources/features/order/order_workflow.feature)): 完整的訂單生命週期
+- **訂單工作流程** ([order_workflow.feature](app/src/test/resources/features/workflow/order_workflow.feature)): 完整的訂單生命週期
 - **支付處理** ([payment_processing.feature](app/src/test/resources/features/payment/payment_processing.feature)): 支付相關的各種場景
 - **配送管理** ([delivery_management.feature](app/src/test/resources/features/logistics/delivery_management.feature)): 訂單配送的完整流程
 - **庫存管理** ([inventory_management.feature](app/src/test/resources/features/inventory/inventory_management.feature)): 庫存檢查和管理
@@ -62,27 +62,55 @@
 
 ### 運行測試
 
-您可以通過以下方式運行測試：
+本專案使用模組化的測試架構，將不同功能領域的測試分開運行，以避免步驟定義衝突。
 
-1. **運行所有 JUnit 測試**:
-   ```bash
-   ./gradlew test
-   ```
+#### 標準測試
 
-2. **運行 Cucumber 測試**:
-   ```bash
-   ./gradlew cucumber --no-configuration-cache
-   ```
+運行所有非 Cucumber 測試（單元測試、架構測試等）：
 
-3. **運行特定的測試類**:
-   ```bash
-   ./gradlew test --tests "solid.humank.genaidemo.bdd.GherkinSyntaxValidator"
-   ```
+```bash
+./gradlew test
+```
 
-4. **運行所有測試（包含 JUnit 和 Cucumber）**:
-   ```bash
-   ./gradlew test allTests
-   ```
+#### 功能領域測試
+
+運行特定功能領域的 Cucumber 測試：
+
+```bash
+# 訂單管理測試
+./gradlew orderTests
+
+# 訂單工作流測試
+./gradlew workflowTests
+
+# 庫存管理測試
+./gradlew inventoryTests
+
+# 物流管理測試
+./gradlew logisticsTests
+
+# 通知服務測試
+./gradlew notificationTests
+
+# 支付處理測試
+./gradlew paymentTests
+```
+
+#### 所有 Cucumber 測試
+
+運行所有 Cucumber 測試：
+
+```bash
+./gradlew cucumberTests
+```
+
+#### 運行所有測試
+
+運行所有測試（包括標準測試和所有 Cucumber 測試）：
+
+```bash
+./gradlew runAllTests
+```
 
 ### 測試報告
 
@@ -92,7 +120,23 @@
 
 ### 步驟定義
 
-步驟定義類位於 `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄下，實現了 Gherkin 步驟與實際代碼的映射。
+步驟定義類位於 `app/src/test/java/solid/humank/genaidemo/bdd/steps/` 目錄下，按功能領域組織：
+
+- `order/`: 訂單管理步驟定義
+- `workflow/`: 訂單工作流步驟定義
+- `inventory/`: 庫存管理步驟定義
+- `logistics/`: 物流管理步驟定義
+- `notification/`: 通知服務步驟定義
+- `payment/`: 支付處理步驟定義
+
+每個功能領域都有自己的測試運行器，位於 `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄下：
+
+- `CucumberOrderTestRunner.java`: 訂單管理測試運行器
+- `CucumberWorkflowTestRunner.java`: 訂單工作流測試運行器
+- `CucumberInventoryTestRunner.java`: 庫存管理測試運行器
+- `CucumberLogisticsTestRunner.java`: 物流管理測試運行器
+- `CucumberNotificationTestRunner.java`: 通知服務測試運行器
+- `CucumberPaymentTestRunner.java`: 支付處理測試運行器
 
 ## 核心概念和模式
 

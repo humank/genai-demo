@@ -1,5 +1,6 @@
 # language: en
 # Original language: zh-TW
+@notification
 Feature: Notification Service
   As an order system
   I need to send various notifications to customers

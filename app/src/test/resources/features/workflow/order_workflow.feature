@@ -1,5 +1,6 @@
 # language: en
 # Original language: zh-TW
+@workflow
 Feature: Order Workflow
   As an order system
   I need to manage the complete order lifecycle
@@ -8,7 +9,7 @@ Feature: Order Workflow
   Background:
     # 假設系統中有可用的商品
     # 並且客戶已經登入系統
-    Given there are available products in the system
+    Given there are products available for workflow
     And the customer is logged into the system
 
   Scenario: Complete order flow - from creation to completion
@@ -70,7 +71,7 @@ Feature: Order Workflow
     
     # Order Confirmation
     Then the system should confirm the order
-    And the order status should be updated to "CONFIRMED"
+    And the workflow order status should be updated to "CONFIRMED"
     And the customer should receive an order confirmation notification
     
     # Delivery Processing
@@ -82,7 +83,7 @@ Feature: Order Workflow
     # Order Completion
     And the customer receives the order
     And the customer confirms receipt
-    Then the order status should be updated to "COMPLETED"
+    Then the workflow order status should be updated to "COMPLETED"
     And the customer should be able to rate the order
 
   Scenario: Order flow - cancellation due to insufficient inventory
@@ -116,8 +117,8 @@ Feature: Order Workflow
     And the inventory is insufficient
     
     # Order Cancellation
-    Then the system should cancel the order
-    And the order status should be updated to "CANCELLED"
+    Then the system should cancel the workflow order
+    And the workflow order status should be updated to "CANCELLED"
     And the cancellation reason should be "Insufficient inventory"
     And the customer should receive an insufficient inventory notification
 
@@ -160,8 +161,8 @@ Feature: Order Workflow
     And the payment fails
     
     # Order Cancellation
-    Then the system should cancel the order
-    And the order status should be updated to "CANCELLED"
+    Then the system should cancel the workflow order
+    And the workflow order status should be updated to "CANCELLED"
     And the cancellation reason should be "Payment failure"
     And the customer should receive a payment failure notification
 
@@ -182,15 +183,15 @@ Feature: Order Workflow
     # 並且客戶應該收到訂單取消確認通知
     # Order Creation
     When the customer creates an order with valid products
-    And the order status is "PENDING_PAYMENT"
+    And the workflow order status is "PENDING_PAYMENT"
     
     # Customer Cancellation
     And the customer requests to cancel the order
     And the customer provides cancellation reason "Found a better option"
     
     # Order Cancellation
-    Then the system should cancel the order
-    And the order status should be updated to "CANCELLED"
+    Then the system should cancel the workflow order
+    And the workflow order status should be updated to "CANCELLED"
     And the cancellation reason should be "Customer request"
     And the system should release the reserved inventory
     And the customer should receive an order cancellation confirmation notification

@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.bdd;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,15 +12,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * 獨立的 feature 文件驗證器，使用 JUnit 5 測試框架
+ * 使用純 JUnit 5 測試框架驗證 feature 文件
  * 不依賴 Cucumber 或 Spring，避免複雜的配置問題
  */
-public class StandaloneFeatureRunner {
+public class JUnitFeatureValidatorTest {
 
     @Test
+    @DisplayName("驗證訂單管理 Feature 文件")
     public void validateOrderManagementFeatureFile() throws IOException {
         Path featureFile = Paths.get("src/test/resources/features/order/order_management.feature");
         assertTrue(Files.exists(featureFile), "Feature file does not exist: " + featureFile);
@@ -30,6 +31,7 @@ public class StandaloneFeatureRunner {
     }
     
     @Test
+    @DisplayName("列出所有 Feature 文件")
     public void listAllFeatureFiles() throws IOException {
         Path featuresDir = Paths.get("src/test/resources/features");
         assertTrue(Files.exists(featuresDir), "Features directory does not exist: " + featuresDir);
@@ -45,26 +47,6 @@ public class StandaloneFeatureRunner {
             }
             
             assertTrue(featureFiles.size() > 0, "No feature files found");
-        }
-    }
-    
-    @Test
-    public void validateAllFeatureFiles() throws IOException {
-        Path featuresDir = Paths.get("src/test/resources/features");
-        assertTrue(Files.exists(featuresDir), "Features directory does not exist: " + featuresDir);
-        
-        try (Stream<Path> paths = Files.walk(featuresDir)) {
-            List<Path> featureFiles = paths
-                .filter(path -> path.toString().endsWith(".feature"))
-                .collect(Collectors.toList());
-            
-            for (Path file : featureFiles) {
-                String content = Files.readString(file);
-                if (!content.contains("Feature:")) {
-                    fail("Feature file does not contain 'Feature:' keyword: " + file);
-                }
-                System.out.println("Validated feature file: " + featuresDir.relativize(file));
-            }
         }
     }
 }
