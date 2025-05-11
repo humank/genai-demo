@@ -7,6 +7,7 @@ import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /**
  * 支付聚合根
@@ -17,9 +18,12 @@ public class Payment {
     private final UUID orderId;
     private final Money amount;
     private PaymentStatus status;
+    private PaymentMethod paymentMethod;
     private String transactionId;
+    private String failureReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean canRetry;
     
     /**
      * 建立支付
@@ -31,6 +35,15 @@ public class Payment {
         this.status = PaymentStatus.PENDING;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
+        this.canRetry = true;
+    }
+    
+    /**
+     * 建立支付（指定支付方式）
+     */
+    public Payment(UUID orderId, Money amount, PaymentMethod paymentMethod) {
+        this(orderId, amount);
+        this.paymentMethod = Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
     }
     
     /**
@@ -54,6 +67,7 @@ public class Payment {
             throw new IllegalStateException("Payment must be in PENDING state to fail");
         }
         
+        this.failureReason = reason;
         this.status = PaymentStatus.FAILED;
         this.updatedAt = LocalDateTime.now();
     }
@@ -67,6 +81,48 @@ public class Payment {
         }
         
         this.status = PaymentStatus.REFUNDED;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * 處理支付超時
+     */
+    public void timeout() {
+        if (status != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Payment must be in PENDING state to timeout");
+        }
+        
+        this.failureReason = "Payment gateway timeout";
+        this.status = PaymentStatus.FAILED;
+        this.canRetry = true;
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * 設置支付方式
+     */
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        if (status != PaymentStatus.PENDING) {
+            throw new IllegalStateException("Payment method can only be set when payment is in PENDING state");
+        }
+        
+        this.paymentMethod = Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    /**
+     * 重試支付
+     */
+    public void retry() {
+        if (!canRetry) {
+            throw new IllegalStateException("This payment cannot be retried");
+        }
+        
+        if (status != PaymentStatus.FAILED) {
+            throw new IllegalStateException("Only failed payments can be retried");
+        }
+        
+        this.status = PaymentStatus.PENDING;
         this.updatedAt = LocalDateTime.now();
     }
     
@@ -87,8 +143,16 @@ public class Payment {
         return status;
     }
     
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+    
     public String getTransactionId() {
         return transactionId;
+    }
+    
+    public String getFailureReason() {
+        return failureReason;
     }
     
     public LocalDateTime getCreatedAt() {
@@ -97,5 +161,9 @@ public class Payment {
     
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+    
+    public boolean canRetry() {
+        return canRetry;
     }
 }

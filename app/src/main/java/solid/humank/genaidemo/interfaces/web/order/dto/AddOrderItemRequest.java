@@ -40,6 +40,6 @@ public record AddOrderItemRequest(
     
     // 通過BigDecimal創建AddOrderItemRequest的工廠方法
     public static AddOrderItemRequest of(String orderId, String productId, String productName, int quantity, BigDecimal price) {
-        return new AddOrderItemRequest(orderId, productId, productName, quantity, new Money(price));
+        return new AddOrderItemRequest(orderId, productId, productName, quantity, Money.of(price));
     }
 }

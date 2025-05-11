@@ -46,6 +46,6 @@ public class AddOrderItemCommand {
      * 創建添加訂單項命令
      */
     public static AddOrderItemCommand of(String orderId, String productId, String productName, int quantity, BigDecimal price) {
-        return new AddOrderItemCommand(orderId, productId, productName, quantity, new Money(price));
+        return new AddOrderItemCommand(orderId, productId, productName, quantity, Money.of(price));
     }
 }

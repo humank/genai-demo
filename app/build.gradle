@@ -1,206 +1,44 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.5'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'solid.humank'
 version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '17'
-}
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.38'
-    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    // Database
+    runtimeOnly 'com.h2database:h2'
     
-    // ArchUnit - 架構測試工具
-    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.1'
+    // Flyway for database migrations
+    implementation 'org.flywaydb:flyway-core'
     
-    // Cucumber - BDD 測試框架 (JUnit 5 相容版本)
-    def cucumberVersion = '7.15.0'
-    testImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
-    testImplementation "io.cucumber:cucumber-core:${cucumberVersion}"
-    testImplementation "io.cucumber:cucumber-junit-platform-engine:${cucumberVersion}"
-    
-    // JUnit 5
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
-    
-    // JUnit Platform Suite
-    testImplementation 'org.junit.platform:junit-platform-suite-api:1.10.2'
-    testImplementation 'org.junit.platform:junit-platform-suite-engine:1.10.2'
-    testImplementation 'org.junit.platform:junit-platform-suite-commons:1.10.2'
-    
-    // Test dependencies
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.cucumber:cucumber-java:7.12.1'
+    testImplementation 'io.cucumber:cucumber-junit:7.12.1'
+    testImplementation 'io.cucumber:cucumber-spring:7.12.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.12.1'
+    testImplementation 'org.junit.platform:junit-platform-suite:1.9.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.9.3'
     
-    // Mockito 扩展支持静态方法模拟
-    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    // ArchUnit for architecture testing
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.0.1'
 }
 
 test {
-    useJUnitPlatform {
-        // 只包含特定的測試類
-        includeTags 'architecture', 'domain', 'utils'
-        excludeTags 'cucumber'
-    }
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-    
-    // 排除特定的測試類，避免重複執行
-    exclude '**/AllTestsSuite.class'
-    exclude '**/FeatureTestSuite.class'
-    exclude '**/CucumberTestRunner.class'
-    exclude '**/Cucumber*TestRunner.class'
-}
-
-// 定義一個新的測試任務，用於運行 Order 相關的 Cucumber 測試
-task orderTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'order'
-    }
-    
-    // 只包含 CucumberOrderTestRunner
-    include '**/CucumberOrderTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行 Workflow 相關的 Cucumber 測試
-task workflowTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'workflow'
-    }
-    
-    // 只包含 CucumberWorkflowTestRunner
-    include '**/CucumberWorkflowTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行 Inventory 相關的 Cucumber 測試
-task inventoryTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'inventory'
-    }
-    
-    // 只包含 CucumberInventoryTestRunner
-    include '**/CucumberInventoryTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行 Logistics 相關的 Cucumber 測試
-task logisticsTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'logistics'
-    }
-    
-    // 只包含 CucumberLogisticsTestRunner
-    include '**/CucumberLogisticsTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行 Notification 相關的 Cucumber 測試
-task notificationTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'notification'
-    }
-    
-    // 只包含 CucumberNotificationTestRunner
-    include '**/CucumberNotificationTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行 Payment 相關的 Cucumber 測試
-task paymentTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-        includeTags 'payment'
-    }
-    
-    // 只包含 CucumberPaymentTestRunner
-    include '**/CucumberPaymentTestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-}
-
-// 定義一個新的測試任務，用於運行所有 Cucumber 測試
-task cucumberTests(type: Test) {
-    useJUnitPlatform {
-        includeEngines 'cucumber'
-    }
-    
-    // 包含所有 Cucumber 測試運行器
-    include '**/Cucumber*TestRunner.class'
-    
-    // 設置系統屬性
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-    
-    // 添加測試報告
-    reports {
-        html.required = true
-        junitXml.required = true
-    }
-}
-
-// 定義一個新的測試任務，用於運行所有測試（包括標準測試和 Cucumber 測試）
-task runAllTests {
-    dependsOn test, cucumberTests
-    
-    doLast {
-        println "All tests have been executed!"
-    }
-}
-
-// Cucumber 配置
-configurations {
-    cucumberRuntime {
-        extendsFrom testImplementation
-    }
-}
-
-// 使用 JavaExec 類型的任務替代自定義任務
-task cucumber(type: JavaExec) {
-    dependsOn assemble, testClasses
-    
-    description = "運行 Cucumber BDD 測試"
-    group = "verification"
-    
-    mainClass = "io.cucumber.core.cli.Main"
-    classpath = sourceSets.main.output + sourceSets.test.output + configurations.cucumberRuntime
-    
-    args = [
-        '--plugin', 'pretty',
-        '--plugin', "html:${buildDir}/reports/cucumber/report.html",
-        '--plugin', "json:${buildDir}/reports/cucumber/report.json",
-        '--glue', 'solid.humank.genaidemo.bdd.steps',
-        'src/test/resources/features'
-    ]
-    
-    systemProperty('cucumber.publish.quiet', 'true')
+    useJUnitPlatform()
 }

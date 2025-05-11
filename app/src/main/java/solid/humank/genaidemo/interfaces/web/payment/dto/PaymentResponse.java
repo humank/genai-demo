@@ -43,8 +43,8 @@ public class PaymentResponse {
                 payment.getId().toString(),
                 payment.getOrderId().toString(),
                 payment.getAmount().getAmount(),
-                payment.getAmount().getCurrency().name(),
-                payment.getStatus().name(),
+                payment.getAmount().getCurrency(),
+                payment.getStatus().toString(),
                 payment.getTransactionId(),
                 payment.getCreatedAt(),
                 payment.getUpdatedAt()

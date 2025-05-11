@@ -1,55 +1,64 @@
 package solid.humank.genaidemo.infrastructure.order.persistence;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
-import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.order.model.aggregate.Order;
+import solid.humank.genaidemo.infrastructure.order.persistence.entity.JpaOrderEntity;
+import solid.humank.genaidemo.infrastructure.order.persistence.mapper.OrderMapper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 訂單持久化適配器
+ * JPA 訂單儲存庫實現
  * 實作 OrderPersistencePort 接口
- * 注意：這是一個簡化的內存實現，實際應用中會使用真實的資料庫
+ * 使用 Spring Data JPA 進行數據庫操作
  */
 @Repository
+@Primary
 public class JpaOrderRepository implements OrderPersistencePort {
 
-    // 模擬數據存儲
-    private final Map<OrderId, Order> orderStore = new HashMap<>();
+    private final SpringDataJpaOrderRepository springDataJpaOrderRepository;
+
+    public JpaOrderRepository(SpringDataJpaOrderRepository springDataJpaOrderRepository) {
+        this.springDataJpaOrderRepository = springDataJpaOrderRepository;
+    }
 
     @Override
     public void save(Order order) {
-        orderStore.put(order.getId(), order);
+        JpaOrderEntity jpaEntity = OrderMapper.toJpaEntity(order);
+        springDataJpaOrderRepository.save(jpaEntity);
     }
 
     @Override
     public Optional<Order> findById(OrderId orderId) {
-        return Optional.ofNullable(orderStore.get(orderId));
+        return springDataJpaOrderRepository.findById(orderId.toString())
+                .map(OrderMapper::toDomainEntity);
     }
 
     @Override
     public List<Order> findAll() {
-        return orderStore.values().stream().collect(Collectors.toList());
+        return springDataJpaOrderRepository.findAll().stream()
+                .map(OrderMapper::toDomainEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void delete(OrderId orderId) {
-        orderStore.remove(orderId);
+        springDataJpaOrderRepository.deleteById(orderId.toString());
     }
 
     @Override
     public void update(Order order) {
-        // 在記憶體實現中，更新和保存是一樣的
+        // 在 JPA 中，save 方法會根據 ID 是否存在來決定是插入還是更新
         save(order);
     }
 
     @Override
     public boolean exists(OrderId orderId) {
-        return orderStore.containsKey(orderId);
+        return springDataJpaOrderRepository.existsById(orderId.toString());
     }
 }

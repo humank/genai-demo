@@ -34,7 +34,7 @@ public class OrderDiscountPolicy implements DomainPolicy<Order, Money> {
         BigDecimal discountAmount = order.getTotalAmount().amount()
             .multiply(discountRate);
         
-        return new Money(
+        return Money.of(
             order.getTotalAmount().amount().subtract(discountAmount),
             order.getTotalAmount().currency()
         );
