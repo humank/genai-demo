@@ -492,12 +492,6 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/cucumber-picocontainer/7.15.0/5d711e134542dd4ca26aaba24a467c89ab15300e/cucumber-picocontainer-7.15.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/cucumber-picocontainer/7.15.0/e136931584908fc30253980c7739cb00efb3bc06/cucumber-picocontainer-7.15.0-sources.jar">
-		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.10.1/c8f15d4e99940c4564098af78c10809c00fdca06/junit-jupiter-params-5.10.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-params/5.10.1/1add8e4310a408675f46eae8acafe6b2b72232e5/junit-jupiter-params-5.10.1-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -541,12 +535,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.awaitility/awaitility/4.2.0/2c39784846001a9cffd6c6b89c78de62c0d80fb8/awaitility-4.2.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.awaitility/awaitility/4.2.0/359e52d6a80b3d12fb08b0e665f15ce334d2c7a3/awaitility-4.2.0-sources.jar">
-		<attributes>
-			<attribute name="test" value="true"/>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.picocontainer/picocontainer/2.15/1b05ebc330fb947f74fe98469f64f99e6bdd9892/picocontainer-2.15.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.picocontainer/picocontainer/2.15/5cd68f54f9d6cf19ac62c7281ac729401f167fc5/picocontainer-2.15-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
 			<attribute name="gradle.buildServer" value="true"/>

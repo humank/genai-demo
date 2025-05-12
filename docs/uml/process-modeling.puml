@@ -1,0 +1,117 @@
+@startuml process-modeling
+left to right direction
+
+skinparam rectangle {
+    RoundCorner 25
+    BorderColor black
+    FontStyle bold
+}
+
+skinparam title {
+    FontSize 20
+    FontStyle bold
+}
+
+title 訂單系統事件風暴圖 - 流程建模階段
+
+' 参与者
+rectangle "客戶" as Customer #FFD700
+rectangle "系統管理員" as Admin #FFD700
+
+' 读模型
+rectangle "產品目錄" as ProductCatalogReadModel #32CD32
+rectangle "訂單摘要" as OrderSummaryReadModel #32CD32
+rectangle "庫存狀態" as InventoryStatusReadModel #32CD32
+rectangle "支付狀態" as PaymentStatusReadModel #32CD32
+
+' 命令
+rectangle "建立訂單" as CreateOrderCommand #1E90FF
+rectangle "添加訂單項目" as AddOrderItemCommand #1E90FF
+rectangle "提交訂單" as SubmitOrderCommand #1E90FF
+rectangle "檢查庫存" as CheckInventoryCommand #1E90FF
+rectangle "預留庫存" as ReserveInventoryCommand #1E90FF
+rectangle "處理支付" as ProcessPaymentCommand #1E90FF
+rectangle "確認訂單" as ConfirmOrderCommand #1E90FF
+rectangle "取消訂單" as CancelOrderCommand #1E90FF
+
+' 聚合
+rectangle "訂單" as OrderAggregate #FFFF00
+rectangle "庫存" as InventoryAggregate #FFFF00
+rectangle "支付" as PaymentAggregate #FFFF00
+
+' 事件
+rectangle "訂單已建立" as OrderCreatedEvent #FFA500
+rectangle "訂單項目已添加" as OrderItemAddedEvent #FFA500
+rectangle "訂單已提交" as OrderSubmittedEvent #FFA500
+rectangle "庫存已檢查" as InventoryCheckedEvent #FFA500
+rectangle "庫存已預留" as InventoryReservedEvent #FFA500
+rectangle "支付已請求" as PaymentRequestedEvent #FFA500
+rectangle "支付已完成" as PaymentCompletedEvent #FFA500
+rectangle "訂單已確認" as OrderConfirmedEvent #FFA500
+rectangle "訂單已取消" as OrderCancelledEvent #FFA500
+
+' 策略
+rectangle "庫存預留策略" as InventoryReservationPolicy #800080
+rectangle "支付處理策略" as PaymentProcessingPolicy #800080
+rectangle "訂單取消策略" as OrderCancellationPolicy #800080
+
+' 流程连接
+' 订单创建流程
+Customer --> ProductCatalogReadModel
+ProductCatalogReadModel --> CreateOrderCommand
+CreateOrderCommand --> OrderAggregate
+OrderAggregate --> OrderCreatedEvent
+OrderCreatedEvent --> OrderSummaryReadModel
+
+' 添加订单项目流程
+Customer --> OrderSummaryReadModel
+OrderSummaryReadModel --> AddOrderItemCommand
+AddOrderItemCommand --> OrderAggregate
+OrderAggregate --> OrderItemAddedEvent
+
+' 提交订单流程
+Customer --> SubmitOrderCommand
+SubmitOrderCommand --> OrderAggregate
+OrderAggregate --> OrderSubmittedEvent
+OrderSubmittedEvent --> CheckInventoryCommand
+
+' 库存检查和预留流程
+CheckInventoryCommand --> InventoryAggregate
+InventoryAggregate --> InventoryCheckedEvent
+InventoryCheckedEvent --> InventoryReservationPolicy
+InventoryReservationPolicy --> ReserveInventoryCommand
+ReserveInventoryCommand --> InventoryAggregate
+InventoryAggregate --> InventoryReservedEvent
+InventoryReservedEvent --> InventoryStatusReadModel
+InventoryReservedEvent --> ProcessPaymentCommand
+
+' 支付处理流程
+ProcessPaymentCommand --> PaymentAggregate
+PaymentAggregate --> PaymentRequestedEvent
+PaymentAggregate --> PaymentCompletedEvent : 支付成功
+PaymentAggregate --> OrderCancelledEvent : 支付失败
+PaymentCompletedEvent --> PaymentStatusReadModel
+PaymentCompletedEvent --> PaymentProcessingPolicy
+PaymentProcessingPolicy --> ConfirmOrderCommand
+
+' 订单确认流程
+ConfirmOrderCommand --> OrderAggregate
+OrderAggregate --> OrderConfirmedEvent
+
+' 订单取消流程
+CancelOrderCommand --> OrderAggregate
+OrderAggregate --> OrderCancelledEvent
+OrderCancelledEvent --> OrderCancellationPolicy
+
+' 图例
+legend right
+  |= 元素類型 |= 顏色 |= 說明 |
+  | <back:#FFD700>   </back> | 參與者 | 執行命令的人或系統 |
+  | <back:#32CD32>   </back> | 讀模型 | 用戶查看的信息或視圖 |
+  | <back:#1E90FF>   </back> | 命令 | 觸發事件的行為或意圖 |
+  | <back:#FFFF00>   </back> | 聚合 | 確保業務規則的實體 |
+  | <back:#FFA500>   </back> | 事件 | 系統中發生的事情 |
+  | <back:#800080>   </back> | 策略 | 當事件發生時應執行的業務規則 |
+endlegend
+
+@enduml
