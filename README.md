@@ -45,22 +45,26 @@
 專案包含豐富的文檔，位於 `docs` 目錄下：
 
 - **架構文檔**:
-  - `architecture-overview.md` - 系統架構概覽
-  - `HexagonalArchitectureSummary.md` - 六角架構實現總結
-  - `HexagonalRefactoring.MD` - 六角架構與 Event Storming 整合重構指南
-  - `LayeredArchitectureDesign.MD` - 分層架構設計分析與建議
+  - [系統架構概覽](docs/architecture-overview.md) - 提供系統架構的高層次視圖，包括六角形架構、DDD 和事件驅動架構的特點
+  - [六角架構實現總結](docs/HexagonalArchitectureSummary.md) - 詳細說明六角形架構的實現方式和優勢
+  - [六角架構與 Event Storming 整合重構指南](docs/HexagonalRefactoring.MD) - 如何使用 Event Storming 重構為六角形架構
+  - [分層架構設計分析與建議](docs/LayeredArchitectureDesign.MD) - 分析不同分層架構的優缺點和適用場景
 
 - **設計文檔**:
-  - `DesignGuideline.MD` - 設計指南，包含 Tell, Don't Ask 原則等
-  - `DesignPrinciple.md` - 系統開發與測試的設計遵循規範
-  - `SoftwareDesignClassics.md` - 軟體設計經典書籍精要
+  - [設計指南](docs/DesignGuideline.MD) - 包含 Tell, Don't Ask 原則、DDD 戰術模式和防禦性編程實踐
+  - [系統開發與測試的設計遵循規範](docs/DesignPrinciple.md) - 定義系統開發和測試的設計規範
+  - [軟體設計經典書籍精要](docs/SoftwareDesignClassics.md) - 總結軟體設計領域經典書籍的核心概念
 
 - **代碼質量**:
-  - `CodeAnalysis.md` - 代碼分析報告
-  - `RefactoringGuidance.md` - 重構指南
+  - [代碼分析報告](docs/CodeAnalysis.md) - 基於《重構》原則的代碼分析和改進建議
+  - [重構指南](docs/RefactoringGuidance.md) - 提供代碼重構的具體技術和最佳實踐
+
+- **重構過程**:
+  - [DDD 與六角形架構重構之旅](docs/instruction.md) - 記錄從混亂代碼結構到 DDD 和六角形架構的重構過程
 
 - **UML 圖表**:
-  - `docs/uml/` 目錄包含各種 UML 圖表，詳見 **[docs/uml/README.md](docs/uml/README.md)**
+  - [UML 文檔說明](docs/uml/README.md) - 包含各種 UML 圖表，如類別圖、組件圖、領域模型圖等
+  - [Event Storming 指南](docs/uml/es-gen-guidance-tc.md) - 使用 PlantUML 繪製 Event Storming 三階段產出的指南
 
 ## 如何運行
 
@@ -127,8 +131,8 @@
 本專案使用 ArchUnit 確保代碼遵循預定的架構規則。架構測試位於 `app/src/test/java/solid/humank/genaidemo/architecture/` 目錄下，包括：
 
 1. **DddArchitectureTest** - 確保遵循 DDD 分層架構
-2. **HexagonalArchitectureTest** - 確保遵循六角形架構
-3. **DddTacticalPatternsTest** - 確保正確使用 DDD 戰術模式
+2. **DddTacticalPatternsTest** - 確保正確使用 DDD 戰術模式
+3. **PackageStructureTest** - 確保包結構符合規範
 
 運行架構測試：
 
@@ -157,7 +161,7 @@
 - 時序圖、狀態圖、活動圖
 - 領域模型圖、六角形架構圖、事件風暴圖等
 
-查看 `docs/uml/README.md` 獲取更多信息。
+查看 [UML 文檔說明](docs/uml/README.md) 獲取更多信息。
 
 ## 常見問題
 
