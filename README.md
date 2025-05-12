@@ -60,7 +60,7 @@
   - `RefactoringGuidance.md` - 重構指南
 
 - **UML 圖表**:
-  - `docs/uml/` 目錄包含各種 UML 圖表，詳見 `docs/uml/README.md`
+  - `docs/uml/` 目錄包含各種 UML 圖表，詳見 **[docs/uml/README.md](docs/uml/README.md)**
 
 ## 如何運行
 
