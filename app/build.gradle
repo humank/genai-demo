@@ -74,3 +74,33 @@ tasks.register('cucumber', JavaExec) {
         'src/test/resources/features'
     ]
 }
+
+// 架構測試任務 - 專門執行 DDD 與六邊形架構的規範測試
+tasks.register('testArchitecture', Test) {
+    description = '執行 DDD 與六邊形架構的規範測試'
+    group = 'verification'
+    
+    useJUnitPlatform()
+    
+    // 只包含 architecture 包下的測試
+    include '**/architecture/**'
+    
+    // 測試報告設置
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
+    
+    // 輸出測試結果到特定目錄
+    reports.html.outputLocation = file("${buildDir}/reports/tests/architecture")
+    
+    // 顯示標準輸出流
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    
+    // 確保在主要測試之前執行
+    shouldRunAfter test
+}

@@ -1,80 +1,139 @@
-# 系統開發設計遵循規範
+# 系統開發與測試的設計遵循規範
 
-在本專案中請遵循 ddd tactical design pattern 與分層原則，如同 ../app/src/test/java/solid/humank/genaidemo/architecture 底下的3 個 ArchUnit 測試的要求，來完成本專案的程式碼開發工作。
+在本專案中請遵循 DDD 戰術設計模式與分層原則，如同 `../app/src/test/java/solid/humank/genaidemo/architecture` 底下的 3 個 ArchUnit 測試的要求，來完成本專案的程式碼開發工作。
 
-## Vibe coding
+## 架構設計原則
 
-1. 針對目前已經有的 feature (基於BDD gherkin 語法) , 對應 AggregateRoot 來撰寫單元測試; 該測試必須透過 cucumber-jvm 套件來完成單元測試程式碼實作, 不依賴於 spring boot 系列框架
-2. 針對 Repository 的實作，需參考 DDD Repository pattern, 以及六邊形架構分層設計來實作，避免將 Aggregate 直接暴露寫入到 jpa 的實作
-3. JPA 的實作是使用 Spring Data JPA
-4. 針對 Interfaces/web (六邊形架構或者 DDD tactical design pattern 的 presentation layer)，需要針對 controller 撰寫測試程式，這個可以透過 spring boot 框架進行整合測試
-5. 針對 application service 也需要撰寫測試, 透過 spring boot 框架進行整合測試
+### 分層架構
 
+1. **領域層 (Domain Layer)**
+   - 包含業務核心邏輯和規則
+   - 不依賴於其他層
+   - 包含聚合根、實體、值對象、領域事件、領域服務和領域異常
 
-## DesignDetail
+2. **應用層 (Application Layer)**
+   - 協調領域對象完成用戶用例
+   - 只依賴於領域層
+   - 包含應用服務、DTO、命令和查詢對象
 
-### 系統問題與改善策略
+3. **基礎設施層 (Infrastructure Layer)**
+   - 提供技術實現
+   - 依賴於領域層，實現領域層定義的接口
+   - 包含儲存庫實現、外部系統適配器、ORM 映射等
 
-#### 1. OrderStatus 枚舉中缺少狀態（PENDING、CONFIRMED、SHIPPING）
+4. **介面層 (Interfaces Layer)**
+   - 處理用戶交互
+   - 只依賴於應用層
+   - 包含控制器、視圖模型、請求/響應對象等
 
-我會檢查 OrderStatus 枚舉，並添加缺少的狀態。目前 OrderStatus 枚舉中有 CREATED、SUBMITTED、PAID 等狀態，但缺少 PENDING、CONFIRMED、SHIPPING 等狀態，這導致 Order 聚合根中使用這些狀態時出現編譯錯誤。
+### DDD 戰術設計模式
 
-改善方案：
-- 在 OrderStatus 枚舉中添加缺少的狀態
-- 或者修改 Order 聚合根中的代碼，使用已存在的狀態（例如，將 PENDING 改為 SUBMITTED，CONFIRMED 改為 PAID，SHIPPING 改為 SHIPPED）
-- 確保狀態轉換邏輯（canTransitionTo 方法）也相應更新
+1. **聚合根 (Aggregate Root)**
+   - 必須位於 `domain.*.model.aggregate` 包中
+   - 使用 `@AggregateRoot` 註解標記
+   - 控制對內部實體的訪問
+   - 確保業務不變性
 
-#### 2. 應用層服務中的方法參數和返回值與領域模型不匹配
+2. **實體 (Entity)**
+   - 必須位於 `domain.*.model.entity` 包中
+   - 使用 `@Entity` 註解標記
+   - 具有唯一標識
+   - 可變但保持身份一致性
 
-應用層服務（如 PaymentApplicationService）中的方法參數和返回值與領域模型不匹配，例如：
-- UUID 和 PaymentId 之間的轉換問題
-- PaymentFailedEvent 構造函數參數不匹配
-- 方法調用不存在的 DTO 方法
+3. **值對象 (Value Object)**
+   - 必須位於 `domain.*.model.valueobject` 包中
+   - 使用 `@ValueObject` 註解標記
+   - 不可變
+   - 沒有唯一標識，通過屬性值比較相等性
 
-改善方案：
-- 創建適當的轉換方法，將 UUID 轉換為 PaymentId
-- 更新 PaymentFailedEvent 構造函數調用，提供正確的參數
-- 實現缺少的 DTO 方法，如 PaymentResponseDto.fromDomain()
-- 確保 DTO 和領域模型之間的映射正確
+4. **領域事件 (Domain Event)**
+   - 必須位於 `domain.*.events` 包中
+   - 實現 `DomainEvent` 接口
+   - 不可變
+   - 記錄領域中發生的重要事件
 
-#### 3. DTO 類中缺少方法
+5. **儲存庫 (Repository)**
+   - 接口必須位於 `domain.*.repository` 包中
+   - 實現必須位於 `infrastructure.*.persistence` 包中
+   - 操作聚合根
+   - 提供持久化和查詢功能
 
-一些 DTO 類（如 PaymentResponseDto）缺少必要的方法，如 fromDomain()、getId()、getCurrency() 等。
+6. **領域服務 (Domain Service)**
+   - 必須位於 `domain.*.service` 包中
+   - 使用 `@DomainService` 註解標記
+   - 無狀態
+   - 處理跨聚合的業務邏輯
 
-改善方案：
-- 為 PaymentResponseDto 實現 fromDomain() 靜態方法，用於從領域模型創建 DTO
-- 為 DTO 類添加缺少的 getter 方法
-- 確保 DTO 類的結構與領域模型匹配，以便於轉換
+7. **規格 (Specification)**
+   - 必須位於 `domain.*.specification` 包中
+   - 實現 `Specification` 接口
+   - 封裝複雜的業務規則和查詢條件
 
-#### 4. 其他改進
+8. **防腐層 (Anti-Corruption Layer)**
+   - 必須位於 `infrastructure.*.acl` 包中
+   - 隔離外部系統
+   - 翻譯外部模型到內部模型
 
-除了上述直接問題外，我還會考慮以下改進：
+## 測試策略
 
-- 確保 Repository 適配器正確實現領域儲存庫接口
-- 檢查 Mapper 類是否正確處理領域模型和持久化模型之間的轉換
-- 確保 JPA 實體類與數據庫表結構匹配
-- 檢查 Cucumber 測試步驟定義是否覆蓋所有場景
+### 1. 單元測試
 
-#### 實施策略
+基於 Cucumber-JVM 針對聚合根撰寫單元測試，不依賴 Spring Boot 框架。
 
-我會採取以下策略來實施這些改進：
+- **測試範圍**：聚合根、實體、值對象、領域服務
+- **測試工具**：Cucumber-JVM、JUnit 5
+- **測試目標**：驗證業務規則和不變性
 
-1. 首先修復領域層的問題（如 OrderStatus 枚舉）
-2. 然後修復基礎設施層的問題（如 Repository 和 Mapper）
-3. 接著修復應用層的問題（如服務和 DTO）
-4. 最後修復接口層的問題（如控制器和請求/響應對象）
+#### Cucumber BDD 測試規範
 
-這種自下而上的方法可以確保每一層都建立在穩固的基礎上，並且可以逐步驗證每一層的正確性。
+1. **Feature 文件**
+   - 使用 Gherkin 語法描述業務場景
+   - 位於 `src/test/resources/features` 目錄
+   - 按子領域組織，如 `inventory/inventory_management.feature`
 
-### 詳細改進說明
+2. **步驟定義**
+   - 位於 `src/test/java/solid/humank/genaidemo/bdd` 目錄
+   - 按子領域組織，如 `inventory/InventoryStepDefinitions.java`
+   - 實現 Feature 文件中的步驟
 
-#### 1. 確保 Repository 適配器正確實現領域儲存庫接口
+3. **測試隔離**
+   - 每個測試場景應該是獨立的
+   - 使用適當的測試數據
+   - 在測試後進行清理
 
-在 DDD 和六邊形架構中，Repository 適配器是連接領域層和基礎設施層的關鍵組件。我需要確保：
+### 2. 整合測試
+
+對應用層、基礎設施層和介面層進行測試，可啟動 Spring Boot 進行測試。
+
+- **測試範圍**：應用服務、儲存庫實現、控制器
+- **測試工具**：Spring Boot Test、MockMvc、TestContainers
+- **測試目標**：驗證組件集成和端到端流程
+
+#### 應用服務測試
+
+- 驗證用例協調邏輯
+- 確保正確調用領域對象
+- 檢查事務管理和事件發布
+
+#### 儲存庫測試
+
+- 驗證 CRUD 操作
+- 確保查詢條件正確
+- 檢查樂觀鎖定和並發控制
+
+#### 控制器測試
+
+- 驗證 HTTP 請求處理
+- 確保正確的狀態碼和響應格式
+- 檢查輸入驗證和錯誤處理
+
+## 實現指南
+
+### 1. 確保 Repository 適配器正確實現領域儲存庫接口
 
 - **完整實現所有方法**：Repository 適配器必須實現領域儲存庫接口中定義的所有方法，如 `save`、`findById`、`findAll` 等。
 
-- **正確的轉換邏輯**：適配器需要正確地將領域模型轉換為持久化模型（JPA 實體），反之亦然。例如，在 `OrderRepositoryAdapter` 中，我們需要確保 `OrderMapper.toJpaEntity()` 和 `OrderMapper.toDomainEntity()` 方法被正確調用。
+- **正確的轉換邏輯**：適配器需要正確地將領域模型轉換為持久化模型（JPA 實體），反之亦然。例如，在 `OrderRepositoryAdapter` 中，需要確保 `OrderMapper.toJpaEntity()` 和 `OrderMapper.toDomainEntity()` 方法被正確調用。
 
 - **事務管理**：確保適配器正確處理事務，特別是在涉及多個實體的操作中。
 
@@ -82,9 +141,7 @@
 
 - **領域事件處理**：如果領域模型發布了事件，確保適配器能夠正確地處理這些事件，例如在保存聚合根後發布事件。
 
-#### 2. 檢查 Mapper 類是否正確處理領域模型和持久化模型之間的轉換
-
-Mapper 類負責在領域模型和持久化模型之間進行轉換，這是保持領域模型純淨的關鍵。我需要檢查：
+### 2. 檢查 Mapper 類是否正確處理領域模型和持久化模型之間的轉換
 
 - **雙向轉換**：確保 `toJpaEntity()` 和 `toDomainEntity()` 方法能夠正確地雙向轉換所有屬性。
 
@@ -98,9 +155,7 @@ Mapper 類負責在領域模型和持久化模型之間進行轉換，這是保�
 
 - **聚合邊界**：確保轉換過程尊重聚合邊界，不會意外地跨越聚合邊界加載數據。
 
-#### 3. 確保 JPA 實體類與數據庫表結構匹配
-
-JPA 實體類是與數據庫直接交互的組件，必須與數據庫表結構匹配。我需要檢查：
+### 3. 確保 JPA 實體類與數據庫表結構匹配
 
 - **表名和列名**：確保 `@Table` 和 `@Column` 註解中的名稱與數據庫表和列名匹配。
 
@@ -116,17 +171,11 @@ JPA 實體類是與數據庫直接交互的組件，必須與數據庫表結構�
 
 - **索引**：如果需要，添加 `@Index` 註解以優化查詢性能。
 
-從 `JpaOrderEntity` 代碼來看，它使用了 `@Enumerated(EnumType.STRING)` 來存儲 `OrderStatus` 枚舉，這是一個好的做法，因為它使數據庫中的值更具可讀性。但需要確保 `OrderStatus` 枚舉中的值與數據庫中的值匹配。
-
-#### 4. 檢查 Cucumber 測試步驟定義是否覆蓋所有場景
-
-Cucumber 測試是確保領域模型行為正確的重要工具。我需要檢查：
+### 4. 檢查 Cucumber 測試步驟定義是否覆蓋所有場景
 
 - **場景覆蓋**：確保所有 feature 文件中定義的場景都有對應的步驟定義。
 
 - **步驟實現**：確保每個步驟定義都有正確的實現，並且使用了適當的斷言來驗證結果。
-
-- **多語言支持**：如果需要支持多語言（如中文），確保步驟定義使用了正確的註解（如 `@假如`、`@當`、`@那麼`）。
 
 - **測試隔離**：確保每個測試場景都是獨立的，不會受到其他測試的影響。
 
@@ -136,4 +185,29 @@ Cucumber 測試是確保領域模型行為正確的重要工具。我需要檢�
 
 - **邊界條件**：確保測試覆蓋了邊界條件和極端情況。
 
-這些詳細的檢查點將幫助我們確保我們的代碼符合 DDD 戰術設計模式和分層原則，並且能夠正確地實現業務需求。特別是在處理領域模型和持久化模型之間的轉換時，我們需要特別小心，以確保領域模型的完整性和純淨性。
+## 常見問題與解決方案
+
+### 1. 測試失敗的處理
+
+當 Cucumber 測試失敗時，可能的原因和解決方案：
+
+- **步驟定義不匹配**：確保步驟定義與 feature 文件中的步驟完全匹配，包括空格和標點符號。
+- **測試數據問題**：確保測試數據正確設置，特別是在多個步驟之間共享數據時。
+- **斷言失敗**：檢查預期值和實際值，可能需要調整業務邏輯或測試預期。
+- **狀態管理問題**：確保測試場景之間的狀態正確重置，避免測試相互干擾。
+
+### 2. 領域模型與持久化模型轉換問題
+
+- **數據丟失**：確保所有必要的屬性都在轉換過程中得到處理。
+- **類型不匹配**：處理不同類型之間的轉換，如字符串到枚舉、字符串到日期等。
+- **循環依賴**：處理實體之間的循環引用，可能需要使用延遲加載或分離轉換過程。
+
+### 3. 聚合邊界問題
+
+- **過大的聚合**：將過大的聚合拆分為多個較小的聚合，使用聚合間的引用。
+- **聚合間一致性**：使用領域事件或應用服務協調多個聚合之間的一致性。
+- **查詢性能**：對於複雜查詢，考慮使用專用的查詢模型或 CQRS 模式。
+
+## 結論
+
+遵循這些設計原則和測試策略，可以幫助我們構建一個健壯、可維護和可測試的系統。DDD 戰術設計模式和分層架構提供了一個清晰的結構，使我們能夠專注於業務邏輯，同時保持技術實現的靈活性。Cucumber BDD 測試確保我們的代碼符合業務需求，而整合測試確保各個組件能夠正確地協同工作。
