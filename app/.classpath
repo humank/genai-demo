@@ -480,6 +480,12 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-model/2.22.1/29308bacbac95cdd96d31c52275aa003521498d2/allure-model-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-model/2.22.1/1b3d577b195af885f2fbd73d8f200fb329b6cb9b/allure-model-2.22.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/messages/22.0.0/5e44123c146b13987a58a7dcff6a92b5cb64b53a/messages-22.0.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/messages/22.0.0/56256e614b555a6a01a0399e558f8e3009a3fb86/messages-22.0.0-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -487,6 +493,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/ci-environment/10.0.0/eb6836690eace2b36a2ed8ed41723e02eca96038/ci-environment-10.0.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/ci-environment/10.0.0/1e5c39d26d7643f0c2426d58b364c00a5fb04c73/ci-environment-10.0.0-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-cucumber7-jvm/2.22.1/e6f4e3603d13204edacb673d99fe00b1e9d1f5e2/allure-cucumber7-jvm-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-cucumber7-jvm/2.22.1/beba58752dbc8dd4bf8f5edb26a77728c6f501ef/allure-cucumber7-jvm-2.22.1-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
 			<attribute name="gradle.buildServer" value="true"/>
@@ -505,6 +517,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.3/8e6300ef51c1d801a7ed62d07cd221aca3a90640/asm-9.3.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.3/ce26e415ccafa10c6624a07bdb38d969110f568f/asm-9.3-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-test-filter/2.22.1/1d659f3261d2fa273d2c0bf2e5f7a9f6e892e503/allure-test-filter-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-test-filter/2.22.1/9fa102923d6affddad73d1f9d034003574c7506d/allure-test-filter-2.22.1-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
 			<attribute name="gradle.buildServer" value="true"/>
@@ -588,6 +606,12 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-java-commons/2.22.1/18ac60318bd629e08fd4430140320b5dac32e0b2/allure-java-commons-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-java-commons/2.22.1/58695a1ea181fb98f5d4d0a3e656c3b2f02251b2/allure-java-commons-2.22.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-api/1.2.0/e805f103b18c095b204432d1d563282d3e7e81ed/archunit-junit5-api-1.2.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.tngtech.archunit/archunit-junit5-api/1.2.0/3ca3e3cf2b4a03f5686d009b06e24e05fc814c1e/archunit-junit5-api-1.2.0-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -666,6 +690,12 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-junit5/2.22.1/b99eead4121ed0d60721267eccfb9f8724b387c9/allure-junit5-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-junit5/2.22.1/dafe2744ef27150605af01b4391e8a5777f2de85/allure-junit5-2.22.1-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/cucumber-java/7.15.0/d9c1557029c12d20ff31c667472a31772c608023/cucumber-java-7.15.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.cucumber/cucumber-java/7.15.0/26d6b9598340a4a0ce3a86dc4ba1f2f2a656364b/cucumber-java-7.15.0-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
@@ -691,6 +721,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/5.8.0/df310627f77f859114ad31e1376fff0dce263cca/mockito-core-5.8.0.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/5.8.0/54af1eba95d0cc37207ad75c5d03fa63a572c272/mockito-core-5.8.0-sources.jar">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-junit-platform/2.22.1/950b83f7d8dbefd87667e21c14d33aadd0212690/allure-junit-platform-2.22.1.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/io.qameta.allure/allure-junit-platform/2.22.1/ef2cec15bf23c233711ead25938ad6337946e422/allure-junit-platform-2.22.1-sources.jar">
 		<attributes>
 			<attribute name="test" value="true"/>
 			<attribute name="gradle.buildServer" value="true"/>
