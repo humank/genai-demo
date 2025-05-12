@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.service.DomainEventPublisherService;
+import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
@@ -23,7 +24,7 @@ import solid.humank.genaidemo.utils.Preconditions;
 @AggregateRoot
 public class Order {
     private final OrderId id;
-    private final String customerId;
+    private final CustomerId customerId;
     private final String shippingAddress;
     private final List<OrderItem> items;
     private OrderStatus status;
@@ -35,10 +36,20 @@ public class Order {
     /**
      * 建立訂單
      * 
-     * @param customerId 客戶ID
+     * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
      */
     public Order(String customerId, String shippingAddress) {
+        this(OrderId.generate(), CustomerId.fromString(customerId), shippingAddress);
+    }
+    
+    /**
+     * 建立訂單
+     * 
+     * @param customerId 客戶ID值對象
+     * @param shippingAddress 配送地址
+     */
+    public Order(CustomerId customerId, String shippingAddress) {
         this(OrderId.generate(), customerId, shippingAddress);
     }
 
@@ -46,12 +57,12 @@ public class Order {
      * 建立訂單
      * 
      * @param orderId 訂單ID
-     * @param customerId 客戶ID
+     * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
      */
-    public Order(OrderId orderId, String customerId, String shippingAddress) {
+    public Order(OrderId orderId, CustomerId customerId, String shippingAddress) {
         Preconditions.requireNonNull(orderId, "訂單ID不能為空");
-        Preconditions.requireNonEmpty(customerId, "客戶ID不能為空");
+        Preconditions.requireNonNull(customerId, "客戶ID不能為空");
         Preconditions.requireNonEmpty(shippingAddress, "配送地址不能為空");
 
         this.id = orderId;
@@ -67,10 +78,21 @@ public class Order {
         // 發布領域事件
         DomainEventPublisherService.publishEvent(new OrderCreatedEvent(
             this.id,
-            this.customerId,
+            this.customerId.toString(),
             Money.zero(),
             List.of()
         ));
+    }
+    
+    /**
+     * 建立訂單 (兼容舊代碼)
+     * 
+     * @param orderId 訂單ID
+     * @param customerId 客戶ID字符串
+     * @param shippingAddress 配送地址
+     */
+    public Order(OrderId orderId, String customerId, String shippingAddress) {
+        this(orderId, CustomerId.fromString(customerId), shippingAddress);
     }
 
     /**
@@ -79,7 +101,7 @@ public class Order {
      * @param orderId 訂單ID字符串
      */
     public Order(String orderId) {
-        this(OrderId.of(orderId), "customer-123", "台北市信義區");
+        this(OrderId.of(orderId), CustomerId.fromString("customer-123"), "台北市信義區");
     }
 
     /**
@@ -234,8 +256,17 @@ public class Order {
         return id;
     }
 
-    public String getCustomerId() {
+    public CustomerId getCustomerId() {
         return customerId;
+    }
+    
+    /**
+     * 獲取客戶ID字符串 (兼容舊代碼)
+     * 
+     * @return 客戶ID字符串
+     */
+    public String getCustomerIdAsString() {
+        return customerId.toString();
     }
 
     public String getShippingAddress() {

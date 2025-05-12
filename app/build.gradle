@@ -1,44 +1,76 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'solid.humank'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    
-    // Database
-    runtimeOnly 'com.h2database:h2'
-    
-    // Flyway for database migrations
-    implementation 'org.flywaydb:flyway-core'
-    
-    // Testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.cucumber:cucumber-java:7.12.1'
-    testImplementation 'io.cucumber:cucumber-junit:7.12.1'
-    testImplementation 'io.cucumber:cucumber-spring:7.12.1'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.12.1'
-    testImplementation 'org.junit.platform:junit-platform-suite:1.9.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
-    testImplementation 'org.junit.vintage:junit-vintage-engine:5.9.3'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'com.h2database:h2'
     
     // ArchUnit for architecture testing
-    testImplementation 'com.tngtech.archunit:archunit-junit5:1.0.1'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.0'
+    
+    // Cucumber for BDD testing
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+    // 移除 cucumber-picocontainer 依賴
+    
+    // JUnit 5
+    testImplementation 'org.junit.platform:junit-platform-suite:1.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+    
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    
+    // Spring Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
+    // 排除 Cucumber 測試，因為它們需要特殊設置
+    exclude '**/CucumberTestRunner.class'
+}
+
+// Cucumber specific task
+tasks.register('cucumber', JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "io.cucumber.core.cli.Main"
+    classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+    args = [
+        '--plugin', 'pretty',
+        '--plugin', 'html:build/reports/cucumber/cucumber-report.html',
+        '--plugin', 'json:build/reports/cucumber/cucumber-report.json',
+        '--glue', 'solid.humank.genaidemo.bdd',
+        'src/test/resources/features'
+    ]
 }

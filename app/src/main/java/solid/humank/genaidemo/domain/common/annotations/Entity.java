@@ -6,15 +6,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 標記一個類為實體
- * 實體是具有唯一標識的對象，其生命週期由聚合根管理
- * 實體類應該放在domain.*.entity包中
+ * 實體註解
+ * 用於標記實體類
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Entity {
+    
     /**
-     * 實體的描述
+     * 實體名稱
+     * 
+     * @return 實體名稱
+     */
+    String name() default "";
+    
+    /**
+     * 實體描述
+     * 
+     * @return 實體描述
      */
     String description() default "";
 }

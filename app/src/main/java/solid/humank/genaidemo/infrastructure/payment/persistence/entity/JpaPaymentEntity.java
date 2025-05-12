@@ -1,17 +1,11 @@
 package solid.humank.genaidemo.infrastructure.payment.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * 支付 JPA 實體
@@ -22,7 +16,6 @@ import java.util.UUID;
 public class JpaPaymentEntity {
 
     @Id
-    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "order_id", nullable = false)
@@ -54,29 +47,11 @@ public class JpaPaymentEntity {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "can_retry", nullable = false)
+    @Column(name = "can_retry")
     private boolean canRetry;
 
     // 默認建構子，JPA 需要
     public JpaPaymentEntity() {
-    }
-
-    // 完整建構子
-    public JpaPaymentEntity(String id, String orderId, BigDecimal amount, String currency,
-                           PaymentStatus status, PaymentMethod paymentMethod, String transactionId,
-                           String failureReason, LocalDateTime createdAt, LocalDateTime updatedAt,
-                           boolean canRetry) {
-        this.id = id;
-        this.orderId = orderId;
-        this.amount = amount;
-        this.currency = currency;
-        this.status = status;
-        this.paymentMethod = paymentMethod;
-        this.transactionId = transactionId;
-        this.failureReason = failureReason;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.canRetry = canRetry;
     }
 
     // Getters and Setters

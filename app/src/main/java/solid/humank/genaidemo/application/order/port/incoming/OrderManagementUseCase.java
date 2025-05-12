@@ -2,7 +2,7 @@ package solid.humank.genaidemo.application.order.port.incoming;
 
 import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
 import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
-import solid.humank.genaidemo.application.order.dto.OrderResponse;
+import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
 
 /**
  * 訂單管理用例接口 - 主要輸入端口

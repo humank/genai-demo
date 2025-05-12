@@ -1,6 +1,5 @@
 # language: en
 # Original language: zh-TW
-@inventory
 Feature: Inventory Management
   As an order system
   I need to check and manage product inventory
@@ -21,7 +20,7 @@ Feature: Inventory Management
     # 並且可用庫存數量應該更新為 8
     Given the product "iPhone 15" has an inventory quantity of 10
     When the order contains product "iPhone 15" with quantity 2
-    And the system checks inventory
+    And the inventory system checks inventory
     Then the inventory check result should be "SUFFICIENT"
     And the system should reserve 2 units of "iPhone 15" inventory
     And the available inventory quantity should be updated to 8
@@ -35,7 +34,7 @@ Feature: Inventory Management
     # 並且系統應該通知訂單系統庫存不足
     Given the product "Limited Edition Phone" has an inventory quantity of 1
     When the order contains product "Limited Edition Phone" with quantity 2
-    And the system checks inventory
+    And the inventory system checks inventory
     Then the inventory check result should be "INSUFFICIENT"
     And the system should not reserve any inventory
     And the system should notify the order system of insufficient inventory
@@ -58,7 +57,7 @@ Feature: Inventory Management
       | Product Name  | Quantity |
       | iPhone 15     | 2        |
       | AirPods Pro   | 3        |
-    And the system checks inventory
+    And the inventory system checks inventory
     Then the inventory check result should be "SUFFICIENT"
     And the system should reserve inventory for all order products
     And the available inventory quantity for "iPhone 15" should be updated to 3

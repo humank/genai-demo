@@ -1,58 +1,39 @@
 package solid.humank.genaidemo.domain.common.valueobject;
 
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
+
 import java.util.Objects;
 import java.util.UUID;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 /**
  * 訂單ID值對象
- * 
- * 不可變的訂單唯一標識。
- * 作為值對象，它是不可變的，所有屬性在創建後不能被修改。
- * 提供了多種創建方式，包括從UUID或字符串創建。
  */
 @ValueObject
 public class OrderId {
     private final UUID id;
     
-    /**
-     * 建立訂單ID
-     */
-    public OrderId() {
-        this(UUID.randomUUID());
+    public OrderId(UUID id) {
+        this.id = Objects.requireNonNull(id, "Order ID cannot be null");
     }
     
     /**
-     * 建立訂單ID
+     * 從UUID創建訂單ID
      * 
      * @param id UUID
-     */
-    public OrderId(UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID cannot be null");
-        }
-        this.id = id;
-    }
-    
-    /**
-     * 從字串建立訂單ID
-     * 
-     * @param id ID字串
      * @return 訂單ID
      */
-    public static OrderId fromString(String id) {
-        return new OrderId(UUID.fromString(id));
+    public static OrderId of(UUID id) {
+        return new OrderId(id);
     }
     
     /**
-     * 從字串建立訂單ID
+     * 從字符串創建訂單ID
      * 
-     * @param id ID字串
+     * @param id 字符串
      * @return 訂單ID
      */
     public static OrderId of(String id) {
-        return fromString(id);
+        return new OrderId(UUID.fromString(id));
     }
     
     /**
@@ -61,13 +42,33 @@ public class OrderId {
      * @return 訂單ID
      */
     public static OrderId generate() {
-        return new OrderId();
+        return new OrderId(UUID.randomUUID());
+    }
+    
+    /**
+     * 從UUID創建訂單ID
+     * 
+     * @param uuid UUID
+     * @return 訂單ID
+     */
+    public static OrderId fromUUID(UUID uuid) {
+        return new OrderId(uuid);
+    }
+    
+    /**
+     * 從字符串創建訂單ID
+     * 
+     * @param id 字符串
+     * @return 訂單ID
+     */
+    public static OrderId fromString(String id) {
+        return new OrderId(UUID.fromString(id));
     }
     
     /**
      * 獲取ID
      * 
-     * @return UUID
+     * @return ID
      */
     public UUID getId() {
         return id;
@@ -76,7 +77,7 @@ public class OrderId {
     /**
      * 獲取ID值
      * 
-     * @return ID字串
+     * @return ID值
      */
     public String getValue() {
         return id.toString();

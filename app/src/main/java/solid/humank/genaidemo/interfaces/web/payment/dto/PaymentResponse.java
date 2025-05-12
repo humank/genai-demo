@@ -1,13 +1,13 @@
 package solid.humank.genaidemo.interfaces.web.payment.dto;
 
-import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
-import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
+import solid.humank.genaidemo.application.payment.dto.PaymentResponseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 支付響應 DTO
+ * 支付響應DTO
+ * 用於返回給前端的數據
  */
 public class PaymentResponse {
     private String id;
@@ -15,42 +15,35 @@ public class PaymentResponse {
     private BigDecimal amount;
     private String currency;
     private String status;
+    private String paymentMethod;
     private String transactionId;
+    private String failureReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean canRetry;
 
+    // 默認構造函數
     public PaymentResponse() {
     }
 
-    public PaymentResponse(String id, String orderId, BigDecimal amount, String currency, 
-                          String status, String transactionId, 
-                          LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.orderId = orderId;
-        this.amount = amount;
-        this.currency = currency;
-        this.status = status;
-        this.transactionId = transactionId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    // 從應用層DTO創建
+    public static PaymentResponse fromDto(PaymentResponseDto dto) {
+        PaymentResponse response = new PaymentResponse();
+        response.setId(dto.getId());
+        response.setOrderId(dto.getOrderId());
+        response.setAmount(dto.getAmount());
+        response.setCurrency(dto.getCurrency());
+        response.setStatus(dto.getStatus());
+        response.setPaymentMethod(dto.getPaymentMethod());
+        response.setTransactionId(dto.getTransactionId());
+        response.setFailureReason(dto.getFailureReason());
+        response.setCreatedAt(dto.getCreatedAt());
+        response.setUpdatedAt(dto.getUpdatedAt());
+        response.setCanRetry(dto.isCanRetry());
+        return response;
     }
 
-    /**
-     * 從領域模型創建 DTO
-     */
-    public static PaymentResponse fromDomain(Payment payment) {
-        return new PaymentResponse(
-                payment.getId().toString(),
-                payment.getOrderId().toString(),
-                payment.getAmount().getAmount(),
-                payment.getAmount().getCurrency(),
-                payment.getStatus().toString(),
-                payment.getTransactionId(),
-                payment.getCreatedAt(),
-                payment.getUpdatedAt()
-        );
-    }
-
+    // Getters and Setters
     public String getId() {
         return id;
     }
@@ -91,12 +84,28 @@ public class PaymentResponse {
         this.status = status;
     }
 
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public String getTransactionId() {
         return transactionId;
     }
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -113,5 +122,13 @@ public class PaymentResponse {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public boolean isCanRetry() {
+        return canRetry;
+    }
+
+    public void setCanRetry(boolean canRetry) {
+        this.canRetry = canRetry;
     }
 }

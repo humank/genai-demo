@@ -30,7 +30,7 @@ public class LogisticsAntiCorruptionLayer {
         // 將領域模型轉換為外部系統所需的格式
         Map<String, String> externalRequest = Map.of(
             "orderId", order.getId().toString(),
-            "customerId", order.getCustomerId(),
+            "customerId", order.getCustomerId().toString(),
             "address", order.getShippingAddress(),
             "items", String.valueOf(order.getItems().size()),
             "totalAmount", order.getTotalAmount().getAmount().toString()

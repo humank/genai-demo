@@ -3,176 +3,200 @@ package solid.humank.genaidemo.domain.common.valueobject;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Objects;
 
 /**
- * 金額值對象
- * 
- * 表示貨幣金額，包含數值和貨幣單位。
- * 作為值對象，它是不可變的，所有屬性在創建後不能被修改。
+ * 金錢值對象
  */
 @ValueObject
 public class Money {
     private final BigDecimal amount;
-    private final String currency;
+    private final Currency currency;
     
-    private static final String DEFAULT_CURRENCY = "TWD";
+    public static final Money ZERO = new Money(BigDecimal.ZERO, Currency.getInstance("TWD"));
     
-    /**
-     * 建立金額
-     * 
-     * @param amount 金額數值
-     * @param currency 貨幣單位
-     */
-    private Money(BigDecimal amount, String currency) {
-        this.amount = Objects.requireNonNull(amount, "Amount cannot be null");
-        this.currency = Objects.requireNonNull(currency, "Currency cannot be null");
+    public Money(BigDecimal amount, Currency currency) {
+        this.amount = amount;
+        this.currency = currency;
     }
     
     /**
-     * 建立金額，使用默認貨幣單位
+     * 創建金錢值對象
      * 
-     * @param amount 金額數值
-     * @return 金額值對象
+     * @param amount 金額
+     * @param currencyCode 貨幣代碼
+     * @return 金錢值對象
      */
-    public static Money of(BigDecimal amount) {
-        return new Money(amount, DEFAULT_CURRENCY);
+    public static Money of(BigDecimal amount, String currencyCode) {
+        return new Money(amount, Currency.getInstance(currencyCode));
     }
     
     /**
-     * 建立金額，使用指定貨幣單位
+     * 創建金錢值對象
      * 
-     * @param amount 金額數值
-     * @param currency 貨幣單位
-     * @return 金額值對象
+     * @param amount 金額
+     * @param currency 貨幣
+     * @return 金錢值對象
      */
-    public static Money of(BigDecimal amount, String currency) {
+    public static Money of(BigDecimal amount, Currency currency) {
         return new Money(amount, currency);
     }
     
     /**
-     * 建立金額，使用整數金額和默認貨幣單位
+     * 創建金錢值對象
      * 
-     * @param amount 整數金額
-     * @return 金額值對象
+     * @param amount 金額
+     * @return 金錢值對象，使用默認貨幣 TWD
      */
-    public static Money of(int amount) {
-        return new Money(BigDecimal.valueOf(amount), DEFAULT_CURRENCY);
+    public static Money of(BigDecimal amount) {
+        return new Money(amount, Currency.getInstance("TWD"));
     }
     
     /**
-     * 建立金額，使用整數金額和指定貨幣單位
+     * 創建金錢值對象
      * 
-     * @param amount 整數金額
-     * @param currency 貨幣單位
-     * @return 金額值對象
+     * @param amount 金額
+     * @return 金錢值對象，使用默認貨幣 TWD
      */
-    public static Money of(int amount, String currency) {
-        return new Money(BigDecimal.valueOf(amount), currency);
+    public static Money of(double amount) {
+        return new Money(BigDecimal.valueOf(amount), Currency.getInstance("TWD"));
     }
     
     /**
-     * 建立台幣金額
+     * 創建金錢值對象
      * 
-     * @param amount 金額數值
-     * @return 金額值對象
+     * @param amount 金額
+     * @param currencyCode 貨幣代碼
+     * @return 金錢值對象
+     */
+    public static Money of(double amount, String currencyCode) {
+        return new Money(BigDecimal.valueOf(amount), Currency.getInstance(currencyCode));
+    }
+    
+    /**
+     * 創建台幣金錢值對象
+     * 
+     * @param amount 金額
+     * @return 金錢值對象，使用 TWD 貨幣
+     */
+    public static Money twd(double amount) {
+        return new Money(BigDecimal.valueOf(amount), Currency.getInstance("TWD"));
+    }
+    
+    /**
+     * 創建台幣金錢值對象
+     * 
+     * @param amount 金額
+     * @return 金錢值對象，使用 TWD 貨幣
      */
     public static Money twd(int amount) {
-        return of(amount, "TWD");
+        return new Money(BigDecimal.valueOf(amount), Currency.getInstance("TWD"));
     }
     
     /**
-     * 建立零金額
+     * 創建零金額的金錢值對象
      * 
-     * @return 金額值對象
+     * @return 零金額的金錢值對象
      */
     public static Money zero() {
-        return of(BigDecimal.ZERO);
+        return ZERO;
     }
     
     /**
-     * 獲取金額數值
+     * 加法
      * 
-     * @return 金額數值
+     * @param money 金錢
+     * @return 新的金錢值對象
      */
-    public BigDecimal getAmount() {
-        return amount;
-    }
-    
-    /**
-     * 獲取金額數值（用於兼容舊代碼）
-     * 
-     * @return 金額數值
-     */
-    public BigDecimal amount() {
-        return amount;
-    }
-    
-    /**
-     * 獲取貨幣單位
-     * 
-     * @return 貨幣單位
-     */
-    public String getCurrency() {
-        return currency;
-    }
-    
-    /**
-     * 獲取貨幣單位（用於兼容舊代碼）
-     * 
-     * @return 貨幣單位
-     */
-    public String currency() {
-        return currency;
-    }
-    
-    /**
-     * 加法運算
-     * 
-     * @param other 另一個金額
-     * @return 相加後的新金額
-     */
-    public Money add(Money other) {
-        if (!this.currency.equals(other.currency)) {
+    public Money add(Money money) {
+        if (!this.currency.equals(money.currency)) {
             throw new IllegalArgumentException("Cannot add money with different currencies");
         }
-        return new Money(this.amount.add(other.amount), this.currency);
+        return new Money(this.amount.add(money.amount), this.currency);
     }
     
     /**
-     * 減法運算
+     * 減法
      * 
-     * @param other 另一個金額
-     * @return 相減後的新金額
+     * @param money 金錢
+     * @return 新的金錢值對象
      */
-    public Money subtract(Money other) {
-        if (!this.currency.equals(other.currency)) {
+    public Money subtract(Money money) {
+        if (!this.currency.equals(money.currency)) {
             throw new IllegalArgumentException("Cannot subtract money with different currencies");
         }
-        return new Money(this.amount.subtract(other.amount), this.currency);
+        return new Money(this.amount.subtract(money.amount), this.currency);
     }
     
     /**
-     * 乘法運算
+     * 乘法
      * 
      * @param multiplier 乘數
-     * @return 相乘後的新金額
+     * @return 新的金錢值對象
      */
     public Money multiply(int multiplier) {
         return new Money(this.amount.multiply(BigDecimal.valueOf(multiplier)), this.currency);
     }
     
     /**
-     * 檢查金額是否為負數或零
+     * 乘法
      * 
-     * @return 是否為負數或零
+     * @param multiplier 乘數
+     * @return 新的金錢值對象
      */
-    public boolean isNegativeOrZero() {
-        return amount.compareTo(BigDecimal.ZERO) <= 0;
+    public Money multiply(double multiplier) {
+        return new Money(this.amount.multiply(BigDecimal.valueOf(multiplier)), this.currency);
     }
     
     /**
-     * 檢查金額是否大於另一個金額
+     * 除法
+     * 
+     * @param divisor 除數
+     * @return 新的金錢值對象
+     */
+    public Money divide(int divisor) {
+        return new Money(this.amount.divide(BigDecimal.valueOf(divisor)), this.currency);
+    }
+    
+    /**
+     * 獲取金額
+     * 
+     * @return 金額
+     */
+    public BigDecimal getAmount() {
+        return amount;
+    }
+    
+    /**
+     * 獲取金額（用於兼容舊代碼）
+     * 
+     * @return 金額
+     */
+    public BigDecimal amount() {
+        return amount;
+    }
+    
+    /**
+     * 獲取貨幣
+     * 
+     * @return 貨幣
+     */
+    public Currency getCurrency() {
+        return currency;
+    }
+    
+    /**
+     * 獲取貨幣（用於兼容舊代碼）
+     * 
+     * @return 貨幣
+     */
+    public Currency currency() {
+        return currency;
+    }
+    
+    /**
+     * 比較金額是否大於另一個金額
      * 
      * @param other 另一個金額
      * @return 是否大於
@@ -189,7 +213,7 @@ public class Money {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Money money = (Money) o;
-        return amount.compareTo(money.amount) == 0 && currency.equals(money.currency);
+        return Objects.equals(amount, money.amount) && Objects.equals(currency, money.currency);
     }
     
     @Override
@@ -199,6 +223,6 @@ public class Money {
     
     @Override
     public String toString() {
-        return amount + " " + currency;
+        return amount + " " + currency.getCurrencyCode();
     }
 }

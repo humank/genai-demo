@@ -6,6 +6,8 @@ import solid.humank.genaidemo.infrastructure.saga.definition.SagaDefinition;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 
+import java.util.UUID;
+
 /**
  * 訂單處理 Saga
  * 協調訂單處理的各個步驟
@@ -38,9 +40,9 @@ public class OrderProcessingSaga implements SagaDefinition<OrderSagaContext> {
     private void processPayment(OrderSagaContext context) {
         Order order = context.getOrder();
         
-        // 處理支付
+        // 處理支付 - 將OrderId轉換為UUID
         PaymentResult result = paymentServicePort.processPayment(
-            order.getId(),
+            UUID.fromString(order.getId().toString()),
             order.getTotalAmount()
         );
         
@@ -68,8 +70,11 @@ public class OrderProcessingSaga implements SagaDefinition<OrderSagaContext> {
     public void compensate(OrderSagaContext context, Exception exception) {
         // 補償邏輯
         if (context.getPaymentId() != null) {
-            // 使用應用層端口進行退款
-            paymentServicePort.processRefund(context.getOrder().getId(), context.getOrder().getTotalAmount());
+            // 使用應用層端口進行退款 - 將OrderId轉換為UUID
+            paymentServicePort.processRefund(
+                UUID.fromString(context.getOrder().getId().toString()), 
+                context.getOrder().getTotalAmount()
+            );
         }
         
         // 取消訂單

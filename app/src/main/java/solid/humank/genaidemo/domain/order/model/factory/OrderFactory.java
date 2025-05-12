@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.order.model.factory;
 
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.common.factory.DomainFactory;
+import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -69,15 +70,19 @@ public class OrderFactory implements DomainFactory<Order, OrderFactory.OrderCrea
      * 訂單創建參數
      */
     public static class OrderCreationParams {
-        private final String customerId;
+        private final CustomerId customerId;
         private final String shippingAddress;
         private final List<OrderItemParams> initialItems;
         
-        public OrderCreationParams(String customerId, String shippingAddress) {
+        public OrderCreationParams(CustomerId customerId, String shippingAddress) {
             this(customerId, shippingAddress, Collections.emptyList());
         }
         
-        public OrderCreationParams(String customerId, String shippingAddress, List<OrderItemParams> initialItems) {
+        public OrderCreationParams(String customerIdStr, String shippingAddress) {
+            this(CustomerId.fromString(customerIdStr), shippingAddress, Collections.emptyList());
+        }
+        
+        public OrderCreationParams(CustomerId customerId, String shippingAddress, List<OrderItemParams> initialItems) {
             this.customerId = customerId;
             this.shippingAddress = shippingAddress;
             this.initialItems = initialItems != null ? 
@@ -85,7 +90,11 @@ public class OrderFactory implements DomainFactory<Order, OrderFactory.OrderCrea
                     Collections.emptyList();
         }
         
-        public String getCustomerId() {
+        public OrderCreationParams(String customerIdStr, String shippingAddress, List<OrderItemParams> initialItems) {
+            this(CustomerId.fromString(customerIdStr), shippingAddress, initialItems);
+        }
+        
+        public CustomerId getCustomerId() {
             return customerId;
         }
         

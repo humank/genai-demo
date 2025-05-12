@@ -1,79 +1,25 @@
 package solid.humank.genaidemo.interfaces.web.order;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
-import solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse;
+import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
+import solid.humank.genaidemo.application.order.dto.response.OrderItemResponse;
+import solid.humank.genaidemo.application.common.valueobject.Money;
+import solid.humank.genaidemo.application.common.valueobject.OrderStatus;
+import solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse.WebOrderItemResponse;
 
 /**
- * 響應工廠
- * 負責創建HTTP響應
+ * 響應工廠類，負責將應用層響應轉換為介面層響應
  */
-@Component
 public class ResponseFactory {
-    
-    /**
-     * 創建錯誤響應
-     */
-    public ResponseEntity<ApiErrorResponse> createErrorResponse(String message) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ApiErrorResponse(message));
-    }
-    
-    /**
-     * 創建訂單處理響應
-     */
-    public ResponseEntity<Object> createOrderProcessingResponse(boolean success, List<String> errors, OrderResponse order) {
-        if (!success) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiErrorResponse(errors));
-        }
-        
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(order);
-    }
-    
-    /**
-     * 創建訂單響應
-     */
-    public ResponseEntity<OrderResponse> createOrderResponse(OrderResponse order) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(order);
-    }
-    
-    /**
-     * 創建訂單列表響應
-     */
-    public ResponseEntity<List<OrderResponse>> createOrderListResponse(List<OrderResponse> orders) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(orders);
-    }
-    
-    /**
-     * API錯誤響應
-     * 在響應工廠中定義，避免跨層依賴
-     */
-    public static class ApiErrorResponse {
-        private final List<String> errors;
 
-        public ApiErrorResponse(String error) {
-            this.errors = List.of(error);
-        }
-
-        public ApiErrorResponse(List<String> errors) {
-            this.errors = errors;
-        }
-
-        public List<String> getErrors() {
-            return errors;
-        }
+    /**
+     * 將應用層訂單響應轉換為介面層訂單響應
+     */
+    public static solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse toWebResponse(OrderResponse appResponse) {
+        // 使用 OrderResponse 的靜態工廠方法創建介面層響應
+        return solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse.fromApplicationResponse(appResponse);
     }
 }

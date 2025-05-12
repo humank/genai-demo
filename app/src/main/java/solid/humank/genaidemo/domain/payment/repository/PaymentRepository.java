@@ -1,5 +1,8 @@
 package solid.humank.genaidemo.domain.payment.repository;
 
+import solid.humank.genaidemo.domain.common.repository.Repository;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 
 import java.util.List;
@@ -8,41 +11,39 @@ import java.util.UUID;
 
 /**
  * 支付儲存庫接口
- * 定義支付聚合根的持久化操作
  */
-public interface PaymentRepository {
+public interface PaymentRepository extends Repository<Payment, PaymentId> {
+    
     /**
      * 保存支付
+     * 
+     * @param payment 支付
+     * @return 保存後的支付
      */
-    void save(Payment payment);
+    @Override
+    Payment save(Payment payment);
     
     /**
-     * 根據ID查找支付
+     * 根據ID查詢支付
+     * 
+     * @param id 支付ID
+     * @return 支付
      */
-    Optional<Payment> findById(UUID paymentId);
+    Optional<Payment> findById(PaymentId id);
     
     /**
-     * 查找所有支付
+     * 根據訂單ID查詢支付列表
+     * 
+     * @param orderId 訂單ID
+     * @return 支付列表
      */
-    List<Payment> findAll();
+    List<Payment> findByOrderId(OrderId orderId);
     
     /**
-     * 刪除支付
+     * 根據訂單ID查詢支付列表
+     * 
+     * @param orderId 訂單ID
+     * @return 支付列表
      */
-    void delete(UUID paymentId);
-    
-    /**
-     * 更新支付
-     */
-    void update(Payment payment);
-    
-    /**
-     * 檢查支付是否存在
-     */
-    boolean exists(UUID paymentId);
-    
-    /**
-     * 根據訂單ID查找支付
-     */
-    Optional<Payment> findByOrderId(UUID orderId);
+    List<Payment> findByOrderId(UUID orderId);
 }

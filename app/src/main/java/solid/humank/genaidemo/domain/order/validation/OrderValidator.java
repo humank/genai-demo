@@ -48,7 +48,7 @@ public class OrderValidator extends DomainValidator<Order> {
     }
     
     private void validateBasicInfo(Order order) {
-        if (order.getCustomerId() == null || order.getCustomerId().isBlank()) {
+        if (order.getCustomerId() == null) {
             addError("Customer ID cannot be empty");
         }
     }

@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
@@ -14,8 +16,8 @@ import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
  */
 @AggregateRoot
 public class Payment {
-    private final UUID id;
-    private final UUID orderId;
+    private final PaymentId id;
+    private final OrderId orderId;
     private final Money amount;
     private PaymentStatus status;
     private PaymentMethod paymentMethod;
@@ -29,8 +31,8 @@ public class Payment {
      * 建立支付
      */
     public Payment(UUID orderId, Money amount) {
-        this.id = UUID.randomUUID();
-        this.orderId = Objects.requireNonNull(orderId, "Order ID cannot be null");
+        this.id = PaymentId.create();
+        this.orderId = OrderId.fromUUID(Objects.requireNonNull(orderId, "Order ID cannot be null"));
         this.amount = Objects.requireNonNull(amount, "Amount cannot be null");
         this.status = PaymentStatus.PENDING;
         this.createdAt = LocalDateTime.now();
@@ -42,6 +44,27 @@ public class Payment {
      * 建立支付（指定支付方式）
      */
     public Payment(UUID orderId, Money amount, PaymentMethod paymentMethod) {
+        this(orderId, amount);
+        this.paymentMethod = Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
+    }
+    
+    /**
+     * 建立支付（使用OrderId值對象）
+     */
+    public Payment(OrderId orderId, Money amount) {
+        this.id = PaymentId.create();
+        this.orderId = Objects.requireNonNull(orderId, "Order ID cannot be null");
+        this.amount = Objects.requireNonNull(amount, "Amount cannot be null");
+        this.status = PaymentStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
+        this.canRetry = true;
+    }
+    
+    /**
+     * 建立支付（使用OrderId值對象和指定支付方式）
+     */
+    public Payment(OrderId orderId, Money amount, PaymentMethod paymentMethod) {
         this(orderId, amount);
         this.paymentMethod = Objects.requireNonNull(paymentMethod, "Payment method cannot be null");
     }
@@ -127,12 +150,20 @@ public class Payment {
     }
     
     // Getters
-    public UUID getId() {
+    public PaymentId getId() {
         return id;
     }
     
-    public UUID getOrderId() {
+    public UUID getIdAsUUID() {
+        return id.getId();
+    }
+    
+    public OrderId getOrderId() {
         return orderId;
+    }
+    
+    public UUID getOrderIdAsUUID() {
+        return orderId.getId();
     }
     
     public Money getAmount() {

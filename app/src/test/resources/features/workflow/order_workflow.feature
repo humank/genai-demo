@@ -1,6 +1,5 @@
 # language: en
 # Original language: zh-TW
-@workflow
 Feature: Order Workflow
   As an order system
   I need to manage the complete order lifecycle
@@ -60,7 +59,7 @@ Feature: Order Workflow
     And the order should be valid
     
     # Inventory Check
-    When the system checks inventory
+    When the order system checks inventory
     And the inventory is sufficient
     
     # Payment Processing
@@ -75,14 +74,14 @@ Feature: Order Workflow
     And the customer should receive an order confirmation notification
     
     # Delivery Processing
-    When the system arranges delivery
-    And the logistics system creates a delivery order
-    And the logistics system allocates delivery resources
-    And the logistics system executes delivery
+    When the system arranges workflow delivery
+    And the logistics system creates a workflow delivery order
+    And the logistics system allocates workflow delivery resources
+    And the logistics system executes workflow delivery
     
     # Order Completion
     And the customer receives the order
-    And the customer confirms receipt
+    And the customer confirms workflow receipt
     Then the workflow order status should be updated to "COMPLETED"
     And the customer should be able to rate the order
 
@@ -113,7 +112,7 @@ Feature: Order Workflow
     And the order should be valid
     
     # Inventory Check
-    When the system checks inventory
+    When the order system checks inventory
     And the inventory is insufficient
     
     # Order Cancellation
@@ -151,7 +150,7 @@ Feature: Order Workflow
     # Order Validation and Inventory Check
     Then the system should validate the order
     And the order should be valid
-    When the system checks inventory
+    When the order system checks inventory
     And the inventory is sufficient
     
     # Payment Processing

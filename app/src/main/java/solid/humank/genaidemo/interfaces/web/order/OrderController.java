@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.*;
 
 import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
 import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
-import solid.humank.genaidemo.application.order.dto.OrderResponse;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
 import solid.humank.genaidemo.interfaces.web.order.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.interfaces.web.order.dto.CreateOrderRequest;
+import solid.humank.genaidemo.interfaces.web.order.dto.OrderResponse;
 
 /**
  * 訂單控制器
@@ -35,8 +35,10 @@ public class OrderController {
             request.getShippingAddress()
         );
         
-        OrderResponse response = orderService.createOrder(dto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.createOrder(dto);
+        // 將應用層響應轉換為介面層響應
+        OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
+        return new ResponseEntity<>(webResponse, HttpStatus.CREATED);
     }
 
     /**
@@ -52,11 +54,13 @@ public class OrderController {
             request.getProductId(),
             request.getProductName(),
             request.getQuantity(),
-            request.getPrice()
+            request.getPrice().getAmount()
         );
         
-        OrderResponse response = orderService.addOrderItem(dto);
-        return ResponseEntity.ok(response);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.addOrderItem(dto);
+        // 將應用層響應轉換為介面層響應
+        OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
+        return ResponseEntity.ok(webResponse);
     }
 
     /**
@@ -64,8 +68,10 @@ public class OrderController {
      */
     @PostMapping("/{orderId}/submit")
     public ResponseEntity<OrderResponse> submitOrder(@PathVariable String orderId) {
-        OrderResponse response = orderService.submitOrder(orderId);
-        return ResponseEntity.ok(response);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.submitOrder(orderId);
+        // 將應用層響應轉換為介面層響應
+        OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
+        return ResponseEntity.ok(webResponse);
     }
 
     /**
@@ -73,8 +79,10 @@ public class OrderController {
      */
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(@PathVariable String orderId) {
-        OrderResponse response = orderService.cancelOrder(orderId);
-        return ResponseEntity.ok(response);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.cancelOrder(orderId);
+        // 將應用層響應轉換為介面層響應
+        OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
+        return ResponseEntity.ok(webResponse);
     }
 
     /**
@@ -82,8 +90,10 @@ public class OrderController {
      */
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable String orderId) {
-        OrderResponse response = orderService.getOrder(orderId);
-        return ResponseEntity.ok(response);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.getOrder(orderId);
+        // 將應用層響應轉換為介面層響應
+        OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
+        return ResponseEntity.ok(webResponse);
     }
 
     /**

@@ -15,8 +15,6 @@ import solid.humank.genaidemo.domain.common.repository.Repository;
 import solid.humank.genaidemo.domain.common.specification.Specification;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.fields;
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.methods;
 
 /**
  * 確保正確實現 DDD 戰術模式

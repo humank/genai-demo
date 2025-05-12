@@ -11,6 +11,7 @@ import solid.humank.genaidemo.domain.common.events.DomainEventBus;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.payment.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.exceptions.ValidationException;
 import solid.humank.genaidemo.utils.Preconditions;
@@ -62,8 +63,12 @@ public class OrderProcessingService {
             
             // 處理支付
             Money effectiveAmount = order.getEffectiveAmount();
-            UUID paymentId = UUID.randomUUID();
-            eventBus.publish(new PaymentRequestedEvent(paymentId, order.getId().getValue(), effectiveAmount));
+            PaymentId paymentId = PaymentId.create();
+            eventBus.publish(new PaymentRequestedEvent(
+                paymentId, 
+                order.getId(), 
+                effectiveAmount
+            ));
             
             // 返回結果
             return OrderProcessingResult.success(effectiveAmount);

@@ -1,29 +1,40 @@
 package solid.humank.genaidemo.domain.common.events;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record AbstractDomainEvent(
-    UUID eventId,
-    Instant occurredOn,
-    String eventType
-) implements DomainEvent {
-    public AbstractDomainEvent(String eventType) {
-        this(UUID.randomUUID(), Instant.now(), eventType);
+/**
+ * 抽象領域事件
+ * 提供領域事件的基本實現
+ */
+public abstract class AbstractDomainEvent implements DomainEvent {
+    
+    private final UUID eventId;
+    private final LocalDateTime occurredOn;
+    private final String source;
+    
+    protected AbstractDomainEvent(String source) {
+        this.eventId = UUID.randomUUID();
+        this.occurredOn = LocalDateTime.now();
+        this.source = source;
     }
-
+    
     @Override
-    public UUID getEventId() {
-        return eventId;
-    }
-
-    @Override
-    public Instant getOccurredOn() {
+    public LocalDateTime getOccurredOn() {
         return occurredOn;
     }
-
+    
     @Override
-    public String getEventType() {
-        return eventType;
+    public String getSource() {
+        return source;
+    }
+    
+    /**
+     * 獲取事件ID
+     * 
+     * @return 事件ID
+     */
+    public UUID getEventId() {
+        return eventId;
     }
 }

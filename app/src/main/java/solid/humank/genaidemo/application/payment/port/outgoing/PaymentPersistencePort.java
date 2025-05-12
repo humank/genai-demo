@@ -8,7 +8,7 @@ import java.util.UUID;
 
 /**
  * 支付持久化端口
- * 定義支付持久化的操作接口
+ * 定義支付持久化的業務操作
  */
 public interface PaymentPersistencePort {
     
@@ -18,12 +18,12 @@ public interface PaymentPersistencePort {
     void save(Payment payment);
     
     /**
-     * 根據ID查找支付
+     * 根據ID查詢支付
      */
     Optional<Payment> findById(UUID paymentId);
     
     /**
-     * 查找所有支付
+     * 查詢所有支付
      */
     List<Payment> findAll();
     
@@ -43,7 +43,7 @@ public interface PaymentPersistencePort {
     boolean exists(UUID paymentId);
     
     /**
-     * 根據訂單ID查找支付
+     * 根據訂單ID查詢支付
      */
     Optional<Payment> findByOrderId(UUID orderId);
 }

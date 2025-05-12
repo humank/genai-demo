@@ -40,7 +40,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     @Override
     public List<Order> findByCustomerId(UUID customerId) {
         return orderStore.values().stream()
-                .filter(order -> UUID.fromString(order.getCustomerId()).equals(customerId))
+                .filter(order -> order.getCustomerId().getId().equals(customerId))
                 .toList();
     }
 

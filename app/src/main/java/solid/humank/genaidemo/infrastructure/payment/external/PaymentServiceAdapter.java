@@ -3,8 +3,9 @@ package solid.humank.genaidemo.infrastructure.payment.external;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
+
+import java.util.UUID;
 
 /**
  * 支付服務適配器
@@ -18,7 +19,7 @@ public class PaymentServiceAdapter implements PaymentServicePort {
      * 處理支付
      */
     @Override
-    public PaymentResult processPayment(OrderId orderId, Money amount) {
+    public PaymentResult processPayment(UUID orderId, Money amount) {
         // 模擬與外部支付系統的交互
         try {
             // 生成支付ID
@@ -36,7 +37,7 @@ public class PaymentServiceAdapter implements PaymentServicePort {
      * 取消支付
      */
     @Override
-    public PaymentResult cancelPayment(OrderId orderId) {
+    public PaymentResult cancelPayment(UUID orderId) {
         // 模擬取消支付
         return PaymentResult.successful("CANCEL-" + orderId.toString());
     }
@@ -45,7 +46,7 @@ public class PaymentServiceAdapter implements PaymentServicePort {
      * 查詢支付狀態
      */
     @Override
-    public PaymentResult getPaymentStatus(OrderId orderId) {
+    public PaymentResult getPaymentStatus(UUID orderId) {
         // 模擬查詢支付狀態
         return PaymentResult.successful("STATUS-" + orderId.toString());
     }
@@ -54,7 +55,7 @@ public class PaymentServiceAdapter implements PaymentServicePort {
      * 退款處理
      */
     @Override
-    public PaymentResult processRefund(OrderId orderId, Money amount) {
+    public PaymentResult processRefund(UUID orderId, Money amount) {
         // 模擬退款處理
         return PaymentResult.successful("REFUND-" + orderId.toString());
     }

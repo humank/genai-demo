@@ -3,7 +3,8 @@ package solid.humank.genaidemo.interfaces.web.payment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.application.payment.dto.PaymentResponseDto;
+import solid.humank.genaidemo.application.payment.dto.ProcessPaymentCommand;
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagementUseCase;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentRequest;
 import solid.humank.genaidemo.interfaces.web.payment.dto.PaymentResponse;
@@ -31,12 +32,35 @@ public class PaymentController {
      */
     @PostMapping
     public ResponseEntity<PaymentResponse> processPayment(@RequestBody PaymentRequest request) {
-        var payment = paymentManagementUseCase.processPayment(
-                UUID.fromString(request.getOrderId()),
-                Money.of(request.getAmount())
-        );
+        // 創建處理支付命令
+        ProcessPaymentCommand command;
         
-        return new ResponseEntity<>(PaymentResponse.fromDomain(payment), HttpStatus.CREATED);
+        if (request.getPaymentDetails() != null) {
+            // 帶支付詳情
+            command = ProcessPaymentCommand.of(
+                    request.getOrderId(),
+                    request.getAmount(),
+                    request.getCurrency() != null ? request.getCurrency() : "TWD",
+                    request.getPaymentMethod() != null ? request.getPaymentMethod() : "CREDIT_CARD",
+                    request.getPaymentDetails().toString()
+            );
+        } else {
+            // 不帶支付詳情
+            command = ProcessPaymentCommand.of(
+                    request.getOrderId(),
+                    request.getAmount(),
+                    request.getCurrency() != null ? request.getCurrency() : "TWD",
+                    request.getPaymentMethod() != null ? request.getPaymentMethod() : "CREDIT_CARD"
+            );
+        }
+        
+        // 處理支付
+        PaymentResponseDto responseDto = paymentManagementUseCase.processPayment(command);
+        
+        // 轉換為介面層 DTO
+        PaymentResponse response = PaymentResponse.fromDto(responseDto);
+        
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     /**
@@ -46,9 +70,13 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> getPayment(@PathVariable String paymentId) {
         var paymentOpt = paymentManagementUseCase.getPayment(UUID.fromString(paymentId));
         
-        return paymentOpt
-                .map(payment -> ResponseEntity.ok(PaymentResponse.fromDomain(payment)))
-                .orElse(ResponseEntity.notFound().build());
+        if (paymentOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // 使用應用層DTO，避免直接依賴領域模型
+        PaymentResponseDto responseDto = paymentManagementUseCase.getPaymentDto(UUID.fromString(paymentId));
+        return ResponseEntity.ok(PaymentResponse.fromDto(responseDto));
     }
     
     /**
@@ -58,9 +86,13 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> getPaymentByOrderId(@PathVariable String orderId) {
         var paymentOpt = paymentManagementUseCase.getPaymentByOrderId(UUID.fromString(orderId));
         
-        return paymentOpt
-                .map(payment -> ResponseEntity.ok(PaymentResponse.fromDomain(payment)))
-                .orElse(ResponseEntity.notFound().build());
+        if (paymentOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        // 使用應用層DTO，避免直接依賴領域模型
+        PaymentResponseDto responseDto = paymentManagementUseCase.getPaymentDtoByOrderId(UUID.fromString(orderId));
+        return ResponseEntity.ok(PaymentResponse.fromDto(responseDto));
     }
     
     /**
@@ -68,21 +100,32 @@ public class PaymentController {
      */
     @GetMapping
     public ResponseEntity<List<PaymentResponse>> getAllPayments() {
-        var payments = paymentManagementUseCase.getAllPayments()
-                .stream()
-                .map(PaymentResponse::fromDomain)
+        // 使用應用層DTO列表，避免直接依賴領域模型
+        List<PaymentResponseDto> responseDtos = paymentManagementUseCase.getAllPaymentDtos();
+        
+        List<PaymentResponse> responses = responseDtos.stream()
+                .map(PaymentResponse::fromDto)
                 .collect(Collectors.toList());
         
-        return ResponseEntity.ok(payments);
+        return ResponseEntity.ok(responses);
     }
     
     /**
      * 退款
      */
     @PostMapping("/{paymentId}/refund")
-    public ResponseEntity<Void> refundPayment(@PathVariable String paymentId) {
-        paymentManagementUseCase.refundPayment(UUID.fromString(paymentId));
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PaymentResponse> refundPayment(@PathVariable String paymentId) {
+        PaymentResponseDto responseDto = paymentManagementUseCase.refundPayment(UUID.fromString(paymentId));
+        return ResponseEntity.ok(PaymentResponse.fromDto(responseDto));
+    }
+    
+    /**
+     * 取消支付
+     */
+    @PostMapping("/{paymentId}/cancel")
+    public ResponseEntity<PaymentResponse> cancelPayment(@PathVariable String paymentId) {
+        PaymentResponseDto responseDto = paymentManagementUseCase.cancelPayment(UUID.fromString(paymentId));
+        return ResponseEntity.ok(PaymentResponse.fromDto(responseDto));
     }
     
     /**

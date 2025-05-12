@@ -6,9 +6,24 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 標記值對象的註解
+ * 值對象註解
+ * 用於標記值對象類
  */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
 public @interface ValueObject {
+    
+    /**
+     * 值對象名稱
+     * 
+     * @return 值對象名稱
+     */
+    String name() default "";
+    
+    /**
+     * 值對象描述
+     * 
+     * @return 值對象描述
+     */
+    String description() default "";
 }

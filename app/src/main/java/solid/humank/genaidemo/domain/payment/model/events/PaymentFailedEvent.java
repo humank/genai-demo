@@ -1,54 +1,46 @@
 package solid.humank.genaidemo.domain.payment.model.events;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import solid.humank.genaidemo.domain.common.events.DomainEvent;
+import solid.humank.genaidemo.domain.common.events.AbstractDomainEvent;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 
 /**
  * 支付失敗事件
  */
-public class PaymentFailedEvent implements DomainEvent {
-    private final UUID eventId;
-    private final Instant occurredOn;
-    private final String eventType;
-    private final UUID paymentId;
-    private final UUID orderId;
-    private final String errorMessage;
+public class PaymentFailedEvent extends AbstractDomainEvent {
     
-    public PaymentFailedEvent(UUID paymentId, UUID orderId, String errorMessage) {
-        this.eventId = UUID.randomUUID();
-        this.occurredOn = Instant.now();
-        this.eventType = "PaymentFailed";
+    private final PaymentId paymentId;
+    private final OrderId orderId;
+    private final Money amount;
+    private final String failureReason;
+    
+    public PaymentFailedEvent(PaymentId paymentId, OrderId orderId, Money amount, String failureReason) {
+        super("payment-service");
         this.paymentId = paymentId;
         this.orderId = orderId;
-        this.errorMessage = errorMessage;
+        this.amount = amount;
+        this.failureReason = failureReason;
     }
     
-    @Override
-    public UUID getEventId() {
-        return eventId;
+    public PaymentId getPaymentId() {
+        return paymentId;
     }
     
-    @Override
-    public Instant getOccurredOn() {
-        return occurredOn;
+    public OrderId getOrderId() {
+        return orderId;
+    }
+    
+    public Money getAmount() {
+        return amount;
+    }
+    
+    public String getFailureReason() {
+        return failureReason;
     }
     
     @Override
     public String getEventType() {
-        return eventType;
-    }
-    
-    public UUID getPaymentId() {
-        return paymentId;
-    }
-    
-    public UUID getOrderId() {
-        return orderId;
-    }
-    
-    public String getErrorMessage() {
-        return errorMessage;
+        return "PaymentFailedEvent";
     }
 }

@@ -1,14 +1,13 @@
 package solid.humank.genaidemo.architecture;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
@@ -52,9 +51,9 @@ public class DddArchitectureTest {
                 .layer("Interfaces").definedBy(INTERFACES_PACKAGE)
                 
                 // 定義允許的依賴關係
-                .whereLayer("Interfaces").mayOnlyAccessLayers("Application", "Domain")
+                .whereLayer("Interfaces").mayOnlyAccessLayers("Application")
                 .whereLayer("Application").mayOnlyAccessLayers("Domain")
-                .whereLayer("Infrastructure").mayOnlyAccessLayers("Application", "Domain");
+                .whereLayer("Infrastructure").mayOnlyAccessLayers("Domain");
 
         rule.check(importedClasses);
     }
@@ -84,11 +83,13 @@ public class DddArchitectureTest {
     }
 
     @Test
-    @DisplayName("介面層不應直接依賴基礎設施層")
-    void interfacesLayerShouldNotDependOnInfrastructureLayer() {
+    @DisplayName("介面層不應直接依賴基礎設施層和領域層")
+    void interfacesLayerShouldNotDependOnInfrastructureOrDomainLayer() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage(INTERFACES_PACKAGE)
-                .should().dependOnClassesThat().resideInAPackage(INFRASTRUCTURE_PACKAGE);
+                .should().dependOnClassesThat().resideInAnyPackage(
+                        INFRASTRUCTURE_PACKAGE, DOMAIN_PACKAGE
+                );
 
         rule.check(importedClasses);
     }
