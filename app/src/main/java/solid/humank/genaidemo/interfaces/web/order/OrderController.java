@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
-import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
+import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
+import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
 import solid.humank.genaidemo.interfaces.web.order.dto.AddOrderItemRequest;
 import solid.humank.genaidemo.interfaces.web.order.dto.CreateOrderRequest;
@@ -29,13 +29,13 @@ public class OrderController {
      */
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest request) {
-        // 將介面層DTO轉換為應用層DTO
-        CreateOrderRequestDto dto = CreateOrderRequestDto.from(
+        // 創建命令對象
+        CreateOrderCommand command = CreateOrderCommand.of(
             request.getCustomerId(),
             request.getShippingAddress()
         );
         
-        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.createOrder(dto);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.createOrder(command);
         // 將應用層響應轉換為介面層響應
         OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
         return new ResponseEntity<>(webResponse, HttpStatus.CREATED);
@@ -48,16 +48,16 @@ public class OrderController {
     public ResponseEntity<OrderResponse> addOrderItem(
             @PathVariable String orderId,
             @RequestBody AddOrderItemRequest request) {
-        // 將介面層DTO轉換為應用層DTO
-        AddOrderItemRequestDto dto = AddOrderItemRequestDto.from(
-            request.getOrderId(),
+        // 創建命令對象
+        AddOrderItemCommand command = AddOrderItemCommand.of(
+            orderId,
             request.getProductId(),
             request.getProductName(),
             request.getQuantity(),
             request.getPrice().getAmount()
         );
         
-        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.addOrderItem(dto);
+        solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse = orderService.addOrderItem(command);
         // 將應用層響應轉換為介面層響應
         OrderResponse webResponse = ResponseFactory.toWebResponse(appResponse);
         return ResponseEntity.ok(webResponse);

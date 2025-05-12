@@ -12,6 +12,13 @@ public class CreateOrderCommand {
         this.shippingAddress = shippingAddress;
     }
 
+    /**
+     * 創建訂單命令
+     */
+    public static CreateOrderCommand of(String customerId, String shippingAddress) {
+        return new CreateOrderCommand(customerId, shippingAddress);
+    }
+
     public String getCustomerId() {
         return customerId;
     }

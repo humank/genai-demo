@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.application.order.port.incoming;
 
-import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
-import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
+import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
+import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
 
 /**
@@ -12,12 +12,12 @@ public interface OrderManagementUseCase {
     /**
      * 創建新訂單
      */
-    OrderResponse createOrder(CreateOrderRequestDto request);
+    OrderResponse createOrder(CreateOrderCommand command);
 
     /**
      * 添加訂單項目
      */
-    OrderResponse addOrderItem(AddOrderItemRequestDto request);
+    OrderResponse addOrderItem(AddOrderItemCommand command);
 
     /**
      * 提交訂單

@@ -9,8 +9,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import solid.humank.genaidemo.application.order.dto.AddOrderItemRequestDto;
-import solid.humank.genaidemo.application.order.dto.CreateOrderRequestDto;
+import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
+import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
 import solid.humank.genaidemo.application.order.dto.response.OrderItemResponse;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
@@ -43,11 +43,11 @@ public class OrderApplicationService implements OrderManagementUseCase {
     }
 
     @Override
-    public OrderResponse createOrder(CreateOrderRequestDto request) {
+    public OrderResponse createOrder(CreateOrderCommand command) {
         // 創建訂單參數
         OrderFactory.OrderCreationParams params = new OrderFactory.OrderCreationParams(
-                request.getCustomerId(),
-                request.getShippingAddress()
+                command.getCustomerId(),
+                command.getShippingAddress()
         );
         
         // 創建訂單
@@ -61,18 +61,18 @@ public class OrderApplicationService implements OrderManagementUseCase {
     }
 
     @Override
-    public OrderResponse addOrderItem(AddOrderItemRequestDto request) {
+    public OrderResponse addOrderItem(AddOrderItemCommand command) {
         // 查找訂單 - 將OrderId轉換為UUID
-        UUID orderId = UUID.fromString(request.getOrderId());
+        UUID orderId = UUID.fromString(command.getOrderId());
         Optional<Order> orderOpt = orderPersistencePort.findById(orderId);
         Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + orderId));
 
         // 添加訂單項目
         order.addItem(
-                request.getProductId(),
-                request.getProductName(),
-                request.getQuantity(),
-                Money.of(request.getPrice(), request.getCurrency())
+                command.getProductId(),
+                command.getProductName(),
+                command.getQuantity(),
+                command.getPrice()
         );
 
         // 保存訂單
