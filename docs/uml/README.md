@@ -68,10 +68,13 @@
     - 展示系統中不同上下文之間的關係
     - 包括上下文映射模式
 
-15. **事件風暴圖 (event-storming-diagram.puml)**
+15. **事件風暴圖 (big-picture-exploration.puml, process-modeling.puml, design-level.puml)**
 
     - 展示系統中的命令、事件、聚合根、策略和讀模型
     - 基於事件風暴工作坊的結果
+    - **大圖探索階段 (Big Picture Exploration)**：快速了解整個業務領域
+    - **流程建模階段 (Process Modeling)**：深入理解事件之間的因果關係
+    - **設計級別階段 (Design Level)**：為軟體實現提供詳細設計
 
 ### 進階架構圖表
 
@@ -199,9 +202,17 @@
 
 ![限界上下文圖](./bounded-context-diagram.svg)
 
-### 事件風暴圖
+### 事件風暴圖-Big Picture Exploration
 
-![事件風暴圖](./event-storming-diagram.svg)
+![事件風暴圖- Big Picture Exploration](./big-picture-exploration.svg)
+
+### 事件風暴圖-Process Modeling
+
+![事件風暴圖- Process Modeling](./process-modeling.svg)
+
+### 事件風暴圖-Design Level
+
+![事件風暴圖- design-level](./design-level.svg)
 
 ### CQRS模式圖
 
