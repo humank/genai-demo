@@ -70,6 +70,26 @@ public class Payment {
     }
     
     /**
+     * 用於重建聚合根的完整建構子（僅供Repository使用）
+     */
+    protected Payment(PaymentId id, OrderId orderId, Money amount, 
+                    PaymentStatus status, PaymentMethod paymentMethod, 
+                    String transactionId, String failureReason, 
+                    LocalDateTime createdAt, LocalDateTime updatedAt, 
+                    boolean canRetry) {
+        this.id = Objects.requireNonNull(id, "Payment ID cannot be null");
+        this.orderId = Objects.requireNonNull(orderId, "Order ID cannot be null");
+        this.amount = Objects.requireNonNull(amount, "Amount cannot be null");
+        this.status = Objects.requireNonNull(status, "Status cannot be null");
+        this.paymentMethod = paymentMethod;
+        this.transactionId = transactionId;
+        this.failureReason = failureReason;
+        this.createdAt = Objects.requireNonNull(createdAt, "Created at cannot be null");
+        this.updatedAt = Objects.requireNonNull(updatedAt, "Updated at cannot be null");
+        this.canRetry = canRetry;
+    }
+    
+    /**
      * 完成支付
      */
     public void complete(String transactionId) {

@@ -8,6 +8,9 @@ import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 import solid.humank.genaidemo.infrastructure.payment.persistence.entity.JpaPaymentEntity;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.UUID;
 
@@ -46,22 +49,60 @@ public class PaymentMapper {
     
     /**
      * 將持久化模型轉換為領域模型
-     * 注意：這裡使用了一個簡化的方法來重建支付聚合根
-     * 在實際應用中，可能需要更複雜的重建邏輯
+     * 使用反射機制重建支付聚合根，保持其完整性
      * 
      * @param jpaEntity 支付持久化模型
      * @return 支付領域模型
      */
     public static Payment toDomainEntity(JpaPaymentEntity jpaEntity) {
+        try {
+            // 創建必要的值對象
+            PaymentId paymentId = PaymentId.fromString(jpaEntity.getId());
+            OrderId orderId = OrderId.fromString(jpaEntity.getOrderId());
+            Money amount = Money.of(
+                    jpaEntity.getAmount(),
+                    Currency.getInstance(jpaEntity.getCurrency())
+            );
+            
+            // 使用反射創建Payment實例
+            Constructor<Payment> constructor = Payment.class.getDeclaredConstructor(
+                    PaymentId.class, OrderId.class, Money.class, 
+                    PaymentStatus.class, PaymentMethod.class, String.class, 
+                    String.class, LocalDateTime.class, LocalDateTime.class, boolean.class);
+            constructor.setAccessible(true);
+            
+            Payment payment = constructor.newInstance(
+                    paymentId,
+                    orderId,
+                    amount,
+                    jpaEntity.getStatus(),
+                    jpaEntity.getPaymentMethod(),
+                    jpaEntity.getTransactionId(),
+                    jpaEntity.getFailureReason(),
+                    jpaEntity.getCreatedAt(),
+                    jpaEntity.getUpdatedAt(),
+                    jpaEntity.isCanRetry()
+            );
+            
+            return payment;
+        } catch (Exception e) {
+            // 如果反射失敗，使用備用方法
+            return createPaymentAlternative(jpaEntity);
+        }
+    }
+    
+    /**
+     * 備用方法：當反射方法失敗時使用
+     */
+    private static Payment createPaymentAlternative(JpaPaymentEntity jpaEntity) {
         // 創建支付聚合根
-        OrderId orderId = OrderId.of(jpaEntity.getOrderId());
+        OrderId orderId = OrderId.fromString(jpaEntity.getOrderId());
         Money amount = Money.of(
                 jpaEntity.getAmount(),
                 Currency.getInstance(jpaEntity.getCurrency())
         );
         
-        // 使用反射或其他方式重建支付聚合根
-        // 這裡使用一個簡化的方法
+        // 創建基本的Payment對象
         Payment payment = new Payment(orderId, amount);
         
         // 設置支付方式
@@ -87,11 +128,24 @@ public class PaymentMapper {
                 break;
         }
         
-        // 注意：這裡我們沒有處理所有可能的狀態和屬性
-        // 在實際應用中，可能需要更複雜的重建邏輯，例如：
-        // - 處理支付歷史記錄
-        // - 處理支付事件
-        // - 處理支付關聯的訂單
+        // 嘗試使用反射設置其他屬性
+        try {
+            // 設置ID
+            Field idField = Payment.class.getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(payment, PaymentId.fromString(jpaEntity.getId()));
+            
+            // 設置創建時間和更新時間
+            Field createdAtField = Payment.class.getDeclaredField("createdAt");
+            createdAtField.setAccessible(true);
+            createdAtField.set(payment, jpaEntity.getCreatedAt());
+            
+            Field updatedAtField = Payment.class.getDeclaredField("updatedAt");
+            updatedAtField.setAccessible(true);
+            updatedAtField.set(payment, jpaEntity.getUpdatedAt());
+        } catch (Exception e) {
+            // 忽略反射錯誤，使用已設置的屬性
+        }
         
         return payment;
     }

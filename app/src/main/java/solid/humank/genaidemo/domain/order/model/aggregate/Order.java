@@ -94,6 +94,35 @@ public class Order {
     public Order(OrderId orderId, String customerId, String shippingAddress) {
         this(orderId, CustomerId.fromString(customerId), shippingAddress);
     }
+    
+    /**
+     * 用於重建聚合根的完整建構子（僅供Repository使用）
+     * 
+     * @param id 訂單ID
+     * @param customerId 客戶ID
+     * @param shippingAddress 配送地址
+     * @param items 訂單項列表
+     * @param status 訂單狀態
+     * @param totalAmount 訂單總金額
+     * @param effectiveAmount 訂單實際金額
+     * @param createdAt 創建時間
+     * @param updatedAt 更新時間
+     */
+    protected Order(OrderId id, CustomerId customerId, String shippingAddress,
+                  List<OrderItem> items, OrderStatus status, Money totalAmount,
+                  Money effectiveAmount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = Objects.requireNonNull(id, "訂單ID不能為空");
+        this.customerId = Objects.requireNonNull(customerId, "客戶ID不能為空");
+        this.shippingAddress = Objects.requireNonNull(shippingAddress, "配送地址不能為空");
+        this.items = new ArrayList<>(Objects.requireNonNull(items, "訂單項列表不能為空"));
+        this.status = Objects.requireNonNull(status, "訂單狀態不能為空");
+        this.totalAmount = Objects.requireNonNull(totalAmount, "訂單總金額不能為空");
+        this.effectiveAmount = Objects.requireNonNull(effectiveAmount, "訂單實際金額不能為空");
+        this.createdAt = Objects.requireNonNull(createdAt, "創建時間不能為空");
+        this.updatedAt = Objects.requireNonNull(updatedAt, "更新時間不能為空");
+        
+        // 注意：這裡不發布領域事件，因為這是重建聚合根，而不是創建新訂單
+    }
 
     /**
      * 建立訂單

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * 支付儲存庫適配器
  * 實現領域儲存庫接口，並使用基礎設施層的 JPA 儲存庫
+ * 嚴格遵循 Repository Pattern，只接受和返回聚合根
  */
 @Component
 public class PaymentRepositoryAdapter implements PaymentRepository {
@@ -36,7 +37,9 @@ public class PaymentRepositoryAdapter implements PaymentRepository {
         JpaPaymentEntity savedEntity = jpaPaymentRepository.save(jpaEntity);
         
         // 將保存後的持久化模型轉換回領域模型
-        return PaymentMapper.toDomainEntity(savedEntity);
+        // 注意：這裡我們返回原始的聚合根實例，而不是創建新的實例
+        // 這樣可以保持聚合根的完整性和一致性
+        return payment;
     }
 
     @Override

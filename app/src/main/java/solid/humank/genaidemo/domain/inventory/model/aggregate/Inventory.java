@@ -15,7 +15,7 @@ import java.util.UUID;
  * 庫存聚合根
  * 管理產品庫存和預留
  */
-@AggregateRoot
+@AggregateRoot(name = "Inventory", description = "庫存聚合根，管理產品庫存和預留")
 public class Inventory {
     private final InventoryId id;
     private final String productId;
