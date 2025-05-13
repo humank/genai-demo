@@ -123,6 +123,11 @@ tasks.register('cucumber', JavaExec) {
     
     // 添加 Allure 結果目錄
     systemProperty 'allure.results.directory', allureResultsDir
+    
+    // 確保 Cucumber 測試結果被包含在 Allure 報告中
+    finalizedBy {
+        tasks.named('allureReport')
+    }
 }
 
 // 架構測試任務 - 專門執行 DDD 與六邊形架構的規範測試
@@ -160,7 +165,7 @@ tasks.register('testArchitecture', Test) {
 
 // 添加一個任務來運行所有測試
 tasks.register('runAllTests') {
-    dependsOn test, cucumber, testArchitecture
+    dependsOn test, testArchitecture, cucumber
     description = '運行所有測試'
     group = 'verification'
     
@@ -192,8 +197,14 @@ tasks.named('clean') {
 
 // 確保在生成報告前所有測試都已完成
 tasks.named('allureReport') {
-    // 不需要顯式依賴測試任務，因為 runAllTests 已經依賴了它們
-    // 並且 runAllTests 會在 finalizedBy 中調用 allureReport
+    // 確保 Allure 報告包含 Cucumber 測試結果
+    doFirst {
+        copy {
+            from "${buildDir}/reports/cucumber"
+            into "${buildDir}/allure-results"
+            include "**/*.json"
+        }
+    }
 }
 
 // 確保在啟動報告服務器前報告已生成
