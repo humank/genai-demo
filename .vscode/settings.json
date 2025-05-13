@@ -10,5 +10,8 @@
   "java.problems.exclude": {
     "**/*.java": ["lombok.*"]
   },
-  "java.compile.nullAnalysis.mode": "disabled"
+  "java.compile.nullAnalysis.mode": "disabled",
+  "cSpell.words": [
+    "genaidemo"
+  ]
 }
