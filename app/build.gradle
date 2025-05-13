@@ -34,7 +34,7 @@ allure {
 }
 
 // 定義 Allure 結果目錄，供所有任務使用
-def allureResultsDir = "${buildDir}/allure-results"
+def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.absolutePath
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -49,12 +49,18 @@ dependencies {
     // Cucumber for BDD testing
     testImplementation 'io.cucumber:cucumber-java:7.15.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
-    // 移除 cucumber-picocontainer 依賴
+    testImplementation 'io.cucumber:cucumber-picocontainer:7.15.0' // 添加回 cucumber-picocontainer 依賴
     
-    // JUnit 5
-    testImplementation 'org.junit.platform:junit-platform-suite:1.10.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    // JUnit 5 - 強制使用相同版本
+    testImplementation(platform('org.junit:junit-bom:5.10.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation('org.junit.platform:junit-platform-suite')
+    
+    // 確保 JUnit Platform 相關依賴版本一致
+    constraints {
+        testImplementation('org.junit.platform:junit-platform-commons:1.10.2')
+        testImplementation('org.junit.platform:junit-platform-engine:1.10.2')
+    }
     
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.8.0'
@@ -81,13 +87,24 @@ tasks.named('test') {
     exclude '**/CucumberTestRunner.class'
     
     // 添加 Allure 報告生成
-    systemProperty 'allure.results.directory', allureResultsDir
+    systemProperty 'allure.results.directory', "${buildDir}/allure-results"
     
     // 確保測試結果被保存
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
+        exceptionFormat = 'full'
     }
+    
+    // 修復 JUnit 依賴問題
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+    
+    // 添加更多診斷信息
+    systemProperty 'junit.platform.output.capture.stdout', 'true'
+    systemProperty 'junit.platform.output.capture.stderr', 'true'
+    
+    // 設置測試執行順序
+    systemProperty 'junit.jupiter.testmethod.order.default', 'org.junit.jupiter.api.MethodOrderer$OrderAnnotation'
 }
 
 // Cucumber specific task

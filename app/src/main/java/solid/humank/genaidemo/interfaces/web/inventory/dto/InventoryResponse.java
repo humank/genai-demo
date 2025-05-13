@@ -2,7 +2,6 @@ package solid.humank.genaidemo.interfaces.web.inventory.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import solid.humank.genaidemo.application.inventory.dto.InventoryDto;
-import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +41,7 @@ public class InventoryResponse {
         response.setAvailableQuantity(dto.getAvailableQuantity());
         response.setReservedQuantity(dto.getReservedQuantity());
         response.setThreshold(dto.getThreshold());
-        response.setStatus(dto.getStatus().name());
+        response.setStatus(dto.getStatusName());
         response.setBelowThreshold(dto.isBelowThreshold());
         response.setCreatedAt(dto.getCreatedAt());
         response.setUpdatedAt(dto.getUpdatedAt());

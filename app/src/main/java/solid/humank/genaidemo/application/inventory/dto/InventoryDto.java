@@ -86,6 +86,14 @@ public class InventoryDto {
     public InventoryStatus getStatus() {
         return status;
     }
+    
+    /**
+     * 獲取庫存狀態的字符串表示
+     * @return 庫存狀態的字符串表示
+     */
+    public String getStatusName() {
+        return status.name();
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
