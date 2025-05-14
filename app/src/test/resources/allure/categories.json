@@ -1,0 +1,30 @@
+[
+  {
+    "name": "通過的測試",
+    "matchedStatuses": ["passed"]
+  },
+  {
+    "name": "失敗的測試",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "忽略的測試",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "損壞的測試",
+    "matchedStatuses": ["broken"]
+  },
+  {
+    "name": "架構測試",
+    "traceRegex": ".*architecture.*"
+  },
+  {
+    "name": "領域模型測試",
+    "traceRegex": ".*DddTacticalPatternsTest.*"
+  },
+  {
+    "name": "Cucumber 測試",
+    "traceRegex": ".*cucumber.*"
+  }
+]

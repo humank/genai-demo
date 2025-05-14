@@ -89,6 +89,11 @@ tasks.named('test') {
     // 添加 Allure 報告生成
     systemProperty 'allure.results.directory', "${buildDir}/allure-results"
     
+    // 添加測試分類信息
+    systemProperty 'allure.epic', 'DDD架構測試'
+    systemProperty 'allure.feature', 'JUnit測試'
+    systemProperty 'allure.story', 'Domain-Driven Design'
+    
     // 確保測試結果被保存
     testLogging {
         events "passed", "skipped", "failed"
@@ -123,6 +128,10 @@ tasks.register('cucumber', JavaExec) {
     
     // 添加 Allure 結果目錄
     systemProperty 'allure.results.directory', allureResultsDir
+    
+    // 添加 Cucumber 測試分類信息
+    systemProperty 'allure.epic', 'BDD功能測試'
+    systemProperty 'allure.feature', 'Cucumber測試'
     
     // 確保 Cucumber 測試結果被包含在 Allure 報告中
     finalizedBy {
@@ -161,6 +170,11 @@ tasks.register('testArchitecture', Test) {
     
     // 添加 Allure 報告生成
     systemProperty 'allure.results.directory', allureResultsDir
+    
+    // 添加架構測試的 Allure 標籤信息
+    systemProperty 'allure.epic', '架構合規性'
+    systemProperty 'allure.feature', '架構規範測試'
+    systemProperty 'allure.story', 'DDD與六邊形架構'
 }
 
 // 添加一個任務來運行所有測試
@@ -204,6 +218,23 @@ tasks.named('allureReport') {
             into "${buildDir}/allure-results"
             include "**/*.json"
         }
+        
+        // 複製 categories.json 和 environment.json 文件到 allure-results 目錄
+        copy {
+            from "src/test/resources/allure"
+            into "${buildDir}/allure-results"
+            include "categories.json"
+            include "environment.json"
+        }
+        
+        // 創建 executor.json 文件
+        def executorFile = new File("${buildDir}/allure-results/executor.json")
+        executorFile.text = """{
+            "name": "Gradle",
+            "type": "gradle",
+            "buildName": "GenAI Demo Project",
+            "reportName": "DDD 架構測試報告"
+        }"""
     }
 }
 
