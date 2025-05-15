@@ -5,7 +5,7 @@ import java.util.Locale;
 
 /**
  * 金錢格式化工具類
- * 使用 Java 21 的 String Templates 功能
+ * 使用 Java 21 的文本塊功能
  */
 public class MoneyFormatter {
     
@@ -22,8 +22,8 @@ public class MoneyFormatter {
         var formatter = NumberFormat.getCurrencyInstance(locale);
         formatter.setCurrency(money.getCurrency());
         
-        // 使用 Java 21 的 String Templates
-        return STR."金額: \{formatter.format(amount)} (\{currencyCode})";
+                // 使用 Java 21 的 String Templates (需要添加 --add-modules jdk.incubator.string_templates)
+        return "金額: " + formatter.format(money.getAmount()) + " (" + money.getCurrency().getCurrencyCode() + ")";
     }
     
     /**
@@ -54,13 +54,13 @@ public class MoneyFormatter {
      * @return 摘要信息
      */
     public static String summarize(String description, Money money) {
-        var formattedAmount = format(money);
-        // 使用 Java 21 的 String Templates 和多行字符串
-        return STR."""
+        String formattedAmount = format(money);
+        // 使用 Java 21 的文本塊功能
+        return """
             交易摘要:
-            說明: \{description}
-            金額: \{formattedAmount}
-            時間: \{java.time.LocalDateTime.now()}
-            """;
+            說明: %s
+            金額: %s
+            時間: %s
+            """.formatted(description, formattedAmount, java.time.LocalDateTime.now());
     }
 }

@@ -78,15 +78,16 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.22.1'
     testImplementation 'io.qameta.allure:allure-java-commons:2.22.1'
     
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
-    testCompileOnly 'org.projectlombok:lombok:1.18.32'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    testCompileOnly 'org.projectlombok:lombok:1.18.34'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
 // 配置所有 Java 編譯任務啟用預覽功能
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
+    options.release = 21
 }
 
 // 配置所有 Java 執行任務啟用預覽功能
