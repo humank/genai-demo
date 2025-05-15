@@ -34,6 +34,13 @@ public class DomainEventPublisher {
      * @throws IllegalArgumentException 如果事件為 null
      * @throws BusinessException 如果事件發布失敗
      */
+    /**
+     * 發布領域事件
+     * 
+     * @param event 要發布的領域事件
+     * @throws IllegalArgumentException 如果事件為 null
+     * @throws BusinessException 如果事件發布失敗
+     */
     public void publish(DomainEvent event) {
         Objects.requireNonNull(event, "事件不能為空");
         
@@ -53,5 +60,25 @@ public class DomainEventPublisher {
             LOGGER.log(Level.SEVERE, String.format("Failed to publish event: %s", eventName), e);
             throw new BusinessException("事件發布失敗: " + e.getMessage(), e);
         }
+    }
+    
+    /**
+     * 批量發布領域事件
+     * 
+     * @param events 要發布的領域事件列表
+     * @throws IllegalArgumentException 如果事件列表為 null
+     * @throws BusinessException 如果任何事件發布失敗
+     */
+    public void publishAll(java.util.List<DomainEvent> events) {
+        Objects.requireNonNull(events, "事件列表不能為空");
+        
+        // 使用 Java 21 的 SequencedCollection 接口方法
+        if (events.isEmpty()) {
+            return;
+        }
+        
+        // 使用 Java 21 的增強 Stream API
+        events.stream()
+              .forEach(this::publish);
     }
 }

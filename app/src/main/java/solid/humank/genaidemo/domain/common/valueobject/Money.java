@@ -117,6 +117,20 @@ public class Money {
     }
     
     /**
+     * 加法 - 使用 Java 21 的 StringTemplate
+     * 
+     * @param money 金錢
+     * @return 新的金錢值對象
+     */
+    public Money plus(Money money) {
+        if (!this.currency.equals(money.currency)) {
+            var errorMsg = STR."Cannot add money with different currencies: \{this.currency} vs \{money.currency}";
+            throw new IllegalArgumentException(errorMsg);
+        }
+        return new Money(this.amount.add(money.amount), this.currency);
+    }
+    
+    /**
      * 減法
      * 
      * @param money 金錢
@@ -211,9 +225,10 @@ public class Money {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Money money = (Money) o;
-        return Objects.equals(amount, money.amount) && Objects.equals(currency, money.currency);
+        if (o instanceof Money money) {
+            return Objects.equals(amount, money.amount) && Objects.equals(currency, money.currency);
+        }
+        return false;
     }
     
     @Override

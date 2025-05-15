@@ -69,6 +69,19 @@ public final class Preconditions {
     }
     
     /**
+     * 確保條件為真，使用 Supplier 延遲計算錯誤信息
+     * 
+     * @param condition 要檢查的條件
+     * @param messageSupplier 錯誤信息提供者
+     * @throws IllegalArgumentException 如果條件為假
+     */
+    public static void checkArgument(boolean condition, java.util.function.Supplier<String> messageSupplier) {
+        if (!condition) {
+            throw new IllegalArgumentException(messageSupplier.get());
+        }
+    }
+    
+    /**
      * 確保數值符合要求（大於 0）
      * 
      * @param value 要檢查的數值

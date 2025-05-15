@@ -35,35 +35,18 @@ public enum OrderStatus {
      * @return 是否可以轉換
      */
     public boolean canTransitionTo(OrderStatus targetStatus) {
-        switch (this) {
-            case CREATED:
-                return targetStatus == SUBMITTED || targetStatus == PENDING || targetStatus == CANCELLED;
-            case SUBMITTED:
-                return targetStatus == PENDING || targetStatus == PAID || targetStatus == REJECTED || targetStatus == CANCELLED;
-            case PENDING:
-                return targetStatus == CONFIRMED || targetStatus == REJECTED || targetStatus == CANCELLED;
-            case CONFIRMED:
-                return targetStatus == PAID || targetStatus == CANCELLED;
-            case PAID:
-                return targetStatus == PROCESSING || targetStatus == CANCELLED;
-            case PROCESSING:
-                return targetStatus == SHIPPING || targetStatus == SHIPPED || targetStatus == CANCELLED;
-            case SHIPPING:
-                return targetStatus == SHIPPED || targetStatus == DELIVERED;
-            case SHIPPED:
-                return targetStatus == DELIVERED;
-            case DELIVERED:
-                return targetStatus == COMPLETED;
-            case COMPLETED:
-                return false; // 終態
-            case CANCELLED:
-                return false; // 終態
-            case REJECTED:
-                return false; // 終態
-            case PAYMENT_FAILED:
-                return targetStatus == SUBMITTED || targetStatus == PENDING || targetStatus == CANCELLED;
-            default:
-                return false;
-        }
+        return switch (this) {
+            case CREATED -> targetStatus == SUBMITTED || targetStatus == PENDING || targetStatus == CANCELLED;
+            case SUBMITTED -> targetStatus == PENDING || targetStatus == PAID || targetStatus == REJECTED || targetStatus == CANCELLED;
+            case PENDING -> targetStatus == CONFIRMED || targetStatus == REJECTED || targetStatus == CANCELLED;
+            case CONFIRMED -> targetStatus == PAID || targetStatus == CANCELLED;
+            case PAID -> targetStatus == PROCESSING || targetStatus == CANCELLED;
+            case PROCESSING -> targetStatus == SHIPPING || targetStatus == SHIPPED || targetStatus == CANCELLED;
+            case SHIPPING -> targetStatus == SHIPPED || targetStatus == DELIVERED;
+            case SHIPPED -> targetStatus == DELIVERED;
+            case DELIVERED -> targetStatus == COMPLETED;
+            case COMPLETED, CANCELLED, REJECTED -> false; // 終態
+            case PAYMENT_FAILED -> targetStatus == SUBMITTED || targetStatus == PENDING || targetStatus == CANCELLED;
+        };
     }
 }
