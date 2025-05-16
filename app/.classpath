@@ -39,7 +39,7 @@
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JavaSE-21">
 		<attributes>
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
@@ -90,6 +90,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.5.18/fc371f3fc97a639de2d67947cffb7518ec5e3d40/logback-classic-1.5.18.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.5.18/c18967160fa1b855dd90a43d69e7bad0328cf19c/logback-classic-1.5.18-sources.jar">
+		<attributes>
+			<attribute name="gradle.buildServer" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/41bc8cca306da167a0e8bc62ce4769b34b90180f/lombok-1.18.38-sources.jar">
 		<attributes>
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
@@ -165,11 +170,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.18.3/78f80c259268200e588aa204dd97ecf09b76916e/jackson-core-2.18.3.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.18.3/93982f4aef48801a4f99f05dbc2403790a1e6d8a/jackson-core-2.18.3-sources.jar">
-		<attributes>
-			<attribute name="gradle.buildServer" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.34/ec547ef414ab1d2c040118fb9c1c265ada63af14/lombok-1.18.34.jar" sourcepath="/Users/yikaikao/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.34/861d5074b9a04a7f1c1e128584a66b2b815fc3d4/lombok-1.18.34-sources.jar">
 		<attributes>
 			<attribute name="gradle.buildServer" value="true"/>
 		</attributes>
