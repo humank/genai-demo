@@ -188,3 +188,7 @@
 ## 授權
 
 本專案採用 MIT 授權協議 - 詳見 [LICENSE](LICENSE) 文件。
+
+## DeepWiki integration
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
