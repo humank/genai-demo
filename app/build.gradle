@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'io.qameta.allure' version '2.11.2' // 添加 Allure 插件
+    id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
 
 group = 'solid.humank'
@@ -27,16 +27,15 @@ repositories {
 
 // Allure 配置
 allure {
-    version = '2.22.1' // Allure 工具版本
+    version = '2.22.1'
     autoconfigure = true
     aspectjweaver = true
     useJUnit5 {
         version = '2.22.1'
     }
-    // 注意：不使用 resultsDir 和 reportDir 屬性，因為它們在當前版本中不可用
 }
 
-// 定義 Allure 結果目錄，供所有任務使用
+// 定義 Allure 結果目錄
 def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.absolutePath
 
 dependencies {
@@ -52,9 +51,9 @@ dependencies {
     // Cucumber for BDD testing
     testImplementation 'io.cucumber:cucumber-java:7.15.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
-    testImplementation 'io.cucumber:cucumber-picocontainer:7.15.0' // 添加回 cucumber-picocontainer 依賴
+    testImplementation 'io.cucumber:cucumber-picocontainer:7.15.0'
     
-    // JUnit 5 - 強制使用相同版本
+    // JUnit 5
     testImplementation(platform('org.junit:junit-bom:5.10.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.platform:junit-platform-suite')
@@ -84,13 +83,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
-// 配置所有 Java 編譯任務啟用預覽功能
+// 配置 Java 編譯和執行任務啟用預覽功能
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
     options.release = 21
 }
 
-// 配置所有 Java 執行任務啟用預覽功能
 tasks.withType(Test).configureEach {
     jvmArgs += '--enable-preview'
 }
@@ -99,38 +97,35 @@ tasks.withType(JavaExec).configureEach {
     jvmArgs += '--enable-preview'
 }
 
+// 標準單元測試任務
 tasks.named('test') {
-    useJUnitPlatform()
-    // 排除 Cucumber 測試，因為它們需要特殊設置
-    exclude '**/CucumberTestRunner.class'
+    useJUnitPlatform {
+        // 包含所有測試，包括 Cucumber 測試
+        includeTags 'cucumber', 'architecture', 'unit'
+    }
     
-    // 添加 Allure 報告生成
+    // Allure 配置
     systemProperty 'allure.results.directory', "${buildDir}/allure-results"
-    
-    // 添加測試分類信息
     systemProperty 'allure.epic', 'DDD架構測試'
     systemProperty 'allure.feature', 'JUnit測試'
-    systemProperty 'allure.story', 'Domain-Driven Design'
     
-    // 確保測試結果被保存
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
         exceptionFormat = 'full'
     }
     
-    // 修復 JUnit 依賴問題
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
-    
-    // 添加更多診斷信息
     systemProperty 'junit.platform.output.capture.stdout', 'true'
     systemProperty 'junit.platform.output.capture.stderr', 'true'
     
-    // 設置測試執行順序
-    systemProperty 'junit.jupiter.testmethod.order.default', 'org.junit.jupiter.api.MethodOrderer$OrderAnnotation'
+    // 確保 Cucumber 測試被包含
+    include '**/*Test.java'
+    include '**/*Tests.java'
+    include '**/CucumberTestRunner.java'
 }
 
-// Cucumber specific task
+// Cucumber 測試任務
 tasks.register('cucumber', JavaExec) {
     dependsOn assemble, testClasses
     getMainClass().set("io.cucumber.core.cli.Main")
@@ -144,105 +139,91 @@ tasks.register('cucumber', JavaExec) {
         'src/test/resources/features'
     ]
     
-    // 添加 Allure 結果目錄
     systemProperty 'allure.results.directory', allureResultsDir
-    
-    // 添加 Cucumber 測試分類信息
     systemProperty 'allure.epic', 'BDD功能測試'
     systemProperty 'allure.feature', 'Cucumber測試'
-    
-    // 確保 Cucumber 測試結果被包含在 Allure 報告中
-    finalizedBy {
-        tasks.named('allureReport')
-    }
 }
 
-// 架構測試任務 - 專門執行 DDD 與六邊形架構的規範測試
+// DDD 架構測試任務
 tasks.register('testArchitecture', Test) {
     description = '執行 DDD 與六邊形架構的規範測試'
     group = 'verification'
     
     useJUnitPlatform()
-    
-    // 只包含 architecture 包下的測試
     include '**/architecture/**'
     
-    // 測試報告設置
     reports {
         html.required = true
         junitXml.required = true
     }
     
-    // 輸出測試結果到特定目錄
     reports.html.outputLocation.set(file("${buildDir}/reports/tests/architecture"))
     
-    // 顯示標準輸出流
     testLogging {
         events "passed", "skipped", "failed"
         showStandardStreams = true
         exceptionFormat = 'full'
     }
     
-    // 確保在主要測試之前執行
-    shouldRunAfter test
-    
-    // 添加 Allure 報告生成
     systemProperty 'allure.results.directory', allureResultsDir
-    
-    // 添加架構測試的 Allure 標籤信息
     systemProperty 'allure.epic', '架構合規性'
     systemProperty 'allure.feature', '架構規範測試'
-    systemProperty 'allure.story', 'DDD與六邊形架構'
 }
 
-// 添加一個任務來運行所有測試
+// 運行所有測試並生成報告
 tasks.register('runAllTests') {
     dependsOn test, testArchitecture, cucumber
-    description = '運行所有測試'
+    description = '運行所有測試並生成 Allure 報告'
     group = 'verification'
     
-    // 確保所有測試完成後生成 Allure 報告
+    doLast {
+        println "所有測試已完成，包括單元測試、架構測試和 Cucumber 測試"
+    }
+    
     finalizedBy 'allureReport'
 }
 
-// 添加一個任務來運行所有測試並啟動 Allure 報告服務器
+// 運行所有測試並啟動報告服務器
 tasks.register('runAllTestsWithReport') {
     dependsOn 'runAllTests'
     description = '運行所有測試並啟動 Allure 報告服務器'
     group = 'verification'
     
-    // 確保所有測試完成後啟動 Allure 報告服務器
     finalizedBy 'allureServe'
 }
 
-// 添加一個任務來清理 Allure 結果目錄
+// 清理 Allure 結果目錄
 tasks.register('cleanAllureResults', Delete) {
     delete(allureResultsDir)
     description = '清理 Allure 結果目錄'
     group = 'build'
 }
 
-// 修改 clean 任務，確保也清理 Allure 相關目錄
 tasks.named('clean') {
     dependsOn 'cleanAllureResults'
 }
 
-// 確保在生成報告前所有測試都已完成
-tasks.named('allureReport') {
-    // 確保 Allure 報告包含 Cucumber 測試結果
-    doFirst {
+// 手動處理 Allure 報告生成，避免使用內建任務
+tasks.register('prepareAllureResults') {
+    description = '準備 Allure 報告數據'
+    group = 'reporting'
+    
+    doLast {
+        // 確保 allure-results 目錄存在
+        mkdir "${buildDir}/allure-results"
+        
+        // 複製 Cucumber 測試結果
         copy {
             from "${buildDir}/reports/cucumber"
             into "${buildDir}/allure-results"
             include "**/*.json"
         }
         
-        // 複製 categories.json 和 environment.json 文件到 allure-results 目錄
+        // 複製 JUnit 測試結果
         copy {
-            from "src/test/resources/allure"
+            from "${buildDir}/test-results/test"
             into "${buildDir}/allure-results"
-            include "categories.json"
-            include "environment.json"
+            include "**/*.xml"
         }
         
         // 創建 executor.json 文件
@@ -253,10 +234,12 @@ tasks.named('allureReport') {
             "buildName": "GenAI Demo Project",
             "reportName": "DDD 架構測試報告"
         }"""
+        
+        println "Allure 報告數據準備完成，結果目錄: ${buildDir}/allure-results"
     }
 }
 
-// 確保在啟動報告服務器前報告已生成
-tasks.named('allureServe') {
-    // 不需要顯式依賴 allureReport，因為 runAllTestsWithReport 已經設置了正確的依賴關係
+// 覆蓋 allureReport 任務
+tasks.named('allureReport') {
+    dependsOn 'prepareAllureResults'
 }
