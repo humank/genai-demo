@@ -14,3 +14,5 @@ logs
 gradle/
 gradlew
 gradlew.bat
+
+.classpath
