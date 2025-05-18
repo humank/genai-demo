@@ -142,6 +142,9 @@ tasks.register('cucumber', JavaExec) {
     systemProperty 'allure.results.directory', allureResultsDir
     systemProperty 'allure.epic', 'BDD功能測試'
     systemProperty 'allure.feature', 'Cucumber測試'
+    
+    // 確保 Cucumber 測試結果被正確處理
+    finalizedBy 'prepareAllureResults'
 }
 
 // DDD 架構測試任務
@@ -172,7 +175,7 @@ tasks.register('testArchitecture', Test) {
 
 // 運行所有測試並生成報告
 tasks.register('runAllTests') {
-    dependsOn test, testArchitecture, cucumber
+    dependsOn test, testArchitecture, cucumber, prepareAllureResults
     description = '運行所有測試並生成 Allure 報告'
     group = 'verification'
     

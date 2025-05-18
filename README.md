@@ -32,10 +32,10 @@
 - **構建工具**: Gradle 8.x
 - **測試框架**:
   - JUnit 5 - 單元測試
-  - Cucumber - BDD 測試
+  - Cucumber 7 - BDD 測試
   - ArchUnit - 架構測試
   - Mockito - 模擬對象
-  - Allure - 測試報告
+  - Allure 2 - 測試報告與可視化
 - **其他工具**:
   - Lombok - 減少樣板代碼
   - PlantUML - UML 圖表生成
@@ -90,13 +90,13 @@
 #### 運行所有測試
 
 ```bash
-./gradlew --no-configuration-cache runAllTests
+./gradlew runAllTests
 ```
 
 #### 運行所有測試並查看 Allure 報告
 
 ```bash
-./gradlew --no-configuration-cache runAllTestsWithReport
+./gradlew runAllTestsWithReport
 ```
 
 #### 運行特定類型的測試
@@ -120,10 +120,10 @@
 2. **Cucumber JSON 報告**: `app/build/reports/cucumber/cucumber-report.json`
 3. **JUnit HTML 報告**: `app/build/reports/tests/test/index.html`
 4. **架構測試報告**: `app/build/reports/tests/architecture/index.html`
-5. **Allure 報告**:
+5. **Allure 報告**: `app/build/reports/allure-report/allureReport/index.html`
    ```bash
-   ./gradlew --no-configuration-cache allureReport  # 生成報告
-   ./gradlew --no-configuration-cache allureServe   # 啟動本地服務器查看報告
+   ./gradlew allureReport  # 生成報告
+   ./gradlew allureServe   # 啟動本地服務器查看報告
    ```
 
 ## 架構測試
@@ -144,13 +144,27 @@
 
 本專案使用 Cucumber 進行行為驅動開發 (BDD) 測試。BDD 測試文件位於：
 
-- **Feature 文件**: `app/src/test/resources/features/` 目錄
-- **步驟定義**: `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄
+- **Feature 文件**: `app/src/test/resources/features/` 目錄，按功能模組分類
+- **步驟定義**: `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄，包含各模組的步驟實現
+
+測試覆蓋了以下領域：
+- 訂單管理 (Order)
+- 庫存管理 (Inventory)
+- 支付處理 (Payment)
+- 物流配送 (Delivery)
+- 通知服務 (Notification)
+- 完整訂單工作流 (Workflow)
 
 運行 BDD 測試：
 
 ```bash
 ./gradlew cucumber
+```
+
+查看 Cucumber 測試報告：
+```bash
+./gradlew cucumber
+# 然後打開 app/build/reports/cucumber/cucumber-report.html
 ```
 
 ## UML 圖表
@@ -178,8 +192,9 @@
 如果 Allure 報告生成失敗，可以嘗試：
 
 1. 清理項目：`./gradlew clean`
-2. 確保 Allure 結果目錄存在：`mkdir -p app/build/allure-results`
-3. 重新運行測試並生成報告：`./gradlew --no-configuration-cache runAllTestsWithReport`
+2. 重新運行測試並生成報告：`./gradlew runAllTestsWithReport`
+
+Allure 報告會自動包含所有測試結果，包括 JUnit 單元測試、架構測試和 Cucumber BDD 測試。報告會顯示測試執行情況、測試步驟、失敗原因以及相關附件。
 
 ## 貢獻
 
