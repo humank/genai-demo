@@ -8,3 +8,9 @@ app/bin
 .idea
 logs
 *.iml
+
+.gradle/
+.vscode/
+gradle/
+gradlew
+gradlew.bat
