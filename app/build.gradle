@@ -77,10 +77,10 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.22.1'
     testImplementation 'io.qameta.allure:allure-java-commons:2.22.1'
     
-    compileOnly 'org.projectlombok:lombok:1.18.34'
-    annotationProcessor 'org.projectlombok:lombok:1.18.34'
-    testCompileOnly 'org.projectlombok:lombok:1.18.34'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    testCompileOnly 'org.projectlombok:lombok:1.18.38'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
 }
 
 // 配置 Java 編譯和執行任務啟用預覽功能
