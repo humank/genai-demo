@@ -16,5 +16,8 @@ gradlew
 gradlew.bat
 
 .classpath
+.factorypath
+.project
+.settings/
 app/.classpath
 .DS_Store
