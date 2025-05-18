@@ -16,3 +16,5 @@ gradlew
 gradlew.bat
 
 .classpath
+app/.classpath
+.DS_Store
