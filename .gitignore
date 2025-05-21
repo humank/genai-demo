@@ -4,6 +4,8 @@
 # Ignore Gradle build output directory
 build
 app/bin
+app/build
+
 
 .idea
 logs
@@ -17,7 +19,8 @@ gradlew.bat
 
 app/.classpath
 .classpath
-.factorypath
-.project
-.settings/
+app/.factorypath
+app/.project
+app/.settings/
 .DS_Store
+.vscode
