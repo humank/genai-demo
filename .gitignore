@@ -24,3 +24,6 @@ app/.project
 app/.settings/
 .DS_Store
 .vscode
+
+.project
+.settings
