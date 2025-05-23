@@ -1,30 +1,22 @@
 [
   {
-    "name": "通過的測試",
-    "matchedStatuses": ["passed"]
+    "name": "架構測試失敗",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*架構.*"
   },
   {
-    "name": "失敗的測試",
-    "matchedStatuses": ["failed"]
+    "name": "領域模型錯誤",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*domain.*"
   },
   {
-    "name": "忽略的測試",
-    "matchedStatuses": ["skipped"]
+    "name": "業務規則違反",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*business rule.*"
   },
   {
-    "name": "損壞的測試",
-    "matchedStatuses": ["broken"]
-  },
-  {
-    "name": "架構測試",
-    "traceRegex": ".*architecture.*"
-  },
-  {
-    "name": "領域模型測試",
-    "traceRegex": ".*DddTacticalPatternsTest.*"
-  },
-  {
-    "name": "Cucumber 測試",
-    "traceRegex": ".*cucumber.*"
+    "name": "測試環境問題",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*環境.*|.*environment.*"
   }
 ]

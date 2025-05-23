@@ -3,11 +3,14 @@ package solid.humank.genaidemo.domain.common.valueobject;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
+
 /**
  * 金錢格式化工具類
  * 使用 Java 21 的文本塊功能
  */
-public class MoneyFormatter {
+@ValueObject
+ public class MoneyFormatter {
     
     /**
      * 格式化金錢為本地化字符串
@@ -17,8 +20,6 @@ public class MoneyFormatter {
      * @return 格式化後的字符串
      */
     public static String format(Money money, Locale locale) {
-        var currencyCode = money.getCurrency().getCurrencyCode();
-        var amount = money.getAmount();
         var formatter = NumberFormat.getCurrencyInstance(locale);
         formatter.setCurrency(money.getCurrency());
         

@@ -4,7 +4,26 @@
 # Ignore Gradle build output directory
 build
 app/bin
+app/build
+
 
 .idea
 logs
 *.iml
+
+.gradle/
+.vscode/
+gradle/
+gradlew
+gradlew.bat
+
+app/.classpath
+.classpath
+app/.factorypath
+app/.project
+app/.settings/
+.DS_Store
+.vscode
+
+.project
+.settings
