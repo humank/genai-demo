@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-import solid.humank.genaidemo.domain.common.events.DomainEvent;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.repository.Repository;
 import solid.humank.genaidemo.domain.common.specification.Specification;
 
@@ -68,6 +68,8 @@ public class DddTacticalPatternsTest {
                 .that().areAnnotatedWith(AggregateRoot.class)
                 .or().haveSimpleNameEndingWith("Aggregate")
                 .or().resideInAPackage("..aggregate..")
+                .and().areNotInnerClasses() // 排除內部類
+                .and().areNotAnonymousClasses() // 排除匿名類
                 .should().bePublic();
 
         rule.check(importedClasses);

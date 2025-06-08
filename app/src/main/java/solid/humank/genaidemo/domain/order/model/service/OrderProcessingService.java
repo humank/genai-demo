@@ -2,12 +2,11 @@ package solid.humank.genaidemo.domain.order.model.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
-import solid.humank.genaidemo.domain.common.events.DomainEventBus;
+import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
 import solid.humank.genaidemo.domain.common.valueobject.Money;

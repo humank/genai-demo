@@ -1,9 +1,10 @@
-package solid.humank.genaidemo.domain.pricing.model.valueobject;
+package solid.humank.genaidemo.application.pricing.dto;
 
 /**
- * 產品類別
+ * 產品類別DTO
+ * 用於應用層與領域層之間的數據傳輸
  */
-public enum ProductCategory {
+public enum ProductCategoryDto {
     ELECTRONICS,
     FASHION,
     GROCERIES,

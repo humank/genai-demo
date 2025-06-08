@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.domain.infrastructure.entity;
+package solid.humank.genaidemo.infrastructure.entity;
 
 import jakarta.persistence.*;
 

@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.domain.common.events;
+package solid.humank.genaidemo.domain.common.event;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

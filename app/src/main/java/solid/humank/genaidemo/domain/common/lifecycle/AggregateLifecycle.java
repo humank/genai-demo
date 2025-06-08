@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import solid.humank.genaidemo.domain.common.events.DomainEvent;
-import solid.humank.genaidemo.domain.common.events.DomainEventBus;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
+import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 
 /**
  * 聚合生命週期管理器

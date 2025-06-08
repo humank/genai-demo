@@ -1,8 +1,8 @@
 package solid.humank.genaidemo.domain.common.service;
 
 import org.springframework.stereotype.Service;
-import solid.humank.genaidemo.domain.common.events.DomainEvent;
-import solid.humank.genaidemo.domain.common.events.DomainEventBus;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
+import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 
 /**
  * 領域事件發布服務

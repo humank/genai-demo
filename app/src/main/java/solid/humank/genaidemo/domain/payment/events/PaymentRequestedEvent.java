@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.domain.payment.events;
 
-import solid.humank.genaidemo.domain.common.events.AbstractDomainEvent;
+import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;

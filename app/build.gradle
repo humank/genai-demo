@@ -28,8 +28,6 @@ repositories {
 // Allure 配置
 allure {
     version = '2.22.1'
-    autoconfigure = true
-    aspectjweaver = true
     useJUnit5 {
         version = '2.22.1'
     }

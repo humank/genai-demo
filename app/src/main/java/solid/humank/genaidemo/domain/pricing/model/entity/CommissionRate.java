@@ -15,6 +15,18 @@ public class CommissionRate {
         this.normalRate = normalRate;
         this.eventRate = eventRate;
     }
+    
+    /**
+     * 建立佣金費率（不指定產品類別）
+     * 
+     * @param normalRate 一般費率
+     * @param eventRate 活動費率
+     */
+    public CommissionRate(int normalRate, int eventRate) {
+        this.category = ProductCategory.GENERAL;
+        this.normalRate = normalRate;
+        this.eventRate = eventRate;
+    }
 
     public ProductCategory getCategory() {
         return category;

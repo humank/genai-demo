@@ -1,4 +1,4 @@
-package solid.humank.genaidemo.domain.infrastructure.entity;
+package solid.humank.genaidemo.infrastructure.entity;
 
 /**
  * 這個類用於標記JPA實體的包，不實際使用

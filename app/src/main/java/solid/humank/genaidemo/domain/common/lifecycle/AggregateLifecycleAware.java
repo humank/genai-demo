@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Component;
 
-import solid.humank.genaidemo.domain.common.events.DomainEvent;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
