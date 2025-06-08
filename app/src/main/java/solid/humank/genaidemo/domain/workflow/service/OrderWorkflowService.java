@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.service.NotificationService;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * 訂單工作流服務
  * 負責處理訂單工作流的創建、狀態轉換和完成
  */
+@DomainService
 public class OrderWorkflowService {
     private final OrderWorkflowRepository orderWorkflowRepository;
     private final NotificationService notificationService;

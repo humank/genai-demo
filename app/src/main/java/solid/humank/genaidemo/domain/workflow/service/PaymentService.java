@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
  * 支付服務接口
  * 定義與支付相關的操作
  */
+@DomainService
 public interface PaymentService {
     
     /**

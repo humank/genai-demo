@@ -3,6 +3,7 @@ package solid.humank.genaidemo.domain.order.model.policy;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import solid.humank.genaidemo.domain.common.annotations.Policy;
 import solid.humank.genaidemo.domain.common.policy.DomainPolicy;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.specification.OrderDiscountSpecification;
@@ -12,6 +13,8 @@ import solid.humank.genaidemo.domain.common.valueobject.Money;
  * 訂單折扣政策
  * 結合 Specification 和 Policy 模式來實作折扣規則
  */
+@Policy(description = "訂單折扣政策，結合Specification和Policy模式來實作折扣規則")
+
 public class OrderDiscountPolicy implements DomainPolicy<Order, Money> {
     
     private final OrderDiscountSpecification specification;

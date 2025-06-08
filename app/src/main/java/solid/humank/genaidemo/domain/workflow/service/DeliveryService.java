@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
  * 配送服務接口
  * 定義與配送相關的操作
  */
+@DomainService
 public interface DeliveryService {
     
     /**

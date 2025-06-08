@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.domain.order.model.factory;
 
 import org.springframework.stereotype.Component;
+import solid.humank.genaidemo.domain.common.annotations.Factory;
 import solid.humank.genaidemo.domain.common.factory.DomainFactory;
 import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
@@ -16,6 +17,7 @@ import java.util.List;
  * 負責創建訂單聚合根
  */
 @Component
+@Factory(description = "負責創建訂單聚合根")
 public class OrderFactory implements DomainFactory<Order, OrderFactory.OrderCreationParams> {
     
     @Override

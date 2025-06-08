@@ -20,5 +20,23 @@ public enum RelationType {
      * 防腐層
      * 表示通過轉換層來隔離不同上下文
      */
-    ANTI_CORRUPTION_LAYER
+    ANTI_CORRUPTION_LAYER,
+    
+    /**
+     * 客戶-供應商關係
+     * 表示下游上下文作為客戶，上游上下文作為供應商
+     */
+    CUSTOMER_SUPPLIER,
+    
+    /**
+     * 遵從者關係
+     * 表示一個上下文遵從另一個上下文的模型
+     */
+    CONFORMIST,
+    
+    /**
+     * 防腐層（別名）
+     * 與 ANTI_CORRUPTION_LAYER 相同，用於兼容性
+     */
+    ANTICORRUPTION_LAYER
 }

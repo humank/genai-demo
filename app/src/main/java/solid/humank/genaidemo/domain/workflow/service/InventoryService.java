@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
  * 庫存服務接口
  * 定義與庫存相關的操作
  */
+@DomainService
 public interface InventoryService {
     
     /**

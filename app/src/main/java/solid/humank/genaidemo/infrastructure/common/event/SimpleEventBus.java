@@ -28,9 +28,9 @@ public class SimpleEventBus implements EventBus {
         List<EventHandler<?>> eventHandlers = handlers.get(eventType);
         
         if (eventHandlers != null) {
-            for (EventHandler handler : eventHandlers) {
+            for (EventHandler<?> handler : eventHandlers) {
                 try {
-                    handler.handle(event);
+                    invokeHandler(handler, event);
                 } catch (Exception e) {
                     // 記錄錯誤但不中斷處理
                     System.err.println("Error handling event: " + e.getMessage());
@@ -40,8 +40,12 @@ public class SimpleEventBus implements EventBus {
         }
     }
     
-    @Override
     @SuppressWarnings("unchecked")
+    private <T> void invokeHandler(EventHandler<?> handler, Object event) {
+        ((EventHandler<T>) handler).handle((T) event);
+    }
+    
+    @Override
     public <T> void subscribe(Class<T> eventType, EventHandler<T> handler) {
         handlers.computeIfAbsent(eventType, k -> new ArrayList<>()).add(handler);
     }

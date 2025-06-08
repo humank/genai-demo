@@ -7,13 +7,15 @@ package solid.humank.genaidemo.domain.common.context;
 public record ContextRelation(
     String sourceContext,
     String targetContext,
-    RelationType type
+    RelationType type,
+    String description
 ) {
     /**
      * 建立一個新的上下文關係
      * @param sourceContext 來源上下文
      * @param targetContext 目標上下文
      * @param type 關係類型
+     * @param description 關係描述
      */
     public ContextRelation {
         if (sourceContext == null || sourceContext.isBlank()) {
@@ -27,15 +29,35 @@ public record ContextRelation(
         }
     }
 
+    /**
+     * 建立一個新的上下文關係（不帶描述）
+     * @param sourceContext 來源上下文
+     * @param targetContext 目標上下文
+     * @param type 關係類型
+     */
+    public ContextRelation(String sourceContext, String targetContext, RelationType type) {
+        this(sourceContext, targetContext, type, "");
+    }
+
     @Override
     public String toString() {
-        return switch (type) {
+        String relation = switch (type) {
             case UPSTREAM_DOWNSTREAM -> 
                 sourceContext + " 是 " + targetContext + " 的上游";
             case SHARED_KERNEL -> 
                 sourceContext + " 和 " + targetContext + " 共享核心元件";
-            case ANTI_CORRUPTION_LAYER -> 
+            case ANTI_CORRUPTION_LAYER, ANTICORRUPTION_LAYER -> 
                 sourceContext + " 通過防腐層使用 " + targetContext;
+            case CUSTOMER_SUPPLIER ->
+                sourceContext + " 是 " + targetContext + " 的供應商";
+            case CONFORMIST ->
+                sourceContext + " 遵從 " + targetContext + " 的模型";
         };
+        
+        if (description != null && !description.isBlank()) {
+            relation += " - " + description;
+        }
+        
+        return relation;
     }
 }
