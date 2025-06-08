@@ -1,178 +1,136 @@
 @startuml 領域模型圖
+
+' 樣式設定
 skinparam class {
-    BackgroundColor<<Aggregate>> #FEFECE
-    BackgroundColor<<Entity>> #D5E1DD
-    BackgroundColor<<ValueObject>> #B4EEB4
-    BackgroundColor<<DomainEvent>> #FFE4B5
-    BackgroundColor<<DomainService>> #ADD8E6
-    BackgroundColor<<Factory>> #F0E68C
-    BackgroundColor<<Repository>> #E6E6FA
-    BackgroundColor<<Policy>> #FFC0CB
+    BackgroundColor<<AggregateRoot>> LightSalmon
+    BackgroundColor<<Entity>> LightBlue
+    BackgroundColor<<ValueObject>> LightGreen
+    BackgroundColor<<DomainEvent>> LightYellow
+    BackgroundColor<<DomainService>> LightGray
+    BackgroundColor<<Repository>> LightCyan
+    BackgroundColor<<Factory>> LightPink
+    BackgroundColor<<Policy>> LightGoldenRodYellow
+    BackgroundColor<<Specification>> LightSkyBlue
 }
 
-package "訂單上下文" <<Rectangle>> {
-    class Order <<Aggregate>> {
-        -OrderId id
-        -List<OrderItem> items
-        -OrderStatus status
-        -Money totalAmount
-        -CustomerId customerId
-        -DateTime createdAt
-        -DateTime updatedAt
-        +addItem(OrderItem item)
-        +removeItem(OrderItem item)
-        +updateStatus(OrderStatus status)
-        +calculateTotal()
-        +create()
-        +cancel()
+' 註解
+note as N1
+  顏色說明:
+  <back:LightSalmon>聚合根</back>
+  <back:LightBlue>實體</back>
+  <back:LightGreen>值對象</back>
+  <back:LightYellow>領域事件</back>
+  <back:LightGray>領域服務</back>
+  <back:LightCyan>儲存庫</back>
+  <back:LightPink>工廠</back>
+  <back:LightGoldenRodYellow>策略</back>
+  <back:LightSkyBlue>規格</back>
+end note
+
+' 訂單聚合
+package "訂單聚合" {
+    class Order <<AggregateRoot>> {
+        - orderId: OrderId
+        - customerId: String
+        - orderItems: List<OrderItem>
+        - shippingAddress: String
+        - status: OrderStatus
+        - totalAmount: Money
+        - discountAmount: Money
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        + addItem(item: OrderItem): void
+        + removeItem(itemId: String): void
+        + submit(): void
+        + cancel(): void
+        + applyDiscount(amount: Money): void
+        + calculateTotal(): Money
     }
     
     class OrderItem <<Entity>> {
-        -String productId
-        -int quantity
-        -Money unitPrice
-        -String productName
-        +calculateSubtotal()
-    }
-    
-    class OrderFactory <<Factory>> {
-        +createOrder(CustomerId customerId)
-        +createOrderItem(String productId, int quantity, Money unitPrice)
-    }
-    
-    class OrderRepository <<Repository>> {
-        +save(Order order)
-        +findById(OrderId id)
-        +findByCustomerId(CustomerId customerId)
-    }
-    
-    class OrderProcessingService <<DomainService>> {
-        +processOrder(Order order)
-        +cancelOrder(Order order)
-    }
-    
-    class OrderDiscountPolicy <<Policy>> {
-        +applyDiscount(Order order)
-    }
-    
-    class OrderCreatedEvent <<DomainEvent>> {
-        -OrderId orderId
-        -DateTime createdAt
-    }
-    
-    class OrderItemAddedEvent <<DomainEvent>> {
-        -OrderId orderId
-        -OrderItem item
-    }
-    
-    class OrderStatusChangedEvent <<DomainEvent>> {
-        -OrderId orderId
-        -OrderStatus oldStatus
-        -OrderStatus newStatus
-    }
-}
-
-package "支付上下文" <<Rectangle>> {
-    class Payment <<Aggregate>> {
-        -PaymentId id
-        -OrderId orderId
-        -Money amount
-        -PaymentStatus status
-        -PaymentMethod method
-        -DateTime createdAt
-        +process()
-        +complete()
-        +fail()
-        +refund()
-    }
-    
-    class PaymentRepository <<Repository>> {
-        +save(Payment payment)
-        +findById(PaymentId id)
-        +findByOrderId(OrderId orderId)
-    }
-    
-    class PaymentService <<DomainService>> {
-        +processPayment(Payment payment)
-        +refundPayment(Payment payment)
-    }
-    
-    class PaymentCompletedEvent <<DomainEvent>> {
-        -PaymentId paymentId
-        -OrderId orderId
-        -DateTime completedAt
-    }
-    
-    class PaymentFailedEvent <<DomainEvent>> {
-        -PaymentId paymentId
-        -OrderId orderId
-        -String failureReason
-    }
-}
-
-package "物流上下文" <<Rectangle>> {
-    class Delivery <<Aggregate>> {
-        -DeliveryId id
-        -OrderId orderId
-        -Address shippingAddress
-        -DeliveryStatus status
-        -DateTime estimatedDeliveryTime
-        +arrange()
-        +ship()
-        +complete()
-    }
-    
-    class DeliveryRepository <<Repository>> {
-        +save(Delivery delivery)
-        +findById(DeliveryId id)
-        +findByOrderId(OrderId orderId)
-    }
-}
-
-package "共享值對象" <<Rectangle>> {
-    class Money <<ValueObject>> {
-        -BigDecimal amount
-        -Currency currency
-        +add(Money other)
-        +subtract(Money other)
-        +multiply(int quantity)
+        - itemId: String
+        - productId: String
+        - productName: String
+        - quantity: int
+        - unitPrice: Money
+        + calculateSubtotal(): Money
     }
     
     class OrderId <<ValueObject>> {
-        -String value
-        +toString()
-    }
-    
-    class CustomerId <<ValueObject>> {
-        -String value
-        +toString()
-    }
-    
-    class PaymentId <<ValueObject>> {
-        -String value
-        +toString()
-    }
-    
-    class DeliveryId <<ValueObject>> {
-        -String value
-        +toString()
-    }
-    
-    class Address <<ValueObject>> {
-        -String street
-        -String city
-        -String state
-        -String country
-        -String zipCode
+        - id: UUID
+        + toString(): String
     }
     
     enum OrderStatus <<ValueObject>> {
         CREATED
-        PENDING_PAYMENT
+        PENDING
         CONFIRMED
-        FAILED
+        PROCESSING
+        SHIPPED
         DELIVERED
+        COMPLETED
         CANCELLED
+    }
+    
+    class OrderCreatedEvent <<DomainEvent>> {
+        - orderId: OrderId
+        - customerId: String
+        - createdAt: LocalDateTime
+    }
+    
+    class OrderItemAddedEvent <<DomainEvent>> {
+        - orderId: OrderId
+        - itemId: String
+        - productId: String
+        - quantity: int
+        - unitPrice: Money
+    }
+    
+    class OrderFactory <<Factory>> {
+        + createOrder(customerId: String, shippingAddress: String): Order
+        + createOrderItem(productId: String, productName: String, quantity: int, unitPrice: Money): OrderItem
+    }
+    
+    class OrderDiscountPolicy <<Policy>> {
+        + calculateDiscount(order: Order): Money
+    }
+    
+    interface OrderRepository <<Repository>> {
+        + save(order: Order): Order
+        + findById(orderId: OrderId): Optional<Order>
+        + findByCustomerId(customerId: String): List<Order>
+    }
+}
+
+' 支付聚合
+package "支付聚合" {
+    class Payment <<AggregateRoot>> {
+        - paymentId: PaymentId
+        - orderId: OrderId
+        - amount: Money
+        - method: PaymentMethod
+        - status: PaymentStatus
+        - transactionId: String
+        - failureReason: String
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        + complete(transactionId: String): void
+        + fail(reason: String): void
+        + refund(): void
+        + retry(): void
+    }
+    
+    class PaymentId <<ValueObject>> {
+        - id: UUID
+        + toString(): String
+    }
+    
+    enum PaymentMethod <<ValueObject>> {
+        CREDIT_CARD
+        DEBIT_CARD
+        BANK_TRANSFER
+        DIGITAL_WALLET
+        CASH_ON_DELIVERY
     }
     
     enum PaymentStatus <<ValueObject>> {
@@ -182,55 +140,235 @@ package "共享值對象" <<Rectangle>> {
         REFUNDED
     }
     
-    enum DeliveryStatus <<ValueObject>> {
-        PENDING
-        PROCESSING
-        SHIPPED
-        DELIVERED
-        FAILED
+    class PaymentCompletedEvent <<DomainEvent>> {
+        - paymentId: PaymentId
+        - orderId: OrderId
+        - amount: Money
+        - transactionId: String
+        - completedAt: LocalDateTime
     }
     
-    enum PaymentMethod <<ValueObject>> {
-        CREDIT_CARD
-        DEBIT_CARD
-        BANK_TRANSFER
-        DIGITAL_WALLET
+    class PaymentFailedEvent <<DomainEvent>> {
+        - paymentId: PaymentId
+        - orderId: OrderId
+        - failureReason: String
+        - failedAt: LocalDateTime
+    }
+    
+    interface PaymentRepository <<Repository>> {
+        + save(payment: Payment): Payment
+        + findById(paymentId: PaymentId): Optional<Payment>
+        + findByOrderId(orderId: OrderId): Optional<Payment>
+    }
+    
+    class PaymentService <<DomainService>> {
+        + processPayment(payment: Payment): void
+        + validatePayment(payment: Payment): boolean
     }
 }
 
-' 訂單上下文關係
-Order "1" *--> "*" OrderItem : contains
-Order --> OrderStatus
-Order --> Money : totalAmount
-Order --> CustomerId : belongs to
-OrderItem --> Money : unitPrice
+' 定價聚合
+package "定價聚合" {
+    class PricingRule <<AggregateRoot>> {
+        - priceId: PriceId
+        - productId: ProductId
+        - promotionId: PromotionId
+        - finalPrice: Money
+        - discountPercentage: double
+        - discountAmount: Money
+        - effectiveFrom: LocalDateTime
+        - effectiveTo: LocalDateTime
+        - isActive: boolean
+        - commissionRates: List<CommissionRate>
+        - productCategory: ProductCategory
+        + isValidNow(): boolean
+        + calculateCommission(isEventPromotion: boolean): Money
+        + updateCommissionRate(normalRate: int, eventRate: int): void
+        + deactivate(): void
+        + activate(): void
+    }
+    
+    class CommissionRate <<Entity>> {
+        - category: ProductCategory
+        - normalRate: int
+        - eventRate: int
+        + getNormalRate(): int
+        + getEventRate(): int
+        + setNormalRate(rate: int): void
+        + setEventRate(rate: int): void
+    }
+    
+    class PriceId <<ValueObject>> {
+        - id: UUID
+        + toString(): String
+    }
+    
+    enum ProductCategory <<ValueObject>> {
+        ELECTRONICS
+        FASHION
+        GROCERIES
+        HOME_APPLIANCES
+        BEAUTY
+        SPORTS
+        BOOKS
+        TOYS
+        AUTOMOTIVE
+        HEALTH
+        GENERAL
+    }
+    
+    interface PricingRuleRepository <<Repository>> {
+        + save(pricingRule: PricingRule): PricingRule
+        + findById(priceId: PriceId): Optional<PricingRule>
+        + findByProductId(productId: ProductId): List<PricingRule>
+        + findByProductCategory(category: ProductCategory): List<PricingRule>
+    }
+    
+    class CommissionService <<DomainService>> {
+        + calculateCommission(product: Product, isEventPromotion: boolean): Money
+        + getCommissionRate(category: ProductCategory): CommissionRate
+        + getCommissionRate(category: ProductCategory, event: String): CommissionRate
+    }
+}
+
+' 配送聚合
+package "配送聚合" {
+    class Delivery <<AggregateRoot>> {
+        - id: DeliveryId
+        - orderId: OrderId
+        - shippingAddress: String
+        - status: DeliveryStatus
+        - deliveryPersonId: String
+        - deliveryPersonName: String
+        - deliveryPersonContact: String
+        - estimatedDeliveryTime: LocalDateTime
+        - actualDeliveryTime: LocalDateTime
+        - trackingNumber: String
+        - failureReason: String
+        - refusalReason: String
+        - delayReason: String
+        - redeliveryScheduled: boolean
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        + allocateResources(deliveryPersonId: String, deliveryPersonName: String, deliveryPersonContact: String, estimatedDeliveryTime: LocalDateTime): void
+        + updateAddress(newAddress: String): void
+        + markAsDelivered(): void
+        + markAsFailed(reason: String): void
+        + markAsRefused(reason: String): void
+        + markAsDelayed(reason: String, newEstimatedDeliveryTime: LocalDateTime): void
+        + cancel(): void
+        + scheduleRedelivery(): void
+        + rearrange(): void
+    }
+    
+    class DeliveryId <<ValueObject>> {
+        - id: UUID
+        + toString(): String
+        + fromUUID(id: UUID): DeliveryId
+    }
+    
+    enum DeliveryStatus <<ValueObject>> {
+        PENDING_SHIPMENT
+        IN_TRANSIT
+        DELIVERED
+        DELAYED
+        DELIVERY_FAILED
+        REFUSED
+        CANCELLED
+    }
+    
+    interface DeliveryRepository <<Repository>> {
+        + save(delivery: Delivery): Delivery
+        + findById(id: DeliveryId): Optional<Delivery>
+        + findByUUID(id: UUID): Optional<Delivery>
+        + findByOrderId(orderId: OrderId): Optional<Delivery>
+        + findByStatus(status: DeliveryStatus): List<Delivery>
+        + findFailedDeliveries(): List<Delivery>
+        + findDeliveriesForRedelivery(): List<Delivery>
+        + findByDeliveryPersonId(deliveryPersonId: String): List<Delivery>
+        + count(): long
+    }
+    
+    interface DeliveryService <<DomainService>> {
+        + createDelivery(orderId: OrderId, shippingAddress: String): Delivery
+        + arrangeDelivery(orderId: OrderId): boolean
+        + allocateDeliveryResources(deliveryId: DeliveryId, deliveryPersonId: String, deliveryPersonName: String, deliveryPersonContact: String, estimatedDeliveryTime: LocalDateTime): boolean
+        + updateDeliveryAddress(deliveryId: DeliveryId, newAddress: String): boolean
+        + markAsDelivered(deliveryId: DeliveryId): boolean
+        + markAsFailed(deliveryId: DeliveryId, reason: String): boolean
+        + markAsRefused(deliveryId: DeliveryId, reason: String): boolean
+        + markAsDelayed(deliveryId: DeliveryId, reason: String, newEstimatedDeliveryTime: LocalDateTime): boolean
+        + cancelDelivery(deliveryId: DeliveryId): boolean
+        + scheduleRedelivery(deliveryId: DeliveryId): boolean
+    }
+}
+
+' 共用值對象
+package "共用值對象" {
+    class Money <<ValueObject>> {
+        - amount: BigDecimal
+        - currency: Currency
+        + add(money: Money): Money
+        + subtract(money: Money): Money
+        + multiply(multiplier: int): Money
+        + multiply(multiplier: double): Money
+        + divide(divisor: int): Money
+        + isGreaterThan(other: Money): boolean
+        + {static} of(amount: BigDecimal, currencyCode: String): Money
+        + {static} of(amount: double, currencyCode: String): Money
+        + {static} twd(amount: double): Money
+        + {static} zero(): Money
+    }
+    
+    class ProductId <<ValueObject>> {
+        - id: String
+        + toString(): String
+    }
+    
+    class PromotionId <<ValueObject>> {
+        - id: String
+        + toString(): String
+    }
+}
+
+' 關係
+Order "1" *-- "many" OrderItem : contains
+Order "1" *-- "1" OrderId : identified by
+Order "1" *-- "1" OrderStatus : has
+Order "1" *-- "1" Money : totalAmount
+Order "1" *-- "1" Money : discountAmount
+Order "1" --> "many" OrderCreatedEvent : publishes
+Order "1" --> "many" OrderItemAddedEvent : publishes
 OrderFactory ..> Order : creates
 OrderFactory ..> OrderItem : creates
-OrderRepository ..> Order : manages
-OrderProcessingService ..> Order : operates on
 OrderDiscountPolicy ..> Order : applies to
-Order ..> OrderCreatedEvent : publishes
-Order ..> OrderItemAddedEvent : publishes
-Order ..> OrderStatusChangedEvent : publishes
+OrderRepository ..> Order : manages
 
-' 支付上下文關係
-Payment --> PaymentStatus
-Payment --> Money : amount
-Payment --> OrderId : for
-Payment --> PaymentMethod : uses
+Payment "1" *-- "1" PaymentId : identified by
+Payment "1" *-- "1" OrderId : references
+Payment "1" *-- "1" Money : amount
+Payment "1" *-- "1" PaymentMethod : has
+Payment "1" *-- "1" PaymentStatus : has
+Payment "1" --> "many" PaymentCompletedEvent : publishes
+Payment "1" --> "many" PaymentFailedEvent : publishes
 PaymentRepository ..> Payment : manages
-PaymentService ..> Payment : operates on
-Payment ..> PaymentCompletedEvent : publishes
-Payment ..> PaymentFailedEvent : publishes
+PaymentService ..> Payment : processes
 
-' 物流上下文關係
-Delivery --> DeliveryStatus
-Delivery --> OrderId : for
-Delivery --> Address : ships to
+PricingRule "1" *-- "many" CommissionRate : contains
+PricingRule "1" *-- "1" PriceId : identified by
+PricingRule "1" *-- "1" ProductId : references
+PricingRule "1" *-- "1" PromotionId : references
+PricingRule "1" *-- "1" Money : finalPrice
+PricingRule "1" *-- "1" Money : discountAmount
+PricingRule "1" *-- "1" ProductCategory : has
+PricingRuleRepository ..> PricingRule : manages
+CommissionService ..> PricingRule : uses
+CommissionService ..> CommissionRate : uses
+
+Delivery "1" *-- "1" DeliveryId : identified by
+Delivery "1" *-- "1" OrderId : references
+Delivery "1" *-- "1" DeliveryStatus : has
 DeliveryRepository ..> Delivery : manages
-
-' 上下文間關係
-Order ..> Payment : triggers
-Payment ..> Delivery : triggers
+DeliveryService ..> Delivery : manages
 
 @enduml

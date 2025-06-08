@@ -18,6 +18,14 @@ package "interfaces" as Interface {
                 [PaymentResponse]
             }
         }
+        package "pricing" {
+            [PricingController]
+            package "dto" {
+                [CreatePricingRuleRequest]
+                [UpdateCommissionRateRequest]
+                [ProductCategoryDto]
+            }
+        }
     }
 }
 
@@ -28,6 +36,9 @@ package "application" as Application {
             [CreateOrderCommand]
             [AddOrderItemCommand]
             [OrderResponse]
+        }
+        package "mapper" {
+            [OrderMapper]
         }
         package "port" {
             package "incoming" {
@@ -42,6 +53,12 @@ package "application" as Application {
     }
     package "payment" {
         [PaymentApplicationService]
+        package "dto" {
+            [PaymentDto]
+        }
+        package "mapper" {
+            [PaymentMapper]
+        }
         package "port" {
             package "incoming" {
                 [PaymentManagementUseCase]
@@ -49,6 +66,16 @@ package "application" as Application {
             package "outgoing" {
                 [PaymentPersistencePort]
             }
+        }
+    }
+    package "pricing" {
+        [PricingApplicationService]
+        package "dto" {
+            [PricingRuleDto]
+            [ProductCategoryDto]
+        }
+        package "mapper" {
+            [ProductCategoryMapper]
         }
     }
 }
@@ -60,7 +87,7 @@ package "domain" as Domain {
             [Entity]
             [ValueObject]
         }
-        package "events" {
+        package "event" {
             [DomainEvent]
             [DomainEventPublisher]
         }
@@ -69,6 +96,9 @@ package "domain" as Domain {
             [OrderId]
             [OrderStatus]
             [PaymentStatus]
+        }
+        package "repository" {
+            [Repository]
         }
     }
     
@@ -116,6 +146,45 @@ package "domain" as Domain {
             [PaymentRepository]
         }
     }
+    
+    package "pricing" {
+        package "model" {
+            package "aggregate" {
+                [PricingRule]
+            }
+            package "entity" {
+                [CommissionRate]
+            }
+            package "valueobject" {
+                [ProductCategory]
+                [PriceId]
+            }
+        }
+        package "repository" {
+            [PricingRuleRepository]
+        }
+        package "service" {
+            [CommissionService]
+        }
+    }
+    
+    package "delivery" {
+        package "model" {
+            package "aggregate" {
+                [Delivery]
+            }
+            package "valueobject" {
+                [DeliveryId]
+                [DeliveryStatus]
+            }
+        }
+        package "repository" {
+            [DeliveryRepository]
+        }
+        package "service" {
+            [DeliveryService]
+        }
+    }
 }
 
 package "infrastructure" as Infrastructure {
@@ -124,24 +193,26 @@ package "infrastructure" as Infrastructure {
         [OrderProperties]
     }
     
-    package "order" {
-        package "persistence" {
+    package "persistence" {
+        package "adapter" {
             [OrderPersistenceAdapter]
+            [PaymentPersistenceAdapter]
+            [DeliveryRepositoryAdapter]
+        }
+        package "repository" {
             [JpaOrderRepository]
-        }
-        package "external" {
-            [LogisticsServiceAdapter]
-            [PaymentServiceAdapter]
-        }
-        package "acl" {
-            [LogisticsAntiCorruptionLayer]
+            [JpaPaymentRepository]
         }
     }
     
-    package "payment" {
-        package "persistence" {
-            [PaymentPersistenceAdapter]
-            [JpaPaymentRepository]
+    package "external" {
+        package "adapter" {
+            [LogisticsServiceAdapter]
+            [PaymentServiceAdapter]
+            [DeliveryServiceAdapter]
+        }
+        package "acl" {
+            [LogisticsAntiCorruptionLayer]
         }
     }
     
@@ -165,11 +236,17 @@ OrderApplicationService .[#red]..> PaymentServicePort : uses
 OrderApplicationService .[#red]..> LogisticsServicePort : uses
 OrderApplicationService .[#red]..> Order : uses
 OrderApplicationService .[#red]..> OrderFactory : uses
+OrderApplicationService .[#red]..> OrderMapper : uses
 
 PaymentController .[#red]..> PaymentManagementUseCase : uses
 PaymentApplicationService .[#red]..> PaymentManagementUseCase : implements
 PaymentApplicationService .[#red]..> PaymentPersistencePort : uses
 PaymentApplicationService .[#red]..> Payment : uses
+PaymentApplicationService .[#red]..> PaymentMapper : uses
+
+PricingController .[#red]..> PricingApplicationService : uses
+PricingApplicationService .[#red]..> PricingRuleRepository : uses
+PricingApplicationService .[#red]..> ProductCategoryMapper : uses
 
 Order .[#green]..> OrderItem : contains
 Order .[#green]..> Money : uses
@@ -183,6 +260,13 @@ Payment .[#green]..> PaymentStatus : uses
 Payment .[#green]..> PaymentCompletedEvent : publishes
 Payment .[#green]..> PaymentFailedEvent : publishes
 
+PricingRule .[#green]..> CommissionRate : contains
+PricingRule .[#green]..> Money : uses
+PricingRule .[#green]..> ProductCategory : uses
+
+Delivery .[#green]..> DeliveryStatus : uses
+Delivery .[#green]..> DeliveryId : uses
+
 OrderPersistenceAdapter .[#orange]..> OrderPersistencePort : implements
 OrderPersistenceAdapter .[#orange]..> JpaOrderRepository : uses
 PaymentPersistenceAdapter .[#orange]..> PaymentPersistencePort : implements
@@ -190,6 +274,8 @@ PaymentPersistenceAdapter .[#orange]..> JpaPaymentRepository : uses
 LogisticsServiceAdapter .[#orange]..> LogisticsServicePort : implements
 LogisticsServiceAdapter .[#orange]..> LogisticsAntiCorruptionLayer : uses
 PaymentServiceAdapter .[#orange]..> PaymentServicePort : implements
+DeliveryRepositoryAdapter .[#orange]..> DeliveryRepository : implements
+DeliveryServiceAdapter .[#orange]..> DeliveryService : implements
 
 OrderProcessingSaga .[#purple]..> Order : uses
 OrderProcessingSaga .[#purple]..> Payment : uses

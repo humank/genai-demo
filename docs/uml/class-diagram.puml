@@ -7,17 +7,25 @@ package "domain.order.model.aggregate" {
     -List<OrderItem> items
     -OrderStatus status
     -Money totalAmount
+    -Money discountAmount
+    -String shippingAddress
+    -LocalDateTime createdAt
+    -LocalDateTime updatedAt
     +addItem(OrderItem item)
+    +removeItem(String itemId)
     +updateStatus(OrderStatus status)
     +calculateTotal()
-    +create()
-    +processPayment()
+    +applyDiscount(Money amount)
+    +submit()
+    +cancel()
   }
 }
 
 package "domain.common.valueobject" {
   class OrderItem {
+    -String itemId
     -String productId
+    -String productName
     -int quantity
     -Money unitPrice
     +calculateSubtotal()
@@ -27,19 +35,30 @@ package "domain.common.valueobject" {
     -BigDecimal amount
     -Currency currency
     +add(Money other)
+    +subtract(Money other)
     +multiply(int quantity)
+    +multiply(double multiplier)
+    +divide(int divisor)
+    +isGreaterThan(Money other)
+    +{static} of(BigDecimal amount, String currencyCode)
+    +{static} of(double amount, String currencyCode)
+    +{static} twd(double amount)
+    +{static} zero()
   }
 
   enum OrderStatus {
     CREATED
-    PENDING_PAYMENT
+    PENDING
     CONFIRMED
-    FAILED
+    PROCESSING
+    SHIPPED
     DELIVERED
+    COMPLETED
+    CANCELLED
   }
 
   class OrderId {
-    -String value
+    -UUID id
     +toString()
   }
 }
@@ -50,20 +69,28 @@ package "application.order.service" {
     -OrderRepository orderRepository
     -PaymentServicePort paymentService
     -LogisticsServicePort logisticsService
+    -OrderMapper orderMapper
     +createOrder(CreateOrderCommand cmd)
     +addOrderItem(AddOrderItemCommand cmd)
     +processOrder(OrderId orderId)
   }
 }
 
-package "domain.order.model.factory" {
-  class OrderFactory {
-    +createOrder()
-    +createOrderItem(String productId, int quantity, Money unitPrice)
+package "application.order.mapper" {
+  class OrderMapper {
+    +toDto(Order order)
+    +fromCommand(CreateOrderCommand cmd)
   }
 }
 
-package "domain.common.events" {
+package "domain.order.model.factory" {
+  class OrderFactory {
+    +createOrder(String customerId, String shippingAddress)
+    +createOrderItem(String productId, String productName, int quantity, Money unitPrice)
+  }
+}
+
+package "domain.common.event" {
   interface DomainEvent {
     +getEventId()
     +getTimestamp()
@@ -73,25 +100,84 @@ package "domain.common.events" {
 package "domain.order.model.events" {
   class OrderCreatedEvent {
     -OrderId orderId
-    -DateTime createdAt
+    -String customerId
+    -LocalDateTime createdAt
   }
 
   class OrderItemAddedEvent {
     -OrderId orderId
-    -OrderItem item
-    -DateTime addedAt
+    -String itemId
+    -String productId
+    -int quantity
+    -Money unitPrice
+    -LocalDateTime addedAt
   }
 }
 
 package "domain.payment.model.aggregate" {
   class Payment {
-    -String paymentId
+    -PaymentId paymentId
     -OrderId orderId
     -Money amount
+    -PaymentMethod method
     -PaymentStatus status
-    +process()
-    +complete()
-    +fail()
+    -String transactionId
+    -String failureReason
+    -LocalDateTime createdAt
+    -LocalDateTime updatedAt
+    +complete(String transactionId)
+    +fail(String reason)
+    +refund()
+    +retry()
+  }
+}
+
+package "domain.pricing.model.aggregate" {
+  class PricingRule {
+    -PriceId priceId
+    -ProductId productId
+    -PromotionId promotionId
+    -Money finalPrice
+    -double discountPercentage
+    -Money discountAmount
+    -LocalDateTime effectiveFrom
+    -LocalDateTime effectiveTo
+    -boolean isActive
+    -List<CommissionRate> commissionRates
+    -ProductCategory productCategory
+    +isValidNow()
+    +calculateCommission(boolean isEventPromotion)
+    +updateCommissionRate(int normalRate, int eventRate)
+    +deactivate()
+    +activate()
+  }
+}
+
+package "domain.delivery.model.aggregate" {
+  class Delivery {
+    -DeliveryId id
+    -OrderId orderId
+    -String shippingAddress
+    -DeliveryStatus status
+    -String deliveryPersonId
+    -String deliveryPersonName
+    -String deliveryPersonContact
+    -LocalDateTime estimatedDeliveryTime
+    -LocalDateTime actualDeliveryTime
+    -String trackingNumber
+    -String failureReason
+    -boolean redeliveryScheduled
+    -LocalDateTime createdAt
+    -LocalDateTime updatedAt
+    +allocateResources(String deliveryPersonId, String deliveryPersonName, String deliveryPersonContact, LocalDateTime estimatedDeliveryTime)
+    +updateAddress(String newAddress)
+    +markAsDelivered()
+    +markAsFailed(String reason)
+    +markAsRefused(String reason)
+    +markAsDelayed(String reason, LocalDateTime newEstimatedDeliveryTime)
+    +cancel()
+    +scheduleRedelivery()
+    +rearrange()
   }
 }
 
@@ -100,27 +186,83 @@ package "domain.common.valueobject" {
     PENDING
     COMPLETED
     FAILED
+    REFUNDED
+  }
+  
+  enum PaymentMethod {
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER
+    DIGITAL_WALLET
+    CASH_ON_DELIVERY
+  }
+  
+  enum ProductCategory {
+    ELECTRONICS
+    FASHION
+    GROCERIES
+    HOME_APPLIANCES
+    BEAUTY
+    SPORTS
+    BOOKS
+    TOYS
+    AUTOMOTIVE
+    HEALTH
+    GENERAL
+  }
+  
+  enum DeliveryStatus {
+    PENDING_SHIPMENT
+    IN_TRANSIT
+    DELIVERED
+    DELAYED
+    DELIVERY_FAILED
+    REFUSED
+    CANCELLED
+  }
+}
+
+package "domain.pricing.model.entity" {
+  class CommissionRate {
+    -ProductCategory category
+    -int normalRate
+    -int eventRate
+    +getNormalRate()
+    +getEventRate()
+    +setNormalRate(int rate)
+    +setEventRate(int rate)
   }
 }
 
 Order "1" *--> "*" OrderItem : contains
 Order --> OrderStatus
-Order --> Money
+Order --> Money : totalAmount
+Order --> Money : discountAmount
 Order --> OrderId
-OrderItem --> Money
+OrderItem --> Money : unitPrice
 OrderApplicationService --> OrderFactory
 OrderApplicationService --> Order
+OrderApplicationService --> OrderMapper
 Order ..> OrderCreatedEvent : publishes
 Order ..> OrderItemAddedEvent : publishes
 OrderCreatedEvent ..|> DomainEvent
 OrderItemAddedEvent ..|> DomainEvent
 Payment --> PaymentStatus
-Payment --> Money
-Payment --> OrderId
+Payment --> PaymentMethod
+Payment --> Money : amount
+Payment --> OrderId : references
+PricingRule "1" *--> "*" CommissionRate : contains
+PricingRule --> ProductCategory
+PricingRule --> Money : finalPrice
+PricingRule --> Money : discountAmount
+Delivery --> DeliveryStatus
+Delivery --> OrderId : references
 
 note right of Order : "訂單聚合根"
 note right of OrderStatus : "訂單狀態"
 note right of DomainEvent : "領域事件介面"
 note right of Payment : "支付聚合根"
+note right of PricingRule : "定價規則聚合根"
+note right of Delivery : "配送聚合根"
 
 @enduml

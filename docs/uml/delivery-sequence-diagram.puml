@@ -1,0 +1,296 @@
+@startuml 配送處理時序圖
+skinparam responseMessageBelowArrow true
+
+actor "Client" as C
+participant "DeliveryController" as DC
+participant "DeliveryApplicationService" as DAS
+participant "DeliveryMapper" as DM
+participant "DeliveryService" as DS
+participant "Delivery" as D
+participant "DeliveryRepository" as DR
+participant "DomainEventPublisher" as DEP
+
+== 創建配送 ==
+C -> DC: createDelivery(DeliveryRequest)
+activate DC
+
+DC -> DAS: createDelivery(CreateDeliveryCommand)
+activate DAS
+
+DAS -> DS: createDelivery(orderId, shippingAddress)
+activate DS
+DS -> D: new Delivery(orderId, shippingAddress)
+activate D
+D --> DS: Delivery
+deactivate D
+DS -> DR: save(delivery)
+activate DR
+DR --> DS: Delivery
+deactivate DR
+DS --> DAS: Delivery
+deactivate DS
+
+DAS -> DM: toDto(delivery)
+activate DM
+DM --> DAS: DeliveryDto
+deactivate DM
+
+DAS --> DC: DeliveryDto
+deactivate DAS
+
+DC --> C: DeliveryResponse
+deactivate DC
+
+== 安排配送 ==
+C -> DC: arrangeDelivery(orderId)
+activate DC
+
+DC -> DAS: arrangeDelivery(orderId)
+activate DAS
+
+DAS -> DS: arrangeDelivery(orderId)
+activate DS
+DS --> DAS: boolean
+deactivate DS
+
+DAS --> DC: boolean
+deactivate DAS
+
+DC --> C: OperationResponse
+deactivate DC
+
+== 分配配送資源 ==
+C -> DC: allocateDeliveryResources(deliveryId, resourceRequest)
+activate DC
+
+DC -> DAS: allocateDeliveryResources(deliveryId, resourceCommand)
+activate DAS
+
+DAS -> DS: allocateDeliveryResources(deliveryId, deliveryPersonId, deliveryPersonName, deliveryPersonContact, estimatedDeliveryTime)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS -> D: allocateResources(deliveryPersonId, deliveryPersonName, deliveryPersonContact, estimatedDeliveryTime)
+  activate D
+  D --> DS: void
+  deactivate D
+  
+  DS -> DR: save(delivery)
+  activate DR
+  DR --> DS: Delivery
+  deactivate DR
+  
+  DS --> DAS: true
+  DAS --> DC: true
+  DC --> C: OperationResponse(success=true)
+else 配送不存在
+  DS --> DAS: false
+  DAS --> DC: false
+  DC --> C: OperationResponse(success=false, message="配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+== 更新配送地址 ==
+C -> DC: updateDeliveryAddress(deliveryId, addressRequest)
+activate DC
+
+DC -> DAS: updateDeliveryAddress(deliveryId, newAddress)
+activate DAS
+
+DAS -> DS: updateDeliveryAddress(deliveryId, newAddress)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS -> D: updateAddress(newAddress)
+  activate D
+  D --> DS: void
+  deactivate D
+  
+  DS -> DR: save(delivery)
+  activate DR
+  DR --> DS: Delivery
+  deactivate DR
+  
+  DS --> DAS: true
+  DAS --> DC: true
+  DC --> C: OperationResponse(success=true)
+else 配送不存在
+  DS --> DAS: false
+  DAS --> DC: false
+  DC --> C: OperationResponse(success=false, message="配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+== 標記為已送達 ==
+C -> DC: markAsDelivered(deliveryId)
+activate DC
+
+DC -> DAS: markAsDelivered(deliveryId)
+activate DAS
+
+DAS -> DS: markAsDelivered(deliveryId)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS -> D: markAsDelivered()
+  activate D
+  D -> D: status = DELIVERED
+  D -> D: actualDeliveryTime = LocalDateTime.now()
+  D -> DEP: publish(DeliveryCompletedEvent)
+  activate DEP
+  DEP --> D: void
+  deactivate DEP
+  D --> DS: void
+  deactivate D
+  
+  DS -> DR: save(delivery)
+  activate DR
+  DR --> DS: Delivery
+  deactivate DR
+  
+  DS --> DAS: true
+  DAS --> DC: true
+  DC --> C: OperationResponse(success=true)
+else 配送不存在
+  DS --> DAS: false
+  DAS --> DC: false
+  DC --> C: OperationResponse(success=false, message="配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+== 標記為失敗 ==
+C -> DC: markAsFailed(deliveryId, failureRequest)
+activate DC
+
+DC -> DAS: markAsFailed(deliveryId, reason)
+activate DAS
+
+DAS -> DS: markAsFailed(deliveryId, reason)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS -> D: markAsFailed(reason)
+  activate D
+  D -> D: status = DELIVERY_FAILED
+  D -> D: failureReason = reason
+  D -> DEP: publish(DeliveryFailedEvent)
+  activate DEP
+  DEP --> D: void
+  deactivate DEP
+  D --> DS: void
+  deactivate D
+  
+  DS -> DR: save(delivery)
+  activate DR
+  DR --> DS: Delivery
+  deactivate DR
+  
+  DS --> DAS: true
+  DAS --> DC: true
+  DC --> C: OperationResponse(success=true)
+else 配送不存在
+  DS --> DAS: false
+  DAS --> DC: false
+  DC --> C: OperationResponse(success=false, message="配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+== 安排重新配送 ==
+C -> DC: scheduleRedelivery(deliveryId)
+activate DC
+
+DC -> DAS: scheduleRedelivery(deliveryId)
+activate DAS
+
+DAS -> DS: scheduleRedelivery(deliveryId)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS -> D: scheduleRedelivery()
+  activate D
+  D -> D: redeliveryScheduled = true
+  D -> D: status = PENDING_SHIPMENT
+  D -> DEP: publish(RedeliveryScheduledEvent)
+  activate DEP
+  DEP --> D: void
+  deactivate DEP
+  D --> DS: void
+  deactivate D
+  
+  DS -> DR: save(delivery)
+  activate DR
+  DR --> DS: Delivery
+  deactivate DR
+  
+  DS --> DAS: true
+  DAS --> DC: true
+  DC --> C: OperationResponse(success=true)
+else 配送不存在
+  DS --> DAS: false
+  DAS --> DC: false
+  DC --> C: OperationResponse(success=false, message="配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+== 獲取配送信息 ==
+C -> DC: getDelivery(deliveryId)
+activate DC
+
+DC -> DAS: getDelivery(deliveryId)
+activate DAS
+
+DAS -> DS: getDelivery(deliveryId)
+activate DS
+DS -> DR: findById(deliveryId)
+activate DR
+DR --> DS: Optional<Delivery>
+deactivate DR
+
+alt 配送存在
+  DS --> DAS: Optional<Delivery>
+  DAS -> DM: toDto(delivery)
+  activate DM
+  DM --> DAS: DeliveryDto
+  deactivate DM
+  DAS --> DC: DeliveryDto
+  DC --> C: DeliveryResponse
+else 配送不存在
+  DS --> DAS: Optional.empty()
+  DAS --> DC: null
+  DC --> C: ErrorResponse(404, "配送不存在")
+end
+deactivate DS
+deactivate DAS
+deactivate DC
+
+@enduml
