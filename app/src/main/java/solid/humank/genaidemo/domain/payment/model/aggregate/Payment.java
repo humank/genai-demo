@@ -5,16 +5,22 @@ import java.util.Objects;
 import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.payment.model.events.PaymentCompletedEvent;
+import solid.humank.genaidemo.domain.payment.model.events.PaymentCreatedEvent;
+import solid.humank.genaidemo.domain.payment.model.events.PaymentFailedEvent;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /**
  * 支付聚合根
  */
 @AggregateRoot
+@AggregateLifecycle.ManagedLifecycle
 public class Payment {
     private final PaymentId id;
     private final OrderId orderId;
@@ -59,6 +65,14 @@ public class Payment {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.canRetry = true;
+        
+        // 發布支付創建事件，處理paymentMethod可能為null的情況
+        AggregateLifecycleAware.apply(new PaymentCreatedEvent(
+            this.id,
+            this.orderId,
+            this.amount,
+            null  // paymentMethod可能為null
+        ));
     }
     
     /**
@@ -100,6 +114,14 @@ public class Payment {
         this.transactionId = Objects.requireNonNull(transactionId, "Transaction ID cannot be null");
         this.status = PaymentStatus.COMPLETED;
         this.updatedAt = LocalDateTime.now();
+        
+        // 發布支付完成事件
+        AggregateLifecycleAware.apply(new PaymentCompletedEvent(
+            this.id,
+            this.orderId,
+            this.amount,
+            this.transactionId
+        ));
     }
     
     /**
@@ -113,6 +135,15 @@ public class Payment {
         this.failureReason = reason;
         this.status = PaymentStatus.FAILED;
         this.updatedAt = LocalDateTime.now();
+        
+        // 發布支付失敗事件
+        AggregateLifecycleAware.apply(new PaymentFailedEvent(
+            this.id,
+            this.orderId,
+            this.amount,
+            this.failureReason,
+            this.canRetry
+        ));
     }
     
     /**

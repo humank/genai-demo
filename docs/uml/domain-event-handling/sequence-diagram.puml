@@ -1,0 +1,71 @@
+@startuml Domain Event Handling - Sequence Diagram
+
+skinparam sequenceArrowThickness 2
+skinparam sequenceGroupBorderColor #999999
+skinparam sequenceGroupBackgroundColor #f5f5f5
+skinparam sequenceLifeLineBorderColor #999999
+skinparam sequenceParticipantBorderColor #999999
+skinparam sequenceParticipantBackgroundColor #e6f2ff
+
+actor Client
+participant "AggregateRoot" as AR
+participant "AggregateLifecycleAware" as ALA
+participant "DomainEventPublisherService" as DEPS
+participant "DomainEventBus" as DEB
+participant "DomainEventPublisherAdapter" as DEPA
+participant "Spring\nApplicationEventPublisher" as SAEP
+participant "DomainEventSubscriptionManager" as DESM
+participant "EventHandler" as EH
+
+== 初始化阶段 ==
+DESM -> DESM: 扫描带有@EventSubscriber注解的方法
+DESM -> DESM: 注册事件订阅者到subscriptions映射
+
+== 事件发布流程 ==
+Client -> AR: 执行业务操作
+activate AR
+AR -> ALA: apply(domainEvent)
+activate ALA
+
+alt 主要路径
+    ALA -> DEPS: publishEvent(domainEvent)
+    activate DEPS
+    DEPS -> DEB: publish(domainEvent)
+    activate DEB
+    DEB -> DEPA: publish(domainEvent)
+    activate DEPA
+    DEPA -> DEPA: 创建DomainEventWrapper
+    DEPA -> SAEP: publishEvent(domainEventWrapper)
+    activate SAEP
+    SAEP --> DEPA: 
+    deactivate SAEP
+    DEPA --> DEB: 
+    deactivate DEPA
+    DEB --> DEPS: 
+    deactivate DEB
+    DEPS --> ALA: 
+    deactivate DEPS
+else EventBus为null (降级路径)
+    ALA -> ALA: 记录警告日志
+end
+
+ALA --> AR: 
+deactivate ALA
+AR --> Client: 
+deactivate AR
+
+== 事件处理流程 ==
+SAEP -> DESM: onApplicationEvent(springEvent)
+activate DESM
+DESM -> DESM: 提取DomainEvent
+DESM -> DESM: 查找匹配的订阅者
+loop 对每个匹配的订阅者
+    DESM -> EH: 通过反射调用处理方法
+    activate EH
+    EH --> DESM: 
+    deactivate EH
+end
+DESM --> SAEP: 
+deactivate DESM
+
+@enduml

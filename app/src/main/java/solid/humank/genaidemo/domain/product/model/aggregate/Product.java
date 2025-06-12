@@ -1,14 +1,19 @@
 package solid.humank.genaidemo.domain.product.model.aggregate;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
+import solid.humank.genaidemo.domain.product.model.events.ProductCreatedEvent;
+import solid.humank.genaidemo.domain.product.model.events.ProductPriceChangedEvent;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
 /**
  * 產品聚合根
  */
 @AggregateRoot
+@AggregateLifecycle.ManagedLifecycle
 public class Product {
     private ProductId productId;
     private String name;
@@ -28,6 +33,14 @@ public class Product {
         this.basePrice = basePrice;
         this.category = category;
         this.isActive = true;
+        
+        // 發布產品創建事件
+        AggregateLifecycleAware.apply(new ProductCreatedEvent(
+            this.productId,
+            this.name,
+            this.basePrice,
+            this.category
+        ));
     }
 
     public ProductId getProductId() {
@@ -63,7 +76,16 @@ public class Product {
     }
 
     public void updatePrice(Money newPrice) {
+        Money oldPrice = this.basePrice;
         this.basePrice = newPrice;
+        
+        // 發布產品價格變更事件
+        AggregateLifecycleAware.apply(new ProductPriceChangedEvent(
+            this.productId,
+            this.name,
+            oldPrice,
+            this.basePrice
+        ));
     }
 
     public void updateDescription(String newDescription) {

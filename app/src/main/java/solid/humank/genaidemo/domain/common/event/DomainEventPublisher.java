@@ -34,13 +34,6 @@ public class DomainEventPublisher {
      * @throws IllegalArgumentException 如果事件為 null
      * @throws BusinessException 如果事件發布失敗
      */
-    /**
-     * 發布領域事件
-     * 
-     * @param event 要發布的領域事件
-     * @throws IllegalArgumentException 如果事件為 null
-     * @throws BusinessException 如果事件發布失敗
-     */
     public void publish(DomainEvent event) {
         Objects.requireNonNull(event, "事件不能為空");
         
@@ -51,7 +44,11 @@ public class DomainEventPublisher {
                 LOGGER.fine(() -> String.format("Publishing event: %s", eventName));
             }
             
-            eventBus.publish(event);
+            if (eventBus != null) {
+                eventBus.publish(event);
+            } else {
+                LOGGER.warning("EventBus is null, event not published: " + eventName);
+            }
             
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.fine(() -> String.format("Event published successfully: %s", eventName));

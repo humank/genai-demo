@@ -1,6 +1,6 @@
 package solid.humank.genaidemo.domain.common.event;
 
-import org.springframework.context.ApplicationEventPublisher;
+import solid.humank.genaidemo.infrastructure.event.DomainEventPublisherAdapter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class DomainEventBus {
     
-    private final ApplicationEventPublisher eventPublisher;
+    private final DomainEventPublisherAdapter eventPublisherAdapter;
     
-    public DomainEventBus(ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public DomainEventBus(DomainEventPublisherAdapter eventPublisherAdapter) {
+        this.eventPublisherAdapter = eventPublisherAdapter;
     }
     
     /**
@@ -23,7 +23,7 @@ public class DomainEventBus {
      */
     public void publish(DomainEvent event) {
         if (event != null) {
-            eventPublisher.publishEvent(event);
+            eventPublisherAdapter.publish(event);
         }
     }
 }

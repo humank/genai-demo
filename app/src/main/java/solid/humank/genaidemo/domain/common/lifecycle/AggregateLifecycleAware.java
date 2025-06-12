@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
+import solid.humank.genaidemo.domain.common.service.DomainEventPublisherService;
 import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
@@ -40,7 +41,13 @@ public class AggregateLifecycleAware {
             LOGGER.fine(String.format("Applying event via static method: %s", event.getClass().getSimpleName()));
         }
         
-        getLifecycle().apply(event);
+        try {
+            getLifecycle().apply(event);
+        } catch (IllegalStateException e) {
+            // 如果無法獲取AggregateLifecycle實例，則使用DomainEventPublisherService發布事件
+            LOGGER.warning("AggregateLifecycle not available, falling back to DomainEventPublisherService: " + e.getMessage());
+            solid.humank.genaidemo.domain.common.service.DomainEventPublisherService.publishEvent(event);
+        }
     }
 
     /**
@@ -99,9 +106,9 @@ public class AggregateLifecycleAware {
             }
             
             return lifecycle;
-        } catch (IllegalStateException e) {
+        } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to get AggregateLifecycle bean: {0}", e.getMessage());
-            throw e;
+            throw new IllegalStateException("AggregateLifecycle not initialized: " + e.getMessage(), e);
         }
     }
     

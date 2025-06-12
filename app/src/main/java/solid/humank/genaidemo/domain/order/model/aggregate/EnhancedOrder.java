@@ -16,16 +16,15 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
 import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
 import solid.humank.genaidemo.domain.order.model.events.OrderCreatedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
-import solid.humank.genaidemo.domain.order.model.events.OrderSubmittedEvent;
 import solid.humank.genaidemo.utils.Preconditions;
 
 /**
- * 訂單聚合根
- * 封裝訂單相關的業務規則和行為
+ * 增強版訂單聚合根
+ * 使用AggregateLifecycle管理領域事件
  */
 @AggregateRoot
 @AggregateLifecycle.ManagedLifecycle
-public class Order {
+public class EnhancedOrder {
     private final OrderId id;
     private final CustomerId customerId;
     private final String shippingAddress;
@@ -42,7 +41,7 @@ public class Order {
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
      */
-    public Order(String customerId, String shippingAddress) {
+    public EnhancedOrder(String customerId, String shippingAddress) {
         this(OrderId.generate(), CustomerId.fromString(customerId), shippingAddress);
     }
     
@@ -52,7 +51,7 @@ public class Order {
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
      */
-    public Order(CustomerId customerId, String shippingAddress) {
+    public EnhancedOrder(CustomerId customerId, String shippingAddress) {
         this(OrderId.generate(), customerId, shippingAddress);
     }
 
@@ -63,7 +62,7 @@ public class Order {
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
      */
-    public Order(OrderId orderId, CustomerId customerId, String shippingAddress) {
+    public EnhancedOrder(OrderId orderId, CustomerId customerId, String shippingAddress) {
         Preconditions.requireNonNull(orderId, "訂單ID不能為空");
         Preconditions.requireNonNull(customerId, "客戶ID不能為空");
         Preconditions.requireNonEmpty(shippingAddress, "配送地址不能為空");
@@ -94,24 +93,14 @@ public class Order {
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
      */
-    public Order(OrderId orderId, String customerId, String shippingAddress) {
+    public EnhancedOrder(OrderId orderId, String customerId, String shippingAddress) {
         this(orderId, CustomerId.fromString(customerId), shippingAddress);
     }
     
     /**
      * 用於重建聚合根的完整建構子（僅供Repository使用）
-     * 
-     * @param id 訂單ID
-     * @param customerId 客戶ID
-     * @param shippingAddress 配送地址
-     * @param items 訂單項列表
-     * @param status 訂單狀態
-     * @param totalAmount 訂單總金額
-     * @param effectiveAmount 訂單實際金額
-     * @param createdAt 創建時間
-     * @param updatedAt 更新時間
      */
-    protected Order(OrderId id, CustomerId customerId, String shippingAddress,
+    protected EnhancedOrder(OrderId id, CustomerId customerId, String shippingAddress,
                   List<OrderItem> items, OrderStatus status, Money totalAmount,
                   Money effectiveAmount, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = Objects.requireNonNull(id, "訂單ID不能為空");
@@ -125,15 +114,6 @@ public class Order {
         this.updatedAt = Objects.requireNonNull(updatedAt, "更新時間不能為空");
         
         // 注意：這裡不發布領域事件，因為這是重建聚合根，而不是創建新訂單
-    }
-
-    /**
-     * 建立訂單
-     * 
-     * @param orderId 訂單ID字符串
-     */
-    public Order(String orderId) {
-        this(OrderId.of(orderId), CustomerId.fromString("customer-123"), "台北市信義區");
     }
 
     /**
@@ -181,113 +161,7 @@ public class Order {
         status = OrderStatus.PENDING;
         updatedAt = LocalDateTime.now();
         
-        // 發布訂單提交事件
-        AggregateLifecycleAware.apply(new OrderSubmittedEvent(
-            this.id,
-            this.customerId.toString(),
-            this.totalAmount,
-            this.items.size()
-        ));
-    }
-
-    /**
-     * 確認訂單
-     */
-    public void confirm() {
-        // 檢查狀態轉換
-        if (!status.canTransitionTo(OrderStatus.CONFIRMED)) {
-            throw new IllegalStateException("Cannot confirm an order in " + status + " state");
-        }
-
-        // 更新狀態
-        status = OrderStatus.CONFIRMED;
-        updatedAt = LocalDateTime.now();
-    }
-
-    /**
-     * 標記為已付款
-     */
-    public void markAsPaid() {
-        // 檢查狀態轉換
-        if (!status.canTransitionTo(OrderStatus.PAID)) {
-            throw new IllegalStateException("Cannot mark as paid an order in " + status + " state");
-        }
-
-        // 更新狀態
-        status = OrderStatus.PAID;
-        updatedAt = LocalDateTime.now();
-    }
-
-    /**
-     * 發貨
-     */
-    public void ship() {
-        // 檢查狀態轉換
-        if (!status.canTransitionTo(OrderStatus.SHIPPING)) {
-            throw new IllegalStateException("Cannot ship an order in " + status + " state");
-        }
-
-        // 更新狀態
-        status = OrderStatus.SHIPPING;
-        updatedAt = LocalDateTime.now();
-    }
-
-    /**
-     * 送達
-     */
-    public void deliver() {
-        // 檢查狀態轉換
-        if (!status.canTransitionTo(OrderStatus.DELIVERED)) {
-            throw new IllegalStateException("Cannot deliver an order in " + status + " state");
-        }
-
-        // 更新狀態
-        status = OrderStatus.DELIVERED;
-        updatedAt = LocalDateTime.now();
-    }
-
-    /**
-     * 取消訂單
-     */
-    public void cancel() {
-        // 檢查狀態
-        if (status == OrderStatus.DELIVERED || status == OrderStatus.CANCELLED) {
-            throw new IllegalStateException("Cannot cancel an order that is already delivered or cancelled");
-        }
-
-        // 更新狀態
-        status = OrderStatus.CANCELLED;
-        updatedAt = LocalDateTime.now();
-    }
-
-    /**
-     * 處理訂單
-     * 執行訂單處理流程
-     */
-    public void process() {
-        // 檢查狀態
-        if (status != OrderStatus.CREATED) {
-            throw new IllegalStateException("只有處於建立狀態的訂單可以處理");
-        }
-
-        // 提交訂單
-        submit();
-    }
-
-    /**
-     * 應用折扣
-     * 
-     * @param discountedAmount 折扣後金額
-     */
-    public void applyDiscount(Money discountedAmount) {
-        // 檢查折扣金額
-        if (discountedAmount.isGreaterThan(totalAmount)) {
-            throw new IllegalArgumentException("折扣金額不能大於訂單總金額");
-        }
-
-        // 更新有效金額
-        effectiveAmount = totalAmount.subtract(discountedAmount);
-        updatedAt = LocalDateTime.now();
+        // 這裡可以發布訂單提交事件
     }
 
     // Getters
@@ -300,11 +174,6 @@ public class Order {
         return customerId;
     }
     
-    /**
-     * 獲取客戶ID字符串 (兼容舊代碼)
-     * 
-     * @return 客戶ID字符串
-     */
     public String getCustomerIdAsString() {
         return customerId.toString();
     }
@@ -342,7 +211,7 @@ public class Order {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Order order) {
+        if (o instanceof EnhancedOrder order) {
             return Objects.equals(id, order.id);
         }
         return false;
@@ -355,7 +224,7 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
+        return "EnhancedOrder{" +
                 "id=" + id +
                 ", customerId='" + customerId + '\'' +
                 ", status=" + status +

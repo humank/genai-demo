@@ -1,6 +1,10 @@
 package solid.humank.genaidemo.domain.notification.model.aggregate;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
+import solid.humank.genaidemo.domain.notification.model.events.NotificationCreatedEvent;
+import solid.humank.genaidemo.domain.notification.model.events.NotificationStatusChangedEvent;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationId;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationStatus;
@@ -17,6 +21,7 @@ import java.util.Objects;
  * 管理系統通知的發送和狀態
  */
 @AggregateRoot
+@AggregateLifecycle.ManagedLifecycle
 public class Notification {
     private final NotificationId id;
     private final String customerId;
@@ -73,6 +78,15 @@ public class Notification {
         this.retryCount = 0;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
+        
+        // 發布通知創建事件
+        AggregateLifecycleAware.apply(new NotificationCreatedEvent(
+            this.id,
+            this.customerId,
+            this.type,
+            this.subject,
+            this.channels
+        ));
     }
 
     /**
@@ -83,9 +97,19 @@ public class Notification {
             throw new IllegalStateException("只有待發送或發送失敗的通知可以發送");
         }
 
+        NotificationStatus oldStatus = this.status;
         this.status = NotificationStatus.SENT;
         this.sentTime = LocalDateTime.now();
         this.updatedAt = this.sentTime;
+        
+        // 發布通知狀態變更事件
+        AggregateLifecycleAware.apply(new NotificationStatusChangedEvent(
+            this.id,
+            this.customerId,
+            oldStatus,
+            this.status,
+            "通知已發送"
+        ));
     }
 
     /**
@@ -96,9 +120,19 @@ public class Notification {
             throw new IllegalStateException("只有已發送的通知可以標記為已送達");
         }
 
+        NotificationStatus oldStatus = this.status;
         this.status = NotificationStatus.DELIVERED;
         this.deliveredTime = LocalDateTime.now();
         this.updatedAt = this.deliveredTime;
+        
+        // 發布通知狀態變更事件
+        AggregateLifecycleAware.apply(new NotificationStatusChangedEvent(
+            this.id,
+            this.customerId,
+            oldStatus,
+            this.status,
+            "通知已送達"
+        ));
     }
 
     /**
@@ -109,9 +143,19 @@ public class Notification {
             throw new IllegalStateException("只有已送達的通知可以標記為已讀");
         }
 
+        NotificationStatus oldStatus = this.status;
         this.status = NotificationStatus.READ;
         this.readTime = LocalDateTime.now();
         this.updatedAt = this.readTime;
+        
+        // 發布通知狀態變更事件
+        AggregateLifecycleAware.apply(new NotificationStatusChangedEvent(
+            this.id,
+            this.customerId,
+            oldStatus,
+            this.status,
+            "通知已讀"
+        ));
     }
 
     /**
@@ -124,9 +168,19 @@ public class Notification {
             throw new IllegalStateException("只有待發送或已發送的通知可以標記為失敗");
         }
 
+        NotificationStatus oldStatus = this.status;
         this.status = NotificationStatus.FAILED;
         this.failureReason = Objects.requireNonNull(reason, "失敗原因不能為空");
         this.updatedAt = LocalDateTime.now();
+        
+        // 發布通知狀態變更事件
+        AggregateLifecycleAware.apply(new NotificationStatusChangedEvent(
+            this.id,
+            this.customerId,
+            oldStatus,
+            this.status,
+            reason
+        ));
     }
 
     /**

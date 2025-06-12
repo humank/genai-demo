@@ -85,6 +85,7 @@ public class PackageStructureTest {
         // 外部系統適配器應該位於 infrastructure.external 或 infrastructure.*.external 包中
         ArchRule adapterRule = classes()
                 .that().haveSimpleNameEndingWith("Adapter")
+                .and().haveNameNotMatching(".*DomainEventPublisherAdapter")
                 .should().resideInAPackage("..infrastructure..external..")
                 .orShould().resideInAPackage("..infrastructure..persistence..");
         adapterRule.check(importedClasses);

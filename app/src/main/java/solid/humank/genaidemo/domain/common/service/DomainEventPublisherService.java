@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 
+import java.util.logging.Logger;
+
 /**
  * 領域事件發布服務
  * 用於發布領域事件
@@ -36,6 +38,10 @@ public class DomainEventPublisherService {
     public static void publishEvent(DomainEvent event) {
         if (eventBus != null) {
             eventBus.publish(event);
+        } else {
+            Logger.getLogger(DomainEventPublisherService.class.getName())
+                  .warning("EventBus is null, event not published: " + 
+                          (event != null ? event.getClass().getSimpleName() : "null"));
         }
     }
 }

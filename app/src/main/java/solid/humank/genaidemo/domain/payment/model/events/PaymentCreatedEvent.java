@@ -4,25 +4,24 @@ import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
+import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /**
- * 支付失敗事件
+ * 支付創建事件
  */
-public class PaymentFailedEvent extends AbstractDomainEvent {
+public class PaymentCreatedEvent extends AbstractDomainEvent {
     
     private final PaymentId paymentId;
     private final OrderId orderId;
     private final Money amount;
-    private final String failureReason;
-    private final boolean canRetry;
+    private final PaymentMethod paymentMethod;
     
-    public PaymentFailedEvent(PaymentId paymentId, OrderId orderId, Money amount, String failureReason, boolean canRetry) {
+    public PaymentCreatedEvent(PaymentId paymentId, OrderId orderId, Money amount, PaymentMethod paymentMethod) {
         super("payment-service");
         this.paymentId = paymentId;
         this.orderId = orderId;
         this.amount = amount;
-        this.failureReason = failureReason;
-        this.canRetry = canRetry;
+        this.paymentMethod = paymentMethod;
     }
     
     public PaymentId getPaymentId() {
@@ -37,16 +36,12 @@ public class PaymentFailedEvent extends AbstractDomainEvent {
         return amount;
     }
     
-    public String getFailureReason() {
-        return failureReason;
-    }
-    
-    public boolean isCanRetry() {
-        return canRetry;
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
     }
     
     @Override
     public String getEventType() {
-        return "PaymentFailedEvent";
+        return "PaymentCreatedEvent";
     }
 }

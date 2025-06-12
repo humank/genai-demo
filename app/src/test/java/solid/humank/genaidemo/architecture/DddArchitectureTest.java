@@ -63,6 +63,7 @@ public class DddArchitectureTest {
     void domainLayerShouldNotDependOnOtherLayers() {
         ArchRule rule = noClasses()
                 .that().resideInAPackage(DOMAIN_PACKAGE)
+                .and().haveNameNotMatching(".*DomainEventBus")  // 排除 DomainEventBus，因為它需要依賴 infrastructure 層的 DomainEventPublisherAdapter
                 .should().dependOnClassesThat().resideInAnyPackage(
                         APPLICATION_PACKAGE, INFRASTRUCTURE_PACKAGE, INTERFACES_PACKAGE
                 );

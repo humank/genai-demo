@@ -1,6 +1,11 @@
 package solid.humank.genaidemo.domain.inventory.model.aggregate;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
+import solid.humank.genaidemo.domain.inventory.model.events.InventoryCreatedEvent;
+import solid.humank.genaidemo.domain.inventory.model.events.StockAddedEvent;
+import solid.humank.genaidemo.domain.inventory.model.events.StockReservedEvent;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
@@ -16,6 +21,7 @@ import java.util.UUID;
  * 管理產品庫存和預留
  */
 @AggregateRoot(name = "Inventory", description = "庫存聚合根，管理產品庫存和預留")
+@AggregateLifecycle.ManagedLifecycle
 public class Inventory {
     private final InventoryId id;
     private final String productId;
@@ -64,6 +70,14 @@ public class Inventory {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.status = InventoryStatus.ACTIVE;
+        
+        // 發布庫存創建事件
+        AggregateLifecycleAware.apply(new InventoryCreatedEvent(
+            this.id,
+            this.productId,
+            this.productName,
+            this.totalQuantity
+        ));
     }
 
     /**
@@ -97,6 +111,16 @@ public class Inventory {
         availableQuantity -= quantity;
         reservedQuantity += quantity;
         updatedAt = LocalDateTime.now();
+        
+        // 發布庫存預留事件
+        AggregateLifecycleAware.apply(new StockReservedEvent(
+            this.id,
+            this.productId,
+            reservationId,
+            orderId,
+            quantity,
+            availableQuantity
+        ));
         
         return reservationId;
     }
@@ -142,6 +166,14 @@ public class Inventory {
         totalQuantity += quantity;
         availableQuantity += quantity;
         updatedAt = LocalDateTime.now();
+        
+        // 發布庫存增加事件
+        AggregateLifecycleAware.apply(new StockAddedEvent(
+            this.id,
+            this.productId,
+            quantity,
+            totalQuantity
+        ));
     }
 
     /**
