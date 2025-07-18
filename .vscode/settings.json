@@ -14,5 +14,6 @@
   "cSpell.words": [
     "genaidemo"
   ],
-  "java.configuration.updateBuildConfiguration": "automatic"
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.dependency.packagePresentation": "hierarchical"
 }

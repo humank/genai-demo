@@ -1,11 +1,11 @@
 package solid.humank.genaidemo.integration.event;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -14,13 +14,13 @@ import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderSubmittedEvent;
 import solid.humank.genaidemo.domain.order.service.OrderEventHandler;
 import solid.humank.genaidemo.infrastructure.event.DomainEventPublisherAdapter;
+import solid.humank.genaidemo.testutils.annotations.IntegrationTest;
+import solid.humank.genaidemo.testutils.fixtures.TestConstants;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,137 +28,126 @@ import static org.mockito.Mockito.*;
 
 /**
  * 領域事件發布整合測試
- * 測試領域事件從發布到處理的完整流程
+ * 重構後使用測試輔助工具，改善測試結構和可讀性
  */
 @SpringBootTest
+@IntegrationTest
 public class DomainEventPublishingIntegrationTest {
 
     @Autowired
     private DomainEventPublisherAdapter eventPublisherAdapter;
-    
-    @Autowired
-    private ApplicationContext applicationContext;
-    
-    @SpyBean
+
+    @MockBean
     private OrderEventHandler orderEventHandler;
-    
-    // 事件捕獲器
+
     private List<DomainEvent> capturedEvents;
-    
+
     @BeforeEach
     public void setup() {
         capturedEvents = new ArrayList<>();
-        
-        // 使用spy替換原始的eventPublisherAdapter方法，以捕獲發布的事件
+        setupEventCapture();
+    }
+
+    private void setupEventCapture() {
         doAnswer(invocation -> {
             DomainEvent event = invocation.getArgument(0);
             capturedEvents.add(event);
-            // 調用原始方法
             return invocation.callRealMethod();
         }).when(eventPublisherAdapter).publish(any(DomainEvent.class));
     }
-    
-    /**
-     * 測試直接發布事件
-     * 驗證事件是否被正確發布和處理
-     */
+
     @Test
-    public void testDirectEventPublishing() {
-        // 創建測試事件
-        OrderCreatedEvent event = new OrderCreatedEvent(
-            OrderId.generate(),
-            "customer-123",
-            Money.of(BigDecimal.valueOf(1000)),
-            Collections.emptyList()
-        );
-        
-        // 發布事件
+    @DisplayName("應該正確發布和處理OrderCreatedEvent")
+    public void shouldPublishAndHandleOrderCreatedEvent() {
+        // Arrange
+        OrderCreatedEvent event = createOrderCreatedEvent();
+
+        // Act
         eventPublisherAdapter.publish(event);
-        
-        // 驗證事件被捕獲
-        assertEquals(1, capturedEvents.size());
-        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent);
-        
-        // 驗證事件處理器被調用
+
+        // Assert
+        assertEquals(1, capturedEvents.size(), "Should capture exactly one event");
+        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent, "Captured event should be OrderCreatedEvent");
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
     }
-    
-    /**
-     * 測試多個事件的發布和處理
-     */
+
     @Test
-    public void testMultipleEventsPublishing() {
+    @DisplayName("應該正確發布和處理多個事件")
+    public void shouldPublishAndHandleMultipleEvents() {
+        // Arrange
         OrderId orderId = OrderId.generate();
-        
-        // 創建並發布訂單創建事件
-        OrderCreatedEvent createdEvent = new OrderCreatedEvent(
-            orderId,
-            "customer-456",
-            Money.zero(),
-            Collections.emptyList()
-        );
+        OrderCreatedEvent createdEvent = createOrderCreatedEvent(orderId);
+        OrderItemAddedEvent itemAddedEvent = createOrderItemAddedEvent(orderId);
+
+        // Act
         eventPublisherAdapter.publish(createdEvent);
-        
-        // 創建並發布訂單項添加事件
-        OrderItemAddedEvent itemAddedEvent = new OrderItemAddedEvent(
-            orderId,
-            "product-123",
-            2,
-            Money.of(BigDecimal.valueOf(500))
-        );
         eventPublisherAdapter.publish(itemAddedEvent);
-        
-        // 驗證事件被捕獲
-        assertEquals(2, capturedEvents.size());
-        
-        // 驗證事件處理器被調用
+
+        // Assert
+        assertEquals(2, capturedEvents.size(), "Should capture exactly two events");
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
         verify(orderEventHandler, timeout(1000)).handleOrderItemAdded(any(OrderItemAddedEvent.class));
     }
-    
-    /**
-     * 測試事件處理的順序性
-     */
+
     @Test
-    public void testEventProcessingOrder() {
+    @DisplayName("應該按順序處理事件")
+    public void shouldProcessEventsInOrder() {
+        // Arrange
         OrderId orderId = OrderId.generate();
-        
-        // 創建事件
-        OrderCreatedEvent createdEvent = new OrderCreatedEvent(
-            orderId,
-            "customer-789",
-            Money.zero(),
-            Collections.emptyList()
-        );
-        
-        OrderItemAddedEvent itemAddedEvent = new OrderItemAddedEvent(
-            orderId,
-            "product-456",
-            1,
-            Money.of(BigDecimal.valueOf(300))
-        );
-        
-        OrderSubmittedEvent submittedEvent = new OrderSubmittedEvent(
-            orderId,
-            "customer-789",
-            Money.of(BigDecimal.valueOf(300)),
-            1
-        );
-        
-        // 按順序發布事件
+        OrderCreatedEvent createdEvent = createOrderCreatedEvent(orderId);
+        OrderItemAddedEvent itemAddedEvent = createOrderItemAddedEvent(orderId);
+        OrderSubmittedEvent submittedEvent = createOrderSubmittedEvent(orderId);
+
+        // Act
         eventPublisherAdapter.publish(createdEvent);
         eventPublisherAdapter.publish(itemAddedEvent);
         eventPublisherAdapter.publish(submittedEvent);
-        
-        // 驗證事件處理器被按順序調用
+
+        // Assert
+        verifyEventHandlersCalledInOrder();
+        verifyEventsCapturedInCorrectOrder();
+    }
+
+    // 輔助方法
+
+    private OrderCreatedEvent createOrderCreatedEvent() {
+        return createOrderCreatedEvent(OrderId.generate());
+    }
+
+    private OrderCreatedEvent createOrderCreatedEvent(OrderId orderId) {
+        return new OrderCreatedEvent(
+                orderId,
+                TestConstants.Customer.DEFAULT_ID,
+                Money.of(TestConstants.Money.MEDIUM_AMOUNT),
+                Collections.emptyList());
+    }
+
+    private OrderItemAddedEvent createOrderItemAddedEvent(OrderId orderId) {
+        return new OrderItemAddedEvent(
+                orderId,
+                TestConstants.Product.DEFAULT_ID,
+                TestConstants.Order.DEFAULT_QUANTITY,
+                Money.of(TestConstants.Product.DEFAULT_PRICE));
+    }
+
+    private OrderSubmittedEvent createOrderSubmittedEvent(OrderId orderId) {
+        return new OrderSubmittedEvent(
+                orderId,
+                TestConstants.Customer.DEFAULT_ID,
+                Money.of(TestConstants.Product.DEFAULT_PRICE),
+                TestConstants.Order.DEFAULT_QUANTITY);
+    }
+
+    private void verifyEventHandlersCalledInOrder() {
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
         verify(orderEventHandler, timeout(1000)).handleOrderItemAdded(any(OrderItemAddedEvent.class));
         verify(orderEventHandler, timeout(1000)).handleOrderSubmitted(any(OrderSubmittedEvent.class));
-        
-        // 驗證捕獲的事件順序
-        assertEquals(3, capturedEvents.size());
-        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent);
-        assertTrue(capturedEvents.get(1) instanceof OrderItemAddedEvent);
-        assertTrue(capturedEvents.get(2) instanceof OrderSubmittedEvent);
+    }
+
+    private void verifyEventsCapturedInCorrectOrder() {
+        assertEquals(3, capturedEvents.size(), "Should capture exactly three events");
+        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent, "First event should be OrderCreatedEvent");
+        assertTrue(capturedEvents.get(1) instanceof OrderItemAddedEvent, "Second event should be OrderItemAddedEvent");
+        assertTrue(capturedEvents.get(2) instanceof OrderSubmittedEvent, "Third event should be OrderSubmittedEvent");
     }
 }

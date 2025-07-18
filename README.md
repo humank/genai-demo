@@ -66,6 +66,7 @@
   - [DDD 與六角形架構重構之旅](docs/instruction.md) - 記錄從混亂代碼結構到 DDD 和六角形架構的重構過程
 
 - **發布說明**:
+  - [測試程式碼品質改善與重構 - 2025-07-18](docs/releases/test-quality-improvement-2025-07-18.md) - 記錄測試程式碼品質的全面改善和重構
   - [架構優化與DDD分層實現 - 2025-06-08](docs/releases/architecture-optimization-2025-06-08.md) - 記錄架構優化和DDD分層實現的詳細說明
   - [促銷模組實作與架構優化 - 2025-05-21](docs/releases/promotion-module-implementation-2025-05-21.md) - 記錄促銷功能模組的實現和架構優化
 
@@ -128,6 +129,7 @@
 3. **JUnit HTML 報告**: `app/build/reports/tests/test/index.html`
 4. **架構測試報告**: `app/build/reports/tests/architecture/index.html`
 5. **Allure 報告**: `app/build/reports/allure-report/allureReport/index.html`
+
    ```bash
    ./gradlew allureReport  # 生成報告
    ./gradlew allureServe   # 啟動本地服務器查看報告
@@ -171,6 +173,7 @@
 - **步驟定義**: `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄，包含各模組的步驟實現
 
 測試覆蓋了以下領域：
+
 - 訂單管理 (Order)
 - 庫存管理 (Inventory)
 - 支付處理 (Payment)
@@ -178,13 +181,64 @@
 - 通知服務 (Notification)
 - 完整訂單工作流 (Workflow)
 
+### 測試輔助工具
+
+本專案建立了完整的測試輔助工具生態系統，位於 `app/src/test/java/solid/humank/genaidemo/testutils/` 目錄：
+
+- **測試資料建構器** (`builders/`): 使用Builder模式簡化測試資料創建
+  - `OrderTestDataBuilder` - 訂單測試資料建構器
+  - `CustomerTestDataBuilder` - 客戶測試資料建構器
+  - `ProductTestDataBuilder` - 產品測試資料建構器
+
+- **場景處理器** (`handlers/`): 處理複雜的測試場景邏輯
+  - `TestScenarioHandler` - 統一的場景處理器
+  - `TestExceptionHandler` - 異常處理器
+
+- **自定義匹配器** (`matchers/`): 提供更具表達性的測試斷言
+  - `OrderMatchers` - 訂單相關匹配器
+  - `MoneyMatchers` - 金額相關匹配器
+
+- **測試固定資料** (`fixtures/`): 提供常用的測試資料和常數
+  - `TestFixtures` - 測試固定資料
+  - `TestConstants` - 測試常數
+
+- **測試標籤註解** (`annotations/`): 支援測試分類和篩選執行
+  - `@UnitTest` - 單元測試標籤
+  - `@IntegrationTest` - 整合測試標籤
+  - `@SlowTest` - 慢速測試標籤
+  - `@BddTest` - BDD測試標籤
+
+### 測試最佳實踐
+
+本專案的測試遵循以下最佳實踐：
+
+- **3A原則**: 每個測試都有清晰的Arrange-Act-Assert結構
+- **無條件邏輯**: 測試中不包含if-else語句
+- **描述性命名**: 使用清晰的測試方法名稱和@DisplayName
+- **測試獨立性**: 每個測試都是獨立且可重複的
+- **DRY原則**: 使用測試輔助工具避免重複程式碼
+
 運行 BDD 測試：
 
 ```bash
 ./gradlew cucumber
 ```
 
+運行特定類型的測試：
+
+```bash
+# 運行單元測試
+./gradlew test --tests "*UnitTest*"
+
+# 運行整合測試
+./gradlew test --tests "*IntegrationTest*"
+
+# 運行BDD測試
+./gradlew test --tests "*BddTest*"
+```
+
 查看 Cucumber 測試報告：
+
 ```bash
 ./gradlew cucumber
 # 然後打開 app/build/reports/cucumber/cucumber-report.html
@@ -199,6 +253,7 @@
 - 領域模型圖、六角形架構圖、DDD分層架構圖、事件風暴圖等
 
 最近更新的圖表：
+
 - **DDD分層架構圖**：展示各層之間的依賴關係和數據流向
 - **定價處理時序圖**：展示定價相關操作的流程
 - **配送處理時序圖**：展示配送相關操作的流程

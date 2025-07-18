@@ -6,10 +6,14 @@ import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
-import solid.humank.genaidemo.domain.customer.model.valueobject.MembershipLevel;
 import solid.humank.genaidemo.domain.customer.service.CustomerDiscountService;
 import solid.humank.genaidemo.domain.customer.service.RewardPointsService;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
+import solid.humank.genaidemo.testutils.annotations.BddTest;
+import solid.humank.genaidemo.testutils.builders.CustomerTestDataBuilder;
+import solid.humank.genaidemo.testutils.context.TestContext;
+import solid.humank.genaidemo.testutils.fixtures.TestConstants;
+import solid.humank.genaidemo.testutils.handlers.TestScenarioHandler;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -19,8 +23,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@BddTest
 public class CustomerStepDefinitions {
 
+    private final TestContext testContext = new TestContext();
+    private final TestScenarioHandler scenarioHandler = new TestScenarioHandler();
+    
     private Customer customer;
     private Order order;
     private CustomerDiscountService discountService;
@@ -32,33 +40,34 @@ public class CustomerStepDefinitions {
     private int pointsToRedeem;
     private boolean redemptionResult;
     private String errorMessage;
-    private int pointsRedemptionRate = 10; // 10點 = $1
+    private int pointsRedemptionRate = TestConstants.Payment.DEFAULT_CASHBACK_PERCENTAGE;
     private double cashbackAmount;
     private int cashbackDays;
-    private Map<String, Object> paymentDetails = new HashMap<>();
+    private final Map<String, Object> paymentDetails = new HashMap<>();
 
     @Given("the customer is browsing the online store")
     public void the_customer_is_browsing_the_online_store() {
-        // 初始化基本物件
-        CustomerId customerId = new CustomerId(UUID.randomUUID().toString());
-        customer = new Customer(customerId, "Test Customer", "test@example.com", LocalDate.of(1990, 5, 15));
+        customer = CustomerTestDataBuilder.aCustomer()
+            .withName("Test Customer")
+            .withEmail(TestConstants.Customer.DEFAULT_EMAIL)
+            .build();
+        
         order = mock(Order.class);
         discountService = mock(CustomerDiscountService.class);
         rewardPointsService = mock(RewardPointsService.class);
-        orderTotal = Money.twd(1000);
+        orderTotal = TestConstants.Money.MEDIUM_AMOUNT;
         when(order.getTotalAmount()).thenReturn(orderTotal);
     }
 
     // 會員折扣相關步驟
     @Given("the customer registered within the last {int} days")
     public void the_customer_registered_within_the_last_days(Integer days) {
-        customer = new Customer(
-            new CustomerId(UUID.randomUUID().toString()),
-            "New Customer",
-            "new@example.com",
-            LocalDate.of(1990, 5, 15)
-        );
-        // 設置註冊日期為最近days天內
+        customer = CustomerTestDataBuilder.aCustomer()
+            .withName("New Customer")
+            .withEmail("new@example.com")
+            .withRegistrationDate(LocalDate.now().minusDays(days - 1))
+            .build();
+        
         when(discountService.isNewMember(customer)).thenReturn(true);
     }
 
@@ -69,13 +78,12 @@ public class CustomerStepDefinitions {
 
     @Given("the customer is a member with birthdate in the current month")
     public void the_customer_is_a_member_with_birthdate_in_the_current_month() {
-        LocalDate today = LocalDate.now();
-        customer = new Customer(
-            new CustomerId(UUID.randomUUID().toString()),
-            "Birthday Customer",
-            "birthday@example.com",
-            LocalDate.of(1990, today.getMonth(), 15)
-        );
+        customer = CustomerTestDataBuilder.aCustomer()
+            .withName("Birthday Customer")
+            .withEmail("birthday@example.com")
+            .withBirthdayInCurrentMonth()
+            .build();
+        
         when(discountService.isBirthdayMonth(customer)).thenReturn(true);
     }
 
@@ -99,37 +107,9 @@ public class CustomerStepDefinitions {
 
     @When("the customer makes a purchase")
     public void the_customer_makes_a_purchase() {
-        // 根據情境決定要套用哪種折扣
-        if (discountService.isNewMember(customer) && discountService.isBirthdayMonth(customer)) {
-            // 如果同時符合新會員和生日月份，選擇較高的折扣
-            int newMemberDiscount = discountService.getNewMemberDiscountPercentage();
-            int birthdayDiscount = discountService.getBirthdayDiscountPercentage();
-            
-            if (newMemberDiscount > birthdayDiscount) {
-                discountedTotal = discountService.applyNewMemberDiscount(order);
-                discountLabel = "New Member Discount";
-            } else {
-                discountedTotal = discountService.applyBirthdayDiscount(order);
-                discountLabel = "Birthday Month Discount";
-            }
-        } else if (discountService.isBirthdayMonth(customer)) {
-            when(discountService.getBirthdayDiscountPercentage()).thenReturn(10);
-            when(discountService.applyBirthdayDiscount(order)).thenReturn(
-                Money.twd(Math.min(100, orderTotal.getAmount().intValue() * 10 / 100))
-            );
-            discountedTotal = discountService.applyBirthdayDiscount(order);
-            discountLabel = "Birthday Month Discount";
-        } else if (discountService.isNewMember(customer)) {
-            when(discountService.getNewMemberDiscountPercentage()).thenReturn(15);
-            when(discountService.applyNewMemberDiscount(order)).thenReturn(
-                Money.twd(orderTotal.getAmount().intValue() * 85 / 100)
-            );
-            discountedTotal = discountService.applyNewMemberDiscount(order);
-            discountLabel = "New Member Discount";
-        } else {
-            discountedTotal = orderTotal;
-            discountLabel = "No Discount";
-        }
+        TestScenarioHandler.DiscountResult result = scenarioHandler.handleDiscountScenario(customer, order, discountService);
+        discountedTotal = result.getDiscountedTotal();
+        discountLabel = result.getDiscountLabel();
     }
 
     @Then("a {int}% discount should be applied to the order total")
@@ -184,17 +164,10 @@ public class CustomerStepDefinitions {
     @When("the customer chooses to redeem all {int} points at checkout")
     public void the_customer_chooses_to_redeem_all_points_at_checkout(Integer points) {
         pointsToRedeem = points;
+        orderTotal = ensureOrderTotalInitialized();
         
-        // 確保 orderTotal 已初始化
-        if (orderTotal == null) {
-            orderTotal = Money.twd(1000);
-        }
-        
-        // 設置 rewardPointsService 的行為
         Money redemptionAmount = Money.twd(points / pointsRedemptionRate);
-        when(rewardPointsService.calculateRedemptionAmount(points)).thenReturn(redemptionAmount);
-        when(rewardPointsService.redeemPoints(customer, points)).thenReturn(true);
-        when(customer.useRewardPoints(points)).thenReturn(true);
+        setupRewardPointsServiceMocks(points, redemptionAmount, true);
         
         redemptionResult = true;
         discountedTotal = orderTotal.subtract(redemptionAmount);
@@ -203,17 +176,10 @@ public class CustomerStepDefinitions {
     @When("the customer chooses to redeem {int} points at checkout")
     public void the_customer_chooses_to_redeem_points_at_checkout(Integer points) {
         pointsToRedeem = points;
+        orderTotal = ensureOrderTotalInitialized();
         
-        // 確保 orderTotal 已初始化
-        if (orderTotal == null) {
-            orderTotal = Money.twd(1000);
-        }
-        
-        // 設置 rewardPointsService 的行為
         Money redemptionAmount = Money.twd(points / pointsRedemptionRate);
-        when(rewardPointsService.calculateRedemptionAmount(points)).thenReturn(redemptionAmount);
-        when(rewardPointsService.redeemPoints(customer, points)).thenReturn(true);
-        when(customer.useRewardPoints(points)).thenReturn(true);
+        setupRewardPointsServiceMocks(points, redemptionAmount, true);
         
         redemptionResult = true;
         discountedTotal = orderTotal.subtract(redemptionAmount);
@@ -225,9 +191,7 @@ public class CustomerStepDefinitions {
         when(customer.useRewardPoints(points)).thenReturn(false);
         
         redemptionResult = rewardPointsService.redeemPoints(customer, points);
-        if (!redemptionResult) {
-            errorMessage = "Insufficient reward points";
-        }
+        handleRedemptionFailure();
     }
 
     @Then("${int} should be deducted from the total price")
@@ -270,13 +234,10 @@ public class CustomerStepDefinitions {
     @When("the customer checks out a ${double} order using {string}")
     public void the_customer_checks_out_a_$_order_using(Double orderAmount, String paymentMethod) {
         orderTotal = Money.of(orderAmount);
-        String selectedPaymentMethod = (String) paymentDetails.get("paymentMethod");
+        TestScenarioHandler.PaymentResult result = scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails, orderTotal);
         
-        if (paymentMethod.equals(selectedPaymentMethod)) {
-            int percentage = (int) paymentDetails.get("cashbackPercentage");
-            int maxCashback = paymentDetails.containsKey("maxCashback") ? (int) paymentDetails.get("maxCashback") : Integer.MAX_VALUE;
-            
-            cashbackAmount = Math.min(orderAmount * percentage / 100, maxCashback);
+        cashbackAmount = result.getCashbackAmount();
+        if (cashbackAmount > 0) {
             cashbackDays = 30;
         }
     }
@@ -309,18 +270,8 @@ public class CustomerStepDefinitions {
     @When("the customer selects {string} at checkout for a ${int} order")
     public void the_customer_selects_at_checkout_for_a_$_order(String paymentMethod, Integer orderAmount) {
         orderTotal = Money.twd(orderAmount);
-        String selectedPaymentMethod = (String) paymentDetails.get("paymentMethod");
-        
-        if (paymentMethod.equals(selectedPaymentMethod)) {
-            int discount = (int) paymentDetails.get("instantDiscount");
-            int minOrderAmount = paymentDetails.containsKey("minOrderAmount") ? (int) paymentDetails.get("minOrderAmount") : 0;
-            
-            if (orderAmount >= minOrderAmount) {
-                discountedTotal = orderTotal.subtract(Money.twd(discount));
-            } else {
-                discountedTotal = orderTotal;
-            }
-        }
+        TestScenarioHandler.PaymentResult result = scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails, orderTotal);
+        discountedTotal = result.getFinalTotal();
     }
 
     @When("the customer pays ${int} with {string} and the remaining ${int} with {string}")
@@ -362,5 +313,23 @@ public class CustomerStepDefinitions {
     public void the_customer_receives_$_cashback_of_$_credited_within_days(Integer cashback, Integer percentage, Integer amount, Integer days) {
         assertEquals(cashback, (int) cashbackAmount);
         assertEquals(days, cashbackDays);
+    }
+    
+    // 輔助方法
+    
+    private Money ensureOrderTotalInitialized() {
+        return orderTotal != null ? orderTotal : TestConstants.Money.MEDIUM_AMOUNT;
+    }
+    
+    private void setupRewardPointsServiceMocks(int points, Money redemptionAmount, boolean success) {
+        when(rewardPointsService.calculateRedemptionAmount(points)).thenReturn(redemptionAmount);
+        when(rewardPointsService.redeemPoints(customer, points)).thenReturn(success);
+        when(customer.useRewardPoints(points)).thenReturn(success);
+    }
+    
+    private void handleRedemptionFailure() {
+        if (!redemptionResult) {
+            errorMessage = TestConstants.ErrorMessages.INSUFFICIENT_REWARD_POINTS;
+        }
     }
 }
