@@ -1,0 +1,13 @@
+{
+  "name": "文檔自動翻譯",
+  "description": "當 commit message 包含 [translate] 或 [en] 時，自動將變更的中文 .md 檔案翻譯成英文",
+  "trigger": {
+    "type": "manual",
+    "keywords": ["translate", "翻譯", "en"]
+  },
+  "context": [
+    "#translation-guide"
+  ],
+  "prompt": "我需要你幫我執行文檔翻譯任務。請按照以下步驟進行：\n\n1. 使用 `git diff --cached --name-only` 檢測本次 commit 中變更的 .md 檔案\n2. 為每個變更的 .md 檔案建立對應的英文版本，放在 docs/en/ 目錄結構中\n3. 翻譯時需要智能轉換內部連結，將中文檔案連結轉換為對應的英文檔案連結\n4. 翻譯錨點連結中的中文部分\n5. 保持程式碼區塊、圖片路徑等技術內容不變\n6. 將翻譯後的檔案自動加入到 git staging area\n\n請參考 #translation-guide 中的詳細規範進行翻譯。",
+  "enabled": true
+}
