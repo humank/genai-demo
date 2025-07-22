@@ -1,3 +1,8 @@
+<!-- This file is auto-translated from docs/en/TRANSLATION_STATUS.md -->
+<!-- 此檔案由 docs/en/TRANSLATION_STATUS.md 自動翻譯而來 -->
+<!-- Please use Kiro AI to complete the actual translation -->
+<!-- 請使用 Kiro AI 完成實際翻譯 -->
+
 # Translation Status
 
 This document tracks the translation status of all documentation files from Traditional Chinese to English.
@@ -120,3 +125,6 @@ The hook will automatically:
 
 *Last updated: 2025-07-18*
 *Translation system: Kiro AI with custom hooks*
+
+<!-- Translation placeholder - Use Kiro AI to translate this content -->
+<!-- 翻譯佔位符 - 請使用 Kiro AI 翻譯此內容 -->

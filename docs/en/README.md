@@ -1,293 +1,305 @@
+<!-- This file is auto-translated from README.md -->
+<!-- 此檔案由 README.md 自動翻譯而來 -->
+<!-- Please use Kiro AI to complete the actual translation -->
+<!-- 請使用 Kiro AI 完成實際翻譯 -->
+
 # GenAI Demo
 
-This is a demonstration project based on Domain-Driven Design (DDD) and Hexagonal Architecture, showcasing how to build a Java application with good architecture and testing practices.
+> **Language / 語言選擇**  
+> 🇺🇸 **English**: [English Documentation](docs/en/README.md)  
+> 🇹🇼 **繁體中文**: 您正在閱讀繁體中文版本
 
-## Project Architecture
+這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的示範專案，展示了如何構建一個具有良好架構和測試實踐的 Java 應用程式。
 
-This project adopts Hexagonal Architecture (also known as Ports and Adapters Architecture) and Domain-Driven Design, dividing the application into the following main layers:
+## 專案架構
 
-1. **Domain Layer**
-   - Contains core business logic and rules
-   - Does not depend on other layers
-   - Includes aggregate roots, entities, value objects, domain events, domain services, and domain exceptions
+本專案採用六角形架構（又稱端口與適配器架構）和領域驅動設計，將應用程序分為以下幾個主要層次：
 
-2. **Application Layer**
-   - Coordinates domain objects to complete user use cases
-   - Only depends on the domain layer
-   - Contains application services, DTOs, command and query objects
-   - Responsible for data transformation between interface layer and domain layer
+1. **領域層 (Domain Layer)**
+   - 包含業務核心邏輯和規則
+   - 不依賴於其他層
+   - 包含聚合根、實體、值對象、領域事件、領域服務和領域異常
 
-3. **Infrastructure Layer**
-   - Provides technical implementation
-   - Depends on the domain layer, implementing interfaces defined by the domain layer
-   - Contains repository implementations, external system adapters, ORM mappings, etc.
-   - Organized by functionality into sub-packages like persistence and external systems
+2. **應用層 (Application Layer)**
+   - 協調領域對象完成用戶用例
+   - 只依賴於領域層
+   - 包含應用服務、DTO、命令和查詢對象
+   - 負責在介面層和領域層之間進行數據轉換
 
-4. **Interface Layer**
-   - Handles user interactions
-   - Only depends on the application layer, not directly on the domain layer
-   - Contains controllers, view models, request/response objects, etc.
-   - Uses its own DTOs to interact with the application layer
+3. **基礎設施層 (Infrastructure Layer)**
+   - 提供技術實現
+   - 依賴於領域層，實現領域層定義的接口
+   - 包含儲存庫實現、外部系統適配器、ORM 映射等
+   - 按功能分為 persistence（持久化）和 external（外部系統）等子包
 
-## Tech Stack
+4. **介面層 (Interfaces Layer)**
+   - 處理用戶交互
+   - 只依賴於應用層，不直接依賴領域層
+   - 包含控制器、視圖模型、請求/響應對象等
+   - 使用自己的 DTO 與應用層交互
 
-- **Core Framework**: Spring Boot 3.2.0
-- **Build Tool**: Gradle 8.x
-- **Testing Frameworks**:
-  - JUnit 5 - Unit testing
-  - Cucumber 7 - BDD testing
-  - ArchUnit - Architecture testing
-  - Mockito - Mock objects
-  - Allure 2 - Test reporting and visualization
-- **Other Tools**:
-  - Lombok - Reduce boilerplate code
-  - PlantUML - UML diagram generation
+## 技術棧
 
-## Documentation
+- **核心框架**: Spring Boot 3.2.0
+- **構建工具**: Gradle 8.x
+- **測試框架**:
+  - JUnit 5 - 單元測試
+  - Cucumber 7 - BDD 測試
+  - ArchUnit - 架構測試
+  - Mockito - 模擬對象
+  - Allure 2 - 測試報告與可視化
+- **其他工具**:
+  - Lombok - 減少樣板代碼
+  - PlantUML - UML 圖表生成
 
-The project contains rich documentation located in the `docs` directory:
+## 文檔
 
-- **Architecture Documentation**:
-  - [System Architecture Overview](architecture-overview.md) - Provides a high-level view of system architecture, including features of Hexagonal Architecture, DDD, and Event-Driven Architecture
-  - [Hexagonal Architecture Implementation Summary](HexagonalArchitectureSummary.md) - Detailed explanation of Hexagonal Architecture implementation and advantages
-  - [Hexagonal Architecture and Event Storming Integration Refactoring Guide](HexagonalRefactoring.MD) - How to refactor to Hexagonal Architecture using Event Storming
-  - [Layered Architecture Design Analysis and Recommendations](LayeredArchitectureDesign.MD) - Analysis of pros and cons of different layered architectures and applicable scenarios
+專案包含豐富的文檔，位於 `docs` 目錄下：
 
-- **Design Documentation**:
-  - [Design Guidelines](DesignGuideline.MD) - Includes Tell, Don't Ask principles, DDD tactical patterns, and defensive programming practices
-  - [System Development and Testing Design Compliance Specifications](DesignPrinciple.md) - Defines design specifications for system development and testing
-  - [Software Design Classics Essentials](SoftwareDesignClassics.md) - Summarizes core concepts from classic books in software design
+- **架構文檔**:
+  - [系統架構概覽](docs/architecture-overview.md) - 提供系統架構的高層次視圖，包括六角形架構、DDD 和事件驅動架構的特點
+  - [六角架構實現總結](docs/HexagonalArchitectureSummary.md) - 詳細說明六角形架構的實現方式和優勢
+  - [六角架構與 Event Storming 整合重構指南](docs/HexagonalRefactoring.MD) - 如何使用 Event Storming 重構為六角形架構
+  - [分層架構設計分析與建議](docs/LayeredArchitectureDesign.MD) - 分析不同分層架構的優缺點和適用場景
 
-- **Code Quality**:
-  - [Code Analysis Report](CodeAnalysis.md) - Code analysis and improvement suggestions based on "Refactoring" principles
-  - [Refactoring Guide](RefactoringGuidance.md) - Provides specific techniques and best practices for code refactoring
+- **設計文檔**:
+  - [設計指南](docs/DesignGuideline.MD) - 包含 Tell, Don't Ask 原則、DDD 戰術模式和防禦性編程實踐
+  - [系統開發與測試的設計遵循規範](docs/DesignPrinciple.md) - 定義系統開發和測試的設計規範
+  - [軟體設計經典書籍精要](docs/SoftwareDesignClassics.md) - 總結軟體設計領域經典書籍的核心概念
 
-- **Refactoring Process**:
-  - [DDD and Hexagonal Architecture Refactoring Journey](instruction.md) - Records the refactoring process from chaotic code structure to DDD and Hexagonal Architecture
+- **代碼質量**:
+  - [代碼分析報告](docs/CodeAnalysis.md) - 基於《重構》原則的代碼分析和改進建議
+  - [重構指南](docs/RefactoringGuidance.md) - 提供代碼重構的具體技術和最佳實踐
 
-- **Release Notes**:
-  - [Test Code Quality Improvement and Refactoring - 2025-07-18](releases/test-quality-improvement-2025-07-18.md) - Records comprehensive improvement and refactoring of test code quality
-  - [Architecture Optimization and DDD Layering Implementation - 2025-06-08](releases/architecture-optimization-2025-06-08.md) - Records detailed description of architecture optimization and DDD layering implementation
-  - [Promotion Module Implementation and Architecture Optimization - 2025-05-21](releases/promotion-module-implementation-2025-05-21.md) - Records implementation of promotion feature module and architecture optimization
+- **重構過程**:
+  - [DDD 與六角形架構重構之旅](docs/instruction.md) - 記錄從混亂代碼結構到 DDD 和六角形架構的重構過程
 
-- **UML Diagrams**:
-  - [UML Documentation](uml/README.md) - Contains various UML diagrams such as class diagrams, component diagrams, domain model diagrams, etc.
-  - [Event Storming Guide](uml/es-gen-guidance-tc.md) - Guide for drawing Event Storming three-phase outputs using PlantUML
+- **發布說明**:
+  - [測試程式碼品質改善與重構 - 2025-07-18](docs/releases/test-quality-improvement-2025-07-18.md) - 記錄測試程式碼品質的全面改善和重構
+  - [架構優化與DDD分層實現 - 2025-06-08](docs/releases/architecture-optimization-2025-06-08.md) - 記錄架構優化和DDD分層實現的詳細說明
+  - [促銷模組實作與架構優化 - 2025-05-21](docs/releases/promotion-module-implementation-2025-05-21.md) - 記錄促銷功能模組的實現和架構優化
 
-## How to Run
+- **UML 圖表**:
+  - [UML 文檔說明](docs/uml/README.md) - 包含各種 UML 圖表，如類別圖、組件圖、領域模型圖等
+  - [Event Storming 指南](docs/uml/es-gen-guidance-tc.md) - 使用 PlantUML 繪製 Event Storming 三階段產出的指南
 
-### Prerequisites
+## 如何運行
 
-- JDK 17 or higher
+### 前置條件
+
+- JDK 17 或更高版本
 - Gradle 8.x
 
-### Build Project
+### 構建專案
 
 ```bash
 ./gradlew build
 ```
 
-### Run Application
+### 運行應用
 
 ```bash
 ./gradlew bootRun
 ```
 
-### Run Tests
+### 運行測試
 
-#### Run All Tests
+#### 運行所有測試
 
 ```bash
 ./gradlew runAllTests
 ```
 
-#### Run All Tests and View Allure Report
+#### 運行所有測試並查看 Allure 報告
 
 ```bash
 ./gradlew runAllTestsWithReport
 ```
 
-#### Run Specific Types of Tests
+#### 運行特定類型的測試
 
 ```bash
-# Run unit tests
+# 運行單元測試
 ./gradlew test
 
-# Run Cucumber BDD tests
+# 運行 Cucumber BDD 測試
 ./gradlew cucumber
 
-# Run architecture tests
+# 運行架構測試
 ./gradlew testArchitecture
 ```
 
-### Generate Test Reports
+### 生成測試報告
 
-After tests complete, you can view the following reports:
+測試完成後，可以查看以下報告：
 
-1. **Cucumber HTML Report**: `app/build/reports/cucumber/cucumber-report.html`
-2. **Cucumber JSON Report**: `app/build/reports/cucumber/cucumber-report.json`
-3. **JUnit HTML Report**: `app/build/reports/tests/test/index.html`
-4. **Architecture Test Report**: `app/build/reports/tests/architecture/index.html`
-5. **Allure Report**: `app/build/reports/allure-report/allureReport/index.html`
+1. **Cucumber HTML 報告**: `app/build/reports/cucumber/cucumber-report.html`
+2. **Cucumber JSON 報告**: `app/build/reports/cucumber/cucumber-report.json`
+3. **JUnit HTML 報告**: `app/build/reports/tests/test/index.html`
+4. **架構測試報告**: `app/build/reports/tests/architecture/index.html`
+5. **Allure 報告**: `app/build/reports/allure-report/allureReport/index.html`
 
    ```bash
-   ./gradlew allureReport  # Generate report
-   ./gradlew allureServe   # Start local server to view report
+   ./gradlew allureReport  # 生成報告
+   ./gradlew allureServe   # 啟動本地服務器查看報告
    ```
 
-## Architecture Testing
+## 架構測試
 
-This project uses ArchUnit to ensure code follows predefined architectural rules. Architecture tests are located in the `app/src/test/java/solid/humank/genaidemo/architecture/` directory, including:
+本專案使用 ArchUnit 確保代碼遵循預定的架構規則。架構測試位於 `app/src/test/java/solid/humank/genaidemo/architecture/` 目錄下，包括：
 
-1. **DddArchitectureTest** - Ensures compliance with DDD layered architecture
-   - Ensures domain layer doesn't depend on other layers
-   - Ensures application layer doesn't depend on infrastructure and interface layers
-   - Ensures interface layer doesn't directly depend on infrastructure and domain layers
-   - Ensures compliance with layered architecture dependency direction
+1. **DddArchitectureTest** - 確保遵循 DDD 分層架構
+   - 確保領域層不依賴其他層
+   - 確保應用層不依賴基礎設施層和介面層
+   - 確保介面層不直接依賴基礎設施層和領域層
+   - 確保遵循分層架構的依賴方向
 
-2. **DddTacticalPatternsTest** - Ensures correct use of DDD tactical patterns
-   - Ensures value objects are immutable
-   - Ensures entities have unique identifiers
-   - Ensures aggregate roots control access to their internal entities
-   - Ensures domain events are immutable
-   - Ensures specifications implement the Specification interface
+2. **DddTacticalPatternsTest** - 確保正確使用 DDD 戰術模式
+   - 確保值對象是不可變的
+   - 確保實體有唯一標識
+   - 確保聚合根控制其內部實體的訪問
+   - 確保領域事件是不可變的
+   - 確保規格實現 Specification 接口
 
-3. **PackageStructureTest** - Ensures package structure complies with specifications
-   - Ensures infrastructure layer adapters are located in correct package structure
-   - Ensures application and interface layers are organized in correct package structure
-   - Ensures subdomain model structure complies with DDD tactical design
+3. **PackageStructureTest** - 確保包結構符合規範
+   - 確保基礎設施層適配器位於正確的包結構中
+   - 確保應用層和介面層組織在正確的包結構中
+   - 確保子領域模型結構符合 DDD 戰術設計
 
-4. **PromotionArchitectureTest** - Ensures promotion module follows architectural specifications
+4. **PromotionArchitectureTest** - 確保促銷模組遵循架構規範
 
-Run architecture tests:
+運行架構測試：
 
 ```bash
 ./gradlew testArchitecture
 ```
 
-## BDD Testing
+## BDD 測試
 
-This project uses Cucumber for Behavior-Driven Development (BDD) testing. BDD test files are located at:
+本專案使用 Cucumber 進行行為驅動開發 (BDD) 測試。BDD 測試文件位於：
 
-- **Feature Files**: `app/src/test/resources/features/` directory, organized by functional modules
-- **Step Definitions**: `app/src/test/java/solid/humank/genaidemo/bdd/` directory, containing step implementations for each module
+- **Feature 文件**: `app/src/test/resources/features/` 目錄，按功能模組分類
+- **步驟定義**: `app/src/test/java/solid/humank/genaidemo/bdd/` 目錄，包含各模組的步驟實現
 
-Testing covers the following domains:
+測試覆蓋了以下領域：
 
-- Order Management
-- Inventory Management
-- Payment Processing
-- Delivery Logistics
-- Notification Service
-- Complete Order Workflow
+- 訂單管理 (Order)
+- 庫存管理 (Inventory)
+- 支付處理 (Payment)
+- 物流配送 (Delivery)
+- 通知服務 (Notification)
+- 完整訂單工作流 (Workflow)
 
-### Test Utility Tools
+### 測試輔助工具
 
-This project has established a complete test utility tool ecosystem, located in the `app/src/test/java/solid/humank/genaidemo/testutils/` directory:
+本專案建立了完整的測試輔助工具生態系統，位於 `app/src/test/java/solid/humank/genaidemo/testutils/` 目錄：
 
-- **Test Data Builders** (`builders/`): Use Builder pattern to simplify test data creation
-  - `OrderTestDataBuilder` - Order test data builder
-  - `CustomerTestDataBuilder` - Customer test data builder
-  - `ProductTestDataBuilder` - Product test data builder
+- **測試資料建構器** (`builders/`): 使用Builder模式簡化測試資料創建
+  - `OrderTestDataBuilder` - 訂單測試資料建構器
+  - `CustomerTestDataBuilder` - 客戶測試資料建構器
+  - `ProductTestDataBuilder` - 產品測試資料建構器
 
-- **Scenario Handlers** (`handlers/`): Handle complex test scenario logic
-  - `TestScenarioHandler` - Unified scenario handler
-  - `TestExceptionHandler` - Exception handler
+- **場景處理器** (`handlers/`): 處理複雜的測試場景邏輯
+  - `TestScenarioHandler` - 統一的場景處理器
+  - `TestExceptionHandler` - 異常處理器
 
-- **Custom Matchers** (`matchers/`): Provide more expressive test assertions
-  - `OrderMatchers` - Order-related matchers
-  - `MoneyMatchers` - Money-related matchers
+- **自定義匹配器** (`matchers/`): 提供更具表達性的測試斷言
+  - `OrderMatchers` - 訂單相關匹配器
+  - `MoneyMatchers` - 金額相關匹配器
 
-- **Test Fixtures** (`fixtures/`): Provide commonly used test data and constants
-  - `TestFixtures` - Test fixtures
-  - `TestConstants` - Test constants
+- **測試固定資料** (`fixtures/`): 提供常用的測試資料和常數
+  - `TestFixtures` - 測試固定資料
+  - `TestConstants` - 測試常數
 
-- **Test Tag Annotations** (`annotations/`): Support test classification and selective execution
-  - `@UnitTest` - Unit test tag
-  - `@IntegrationTest` - Integration test tag
-  - `@SlowTest` - Slow test tag
-  - `@BddTest` - BDD test tag
+- **測試標籤註解** (`annotations/`): 支援測試分類和篩選執行
+  - `@UnitTest` - 單元測試標籤
+  - `@IntegrationTest` - 整合測試標籤
+  - `@SlowTest` - 慢速測試標籤
+  - `@BddTest` - BDD測試標籤
 
-### Testing Best Practices
+### 測試最佳實踐
 
-Testing in this project follows these best practices:
+本專案的測試遵循以下最佳實踐：
 
-- **3A Principle**: Each test has clear Arrange-Act-Assert structure
-- **No Conditional Logic**: Tests contain no if-else statements
-- **Descriptive Naming**: Use clear test method names and @DisplayName
-- **Test Independence**: Each test is independent and repeatable
-- **DRY Principle**: Use test utility tools to avoid duplicate code
+- **3A原則**: 每個測試都有清晰的Arrange-Act-Assert結構
+- **無條件邏輯**: 測試中不包含if-else語句
+- **描述性命名**: 使用清晰的測試方法名稱和@DisplayName
+- **測試獨立性**: 每個測試都是獨立且可重複的
+- **DRY原則**: 使用測試輔助工具避免重複程式碼
 
-Run BDD tests:
+運行 BDD 測試：
 
 ```bash
 ./gradlew cucumber
 ```
 
-Run specific types of tests:
+運行特定類型的測試：
 
 ```bash
-# Run unit tests
+# 運行單元測試
 ./gradlew test --tests "*UnitTest*"
 
-# Run integration tests
+# 運行整合測試
 ./gradlew test --tests "*IntegrationTest*"
 
-# Run BDD tests
+# 運行BDD測試
 ./gradlew test --tests "*BddTest*"
 ```
 
-View Cucumber test reports:
+查看 Cucumber 測試報告：
 
 ```bash
 ./gradlew cucumber
-# Then open app/build/reports/cucumber/cucumber-report.html
+# 然後打開 app/build/reports/cucumber/cucumber-report.html
 ```
 
-## UML Diagrams
+## UML 圖表
 
-This project uses PlantUML to generate various UML diagrams, including:
+本專案使用 PlantUML 生成各種 UML 圖表，包括：
 
-- Class diagrams, object diagrams, component diagrams, deployment diagrams
-- Sequence diagrams (order processing, pricing processing, delivery processing), state diagrams, activity diagrams
-- Domain model diagrams, hexagonal architecture diagrams, DDD layered architecture diagrams, event storming diagrams, etc.
+- 類別圖、對象圖、組件圖、部署圖
+- 時序圖（訂單處理、定價處理、配送處理）、狀態圖、活動圖
+- 領域模型圖、六角形架構圖、DDD分層架構圖、事件風暴圖等
 
-Recently updated diagrams:
+最近更新的圖表：
 
-- **DDD Layered Architecture Diagram**: Shows dependency relationships and data flow between layers
-- **Pricing Processing Sequence Diagram**: Shows the flow of pricing-related operations
-- **Delivery Processing Sequence Diagram**: Shows the flow of delivery-related operations
-- **Updated Domain Model Diagram**: Added pricing and delivery aggregates
+- **DDD分層架構圖**：展示各層之間的依賴關係和數據流向
+- **定價處理時序圖**：展示定價相關操作的流程
+- **配送處理時序圖**：展示配送相關操作的流程
+- **更新的領域模型圖**：添加定價和配送聚合
 
-See [UML Documentation](uml/README.md) for more information.
+查看 [UML 文檔說明](docs/uml/README.md) 獲取更多信息。
 
-## FAQ
+## 常見問題
 
-### Configuration Cache Issues
+### 配置緩存問題
 
-If you encounter configuration cache-related errors, you can use the `--no-configuration-cache` parameter:
+如果遇到配置緩存相關的錯誤，可以使用 `--no-configuration-cache` 參數：
 
 ```bash
 ./gradlew --no-configuration-cache <task>
 ```
 
-### Allure Report Issues
+### Allure 報告問題
 
-If Allure report generation fails, you can try:
+如果 Allure 報告生成失敗，可以嘗試：
 
-1. Clean project: `./gradlew clean`
-2. Re-run tests and generate report: `./gradlew runAllTestsWithReport`
+1. 清理項目：`./gradlew clean`
+2. 重新運行測試並生成報告：`./gradlew runAllTestsWithReport`
 
-Allure reports automatically include all test results, including JUnit unit tests, architecture tests, and Cucumber BDD tests. Reports show test execution status, test steps, failure reasons, and related attachments.
+Allure 報告會自動包含所有測試結果，包括 JUnit 單元測試、架構測試和 Cucumber BDD 測試。報告會顯示測試執行情況、測試步驟、失敗原因以及相關附件。
 
-## Contributing
+## 貢獻
 
-Pull Requests and Issues for improvement suggestions are welcome.
+歡迎提交 Pull Request 或開 Issue 討論改進建議。
 
-## License
+## 授權
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+本專案採用 MIT 授權協議 - 詳見 [LICENSE](LICENSE) 文件。
 
 ## DeepWiki integration
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
+
+<!-- Translation placeholder - Use Kiro AI to translate this content -->
+<!-- 翻譯佔位符 - 請使用 Kiro AI 翻譯此內容 -->

@@ -1,5 +1,9 @@
 # GenAI Demo
 
+> **Language / 語言選擇**  
+> 🇺🇸 **English**: [English Documentation](docs/en/README.md)  
+> 🇹🇼 **繁體中文**: 您正在閱讀繁體中文版本
+
 這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的示範專案，展示了如何構建一個具有良好架構和測試實踐的 Java 應用程式。
 
 ## 專案架構
