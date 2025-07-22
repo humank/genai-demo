@@ -4,7 +4,7 @@ This document summarizes the order system implementation based on Hexagonal Arch
 
 ## Architecture Overview
 
-![Hexagonal Architecture](https://user-images.githubusercontent.com/1234567/hexagonal-architecture.png)
+![Hexagonal Architecture](../images/hexagonal_architecture.png)
 
 Hexagonal Architecture (also known as Ports and Adapters Architecture) divides the application into three main parts:
 

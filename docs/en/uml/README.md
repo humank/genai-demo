@@ -164,7 +164,7 @@ To view diagrams, please use one of the methods above to render .puml files. Her
 
 ### Component Diagram
 
-![Component Diagram](./電子商務系統組件圖.svg)
+![Component Diagram](./component-diagram.svg)
 
 ### Deployment Diagram
 
@@ -172,55 +172,55 @@ To view diagrams, please use one of the methods above to render .puml files. Her
 
 ### Package Diagram
 
-![Package Diagram](./訂單系統套件圖.svg)
+![Package Diagram](./package-diagram.svg)
 
 ### Sequence Diagram
 
-![Sequence Diagram](./訂單處理時序圖.svg)
+![Sequence Diagram](./sequence-diagram.svg)
 
 ### Pricing Processing Sequence Diagram
 
-![Pricing Processing Sequence Diagram](./定價處理時序圖.svg)
+![Pricing Processing Sequence Diagram](../../uml/定價處理時序圖.svg)
 
 ### Delivery Processing Sequence Diagram
 
-![Delivery Processing Sequence Diagram](./配送處理時序圖.svg)
+![Delivery Processing Sequence Diagram](../../uml/配送處理時序圖.svg)
 
 ### State Diagram
 
-![State Diagram](./訂單狀態圖.svg)
+![State Diagram](./state-diagram.svg)
 
 ### Activity Diagram Overview
 
-![Activity Diagram Overview](./訂單系統活動圖概覽.svg)
+![Activity Diagram Overview](./activity-diagram-overview.svg)
 
 ### Activity Diagram Detail
 
-![Activity Diagram Detail](./訂單處理詳細活動圖.svg)
+![Activity Diagram Detail](./activity-diagram-detail.svg)
 
 ### Use Case Diagram
 
-![Use Case Diagram](./訂單系統使用案例圖.svg)
+![Use Case Diagram](./use-case-diagram.svg)
 
 ### Domain Model Diagram
 
-![Domain Model Diagram](./領域模型圖.svg)
+![Domain Model Diagram](./domain-model-diagram.svg)
 
 ### Hexagonal Architecture Diagram
 
-![Hexagonal Architecture Diagram](./六角形架構圖.svg)
+![Hexagonal Architecture Diagram](./hexagonal-architecture-diagram.svg)
 
 ### DDD Layered Architecture Diagram
 
-![DDD Layered Architecture Diagram](./DDD分層架構圖.svg)
+![DDD Layered Architecture Diagram](../../uml/DDD分層架構圖.svg)
 
 ### Saga Pattern Diagram
 
-![Saga Pattern Diagram](./訂單處理Saga模式圖.svg)
+![Saga Pattern Diagram](./saga-pattern-diagram.svg)
 
 ### Bounded Context Diagram
 
-![Bounded Context Diagram](./限界上下文圖.svg)
+![Bounded Context Diagram](./bounded-context-diagram.svg)
 
 ### Event Storming Diagram - Big Picture Exploration
 
