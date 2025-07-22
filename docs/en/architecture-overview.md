@@ -4,15 +4,15 @@ This document provides a high-level view of the system architecture, including m
 
 ## Hexagonal Architecture
 
-![Hexagonal Architecture](../images/hexagonal_architecture.png)
+![Hexagonal Architecture](../../images/hexagonal_architecture.png)
 
 ## Domain-Driven Design Architecture
 
-![Domain-Driven Design Architecture](../images/ddd_architecture.png)
+![Domain-Driven Design Architecture](../../images/ddd_architecture.png)
 
 ## Event-Driven Architecture
 
-![Event-Driven Architecture](../images/event_driven_architecture.png)
+![Event-Driven Architecture](../../images/event_driven_architecture.png)
 
 ## Architecture Features
 
