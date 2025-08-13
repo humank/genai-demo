@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * 嚴格遵循 Repository Pattern，只接受和返回聚合根
  */
 @Component
+@Primary
 public class OrderRepositoryAdapter implements OrderRepository {
 
     private final JpaOrderRepository jpaOrderRepository;

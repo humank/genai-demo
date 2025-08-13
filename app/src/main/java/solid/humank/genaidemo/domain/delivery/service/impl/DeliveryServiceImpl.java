@@ -12,8 +12,9 @@ import java.util.Optional;
 
 /**
  * 配送服務實現
+ * 暫時禁用以解決啟動問題
  */
-@Service
+// @Service
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final DeliveryRepository deliveryRepository;

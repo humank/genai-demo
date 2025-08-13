@@ -13,8 +13,9 @@ import java.util.Optional;
 /**
  * 配送服務適配器
  * 用於適配新舊兩個配送服務
+ * 暫時禁用以解決啟動問題
  */
-@Service
+// @Service
 public class DeliveryServiceAdapter implements DeliveryService {
 
     private final solid.humank.genaidemo.domain.workflow.service.DeliveryService workflowDeliveryService;

@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.infrastructure.payment.external;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
@@ -13,6 +14,7 @@ import java.util.UUID;
  * 使用內部實現進行實際的支付處理
  */
 @Component
+@Primary
 public class PaymentServiceAdapter implements PaymentServicePort {
 
     /**
