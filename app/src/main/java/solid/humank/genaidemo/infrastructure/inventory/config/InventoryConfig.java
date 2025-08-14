@@ -6,26 +6,19 @@ import solid.humank.genaidemo.application.inventory.port.outgoing.ExternalWareho
 import solid.humank.genaidemo.application.inventory.port.outgoing.InventoryPersistencePort;
 import solid.humank.genaidemo.application.inventory.service.InventoryApplicationService;
 import solid.humank.genaidemo.infrastructure.inventory.external.ExternalWarehouseAdapter;
-import solid.humank.genaidemo.infrastructure.inventory.persistence.adapter.InventoryRepositoryAdapter;
 
-/**
- * 庫存配置類
- */
+/** 庫存配置類 */
 @Configuration
 public class InventoryConfig {
 
-    /**
-     * 創建庫存應用服務
-     */
+    /** 創建庫存應用服務 */
     @Bean
     public InventoryApplicationService inventoryApplicationService(
-            solid.humank.genaidemo.infrastructure.inventory.persistence.repository.JpaInventoryRepository jpaInventoryRepository) {
-        return new InventoryApplicationService(jpaInventoryRepository);
+            InventoryPersistencePort inventoryPersistencePort) {
+        return new InventoryApplicationService(inventoryPersistencePort);
     }
 
-    /**
-     * 創建外部倉庫適配器
-     */
+    /** 創建外部倉庫適配器 */
     @Bean
     public ExternalWarehousePort externalWarehousePort() {
         return new ExternalWarehouseAdapter();

@@ -1,15 +1,11 @@
 package solid.humank.genaidemo.application.payment.dto;
 
-import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
-import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
-import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
+import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 
-/**
- * 支付響應 DTO
- */
+/** 支付響應 DTO */
 public class PaymentResponseDto {
     private String id;
     private String transactionId;
@@ -32,7 +28,7 @@ public class PaymentResponseDto {
 
     /**
      * 從領域模型創建 DTO
-     * 
+     *
      * @param payment 支付領域模型
      * @return 支付響應 DTO
      */
@@ -44,18 +40,18 @@ public class PaymentResponseDto {
         dto.setCurrency(payment.getAmount().getCurrency().getCurrencyCode());
         dto.setStatus(payment.getStatus().name());
         dto.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
-        
+
         if (payment.getPaymentMethod() != null) {
             dto.setPaymentMethod(payment.getPaymentMethod().name());
         }
-        
+
         dto.setTransactionId(payment.getTransactionId());
         dto.setFailureReason(payment.getFailureReason());
         dto.setErrorMessage(payment.getFailureReason()); // 兼容舊代碼
         dto.setCreatedAt(payment.getCreatedAt());
         dto.setUpdatedAt(payment.getUpdatedAt());
         dto.setCanRetry(payment.canRetry());
-        
+
         return dto;
     }
 

@@ -1,14 +1,11 @@
 package solid.humank.genaidemo.domain.promotion.model.entity;
 
+import java.time.LocalDate;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
-/**
- * 優惠券實體
- */
+/** 優惠券實體 */
 @Entity
 public class Voucher {
     private final String id;
@@ -22,7 +19,8 @@ public class Voucher {
     private boolean isUsed;
     private boolean isInvalidated;
 
-    public Voucher(String name, Money value, int validDays, String redemptionLocation, String contents) {
+    public Voucher(
+            String name, Money value, int validDays, String redemptionLocation, String contents) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.value = value;

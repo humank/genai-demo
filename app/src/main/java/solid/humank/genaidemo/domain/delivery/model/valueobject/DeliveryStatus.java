@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.delivery.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 配送狀態值對象
- */
+/** 配送狀態值對象 */
 @ValueObject
 public enum DeliveryStatus {
     PENDING_SHIPMENT("待發貨"),
@@ -36,11 +34,15 @@ public enum DeliveryStatus {
             case PENDING_SHIPMENT:
                 return targetStatus == IN_TRANSIT || targetStatus == CANCELLED;
             case IN_TRANSIT:
-                return targetStatus == DELIVERED || targetStatus == DELAYED || 
-                       targetStatus == DELIVERY_FAILED || targetStatus == REFUSED;
+                return targetStatus == DELIVERED
+                        || targetStatus == DELAYED
+                        || targetStatus == DELIVERY_FAILED
+                        || targetStatus == REFUSED;
             case DELAYED:
-                return targetStatus == IN_TRANSIT || targetStatus == DELIVERED || 
-                       targetStatus == DELIVERY_FAILED || targetStatus == REFUSED;
+                return targetStatus == IN_TRANSIT
+                        || targetStatus == DELIVERED
+                        || targetStatus == DELIVERY_FAILED
+                        || targetStatus == REFUSED;
             case DELIVERY_FAILED:
                 return targetStatus == IN_TRANSIT || targetStatus == CANCELLED;
             case DELIVERED:

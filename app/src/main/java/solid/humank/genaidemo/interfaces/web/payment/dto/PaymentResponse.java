@@ -1,14 +1,10 @@
 package solid.humank.genaidemo.interfaces.web.payment.dto;
 
-import solid.humank.genaidemo.application.payment.dto.PaymentResponseDto;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import solid.humank.genaidemo.application.payment.dto.PaymentResponseDto;
 
-/**
- * 支付響應DTO
- * 用於返回給前端的數據
- */
+/** 支付響應DTO 用於返回給前端的數據 */
 public class PaymentResponse {
     private String id;
     private String orderId;
@@ -23,8 +19,7 @@ public class PaymentResponse {
     private boolean canRetry;
 
     // 默認構造函數
-    public PaymentResponse() {
-    }
+    public PaymentResponse() {}
 
     // 從應用層DTO創建
     public static PaymentResponse fromDto(PaymentResponseDto dto) {

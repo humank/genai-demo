@@ -1,18 +1,14 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import java.util.List;
+import java.util.Map;
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * 庫存服務接口
- * 定義與庫存相關的操作
- */
+/** 庫存服務接口 定義與庫存相關的操作 */
 @DomainService
 public interface InventoryService {
-    
+
     /**
      * 檢查庫存
      *
@@ -21,7 +17,7 @@ public interface InventoryService {
      * @return 庫存是否充足
      */
     boolean checkInventory(OrderId orderId, List<String> productIds);
-    
+
     /**
      * 預留庫存
      *
@@ -30,7 +26,7 @@ public interface InventoryService {
      * @return 是否預留成功
      */
     boolean reserveInventory(OrderId orderId, List<String> productIds);
-    
+
     /**
      * 釋放庫存
      *
@@ -38,7 +34,7 @@ public interface InventoryService {
      * @return 是否釋放成功
      */
     boolean releaseInventory(OrderId orderId);
-    
+
     /**
      * 獲取庫存不足的商品
      *
@@ -46,7 +42,7 @@ public interface InventoryService {
      * @return 庫存不足的商品列表
      */
     List<String> getOutOfStockProducts(OrderId orderId);
-    
+
     /**
      * 獲取替代商品建議
      *

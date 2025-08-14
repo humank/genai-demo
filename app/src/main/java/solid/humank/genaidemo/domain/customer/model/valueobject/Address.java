@@ -31,7 +31,7 @@ public class Address {
     public String getCountry() {
         return country;
     }
-    
+
     public String getFullAddress() {
         return toString();
     }
@@ -41,10 +41,10 @@ public class Address {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return street.equals(address.street) &&
-               city.equals(address.city) &&
-               zipCode.equals(address.zipCode) &&
-               country.equals(address.country);
+        return street.equals(address.street)
+                && city.equals(address.city)
+                && zipCode.equals(address.zipCode)
+                && country.equals(address.country);
     }
 
     @Override

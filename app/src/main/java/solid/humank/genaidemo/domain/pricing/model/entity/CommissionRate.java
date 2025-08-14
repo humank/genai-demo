@@ -3,24 +3,22 @@ package solid.humank.genaidemo.domain.pricing.model.entity;
 import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
 
-/**
- * 佣金費率實體
- */
+/** 佣金費率實體 */
 @Entity(name = "CommissionRate", description = "佣金費率實體，管理不同產品類別的佣金費率")
 public class CommissionRate {
     private ProductCategory category;
     private int normalRate; // 一般費率（百分比）
-    private int eventRate;  // 活動費率（百分比）
+    private int eventRate; // 活動費率（百分比）
 
     public CommissionRate(ProductCategory category, int normalRate, int eventRate) {
         this.category = category;
         this.normalRate = normalRate;
         this.eventRate = eventRate;
     }
-    
+
     /**
      * 建立佣金費率（不指定產品類別）
-     * 
+     *
      * @param normalRate 一般費率
      * @param eventRate 活動費率
      */

@@ -5,13 +5,16 @@ inclusion: manual
 # 文檔翻譯指南
 
 ## 翻譯觸發條件
+
 當 git commit message 包含以下關鍵字時觸發自動翻譯：
+
 - `[translate]` - 翻譯所有變更的 .md 檔案
 - `[en]` - 翻譯所有變更的 .md 檔案
 
 ## 目錄結構規範
 
 ### 原始結構 (繁體中文)
+
 ```
 ├── README.md
 ├── aws-eks-architecture.md
@@ -32,6 +35,7 @@ inclusion: manual
 ```
 
 ### 翻譯後結構
+
 ```
 ├── README.md (保持雙語或指向各語言版本)
 ├── docs/
@@ -60,6 +64,7 @@ inclusion: manual
 ## 連結轉換規則
 
 ### 1. 相對路徑連結
+
 ```markdown
 <!-- 中文版本 -->
 [架構概覽](docs/architecture-overview.md)
@@ -73,6 +78,7 @@ inclusion: manual
 ```
 
 ### 2. 錨點連結轉換
+
 ```markdown
 <!-- 中文版本 -->
 [Tell, Don't Ask 原則](DesignGuideline.MD#tell-dont-ask-原則)
@@ -84,6 +90,7 @@ inclusion: manual
 ```
 
 ### 3. 圖片連結處理
+
 ```markdown
 <!-- 中文版本 -->
 ![類別圖](./class-diagram.svg)
@@ -97,6 +104,7 @@ inclusion: manual
 ## 翻譯品質要求
 
 ### 1. 技術術語一致性
+
 - Domain-Driven Design (DDD) → 領域驅動設計
 - Hexagonal Architecture → 六角形架構
 - Aggregate Root → 聚合根
@@ -105,11 +113,13 @@ inclusion: manual
 - Specification → 規格
 
 ### 2. 程式碼區塊
+
 - 保持程式碼不變
 - 翻譯註解和字串
 - 保持變數名稱的英文形式
 
 ### 3. 檔案名稱
+
 - 保持檔案名稱不變 (例如: DesignGuideline.MD)
 - 只翻譯內容，不翻譯檔案路徑
 
@@ -124,14 +134,17 @@ inclusion: manual
 ## 特殊處理
 
 ### 1. PlantUML 檔案
+
 - `.puml` 檔案中的中文註解需要翻譯
 - 保持 PlantUML 語法結構不變
 
 ### 2. 表格內容
+
 - 翻譯表格中的中文內容
 - 保持表格格式不變
 
 ### 3. 程式碼註解
+
 ```java
 // 中文註解 → English comment
 /* 多行中文註解 → Multi-line English comment */

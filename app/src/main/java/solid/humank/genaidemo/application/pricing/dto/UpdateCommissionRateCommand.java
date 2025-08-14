@@ -1,9 +1,6 @@
 package solid.humank.genaidemo.application.pricing.dto;
 
-/**
- * 更新佣金費率命令
- * 用於接收更新佣金費率的請求
- */
+/** 更新佣金費率命令 用於接收更新佣金費率的請求 */
 public class UpdateCommissionRateCommand {
     private String priceId;
     private int normalRate;

@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.domain.pricing.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 @ValueObject
 public class PriceId {

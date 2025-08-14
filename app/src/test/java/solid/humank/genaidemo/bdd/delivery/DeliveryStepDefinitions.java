@@ -1,26 +1,24 @@
 package solid.humank.genaidemo.bdd.delivery;
 
-import io.cucumber.java.en.And;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * 配送聚合根的 Cucumber 步驟定義
- */
+/** 配送聚合根的 Cucumber 步驟定義 */
 public class DeliveryStepDefinitions {
 
     private OrderId orderId;
     private Delivery delivery;
-    private Exception thrownException;
+
     private String newAddress;
 
     @Given("I have created an order")
@@ -70,19 +68,19 @@ public class DeliveryStepDefinitions {
     public void theNotificationShouldIncludeEstimatedDeliveryTime() {
         // 這個步驟在實際應用中會檢查通知內容
         // 在這個測試中，我們需要確保配送對象已創建，並且有預計送達時間
-        
+
         // 如果配送對象為空，則創建一個新的配送對象
         if (delivery == null) {
             orderId = OrderId.fromUUID(java.util.UUID.randomUUID());
             delivery = new Delivery(orderId, "台北市信義區");
         }
-        
+
         // 如果配送狀態是 PENDING_SHIPMENT，需要先分配資源以設置預計送達時間
         if (delivery.getStatus() == DeliveryStatus.PENDING_SHIPMENT) {
             LocalDateTime estimatedDeliveryTime = LocalDateTime.now().plusHours(2);
             delivery.allocateResources("driver-123", "張三", "0912345678", estimatedDeliveryTime);
         }
-        
+
         assertNotNull(delivery);
         // 確保配送對象有預計送達時間
         assertNotNull(delivery.getEstimatedDeliveryTime());
@@ -124,7 +122,7 @@ public class DeliveryStepDefinitions {
     @Given("the delivery status is {string}")
     public void theDeliveryStatusIs(String status) {
         delivery = new Delivery(orderId, "台北市信義區");
-        
+
         // 根據需要的狀態設置配送狀態
         if (status.equals("IN_TRANSIT")) {
             LocalDateTime estimatedDeliveryTime = LocalDateTime.now().plusHours(2);
@@ -132,7 +130,7 @@ public class DeliveryStepDefinitions {
         } else if (status.equals("PENDING_SHIPMENT")) {
             // 默認狀態就是 PENDING_SHIPMENT，不需要額外操作
         }
-        
+
         assertEquals(DeliveryStatus.valueOf(status), delivery.getStatus());
     }
 
@@ -249,14 +247,15 @@ public class DeliveryStepDefinitions {
         // 這個步驟在實際應用中會發送通知
         // 在這個測試中，我們只需要確保配送對象已創建
         assertNotNull(delivery);
-        
+
         // 檢查配送狀態，如果不是 DELIVERY_FAILED，則先設置為 IN_TRANSIT 再標記為失敗
         try {
             if (delivery.getStatus() != DeliveryStatus.DELIVERY_FAILED) {
                 // 先確保配送狀態為 IN_TRANSIT
                 if (delivery.getStatus() != DeliveryStatus.IN_TRANSIT) {
                     // 使用反射修改狀態
-                    java.lang.reflect.Field statusField = delivery.getClass().getDeclaredField("status");
+                    java.lang.reflect.Field statusField =
+                            delivery.getClass().getDeclaredField("status");
                     statusField.setAccessible(true);
                     statusField.set(delivery, DeliveryStatus.IN_TRANSIT);
                 }
@@ -265,7 +264,7 @@ public class DeliveryStepDefinitions {
         } catch (Exception e) {
             // 忽略異常，確保測試可以繼續
         }
-        
+
         // 確保有失敗原因
         assertTrue(true);
     }
@@ -274,12 +273,12 @@ public class DeliveryStepDefinitions {
     public void theNotificationShouldIncludeRedeliveryInformation() {
         // 這個步驟在實際應用中會檢查通知內容
         // 在這個測試中，我們需要確保配送狀態已經被重新安排為待發貨
-        
+
         // 如果當前狀態是 DELIVERY_FAILED，則先重新安排配送
         if (delivery.getStatus() == DeliveryStatus.DELIVERY_FAILED) {
             delivery.rearrange();
         }
-        
+
         assertEquals(DeliveryStatus.PENDING_SHIPMENT, delivery.getStatus());
     }
 

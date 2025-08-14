@@ -2,10 +2,7 @@ package solid.humank.genaidemo.application.pricing.dto;
 
 import java.time.LocalDateTime;
 
-/**
- * 創建定價規則命令
- * 用於接收創建定價規則的請求
- */
+/** 創建定價規則命令 用於接收創建定價規則的請求 */
 public class CreatePricingRuleCommand {
     private String productId;
     private String promotionId;
@@ -17,11 +14,16 @@ public class CreatePricingRuleCommand {
     private LocalDateTime effectiveTo;
     private ProductCategoryDto productCategory;
 
-    public CreatePricingRuleCommand(String productId, String promotionId, 
-                                   double finalPrice, String currency, 
-                                   double discountPercentage, double discountAmount, 
-                                   LocalDateTime effectiveFrom, LocalDateTime effectiveTo,
-                                   ProductCategoryDto productCategory) {
+    public CreatePricingRuleCommand(
+            String productId,
+            String promotionId,
+            double finalPrice,
+            String currency,
+            double discountPercentage,
+            double discountAmount,
+            LocalDateTime effectiveFrom,
+            LocalDateTime effectiveTo,
+            ProductCategoryDto productCategory) {
         this.productId = productId;
         this.promotionId = promotionId;
         this.finalPrice = finalPrice;

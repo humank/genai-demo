@@ -2,9 +2,7 @@ package solid.humank.genaidemo.interfaces.web.product.dto;
 
 import java.math.BigDecimal;
 
-/**
- * 更新產品請求 DTO
- */
+/** 更新產品請求 DTO */
 public class UpdateProductRequest {
     private String name;
     private String description;
@@ -12,10 +10,10 @@ public class UpdateProductRequest {
     private String currency;
     private String category;
 
-    public UpdateProductRequest() {
-    }
+    public UpdateProductRequest() {}
 
-    public UpdateProductRequest(String name, String description, BigDecimal price, String currency, String category) {
+    public UpdateProductRequest(
+            String name, String description, BigDecimal price, String currency, String category) {
         this.name = name;
         this.description = description;
         this.price = price;

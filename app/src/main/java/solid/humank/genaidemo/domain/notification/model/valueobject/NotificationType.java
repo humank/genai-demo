@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.notification.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 通知類型值對象
- */
+/** 通知類型值對象 */
 @ValueObject
 public enum NotificationType {
     ORDER_CREATED("訂單創建"),

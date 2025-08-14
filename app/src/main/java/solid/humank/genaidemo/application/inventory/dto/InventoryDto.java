@@ -1,14 +1,10 @@
 package solid.humank.genaidemo.application.inventory.dto;
 
+import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-/**
- * 庫存數據傳輸對象
- */
+/** 庫存數據傳輸對象 */
 public class InventoryDto {
     private final String id;
     private final String productId;
@@ -21,9 +17,17 @@ public class InventoryDto {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public InventoryDto(String id, String productId, String productName, int totalQuantity,
-                        int availableQuantity, int reservedQuantity, int threshold,
-                        InventoryStatus status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public InventoryDto(
+            String id,
+            String productId,
+            String productName,
+            int totalQuantity,
+            int availableQuantity,
+            int reservedQuantity,
+            int threshold,
+            InventoryStatus status,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
@@ -36,9 +40,7 @@ public class InventoryDto {
         this.updatedAt = updatedAt;
     }
 
-    /**
-     * 從領域模型創建DTO
-     */
+    /** 從領域模型創建DTO */
     public static InventoryDto fromDomain(Inventory inventory) {
         return new InventoryDto(
                 inventory.getId().toString(),
@@ -50,8 +52,7 @@ public class InventoryDto {
                 inventory.getThreshold(),
                 inventory.getStatus(),
                 inventory.getCreatedAt(),
-                inventory.getUpdatedAt()
-        );
+                inventory.getUpdatedAt());
     }
 
     // Getters
@@ -86,9 +87,10 @@ public class InventoryDto {
     public InventoryStatus getStatus() {
         return status;
     }
-    
+
     /**
      * 獲取庫存狀態的字符串表示
+     *
      * @return 庫存狀態的字符串表示
      */
     public String getStatusName() {

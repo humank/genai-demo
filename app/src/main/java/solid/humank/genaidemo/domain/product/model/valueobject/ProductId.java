@@ -3,9 +3,7 @@ package solid.humank.genaidemo.domain.product.model.valueobject;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * 產品ID值物件
- */
+/** 產品ID值物件 */
 public class ProductId {
     private final String id;
 

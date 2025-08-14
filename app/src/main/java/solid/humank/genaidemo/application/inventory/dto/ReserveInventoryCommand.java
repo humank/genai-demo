@@ -2,9 +2,7 @@ package solid.humank.genaidemo.application.inventory.dto;
 
 import java.util.UUID;
 
-/**
- * 預留庫存命令
- */
+/** 預留庫存命令 */
 public class ReserveInventoryCommand {
     private final String productId;
     private final int quantity;

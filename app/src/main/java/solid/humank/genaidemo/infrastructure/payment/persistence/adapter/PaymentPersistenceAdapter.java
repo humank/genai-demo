@@ -1,5 +1,8 @@
 package solid.humank.genaidemo.infrastructure.payment.persistence.adapter;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.payment.port.outgoing.PaymentPersistencePort;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -7,15 +10,7 @@ import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.repository.PaymentRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-/**
- * 支付持久化適配器
- * 實現應用層的 PaymentPersistencePort 接口
- * 使用領域層的 PaymentRepository 進行實際的持久化操作
- */
+/** 支付持久化適配器 實現應用層的 PaymentPersistencePort 接口 使用領域層的 PaymentRepository 進行實際的持久化操作 */
 @Component
 public class PaymentPersistenceAdapter implements PaymentPersistencePort {
 

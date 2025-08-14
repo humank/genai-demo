@@ -15,6 +15,7 @@
 確保專案遵循 DDD 分層架構的設計原則，包括：
 
 1. **分層架構驗證**：
+
    - 確保遵循分層架構依賴方向
    - 領域層不依賴其他層
    - 應用層不依賴基礎設施層和介面層
@@ -30,6 +31,7 @@
 確保正確實現 DDD 戰術模式，包括：
 
 1. **領域模型驗證**：
+
    - 值對象應該是不可變的
    - 實體應該有唯一標識
    - 聚合根應該控制其內部實體的訪問
@@ -46,6 +48,7 @@
 確保專案的包結構符合 DDD 最佳實踐，包括：
 
 1. **領域模型組織**：
+
    - 聚合根位於 `model.aggregate` 包中
    - 實體位於 `model.entity` 包中
    - 值對象位於 `common.valueobject` 或 `model.valueobject` 包中
@@ -56,15 +59,18 @@
    - 規格位於 `specification` 或 `model.specification` 包中
 
 2. **子領域模型結構**：
+
    - 子領域的模型元素位於 `model` 包中
    - 子領域的聚合根位於 `model.aggregate` 包中
 
 3. **應用層組織**：
+
    - 應用服務位於 `application.service` 包中
    - DTO 位於 `application.dto` 包中
    - 端口位於 `application.port` 包中
 
 4. **基礎設施層組織**：
+
    - 儲存庫實現位於 `infrastructure.persistence` 包中
    - 防腐層位於 `infrastructure.acl` 包中
    - 外部系統適配器位於 `infrastructure.external` 或 `infrastructure.*.external` 包中
@@ -86,7 +92,7 @@
 
 架構測試本身已經具有良好的品質，但在測試輔助工具改善過程中也受益：
 
-1. **測試分類**：可以使用@UnitTest標籤進行分類
+1. **測試分類**：可以使用@UnitTest 標籤進行分類
 2. **測試文檔**：改善了測試說明文檔的完整性
 3. **測試一致性**：與其他測試保持一致的命名和結構規範
 
@@ -109,4 +115,5 @@
 
 # 運行特定的架構測試
 ./gradlew test --tests "solid.humank.genaidemo.architecture.*"
+
 ```

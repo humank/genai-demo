@@ -2,9 +2,7 @@ package solid.humank.genaidemo.application.inventory.dto.response;
 
 import java.time.LocalDateTime;
 
-/**
- * 庫存響應 DTO
- */
+/** 庫存響應 DTO */
 public class InventoryResponse {
     private String id;
     private String productId;
@@ -17,12 +15,19 @@ public class InventoryResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public InventoryResponse() {
-    }
+    public InventoryResponse() {}
 
-    public InventoryResponse(String id, String productId, String productName, 
-                           int totalQuantity, int availableQuantity, int reservedQuantity,
-                           int threshold, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public InventoryResponse(
+            String id,
+            String productId,
+            String productName,
+            int totalQuantity,
+            int availableQuantity,
+            int reservedQuantity,
+            int threshold,
+            String status,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;

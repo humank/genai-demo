@@ -3,10 +3,7 @@ package solid.humank.genaidemo.interfaces.web.payment.dto;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/**
- * 支付請求DTO
- * 用於接收前端的支付請求
- */
+/** 支付請求DTO 用於接收前端的支付請求 */
 public class PaymentRequest {
     private String orderId;
     private BigDecimal amount;
@@ -15,11 +12,15 @@ public class PaymentRequest {
     private Map<String, Object> paymentDetails;
 
     // 默認構造函數
-    public PaymentRequest() {
-    }
+    public PaymentRequest() {}
 
     // 全參數構造函數
-    public PaymentRequest(String orderId, BigDecimal amount, String currency, String paymentMethod, Map<String, Object> paymentDetails) {
+    public PaymentRequest(
+            String orderId,
+            BigDecimal amount,
+            String currency,
+            String paymentMethod,
+            Map<String, Object> paymentDetails) {
         this.orderId = orderId;
         this.amount = amount;
         this.currency = currency;

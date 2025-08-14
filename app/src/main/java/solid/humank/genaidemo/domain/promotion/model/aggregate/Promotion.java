@@ -1,15 +1,12 @@
 package solid.humank.genaidemo.domain.promotion.model.aggregate;
 
-import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.promotion.model.valueobject.*;
-import solid.humank.genaidemo.domain.promotion.model.specification.PromotionSpecification;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
+import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.promotion.model.specification.PromotionSpecification;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.*;
 
-/**
- * 促銷聚合根
- */
+/** 促銷聚合根 */
 @AggregateRoot
 public class Promotion {
     private final PromotionId promotionId;
@@ -19,21 +16,25 @@ public class Promotion {
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
     private boolean isActive;
-    
+
     // 不同類型促銷的規則
     private AddOnPurchaseRule addOnPurchaseRule;
     private FlashSaleRule flashSaleRule;
     private LimitedQuantityRule limitedQuantityRule;
     private GiftWithPurchaseRule giftWithPurchaseRule;
     private ConvenienceStoreVoucherRule convenienceStoreVoucherRule;
-    
+
     // 促銷規格
     private PromotionSpecification specification;
 
     // 建構函數 - 加價購
-    public Promotion(PromotionId promotionId, String name, String description,
-                    LocalDateTime startDate, LocalDateTime endDate,
-                    AddOnPurchaseRule addOnPurchaseRule) {
+    public Promotion(
+            PromotionId promotionId,
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            AddOnPurchaseRule addOnPurchaseRule) {
         this.promotionId = promotionId;
         this.name = name;
         this.description = description;
@@ -45,9 +46,13 @@ public class Promotion {
     }
 
     // 建構函數 - 限時特價
-    public Promotion(PromotionId promotionId, String name, String description,
-                    LocalDateTime startDate, LocalDateTime endDate,
-                    FlashSaleRule flashSaleRule) {
+    public Promotion(
+            PromotionId promotionId,
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            FlashSaleRule flashSaleRule) {
         this.promotionId = promotionId;
         this.name = name;
         this.description = description;
@@ -59,9 +64,13 @@ public class Promotion {
     }
 
     // 建構函數 - 限量特價
-    public Promotion(PromotionId promotionId, String name, String description,
-                    LocalDateTime startDate, LocalDateTime endDate,
-                    LimitedQuantityRule limitedQuantityRule) {
+    public Promotion(
+            PromotionId promotionId,
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            LimitedQuantityRule limitedQuantityRule) {
         this.promotionId = promotionId;
         this.name = name;
         this.description = description;
@@ -73,9 +82,13 @@ public class Promotion {
     }
 
     // 建構函數 - 滿額贈禮
-    public Promotion(PromotionId promotionId, String name, String description,
-                    LocalDateTime startDate, LocalDateTime endDate,
-                    GiftWithPurchaseRule giftWithPurchaseRule) {
+    public Promotion(
+            PromotionId promotionId,
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            GiftWithPurchaseRule giftWithPurchaseRule) {
         this.promotionId = promotionId;
         this.name = name;
         this.description = description;
@@ -87,9 +100,13 @@ public class Promotion {
     }
 
     // 建構函數 - 超商優惠券
-    public Promotion(PromotionId promotionId, String name, String description,
-                    LocalDateTime startDate, LocalDateTime endDate,
-                    ConvenienceStoreVoucherRule convenienceStoreVoucherRule) {
+    public Promotion(
+            PromotionId promotionId,
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            ConvenienceStoreVoucherRule convenienceStoreVoucherRule) {
         this.promotionId = promotionId;
         this.name = name;
         this.description = description;

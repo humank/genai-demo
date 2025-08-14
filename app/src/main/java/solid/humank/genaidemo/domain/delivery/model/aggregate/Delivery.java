@@ -1,19 +1,14 @@
 package solid.humank.genaidemo.domain.delivery.model.aggregate;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
-/**
- * 配送聚合根
- * 管理訂單的配送流程
- * 合併了workflow.model.aggregate.Delivery的功能
- */
+/** 配送聚合根 管理訂單的配送流程 合併了workflow.model.aggregate.Delivery的功能 */
 @AggregateRoot
 public class Delivery {
     private final DeliveryId id;
@@ -79,8 +74,11 @@ public class Delivery {
      * @param deliveryPersonContact 配送員聯繫方式
      * @param estimatedDeliveryTime 預計送達時間
      */
-    public void allocateResources(String deliveryPersonId, String deliveryPersonName, 
-                                 String deliveryPersonContact, LocalDateTime estimatedDeliveryTime) {
+    public void allocateResources(
+            String deliveryPersonId,
+            String deliveryPersonName,
+            String deliveryPersonContact,
+            LocalDateTime estimatedDeliveryTime) {
         if (status != DeliveryStatus.PENDING_SHIPMENT) {
             throw new IllegalStateException("只有待發貨狀態的配送可以分配資源");
         }
@@ -108,9 +106,7 @@ public class Delivery {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 標記為已送達
-     */
+    /** 標記為已送達 */
     public void markAsDelivered() {
         if (status != DeliveryStatus.IN_TRANSIT && status != DeliveryStatus.DELAYED) {
             throw new IllegalStateException("只有配送中或延遲狀態的配送可以標記為已送達");
@@ -164,13 +160,12 @@ public class Delivery {
 
         this.status = DeliveryStatus.DELAYED;
         this.delayReason = Objects.requireNonNull(reason, "延遲原因不能為空");
-        this.estimatedDeliveryTime = Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計送達時間不能為空");
+        this.estimatedDeliveryTime =
+                Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計送達時間不能為空");
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 取消配送
-     */
+    /** 取消配送 */
     public void cancel() {
         if (status != DeliveryStatus.PENDING_SHIPMENT && status != DeliveryStatus.DELIVERY_FAILED) {
             throw new IllegalStateException("只有待發貨或配送失敗狀態的配送可以取消");
@@ -180,9 +175,7 @@ public class Delivery {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 安排重新配送
-     */
+    /** 安排重新配送 */
     public void scheduleRedelivery() {
         if (status != DeliveryStatus.DELIVERY_FAILED) {
             throw new IllegalStateException("只有配送失敗的配送可以安排重新配送");
@@ -193,10 +186,8 @@ public class Delivery {
         this.failureReason = null;
         this.updatedAt = LocalDateTime.now();
     }
-    
-    /**
-     * 重新安排配送（兼容舊代碼）
-     */
+
+    /** 重新安排配送（兼容舊代碼） */
     public void rearrange() {
         // 測試中可能會在不同狀態下調用此方法，所以放寬限制
         this.status = DeliveryStatus.PENDING_SHIPMENT;
@@ -218,10 +209,8 @@ public class Delivery {
     public DeliveryId getId() {
         return id;
     }
-    
-    /**
-     * 獲取ID的UUID形式（兼容舊代碼）
-     */
+
+    /** 獲取ID的UUID形式（兼容舊代碼） */
     public UUID getIdAsUUID() {
         return id.getId();
     }
@@ -253,7 +242,7 @@ public class Delivery {
     public LocalDateTime getEstimatedDeliveryTime() {
         return estimatedDeliveryTime;
     }
-    
+
     public LocalDateTime getActualDeliveryTime() {
         return actualDeliveryTime;
     }
@@ -273,7 +262,7 @@ public class Delivery {
     public String getDelayReason() {
         return delayReason;
     }
-    
+
     public boolean isRedeliveryScheduled() {
         return redeliveryScheduled;
     }

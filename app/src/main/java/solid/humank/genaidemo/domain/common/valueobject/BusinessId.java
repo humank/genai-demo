@@ -2,10 +2,7 @@ package solid.humank.genaidemo.domain.common.valueobject;
 
 import java.util.UUID;
 
-/**
- * 共享核心中的業務識別碼基礎類型
- * 用於在不同 Bounded Context 之間共享通用的識別碼概念
- */
+/** 共享核心中的業務識別碼基礎類型 用於在不同 Bounded Context 之間共享通用的識別碼概念 */
 public abstract class BusinessId {
     protected final UUID id;
 

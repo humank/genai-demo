@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * 訂單響應 DTO
- */
+/** 訂單響應 DTO */
 public class OrderResponse {
     private String id;
     private String customerId;
@@ -17,12 +15,17 @@ public class OrderResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public OrderResponse() {
-    }
+    public OrderResponse() {}
 
-    public OrderResponse(String id, String customerId, String shippingAddress, String status, 
-                        BigDecimal totalAmount, List<OrderItemResponse> items, 
-                        LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public OrderResponse(
+            String id,
+            String customerId,
+            String shippingAddress,
+            String status,
+            BigDecimal totalAmount,
+            List<OrderItemResponse> items,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = id;
         this.customerId = customerId;
         this.shippingAddress = shippingAddress;

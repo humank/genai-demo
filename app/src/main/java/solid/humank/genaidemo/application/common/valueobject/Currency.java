@@ -2,9 +2,8 @@ package solid.humank.genaidemo.application.common.valueobject;
 
 /**
  * 貨幣單位值對象 (應用層)
- * 
- * 表示貨幣單位。
- * 作為應用層的值對象，它是領域層值對象的簡化版本。
+ *
+ * <p>表示貨幣單位。 作為應用層的值對象，它是領域層值對象的簡化版本。
  */
 public enum Currency {
     TWD("新台幣"),
@@ -17,7 +16,7 @@ public enum Currency {
 
     /**
      * 建立貨幣單位
-     * 
+     *
      * @param description 貨幣描述
      */
     Currency(String description) {
@@ -26,7 +25,7 @@ public enum Currency {
 
     /**
      * 獲取貨幣描述
-     * 
+     *
      * @return 貨幣描述
      */
     public String getDescription() {

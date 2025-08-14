@@ -1,5 +1,11 @@
 package solid.humank.genaidemo.infrastructure.pricing.repository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Repository;
 import solid.humank.genaidemo.domain.pricing.model.aggregate.PricingRule;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.PriceId;
@@ -8,17 +14,7 @@ import solid.humank.genaidemo.domain.pricing.repository.PricingRuleRepository;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-
-/**
- * 定價規則倉儲的內存實現
- * 僅用於演示和測試目的
- */
+/** 定價規則倉儲的內存實現 僅用於演示和測試目的 */
 @Repository
 public class InMemoryPricingRuleRepository implements PricingRuleRepository {
 
@@ -84,7 +80,7 @@ public class InMemoryPricingRuleRepository implements PricingRuleRepository {
     public long count() {
         return storage.size();
     }
-    
+
     @Override
     public boolean existsById(PriceId priceId) {
         return storage.containsKey(priceId);

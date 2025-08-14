@@ -4,30 +4,28 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * 創建庫存請求對象
- */
+/** 創建庫存請求對象 */
 public class CreateInventoryRequest {
-    
+
     @NotBlank(message = "產品ID不能為空")
     private String productId;
-    
+
     @NotBlank(message = "產品名稱不能為空")
     private String productName;
-    
+
     @NotNull(message = "初始庫存數量不能為空")
     @Min(value = 0, message = "初始庫存數量不能小於0")
     private Integer initialQuantity;
-    
+
     @Min(value = 0, message = "庫存閾值不能小於0")
     private Integer threshold = 0;
 
     // 默認構造函數
-    public CreateInventoryRequest() {
-    }
+    public CreateInventoryRequest() {}
 
     // 帶參數的構造函數
-    public CreateInventoryRequest(String productId, String productName, Integer initialQuantity, Integer threshold) {
+    public CreateInventoryRequest(
+            String productId, String productName, Integer initialQuantity, Integer threshold) {
         this.productId = productId;
         this.productName = productName;
         this.initialQuantity = initialQuantity;

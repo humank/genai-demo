@@ -2,20 +2,17 @@ package solid.humank.genaidemo.interfaces.web.inventory.dto;
 
 import jakarta.validation.constraints.Min;
 
-/**
- * 更新庫存請求對象
- */
+/** 更新庫存請求對象 */
 public class UpdateInventoryRequest {
-    
+
     @Min(value = 0, message = "庫存數量不能小於0")
     private Integer quantity;
-    
+
     @Min(value = 0, message = "庫存閾值不能小於0")
     private Integer threshold;
 
     // 默認構造函數
-    public UpdateInventoryRequest() {
-    }
+    public UpdateInventoryRequest() {}
 
     // 帶參數的構造函數
     public UpdateInventoryRequest(Integer quantity, Integer threshold) {

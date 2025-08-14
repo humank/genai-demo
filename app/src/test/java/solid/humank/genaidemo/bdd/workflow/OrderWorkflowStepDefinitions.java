@@ -1,6 +1,10 @@
 package solid.humank.genaidemo.bdd.workflow;
 
-import io.cucumber.java.en.And;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -8,15 +12,10 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.workflow.model.aggregate.OrderWorkflow;
 import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowStatus;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * 訂單工作流聚合根的 Cucumber 步驟定義
- */
+/** 訂單工作流聚合根的 Cucumber 步驟定義 */
 public class OrderWorkflowStepDefinitions {
 
     private OrderWorkflow orderWorkflow;
-    private Exception thrownException;
 
     @Given("there are products available for workflow")
     public void thereAreProductsAvailableForWorkflow() {
@@ -265,7 +264,7 @@ public class OrderWorkflowStepDefinitions {
         // 在這個測試中，我們只需要確保訂單狀態為已取消
         assertEquals(WorkflowStatus.CANCELLED, orderWorkflow.getStatus());
     }
-    
+
     @Then("the system should release the reserved inventory")
     public void theSystemShouldReleaseTheReservedInventory2() {
         // 這個步驟在實際應用中會釋放庫存

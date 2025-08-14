@@ -1,17 +1,14 @@
 package solid.humank.genaidemo.infrastructure.inventory.persistence.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-/**
- * 庫存JPA實體
- */
+/** 庫存JPA實體 */
 @Entity
 @Table(name = "inventories")
 public class JpaInventoryEntity {
@@ -54,8 +51,7 @@ public class JpaInventoryEntity {
     private LocalDateTime updatedAt;
 
     // 默認構造函數
-    public JpaInventoryEntity() {
-    }
+    public JpaInventoryEntity() {}
 
     // Getters and Setters
     public UUID getId() {
@@ -158,9 +154,7 @@ public class JpaInventoryEntity {
         reservation.setInventory(null);
     }
 
-    /**
-     * 庫存狀態枚舉
-     */
+    /** 庫存狀態枚舉 */
     public enum InventoryStatusEnum {
         ACTIVE,
         INACTIVE,

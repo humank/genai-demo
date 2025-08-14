@@ -1,16 +1,12 @@
 package solid.humank.genaidemo.domain.notification.service;
 
+import java.util.List;
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 
-import java.util.List;
-
-/**
- * 通知發送器接口
- * 定義通知發送的行為
- */
+/** 通知發送器接口 定義通知發送的行為 */
 public interface NotificationSender {
-    
+
     /**
      * 發送通知
      *
@@ -18,7 +14,7 @@ public interface NotificationSender {
      * @return 是否發送成功
      */
     boolean send(Notification notification);
-    
+
     /**
      * 通過指定渠道發送通知
      *
@@ -27,7 +23,7 @@ public interface NotificationSender {
      * @return 是否發送成功
      */
     boolean sendThroughChannel(Notification notification, NotificationChannel channel);
-    
+
     /**
      * 通過替代渠道發送通知
      *
@@ -35,7 +31,7 @@ public interface NotificationSender {
      * @return 是否發送成功
      */
     boolean sendThroughAlternativeChannels(Notification notification);
-    
+
     /**
      * 批量發送通知
      *

@@ -1,22 +1,18 @@
 package solid.humank.genaidemo.domain.pricing.model.aggregate;
 
-import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.pricing.model.entity.CommissionRate;
-import solid.humank.genaidemo.domain.pricing.model.valueobject.PriceId;
-import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
-import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
-import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.pricing.model.entity.CommissionRate;
+import solid.humank.genaidemo.domain.pricing.model.valueobject.PriceId;
+import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
+import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 
-/**
- * 定價規則聚合根
- * 負責管理產品定價、折扣和佣金費率
- */
+/** 定價規則聚合根 負責管理產品定價、折扣和佣金費率 */
 @AggregateRoot
 public class PricingRule {
     private PriceId priceId;
@@ -28,20 +24,27 @@ public class PricingRule {
     private LocalDateTime effectiveFrom;
     private LocalDateTime effectiveTo;
     private boolean isActive;
-    
+
     // 將CommissionRate納入聚合內
     private List<CommissionRate> commissionRates;
     private ProductCategory productCategory;
 
     // Private constructor for JPA
+    @SuppressWarnings("unused")
     private PricingRule() {
         this.commissionRates = new ArrayList<>();
     }
 
-    public PricingRule(PriceId priceId, ProductId productId, PromotionId promotionId,
-                      Money finalPrice, double discountPercentage, Money discountAmount,
-                      LocalDateTime effectiveFrom, LocalDateTime effectiveTo,
-                      ProductCategory productCategory) {
+    public PricingRule(
+            PriceId priceId,
+            ProductId productId,
+            PromotionId promotionId,
+            Money finalPrice,
+            double discountPercentage,
+            Money discountAmount,
+            LocalDateTime effectiveFrom,
+            LocalDateTime effectiveTo,
+            ProductCategory productCategory) {
         this.priceId = priceId;
         this.productId = productId;
         this.promotionId = promotionId;
@@ -53,14 +56,12 @@ public class PricingRule {
         this.isActive = true;
         this.productCategory = productCategory;
         this.commissionRates = new ArrayList<>();
-        
+
         // 初始化默認佣金費率
         addDefaultCommissionRate();
     }
-    
-    /**
-     * 添加佣金費率
-     */
+
+    /** 添加佣金費率 */
     public void addCommissionRate(CommissionRate commissionRate) {
         if (commissionRate != null && commissionRate.getCategory().equals(this.productCategory)) {
             this.commissionRates.add(commissionRate);
@@ -68,49 +69,39 @@ public class PricingRule {
             throw new IllegalArgumentException("佣金費率的產品類別必須與定價規則的產品類別一致");
         }
     }
-    
-    /**
-     * 獲取所有佣金費率
-     */
+
+    /** 獲取所有佣金費率 */
     public List<CommissionRate> getCommissionRates() {
         return Collections.unmodifiableList(commissionRates);
     }
-    
-    /**
-     * 獲取當前適用的佣金費率
-     */
+
+    /** 獲取當前適用的佣金費率 */
     public CommissionRate getCurrentCommissionRate() {
         // 如果有多個費率，可以根據業務規則選擇最適合的一個
         // 這裡簡單返回第一個
         return commissionRates.isEmpty() ? null : commissionRates.get(0);
     }
-    
-    /**
-     * 計算佣金金額
-     */
+
+    /** 計算佣金金額 */
     public Money calculateCommission(boolean isEventPromotion) {
         CommissionRate rate = getCurrentCommissionRate();
         if (rate == null) {
             return Money.ZERO;
         }
-        
+
         int ratePercentage = isEventPromotion ? rate.getEventRate() : rate.getNormalRate();
         return finalPrice.multiply(ratePercentage / 100.0);
     }
 
-    /**
-     * 添加默認佣金費率
-     */
+    /** 添加默認佣金費率 */
     private void addDefaultCommissionRate() {
         int normalRate = getDefaultNormalRate(productCategory);
         int eventRate = getDefaultEventRate(productCategory);
         CommissionRate defaultRate = new CommissionRate(productCategory, normalRate, eventRate);
         this.commissionRates.add(defaultRate);
     }
-    
-    /**
-     * 獲取默認一般費率
-     */
+
+    /** 獲取默認一般費率 */
     private int getDefaultNormalRate(ProductCategory category) {
         return switch (category) {
             case ELECTRONICS -> 3;
@@ -119,10 +110,8 @@ public class PricingRule {
             default -> 4;
         };
     }
-    
-    /**
-     * 獲取默認活動費率
-     */
+
+    /** 獲取默認活動費率 */
     private int getDefaultEventRate(ProductCategory category) {
         return switch (category) {
             case ELECTRONICS -> 5;
@@ -172,7 +161,7 @@ public class PricingRule {
     public boolean isActive() {
         return isActive;
     }
-    
+
     public ProductCategory getProductCategory() {
         return productCategory;
     }
@@ -189,10 +178,8 @@ public class PricingRule {
         this.effectiveFrom = from;
         this.effectiveTo = to;
     }
-    
-    /**
-     * 更新佣金費率
-     */
+
+    /** 更新佣金費率 */
     public void updateCommissionRate(int normalRate, int eventRate) {
         CommissionRate rate = getCurrentCommissionRate();
         if (rate != null) {

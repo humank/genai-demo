@@ -2,9 +2,7 @@ package solid.humank.genaidemo.interfaces.web.inventory.dto;
 
 import solid.humank.genaidemo.application.inventory.dto.ReservationResult;
 
-/**
- * 庫存預留響應對象
- */
+/** 庫存預留響應對象 */
 public class ReservationResponse {
     private String productId;
     private int quantity;
@@ -13,11 +11,11 @@ public class ReservationResponse {
     private String message;
 
     // 默認構造函數
-    public ReservationResponse() {
-    }
+    public ReservationResponse() {}
 
     // 帶參數的構造函數
-    public ReservationResponse(String productId, int quantity, boolean success, String reservationId, String message) {
+    public ReservationResponse(
+            String productId, int quantity, boolean success, String reservationId, String message) {
         this.productId = productId;
         this.quantity = quantity;
         this.success = success;
@@ -25,17 +23,14 @@ public class ReservationResponse {
         this.message = message;
     }
 
-    /**
-     * 從應用層結果創建響應對象
-     */
+    /** 從應用層結果創建響應對象 */
     public static ReservationResponse fromResult(ReservationResult result) {
         return new ReservationResponse(
                 result.getProductId(),
                 result.getQuantity(),
                 result.isSuccess(),
                 result.getReservationId(),
-                result.getMessage()
-        );
+                result.getMessage());
     }
 
     // Getters and Setters

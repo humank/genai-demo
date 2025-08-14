@@ -1,13 +1,8 @@
 package solid.humank.genaidemo.application.pricing.dto;
 
-import solid.humank.genaidemo.application.pricing.dto.ProductCategoryDto;
-
 import java.time.LocalDateTime;
 
-/**
- * 定價規則DTO
- * 用於應用層與外部系統交互
- */
+/** 定價規則DTO 用於應用層與外部系統交互 */
 public class PricingRuleDto {
     private String priceId;
     private String productId;
@@ -23,12 +18,20 @@ public class PricingRuleDto {
     private int normalCommissionRate;
     private int eventCommissionRate;
 
-    public PricingRuleDto(String priceId, String productId, String promotionId, 
-                         double finalPrice, String currency, double discountPercentage, 
-                         double discountAmount, LocalDateTime effectiveFrom, 
-                         LocalDateTime effectiveTo, boolean active, 
-                         ProductCategoryDto productCategory, 
-                         int normalCommissionRate, int eventCommissionRate) {
+    public PricingRuleDto(
+            String priceId,
+            String productId,
+            String promotionId,
+            double finalPrice,
+            String currency,
+            double discountPercentage,
+            double discountAmount,
+            LocalDateTime effectiveFrom,
+            LocalDateTime effectiveTo,
+            boolean active,
+            ProductCategoryDto productCategory,
+            int normalCommissionRate,
+            int eventCommissionRate) {
         this.priceId = priceId;
         this.productId = productId;
         this.promotionId = promotionId;

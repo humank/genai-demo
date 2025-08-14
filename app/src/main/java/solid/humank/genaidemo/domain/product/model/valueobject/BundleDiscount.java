@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.product.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 
-/**
- * 捆綁銷售折扣
- */
+/** 捆綁銷售折扣 */
 public class BundleDiscount {
     private Money regularPrice;
     private Money discountedPrice;
@@ -16,10 +14,13 @@ public class BundleDiscount {
         this.regularPrice = regularPrice;
         this.discountedPrice = discountedPrice;
         this.isFixedPrice = true;
-        
+
         // 計算折扣百分比（僅供參考）
         if (regularPrice.getAmount().doubleValue() > 0) {
-            double discount = 1 - (discountedPrice.getAmount().doubleValue() / regularPrice.getAmount().doubleValue());
+            double discount =
+                    1
+                            - (discountedPrice.getAmount().doubleValue()
+                                    / regularPrice.getAmount().doubleValue());
             this.discountPercentage = (int) Math.round(discount * 100);
         }
     }

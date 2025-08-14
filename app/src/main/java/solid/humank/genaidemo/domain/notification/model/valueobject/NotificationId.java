@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.domain.notification.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 import java.util.Objects;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 通知ID值對象
- */
+/** 通知ID值對象 */
 @ValueObject
 public class NotificationId {
     private final UUID id;

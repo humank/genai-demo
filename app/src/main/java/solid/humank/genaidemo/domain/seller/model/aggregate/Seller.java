@@ -3,9 +3,7 @@ package solid.humank.genaidemo.domain.seller.model.aggregate;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.seller.model.valueobject.SellerId;
 
-/**
- * 賣家聚合根
- */
+/** 賣家聚合根 */
 @AggregateRoot
 public class Seller {
     private SellerId sellerId;
@@ -15,8 +13,8 @@ public class Seller {
     private boolean isActive;
 
     // Private constructor for JPA
-    private Seller() {
-    }
+    @SuppressWarnings("unused")
+    private Seller() {}
 
     public Seller(SellerId sellerId, String name, String email, String phone) {
         this.sellerId = sellerId;

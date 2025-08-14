@@ -1,8 +1,6 @@
 package solid.humank.genaidemo.application.inventory.dto;
 
-/**
- * 庫存預留結果
- */
+/** 庫存預留結果 */
 public class ReservationResult {
     private final String productId;
     private final int quantity;
@@ -10,7 +8,8 @@ public class ReservationResult {
     private final String reservationId;
     private final String message;
 
-    private ReservationResult(String productId, int quantity, boolean success, String reservationId, String message) {
+    private ReservationResult(
+            String productId, int quantity, boolean success, String reservationId, String message) {
         this.productId = productId;
         this.quantity = quantity;
         this.success = success;
@@ -19,23 +18,11 @@ public class ReservationResult {
     }
 
     public static ReservationResult success(String productId, int quantity, String reservationId) {
-        return new ReservationResult(
-                productId,
-                quantity,
-                true,
-                reservationId,
-                "庫存預留成功"
-        );
+        return new ReservationResult(productId, quantity, true, reservationId, "庫存預留成功");
     }
 
     public static ReservationResult failure(String productId, int quantity, String message) {
-        return new ReservationResult(
-                productId,
-                quantity,
-                false,
-                null,
-                message
-        );
+        return new ReservationResult(productId, quantity, false, null, message);
     }
 
     public String getProductId() {

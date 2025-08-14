@@ -1,14 +1,11 @@
 package solid.humank.genaidemo.infrastructure.inventory.persistence.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.hibernate.annotations.CreationTimestamp;
 
-/**
- * 庫存預留JPA實體
- */
+/** 庫存預留JPA實體 */
 @Entity
 @Table(name = "inventory_reservations")
 public class JpaReservationEntity {
@@ -39,8 +36,7 @@ public class JpaReservationEntity {
     private LocalDateTime expiresAt;
 
     // 默認構造函數
-    public JpaReservationEntity() {
-    }
+    public JpaReservationEntity() {}
 
     // Getters and Setters
     public UUID getId() {
@@ -99,9 +95,7 @@ public class JpaReservationEntity {
         this.expiresAt = expiresAt;
     }
 
-    /**
-     * 預留狀態枚舉
-     */
+    /** 預留狀態枚舉 */
     public enum ReservationStatusEnum {
         ACTIVE,
         CONFIRMED,

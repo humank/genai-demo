@@ -2,10 +2,7 @@ package solid.humank.genaidemo.application.inventory.port.outgoing;
 
 import java.util.Map;
 
-/**
- * 外部倉庫端口 - 次要輸出端口
- * 定義系統與外部倉庫系統的交互方式
- */
+/** 外部倉庫端口 - 次要輸出端口 定義系統與外部倉庫系統的交互方式 */
 public interface ExternalWarehousePort {
     /**
      * 獲取產品庫存數量

@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.notification.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 通知渠道值對象
- */
+/** 通知渠道值對象 */
 @ValueObject
 public enum NotificationChannel {
     EMAIL("電子郵件"),

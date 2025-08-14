@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.domain.workflow.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 import java.util.Objects;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 工作流ID值對象
- */
+/** 工作流ID值對象 */
 @ValueObject
 public class WorkflowId {
     private final UUID id;

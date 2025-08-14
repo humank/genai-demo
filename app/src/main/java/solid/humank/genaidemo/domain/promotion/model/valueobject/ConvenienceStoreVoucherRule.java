@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
+import java.time.Period;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 
-import java.time.Period;
-
-/**
- * 超商優惠券規則
- */
+/** 超商優惠券規則 */
 @ValueObject
 public class ConvenienceStoreVoucherRule {
     private final String voucherName;
@@ -18,9 +15,14 @@ public class ConvenienceStoreVoucherRule {
     private final String contents;
     private final int quantity;
 
-    public ConvenienceStoreVoucherRule(String voucherName, Money price, Money regularPrice, 
-                                      Period validPeriod, String redemptionLocation, 
-                                      String contents, int quantity) {
+    public ConvenienceStoreVoucherRule(
+            String voucherName,
+            Money price,
+            Money regularPrice,
+            Period validPeriod,
+            String redemptionLocation,
+            String contents,
+            int quantity) {
         this.voucherName = voucherName;
         this.price = price;
         this.regularPrice = regularPrice;

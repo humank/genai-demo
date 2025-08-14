@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.domain.delivery.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 import java.util.Objects;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 配送ID值對象
- */
+/** 配送ID值對象 */
 @ValueObject
 public class DeliveryId {
     private final UUID id;

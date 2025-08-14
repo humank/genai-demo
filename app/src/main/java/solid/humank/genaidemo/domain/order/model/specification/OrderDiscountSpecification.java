@@ -2,18 +2,15 @@ package solid.humank.genaidemo.domain.order.model.specification;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-
-// 使用完整路徑來避免命名衝突
-import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 
-/**
- * 訂單折扣規格
- * 展示如何使用 Specification 模式來實作複雜的業務規則
- */
-@solid.humank.genaidemo.domain.common.annotations.Specification(description = "訂單折扣規格，用於判斷訂單是否符合折扣條件")
-public class OrderDiscountSpecification implements solid.humank.genaidemo.domain.common.specification.Specification<Order> {
-    
+/** 訂單折扣規格 展示如何使用 Specification 模式來實作複雜的業務規則 */
+@solid.humank.genaidemo.domain.common.annotations.Specification(
+        description = "訂單折扣規格，用於判斷訂單是否符合折扣條件")
+public class OrderDiscountSpecification
+        implements solid.humank.genaidemo.domain.common.specification.Specification<Order> {
+
     private final Money minimumAmount;
     private final LocalDateTime currentTime;
 
@@ -24,34 +21,24 @@ public class OrderDiscountSpecification implements solid.humank.genaidemo.domain
 
     @Override
     public boolean isSatisfiedBy(Order order) {
-        return isMinimumAmountMet(order) && 
-               isWeekend() && 
-               hasMultipleItems(order);
+        return isMinimumAmountMet(order) && isWeekend() && hasMultipleItems(order);
     }
 
     private boolean isMinimumAmountMet(Order order) {
-        return order.getTotalAmount().amount()
-                   .compareTo(minimumAmount.amount()) >= 0;
+        return order.getTotalAmount().amount().compareTo(minimumAmount.amount()) >= 0;
     }
 
     private boolean isWeekend() {
         DayOfWeek dayOfWeek = currentTime.getDayOfWeek();
-        return dayOfWeek == DayOfWeek.SATURDAY || 
-               dayOfWeek == DayOfWeek.SUNDAY;
+        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
 
     private boolean hasMultipleItems(Order order) {
         return order.getItems().size() >= 2;
     }
 
-    /**
-     * 建立一個週末特價規格
-     * 訂單滿 1000 元且購買 2 件以上商品，在週末可以享有折扣
-     */
+    /** 建立一個週末特價規格 訂單滿 1000 元且購買 2 件以上商品，在週末可以享有折扣 */
     public static OrderDiscountSpecification weekendSpecial() {
-        return new OrderDiscountSpecification(
-            Money.twd(1000),
-            LocalDateTime.now()
-        );
+        return new OrderDiscountSpecification(Money.twd(1000), LocalDateTime.now());
     }
 }

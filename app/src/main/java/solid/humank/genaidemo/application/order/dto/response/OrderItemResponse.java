@@ -2,9 +2,7 @@ package solid.humank.genaidemo.application.order.dto.response;
 
 import java.math.BigDecimal;
 
-/**
- * 訂單項響應 DTO
- */
+/** 訂單項響應 DTO */
 public class OrderItemResponse {
     private String id;
     private String productId;
@@ -13,10 +11,15 @@ public class OrderItemResponse {
     private BigDecimal unitPrice;
     private BigDecimal subtotal;
 
-    public OrderItemResponse() {
-    }
+    public OrderItemResponse() {}
 
-    public OrderItemResponse(String id, String productId, String productName, int quantity, BigDecimal unitPrice, BigDecimal subtotal) {
+    public OrderItemResponse(
+            String id,
+            String productId,
+            String productName,
+            int quantity,
+            BigDecimal unitPrice,
+            BigDecimal subtotal) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;

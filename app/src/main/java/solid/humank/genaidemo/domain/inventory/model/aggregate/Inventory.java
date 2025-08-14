@@ -1,5 +1,10 @@
 package solid.humank.genaidemo.domain.inventory.model.aggregate;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
@@ -10,16 +15,7 @@ import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
-/**
- * 庫存聚合根
- * 管理產品庫存和預留
- */
+/** 庫存聚合根 管理產品庫存和預留 */
 @AggregateRoot(name = "Inventory", description = "庫存聚合根，管理產品庫存和預留")
 @AggregateLifecycle.ManagedLifecycle
 public class Inventory {
@@ -58,7 +54,7 @@ public class Inventory {
         if (quantity < 0) {
             throw new IllegalArgumentException("庫存數量不能為負數");
         }
-        
+
         this.id = Objects.requireNonNull(id, "庫存ID不能為空");
         this.productId = Objects.requireNonNull(productId, "產品ID不能為空");
         this.productName = Objects.requireNonNull(productName, "產品名稱不能為空");
@@ -70,14 +66,11 @@ public class Inventory {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
         this.status = InventoryStatus.ACTIVE;
-        
+
         // 發布庫存創建事件
-        AggregateLifecycleAware.apply(new InventoryCreatedEvent(
-            this.id,
-            this.productId,
-            this.productName,
-            this.totalQuantity
-        ));
+        AggregateLifecycleAware.apply(
+                new InventoryCreatedEvent(
+                        this.id, this.productId, this.productName, this.totalQuantity));
     }
 
     /**
@@ -101,27 +94,27 @@ public class Inventory {
         if (quantity <= 0) {
             throw new IllegalArgumentException("預留數量必須大於零");
         }
-        
+
         if (!isSufficient(quantity)) {
             throw new IllegalStateException("庫存不足，無法預留");
         }
-        
+
         ReservationId reservationId = ReservationId.create();
         reservations.put(reservationId, quantity);
         availableQuantity -= quantity;
         reservedQuantity += quantity;
         updatedAt = LocalDateTime.now();
-        
+
         // 發布庫存預留事件
-        AggregateLifecycleAware.apply(new StockReservedEvent(
-            this.id,
-            this.productId,
-            reservationId,
-            orderId,
-            quantity,
-            availableQuantity
-        ));
-        
+        AggregateLifecycleAware.apply(
+                new StockReservedEvent(
+                        this.id,
+                        this.productId,
+                        reservationId,
+                        orderId,
+                        quantity,
+                        availableQuantity));
+
         return reservationId;
     }
 
@@ -162,18 +155,14 @@ public class Inventory {
         if (quantity <= 0) {
             throw new IllegalArgumentException("增加的庫存數量必須大於零");
         }
-        
+
         totalQuantity += quantity;
         availableQuantity += quantity;
         updatedAt = LocalDateTime.now();
-        
+
         // 發布庫存增加事件
-        AggregateLifecycleAware.apply(new StockAddedEvent(
-            this.id,
-            this.productId,
-            quantity,
-            totalQuantity
-        ));
+        AggregateLifecycleAware.apply(
+                new StockAddedEvent(this.id, this.productId, quantity, totalQuantity));
     }
 
     /**
@@ -185,7 +174,7 @@ public class Inventory {
         if (threshold < 0) {
             throw new IllegalArgumentException("庫存閾值不能為負數");
         }
-        
+
         this.threshold = threshold;
         updatedAt = LocalDateTime.now();
     }
@@ -208,7 +197,7 @@ public class Inventory {
         if (newTotalQuantity < reservedQuantity) {
             throw new IllegalArgumentException("新的庫存數量不能小於已預留數量");
         }
-        
+
         int difference = newTotalQuantity - totalQuantity;
         totalQuantity = newTotalQuantity;
         availableQuantity += difference;

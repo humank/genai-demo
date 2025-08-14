@@ -1,7 +1,7 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 @ValueObject
 public class PromotionId {

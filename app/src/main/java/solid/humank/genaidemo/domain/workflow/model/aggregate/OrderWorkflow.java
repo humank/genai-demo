@@ -1,20 +1,16 @@
 package solid.humank.genaidemo.domain.workflow.model.aggregate;
 
-import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.common.valueobject.OrderId;
-import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowId;
-import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowStatus;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowId;
+import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowStatus;
 
-/**
- * 訂單工作流聚合根
- * 管理訂單從創建到完成的整個生命週期
- */
+/** 訂單工作流聚合根 管理訂單從創建到完成的整個生命週期 */
 @AggregateRoot
 public class OrderWorkflow {
     private final WorkflowId id;
@@ -70,9 +66,7 @@ public class OrderWorkflow {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 提交訂單
-     */
+    /** 提交訂單 */
     public void submitOrder() {
         if (status != WorkflowStatus.CREATED) {
             throw new IllegalStateException("只有已創建狀態的工作流可以提交訂單");
@@ -138,9 +132,7 @@ public class OrderWorkflow {
         }
     }
 
-    /**
-     * 確認訂單
-     */
+    /** 確認訂單 */
     public void confirmOrder() {
         if (status != WorkflowStatus.PENDING_PAYMENT) {
             throw new IllegalStateException("只有待支付狀態的工作流可以確認訂單");
@@ -158,9 +150,7 @@ public class OrderWorkflow {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 安排配送
-     */
+    /** 安排配送 */
     public void arrangeDelivery() {
         if (status != WorkflowStatus.CONFIRMED) {
             throw new IllegalStateException("只有已確認狀態的工作流可以安排配送");
@@ -171,9 +161,7 @@ public class OrderWorkflow {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 完成訂單
-     */
+    /** 完成訂單 */
     public void completeOrder() {
         if (status != WorkflowStatus.PROCESSING) {
             throw new IllegalStateException("只有處理中狀態的工作流可以完成訂單");

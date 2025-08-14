@@ -4,9 +4,7 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
-/**
- * 滿額贈禮規則
- */
+/** 滿額贈禮規則 */
 @ValueObject
 public class GiftWithPurchaseRule {
     private final Money minimumPurchaseAmount;
@@ -15,8 +13,12 @@ public class GiftWithPurchaseRule {
     private final int maxGiftsPerOrder;
     private final boolean isMultipleGiftsAllowed;
 
-    public GiftWithPurchaseRule(Money minimumPurchaseAmount, ProductId giftProductId, Money giftValue, 
-                               int maxGiftsPerOrder, boolean isMultipleGiftsAllowed) {
+    public GiftWithPurchaseRule(
+            Money minimumPurchaseAmount,
+            ProductId giftProductId,
+            Money giftValue,
+            int maxGiftsPerOrder,
+            boolean isMultipleGiftsAllowed) {
         this.minimumPurchaseAmount = minimumPurchaseAmount;
         this.giftProductId = giftProductId;
         this.giftValue = giftValue;

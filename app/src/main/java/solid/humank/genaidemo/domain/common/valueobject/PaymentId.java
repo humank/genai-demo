@@ -3,10 +3,7 @@ package solid.humank.genaidemo.domain.common.valueobject;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * 支付ID值對象
- * 封裝支付ID的業務規則和行為
- */
+/** 支付ID值對象 封裝支付ID的業務規則和行為 */
 public class PaymentId {
     private final UUID id;
 
@@ -16,7 +13,7 @@ public class PaymentId {
 
     /**
      * 創建新的支付ID
-     * 
+     *
      * @return 新的支付ID值對象
      */
     public static PaymentId create() {
@@ -25,7 +22,7 @@ public class PaymentId {
 
     /**
      * 從UUID創建支付ID
-     * 
+     *
      * @param id UUID
      * @return 支付ID值對象
      */
@@ -35,7 +32,7 @@ public class PaymentId {
 
     /**
      * 從字符串創建支付ID
-     * 
+     *
      * @param id 字符串形式的UUID
      * @return 支付ID值對象
      */
@@ -45,7 +42,7 @@ public class PaymentId {
 
     /**
      * 獲取UUID
-     * 
+     *
      * @return UUID
      */
     public UUID getId() {

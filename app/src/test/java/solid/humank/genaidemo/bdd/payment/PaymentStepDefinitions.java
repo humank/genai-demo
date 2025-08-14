@@ -1,23 +1,20 @@
 package solid.humank.genaidemo.bdd.payment;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
-import java.math.BigDecimal;
-import java.util.Map;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-/**
- * 支付聚合根的 Cucumber 步驟定義
- */
+/** 支付聚合根的 Cucumber 步驟定義 */
 public class PaymentStepDefinitions {
 
     private UUID orderId;
@@ -119,8 +116,11 @@ public class PaymentStepDefinitions {
     @Then("應拋出支付相關異常 {string}")
     public void shouldThrowPaymentExceptionWithMessage(String errorMessage) {
         assertNotNull(thrownException, "Expected exception was not thrown");
-        assertTrue(thrownException.getMessage().contains(errorMessage), 
-                "Expected error message to contain: " + errorMessage + 
-                ", but was: " + thrownException.getMessage());
+        assertTrue(
+                thrownException.getMessage().contains(errorMessage),
+                "Expected error message to contain: "
+                        + errorMessage
+                        + ", but was: "
+                        + thrownException.getMessage());
     }
 }

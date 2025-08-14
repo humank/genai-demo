@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
+    id 'com.diffplug.spotless' version '6.25.0' // 代碼格式化插件
 }
 
 group = 'solid.humank'
@@ -94,6 +95,11 @@ tasks.withType(Test).configureEach {
 
 tasks.withType(JavaExec).configureEach {
     jvmArgs += '--enable-preview'
+}
+
+// 讓編譯任務依賴於代碼格式化
+tasks.named('compileJava') {
+    dependsOn 'spotlessApply'
 }
 
 // 標準單元測試任務
@@ -244,4 +250,167 @@ tasks.register('prepareAllureResults') {
 // 覆蓋 allureReport 任務
 tasks.named('allureReport') {
     dependsOn 'prepareAllureResults'
+}
+
+// Spotless 配置 - 代碼格式化和 import 清理
+spotless {
+    java {
+        // 指定要處理的文件
+        target 'src/**/*.java'
+        
+        // 移除未使用的 imports
+        removeUnusedImports()
+        
+        // 整理 imports 順序
+        importOrder('java', 'javax', 'org', 'com', '')
+        
+        // 使用 Google Java Format
+        googleJavaFormat('1.19.2').aosp().reflowLongStrings()
+        
+        // 或者使用 Eclipse formatter（註釋掉上面的 googleJavaFormat 行）
+        // eclipse().configFile('eclipse-formatter.xml')
+        
+        // 確保文件以換行符結尾
+        endWithNewline()
+        
+        // 移除行尾空白
+        trimTrailingWhitespace()
+    }
+    
+    // Markdown 格式化配置
+    format 'markdown', {
+        target '**/*.md'
+        
+        // 使用 Prettier 格式化 Markdown
+        prettier(['prettier': '2.8.8', 'prettier-plugin-organize-imports': '3.2.2'])
+            .config([
+                'parser': 'markdown',
+                'printWidth': 80,
+                'tabWidth': 2,
+                'useTabs': false,
+                'semi': false,
+                'singleQuote': true,
+                'quoteProps': 'as-needed',
+                'trailingComma': 'es5',
+                'bracketSpacing': true,
+                'proseWrap': 'preserve'
+            ])
+        
+        // 確保文件以換行符結尾
+        endWithNewline()
+        
+        // 移除行尾空白
+        trimTrailingWhitespace()
+    }
+}
+
+// 自定義任務：只清理 imports（不格式化其他內容）
+tasks.register('cleanImports') {
+    description = '只清理 Java 代碼中未使用的 imports，不進行其他格式化'
+    group = 'formatting'
+    
+    doLast {
+        // 使用 Spotless 的 removeUnusedImports 功能
+        exec {
+            commandLine 'sh', '-c', """
+                find src -name "*.java" -exec sed -i '' '/^import.*unused/d' {} \\;
+            """
+        }
+        println "未使用的 imports 已清理完成！"
+    }
+}
+
+// Markdown 格式化和語法修正任務
+tasks.register('formatMarkdown') {
+    description = '格式化和修正 Markdown 文件語法結構'
+    group = 'formatting'
+    
+    doLast {
+        // 找到所有 Markdown 文件
+        def markdownFiles = fileTree(dir: '.', include: '**/*.md', exclude: ['**/node_modules/**', '**/build/**', '**/.git/**']).files
+        
+        println "正在處理 ${markdownFiles.size()} 個 Markdown 文件..."
+        
+        markdownFiles.each { file ->
+            def content = file.text
+            def originalContent = content
+            
+            // 修正標題格式（確保 # 後面有空格）
+            content = content.replaceAll(/^(#{1,6})([^\s#])/, '$1 $2')
+            
+            // 修正列表格式（確保 - 或 * 後面有空格）
+            content = content.replaceAll(/^(\s*[-*])([^\s])/, '$1 $2')
+            
+            // 修正數字列表格式
+            content = content.replaceAll(/^(\s*\d+\.)([^\s])/, '$1 $2')
+            
+            // 修正代碼塊格式（確保前後有空行）
+            content = content.replaceAll(/([^\n])\n```/, '$1\n\n```')
+            content = content.replaceAll(/```\n([^\n])/, '```\n\n$1')
+            
+            // 修正鏈接格式
+            content = content.replaceAll(/\[([^\]]+)\]\s*\(([^)]+)\)/, '[$1]($2)')
+            
+            // 移除多餘的空行（超過兩個連續空行）
+            content = content.replaceAll(/\n{3,}/, '\n\n')
+            
+            // 確保文件以單個換行符結尾
+            content = content.replaceAll(/\n*$/, '\n')
+            
+            if (content != originalContent) {
+                file.text = content
+                println "已修正: ${file.name}"
+            }
+        }
+        
+        println "Markdown 文件格式化完成！"
+    }
+}
+
+// Markdown 語法檢查任務
+tasks.register('lintMarkdown') {
+    description = '檢查 Markdown 文件語法'
+    group = 'verification'
+    
+    doLast {
+        def markdownFiles = fileTree(dir: '.', include: '**/*.md', exclude: ['**/node_modules/**', '**/build/**', '**/.git/**']).files
+        def issues = []
+        
+        markdownFiles.each { file ->
+            def content = file.text
+            def lines = content.split('\n')
+            
+            lines.eachWithIndex { line, index ->
+                def lineNumber = index + 1
+                
+                // 檢查標題格式
+                if (line.matches(/^#{1,6}[^\s#]/)) {
+                    issues.add("${file.name}:${lineNumber} - 標題後缺少空格")
+                }
+                
+                // 檢查列表格式
+                if (line.matches(/^\s*[-*][^\s]/)) {
+                    issues.add("${file.name}:${lineNumber} - 列表項後缺少空格")
+                }
+                
+                // 檢查數字列表格式
+                if (line.matches(/^\s*\d+\.[^\s]/)) {
+                    issues.add("${file.name}:${lineNumber} - 數字列表後缺少空格")
+                }
+                
+                // 檢查行尾空白
+                if (line.endsWith(' ') || line.endsWith('\t')) {
+                    issues.add("${file.name}:${lineNumber} - 行尾有多餘空白")
+                }
+            }
+        }
+        
+        if (issues.isEmpty()) {
+            println "✅ 所有 Markdown 文件語法檢查通過！"
+        } else {
+            println "❌ 發現 ${issues.size()} 個 Markdown 語法問題："
+            issues.each { println "  $it" }
+            throw new GradleException("Markdown 語法檢查失敗")
+        }
+    }
 }

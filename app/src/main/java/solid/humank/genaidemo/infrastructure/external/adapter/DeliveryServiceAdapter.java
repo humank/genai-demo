@@ -1,28 +1,24 @@
 package solid.humank.genaidemo.infrastructure.external.adapter;
 
-import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
 import solid.humank.genaidemo.infrastructure.persistence.adapter.DeliveryRepositoryAdapter;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-/**
- * 配送服務適配器
- * 用於適配新舊兩個配送服務
- * 暫時禁用以解決啟動問題
- */
+/** 配送服務適配器 用於適配新舊兩個配送服務 暫時禁用以解決啟動問題 */
 // @Service
 public class DeliveryServiceAdapter implements DeliveryService {
 
-    private final solid.humank.genaidemo.domain.workflow.service.DeliveryService workflowDeliveryService;
+    private final solid.humank.genaidemo.domain.workflow.service.DeliveryService
+            workflowDeliveryService;
     private final DeliveryRepositoryAdapter deliveryRepositoryAdapter;
 
-    public DeliveryServiceAdapter(solid.humank.genaidemo.domain.workflow.service.DeliveryService workflowDeliveryService, 
-                                 DeliveryRepositoryAdapter deliveryRepositoryAdapter) {
+    public DeliveryServiceAdapter(
+            solid.humank.genaidemo.domain.workflow.service.DeliveryService workflowDeliveryService,
+            DeliveryRepositoryAdapter deliveryRepositoryAdapter) {
         this.workflowDeliveryService = workflowDeliveryService;
         this.deliveryRepositoryAdapter = deliveryRepositoryAdapter;
     }
@@ -42,9 +38,12 @@ public class DeliveryServiceAdapter implements DeliveryService {
     }
 
     @Override
-    public boolean allocateDeliveryResources(DeliveryId deliveryId, String deliveryPersonId, 
-                                           String deliveryPersonName, String deliveryPersonContact, 
-                                           LocalDateTime estimatedDeliveryTime) {
+    public boolean allocateDeliveryResources(
+            DeliveryId deliveryId,
+            String deliveryPersonId,
+            String deliveryPersonName,
+            String deliveryPersonContact,
+            LocalDateTime estimatedDeliveryTime) {
         // 獲取配送
         Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
@@ -54,8 +53,11 @@ public class DeliveryServiceAdapter implements DeliveryService {
         try {
             // 分配資源
             Delivery delivery = deliveryOpt.get();
-            delivery.allocateResources(deliveryPersonId, deliveryPersonName, 
-                                      deliveryPersonContact, estimatedDeliveryTime);
+            delivery.allocateResources(
+                    deliveryPersonId,
+                    deliveryPersonName,
+                    deliveryPersonContact,
+                    estimatedDeliveryTime);
             // 保存更新
             deliveryRepositoryAdapter.save(delivery);
             return true;
@@ -147,7 +149,8 @@ public class DeliveryServiceAdapter implements DeliveryService {
     }
 
     @Override
-    public boolean markAsDelayed(DeliveryId deliveryId, String reason, LocalDateTime newEstimatedDeliveryTime) {
+    public boolean markAsDelayed(
+            DeliveryId deliveryId, String reason, LocalDateTime newEstimatedDeliveryTime) {
         // 獲取配送
         Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {

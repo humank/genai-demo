@@ -1,14 +1,10 @@
 package solid.humank.genaidemo.domain.promotion.model.specification;
 
+import java.util.Optional;
 import solid.humank.genaidemo.domain.common.annotations.Specification;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.LimitedQuantityRule;
 
-import java.util.Optional;
-
-/**
- * 限量特價規格
- * 檢查促銷庫存是否還有剩餘
- */
+/** 限量特價規格 檢查促銷庫存是否還有剩餘 */
 @Specification(name = "LimitedQuantitySpecification", description = "限量特價規格，檢查促銷庫存是否還有剩餘")
 public class LimitedQuantitySpecification implements PromotionSpecification {
     private final LimitedQuantityRule rule;

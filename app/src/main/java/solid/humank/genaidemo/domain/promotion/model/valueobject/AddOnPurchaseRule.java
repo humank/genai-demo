@@ -4,9 +4,7 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
-/**
- * 加價購規則
- */
+/** 加價購規則 */
 @ValueObject
 public class AddOnPurchaseRule {
     private final ProductId mainProductId;
@@ -14,7 +12,11 @@ public class AddOnPurchaseRule {
     private final Money specialPrice;
     private final Money regularPrice;
 
-    public AddOnPurchaseRule(ProductId mainProductId, ProductId addOnProductId, Money specialPrice, Money regularPrice) {
+    public AddOnPurchaseRule(
+            ProductId mainProductId,
+            ProductId addOnProductId,
+            Money specialPrice,
+            Money regularPrice) {
         this.mainProductId = mainProductId;
         this.addOnProductId = addOnProductId;
         this.specialPrice = specialPrice;

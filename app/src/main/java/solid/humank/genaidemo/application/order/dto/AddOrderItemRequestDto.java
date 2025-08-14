@@ -2,9 +2,7 @@ package solid.humank.genaidemo.application.order.dto;
 
 import java.math.BigDecimal;
 
-/**
- * 添加訂單項請求 DTO
- */
+/** 添加訂單項請求 DTO */
 public class AddOrderItemRequestDto {
     private String orderId;
     private String productId;
@@ -19,7 +17,7 @@ public class AddOrderItemRequestDto {
 
     /**
      * 從參數創建 DTO
-     * 
+     *
      * @param orderId 訂單ID
      * @param productId 產品ID
      * @param productName 產品名稱
@@ -28,10 +26,10 @@ public class AddOrderItemRequestDto {
      * @return 添加訂單項請求 DTO
      */
     public static AddOrderItemRequestDto from(
-            String orderId, 
-            String productId, 
-            String productName, 
-            int quantity, 
+            String orderId,
+            String productId,
+            String productName,
+            int quantity,
             BigDecimal unitPrice) {
         AddOrderItemRequestDto dto = new AddOrderItemRequestDto();
         dto.setOrderId(orderId);
@@ -44,7 +42,7 @@ public class AddOrderItemRequestDto {
 
     /**
      * 從參數創建 DTO
-     * 
+     *
      * @param orderId 訂單ID
      * @param productId 產品ID
      * @param productName 產品名稱
@@ -54,10 +52,10 @@ public class AddOrderItemRequestDto {
      * @return 添加訂單項請求 DTO
      */
     public static AddOrderItemRequestDto from(
-            String orderId, 
-            String productId, 
-            String productName, 
-            int quantity, 
+            String orderId,
+            String productId,
+            String productName,
+            int quantity,
             BigDecimal unitPrice,
             String currency) {
         AddOrderItemRequestDto dto = from(orderId, productId, productName, quantity, unitPrice);

@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.domain.inventory.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 import java.util.Objects;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 庫存ID值對象
- */
+/** 庫存ID值對象 */
 @ValueObject
 public class InventoryId {
     private final UUID id;

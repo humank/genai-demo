@@ -3,10 +3,7 @@ package solid.humank.genaidemo.domain.common.validation;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 領域驗證器基礎類別
- * 用於實施領域不變條件（Domain Invariants）
- */
+/** 領域驗證器基礎類別 用於實施領域不變條件（Domain Invariants） */
 public abstract class DomainValidator<T> {
     private final List<String> errors = new ArrayList<>();
 
@@ -24,6 +21,7 @@ public abstract class DomainValidator<T> {
 
     /**
      * 驗證領域物件
+     *
      * @param target 要驗證的領域物件
      * @return 驗證是否通過
      */
@@ -35,6 +33,7 @@ public abstract class DomainValidator<T> {
 
     /**
      * 執行實際的驗證邏輯
+     *
      * @param target 要驗證的領域物件
      */
     protected abstract void doValidate(T target);

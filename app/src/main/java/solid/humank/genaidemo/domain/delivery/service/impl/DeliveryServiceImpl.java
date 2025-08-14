@@ -1,19 +1,14 @@
 package solid.humank.genaidemo.domain.delivery.service.impl;
 
-import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.repository.DeliveryRepository;
 import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-/**
- * 配送服務實現
- * 暫時禁用以解決啟動問題
- */
+/** 配送服務實現 暫時禁用以解決啟動問題 */
 // @Service
 public class DeliveryServiceImpl implements DeliveryService {
 
@@ -35,15 +30,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (deliveryOpt.isEmpty()) {
             return false;
         }
-        
+
         // 在實際實現中，這裡可能會有更複雜的邏輯來安排配送
         return true;
     }
 
     @Override
-    public boolean allocateDeliveryResources(DeliveryId deliveryId, String deliveryPersonId, 
-                                           String deliveryPersonName, String deliveryPersonContact, 
-                                           LocalDateTime estimatedDeliveryTime) {
+    public boolean allocateDeliveryResources(
+            DeliveryId deliveryId,
+            String deliveryPersonId,
+            String deliveryPersonName,
+            String deliveryPersonContact,
+            LocalDateTime estimatedDeliveryTime) {
         Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
@@ -51,8 +49,11 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         try {
             Delivery delivery = deliveryOpt.get();
-            delivery.allocateResources(deliveryPersonId, deliveryPersonName, 
-                                      deliveryPersonContact, estimatedDeliveryTime);
+            delivery.allocateResources(
+                    deliveryPersonId,
+                    deliveryPersonName,
+                    deliveryPersonContact,
+                    estimatedDeliveryTime);
             deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
@@ -129,7 +130,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public boolean markAsDelayed(DeliveryId deliveryId, String reason, LocalDateTime newEstimatedDeliveryTime) {
+    public boolean markAsDelayed(
+            DeliveryId deliveryId, String reason, LocalDateTime newEstimatedDeliveryTime) {
         Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;

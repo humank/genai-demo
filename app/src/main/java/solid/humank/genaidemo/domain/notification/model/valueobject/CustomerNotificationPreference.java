@@ -1,15 +1,11 @@
 package solid.humank.genaidemo.domain.notification.model.valueobject;
 
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 客戶通知偏好值對象
- * 封裝客戶的通知偏好設置
- */
+/** 客戶通知偏好值對象 封裝客戶的通知偏好設置 */
 @ValueObject
 public class CustomerNotificationPreference {
     private final String customerId;
@@ -25,19 +21,23 @@ public class CustomerNotificationPreference {
      * @param selectedChannels 選擇的通知渠道
      * @param optedOut 是否選擇不接收通知
      */
-    public CustomerNotificationPreference(String customerId, List<NotificationType> selectedTypes, List<NotificationChannel> selectedChannels, boolean optedOut) {
+    public CustomerNotificationPreference(
+            String customerId,
+            List<NotificationType> selectedTypes,
+            List<NotificationChannel> selectedChannels,
+            boolean optedOut) {
         this.customerId = Objects.requireNonNull(customerId, "客戶ID不能為空");
-        
+
         if (selectedTypes == null || selectedTypes.isEmpty()) {
             throw new IllegalArgumentException("選擇的通知類型不能為空");
         }
         this.selectedTypes = Collections.unmodifiableList(selectedTypes);
-        
+
         if (selectedChannels == null || selectedChannels.isEmpty()) {
             throw new IllegalArgumentException("選擇的通知渠道不能為空");
         }
         this.selectedChannels = Collections.unmodifiableList(selectedChannels);
-        
+
         this.optedOut = optedOut;
     }
 
@@ -51,7 +51,7 @@ public class CustomerNotificationPreference {
         if (optedOut) {
             return false;
         }
-        
+
         return selectedTypes.contains(type);
     }
 
@@ -105,10 +105,10 @@ public class CustomerNotificationPreference {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerNotificationPreference that = (CustomerNotificationPreference) o;
-        return optedOut == that.optedOut &&
-                Objects.equals(customerId, that.customerId) &&
-                Objects.equals(selectedTypes, that.selectedTypes) &&
-                Objects.equals(selectedChannels, that.selectedChannels);
+        return optedOut == that.optedOut
+                && Objects.equals(customerId, that.customerId)
+                && Objects.equals(selectedTypes, that.selectedTypes)
+                && Objects.equals(selectedChannels, that.selectedChannels);
     }
 
     @Override

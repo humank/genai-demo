@@ -1,5 +1,9 @@
 package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
@@ -10,16 +14,7 @@ import solid.humank.genaidemo.infrastructure.order.persistence.entity.JpaOrderEn
 import solid.humank.genaidemo.infrastructure.order.persistence.mapper.OrderMapper;
 import solid.humank.genaidemo.infrastructure.order.persistence.repository.JpaOrderRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-/**
- * 訂單儲存庫適配器
- * 實現領域儲存庫接口，並使用基礎設施層的 JPA 儲存庫
- * 嚴格遵循 Repository Pattern，只接受和返回聚合根
- */
+/** 訂單儲存庫適配器 實現領域儲存庫接口，並使用基礎設施層的 JPA 儲存庫 嚴格遵循 Repository Pattern，只接受和返回聚合根 */
 @Component
 @Primary
 public class OrderRepositoryAdapter implements OrderRepository {
@@ -34,10 +29,10 @@ public class OrderRepositoryAdapter implements OrderRepository {
     public Order save(Order order) {
         // 將領域模型轉換為持久化模型
         JpaOrderEntity jpaEntity = OrderMapper.toJpaEntity(order);
-        
+
         // 保存到資料庫
         jpaOrderRepository.save(jpaEntity);
-        
+
         // 返回原始的聚合根實例，而不是創建新的實例
         // 這樣可以保持聚合根的完整性和一致性
         return order;
@@ -45,14 +40,12 @@ public class OrderRepositoryAdapter implements OrderRepository {
 
     @Override
     public Optional<Order> findById(OrderId id) {
-        return jpaOrderRepository.findById(id.toString())
-                .map(OrderMapper::toDomainEntity);
+        return jpaOrderRepository.findById(id.toString()).map(OrderMapper::toDomainEntity);
     }
 
     @Override
     public List<Order> findByCustomerId(CustomerId customerId) {
-        return jpaOrderRepository.findByCustomerId(customerId.toString())
-                .stream()
+        return jpaOrderRepository.findByCustomerId(customerId.toString()).stream()
                 .map(OrderMapper::toDomainEntity)
                 .collect(Collectors.toList());
     }
@@ -64,8 +57,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
 
     @Override
     public List<Order> findAll() {
-        return jpaOrderRepository.findAll()
-                .stream()
+        return jpaOrderRepository.findAll().stream()
                 .map(OrderMapper::toDomainEntity)
                 .collect(Collectors.toList());
     }
@@ -84,7 +76,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     public long count() {
         return jpaOrderRepository.count();
     }
-    
+
     @Override
     public boolean existsById(OrderId id) {
         return jpaOrderRepository.existsById(id.toString());

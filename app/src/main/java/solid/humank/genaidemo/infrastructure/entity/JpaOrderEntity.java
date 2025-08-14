@@ -1,19 +1,16 @@
 package solid.humank.genaidemo.infrastructure.entity;
 
 import jakarta.persistence.*;
-import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
 
 /**
- * 訂單 JPA 實體
- * 用於與數據庫交互的實體類
- * 
- * 注意：這個類僅作為持久化的技術實現，不包含業務邏輯
- * 所有業務邏輯都應該在Order聚合根中實現
+ * 訂單 JPA 實體 用於與數據庫交互的實體類
+ *
+ * <p>注意：這個類僅作為持久化的技術實現，不包含業務邏輯 所有業務邏輯都應該在Order聚合根中實現
  */
 @Entity
 @Table(name = "orders")
@@ -53,8 +50,7 @@ public class JpaOrderEntity {
     private List<JpaOrderItemEntity> items = new ArrayList<>();
 
     // 默認建構子，JPA 需要
-    public JpaOrderEntity() {
-    }
+    public JpaOrderEntity() {}
 
     // Getters and Setters
     public String getId() {

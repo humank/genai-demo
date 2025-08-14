@@ -1,8 +1,6 @@
 package solid.humank.genaidemo.domain.pricing.model.valueobject;
 
-/**
- * 產品類別
- */
+/** 產品類別 */
 public enum ProductCategory {
     ELECTRONICS,
     FASHION,

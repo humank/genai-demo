@@ -38,6 +38,7 @@ app/src/test/java/solid/humank/genaidemo/testutils/
 ### 1. 測試資料建構器 (Test Data Builders)
 
 #### OrderTestDataBuilder
+
 ```java
 public class OrderTestDataBuilder {
     public static OrderTestDataBuilder anOrder();
@@ -50,6 +51,7 @@ public class OrderTestDataBuilder {
 ```
 
 #### CustomerTestDataBuilder
+
 ```java
 public class CustomerTestDataBuilder {
     public static CustomerTestDataBuilder aCustomer();
@@ -63,6 +65,7 @@ public class CustomerTestDataBuilder {
 ### 2. 場景處理器 (Scenario Handlers)
 
 #### TestScenarioHandler
+
 ```java
 public class TestScenarioHandler {
     public void handleAddItemScenario(Order order, String productName, int quantity, int price, Consumer<Exception> exceptionSetter);
@@ -72,6 +75,7 @@ public class TestScenarioHandler {
 ```
 
 #### TestExceptionHandler
+
 ```java
 public class TestExceptionHandler {
     private Exception capturedException;
@@ -87,6 +91,7 @@ public class TestExceptionHandler {
 ### 3. 測試固定資料 (Test Fixtures)
 
 #### TestFixtures
+
 ```java
 public class TestFixtures {
     // 常用測試資料
@@ -105,6 +110,7 @@ public class TestFixtures {
 ### 4. 自定義匹配器 (Custom Matchers)
 
 #### OrderMatchers
+
 ```java
 public class OrderMatchers {
     public static Matcher<Order> hasStatus(OrderStatus status);
@@ -175,6 +181,7 @@ public class EnhancedAssertions {
 ### 1. BDD步驟定義重構策略
 
 #### 重構前 (問題代碼)
+
 ```java
 @When("添加產品 {string} 到訂單，數量為 {int}，單價為 {int}")
 public void addItemToOrder(String productName, int quantity, int price) {
@@ -191,6 +198,7 @@ public void addItemToOrder(String productName, int quantity, int price) {
 ```
 
 #### 重構後 (改善代碼)
+
 ```java
 @When("添加產品 {string} 到訂單，數量為 {int}，單價為 {int}")
 public void addItemToOrder(String productName, int quantity, int price) {
@@ -202,6 +210,7 @@ public void addItemToOrder(String productName, int quantity, int price) {
 ### 2. 整合測試3A結構改善
 
 #### 重構前 (違反3A原則)
+
 ```java
 @Test
 public void testOrderCreationEventFlow() {
@@ -222,6 +231,7 @@ public void testOrderCreationEventFlow() {
 ```
 
 #### 重構後 (遵循3A原則)
+
 ```java
 @Test
 @DisplayName("應該在訂單創建時發布OrderCreatedEvent")
@@ -259,6 +269,7 @@ public void shouldPublishOrderItemAddedEventWhenItemIsAdded() {
 ### 3. 測試資料管理策略
 
 #### Object Mother模式
+
 ```java
 public class OrderMother {
     public static Order simpleOrder() {
@@ -281,30 +292,35 @@ public class OrderMother {
 ## 實施計劃
 
 ### 階段1：建立測試輔助工具基礎設施
+
 1. 創建testutils包結構
 2. 實施測試資料建構器
 3. 建立測試固定資料類別
 4. 創建測試標籤註解
 
 ### 階段2：重構BDD步驟定義
+
 1. 創建場景處理器
 2. 重構包含條件邏輯的步驟定義
 3. 統一異常處理機制
 4. 改善測試可讀性
 
 ### 階段3：改善整合測試結構
+
 1. 識別違反3A原則的測試
 2. 拆分複雜的測試方法
 3. 使用測試輔助工具簡化測試設置
 4. 改善測試命名和文檔
 
 ### 階段4：程式碼品質清理
+
 1. 移除未使用的import和變數
 2. 更新過時的註解
 3. 統一程式碼格式
 4. 添加測試標籤
 
 ### 階段5：效能和可維護性優化
+
 1. 識別慢速測試並優化
 2. 改善測試獨立性
 3. 強化錯誤訊息
@@ -313,6 +329,7 @@ public class OrderMother {
 ## 品質保證
 
 ### 1. 程式碼審查檢查清單
+
 - [ ] 每個測試方法遵循3A原則
 - [ ] 沒有條件邏輯在測試中
 - [ ] 使用描述性的測試名稱
@@ -320,12 +337,14 @@ public class OrderMother {
 - [ ] 清晰的錯誤訊息
 
 ### 2. 自動化檢查
+
 - 靜態程式碼分析規則
 - 測試覆蓋率要求
 - 測試執行時間監控
 - 架構測試驗證
 
 ### 3. 測試指標
+
 - 測試執行時間
 - 測試穩定性（成功率）
 - 程式碼覆蓋率

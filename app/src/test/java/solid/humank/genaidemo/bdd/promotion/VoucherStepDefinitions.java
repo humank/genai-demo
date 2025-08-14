@@ -1,39 +1,30 @@
 package solid.humank.genaidemo.bdd.promotion;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
 
 public class VoucherStepDefinitions {
 
-    private String comboName;
-    private double comboPrice;
-    private double regularPrice;
     private List<Voucher> vouchers = new ArrayList<>();
     private Map<String, Object> voucherDetails = new HashMap<>();
 
     @Given("the store offers a {string} at ${int} instead of the regular ${int}")
     public void the_store_offers_a_at_$_instead_of_the_regular_$(
             String comboName, Integer comboPrice, Integer regularPrice) {
-        
-        this.comboName = comboName;
-        this.comboPrice = comboPrice;
-        this.regularPrice = regularPrice;
-        
+
         voucherDetails.put("comboName", comboName);
         voucherDetails.put("comboPrice", comboPrice);
         voucherDetails.put("regularPrice", regularPrice);
@@ -42,15 +33,24 @@ public class VoucherStepDefinitions {
 
     @When("the customer purchases the combo")
     public void the_customer_purchases_the_combo() {
-        // 創建7張優惠券
+        // 驗證套餐信息
+        Integer comboPrice = (Integer) voucherDetails.get("comboPrice");
+        Integer regularPrice = (Integer) voucherDetails.get("regularPrice");
+
+        // 驗證套餐價格確實比原價便宜
+        assertTrue(
+                comboPrice < regularPrice,
+                String.format("套餐價格 $%d 應該比原價 $%d 便宜", comboPrice, regularPrice));
+
+        // 創建優惠券
         vouchers.clear();
         int voucherCount = (int) voucherDetails.get("voucherCount");
-        
+
         for (int i = 0; i < voucherCount; i++) {
             Voucher voucher = mock(Voucher.class);
             String redemptionCode = UUID.randomUUID().toString().substring(0, 8);
             String voucherId = UUID.randomUUID().toString();
-            
+
             // 設置 Voucher 實體的行為
             when(voucher.getRedemptionCode()).thenReturn(redemptionCode);
             when(voucher.getId()).thenReturn(voucherId);
@@ -60,20 +60,21 @@ public class VoucherStepDefinitions {
             when(voucher.isUsed()).thenReturn(false);
             when(voucher.getRedemptionLocation()).thenReturn("Any 7-11 in Taiwan");
             when(voucher.getContents()).thenReturn("Medium-sized coffee");
-            
+
             vouchers.add(voucher);
         }
     }
 
     @Then("the customer receives {int} beverage vouchers valid for {int} days")
-    public void the_customer_receives_beverage_vouchers_valid_for_days(Integer count, Integer days) {
+    public void the_customer_receives_beverage_vouchers_valid_for_days(
+            Integer count, Integer days) {
         assertEquals(count, vouchers.size());
         for (Voucher voucher : vouchers) {
             // 檢查有效期是否為90天
             LocalDate issueDate = voucher.getIssueDate();
             LocalDate expirationDate = voucher.getExpirationDate();
             long validDays = java.time.temporal.ChronoUnit.DAYS.between(issueDate, expirationDate);
-            assertEquals(days, (int)validDays);
+            assertEquals(days, (int) validDays);
         }
     }
 
@@ -89,15 +90,34 @@ public class VoucherStepDefinitions {
     }
 
     @Then("vouchers can be redeemed for any medium-sized coffee at {int}-{int}")
-    public void vouchers_can_be_redeemed_for_any_medium_sized_coffee_at(Integer storeNumber1, Integer storeNumber2) {
+    public void vouchers_can_be_redeemed_for_any_medium_sized_coffee_at(
+            Integer storeNumber1, Integer storeNumber2) {
         // 這裡只是驗證7-11的格式，實際上不需要做任何事情
         assertEquals(7, storeNumber1);
         assertEquals(11, storeNumber2);
-        
+
         // 驗證所有優惠券的內容是否為中杯咖啡
         for (Voucher voucher : vouchers) {
             assertEquals("Medium-sized coffee", voucher.getContents());
             assertEquals("Any 7-11 in Taiwan", voucher.getRedemptionLocation());
         }
+    }
+
+    @Then("the combo provides better value than buying individually")
+    public void the_combo_provides_better_value_than_buying_individually() {
+        String comboName = (String) voucherDetails.get("comboName");
+        Integer comboPrice = (Integer) voucherDetails.get("comboPrice");
+        Integer regularPrice = (Integer) voucherDetails.get("regularPrice");
+        int voucherCount = (int) voucherDetails.get("voucherCount");
+
+        // 計算節省的金額
+        int totalRegularPrice = regularPrice * voucherCount;
+        int savings = totalRegularPrice - comboPrice;
+
+        assertTrue(
+                savings > 0,
+                String.format(
+                        "套餐 '%s' 應該比單獨購買便宜。套餐價格: $%d, 原價總計: $%d, 節省: $%d",
+                        comboName, comboPrice, totalRegularPrice, savings));
     }
 }

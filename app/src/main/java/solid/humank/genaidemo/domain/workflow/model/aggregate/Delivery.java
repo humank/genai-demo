@@ -1,17 +1,13 @@
 package solid.humank.genaidemo.domain.workflow.model.aggregate;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.workflow.model.valueobject.DeliveryStatus;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.UUID;
-
-/**
- * 配送聚合根
- * 管理配送的生命週期
- */
+/** 配送聚合根 管理配送的生命週期 */
 @AggregateRoot
 public class Delivery {
     private final UUID id;
@@ -52,7 +48,8 @@ public class Delivery {
      * @param deliveryPersonName 配送人員姓名
      * @param deliveryPersonContact 配送人員聯繫方式
      */
-    public void assignDeliveryPerson(String deliveryPersonId, String deliveryPersonName, String deliveryPersonContact) {
+    public void assignDeliveryPerson(
+            String deliveryPersonId, String deliveryPersonName, String deliveryPersonContact) {
         this.deliveryPersonId = Objects.requireNonNull(deliveryPersonId, "配送人員ID不能為空");
         this.deliveryPersonName = Objects.requireNonNull(deliveryPersonName, "配送人員姓名不能為空");
         this.deliveryPersonContact = Objects.requireNonNull(deliveryPersonContact, "配送人員聯繫方式不能為空");
@@ -80,9 +77,7 @@ public class Delivery {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 標記為已送達
-     */
+    /** 標記為已送達 */
     public void markAsDelivered() {
         if (status != DeliveryStatus.IN_TRANSIT) {
             throw new IllegalStateException("只有配送中的配送可以標記為已送達");
@@ -106,7 +101,8 @@ public class Delivery {
 
         this.status = DeliveryStatus.DELAYED;
         this.failureReason = Objects.requireNonNull(reason, "延遲原因不能為空");
-        this.estimatedDeliveryTime = Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計配送時間不能為空");
+        this.estimatedDeliveryTime =
+                Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計配送時間不能為空");
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -140,9 +136,7 @@ public class Delivery {
         this.updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 安排重新配送
-     */
+    /** 安排重新配送 */
     public void scheduleRedelivery() {
         if (status != DeliveryStatus.DELIVERY_FAILED) {
             throw new IllegalStateException("只有配送失敗的配送可以安排重新配送");

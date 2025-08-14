@@ -2,9 +2,7 @@ package solid.humank.genaidemo.interfaces.web.order.dto;
 
 import java.util.List;
 
-/**
- * 錯誤響應 DTO
- */
+/** 錯誤響應 DTO */
 public class ErrorResponse {
     private final List<String> errors;
 

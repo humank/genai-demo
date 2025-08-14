@@ -2,10 +2,7 @@ package solid.humank.genaidemo.application.common.dto;
 
 import java.util.List;
 
-/**
- * 分頁結果 DTO
- * 用於封裝分頁查詢的結果
- */
+/** 分頁結果 DTO 用於封裝分頁查詢的結果 */
 public class PagedResult<T> {
     private final List<T> content;
     private final int totalElements;
@@ -15,8 +12,14 @@ public class PagedResult<T> {
     private final boolean first;
     private final boolean last;
 
-    public PagedResult(List<T> content, int totalElements, int totalPages, 
-                      int size, int number, boolean first, boolean last) {
+    public PagedResult(
+            List<T> content,
+            int totalElements,
+            int totalPages,
+            int size,
+            int number,
+            boolean first,
+            boolean last) {
         this.content = content;
         this.totalElements = totalElements;
         this.totalPages = totalPages;
@@ -30,7 +33,7 @@ public class PagedResult<T> {
         int totalPages = (int) Math.ceil((double) totalElements / size);
         boolean first = page == 0;
         boolean last = page >= totalPages - 1;
-        
+
         return new PagedResult<>(content, totalElements, totalPages, size, page, first, last);
     }
 

@@ -1,15 +1,11 @@
 package solid.humank.genaidemo.application.order.dto;
 
-/**
- * 創建訂單請求DTO
- * 應用層使用的數據傳輸對象，避免直接依賴介面層
- */
+/** 創建訂單請求DTO 應用層使用的數據傳輸對象，避免直接依賴介面層 */
 public class CreateOrderRequestDto {
     private String customerId;
     private String shippingAddress;
 
-    public CreateOrderRequestDto() {
-    }
+    public CreateOrderRequestDto() {}
 
     public CreateOrderRequestDto(String customerId, String shippingAddress) {
         this.customerId = customerId;
@@ -32,9 +28,7 @@ public class CreateOrderRequestDto {
         this.shippingAddress = shippingAddress;
     }
 
-    /**
-     * 從通用參數創建應用層DTO
-     */
+    /** 從通用參數創建應用層DTO */
     public static CreateOrderRequestDto from(String customerId, String shippingAddress) {
         return new CreateOrderRequestDto(customerId, shippingAddress);
     }

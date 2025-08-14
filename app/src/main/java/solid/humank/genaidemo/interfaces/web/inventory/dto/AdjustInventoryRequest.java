@@ -1,15 +1,12 @@
 package solid.humank.genaidemo.interfaces.web.inventory.dto;
 
-/**
- * 調整庫存請求 DTO
- */
+/** 調整庫存請求 DTO */
 public class AdjustInventoryRequest {
     private int quantity;
     private String reason;
     private String type; // INCREASE, DECREASE, SET
 
-    public AdjustInventoryRequest() {
-    }
+    public AdjustInventoryRequest() {}
 
     public AdjustInventoryRequest(int quantity, String reason, String type) {
         this.quantity = quantity;

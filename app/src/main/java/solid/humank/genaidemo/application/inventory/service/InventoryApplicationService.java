@@ -1,86 +1,79 @@
 package solid.humank.genaidemo.application.inventory.service;
 
+import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import solid.humank.genaidemo.application.inventory.dto.command.AdjustInventoryCommand;
 import solid.humank.genaidemo.application.inventory.dto.response.InventoryResponse;
 import solid.humank.genaidemo.application.inventory.port.incoming.InventoryManagementUseCase;
-import solid.humank.genaidemo.infrastructure.inventory.persistence.repository.JpaInventoryRepository;
-import solid.humank.genaidemo.infrastructure.inventory.persistence.entity.JpaInventoryEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import solid.humank.genaidemo.application.inventory.port.outgoing.InventoryPersistencePort;
+import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-/**
- * 庫存應用服務
- */
+/** 庫存應用服務 */
 @Service
 @Transactional
 public class InventoryApplicationService implements InventoryManagementUseCase {
-    
-    private final JpaInventoryRepository inventoryRepository;
-    
-    public InventoryApplicationService(JpaInventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+
+    private final InventoryPersistencePort inventoryPersistencePort;
+
+    public InventoryApplicationService(InventoryPersistencePort inventoryPersistencePort) {
+        this.inventoryPersistencePort = inventoryPersistencePort;
     }
-    
+
     @Override
     public InventoryResponse adjustInventory(AdjustInventoryCommand command) {
-        Optional<JpaInventoryEntity> inventoryOpt = inventoryRepository.findByProductId(command.getProductId());
-        
+        Optional<Inventory> inventoryOpt =
+                inventoryPersistencePort.findByProductId(command.getProductId());
+
         if (inventoryOpt.isEmpty()) {
             throw new RuntimeException("找不到產品庫存: " + command.getProductId());
         }
-        
-        JpaInventoryEntity inventory = inventoryOpt.get();
-        
+
+        Inventory inventory = inventoryOpt.get();
+
         // 根據調整類型更新庫存
         switch (command.getType()) {
             case INCREASE:
-                inventory.setTotalQuantity(inventory.getTotalQuantity() + command.getQuantity());
-                inventory.setAvailableQuantity(inventory.getAvailableQuantity() + command.getQuantity());
+                inventory.addStock(command.getQuantity());
                 break;
             case DECREASE:
+                // 對於減少庫存，我們需要在領域模型中添加相應的方法
+                // 這裡暫時使用同步方法來實現
                 int newTotal = Math.max(0, inventory.getTotalQuantity() - command.getQuantity());
-                int newAvailable = Math.max(0, inventory.getAvailableQuantity() - command.getQuantity());
-                inventory.setTotalQuantity(newTotal);
-                inventory.setAvailableQuantity(newAvailable);
+                inventory.synchronize(newTotal);
                 break;
             case SET:
-                inventory.setTotalQuantity(command.getQuantity());
-                inventory.setAvailableQuantity(command.getQuantity() - inventory.getReservedQuantity());
+                // 對於設置庫存，使用同步方法
+                inventory.synchronize(command.getQuantity());
                 break;
         }
-        
-        inventory.setUpdatedAt(LocalDateTime.now());
-        
-        JpaInventoryEntity savedInventory = inventoryRepository.save(inventory);
+
+        Inventory savedInventory = inventoryPersistencePort.save(inventory);
         return toResponse(savedInventory);
     }
-    
+
     @Override
     public InventoryResponse getInventory(String productId) {
-        Optional<JpaInventoryEntity> inventoryOpt = inventoryRepository.findByProductId(productId);
-        
+        Optional<Inventory> inventoryOpt = inventoryPersistencePort.findByProductId(productId);
+
         if (inventoryOpt.isEmpty()) {
             throw new RuntimeException("找不到產品庫存: " + productId);
         }
-        
+
         return toResponse(inventoryOpt.get());
     }
-    
-    private InventoryResponse toResponse(JpaInventoryEntity entity) {
+
+    private InventoryResponse toResponse(Inventory inventory) {
         return new InventoryResponse(
-            entity.getId().toString(),
-            entity.getProductId(),
-            entity.getProductName(),
-            entity.getTotalQuantity(),
-            entity.getAvailableQuantity(),
-            entity.getReservedQuantity(),
-            entity.getThreshold(),
-            entity.getStatus().name(),
-            entity.getCreatedAt(),
-            entity.getUpdatedAt()
-        );
+                inventory.getId().getId().toString(),
+                inventory.getProductId(),
+                inventory.getProductName(),
+                inventory.getTotalQuantity(),
+                inventory.getAvailableQuantity(),
+                inventory.getReservedQuantity(),
+                inventory.getThreshold(),
+                inventory.getStatus().name(),
+                inventory.getCreatedAt(),
+                inventory.getUpdatedAt());
     }
 }

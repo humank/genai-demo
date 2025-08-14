@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
@@ -18,10 +17,7 @@ import solid.humank.genaidemo.domain.order.model.events.OrderCreatedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
 import solid.humank.genaidemo.utils.Preconditions;
 
-/**
- * 增強版訂單聚合根
- * 使用AggregateLifecycle管理領域事件
- */
+/** 增強版訂單聚合根 使用AggregateLifecycle管理領域事件 */
 @AggregateRoot
 @AggregateLifecycle.ManagedLifecycle
 public class EnhancedOrder {
@@ -37,17 +33,17 @@ public class EnhancedOrder {
 
     /**
      * 建立訂單
-     * 
+     *
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
      */
     public EnhancedOrder(String customerId, String shippingAddress) {
         this(OrderId.generate(), CustomerId.fromString(customerId), shippingAddress);
     }
-    
+
     /**
      * 建立訂單
-     * 
+     *
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
      */
@@ -57,7 +53,7 @@ public class EnhancedOrder {
 
     /**
      * 建立訂單
-     * 
+     *
      * @param orderId 訂單ID
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
@@ -78,17 +74,14 @@ public class EnhancedOrder {
         this.updatedAt = this.createdAt;
 
         // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(new OrderCreatedEvent(
-            this.id,
-            this.customerId.toString(),
-            Money.zero(),
-            List.of()
-        ));
+        AggregateLifecycleAware.apply(
+                new OrderCreatedEvent(
+                        this.id, this.customerId.toString(), Money.zero(), List.of()));
     }
-    
+
     /**
      * 建立訂單 (兼容舊代碼)
-     * 
+     *
      * @param orderId 訂單ID
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
@@ -96,13 +89,18 @@ public class EnhancedOrder {
     public EnhancedOrder(OrderId orderId, String customerId, String shippingAddress) {
         this(orderId, CustomerId.fromString(customerId), shippingAddress);
     }
-    
-    /**
-     * 用於重建聚合根的完整建構子（僅供Repository使用）
-     */
-    protected EnhancedOrder(OrderId id, CustomerId customerId, String shippingAddress,
-                  List<OrderItem> items, OrderStatus status, Money totalAmount,
-                  Money effectiveAmount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+
+    /** 用於重建聚合根的完整建構子（僅供Repository使用） */
+    protected EnhancedOrder(
+            OrderId id,
+            CustomerId customerId,
+            String shippingAddress,
+            List<OrderItem> items,
+            OrderStatus status,
+            Money totalAmount,
+            Money effectiveAmount,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = Objects.requireNonNull(id, "訂單ID不能為空");
         this.customerId = Objects.requireNonNull(customerId, "客戶ID不能為空");
         this.shippingAddress = Objects.requireNonNull(shippingAddress, "配送地址不能為空");
@@ -112,13 +110,13 @@ public class EnhancedOrder {
         this.effectiveAmount = Objects.requireNonNull(effectiveAmount, "訂單實際金額不能為空");
         this.createdAt = Objects.requireNonNull(createdAt, "創建時間不能為空");
         this.updatedAt = Objects.requireNonNull(updatedAt, "更新時間不能為空");
-        
+
         // 注意：這裡不發布領域事件，因為這是重建聚合根，而不是創建新訂單
     }
 
     /**
      * 添加訂單項
-     * 
+     *
      * @param productId 產品ID
      * @param productName 產品名稱
      * @param quantity 數量
@@ -127,7 +125,8 @@ public class EnhancedOrder {
     public void addItem(String productId, String productName, int quantity, Money price) {
         // 檢查訂單狀態
         if (status != OrderStatus.CREATED) {
-            throw new IllegalStateException("Cannot add items to an order that is not in CREATED state");
+            throw new IllegalStateException(
+                    "Cannot add items to an order that is not in CREATED state");
         }
 
         // 創建訂單項
@@ -140,17 +139,10 @@ public class EnhancedOrder {
         updatedAt = LocalDateTime.now();
 
         // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(new OrderItemAddedEvent(
-            this.id,
-            productId,
-            quantity,
-            price
-        ));
+        AggregateLifecycleAware.apply(new OrderItemAddedEvent(this.id, productId, quantity, price));
     }
 
-    /**
-     * 提交訂單
-     */
+    /** 提交訂單 */
     public void submit() {
         // 檢查訂單項
         if (items.isEmpty()) {
@@ -160,7 +152,7 @@ public class EnhancedOrder {
         // 更新狀態
         status = OrderStatus.PENDING;
         updatedAt = LocalDateTime.now();
-        
+
         // 這裡可以發布訂單提交事件
     }
 
@@ -173,7 +165,7 @@ public class EnhancedOrder {
     public CustomerId getCustomerId() {
         return customerId;
     }
-    
+
     public String getCustomerIdAsString() {
         return customerId.toString();
     }
@@ -224,12 +216,18 @@ public class EnhancedOrder {
 
     @Override
     public String toString() {
-        return "EnhancedOrder{" +
-                "id=" + id +
-                ", customerId='" + customerId + '\'' +
-                ", status=" + status +
-                ", totalAmount=" + totalAmount +
-                ", items=" + items.size() +
-                '}';
+        return "EnhancedOrder{"
+                + "id="
+                + id
+                + ", customerId='"
+                + customerId
+                + '\''
+                + ", status="
+                + status
+                + ", totalAmount="
+                + totalAmount
+                + ", items="
+                + items.size()
+                + '}';
     }
 }

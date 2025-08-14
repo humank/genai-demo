@@ -1,5 +1,7 @@
 package solid.humank.genaidemo.infrastructure.order.external;
 
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagementUseCase;
@@ -7,14 +9,7 @@ import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 
-import java.util.Optional;
-import java.util.UUID;
-
-/**
- * 訂單支付服務適配器
- * 實現應用層的 PaymentServicePort 接口
- * 使用 PaymentManagementUseCase 進行實際的支付操作
- */
+/** 訂單支付服務適配器 實現應用層的 PaymentServicePort 接口 使用 PaymentManagementUseCase 進行實際的支付操作 */
 @Component
 public class OrderPaymentServiceAdapter implements PaymentServicePort {
 
@@ -24,15 +19,13 @@ public class OrderPaymentServiceAdapter implements PaymentServicePort {
         this.paymentManagementUseCase = paymentManagementUseCase;
     }
 
-    /**
-     * 處理訂單支付
-     */
+    /** 處理訂單支付 */
     @Override
     public PaymentResult processPayment(UUID orderId, Money amount) {
         try {
             // 調用支付管理用例處理支付
             Payment payment = paymentManagementUseCase.processPayment(orderId, amount);
-            
+
             // 返回支付結果
             return PaymentResult.successful(payment.getId().toString());
         } catch (Exception e) {
@@ -41,19 +34,17 @@ public class OrderPaymentServiceAdapter implements PaymentServicePort {
         }
     }
 
-    /**
-     * 取消支付
-     */
+    /** 取消支付 */
     @Override
     public PaymentResult cancelPayment(UUID orderId) {
         try {
             // 查找訂單的支付
             Optional<Payment> paymentOpt = paymentManagementUseCase.getPaymentByOrderId(orderId);
-            
+
             if (paymentOpt.isPresent()) {
                 // 取消支付
                 paymentManagementUseCase.cancelPayment(paymentOpt.get().getIdAsUUID());
-                
+
                 // 返回成功結果
                 return PaymentResult.successful(paymentOpt.get().getId().toString());
             } else {
@@ -66,15 +57,13 @@ public class OrderPaymentServiceAdapter implements PaymentServicePort {
         }
     }
 
-    /**
-     * 查詢支付狀態
-     */
+    /** 查詢支付狀態 */
     @Override
     public PaymentResult getPaymentStatus(UUID orderId) {
         try {
             // 查找訂單的支付
             Optional<Payment> paymentOpt = paymentManagementUseCase.getPaymentByOrderId(orderId);
-            
+
             if (paymentOpt.isPresent()) {
                 // 返回支付狀態
                 return PaymentResult.successful(paymentOpt.get().getStatus().toString());
@@ -88,19 +77,17 @@ public class OrderPaymentServiceAdapter implements PaymentServicePort {
         }
     }
 
-    /**
-     * 退款處理
-     */
+    /** 退款處理 */
     @Override
     public PaymentResult processRefund(UUID orderId, Money amount) {
         try {
             // 查找訂單的支付
             Optional<Payment> paymentOpt = paymentManagementUseCase.getPaymentByOrderId(orderId);
-            
+
             if (paymentOpt.isPresent()) {
                 // 退款
                 paymentManagementUseCase.refundPayment(paymentOpt.get().getIdAsUUID());
-                
+
                 // 返回成功結果
                 return PaymentResult.successful(paymentOpt.get().getId().toString());
             } else {

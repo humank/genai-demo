@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
@@ -19,10 +18,7 @@ import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderSubmittedEvent;
 import solid.humank.genaidemo.utils.Preconditions;
 
-/**
- * 訂單聚合根
- * 封裝訂單相關的業務規則和行為
- */
+/** 訂單聚合根 封裝訂單相關的業務規則和行為 */
 @AggregateRoot
 @AggregateLifecycle.ManagedLifecycle
 public class Order {
@@ -38,17 +34,17 @@ public class Order {
 
     /**
      * 建立訂單
-     * 
+     *
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
      */
     public Order(String customerId, String shippingAddress) {
         this(OrderId.generate(), CustomerId.fromString(customerId), shippingAddress);
     }
-    
+
     /**
      * 建立訂單
-     * 
+     *
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
      */
@@ -58,7 +54,7 @@ public class Order {
 
     /**
      * 建立訂單
-     * 
+     *
      * @param orderId 訂單ID
      * @param customerId 客戶ID值對象
      * @param shippingAddress 配送地址
@@ -79,17 +75,14 @@ public class Order {
         this.updatedAt = this.createdAt;
 
         // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(new OrderCreatedEvent(
-            this.id,
-            this.customerId.toString(),
-            Money.zero(),
-            List.of()
-        ));
+        AggregateLifecycleAware.apply(
+                new OrderCreatedEvent(
+                        this.id, this.customerId.toString(), Money.zero(), List.of()));
     }
-    
+
     /**
      * 建立訂單 (兼容舊代碼)
-     * 
+     *
      * @param orderId 訂單ID
      * @param customerId 客戶ID字符串
      * @param shippingAddress 配送地址
@@ -97,10 +90,10 @@ public class Order {
     public Order(OrderId orderId, String customerId, String shippingAddress) {
         this(orderId, CustomerId.fromString(customerId), shippingAddress);
     }
-    
+
     /**
      * 用於重建聚合根的完整建構子（僅供Repository使用）
-     * 
+     *
      * @param id 訂單ID
      * @param customerId 客戶ID
      * @param shippingAddress 配送地址
@@ -111,9 +104,16 @@ public class Order {
      * @param createdAt 創建時間
      * @param updatedAt 更新時間
      */
-    protected Order(OrderId id, CustomerId customerId, String shippingAddress,
-                  List<OrderItem> items, OrderStatus status, Money totalAmount,
-                  Money effectiveAmount, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    protected Order(
+            OrderId id,
+            CustomerId customerId,
+            String shippingAddress,
+            List<OrderItem> items,
+            OrderStatus status,
+            Money totalAmount,
+            Money effectiveAmount,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt) {
         this.id = Objects.requireNonNull(id, "訂單ID不能為空");
         this.customerId = Objects.requireNonNull(customerId, "客戶ID不能為空");
         this.shippingAddress = Objects.requireNonNull(shippingAddress, "配送地址不能為空");
@@ -123,13 +123,13 @@ public class Order {
         this.effectiveAmount = Objects.requireNonNull(effectiveAmount, "訂單實際金額不能為空");
         this.createdAt = Objects.requireNonNull(createdAt, "創建時間不能為空");
         this.updatedAt = Objects.requireNonNull(updatedAt, "更新時間不能為空");
-        
+
         // 注意：這裡不發布領域事件，因為這是重建聚合根，而不是創建新訂單
     }
 
     /**
      * 建立訂單
-     * 
+     *
      * @param orderId 訂單ID字符串
      */
     public Order(String orderId) {
@@ -138,7 +138,7 @@ public class Order {
 
     /**
      * 添加訂單項
-     * 
+     *
      * @param productId 產品ID
      * @param productName 產品名稱
      * @param quantity 數量
@@ -147,7 +147,8 @@ public class Order {
     public void addItem(String productId, String productName, int quantity, Money price) {
         // 檢查訂單狀態
         if (status != OrderStatus.CREATED) {
-            throw new IllegalStateException("Cannot add items to an order that is not in CREATED state");
+            throw new IllegalStateException(
+                    "Cannot add items to an order that is not in CREATED state");
         }
 
         // 創建訂單項
@@ -160,17 +161,10 @@ public class Order {
         updatedAt = LocalDateTime.now();
 
         // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(new OrderItemAddedEvent(
-            this.id,
-            productId,
-            quantity,
-            price
-        ));
+        AggregateLifecycleAware.apply(new OrderItemAddedEvent(this.id, productId, quantity, price));
     }
 
-    /**
-     * 提交訂單
-     */
+    /** 提交訂單 */
     public void submit() {
         // 檢查訂單項
         if (items.isEmpty()) {
@@ -180,19 +174,14 @@ public class Order {
         // 更新狀態
         status = OrderStatus.PENDING;
         updatedAt = LocalDateTime.now();
-        
+
         // 發布訂單提交事件
-        AggregateLifecycleAware.apply(new OrderSubmittedEvent(
-            this.id,
-            this.customerId.toString(),
-            this.totalAmount,
-            this.items.size()
-        ));
+        AggregateLifecycleAware.apply(
+                new OrderSubmittedEvent(
+                        this.id, this.customerId.toString(), this.totalAmount, this.items.size()));
     }
 
-    /**
-     * 確認訂單
-     */
+    /** 確認訂單 */
     public void confirm() {
         // 檢查狀態轉換
         if (!status.canTransitionTo(OrderStatus.CONFIRMED)) {
@@ -204,9 +193,7 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 標記為已付款
-     */
+    /** 標記為已付款 */
     public void markAsPaid() {
         // 檢查狀態轉換
         if (!status.canTransitionTo(OrderStatus.PAID)) {
@@ -218,9 +205,7 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 發貨
-     */
+    /** 發貨 */
     public void ship() {
         // 檢查狀態轉換
         if (!status.canTransitionTo(OrderStatus.SHIPPING)) {
@@ -232,9 +217,7 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 送達
-     */
+    /** 送達 */
     public void deliver() {
         // 檢查狀態轉換
         if (!status.canTransitionTo(OrderStatus.DELIVERED)) {
@@ -246,13 +229,12 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 取消訂單
-     */
+    /** 取消訂單 */
     public void cancel() {
         // 檢查狀態
         if (status == OrderStatus.DELIVERED || status == OrderStatus.CANCELLED) {
-            throw new IllegalStateException("Cannot cancel an order that is already delivered or cancelled");
+            throw new IllegalStateException(
+                    "Cannot cancel an order that is already delivered or cancelled");
         }
 
         // 更新狀態
@@ -260,10 +242,7 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
-    /**
-     * 處理訂單
-     * 執行訂單處理流程
-     */
+    /** 處理訂單 執行訂單處理流程 */
     public void process() {
         // 檢查狀態
         if (status != OrderStatus.CREATED) {
@@ -276,7 +255,7 @@ public class Order {
 
     /**
      * 應用折扣
-     * 
+     *
      * @param discountedAmount 折扣後金額
      */
     public void applyDiscount(Money discountedAmount) {
@@ -299,10 +278,10 @@ public class Order {
     public CustomerId getCustomerId() {
         return customerId;
     }
-    
+
     /**
      * 獲取客戶ID字符串 (兼容舊代碼)
-     * 
+     *
      * @return 客戶ID字符串
      */
     public String getCustomerIdAsString() {
@@ -355,12 +334,18 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", customerId='" + customerId + '\'' +
-                ", status=" + status +
-                ", totalAmount=" + totalAmount +
-                ", items=" + items.size() +
-                '}';
+        return "Order{"
+                + "id="
+                + id
+                + ", customerId='"
+                + customerId
+                + '\''
+                + ", status="
+                + status
+                + ", totalAmount="
+                + totalAmount
+                + ", items="
+                + items.size()
+                + '}';
     }
 }

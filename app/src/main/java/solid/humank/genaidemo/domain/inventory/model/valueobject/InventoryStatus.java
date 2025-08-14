@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.inventory.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 庫存狀態值對象
- */
+/** 庫存狀態值對象 */
 @ValueObject
 public enum InventoryStatus {
     ACTIVE("活躍"),

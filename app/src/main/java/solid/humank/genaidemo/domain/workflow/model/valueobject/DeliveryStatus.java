@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.workflow.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 配送狀態值對象
- */
+/** 配送狀態值對象 */
 @ValueObject
 public enum DeliveryStatus {
     PENDING_SHIPMENT("待出貨"),

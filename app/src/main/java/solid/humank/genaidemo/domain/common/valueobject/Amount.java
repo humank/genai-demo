@@ -3,13 +3,9 @@ package solid.humank.genaidemo.domain.common.valueobject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
-
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 共享核心中的金額值物件
- * 用於在不同 Bounded Context 之間共享金額計算邏輯
- */
+/** 共享核心中的金額值物件 用於在不同 Bounded Context 之間共享金額計算邏輯 */
 @ValueObject
 public final class Amount {
     private final BigDecimal value;
@@ -55,9 +51,10 @@ public final class Amount {
     private void requireSameCurrency(Amount other) {
         if (!this.currency.equals(other.currency)) {
             throw new IllegalArgumentException(
-                "Cannot operate on amounts with different currencies: " +
-                this.currency + " vs " + other.currency
-            );
+                    "Cannot operate on amounts with different currencies: "
+                            + this.currency
+                            + " vs "
+                            + other.currency);
         }
     }
 

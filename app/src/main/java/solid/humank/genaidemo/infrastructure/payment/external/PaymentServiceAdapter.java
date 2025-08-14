@@ -1,32 +1,25 @@
 package solid.humank.genaidemo.infrastructure.payment.external;
 
+import java.util.UUID;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentResult;
 
-import java.util.UUID;
-
-/**
- * 支付服務適配器
- * 實現應用層的 PaymentServicePort 接口
- * 使用內部實現進行實際的支付處理
- */
+/** 支付服務適配器 實現應用層的 PaymentServicePort 接口 使用內部實現進行實際的支付處理 */
 @Component
 @Primary
 public class PaymentServiceAdapter implements PaymentServicePort {
 
-    /**
-     * 處理支付
-     */
+    /** 處理支付 */
     @Override
     public PaymentResult processPayment(UUID orderId, Money amount) {
         // 模擬與外部支付系統的交互
         try {
             // 生成支付ID
             String paymentId = "PAY-" + System.currentTimeMillis();
-            
+
             // 返回成功結果
             return PaymentResult.successful(paymentId);
         } catch (Exception e) {
@@ -34,28 +27,22 @@ public class PaymentServiceAdapter implements PaymentServicePort {
             return PaymentResult.failed("Payment processing failed: " + e.getMessage());
         }
     }
-    
-    /**
-     * 取消支付
-     */
+
+    /** 取消支付 */
     @Override
     public PaymentResult cancelPayment(UUID orderId) {
         // 模擬取消支付
         return PaymentResult.successful("CANCEL-" + orderId.toString());
     }
-    
-    /**
-     * 查詢支付狀態
-     */
+
+    /** 查詢支付狀態 */
     @Override
     public PaymentResult getPaymentStatus(UUID orderId) {
         // 模擬查詢支付狀態
         return PaymentResult.successful("STATUS-" + orderId.toString());
     }
-    
-    /**
-     * 退款處理
-     */
+
+    /** 退款處理 */
     @Override
     public PaymentResult processRefund(UUID orderId, Money amount) {
         // 模擬退款處理

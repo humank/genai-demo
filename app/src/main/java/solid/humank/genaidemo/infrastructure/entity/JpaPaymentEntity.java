@@ -6,16 +6,12 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-/**
- * 支付 JPA 實體
- * 用於與數據庫交互的實體類
- */
+/** 支付 JPA 實體 用於與數據庫交互的實體類 */
 @Entity
 @Table(name = "payments")
 public class JpaPaymentEntity {
@@ -57,14 +53,21 @@ public class JpaPaymentEntity {
     private boolean canRetry;
 
     // 默認建構子，JPA 需要
-    public JpaPaymentEntity() {
-    }
+    public JpaPaymentEntity() {}
 
     // 完整建構子
-    public JpaPaymentEntity(String id, String orderId, BigDecimal amount, String currency,
-                           PaymentStatus status, PaymentMethod paymentMethod, String transactionId,
-                           String failureReason, LocalDateTime createdAt, LocalDateTime updatedAt,
-                           boolean canRetry) {
+    public JpaPaymentEntity(
+            String id,
+            String orderId,
+            BigDecimal amount,
+            String currency,
+            PaymentStatus status,
+            PaymentMethod paymentMethod,
+            String transactionId,
+            String failureReason,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            boolean canRetry) {
         this.id = id;
         this.orderId = orderId;
         this.amount = amount;

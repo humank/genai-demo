@@ -8,12 +8,56 @@
     "**/.settings/": true
   },
   "java.problems.exclude": {
-    "**/*.java": ["lombok.*"]
+    "**/*.java": [
+      "lombok.*"
+    ]
   },
   "java.compile.nullAnalysis.mode": "disabled",
   "cSpell.words": [
     "genaidemo"
   ],
   "java.configuration.updateBuildConfiguration": "automatic",
-  "java.dependency.packagePresentation": "hierarchical"
+  "java.dependency.packagePresentation": "hierarchical",
+  // 自動整理 imports 相關設置
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "java.saveActions.organizeImports": true,
+  "editor.formatOnSave": true,
+  // Java imports 排序設置
+  "java.imports.order": [
+    "java",
+    "javax",
+    "org",
+    "com",
+    ""
+  ],
+  "java.imports.includeStatic": false,
+  // Markdown 格式化設置
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "explicit"
+    },
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": "off",
+      "strings": "off",
+      "other": "off"
+    }
+  },
+  // Markdown 語法檢查設置
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false,
+    "MD041": false,
+    "MD007": {
+      "indent": 2
+    }
+  },
+  // 文件關聯設置
+  "files.associations": {
+    "*.md": "markdown"
+  }
 }

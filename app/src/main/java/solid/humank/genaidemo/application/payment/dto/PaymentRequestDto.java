@@ -2,9 +2,7 @@ package solid.humank.genaidemo.application.payment.dto;
 
 import java.math.BigDecimal;
 
-/**
- * 支付請求 DTO
- */
+/** 支付請求 DTO */
 public class PaymentRequestDto {
     private String orderId;
     private BigDecimal amount;
@@ -26,7 +24,8 @@ public class PaymentRequestDto {
         this.paymentMethod = paymentMethod;
     }
 
-    public PaymentRequestDto(String orderId, BigDecimal amount, String currency, String paymentMethod) {
+    public PaymentRequestDto(
+            String orderId, BigDecimal amount, String currency, String paymentMethod) {
         this.orderId = orderId;
         this.amount = amount;
         this.currency = currency;

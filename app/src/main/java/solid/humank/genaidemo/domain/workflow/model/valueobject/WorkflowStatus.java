@@ -2,9 +2,7 @@ package solid.humank.genaidemo.domain.workflow.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-/**
- * 工作流狀態值對象
- */
+/** 工作流狀態值對象 */
 @ValueObject
 public enum WorkflowStatus {
     CREATED("已創建"),

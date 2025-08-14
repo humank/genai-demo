@@ -1,13 +1,10 @@
 package solid.humank.genaidemo.interfaces.web.inventory.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import solid.humank.genaidemo.application.inventory.dto.InventoryDto;
 
-import java.time.LocalDateTime;
-
-/**
- * 庫存響應對象
- */
+/** 庫存響應對象 */
 public class InventoryResponse {
     private String id;
     private String productId;
@@ -18,20 +15,17 @@ public class InventoryResponse {
     private int threshold;
     private String status;
     private boolean belowThreshold;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     // 默認構造函數
-    public InventoryResponse() {
-    }
+    public InventoryResponse() {}
 
-    /**
-     * 從應用層DTO創建響應對象
-     */
+    /** 從應用層DTO創建響應對象 */
     public static InventoryResponse fromDto(InventoryDto dto) {
         InventoryResponse response = new InventoryResponse();
         response.setId(dto.getId());

@@ -13,9 +13,10 @@
 - 事件處理的順序性
 
 **重構改善**：
+
 - 使用測試輔助工具簡化測試資料創建
-- 改善測試方法命名，使用@DisplayName提供清晰描述
-- 遵循3A原則，每個測試方法結構清晰
+- 改善測試方法命名，使用@DisplayName 提供清晰描述
+- 遵循 3A 原則，每個測試方法結構清晰
 - 使用輔助方法減少重複程式碼
 
 ### 2. EventSubscriptionIntegrationTest
@@ -35,10 +36,11 @@
 - 異常情況下的事件處理
 
 **重構改善**：
+
 - 拆分複雜的測試方法為多個獨立測試
 - 每個測試方法只測試一個特定場景
-- 使用OrderTestDataBuilder簡化測試資料準備
-- 添加@IntegrationTest標籤進行測試分類
+- 使用 OrderTestDataBuilder 簡化測試資料準備
+- 添加@IntegrationTest 標籤進行測試分類
 - 改善異常測試的斷言方式
 
 ### 4. EventHandlingPerformanceTest
@@ -52,37 +54,38 @@
 
 可以通過以下方式運行測試：
 
-1. 使用IDE直接運行測試類
-2. 使用Gradle命令運行：
+1. 使用 IDE 直接運行測試類
+2. 使用 Gradle 命令運行：
 
 ```bash
 ./gradlew test --tests "solid.humank.genaidemo.integration.event.*"
+
 ```
 
 ## 測試策略
 
 這些測試採用了以下策略：
 
-1. **使用@MockBean監控事件處理器**：使用Mock物件進行驗證，提高測試穩定性
-2. **事件捕獲**：通過替換eventPublisherAdapter的publish方法來捕獲發布的事件
-3. **超時驗證**：使用timeout參數處理異步事件
+1. **使用@MockBean 監控事件處理器**：使用 Mock 物件進行驗證，提高測試穩定性
+2. **事件捕獲**：通過替換 eventPublisherAdapter 的 publish 方法來捕獲發布的事件
+3. **超時驗證**：使用 timeout 參數處理異步事件
 4. **業務流程驗證**：通過執行完整的業務操作來觸發事件流
-5. **性能測試**：使用CountDownLatch等待異步事件處理完成
+5. **性能測試**：使用 CountDownLatch 等待異步事件處理完成
 
 ## 測試品質改善
 
 經過重構後，這些測試具有以下特點：
 
-1. **遵循3A原則**：每個測試都有清晰的Arrange-Act-Assert結構
+1. **遵循 3A 原則**：每個測試都有清晰的 Arrange-Act-Assert 結構
 2. **單一職責**：每個測試方法只測試一個特定場景
-3. **描述性命名**：使用@DisplayName提供清晰的測試描述
-4. **測試輔助工具**：使用TestConstants和測試建構器簡化測試
-5. **測試分類**：使用@IntegrationTest標籤進行分類
+3. **描述性命名**：使用@DisplayName 提供清晰的測試描述
+4. **測試輔助工具**：使用 TestConstants 和測試建構器簡化測試
+5. **測試分類**：使用@IntegrationTest 標籤進行分類
 6. **輔助方法**：提取共用邏輯到輔助方法，減少重複
 
 ## 注意事項
 
-1. 這些測試需要啟動完整的Spring上下文，因此運行時間較長
+1. 這些測試需要啟動完整的 Spring 上下文，因此運行時間較長
 2. 性能測試中的參數（如事件數量）可能需要根據實際環境調整
 3. 測試可能會受到系統資源和環境因素的影響
 4. 重構後的測試更加穩定和可維護

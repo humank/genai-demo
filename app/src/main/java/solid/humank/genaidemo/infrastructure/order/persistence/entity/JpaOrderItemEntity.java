@@ -1,13 +1,9 @@
 package solid.humank.genaidemo.infrastructure.order.persistence.entity;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
-/**
- * 訂單項 JPA 實體
- * 用於與數據庫交互的實體類
- */
+/** 訂單項 JPA 實體 用於與數據庫交互的實體類 */
 @Entity
 @Table(name = "order_items")
 public class JpaOrderItemEntity {
@@ -35,11 +31,16 @@ public class JpaOrderItemEntity {
     private String currency;
 
     // 默認建構子，JPA 需要
-    public JpaOrderItemEntity() {
-    }
+    public JpaOrderItemEntity() {}
 
     // 完整建構子
-    public JpaOrderItemEntity(String orderId, String productId, String productName, int quantity, BigDecimal price, String currency) {
+    public JpaOrderItemEntity(
+            String orderId,
+            String productId,
+            String productName,
+            int quantity,
+            BigDecimal price,
+            String currency) {
         this.orderId = orderId;
         this.productId = productId;
         this.productName = productName;

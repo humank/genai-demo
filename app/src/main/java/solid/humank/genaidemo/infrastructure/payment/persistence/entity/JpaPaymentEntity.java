@@ -1,22 +1,17 @@
 package solid.humank.genaidemo.infrastructure.payment.persistence.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-/**
- * 支付 JPA 實體
- * 用於與數據庫交互的實體類
- */
+/** 支付 JPA 實體 用於與數據庫交互的實體類 */
 @Entity
 @Table(name = "payments")
 public class JpaPaymentEntity {
 
-    @Id
-    private String id;
+    @Id private String id;
 
     @Column(name = "order_id", nullable = false)
     private String orderId;
@@ -51,8 +46,7 @@ public class JpaPaymentEntity {
     private boolean canRetry;
 
     // 默認建構子，JPA 需要
-    public JpaPaymentEntity() {
-    }
+    public JpaPaymentEntity() {}
 
     // Getters and Setters
     public String getId() {

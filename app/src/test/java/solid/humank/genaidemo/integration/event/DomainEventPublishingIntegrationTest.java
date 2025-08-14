@@ -1,14 +1,17 @@
 package solid.humank.genaidemo.integration.event;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.mockito.Mock;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -20,28 +23,14 @@ import solid.humank.genaidemo.infrastructure.event.DomainEventPublisherAdapter;
 import solid.humank.genaidemo.testutils.annotations.IntegrationTest;
 import solid.humank.genaidemo.testutils.fixtures.TestConstants;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-/**
- * 領域事件發布整合測試
- * 重構後使用測試輔助工具，改善測試結構和可讀性
- */
+/** 領域事件發布整合測試 重構後使用測試輔助工具，改善測試結構和可讀性 */
 @SpringBootTest
 @IntegrationTest
 public class DomainEventPublishingIntegrationTest {
 
-    @Autowired
-    private DomainEventPublisherAdapter eventPublisherAdapter;
+    @Autowired private DomainEventPublisherAdapter eventPublisherAdapter;
 
-    @Autowired
-    private OrderEventHandler orderEventHandler;
+    @Autowired private OrderEventHandler orderEventHandler;
 
     private List<DomainEvent> capturedEvents;
 
@@ -52,11 +41,14 @@ public class DomainEventPublishingIntegrationTest {
     }
 
     private void setupEventCapture() {
-        doAnswer(invocation -> {
-            DomainEvent event = invocation.getArgument(0);
-            capturedEvents.add(event);
-            return invocation.callRealMethod();
-        }).when(eventPublisherAdapter).publish(any(DomainEvent.class));
+        doAnswer(
+                        invocation -> {
+                            DomainEvent event = invocation.getArgument(0);
+                            capturedEvents.add(event);
+                            return invocation.callRealMethod();
+                        })
+                .when(eventPublisherAdapter)
+                .publish(any(DomainEvent.class));
     }
 
     @Test
@@ -70,7 +62,9 @@ public class DomainEventPublishingIntegrationTest {
 
         // Assert
         assertEquals(1, capturedEvents.size(), "Should capture exactly one event");
-        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent, "Captured event should be OrderCreatedEvent");
+        assertTrue(
+                capturedEvents.get(0) instanceof OrderCreatedEvent,
+                "Captured event should be OrderCreatedEvent");
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
     }
 
@@ -89,7 +83,8 @@ public class DomainEventPublishingIntegrationTest {
         // Assert
         assertEquals(2, capturedEvents.size(), "Should capture exactly two events");
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
-        verify(orderEventHandler, timeout(1000)).handleOrderItemAdded(any(OrderItemAddedEvent.class));
+        verify(orderEventHandler, timeout(1000))
+                .handleOrderItemAdded(any(OrderItemAddedEvent.class));
     }
 
     @Test
@@ -143,14 +138,22 @@ public class DomainEventPublishingIntegrationTest {
 
     private void verifyEventHandlersCalledInOrder() {
         verify(orderEventHandler, timeout(1000)).handleOrderCreated(any(OrderCreatedEvent.class));
-        verify(orderEventHandler, timeout(1000)).handleOrderItemAdded(any(OrderItemAddedEvent.class));
-        verify(orderEventHandler, timeout(1000)).handleOrderSubmitted(any(OrderSubmittedEvent.class));
+        verify(orderEventHandler, timeout(1000))
+                .handleOrderItemAdded(any(OrderItemAddedEvent.class));
+        verify(orderEventHandler, timeout(1000))
+                .handleOrderSubmitted(any(OrderSubmittedEvent.class));
     }
 
     private void verifyEventsCapturedInCorrectOrder() {
         assertEquals(3, capturedEvents.size(), "Should capture exactly three events");
-        assertTrue(capturedEvents.get(0) instanceof OrderCreatedEvent, "First event should be OrderCreatedEvent");
-        assertTrue(capturedEvents.get(1) instanceof OrderItemAddedEvent, "Second event should be OrderItemAddedEvent");
-        assertTrue(capturedEvents.get(2) instanceof OrderSubmittedEvent, "Third event should be OrderSubmittedEvent");
+        assertTrue(
+                capturedEvents.get(0) instanceof OrderCreatedEvent,
+                "First event should be OrderCreatedEvent");
+        assertTrue(
+                capturedEvents.get(1) instanceof OrderItemAddedEvent,
+                "Second event should be OrderItemAddedEvent");
+        assertTrue(
+                capturedEvents.get(2) instanceof OrderSubmittedEvent,
+                "Third event should be OrderSubmittedEvent");
     }
 }

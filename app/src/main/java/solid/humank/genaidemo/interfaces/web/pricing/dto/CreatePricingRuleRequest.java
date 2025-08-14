@@ -2,10 +2,7 @@ package solid.humank.genaidemo.interfaces.web.pricing.dto;
 
 import java.time.LocalDateTime;
 
-/**
- * 創建定價規則請求
- * 用於接收HTTP請求中的數據
- */
+/** 創建定價規則請求 用於接收HTTP請求中的數據 */
 public class CreatePricingRuleRequest {
     private String productId;
     private String promotionId;
@@ -18,8 +15,7 @@ public class CreatePricingRuleRequest {
     private ProductCategoryDto productCategory;
 
     // 無參構造函數，用於JSON反序列化
-    public CreatePricingRuleRequest() {
-    }
+    public CreatePricingRuleRequest() {}
 
     public String getProductId() {
         return productId;
