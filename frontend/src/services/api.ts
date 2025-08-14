@@ -135,6 +135,16 @@ class ApiClient {
     return this.request<Product>('GET', `/products/${productId}`)
   }
 
+  async updateProduct(productId: string, product: Partial<Product>): Promise<Product> {
+    return this.request<Product>('PUT', `/products/${productId}`, product)
+  }
+
+  async deleteProduct(productId: string): Promise<void> {
+    return this.request<void>('DELETE', `/products/${productId}`)
+  }
+
+
+
   // 客戶相關 API
   async getCustomer(customerId: string): Promise<Customer> {
     return this.request<Customer>('GET', `/customers/${customerId}`)
@@ -168,6 +178,10 @@ class ApiClient {
   // 庫存相關 API
   async getInventory(productId: string): Promise<Inventory> {
     return this.request<Inventory>('GET', `/inventory/${productId}`)
+  }
+
+  async adjustInventory(productId: string, adjustment: { quantity: number; reason: string; type: string }): Promise<any> {
+    return this.request<any>('POST', `/inventory/${productId}/adjust`, adjustment)
   }
 
   async checkInventory(productId: string, quantity: number): Promise<boolean> {
@@ -227,6 +241,8 @@ export const orderService = {
 export const productService = {
   list: (params?: PageRequest) => apiClient.getProducts(params),
   get: (id: string) => apiClient.getProduct(id),
+  update: (id: string, product: Partial<Product>) => apiClient.updateProduct(id, product),
+  delete: (id: string) => apiClient.deleteProduct(id),
 }
 
 export const customerService = {
@@ -242,6 +258,8 @@ export const paymentService = {
 
 export const inventoryService = {
   get: (productId: string) => apiClient.getInventory(productId),
+  adjust: (productId: string, adjustment: { quantity: number; reason: string; type: string }) => 
+    apiClient.adjustInventory(productId, adjustment),
   check: (productId: string, quantity: number) => 
     apiClient.checkInventory(productId, quantity),
 }

@@ -9,7 +9,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // 格式化金額
-export function formatMoney(money: Money): string {
+export function formatMoney(money?: Money | null): string {
+  if (!money || money.amount === undefined || money.amount === null) {
+    return 'NT$ 0'
+  }
+  
   return new Intl.NumberFormat('zh-TW', {
     style: 'currency',
     currency: money.currency || 'TWD',
@@ -17,7 +21,11 @@ export function formatMoney(money: Money): string {
 }
 
 // 格式化日期
-export function formatDate(dateString: string, formatStr: string = 'yyyy/MM/dd HH:mm'): string {
+export function formatDate(dateString?: string | null, formatStr: string = 'yyyy/MM/dd HH:mm'): string {
+  if (!dateString) {
+    return 'N/A'
+  }
+  
   try {
     const date = parseISO(dateString)
     return format(date, formatStr, { locale: zhTW })

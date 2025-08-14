@@ -83,4 +83,9 @@ public class PaymentRepositoryAdapter implements PaymentRepository {
     public long count() {
         return jpaPaymentRepository.count();
     }
+    
+    @Override
+    public boolean existsById(PaymentId id) {
+        return jpaPaymentRepository.existsById(id.toString());
+    }
 }

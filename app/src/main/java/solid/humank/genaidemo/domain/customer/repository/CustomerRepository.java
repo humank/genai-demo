@@ -19,4 +19,8 @@ public interface CustomerRepository extends Repository<Customer, CustomerId> {
     @Override
     Customer save(Customer customer);
     void delete(CustomerId customerId);
+    
+    // 分頁查詢方法
+    List<CustomerId> findCustomerIds(int page, int size);
+    int countCustomers();
 }

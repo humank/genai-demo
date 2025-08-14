@@ -19,9 +19,8 @@ public class InventoryConfig {
      */
     @Bean
     public InventoryApplicationService inventoryApplicationService(
-            InventoryPersistencePort inventoryPersistencePort,
-            ExternalWarehousePort externalWarehousePort) {
-        return new InventoryApplicationService(inventoryPersistencePort, externalWarehousePort);
+            solid.humank.genaidemo.infrastructure.inventory.persistence.repository.JpaInventoryRepository jpaInventoryRepository) {
+        return new InventoryApplicationService(jpaInventoryRepository);
     }
 
     /**

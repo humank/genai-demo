@@ -3,8 +3,17 @@
 import React, { useEffect, useState } from 'react'
 import { useStats, useActivities } from '@/hooks/useApi'
 
+interface TestResults {
+  directFetch?: {
+    success: boolean
+    data?: any
+    error?: string
+    isSuccess?: boolean
+  }
+}
+
 export default function ApiTestPage() {
-  const [testResults, setTestResults] = useState<any>({})
+  const [testResults, setTestResults] = useState<TestResults>({})
   
   // 使用實際的 hooks
   const { data: statsData, isLoading: statsLoading, error: statsError } = useStats()
@@ -20,7 +29,7 @@ export default function ApiTestPage() {
         const response = await fetch('http://localhost:8080/api/stats')
         const data = await response.json()
         
-        setTestResults(prev => ({
+        setTestResults((prev: TestResults) => ({
           ...prev,
           directFetch: {
             success: true,
@@ -31,7 +40,7 @@ export default function ApiTestPage() {
         
         console.log('直接 fetch 結果:', data)
       } catch (error: any) {
-        setTestResults(prev => ({
+        setTestResults((prev: TestResults) => ({
           ...prev,
           directFetch: {
             success: false,
@@ -127,7 +136,7 @@ export default function ApiTestPage() {
               <div className="mt-4">
                 <h3 className="font-medium">活動數量: {activities.length}</h3>
                 {activities.slice(0, 2).map((activity: any, index: number) => (
-                  <div key={index} className="text-sm ml-4">
+                  <div key={activity?.id || `activity-${index}`} className="text-sm ml-4">
                     <p>• {activity.title} - {activity.timestamp}</p>
                   </div>
                 ))}

@@ -4,7 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
 import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
@@ -29,13 +31,14 @@ import static org.mockito.Mockito.verify;
  * 重構後遵循3A原則，每個測試方法只測試一個特定場景
  */
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @IntegrationTest
 public class BusinessFlowEventIntegrationTest {
 
     @Autowired
     private OrderApplicationService orderApplicationService;
     
-    @MockBean
+    @Mock
     private OrderEventHandler orderEventHandler;
     
     @Test

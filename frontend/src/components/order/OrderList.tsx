@@ -54,8 +54,8 @@ export const OrderList: React.FC<OrderListProps> = ({
   // 過濾訂單
   const filteredOrders = ordersResponse?.content?.filter((order) => {
     const matchesSearch = 
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.shippingAddress.toLowerCase().includes(searchTerm.toLowerCase())
+      (order.id?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+      (order.shippingAddress?.toLowerCase() || '').includes(searchTerm.toLowerCase())
     
     const matchesStatus = statusFilter === 'ALL' || order.status === statusFilter
     
@@ -212,7 +212,7 @@ export const OrderList: React.FC<OrderListProps> = ({
           <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
             {filteredOrders.map((order, index) => (
               <div 
-                key={order.id} 
+                key={order?.id || `order-${index}`} 
                 className="animate-scale-in" 
                 style={{ animationDelay: `${index * 50}ms` }}
               >

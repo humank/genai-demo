@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.product.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * 捆綁銷售服務
  */
+@DomainService(description = "捆綁銷售服務，處理產品捆綁銷售的業務邏輯和折扣計算")
 public class BundleService {
     
     /**
@@ -36,7 +38,7 @@ public class BundleService {
     public Money calculateRegularPrice(List<Product> products) {
         Money total = Money.twd(0);
         for (Product product : products) {
-            total = total.add(product.getBasePrice());
+            total = total.add(product.getPrice());
         }
         return total;
     }
@@ -79,14 +81,14 @@ public class BundleService {
         
         // 如果產品數量大於要求的數量，只對最貴的N個產品應用折扣
         List<Product> sortedProducts = products.stream()
-            .sorted(Comparator.comparing(p -> p.getBasePrice().getAmount(), Comparator.reverseOrder()))
+            .sorted(Comparator.comparing(p -> p.getPrice().getAmount(), Comparator.reverseOrder()))
             .collect(Collectors.toList());
         
         // 計算折扣金額
         Money discountAmount = Money.twd(0);
         for (int i = 0; i < bundle.getRequiredItemCount(); i++) {
             Product product = sortedProducts.get(i);
-            Money productPrice = product.getBasePrice();
+            Money productPrice = product.getPrice();
             discountAmount = discountAmount.add(bundle.getDiscount().calculateDiscount(productPrice));
         }
         

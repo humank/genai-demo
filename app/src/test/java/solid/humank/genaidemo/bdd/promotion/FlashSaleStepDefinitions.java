@@ -6,6 +6,7 @@ import io.cucumber.java.en.Then;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.product.model.valueobject.ProductName;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 
 import java.time.LocalDateTime;
@@ -35,10 +36,10 @@ public class FlashSaleStepDefinitions {
             Integer startMinute, Integer endHour, Integer endMinute, Integer timezone, Integer salePrice, Integer regularPrice) {
         
         this.product = mock(Product.class);
-        when(product.getName()).thenReturn(productName);
+        when(product.getName()).thenReturn(new ProductName(productName));
         
         ProductId productId = new ProductId(productName);
-        when(product.getProductId()).thenReturn(productId);
+        when(product.getId()).thenReturn(productId);
         
         this.regularPrice = regularPrice;
         this.salePrice = salePrice;
@@ -73,9 +74,9 @@ public class FlashSaleStepDefinitions {
                                   checkoutTime.isBefore(flashSaleRule.getEndTime());
         
         if (isWithinSaleTime) {
-            when(product.getBasePrice()).thenReturn(Money.of(salePrice));
+            when(product.getPrice()).thenReturn(Money.of(salePrice));
         } else {
-            when(product.getBasePrice()).thenReturn(Money.of(regularPrice));
+            when(product.getPrice()).thenReturn(Money.of(regularPrice));
         }
     }
 
@@ -84,7 +85,7 @@ public class FlashSaleStepDefinitions {
             String productName, Integer quantity, Integer salePrice, Integer regularPrice) {
         
         this.product = mock(Product.class);
-        when(product.getName()).thenReturn(productName);
+        when(product.getName()).thenReturn(new ProductName(productName));
         
         this.regularPrice = regularPrice;
         this.salePrice = salePrice;
@@ -102,7 +103,7 @@ public class FlashSaleStepDefinitions {
             String productName, Integer quantity, Integer salePrice) {
         
         this.product = mock(Product.class);
-        when(product.getName()).thenReturn(productName);
+        when(product.getName()).thenReturn(new ProductName(productName));
         
         this.salePrice = salePrice;
         this.regularPrice = salePrice * 2; // 假設原價是特價的兩倍
@@ -127,9 +128,9 @@ public class FlashSaleStepDefinitions {
         this.dealAvailable = soldQuantity < availableQuantity;
         
         if (dealAvailable) {
-            when(product.getBasePrice()).thenReturn(Money.of(salePrice));
+            when(product.getPrice()).thenReturn(Money.of(salePrice));
         } else {
-            when(product.getBasePrice()).thenReturn(Money.of(regularPrice));
+            when(product.getPrice()).thenReturn(Money.of(regularPrice));
         }
     }
 
@@ -138,9 +139,9 @@ public class FlashSaleStepDefinitions {
         this.dealAvailable = soldQuantity < availableQuantity;
         
         if (dealAvailable) {
-            when(product.getBasePrice()).thenReturn(Money.of(salePrice));
+            when(product.getPrice()).thenReturn(Money.of(salePrice));
         } else {
-            when(product.getBasePrice()).thenReturn(Money.of(regularPrice));
+            when(product.getPrice()).thenReturn(Money.of(regularPrice));
         }
     }
 
@@ -148,9 +149,9 @@ public class FlashSaleStepDefinitions {
     public void the_customer_receives_the_special_price_of_$(Integer price) {
         assertEquals(price, (int)salePrice);
         
-        // 重新設置 product 的 basePrice
-        when(product.getBasePrice()).thenReturn(Money.of(price));
-        assertEquals(Money.of(price).getAmount(), product.getBasePrice().getAmount());
+        // 重新設置 product 的 price
+        when(product.getPrice()).thenReturn(Money.of(price));
+        assertEquals(Money.of(price).getAmount(), product.getPrice().getAmount());
     }
 
     @Then("the customer is informed the deal is no longer available")
@@ -164,8 +165,8 @@ public class FlashSaleStepDefinitions {
         this.regularPrice = price;
         assertEquals(price, (int)regularPrice);
         
-        // 重新設置 product 的 basePrice
-        when(product.getBasePrice()).thenReturn(Money.of(price));
-        assertEquals(Money.of(price).getAmount(), product.getBasePrice().getAmount());
+        // 重新設置 product 的 price
+        when(product.getPrice()).thenReturn(Money.of(price));
+        assertEquals(Money.of(price).getAmount(), product.getPrice().getAmount());
     }
 }

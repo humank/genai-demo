@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.workflow.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.service.NotificationService;
@@ -16,6 +17,7 @@ import java.util.UUID;
  * 配送管理服務
  * 負責處理配送的創建、狀態轉換和完成
  */
+@DomainService(description = "配送管理服務，負責處理配送的創建、狀態轉換和完成")
 public class DeliveryManagementService implements DeliveryService {
     private final DeliveryRepository deliveryRepository;
     private final NotificationService notificationService;

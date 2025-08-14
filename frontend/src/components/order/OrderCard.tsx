@@ -40,8 +40,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({
   showActions = true,
   compact = false,
 }) => {
-  const canEdit = order.status === OrderStatus.CREATED
-  const canCancel = [OrderStatus.CREATED, OrderStatus.PENDING].includes(order.status)
+  const canEdit = order?.status === OrderStatus.CREATED
+  const canCancel = order?.status && [OrderStatus.CREATED, OrderStatus.PENDING].includes(order.status)
 
   if (compact) {
     return (
@@ -57,16 +57,16 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">
-                      訂單 #{order.id.slice(-8)}
+                      訂單 #{order.id?.slice(-8) || 'N/A'}
                     </h3>
                     <p className="text-sm text-muted-foreground flex items-center">
                       <Clock className="h-3 w-3 mr-1" />
-                      {formatDate(order.createdAt, 'MM/dd HH:mm')}
+                      {formatDate(order?.createdAt, 'MM/dd HH:mm')}
                     </p>
                   </div>
                 </div>
-                <Badge className={getOrderStatusColor(order.status)}>
-                  {getOrderStatusText(order.status)}
+                <Badge className={getOrderStatusColor(order?.status)}>
+                  {getOrderStatusText(order?.status)}
                 </Badge>
               </div>
 
@@ -75,7 +75,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="text-muted-foreground">地址:</span>
-                  <span className="truncate">{order.shippingAddress}</span>
+                  <span className="truncate">{order?.shippingAddress || 'N/A'}</span>
                 </div>
                 
                 <div className="flex items-center space-x-2">
@@ -87,7 +87,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                 <div className="flex items-center space-x-2">
                   <CreditCard className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="text-muted-foreground">金額:</span>
-                  <span className="font-medium">{formatMoney(order.effectiveAmount)}</span>
+                  <span className="font-medium">{formatMoney(order?.effectiveAmount)}</span>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onView(order.id)}
+                    onClick={() => onView(order?.id)}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
@@ -109,7 +109,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onEdit(order.id)}
+                    onClick={() => onEdit(order?.id)}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -119,7 +119,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => onCancel(order.id)}
+                    onClick={() => onCancel(order?.id)}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -142,16 +142,16 @@ export const OrderCard: React.FC<OrderCardProps> = ({
             </div>
             <div>
               <CardTitle className="text-lg font-semibold">
-                訂單 #{order.id.slice(-8)}
+                訂單 #{order.id?.slice(-8) || 'N/A'}
               </CardTitle>
               <p className="text-sm text-muted-foreground flex items-center mt-1">
                 <Clock className="h-3 w-3 mr-1" />
-                {formatDate(order.createdAt)}
+                {formatDate(order?.createdAt)}
               </p>
             </div>
           </div>
-          <Badge className={getOrderStatusColor(order.status)}>
-            {getOrderStatusText(order.status)}
+          <Badge className={getOrderStatusColor(order?.status)}>
+            {getOrderStatusText(order?.status)}
           </Badge>
         </div>
       </CardHeader>
@@ -163,7 +163,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
             <MapPin className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
             <div className="flex-1">
               <span className="text-sm text-muted-foreground">配送地址:</span>
-              <p className="text-sm font-medium">{order.shippingAddress}</p>
+              <p className="text-sm font-medium">{order?.shippingAddress || 'N/A'}</p>
             </div>
           </div>
         </div>
@@ -176,13 +176,13 @@ export const OrderCard: React.FC<OrderCardProps> = ({
           </div>
           
           <div className="bg-muted/30 rounded-lg p-3 space-y-2">
-            {order.items?.slice(0, 3).map((item, index) => (
-              <div key={index} className="flex justify-between items-center text-sm">
+            {(order?.items || []).slice(0, 3).map((item, index) => (
+              <div key={item?.id || `${item?.productName}-${index}` || `item-${index}`} className="flex justify-between items-center text-sm">
                 <div className="flex-1">
                   <span className="font-medium">{item.productName}</span>
                   <span className="text-muted-foreground ml-2">x{item.quantity}</span>
                 </div>
-                <span className="font-medium">{formatMoney(item.totalPrice)}</span>
+                <span className="font-medium">{formatMoney(item?.totalPrice)}</span>
               </div>
             )) || (
               <div className="text-sm text-muted-foreground text-center">
@@ -202,14 +202,14 @@ export const OrderCard: React.FC<OrderCardProps> = ({
         <div className="space-y-2 pt-2 border-t border-border/50">
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">原始金額:</span>
-            <span className="text-sm">{formatMoney(order.totalAmount)}</span>
+            <span className="text-sm">{formatMoney(order?.totalAmount)}</span>
           </div>
           
-          {order.effectiveAmount.amount !== order.totalAmount.amount && (
+          {order.effectiveAmount?.amount !== order.totalAmount?.amount && (
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">折扣後:</span>
               <span className="text-sm text-green-600 font-medium">
-                {formatMoney(order.effectiveAmount)}
+                {formatMoney(order?.effectiveAmount)}
               </span>
             </div>
           )}
@@ -218,7 +218,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
             <span>實付金額:</span>
             <div className="flex items-center space-x-2">
               <CreditCard className="h-4 w-4" />
-              <span className="text-primary">{formatMoney(order.effectiveAmount)}</span>
+              <span className="text-primary">{formatMoney(order?.effectiveAmount)}</span>
             </div>
           </div>
         </div>

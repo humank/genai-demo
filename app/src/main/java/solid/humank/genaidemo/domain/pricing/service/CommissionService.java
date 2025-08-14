@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.pricing.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.pricing.model.aggregate.PricingRule;
 import solid.humank.genaidemo.domain.pricing.model.entity.CommissionRate;
@@ -14,6 +15,7 @@ import java.util.Optional;
  * 佣金服務
  * 重構後作為領域服務，協調聚合之間的操作
  */
+@DomainService(description = "佣金服務，協調聚合之間的佣金計算操作和定價規則")
 public class CommissionService {
     
     private final PricingRuleRepository pricingRuleRepository;
@@ -73,7 +75,7 @@ public class CommissionService {
      * 現在使用PricingRule聚合來計算佣金
      */
     public Money calculateCommission(Product product, boolean isEventPromotion) {
-        ProductId productId = product.getProductId();
+        ProductId productId = product.getId();
         
         // 查找產品對應的定價規則
         Optional<PricingRule> pricingRuleOpt = pricingRuleRepository.findByProductId(productId)

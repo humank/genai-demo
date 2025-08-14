@@ -1,94 +1,72 @@
 package solid.humank.genaidemo.domain.product.model.aggregate;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
-import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
-import solid.humank.genaidemo.domain.product.model.events.ProductCreatedEvent;
-import solid.humank.genaidemo.domain.product.model.events.ProductPriceChangedEvent;
-import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.product.model.valueobject.*;
 
 /**
  * 產品聚合根
  */
-@AggregateRoot
-@AggregateLifecycle.ManagedLifecycle
+@AggregateRoot(name = "Product", description = "產品聚合根，管理產品信息和庫存")
 public class Product {
-    private ProductId productId;
-    private String name;
-    private String description;
-    private Money basePrice;
-    private ProductCategory category;
-    private boolean isActive;
-
-    // Private constructor for JPA
-    private Product() {
-    }
-
-    public Product(ProductId productId, String name, String description, Money basePrice, ProductCategory category) {
-        this.productId = productId;
+    
+    private final ProductId id;
+    private final ProductName name;
+    private final ProductDescription description;
+    private final Money price;
+    private final ProductCategory category;
+    private final StockQuantity stockQuantity;
+    private final boolean inStock;
+    
+    public Product(ProductId id, ProductName name, ProductDescription description,
+                  Money price, ProductCategory category, StockQuantity stockQuantity) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.basePrice = basePrice;
+        this.price = price;
         this.category = category;
-        this.isActive = true;
-        
-        // 發布產品創建事件
-        AggregateLifecycleAware.apply(new ProductCreatedEvent(
-            this.productId,
-            this.name,
-            this.basePrice,
-            this.category
-        ));
+        this.stockQuantity = stockQuantity;
+        this.inStock = stockQuantity.getValue() > 0;
     }
-
-    public ProductId getProductId() {
-        return productId;
+    
+    public ProductId getId() {
+        return id;
     }
-
-    public String getName() {
+    
+    public ProductName getName() {
         return name;
     }
-
-    public String getDescription() {
+    
+    public ProductDescription getDescription() {
         return description;
     }
-
-    public Money getBasePrice() {
-        return basePrice;
+    
+    public Money getPrice() {
+        return price;
     }
-
+    
     public ProductCategory getCategory() {
         return category;
     }
-
-    public boolean isActive() {
-        return isActive;
+    
+    public StockQuantity getStockQuantity() {
+        return stockQuantity;
     }
-
-    public void activate() {
-        this.isActive = true;
+    
+    public boolean isInStock() {
+        return inStock;
     }
-
-    public void deactivate() {
-        this.isActive = false;
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Product product = (Product) obj;
+        return id.equals(product.id);
     }
-
-    public void updatePrice(Money newPrice) {
-        Money oldPrice = this.basePrice;
-        this.basePrice = newPrice;
-        
-        // 發布產品價格變更事件
-        AggregateLifecycleAware.apply(new ProductPriceChangedEvent(
-            this.productId,
-            this.name,
-            oldPrice,
-            this.basePrice
-        ));
-    }
-
-    public void updateDescription(String newDescription) {
-        this.description = newDescription;
+    
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

@@ -1,10 +1,12 @@
 package solid.humank.genaidemo.domain.pricing.model.entity;
 
+import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
 
 /**
  * 佣金費率實體
  */
+@Entity(name = "CommissionRate", description = "佣金費率實體，管理不同產品類別的佣金費率")
 public class CommissionRate {
     private ProductCategory category;
     private int normalRate; // 一般費率（百分比）

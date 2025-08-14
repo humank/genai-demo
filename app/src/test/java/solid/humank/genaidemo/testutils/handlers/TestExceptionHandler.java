@@ -82,4 +82,34 @@ public class TestExceptionHandler {
     public String getExceptionMessage() {
         return capturedException != null ? capturedException.getMessage() : null;
     }
+    
+    /**
+     * 獲取最後一個異常
+     */
+    public Exception getLastException() {
+        return capturedException;
+    }
+    
+    /**
+     * 處理異常
+     */
+    public void handleException(Runnable action) {
+        try {
+            action.run();
+        } catch (Exception e) {
+            captureException(e);
+        }
+    }
+    
+    /**
+     * 處理異常並返回結果
+     */
+    public <T> T handleExceptionWithReturn(java.util.function.Supplier<T> action) {
+        try {
+            return action.get();
+        } catch (Exception e) {
+            captureException(e);
+            return null;
+        }
+    }
 }

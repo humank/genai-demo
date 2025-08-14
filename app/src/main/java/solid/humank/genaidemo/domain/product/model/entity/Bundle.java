@@ -1,11 +1,13 @@
 package solid.humank.genaidemo.domain.product.model.entity;
 
+import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.product.model.valueobject.BundleDiscount;
 import solid.humank.genaidemo.domain.product.model.valueobject.BundleType;
 
 /**
  * 捆綁銷售實體
  */
+@Entity(name = "Bundle", description = "捆綁銷售實體，管理產品捆綁銷售的規則和折扣")
 public class Bundle {
     private String name;
     private BundleType type;

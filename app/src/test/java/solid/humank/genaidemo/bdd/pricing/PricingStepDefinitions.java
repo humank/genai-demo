@@ -60,7 +60,7 @@ public class PricingStepDefinitions {
 
     @When("the seller's product is sold during the {string} event")
     public void the_seller_s_product_is_sold_during_the_event(String event) {
-        when(product.getCategory()).thenReturn(ProductCategory.ELECTRONICS);
+        when(product.getCategory()).thenReturn(new solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory("ELECTRONICS", "電子產品"));
         CommissionRate rate = commissionService.getCommissionRate(ProductCategory.ELECTRONICS, event);
         commissionAmount = salePrice.multiply(rate.getEventRate() / 100.0);
         when(commissionService.calculateCommission(product, salePrice, event)).thenReturn(commissionAmount);
@@ -104,7 +104,10 @@ public class PricingStepDefinitions {
     @When("a seller's {string} product is sold during a promotional event")
     public void a_seller_s_product_is_sold_during_a_promotional_event(String category) {
         ProductCategory productCategory = ProductCategory.valueOf(category.toUpperCase());
-        when(product.getCategory()).thenReturn(productCategory);
+        // 將 pricing 的 ProductCategory 轉換為 product 的 ProductCategory
+        solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory productCategoryVO = 
+            new solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory(productCategory.name(), productCategory.name());
+        when(product.getCategory()).thenReturn(productCategoryVO);
         
         CommissionRate rate = commissionService.getCommissionRate(productCategory, "PROMOTIONAL_EVENT");
         commissionAmount = salePrice.multiply(rate.getEventRate() / 100.0);

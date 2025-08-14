@@ -124,4 +124,34 @@ public class DddArchitectureTest {
 
         rule.check(importedClasses);
     }
+
+    @Test
+    @DisplayName("控制器不應直接使用數據庫相關類")
+    void controllersShouldNotDirectlyUseDatabaseClasses() {
+        ArchRule rule = noClasses()
+                .that().resideInAPackage(INTERFACES_PACKAGE)
+                .and().haveNameMatching(".*Controller")
+                .should().dependOnClassesThat().haveNameMatching(".*DataSource.*")
+                .orShould().dependOnClassesThat().haveNameMatching(".*Connection.*")
+                .orShould().dependOnClassesThat().haveNameMatching(".*PreparedStatement.*")
+                .orShould().dependOnClassesThat().haveNameMatching(".*ResultSet.*")
+                .orShould().dependOnClassesThat().resideInAnyPackage("java.sql..", "javax.sql..");
+
+        rule.check(importedClasses);
+    }
+
+    @Test
+    @DisplayName("控制器應該只依賴應用服務")
+    void controllersShouldOnlyDependOnApplicationServices() {
+        ArchRule rule = noClasses()
+                .that().resideInAPackage(INTERFACES_PACKAGE)
+                .and().haveNameMatching(".*Controller")
+                .should().dependOnClassesThat().resideInAnyPackage(
+                        INFRASTRUCTURE_PACKAGE,
+                        "java.sql..",
+                        "javax.sql.."
+                );
+
+        rule.check(importedClasses);
+    }
 }

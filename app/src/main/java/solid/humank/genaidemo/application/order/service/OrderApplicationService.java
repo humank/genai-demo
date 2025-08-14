@@ -13,11 +13,10 @@ import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
 import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
 import solid.humank.genaidemo.application.order.dto.response.OrderItemResponse;
+import solid.humank.genaidemo.application.common.dto.PagedResult;
 import solid.humank.genaidemo.application.order.port.incoming.OrderManagementUseCase;
 import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
 import solid.humank.genaidemo.application.order.port.outgoing.PaymentServicePort;
-import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
-import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.factory.OrderFactory;
@@ -62,8 +61,8 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
     @Override
     public OrderResponse addOrderItem(AddOrderItemCommand command) {
-        // 查找訂單 - 將OrderId轉換為UUID
-        UUID orderId = UUID.fromString(command.getOrderId());
+        // 查找訂單 - 使用領域值對象
+        OrderId orderId = OrderId.of(command.getOrderId());
         Optional<Order> orderOpt = orderPersistencePort.findById(orderId);
         Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + orderId));
 
@@ -84,16 +83,16 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
     @Override
     public OrderResponse submitOrder(String orderId) {
-        // 查找訂單 - 將OrderId轉換為UUID
-        UUID id = UUID.fromString(orderId);
+        // 查找訂單 - 使用領域值對象
+        OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
         Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 提交訂單
         order.submit();
 
-        // 處理支付 - 將OrderId轉換為UUID
-        paymentServicePort.processPayment(id, order.getTotalAmount());
+        // 處理支付 - 轉換為UUID給外部服務
+        paymentServicePort.processPayment(id.getId(), order.getTotalAmount());
 
         // 保存訂單
         orderPersistencePort.save(order);
@@ -104,16 +103,16 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
     @Override
     public OrderResponse cancelOrder(String orderId) {
-        // 查找訂單 - 將OrderId轉換為UUID
-        UUID id = UUID.fromString(orderId);
+        // 查找訂單 - 使用領域值對象
+        OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
         Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 取消訂單
         order.cancel();
 
-        // 取消支付 - 將OrderId轉換為UUID
-        paymentServicePort.cancelPayment(id);
+        // 取消支付 - 轉換為UUID給外部服務
+        paymentServicePort.cancelPayment(id.getId());
 
         // 保存訂單
         orderPersistencePort.save(order);
@@ -124,13 +123,28 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
     @Override
     public OrderResponse getOrder(String orderId) {
-        // 查找訂單 - 將OrderId轉換為UUID
-        UUID id = UUID.fromString(orderId);
+        // 查找訂單 - 使用領域值對象
+        OrderId id = OrderId.of(orderId);
         Optional<Order> orderOpt = orderPersistencePort.findById(id);
         Order order = orderOpt.orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND + id));
 
         // 返回響應
         return mapToOrderResponse(order);
+    }
+    
+    @Override
+    public PagedResult<OrderResponse> getOrders(int page, int size) {
+        // 獲取分頁數據
+        List<Order> orders = orderPersistencePort.findAll(page, size);
+        long totalElements = orderPersistencePort.count();
+        
+        // 轉換為響應DTO
+        List<OrderResponse> orderResponses = orders.stream()
+                .map(this::mapToOrderResponse)
+                .collect(Collectors.toList());
+        
+        // 返回分頁結果
+        return PagedResult.of(orderResponses, (int) totalElements, page, size);
     }
     
     /**

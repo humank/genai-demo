@@ -6,11 +6,11 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 訂單持久化端口
  * 定義訂單持久化的操作接口
+ * 使用領域值對象保持領域模型的完整性
  */
 public interface OrderPersistencePort {
     
@@ -22,7 +22,7 @@ public interface OrderPersistencePort {
     /**
      * 根據ID查找訂單
      */
-    Optional<Order> findById(UUID orderId);
+    Optional<Order> findById(OrderId orderId);
     
     /**
      * 查找所有訂單
@@ -32,7 +32,7 @@ public interface OrderPersistencePort {
     /**
      * 刪除訂單
      */
-    void delete(UUID orderId);
+    void delete(OrderId orderId);
     
     /**
      * 更新訂單
@@ -42,17 +42,20 @@ public interface OrderPersistencePort {
     /**
      * 檢查訂單是否存在
      */
-    boolean exists(UUID orderId);
+    boolean exists(OrderId orderId);
     
     /**
      * 根據客戶ID查找訂單
      */
-    List<Order> findByCustomerId(UUID customerId);
+    List<Order> findByCustomerId(CustomerId customerId);
     
     /**
-     * 根據客戶ID查找訂單 (使用CustomerId值對象)
+     * 分頁查詢訂單
      */
-    default List<Order> findByCustomerId(CustomerId customerId) {
-        return findByCustomerId(customerId.getId());
-    }
+    List<Order> findAll(int page, int size);
+    
+    /**
+     * 計算訂單總數
+     */
+    long count();
 }

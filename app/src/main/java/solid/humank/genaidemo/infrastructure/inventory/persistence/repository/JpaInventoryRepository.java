@@ -38,4 +38,12 @@ public interface JpaInventoryRepository extends JpaRepository<JpaInventoryEntity
      */
     @Query("SELECT i FROM JpaInventoryEntity i JOIN i.reservations r WHERE r.orderId = :orderId")
     List<JpaInventoryEntity> findByOrderId(@Param("orderId") UUID orderId);
+    
+    // ========== 統計查詢方法 ==========
+    
+    /**
+     * 根據狀態統計可用庫存總量
+     */
+    @Query("SELECT COALESCE(SUM(i.availableQuantity), 0) FROM JpaInventoryEntity i WHERE i.status = :status")
+    Long sumAvailableQuantityByStatus(@Param("status") solid.humank.genaidemo.infrastructure.inventory.persistence.entity.JpaInventoryEntity.InventoryStatusEnum status);
 }

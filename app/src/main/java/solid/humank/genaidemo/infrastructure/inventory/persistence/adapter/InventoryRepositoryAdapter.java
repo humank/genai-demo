@@ -73,6 +73,11 @@ public class InventoryRepositoryAdapter implements InventoryRepository, Inventor
     public long count() {
         return jpaInventoryRepository.count();
     }
+    
+    @Override
+    public boolean existsById(InventoryId id) {
+        return jpaInventoryRepository.existsById(id.getId());
+    }
 
     @Override
     public void delete(InventoryId inventoryId) {

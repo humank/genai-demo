@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.promotion.model.specification;
 
+import solid.humank.genaidemo.domain.common.annotations.Specification;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.GiftWithPurchaseRule;
@@ -11,6 +12,7 @@ import java.math.RoundingMode;
  * 滿額贈禮規格
  * 檢查訂單金額是否滿足滿額贈禮條件
  */
+@Specification(name = "GiftWithPurchaseSpecification", description = "滿額贈禮規格，檢查訂單金額是否滿足滿額贈禮條件")
 public class GiftWithPurchaseSpecification implements PromotionSpecification {
     private final GiftWithPurchaseRule rule;
 

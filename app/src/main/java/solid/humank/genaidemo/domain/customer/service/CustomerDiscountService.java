@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.customer.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
@@ -7,6 +8,7 @@ import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 /**
  * 客戶折扣服務
  */
+@DomainService(description = "客戶折扣服務，處理客戶相關的折扣邏輯和會員優惠")
 public class CustomerDiscountService {
     
     private static final int NEW_MEMBER_DISCOUNT_PERCENTAGE = 15;

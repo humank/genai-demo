@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
 import { ProductCard } from '@/components/product/ProductCard'
 import { StatsCard } from '@/components/dashboard/StatsCard'
@@ -24,6 +25,7 @@ import {
 } from 'lucide-react'
 
 export default function ProductsPage() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
   const [stockFilter, setStockFilter] = useState<string>('ALL')
@@ -67,21 +69,25 @@ export default function ProductsPage() {
   const categories = Array.from(new Set(products.map(p => p.category)))
 
   const handleViewProduct = (productId: string) => {
-    console.log('View product:', productId)
+    // 導航到商品詳情頁面
+    router.push(`/products/${productId}`)
   }
 
   const handleEditProduct = (productId: string) => {
-    console.log('Edit product:', productId)
+    // 導航到商品編輯頁面（暫時跳轉到詳情頁面）
+    router.push(`/products/${productId}`)
   }
 
   const handleDeleteProduct = (productId: string) => {
-    if (window.confirm('確定要刪除這個產品嗎？')) {
-      console.log('Delete product:', productId)
+    if (window.confirm('確定要刪除這個產品嗎？此操作無法撤銷。')) {
+      // TODO: 實現刪除功能
+      alert('刪除功能尚未實現')
     }
   }
 
   const handleCreateProduct = () => {
-    console.log('Create new product')
+    // TODO: 導航到商品創建頁面
+    alert('新增商品功能尚未實現')
   }
 
   const handleRefresh = () => {

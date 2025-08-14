@@ -32,6 +32,11 @@ public class DeliveryRepositoryAdapter implements DeliveryRepository {
     }
     
     @Override
+    public boolean existsById(DeliveryId id) {
+        return workflowDeliveryRepository.existsById(id.getId());
+    }
+    
+    @Override
     public List<Delivery> findAll() {
         // 實現 Repository 接口中的 findAll 方法
         return workflowDeliveryRepository.findAll()

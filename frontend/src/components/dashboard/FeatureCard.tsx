@@ -81,10 +81,15 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
 }) => {
   const colors = colorVariants[color]
 
-  const CardWrapper = disabled ? 'div' : Link
+  const CardWrapper = ({ children, className }: { children: React.ReactNode; className?: string }) => {
+    if (disabled) {
+      return <div className={cn("cursor-not-allowed", className)}>{children}</div>
+    }
+    return <Link href={href} className={className}>{children}</Link>
+  }
 
   return (
-    <CardWrapper href={disabled ? undefined : href} className={disabled ? 'cursor-not-allowed' : ''}>
+    <CardWrapper>
       <Card className={cn(
         "modern-card modern-card-hover group relative overflow-hidden transition-all duration-300",
         colors.border,

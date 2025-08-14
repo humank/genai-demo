@@ -54,6 +54,11 @@ public class OrderResponse {
     public String getOrderId() {
         return orderId;
     }
+    
+    // 為了與前端兼容，添加 getId() 方法
+    public String getId() {
+        return orderId;
+    }
 
     public String getCustomerId() {
         return customerId;

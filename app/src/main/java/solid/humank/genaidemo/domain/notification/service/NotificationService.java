@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.notification.service;
 
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * 通知服務
  * 負責處理通知的創建、發送和管理
  */
+@DomainService(description = "通知服務，負責處理通知的創建、發送和管理")
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final NotificationSender notificationSender;

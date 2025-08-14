@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.infrastructure.payment.persistence.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import solid.humank.genaidemo.infrastructure.payment.persistence.entity.JpaPaymentEntity;
 
@@ -29,4 +30,12 @@ public interface JpaPaymentRepository extends JpaRepository<JpaPaymentEntity, St
      * @return 支付
      */
     Optional<JpaPaymentEntity> findById(String id);
+    
+    // ========== 統計查詢方法 ==========
+    
+    /**
+     * 按支付方式分組統計支付數量
+     */
+    @Query("SELECT p.paymentMethod, COUNT(p) FROM JpaPaymentEntity p GROUP BY p.paymentMethod")
+    List<Object[]> countByPaymentMethodGrouped();
 }

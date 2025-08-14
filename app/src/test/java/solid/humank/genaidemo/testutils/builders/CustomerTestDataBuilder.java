@@ -118,9 +118,23 @@ public class CustomerTestDataBuilder {
      * 建構Customer領域物件
      */
     public Customer build() {
-        Customer customer = new Customer(customerId, name, email, birthDate);
-        customer.setRegistrationDate(registrationDate);
-        customer.setRewardPoints(rewardPoints);
+        solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId customerIdVO = 
+            new solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId(customerId);
+        // 創建所需的值對象
+        solid.humank.genaidemo.domain.customer.model.valueobject.CustomerName customerName = 
+            new solid.humank.genaidemo.domain.customer.model.valueobject.CustomerName(name);
+        solid.humank.genaidemo.domain.customer.model.valueobject.Email emailVO = 
+            new solid.humank.genaidemo.domain.customer.model.valueobject.Email(email);
+        solid.humank.genaidemo.domain.customer.model.valueobject.Phone phoneVO = 
+            new solid.humank.genaidemo.domain.customer.model.valueobject.Phone("0912345678");
+        solid.humank.genaidemo.domain.customer.model.valueobject.Address addressVO = 
+            new solid.humank.genaidemo.domain.customer.model.valueobject.Address("台北市", "信義區", "110", "台灣");
+        solid.humank.genaidemo.domain.customer.model.valueobject.MembershipLevel membershipLevel = 
+            solid.humank.genaidemo.domain.customer.model.valueobject.MembershipLevel.STANDARD;
+        
+        Customer customer = new Customer(customerIdVO, customerName, emailVO, phoneVO, addressVO, membershipLevel);
+        // 注意：Customer 類可能沒有 setter 方法，因為它遵循 DDD 原則
+        // 如果需要設置這些值，應該通過構造函數或業務方法
         return customer;
     }
     

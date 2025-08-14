@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.promotion.model.specification;
 
+import solid.humank.genaidemo.domain.common.annotations.Specification;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.AddOnPurchaseRule;
@@ -11,6 +12,7 @@ import java.util.List;
  * 加價購規格
  * 檢查訂單是否滿足加價購條件
  */
+@Specification(name = "AddOnPurchaseSpecification", description = "加價購規格，檢查訂單是否滿足加價購條件")
 public class AddOnPurchaseSpecification implements PromotionSpecification {
     private final AddOnPurchaseRule rule;
 

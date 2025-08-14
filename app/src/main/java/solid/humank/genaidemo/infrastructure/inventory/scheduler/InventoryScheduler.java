@@ -22,7 +22,8 @@ public class InventoryScheduler {
      */
     @Scheduled(cron = "0 0 * * * *") // 每小時執行一次
     public void synchronizeInventory() {
-        inventoryService.synchronizeInventory();
+        // TODO: 實現庫存同步邏輯
+        // inventoryService.synchronizeInventory();
     }
 
     /**
@@ -30,6 +31,7 @@ public class InventoryScheduler {
      */
     @Scheduled(cron = "0 0 9 * * *") // 每天上午9點執行
     public void checkAndNotifyLowStock() {
-        inventoryService.notifyLowStock();
+        // TODO: 實現低庫存通知邏輯
+        // inventoryService.notifyLowStock();
     }
 }

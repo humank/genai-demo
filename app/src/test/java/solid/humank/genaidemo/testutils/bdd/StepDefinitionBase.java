@@ -18,8 +18,8 @@ public abstract class StepDefinitionBase {
     protected StepDefinitionBase() {
         this.testContext = new TestContext();
         this.scenarioState = new ScenarioState(testContext);
-        this.scenarioHandler = new TestScenarioHandler(testContext);
-        this.exceptionHandler = new TestExceptionHandler(testContext);
+        this.scenarioHandler = new TestScenarioHandler();
+        this.exceptionHandler = new TestExceptionHandler();
         
         // 註冊場景處理器
         registerScenarioProcessors();

@@ -3,7 +3,9 @@ package solid.humank.genaidemo.integration.event;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.mockito.Spy;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -17,7 +19,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -30,12 +32,13 @@ import static org.mockito.Mockito.*;
  * 測試事件處理機制的性能和穩定性
  */
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EventHandlingPerformanceTest {
 
     @Autowired
     private DomainEventPublisherAdapter eventPublisherAdapter;
     
-    @SpyBean
+    @Spy
     private OrderEventHandler orderEventHandler;
     
     /**

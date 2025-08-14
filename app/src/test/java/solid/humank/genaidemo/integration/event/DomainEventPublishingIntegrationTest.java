@@ -5,7 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mock;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
@@ -37,7 +40,7 @@ public class DomainEventPublishingIntegrationTest {
     @Autowired
     private DomainEventPublisherAdapter eventPublisherAdapter;
 
-    @MockBean
+    @Autowired
     private OrderEventHandler orderEventHandler;
 
     private List<DomainEvent> capturedEvents;
@@ -118,7 +121,7 @@ public class DomainEventPublishingIntegrationTest {
         return new OrderCreatedEvent(
                 orderId,
                 TestConstants.Customer.DEFAULT_ID,
-                Money.of(TestConstants.Money.MEDIUM_AMOUNT),
+                TestConstants.MoneyAmounts.MEDIUM_AMOUNT,
                 Collections.emptyList());
     }
 

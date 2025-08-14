@@ -8,6 +8,7 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
+import solid.humank.genaidemo.domain.product.model.valueobject.ProductName;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
 import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
@@ -55,9 +56,9 @@ public class PromotionStepDefinitions {
         
         productIdString = productName;
         ProductId productId = new ProductId(productName);
-        when(product.getProductId()).thenReturn(productId);
-        when(product.getName()).thenReturn(productName);
-        when(product.getBasePrice()).thenReturn(Money.of(price));
+        when(product.getId()).thenReturn(productId);
+        when(product.getName()).thenReturn(new ProductName(productName));
+        when(product.getPrice()).thenReturn(Money.of(price));
         
         products.put(productId.getId(), product);
         
@@ -104,17 +105,17 @@ public class PromotionStepDefinitions {
         if (context != null) {
             if (products.containsKey(productName)) {
                 Product product = products.get(productName);
-                when(product.getBasePrice()).thenReturn(Money.of(price));
-                assertEquals(Money.of(price).getAmount(), product.getBasePrice().getAmount());
+                when(product.getPrice()).thenReturn(Money.of(price));
+                assertEquals(Money.of(price).getAmount(), product.getPrice().getAmount());
             } else if (this.product != null && this.product.getName().equals(productName)) {
-                when(this.product.getBasePrice()).thenReturn(Money.of(price));
-                assertEquals(Money.of(price).getAmount(), this.product.getBasePrice().getAmount());
+                when(this.product.getPrice()).thenReturn(Money.of(price));
+                assertEquals(Money.of(price).getAmount(), this.product.getPrice().getAmount());
             } else {
                 // 創建一個新的產品模擬對象
                 Product mockProduct = mock(Product.class);
-                when(mockProduct.getName()).thenReturn(productName);
-                when(mockProduct.getBasePrice()).thenReturn(Money.of(price));
-                assertEquals(Money.of(price).getAmount(), mockProduct.getBasePrice().getAmount());
+                when(mockProduct.getName()).thenReturn(new ProductName(productName));
+                when(mockProduct.getPrice()).thenReturn(Money.of(price));
+                assertEquals(Money.of(price).getAmount(), mockProduct.getPrice().getAmount());
             }
         } else {
             // 原有的 Add-On Purchase 測試邏輯
@@ -129,9 +130,9 @@ public class PromotionStepDefinitions {
         product = mock(Product.class);
         
         ProductId productId = new ProductId(productName);
-        when(product.getProductId()).thenReturn(productId);
-        when(product.getName()).thenReturn(productName);
-        when(product.getBasePrice()).thenReturn(Money.of(regularPrice));
+        when(product.getId()).thenReturn(productId);
+        when(product.getName()).thenReturn(new ProductName(productName));
+        when(product.getPrice()).thenReturn(Money.of(regularPrice));
         
         products.put(productId.getId(), product);
         

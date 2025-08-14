@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
+import solid.humank.genaidemo.domain.product.model.valueobject.ProductName;
 import solid.humank.genaidemo.domain.product.model.entity.Bundle;
 import solid.humank.genaidemo.domain.product.model.valueobject.BundleDiscount;
 import solid.humank.genaidemo.domain.product.model.valueobject.BundleType;
@@ -68,7 +69,7 @@ public class ProductStepDefinitions {
         String[] itemNames = items.split(", ");
         for (String itemName : itemNames) {
             Product product = mock(Product.class);
-            when(product.getName()).thenReturn(itemName);
+            when(product.getName()).thenReturn(new ProductName(itemName));
             products.add(product);
         }
         
@@ -113,8 +114,8 @@ public class ProductStepDefinitions {
             Money price = Money.twd(Integer.parseInt(priceStr));
             
             Product product = mock(Product.class);
-            when(product.getName()).thenReturn(productName);
-            when(product.getBasePrice()).thenReturn(price);
+            when(product.getName()).thenReturn(new ProductName(productName));
+            when(product.getPrice()).thenReturn(price);
             
             products.add(product);
             productMap.put(productName, product);
@@ -145,21 +146,21 @@ public class ProductStepDefinitions {
             Money productPrice = Money.twd(price);
             
             Product product = mock(Product.class);
-            when(product.getName()).thenReturn(productName);
-            when(product.getBasePrice()).thenReturn(productPrice);
+            when(product.getName()).thenReturn(new ProductName(productName));
+            when(product.getPrice()).thenReturn(productPrice);
             
             allProducts.add(product);
             regularTotal = regularTotal.add(productPrice);
         }
         
         // 按價格排序產品（從高到低）
-        allProducts.sort((p1, p2) -> p2.getBasePrice().getAmount().compareTo(p1.getBasePrice().getAmount()));
+        allProducts.sort((p1, p2) -> p2.getPrice().getAmount().compareTo(p1.getPrice().getAmount()));
         
         // 計算折扣
         Money discountAmount = Money.twd(0);
         for (int i = 0; i < 3; i++) { // 只對前3個最貴的產品應用折扣
             Product product = allProducts.get(i);
-            Money productPrice = product.getBasePrice();
+            Money productPrice = product.getPrice();
             discountAmount = discountAmount.add(productPrice.multiply(0.12)); // 12% 折扣
         }
         

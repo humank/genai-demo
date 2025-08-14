@@ -66,4 +66,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     public long count() {
         return orderMap.size();
     }
+    
+    @Override
+    public boolean existsById(OrderId id) {
+        return orderMap.containsKey(id.toString());
+    }
 }

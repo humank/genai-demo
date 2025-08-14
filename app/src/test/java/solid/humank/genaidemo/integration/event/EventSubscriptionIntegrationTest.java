@@ -3,10 +3,11 @@ package solid.humank.genaidemo.integration.event;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.mockito.Spy;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
-import solid.humank.genaidemo.domain.common.event.DomainEvent;
+
 import solid.humank.genaidemo.domain.common.event.DomainEventSubscriptionManager;
 import solid.humank.genaidemo.domain.common.event.EventSubscriber;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
@@ -22,11 +23,9 @@ import solid.humank.genaidemo.infrastructure.event.DomainEventPublisherAdapter;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +38,7 @@ import static org.mockito.Mockito.verify;
  * 測試事件訂閱機制的正確性
  */
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class EventSubscriptionIntegrationTest {
 
     @Autowired
@@ -50,10 +50,10 @@ public class EventSubscriptionIntegrationTest {
     @Autowired
     private DomainEventSubscriptionManager subscriptionManager;
     
-    @SpyBean
+    @Spy
     private OrderEventHandler orderEventHandler;
     
-    @SpyBean
+    @Spy
     private NotificationEventHandler notificationEventHandler;
     
     /**

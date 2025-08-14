@@ -56,12 +56,17 @@ public final class TestConstants {
     }
     
     // 金額相關常數
-    public static final class Money {
-        public static final BigDecimal ZERO = BigDecimal.ZERO;
-        public static final BigDecimal SMALL_AMOUNT = new BigDecimal("100");
-        public static final BigDecimal MEDIUM_AMOUNT = new BigDecimal("1000");
-        public static final BigDecimal LARGE_AMOUNT = new BigDecimal("10000");
-        public static final BigDecimal HUGE_AMOUNT = new BigDecimal("100000");
+    public static final class MoneyAmounts {
+        public static final solid.humank.genaidemo.domain.common.valueobject.Money ZERO = 
+            solid.humank.genaidemo.domain.common.valueobject.Money.zero();
+        public static final solid.humank.genaidemo.domain.common.valueobject.Money SMALL_AMOUNT = 
+            solid.humank.genaidemo.domain.common.valueobject.Money.twd(100);
+        public static final solid.humank.genaidemo.domain.common.valueobject.Money MEDIUM_AMOUNT = 
+            solid.humank.genaidemo.domain.common.valueobject.Money.twd(1000);
+        public static final solid.humank.genaidemo.domain.common.valueobject.Money LARGE_AMOUNT = 
+            solid.humank.genaidemo.domain.common.valueobject.Money.twd(10000);
+        public static final solid.humank.genaidemo.domain.common.valueobject.Money HUGE_AMOUNT = 
+            solid.humank.genaidemo.domain.common.valueobject.Money.twd(100000);
         
         public static final BigDecimal DISCOUNT_10_PERCENT = new BigDecimal("0.1");
         public static final BigDecimal DISCOUNT_15_PERCENT = new BigDecimal("0.15");

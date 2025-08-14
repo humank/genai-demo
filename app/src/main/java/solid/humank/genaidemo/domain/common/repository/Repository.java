@@ -56,4 +56,12 @@ public interface Repository<T, ID> {
      * @return 聚合根數量
      */
     long count();
+    
+    /**
+     * 檢查是否存在
+     * 
+     * @param id ID
+     * @return 是否存在
+     */
+    boolean existsById(ID id);
 }

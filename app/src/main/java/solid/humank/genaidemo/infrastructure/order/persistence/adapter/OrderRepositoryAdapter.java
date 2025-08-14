@@ -84,4 +84,9 @@ public class OrderRepositoryAdapter implements OrderRepository {
     public long count() {
         return jpaOrderRepository.count();
     }
+    
+    @Override
+    public boolean existsById(OrderId id) {
+        return jpaOrderRepository.existsById(id.toString());
+    }
 }

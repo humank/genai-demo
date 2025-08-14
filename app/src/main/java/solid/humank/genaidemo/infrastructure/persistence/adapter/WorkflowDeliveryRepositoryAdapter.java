@@ -69,6 +69,11 @@ public class WorkflowDeliveryRepositoryAdapter implements DeliveryRepository {
     }
     
     @Override
+    public boolean existsById(UUID id) {
+        return deliveries.containsKey(id);
+    }
+    
+    @Override
     public List<Delivery> findAll() {
         return new ArrayList<>(deliveries.values());
     }

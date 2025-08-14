@@ -2,7 +2,7 @@ package solid.humank.genaidemo.testutils.handlers;
 
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
-import solid.humank.genaidemo.domain.customer.service.DiscountService;
+import solid.humank.genaidemo.domain.customer.service.CustomerDiscountService;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.testutils.fixtures.TestConstants;
 
@@ -38,7 +38,7 @@ public class TestScenarioHandler {
     /**
      * 處理客戶折扣場景
      */
-    public DiscountResult handleDiscountScenario(Customer customer, Order order, DiscountService discountService) {
+    public DiscountResult handleDiscountScenario(Customer customer, Order order, CustomerDiscountService discountService) {
         if (discountService.isNewMember(customer) && discountService.isBirthdayMonth(customer)) {
             return handleBothDiscountsScenario(customer, order, discountService);
         } else if (discountService.isBirthdayMonth(customer)) {
@@ -105,7 +105,7 @@ public class TestScenarioHandler {
         return "product-" + productName.hashCode();
     }
     
-    private DiscountResult handleBothDiscountsScenario(Customer customer, Order order, DiscountService discountService) {
+    private DiscountResult handleBothDiscountsScenario(Customer customer, Order order, CustomerDiscountService discountService) {
         int newMemberDiscount = discountService.getNewMemberDiscountPercentage();
         int birthdayDiscount = discountService.getBirthdayDiscountPercentage();
         
@@ -118,12 +118,12 @@ public class TestScenarioHandler {
         }
     }
     
-    private DiscountResult handleBirthdayDiscountScenario(Customer customer, Order order, DiscountService discountService) {
+    private DiscountResult handleBirthdayDiscountScenario(Customer customer, Order order, CustomerDiscountService discountService) {
         Money discountedTotal = discountService.applyBirthdayDiscount(order);
         return new DiscountResult(discountedTotal, "Birthday Month Discount");
     }
     
-    private DiscountResult handleNewMemberDiscountScenario(Customer customer, Order order, DiscountService discountService) {
+    private DiscountResult handleNewMemberDiscountScenario(Customer customer, Order order, CustomerDiscountService discountService) {
         Money discountedTotal = discountService.applyNewMemberDiscount(order);
         return new DiscountResult(discountedTotal, "New Member Discount");
     }

@@ -4,6 +4,8 @@ import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
 import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderResponse;
 
+import solid.humank.genaidemo.application.common.dto.PagedResult;
+
 /**
  * 訂單管理用例接口 - 主要輸入端口
  * 定義系統對外提供的所有訂單相關操作
@@ -33,4 +35,9 @@ public interface OrderManagementUseCase {
      * 查詢訂單
      */
     OrderResponse getOrder(String orderId);
+    
+    /**
+     * 分頁查詢訂單列表
+     */
+    PagedResult<OrderResponse> getOrders(int page, int size);
 }

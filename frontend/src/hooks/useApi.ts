@@ -138,6 +138,32 @@ export const useProduct = (productId: string) => {
   })
 }
 
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: ({ productId, product }: { productId: string; product: Partial<Product> }) =>
+      productService.update(productId, product),
+    onSuccess: (_, { productId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.product(productId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.products })
+    },
+  })
+}
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: (productId: string) => productService.delete(productId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.products })
+    },
+  })
+}
+
+
+
 // 客戶相關 hooks
 export const useCustomers = (params?: PageRequest) => {
   return useQuery({
@@ -197,6 +223,21 @@ export const useCheckInventory = () => {
   return useMutation({
     mutationFn: ({ productId, quantity }: { productId: string; quantity: number }) =>
       inventoryService.check(productId, quantity),
+  })
+}
+
+export const useAdjustInventory = () => {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: ({ productId, adjustment }: { 
+      productId: string; 
+      adjustment: { quantity: number; reason: string; type: string } 
+    }) => inventoryService.adjust(productId, adjustment),
+    onSuccess: (_, { productId }) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.inventory(productId) })
+      queryClient.invalidateQueries({ queryKey: queryKeys.products })
+    },
   })
 }
 

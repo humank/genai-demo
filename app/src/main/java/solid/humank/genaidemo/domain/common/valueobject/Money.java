@@ -124,7 +124,7 @@ public class Money {
      */
     public Money plus(Money money) {
         if (!this.currency.equals(money.currency)) {
-            var errorMsg = STR."Cannot add money with different currencies: \{this.currency} vs \{money.currency}";
+            var errorMsg = "Cannot add money with different currencies: " + this.currency + " vs " + money.currency;
             throw new IllegalArgumentException(errorMsg);
         }
         return new Money(this.amount.add(money.amount), this.currency);

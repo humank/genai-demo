@@ -9,12 +9,12 @@ import solid.humank.genaidemo.domain.order.repository.OrderRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * 訂單持久化適配器
  * 實現應用層的 OrderPersistencePort 接口
  * 使用領域層的 OrderRepository 進行實際的持久化操作
+ * 保持領域值對象的使用，維護架構的一致性
  */
 @Component
 public class OrderPersistenceAdapter implements OrderPersistencePort {
@@ -31,8 +31,8 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     }
 
     @Override
-    public Optional<Order> findById(UUID orderId) {
-        return orderRepository.findById(OrderId.of(orderId));
+    public Optional<Order> findById(OrderId orderId) {
+        return orderRepository.findById(orderId);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     }
 
     @Override
-    public void delete(UUID orderId) {
-        orderRepository.deleteById(OrderId.of(orderId));
+    public void delete(OrderId orderId) {
+        orderRepository.deleteById(orderId);
     }
 
     @Override
@@ -51,12 +51,31 @@ public class OrderPersistenceAdapter implements OrderPersistencePort {
     }
 
     @Override
-    public boolean exists(UUID orderId) {
-        return orderRepository.findById(OrderId.of(orderId)).isPresent();
+    public boolean exists(OrderId orderId) {
+        return orderRepository.findById(orderId).isPresent();
     }
 
     @Override
-    public List<Order> findByCustomerId(UUID customerId) {
-        return orderRepository.findByCustomerId(CustomerId.of(customerId));
+    public List<Order> findByCustomerId(CustomerId customerId) {
+        return orderRepository.findByCustomerId(customerId);
+    }
+    
+    @Override
+    public List<Order> findAll(int page, int size) {
+        // 這裡需要實現分頁邏輯，暫時返回所有訂單的子集
+        List<Order> allOrders = orderRepository.findAll();
+        int start = page * size;
+        int end = Math.min(start + size, allOrders.size());
+        
+        if (start >= allOrders.size()) {
+            return List.of();
+        }
+        
+        return allOrders.subList(start, end);
+    }
+    
+    @Override
+    public long count() {
+        return orderRepository.findAll().size();
     }
 }

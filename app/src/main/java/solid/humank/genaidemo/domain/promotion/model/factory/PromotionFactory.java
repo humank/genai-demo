@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.domain.promotion.model.factory;
 
+import solid.humank.genaidemo.domain.common.annotations.Factory;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
@@ -14,6 +15,7 @@ import java.time.ZoneId;
  * 促銷工廠
  * 用於創建各種類型的促銷
  */
+@Factory(name = "PromotionFactory", description = "促銷工廠，用於創建各種類型的促銷聚合根")
 public class PromotionFactory {
     
     /**

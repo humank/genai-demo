@@ -74,4 +74,26 @@ public class TestContext {
     public boolean isEmpty() {
         return context.isEmpty();
     }
+    
+    /**
+     * 清理測試上下文
+     */
+    public void clear() {
+        context.clear();
+        exceptionHandler.reset();
+    }
+    
+    /**
+     * 檢查是否有異常
+     */
+    public boolean hasException() {
+        return exceptionHandler.hasException();
+    }
+    
+    /**
+     * 獲取最後一個異常
+     */
+    public Exception getLastException() {
+        return exceptionHandler.getLastException();
+    }
 }

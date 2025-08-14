@@ -84,4 +84,9 @@ public class InMemoryPricingRuleRepository implements PricingRuleRepository {
     public long count() {
         return storage.size();
     }
+    
+    @Override
+    public boolean existsById(PriceId priceId) {
+        return storage.containsKey(priceId);
+    }
 }
