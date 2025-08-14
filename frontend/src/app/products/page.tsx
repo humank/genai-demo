@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Loading } from '@/components/ui/loading'
+import { useProducts } from '@/hooks/useApi'
 import { Product } from '@/types/domain'
 import { 
   Package, 
@@ -22,73 +23,23 @@ import {
   Archive
 } from 'lucide-react'
 
-// 模擬產品數據
-const mockProducts: Product[] = [
-  {
-    id: 'prod-001',
-    name: 'iPhone 15 Pro',
-    description: '最新款 iPhone，配備 A17 Pro 晶片，支援 USB-C 接口',
-    price: { amount: 35900, currency: 'TWD' },
-    category: '智慧型手機',
-    inStock: true,
-    stockQuantity: 25
-  },
-  {
-    id: 'prod-002',
-    name: 'MacBook Pro 14"',
-    description: 'M3 晶片，16GB 記憶體，512GB SSD，適合專業工作者',
-    price: { amount: 65900, currency: 'TWD' },
-    category: '筆記型電腦',
-    inStock: true,
-    stockQuantity: 8
-  },
-  {
-    id: 'prod-003',
-    name: 'AirPods Pro (第3代)',
-    description: '主動降噪，空間音訊，最長 30 小時電池續航',
-    price: { amount: 7490, currency: 'TWD' },
-    category: '音響設備',
-    inStock: true,
-    stockQuantity: 45
-  },
-  {
-    id: 'prod-004',
-    name: 'iPad Air',
-    description: 'M2 晶片，10.9 吋 Liquid Retina 顯示器',
-    price: { amount: 19900, currency: 'TWD' },
-    category: '平板電腦',
-    inStock: false,
-    stockQuantity: 0
-  },
-  {
-    id: 'prod-005',
-    name: 'Apple Watch Series 9',
-    description: 'GPS + Cellular，45mm，運動型錶帶',
-    price: { amount: 13900, currency: 'TWD' },
-    category: '穿戴裝置',
-    inStock: true,
-    stockQuantity: 3
-  },
-  {
-    id: 'prod-006',
-    name: 'Magic Keyboard',
-    description: '適用於 iPad Pro，背光鍵盤，觸控板',
-    price: { amount: 10900, currency: 'TWD' },
-    category: '配件',
-    inStock: true,
-    stockQuantity: 15
-  }
-]
-
 export default function ProductsPage() {
-  const [products] = useState<Product[]>(mockProducts)
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
   const [stockFilter, setStockFilter] = useState<string>('ALL')
-  const [loading] = useState(false)
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 20
+
+  // 使用 API 獲取產品數據
+  const { data: productsResponse, isLoading, error, refetch } = useProducts({
+    page: currentPage,
+    size: pageSize,
+  })
+
+  const products = productsResponse?.content || []
 
   // 統計數據
-  const totalProducts = products.length
+  const totalProducts = productsResponse?.totalElements || 0
   const inStockProducts = products.filter(p => p.inStock).length
   const lowStockProducts = products.filter(p => p.inStock && p.stockQuantity < 10).length
   const outOfStockProducts = products.filter(p => !p.inStock).length
@@ -133,6 +84,34 @@ export default function ProductsPage() {
     console.log('Create new product')
   }
 
+  const handleRefresh = () => {
+    refetch()
+  }
+
+  const handleResetFilters = () => {
+    setSearchTerm('')
+    setCategoryFilter('ALL')
+    setStockFilter('ALL')
+    setCurrentPage(0)
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        <Navbar />
+        <main className="container-modern py-8">
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <p className="text-red-500 mb-4">載入產品時發生錯誤</p>
+            <Button onClick={handleRefresh} variant="outline">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              重試
+            </Button>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Navbar />
@@ -148,7 +127,7 @@ export default function ProductsPage() {
           </div>
           
           <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
               <RefreshCw className="h-4 w-4 mr-2" />
               刷新
             </Button>
@@ -166,27 +145,38 @@ export default function ProductsPage() {
             value={totalProducts}
             icon={Package}
             color="blue"
-            stats={{ label: '總計', value: totalProducts }}
+            loading={isLoading}
           />
           <StatsCard
             title="有庫存"
             value={inStockProducts}
-            change={{ value: `${Math.round((inStockProducts/totalProducts)*100)}%`, type: 'neutral', period: '佔比' }}
+            change={{ 
+              value: totalProducts > 0 ? `${Math.round((inStockProducts/totalProducts)*100)}%` : '0%', 
+              type: 'neutral', 
+              period: '佔比' 
+            }}
             icon={Archive}
             color="green"
+            loading={isLoading}
           />
           <StatsCard
             title="庫存不足"
             value={lowStockProducts}
-            change={{ value: lowStockProducts > 0 ? '需要補貨' : '狀況良好', type: lowStockProducts > 0 ? 'warning' : 'success', period: '' }}
+            change={{ 
+              value: lowStockProducts > 0 ? '需要補貨' : '狀況良好', 
+              type: lowStockProducts > 0 ? 'warning' : 'neutral', 
+              period: '' 
+            }}
             icon={AlertTriangle}
             color="orange"
+            loading={isLoading}
           />
           <StatsCard
             title="庫存價值"
             value={`NT$ ${totalValue.toLocaleString()}`}
             icon={DollarSign}
             color="purple"
+            loading={isLoading}
           />
         </div>
 
@@ -234,7 +224,7 @@ export default function ProductsPage() {
               </SelectContent>
             </Select>
             
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleResetFilters}>
               <RefreshCw className="h-4 w-4 mr-2" />
               重置篩選
             </Button>
@@ -242,7 +232,7 @@ export default function ProductsPage() {
         </div>
 
         {/* 產品列表 */}
-        {loading ? (
+        {isLoading ? (
           <div className="grid-modern">
             {Array.from({ length: 6 }).map((_, index) => (
               <div key={index} className="modern-card p-6 animate-pulse">
@@ -297,10 +287,37 @@ export default function ProductsPage() {
           </div>
         )}
 
+        {/* 分頁 */}
+        {productsResponse && productsResponse.totalPages > 1 && (
+          <div className="flex justify-center items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+              disabled={currentPage === 0}
+            >
+              上一頁
+            </Button>
+            
+            <span className="text-sm text-muted-foreground">
+              第 {currentPage + 1} 頁，共 {productsResponse.totalPages} 頁
+            </span>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(Math.min(productsResponse.totalPages - 1, currentPage + 1))}
+              disabled={currentPage >= productsResponse.totalPages - 1}
+            >
+              下一頁
+            </Button>
+          </div>
+        )}
+
         {/* 分頁信息 */}
         {filteredProducts.length > 0 && (
           <div className="flex justify-center items-center space-x-4 text-sm text-muted-foreground">
-            <span>顯示 {filteredProducts.length} 個商品</span>
+            <span>顯示 {filteredProducts.length} 個商品，共 {totalProducts} 個</span>
             {searchTerm && (
               <span>• 搜尋: "{searchTerm}"</span>
             )}

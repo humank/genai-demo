@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .loading { background-color: #fff3cd; }
+    </style>
+</head>
+<body>
+    <h1>前端 API 測試</h1>
+    
+    <button onclick="testAllAPIs()">測試所有 API</button>
+    
+    <div id="results"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+        
+        function addResult(title, content, type = 'success') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = `<h3>${title}</h3><pre>${content}</pre>`;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        async function testAPI(endpoint, title) {
+            try {
+                addResult(title, '載入中...', 'loading');
+                
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // 移除載入中的結果
+                const loadingResults = document.querySelectorAll('.loading');
+                loadingResults[loadingResults.length - 1]?.remove();
+                
+                addResult(title, JSON.stringify(data, null, 2), 'success');
+                
+            } catch (error) {
+                // 移除載入中的結果
+                const loadingResults = document.querySelectorAll('.loading');
+                loadingResults[loadingResults.length - 1]?.remove();
+                
+                addResult(title, `錯誤: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testAllAPIs() {
+            // 清空結果
+            document.getElementById('results').innerHTML = '';
+            
+            // 測試各個 API
+            await testAPI('/stats', '統計 API');
+            await testAPI('/activities?limit=3', '活動記錄 API');
+            await testAPI('/products?page=0&size=2', '產品 API');
+            await testAPI('/customers?page=0&size=2', '客戶 API');
+            await testAPI('/orders?page=0&size=2', '訂單 API');
+        }
+        
+        // 頁面載入時自動測試
+        window.onload = function() {
+            testAllAPIs();
+        };
+    </script>
+</body>
+</html>

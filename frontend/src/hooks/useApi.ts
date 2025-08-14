@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-hot-toast'
 import {
   orderService,
   productService,
@@ -7,6 +6,8 @@ import {
   paymentService,
   inventoryService,
   promotionService,
+  statsService,
+  activityService,
 } from '@/services/api'
 import {
   Order,
@@ -35,6 +36,10 @@ export const queryKeys = {
   inventory: (productId: string) => ['inventory', productId] as const,
   promotions: ['promotions'] as const,
   activePromotions: ['promotions', 'active'] as const,
+  stats: ['stats'] as const,
+  orderStatusStats: ['stats', 'order-status'] as const,
+  paymentMethodStats: ['stats', 'payment-methods'] as const,
+  activities: ['activities'] as const,
 }
 
 // 訂單相關 hooks
@@ -61,10 +66,9 @@ export const useCreateOrder = () => {
     mutationFn: (request: CreateOrderRequest) => orderService.create(request),
     onSuccess: (newOrder) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders })
-      toast.success('訂單創建成功！')
     },
     onError: (error: Error) => {
-      toast.error(`創建訂單失敗: ${error.message}`)
+      throw error
     },
   })
 }
@@ -78,10 +82,9 @@ export const useAddOrderItem = () => {
     onSuccess: (_, { orderId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.orders })
-      toast.success('商品已添加到訂單！')
     },
     onError: (error: Error) => {
-      toast.error(`添加商品失敗: ${error.message}`)
+      throw error
     },
   })
 }
@@ -94,10 +97,9 @@ export const useSubmitOrder = () => {
     onSuccess: (_, orderId) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.orders })
-      toast.success('訂單提交成功！')
     },
     onError: (error: Error) => {
-      toast.error(`提交訂單失敗: ${error.message}`)
+      throw error
     },
   })
 }
@@ -110,10 +112,11 @@ export const useCancelOrder = () => {
     onSuccess: (_, orderId) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) })
       queryClient.invalidateQueries({ queryKey: queryKeys.orders })
-      toast.success('訂單已取消')
+      // 移除這裡的 toast，讓組件自己處理
     },
     onError: (error: Error) => {
-      toast.error(`取消訂單失敗: ${error.message}`)
+      // 移除這裡的 toast，讓組件自己處理
+      throw error
     },
   })
 }
@@ -165,10 +168,9 @@ export const useProcessPayment = () => {
       queryClient.invalidateQueries({ 
         queryKey: queryKeys.order(payment.orderId) 
       })
-      toast.success('支付處理成功！')
     },
     onError: (error: Error) => {
-      toast.error(`支付失敗: ${error.message}`)
+      throw error
     },
   })
 }
@@ -223,10 +225,43 @@ export const useApplyPromotion = () => {
       promotionService.apply(orderId, promotionId),
     onSuccess: (_, { orderId }) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.order(orderId) })
-      toast.success('促銷已應用！')
     },
     onError: (error: Error) => {
-      toast.error(`應用促銷失敗: ${error.message}`)
+      throw error
     },
+  })
+}
+
+// 統計相關 hooks
+export const useStats = () => {
+  return useQuery({
+    queryKey: queryKeys.stats,
+    queryFn: () => statsService.getStats(),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  })
+}
+
+export const useOrderStatusStats = () => {
+  return useQuery({
+    queryKey: queryKeys.orderStatusStats,
+    queryFn: () => statsService.getOrderStatusStats(),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+export const usePaymentMethodStats = () => {
+  return useQuery({
+    queryKey: queryKeys.paymentMethodStats,
+    queryFn: () => statsService.getPaymentMethodStats(),
+    staleTime: 5 * 60 * 1000,
+  })
+}
+
+// 活動記錄相關 hooks
+export const useActivities = (params?: { limit?: number }) => {
+  return useQuery({
+    queryKey: [...queryKeys.activities, params],
+    queryFn: () => activityService.list(params),
+    staleTime: 2 * 60 * 1000, // 2 minutes
   })
 }

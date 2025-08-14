@@ -26,8 +26,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex) {
+        // 在開發環境中顯示詳細錯誤信息
+        String errorMessage = "系統發生未預期的錯誤";
+        if (ex.getMessage() != null) {
+            errorMessage += ": " + ex.getMessage();
+        }
+        
+        // 記錄完整的異常堆棧
+        ex.printStackTrace();
+        
         return ResponseEntity.internalServerError()
-            .body(new ApiErrorResponse(List.of("系統發生未預期的錯誤")));
+            .body(new ApiErrorResponse(List.of(errorMessage)));
     }
     
     /**

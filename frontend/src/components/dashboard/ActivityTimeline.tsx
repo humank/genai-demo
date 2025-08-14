@@ -21,7 +21,7 @@ interface ActivityItem {
 }
 
 interface ActivityTimelineProps {
-  activities: ActivityItem[]
+  activities?: ActivityItem[]
   showAll?: boolean
   onViewAll?: () => void
   loading?: boolean
@@ -62,55 +62,8 @@ const statusConfig = {
   info: 'bg-blue-500'
 }
 
-// 模擬數據
-const mockActivities: ActivityItem[] = [
-  {
-    id: '1',
-    type: 'order',
-    title: '新訂單已創建',
-    description: '客戶張小明創建了新訂單',
-    timestamp: '2 分鐘前',
-    status: 'success',
-    metadata: { orderId: 'ORD-001', customerId: 'CUST-123' }
-  },
-  {
-    id: '2',
-    type: 'payment',
-    title: '支付處理完成',
-    description: '訂單 #ORD-001 支付成功',
-    timestamp: '5 分鐘前',
-    status: 'success',
-    metadata: { orderId: 'ORD-001', amount: 1299 }
-  },
-  {
-    id: '3',
-    type: 'inventory',
-    title: '庫存警告',
-    description: '商品 "iPhone 15" 庫存不足',
-    timestamp: '10 分鐘前',
-    status: 'warning'
-  },
-  {
-    id: '4',
-    type: 'customer',
-    title: '新客戶註冊',
-    description: '李小華完成註冊',
-    timestamp: '15 分鐘前',
-    status: 'info',
-    metadata: { customerId: 'CUST-124' }
-  },
-  {
-    id: '5',
-    type: 'system',
-    title: '系統維護完成',
-    description: '定期系統維護已完成',
-    timestamp: '30 分鐘前',
-    status: 'success'
-  }
-]
-
 export const ActivityTimeline: React.FC<ActivityTimelineProps> = ({
-  activities = mockActivities,
+  activities = [],
   showAll = false,
   onViewAll,
   loading = false

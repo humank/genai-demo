@@ -10,7 +10,7 @@ interface StatsCardProps {
   value: string | number
   change?: {
     value: string
-    type: 'increase' | 'decrease' | 'neutral'
+    type: 'increase' | 'decrease' | 'neutral' | 'warning'
     period: string
   }
   icon: LucideIcon
@@ -55,7 +55,8 @@ const colorVariants = {
 const changeTypeStyles = {
   increase: 'text-green-600 bg-green-50 border-green-200',
   decrease: 'text-red-600 bg-red-50 border-red-200',
-  neutral: 'text-gray-600 bg-gray-50 border-gray-200'
+  neutral: 'text-gray-600 bg-gray-50 border-gray-200',
+  warning: 'text-orange-600 bg-orange-50 border-orange-200'
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({

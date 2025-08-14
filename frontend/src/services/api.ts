@@ -59,16 +59,25 @@ class ApiClient {
     data?: any
   ): Promise<T> {
     try {
-      const response: AxiosResponse<ApiResponse<T>> = await this.client.request({
+      const response: AxiosResponse<any> = await this.client.request({
         method,
         url,
         data,
       })
       
-      if (response.data.success) {
-        return response.data.data as T
+      // 處理不同的響應格式
+      const responseData = response.data
+      
+      // 檢查是否成功 - 支持兩種格式
+      const isSuccess = responseData.success === true || responseData.status === 'success'
+      
+      if (isSuccess) {
+        // 如果有 data 字段，返回 data；否則返回整個響應（用於統計 API）
+        return responseData.data || responseData
       } else {
-        throw new Error(response.data.message || 'API request failed')
+        // 處理錯誤情況
+        const errorMessage = responseData.message || responseData.errors?.[0] || 'API request failed'
+        throw new Error(errorMessage)
       }
     } catch (error) {
       console.error(`API ${method} ${url} failed:`, error)
@@ -177,6 +186,28 @@ class ApiClient {
   async applyPromotion(orderId: string, promotionId: string): Promise<void> {
     return this.request<void>('POST', `/orders/${orderId}/promotions/${promotionId}`)
   }
+
+  // 統計相關 API
+  async getStats(): Promise<any> {
+    return this.request<any>('GET', '/stats')
+  }
+
+  async getOrderStatusStats(): Promise<any> {
+    return this.request<any>('GET', '/stats/order-status')
+  }
+
+  async getPaymentMethodStats(): Promise<any> {
+    return this.request<any>('GET', '/stats/payment-methods')
+  }
+
+  // 活動記錄 API
+  async getActivities(params?: { limit?: number }): Promise<any[]> {
+    const queryParams = new URLSearchParams()
+    if (params?.limit) {
+      queryParams.append('limit', params.limit.toString())
+    }
+    return this.request<any[]>('GET', `/activities?${queryParams}`)
+  }
 }
 
 // 單例模式
@@ -220,4 +251,14 @@ export const promotionService = {
   getActive: () => apiClient.getActivePromotions(),
   apply: (orderId: string, promotionId: string) => 
     apiClient.applyPromotion(orderId, promotionId),
+}
+
+export const statsService = {
+  getStats: () => apiClient.getStats(),
+  getOrderStatusStats: () => apiClient.getOrderStatusStats(),
+  getPaymentMethodStats: () => apiClient.getPaymentMethodStats(),
+}
+
+export const activityService = {
+  list: (params?: { limit?: number }) => apiClient.getActivities(params),
 }

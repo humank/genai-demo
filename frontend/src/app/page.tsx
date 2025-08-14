@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { FeatureCard } from '@/components/dashboard/FeatureCard'
 import { ActivityTimeline } from '@/components/dashboard/ActivityTimeline'
+import { useStats, useActivities } from '@/hooks/useApi'
 import { 
   ShoppingCart, 
   Package, 
@@ -19,41 +20,92 @@ import {
 } from 'lucide-react'
 
 export default function HomePage() {
-  // 模擬統計數據
-  const stats = [
-    {
-      title: '今日訂單',
-      value: 24,
-      change: { value: '+12%', type: 'increase' as const, period: '比昨天' },
-      icon: ShoppingCart,
-      color: 'blue' as const,
-      trend: [12, 19, 15, 22, 18, 24, 20]
-    },
-    {
-      title: '今日營收',
-      value: 'NT$ 45,231',
-      change: { value: '+8%', type: 'increase' as const, period: '比昨天' },
-      icon: DollarSign,
-      color: 'green' as const,
-      trend: [30000, 35000, 32000, 42000, 38000, 45231, 40000]
-    },
-    {
-      title: '活躍客戶',
-      value: 1234,
-      change: { value: '+5%', type: 'increase' as const, period: '比上週' },
-      icon: Users,
-      color: 'purple' as const,
-      trend: [1100, 1150, 1200, 1180, 1220, 1234, 1210]
-    },
-    {
-      title: '庫存警告',
-      value: 3,
-      change: { value: '-2', type: 'decrease' as const, period: '比昨天' },
-      icon: AlertTriangle,
-      color: 'orange' as const,
-      trend: [5, 4, 6, 3, 4, 3, 2]
+  // 使用 API 獲取統計數據
+  const { data: statsData, isLoading: statsLoading, error: statsError } = useStats()
+  const { data: activities, isLoading: activitiesLoading, error: activitiesError } = useActivities({ limit: 10 })
+
+  // 調試日誌
+  React.useEffect(() => {
+    console.log('HomePage 渲染:', { statsData, statsLoading, statsError, activities, activitiesLoading, activitiesError })
+  }, [statsData, statsLoading, statsError, activities, activitiesLoading, activitiesError])
+
+  // 從 API 數據計算統計
+  const stats = React.useMemo(() => {
+    console.log('計算統計數據:', statsData)
+    if (!statsData) {
+      return [
+        {
+          title: '今日訂單',
+          value: 0,
+          change: { value: '載入中...', type: 'neutral' as const, period: '' },
+          icon: ShoppingCart,
+          color: 'blue' as const,
+          loading: true
+        },
+        {
+          title: '今日營收',
+          value: 'NT$ 0',
+          change: { value: '載入中...', type: 'neutral' as const, period: '' },
+          icon: DollarSign,
+          color: 'green' as const,
+          loading: true
+        },
+        {
+          title: '活躍客戶',
+          value: 0,
+          change: { value: '載入中...', type: 'neutral' as const, period: '' },
+          icon: Users,
+          color: 'purple' as const,
+          loading: true
+        },
+        {
+          title: '庫存警告',
+          value: 0,
+          change: { value: '載入中...', type: 'neutral' as const, period: '' },
+          icon: AlertTriangle,
+          color: 'orange' as const,
+          loading: true
+        }
+      ]
     }
-  ]
+
+    return [
+      {
+        title: '總訂單數',
+        value: statsData.totalOrders || 0,
+        change: { value: '+12%', type: 'increase' as const, period: '比昨天' },
+        icon: ShoppingCart,
+        color: 'blue' as const,
+        trend: [12, 19, 15, 22, 18, 24, 20]
+      },
+      {
+        title: '完成訂單價值',
+        value: statsData.totalCompletedOrderValue 
+          ? `NT$ ${Number(statsData.totalCompletedOrderValue).toLocaleString()}` 
+          : 'NT$ 0',
+        change: { value: '+8%', type: 'increase' as const, period: '比昨天' },
+        icon: DollarSign,
+        color: 'green' as const,
+        trend: [30000, 35000, 32000, 42000, 38000, 45231, 40000]
+      },
+      {
+        title: '獨特客戶',
+        value: statsData.uniqueCustomers || 0,
+        change: { value: '+5%', type: 'increase' as const, period: '比上週' },
+        icon: Users,
+        color: 'purple' as const,
+        trend: [1100, 1150, 1200, 1180, 1220, 1234, 1210]
+      },
+      {
+        title: '庫存總量',
+        value: statsData.totalAvailableInventory || 0,
+        change: { value: '正常', type: 'neutral' as const, period: '庫存狀態' },
+        icon: Package,
+        color: 'orange' as const,
+        trend: [5, 4, 6, 3, 4, 3, 2]
+      }
+    ]
+  }, [statsData])
 
   // 功能模組配置
   const features = [
@@ -63,7 +115,7 @@ export default function HomePage() {
       icon: ShoppingCart,
       href: '/orders',
       color: 'blue' as const,
-      stats: { label: '今日新增', value: 24 },
+      stats: { label: '總訂單', value: statsData?.totalOrders || 0 },
       badge: { text: 'HOT', variant: 'hot' as const }
     },
     {
@@ -72,7 +124,7 @@ export default function HomePage() {
       icon: Package,
       href: '/products',
       color: 'green' as const,
-      stats: { label: '商品總數', value: 1567 }
+      stats: { label: '庫存項目', value: statsData?.totalInventories || 0 }
     },
     {
       title: '客戶管理',
@@ -80,7 +132,7 @@ export default function HomePage() {
       icon: Users,
       href: '/customers',
       color: 'purple' as const,
-      stats: { label: '活躍客戶', value: 1234 },
+      stats: { label: '獨特客戶', value: statsData?.uniqueCustomers || 0 },
       badge: { text: 'NEW', variant: 'new' as const }
     },
     {
@@ -89,7 +141,7 @@ export default function HomePage() {
       icon: CreditCard,
       href: '/payments',
       color: 'orange' as const,
-      stats: { label: '今日收款', value: 'NT$ 45,231' }
+      stats: { label: '支付記錄', value: statsData?.totalPayments || 0 }
     },
     {
       title: '物流配送',
@@ -143,7 +195,7 @@ export default function HomePage() {
           <div className="grid-stats">
             {stats.map((stat, index) => (
               <div key={stat.title} className="animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
-                <StatsCard {...stat} />
+                <StatsCard {...stat} loading={statsLoading} />
               </div>
             ))}
           </div>
@@ -166,7 +218,10 @@ export default function HomePage() {
 
         {/* 最近活動 */}
         <div className="animate-slide-up" style={{ animationDelay: '400ms' }}>
-          <ActivityTimeline />
+          <ActivityTimeline 
+            activities={activities || []} 
+            loading={activitiesLoading}
+          />
         </div>
 
         {/* 快速操作區 */}
