@@ -1,26 +1,26 @@
 'use client'
 
-import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import {
+  Bell,
+  CreditCard,
+  Menu,
+  Moon,
+  Package,
+  Search,
+  Settings,
+  ShoppingCart,
+  Sun,
+  TrendingUp,
+  Truck,
+  User,
+  Users,
+  X
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { 
-  Menu, 
-  X, 
-  Settings, 
-  Bell, 
-  User, 
-  Search,
-  Moon,
-  Sun,
-  ShoppingCart,
-  Package,
-  Users,
-  CreditCard,
-  Truck,
-  TrendingUp
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React, { useState } from 'react'
 
 const navigation = [
   { name: '首頁', href: '/', icon: null },
@@ -50,14 +50,14 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">G</span>
+                <span className="text-white font-bold text-sm">C</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-gradient group-hover:scale-105 transition-transform">
-                  GenAI Demo
+                  CMC
                 </span>
                 <span className="text-xs text-muted-foreground -mt-1">
-                  電商管理系統
+                  商務管理中心
                 </span>
               </div>
             </Link>
@@ -68,7 +68,7 @@ export const Navbar: React.FC = () => {
             {navigation.map((item) => {
               const isActive = pathname === item.href
               const Icon = item.icon
-              
+
               return (
                 <Link
                   key={item.name}
@@ -103,9 +103,9 @@ export const Navbar: React.FC = () => {
             </Button>
 
             {/* 主題切換 */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={toggleDarkMode}
               className="hidden sm:flex"
             >
@@ -142,7 +142,7 @@ export const Navbar: React.FC = () => {
               {navigation.map((item) => {
                 const isActive = pathname === item.href
                 const Icon = item.icon
-                
+
                 return (
                   <Link
                     key={item.name}
@@ -160,7 +160,7 @@ export const Navbar: React.FC = () => {
                   </Link>
                 )
               })}
-              
+
               {/* 移動端額外選項 */}
               <div className="border-t border-border/50 pt-2 mt-2">
                 <button
@@ -170,7 +170,7 @@ export const Navbar: React.FC = () => {
                   {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   <span>{darkMode ? '淺色模式' : '深色模式'}</span>
                 </button>
-                
+
                 <Link
                   href="/profile"
                   className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50"

@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Toaster } from 'react-hot-toast'
 import './globals.css'
 import { Providers } from './providers'
-import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'GenAI Demo - 電商管理系統',
-  description: '基於 DDD 和六角形架構的電商管理系統示範',
+  title: 'CMC - 商務管理中心',
+  description: '專業的電子商務管理平台，提供訂單、商品、客戶一站式管理解決方案',
 }
 
 export default function RootLayout({

@@ -1,23 +1,23 @@
 'use client'
 
-import React from 'react'
-import { Navbar } from '@/components/layout/Navbar'
-import { StatsCard } from '@/components/dashboard/StatsCard'
-import { FeatureCard } from '@/components/dashboard/FeatureCard'
 import { ActivityTimeline } from '@/components/dashboard/ActivityTimeline'
-import { useStats, useActivities } from '@/hooks/useApi'
-import { 
-  ShoppingCart, 
-  Package, 
-  Users, 
-  CreditCard, 
-  Truck, 
-  TrendingUp,
-  DollarSign,
-  AlertTriangle,
+import { FeatureCard } from '@/components/dashboard/FeatureCard'
+import { StatsCard } from '@/components/dashboard/StatsCard'
+import { Navbar } from '@/components/layout/Navbar'
+import { useActivities, useStats } from '@/hooks/useApi'
+import {
   Activity,
-  Sparkles
+  AlertTriangle,
+  CreditCard,
+  DollarSign,
+  Package,
+  ShoppingCart,
+  Sparkles,
+  TrendingUp,
+  Truck,
+  Users
 } from 'lucide-react'
+import React from 'react'
 
 export default function HomePage() {
   // 使用 API 獲取統計數據
@@ -80,8 +80,8 @@ export default function HomePage() {
       },
       {
         title: '完成訂單價值',
-        value: statsData.totalCompletedOrderValue 
-          ? `NT$ ${Number(statsData.totalCompletedOrderValue).toLocaleString()}` 
+        value: statsData.totalCompletedOrderValue
+          ? `NT$ ${Number(statsData.totalCompletedOrderValue).toLocaleString()}`
           : 'NT$ 0',
         change: { value: '+8%', type: 'increase' as const, period: '比昨天' },
         icon: DollarSign,
@@ -175,14 +175,14 @@ export default function HomePage() {
             <Sparkles className="h-4 w-4" />
             <span>現代化電商管理平台</span>
           </div>
-          
+
           <h1 className="heading-modern text-gradient">
-            歡迎使用 GenAI Demo
+            歡迎使用商務管理中心
           </h1>
-          
+
           <p className="subheading-modern mx-auto">
-            基於 DDD 和六角形架構的現代化電商平台，提供完整的訂單、庫存、支付和客戶管理功能。
-            體驗最新的企業級架構設計和用戶界面。
+            專業的電子商務管理平台，為您提供完整的訂單、商品、客戶和庫存管理解決方案。
+            體驗現代化的企業級管理系統，提升您的商務運營效率。
           </p>
         </div>
 
@@ -218,8 +218,8 @@ export default function HomePage() {
 
         {/* 最近活動 */}
         <div className="animate-slide-up" style={{ animationDelay: '400ms' }}>
-          <ActivityTimeline 
-            activities={activities || []} 
+          <ActivityTimeline
+            activities={activities || []}
             loading={activitiesLoading}
           />
         </div>

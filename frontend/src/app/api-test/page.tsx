@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useStats, useActivities } from '@/hooks/useApi'
+import { useActivities, useStats } from '@/hooks/useApi'
+import { useEffect, useState } from 'react'
 
 interface TestResults {
   directFetch?: {
@@ -14,7 +14,7 @@ interface TestResults {
 
 export default function ApiTestPage() {
   const [testResults, setTestResults] = useState<TestResults>({})
-  
+
   // 使用實際的 hooks
   const { data: statsData, isLoading: statsLoading, error: statsError } = useStats()
   const { data: activities, isLoading: activitiesLoading, error: activitiesError } = useActivities({ limit: 3 })
@@ -24,11 +24,11 @@ export default function ApiTestPage() {
     const testDirectAPI = async () => {
       try {
         console.log('開始直接 API 測試...')
-        
+
         // 直接使用 fetch 測試
         const response = await fetch('http://localhost:8080/api/stats')
         const data = await response.json()
-        
+
         setTestResults((prev: TestResults) => ({
           ...prev,
           directFetch: {
@@ -37,7 +37,7 @@ export default function ApiTestPage() {
             isSuccess: data.success === true || data.status === 'success'
           }
         }))
-        
+
         console.log('直接 fetch 結果:', data)
       } catch (error: any) {
         setTestResults((prev: TestResults) => ({
@@ -65,8 +65,8 @@ export default function ApiTestPage() {
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">API 測試頁面</h1>
-      
+      <h1 className="text-3xl font-bold mb-8">CMC API 測試頁面</h1>
+
       {/* 直接 API 測試結果 */}
       <div className="mb-8 p-6 border rounded-lg">
         <h2 className="text-xl font-semibold mb-4">直接 API 測試</h2>
@@ -105,7 +105,7 @@ export default function ApiTestPage() {
             <p>載入狀態: {statsLoading ? '載入中...' : '已完成'}</p>
             <p>錯誤狀態: {statsError ? `❌ ${statsError.message}` : '✅ 無錯誤'}</p>
             <p>數據狀態: {statsData ? '✅ 有數據' : '❌ 無數據'}</p>
-            
+
             {statsData && (
               <div className="mt-4">
                 <h3 className="font-medium">數據內容:</h3>
@@ -114,7 +114,7 @@ export default function ApiTestPage() {
                 <p>總庫存: {statsData.totalInventories}</p>
               </div>
             )}
-            
+
             <details className="mt-2">
               <summary>完整數據</summary>
               <pre className="text-xs bg-gray-100 p-2 mt-1 overflow-auto">
@@ -131,7 +131,7 @@ export default function ApiTestPage() {
             <p>載入狀態: {activitiesLoading ? '載入中...' : '已完成'}</p>
             <p>錯誤狀態: {activitiesError ? `❌ ${activitiesError.message}` : '✅ 無錯誤'}</p>
             <p>數據狀態: {activities ? '✅ 有數據' : '❌ 無數據'}</p>
-            
+
             {activities && (
               <div className="mt-4">
                 <h3 className="font-medium">活動數量: {activities.length}</h3>
@@ -142,7 +142,7 @@ export default function ApiTestPage() {
                 ))}
               </div>
             )}
-            
+
             <details className="mt-2">
               <summary>完整數據</summary>
               <pre className="text-xs bg-gray-100 p-2 mt-1 overflow-auto">
