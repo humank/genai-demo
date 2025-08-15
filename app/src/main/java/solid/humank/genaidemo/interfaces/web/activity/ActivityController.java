@@ -1,21 +1,93 @@
 package solid.humank.genaidemo.interfaces.web.activity;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import solid.humank.genaidemo.application.common.dto.StandardErrorResponse;
 
 /** 活動記錄控制器 提供系統活動記錄的 API 端點 */
 @RestController
 @RequestMapping("/api/activities")
+@Tag(name = "活動記錄", description = "系統活動記錄管理 API，提供查詢和篩選系統中各種業務活動的功能")
 public class ActivityController {
 
     /** 獲取活動記錄列表 */
     @GetMapping
+    @Operation(
+            summary = "獲取活動記錄列表",
+            description = "查詢系統中的活動記錄，支援限制返回數量。活動記錄包含訂單狀態更新、支付處理、庫存變動等各種業務操作的歷史記錄。")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "成功獲取活動記錄列表",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema =
+                                                @Schema(
+                                                        example =
+                                                                """
+                    {
+                      "success": true,
+                      "data": [
+                        {
+                          "id": "order-550e8400-e29b-41d4-a716-446655440001",
+                          "type": "order",
+                          "title": "訂單狀態更新",
+                          "description": "客戶 王淑芬 的訂單 550e8400-e29b-41d4-a716-446655440001",
+                          "timestamp": "587 天前",
+                          "status": "info",
+                          "metadata": {
+                            "orderId": "550e8400-e29b-41d4-a716-446655440001",
+                            "customerId": "660e8400-e29b-41d4-a716-446655440001",
+                            "amount": 6420.0
+                          }
+                        }
+                      ]
+                    }
+                    """))),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "請求參數無效",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                StandardErrorResponse.class))),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "系統內部錯誤",
+                        content =
+                                @Content(
+                                        mediaType = "application/json",
+                                        schema =
+                                                @Schema(
+                                                        implementation =
+                                                                StandardErrorResponse.class)))
+            })
     public ResponseEntity<Map<String, Object>> getActivities(
-            @RequestParam(defaultValue = "10") int limit) {
+            @Parameter(
+                            description = "限制返回的活動記錄數量，用於分頁控制",
+                            example = "10",
+                            schema = @Schema(minimum = "1", maximum = "100"))
+                    @RequestParam(defaultValue = "10")
+                    int limit) {
 
         Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> activities = new ArrayList<>();

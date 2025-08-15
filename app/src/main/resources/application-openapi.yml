@@ -1,0 +1,134 @@
+# OpenAPI 專用配置檔案
+# 用於配置 SpringDoc 的各項設定
+
+springdoc:
+  # API 文檔配置
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+    resolve-schema-properties: true
+  
+  # Swagger UI 配置
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    try-it-out-enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    display-operation-id: false
+    show-extensions: true
+    show-common-extensions: true
+    default-models-expand-depth: 1
+    default-model-expand-depth: 1
+    doc-expansion: none
+    filter: false
+    
+  # 顯示 Actuator 端點
+  show-actuator: true
+  
+  # API 分組配置
+  group-configs:
+    - group: 'public-api'
+      display-name: '公開 API'
+      paths-to-match: 
+        - '/api/orders/**'
+        - '/api/products/**'
+        - '/api/customers/**'
+        - '/api/payments/**'
+        - '/api/inventory/**'
+        - '/api/pricing/**'
+        - '/api/stats/**'
+      paths-to-exclude: 
+        - '/api/internal/**'
+        - '/api/admin/**'
+    
+    - group: 'internal-api'
+      display-name: '內部 API'
+      paths-to-match: 
+        - '/api/internal/**'
+      
+    - group: 'management'
+      display-name: '管理端點'
+      paths-to-match: 
+        - '/actuator/**'
+      paths-to-exclude:
+        - '/actuator/health'
+        - '/actuator/info'
+
+  # 預設產生器配置
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  
+  # 模型和屬性配置
+  model-and-view-allowed: false
+  override-with-generic-response: false
+  remove-broken-reference-definitions: false
+  auto-tag-classes: true
+  
+  # 快取配置
+  cache:
+    disabled: false
+
+---
+# 開發環境配置
+spring:
+  config:
+    activate:
+      on-profile: development
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    try-it-out-enabled: true
+    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
+  api-docs:
+    enabled: true
+  show-actuator: true
+
+---
+# 測試環境配置  
+spring:
+  config:
+    activate:
+      on-profile: test
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    try-it-out-enabled: true
+  api-docs:
+    enabled: true
+  show-actuator: false
+
+---
+# 生產環境配置
+spring:
+  config:
+    activate:
+      on-profile: production
+
+springdoc:
+  swagger-ui:
+    enabled: false  # 生產環境關閉 Swagger UI
+    try-it-out-enabled: false
+  api-docs:
+    enabled: true   # 保留 API 文檔端點供內部使用
+  show-actuator: false  # 生產環境不顯示 Actuator 端點
+
+---
+# 預發布環境配置
+spring:
+  config:
+    activate:
+      on-profile: staging
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    try-it-out-enabled: false  # 預發布環境允許查看但不允許測試
+  api-docs:
+    enabled: true
+  show-actuator: false

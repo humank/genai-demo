@@ -3,6 +3,8 @@ package solid.humank.genaidemo.interfaces.web.product.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -11,9 +13,9 @@ import solid.humank.genaidemo.application.product.dto.ProductAttributeDto;
 import solid.humank.genaidemo.application.product.dto.ProductImageDto;
 import solid.humank.genaidemo.application.product.dto.ProductStatus;
 
-/** 更新產品請求 DTO */
+/** 創建產品請求 DTO */
 @Schema(
-        description = "更新產品請求資料",
+        description = "創建產品請求資料",
         example =
                 """
         {
@@ -55,13 +57,14 @@ import solid.humank.genaidemo.application.product.dto.ProductStatus;
           ]
         }
         """)
-public class UpdateProductRequest {
+public class CreateProductRequest {
 
     @Schema(
             description = "產品名稱",
             example = "iPhone 15 Pro",
             maxLength = 100,
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "產品名稱不能為空")
     @Size(max = 100, message = "產品名稱不能超過100個字元")
     private String name;
 
@@ -79,7 +82,8 @@ public class UpdateProductRequest {
             minimum = "0.01",
             type = "number",
             format = "decimal",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "產品價格不能為空")
     @DecimalMin(value = "0.01", message = "產品價格必須大於0")
     private BigDecimal price;
 
@@ -88,7 +92,8 @@ public class UpdateProductRequest {
             example = "TWD",
             allowableValues = {"TWD", "USD", "EUR", "JPY", "CNY", "KRW", "HKD", "SGD"},
             pattern = "^[A-Z]{3}$",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "貨幣代碼不能為空")
     @Pattern(regexp = "^[A-Z]{3}$", message = "貨幣代碼必須為3位大寫字母")
     private String currency;
 
@@ -107,7 +112,8 @@ public class UpdateProductRequest {
                 "AUTOMOTIVE",
                 "OTHER"
             },
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+            requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "產品分類不能為空")
     private String category;
 
     @Schema(
@@ -115,14 +121,14 @@ public class UpdateProductRequest {
             example = "ACTIVE",
             allowableValues = {"ACTIVE", "INACTIVE", "DISCONTINUED", "DRAFT", "OUT_OF_STOCK"},
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private ProductStatus status;
+    private ProductStatus status = ProductStatus.DRAFT;
 
     @Schema(
-            description = "庫存數量",
+            description = "初始庫存數量",
             example = "100",
             minimum = "0",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer stockQuantity;
+    private Integer stockQuantity = 0;
 
     @Schema(
             description = "產品重量（公克）",
@@ -133,7 +139,7 @@ public class UpdateProductRequest {
 
     @Schema(description = "產品尺寸資訊", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @Valid
-    private ProductDimensions dimensions;
+    private UpdateProductRequest.ProductDimensions dimensions;
 
     @Schema(
             description = "產品SKU（庫存單位）",
@@ -210,70 +216,10 @@ public class UpdateProductRequest {
     @Size(max = 50, message = "原產地不能超過50個字元")
     private String countryOfOrigin;
 
-    /** 產品尺寸資訊 */
-    @Schema(description = "產品尺寸資訊")
-    public static class ProductDimensions {
-        @Schema(
-                description = "長度（公分）",
-                example = "15.99",
-                minimum = "0",
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @DecimalMin(value = "0", message = "長度必須大於等於0")
-        private Double length;
-
-        @Schema(
-                description = "寬度（公分）",
-                example = "7.67",
-                minimum = "0",
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @DecimalMin(value = "0", message = "寬度必須大於等於0")
-        private Double width;
-
-        @Schema(
-                description = "高度（公分）",
-                example = "0.825",
-                minimum = "0",
-                requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-        @DecimalMin(value = "0", message = "高度必須大於等於0")
-        private Double height;
-
-        public ProductDimensions() {}
-
-        public ProductDimensions(Double length, Double width, Double height) {
-            this.length = length;
-            this.width = width;
-            this.height = height;
-        }
-
-        public Double getLength() {
-            return length;
-        }
-
-        public void setLength(Double length) {
-            this.length = length;
-        }
-
-        public Double getWidth() {
-            return width;
-        }
-
-        public void setWidth(Double width) {
-            this.width = width;
-        }
-
-        public Double getHeight() {
-            return height;
-        }
-
-        public void setHeight(Double height) {
-            this.height = height;
-        }
-    }
-
     // Constructors
-    public UpdateProductRequest() {}
+    public CreateProductRequest() {}
 
-    public UpdateProductRequest(
+    public CreateProductRequest(
             String name, String description, BigDecimal price, String currency, String category) {
         this.name = name;
         this.description = description;
@@ -347,11 +293,11 @@ public class UpdateProductRequest {
         this.weight = weight;
     }
 
-    public ProductDimensions getDimensions() {
+    public UpdateProductRequest.ProductDimensions getDimensions() {
         return dimensions;
     }
 
-    public void setDimensions(ProductDimensions dimensions) {
+    public void setDimensions(UpdateProductRequest.ProductDimensions dimensions) {
         this.dimensions = dimensions;
     }
 

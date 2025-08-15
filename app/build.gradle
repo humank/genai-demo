@@ -45,6 +45,9 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'com.h2database:h2'
     
+    // OpenAPI 3 (Swagger) 支援
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    
     // ArchUnit for architecture testing
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.0'
     
@@ -412,5 +415,149 @@ tasks.register('lintMarkdown') {
             issues.each { println "  $it" }
             throw new GradleException("Markdown 語法檢查失敗")
         }
+    }
+}
+// OpenAPI 文檔生成任務
+tasks.register('generateApiDocs', Test) {
+    description = '生成 OpenAPI 規範檔案 (JSON 和 YAML 格式)'
+    group = 'documentation'
+    
+    // 任務依賴
+    dependsOn assemble, testClasses
+    
+    // 配置 JUnit Platform
+    useJUnitPlatform()
+    include '**/OpenApiDocumentationTest.class'
+    
+    // 確保 docs/api 目錄存在
+    doFirst {
+        println '========================================='
+        println '🚀 正在生成 OpenAPI 文檔...'
+        println '========================================='
+        
+        // 創建輸出目錄
+        def docsDir = file('docs/api')
+        if (!docsDir.exists()) {
+            docsDir.mkdirs()
+            println "✅ 已創建目錄: ${docsDir.absolutePath}"
+        }
+    }
+    
+    // 測試執行配置
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    
+    // 系統屬性配置
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'spring.test.context.cache.maxSize', '1'
+    
+    // 任務完成後的提示訊息
+    doLast {
+        println '========================================='
+        println '✅ OpenAPI 文檔生成完成！'
+        println '========================================='
+        println '📁 檔案位置: docs/api/'
+        println '📄 JSON 檔案: docs/api/openapi.json'
+        println '📄 YAML 檔案: docs/api/openapi.yaml'
+        println ''
+        println '🌐 Swagger UI 訪問地址:'
+        println '   http://localhost:8080/swagger-ui.html'
+        println ''
+        println '📖 API 文檔訪問地址:'
+        println '   http://localhost:8080/v3/api-docs (JSON)'
+        println '   http://localhost:8080/v3/api-docs.yaml (YAML)'
+        println '========================================='
+    }
+    
+    // 錯誤處理
+    onlyIf {
+        def testClass = file('src/test/java/solid/humank/genaidemo/infrastructure/OpenApiDocumentationTest.java')
+        if (!testClass.exists()) {
+            println "❌ 錯誤: 找不到 OpenApiDocumentationTest.java"
+            println "   請確保測試類別存在於: ${testClass.absolutePath}"
+            return false
+        }
+        return true
+    }
+}
+
+// 文檔相關任務組
+tasks.register('generateAllDocs') {
+    description = '生成所有專案文檔 (API 文檔、架構圖等)'
+    group = 'documentation'
+    
+    dependsOn generateApiDocs
+    
+    doFirst {
+        println '🔄 開始生成所有專案文檔...'
+    }
+    
+    doLast {
+        println '✅ 所有文檔生成完成！'
+        println ''
+        println '📚 可用文檔:'
+        println '   • API 文檔: docs/api/'
+        println '   • 架構文檔: docs/'
+        println '   • UML 圖表: docs/uml/'
+        println ''
+    }
+}
+
+// 驗證 API 文檔任務
+tasks.register('validateApiDocs') {
+    description = '驗證生成的 OpenAPI 文檔格式正確性'
+    group = 'verification'
+    
+    dependsOn generateApiDocs
+    
+    doLast {
+        def jsonFile = file('docs/api/openapi.json')
+        def yamlFile = file('docs/api/openapi.yaml')
+        
+        println '🔍 驗證 API 文檔...'
+        
+        if (jsonFile.exists()) {
+            try {
+                // 簡單的 JSON 格式驗證
+                def jsonContent = jsonFile.text
+                if (jsonContent.contains('"openapi"') && jsonContent.contains('"info"')) {
+                    println "✅ JSON 文檔格式正確: ${jsonFile.name}"
+                } else {
+                    throw new GradleException("❌ JSON 文檔格式不正確")
+                }
+            } catch (Exception e) {
+                throw new GradleException("❌ JSON 文檔驗證失敗: ${e.message}")
+            }
+        } else {
+            throw new GradleException("❌ 找不到 JSON 文檔: ${jsonFile.absolutePath}")
+        }
+        
+        if (yamlFile.exists()) {
+            def yamlContent = yamlFile.text
+            if (yamlContent.contains('openapi:') && yamlContent.contains('info:')) {
+                println "✅ YAML 文檔格式正確: ${yamlFile.name}"
+            } else {
+                throw new GradleException("❌ YAML 文檔格式不正確")
+            }
+        } else {
+            throw new GradleException("❌ 找不到 YAML 文檔: ${yamlFile.absolutePath}")
+        }
+        
+        println '✅ API 文檔驗證通過！'
+    }
+}
+
+// 整合到建構流程 - 可選擇性地在 build 時生成文檔
+tasks.register('buildWithDocs') {
+    description = '建構專案並生成 API 文檔'
+    group = 'build'
+    
+    dependsOn build, generateApiDocs
+    
+    doLast {
+        println '🎉 專案建構完成，包含 API 文檔生成！'
     }
 }

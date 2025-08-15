@@ -102,7 +102,23 @@ public class ProductApplicationService
                         product.getPrice().getAmount(),
                         product.getPrice().getCurrency().getCurrencyCode()),
                 product.getCategory().getName(),
+                solid.humank.genaidemo.application.product.dto.ProductStatus
+                        .ACTIVE, // Default status
                 product.isInStock(),
-                product.getStockQuantity().getValue());
+                product.getStockQuantity().getValue(),
+                null, // sku
+                null, // brand
+                null, // model
+                null, // weight
+                null, // barcode
+                null, // tags
+                null, // images
+                null, // attributes
+                null, // warrantyMonths
+                null, // manufacturer
+                null, // countryOfOrigin
+                java.time.LocalDateTime.now(), // createdAt
+                java.time.LocalDateTime.now() // updatedAt
+                );
     }
 }
