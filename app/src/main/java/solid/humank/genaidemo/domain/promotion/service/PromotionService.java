@@ -9,15 +9,13 @@ import java.util.Map;
 import java.util.Optional;
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
+import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
 import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
-import solid.humank.genaidemo.domain.promotion.model.specification.AddOnPurchaseSpecification;
-import solid.humank.genaidemo.domain.promotion.model.specification.FlashSaleSpecification;
-import solid.humank.genaidemo.domain.promotion.model.specification.GiftWithPurchaseSpecification;
-import solid.humank.genaidemo.domain.promotion.model.specification.LimitedQuantitySpecification;
 import solid.humank.genaidemo.domain.promotion.model.specification.PromotionContext;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.AddOnPurchaseRule;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.ConvenienceStoreVoucherRule;
@@ -33,6 +31,8 @@ import solid.humank.genaidemo.domain.promotion.repository.VoucherRepository;
 public class PromotionService {
     private final PromotionRepository promotionRepository;
     private final VoucherRepository voucherRepository;
+    private final Map<String, Integer> promotionInventory = new HashMap<>();
+    private final Map<String, Product> productCache = new HashMap<>();
 
     public PromotionService(
             PromotionRepository promotionRepository, VoucherRepository voucherRepository) {
@@ -40,31 +40,16 @@ public class PromotionService {
         this.voucherRepository = voucherRepository;
     }
 
-    /**
-     * 應用加價購規則
-     *
-     * @param order 訂單
-     * @param customer 客戶
-     * @return 更新後的訂單
-     */
+    /** 應用加價購規則 */
     public Order applyAddOnPurchaseRules(Order order, Customer customer) {
         List<Promotion> addOnPromotions =
                 promotionRepository.findByType(PromotionType.ADD_ON_PURCHASE);
-
-        // 創建促銷上下文
-        PromotionContext context = createPromotionContext(order, customer);
 
         for (Promotion promotion : addOnPromotions) {
             Optional<AddOnPurchaseRule> ruleOpt = promotion.getAddOnPurchaseRule();
             if (ruleOpt.isPresent()) {
                 AddOnPurchaseRule rule = ruleOpt.get();
-
-                // 創建規格
-                AddOnPurchaseSpecification spec = new AddOnPurchaseSpecification(rule);
-
-                // 檢查是否滿足條件
-                if (spec.isSatisfiedBy(context)) {
-                    // 更新加價購商品的價格
+                if (isAddOnPurchaseApplicable(order, rule)) {
                     order = updateAddOnProductPrice(order, rule);
                 }
             }
@@ -73,31 +58,16 @@ public class PromotionService {
         return order;
     }
 
-    /**
-     * 應用限時特價規則
-     *
-     * @param order 訂單
-     * @param customer 客戶
-     * @return 更新後的訂單
-     */
+    /** 應用限時特價規則 */
     public Order applyFlashSaleRules(Order order, Customer customer) {
         List<Promotion> flashSalePromotions =
                 promotionRepository.findByType(PromotionType.FLASH_SALE);
-
-        // 創建促銷上下文
-        PromotionContext context = createPromotionContext(order, customer);
 
         for (Promotion promotion : flashSalePromotions) {
             Optional<FlashSaleRule> ruleOpt = promotion.getFlashSaleRule();
             if (ruleOpt.isPresent()) {
                 FlashSaleRule rule = ruleOpt.get();
-
-                // 創建規格
-                FlashSaleSpecification spec = new FlashSaleSpecification(rule);
-
-                // 檢查是否滿足條件
-                if (spec.isSatisfiedBy(context)) {
-                    // 更新限時特價商品的價格
+                if (isFlashSaleApplicable(order, rule)) {
                     order = updateFlashSaleProductPrice(order, rule);
                 }
             }
@@ -106,38 +76,18 @@ public class PromotionService {
         return order;
     }
 
-    /**
-     * 應用限量特價規則
-     *
-     * @param order 訂單
-     * @param customer 客戶
-     * @return 更新後的訂單
-     */
+    /** 應用限量特價規則 */
     public Order applyLimitedQuantityRules(Order order, Customer customer) {
         List<Promotion> limitedQuantityPromotions =
-                promotionRepository.findByType(PromotionType.LIMITED_QUANTITY_DEAL);
-
-        // 創建促銷上下文
-        PromotionContext context = createPromotionContext(order, customer);
+                promotionRepository.findByType(PromotionType.LIMITED_QUANTITY);
 
         for (Promotion promotion : limitedQuantityPromotions) {
             Optional<LimitedQuantityRule> ruleOpt = promotion.getLimitedQuantityRule();
             if (ruleOpt.isPresent()) {
                 LimitedQuantityRule rule = ruleOpt.get();
-
-                // 創建規格
-                LimitedQuantitySpecification spec = new LimitedQuantitySpecification(rule);
-
-                // 檢查是否滿足條件
-                if (spec.isSatisfiedBy(context)) {
-                    // 更新限量特價商品的價格
+                if (isLimitedQuantityApplicable(order, rule)) {
                     order = updateLimitedQuantityProductPrice(order, rule);
-
-                    // 減少促銷庫存
                     decrementPromotionInventory(rule.getPromotionId());
-
-                    // 在上下文中也減少庫存，確保同一訂單中的多個相同商品不會重複享受優惠
-                    context.decrementRemainingQuantity(rule.getPromotionId());
                 }
             }
         }
@@ -145,34 +95,17 @@ public class PromotionService {
         return order;
     }
 
-    /**
-     * 應用滿額贈禮規則
-     *
-     * @param order 訂單
-     * @param customer 客戶
-     * @return 更新後的訂單，可能包含贈品
-     */
+    /** 應用滿額贈禮規則 */
     public Order applyGiftWithPurchaseRules(Order order, Customer customer) {
         List<Promotion> giftPromotions =
                 promotionRepository.findByType(PromotionType.GIFT_WITH_PURCHASE);
-
-        // 創建促銷上下文
-        PromotionContext context = createPromotionContext(order, customer);
 
         for (Promotion promotion : giftPromotions) {
             Optional<GiftWithPurchaseRule> ruleOpt = promotion.getGiftWithPurchaseRule();
             if (ruleOpt.isPresent()) {
                 GiftWithPurchaseRule rule = ruleOpt.get();
-
-                // 創建規格
-                GiftWithPurchaseSpecification spec = new GiftWithPurchaseSpecification(rule);
-
-                // 檢查是否滿足條件
-                if (spec.isSatisfiedBy(context)) {
-                    // 計算贈品數量
-                    int giftQuantity = spec.calculateGiftQuantity(context);
-
-                    // 添加贈品到訂單
+                if (isGiftWithPurchaseApplicable(order, rule)) {
+                    int giftQuantity = calculateGiftQuantity(order, rule);
                     order = addGiftsToOrder(order, rule, giftQuantity);
                 }
             }
@@ -181,16 +114,10 @@ public class PromotionService {
         return order;
     }
 
-    /**
-     * 創建超商優惠券
-     *
-     * @param voucherRule 優惠券規則
-     * @return 創建的優惠券列表
-     */
+    /** 創建超商優惠券 */
     public List<Voucher> createConvenienceStoreVouchers(ConvenienceStoreVoucherRule voucherRule) {
         List<Voucher> vouchers = new ArrayList<>();
 
-        // 計算有效天數
         int validDays =
                 Period.between(
                                 LocalDateTime.now().toLocalDate(),
@@ -210,30 +137,21 @@ public class PromotionService {
                             voucherRule.getRedemptionLocation(),
                             voucherRule.getContents());
 
-            // 保存優惠券
             voucherRepository.save(voucher);
-
             vouchers.add(voucher);
         }
 
         return vouchers;
     }
 
-    /**
-     * 處理遺失的優惠券
-     *
-     * @param voucherId 優惠券ID
-     * @return 替換的優惠券，如果原優惠券不存在或已兌換則返回空
-     */
+    /** 處理遺失的優惠券 */
     public Optional<Voucher> handleLostVoucher(String voucherId) {
         Optional<Voucher> voucherOpt = voucherRepository.findById(voucherId);
 
         if (voucherOpt.isPresent()) {
             Voucher voucher = voucherOpt.get();
 
-            // 檢查優惠券是否有效且未使用
             if (voucher.isValid() && !voucher.isUsed()) {
-                // 創建替換優惠券
                 Voucher replacement =
                         new Voucher(
                                 voucher.getName(),
@@ -242,10 +160,7 @@ public class PromotionService {
                                 voucher.getRedemptionLocation(),
                                 voucher.getContents());
 
-                // 保存替換優惠券
                 voucherRepository.save(replacement);
-
-                // 更新原優惠券狀態
                 voucherRepository.save(voucher);
 
                 return Optional.of(replacement);
@@ -255,64 +170,173 @@ public class PromotionService {
         return Optional.empty();
     }
 
-    // 輔助方法
+    // 私有輔助方法
 
-    private PromotionContext createPromotionContext(Order order, Customer customer) {
-        // 創建促銷上下文，包含評估促銷條件所需的所有信息
-        return new PromotionContext(
-                order, customer, LocalDateTime.now(), getPromotionInventory(), getProductMap());
+    private boolean isAddOnPurchaseApplicable(Order order, AddOnPurchaseRule rule) {
+        // 檢查訂單中是否包含主要商品
+        return order.getItems().stream()
+                .anyMatch(item -> item.getProductId().equals(rule.getMainProductId()));
     }
 
-    private Map<String, Integer> getPromotionInventory() {
-        // 從倉儲獲取促銷庫存信息
-        // 這裡是簡化實現
-        return new HashMap<>();
+    private boolean isFlashSaleApplicable(Order order, FlashSaleRule rule) {
+        // 檢查是否在閃購時間內且包含目標商品
+        LocalDateTime now = LocalDateTime.now();
+        boolean inTimeRange = rule.flashSalePeriod().contains(now);
+        boolean hasTargetProduct =
+                order.getItems().stream()
+                        .anyMatch(item -> item.getProductId().equals(rule.targetProductId()));
+
+        return inTimeRange && hasTargetProduct;
     }
 
-    private Map<String, Product> getProductMap() {
-        // 從倉儲獲取產品信息
-        // 這裡是簡化實現
-        return new HashMap<>();
+    private boolean isLimitedQuantityApplicable(Order order, LimitedQuantityRule rule) {
+        // 檢查是否包含目標商品且庫存充足
+        boolean hasTargetProduct =
+                order.getItems().stream()
+                        .anyMatch(item -> item.getProductId().equals(rule.getProductId()));
+
+        int remainingQuantity =
+                getPromotionInventory()
+                        .getOrDefault(rule.getPromotionId(), rule.getTotalQuantity());
+
+        return hasTargetProduct && remainingQuantity > 0;
+    }
+
+    private boolean isGiftWithPurchaseApplicable(Order order, GiftWithPurchaseRule rule) {
+        // 檢查訂單總額是否達到最低消費金額
+        Money orderTotal = order.getTotalAmount();
+        return orderTotal.getAmount().compareTo(rule.getMinimumPurchaseAmount().getAmount()) >= 0;
+    }
+
+    private int calculateGiftQuantity(Order order, GiftWithPurchaseRule rule) {
+        if (!rule.isMultipleGiftsAllowed()) {
+            return 1;
+        }
+
+        // 根據消費金額計算贈品數量
+        Money orderTotal = order.getTotalAmount();
+        Money minimumAmount = rule.getMinimumPurchaseAmount();
+
+        int multiplier = orderTotal.getAmount().divide(minimumAmount.getAmount()).intValue();
+        return Math.min(multiplier, rule.getMaxGiftsPerOrder());
     }
 
     private Order updateAddOnProductPrice(Order order, AddOnPurchaseRule rule) {
-        // 更新加價購商品的價格
-        // 這裡是簡化實現
-        return order;
+        // 為加價購商品設定特價
+        List<OrderItem> updatedItems = new ArrayList<>();
+
+        for (OrderItem item : order.getItems()) {
+            if (item.getProductId().equals(rule.getAddOnProductId())) {
+                // 更新加價購商品的價格
+                OrderItem updatedItem =
+                        new OrderItem(
+                                item.getProductId(),
+                                item.getProductName(),
+                                item.getQuantity(),
+                                rule.getSpecialPrice());
+                updatedItems.add(updatedItem);
+            } else {
+                updatedItems.add(item);
+            }
+        }
+
+        return order.updateItems(updatedItems);
     }
 
     private Order updateFlashSaleProductPrice(Order order, FlashSaleRule rule) {
-        // 更新限時特價商品的價格
-        // 這裡是簡化實現
-        return order;
+        List<OrderItem> updatedItems = new ArrayList<>();
+
+        for (OrderItem item : order.getItems()) {
+            if (item.getProductId().equals(rule.targetProductId())) {
+                // 應用數量限制
+                int applicableQuantity = Math.min(item.getQuantity(), rule.quantityLimit());
+
+                if (applicableQuantity > 0) {
+                    // 特價商品
+                    OrderItem discountedItem =
+                            new OrderItem(
+                                    item.getProductId(),
+                                    item.getProductName(),
+                                    applicableQuantity,
+                                    rule.specialPrice());
+                    updatedItems.add(discountedItem);
+
+                    // 剩餘商品保持原價
+                    if (item.getQuantity() > applicableQuantity) {
+                        OrderItem remainingItem =
+                                new OrderItem(
+                                        item.getProductId(),
+                                        item.getProductName(),
+                                        item.getQuantity() - applicableQuantity,
+                                        item.getUnitPrice());
+                        updatedItems.add(remainingItem);
+                    }
+                } else {
+                    updatedItems.add(item);
+                }
+            } else {
+                updatedItems.add(item);
+            }
+        }
+
+        return order.updateItems(updatedItems);
     }
 
     private Order updateLimitedQuantityProductPrice(Order order, LimitedQuantityRule rule) {
-        // 更新限量特價商品的價格
-        // 實際實現中，這裡會更新訂單中對應產品的價格
-        // 會使用 rule.getProductId().getId() 和 rule.getSpecialPrice()
+        List<OrderItem> updatedItems = new ArrayList<>();
 
-        // 在實際實現中，這裡會遍歷訂單項目並更新價格
-        // 這裡只是簡化的示例
-        return order;
-    }
-
-    private void decrementPromotionInventory(String promotionId) {
-        // 減少促銷庫存
-        // 在實際實現中，這裡會更新資料庫中的促銷庫存
-        Map<String, Integer> inventory = getPromotionInventory();
-        if (inventory.containsKey(promotionId)) {
-            int currentQuantity = inventory.get(promotionId);
-            if (currentQuantity > 0) {
-                inventory.put(promotionId, currentQuantity - 1);
-                // 在實際實現中，這裡會將更新後的庫存保存到資料庫
+        for (OrderItem item : order.getItems()) {
+            if (item.getProductId().equals(rule.getProductId())) {
+                OrderItem updatedItem =
+                        new OrderItem(
+                                item.getProductId(),
+                                item.getProductName(),
+                                item.getQuantity(),
+                                rule.getSpecialPrice());
+                updatedItems.add(updatedItem);
+            } else {
+                updatedItems.add(item);
             }
         }
+
+        return order.updateItems(updatedItems);
     }
 
     private Order addGiftsToOrder(Order order, GiftWithPurchaseRule rule, int quantity) {
-        // 添加贈品到訂單
-        // 這裡是簡化實現
-        return order;
+        List<OrderItem> updatedItems = new ArrayList<>(order.getItems());
+
+        // 添加贈品項目
+        OrderItem giftItem =
+                new OrderItem(
+                        rule.getGiftProductId().getId(),
+                        "贈品 - " + getProductName(rule.getGiftProductId()),
+                        quantity,
+                        Money.twd(0)); // 贈品價格為0
+
+        updatedItems.add(giftItem);
+        return order.updateItems(updatedItems);
+    }
+
+    private void decrementPromotionInventory(String promotionId) {
+        int currentQuantity = promotionInventory.getOrDefault(promotionId, 0);
+        if (currentQuantity > 0) {
+            promotionInventory.put(promotionId, currentQuantity - 1);
+        }
+    }
+
+    private Map<String, Integer> getPromotionInventory() {
+        return promotionInventory;
+    }
+
+    private String getProductName(ProductId productId) {
+        // 簡化實現：返回預設商品名稱
+        return productCache.containsKey(productId.getId())
+                ? productCache.get(productId.getId()).getName().getName()
+                : "商品 " + productId.getId();
+    }
+
+    private PromotionContext createPromotionContext(Order order, Customer customer) {
+        return new PromotionContext(
+                order, customer, LocalDateTime.now(), getPromotionInventory(), new HashMap<>());
     }
 }

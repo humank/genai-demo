@@ -3,10 +3,11 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 限量特價規則 */
 @ValueObject
-public class LimitedQuantityRule {
+public final class LimitedQuantityRule implements PromotionRule {
     private final ProductId productId;
     private final Money specialPrice;
     private final Money regularPrice;
@@ -44,5 +45,35 @@ public class LimitedQuantityRule {
 
     public String getPromotionId() {
         return promotionId;
+    }
+
+    @Override
+    public boolean matches(ShoppingCart cart) {
+        // 檢查購物車是否包含目標商品
+        return cart.getItems().stream().anyMatch(item -> item.productId().equals(productId));
+    }
+
+    @Override
+    public Money calculateDiscount(ShoppingCart cart) {
+        if (!matches(cart)) {
+            return Money.twd(0);
+        }
+
+        // 計算限量特價的折扣
+        return cart.getItems().stream()
+                .filter(item -> item.productId().equals(productId))
+                .findFirst()
+                .map(
+                        item -> {
+                            int applicableQuantity = Math.min(item.quantity(), totalQuantity);
+                            return regularPrice.subtract(specialPrice).multiply(applicableQuantity);
+                        })
+                .orElse(Money.twd(0));
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format(
+                "限量特價：%s 特價 %s，限量 %d 件", productId.getId(), specialPrice, totalQuantity);
     }
 }

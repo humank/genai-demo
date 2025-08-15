@@ -1,31 +1,80 @@
-# GenAI Demo
+# GenAI Demo - 電商平台示範專案
 
 > **Language / 語言選擇**  
 > 🇺🇸 **English**: [English Documentation](docs/en/README.md)  
 > 🇹🇼 **繁體中文**: 您正在閱讀繁體中文版本
 
-這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的全棧示範專案，展示了如何構建一個具有良好架構和測試實踐的現代化應用程式。
+這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的全棧電商平台示範專案，展示了如何構建一個具有良好架構和測試實踐的現代化應用程式。
+
+## ✨ 新功能亮點 (v2.0.0)
+
+### 🛒 消費者端功能
+
+- **智能購物車**: 支援多重優惠計算和促銷規則引擎
+- **個人化推薦**: 基於購買歷史和偏好的商品推薦系統
+- **會員紅利系統**: 完整的紅利點數累積和兌換機制
+- **超商優惠券**: 優惠券購買、使用和管理功能
+- **即時配送追蹤**: 配送狀態即時更新和路線追蹤
+- **商品評價系統**: 評價提交、審核和統計分析
+
+### 🏢 商務端功能
+
+- **促銷活動管理**: 多種促銷規則和優惠券系統
+- **庫存管理**: 即時庫存追蹤和預留機制
+- **訂單處理**: 完整的訂單生命週期管理
+- **統計分析**: 銷售數據和效能指標分析
+
+### 🔧 技術特色
+
+- **完整的 API 文檔**: 基於 OpenAPI 3.0 的互動式文檔，支援 API 分組
+- **容器化部署**: ARM64 優化的 Docker 映像
+- **輕量化設計**: 瘦身 Docker 映像和內存資料庫
+- **健康檢查**: 完整的應用程式監控機制
+- **DDD 架構**: 完整的領域驅動設計實作，包含聚合根、值對象、領域服務
+- **測試覆蓋**: BDD 測試、單元測試、整合測試和架構測試
 
 ## 🚀 快速開始
 
-### 全棧應用啟動
+### 方式一：Docker 容器化部署 (推薦)
+
+```bash
+# 構建 ARM64 優化映像
+./docker/docker-build.sh
+
+# 啟動容器化環境
+docker-compose up -d
+
+# 查看服務狀態
+docker-compose ps
+
+# 停止所有服務
+docker-compose down
+```
+
+**服務端點：**
+
+- 🌐 **API 文檔**: <http://localhost:8080/swagger-ui/index.html>
+- 🏥 **健康檢查**: <http://localhost:8080/actuator/health>
+- 🗄️ **H2 資料庫控制台**: <http://localhost:8080/h2-console>
+
+### 方式二：本地開發環境
 
 ```bash
 # 啟動完整的前後端應用
-./start-fullstack.sh
+./scripts/start-fullstack.sh
 
 # 停止所有服務
-./stop-fullstack.sh
+./scripts/stop-fullstack.sh
 ```
 
-### 單獨啟動服務
+### 方式三：單獨啟動服務
 
 ```bash
 # 僅啟動後端 (Spring Boot)
-./gradlew bootRun
+./gradlew :app:bootRun
 
 # 僅啟動前端 (Next.js)
-cd frontend && npm run dev
+cd cmc-frontend && npm run dev
 ```
 
 ## 🏗️ 專案架構
@@ -51,6 +100,34 @@ cd frontend && npm run dev
    - 包含儲存庫實現、外部系統適配器、ORM 映射等
    - 按功能分為 persistence（持久化）和 external（外部系統）等子包
 
+## 📁 專案目錄結構
+
+```
+genai-demo/
+├── app/                    # 主應用程式
+│   ├── src/main/java/      # Java 原始碼
+│   └── src/test/java/      # 測試程式碼
+├── cmc-frontend/           # Next.js 前端應用
+├── deployment/             # 部署相關檔案
+│   ├── k8s/               # Kubernetes 配置
+│   └── deploy-to-eks.sh   # EKS 部署腳本
+├── docker/                 # Docker 相關檔案
+│   ├── docker-build.sh    # 映像構建腳本
+│   └── verify-deployment.sh # 部署驗證腳本
+├── docs/                   # 專案文檔
+│   ├── api/               # API 文檔
+│   ├── en/                # 英文文檔
+│   └── zh-tw/             # 繁體中文文檔
+├── scripts/                # 各種腳本檔案
+│   ├── start-fullstack.sh # 啟動全棧應用
+│   └── stop-fullstack.sh  # 停止所有服務
+├── tools/                  # 開發工具
+│   └── plantuml.jar       # UML 圖表生成工具
+├── docker-compose.yml      # Docker Compose 配置
+├── Dockerfile             # Docker 映像定義
+└── README.md              # 專案說明文檔
+```
+
 4. **介面層 (Interfaces Layer)**
    - 處理用戶交互
    - 只依賴於應用層，不直接依賴領域層
@@ -64,6 +141,37 @@ cd frontend && npm run dev
 - **樣式**: Tailwind CSS + shadcn/ui 組件庫
 - **狀態管理**: Zustand (全局狀態) + React Query (服務器狀態)
 - **API 集成**: Axios 基於類型安全的 API 調用
+
+## 🆕 最新改動 (2025-01-15)
+
+### 📁 專案結構重整
+
+- **檔案重新組織**: 將散亂的根目錄檔案整理到對應的功能目錄
+- **Docker 檔案**: 移動到 `docker/` 目錄，包含構建和驗證腳本
+- **部署檔案**: 移動到 `deployment/` 目錄，包含 Kubernetes 和 EKS 配置
+- **腳本檔案**: 移動到 `scripts/` 目錄，包含啟動、測試和資料生成腳本
+- **工具檔案**: 移動到 `tools/` 目錄，包含 PlantUML 等開發工具
+
+### 🔧 API 分組優化
+
+- **重新設計 API 分組**: 基於 DDD 和使用者角色的分組策略
+- **客戶端 API**: 面向終端客戶的 API 集合
+- **運營管理 API**: 面向平台運營者的 API 集合
+- **系統管理 API**: 面向系統管理員的 API 集合
+
+### 🏗️ 領域模型完善
+
+- **促銷規則引擎**: 完整實作 sealed interface 的促銷規則體系
+- **購物車聚合**: 實作完整的購物車業務邏輯和優惠計算
+- **客戶聚合**: 增強客戶模型，支援紅利點數和通知偏好
+- **訂單聚合**: 完善訂單生命週期管理和狀態轉換
+
+### 🧪 測試體系建立
+
+- **BDD 測試**: 實作消費者購物流程的行為驅動測試
+- **架構測試**: 使用 ArchUnit 確保 DDD 架構合規性
+- **整合測試**: 完整的 API 端點測試覆蓋
+- **單元測試**: 領域邏輯和業務規則的單元測試
 
 ## 🛠️ 技術棧
 
@@ -281,20 +389,20 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 ### 數據生成
 
 ```bash
-python3 generate_data.py               # 生成大量測試數據
+python3 scripts/generate_data.py       # 生成大量測試數據
 ```
 
 ### 服務管理
 
 ```bash
-./start-fullstack.sh                   # 啟動全棧應用
-./stop-fullstack.sh                    # 停止所有服務
+./scripts/start-fullstack.sh           # 啟動全棧應用
+./scripts/stop-fullstack.sh            # 停止所有服務
 ```
 
 ### 前端開發
 
 ```bash
-cd frontend
+cd cmc-frontend
 npm install                             # 安裝依賴
 npm run dev                            # 開發模式
 npm run build                          # 生產構建
@@ -330,7 +438,7 @@ npm run lint                           # 代碼檢查
 ### 前端依賴問題
 
 ```bash
-cd frontend
+cd cmc-frontend
 rm -rf node_modules package-lock.json
 npm install
 ```

@@ -1,0 +1,105 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genai-demo-config
+  namespace: default
+  labels:
+    app: genai-demo
+data:
+  application-kubernetes.yml: |
+    # Kubernetes 環境配置
+    spring:
+      application:
+        name: genai-demo
+      
+      # 資料庫配置 (使用 H2 內存資料庫)
+      datasource:
+        url: jdbc:h2:mem:genaidemo
+        username: sa
+        password: 
+        driver-class-name: org.h2.Driver
+        hikari:
+          maximum-pool-size: 10
+          minimum-idle: 2
+          idle-timeout: 300000
+          connection-timeout: 20000
+          validation-timeout: 5000
+          leak-detection-threshold: 60000
+
+      # H2 Console Configuration (僅開發環境)
+      h2:
+        console:
+          enabled: false  # 生產環境關閉
+
+      # JPA 配置
+      jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+          ddl-auto: none
+        show-sql: false
+        properties:
+          hibernate:
+            format_sql: false
+            jdbc:
+              batch_size: 20
+            order_inserts: true
+            order_updates: true
+
+      # Flyway 配置
+      flyway:
+        enabled: true
+        locations: classpath:db/migration
+        baseline-on-migrate: true
+        validate-on-migrate: true
+
+      # 快取配置
+      cache:
+        type: simple
+
+      # 效能優化配置
+      main:
+        lazy-initialization: true
+      jmx:
+        enabled: false
+
+    # 伺服器配置
+    server:
+      port: 8080
+      servlet:
+        context-path: /
+      tomcat:
+        threads:
+          max: 100
+          min-spare: 10
+        connection-timeout: 20000
+        max-connections: 4096
+
+    # 監控配置
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info,metrics
+      endpoint:
+        health:
+          show-details: when-authorized
+      metrics:
+        enabled: true
+
+    # 日誌配置
+    logging:
+      level:
+        root: INFO
+        solid.humank.genaidemo: INFO
+        org.springframework.web: WARN
+        org.hibernate.SQL: WARN
+      pattern:
+        console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+    # OpenAPI 配置
+    springdoc:
+      api-docs:
+        enabled: true
+      swagger-ui:
+        enabled: true
+        path: /swagger-ui.html

@@ -1,75 +1,20 @@
 package solid.humank.genaidemo.domain.promotion.model.factory;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneId;
 import solid.humank.genaidemo.domain.common.annotations.Factory;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
-import solid.humank.genaidemo.domain.promotion.model.specification.*;
-import solid.humank.genaidemo.domain.promotion.model.valueobject.*;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.DateRange;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionType;
 
 /** 促銷工廠 用於創建各種類型的促銷 */
 @Factory(name = "PromotionFactory", description = "促銷工廠，用於創建各種類型的促銷聚合根")
 public class PromotionFactory {
 
-    /**
-     * 創建加價購促銷
-     *
-     * @param name 促銷名稱
-     * @param description 促銷描述
-     * @param startDate 開始日期
-     * @param endDate 結束日期
-     * @param mainProductId 主要商品ID
-     * @param addOnProductId 加價購商品ID
-     * @param specialPrice 特價
-     * @param regularPrice 原價
-     * @return 加價購促銷
-     */
-    public static Promotion createAddOnPurchasePromotion(
-            String name,
-            String description,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            String mainProductId,
-            String addOnProductId,
-            double specialPrice,
-            double regularPrice) {
-
-        PromotionId promotionId = new PromotionId();
-
-        AddOnPurchaseRule rule =
-                new AddOnPurchaseRule(
-                        new ProductId(mainProductId),
-                        new ProductId(addOnProductId),
-                        Money.of(specialPrice),
-                        Money.of(regularPrice));
-
-        Promotion promotion =
-                new Promotion(promotionId, name, description, startDate, endDate, rule);
-
-        // 設置規格
-        promotion.setSpecification(new AddOnPurchaseSpecification(rule));
-
-        return promotion;
-    }
-
-    /**
-     * 創建限時特價促銷
-     *
-     * @param name 促銷名稱
-     * @param description 促銷描述
-     * @param startDate 促銷開始日期
-     * @param endDate 促銷結束日期
-     * @param productId 商品ID
-     * @param specialPrice 特價
-     * @param regularPrice 原價
-     * @param flashSaleStartTime 限時特價開始時間
-     * @param flashSaleEndTime 限時特價結束時間
-     * @param timeZone 時區
-     * @return 限時特價促銷
-     */
+    /** 創建閃購促銷 */
     public static Promotion createFlashSalePromotion(
             String name,
             String description,
@@ -77,44 +22,46 @@ public class PromotionFactory {
             LocalDateTime endDate,
             String productId,
             double specialPrice,
-            double regularPrice,
-            LocalDateTime flashSaleStartTime,
-            LocalDateTime flashSaleEndTime,
-            ZoneId timeZone) {
+            int quantityLimit) {
 
-        PromotionId promotionId = new PromotionId();
+        PromotionId promotionId = PromotionId.generate();
+        DateRange validPeriod = new DateRange(startDate, endDate);
 
         FlashSaleRule rule =
                 new FlashSaleRule(
                         new ProductId(productId),
-                        Money.of(specialPrice),
-                        Money.of(regularPrice),
-                        flashSaleStartTime,
-                        flashSaleEndTime,
-                        timeZone);
+                        Money.twd(specialPrice),
+                        quantityLimit,
+                        validPeriod);
 
-        Promotion promotion =
-                new Promotion(promotionId, name, description, startDate, endDate, rule);
-
-        // 設置規格
-        promotion.setSpecification(new FlashSaleSpecification(rule));
-
-        return promotion;
+        return new Promotion(
+                promotionId, name, description, PromotionType.FLASH_SALE, rule, validPeriod);
     }
 
-    /**
-     * 創建限量特價促銷
-     *
-     * @param name 促銷名稱
-     * @param description 促銷描述
-     * @param startDate 開始日期
-     * @param endDate 結束日期
-     * @param productId 商品ID
-     * @param specialPrice 特價
-     * @param regularPrice 原價
-     * @param quantity 限量數量
-     * @return 限量特價促銷
-     */
+    /** 創建買一送一促銷 */
+    public static Promotion createBuyOneGetOnePromotion(
+            String name,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            String productId) {
+
+        PromotionId promotionId = PromotionId.generate();
+        DateRange validPeriod = new DateRange(startDate, endDate);
+
+        // 創建一個簡單的買一送一規則（使用FlashSaleRule作為基礎）
+        FlashSaleRule rule =
+                new FlashSaleRule(
+                        new ProductId(productId),
+                        Money.twd(0), // 第二件免費
+                        1, // 每次限制一件
+                        validPeriod);
+
+        return new Promotion(
+                promotionId, name, description, PromotionType.BUY_ONE_GET_ONE, rule, validPeriod);
+    }
+
+    /** 創建限量促銷 */
     public static Promotion createLimitedQuantityPromotion(
             String name,
             String description,
@@ -122,116 +69,71 @@ public class PromotionFactory {
             LocalDateTime endDate,
             String productId,
             double specialPrice,
-            double regularPrice,
-            int quantity) {
+            int quantityLimit) {
 
-        PromotionId promotionId = new PromotionId();
+        PromotionId promotionId = PromotionId.generate();
+        DateRange validPeriod = new DateRange(startDate, endDate);
 
-        LimitedQuantityRule rule =
-                new LimitedQuantityRule(
+        FlashSaleRule rule =
+                new FlashSaleRule(
                         new ProductId(productId),
-                        Money.of(specialPrice),
-                        Money.of(regularPrice),
-                        quantity,
-                        promotionId.getId());
+                        Money.twd(specialPrice),
+                        quantityLimit,
+                        validPeriod);
 
-        Promotion promotion =
-                new Promotion(promotionId, name, description, startDate, endDate, rule);
-
-        // 設置規格
-        promotion.setSpecification(new LimitedQuantitySpecification(rule));
-
-        return promotion;
+        return new Promotion(
+                promotionId, name, description, PromotionType.LIMITED_QUANTITY, rule, validPeriod);
     }
 
-    /**
-     * 創建滿額贈禮促銷
-     *
-     * @param name 促銷名稱
-     * @param description 促銷描述
-     * @param startDate 開始日期
-     * @param endDate 結束日期
-     * @param minimumPurchaseAmount 最低消費金額
-     * @param giftProductId 贈品ID
-     * @param giftValue 贈品價值
-     * @param maxGiftsPerOrder 每筆訂單最大贈品數量
-     * @param isMultipleGiftsAllowed 是否允許多件贈品
-     * @return 滿額贈禮促銷
-     */
+    /** 創建滿額贈禮促銷 */
     public static Promotion createGiftWithPurchasePromotion(
             String name,
             String description,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            double minimumPurchaseAmount,
             String giftProductId,
-            double giftValue,
-            int maxGiftsPerOrder,
-            boolean isMultipleGiftsAllowed) {
+            double minimumAmount) {
 
-        PromotionId promotionId = new PromotionId();
+        PromotionId promotionId = PromotionId.generate();
+        DateRange validPeriod = new DateRange(startDate, endDate);
 
-        GiftWithPurchaseRule rule =
-                new GiftWithPurchaseRule(
-                        Money.of(minimumPurchaseAmount),
+        // 使用FlashSaleRule作為基礎實現
+        FlashSaleRule rule =
+                new FlashSaleRule(
                         new ProductId(giftProductId),
-                        Money.of(giftValue),
-                        maxGiftsPerOrder,
-                        isMultipleGiftsAllowed);
+                        Money.twd(0), // 贈品免費
+                        1, // 每次限制一件贈品
+                        validPeriod);
 
-        Promotion promotion =
-                new Promotion(promotionId, name, description, startDate, endDate, rule);
-
-        // 設置規格
-        promotion.setSpecification(new GiftWithPurchaseSpecification(rule));
-
-        return promotion;
+        return new Promotion(
+                promotionId,
+                name,
+                description,
+                PromotionType.GIFT_WITH_PURCHASE,
+                rule,
+                validPeriod);
     }
 
-    /**
-     * 創建超商優惠券促銷
-     *
-     * @param name 促銷名稱
-     * @param description 促銷描述
-     * @param startDate 開始日期
-     * @param endDate 結束日期
-     * @param voucherName 優惠券名稱
-     * @param price 價格
-     * @param regularPrice 原價
-     * @param validDays 有效天數
-     * @param redemptionLocation 兌換地點
-     * @param contents 內容
-     * @param quantity 數量
-     * @return 超商優惠券促銷
-     */
-    public static Promotion createConvenienceStoreVoucherPromotion(
+    /** 創建加價購促銷 */
+    public static Promotion createAddOnPurchasePromotion(
             String name,
             String description,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            String voucherName,
-            double price,
-            double regularPrice,
-            int validDays,
-            String redemptionLocation,
-            String contents,
-            int quantity) {
+            String addOnProductId,
+            double specialPrice) {
 
-        PromotionId promotionId = new PromotionId();
+        PromotionId promotionId = PromotionId.generate();
+        DateRange validPeriod = new DateRange(startDate, endDate);
 
-        ConvenienceStoreVoucherRule rule =
-                new ConvenienceStoreVoucherRule(
-                        voucherName,
-                        Money.of(price),
-                        Money.of(regularPrice),
-                        Period.ofDays(validDays),
-                        redemptionLocation,
-                        contents,
-                        quantity);
+        FlashSaleRule rule =
+                new FlashSaleRule(
+                        new ProductId(addOnProductId),
+                        Money.twd(specialPrice),
+                        1, // 每次限制一件
+                        validPeriod);
 
-        Promotion promotion =
-                new Promotion(promotionId, name, description, startDate, endDate, rule);
-
-        return promotion;
+        return new Promotion(
+                promotionId, name, description, PromotionType.ADD_ON_PURCHASE, rule, validPeriod);
     }
 }

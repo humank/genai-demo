@@ -15,6 +15,7 @@ import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductName;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.DateRange;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 
 public class FlashSaleStepDefinitions {
@@ -56,14 +57,13 @@ public class FlashSaleStepDefinitions {
         LocalDateTime endTime = now.withHour(endHour).withMinute(endMinute).withSecond(0);
 
         ZoneId zoneId = ZoneId.of("GMT+" + timezone);
+        DateRange flashSalePeriod = new DateRange(startTime, endTime);
         this.flashSaleRule =
                 new FlashSaleRule(
                         productId,
                         Money.of(salePrice),
-                        Money.of(regularPrice),
-                        startTime,
-                        endTime,
-                        zoneId);
+                        100, // 數量限制
+                        flashSalePeriod);
 
         productDetails.put("name", productName);
         productDetails.put("regularPrice", regularPrice);
@@ -77,9 +77,7 @@ public class FlashSaleStepDefinitions {
         this.checkoutTime = now.withHour(hour).withMinute(minute).withSecond(0);
 
         // 檢查是否在特價時間內
-        boolean isWithinSaleTime =
-                checkoutTime.isAfter(flashSaleRule.getStartTime())
-                        && checkoutTime.isBefore(flashSaleRule.getEndTime());
+        boolean isWithinSaleTime = flashSaleRule.flashSalePeriod().contains(checkoutTime);
 
         if (isWithinSaleTime) {
             when(product.getPrice()).thenReturn(Money.of(salePrice));

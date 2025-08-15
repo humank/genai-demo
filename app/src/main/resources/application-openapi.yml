@@ -27,34 +27,57 @@ springdoc:
   # 顯示 Actuator 端點
   show-actuator: true
   
-  # API 分組配置
+  # API 分組配置 - 基於 DDD 和使用者角色
   group-configs:
-    - group: 'public-api'
-      display-name: '公開 API'
+    # 終端客戶 API - 面向 Customer 的前端應用
+    - group: 'customer-api'
+      display-name: '客戶端 API'
       paths-to-match: 
-        - '/api/orders/**'
-        - '/api/products/**'
-        - '/api/customers/**'
-        - '/api/payments/**'
-        - '/api/inventory/**'
-        - '/api/pricing/**'
-        - '/api/stats/**'
+        - '/api/products/**'        # 商品瀏覽 (客戶視角)
+        - '/api/orders/**'          # 訂單查詢 (客戶自己的訂單)
+        - '/api/payments/**'        # 支付處理 (客戶發起的支付)
+        - '/api/consumer/**'        # 專門的消費者功能
+        - '/api/shopping-cart/**'   # 購物車功能
+        - '/api/promotions/**'      # 促銷活動查詢
+        - '/api/vouchers/**'        # 優惠券使用
+        - '/api/reviews/**'         # 商品評價
+        - '/api/recommendations/**' # 個人化推薦
+        - '/api/notifications/**'   # 個人通知
+        - '/api/delivery-tracking/**' # 配送追蹤
       paths-to-exclude: 
-        - '/api/internal/**'
         - '/api/admin/**'
-    
-    - group: 'internal-api'
-      display-name: '內部 API'
-      paths-to-match: 
         - '/api/internal/**'
-      
-    - group: 'management'
-      display-name: '管理端點'
+        - '/api/management/**'
+    
+    # 平台運營者 API - 面向 Operator/Admin 的管理後台
+    - group: 'operator-api'
+      display-name: '運營管理 API'
       paths-to-match: 
-        - '/actuator/**'
+        - '/api/customers/**'       # 客戶管理 (運營者視角)
+        - '/api/orders/**'          # 訂單管理 (全部訂單管理)
+        - '/api/products/**'        # 商品管理 (CRUD 操作)
+        - '/api/inventory/**'       # 庫存管理
+        - '/api/pricing/**'         # 定價策略管理
+        - '/api/payments/**'        # 支付管理 (退款、對帳等)
+        - '/api/activities/**'      # 系統活動記錄
+        - '/api/stats/**'           # 統計報表
+        - '/api/admin/**'           # 管理員專用功能
+      paths-to-exclude: 
+        - '/api/consumer/**'        # 排除純客戶端功能
+        - '/api/shopping-cart/**'
+        - '/api/recommendations/**'
+        - '/api/delivery-tracking/**'
+    
+    # 系統管理 API - 面向系統維護和監控
+    - group: 'system-api'
+      display-name: '系統管理 API'
+      paths-to-match: 
+        - '/api/internal/**'        # 內部系統整合
+        - '/api/management/**'      # 系統管理功能
+        - '/actuator/**'            # Spring Boot Actuator
       paths-to-exclude:
-        - '/actuator/health'
-        - '/actuator/info'
+        - '/actuator/health'        # 健康檢查保持公開
+        - '/actuator/info'          # 基本資訊保持公開
 
   # 預設產生器配置
   default-consumes-media-type: application/json

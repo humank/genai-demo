@@ -70,6 +70,15 @@ public class OrderItem {
     }
 
     /**
+     * 獲取單價 (別名方法，與 getPrice 相同)
+     *
+     * @return 單價
+     */
+    public Money getUnitPrice() {
+        return price;
+    }
+
+    /**
      * 計算訂單項小計金額
      *
      * @return 小計金額

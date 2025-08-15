@@ -269,6 +269,32 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * 更新訂單項目列表
+     *
+     * @param updatedItems 更新後的訂單項目列表
+     * @return 更新後的訂單
+     */
+    public Order updateItems(List<OrderItem> updatedItems) {
+        // 檢查訂單狀態
+        if (status != OrderStatus.CREATED) {
+            throw new IllegalStateException(
+                    "Cannot update items for an order that is not in CREATED state");
+        }
+
+        // 清空現有項目並添加新項目
+        this.items.clear();
+        this.items.addAll(updatedItems);
+
+        // 重新計算總金額
+        this.totalAmount =
+                updatedItems.stream().map(OrderItem::getSubtotal).reduce(Money.zero(), Money::add);
+        this.effectiveAmount = this.totalAmount;
+        this.updatedAt = LocalDateTime.now();
+
+        return this;
+    }
+
     // Getters
 
     public OrderId getId() {

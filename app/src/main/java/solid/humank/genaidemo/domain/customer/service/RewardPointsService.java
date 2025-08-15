@@ -37,6 +37,6 @@ public class RewardPointsService {
 
     /** 添加點數到客戶帳戶 */
     public void addPointsToCustomer(Customer customer, int points) {
-        customer.addRewardPoints(points);
+        customer.addRewardPoints(points, "Service reward");
     }
 }

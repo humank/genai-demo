@@ -89,7 +89,7 @@ public class PricingApplicationService {
         return new PricingRuleDto(
                 pricingRule.getPriceId().getId(),
                 pricingRule.getProductId().getId(),
-                pricingRule.getPromotionId() != null ? pricingRule.getPromotionId().getId() : null,
+                pricingRule.getPromotionId() != null ? pricingRule.getPromotionId().value() : null,
                 pricingRule.getFinalPrice().getAmount().doubleValue(),
                 pricingRule.getFinalPrice().getCurrency().getCurrencyCode(),
                 pricingRule.getDiscountPercentage(),

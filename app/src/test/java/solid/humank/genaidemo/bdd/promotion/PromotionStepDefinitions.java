@@ -15,7 +15,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,7 @@ import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
 import solid.humank.genaidemo.domain.promotion.model.specification.PromotionContext;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.AddOnPurchaseRule;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.ConvenienceStoreVoucherRule;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.DateRange;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 import solid.humank.genaidemo.domain.promotion.service.PromotionService;
 
@@ -170,14 +170,13 @@ public class PromotionStepDefinitions {
                         Integer.parseInt(endTime.split(":")[0]),
                         Integer.parseInt(endTime.split(":")[1]));
 
+        DateRange flashSalePeriod = new DateRange(start, end);
         FlashSaleRule rule =
                 new FlashSaleRule(
                         productId,
                         Money.of(specialPrice),
-                        Money.of(regularPrice),
-                        start,
-                        end,
-                        ZoneId.of("GMT+8"));
+                        100, // 數量限制
+                        flashSalePeriod);
 
         promotion = mock(Promotion.class);
         when(promotion.getFlashSaleRule()).thenReturn(java.util.Optional.of(rule));

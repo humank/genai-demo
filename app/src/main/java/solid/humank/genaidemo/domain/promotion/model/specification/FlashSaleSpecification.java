@@ -1,8 +1,6 @@
 package solid.humank.genaidemo.domain.promotion.model.specification;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import solid.humank.genaidemo.domain.common.annotations.Specification;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 
@@ -19,15 +17,7 @@ public class FlashSaleSpecification implements PromotionSpecification {
     public boolean isSatisfiedBy(PromotionContext context) {
         LocalDateTime currentTime = context.getCurrentTime();
 
-        // 將當前時間轉換為促銷規則的時區
-        ZoneId systemZone = ZoneId.systemDefault();
-        ZonedDateTime zonedCurrentTime = currentTime.atZone(systemZone);
-        ZonedDateTime convertedTime = zonedCurrentTime.withZoneSameInstant(rule.getTimeZone());
-        LocalDateTime timeInPromotionZone = convertedTime.toLocalDateTime();
-
-        // 檢查時間是否在有效範圍內（包含起始時間）
-        return (timeInPromotionZone.isEqual(rule.getStartTime())
-                        || timeInPromotionZone.isAfter(rule.getStartTime()))
-                && timeInPromotionZone.isBefore(rule.getEndTime());
+        // 使用FlashSaleRule中的flashSalePeriod來檢查時間範圍
+        return rule.flashSalePeriod().contains(currentTime);
     }
 }

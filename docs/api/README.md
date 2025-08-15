@@ -11,16 +11,24 @@
 ./gradlew bootRun
 
 # 或使用全棧啟動腳本
-./start-fullstack.sh
+./scripts/start-fullstack.sh
 ```
 
 ### 2. 訪問 Swagger UI
 
 應用程式啟動後，可以通過以下 URL 訪問互動式 API 文檔：
 
-- **Swagger UI**: <http://localhost:8080/swagger-ui.html>
-- **OpenAPI JSON**: <http://localhost:8080/v3/api-docs>
-- **OpenAPI YAML**: <http://localhost:8080/v3/api-docs.yaml>
+- **完整 API 文檔**: <http://localhost:8080/swagger-ui/index.html>
+- **客戶端 API**: <http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/customer-api>
+- **運營管理 API**: <http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/operator-api>
+- **系統管理 API**: <http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/system-api>
+
+**OpenAPI 規範**:
+
+- **完整規範**: <http://localhost:8080/v3/api-docs>
+- **客戶端 API**: <http://localhost:8080/v3/api-docs/customer-api>
+- **運營管理 API**: <http://localhost:8080/v3/api-docs/operator-api>
+- **系統管理 API**: <http://localhost:8080/v3/api-docs/system-api>
 
 ### 3. 第一個 API 呼叫
 

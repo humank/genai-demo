@@ -73,17 +73,17 @@ Desktop.ini
 
 # Application specific logs
 backend*.log
-frontend*.log
+cmc-frontend*.log
 
-# Node.js (for frontend)
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/dist/
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
+# Node.js (for cmc-frontend)
+cmc-frontend/node_modules/
+cmc-frontend/.next/
+cmc-frontend/out/
+cmc-frontend/dist/
+cmc-frontend/.env.local
+cmc-frontend/.env.development.local
+cmc-frontend/.env.test.local
+cmc-frontend/.env.production.local
 
 # npm
 npm-debug.log*

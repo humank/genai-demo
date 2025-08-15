@@ -3,32 +3,21 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import java.util.UUID;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
-@ValueObject
-public class PromotionId {
-    private final String id;
+/** 促銷ID值對象 */
+@ValueObject(name = "PromotionId", description = "促銷活動唯一識別碼")
+public record PromotionId(String value) {
 
-    public PromotionId() {
-        this.id = UUID.randomUUID().toString();
+    public PromotionId {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException("促銷ID不能為空");
+        }
     }
 
-    public PromotionId(String id) {
-        this.id = id;
+    public static PromotionId generate() {
+        return new PromotionId(UUID.randomUUID().toString());
     }
 
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PromotionId that = (PromotionId) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public static PromotionId of(String value) {
+        return new PromotionId(value);
     }
 }
