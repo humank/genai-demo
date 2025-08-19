@@ -2,11 +2,15 @@ package solid.humank.genaidemo.domain.notification.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.notification.model.valueobject.CustomerNotificationPreference;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationType;
+import solid.humank.genaidemo.domain.notification.repository.CustomerNotificationPreferenceRepository;
 
 /** 客戶通知偏好服務 負責管理客戶的通知偏好設置 */
+@DomainService
 public class CustomerNotificationPreferenceService {
     private final CustomerNotificationPreferenceRepository preferenceRepository;
 
@@ -28,8 +32,8 @@ public class CustomerNotificationPreferenceService {
     /**
      * 更新客戶通知偏好
      *
-     * @param customerId 客戶ID
-     * @param selectedTypes 選擇的通知類型
+     * @param customerId       客戶ID
+     * @param selectedTypes    選擇的通知類型
      * @param selectedChannels 選擇的通知渠道
      * @return 是否更新成功
      */
@@ -37,11 +41,11 @@ public class CustomerNotificationPreferenceService {
             String customerId,
             List<NotificationType> selectedTypes,
             List<NotificationChannel> selectedChannels) {
-        CustomerNotificationPreference preference =
-                new CustomerNotificationPreference(
-                        customerId, selectedTypes, selectedChannels, false);
+        CustomerNotificationPreference preference = new CustomerNotificationPreference(
+                customerId, selectedTypes, selectedChannels, false);
 
-        return preferenceRepository.save(preference);
+        CustomerNotificationPreference saved = preferenceRepository.save(preference);
+        return saved != null;
     }
 
     /**
@@ -51,29 +55,28 @@ public class CustomerNotificationPreferenceService {
      * @return 是否設置成功
      */
     public boolean optOut(String customerId) {
-        Optional<CustomerNotificationPreference> existingPreference =
-                preferenceRepository.findByCustomerId(customerId);
+        Optional<CustomerNotificationPreference> existingPreference = preferenceRepository.findByCustomerId(customerId);
 
         if (existingPreference.isPresent()) {
             CustomerNotificationPreference preference = existingPreference.get();
-            CustomerNotificationPreference updatedPreference =
-                    new CustomerNotificationPreference(
-                            customerId,
-                            preference.getSelectedTypes(),
-                            preference.getSelectedChannels(),
-                            true);
+            CustomerNotificationPreference updatedPreference = new CustomerNotificationPreference(
+                    customerId,
+                    preference.getSelectedTypes(),
+                    preference.getSelectedChannels(),
+                    true);
 
-            return preferenceRepository.save(updatedPreference);
+            CustomerNotificationPreference saved = preferenceRepository.save(updatedPreference);
+            return saved != null;
         } else {
             // 如果客戶沒有設置偏好，創建一個默認的並設置為選擇不接收
-            CustomerNotificationPreference preference =
-                    new CustomerNotificationPreference(
-                            customerId,
-                            List.of(NotificationType.values()),
-                            List.of(NotificationChannel.EMAIL),
-                            true);
+            CustomerNotificationPreference preference = new CustomerNotificationPreference(
+                    customerId,
+                    List.of(NotificationType.values()),
+                    List.of(NotificationChannel.EMAIL),
+                    true);
 
-            return preferenceRepository.save(preference);
+            CustomerNotificationPreference saved = preferenceRepository.save(preference);
+            return saved != null;
         }
     }
 
@@ -84,29 +87,28 @@ public class CustomerNotificationPreferenceService {
      * @return 是否設置成功
      */
     public boolean optIn(String customerId) {
-        Optional<CustomerNotificationPreference> existingPreference =
-                preferenceRepository.findByCustomerId(customerId);
+        Optional<CustomerNotificationPreference> existingPreference = preferenceRepository.findByCustomerId(customerId);
 
         if (existingPreference.isPresent()) {
             CustomerNotificationPreference preference = existingPreference.get();
-            CustomerNotificationPreference updatedPreference =
-                    new CustomerNotificationPreference(
-                            customerId,
-                            preference.getSelectedTypes(),
-                            preference.getSelectedChannels(),
-                            false);
+            CustomerNotificationPreference updatedPreference = new CustomerNotificationPreference(
+                    customerId,
+                    preference.getSelectedTypes(),
+                    preference.getSelectedChannels(),
+                    false);
 
-            return preferenceRepository.save(updatedPreference);
+            CustomerNotificationPreference saved = preferenceRepository.save(updatedPreference);
+            return saved != null;
         } else {
             // 如果客戶沒有設置偏好，創建一個默認的
-            CustomerNotificationPreference preference =
-                    new CustomerNotificationPreference(
-                            customerId,
-                            List.of(NotificationType.values()),
-                            List.of(NotificationChannel.EMAIL),
-                            false);
+            CustomerNotificationPreference preference = new CustomerNotificationPreference(
+                    customerId,
+                    List.of(NotificationType.values()),
+                    List.of(NotificationChannel.EMAIL),
+                    false);
 
-            return preferenceRepository.save(preference);
+            CustomerNotificationPreference saved = preferenceRepository.save(preference);
+            return saved != null;
         }
     }
 
@@ -114,12 +116,11 @@ public class CustomerNotificationPreferenceService {
      * 檢查是否應該發送指定類型的通知
      *
      * @param customerId 客戶ID
-     * @param type 通知類型
+     * @param type       通知類型
      * @return 是否應該發送
      */
     public boolean shouldSendNotificationType(String customerId, NotificationType type) {
-        Optional<CustomerNotificationPreference> preference =
-                preferenceRepository.findByCustomerId(customerId);
+        Optional<CustomerNotificationPreference> preference = preferenceRepository.findByCustomerId(customerId);
 
         return preference
                 .map(p -> p.shouldSendNotificationType(type))
@@ -133,8 +134,7 @@ public class CustomerNotificationPreferenceService {
      * @return 通知渠道列表
      */
     public List<NotificationChannel> getPreferredChannels(String customerId) {
-        Optional<CustomerNotificationPreference> preference =
-                preferenceRepository.findByCustomerId(customerId);
+        Optional<CustomerNotificationPreference> preference = preferenceRepository.findByCustomerId(customerId);
 
         return preference
                 .map(CustomerNotificationPreference::getPreferredChannels)

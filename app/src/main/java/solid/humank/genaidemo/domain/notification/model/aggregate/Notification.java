@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
@@ -16,9 +17,9 @@ import solid.humank.genaidemo.domain.notification.model.valueobject.Notification
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationType;
 
 /** 通知聚合根 管理系統通知的發送和狀態 */
-@AggregateRoot
+@AggregateRoot(name = "Notification", description = "通知聚合根，管理系統通知的發送和狀態", boundedContext = "Notification", version = "1.0")
 @AggregateLifecycle.ManagedLifecycle
-public class Notification {
+public class Notification extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private final NotificationId id;
     private final String customerId;
     private final NotificationType type;
@@ -39,10 +40,10 @@ public class Notification {
      * 建立通知
      *
      * @param customerId 客戶ID
-     * @param type 通知類型
-     * @param subject 主題
-     * @param content 內容
-     * @param channels 通知渠道
+     * @param type       通知類型
+     * @param subject    主題
+     * @param content    內容
+     * @param channels   通知渠道
      */
     public Notification(
             String customerId,
@@ -56,12 +57,12 @@ public class Notification {
     /**
      * 建立通知
      *
-     * @param id 通知ID
+     * @param id         通知ID
      * @param customerId 客戶ID
-     * @param type 通知類型
-     * @param subject 主題
-     * @param content 內容
-     * @param channels 通知渠道
+     * @param type       通知類型
+     * @param subject    主題
+     * @param content    內容
+     * @param channels   通知渠道
      */
     public Notification(
             NotificationId id,
@@ -88,7 +89,7 @@ public class Notification {
 
         // 發布通知創建事件
         AggregateLifecycleAware.apply(
-                new NotificationCreatedEvent(
+                NotificationCreatedEvent.create(
                         this.id, this.customerId, this.type, this.subject, this.channels));
     }
 
@@ -105,7 +106,7 @@ public class Notification {
 
         // 發布通知狀態變更事件
         AggregateLifecycleAware.apply(
-                new NotificationStatusChangedEvent(
+                NotificationStatusChangedEvent.create(
                         this.id, this.customerId, oldStatus, this.status, "通知已發送"));
     }
 
@@ -122,7 +123,7 @@ public class Notification {
 
         // 發布通知狀態變更事件
         AggregateLifecycleAware.apply(
-                new NotificationStatusChangedEvent(
+                NotificationStatusChangedEvent.create(
                         this.id, this.customerId, oldStatus, this.status, "通知已送達"));
     }
 
@@ -139,7 +140,7 @@ public class Notification {
 
         // 發布通知狀態變更事件
         AggregateLifecycleAware.apply(
-                new NotificationStatusChangedEvent(
+                NotificationStatusChangedEvent.create(
                         this.id, this.customerId, oldStatus, this.status, "通知已讀"));
     }
 
@@ -160,7 +161,7 @@ public class Notification {
 
         // 發布通知狀態變更事件
         AggregateLifecycleAware.apply(
-                new NotificationStatusChangedEvent(
+                NotificationStatusChangedEvent.create(
                         this.id, this.customerId, oldStatus, this.status, reason));
     }
 
@@ -253,8 +254,10 @@ public class Notification {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Notification that = (Notification) o;
         return Objects.equals(id, that.id);
     }

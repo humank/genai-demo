@@ -2,8 +2,8 @@ package solid.humank.genaidemo.infrastructure.order.external;
 
 import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
-import solid.humank.genaidemo.domain.common.valueobject.DeliveryStatus;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
 /** 外部物流適配器 模擬與外部物流系統的交互 */
 public class ExternalLogisticsAdapter {
@@ -22,7 +22,7 @@ public class ExternalLogisticsAdapter {
         String trackingNumber = "TN-" + System.currentTimeMillis();
 
         return new DeliveryOrder(
-                orderId, DeliveryStatus.PENDING, trackingNumber, estimatedDeliveryTime);
+                orderId, DeliveryStatus.PENDING_SHIPMENT, trackingNumber, estimatedDeliveryTime);
     }
 
     /**

@@ -3,17 +3,18 @@ package solid.humank.genaidemo.domain.review.model.aggregate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
-import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.review.exception.ReviewModificationNotAllowedException;
 import solid.humank.genaidemo.domain.review.model.valueobject.ReviewId;
 import solid.humank.genaidemo.domain.review.model.valueobject.ReviewRating;
 import solid.humank.genaidemo.domain.review.model.valueobject.ReviewStatus;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
 /** 商品評價聚合根 */
-@AggregateRoot(name = "ProductReview", description = "商品評價聚合根，管理消費者的商品評價和評分")
-public class ProductReview {
+@AggregateRoot(name = "ProductReview", description = "商品評價聚合根，管理消費者的商品評價和評分", boundedContext = "Review", version = "1.0")
+public class ProductReview extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
 
     private final ReviewId id;
     private final ProductId productId;
@@ -223,8 +224,10 @@ public class ProductReview {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         ProductReview review = (ProductReview) obj;
         return id.equals(review.id);
     }

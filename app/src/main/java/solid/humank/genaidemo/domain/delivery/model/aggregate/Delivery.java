@@ -3,14 +3,15 @@ package solid.humank.genaidemo.domain.delivery.model.aggregate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
 /** 配送聚合根 管理訂單的配送流程 合併了workflow.model.aggregate.Delivery的功能 */
-@AggregateRoot
-public class Delivery {
+@AggregateRoot(name = "Delivery", description = "配送聚合根，管理訂單的配送流程和狀態", boundedContext = "Delivery", version = "1.0")
+public class Delivery extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private final DeliveryId id;
     private final OrderId orderId;
     private String shippingAddress;
@@ -31,7 +32,7 @@ public class Delivery {
     /**
      * 建立配送
      *
-     * @param orderId 訂單ID
+     * @param orderId         訂單ID
      * @param shippingAddress 配送地址
      */
     public Delivery(OrderId orderId, String shippingAddress) {
@@ -41,8 +42,8 @@ public class Delivery {
     /**
      * 建立配送
      *
-     * @param id 配送ID
-     * @param orderId 訂單ID
+     * @param id              配送ID
+     * @param orderId         訂單ID
      * @param shippingAddress 配送地址
      */
     public Delivery(DeliveryId id, OrderId orderId, String shippingAddress) {
@@ -58,8 +59,8 @@ public class Delivery {
     /**
      * 從UUID建立配送（兼容舊代碼）
      *
-     * @param id UUID
-     * @param orderId 訂單ID
+     * @param id              UUID
+     * @param orderId         訂單ID
      * @param shippingAddress 配送地址
      */
     public Delivery(UUID id, OrderId orderId, String shippingAddress) {
@@ -69,8 +70,8 @@ public class Delivery {
     /**
      * 分配配送資源
      *
-     * @param deliveryPersonId 配送員ID
-     * @param deliveryPersonName 配送員姓名
+     * @param deliveryPersonId      配送員ID
+     * @param deliveryPersonName    配送員姓名
      * @param deliveryPersonContact 配送員聯繫方式
      * @param estimatedDeliveryTime 預計送達時間
      */
@@ -93,6 +94,43 @@ public class Delivery {
     }
 
     /**
+     * 分配配送人員（兼容舊版本的方法名）
+     *
+     * @param deliveryPersonId      配送人員ID
+     * @param deliveryPersonName    配送人員姓名
+     * @param deliveryPersonContact 配送人員聯繫方式
+     */
+    public void assignDeliveryPerson(
+            String deliveryPersonId, String deliveryPersonName, String deliveryPersonContact) {
+        // 委託給新的方法，使用當前時間作為預計送達時間
+        allocateResources(
+                deliveryPersonId,
+                deliveryPersonName,
+                deliveryPersonContact,
+                LocalDateTime.now().plusDays(1));
+    }
+
+    /**
+     * 設置預計配送時間（兼容舊版本）
+     *
+     * @param estimatedDeliveryTime 預計配送時間
+     */
+    public void setEstimatedDeliveryTime(LocalDateTime estimatedDeliveryTime) {
+        this.estimatedDeliveryTime = Objects.requireNonNull(estimatedDeliveryTime, "預計配送時間不能為空");
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 設置追蹤號碼（兼容舊版本）
+     *
+     * @param trackingNumber 追蹤號碼
+     */
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = Objects.requireNonNull(trackingNumber, "追蹤號碼不能為空");
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
      * 更新配送地址
      *
      * @param newAddress 新地址
@@ -104,6 +142,15 @@ public class Delivery {
 
         this.shippingAddress = Objects.requireNonNull(newAddress, "新地址不能為空");
         this.updatedAt = LocalDateTime.now();
+    }
+
+    /**
+     * 更新配送地址（兼容舊版本的方法名）
+     *
+     * @param newAddress 新地址
+     */
+    public void updateShippingAddress(String newAddress) {
+        updateAddress(newAddress);
     }
 
     /** 標記為已送達 */
@@ -133,6 +180,15 @@ public class Delivery {
     }
 
     /**
+     * 標記為配送失敗（兼容舊版本的方法名）
+     *
+     * @param reason 失敗原因
+     */
+    public void markAsDeliveryFailed(String reason) {
+        markAsFailed(reason);
+    }
+
+    /**
      * 標記為已拒收
      *
      * @param reason 拒收原因
@@ -150,7 +206,7 @@ public class Delivery {
     /**
      * 標記為延遲
      *
-     * @param reason 延遲原因
+     * @param reason                   延遲原因
      * @param newEstimatedDeliveryTime 新的預計送達時間
      */
     public void markAsDelayed(String reason, LocalDateTime newEstimatedDeliveryTime) {
@@ -160,8 +216,7 @@ public class Delivery {
 
         this.status = DeliveryStatus.DELAYED;
         this.delayReason = Objects.requireNonNull(reason, "延遲原因不能為空");
-        this.estimatedDeliveryTime =
-                Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計送達時間不能為空");
+        this.estimatedDeliveryTime = Objects.requireNonNull(newEstimatedDeliveryTime, "新的預計送達時間不能為空");
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -277,8 +332,10 @@ public class Delivery {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Delivery delivery = (Delivery) o;
         return Objects.equals(id, delivery.id);
     }

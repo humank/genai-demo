@@ -1,4 +1,3 @@
-# language: en
 # Original language: zh-TW
 Feature: Order Workflow
   As an order system
@@ -53,32 +52,26 @@ Feature: Order Workflow
     And the customer selects product "iPhone 15"
     And the customer adds the product to the order
     And the customer submits the order
-    
     # Order Validation
     Then the system should validate the order
     And the order should be valid
-    
     # Inventory Check
     When the order system checks inventory
     And the inventory is sufficient
-    
     # Payment Processing
     And the customer selects credit card payment method
     And the customer enters valid credit card information
     And the payment system processes the payment
     And the payment is successful
-    
     # Order Confirmation
     Then the system should confirm the order
     And the workflow order status should be updated to "CONFIRMED"
     And the customer should receive an order confirmation notification
-    
     # Delivery Processing
     When the system arranges workflow delivery
     And the logistics system creates a workflow delivery order
     And the logistics system allocates workflow delivery resources
     And the logistics system executes workflow delivery
-    
     # Order Completion
     And the customer receives the order
     And the customer confirms workflow receipt
@@ -106,15 +99,12 @@ Feature: Order Workflow
     # Order Creation
     When the customer creates an order containing product "Limited Edition Phone"
     And the customer submits the order
-    
     # Order Validation
     Then the system should validate the order
     And the order should be valid
-    
     # Inventory Check
     When the order system checks inventory
     And the inventory is insufficient
-    
     # Order Cancellation
     Then the system should cancel the workflow order
     And the workflow order status should be updated to "CANCELLED"
@@ -146,19 +136,16 @@ Feature: Order Workflow
     # Order Creation
     When the customer creates an order with valid products
     And the customer submits the order
-    
     # Order Validation and Inventory Check
     Then the system should validate the order
     And the order should be valid
     When the order system checks inventory
     And the inventory is sufficient
-    
     # Payment Processing
     And the customer selects credit card payment method
     And the customer enters invalid credit card information
     And the payment system processes the payment
     And the payment fails
-    
     # Order Cancellation
     Then the system should cancel the workflow order
     And the workflow order status should be updated to "CANCELLED"
@@ -183,14 +170,12 @@ Feature: Order Workflow
     # Order Creation
     When the customer creates an order with valid products
     And the workflow order status is "PENDING_PAYMENT"
-    
     # Customer Cancellation
     And the customer requests to cancel the order
     And the customer provides cancellation reason "Found a better option"
-    
     # Order Cancellation
     Then the system should cancel the workflow order
     And the workflow order status should be updated to "CANCELLED"
     And the cancellation reason should be "Customer request"
-    And the system should release the reserved inventory
+    And the order system should release the reserved inventory
     And the customer should receive an order cancellation confirmation notification

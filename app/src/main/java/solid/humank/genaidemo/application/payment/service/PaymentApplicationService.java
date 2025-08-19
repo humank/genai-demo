@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.payment.dto.PaymentRequestDto;
 import solid.humank.genaidemo.application.payment.dto.PaymentResponseDto;
 import solid.humank.genaidemo.application.payment.dto.ProcessPaymentCommand;
@@ -12,30 +14,27 @@ import solid.humank.genaidemo.application.payment.port.incoming.PaymentManagemen
 import solid.humank.genaidemo.application.payment.port.incoming.PaymentProcessingUseCase;
 import solid.humank.genaidemo.application.payment.port.outgoing.PaymentGatewayPort;
 import solid.humank.genaidemo.application.payment.port.outgoing.PaymentPersistencePort;
-import solid.humank.genaidemo.domain.common.event.EventBus;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.payment.events.PaymentCompletedEvent;
-import solid.humank.genaidemo.domain.payment.events.PaymentFailedEvent;
-import solid.humank.genaidemo.domain.payment.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /** 支付應用服務 實現支付處理和管理用例 */
 @Service
+@Transactional
 public class PaymentApplicationService
         implements PaymentProcessingUseCase, PaymentManagementUseCase {
 
     private final PaymentPersistencePort paymentPersistencePort;
     private final PaymentGatewayPort paymentGatewayPort;
-    private final EventBus eventBus;
+    private final DomainEventApplicationService domainEventApplicationService;
 
     public PaymentApplicationService(
             PaymentPersistencePort paymentPersistencePort,
             PaymentGatewayPort paymentGatewayPort,
-            EventBus eventBus) {
+            DomainEventApplicationService domainEventApplicationService) {
         this.paymentPersistencePort = paymentPersistencePort;
         this.paymentGatewayPort = paymentGatewayPort;
-        this.eventBus = eventBus;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     @Override
@@ -50,10 +49,8 @@ public class PaymentApplicationService
         // 保存支付
         paymentPersistencePort.save(payment);
 
-        // 發布支付請求事件
-        eventBus.publish(
-                new PaymentRequestedEvent(
-                        payment.getId(), payment.getOrderId(), payment.getAmount()));
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(payment);
 
         try {
             // 處理支付
@@ -69,13 +66,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付完成事件
-            eventBus.publish(
-                    new PaymentCompletedEvent(
-                            payment.getId(),
-                            payment.getOrderId(),
-                            payment.getAmount(),
-                            transactionId));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         } catch (Exception e) {
             // 支付失敗
             payment.fail(e.getMessage());
@@ -83,13 +75,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付失敗事件
-            eventBus.publish(
-                    PaymentFailedEvent.fromUUID(
-                            payment.getIdAsUUID(),
-                            payment.getOrderIdAsUUID(),
-                            payment.getAmount(),
-                            e.getMessage()));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         }
 
         return PaymentResponseDto.fromDomain(payment);
@@ -104,10 +91,8 @@ public class PaymentApplicationService
         // 保存支付
         paymentPersistencePort.save(payment);
 
-        // 發布支付請求事件
-        eventBus.publish(
-                new PaymentRequestedEvent(
-                        payment.getId(), payment.getOrderId(), payment.getAmount()));
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(payment);
 
         try {
             // 處理支付
@@ -123,13 +108,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付完成事件
-            eventBus.publish(
-                    new PaymentCompletedEvent(
-                            payment.getId(),
-                            payment.getOrderId(),
-                            payment.getAmount(),
-                            transactionId));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         } catch (Exception e) {
             // 支付失敗
             payment.fail(e.getMessage());
@@ -137,13 +117,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付失敗事件
-            eventBus.publish(
-                    PaymentFailedEvent.fromUUID(
-                            payment.getIdAsUUID(),
-                            payment.getOrderIdAsUUID(),
-                            payment.getAmount(),
-                            e.getMessage()));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         }
 
         return PaymentResponseDto.fromDomain(payment);
@@ -157,10 +132,8 @@ public class PaymentApplicationService
         // 保存支付
         paymentPersistencePort.save(payment);
 
-        // 發布支付請求事件
-        eventBus.publish(
-                new PaymentRequestedEvent(
-                        payment.getId(), payment.getOrderId(), payment.getAmount()));
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(payment);
 
         try {
             // 處理支付
@@ -176,13 +149,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付完成事件
-            eventBus.publish(
-                    new PaymentCompletedEvent(
-                            payment.getId(),
-                            payment.getOrderId(),
-                            payment.getAmount(),
-                            transactionId));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         } catch (Exception e) {
             // 支付失敗
             payment.fail(e.getMessage());
@@ -190,13 +158,8 @@ public class PaymentApplicationService
             // 更新支付
             paymentPersistencePort.update(payment);
 
-            // 發布支付失敗事件
-            eventBus.publish(
-                    PaymentFailedEvent.fromUUID(
-                            payment.getIdAsUUID(),
-                            payment.getOrderIdAsUUID(),
-                            payment.getAmount(),
-                            e.getMessage()));
+            // 發布領域事件
+            domainEventApplicationService.publishEventsFromAggregate(payment);
         }
 
         return payment;
@@ -262,13 +225,8 @@ public class PaymentApplicationService
         // 更新支付
         paymentPersistencePort.update(payment);
 
-        // 發布支付失敗事件
-        eventBus.publish(
-                PaymentFailedEvent.fromUUID(
-                        payment.getIdAsUUID(),
-                        payment.getOrderIdAsUUID(),
-                        payment.getAmount(),
-                        "Payment cancelled by user"));
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(payment);
 
         return PaymentResponseDto.fromDomain(payment);
     }
@@ -289,13 +247,8 @@ public class PaymentApplicationService
         // 更新支付
         paymentPersistencePort.update(payment);
 
-        // 發布支付失敗事件
-        eventBus.publish(
-                PaymentFailedEvent.fromUUID(
-                        payment.getIdAsUUID(),
-                        payment.getOrderIdAsUUID(),
-                        payment.getAmount(),
-                        "Payment refunded"));
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(payment);
 
         return PaymentResponseDto.fromDomain(payment);
     }

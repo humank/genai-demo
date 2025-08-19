@@ -1,9 +1,12 @@
 package solid.humank.genaidemo.domain.common.specification;
 
-public class NotSpecification<T> implements Specification<T> {
-    private final Specification<T> spec;
+import solid.humank.genaidemo.domain.common.annotations.Specification;
 
-    public NotSpecification(Specification<T> spec) {
+@Specification(name = "NotSpecification", description = "Negates a specification with logical NOT operation")
+public class NotSpecification<T> implements solid.humank.genaidemo.domain.common.specification.Specification<T> {
+    private final solid.humank.genaidemo.domain.common.specification.Specification<T> spec;
+
+    public NotSpecification(solid.humank.genaidemo.domain.common.specification.Specification<T> spec) {
         this.spec = spec;
     }
 

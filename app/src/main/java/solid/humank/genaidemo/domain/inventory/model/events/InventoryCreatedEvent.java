@@ -1,43 +1,50 @@
 package solid.humank.genaidemo.domain.inventory.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 
-/** 庫存創建事件 */
-public class InventoryCreatedEvent extends AbstractDomainEvent {
+/**
+ * 庫存創建事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record InventoryCreatedEvent(
+        InventoryId inventoryId,
+        String productId,
+        String productName,
+        int initialQuantity,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final InventoryId inventoryId;
-    private final String productId;
-    private final String productName;
-    private final int initialQuantity;
-
-    public InventoryCreatedEvent(
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static InventoryCreatedEvent create(
             InventoryId inventoryId, String productId, String productName, int initialQuantity) {
-        super("inventory-service");
-        this.inventoryId = inventoryId;
-        this.productId = productId;
-        this.productName = productName;
-        this.initialQuantity = initialQuantity;
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new InventoryCreatedEvent(inventoryId, productId, productName, initialQuantity,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public InventoryId getInventoryId() {
-        return inventoryId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getProductId() {
-        return productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public int getInitialQuantity() {
-        return initialQuantity;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "InventoryCreatedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return inventoryId.getId().toString();
     }
 }

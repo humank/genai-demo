@@ -2,18 +2,23 @@ package solid.humank.genaidemo.infrastructure.inventory.persistence.mapper;
 
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
+import solid.humank.genaidemo.infrastructure.common.persistence.mapper.DomainMapper;
 import solid.humank.genaidemo.infrastructure.inventory.persistence.entity.JpaInventoryEntity;
 import solid.humank.genaidemo.infrastructure.inventory.persistence.entity.JpaReservationEntity;
 
 /** 庫存映射器 負責在領域模型和JPA實體之間進行轉換 */
-public class InventoryMapper {
+@Component
+public class InventoryMapper implements DomainMapper<Inventory, JpaInventoryEntity> {
 
-    /** 將領域模型轉換為JPA實體 */
-    public static JpaInventoryEntity toJpaEntity(Inventory inventory) {
+    @Override
+    public JpaInventoryEntity toJpaEntity(Inventory inventory) {
         JpaInventoryEntity entity = new JpaInventoryEntity();
         entity.setId(inventory.getId().getId());
         entity.setProductId(inventory.getProductId());
@@ -40,17 +45,16 @@ public class InventoryMapper {
         return entity;
     }
 
-    /** 將JPA實體轉換為領域模型 */
-    public static Inventory toDomainModel(JpaInventoryEntity entity) {
+    @Override
+    public Inventory toDomainModel(JpaInventoryEntity entity) {
         InventoryId inventoryId = InventoryId.fromUUID(entity.getId());
 
         // 創建基本的庫存聚合根
-        Inventory inventory =
-                new Inventory(
-                        inventoryId,
-                        entity.getProductId(),
-                        entity.getProductName(),
-                        entity.getTotalQuantity());
+        Inventory inventory = new Inventory(
+                inventoryId,
+                entity.getProductId(),
+                entity.getProductName(),
+                entity.getTotalQuantity());
 
         // 設置閾值
         inventory.setThreshold(entity.getThreshold());
@@ -62,7 +66,7 @@ public class InventoryMapper {
     }
 
     /** 將領域狀態映射到JPA狀態 */
-    private static JpaInventoryEntity.InventoryStatusEnum mapDomainStatusToJpa(
+    private JpaInventoryEntity.InventoryStatusEnum mapDomainStatusToJpa(
             InventoryStatus status) {
         switch (status) {
             case ACTIVE:

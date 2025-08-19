@@ -1,45 +1,52 @@
 package solid.humank.genaidemo.domain.payment.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 
-/** 支付完成事件 */
-public class PaymentCompletedEvent extends AbstractDomainEvent {
+/**
+ * 支付完成事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record PaymentCompletedEvent(
+        PaymentId paymentId,
+        OrderId orderId,
+        Money amount,
+        String transactionId,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final PaymentId paymentId;
-    private final OrderId orderId;
-    private final Money amount;
-    private final String transactionId;
-
-    public PaymentCompletedEvent(
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static PaymentCompletedEvent create(
             PaymentId paymentId, OrderId orderId, Money amount, String transactionId) {
-        super("payment-service");
-        this.paymentId = paymentId;
-        this.orderId = orderId;
-        this.amount = amount;
-        this.transactionId = transactionId;
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new PaymentCompletedEvent(paymentId, orderId, amount, transactionId,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public PaymentId getPaymentId() {
-        return paymentId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public OrderId getOrderId() {
-        return orderId;
-    }
-
-    public Money getAmount() {
-        return amount;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "PaymentCompletedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return paymentId.getId().toString();
     }
 }

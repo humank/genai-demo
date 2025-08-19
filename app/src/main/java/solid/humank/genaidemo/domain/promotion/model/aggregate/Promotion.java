@@ -2,9 +2,16 @@ package solid.humank.genaidemo.domain.promotion.model.aggregate;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.promotion.model.events.PromotionActivatedEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.PromotionCreatedEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.PromotionInfoUpdatedEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.PromotionStatusChangedEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.PromotionUsedEvent;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.AddOnPurchaseRule;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.CartSummary;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.ConvenienceStoreVoucherRule;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.DateRange;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
@@ -14,11 +21,10 @@ import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionRule;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionStatus;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionType;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 促銷聚合根 */
-@AggregateRoot(name = "Promotion", description = "促銷聚合根，管理各種促銷活動規則")
-public class Promotion {
+@AggregateRoot(name = "Promotion", description = "促銷聚合根，管理各種促銷活動規則", boundedContext = "Promotion", version = "1.0")
+public class Promotion extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
 
     private final PromotionId id;
     private String name;
@@ -50,6 +56,9 @@ public class Promotion {
         this.usageCount = 0;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+
+        // 發布促銷活動創建事件
+        collectEvent(PromotionCreatedEvent.create(id, name, description, type));
     }
 
     // Getters
@@ -100,28 +109,36 @@ public class Promotion {
     // 業務方法
 
     /** 檢查促銷是否適用於購物車 */
-    public boolean isApplicable(ShoppingCart cart) {
+    public boolean isApplicable(CartSummary cartSummary) {
         return status == PromotionStatus.ACTIVE
                 && validPeriod.contains(LocalDateTime.now())
                 && !isUsageLimitReached()
-                && rule.matches(cart);
+                && rule.matches(cartSummary);
     }
 
     /** 計算折扣金額 */
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!isApplicable(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!isApplicable(cartSummary)) {
             return Money.twd(0);
         }
-        return rule.calculateDiscount(cart);
+        return rule.calculateDiscount(cartSummary);
     }
 
     /** 使用促銷 */
-    public void use() {
+    public void use(String customerId, String orderId) {
         if (!canUse()) {
             throw new IllegalStateException("促銷無法使用");
         }
         this.usageCount++;
         this.updatedAt = LocalDateTime.now();
+
+        // 發布促銷使用事件
+        collectEvent(PromotionUsedEvent.create(this.id, customerId, orderId, this.usageCount));
+    }
+
+    /** 使用促銷（向後兼容） */
+    public void use() {
+        use("unknown", "unknown");
     }
 
     /** 檢查是否可以使用 */
@@ -142,9 +159,30 @@ public class Promotion {
     }
 
     /** 更新促銷狀態 */
-    public void updateStatus(PromotionStatus newStatus) {
+    public void updateStatus(PromotionStatus newStatus, String reason) {
+        PromotionStatus oldStatus = this.status;
         this.status = newStatus;
         this.updatedAt = LocalDateTime.now();
+
+        // 發布促銷狀態變更事件
+        collectEvent(PromotionStatusChangedEvent.create(this.id, oldStatus, newStatus, reason));
+
+        // 如果促銷被激活，發布促銷激活事件
+        if (newStatus == PromotionStatus.ACTIVE && oldStatus != PromotionStatus.ACTIVE) {
+            Money discountAmount = Money.twd(0); // 預設折扣金額，實際應根據規則計算
+            collectEvent(PromotionActivatedEvent.create(
+                    this.id,
+                    this.name,
+                    this.type,
+                    discountAmount,
+                    this.validPeriod.startDate(),
+                    this.validPeriod.endDate()));
+        }
+    }
+
+    /** 更新促銷狀態（向後兼容） */
+    public void updateStatus(PromotionStatus newStatus) {
+        updateStatus(newStatus, "Status updated");
     }
 
     /** 設定使用限制 */
@@ -155,15 +193,24 @@ public class Promotion {
 
     /** 更新促銷資訊 */
     public void updateInfo(String newName, String newDescription) {
+        String oldName = this.name;
+        String oldDescription = this.description;
+
         this.name = newName;
         this.description = newDescription;
         this.updatedAt = LocalDateTime.now();
+
+        // 發布促銷資訊更新事件
+        collectEvent(PromotionInfoUpdatedEvent.create(
+                this.id, oldName, newName, oldDescription, newDescription));
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         Promotion promotion = (Promotion) obj;
         return id.equals(promotion.id);
     }

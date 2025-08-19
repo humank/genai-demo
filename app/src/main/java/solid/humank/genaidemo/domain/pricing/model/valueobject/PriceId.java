@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.domain.pricing.model.valueobject;
 
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 @ValueObject
@@ -19,10 +20,16 @@ public class PriceId {
         return id;
     }
 
+    public String getValue() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         PriceId priceId = (PriceId) o;
         return id.equals(priceId.id);
     }

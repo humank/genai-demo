@@ -13,7 +13,7 @@ CREATE TABLE notification_templates (
     variables TEXT, -- JSON array of template variables
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, INACTIVE
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 創建通知表
@@ -38,7 +38,7 @@ CREATE TABLE notifications (
     related_entity_id VARCHAR(50),
     metadata TEXT, -- JSON data for additional information
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
     CHECK (retry_count <= max_retry_count)
 );
@@ -53,7 +53,7 @@ CREATE TABLE notification_subscriptions (
     subscribed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     unsubscribed_at TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_customer_type_channel (customer_id, notification_type, channel)
+    CONSTRAINT unique_customer_type_channel UNIQUE (customer_id, notification_type, channel)
 );
 
 -- 創建系統公告表
@@ -71,7 +71,7 @@ CREATE TABLE system_announcements (
     view_count INTEGER NOT NULL DEFAULT 0,
     created_by VARCHAR(36) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CHECK (expire_at IS NULL OR expire_at > publish_at)
 );
 
@@ -83,7 +83,7 @@ CREATE TABLE announcement_read_records (
     read_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (announcement_id) REFERENCES system_announcements(id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_customer_announcement (customer_id, announcement_id)
+    CONSTRAINT unique_customer_announcement UNIQUE (customer_id, announcement_id)
 );
 
 -- 創建通知統計表
@@ -99,8 +99,8 @@ CREATE TABLE notification_statistics (
     delivery_rate DECIMAL(5,4) NOT NULL DEFAULT 0.0000,
     read_rate DECIMAL(5,4) NOT NULL DEFAULT 0.0000,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY unique_date_type_channel (date, notification_type, channel)
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_date_type_channel UNIQUE (date, notification_type, channel)
 );
 
 -- 創建索引

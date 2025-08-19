@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.domain.pricing.service;
 
 import java.util.Optional;
+
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.pricing.model.aggregate.PricingRule;
@@ -11,7 +12,7 @@ import solid.humank.genaidemo.domain.product.model.aggregate.Product;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
 /** 佣金服務 重構後作為領域服務，協調聚合之間的操作 */
-@DomainService(description = "佣金服務，協調聚合之間的佣金計算操作和定價規則")
+@DomainService(name = "CommissionService", description = "佣金服務，協調聚合之間的佣金計算操作和定價規則", boundedContext = "Pricing")
 public class CommissionService {
 
     private final PricingRuleRepository pricingRuleRepository;
@@ -39,7 +40,7 @@ public class CommissionService {
      * 獲取產品類別和活動的佣金費率
      *
      * @param category 產品類別
-     * @param event 活動名稱
+     * @param event    活動名稱
      * @return 佣金費率
      */
     public CommissionRate getCommissionRate(ProductCategory category, String event) {
@@ -54,9 +55,9 @@ public class CommissionService {
     /**
      * 計算產品佣金金額
      *
-     * @param product 產品
+     * @param product   產品
      * @param salePrice 銷售價格
-     * @param event 活動名稱
+     * @param event     活動名稱
      * @return 佣金金額
      */
     public Money calculateCommission(Product product, Money salePrice, String event) {
@@ -69,10 +70,9 @@ public class CommissionService {
         ProductId productId = product.getId();
 
         // 查找產品對應的定價規則
-        Optional<PricingRule> pricingRuleOpt =
-                pricingRuleRepository.findByProductId(productId).stream()
-                        .filter(PricingRule::isValidNow)
-                        .findFirst();
+        Optional<PricingRule> pricingRuleOpt = pricingRuleRepository.findByProductId(productId).stream()
+                .filter(PricingRule::isValidNow)
+                .findFirst();
 
         if (pricingRuleOpt.isPresent()) {
             PricingRule pricingRule = pricingRuleOpt.get();

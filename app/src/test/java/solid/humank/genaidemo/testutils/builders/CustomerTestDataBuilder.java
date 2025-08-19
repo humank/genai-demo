@@ -95,8 +95,8 @@ public class CustomerTestDataBuilder {
 
     /** 建構Customer領域物件 */
     public Customer build() {
-        solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId customerIdVO =
-                new solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId(customerId);
+        solid.humank.genaidemo.domain.shared.valueobject.CustomerId customerIdVO =
+                new solid.humank.genaidemo.domain.shared.valueobject.CustomerId(customerId);
         // 創建所需的值對象
         solid.humank.genaidemo.domain.customer.model.valueobject.CustomerName customerName =
                 new solid.humank.genaidemo.domain.customer.model.valueobject.CustomerName(name);

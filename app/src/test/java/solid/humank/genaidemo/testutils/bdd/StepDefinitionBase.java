@@ -1,23 +1,31 @@
 package solid.humank.genaidemo.testutils.bdd;
 
-import solid.humank.genaidemo.testutils.context.ScenarioState;
-import solid.humank.genaidemo.testutils.context.TestContext;
+import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.testutils.handlers.TestExceptionHandler;
 import solid.humank.genaidemo.testutils.handlers.TestScenarioHandler;
+import solid.humank.genaidemo.testutils.mocks.MockFactory;
+import solid.humank.genaidemo.testutils.stubs.StubFactory;
 
-/** BDD步驟定義基礎類別，提供共用的測試基礎設施 */
+/**
+ * BDD步驟定義基礎類別，提供共用的測試基礎設施
+ * 已改進為支援測試隔離和獨立執行
+ */
 public abstract class StepDefinitionBase {
 
     protected final TestContext testContext;
-    protected final ScenarioState scenarioState;
     protected final TestScenarioHandler scenarioHandler;
     protected final TestExceptionHandler exceptionHandler;
+    protected final MockFactory mockFactory;
+    protected final StubFactory stubFactory;
 
     protected StepDefinitionBase() {
-        this.testContext = new TestContext();
-        this.scenarioState = new ScenarioState(testContext);
+        this.testContext = TestContext.getInstance();
         this.scenarioHandler = new TestScenarioHandler();
         this.exceptionHandler = new TestExceptionHandler();
+
+        // 初始化測試隔離工具
+        this.mockFactory = MockFactory.getInstance();
+        this.stubFactory = StubFactory.getInstance();
 
         // 註冊場景處理器
         registerScenarioProcessors();
@@ -29,25 +37,23 @@ public abstract class StepDefinitionBase {
     /** 清理測試資料 */
     protected void cleanup() {
         testContext.clear();
-        scenarioState.endScenario();
+        mockFactory.resetAllMocks();
     }
 
     /** 檢查是否有異常 */
     protected boolean hasException() {
-        return testContext.hasException();
+        return testContext.hasError();
     }
 
-    /** 取得最後一個異常 */
-    protected Exception getLastException() {
-        return testContext.getLastException();
+    /** 取得最後一個異常訊息 */
+    protected String getLastErrorMessage() {
+        return testContext.getLastErrorMessage();
     }
 
     /** 檢查異常訊息是否包含特定文字 */
     protected boolean exceptionMessageContains(String expectedMessage) {
-        Exception lastException = getLastException();
-        return lastException != null
-                && lastException.getMessage() != null
-                && lastException.getMessage().contains(expectedMessage);
+        String lastErrorMessage = getLastErrorMessage();
+        return lastErrorMessage != null && lastErrorMessage.contains(expectedMessage);
     }
 
     /** 安全執行操作 */
@@ -74,4 +80,15 @@ public abstract class StepDefinitionBase {
     protected boolean hasTestData(String key) {
         return testContext.contains(key);
     }
+
+    /** 創建 Mock 物件 */
+    protected <T> T createMock(Class<T> interfaceClass) {
+        return mockFactory.createMock(interfaceClass);
+    }
+
+    /** 創建 Stub 物件 */
+    protected <T> T createStub(Class<T> stubClass) {
+        return stubFactory.createStub(stubClass);
+    }
+
 }

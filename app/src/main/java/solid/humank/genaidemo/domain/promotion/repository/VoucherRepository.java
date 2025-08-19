@@ -3,11 +3,13 @@ package solid.humank.genaidemo.domain.promotion.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.repository.Repository;
-import solid.humank.genaidemo.domain.promotion.model.entity.Voucher;
+
+import solid.humank.genaidemo.domain.promotion.model.aggregate.Voucher;
 
 /** 優惠券倉儲接口 */
-public interface VoucherRepository extends Repository<Voucher, String> {
+@solid.humank.genaidemo.domain.common.annotations.Repository(name = "VoucherRepository", description = "優惠券聚合根儲存庫")
+public interface VoucherRepository
+        extends solid.humank.genaidemo.domain.common.repository.BaseRepository<Voucher, String> {
 
     /**
      * 根據ID查找優惠券

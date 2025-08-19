@@ -22,6 +22,9 @@
     "bearerAuth" : [ ]
   } ],
   "tags" : [ {
+    "name" : "事件監控",
+    "description" : "事件處理系統監控和管理"
+  }, {
     "name" : "統計報表",
     "description" : "提供系統各項統計數據和報表功能，包括數據庫統計、訂單狀態分布、支付方式分析等"
   }, {
@@ -58,11 +61,17 @@
     "name" : "產品管理",
     "description" : "提供產品的查詢、更新和刪除功能，包括產品資訊管理、庫存狀態查詢等操作"
   }, {
+    "name" : "消費者商品",
+    "description" : "消費者商品瀏覽和搜索功能"
+  }, {
     "name" : "定價管理",
     "description" : "提供定價策略、佣金費率管理和產品定價規則的相關功能，支援複雜的定價邏輯和促銷規則配置"
   }, {
     "name" : "產品管理",
     "description" : "產品相關的 API 操作，包含產品資訊管理和分類"
+  }, {
+    "name" : "購物車管理",
+    "description" : "購物車相關操作"
   }, {
     "name" : "訂單管理",
     "description" : "訂單相關的 API 操作，包括創建、查詢、修改和取消訂單"
@@ -171,16 +180,6 @@
               }
             }
           },
-          "422" : {
-            "description" : "業務規則驗證失敗",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "400" : {
             "description" : "請求參數無效",
             "content" : {
@@ -193,6 +192,16 @@
           },
           "500" : {
             "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "業務規則驗證失敗",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -254,16 +263,6 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "產品刪除成功",
             "content" : {
@@ -274,6 +273,16 @@
                     "success" : true,
                     "message" : "產品已成功刪除"
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -318,18 +327,18 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "指定的定價規則不存在",
+          "200" : {
+            "description" : "佣金費率更新成功",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "$ref" : "#/components/schemas/PricingRuleDto"
                 }
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效，如費率值超出合理範圍或格式錯誤",
+          "404" : {
+            "description" : "指定的定價規則不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -348,12 +357,12 @@
               }
             }
           },
-          "200" : {
-            "description" : "佣金費率更新成功",
+          "400" : {
+            "description" : "請求參數無效，如費率值超出合理範圍或格式錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PricingRuleDto"
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -364,6 +373,94 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/items/{productId}" : {
+      "put" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "更新購物車商品數量",
+        "description" : "更新購物車中指定商品的數量",
+        "operationId" : "updateItemQuantity",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "description" : "商品ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UpdateQuantityRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "從購物車移除商品",
+        "description" : "從購物車中移除指定商品",
+        "operationId" : "removeItemFromCart",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "productId",
+          "in" : "path",
+          "description" : "商品ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
                 }
               }
             }
@@ -388,22 +485,22 @@
           "required" : true
         },
         "responses" : {
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "定價規則創建成功",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/PricingRuleDto"
-                }
-              }
-            }
-          },
-          "422" : {
-            "description" : "業務規則違反，如定價規則衝突、有效期間重疊或折扣設定不合理",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -418,8 +515,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "422" : {
+            "description" : "業務規則違反，如定價規則衝突、有效期間重疊或折扣設定不合理",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -438,22 +535,22 @@
         "description" : "獲取系統中所有支付記錄的列表，通常用於管理後台查詢",
         "operationId" : "getAllPayments",
         "responses" : {
-          "200" : {
-            "description" : "成功獲取支付列表",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentResponse"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取支付列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentResponse"
                 }
               }
             }
@@ -486,8 +583,8 @@
               }
             }
           },
-          "422" : {
-            "description" : "支付處理失敗（業務邏輯錯誤）",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -496,8 +593,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "422" : {
+            "description" : "支付處理失敗（業務邏輯錯誤）",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -537,8 +634,18 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
+          "400" : {
+            "description" : "支付ID格式無效",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -557,18 +664,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "支付ID格式無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "404" : {
+            "description" : "支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -608,26 +705,6 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "422" : {
-            "description" : "支付狀態不允許取消",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "支付取消成功",
             "content" : {
@@ -650,6 +727,26 @@
           },
           "500" : {
             "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "支付狀態不允許取消",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -691,22 +788,22 @@
           "example" : 20
         } ],
         "responses" : {
-          "500" : {
-            "description" : "內部伺服器錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取訂單列表",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "內部伺服器錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -729,8 +826,8 @@
           "required" : true
         },
         "responses" : {
-          "500" : {
-            "description" : "內部伺服器錯誤",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -739,8 +836,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "500" : {
+            "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -789,16 +886,6 @@
               }
             }
           },
-          "404" : {
-            "description" : "訂單不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "訂單提交成功",
             "content" : {
@@ -811,6 +898,16 @@
           },
           "500" : {
             "description" : "內部伺服器錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "訂單不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -849,8 +946,8 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "訂單不存在",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -879,8 +976,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "404" : {
+            "description" : "訂單不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -909,6 +1006,26 @@
           "example" : "order-123"
         } ],
         "responses" : {
+          "400" : {
+            "description" : "訂單狀態不允許取消",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "內部伺服器錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "訂單取消成功",
             "content" : {
@@ -928,23 +1045,87 @@
                 }
               }
             }
-          },
-          "500" : {
-            "description" : "內部伺服器錯誤",
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/statistics/processing/reset" : {
+      "post" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "重置處理統計",
+        "description" : "重置事件處理的統計信息",
+        "operationId" : "resetProcessingStatistics",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "type" : "string"
                 }
               }
             }
-          },
-          "400" : {
-            "description" : "訂單狀態不允許取消",
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/sequence/{aggregateId}/update" : {
+      "post" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "強制更新聚合根序列",
+        "description" : "強制更新指定聚合根的事件序列號",
+        "operationId" : "forceUpdateSequence",
+        "parameters" : [ {
+          "name" : "aggregateId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "sequence",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/sequence/{aggregateId}/reset" : {
+      "post" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "重置聚合根序列",
+        "description" : "重置指定聚合根的事件序列追蹤",
+        "operationId" : "resetAggregateSequence",
+        "parameters" : [ {
+          "name" : "aggregateId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
                 }
               }
             }
@@ -989,28 +1170,18 @@
               }
             }
           },
-          "422" : {
-            "description" : "業務規則違反，如庫存不足無法減少、調整後庫存為負數等",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "請求參數無效，如調整數量為負數、調整類型不正確等",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "業務規則違反，如庫存不足無法減少、調整後庫存為負數等",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1028,6 +1199,172 @@
                 }
               }
             }
+          },
+          "400" : {
+            "description" : "請求參數無效，如調整數量為負數、調整類型不正確等",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/promotions" : {
+      "get" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "獲取可用促銷活動",
+        "description" : "獲取購物車可用的促銷活動",
+        "operationId" : "getAvailablePromotions",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "應用促銷活動",
+        "description" : "向購物車應用促銷活動",
+        "operationId" : "applyPromotion",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApplyPromotionRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/items" : {
+      "post" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "添加商品到購物車",
+        "description" : "向購物車添加商品",
+        "operationId" : "addItemToCart",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AddItemRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/coupons" : {
+      "post" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "應用優惠券",
+        "description" : "向購物車應用優惠券",
+        "operationId" : "applyCoupon",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApplyCouponRequest"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1039,16 +1376,6 @@
         "description" : "獲取系統整體統計數據，包括各個數據表的記錄數量、系統狀態等基礎統計信息",
         "operationId" : "getStats",
         "responses" : {
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取統計數據",
             "content" : {
@@ -1069,6 +1396,16 @@
                       "message" : "統計數據獲取成功"
                     }
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -1209,6 +1546,16 @@
               }
             }
           },
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "成功獲取產品列表",
             "content" : {
@@ -1241,16 +1588,6 @@
                 }
               }
             }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -1272,8 +1609,8 @@
           "example" : "prod-123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "400" : {
-            "description" : "請求參數無效，如產品ID格式錯誤",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1282,8 +1619,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "400" : {
+            "description" : "請求參數無效，如產品ID格式錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1335,26 +1672,6 @@
           "example" : "ELECTRONICS"
         } ],
         "responses" : {
-          "200" : {
-            "description" : "成功獲取產品類別定價規則列表",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PricingRuleDto"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "請求參數無效，如產品類別值不在允許範圍內",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "系統內部錯誤",
             "content" : {
@@ -1365,8 +1682,28 @@
               }
             }
           },
+          "200" : {
+            "description" : "成功獲取產品類別定價規則列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PricingRuleDto"
+                }
+              }
+            }
+          },
           "422" : {
             "description" : "業務規則違反，如查詢的產品類別不支援定價規則",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "請求參數無效，如產品類別值不在允許範圍內",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1396,16 +1733,6 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "400" : {
             "description" : "支付ID格式無效",
             "content" : {
@@ -1432,6 +1759,16 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "支付不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -1467,16 +1804,6 @@
               }
             }
           },
-          "400" : {
-            "description" : "訂單ID格式無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取訂單支付詳情",
             "content" : {
@@ -1489,6 +1816,16 @@
           },
           "404" : {
             "description" : "訂單支付不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "訂單ID格式無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1517,12 +1854,12 @@
           "example" : "order-123"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "訂單不存在",
+          "200" : {
+            "description" : "成功獲取訂單資訊",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "type" : "string"
                 }
               }
             }
@@ -1537,12 +1874,141 @@
               }
             }
           },
-          "200" : {
-            "description" : "成功獲取訂單資訊",
+          "404" : {
+            "description" : "訂單不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "string"
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/statistics/sequence" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取序列追蹤統計",
+        "description" : "返回事件序列追蹤的統計信息",
+        "operationId" : "getSequenceStatistics",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SequenceTrackingStatisticsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/statistics/retry" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取重試統計",
+        "description" : "返回事件重試的統計信息",
+        "operationId" : "getRetryStatistics",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RetryStatisticsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/statistics/processing" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取事件處理統計",
+        "description" : "返回事件處理的詳細統計信息",
+        "operationId" : "getProcessingStatistics",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProcessingStatisticsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/sequence/{aggregateId}" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取聚合根當前序列",
+        "description" : "返回指定聚合根的當前事件序列號",
+        "operationId" : "getCurrentSequence",
+        "parameters" : [ {
+          "name" : "aggregateId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/health" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取系統健康狀態",
+        "description" : "返回事件處理系統的整體健康狀態",
+        "operationId" : "getSystemHealth",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SystemHealthStatusDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/monitoring/events/backpressure/status" : {
+      "get" : {
+        "tags" : [ "事件監控" ],
+        "summary" : "獲取背壓狀態",
+        "description" : "返回當前的背壓狀態和負載信息",
+        "operationId" : "getBackpressureStatus",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BackpressureStatusDto"
                 }
               }
             }
@@ -1567,6 +2033,16 @@
           "example" : "PROD-001"
         } ],
         "responses" : {
+          "200" : {
+            "description" : "成功獲取庫存資訊",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/InventoryResponse"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "系統內部錯誤",
             "content" : {
@@ -1583,16 +2059,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "成功獲取庫存資訊",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/InventoryResponse"
                 }
               }
             }
@@ -1690,16 +2156,6 @@
               }
             }
           },
-          "200" : {
-            "description" : "成功獲取客戶資訊",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "系統內部錯誤",
             "content" : {
@@ -1716,6 +2172,504 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取客戶資訊",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "瀏覽商品列表",
+        "description" : "分頁瀏覽商品，支援分類篩選",
+        "operationId" : "browseProducts",
+        "parameters" : [ {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "category",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "minPrice",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "maxPrice",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "number"
+          }
+        }, {
+          "name" : "minRating",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/{productId}" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取商品詳情",
+        "description" : "獲取指定商品的詳細信息",
+        "operationId" : "getProductDetail",
+        "parameters" : [ {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/{productId}/related" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取相關商品",
+        "description" : "獲取與指定商品相關的其他商品",
+        "operationId" : "getRelatedProducts",
+        "parameters" : [ {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 5
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "additionalProperties" : {
+                      "type" : "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/{productId}/price-history" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取商品價格歷史",
+        "description" : "獲取指定商品的價格變化歷史",
+        "operationId" : "getProductPriceHistory",
+        "parameters" : [ {
+          "name" : "productId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "days",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 30
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/trending" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取熱門商品",
+        "description" : "獲取當前熱門商品",
+        "operationId" : "getTrendingProducts",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "category",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "additionalProperties" : {
+                      "type" : "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/search" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "搜尋商品",
+        "description" : "根據關鍵字搜尋商品",
+        "operationId" : "searchProducts",
+        "parameters" : [ {
+          "name" : "keyword",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/recommendations" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取推薦商品",
+        "description" : "根據客戶ID獲取個人化推薦商品",
+        "operationId" : "getRecommendedProducts",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 5
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "additionalProperties" : {
+                      "type" : "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/new" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取新品推薦",
+        "description" : "獲取最新上架的商品",
+        "operationId" : "getNewProducts",
+        "parameters" : [ {
+          "name" : "limit",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "days",
+          "in" : "query",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 30
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object",
+                    "additionalProperties" : {
+                      "type" : "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/products/categories" : {
+      "get" : {
+        "tags" : [ "消費者商品" ],
+        "summary" : "獲取商品分類",
+        "description" : "獲取所有可用的商品分類",
+        "operationId" : "getProductCategories",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}" : {
+      "get" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "獲取購物車",
+        "description" : "根據客戶ID獲取購物車信息",
+        "operationId" : "getShoppingCart",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ShoppingCartDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/inventory-check" : {
+      "get" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "檢查庫存可用性",
+        "description" : "檢查購物車商品的庫存可用性",
+        "operationId" : "checkInventoryAvailability",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/checkout" : {
+      "get" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "計算結帳金額",
+        "description" : "計算購物車的結帳金額",
+        "operationId" : "calculateCheckout",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "object"
+                  }
                 }
               }
             }
@@ -1752,6 +2706,16 @@
               }
             }
           },
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "成功獲取活動記錄列表",
             "content" : {
@@ -1777,13 +2741,75 @@
                 }
               }
             }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/coupons/{couponCode}" : {
+      "delete" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "移除優惠券",
+        "description" : "從購物車移除優惠券",
+        "operationId" : "removeCoupon",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "couponCode",
+          "in" : "path",
+          "description" : "優惠券代碼",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/consumer/cart/{customerId}/clear" : {
+      "delete" : {
+        "tags" : [ "購物車管理" ],
+        "summary" : "清空購物車",
+        "description" : "清空購物車中的所有商品",
+        "operationId" : "clearCart",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "客戶ID",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "additionalProperties" : {
+                    "type" : "string"
+                  }
                 }
               }
             }
@@ -2374,6 +3400,15 @@
           }
         }
       },
+      "UpdateQuantityRequest" : {
+        "type" : "object",
+        "properties" : {
+          "quantity" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
       "CreatePricingRuleRequest" : {
         "required" : [ "currency", "effectiveFrom", "effectiveTo", "finalPrice", "pricingStrategy", "productCategory", "productId" ],
         "type" : "object",
@@ -2668,7 +3703,9 @@
             "example" : 2
           },
           "price" : {
-            "$ref" : "#/components/schemas/Money"
+            "type" : "number",
+            "description" : "商品單價",
+            "example" : 500.0
           }
         },
         "description" : "添加訂單項目請求",
@@ -2679,19 +3716,6 @@
           "quantity" : 2,
           "price" : "500.00 TWD"
         }
-      },
-      "Money" : {
-        "type" : "object",
-        "properties" : {
-          "amount" : {
-            "type" : "number"
-          },
-          "currency" : {
-            "type" : "string"
-          }
-        },
-        "description" : "商品單價，包含幣別資訊",
-        "example" : "500.00 TWD"
       },
       "AdjustInventoryRequest" : {
         "required" : [ "quantity", "reason", "type" ],
@@ -2786,6 +3810,229 @@
           }
         },
         "description" : "庫存資訊回應資料，包含產品的完整庫存狀態和相關資訊"
+      },
+      "ApplyPromotionRequest" : {
+        "type" : "object",
+        "properties" : {
+          "promotionId" : {
+            "type" : "string"
+          }
+        }
+      },
+      "AddItemRequest" : {
+        "type" : "object",
+        "properties" : {
+          "productId" : {
+            "type" : "string"
+          },
+          "quantity" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "unitPrice" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "ApplyCouponRequest" : {
+        "type" : "object",
+        "properties" : {
+          "couponCode" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SequenceTrackingStatisticsDto" : {
+        "type" : "object",
+        "properties" : {
+          "totalAggregates" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalRecords" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "validEvents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "duplicateEvents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "outOfOrderEvents" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "validRate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "duplicateRate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "outOfOrderRate" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "RetryStatisticsDto" : {
+        "type" : "object",
+        "properties" : {
+          "activeRetries" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "totalRetryAttempts" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "ProcessingStatisticsDto" : {
+        "type" : "object",
+        "properties" : {
+          "totalProcessed" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalSucceeded" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalFailed" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "totalTimedOut" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "activeProcessing" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "successRate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "failureRate" : {
+            "type" : "number",
+            "format" : "double"
+          },
+          "timeoutRate" : {
+            "type" : "number",
+            "format" : "double"
+          }
+        }
+      },
+      "BackpressureStatusDto" : {
+        "type" : "object",
+        "properties" : {
+          "level" : {
+            "type" : "string"
+          },
+          "currentConcurrentEvents" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "currentQueueSize" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "eventsInCurrentWindow" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "lastLevelChangeTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "SystemHealthStatusDto" : {
+        "type" : "object",
+        "properties" : {
+          "processingStats" : {
+            "$ref" : "#/components/schemas/ProcessingStatisticsDto"
+          },
+          "retryStats" : {
+            "$ref" : "#/components/schemas/RetryStatisticsDto"
+          },
+          "backpressureStatus" : {
+            "$ref" : "#/components/schemas/BackpressureStatusDto"
+          },
+          "sequenceStats" : {
+            "$ref" : "#/components/schemas/SequenceTrackingStatisticsDto"
+          },
+          "healthScore" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "healthy" : {
+            "type" : "boolean"
+          }
+        }
+      },
+      "CartItemDto" : {
+        "type" : "object",
+        "properties" : {
+          "productId" : {
+            "type" : "string"
+          },
+          "productName" : {
+            "type" : "string"
+          },
+          "quantity" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "unitPrice" : {
+            "type" : "number"
+          },
+          "totalPrice" : {
+            "type" : "number"
+          }
+        }
+      },
+      "ShoppingCartDto" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "customerId" : {
+            "type" : "string"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CartItemDto"
+            }
+          },
+          "totalAmount" : {
+            "type" : "number"
+          },
+          "discountAmount" : {
+            "type" : "number"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACTIVE", "ABANDONED", "CHECKED_OUT", "EXPIRED" ]
+          },
+          "createdAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updatedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
       }
     },
     "securitySchemes" : {

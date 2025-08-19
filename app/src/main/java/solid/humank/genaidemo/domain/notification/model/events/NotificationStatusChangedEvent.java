@@ -1,54 +1,56 @@
 package solid.humank.genaidemo.domain.notification.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationId;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationStatus;
 
-/** 通知狀態變更事件 */
-public class NotificationStatusChangedEvent extends AbstractDomainEvent {
+/**
+ * 通知狀態變更事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record NotificationStatusChangedEvent(
+        NotificationId notificationId,
+        String customerId,
+        NotificationStatus oldStatus,
+        NotificationStatus newStatus,
+        String reason,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final NotificationId notificationId;
-    private final String customerId;
-    private final NotificationStatus oldStatus;
-    private final NotificationStatus newStatus;
-    private final String reason;
-
-    public NotificationStatusChangedEvent(
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static NotificationStatusChangedEvent create(
             NotificationId notificationId,
             String customerId,
             NotificationStatus oldStatus,
             NotificationStatus newStatus,
             String reason) {
-        super("notification-service");
-        this.notificationId = notificationId;
-        this.customerId = customerId;
-        this.oldStatus = oldStatus;
-        this.newStatus = newStatus;
-        this.reason = reason;
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new NotificationStatusChangedEvent(notificationId, customerId, oldStatus, newStatus, reason,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public NotificationId getNotificationId() {
-        return notificationId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public NotificationStatus getOldStatus() {
-        return oldStatus;
-    }
-
-    public NotificationStatus getNewStatus() {
-        return newStatus;
-    }
-
-    public String getReason() {
-        return reason;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "NotificationStatusChangedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return notificationId.getId().toString();
     }
 }

@@ -3,7 +3,6 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import java.time.Period;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 超商優惠券規則 */
 @ValueObject
@@ -62,13 +61,13 @@ public final class ConvenienceStoreVoucherRule implements PromotionRule {
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
+    public boolean matches(CartSummary cartSummary) {
         // 超商優惠券通常沒有特殊條件，任何購物車都可以購買
         return true;
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
+    public Money calculateDiscount(CartSummary cartSummary) {
         // 超商優惠券的折扣是購買價格與原價的差額
         return regularPrice.subtract(price);
     }

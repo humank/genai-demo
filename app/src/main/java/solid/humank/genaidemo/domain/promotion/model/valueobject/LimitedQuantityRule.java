@@ -3,7 +3,6 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 限量特價規則 */
 @ValueObject
@@ -48,20 +47,21 @@ public final class LimitedQuantityRule implements PromotionRule {
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
+    public boolean matches(CartSummary cartSummary) {
         // 檢查購物車是否包含目標商品
-        return cart.getItems().stream().anyMatch(item -> item.productId().equals(productId));
+        return cartSummary.items().stream()
+                .anyMatch(item -> item.productId().equals(productId.getId()));
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
         // 計算限量特價的折扣
-        return cart.getItems().stream()
-                .filter(item -> item.productId().equals(productId))
+        return cartSummary.items().stream()
+                .filter(item -> item.productId().equals(productId.getId()))
                 .findFirst()
                 .map(
                         item -> {

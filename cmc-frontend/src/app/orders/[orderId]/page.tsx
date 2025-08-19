@@ -96,7 +96,7 @@ export default function OrderDetailPage() {
               <CardContent>
                 <div className="space-y-4">
                   {(order.items || []).map((item, index) => (
-                    <div key={item?.id || `item-${index}`} className="flex justify-between items-center p-4 bg-muted/30 rounded-lg">
+                    <div key={`item-${index}`} className="flex justify-between items-center p-4 bg-muted/30 rounded-lg">
                       <div className="flex-1">
                         <h4 className="font-medium text-foreground">
                           {item?.productName || 'N/A'}

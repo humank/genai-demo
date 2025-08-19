@@ -5,22 +5,21 @@ import java.util.Optional;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
+import solid.humank.genaidemo.domain.delivery.repository.DeliveryRepository;
 import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
-import solid.humank.genaidemo.infrastructure.persistence.adapter.DeliveryRepositoryAdapter;
 
 /** 配送服務適配器 用於適配新舊兩個配送服務 暫時禁用以解決啟動問題 */
 // @Service
 public class DeliveryServiceAdapter implements DeliveryService {
 
-    private final solid.humank.genaidemo.domain.workflow.service.DeliveryService
-            workflowDeliveryService;
-    private final DeliveryRepositoryAdapter deliveryRepositoryAdapter;
+    private final solid.humank.genaidemo.domain.delivery.service.DeliveryService deliveryService;
+    private final DeliveryRepository deliveryRepository;
 
     public DeliveryServiceAdapter(
-            solid.humank.genaidemo.domain.workflow.service.DeliveryService workflowDeliveryService,
-            DeliveryRepositoryAdapter deliveryRepositoryAdapter) {
-        this.workflowDeliveryService = workflowDeliveryService;
-        this.deliveryRepositoryAdapter = deliveryRepositoryAdapter;
+            solid.humank.genaidemo.domain.delivery.service.DeliveryService deliveryService,
+            DeliveryRepository deliveryRepository) {
+        this.deliveryService = deliveryService;
+        this.deliveryRepository = deliveryRepository;
     }
 
     @Override
@@ -28,13 +27,13 @@ public class DeliveryServiceAdapter implements DeliveryService {
         // 創建新的Delivery
         Delivery delivery = new Delivery(orderId, shippingAddress);
         // 保存到儲存庫
-        return deliveryRepositoryAdapter.save(delivery);
+        return deliveryRepository.save(delivery);
     }
 
     @Override
     public boolean arrangeDelivery(OrderId orderId) {
         // 使用舊的服務安排配送
-        return workflowDeliveryService.arrangeDelivery(orderId);
+        return deliveryService.arrangeDelivery(orderId);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             String deliveryPersonContact,
             LocalDateTime estimatedDeliveryTime) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -59,7 +58,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
                     deliveryPersonContact,
                     estimatedDeliveryTime);
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -69,7 +68,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean updateDeliveryAddress(DeliveryId deliveryId, String newAddress) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -79,7 +78,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.updateAddress(newAddress);
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -89,7 +88,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean markAsDelivered(DeliveryId deliveryId) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -99,7 +98,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.markAsDelivered();
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -109,7 +108,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean markAsFailed(DeliveryId deliveryId, String reason) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -119,9 +118,9 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.markAsFailed(reason);
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
-            // 使用舊的服務記錄失敗
-            workflowDeliveryService.recordDeliveryFailure(delivery.getOrderId(), reason);
+            deliveryRepository.save(delivery);
+            // 記錄失敗（簡化實作）
+            System.out.println("記錄配送失敗: " + delivery.getOrderId() + ", 原因: " + reason);
             return true;
         } catch (Exception e) {
             return false;
@@ -131,7 +130,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean markAsRefused(DeliveryId deliveryId, String reason) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -141,7 +140,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.markAsRefused(reason);
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -152,7 +151,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     public boolean markAsDelayed(
             DeliveryId deliveryId, String reason, LocalDateTime newEstimatedDeliveryTime) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -162,7 +161,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.markAsDelayed(reason, newEstimatedDeliveryTime);
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -172,7 +171,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean cancelDelivery(DeliveryId deliveryId) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -182,7 +181,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.cancel();
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
+            deliveryRepository.save(delivery);
             return true;
         } catch (Exception e) {
             return false;
@@ -192,7 +191,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public boolean scheduleRedelivery(DeliveryId deliveryId) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return false;
         }
@@ -202,9 +201,9 @@ public class DeliveryServiceAdapter implements DeliveryService {
             Delivery delivery = deliveryOpt.get();
             delivery.scheduleRedelivery();
             // 保存更新
-            deliveryRepositoryAdapter.save(delivery);
-            // 使用舊的服務安排重新配送
-            workflowDeliveryService.arrangeRedelivery(delivery.getOrderId());
+            deliveryRepository.save(delivery);
+            // 安排重新配送（簡化實作）
+            System.out.println("安排重新配送: " + delivery.getOrderId());
             return true;
         } catch (Exception e) {
             return false;
@@ -214,19 +213,19 @@ public class DeliveryServiceAdapter implements DeliveryService {
     @Override
     public Optional<Delivery> getDelivery(DeliveryId deliveryId) {
         // 獲取配送
-        return deliveryRepositoryAdapter.findById(deliveryId);
+        return deliveryRepository.findById(deliveryId);
     }
 
     @Override
     public Optional<Delivery> getDeliveryByOrderId(OrderId orderId) {
         // 根據訂單ID獲取配送
-        return deliveryRepositoryAdapter.findByOrderId(orderId);
+        return deliveryRepository.findByOrderId(orderId);
     }
 
     @Override
     public String getDeliveryTrackingLink(DeliveryId deliveryId) {
         // 獲取配送
-        Optional<Delivery> deliveryOpt = deliveryRepositoryAdapter.findById(deliveryId);
+        Optional<Delivery> deliveryOpt = deliveryRepository.findById(deliveryId);
         if (deliveryOpt.isEmpty()) {
             return null;
         }
@@ -238,7 +237,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             return null;
         }
 
-        // 使用舊的服務獲取追蹤鏈接
-        return workflowDeliveryService.getDeliveryTrackingLink(delivery.getOrderId());
+        // 生成追蹤鏈接（簡化實作）
+        return "https://tracking.example.com/" + trackingNumber;
     }
 }

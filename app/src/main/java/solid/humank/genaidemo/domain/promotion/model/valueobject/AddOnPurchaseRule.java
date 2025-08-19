@@ -3,7 +3,6 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 加價購規則 */
 @ValueObject
@@ -41,20 +40,21 @@ public final class AddOnPurchaseRule implements PromotionRule {
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
+    public boolean matches(CartSummary cartSummary) {
         // 檢查購物車是否包含主要商品
-        return cart.getItems().stream().anyMatch(item -> item.productId().equals(mainProductId));
+        return cartSummary.items().stream()
+                .anyMatch(item -> item.productId().equals(mainProductId.getId()));
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
         // 計算加價購商品的折扣
-        return cart.getItems().stream()
-                .filter(item -> item.productId().equals(addOnProductId))
+        return cartSummary.items().stream()
+                .filter(item -> item.productId().equals(addOnProductId.getId()))
                 .findFirst()
                 .map(item -> regularPrice.subtract(specialPrice).multiply(item.quantity()))
                 .orElse(Money.twd(0));

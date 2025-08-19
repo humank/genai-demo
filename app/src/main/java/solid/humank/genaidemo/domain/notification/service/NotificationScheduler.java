@@ -2,10 +2,12 @@ package solid.humank.genaidemo.domain.notification.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.repository.NotificationRepository;
 
 /** 通知排程器 負責處理通知的排程和重試 */
+@DomainService
 public class NotificationScheduler {
     private final NotificationRepository notificationRepository;
     private final NotificationSender notificationSender;

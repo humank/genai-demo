@@ -2,9 +2,9 @@ package solid.humank.genaidemo.application.order.port.outgoing;
 
 import java.util.List;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
 /** 訂單持久化端口 定義訂單持久化的操作接口 使用領域值對象保持領域模型的完整性 */
 public interface OrderPersistencePort {

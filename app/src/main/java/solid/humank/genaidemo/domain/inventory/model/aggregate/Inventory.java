@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
-import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
 import solid.humank.genaidemo.domain.inventory.model.events.InventoryCreatedEvent;
 import solid.humank.genaidemo.domain.inventory.model.events.StockAddedEvent;
 import solid.humank.genaidemo.domain.inventory.model.events.StockReservedEvent;
@@ -16,9 +16,9 @@ import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
 
 /** 庫存聚合根 管理產品庫存和預留 */
-@AggregateRoot(name = "Inventory", description = "庫存聚合根，管理產品庫存和預留")
+@AggregateRoot(name = "Inventory", description = "庫存聚合根，管理產品庫存和預留", boundedContext = "Inventory", version = "1.0")
 @AggregateLifecycle.ManagedLifecycle
-public class Inventory {
+public class Inventory extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private final InventoryId id;
     private final String productId;
     private final String productName;
@@ -34,9 +34,9 @@ public class Inventory {
     /**
      * 建立庫存
      *
-     * @param productId 產品ID
+     * @param productId   產品ID
      * @param productName 產品名稱
-     * @param quantity 初始庫存數量
+     * @param quantity    初始庫存數量
      */
     public Inventory(String productId, String productName, int quantity) {
         this(InventoryId.generate(), productId, productName, quantity);
@@ -45,10 +45,10 @@ public class Inventory {
     /**
      * 建立庫存
      *
-     * @param id 庫存ID
-     * @param productId 產品ID
+     * @param id          庫存ID
+     * @param productId   產品ID
      * @param productName 產品名稱
-     * @param quantity 初始庫存數量
+     * @param quantity    初始庫存數量
      */
     public Inventory(InventoryId id, String productId, String productName, int quantity) {
         if (quantity < 0) {
@@ -67,10 +67,9 @@ public class Inventory {
         this.updatedAt = this.createdAt;
         this.status = InventoryStatus.ACTIVE;
 
-        // 發布庫存創建事件
-        AggregateLifecycleAware.apply(
-                new InventoryCreatedEvent(
-                        this.id, this.productId, this.productName, this.totalQuantity));
+        // 收集領域事件
+        collectEvent(InventoryCreatedEvent.create(
+                this.id, this.productId, this.productName, this.totalQuantity));
     }
 
     /**
@@ -86,7 +85,7 @@ public class Inventory {
     /**
      * 預留庫存
      *
-     * @param orderId 訂單ID
+     * @param orderId  訂單ID
      * @param quantity 預留數量
      * @return 預留ID
      */
@@ -105,15 +104,14 @@ public class Inventory {
         reservedQuantity += quantity;
         updatedAt = LocalDateTime.now();
 
-        // 發布庫存預留事件
-        AggregateLifecycleAware.apply(
-                new StockReservedEvent(
-                        this.id,
-                        this.productId,
-                        reservationId,
-                        orderId,
-                        quantity,
-                        availableQuantity));
+        // 收集領域事件
+        collectEvent(StockReservedEvent.create(
+                this.id,
+                this.productId,
+                reservationId,
+                orderId,
+                quantity,
+                availableQuantity));
 
         return reservationId;
     }
@@ -160,9 +158,8 @@ public class Inventory {
         availableQuantity += quantity;
         updatedAt = LocalDateTime.now();
 
-        // 發布庫存增加事件
-        AggregateLifecycleAware.apply(
-                new StockAddedEvent(this.id, this.productId, quantity, totalQuantity));
+        // 收集領域事件
+        collectEvent(StockAddedEvent.create(this.id, this.productId, quantity, totalQuantity));
     }
 
     /**
@@ -251,8 +248,10 @@ public class Inventory {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Inventory inventory = (Inventory) o;
         return Objects.equals(id, inventory.id);
     }

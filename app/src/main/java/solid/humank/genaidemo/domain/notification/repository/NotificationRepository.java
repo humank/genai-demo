@@ -3,14 +3,16 @@ package solid.humank.genaidemo.domain.notification.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationId;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationStatus;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationType;
 
 /** 通知儲存庫接口 */
-public interface NotificationRepository extends Repository<Notification, NotificationId> {
+@solid.humank.genaidemo.domain.common.annotations.Repository(name = "NotificationRepository", description = "通知聚合根儲存庫")
+public interface NotificationRepository
+        extends solid.humank.genaidemo.domain.common.repository.BaseRepository<Notification, NotificationId> {
 
     /**
      * 保存通知

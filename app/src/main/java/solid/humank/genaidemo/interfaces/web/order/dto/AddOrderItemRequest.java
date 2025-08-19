@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
-import solid.humank.genaidemo.application.common.valueobject.Money;
 
 /** 添加訂單項請求 DTO */
 @Schema(
@@ -58,9 +57,9 @@ public record AddOrderItemRequest(
                 @NotNull(message = "數量不能為空")
                 @Min(value = 1, message = "數量必須大於0")
                 int quantity,
-        @Schema(description = "商品單價，包含幣別資訊", example = "500.00 TWD", required = true)
+        @Schema(description = "商品單價", example = "500.00", required = true)
                 @NotNull(message = "單價不能為空")
-                Money price) {
+                BigDecimal price) {
     public String getOrderId() {
         return orderId;
     }
@@ -77,17 +76,17 @@ public record AddOrderItemRequest(
         return quantity;
     }
 
-    public Money getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public Money unitPrice() {
+    public BigDecimal unitPrice() {
         return getPrice();
     }
 
     // 通過BigDecimal創建AddOrderItemRequest的工廠方法
     public static AddOrderItemRequest of(
             String orderId, String productId, String productName, int quantity, BigDecimal price) {
-        return new AddOrderItemRequest(orderId, productId, productName, quantity, Money.of(price));
+        return new AddOrderItemRequest(orderId, productId, productName, quantity, price);
     }
 }

@@ -9,8 +9,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
-import solid.humank.genaidemo.domain.workflow.model.aggregate.OrderWorkflow;
-import solid.humank.genaidemo.domain.workflow.model.valueobject.WorkflowStatus;
+import solid.humank.genaidemo.domain.order.model.aggregate.OrderWorkflow;
+import solid.humank.genaidemo.domain.order.model.valueobject.WorkflowStatus;
 
 /** 訂單工作流聚合根的 Cucumber 步驟定義 */
 public class OrderWorkflowStepDefinitions {
@@ -259,24 +259,10 @@ public class OrderWorkflowStepDefinitions {
     }
 
     @Then("the order system should release the reserved inventory")
-    public void theSystemShouldReleaseTheReservedInventory() {
+    public void theOrderSystemShouldReleaseTheReservedInventory() {
         // 這個步驟在實際應用中會釋放庫存
         // 在這個測試中，我們只需要確保訂單狀態為已取消
         assertEquals(WorkflowStatus.CANCELLED, orderWorkflow.getStatus());
-    }
-
-    @Then("the system should release the reserved inventory")
-    public void theSystemShouldReleaseTheReservedInventory2() {
-        // 這個步驟在實際應用中會釋放庫存
-        // 在這個測試中，我們不需要檢查 orderWorkflow 的狀態
-        // 因為這個步驟可能在 inventory 測試中被調用，此時 orderWorkflow 為 null
-        if (orderWorkflow != null) {
-            assertEquals(WorkflowStatus.CANCELLED, orderWorkflow.getStatus());
-        } else {
-            // 如果 orderWorkflow 為 null，則表示這個步驟是在 inventory 測試中被調用的
-            // 我們只需要確保這個步驟不會拋出異常
-            assertTrue(true);
-        }
     }
 
     @Then("the customer should receive an order cancellation confirmation notification")

@@ -14,8 +14,11 @@ public class InventoryConfig {
     /** 創建庫存應用服務 */
     @Bean
     public InventoryApplicationService inventoryApplicationService(
-            InventoryPersistencePort inventoryPersistencePort) {
-        return new InventoryApplicationService(inventoryPersistencePort);
+            InventoryPersistencePort inventoryPersistencePort,
+            solid.humank.genaidemo.application.common.service.DomainEventApplicationService
+                    domainEventApplicationService) {
+        return new InventoryApplicationService(
+                inventoryPersistencePort, domainEventApplicationService);
     }
 
     /** 創建外部倉庫適配器 */

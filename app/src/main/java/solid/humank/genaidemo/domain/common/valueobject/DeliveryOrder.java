@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.common.valueobject;
 
 import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
+import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
 /**
  * 物流訂單值對象 領域層定義的物流訂單，避免依賴基礎設施層

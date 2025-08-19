@@ -3,13 +3,15 @@ package solid.humank.genaidemo.domain.promotion.model.specification;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.specification.Specification;
+
+import solid.humank.genaidemo.domain.common.annotations.Specification;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
 
 /** 促銷上下文 包含評估促銷條件所需的所有信息 */
-public class PromotionContext implements Specification<Object> {
+@Specification(name = "PromotionContext", description = "促銷上下文，包含評估促銷條件所需的所有信息")
+public class PromotionContext implements solid.humank.genaidemo.domain.common.specification.Specification<Object> {
     private final Order order;
     private final Customer customer;
     private final LocalDateTime currentTime;

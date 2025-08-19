@@ -5,7 +5,7 @@ import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 
 /** 紅利點數服務 */
-@DomainService(description = "紅利點數服務，處理客戶點數的兌換和累積邏輯")
+@DomainService(name = "RewardPointsService", description = "紅利點數服務，處理客戶點數的兌換和累積邏輯", boundedContext = "Customer")
 public class RewardPointsService {
 
     private static final int POINTS_REDEMPTION_RATE = 10; // 10點 = $1

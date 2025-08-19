@@ -1,4 +1,3 @@
-# language: en
 # Original language: zh-TW
 Feature: Notification Service
   As an order system
@@ -13,15 +12,15 @@ Feature: Notification Service
 
   Scenario: Send order creation notification
     # 當客戶創建新訂單
-    # 並且訂單ID為 "ORD-20240510-001"
+    # 並且訂單ID為 UUID 格式
     # 那麼系統應該發送訂單創建通知
-    # 並且通知應該包含訂單ID "ORD-20240510-001"
+    # 並且通知應該包含訂單ID
     # 並且通知應該包含訂單創建時間
     # 並且通知應該發送到客戶的郵箱和手機
     When a customer creates a new order
-    And the order ID is "ORD-20240510-001"
+    And the order ID is "550e8400-e29b-41d4-a716-446655440001"
     Then the system should send an order creation notification
-    And the notification should include order ID "ORD-20240510-001"
+    And the notification should include order ID "550e8400-e29b-41d4-a716-446655440001"
     And the notification should include the order creation time
     And the notification should be sent to the customer's email and phone
 

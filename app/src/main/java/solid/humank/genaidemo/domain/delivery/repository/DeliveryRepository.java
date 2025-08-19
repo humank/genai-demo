@@ -3,14 +3,17 @@ package solid.humank.genaidemo.domain.delivery.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
+import solid.humank.genaidemo.domain.common.annotations.Repository;
+import solid.humank.genaidemo.domain.common.repository.BaseRepository;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 
 /** 配送儲存庫接口 */
-public interface DeliveryRepository extends Repository<Delivery, DeliveryId> {
+@Repository(name = "DeliveryRepository", description = "配送聚合根儲存庫")
+public interface DeliveryRepository extends BaseRepository<Delivery, DeliveryId> {
 
     /**
      * 保存配送

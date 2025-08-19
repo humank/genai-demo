@@ -5,7 +5,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import solid.humank.genaidemo.application.common.dto.PagedResult;
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.order.dto.AddOrderItemCommand;
 import solid.humank.genaidemo.application.order.dto.CreateOrderCommand;
 import solid.humank.genaidemo.application.order.dto.response.OrderItemResponse;
@@ -19,20 +21,24 @@ import solid.humank.genaidemo.domain.order.model.factory.OrderFactory;
 
 /** 訂單應用服務 實現訂單管理用例接口 */
 @Service
+@Transactional
 public class OrderApplicationService implements OrderManagementUseCase {
 
     private static final String ORDER_NOT_FOUND = "Order not found: ";
     private final OrderPersistencePort orderPersistencePort;
     private final PaymentServicePort paymentServicePort;
     private final OrderFactory orderFactory;
+    private final DomainEventApplicationService domainEventApplicationService;
 
     public OrderApplicationService(
             OrderPersistencePort orderPersistencePort,
             PaymentServicePort paymentServicePort,
-            OrderFactory orderFactory) {
+            OrderFactory orderFactory,
+            DomainEventApplicationService domainEventApplicationService) {
         this.orderPersistencePort = orderPersistencePort;
         this.paymentServicePort = paymentServicePort;
         this.orderFactory = orderFactory;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     @Override
@@ -47,6 +53,9 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
         // 保存訂單
         orderPersistencePort.save(order);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(order);
 
         // 返回響應
         return mapToOrderResponse(order);
@@ -69,6 +78,9 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 保存訂單
         orderPersistencePort.save(order);
 
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(order);
+
         // 返回響應
         return mapToOrderResponse(order);
     }
@@ -89,6 +101,9 @@ public class OrderApplicationService implements OrderManagementUseCase {
         // 保存訂單
         orderPersistencePort.save(order);
 
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(order);
+
         // 返回響應
         return mapToOrderResponse(order);
     }
@@ -108,6 +123,9 @@ public class OrderApplicationService implements OrderManagementUseCase {
 
         // 保存訂單
         orderPersistencePort.save(order);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(order);
 
         // 返回響應
         return mapToOrderResponse(order);

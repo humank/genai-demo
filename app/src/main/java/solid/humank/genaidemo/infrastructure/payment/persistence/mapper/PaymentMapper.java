@@ -4,16 +4,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Currency;
+
+import org.springframework.stereotype.Component;
+
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
+import solid.humank.genaidemo.infrastructure.common.persistence.mapper.DomainMapper;
 import solid.humank.genaidemo.infrastructure.payment.persistence.entity.JpaPaymentEntity;
 
 /** 支付映射器 負責在領域模型和持久化模型之間進行轉換 */
-public class PaymentMapper {
+@Component
+public class PaymentMapper implements DomainMapper<Payment, JpaPaymentEntity> {
 
     /**
      * 將領域模型轉換為持久化模型
@@ -21,7 +26,8 @@ public class PaymentMapper {
      * @param payment 支付領域模型
      * @return 支付持久化模型
      */
-    public static JpaPaymentEntity toJpaEntity(Payment payment) {
+    @Override
+    public JpaPaymentEntity toJpaEntity(Payment payment) {
         JpaPaymentEntity jpaEntity = new JpaPaymentEntity();
         jpaEntity.setId(payment.getId().toString());
         jpaEntity.setOrderId(payment.getOrderId().toString());
@@ -48,41 +54,39 @@ public class PaymentMapper {
      * @param jpaEntity 支付持久化模型
      * @return 支付領域模型
      */
-    public static Payment toDomainEntity(JpaPaymentEntity jpaEntity) {
+    @Override
+    public Payment toDomainModel(JpaPaymentEntity jpaEntity) {
         try {
             // 創建必要的值對象
             PaymentId paymentId = PaymentId.fromString(jpaEntity.getId());
             OrderId orderId = OrderId.fromString(jpaEntity.getOrderId());
-            Money amount =
-                    Money.of(jpaEntity.getAmount(), Currency.getInstance(jpaEntity.getCurrency()));
+            Money amount = Money.of(jpaEntity.getAmount(), Currency.getInstance(jpaEntity.getCurrency()));
 
             // 使用反射創建Payment實例
-            Constructor<Payment> constructor =
-                    Payment.class.getDeclaredConstructor(
-                            PaymentId.class,
-                            OrderId.class,
-                            Money.class,
-                            PaymentStatus.class,
-                            PaymentMethod.class,
-                            String.class,
-                            String.class,
-                            LocalDateTime.class,
-                            LocalDateTime.class,
-                            boolean.class);
+            Constructor<Payment> constructor = Payment.class.getDeclaredConstructor(
+                    PaymentId.class,
+                    OrderId.class,
+                    Money.class,
+                    PaymentStatus.class,
+                    PaymentMethod.class,
+                    String.class,
+                    String.class,
+                    LocalDateTime.class,
+                    LocalDateTime.class,
+                    boolean.class);
             constructor.setAccessible(true);
 
-            Payment payment =
-                    constructor.newInstance(
-                            paymentId,
-                            orderId,
-                            amount,
-                            jpaEntity.getStatus(),
-                            jpaEntity.getPaymentMethod(),
-                            jpaEntity.getTransactionId(),
-                            jpaEntity.getFailureReason(),
-                            jpaEntity.getCreatedAt(),
-                            jpaEntity.getUpdatedAt(),
-                            jpaEntity.isCanRetry());
+            Payment payment = constructor.newInstance(
+                    paymentId,
+                    orderId,
+                    amount,
+                    jpaEntity.getStatus(),
+                    jpaEntity.getPaymentMethod(),
+                    jpaEntity.getTransactionId(),
+                    jpaEntity.getFailureReason(),
+                    jpaEntity.getCreatedAt(),
+                    jpaEntity.getUpdatedAt(),
+                    jpaEntity.isCanRetry());
 
             return payment;
         } catch (Exception e) {
@@ -92,11 +96,10 @@ public class PaymentMapper {
     }
 
     /** 備用方法：當反射方法失敗時使用 */
-    private static Payment createPaymentAlternative(JpaPaymentEntity jpaEntity) {
+    private Payment createPaymentAlternative(JpaPaymentEntity jpaEntity) {
         // 創建支付聚合根
         OrderId orderId = OrderId.fromString(jpaEntity.getOrderId());
-        Money amount =
-                Money.of(jpaEntity.getAmount(), Currency.getInstance(jpaEntity.getCurrency()));
+        Money amount = Money.of(jpaEntity.getAmount(), Currency.getInstance(jpaEntity.getCurrency()));
 
         // 創建基本的Payment對象
         Payment payment = new Payment(orderId, amount);
@@ -145,4 +148,5 @@ public class PaymentMapper {
 
         return payment;
     }
+
 }

@@ -3,6 +3,7 @@ package solid.humank.genaidemo.domain.payment.model.aggregate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
@@ -16,9 +17,9 @@ import solid.humank.genaidemo.domain.payment.model.events.PaymentFailedEvent;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /** 支付聚合根 */
-@AggregateRoot
+@AggregateRoot(name = "Payment", description = "支付聚合根，管理支付流程和狀態", boundedContext = "Payment", version = "1.0")
 @AggregateLifecycle.ManagedLifecycle
-public class Payment {
+public class Payment extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private final PaymentId id;
     private final OrderId orderId;
     private final Money amount;
@@ -59,9 +60,9 @@ public class Payment {
 
         // 發布支付創建事件，處理paymentMethod可能為null的情況
         AggregateLifecycleAware.apply(
-                new PaymentCreatedEvent(
+                PaymentCreatedEvent.create(
                         this.id, this.orderId, this.amount, null // paymentMethod可能為null
-                        ));
+                ));
     }
 
     /** 建立支付（使用OrderId值對象和指定支付方式） */
@@ -106,7 +107,7 @@ public class Payment {
 
         // 發布支付完成事件
         AggregateLifecycleAware.apply(
-                new PaymentCompletedEvent(this.id, this.orderId, this.amount, this.transactionId));
+                PaymentCompletedEvent.create(this.id, this.orderId, this.amount, this.transactionId));
     }
 
     /** 失敗支付 */
@@ -121,7 +122,7 @@ public class Payment {
 
         // 發布支付失敗事件
         AggregateLifecycleAware.apply(
-                new PaymentFailedEvent(
+                PaymentFailedEvent.create(
                         this.id, this.orderId, this.amount, this.failureReason, this.canRetry));
     }
 

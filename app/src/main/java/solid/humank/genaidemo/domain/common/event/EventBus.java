@@ -14,8 +14,8 @@ public interface EventBus {
      * 訂閱事件
      *
      * @param eventType 事件類型
-     * @param handler 事件處理器
-     * @param <T> 事件類型
+     * @param handler   事件處理器
+     * @param <T>       事件類型
      */
     <T> void subscribe(Class<T> eventType, EventHandler<T> handler);
 
@@ -23,8 +23,8 @@ public interface EventBus {
      * 取消訂閱事件
      *
      * @param eventType 事件類型
-     * @param handler 事件處理器
-     * @param <T> 事件類型
+     * @param handler   事件處理器
+     * @param <T>       事件類型
      */
     <T> void unsubscribe(Class<T> eventType, EventHandler<T> handler);
 }

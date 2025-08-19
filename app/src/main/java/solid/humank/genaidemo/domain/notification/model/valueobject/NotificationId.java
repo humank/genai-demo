@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.notification.model.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 通知ID值對象 */
@@ -43,6 +44,16 @@ public class NotificationId {
     }
 
     /**
+     * 從字符串創建通知ID
+     *
+     * @param id 字符串ID
+     * @return 通知ID
+     */
+    public static NotificationId of(String id) {
+        return new NotificationId(UUID.fromString(id));
+    }
+
+    /**
      * 獲取UUID
      *
      * @return UUID
@@ -51,10 +62,21 @@ public class NotificationId {
         return id;
     }
 
+    /**
+     * 獲取ID值
+     *
+     * @return ID值
+     */
+    public String getValue() {
+        return id.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         NotificationId that = (NotificationId) o;
         return Objects.equals(id, that.id);
     }

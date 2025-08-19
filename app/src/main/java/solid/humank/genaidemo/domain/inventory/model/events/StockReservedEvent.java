@@ -1,62 +1,58 @@
 package solid.humank.genaidemo.domain.inventory.model.events;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
 
-/** 庫存預留事件 */
-public class StockReservedEvent extends AbstractDomainEvent {
+/**
+ * 庫存預留事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record StockReservedEvent(
+        InventoryId inventoryId,
+        String productId,
+        ReservationId reservationId,
+        UUID orderId,
+        int quantity,
+        int remainingQuantity,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final InventoryId inventoryId;
-    private final String productId;
-    private final ReservationId reservationId;
-    private final UUID orderId;
-    private final int quantity;
-    private final int remainingQuantity;
-
-    public StockReservedEvent(
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static StockReservedEvent create(
             InventoryId inventoryId,
             String productId,
             ReservationId reservationId,
             UUID orderId,
             int quantity,
             int remainingQuantity) {
-        super("inventory-service");
-        this.inventoryId = inventoryId;
-        this.productId = productId;
-        this.reservationId = reservationId;
-        this.orderId = orderId;
-        this.quantity = quantity;
-        this.remainingQuantity = remainingQuantity;
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new StockReservedEvent(inventoryId, productId, reservationId, orderId, quantity, remainingQuantity,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public InventoryId getInventoryId() {
-        return inventoryId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getProductId() {
-        return productId;
-    }
-
-    public ReservationId getReservationId() {
-        return reservationId;
-    }
-
-    public UUID getOrderId() {
-        return orderId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public int getRemainingQuantity() {
-        return remainingQuantity;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "StockReservedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return inventoryId.getId().toString();
     }
 }

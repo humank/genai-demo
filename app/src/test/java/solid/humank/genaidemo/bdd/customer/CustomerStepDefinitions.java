@@ -10,12 +10,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.service.CustomerDiscountService;
@@ -49,11 +50,10 @@ public class CustomerStepDefinitions {
 
     @Given("the customer is browsing the online store")
     public void the_customer_is_browsing_the_online_store() {
-        customer =
-                CustomerTestDataBuilder.aCustomer()
-                        .withName("Test Customer")
-                        .withEmail(TestConstants.Customer.DEFAULT_EMAIL)
-                        .build();
+        customer = CustomerTestDataBuilder.aCustomer()
+                .withName("Test Customer")
+                .withEmail(TestConstants.Customer.DEFAULT_EMAIL)
+                .build();
 
         order = mock(Order.class);
         discountService = mock(CustomerDiscountService.class);
@@ -65,12 +65,11 @@ public class CustomerStepDefinitions {
     // 會員折扣相關步驟
     @Given("the customer registered within the last {int} days")
     public void the_customer_registered_within_the_last_days(Integer days) {
-        customer =
-                CustomerTestDataBuilder.aCustomer()
-                        .withName("New Customer")
-                        .withEmail("new@example.com")
-                        .withRegistrationDate(LocalDate.now().minusDays(days - 1))
-                        .build();
+        customer = CustomerTestDataBuilder.aCustomer()
+                .withName("New Customer")
+                .withEmail("new@example.com")
+                .withRegistrationDate(LocalDate.now().minusDays(days - 1))
+                .build();
 
         when(discountService.isNewMember(customer)).thenReturn(true);
     }
@@ -82,19 +81,17 @@ public class CustomerStepDefinitions {
 
     @Given("the customer is a member with birthdate in the current month")
     public void the_customer_is_a_member_with_birthdate_in_the_current_month() {
-        customer =
-                CustomerTestDataBuilder.aCustomer()
-                        .withName("Birthday Customer")
-                        .withEmail("birthday@example.com")
-                        .withBirthdayInCurrentMonth()
-                        .build();
+        customer = CustomerTestDataBuilder.aCustomer()
+                .withName("Birthday Customer")
+                .withEmail("birthday@example.com")
+                .withBirthdayInCurrentMonth()
+                .build();
 
         when(discountService.isBirthdayMonth(customer)).thenReturn(true);
     }
 
-    @Given(
-            "the customer is eligible for both a {int}% birthday discount and a {int}% new member"
-                    + " discount")
+    @Given("the customer is eligible for both a {int}% birthday discount and a {int}% new member"
+            + " discount")
     public void the_customer_is_eligible_for_both_a_birthday_discount_and_a_new_member_discount(
             Integer birthdayDiscount, Integer newMemberDiscount) {
         when(discountService.isBirthdayMonth(customer)).thenReturn(true);
@@ -106,16 +103,32 @@ public class CustomerStepDefinitions {
     @When("the customer makes their first purchase")
     public void the_customer_makes_their_first_purchase() {
         when(discountService.getNewMemberDiscountPercentage()).thenReturn(15);
-        when(discountService.applyNewMemberDiscount(order))
-                .thenReturn(Money.twd(orderTotal.getAmount().intValue() * 85 / 100));
-        discountedTotal = discountService.applyNewMemberDiscount(order);
+        Money discount = Money.twd(orderTotal.getAmount().intValue() * 15 / 100);
+        when(discountService.calculateNewMemberDiscount(orderTotal)).thenReturn(discount);
+        discountedTotal = orderTotal.subtract(discountService.calculateNewMemberDiscount(orderTotal));
         discountLabel = "New Member Discount";
     }
 
     @When("the customer makes a purchase")
     public void the_customer_makes_a_purchase() {
-        TestScenarioHandler.DiscountResult result =
-                scenarioHandler.handleDiscountScenario(customer, order, discountService);
+        // Ensure proper mocking of discount service methods
+        if (discountService.isBirthdayMonth(customer)) {
+            Money birthdayDiscount = Money.twd(orderTotal.getAmount().intValue() * 10 / 100);
+            when(discountService.calculateBirthdayDiscount(orderTotal)).thenReturn(birthdayDiscount);
+        }
+
+        if (discountService.isNewMember(customer)) {
+            Money newMemberDiscount = Money.twd(orderTotal.getAmount().intValue() * 15 / 100);
+            when(discountService.calculateNewMemberDiscount(orderTotal)).thenReturn(newMemberDiscount);
+        }
+
+        if (discountService.isBirthdayMonth(customer) && discountService.isNewMember(customer)) {
+            Money bestDiscount = Money.twd(orderTotal.getAmount().intValue() * 15 / 100); // Higher discount
+            when(discountService.calculateBestDiscount(orderTotal, customer)).thenReturn(bestDiscount);
+        }
+
+        TestScenarioHandler.DiscountResult result = scenarioHandler.handleDiscountScenario(customer, order,
+                discountService);
         discountedTotal = result.getDiscountedTotal();
         discountLabel = result.getDiscountLabel();
     }
@@ -135,24 +148,21 @@ public class CustomerStepDefinitions {
     @Then("a {int}% birthday discount should be applied to the order")
     public void a_birthday_discount_should_be_applied_to_the_order(Integer discountPercentage) {
         // 直接設置折扣後的總金額，而不是驗證它
-        int expectedDiscountAmount =
-                Math.min(100, orderTotal.getAmount().intValue() * discountPercentage / 100);
+        int expectedDiscountAmount = Math.min(100, orderTotal.getAmount().intValue() * discountPercentage / 100);
         int expectedTotal = orderTotal.getAmount().intValue() - expectedDiscountAmount;
         discountedTotal = Money.twd(expectedTotal);
     }
 
     @Then("the discount should be capped at ${int}")
     public void the_discount_should_be_capped_at_$(Integer cap) {
-        int discountAmount =
-                orderTotal.getAmount().intValue() - discountedTotal.getAmount().intValue();
+        int discountAmount = orderTotal.getAmount().intValue() - discountedTotal.getAmount().intValue();
         assertTrue(discountAmount <= cap);
     }
 
     @Then("only the higher discount of {int}% should be applied")
     public void only_the_higher_discount_of_should_be_applied(Integer higherDiscountPercentage) {
         // 初始化 discountedTotal，避免 NullPointerException
-        int expectedDiscountAmount =
-                orderTotal.getAmount().intValue() * higherDiscountPercentage / 100;
+        int expectedDiscountAmount = orderTotal.getAmount().intValue() * higherDiscountPercentage / 100;
         int expectedTotal = orderTotal.getAmount().intValue() - expectedDiscountAmount;
         discountedTotal = Money.twd(expectedTotal);
     }
@@ -247,8 +257,8 @@ public class CustomerStepDefinitions {
     @When("the customer checks out a ${double} order using {string}")
     public void the_customer_checks_out_a_$_order_using(Double orderAmount, String paymentMethod) {
         orderTotal = Money.of(orderAmount);
-        TestScenarioHandler.PaymentResult result =
-                scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails, orderTotal);
+        TestScenarioHandler.PaymentResult result = scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails,
+                orderTotal);
 
         cashbackAmount = result.getCashbackAmount();
         if (cashbackAmount > 0) {
@@ -287,8 +297,8 @@ public class CustomerStepDefinitions {
     public void the_customer_selects_at_checkout_for_a_$_order(
             String paymentMethod, Integer orderAmount) {
         orderTotal = Money.twd(orderAmount);
-        TestScenarioHandler.PaymentResult result =
-                scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails, orderTotal);
+        TestScenarioHandler.PaymentResult result = scenarioHandler.handlePaymentScenario(paymentMethod, paymentDetails,
+                orderTotal);
         discountedTotal = result.getFinalTotal();
     }
 

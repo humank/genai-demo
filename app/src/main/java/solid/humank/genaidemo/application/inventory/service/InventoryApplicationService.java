@@ -3,6 +3,7 @@ package solid.humank.genaidemo.application.inventory.service;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.inventory.dto.command.AdjustInventoryCommand;
 import solid.humank.genaidemo.application.inventory.dto.response.InventoryResponse;
 import solid.humank.genaidemo.application.inventory.port.incoming.InventoryManagementUseCase;
@@ -15,9 +16,13 @@ import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 public class InventoryApplicationService implements InventoryManagementUseCase {
 
     private final InventoryPersistencePort inventoryPersistencePort;
+    private final DomainEventApplicationService domainEventApplicationService;
 
-    public InventoryApplicationService(InventoryPersistencePort inventoryPersistencePort) {
+    public InventoryApplicationService(
+            InventoryPersistencePort inventoryPersistencePort,
+            DomainEventApplicationService domainEventApplicationService) {
         this.inventoryPersistencePort = inventoryPersistencePort;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     @Override
@@ -49,6 +54,10 @@ public class InventoryApplicationService implements InventoryManagementUseCase {
         }
 
         Inventory savedInventory = inventoryPersistencePort.save(inventory);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedInventory);
+
         return toResponse(savedInventory);
     }
 

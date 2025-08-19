@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    # 使用隨機資料庫名稱以確保測試隔離
+    url: jdbc:h2:mem:testdb-${random.uuid};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    # 禁用二級快取以避免測試間的資料污染
+    properties:
+      hibernate:
+        cache:
+          '[use_second_level_cache]': false
+          '[use_query_cache]': false
+  flyway:
+    enabled: false
+  aop:
+    auto: false
+  main:
+    lazy-initialization: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+
+logging:
+  level:
+    '[org.springframework]': WARN
+    '[org.hibernate]': WARN
+    '[org.flywaydb]': WARN
+    '[solid.humank.genaidemo]': INFO
+    '[org.aspectj]': OFF
+    # 測試隔離相關日誌
+    '[solid.humank.genaidemo.testutils]': DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+  metrics:
+    enable:
+      all: false

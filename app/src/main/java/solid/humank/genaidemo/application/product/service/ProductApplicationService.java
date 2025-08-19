@@ -3,6 +3,8 @@ package solid.humank.genaidemo.application.product.service;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.product.PriceDto;
 import solid.humank.genaidemo.application.product.ProductDto;
 import solid.humank.genaidemo.application.product.ProductPageDto;
@@ -12,14 +14,19 @@ import solid.humank.genaidemo.domain.product.repository.ProductRepository;
 
 /** 產品應用服務 */
 @Service
+@Transactional
 public class ProductApplicationService
         implements solid.humank.genaidemo.application.product.port.incoming
                 .ProductManagementUseCase {
 
     private final ProductRepository productRepository;
+    private final DomainEventApplicationService domainEventApplicationService;
 
-    public ProductApplicationService(ProductRepository productRepository) {
+    public ProductApplicationService(
+            ProductRepository productRepository,
+            DomainEventApplicationService domainEventApplicationService) {
         this.productRepository = productRepository;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     /** 獲取產品詳情 */
@@ -81,6 +88,10 @@ public class ProductApplicationService
                         );
 
         Product savedProduct = productRepository.save(updatedProduct);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedProduct);
+
         return toDto(savedProduct);
     }
 

@@ -1,90 +1,32 @@
-# language: zh-TW
-功能: 消費者購物流程
-  作為一個消費者
-  我希望能夠完成完整的購物流程
-  以便購買我需要的商品
-
-  背景:
-    假設系統中存在以下商品:
-      | 商品ID   | 商品名稱           | 價格  | 庫存 |
-      | PROD-001 | iPhone 15 Pro Max  | 35900 |   50 |
-      | PROD-002 | Samsung Galaxy S24 | 28900 |   40 |
-      | PROD-005 | AirPods Pro 第三代 |  8990 |  100 |
-    並且系統中存在客戶 "張小明" ID為 "660e8400-e29b-41d4-a716-446655440001"
-    並且客戶 "張小明" 的會員等級為 "STANDARD"
-    並且客戶 "張小明" 的獎勵積點為 1500
-
-  場景: 完整的購物流程
-    假設我是客戶 "張小明"
-    當我瀏覽商品目錄
-    那麼我應該看到可用的商品列表
-    當我搜尋 "iPhone"
-    那麼我應該看到包含 "iPhone 15 Pro Max" 的搜尋結果
-    當我查看商品 "PROD-001" 的詳情
-    那麼我應該看到商品名稱為 "iPhone 15 Pro Max"
-    並且我應該看到價格為 35900 元
-    當我將 1 個 "PROD-001" 添加到購物車
-    那麼我的購物車應該包含 1 個商品
-    並且購物車總金額應該為 35900 元
-    當我將 1 個 "PROD-005" 添加到購物車
-    那麼我的購物車應該包含 2 個商品
-    並且購物車總金額應該為 44890 元
-    當我查看購物車
-    那麼我應該看到以下商品:
-      | 商品ID   | 數量 | 單價  | 小計  |
-      | PROD-001 |    1 | 35900 | 35900 |
-      | PROD-005 |    1 |  8990 |  8990 |
-    當我進行結帳計算
-    那麼我應該看到小計為 44890 元
-    並且我應該看到總計為 44890 元
-
-  場景: 使用會員折扣的購物流程
-    假設我是VIP會員 "陳美麗" ID為 "660e8400-e29b-41d4-a716-446655440004"
-    並且客戶 "陳美麗" 的會員等級為 "VIP"
-    並且存在VIP會員專享促銷活動 "promo-002"
-    當我將 1 個 "PROD-001" 添加到購物車
-    並且我將 1 個 "PROD-002" 添加到購物車
-    那麼我的購物車總金額應該為 64800 元
-    當我查看可用的促銷活動
-    那麼我應該看到 "VIP會員專享" 促銷活動
-    當我應用促銷活動 "promo-002"
-    那麼我應該獲得折扣
-    並且我的最終金額應該少於原始金額
-
-  場景: 使用優惠券的購物流程
-    假設我是客戶 "張小明"
-    並且存在優惠券 "NEWYEAR2024" 可提供10%折扣
-    當我將 1 個 "PROD-001" 添加到購物車
-    那麼我的購物車總金額應該為 35900 元
-    當我應用優惠券 "NEWYEAR2024"
-    那麼我應該獲得 3590 元的折扣
-    並且我的最終金額應該為 32310 元
-
-  場景: 購物車商品數量管理
-    假設我是客戶 "張小明"
-    當我將 2 個 "PROD-005" 添加到購物車
-    那麼我的購物車應該包含 1 種商品
-    並且商品 "PROD-005" 的數量應該為 2
-    當我將商品 "PROD-005" 的數量更新為 5
-    那麼商品 "PROD-005" 的數量應該為 5
-    並且購物車總金額應該為 44950 元
-    當我從購物車移除商品 "PROD-005"
-    那麼我的購物車應該為空
-    並且購物車總金額應該為 0 元
-
-  場景: 庫存不足的處理
-    假設我是客戶 "張小明"
-    並且商品 "PROD-001" 的庫存只有 1 個
-    當我嘗試將 5 個 "PROD-001" 添加到購物車
-    那麼我應該收到庫存不足的錯誤訊息
-    並且我的購物車應該為空
-
-  場景: 清空購物車
-    假設我是客戶 "張小明"
-    並且我的購物車中有以下商品:
-      | 商品ID   | 數量 |
-      | PROD-001 |    1 |
-      | PROD-005 |    2 |
-    當我清空購物車
-    那麼我的購物車應該為空
-    並且購物車總金額應該為 0 元
+# Feature: Consumer Shopping Journey
+#   As a consumer
+#   I want to complete the full shopping process
+#   So that I can purchase the products I need
+  # Background:
+  #   Given the following products exist in the system:
+  #     | Product ID | Product Name        | Price | Stock |
+  #     | PROD-001   | iPhone 15 Pro Max   | 35900 |    50 |
+  #     | PROD-002   | Samsung Galaxy S24  | 28900 |    40 |
+  #     | PROD-005   | AirPods Pro 3rd Gen |  8990 |   100 |
+  #   And customer "John Doe" exists with ID "660e8400-e29b-41d4-a716-446655440001"
+  #   And customer "John Doe" has membership level "STANDARD"
+  #   And customer "John Doe" has reward points 1500
+  # Scenario: Complete shopping flow
+  #   Given I am customer "John Doe"
+  #   When I browse the product catalog
+  #   Then I should see the available product list
+  #   When I search for "iPhone"
+  #   Then I should see search results containing "iPhone 15 Pro Max"
+  #   When I view product "PROD-001" details
+  #   Then I should see product name as "iPhone 15 Pro Max"
+  #   And I should see price as 35900
+  #   When I add 1 "PROD-001" to cart
+  #   Then my cart should contain 1 item
+  #   And cart total should be 35900
+  #   When I add 1 "PROD-005" to cart
+  #   Then my cart should contain 2 items
+  #   When I view cart
+  #   Then I should see the following items:
+  #     | Product ID | Quantity | Unit Price | Subtotal |
+  #     | PROD-001   |        1 |      35900 |    35900 |
+  #     | PROD-005   |        1 |       8990 |     8990 |

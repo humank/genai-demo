@@ -4,22 +4,31 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.stereotype.Component;
+
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
-import solid.humank.genaidemo.utils.SpringContextHolder;
 
 /**
  * 聚合生命週期感知接口 為領域實體提供生命週期管理功能
  *
- * <p>注意：這個類提供了靜態方法作為便利方法，但內部使用 SpringContextHolder 獲取實例 這樣設計是為了讓領域實體可以方便地使用生命週期管理功能，而不需要注入
- * AggregateLifecycle
+ * <p>
+ * 注意：這個類提供了靜態方法作為便利方法，通過靜態實例提供服務
+ * 這樣設計是為了讓領域實體可以方便地使用生命週期管理功能，而不需要注入 AggregateLifecycle
  */
-@Component
 public class AggregateLifecycleAware {
     private static final Logger LOGGER = Logger.getLogger(AggregateLifecycleAware.class.getName());
 
+    private static AggregateLifecycle lifecycleInstance;
+
     private AggregateLifecycleAware() {
         // 私有構造函數，防止實例化
+    }
+
+    /**
+     * 設置AggregateLifecycle實例
+     * 這個方法應該在應用啟動時由基礎設施層調用
+     */
+    public static void setLifecycleInstance(AggregateLifecycle lifecycle) {
+        lifecycleInstance = lifecycle;
     }
 
     /**
@@ -27,7 +36,7 @@ public class AggregateLifecycleAware {
      *
      * @param event 要應用的領域事件
      * @throws IllegalArgumentException 如果事件為 null
-     * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
+     * @throws IllegalStateException    如果 AggregateLifecycle 未初始化
      */
     public static void apply(DomainEvent event) {
         Objects.requireNonNull(event, "Event cannot be null");
@@ -39,17 +48,7 @@ public class AggregateLifecycleAware {
                             event.getClass().getSimpleName()));
         }
 
-        try {
-            getLifecycle().apply(event);
-        } catch (IllegalStateException e) {
-            // 如果無法獲取AggregateLifecycle實例，則使用DomainEventPublisherService發布事件
-            LOGGER.warning(
-                    "AggregateLifecycle not available, falling back to DomainEventPublisherService:"
-                            + " "
-                            + e.getMessage());
-            solid.humank.genaidemo.domain.common.service.DomainEventPublisherService.publishEvent(
-                    event);
-        }
+        getLifecycle().apply(event);
     }
 
     /**
@@ -92,26 +91,17 @@ public class AggregateLifecycleAware {
     }
 
     /**
-     * 獲取 AggregateLifecycle 實例 直接從 Spring 上下文獲取實例
+     * 獲取 AggregateLifecycle 實例
      *
      * @return AggregateLifecycle 實例
      * @throws IllegalStateException 如果 AggregateLifecycle 未初始化
      */
     private static AggregateLifecycle getLifecycle() {
-        try {
-            AggregateLifecycle lifecycle = SpringContextHolder.getBean(AggregateLifecycle.class);
-
-            if (lifecycle == null) {
-                LOGGER.severe("AggregateLifecycle bean is null");
-                throw new IllegalStateException("AggregateLifecycle not initialized");
-            }
-
-            return lifecycle;
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to get AggregateLifecycle bean: {0}", e.getMessage());
-            throw new IllegalStateException(
-                    "AggregateLifecycle not initialized: " + e.getMessage(), e);
+        if (lifecycleInstance == null) {
+            LOGGER.severe("AggregateLifecycle instance is null");
+            throw new IllegalStateException("AggregateLifecycle not initialized");
         }
+        return lifecycleInstance;
     }
 
     /**

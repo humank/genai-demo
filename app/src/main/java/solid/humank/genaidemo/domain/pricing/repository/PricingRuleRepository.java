@@ -3,7 +3,7 @@ package solid.humank.genaidemo.domain.pricing.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
 import solid.humank.genaidemo.domain.pricing.model.aggregate.PricingRule;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.PriceId;
 import solid.humank.genaidemo.domain.pricing.model.valueobject.ProductCategory;
@@ -11,7 +11,9 @@ import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 
 /** 定價規則倉儲接口 負責PricingRule聚合的持久化操作 */
-public interface PricingRuleRepository extends Repository<PricingRule, PriceId> {
+@solid.humank.genaidemo.domain.common.annotations.Repository(name = "PricingRuleRepository", description = "定價規則聚合根儲存庫")
+public interface PricingRuleRepository
+        extends solid.humank.genaidemo.domain.common.repository.BaseRepository<PricingRule, PriceId> {
     @Override
     Optional<PricingRule> findById(PriceId priceId);
 
@@ -32,6 +34,4 @@ public interface PricingRuleRepository extends Repository<PricingRule, PriceId> 
 
     @Override
     PricingRule save(PricingRule pricingRule);
-
-    void delete(PriceId priceId);
 }

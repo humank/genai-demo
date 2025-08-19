@@ -3,13 +3,16 @@ package solid.humank.genaidemo.domain.inventory.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
+import solid.humank.genaidemo.domain.common.annotations.Repository;
+import solid.humank.genaidemo.domain.common.repository.BaseRepository;
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryId;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
 
 /** 庫存儲存庫接口 定義在領域層，由基礎設施層實現 專門處理 Inventory 聚合根 */
-public interface InventoryRepository extends Repository<Inventory, InventoryId> {
+@Repository(name = "InventoryRepository", description = "庫存聚合根儲存庫")
+public interface InventoryRepository extends BaseRepository<Inventory, InventoryId> {
     /** 根據產品ID查詢庫存聚合根 */
     Optional<Inventory> findByProductId(String productId);
 

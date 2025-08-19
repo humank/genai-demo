@@ -3,13 +3,16 @@ package solid.humank.genaidemo.domain.promotion.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
+import solid.humank.genaidemo.domain.common.annotations.Repository;
+import solid.humank.genaidemo.domain.common.repository.BaseRepository;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionType;
 
 /** 促銷倉儲接口 */
-public interface PromotionRepository extends Repository<Promotion, PromotionId> {
+@Repository(name = "PromotionRepository", description = "促銷聚合根儲存庫")
+public interface PromotionRepository extends BaseRepository<Promotion, PromotionId> {
 
     /**
      * 根據ID查找促銷

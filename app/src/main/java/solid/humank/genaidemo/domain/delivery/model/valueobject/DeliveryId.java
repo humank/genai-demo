@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.delivery.model.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 配送ID值對象 */
@@ -43,6 +44,16 @@ public class DeliveryId {
     }
 
     /**
+     * 從字符串創建配送ID
+     *
+     * @param id 字符串ID
+     * @return 配送ID
+     */
+    public static DeliveryId of(String id) {
+        return new DeliveryId(UUID.fromString(id));
+    }
+
+    /**
      * 獲取UUID
      *
      * @return UUID
@@ -51,10 +62,21 @@ public class DeliveryId {
         return id;
     }
 
+    /**
+     * 獲取ID值
+     *
+     * @return ID值
+     */
+    public String getValue() {
+        return id.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         DeliveryId that = (DeliveryId) o;
         return Objects.equals(id, that.id);
     }

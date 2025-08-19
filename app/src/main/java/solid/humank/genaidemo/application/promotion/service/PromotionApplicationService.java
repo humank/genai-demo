@@ -6,14 +6,19 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.promotion.dto.FlashSaleDto;
 import solid.humank.genaidemo.application.promotion.dto.PromotionDto;
+import solid.humank.genaidemo.domain.common.valueobject.Money;
+import solid.humank.genaidemo.domain.promotion.exception.PromotionNotFoundException;
 import solid.humank.genaidemo.domain.promotion.model.aggregate.Promotion;
 import solid.humank.genaidemo.domain.promotion.model.factory.PromotionFactory;
+import solid.humank.genaidemo.domain.promotion.model.valueobject.CartSummary;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionType;
 import solid.humank.genaidemo.domain.promotion.repository.PromotionRepository;
+import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 促銷應用服務 */
 @Service
@@ -21,9 +26,16 @@ import solid.humank.genaidemo.domain.promotion.repository.PromotionRepository;
 public class PromotionApplicationService {
 
     private final PromotionRepository promotionRepository;
+    private final CartSummaryConverter cartSummaryConverter;
+    private final DomainEventApplicationService domainEventApplicationService;
 
-    public PromotionApplicationService(PromotionRepository promotionRepository) {
+    public PromotionApplicationService(
+            PromotionRepository promotionRepository,
+            CartSummaryConverter cartSummaryConverter,
+            DomainEventApplicationService domainEventApplicationService) {
         this.promotionRepository = promotionRepository;
+        this.cartSummaryConverter = cartSummaryConverter;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     /** 創建閃購促銷 */
@@ -47,6 +59,10 @@ public class PromotionApplicationService {
                         quantityLimit);
 
         Promotion savedPromotion = promotionRepository.save(promotion);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedPromotion);
+
         return toDto(savedPromotion);
     }
 
@@ -137,5 +153,41 @@ public class PromotionApplicationService {
         // 簡化實現：返回預設剩餘數量
         // 實際應該從庫存服務獲取
         return 50;
+    }
+
+    /** 獲取適用於購物車的促銷活動 */
+    @Transactional(readOnly = true)
+    public List<PromotionDto> getApplicablePromotions(ShoppingCart shoppingCart) {
+        CartSummary cartSummary = cartSummaryConverter.toCartSummary(shoppingCart);
+
+        return promotionRepository.findActivePromotions().stream()
+                .filter(promotion -> promotion.isApplicable(cartSummary))
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    /** 計算購物車的促銷折扣 */
+    @Transactional(readOnly = true)
+    public Money calculatePromotionDiscount(ShoppingCart shoppingCart, String promotionId) {
+        CartSummary cartSummary = cartSummaryConverter.toCartSummary(shoppingCart);
+
+        Promotion promotion =
+                promotionRepository
+                        .findById(PromotionId.of(promotionId))
+                        .orElseThrow(
+                                () -> new PromotionNotFoundException("促銷活動不存在: " + promotionId));
+
+        return promotion.calculateDiscount(cartSummary);
+    }
+
+    /** 計算購物車的總折扣（所有適用促銷） */
+    @Transactional(readOnly = true)
+    public Money calculateTotalDiscount(ShoppingCart shoppingCart) {
+        CartSummary cartSummary = cartSummaryConverter.toCartSummary(shoppingCart);
+
+        return promotionRepository.findActivePromotions().stream()
+                .filter(promotion -> promotion.isApplicable(cartSummary))
+                .map(promotion -> promotion.calculateDiscount(cartSummary))
+                .reduce(Money.twd(0), (a, b) -> a.add(b));
     }
 }

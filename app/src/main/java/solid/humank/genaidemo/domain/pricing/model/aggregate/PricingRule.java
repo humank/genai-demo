@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.pricing.model.entity.CommissionRate;
@@ -13,8 +14,8 @@ import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.PromotionId;
 
 /** 定價規則聚合根 負責管理產品定價、折扣和佣金費率 */
-@AggregateRoot
-public class PricingRule {
+@AggregateRoot(name = "PricingRule", description = "定價規則聚合根，負責管理產品定價、折扣和佣金費率", boundedContext = "Pricing", version = "1.0")
+public class PricingRule extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private PriceId priceId;
     private ProductId productId;
     private PromotionId promotionId;
@@ -94,7 +95,7 @@ public class PricingRule {
     }
 
     /** 添加默認佣金費率 */
-    private void addDefaultCommissionRate() {
+    public void addDefaultCommissionRate() {
         int normalRate = getDefaultNormalRate(productCategory);
         int eventRate = getDefaultEventRate(productCategory);
         CommissionRate defaultRate = new CommissionRate(productCategory, normalRate, eventRate);
@@ -102,7 +103,7 @@ public class PricingRule {
     }
 
     /** 獲取默認一般費率 */
-    private int getDefaultNormalRate(ProductCategory category) {
+    public int getDefaultNormalRate(ProductCategory category) {
         return switch (category) {
             case ELECTRONICS -> 3;
             case FASHION -> 5;
@@ -112,7 +113,7 @@ public class PricingRule {
     }
 
     /** 獲取默認活動費率 */
-    private int getDefaultEventRate(ProductCategory category) {
+    public int getDefaultEventRate(ProductCategory category) {
         return switch (category) {
             case ELECTRONICS -> 5;
             case FASHION -> 8;

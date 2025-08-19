@@ -1,38 +1,50 @@
 package solid.humank.genaidemo.domain.payment.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 
-/** 支付請求事件 */
-public class PaymentRequestedEvent extends AbstractDomainEvent {
+/**
+ * 支付請求事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record PaymentRequestedEvent(
+        PaymentId paymentId,
+        OrderId orderId,
+        Money amount,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final PaymentId paymentId;
-    private final OrderId orderId;
-    private final Money amount;
-
-    public PaymentRequestedEvent(PaymentId paymentId, OrderId orderId, Money amount) {
-        super("order-service");
-        this.paymentId = paymentId;
-        this.orderId = orderId;
-        this.amount = amount;
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static PaymentRequestedEvent create(PaymentId paymentId, OrderId orderId, Money amount) {
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new PaymentRequestedEvent(paymentId, orderId, amount,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public PaymentId getPaymentId() {
-        return paymentId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public OrderId getOrderId() {
-        return orderId;
-    }
-
-    public Money getAmount() {
-        return amount;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "PaymentRequestedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return paymentId.getId().toString();
     }
 }

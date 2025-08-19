@@ -6,9 +6,10 @@ import java.util.Optional;
 /**
  * 通用儲存庫接口
  *
- * @param <T> 聚合根類型，必須標記 @AggregateRoot 註解
+ * @param <T>  聚合根類型，必須標記 @AggregateRoot 註解
  * @param <ID> ID類型
  */
+@solid.humank.genaidemo.domain.common.annotations.Repository(name = "Repository", description = "通用儲存庫接口，定義聚合根的基本儲存操作")
 public interface Repository<T, ID> {
 
     /**

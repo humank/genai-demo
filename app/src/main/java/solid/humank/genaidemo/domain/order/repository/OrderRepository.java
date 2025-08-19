@@ -3,13 +3,16 @@ package solid.humank.genaidemo.domain.order.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.repository.Repository;
-import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
+
+import solid.humank.genaidemo.domain.common.annotations.Repository;
+import solid.humank.genaidemo.domain.common.repository.BaseRepository;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
 /** 訂單儲存庫接口 */
-public interface OrderRepository extends Repository<Order, OrderId> {
+@Repository(name = "OrderRepository", description = "訂單聚合根儲存庫")
+public interface OrderRepository extends BaseRepository<Order, OrderId> {
 
     /**
      * 保存訂單

@@ -74,7 +74,7 @@ NODE_ENV=development
 npm run dev
 ```
 
-應用程式將在 `http://localhost:3000` 啟動。
+應用程式將在 `http://localhost:3002` 啟動。
 
 ### 其他指令
 

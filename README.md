@@ -454,7 +454,8 @@ npm install
 ## 🔗 相關連結
 
 - **DeepWiki 整合**: [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
-- **前端應用**: <http://localhost:3000> (開發模式)
+- **Consumer 前端**: <http://localhost:3001> (開發模式)
+- **CMC 前端**: <http://localhost:3002> (開發模式)
 - **後端 API**: <http://localhost:8080>
 - **Swagger UI**: <http://localhost:8080/swagger-ui.html>
 - **OpenAPI 規範**: <http://localhost:8080/v3/api-docs>

@@ -2,8 +2,10 @@ package solid.humank.genaidemo.domain.product.model.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 產品ID值物件 */
+@ValueObject
 public class ProductId {
     private final String id;
 

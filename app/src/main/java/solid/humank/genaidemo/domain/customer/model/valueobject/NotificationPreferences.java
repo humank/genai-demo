@@ -2,6 +2,8 @@ package solid.humank.genaidemo.domain.customer.model.valueobject;
 
 import java.util.Set;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
+import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
+import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationType;
 
 /** 通知偏好設定值對象 */
 @ValueObject(name = "NotificationPreferences", description = "通知偏好設定值對象，管理消費者的通知偏好")

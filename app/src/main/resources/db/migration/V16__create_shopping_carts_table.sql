@@ -12,7 +12,7 @@ CREATE TABLE shopping_carts (
     final_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE cart_items (
     total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
     currency VARCHAR(3) NOT NULL DEFAULT 'TWD',
     added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     FOREIGN KEY (cart_id) REFERENCES shopping_carts(id) ON DELETE CASCADE
 );
 
@@ -51,4 +51,5 @@ CREATE INDEX idx_cart_applied_promotions_cart_id ON cart_applied_promotions(cart
 CREATE INDEX idx_cart_applied_promotions_promotion_id ON cart_applied_promotions(promotion_id);
 
 -- 確保每個客戶只有一個活躍的購物車
-CREATE UNIQUE INDEX idx_shopping_carts_customer_active ON shopping_carts(customer_id) WHERE status = 'ACTIVE';
+-- 注意：H2 不支持部分索引，這個約束需要在應用層處理
+-- CREATE UNIQUE INDEX idx_shopping_carts_customer_active ON shopping_carts(customer_id) WHERE status = 'ACTIVE';

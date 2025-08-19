@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.application.order.port.outgoing.OrderPersistencePort;
-import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.repository.OrderRepository;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
 /** 訂單持久化適配器 實現應用層的 OrderPersistencePort 接口 使用領域層的 OrderRepository 進行實際的持久化操作 保持領域值對象的使用，維護架構的一致性 */
 @Component

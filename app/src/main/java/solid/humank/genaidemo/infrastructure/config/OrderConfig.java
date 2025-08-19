@@ -2,14 +2,22 @@ package solid.humank.genaidemo.infrastructure.config;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
 
 /** 訂單相關配置 提供訂單相關的Bean定義 */
 @Configuration
 public class OrderConfig {
+
+    /** 定義訂單工廠 Bean */
+    @Bean
+    public solid.humank.genaidemo.domain.order.model.factory.OrderFactory orderFactory() {
+        return new solid.humank.genaidemo.domain.order.model.factory.OrderFactory();
+    }
 
     /** 定義最大訂單項數量 用於訂單驗證 */
     @Bean

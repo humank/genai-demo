@@ -38,18 +38,20 @@ public class Address {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Address address = (Address) o;
-        return street.equals(address.street)
-                && city.equals(address.city)
-                && zipCode.equals(address.zipCode)
-                && country.equals(address.country);
+        return java.util.Objects.equals(street, address.street)
+                && java.util.Objects.equals(city, address.city)
+                && java.util.Objects.equals(zipCode, address.zipCode)
+                && java.util.Objects.equals(country, address.country);
     }
 
     @Override
     public int hashCode() {
-        return street.hashCode() + city.hashCode() + zipCode.hashCode() + country.hashCode();
+        return java.util.Objects.hash(street, city, zipCode, country);
     }
 
     @Override

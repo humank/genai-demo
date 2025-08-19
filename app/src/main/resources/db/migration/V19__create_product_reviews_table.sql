@@ -20,9 +20,9 @@ CREATE TABLE product_reviews (
     reviewed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     approved_at TIMESTAMP,
     approved_by VARCHAR(36), -- 審核人員ID
-    last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_customer_product_order (customer_id, product_id, order_id)
+    CONSTRAINT unique_customer_product_order UNIQUE (customer_id, product_id, order_id)
 );
 
 -- 創建評價回覆表
@@ -34,7 +34,7 @@ CREATE TABLE review_replies (
     reply_content TEXT NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE', -- ACTIVE, HIDDEN, DELETED
     replied_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (review_id) REFERENCES product_reviews(id) ON DELETE CASCADE
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE review_helpfulness_votes (
     voted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (review_id) REFERENCES product_reviews(id) ON DELETE CASCADE,
     FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_customer_review_vote (customer_id, review_id)
+    CONSTRAINT unique_customer_review_vote UNIQUE (customer_id, review_id)
 );
 
 -- 創建評價檢舉表
@@ -64,7 +64,7 @@ CREATE TABLE review_reports (
     processing_notes TEXT,
     FOREIGN KEY (review_id) REFERENCES product_reviews(id) ON DELETE CASCADE,
     FOREIGN KEY (reporter_id) REFERENCES customers(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_reporter_review (reporter_id, review_id)
+    CONSTRAINT unique_reporter_review UNIQUE (reporter_id, review_id)
 );
 
 -- 創建商品評價統計表（用於快速查詢）
@@ -77,7 +77,7 @@ CREATE TABLE product_review_statistics (
     rating_3_count INTEGER NOT NULL DEFAULT 0,
     rating_4_count INTEGER NOT NULL DEFAULT 0,
     rating_5_count INTEGER NOT NULL DEFAULT 0,
-    last_updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CHECK (average_rating >= 0.00 AND average_rating <= 5.00)
 );
 

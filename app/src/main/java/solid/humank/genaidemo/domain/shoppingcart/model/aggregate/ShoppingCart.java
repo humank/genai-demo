@@ -4,19 +4,27 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.shoppingcart.exception.CartItemNotFoundException;
 import solid.humank.genaidemo.domain.shoppingcart.exception.InvalidQuantityException;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartCheckedOutEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartClearedEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartCreatedEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartItemAddedEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartItemQuantityUpdatedEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartItemRemovedEvent;
+import solid.humank.genaidemo.domain.shoppingcart.model.events.CartStatusChangedEvent;
 import solid.humank.genaidemo.domain.shoppingcart.model.valueobject.CartItem;
 import solid.humank.genaidemo.domain.shoppingcart.model.valueobject.ShoppingCartId;
 import solid.humank.genaidemo.domain.shoppingcart.model.valueobject.ShoppingCartStatus;
 
 /** 購物車聚合根 */
-@AggregateRoot(name = "ShoppingCart", description = "購物車聚合根，管理消費者的購物車狀態和商品項目")
-public class ShoppingCart {
+@AggregateRoot(name = "ShoppingCart", description = "購物車聚合根，管理消費者的購物車狀態和商品項目", boundedContext = "ShoppingCart", version = "1.0")
+public class ShoppingCart extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
 
     private final ShoppingCartId id;
     private final CustomerId consumerId;
@@ -32,6 +40,9 @@ public class ShoppingCart {
         this.status = ShoppingCartStatus.ACTIVE;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+
+        // 發布購物車創建事件
+        collectEvent(CartCreatedEvent.create(id, consumerId));
     }
 
     // Getters
@@ -79,8 +90,10 @@ public class ShoppingCart {
         }
 
         updateTimestamp();
-        // TODO: 發布領域事件
-        // registerEvent(new CartItemAddedEvent(this.id, productId, quantity));
+
+        // 發布購物車商品添加事件
+        collectEvent(
+                CartItemAddedEvent.create(this.id, this.consumerId, productId, quantity, unitPrice));
     }
 
     /** 更新商品數量 */
@@ -89,33 +102,55 @@ public class ShoppingCart {
             throw new InvalidQuantityException("商品數量必須大於 0");
         }
 
-        CartItem existingItem =
-                findItemOptional(productId)
-                        .orElseThrow(
-                                () -> new CartItemNotFoundException("購物車中找不到商品: " + productId));
+        CartItem existingItem = findItemOptional(productId)
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("購物車中找不到商品: " + productId));
 
+        int oldQuantity = existingItem.quantity();
         CartItem updatedItem = existingItem.updateQuantity(newQuantity);
         replaceItem(existingItem, updatedItem);
         updateTimestamp();
+
+        // 發布購物車商品數量更新事件
+        collectEvent(
+                CartItemQuantityUpdatedEvent.create(
+                        this.id,
+                        this.consumerId,
+                        productId,
+                        oldQuantity,
+                        newQuantity,
+                        existingItem.unitPrice()));
     }
 
     /** 移除商品 */
     public void removeItem(ProductId productId) {
-        CartItem itemToRemove =
-                findItemOptional(productId)
-                        .orElseThrow(
-                                () -> new CartItemNotFoundException("購物車中找不到商品: " + productId));
+        CartItem itemToRemove = findItemOptional(productId)
+                .orElseThrow(
+                        () -> new CartItemNotFoundException("購物車中找不到商品: " + productId));
 
         items.remove(itemToRemove);
         updateTimestamp();
-        // TODO: 發布領域事件
-        // registerEvent(new CartItemRemovedEvent(this.id, productId));
+
+        // 發布購物車商品移除事件
+        collectEvent(
+                CartItemRemovedEvent.create(
+                        this.id,
+                        this.consumerId,
+                        productId,
+                        itemToRemove.quantity(),
+                        itemToRemove.unitPrice()));
     }
 
     /** 清空購物車 */
     public void clear() {
+        List<CartItem> itemsToRemove = new ArrayList<>(items);
+        Money clearedAmount = calculateTotal();
+
         items.clear();
         updateTimestamp();
+
+        // 發布購物車清空事件
+        collectEvent(CartClearedEvent.create(this.id, this.consumerId, itemsToRemove, clearedAmount));
     }
 
     /** 計算總金額 */
@@ -144,8 +179,31 @@ public class ShoppingCart {
 
     /** 更新購物車狀態 */
     public void updateStatus(ShoppingCartStatus newStatus) {
+        ShoppingCartStatus oldStatus = this.status;
         this.status = newStatus;
         updateTimestamp();
+
+        // 發布購物車狀態變更事件
+        collectEvent(CartStatusChangedEvent.create(this.id, this.consumerId, oldStatus, newStatus));
+    }
+
+    /** 結帳購物車 */
+    public void checkout() {
+        if (isEmpty()) {
+            throw new IllegalStateException("無法結帳空的購物車");
+        }
+
+        Money totalAmount = calculateTotal();
+        int totalQuantity = getTotalQuantity();
+        List<CartItem> itemsSnapshot = new ArrayList<>(items);
+
+        // 更新狀態為已結帳
+        updateStatus(ShoppingCartStatus.CHECKED_OUT);
+
+        // 發布購物車結帳事件
+        collectEvent(
+                CartCheckedOutEvent.create(
+                        this.id, this.consumerId, itemsSnapshot, totalAmount, totalQuantity));
     }
 
     // 測試需要的額外方法
@@ -177,7 +235,7 @@ public class ShoppingCart {
 
     // 私有輔助方法
 
-    private Optional<CartItem> findItemOptional(ProductId productId) {
+    public Optional<CartItem> findItemOptional(ProductId productId) {
         return items.stream().filter(item -> item.productId().equals(productId)).findFirst();
     }
 
@@ -188,14 +246,16 @@ public class ShoppingCart {
         }
     }
 
-    private void updateTimestamp() {
+    public void updateTimestamp() {
         this.updatedAt = LocalDateTime.now();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         ShoppingCart that = (ShoppingCart) obj;
         return id.equals(that.id);
     }

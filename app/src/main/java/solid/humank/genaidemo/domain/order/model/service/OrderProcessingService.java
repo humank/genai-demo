@@ -1,20 +1,19 @@
 package solid.humank.genaidemo.domain.order.model.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import org.springframework.stereotype.Service;
+
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.order.model.policy.OrderDiscountPolicy;
-import solid.humank.genaidemo.domain.payment.events.PaymentRequestedEvent;
+import solid.humank.genaidemo.domain.payment.model.events.PaymentRequestedEvent;
 import solid.humank.genaidemo.exceptions.ValidationException;
-import solid.humank.genaidemo.utils.Preconditions;
 
 /** 訂單處理服務 協調各種領域規則和政策的應用 */
-@Service
 @DomainService(description = "處理訂單相關的領域邏輯")
 public class OrderProcessingService {
     private final OrderDiscountPolicy discountPolicy;
@@ -24,11 +23,11 @@ public class OrderProcessingService {
      * 建立訂單處理服務
      *
      * @param discountPolicy 折扣政策
-     * @param eventBus 領域事件總線
+     * @param eventBus       領域事件總線
      */
     public OrderProcessingService(OrderDiscountPolicy discountPolicy, DomainEventBus eventBus) {
-        Preconditions.requireNonNull(discountPolicy, "折扣政策不能為空");
-        Preconditions.requireNonNull(eventBus, "事件總線不能為空");
+        Objects.requireNonNull(discountPolicy, "折扣政策不能為空");
+        Objects.requireNonNull(eventBus, "事件總線不能為空");
 
         this.discountPolicy = discountPolicy;
         this.eventBus = eventBus;
@@ -43,7 +42,7 @@ public class OrderProcessingService {
      */
     public OrderProcessingResult process(Order order) {
         // 前置條件檢查
-        Preconditions.requireNonNull(order, "訂單不能為空");
+        Objects.requireNonNull(order, "訂單不能為空");
 
         try {
             // 驗證訂單
@@ -56,7 +55,7 @@ public class OrderProcessingService {
             // 處理支付
             Money effectiveAmount = order.getEffectiveAmount();
             PaymentId paymentId = PaymentId.create();
-            eventBus.publish(new PaymentRequestedEvent(paymentId, order.getId(), effectiveAmount));
+            eventBus.publish(PaymentRequestedEvent.create(paymentId, order.getId(), effectiveAmount));
 
             // 返回結果
             return OrderProcessingResult.success(effectiveAmount);

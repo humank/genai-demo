@@ -4,13 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
@@ -30,9 +31,8 @@ public class FlashSaleStepDefinitions {
     private boolean dealAvailable;
     private Map<String, Object> productDetails = new HashMap<>();
 
-    @Given(
-            "a product {string} is on flash sale from {int}:{int} to {int}:{int} \\(GMT+{int}) at"
-                    + " ${int} instead of ${int}")
+    @Given("a product {string} is on flash sale from {int}:{int} to {int}:{int} \\(GMT+{int}) at"
+            + " ${int} instead of ${int}")
     public void a_product_is_on_flash_sale_from_to_gmt_at_$_instead_of_$(
             String productName,
             Integer startHour,
@@ -58,12 +58,11 @@ public class FlashSaleStepDefinitions {
 
         ZoneId zoneId = ZoneId.of("GMT+" + timezone);
         DateRange flashSalePeriod = new DateRange(startTime, endTime);
-        this.flashSaleRule =
-                new FlashSaleRule(
-                        productId,
-                        Money.of(salePrice),
-                        100, // 數量限制
-                        flashSalePeriod);
+        this.flashSaleRule = new FlashSaleRule(
+                productId,
+                Money.of(salePrice),
+                100, // 數量限制
+                flashSalePeriod);
 
         productDetails.put("name", productName);
         productDetails.put("regularPrice", regularPrice);
@@ -86,9 +85,8 @@ public class FlashSaleStepDefinitions {
         }
     }
 
-    @Given(
-            "a product {string} has a limited quantity of {int} units at a special price of ${int}"
-                    + " instead of ${int}")
+    @Given("a product {string} has a limited quantity of {int} units at a special price of ${int}"
+            + " instead of ${int}")
     public void a_product_has_a_limited_quantity_of_units_at_a_special_price_of_$_instead_of_$(
             String productName, Integer quantity, Integer salePrice, Integer regularPrice) {
 
@@ -178,5 +176,20 @@ public class FlashSaleStepDefinitions {
         assertEquals(Money.of(price).getAmount(), product.getPrice().getAmount());
     }
 
-    // 移除重複的步驟定義，使用 AddOnPurchaseStepDefinitions 中的實現
+    // 新增缺少的步驟定義
+    @Then("the {string} should be priced at ${int}")
+    public void the_should_be_priced_at_$(String productName, Integer expectedPrice) {
+        // 驗證產品在快閃銷售期間的價格
+        assertEquals(expectedPrice.doubleValue(), this.salePrice, 0.01);
+    }
+
+    @Then("the {string} should be priced at the regular price of ${int}")
+    public void theShouldBePricedAtTheRegularPriceOf$(String productName, Integer price) {
+        this.regularPrice = price;
+        assertEquals(price, (int) regularPrice);
+
+        // 重新設置 product 的 price
+        when(product.getPrice()).thenReturn(Money.of(price));
+        assertEquals(Money.of(price).getAmount(), product.getPrice().getAmount());
+    }
 }

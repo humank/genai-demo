@@ -1,16 +1,15 @@
 package solid.humank.genaidemo.domain.common.event;
 
-import org.springframework.stereotype.Component;
-import solid.humank.genaidemo.infrastructure.event.DomainEventPublisherAdapter;
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 
 /** 領域事件總線 用於發布領域事件 */
-@Component
+@DomainService(name = "DomainEventBus", description = "領域事件總線，用於發布領域事件", boundedContext = "Common")
 public class DomainEventBus {
 
-    private final DomainEventPublisherAdapter eventPublisherAdapter;
+    private final DomainEventPublisher eventPublisher;
 
-    public DomainEventBus(DomainEventPublisherAdapter eventPublisherAdapter) {
-        this.eventPublisherAdapter = eventPublisherAdapter;
+    public DomainEventBus(DomainEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -20,7 +19,7 @@ public class DomainEventBus {
      */
     public void publish(DomainEvent event) {
         if (event != null) {
-            eventPublisherAdapter.publish(event);
+            eventPublisher.publish(event);
         }
     }
 }

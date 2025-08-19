@@ -8,12 +8,10 @@ public abstract class AbstractDomainEvent implements DomainEvent {
 
     private final UUID eventId;
     private final LocalDateTime occurredOn;
-    private final String source;
 
-    protected AbstractDomainEvent(String source) {
+    protected AbstractDomainEvent() {
         this.eventId = UUID.randomUUID();
         this.occurredOn = LocalDateTime.now();
-        this.source = source;
     }
 
     @Override
@@ -21,10 +19,13 @@ public abstract class AbstractDomainEvent implements DomainEvent {
         return occurredOn;
     }
 
+    /**
+     * 獲取聚合根ID - 子類必須實作
+     *
+     * @return 聚合根ID
+     */
     @Override
-    public String getSource() {
-        return source;
-    }
+    public abstract String getAggregateId();
 
     /**
      * 獲取事件ID

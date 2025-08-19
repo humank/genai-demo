@@ -222,7 +222,7 @@ public class OrderController {
                             request.getProductId(),
                             request.getProductName(),
                             request.getQuantity(),
-                            request.getPrice().getAmount());
+                            request.getPrice());
 
             solid.humank.genaidemo.application.order.dto.response.OrderResponse appResponse =
                     orderService.addOrderItem(command);

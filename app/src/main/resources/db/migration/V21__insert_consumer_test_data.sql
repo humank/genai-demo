@@ -84,11 +84,11 @@ INSERT INTO voucher_products (id, name, description, face_value, selling_price, 
 ('vp-004', '麥當勞 $150 餐券', '可於麥當勞門市使用的餐券', 150.00, 140.00, 'TWD', 90, 'FOOD', '["MCDONALDS"]', '限於麥當勞門市使用，不可找零', 'ACTIVE');
 
 -- 插入優惠券實例
-INSERT INTO vouchers (id, voucher_product_id, customer_id, redemption_code, status, face_value, purchase_price, currency, expires_at) VALUES
-('voucher-001', 'vp-001', '660e8400-e29b-41d4-a716-446655440001', 'V711001234567890', 'ACTIVE', 100.00, 95.00, 'TWD', '2025-08-15 23:59:59'),
-('voucher-002', 'vp-002', '660e8400-e29b-41d4-a716-446655440002', 'VFM2001234567890', 'ACTIVE', 200.00, 190.00, 'TWD', '2025-08-15 23:59:59'),
-('voucher-003', 'vp-003', '660e8400-e29b-41d4-a716-446655440003', 'VSB3001234567890', 'USED', 300.00, 280.00, 'TWD', '2025-02-15 23:59:59'),
-('voucher-004', 'vp-004', '660e8400-e29b-41d4-a716-446655440004', 'VMD1501234567890', 'ACTIVE', 150.00, 140.00, 'TWD', '2024-11-15 23:59:59');
+INSERT INTO vouchers (id, voucher_product_id, customer_id, redemption_code, status, face_value, purchase_price, currency, purchased_at, expires_at) VALUES
+('voucher-001', 'vp-001', '660e8400-e29b-41d4-a716-446655440001', 'V711001234567890', 'ACTIVE', 100.00, 95.00, 'TWD', '2024-08-15 10:00:00', '2025-08-15 23:59:59'),
+('voucher-002', 'vp-002', '660e8400-e29b-41d4-a716-446655440002', 'VFM2001234567890', 'ACTIVE', 200.00, 190.00, 'TWD', '2024-08-15 10:00:00', '2025-08-15 23:59:59'),
+('voucher-003', 'vp-003', '660e8400-e29b-41d4-a716-446655440003', 'VSB3001234567890', 'USED', 300.00, 280.00, 'TWD', '2024-02-15 10:00:00', '2025-02-15 23:59:59'),
+('voucher-004', 'vp-004', '660e8400-e29b-41d4-a716-446655440004', 'VMD1501234567890', 'ACTIVE', 150.00, 140.00, 'TWD', '2024-05-15 10:00:00', '2025-05-15 23:59:59');
 
 -- 插入優惠券使用記錄
 INSERT INTO voucher_usage_history (id, voucher_id, action, store_code, amount_used, currency, notes) VALUES
@@ -127,14 +127,14 @@ INSERT INTO notifications (id, customer_id, type, channel, priority, subject, co
 ('notif-004', '660e8400-e29b-41d4-a716-446655440004', 'MARKETING', 'EMAIL', 'LOW', 'VIP會員專屬優惠', '陳美麗您好，作為VIP會員，您享有專屬優惠和免運服務。', 'DELIVERED', false, NULL, NULL);
 
 -- 插入通知訂閱
-INSERT INTO notification_subscriptions (customer_id, notification_type, channel, is_subscribed) VALUES
-('660e8400-e29b-41d4-a716-446655440001', 'ORDER_STATUS', 'EMAIL', true),
-('660e8400-e29b-41d4-a716-446655440001', 'DELIVERY_STATUS', 'IN_APP', true),
-('660e8400-e29b-41d4-a716-446655440001', 'PROMOTION', 'EMAIL', true),
-('660e8400-e29b-41d4-a716-446655440002', 'ORDER_STATUS', 'EMAIL', true),
-('660e8400-e29b-41d4-a716-446655440002', 'DELIVERY_STATUS', 'SMS', true),
-('660e8400-e29b-41d4-a716-446655440002', 'PROMOTION', 'IN_APP', true),
-('660e8400-e29b-41d4-a716-446655440002', 'MARKETING', 'EMAIL', true);
+INSERT INTO notification_subscriptions (id, customer_id, notification_type, channel, is_subscribed) VALUES
+('sub-001', '660e8400-e29b-41d4-a716-446655440001', 'ORDER_STATUS', 'EMAIL', true),
+('sub-002', '660e8400-e29b-41d4-a716-446655440001', 'DELIVERY_STATUS', 'IN_APP', true),
+('sub-003', '660e8400-e29b-41d4-a716-446655440001', 'PROMOTION', 'EMAIL', true),
+('sub-004', '660e8400-e29b-41d4-a716-446655440002', 'ORDER_STATUS', 'EMAIL', true),
+('sub-005', '660e8400-e29b-41d4-a716-446655440002', 'DELIVERY_STATUS', 'SMS', true),
+('sub-006', '660e8400-e29b-41d4-a716-446655440002', 'PROMOTION', 'IN_APP', true),
+('sub-007', '660e8400-e29b-41d4-a716-446655440002', 'MARKETING', 'EMAIL', true);
 
 -- 插入系統公告
 INSERT INTO system_announcements (id, title, content, type, priority, target_audience, status, publish_at, is_sticky, created_by) VALUES

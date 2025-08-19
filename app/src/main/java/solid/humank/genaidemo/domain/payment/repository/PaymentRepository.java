@@ -3,13 +3,16 @@ package solid.humank.genaidemo.domain.payment.repository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.repository.Repository;
+
+import solid.humank.genaidemo.domain.common.annotations.Repository;
+import solid.humank.genaidemo.domain.common.repository.BaseRepository;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentId;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
 
 /** 支付儲存庫接口 */
-public interface PaymentRepository extends Repository<Payment, PaymentId> {
+@Repository(name = "PaymentRepository", description = "支付聚合根儲存庫")
+public interface PaymentRepository extends BaseRepository<Payment, PaymentId> {
 
     /**
      * 保存支付

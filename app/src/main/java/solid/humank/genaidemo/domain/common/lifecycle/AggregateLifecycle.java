@@ -9,16 +9,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.stereotype.Service;
+
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 
 /** 聚合生命週期管理器 處理聚合的事件發布和狀態變更 */
-@Service
 public class AggregateLifecycle {
     private static final Logger LOGGER = Logger.getLogger(AggregateLifecycle.class.getName());
-    private static final ThreadLocal<List<DomainEvent>> PENDING_EVENTS =
-            ThreadLocal.withInitial(ArrayList::new);
+    private static final ThreadLocal<List<DomainEvent>> PENDING_EVENTS = ThreadLocal.withInitial(ArrayList::new);
 
     private final DomainEventBus eventBus;
 
@@ -123,10 +121,12 @@ public class AggregateLifecycle {
     /** 用於標記聚合根要使用生命週期管理的註解 */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
-    public @interface ManagedLifecycle {}
+    public @interface ManagedLifecycle {
+    }
 
     /** 用於標記聚合根中會產生事件的方法 */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    public @interface EventSourcing {}
+    public @interface EventSourcing {
+    }
 }

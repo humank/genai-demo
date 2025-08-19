@@ -4,8 +4,8 @@ import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.seller.model.valueobject.SellerId;
 
 /** 賣家聚合根 */
-@AggregateRoot
-public class Seller {
+@AggregateRoot(name = "Seller", description = "賣家聚合根，管理賣家基本資訊和狀態", boundedContext = "Seller", version = "1.0")
+public class Seller extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private SellerId sellerId;
     private String name;
     private String email;
@@ -14,7 +14,8 @@ public class Seller {
 
     // Private constructor for JPA
     @SuppressWarnings("unused")
-    private Seller() {}
+    private Seller() {
+    }
 
     public Seller(SellerId sellerId, String name, String email, String phone) {
         this.sellerId = sellerId;

@@ -1,7 +1,8 @@
 package solid.humank.genaidemo.domain.common.event;
 
 /**
- * 事件處理器接口
+ * 通用事件處理器接口
+ * 用於 EventBus 的通用事件處理機制
  *
  * @param <T> 事件類型
  */

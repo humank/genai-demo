@@ -6,16 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -26,27 +22,37 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+
+import solid.humank.genaidemo.testutils.BaseTest;
+
 /**
  * OpenAPI 文檔生成測試類別
  *
- * <p>此測試類別負責： 1. 生成 JSON 格式的 OpenAPI 規範檔案 2. 生成 YAML 格式的 OpenAPI 規範檔案 3. 確保生成的檔案儲存在 docs/api 目錄 4.
+ * <p>
+ * 此測試類別負責： 1. 生成 JSON 格式的 OpenAPI 規範檔案 2. 生成 YAML 格式的 OpenAPI 規範檔案 3.
+ * 確保生成的檔案儲存在 docs/api 目錄 4.
  * 提供檔案格式化和美化功能
  */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Tag("unit")
-public class OpenApiDocumentationTest {
+public class OpenApiDocumentationTest extends BaseTest {
 
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
     private final ObjectMapper jsonMapper = new ObjectMapper();
-    private final ObjectMapper yamlMapper =
-            new ObjectMapper(
-                    new YAMLFactory()
-                            .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-                            .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
-                            .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR));
+    private final ObjectMapper yamlMapper = new ObjectMapper(
+            new YAMLFactory()
+                    .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+                    .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
+                    .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR));
 
     private static final String DOCS_API_DIR = "docs/api";
     private static final String OPENAPI_JSON_FILE = "openapi.json";
@@ -69,7 +75,8 @@ public class OpenApiDocumentationTest {
     /**
      * 生成 JSON 格式的 OpenAPI 規範檔案
      *
-     * <p>此測試方法會： 1. 從 /v3/api-docs 端點獲取 OpenAPI 規範 2. 格式化 JSON 內容 3. 將格式化後的內容儲存到
+     * <p>
+     * 此測試方法會： 1. 從 /v3/api-docs 端點獲取 OpenAPI 規範 2. 格式化 JSON 內容 3. 將格式化後的內容儲存到
      * docs/api/openapi.json 4. 驗證檔案內容的完整性
      */
     @Test
@@ -77,8 +84,7 @@ public class OpenApiDocumentationTest {
         System.out.println("正在生成 OpenAPI JSON 規範檔案...");
 
         // 從 SpringDoc 端點獲取 OpenAPI 規範
-        MvcResult result =
-                mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk()).andReturn();
+        MvcResult result = mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk()).andReturn();
 
         String openApiJson = result.getResponse().getContentAsString();
         assertNotNull(openApiJson, "OpenAPI JSON 內容不應為空");
@@ -99,7 +105,9 @@ public class OpenApiDocumentationTest {
     /**
      * 生成 YAML 格式的 OpenAPI 規範檔案
      *
-     * <p>此測試方法會： 1. 從 /v3/api-docs.yaml 端點獲取 YAML 格式的 OpenAPI 規範 2. 格式化 YAML 內容 3. 將格式化後的內容儲存到
+     * <p>
+     * 此測試方法會： 1. 從 /v3/api-docs.yaml 端點獲取 YAML 格式的 OpenAPI 規範 2. 格式化 YAML 內容 3.
+     * 將格式化後的內容儲存到
      * docs/api/openapi.yaml 4. 驗證檔案內容的完整性
      */
     @Test
@@ -107,8 +115,7 @@ public class OpenApiDocumentationTest {
         System.out.println("正在生成 OpenAPI YAML 規範檔案...");
 
         // 從 JSON 端點獲取內容並轉換為 YAML
-        MvcResult jsonResult =
-                mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk()).andReturn();
+        MvcResult jsonResult = mockMvc.perform(get("/v3/api-docs")).andExpect(status().isOk()).andReturn();
         String jsonContent = jsonResult.getResponse().getContentAsString();
         String openApiYaml = convertJsonToYaml(jsonContent);
 

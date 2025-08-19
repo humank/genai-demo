@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 閃購特價規則 */
 @ValueObject(name = "FlashSaleRule", description = "閃購特價規則")
@@ -29,25 +28,26 @@ public record FlashSaleRule(
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
+    public boolean matches(CartSummary cartSummary) {
         // 檢查是否在閃購期間
         if (!flashSalePeriod.contains(LocalDateTime.now())) {
             return false;
         }
 
         // 檢查購物車是否包含目標商品
-        return cart.containsProduct(targetProductId);
+        return cartSummary.items().stream()
+                .anyMatch(item -> item.productId().equals(targetProductId.getId()));
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
         // 找到目標商品項目
-        return cart.getItems().stream()
-                .filter(item -> item.productId().equals(targetProductId))
+        return cartSummary.items().stream()
+                .filter(item -> item.productId().equals(targetProductId.getId()))
                 .findFirst()
                 .map(
                         item -> {

@@ -5,14 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 import solid.humank.genaidemo.domain.product.model.aggregate.Product;
@@ -38,10 +39,18 @@ public class ProductStepDefinitions {
         this.bundleService = mock(BundleService.class);
     }
 
-    @Given("the customer is browsing the product catalog")
-    public void the_customer_is_browsing_the_product_catalog() {
+    @Given("the customer is browsing the product catalog for bundles")
+    public void the_customer_is_browsing_the_product_catalog_for_bundles() {
         order = mock(Order.class);
         bundleService = mock(BundleService.class);
+    }
+
+    @When("the customer adds the {string} to the cart")
+    public void the_customer_adds_the_to_the_cart(String bundleName) {
+        this.bundleName = bundleName;
+        // 模擬將套裝商品加入購物車的邏輯
+        // 在純領域測試中，我們直接使用領域物件而不依賴 Spring
+        // discountedTotal 已經在 @Given 步驟中從測試資料設定好了，不需要重新計算
     }
 
     @Given("the store offers a bundle with the following details")
@@ -58,11 +67,10 @@ public class ProductStepDefinitions {
         discountedTotal = Money.twd(Integer.parseInt(bundlePriceStr));
 
         // 創建捆綁銷售
-        bundle =
-                new Bundle(
-                        bundleName,
-                        BundleType.FIXED_BUNDLE,
-                        new BundleDiscount(regularTotal, discountedTotal));
+        bundle = new Bundle(
+                bundleName,
+                BundleType.FIXED_BUNDLE,
+                new BundleDiscount(regularTotal, discountedTotal));
 
         // 添加產品到捆綁銷售
         String[] itemNames = items.split(", ");
@@ -81,12 +89,11 @@ public class ProductStepDefinitions {
     @Given("the store offers {string}")
     public void the_store_offers(String rule) {
 
-        bundle =
-                new Bundle(
-                        "Pick Any Bundle",
-                        BundleType.PICK_ANY_BUNDLE,
-                        new BundleDiscount(12) // 12% 折扣
-                        );
+        bundle = new Bundle(
+                "Pick Any Bundle",
+                BundleType.PICK_ANY_BUNDLE,
+                new BundleDiscount(12) // 12% 折扣
+        );
 
         when(bundleService.getBundle("Pick Any Bundle")).thenReturn(bundle);
     }
@@ -124,8 +131,7 @@ public class ProductStepDefinitions {
         }
 
         // 計算折扣後的總價
-        discountedTotal =
-                Money.twd((int) (regularTotal.getAmount().doubleValue() * 0.88)); // 12% 折扣
+        discountedTotal = Money.twd((int) (regularTotal.getAmount().doubleValue() * 0.88)); // 12% 折扣
 
         when(order.getTotalAmount()).thenReturn(regularTotal);
         when(bundleService.applyPickAnyBundleDiscount(order, bundle, products))

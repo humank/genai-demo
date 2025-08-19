@@ -55,8 +55,10 @@ export const EditProductDialog: React.FC<EditProductDialogProps> = ({
         product: {
           name: formData.name,
           description: formData.description,
-          price: parseFloat(formData.price),
-          currency: formData.currency,
+          price: {
+            amount: parseFloat(formData.price),
+            currency: formData.currency
+          },
           category: formData.category,
         }
       })

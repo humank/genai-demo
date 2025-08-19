@@ -3,7 +3,6 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 買一送一規則 */
 @ValueObject(name = "BuyOneGetOneRule", description = "買一送一規則")
@@ -23,20 +22,20 @@ public record BuyOneGetOneRule(ProductId targetProductId, int buyQuantity, int g
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
-        return cart.getItems().stream()
-                .filter(item -> item.productId().equals(targetProductId))
+    public boolean matches(CartSummary cartSummary) {
+        return cartSummary.items().stream()
+                .filter(item -> item.productId().equals(targetProductId.getId()))
                 .anyMatch(item -> item.quantity() >= buyQuantity);
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
-        return cart.getItems().stream()
-                .filter(item -> item.productId().equals(targetProductId))
+        return cartSummary.items().stream()
+                .filter(item -> item.productId().equals(targetProductId.getId()))
                 .findFirst()
                 .map(
                         item -> {

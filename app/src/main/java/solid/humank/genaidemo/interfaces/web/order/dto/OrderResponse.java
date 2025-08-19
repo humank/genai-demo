@@ -1,11 +1,10 @@
 package solid.humank.genaidemo.interfaces.web.order.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import solid.humank.genaidemo.application.common.valueobject.Money;
-import solid.humank.genaidemo.application.common.valueobject.OrderStatus;
 
 /** 訂單響應 DTO */
 @Schema(
@@ -44,8 +43,8 @@ public class OrderResponse {
     @Schema(description = "訂單項目列表，包含所有購買的商品", required = true)
     private final List<WebOrderItemResponse> items;
 
-    @Schema(description = "訂單總金額，包含所有商品的總價", example = "1000.00 TWD", required = true)
-    private final Money totalAmount;
+    @Schema(description = "訂單總金額，包含所有商品的總價", example = "1000.00", required = true)
+    private final BigDecimal totalAmount;
 
     @Schema(
             description = "訂單當前狀態",
@@ -63,7 +62,7 @@ public class OrderResponse {
                 "REJECTED",
                 "PAYMENT_FAILED"
             })
-    private final OrderStatus status;
+    private final String status;
 
     @Schema(description = "訂單創建時間", example = "2024-01-15T10:30:00", required = true)
     private final LocalDateTime createdAt;
@@ -76,8 +75,8 @@ public class OrderResponse {
             String customerId,
             String shippingAddress,
             List<WebOrderItemResponse> items,
-            Money totalAmount,
-            OrderStatus status,
+            BigDecimal totalAmount,
+            String status,
             LocalDateTime createdAt,
             LocalDateTime updatedAt) {
         this.orderId = orderId;
@@ -102,8 +101,8 @@ public class OrderResponse {
                 appResponse.getCustomerId(),
                 appResponse.getShippingAddress(),
                 items,
-                Money.of(appResponse.getTotalAmount()),
-                OrderStatus.valueOf(appResponse.getStatus()),
+                appResponse.getTotalAmount(),
+                appResponse.getStatus(),
                 appResponse.getCreatedAt(),
                 appResponse.getUpdatedAt());
     }
@@ -129,11 +128,11 @@ public class OrderResponse {
         return items;
     }
 
-    public Money getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public OrderStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
@@ -168,14 +167,18 @@ public class OrderResponse {
         @Schema(description = "購買數量", example = "2", required = true, minimum = "1")
         private final int quantity;
 
-        @Schema(description = "商品單價", example = "500.00 TWD", required = true)
-        private final Money price;
+        @Schema(description = "商品單價", example = "500.00", required = true)
+        private final BigDecimal price;
 
-        @Schema(description = "該項目小計金額（單價 × 數量）", example = "1000.00 TWD", required = true)
-        private final Money subtotal;
+        @Schema(description = "該項目小計金額（單價 × 數量）", example = "1000.00", required = true)
+        private final BigDecimal subtotal;
 
         public WebOrderItemResponse(
-                String productId, String productName, int quantity, Money price, Money subtotal) {
+                String productId,
+                String productName,
+                int quantity,
+                BigDecimal price,
+                BigDecimal subtotal) {
             this.productId = productId;
             this.productName = productName;
             this.quantity = quantity;
@@ -189,8 +192,8 @@ public class OrderResponse {
                     item.getProductId(),
                     item.getProductName(),
                     item.getQuantity(),
-                    Money.of(item.getUnitPrice()),
-                    Money.of(item.getSubtotal()));
+                    item.getUnitPrice(),
+                    item.getSubtotal());
         }
 
         public String getProductId() {
@@ -205,11 +208,11 @@ public class OrderResponse {
             return quantity;
         }
 
-        public Money getPrice() {
+        public BigDecimal getPrice() {
             return price;
         }
 
-        public Money getSubtotal() {
+        public BigDecimal getSubtotal() {
             return subtotal;
         }
     }

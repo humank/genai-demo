@@ -1,44 +1,55 @@
 package solid.humank.genaidemo.domain.product.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
-/** 產品價格變更事件 */
-public class ProductPriceChangedEvent extends AbstractDomainEvent {
+/**
+ * 商品價格變更事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record ProductPriceChangedEvent(
+        ProductId productId,
+        Money oldPrice,
+        Money newPrice,
+        UUID eventId,
+        LocalDateTime occurredOn)
+        implements DomainEvent {
 
-    private final ProductId productId;
-    private final String name;
-    private final Money oldPrice;
-    private final Money newPrice;
-
-    public ProductPriceChangedEvent(
-            ProductId productId, String name, Money oldPrice, Money newPrice) {
-        super("product-service");
-        this.productId = productId;
-        this.name = name;
-        this.oldPrice = oldPrice;
-        this.newPrice = newPrice;
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static ProductPriceChangedEvent create(ProductId productId, Money oldPrice, Money newPrice) {
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new ProductPriceChangedEvent(productId, oldPrice, newPrice,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public ProductId getProductId() {
-        return productId;
+    // 向後兼容的構造函數
+    public ProductPriceChangedEvent(ProductId productId, Money oldPrice, Money newPrice) {
+        this(productId, oldPrice, newPrice, UUID.randomUUID(), LocalDateTime.now());
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public Money getOldPrice() {
-        return oldPrice;
-    }
-
-    public Money getNewPrice() {
-        return newPrice;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "ProductPriceChangedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return productId.getId();
     }
 }

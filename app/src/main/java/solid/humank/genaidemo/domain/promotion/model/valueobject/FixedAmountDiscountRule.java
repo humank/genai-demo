@@ -2,7 +2,6 @@ package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 固定金額折扣規則 */
 @ValueObject(name = "FixedAmountDiscountRule", description = "固定金額折扣規則")
@@ -21,19 +20,18 @@ public record FixedAmountDiscountRule(Money discountAmount, Money minimumAmount)
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
-        Money totalAmount = cart.calculateTotal();
-        return totalAmount.getAmount().compareTo(minimumAmount.getAmount()) >= 0;
+    public boolean matches(CartSummary cartSummary) {
+        return cartSummary.totalAmount().getAmount().compareTo(minimumAmount.getAmount()) >= 0;
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
         // 確保折扣不超過總金額
-        Money totalAmount = cart.calculateTotal();
+        Money totalAmount = cartSummary.totalAmount();
         if (discountAmount.getAmount().compareTo(totalAmount.getAmount()) > 0) {
             return totalAmount;
         }

@@ -5,13 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationStatus;
@@ -36,8 +37,7 @@ public class NotificationStepDefinitions {
     public void theCustomerHasSetUpNotificationPreferences() {
         customerId = "customer-123";
         selectedChannels = Arrays.asList(NotificationChannel.EMAIL, NotificationChannel.SMS);
-        selectedTypes =
-                Arrays.asList(NotificationType.ORDER_CREATED, NotificationType.PAYMENT_SUCCESS);
+        selectedTypes = Arrays.asList(NotificationType.ORDER_CREATED, NotificationType.PAYMENT_SUCCESS);
     }
 
     @When("a customer creates a new order")
@@ -52,13 +52,12 @@ public class NotificationStepDefinitions {
 
     @Then("the system should send an order creation notification")
     public void theSystemShouldSendAnOrderCreationNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.ORDER_CREATED,
-                        "訂單已創建",
-                        "您的訂單 " + orderId + " 已成功創建",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.ORDER_CREATED,
+                "訂單已創建",
+                "您的訂單 " + orderId + " 已成功創建",
+                selectedChannels);
         assertNotNull(notification);
     }
 
@@ -83,7 +82,7 @@ public class NotificationStepDefinitions {
 
     @When("an order payment is successful")
     public void anOrderPaymentIsSuccessful() {
-        orderId = "ORD-20240510-001";
+        orderId = "550e8400-e29b-41d4-a716-446655440001";
     }
 
     @When("the order status is updated to {string}")
@@ -95,13 +94,12 @@ public class NotificationStepDefinitions {
 
     @Then("the system should send an order confirmation notification")
     public void theSystemShouldSendAnOrderConfirmationNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.ORDER_CONFIRMED,
-                        "訂單已確認",
-                        "您的訂單 " + orderId + " 已確認",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.ORDER_CONFIRMED,
+                "訂單已確認",
+                "您的訂單 " + orderId + " 已確認",
+                selectedChannels);
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }
@@ -113,7 +111,7 @@ public class NotificationStepDefinitions {
 
     @When("an order payment fails")
     public void anOrderPaymentFails() {
-        orderId = "ORD-20240510-001";
+        orderId = "550e8400-e29b-41d4-a716-446655440002";
     }
 
     @When("the failure reason is {string}")
@@ -125,13 +123,12 @@ public class NotificationStepDefinitions {
 
     @Then("the system should send a payment failure notification")
     public void theSystemShouldSendAPaymentFailureNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.PAYMENT_FAILED,
-                        "支付失敗",
-                        "您的訂單 " + orderId + " 支付失敗，原因：信用卡餘額不足",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.PAYMENT_FAILED,
+                "支付失敗",
+                "您的訂單 " + orderId + " 支付失敗，原因：信用卡餘額不足",
+                selectedChannels);
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }
@@ -150,7 +147,7 @@ public class NotificationStepDefinitions {
 
     @When("products in an order have insufficient inventory")
     public void productsInAnOrderHaveInsufficientInventory() {
-        orderId = "ORD-20240510-001";
+        orderId = "550e8400-e29b-41d4-a716-446655440003";
     }
 
     @When("the order cannot be fulfilled")
@@ -162,13 +159,12 @@ public class NotificationStepDefinitions {
 
     @Then("the system should send an insufficient inventory notification")
     public void theSystemShouldSendAnInsufficientInventoryNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.INVENTORY_INSUFFICIENT,
-                        "庫存不足",
-                        "您的訂單 " + orderId + " 中的商品庫存不足",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.INVENTORY_INSUFFICIENT,
+                "庫存不足",
+                "您的訂單 " + orderId + " 中的商品庫存不足",
+                selectedChannels);
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }
@@ -201,13 +197,12 @@ public class NotificationStepDefinitions {
 
     @Then("the system should send a delivery status update notification")
     public void theSystemShouldSendADeliveryStatusUpdateNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.DELIVERY_STATUS_UPDATE,
-                        "配送狀態更新",
-                        "您的訂單 " + orderId + " 配送狀態已更新為：配送中",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.DELIVERY_STATUS_UPDATE,
+                "配送狀態更新",
+                "您的訂單 " + orderId + " 配送狀態已更新為：配送中",
+                selectedChannels);
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }
@@ -232,13 +227,12 @@ public class NotificationStepDefinitions {
         // 如果通知對象為空，則創建一個新的通知對象
         if (notification == null) {
             // 創建一個包含預計送達時間的通知對象
-            notification =
-                    new Notification(
-                            "customer-123",
-                            NotificationType.DELIVERY_STATUS_UPDATE,
-                            "配送狀態更新",
-                            "您的訂單配送狀態已更新，預計送達時間為：" + LocalDateTime.now().plusHours(2),
-                            Arrays.asList(NotificationChannel.EMAIL, NotificationChannel.SMS));
+            notification = new Notification(
+                    "customer-123",
+                    NotificationType.DELIVERY_STATUS_UPDATE,
+                    "配送狀態更新",
+                    "您的訂單配送狀態已更新，預計送達時間為：" + LocalDateTime.now().plusHours(2),
+                    Arrays.asList(NotificationChannel.EMAIL, NotificationChannel.SMS));
 
             // 確保通知已發送
             notification.send();
@@ -248,8 +242,7 @@ public class NotificationStepDefinitions {
                     && !notification.getContent().contains("estimated")) {
                 // 使用反射修改內容
                 try {
-                    java.lang.reflect.Field contentField =
-                            notification.getClass().getDeclaredField("content");
+                    java.lang.reflect.Field contentField = notification.getClass().getDeclaredField("content");
                     contentField.setAccessible(true);
                     contentField.set(
                             notification,
@@ -272,18 +265,17 @@ public class NotificationStepDefinitions {
 
     @When("a customer confirms receipt")
     public void aCustomerConfirmsReceipt() {
-        orderId = "ORD-20240510-001";
+        orderId = "550e8400-e29b-41d4-a716-446655440004";
     }
 
     @Then("the system should send an order completion notification")
     public void theSystemShouldSendAnOrderCompletionNotification() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.ORDER_COMPLETED,
-                        "訂單已完成",
-                        "您的訂單 " + orderId + " 已完成",
-                        selectedChannels);
+        notification = new Notification(
+                customerId,
+                NotificationType.ORDER_COMPLETED,
+                "訂單已完成",
+                "您的訂單 " + orderId + " 已完成",
+                selectedChannels);
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }
@@ -311,13 +303,12 @@ public class NotificationStepDefinitions {
 
     @When("the system attempts to send a notification to the customer's email")
     public void theSystemAttemptsToSendANotificationToTheCustomerSEmail() {
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.ORDER_CREATED,
-                        "訂單已創建",
-                        "您的訂單已成功創建",
-                        Arrays.asList(NotificationChannel.EMAIL));
+        notification = new Notification(
+                customerId,
+                NotificationType.ORDER_CREATED,
+                "訂單已創建",
+                "您的訂單已成功創建",
+                Arrays.asList(NotificationChannel.EMAIL));
     }
 
     @When("the delivery fails")
@@ -334,13 +325,12 @@ public class NotificationStepDefinitions {
     @Then("the system should attempt to send the notification through other channels")
     public void theSystemShouldAttemptToSendTheNotificationThroughOtherChannels() {
         // 模擬通過其他渠道發送
-        notification =
-                new Notification(
-                        customerId,
-                        NotificationType.ORDER_CREATED,
-                        "訂單已創建",
-                        "您的訂單已成功創建",
-                        Arrays.asList(NotificationChannel.SMS));
+        notification = new Notification(
+                customerId,
+                NotificationType.ORDER_CREATED,
+                "訂單已創建",
+                "您的訂單已成功創建",
+                Arrays.asList(NotificationChannel.SMS));
         notification.send();
         assertEquals(NotificationStatus.SENT, notification.getStatus());
     }

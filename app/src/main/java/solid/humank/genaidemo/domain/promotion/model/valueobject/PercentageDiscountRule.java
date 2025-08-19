@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
-import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 
 /** 百分比折扣規則 */
 @ValueObject(name = "PercentageDiscountRule", description = "百分比折扣規則")
@@ -24,18 +23,17 @@ public record PercentageDiscountRule(
     }
 
     @Override
-    public boolean matches(ShoppingCart cart) {
-        Money totalAmount = cart.calculateTotal();
-        return totalAmount.getAmount().compareTo(minimumAmount.getAmount()) >= 0;
+    public boolean matches(CartSummary cartSummary) {
+        return cartSummary.totalAmount().getAmount().compareTo(minimumAmount.getAmount()) >= 0;
     }
 
     @Override
-    public Money calculateDiscount(ShoppingCart cart) {
-        if (!matches(cart)) {
+    public Money calculateDiscount(CartSummary cartSummary) {
+        if (!matches(cartSummary)) {
             return Money.twd(0);
         }
 
-        Money totalAmount = cart.calculateTotal();
+        Money totalAmount = cartSummary.totalAmount();
         BigDecimal discountAmount =
                 totalAmount
                         .getAmount()

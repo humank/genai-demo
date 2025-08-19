@@ -20,7 +20,7 @@ CREATE TABLE promotions (
     applicable_product_ids TEXT, -- JSON array of applicable product IDs
     applicable_categories TEXT, -- JSON array of applicable categories
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     CHECK (end_date > start_date),
     CHECK (max_usage_count IS NULL OR max_usage_count > 0),
     CHECK (max_usage_per_customer IS NULL OR max_usage_per_customer > 0),

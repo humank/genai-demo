@@ -5,74 +5,74 @@ Feature: Payment Aggregate Root
   So that I can ensure the domain model works correctly
 
   Background:
-    Given 建立新的訂單ID
+    Given create new order ID
 
-  Scenario: 建立新支付 - 驗證初始狀態
-    When 建立支付
-      | 金額 | 30000 |
-    Then 支付應該成功建立
-    And 支付狀態應為 "PENDING"
-    And 支付金額應為 30000
+  Scenario: Create new payment - verify initial state
+    When create payment
+      | Amount | 30000 |
+    Then payment should be successfully created
+    And payment status should be "PENDING"
+    And payment amount should be 30000
 
-  Scenario: 設定支付方式 - 信用卡
-    When 建立支付
-      | 金額 | 30000 |
-    And 設定支付方式為 "CREDIT_CARD"
-    Then 支付方式應為 "CREDIT_CARD"
+  Scenario: Set payment method - credit card
+    When create payment
+      | Amount | 30000 |
+    And set payment method to "CREDIT_CARD"
+    Then payment method should be "CREDIT_CARD"
 
-  Scenario: 完成支付流程 - 成功
-    When 建立支付
-      | 金額 | 30000 |
-    And 設定支付方式為 "CREDIT_CARD"
-    And 完成支付處理
-      | 交易ID | txn-123456 |
-    Then 支付狀態應為 "COMPLETED"
-    And 交易ID應為 "txn-123456"
+  Scenario: Complete payment process - success
+    When create payment
+      | Amount | 30000 |
+    And set payment method to "CREDIT_CARD"
+    And complete payment processing
+      | Transaction ID | txn-123456 |
+    Then payment status should be "COMPLETED"
+    And transaction ID should be "txn-123456"
 
-  Scenario: 支付失敗處理 - 餘額不足
-    When 建立支付
-      | 金額 | 30000 |
-    And 設定支付方式為 "CREDIT_CARD"
-    And 支付處理失敗
-      | 失敗原因 | Insufficient funds |
-    Then 支付狀態應為 "FAILED"
-    And 失敗原因應為 "Insufficient funds"
+  Scenario: Payment failure handling - insufficient funds
+    When create payment
+      | Amount | 30000 |
+    And set payment method to "CREDIT_CARD"
+    And payment processing fails
+      | Failure Reason | Insufficient funds |
+    Then payment status should be "FAILED"
+    And failure reason should be "Insufficient funds"
 
-  Scenario: 退款處理 - 已完成支付
-    When 建立支付
-      | 金額 | 30000 |
-    And 完成支付處理
-      | 交易ID | txn-123456 |
-    And 申請退款
-    Then 支付狀態應為 "REFUNDED"
+  Scenario: Refund processing - completed payment
+    When create payment
+      | Amount | 30000 |
+    And complete payment processing
+      | Transaction ID | txn-123456 |
+    And request refund
+    Then payment status should be "REFUNDED"
 
-  Scenario: 退款處理 - 未完成支付
-    When 建立支付
-      | 金額 | 30000 |
-    And 申請退款
-    Then 應拋出支付相關異常 "Payment must be in COMPLETED state to refund"
+  Scenario: Refund processing - uncompleted payment
+    When create payment
+      | Amount | 30000 |
+    And request refund
+    Then should throw payment exception "Payment must be in COMPLETED state to refund"
 
-  Scenario: 支付超時處理
-    When 建立支付
-      | 金額 | 30000 |
-    And 支付處理超時
-    Then 支付狀態應為 "FAILED"
-    And 失敗原因應為 "Payment gateway timeout"
-    And 支付應可重試
+  Scenario: Payment timeout handling
+    When create payment
+      | Amount | 30000 |
+    And payment processing times out
+    Then payment status should be "FAILED"
+    And failure reason should be "Payment gateway timeout"
+    And payment should be retryable
 
-  Scenario: 重試失敗的支付
-    When 建立支付
-      | 金額 | 30000 |
-    And 支付處理失敗
-      | 失敗原因 | Insufficient funds |
-    And 重試支付
-    Then 支付狀態應為 "PENDING"
+  Scenario: Retry failed payment
+    When create payment
+      | Amount | 30000 |
+    And payment processing fails
+      | Failure Reason | Insufficient funds |
+    And retry payment
+    Then payment status should be "PENDING"
 
-  Scenario: 完成非待處理狀態的支付
-    When 建立支付
-      | 金額 | 30000 |
-    And 支付處理失敗
-      | 失敗原因 | Insufficient funds |
-    And 完成支付處理
-      | 交易ID | txn-123456 |
-    Then 應拋出支付相關異常 "Payment must be in PENDING state to complete"
+  Scenario: Complete non-pending payment
+    When create payment
+      | Amount | 30000 |
+    And payment processing fails
+      | Failure Reason | Insufficient funds |
+    And complete payment processing
+      | Transaction ID | txn-123456 |
+    Then should throw payment exception "Payment must be in PENDING state to complete"

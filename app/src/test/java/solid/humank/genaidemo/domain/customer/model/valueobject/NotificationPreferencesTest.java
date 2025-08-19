@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
+import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationType;
 
 /** NotificationPreferences 值對象單元測試 測試通知偏好設定的不變性和業務邏輯 */
 @DisplayName("NotificationPreferences 值對象測試")

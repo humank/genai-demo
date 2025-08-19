@@ -12,7 +12,6 @@ import {
   DollarSign,
   Package,
   ShoppingCart,
-  Sparkles,
   TrendingUp,
   Truck,
   Users
@@ -20,18 +19,10 @@ import {
 import React from 'react'
 
 export default function HomePage() {
-  // 使用 API 獲取統計數據
   const { data: statsData, isLoading: statsLoading, error: statsError } = useStats()
   const { data: activities, isLoading: activitiesLoading, error: activitiesError } = useActivities({ limit: 10 })
 
-  // 調試日誌
-  React.useEffect(() => {
-    console.log('HomePage 渲染:', { statsData, statsLoading, statsError, activities, activitiesLoading, activitiesError })
-  }, [statsData, statsLoading, statsError, activities, activitiesLoading, activitiesError])
-
-  // 從 API 數據計算統計
   const stats = React.useMemo(() => {
-    console.log('計算統計數據:', statsData)
     if (!statsData) {
       return [
         {
@@ -75,8 +66,7 @@ export default function HomePage() {
         value: statsData.totalOrders || 0,
         change: { value: '+12%', type: 'increase' as const, period: '比昨天' },
         icon: ShoppingCart,
-        color: 'blue' as const,
-        trend: [12, 19, 15, 22, 18, 24, 20]
+        color: 'blue' as const
       },
       {
         title: '完成訂單價值',
@@ -85,29 +75,25 @@ export default function HomePage() {
           : 'NT$ 0',
         change: { value: '+8%', type: 'increase' as const, period: '比昨天' },
         icon: DollarSign,
-        color: 'green' as const,
-        trend: [30000, 35000, 32000, 42000, 38000, 45231, 40000]
+        color: 'green' as const
       },
       {
         title: '獨特客戶',
         value: statsData.uniqueCustomers || 0,
         change: { value: '+5%', type: 'increase' as const, period: '比上週' },
         icon: Users,
-        color: 'purple' as const,
-        trend: [1100, 1150, 1200, 1180, 1220, 1234, 1210]
+        color: 'purple' as const
       },
       {
         title: '庫存總量',
         value: statsData.totalAvailableInventory || 0,
         change: { value: '正常', type: 'neutral' as const, period: '庫存狀態' },
         icon: Package,
-        color: 'orange' as const,
-        trend: [5, 4, 6, 3, 4, 3, 2]
+        color: 'orange' as const
       }
     ]
   }, [statsData])
 
-  // 功能模組配置
   const features = [
     {
       title: '訂單管理',
@@ -115,8 +101,7 @@ export default function HomePage() {
       icon: ShoppingCart,
       href: '/orders',
       color: 'blue' as const,
-      stats: { label: '總訂單', value: statsData?.totalOrders || 0 },
-      badge: { text: 'HOT', variant: 'hot' as const }
+      stats: { label: '總訂單', value: statsData?.totalOrders || 0 }
     },
     {
       title: '商品管理',
@@ -132,8 +117,7 @@ export default function HomePage() {
       icon: Users,
       href: '/customers',
       color: 'purple' as const,
-      stats: { label: '獨特客戶', value: statsData?.uniqueCustomers || 0 },
-      badge: { text: 'NEW', variant: 'new' as const }
+      stats: { label: '獨特客戶', value: statsData?.uniqueCustomers || 0 }
     },
     {
       title: '支付管理',
@@ -157,44 +141,34 @@ export default function HomePage() {
       icon: TrendingUp,
       href: '/promotions',
       color: 'red' as const,
-      stats: { label: '活動進行中', value: 5 },
-      badge: { text: 'UPDATED', variant: 'updated' as const }
+      stats: { label: '活動進行中', value: 5 }
     }
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* 導航欄 */}
+    <div className="min-h-screen bg-white">
       <Navbar />
-
-      {/* 主要內容 */}
-      <main className="container-modern py-8 space-y-8">
-        {/* 歡迎區塊 */}
-        <div className="text-center space-y-4 animate-fade-in">
-          <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium border border-primary/20">
-            <Sparkles className="h-4 w-4" />
-            <span>現代化電商管理平台</span>
-          </div>
-
-          <h1 className="heading-modern text-gradient">
-            歡迎使用商務管理中心
+      
+      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+        {/* 標題區塊 */}
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            商務管理中心
           </h1>
-
-          <p className="subheading-modern mx-auto">
-            專業的電子商務管理平台，為您提供完整的訂單、商品、客戶和庫存管理解決方案。
-            體驗現代化的企業級管理系統，提升您的商務運營效率。
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            專業的電子商務管理平台，為您提供完整的訂單、商品、客戶和庫存管理解決方案
           </p>
         </div>
 
         {/* 統計卡片 */}
-        <div className="animate-slide-up">
-          <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-            <Activity className="h-5 w-5 mr-2 text-primary" />
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+            <Activity className="h-5 w-5 mr-2 text-blue-600" />
             實時統計
           </h2>
-          <div className="grid-stats">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {stats.map((stat, index) => (
-              <div key={stat.title} className="animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
+              <div key={stat.title}>
                 <StatsCard {...stat} loading={statsLoading} />
               </div>
             ))}
@@ -202,14 +176,14 @@ export default function HomePage() {
         </div>
 
         {/* 功能模組 */}
-        <div className="animate-slide-up" style={{ animationDelay: '200ms' }}>
-          <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
-            <Package className="h-5 w-5 mr-2 text-primary" />
+        <div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+            <Package className="h-5 w-5 mr-2 text-blue-600" />
             功能模組
           </h2>
-          <div className="grid-modern">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <div key={feature.title} className="animate-scale-in" style={{ animationDelay: `${(index + 4) * 100}ms` }}>
+              <div key={feature.title}>
                 <FeatureCard {...feature} />
               </div>
             ))}
@@ -217,7 +191,7 @@ export default function HomePage() {
         </div>
 
         {/* 最近活動 */}
-        <div className="animate-slide-up" style={{ animationDelay: '400ms' }}>
+        <div>
           <ActivityTimeline
             activities={activities || []}
             loading={activitiesLoading}
@@ -225,24 +199,22 @@ export default function HomePage() {
         </div>
 
         {/* 快速操作區 */}
-        <div className="animate-slide-up" style={{ animationDelay: '500ms' }}>
-          <div className="modern-card p-8 text-center space-y-4 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5">
-            <h3 className="text-lg font-semibold text-foreground">
-              準備開始使用？
-            </h3>
-            <p className="text-muted-foreground">
-              探索我們的功能模組，或查看詳細的系統文檔和 API 指南
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="btn-primary">
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                創建第一個訂單
-              </button>
-              <button className="btn-secondary">
-                <Package className="h-4 w-4 mr-2" />
-                查看 API 文檔
-              </button>
-            </div>
+        <div className="bg-gray-50 rounded-lg p-8 text-center space-y-4">
+          <h3 className="text-lg font-semibold text-gray-900">
+            準備開始使用？
+          </h3>
+          <p className="text-gray-600">
+            探索我們的功能模組，或查看詳細的系統文檔和 API 指南
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors flex items-center">
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              創建第一個訂單
+            </button>
+            <button className="bg-white text-gray-700 px-6 py-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors flex items-center">
+              <Package className="h-4 w-4 mr-2" />
+              查看 API 文檔
+            </button>
           </div>
         </div>
       </main>

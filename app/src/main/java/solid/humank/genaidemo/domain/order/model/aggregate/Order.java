@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import solid.humank.genaidemo.domain.common.aggregate.AggregateReconstruction;
+import solid.humank.genaidemo.domain.common.aggregate.AggregateStateTracker;
+import solid.humank.genaidemo.domain.common.aggregate.CrossAggregateOperation;
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
+import solid.humank.genaidemo.domain.common.exception.BusinessRuleViolationException;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
-import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
-import solid.humank.genaidemo.domain.common.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.common.valueobject.OrderItem;
@@ -16,13 +19,14 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderStatus;
 import solid.humank.genaidemo.domain.order.model.events.OrderCreatedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderItemAddedEvent;
 import solid.humank.genaidemo.domain.order.model.events.OrderSubmittedEvent;
-import solid.humank.genaidemo.utils.Preconditions;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
-/** 訂單聚合根 封裝訂單相關的業務規則和行為 */
-@AggregateRoot
+/** 訂單聚合根 封裝訂單相關的業務規則和行為 合併了EnhancedOrder的功能 */
+@AggregateRoot(name = "Order", description = "訂單聚合根，封裝訂單相關的業務規則和行為", boundedContext = "Order", version = "1.0")
 @AggregateLifecycle.ManagedLifecycle
-public class Order {
+public class Order extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
     private final OrderId id;
+    private final AggregateStateTracker<Order> stateTracker = new AggregateStateTracker<>(this);
     private final CustomerId customerId;
     private final String shippingAddress;
     private final List<OrderItem> items;
@@ -35,17 +39,17 @@ public class Order {
     /**
      * 建立訂單
      *
-     * @param customerId 客戶ID字符串
+     * @param customerId      客戶ID字符串
      * @param shippingAddress 配送地址
      */
     public Order(String customerId, String shippingAddress) {
-        this(OrderId.generate(), CustomerId.fromString(customerId), shippingAddress);
+        this(OrderId.generate(), CustomerId.of(customerId), shippingAddress);
     }
 
     /**
      * 建立訂單
      *
-     * @param customerId 客戶ID值對象
+     * @param customerId      客戶ID值對象
      * @param shippingAddress 配送地址
      */
     public Order(CustomerId customerId, String shippingAddress) {
@@ -55,14 +59,14 @@ public class Order {
     /**
      * 建立訂單
      *
-     * @param orderId 訂單ID
-     * @param customerId 客戶ID值對象
+     * @param orderId         訂單ID
+     * @param customerId      客戶ID值對象
      * @param shippingAddress 配送地址
      */
     public Order(OrderId orderId, CustomerId customerId, String shippingAddress) {
-        Preconditions.requireNonNull(orderId, "訂單ID不能為空");
-        Preconditions.requireNonNull(customerId, "客戶ID不能為空");
-        Preconditions.requireNonEmpty(shippingAddress, "配送地址不能為空");
+        Objects.requireNonNull(orderId, "訂單ID不能為空");
+        Objects.requireNonNull(customerId, "客戶ID不能為空");
+        requireNonEmpty(shippingAddress, "配送地址不能為空");
 
         this.id = orderId;
         this.customerId = customerId;
@@ -74,36 +78,36 @@ public class Order {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
 
-        // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(
-                new OrderCreatedEvent(
-                        this.id, this.customerId.toString(), Money.zero(), List.of()));
+        // 收集領域事件
+        collectEvent(OrderCreatedEvent.create(
+                this.id, this.customerId.toString(), Money.zero(), List.of()));
     }
 
     /**
      * 建立訂單 (兼容舊代碼)
      *
-     * @param orderId 訂單ID
-     * @param customerId 客戶ID字符串
+     * @param orderId         訂單ID
+     * @param customerId      客戶ID字符串
      * @param shippingAddress 配送地址
      */
     public Order(OrderId orderId, String customerId, String shippingAddress) {
-        this(orderId, CustomerId.fromString(customerId), shippingAddress);
+        this(orderId, CustomerId.of(customerId), shippingAddress);
     }
 
     /**
      * 用於重建聚合根的完整建構子（僅供Repository使用）
      *
-     * @param id 訂單ID
-     * @param customerId 客戶ID
+     * @param id              訂單ID
+     * @param customerId      客戶ID
      * @param shippingAddress 配送地址
-     * @param items 訂單項列表
-     * @param status 訂單狀態
-     * @param totalAmount 訂單總金額
+     * @param items           訂單項列表
+     * @param status          訂單狀態
+     * @param totalAmount     訂單總金額
      * @param effectiveAmount 訂單實際金額
-     * @param createdAt 創建時間
-     * @param updatedAt 更新時間
+     * @param createdAt       創建時間
+     * @param updatedAt       更新時間
      */
+    @AggregateReconstruction.ReconstructionConstructor("從持久化狀態重建訂單聚合根")
     protected Order(
             OrderId id,
             CustomerId customerId,
@@ -133,16 +137,16 @@ public class Order {
      * @param orderId 訂單ID字符串
      */
     public Order(String orderId) {
-        this(OrderId.of(orderId), CustomerId.fromString("customer-123"), "台北市信義區");
+        this(OrderId.of(orderId), CustomerId.of("customer-123"), "台北市信義區");
     }
 
     /**
      * 添加訂單項
      *
-     * @param productId 產品ID
+     * @param productId   產品ID
      * @param productName 產品名稱
-     * @param quantity 數量
-     * @param price 價格
+     * @param quantity    數量
+     * @param price       價格
      */
     public void addItem(String productId, String productName, int quantity, Money price) {
         // 檢查訂單狀態
@@ -160,37 +164,86 @@ public class Order {
         effectiveAmount = totalAmount;
         updatedAt = LocalDateTime.now();
 
-        // 使用AggregateLifecycleAware發布事件
-        AggregateLifecycleAware.apply(new OrderItemAddedEvent(this.id, productId, quantity, price));
+        // 收集領域事件
+        collectEvent(OrderItemAddedEvent.create(this.id, productId, quantity, price));
     }
 
     /** 提交訂單 */
     public void submit() {
-        // 檢查訂單項
-        if (items.isEmpty()) {
-            throw new IllegalStateException("Cannot submit an order with no items");
-        }
+        // 驗證業務規則
+        validateOrderSubmission();
+
+        OrderStatus oldStatus = this.status;
+
+        // 使用狀態追蹤器追蹤變化並自動產生事件
+        stateTracker.trackChange("status", oldStatus, OrderStatus.PENDING,
+                (oldValue, newValue) -> OrderSubmittedEvent.create(
+                        this.id, this.customerId.toString(), this.totalAmount, this.items.size()));
 
         // 更新狀態
         status = OrderStatus.PENDING;
         updatedAt = LocalDateTime.now();
 
-        // 發布訂單提交事件
-        AggregateLifecycleAware.apply(
-                new OrderSubmittedEvent(
-                        this.id, this.customerId.toString(), this.totalAmount, this.items.size()));
+        // 跨聚合根操作：通知庫存系統預留商品
+        CrossAggregateOperation.publishEvent(this,
+                new solid.humank.genaidemo.domain.order.model.events.OrderInventoryReservationRequestedEvent(
+                        this.id, this.customerId, this.items));
+    }
+
+    /** 驗證訂單提交的業務規則 */
+    private void validateOrderSubmission() {
+        BusinessRuleViolationException.Builder violationBuilder = new BusinessRuleViolationException.Builder("Order",
+                this.id.getValue());
+
+        if (items.isEmpty()) {
+            violationBuilder.addError("ORDER_ITEMS_REQUIRED", "Cannot submit an order with no items");
+        }
+
+        if (status != OrderStatus.CREATED) {
+            violationBuilder.addError("ORDER_STATUS_INVALID",
+                    String.format("只有狀態為 CREATED 的訂單可以提交，當前狀態：%s", status));
+        }
+
+        if (totalAmount == null || totalAmount.getAmount().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            violationBuilder.addError("ORDER_AMOUNT_INVALID", "訂單金額必須大於零");
+        }
+
+        // 檢查是否有錯誤並拋出異常
+        BusinessRuleViolationException exception = violationBuilder.buildIfHasErrors();
+        if (exception != null) {
+            throw exception;
+        }
     }
 
     /** 確認訂單 */
     public void confirm() {
-        // 檢查狀態轉換
-        if (!status.canTransitionTo(OrderStatus.CONFIRMED)) {
-            throw new IllegalStateException("Cannot confirm an order in " + status + " state");
-        }
+        // 驗證業務規則
+        validateOrderConfirmation();
+
+        OrderStatus oldStatus = this.status;
+
+        // 使用狀態追蹤器追蹤變化並自動產生事件
+        stateTracker.trackChange("status", oldStatus, OrderStatus.CONFIRMED,
+                (oldValue, newValue) -> new solid.humank.genaidemo.domain.order.model.events.OrderConfirmedEvent(
+                        this.id, this.customerId, this.totalAmount));
 
         // 更新狀態
         status = OrderStatus.CONFIRMED;
         updatedAt = LocalDateTime.now();
+
+        // 跨聚合根操作：通知支付系統準備支付
+        CrossAggregateOperation.publishEvent(this,
+                new solid.humank.genaidemo.domain.order.model.events.OrderPaymentRequestedEvent(
+                        this.id, this.customerId, this.effectiveAmount));
+    }
+
+    /** 驗證訂單確認的業務規則 */
+    private void validateOrderConfirmation() {
+        if (!status.canTransitionTo(OrderStatus.CONFIRMED)) {
+            throw new BusinessRuleViolationException("Order", this.id.getValue(),
+                    "ORDER_CONFIRMATION_INVALID",
+                    String.format("無法確認狀態為 %s 的訂單", status));
+        }
     }
 
     /** 標記為已付款 */
@@ -287,8 +340,7 @@ public class Order {
         this.items.addAll(updatedItems);
 
         // 重新計算總金額
-        this.totalAmount =
-                updatedItems.stream().map(OrderItem::getSubtotal).reduce(Money.zero(), Money::add);
+        this.totalAmount = updatedItems.stream().map(OrderItem::getSubtotal).reduce(Money.zero(), Money::add);
         this.effectiveAmount = this.totalAmount;
         this.updatedAt = LocalDateTime.now();
 
@@ -346,7 +398,8 @@ public class Order {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
         if (o instanceof Order order) {
             return Objects.equals(id, order.id);
         }
@@ -373,5 +426,63 @@ public class Order {
                 + ", items="
                 + items.size()
                 + '}';
+    }
+
+    /**
+     * 確保字符串不為空（null 或空字符串）
+     * 
+     * @param value   要檢查的字符串
+     * @param message 錯誤信息
+     * @return 輸入的字符串
+     * @throws IllegalArgumentException 如果字符串為空
+     */
+    private static String requireNonEmpty(String value, String message) {
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
+    }
+
+    /**
+     * 重建後驗證聚合根狀態
+     */
+    @AggregateReconstruction.PostReconstruction("驗證重建後的訂單聚合根狀態")
+    public void validateReconstructedState() {
+        BusinessRuleViolationException.Builder violationBuilder = new BusinessRuleViolationException.Builder("Order",
+                this.id.getValue());
+
+        if (this.id == null) {
+            violationBuilder.addError("ORDER_ID_REQUIRED", "訂單ID不能為空");
+        }
+
+        if (this.customerId == null) {
+            violationBuilder.addError("CUSTOMER_ID_REQUIRED", "客戶ID不能為空");
+        }
+
+        if (this.shippingAddress == null || this.shippingAddress.trim().isEmpty()) {
+            violationBuilder.addError("SHIPPING_ADDRESS_REQUIRED", "配送地址不能為空");
+        }
+
+        if (this.status == null) {
+            violationBuilder.addError("ORDER_STATUS_REQUIRED", "訂單狀態不能為空");
+        }
+
+        if (this.totalAmount == null) {
+            violationBuilder.addError("TOTAL_AMOUNT_REQUIRED", "訂單總金額不能為空");
+        }
+
+        if (this.effectiveAmount == null) {
+            violationBuilder.addError("EFFECTIVE_AMOUNT_REQUIRED", "訂單實際金額不能為空");
+        }
+
+        if (this.items == null) {
+            violationBuilder.addError("ORDER_ITEMS_REQUIRED", "訂單項目列表不能為空");
+        }
+
+        // 檢查是否有錯誤並拋出異常
+        BusinessRuleViolationException exception = violationBuilder.buildIfHasErrors();
+        if (exception != null) {
+            throw exception;
+        }
     }
 }

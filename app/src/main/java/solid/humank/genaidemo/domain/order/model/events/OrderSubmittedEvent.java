@@ -1,44 +1,51 @@
 package solid.humank.genaidemo.domain.order.model.events;
 
-import solid.humank.genaidemo.domain.common.event.AbstractDomainEvent;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 
-/** 訂單提交事件 */
-public class OrderSubmittedEvent extends AbstractDomainEvent {
+/**
+ * 訂單提交事件
+ * 使用 record 實作，自動獲得不可變性和基礎功能
+ */
+public record OrderSubmittedEvent(
+        OrderId orderId,
+        String customerId,
+        Money totalAmount,
+        int itemCount,
+        UUID eventId,
+        LocalDateTime occurredOn) implements DomainEvent {
 
-    private final OrderId orderId;
-    private final String customerId;
-    private final Money totalAmount;
-    private final int itemCount;
-
-    public OrderSubmittedEvent(
+    /**
+     * 工廠方法，自動設定 eventId 和 occurredOn
+     */
+    public static OrderSubmittedEvent create(
             OrderId orderId, String customerId, Money totalAmount, int itemCount) {
-        super("order-service");
-        this.orderId = orderId;
-        this.customerId = customerId;
-        this.totalAmount = totalAmount;
-        this.itemCount = itemCount;
+        DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
+        return new OrderSubmittedEvent(orderId, customerId, totalAmount, itemCount,
+                metadata.eventId(), metadata.occurredOn());
     }
 
-    public OrderId getOrderId() {
-        return orderId;
+    @Override
+    public UUID getEventId() {
+        return eventId;
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public Money getTotalAmount() {
-        return totalAmount;
-    }
-
-    public int getItemCount() {
-        return itemCount;
+    @Override
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
     }
 
     @Override
     public String getEventType() {
-        return "OrderSubmittedEvent";
+        return DomainEvent.getEventTypeFromClass(this.getClass());
+    }
+
+    @Override
+    public String getAggregateId() {
+        return orderId.getValue();
     }
 }

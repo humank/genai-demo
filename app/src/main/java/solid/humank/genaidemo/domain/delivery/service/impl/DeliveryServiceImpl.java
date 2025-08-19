@@ -2,6 +2,8 @@ package solid.humank.genaidemo.domain.delivery.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
@@ -10,6 +12,7 @@ import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
 
 /** 配送服務實現 暫時禁用以解決啟動問題 */
 // @Service
+@DomainService(name = "DeliveryServiceImpl", description = "配送服務實現，處理配送相關的業務邏輯", boundedContext = "Delivery")
 public class DeliveryServiceImpl implements DeliveryService {
 
     private final DeliveryRepository deliveryRepository;

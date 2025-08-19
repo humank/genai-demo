@@ -2,6 +2,7 @@ package solid.humank.genaidemo.testutils.handlers;
 
 import java.util.Map;
 import java.util.function.Consumer;
+
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.service.CustomerDiscountService;
@@ -104,50 +105,50 @@ public class TestScenarioHandler {
 
     private DiscountResult handleBothDiscountsScenario(
             Customer customer, Order order, CustomerDiscountService discountService) {
+        Money totalAmount = order.getTotalAmount();
+        Money bestDiscount = discountService.calculateBestDiscount(totalAmount, customer);
+        Money discountedTotal = totalAmount.subtract(bestDiscount);
+
         int newMemberDiscount = discountService.getNewMemberDiscountPercentage();
         int birthdayDiscount = discountService.getBirthdayDiscountPercentage();
 
-        if (newMemberDiscount > birthdayDiscount) {
-            Money discountedTotal = discountService.applyNewMemberDiscount(order);
-            return new DiscountResult(discountedTotal, "New Member Discount");
-        } else {
-            Money discountedTotal = discountService.applyBirthdayDiscount(order);
-            return new DiscountResult(discountedTotal, "Birthday Month Discount");
-        }
+        String discountType = newMemberDiscount > birthdayDiscount ? "New Member Discount" : "Birthday Month Discount";
+        return new DiscountResult(discountedTotal, discountType);
     }
 
     private DiscountResult handleBirthdayDiscountScenario(
             Customer customer, Order order, CustomerDiscountService discountService) {
-        Money discountedTotal = discountService.applyBirthdayDiscount(order);
+        Money totalAmount = order.getTotalAmount();
+        Money discount = discountService.calculateBirthdayDiscount(totalAmount);
+        Money discountedTotal = totalAmount.subtract(discount);
         return new DiscountResult(discountedTotal, "Birthday Month Discount");
     }
 
     private DiscountResult handleNewMemberDiscountScenario(
             Customer customer, Order order, CustomerDiscountService discountService) {
-        Money discountedTotal = discountService.applyNewMemberDiscount(order);
+        Money totalAmount = order.getTotalAmount();
+        Money discount = discountService.calculateNewMemberDiscount(totalAmount);
+        Money discountedTotal = totalAmount.subtract(discount);
         return new DiscountResult(discountedTotal, "New Member Discount");
     }
 
     private PaymentResult handleCashbackScenario(
             Map<String, Object> paymentDetails, Money orderTotal) {
         int percentage = (int) paymentDetails.get("cashbackPercentage");
-        int maxCashback =
-                paymentDetails.containsKey("maxCashback")
-                        ? (int) paymentDetails.get("maxCashback")
-                        : Integer.MAX_VALUE;
+        int maxCashback = paymentDetails.containsKey("maxCashback")
+                ? (int) paymentDetails.get("maxCashback")
+                : Integer.MAX_VALUE;
 
-        int cashbackAmount =
-                Math.min(orderTotal.getAmount().intValue() * percentage / 100, maxCashback);
+        int cashbackAmount = Math.min(orderTotal.getAmount().intValue() * percentage / 100, maxCashback);
         return new PaymentResult(orderTotal, cashbackAmount, orderTotal);
     }
 
     private PaymentResult handleInstantDiscountScenario(
             Map<String, Object> paymentDetails, Money orderTotal) {
         int discount = (int) paymentDetails.get("instantDiscount");
-        int minOrderAmount =
-                paymentDetails.containsKey("minOrderAmount")
-                        ? (int) paymentDetails.get("minOrderAmount")
-                        : 0;
+        int minOrderAmount = paymentDetails.containsKey("minOrderAmount")
+                ? (int) paymentDetails.get("minOrderAmount")
+                : 0;
 
         if (orderTotal.getAmount().intValue() >= minOrderAmount) {
             Money discountedTotal = orderTotal.subtract(Money.twd(discount));

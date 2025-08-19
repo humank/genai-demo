@@ -3,8 +3,8 @@ package solid.humank.genaidemo.infrastructure.order.acl;
 import java.time.LocalDateTime;
 import java.util.Map;
 import solid.humank.genaidemo.domain.common.valueobject.DeliveryOrder;
-import solid.humank.genaidemo.domain.common.valueobject.DeliveryStatus;
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
+import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryStatus;
 import solid.humank.genaidemo.domain.order.model.aggregate.Order;
 
 /** 物流防腐層 隔離外部物流系統與領域模型 */
@@ -38,7 +38,7 @@ public class LogisticsAntiCorruptionLayer {
         // 將外部系統的響應轉換為領域模型
         return new DeliveryOrder(
                 order.getId(),
-                DeliveryStatus.PENDING,
+                DeliveryStatus.PENDING_SHIPMENT,
                 trackingNumber,
                 LocalDateTime.now().plusDays(3));
     }
@@ -65,12 +65,12 @@ public class LogisticsAntiCorruptionLayer {
      */
     private DeliveryStatus mapExternalStatus(String externalStatus) {
         return switch (externalStatus.toUpperCase()) {
-            case "CREATED", "PENDING" -> DeliveryStatus.PENDING;
-            case "SHIPPED" -> DeliveryStatus.SHIPPED;
+            case "CREATED", "PENDING" -> DeliveryStatus.PENDING_SHIPMENT;
+            case "SHIPPED" -> DeliveryStatus.IN_TRANSIT;
             case "DELIVERED" -> DeliveryStatus.DELIVERED;
-            case "FAILED" -> DeliveryStatus.FAILED;
+            case "FAILED" -> DeliveryStatus.DELIVERY_FAILED;
             case "CANCELLED" -> DeliveryStatus.CANCELLED;
-            default -> DeliveryStatus.UNKNOWN;
+            default -> DeliveryStatus.PENDING_SHIPMENT; // 預設為待發貨
         };
     }
 }

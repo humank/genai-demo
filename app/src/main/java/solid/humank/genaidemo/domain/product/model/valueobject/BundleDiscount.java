@@ -1,8 +1,10 @@
 package solid.humank.genaidemo.domain.product.model.valueobject;
 
+import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 /** 捆綁銷售折扣 */
+@ValueObject
 public class BundleDiscount {
     private Money regularPrice;
     private Money discountedPrice;

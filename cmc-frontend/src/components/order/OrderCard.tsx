@@ -177,7 +177,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({
           
           <div className="bg-muted/30 rounded-lg p-3 space-y-2">
             {(order?.items || []).slice(0, 3).map((item, index) => (
-              <div key={item?.id || `${item?.productName}-${index}` || `item-${index}`} className="flex justify-between items-center text-sm">
+              <div key={`${item?.productName}-${index}` || `item-${index}`} className="flex justify-between items-center text-sm">
                 <div className="flex-1">
                   <span className="font-medium">{item.productName}</span>
                   <span className="text-muted-foreground ml-2">x{item.quantity}</span>

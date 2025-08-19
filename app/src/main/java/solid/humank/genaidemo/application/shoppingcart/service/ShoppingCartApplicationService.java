@@ -3,16 +3,19 @@ package solid.humank.genaidemo.application.shoppingcart.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
 import solid.humank.genaidemo.application.shoppingcart.dto.CartItemDto;
 import solid.humank.genaidemo.application.shoppingcart.dto.ShoppingCartDto;
-import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
+import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
 import solid.humank.genaidemo.domain.shoppingcart.model.valueobject.CartItem;
 import solid.humank.genaidemo.domain.shoppingcart.model.valueobject.ShoppingCartId;
-import solid.humank.genaidemo.domain.shoppingcart.port.ShoppingCartRepository;
+import solid.humank.genaidemo.domain.shoppingcart.repository.ShoppingCartRepository;
 
 /** 購物車應用服務 */
 @Service
@@ -20,9 +23,13 @@ import solid.humank.genaidemo.domain.shoppingcart.port.ShoppingCartRepository;
 public class ShoppingCartApplicationService {
 
     private final ShoppingCartRepository shoppingCartRepository;
+    private final DomainEventApplicationService domainEventApplicationService;
 
-    public ShoppingCartApplicationService(ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingCartApplicationService(
+            ShoppingCartRepository shoppingCartRepository,
+            DomainEventApplicationService domainEventApplicationService) {
         this.shoppingCartRepository = shoppingCartRepository;
+        this.domainEventApplicationService = domainEventApplicationService;
     }
 
     /** 創建購物車 */
@@ -30,6 +37,10 @@ public class ShoppingCartApplicationService {
         ShoppingCart cart = new ShoppingCart(ShoppingCartId.generate(), new CustomerId(customerId));
 
         ShoppingCart savedCart = shoppingCartRepository.save(cart);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedCart);
+
         return toDto(savedCart);
     }
 
@@ -48,6 +59,10 @@ public class ShoppingCartApplicationService {
                 solid.humank.genaidemo.domain.common.valueobject.Money.twd(unitPrice));
 
         ShoppingCart savedCart = shoppingCartRepository.save(cart);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedCart);
+
         return toDto(savedCart);
     }
 
@@ -62,6 +77,10 @@ public class ShoppingCartApplicationService {
         cart.updateItemQuantity(new ProductId(productId), newQuantity);
 
         ShoppingCart savedCart = shoppingCartRepository.save(cart);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedCart);
+
         return toDto(savedCart);
     }
 
@@ -76,6 +95,10 @@ public class ShoppingCartApplicationService {
         cart.removeItem(new ProductId(productId));
 
         ShoppingCart savedCart = shoppingCartRepository.save(cart);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedCart);
+
         return toDto(savedCart);
     }
 
@@ -102,12 +125,15 @@ public class ShoppingCartApplicationService {
         cart.clear();
 
         ShoppingCart savedCart = shoppingCartRepository.save(cart);
+
+        // 發布領域事件
+        domainEventApplicationService.publishEventsFromAggregate(savedCart);
+
         return toDto(savedCart);
     }
 
     private ShoppingCartDto toDto(ShoppingCart cart) {
-        List<CartItemDto> itemDtos =
-                cart.getItems().stream().map(this::toCartItemDto).collect(Collectors.toList());
+        List<CartItemDto> itemDtos = cart.getItems().stream().map(this::toCartItemDto).collect(Collectors.toList());
 
         // 計算折扣金額（簡化實現）
         java.math.BigDecimal discountAmount = calculateDiscountAmount(cart);

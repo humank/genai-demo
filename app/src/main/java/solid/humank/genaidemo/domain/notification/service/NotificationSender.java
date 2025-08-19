@@ -1,10 +1,12 @@
 package solid.humank.genaidemo.domain.notification.service;
 
 import java.util.List;
+import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.notification.model.aggregate.Notification;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 
 /** 通知發送器接口 定義通知發送的行為 */
+@DomainService
 public interface NotificationSender {
 
     /**

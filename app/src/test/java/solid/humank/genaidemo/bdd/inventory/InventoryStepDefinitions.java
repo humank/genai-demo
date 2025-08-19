@@ -14,17 +14,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.ReservationId;
 import solid.humank.genaidemo.testutils.annotations.BddTest;
-import solid.humank.genaidemo.testutils.context.TestContext;
 import solid.humank.genaidemo.testutils.fixtures.TestConstants;
 
 /** 庫存聚合根的 Cucumber 步驟定義 重構後移除了條件邏輯，使用測試輔助工具來提高可讀性和維護性 */
 @BddTest
 public class InventoryStepDefinitions {
 
-    private final TestContext testContext = new TestContext();
+    private final TestContext testContext = TestContext.getInstance();
 
     private final Map<String, Inventory> inventories = new HashMap<>();
     private final Map<String, ReservationId> reservations = new HashMap<>();
@@ -88,7 +88,7 @@ public class InventoryStepDefinitions {
             ReservationId reservationId = createInventoryReservation(productName, quantity);
             assertNotNull(reservationId, "Reservation ID should not be null");
         } catch (Exception e) {
-            testContext.getExceptionHandler().captureException(e);
+            testContext.setLastErrorMessage(e.getMessage());
             fail("Failed to reserve inventory: " + e.getMessage());
         }
     }
@@ -102,7 +102,7 @@ public class InventoryStepDefinitions {
     @Then("the system should not reserve any inventory")
     public void theSystemShouldNotReserveAnyInventory() {
         assertFalse(
-                testContext.getExceptionHandler().hasException(),
+                testContext.hasError(),
                 "No exception should be thrown when not reserving inventory");
     }
 
@@ -116,7 +116,7 @@ public class InventoryStepDefinitions {
     @Then("the system should reserve inventory for all order products")
     public void theSystemShouldReserveInventoryForAllOrderProducts() {
         assertFalse(
-                testContext.getExceptionHandler().hasException(),
+                testContext.hasError(),
                 "No exception should be thrown when reserving inventory for all products");
     }
 
@@ -165,12 +165,6 @@ public class InventoryStepDefinitions {
         // 這個步驟在實際應用中會取消訂單
         // 在這個測試中，我們只需要設置一個標誌
         assertTrue(true);
-    }
-
-    @Then("the inventory system should release the reserved inventory")
-    public void theSystemShouldReleaseTheReservedInventory() {
-        ensureInventoryAndReservationExist();
-        releaseCurrentReservation();
     }
 
     @Given("the inventory threshold for product {string} is set to {int}")
@@ -252,7 +246,7 @@ public class InventoryStepDefinitions {
             try {
                 createInventoryReservation(productName, quantity);
             } catch (Exception e) {
-                testContext.getExceptionHandler().captureException(e);
+                testContext.setLastErrorMessage(e.getMessage());
             }
         }
     }
@@ -337,6 +331,16 @@ public class InventoryStepDefinitions {
         }
     }
 
+    @Then("the system should release the reserved inventory")
+    public void theSystemShouldReleaseTheReservedInventory() {
+        ensureInventoryAndReservationExist();
+        releaseCurrentReservation();
+
+        // 驗證庫存已被釋放
+        Inventory inventory = inventories.get(currentProductId);
+        assertTrue(inventory.getAvailableQuantity() > 0, "Inventory should be released");
+    }
+
     private void reduceInventoryBelowThreshold(
             Inventory inventory, String productName, int threshold) {
         int currentQuantity = inventory.getAvailableQuantity();
@@ -347,7 +351,7 @@ public class InventoryStepDefinitions {
                 ReservationId reservationId = inventory.reserve(UUID.randomUUID(), reduceBy);
                 reservations.put(productName + "-threshold", reservationId);
             } catch (Exception e) {
-                testContext.getExceptionHandler().captureException(e);
+                testContext.setLastErrorMessage(e.getMessage());
                 fail("Failed to reduce inventory: " + e.getMessage());
             }
         }
