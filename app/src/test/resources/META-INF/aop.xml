@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aspectj>
+    <weaver options="-verbose -showWeaveInfo">
+        <!-- Include all packages for weaving -->
+        <include within="solid.humank.genaidemo..*" />
+        <include within="io.qameta.allure..*" />
+
+        <!-- Exclude problematic Spring Boot classes -->
+        <exclude within="org.springframework.boot.jdbc.DataSourceBuilder*" />
+        <exclude within="org.springframework.boot.liquibase.*" />
+        <exclude within="com.mchange.v2.c3p0.*" />
+        <exclude within="liquibase.exception.*" />
+
+        <!-- Exclude other problematic classes -->
+        <exclude within="org.springframework.boot.diagnostics.*" />
+        <exclude within="org.springframework.boot.autoconfigure.*" />
+    </weaver>
+
+    <aspects>
+        <!-- Include Allure aspects -->
+        <aspect name="io.qameta.allure.aspects.AttachmentsAspects" />
+        <aspect name="io.qameta.allure.aspects.StepsAspects" />
+    </aspects>
+</aspectj>

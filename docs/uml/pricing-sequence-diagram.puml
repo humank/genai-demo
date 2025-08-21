@@ -1,0 +1,185 @@
+@startuml 定價處理時序圖
+skinparam responseMessageBelowArrow true
+
+actor "Client" as C
+participant "PricingController" as PC
+participant "PricingApplicationService" as PAS
+participant "ProductCategoryMapper" as PCM
+participant "PricingRule" as PR
+participant "CommissionRate" as CR
+participant "PricingRuleRepository" as PRR
+participant "DomainEventPublisher" as DEP
+
+== 創建定價規則 ==
+C -> PC: createPricingRule(CreatePricingRuleRequest)
+activate PC
+
+PC -> PC: convertToAppProductCategory(productCategoryDto)
+activate PC
+PC --> PC: AppProductCategoryDto
+deactivate PC
+
+PC -> PAS: createPricingRule(CreatePricingRuleCommand)
+activate PAS
+
+PAS -> PCM: toDomain(productCategoryDto)
+activate PCM
+PCM --> PAS: ProductCategory
+deactivate PCM
+
+PAS -> PR: new PricingRule(priceId, productId, promotionId, finalPrice, discountPercentage, discountAmount, effectiveFrom, effectiveTo, category)
+activate PR
+PR -> PR: addDefaultCommissionRate()
+PR --> PAS: PricingRule
+deactivate PR
+
+PAS -> PRR: save(pricingRule)
+activate PRR
+PRR --> PAS: PricingRule
+deactivate PRR
+
+PAS -> PAS: mapToDto(pricingRule)
+activate PAS
+PAS -> PCM: toDto(pricingRule.getProductCategory())
+activate PCM
+PCM --> PAS: ProductCategoryDto
+deactivate PCM
+PAS --> PAS: PricingRuleDto
+deactivate PAS
+
+PAS --> PC: PricingRuleDto
+deactivate PAS
+
+PC --> C: PricingRuleResponse
+deactivate PC
+
+== 更新佣金費率 ==
+C -> PC: updateCommissionRate(priceId, UpdateCommissionRateRequest)
+activate PC
+
+PC -> PAS: updateCommissionRate(UpdateCommissionRateCommand)
+activate PAS
+
+PAS -> PRR: findById(priceId)
+activate PRR
+PRR --> PAS: Optional<PricingRule>
+deactivate PRR
+
+alt 定價規則存在
+  PAS -> PR: updateCommissionRate(normalRate, eventRate)
+  activate PR
+  PR -> CR: setNormalRate(normalRate)
+  activate CR
+  CR --> PR: void
+  deactivate CR
+  PR -> CR: setEventRate(eventRate)
+  activate CR
+  CR --> PR: void
+  deactivate CR
+  PR --> PAS: void
+  deactivate PR
+  
+  PAS -> PRR: save(pricingRule)
+  activate PRR
+  PRR --> PAS: PricingRule
+  deactivate PRR
+  
+  PAS -> PAS: mapToDto(pricingRule)
+  activate PAS
+  PAS -> PCM: toDto(pricingRule.getProductCategory())
+  activate PCM
+  PCM --> PAS: ProductCategoryDto
+  deactivate PCM
+  PAS --> PAS: PricingRuleDto
+  deactivate PAS
+  
+  PAS --> PC: PricingRuleDto
+  PC --> C: PricingRuleResponse
+else 定價規則不存在
+  PAS --> PC: throw IllegalArgumentException
+  PC --> C: ErrorResponse(404, "定價規則不存在")
+end
+deactivate PAS
+deactivate PC
+
+== 獲取產品類別的定價規則 ==
+C -> PC: getPricingRulesByCategory(category)
+activate PC
+
+PC -> PC: convertToAppProductCategory(category)
+activate PC
+PC --> PC: AppProductCategoryDto
+deactivate PC
+
+PC -> PAS: getPricingRulesByCategory(categoryDto)
+activate PAS
+
+PAS -> PCM: toDomain(categoryDto)
+activate PCM
+PCM --> PAS: ProductCategory
+deactivate PCM
+
+PAS -> PRR: findByProductCategory(category)
+activate PRR
+PRR --> PAS: List<PricingRule>
+deactivate PRR
+
+PAS -> PAS: rules.stream().map(this::mapToDto).collect(Collectors.toList())
+activate PAS
+loop 對於每個 PricingRule
+  PAS -> PCM: toDto(pricingRule.getProductCategory())
+  activate PCM
+  PCM --> PAS: ProductCategoryDto
+  deactivate PCM
+end
+PAS --> PAS: List<PricingRuleDto>
+deactivate PAS
+
+PAS --> PC: List<PricingRuleDto>
+deactivate PAS
+
+PC --> C: PricingRuleListResponse
+deactivate PC
+
+== 計算佣金 ==
+C -> PC: calculateCommission(productId, isEventPromotion)
+activate PC
+
+PC -> PAS: calculateCommission(productId, isEventPromotion)
+activate PAS
+
+PAS -> PRR: findByProductId(productId)
+activate PRR
+PRR --> PAS: List<PricingRule>
+deactivate PRR
+
+PAS -> PAS: pricingRules.stream().filter(PricingRule::isValidNow).findFirst()
+activate PAS
+PAS --> PAS: Optional<PricingRule>
+deactivate PAS
+
+alt 找到有效的定價規則
+  PAS -> PR: calculateCommission(isEventPromotion)
+  activate PR
+  PR -> CR: getCurrentCommissionRate()
+  activate CR
+  CR --> PR: CommissionRate
+  deactivate CR
+  PR -> CR: isEventPromotion ? getEventRate() : getNormalRate()
+  activate CR
+  CR --> PR: int
+  deactivate CR
+  PR -> PR: finalPrice.multiply(ratePercentage / 100.0)
+  PR --> PAS: Money
+  deactivate PR
+  
+  PAS --> PC: CommissionDto
+  PC --> C: CommissionResponse
+else 沒有找到有效的定價規則
+  PAS --> PC: CommissionDto(Money.ZERO)
+  PC --> C: CommissionResponse(0)
+end
+deactivate PAS
+deactivate PC
+
+@enduml

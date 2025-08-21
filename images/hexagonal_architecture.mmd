@@ -1,0 +1,72 @@
+graph TB
+    subgraph 外部系統 ["外部系統"]
+        UI[Web 界面]
+        DB[(數據庫)]
+        PS[支付服務]
+        LS[物流服務]
+    end
+    
+    subgraph 應用層 ["應用層"]
+        APPS[OrderApplicationService]
+    end
+    
+    subgraph 領域層 ["領域層"]
+        AGG[Order<br>聚合根]
+        VO[值對象<br>Money, OrderId]
+        ENT[實體<br>OrderItem]
+        DOM_EVT[領域事件]
+        DOM_SVC[領域服務]
+    end
+    
+    subgraph 入站端口 ["入站端口"]
+        IP[OrderManagementUseCase]
+    end
+    
+    subgraph 出站端口 ["出站端口"]
+        OP1[OrderPersistencePort]
+        OP2[PaymentServicePort]
+        OP3[LogisticsServicePort]
+    end
+    
+    subgraph 入站適配器 ["入站適配器"]
+        IA[OrderController]
+    end
+    
+    subgraph 出站適配器 ["出站適配器"]
+        OA1[JpaOrderRepository]
+        OA2[ExternalPaymentAdapter]
+        OA3[ExternalLogisticsAdapter]
+    end
+    
+    UI -->|HTTP請求| IA
+    IA -->|實現| IP
+    IP <---->|使用| APPS
+    APPS -->|操作| AGG
+    AGG -->|包含| ENT
+    AGG -->|使用| VO
+    AGG -->|產生| DOM_EVT
+    DOM_SVC -->|處理| AGG
+    
+    APPS -->|使用| OP1
+    APPS -->|使用| OP2
+    APPS -->|使用| OP3
+    
+    OP1 <---->|實現| OA1
+    OP2 <---->|實現| OA2
+    OP3 <---->|實現| OA3
+    
+    OA1 -->|存取| DB
+    OA2 -->|整合| PS
+    OA3 -->|整合| LS
+    
+    classDef application fill:#f9f,stroke:#333,stroke-width:2px
+    classDef domain fill:#bbf,stroke:#333,stroke-width:2px
+    classDef port fill:#bfb,stroke:#333,stroke-width:2px
+    classDef adapter fill:#fbb,stroke:#333,stroke-width:2px
+    classDef external fill:#ddd,stroke:#333,stroke-width:2px
+    
+    class APPS application
+    class AGG,VO,ENT,DOM_EVT,DOM_SVC domain
+    class IP,OP1,OP2,OP3 port
+    class IA,OA1,OA2,OA3 adapter
+    class UI,DB,PS,LS external

@@ -1,0 +1,188 @@
+@startuml 分層架構圖
+
+' 樣式設定
+skinparam package {
+    BackgroundColor<<Interface>> LightBlue
+    BackgroundColor<<Application>> LightGreen
+    BackgroundColor<<Domain>> LightSalmon
+    BackgroundColor<<Infrastructure>> LightGray
+}
+
+skinparam component {
+    BackgroundColor<<DTO>> LightYellow
+    BackgroundColor<<Mapper>> LightCyan
+    BackgroundColor<<Service>> LightGreen
+    BackgroundColor<<Repository>> LightBlue
+    BackgroundColor<<Adapter>> LightGray
+}
+
+' 註解
+note as N1
+  顏色說明:
+  <back:LightBlue>介面層</back>
+  <back:LightGreen>應用層</back>
+  <back:LightSalmon>領域層</back>
+  <back:LightGray>基礎設施層</back>
+  <back:LightYellow>DTO</back>
+  <back:LightCyan>映射器</back>
+end note
+
+' 介面層
+package "介面層 (Interfaces Layer)" <<Interface>> {
+    package "web" {
+        [OrderController]
+        [PaymentController]
+        [PricingController]
+        [DeliveryController]
+        
+        package "dto" {
+            [CreateOrderRequest] <<DTO>>
+            [OrderResponse] <<DTO>>
+            [PaymentRequest] <<DTO>>
+            [PaymentResponse] <<DTO>>
+            [CreatePricingRuleRequest] <<DTO>>
+            [ProductCategoryDto] <<DTO>>
+            [DeliveryRequest] <<DTO>>
+            [DeliveryResponse] <<DTO>>
+        }
+    }
+}
+
+' 應用層
+package "應用層 (Application Layer)" <<Application>> {
+    package "service" {
+        [OrderApplicationService] <<Service>>
+        [PaymentApplicationService] <<Service>>
+        [PricingApplicationService] <<Service>>
+        [DeliveryApplicationService] <<Service>>
+    }
+    
+    package "dto" {
+        [CreateOrderCommand] <<DTO>>
+        [OrderDto] <<DTO>>
+        [PaymentDto] <<DTO>>
+        [PricingRuleDto] <<DTO>>
+        [AppProductCategoryDto] <<DTO>>
+        [DeliveryDto] <<DTO>>
+    }
+    
+    package "mapper" {
+        [OrderMapper] <<Mapper>>
+        [PaymentMapper] <<Mapper>>
+        [ProductCategoryMapper] <<Mapper>>
+        [DeliveryMapper] <<Mapper>>
+    }
+}
+
+' 領域層
+package "領域層 (Domain Layer)" <<Domain>> {
+    package "model" {
+        package "aggregate" {
+            [Order]
+            [Payment]
+            [PricingRule]
+            [Delivery]
+        }
+        
+        package "entity" {
+            [OrderItem]
+            [CommissionRate]
+        }
+        
+        package "valueobject" {
+            [Money]
+            [OrderId]
+            [PaymentId]
+            [PriceId]
+            [DeliveryId]
+            [ProductCategory]
+            [DeliveryStatus]
+        }
+        
+        package "event" {
+            [OrderCreatedEvent]
+            [PaymentCompletedEvent]
+        }
+    }
+    
+    package "repository" {
+        [OrderRepository] <<Repository>>
+        [PaymentRepository] <<Repository>>
+        [PricingRuleRepository] <<Repository>>
+        [DeliveryRepository] <<Repository>>
+    }
+    
+    package "service" {
+        [OrderProcessingService] <<Service>>
+        [PaymentService] <<Service>>
+        [CommissionService] <<Service>>
+        [DeliveryService] <<Service>>
+    }
+}
+
+' 基礎設施層
+package "基礎設施層 (Infrastructure Layer)" <<Infrastructure>> {
+    package "persistence" {
+        package "adapter" {
+            [OrderPersistenceAdapter] <<Adapter>>
+            [PaymentPersistenceAdapter] <<Adapter>>
+            [PricingRulePersistenceAdapter] <<Adapter>>
+            [DeliveryRepositoryAdapter] <<Adapter>>
+        }
+        
+        package "repository" {
+            [JpaOrderRepository]
+            [JpaPaymentRepository]
+        }
+    }
+    
+    package "external" {
+        package "adapter" {
+            [PaymentGatewayAdapter] <<Adapter>>
+            [LogisticsAdapter] <<Adapter>>
+            [DeliveryServiceAdapter] <<Adapter>>
+        }
+    }
+}
+
+' 依賴關係
+' 介面層 -> 應用層
+OrderController --> OrderApplicationService
+OrderController --> CreateOrderCommand
+OrderController --> OrderDto
+PaymentController --> PaymentApplicationService
+PaymentController --> PaymentDto
+PricingController --> PricingApplicationService
+PricingController --> PricingRuleDto
+PricingController --> AppProductCategoryDto
+DeliveryController --> DeliveryApplicationService
+DeliveryController --> DeliveryDto
+
+' 應用層 -> 領域層
+OrderApplicationService --> Order
+OrderApplicationService --> OrderRepository
+PaymentApplicationService --> Payment
+PaymentApplicationService --> PaymentRepository
+PricingApplicationService --> PricingRule
+PricingApplicationService --> PricingRuleRepository
+DeliveryApplicationService --> Delivery
+DeliveryApplicationService --> DeliveryRepository
+
+' 應用層映射器
+OrderMapper --> Order
+OrderMapper --> OrderDto
+PaymentMapper --> Payment
+PaymentMapper --> PaymentDto
+ProductCategoryMapper --> ProductCategory
+ProductCategoryMapper --> AppProductCategoryDto
+DeliveryMapper --> Delivery
+DeliveryMapper --> DeliveryDto
+
+' 基礎設施層 -> 領域層
+OrderPersistenceAdapter --> OrderRepository
+PaymentPersistenceAdapter --> PaymentRepository
+PricingRulePersistenceAdapter --> PricingRuleRepository
+DeliveryRepositoryAdapter --> DeliveryRepository
+DeliveryServiceAdapter --> DeliveryService
+
+@enduml

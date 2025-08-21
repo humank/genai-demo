@@ -1,0 +1,89 @@
+@startuml 訂單系統活動圖概覽
+
+skinparam activity {
+    BackgroundColor #EEEEEE
+    BorderColor #333333
+    FontName Arial
+    ArrowColor #333333
+}
+
+skinparam swimlane {
+    BorderColor #333333
+    BorderThickness 2
+    TitleFontColor #006699
+    TitleFontSize 14
+}
+
+title 訂單系統主要業務流程概覽
+
+|客戶|
+start
+:瀏覽商品;
+:選擇商品;
+:建立訂單;
+:添加訂單項目;
+:提交訂單;
+
+|訂單系統|
+:驗證訂單;
+
+if (訂單有效?) then (是)
+  :檢查庫存;
+  
+  if (庫存充足?) then (是)
+    :處理支付;
+    
+    |支付系統|
+    :驗證支付信息;
+    :執行支付交易;
+    
+    if (支付成功?) then (是)
+      |訂單系統|
+      :確認訂單;
+      :安排配送;
+      
+      |物流系統|
+      :建立配送單;
+      :分配配送資源;
+      :執行配送;
+      :更新配送狀態;
+      
+      |客戶|
+      :接收訂單;
+      :確認收貨;
+      
+      |訂單系統|
+      :完成訂單;
+      
+    else (否)
+      |訂單系統|
+      :取消訂單;
+      :通知客戶支付失敗;
+      
+      |客戶|
+      :收到支付失敗通知;
+    endif
+    
+  else (否)
+    |訂單系統|
+    :取消訂單;
+    :通知客戶庫存不足;
+    
+    |客戶|
+    :收到庫存不足通知;
+  endif
+  
+else (否)
+  |訂單系統|
+  :拒絕訂單;
+  :通知客戶訂單無效;
+  
+  |客戶|
+  :收到訂單無效通知;
+endif
+
+|客戶|
+:評價訂單(可選);
+stop
+
+@enduml

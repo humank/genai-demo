@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/yikaikao"],
+      "env": {}
+    },
+    "git": {
+      "command": "npx", 
+      "args": ["-y", "@cyanheads/git-mcp-server"],
+      "env": {
+        "GIT_REPOSITORY_PATH": "/Users/yikaikao/git"
+      }
+    }
+  }
+}

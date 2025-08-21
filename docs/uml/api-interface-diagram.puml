@@ -1,0 +1,122 @@
+@startuml API Interface Diagram
+
+' C4 Model Definitions
+!define LAYOUT_WITH_LEGEND
+!define SHOW_PERSON_PORTRAIT
+
+' C4 Element Styles
+!define C4_COMPONENT_FONT_COLOR #000000
+!define C4_COMPONENT_BG_COLOR #85BBF0
+!define C4_CONTAINER_FONT_COLOR #000000
+!define C4_CONTAINER_BG_COLOR #438DD5
+!define C4_SYSTEM_FONT_COLOR #FFFFFF
+!define C4_SYSTEM_BG_COLOR #1168BD
+!define C4_PERSON_FONT_COLOR #FFFFFF
+!define C4_PERSON_BG_COLOR #08427B
+!define C4_BOUNDARY_COLOR #444444
+
+' C4 Element Macros
+!define Container(e_alias, e_label, e_techn, e_descr) rectangle "==e_label\n<size:12>[e_techn]</size>\n\ne_descr" <<container>> as e_alias
+!define Container_Boundary(e_alias, e_label) rectangle "==e_label" <<boundary>> as e_alias
+!define Component(e_alias, e_label, e_techn, e_descr) rectangle "==e_label\n<size:12>[e_techn]</size>\n\ne_descr" <<component>> as e_alias
+!define System_Ext(e_alias, e_label, e_descr) rectangle "==e_label\n\ne_descr" <<external_system>> as e_alias
+!define Rel(e_from, e_to, e_label, e_techn) e_from --> e_to : "e_label\n//<size:10>[e_techn]</size>//"
+
+' Styling
+skinparam rectangle {
+    FontColor<<container>> C4_CONTAINER_FONT_COLOR
+    BackgroundColor<<container>> C4_CONTAINER_BG_COLOR
+    FontColor<<component>> C4_COMPONENT_FONT_COLOR
+    BackgroundColor<<component>> C4_COMPONENT_BG_COLOR
+    FontColor<<external_system>> C4_SYSTEM_FONT_COLOR
+    BackgroundColor<<external_system>> #999999
+    BorderColor<<boundary>> C4_BOUNDARY_COLOR
+    FontColor<<boundary>> #444444
+    BorderStyle<<boundary>> dashed
+}
+
+title Order System API Interfaces
+
+' API Gateway
+Container(api_gateway, "API Gateway", "Spring Cloud Gateway", "Routes and filters API requests")
+
+' Public APIs
+Container_Boundary(public_apis, "Public APIs") {
+    Component(order_api, "Order API", "REST", "Order management endpoints")
+    Component(payment_api, "Payment API", "REST", "Payment processing endpoints")
+    Component(delivery_api, "Delivery API", "REST", "Delivery tracking endpoints")
+    Component(customer_api, "Customer API", "REST", "Customer management endpoints")
+}
+
+' Internal APIs
+Container_Boundary(internal_apis, "Internal APIs") {
+    Component(inventory_api, "Inventory API", "REST", "Inventory management endpoints")
+    Component(analytics_api, "Analytics API", "REST", "Reporting and analytics endpoints")
+    Component(admin_api, "Admin API", "REST", "Administrative endpoints")
+}
+
+' GraphQL API
+Container(graphql_api, "GraphQL API", "GraphQL", "Unified query interface")
+
+' API Documentation
+Container(api_docs, "API Documentation", "Swagger/OpenAPI", "Interactive API documentation")
+
+' API Clients
+System_Ext(web_client, "Web Application", "React/Angular")
+System_Ext(mobile_client, "Mobile Application", "iOS/Android")
+System_Ext(third_party, "Third-party Systems", "Partner integrations")
+System_Ext(admin_portal, "Admin Portal", "Internal tool")
+
+' Relationships
+Rel(web_client, api_gateway, "Uses", "HTTPS")
+Rel(mobile_client, api_gateway, "Uses", "HTTPS")
+Rel(third_party, api_gateway, "Uses", "HTTPS")
+Rel(admin_portal, api_gateway, "Uses", "HTTPS")
+
+Rel(api_gateway, order_api, "Routes to", "")
+Rel(api_gateway, payment_api, "Routes to", "")
+Rel(api_gateway, delivery_api, "Routes to", "")
+Rel(api_gateway, customer_api, "Routes to", "")
+Rel(api_gateway, inventory_api, "Routes to", "")
+Rel(api_gateway, analytics_api, "Routes to", "")
+Rel(api_gateway, admin_api, "Routes to", "")
+Rel(api_gateway, graphql_api, "Routes to", "")
+Rel(api_gateway, api_docs, "Routes to", "")
+
+' API Details
+note right of order_api
+  <b>Order API Endpoints:</b>
+  - POST /orders (Create order)
+  - GET /orders (List orders)
+  - GET /orders/{id} (Get order)
+  - PUT /orders/{id}/items (Add item)
+  - DELETE /orders/{id}/items/{itemId} (Remove item)
+  - POST /orders/{id}/submit (Submit order)
+  - POST /orders/{id}/cancel (Cancel order)
+end note
+
+note right of payment_api
+  <b>Payment API Endpoints:</b>
+  - POST /payments (Process payment)
+  - GET /payments/{id} (Get payment status)
+  - POST /payments/{id}/refund (Request refund)
+  - GET /payments/methods (List payment methods)
+end note
+
+note right of delivery_api
+  <b>Delivery API Endpoints:</b>
+  - GET /deliveries/{id} (Track delivery)
+  - GET /deliveries/{id}/status (Get status)
+  - PUT /deliveries/{id}/address (Update address)
+end note
+
+note right of graphql_api
+  <b>GraphQL Schema:</b>
+  - Query: orders, order, payments, deliveries
+  - Mutation: createOrder, addOrderItem, 
+    submitOrder, processPayment
+  - Subscription: orderStatusChanged, 
+    deliveryStatusUpdated
+end note
+
+@enduml

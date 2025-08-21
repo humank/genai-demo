@@ -1,0 +1,237 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'io.qameta.allure' version '2.11.2' // Allure 插件
+}
+
+group = 'solid.humank'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Allure 配置
+allure {
+    version = '2.22.1'
+    useJUnit5 {
+        version = '2.22.1'
+    }
+}
+
+// 定義 Allure 結果目錄
+def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.absolutePath
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'com.h2database:h2'
+    
+    // OpenAPI 3 (Swagger) 支援
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    
+
+    
+    // Cucumber for BDD testing
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+    testImplementation 'io.cucumber:cucumber-picocontainer:7.15.0'
+    
+    // JUnit 5
+    testImplementation(platform('org.junit:junit-bom:5.10.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation('org.junit.platform:junit-platform-suite')
+    
+    // 確保 JUnit Platform 相關依賴版本一致
+    constraints {
+        testImplementation('org.junit.platform:junit-platform-commons:1.10.2')
+        testImplementation('org.junit.platform:junit-platform-engine:1.10.2')
+    }
+    
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    
+    // Spring Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // Allure 依賴
+    testImplementation 'io.qameta.allure:allure-junit5:2.22.1'
+    testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.22.1'
+    testImplementation 'io.qameta.allure:allure-java-commons:2.22.1'
+    
+    // ArchUnit for architecture testing
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
+    
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    testCompileOnly 'org.projectlombok:lombok:1.18.38'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
+}
+
+// 配置 Java 編譯和執行任務啟用預覽功能
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += '--enable-preview'
+    options.release = 21
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += '--enable-preview'
+    // 禁用 AspectJ weaver 以避免織入問題
+    jvmArgs += '-Dallure.aspectj.enabled=false'
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += '--enable-preview'
+}
+
+// 標準單元測試任務
+tasks.named('test') {
+    useJUnitPlatform {
+        // 包含所有測試，包括 Cucumber 測試
+    }
+    
+    // Allure 配置
+    systemProperty 'allure.results.directory', "${buildDir}/allure-results"
+    systemProperty 'allure.epic', 'DDD架構測試'
+    systemProperty 'allure.feature', 'JUnit測試'
+    
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    
+    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+    systemProperty 'junit.platform.output.capture.stdout', 'true'
+    systemProperty 'junit.platform.output.capture.stderr', 'true'
+}
+
+// Cucumber 測試任務
+tasks.register('cucumber', JavaExec) {
+    dependsOn assemble, testClasses
+    getMainClass().set("io.cucumber.core.cli.Main")
+    classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
+    args = [
+        '--plugin', 'pretty',
+        '--plugin', 'html:build/reports/cucumber/cucumber-report.html',
+        '--plugin', 'json:build/reports/cucumber/cucumber-report.json',
+        '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
+        '--glue', 'solid.humank.genaidemo.bdd',
+        'src/test/resources/features'
+    ]
+    
+    systemProperty 'allure.results.directory', allureResultsDir
+    systemProperty 'allure.epic', 'BDD功能測試'
+    systemProperty 'allure.feature', 'Cucumber測試'
+    
+    // 確保 Cucumber 測試結果被正確處理
+    finalizedBy 'prepareAllureResults'
+}
+
+
+
+// 運行所有測試並生成報告
+tasks.register('runAllTests') {
+    dependsOn test, cucumber, prepareAllureResults
+    description = '運行所有測試並生成 Allure 報告'
+    group = 'verification'
+    
+    doLast {
+        println "所有測試已完成，包括單元測試和 Cucumber 測試"
+    }
+    
+    finalizedBy 'allureReport'
+}
+
+// 運行所有測試
+tasks.register('runAllTestsComplete') {
+    dependsOn test, cucumber, prepareAllureResults
+    description = '運行所有測試並生成 Allure 報告'
+    group = 'verification'
+    
+    doLast {
+        println "所有測試已完成，包括單元測試、Cucumber 測試和性能測試"
+    }
+    
+    finalizedBy 'allureReport'
+}
+
+// 運行所有測試並啟動報告服務器
+tasks.register('runAllTestsWithReport') {
+    dependsOn 'runAllTests'
+    description = '運行所有測試並啟動 Allure 報告服務器'
+    group = 'verification'
+    
+    finalizedBy 'allureServe'
+}
+
+// 清理 Allure 結果目錄
+tasks.register('cleanAllureResults', Delete) {
+    delete(allureResultsDir)
+    description = '清理 Allure 結果目錄'
+    group = 'build'
+}
+
+tasks.named('clean') {
+    dependsOn 'cleanAllureResults'
+}
+
+// 手動處理 Allure 報告生成，避免使用內建任務
+tasks.register('prepareAllureResults') {
+    description = '準備 Allure 報告數據'
+    group = 'reporting'
+    
+    doLast {
+        // 確保 allure-results 目錄存在
+        mkdir "${buildDir}/allure-results"
+        
+        // 複製 Cucumber 測試結果
+        copy {
+            from "${buildDir}/reports/cucumber"
+            into "${buildDir}/allure-results"
+            include "**/*.json"
+        }
+        
+        // 複製 JUnit 測試結果
+        copy {
+            from "${buildDir}/test-results/test"
+            into "${buildDir}/allure-results"
+            include "**/*.xml"
+        }
+        
+        // 創建 executor.json 文件
+        def executorFile = new File("${buildDir}/allure-results/executor.json")
+        executorFile.text = """{
+            "name": "Gradle",
+            "type": "gradle",
+            "buildName": "GenAI Demo Project",
+            "reportName": "DDD 架構測試報告"
+        }"""
+        
+        println "Allure 報告數據準備完成，結果目錄: ${buildDir}/allure-results"
+    }
+}
+
+// 覆蓋 allureReport 任務
+tasks.named('allureReport') {
+    dependsOn 'prepareAllureResults'
+}

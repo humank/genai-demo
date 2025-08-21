@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 主應用程式
+  genai-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: genai-demo-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:genaidemo
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=
+      - JAVA_OPTS=-Xms256m -Xmx512m -XX:+UseSerialGC -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - genai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  # 移除不需要的 volumes
+
+networks:
+  genai-network:
+    driver: bridge

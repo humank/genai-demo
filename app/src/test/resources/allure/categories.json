@@ -1,0 +1,22 @@
+[
+  {
+    "name": "架構測試失敗",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*架構.*"
+  },
+  {
+    "name": "領域模型錯誤",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*domain.*"
+  },
+  {
+    "name": "業務規則違反",
+    "matchedStatuses": ["failed"],
+    "messageRegex": ".*business rule.*"
+  },
+  {
+    "name": "測試環境問題",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*環境.*|.*environment.*"
+  }
+]
