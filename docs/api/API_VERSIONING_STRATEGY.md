@@ -208,5 +208,5 @@ public class ApiVersionInterceptor implements HandlerInterceptor {
 
 - [API 文檔](./README.md)
 - [變更日誌](../releases/)
-- [遷移指南](./MIGRATION_GUIDE.md)
-- [開發者指南](../DEVELOPER_GUIDE.md)
+- [SpringDoc 分組指南](./SPRINGDOC_GROUPING_GUIDE.md)
+- [技術棧說明](../TECHNOLOGY_STACK_2025.md)

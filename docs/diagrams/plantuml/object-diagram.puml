@@ -1,0 +1,126 @@
+@startuml 訂單系統對象圖
+
+skinparam object {
+    BackgroundColor #EEEEEE
+    ArrowColor #333333
+    BorderColor #333333
+}
+
+skinparam note {
+    BackgroundColor #FFFFCC
+    BorderColor #999999
+}
+
+title 訂單系統領域模型對象圖
+
+' 訂單聚合根實例
+object "order : Order" as order {
+    id = "ORD-20240510-001"
+    status = CONFIRMED
+    customerId = "CUST-001"
+    totalAmount = 35000 TWD
+    createdAt = "2024-05-10T10:30:00"
+}
+
+' 訂單項目實例
+object "item1 : OrderItem" as item1 {
+    productId = "PROD-001"
+    productName = "iPhone 15"
+    quantity = 1
+    unitPrice = 30000 TWD
+    subtotal = 30000 TWD
+}
+
+object "item2 : OrderItem" as item2 {
+    productId = "PROD-002"
+    productName = "AirPods Pro"
+    quantity = 1
+    unitPrice = 5000 TWD
+    subtotal = 5000 TWD
+}
+
+' 支付聚合根實例
+object "payment : Payment" as payment {
+    id = "PAY-20240510-001"
+    orderId = "ORD-20240510-001"
+    amount = 35000 TWD
+    status = COMPLETED
+    paymentMethod = "CREDIT_CARD"
+    createdAt = "2024-05-10T10:35:00"
+}
+
+' 配送聚合根實例
+object "delivery : Delivery" as delivery {
+    id = "DEL-20240510-001"
+    orderId = "ORD-20240510-001"
+    status = IN_TRANSIT
+    address = "台北市信義區101大樓"
+    estimatedDeliveryDate = "2024-05-12"
+}
+
+' 值對象實例
+object "orderId : OrderId" as orderId {
+    value = "ORD-20240510-001"
+}
+
+object "totalAmount : Money" as totalAmount {
+    amount = 35000
+    currency = TWD
+}
+
+object "unitPrice1 : Money" as unitPrice1 {
+    amount = 30000
+    currency = TWD
+}
+
+object "unitPrice2 : Money" as unitPrice2 {
+    amount = 5000
+    currency = TWD
+}
+
+object "address : Address" as address {
+    street = "信義路五段7號"
+    city = "台北市"
+    state = "台北"
+    country = "台灣"
+    zipCode = "110"
+}
+
+' 關係
+order *-- item1 : contains
+order *-- item2 : contains
+order -- orderId : identified by
+order -- totalAmount : has
+item1 -- unitPrice1 : has
+item2 -- unitPrice2 : has
+payment -- order : for
+delivery -- order : for
+delivery -- address : ships to
+
+' 註解
+note bottom of order
+  訂單聚合根
+  - 包含訂單項目集合
+  - 負責計算總金額
+  - 管理訂單狀態變更
+end note
+
+note bottom of payment
+  支付聚合根
+  - 處理訂單支付
+  - 追蹤支付狀態
+end note
+
+note bottom of delivery
+  配送聚合根
+  - 管理訂單配送
+  - 追蹤配送狀態
+end note
+
+note right of totalAmount
+  Money 值對象
+  - 不可變
+  - 無唯一標識
+end note
+
+@enduml

@@ -1,0 +1,48 @@
+@startuml Domain Event Handling - Event Flow Diagram
+
+skinparam activityBackgroundColor #f5f5f5
+skinparam activityBorderColor #999999
+skinparam activityDiamondBackgroundColor #e6f2ff
+skinparam activityDiamondBorderColor #3c7fc0
+skinparam arrowColor #666666
+
+start
+:业务操作触发领域事件;
+
+:聚合根通过AggregateLifecycleAware.apply()发布事件;
+
+if (AggregateLifecycle可用?) then (yes)
+  :通过AggregateLifecycle发布事件;
+else (no)
+  :降级到DomainEventPublisherService;
+endif
+
+:DomainEventBus接收事件;
+
+:DomainEventPublisherAdapter将领域事件
+包装为Spring ApplicationEvent;
+
+:通过Spring ApplicationEventPublisher发布事件;
+
+:DomainEventSubscriptionManager
+接收Spring ApplicationEvent;
+
+:提取原始DomainEvent;
+
+:查找匹配的事件订阅者;
+
+if (找到订阅者?) then (yes)
+  :通过反射调用订阅者的处理方法;
+  if (处理成功?) then (yes)
+    :事件处理完成;
+  else (no)
+    :记录错误日志;
+    :继续处理其他订阅者;
+  endif
+else (no)
+  :事件未被处理;
+endif
+
+stop
+
+@enduml

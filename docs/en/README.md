@@ -1,297 +1,206 @@
-# GenAI Demo
+<!-- 
+此文件需要手動翻譯
+原文件: docs/README.md
+翻譯日期: Thu Aug 21 22:10:37 CST 2025
 
-> **Language / 語言選擇**  
-> 🇺🇸 **English**: You are reading the English version  
-> 🇹🇼 **繁體中文**: [繁體中文文檔](../README.md)
+請將以下中文內容翻譯為英文，保持 Markdown 格式不變
+-->
 
-This is a demonstration project based on Domain-Driven Design (DDD) and Hexagonal Architecture, showcasing how to build a Java application with good architecture and testing practices.
+# GenAI Demo 文檔中心
 
-## Project Architecture
+歡迎來到 GenAI Demo 專案的文檔中心！這裡包含了專案的完整文檔，按功能和用途分類組織。
 
-This project adopts Hexagonal Architecture (also known as Ports and Adapters Architecture) and Domain-Driven Design, dividing the application into the following main layers:
+## 🌐 語言版本
 
-1. **Domain Layer**
-   - Contains core business logic and rules
-   - Does not depend on other layers
-   - Includes aggregate roots, entities, value objects, domain events, domain services, and domain exceptions
+- **中文版本** (當前): [docs/](.)
+- **English Version**: [docs/en/](en/)
 
-2. **Application Layer**
-   - Coordinates domain objects to complete user use cases
-   - Only depends on the domain layer
-   - Contains application services, DTOs, command and query objects
-   - Responsible for data transformation between interface layer and domain layer
+## 📚 文檔分類
 
-3. **Infrastructure Layer**
-   - Provides technical implementation
-   - Depends on the domain layer, implementing interfaces defined by the domain layer
-   - Contains repository implementations, external system adapters, ORM mappings, etc.
-   - Organized by functionality into sub-packages like persistence and external systems
+### 🏗️ [架構文檔](architecture/)
 
-4. **Interface Layer**
-   - Handles user interactions
-   - Only depends on the application layer, not directly on the domain layer
-   - Contains controllers, view models, request/response objects, etc.
-   - Uses its own DTOs to interact with the application layer
+系統架構相關的文檔，適合架構師和高級開發者。
 
-## Tech Stack
+- [架構概覽](architecture/overview.md) - 系統整體架構介紹
+- [六角形架構](architecture/hexagonal-architecture.md) - 六角形架構實現詳解
+- [DDD 實現](architecture/ddd-implementation.md) - 領域驅動設計實現指南
+- [2025年架構改進](architecture/improvements-2025.md) - 最新架構改進記錄
 
-- **Core Framework**: Spring Boot 3.2.0
-- **Build Tool**: Gradle 8.x
-- **Testing Frameworks**:
-  - JUnit 5 - Unit testing
-  - Cucumber 7 - BDD testing
-  - ArchUnit - Architecture testing
-  - Mockito - Mock objects
-  - Allure 2 - Test reporting and visualization
-- **Other Tools**:
-  - Lombok - Reduce boilerplate code
-  - PlantUML - UML diagram generation
+### 🔌 [API 文檔](api/)
 
-## Documentation
+API 相關的文檔，適合 API 使用者和前端開發者。
 
-The project contains rich documentation located in the `docs/en` directory:
+- [API 版本策略](api/versioning-strategy.md) - API 版本管理策略
+- [OpenAPI 規範](api/openapi-spec.md) - OpenAPI 3.0 規範文檔
+- [前端 API 整合](api/frontend-integration.md) - 前端 API 整合指南
 
-- **Architecture Documentation**:
-  - [System Architecture Overview](architecture-overview.md) - Provides a high-level view of system architecture, including features of hexagonal architecture, DDD, and event-driven architecture
-  - [Hexagonal Architecture Implementation Summary](HexagonalArchitectureSummary.md) - Detailed explanation of hexagonal architecture implementation methods and advantages
-  - [Hexagonal Architecture and Event Storming Integration Refactoring Guide](HexagonalRefactoring.MD) - How to refactor to hexagonal architecture using Event Storming
-  - [Layered Architecture Design Analysis and Recommendations](LayeredArchitectureDesign.MD) - Analysis of pros and cons of different layered architectures and applicable scenarios
+### 📊 [圖表文檔](diagrams/)
 
-- **Design Documentation**:
-  - [Design Guidelines](DesignGuideline.MD) - Contains Tell, Don't Ask principles, DDD tactical patterns, and defensive programming practices
-  - [System Development and Testing Design Compliance Specifications](DesignPrinciple.md) - Defines design specifications for system development and testing
-  - [Software Design Classics Essentials](SoftwareDesignClassics.md) - Summarizes core concepts from classic books in the software design field
+系統的各種圖表和視覺化文檔，適合所有角色。
 
-- **Code Quality**:
-  - [Code Analysis Report](CodeAnalysis.md) - Code analysis and improvement suggestions based on "Refactoring" principles
-  - [Refactoring Guide](RefactoringGuidance.md) - Provides specific techniques and best practices for code refactoring
+#### Mermaid 圖表 (GitHub 直接顯示)
 
-- **Refactoring Process**:
-  - [DDD and Hexagonal Architecture Refactoring Journey](instruction.md) - Records the refactoring process from chaotic code structure to DDD and hexagonal architecture
+- [架構概覽](diagrams/mermaid/architecture-overview.md) - 系統整體架構圖
+- [六角形架構](diagrams/mermaid/hexagonal-architecture.md) - 六角形架構圖
+- [DDD 分層架構](diagrams/mermaid/ddd-layered-architecture.md) - DDD 分層架構圖
+- [事件驅動架構](diagrams/mermaid/event-driven-architecture.md) - 事件驅動架構圖
+- [API 交互圖](diagrams/mermaid/api-interactions.md) - API 交互關係圖
 
-- **Release Notes**:
-  - [Test Code Quality Improvement and Refactoring - 2025-07-18](releases/test-quality-improvement-2025-07-18.md) - Records comprehensive improvement and refactoring of test code quality
-  - [Architecture Optimization and DDD Layering Implementation - 2025-06-08](releases/architecture-optimization-2025-06-08.md) - Records detailed description of architecture optimization and DDD layering implementation
-  - [Promotion Module Implementation and Architecture Optimization - 2025-05-21](releases/promotion-module-implementation-2025-05-21.md) - Records implementation of promotion functionality module and architecture optimization
+#### PlantUML 圖表 (詳細 UML 圖表)
 
-- **UML Diagrams**:
-  - [UML Documentation](uml/README.md) - Contains various UML diagrams such as class diagrams, component diagrams, domain model diagrams, etc.
-  - [Event Storming Guide](uml/es-gen-guidance-tc.md) - Guide for drawing Event Storming three-phase outputs using PlantUML
+- **結構圖**: 類圖、對象圖、組件圖、部署圖、包圖、複合結構圖
+- **行為圖**: 用例圖、活動圖、狀態圖
+- **交互圖**: 時序圖、通信圖、交互概覽圖、時間圖
+- **Event Storming**: Big Picture、Process Level、Design Level
 
-## How to Run
+### 💻 [開發指南](development/)
 
-### Prerequisites
+開發相關的文檔，適合開發者和新加入的團隊成員。
 
-- JDK 17 or higher
-- Gradle 8.x
+- [快速入門](development/getting-started.md) - 專案快速入門指南
+- [編碼標準](development/coding-standards.md) - 編碼規範和最佳實踐
+- [測試指南](development/testing-guide.md) - 測試策略和實踐
+- [文檔維護指南](development/documentation-guide.md) - 文檔創建和維護指南
 
-### Build Project
+### 🚀 [部署文檔](deployment/)
 
-```bash
-./gradlew build
-```
+部署相關的文檔，適合 DevOps 工程師和運維人員。
 
-### Run Application
+- [Docker 指南](deployment/docker-guide.md) - Docker 容器化部署
+- [Kubernetes 指南](deployment/kubernetes-guide.md) - Kubernetes 集群部署
 
-```bash
-./gradlew bootRun
-```
+### 🎨 [設計文檔](design/)
 
-### Run Tests
+設計相關的文檔，適合軟體架構師和設計決策者。
 
-#### Run All Tests
+- [DDD 指南](design/ddd-guide.md) - 領域驅動設計指南
+- [設計原則](design/design-principles.md) - 軟體設計原則
+- [重構指南](design/refactoring-guide.md) - 代碼重構指南
 
-```bash
-./gradlew runAllTests
-```
+### 📋 [發布說明](releases/)
 
-#### Run All Tests and View Allure Report
+版本發布和變更記錄，適合所有利益相關者。
 
-```bash
-./gradlew runAllTestsWithReport
-```
+- [發布記錄](releases/) - 版本發布歷史
 
-#### Run Specific Types of Tests
+### 📊 [報告文檔](reports/)
 
-```bash
-# Run unit tests
-./gradlew test
+專案報告和分析文檔，適合專案經理和技術負責人。
 
-# Run Cucumber BDD tests
-./gradlew cucumber
+- [專案總結 2025](reports/project-summary-2025.md) - 2025年專案總結報告
+- [架構卓越性 2025](reports/architecture-excellence-2025.md) - 架構卓越性評估
+- [技術棧 2025](reports/technology-stack-2025.md) - 技術棧分析報告
+- [文檔清理 2025](reports/documentation-cleanup-2025.md) - 文檔清理報告
 
-# Run architecture tests
-./gradlew testArchitecture
-```
+## 🎯 快速導航
 
-### Generate Test Reports
+### 👨‍💼 我是專案經理
 
-After tests complete, you can view the following reports:
+- [專案總結 2025](reports/project-summary-2025.md) - 了解專案現狀
+- [架構概覽](diagrams/mermaid/architecture-overview.md) - 系統整體架構
+- [發布記錄](releases/) - 版本發布歷史
 
-1. **Cucumber HTML Report**: `app/build/reports/cucumber/cucumber-report.html`
-2. **Cucumber JSON Report**: `app/build/reports/cucumber/cucumber-report.json`
-3. **JUnit HTML Report**: `app/build/reports/tests/test/index.html`
-4. **Architecture Test Report**: `app/build/reports/tests/architecture/index.html`
-5. **Allure Report**: `app/build/reports/allure-report/allureReport/index.html`
+### 🏗️ 我是架構師
 
-   ```bash
-   ./gradlew allureReport  # Generate report
-   ./gradlew allureServe   # Start local server to view report
-   ```
+- [架構文檔](architecture/) - 完整架構設計
+- [圖表文檔](diagrams/) - 視覺化架構圖
+- [設計文檔](design/) - 設計原則和指南
 
-## Architecture Testing
+### 👨‍💻 我是開發者
 
-This project uses ArchUnit to ensure code follows predetermined architectural rules. Architecture tests are located in the `app/src/test/java/solid/humank/genaidemo/architecture/` directory, including:
+- [開發指南](development/) - 開發環境和規範
+- [API 文檔](api/) - API 使用指南
+- [測試指南](development/testing-guide.md) - 測試策略
 
-1. **DddArchitectureTest** - Ensures compliance with DDD layered architecture
-   - Ensures domain layer does not depend on other layers
-   - Ensures application layer does not depend on infrastructure and interface layers
-   - Ensures interface layer does not directly depend on infrastructure and domain layers
-   - Ensures compliance with layered architecture dependency direction
+### 🚀 我是 DevOps 工程師
 
-2. **DddTacticalPatternsTest** - Ensures correct use of DDD tactical patterns
-   - Ensures value objects are immutable
-   - Ensures entities have unique identities
-   - Ensures aggregate roots control access to their internal entities
-   - Ensures domain events are immutable
-   - Ensures specifications implement the Specification interface
+- [部署文檔](deployment/) - 部署指南
+- [Docker 指南](deployment/docker-guide.md) - 容器化部署
+- [Kubernetes 指南](deployment/kubernetes-guide.md) - 集群部署
 
-3. **PackageStructureTest** - Ensures package structure complies with specifications
-   - Ensures infrastructure layer adapters are located in correct package structure
-   - Ensures application and interface layers are organized in correct package structure
-   - Ensures subdomain model structure complies with DDD tactical design
+### 🔍 我是業務分析師
 
-4. **PromotionArchitectureTest** - Ensures promotion module follows architectural specifications
+- [Event Storming 圖表](diagrams/plantuml/event-storming/) - 業務流程分析
+- [用例圖](diagrams/plantuml/behavioral/) - 系統功能概覽
+- [API 交互圖](diagrams/mermaid/api-interactions.md) - 系統交互
 
-Run architecture tests:
+## 🛠️ 工具和腳本
+
+### 圖表生成
 
 ```bash
-./gradlew testArchitecture
+# 生成所有 PlantUML 圖表
+./scripts/generate-diagrams.sh
+
+# 生成特定圖表
+./scripts/generate-diagrams.sh domain-model-class-diagram.puml
+
+# 驗證圖表語法
+./scripts/generate-diagrams.sh --validate
 ```
 
-## BDD Testing
-
-This project uses Cucumber for Behavior-Driven Development (BDD) testing. BDD test files are located at:
-
-- **Feature Files**: `app/src/test/resources/features/` directory, organized by functional modules
-- **Step Definitions**: `app/src/test/java/solid/humank/genaidemo/bdd/` directory, containing step implementations for each module
-
-Tests cover the following domains:
-
-- Order Management
-- Inventory Management
-- Payment Processing
-- Delivery & Logistics
-- Notification Service
-- Complete Order Workflow
-
-### Test Utility Tools
-
-This project has established a complete test utility tool ecosystem, located in the `app/src/test/java/solid/humank/genaidemo/testutils/` directory:
-
-- **Test Data Builders** (`builders/`): Use Builder pattern to simplify test data creation
-  - `OrderTestDataBuilder` - Order test data builder
-  - `CustomerTestDataBuilder` - Customer test data builder
-  - `ProductTestDataBuilder` - Product test data builder
-
-- **Scenario Handlers** (`handlers/`): Handle complex test scenario logic
-  - `TestScenarioHandler` - Unified scenario handler
-  - `TestExceptionHandler` - Exception handler
-
-- **Custom Matchers** (`matchers/`): Provide more expressive test assertions
-  - `OrderMatchers` - Order-related matchers
-  - `MoneyMatchers` - Money-related matchers
-
-- **Test Fixtures** (`fixtures/`): Provide commonly used test data and constants
-  - `TestFixtures` - Test fixture data
-  - `TestConstants` - Test constants
-
-- **Test Tag Annotations** (`annotations/`): Support test classification and selective execution
-  - `@UnitTest` - Unit test tag
-  - `@IntegrationTest` - Integration test tag
-  - `@SlowTest` - Slow test tag
-  - `@BddTest` - BDD test tag
-
-### Testing Best Practices
-
-Tests in this project follow these best practices:
-
-- **3A Principle**: Each test has clear Arrange-Act-Assert structure
-- **No Conditional Logic**: Tests do not contain if-else statements
-- **Descriptive Naming**: Use clear test method names and @DisplayName
-- **Test Independence**: Each test is independent and repeatable
-- **DRY Principle**: Use test utility tools to avoid duplicate code
-
-Run BDD tests:
+### 文檔同步
 
 ```bash
-./gradlew cucumber
+# 同步中英文文檔
+./scripts/sync-docs.sh
+
+# 驗證文檔品質
+./scripts/validate-docs.sh
 ```
 
-Run specific types of tests:
+## 📈 專案統計
 
-```bash
-# Run unit tests
-./gradlew test --tests "*UnitTest*"
+- **總文檔數**: 50+ 個文檔
+- **圖表數量**: 20+ 個圖表
+- **支援語言**: 中文、英文
+- **架構模式**: DDD + 六角形架構 + 事件驅動
+- **技術棧**: Java 21 + Spring Boot 3.4.5 + Next.js 14 + Angular 18
 
-# Run integration tests
-./gradlew test --tests "*IntegrationTest*"
+## 🔗 外部連結
 
-# Run BDD tests
-./gradlew test --tests "*BddTest*"
-```
+### 在線編輯器
 
-View Cucumber test reports:
+- [Mermaid Live Editor](https://mermaid.live/) - Mermaid 圖表在線編輯
+- [PlantUML Online Server](http://www.plantuml.com/plantuml/uml/) - PlantUML 圖表在線編輯
 
-```bash
-./gradlew cucumber
-# Then open app/build/reports/cucumber/cucumber-report.html
-```
+### API 端點
 
-## UML Diagrams
+- **後端 API**: <http://localhost:8080>
+- **Swagger UI**: <http://localhost:8080/swagger-ui/index.html>
+- **健康檢查**: <http://localhost:8080/actuator/health>
+- **CMC 前端**: <http://localhost:3002>
+- **Consumer 前端**: <http://localhost:3001>
 
-This project uses PlantUML to generate various UML diagrams, including:
+## 📝 貢獻指南
 
-- Class diagrams, object diagrams, component diagrams, deployment diagrams
-- Sequence diagrams (order processing, pricing processing, delivery processing), state diagrams, activity diagrams
-- Domain model diagrams, hexagonal architecture diagrams, DDD layered architecture diagrams, event storming diagrams, etc.
+### 文檔更新流程
 
-Recently updated diagrams:
+1. 更新中文文檔
+2. Kiro Hook 自動生成英文版本
+3. 人工審核翻譯品質
+4. 提交變更
 
-- **DDD Layered Architecture Diagram**: Shows dependency relationships and data flow between layers
-- **Pricing Processing Sequence Diagram**: Shows the flow of pricing-related operations
-- **Delivery Processing Sequence Diagram**: Shows the flow of delivery-related operations
-- **Updated Domain Model Diagram**: Added pricing and delivery aggregates
+### 圖表更新流程
 
-See [UML Documentation](uml/README.md) for more information.
+1. 修改 PlantUML 源文件
+2. 運行 `./scripts/generate-diagrams.sh`
+3. 檢查生成的圖片
+4. 提交源文件和生成的圖片
 
-## Common Issues
+## 📞 支援
 
-### Configuration Cache Issues
+如有問題或建議，請：
 
-If you encounter configuration cache-related errors, you can use the `--no-configuration-cache` parameter:
+1. 查看相關文檔
+2. 檢查 [Issues](../../issues)
+3. 創建新的 Issue
 
-```bash
-./gradlew --no-configuration-cache <task>
-```
+---
 
-### Allure Report Issues
+**最後更新**: 2025年1月21日  
+**文檔版本**: v3.0.0  
+**維護者**: GenAI Demo 團隊
 
-If Allure report generation fails, you can try:
 
-1. Clean the project: `./gradlew clean`
-2. Re-run tests and generate report: `./gradlew runAllTestsWithReport`
-
-Allure reports automatically include all test results, including JUnit unit tests, architecture tests, and Cucumber BDD tests. Reports show test execution status, test steps, failure reasons, and related attachments.
-
-## Contributing
-
-Pull Requests and Issues for improvement suggestions are welcome.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
-
-## DeepWiki Integration
-
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
+<!-- 翻譯完成後請刪除此註釋 -->

@@ -1,0 +1,77 @@
+{
+    "name": "Auto Translation Hook",
+    "description": "Automatically translate Chinese markdown files to English",
+    "version": "1.0.0",
+    "trigger": {
+        "event": "file.save",
+        "pattern": "**/*.md",
+        "exclude": [
+            "docs/en/**",
+            "node_modules/**",
+            ".git/**",
+            ".kiro/**",
+            "README.en.md"
+        ]
+    },
+    "conditions": [
+        {
+            "type": "file_content",
+            "pattern": "[\u4e00-\u9fff]",
+            "description": "Contains Chinese characters"
+        },
+        {
+            "type": "file_path",
+            "pattern": "docs/**",
+            "description": "Only process files in docs directory"
+        }
+    ],
+    "actions": [
+        {
+            "type": "translate_markdown",
+            "source_lang": "zh-TW",
+            "target_lang": "en",
+            "preserve_code": true,
+            "preserve_links": true,
+            "preserve_images": true,
+            "preserve_tables": true,
+            "output_path": "docs/en/{relative_path}",
+            "terminology_consistency": true,
+            "technical_terms_dictionary": {
+                "領域驅動設計": "Domain-Driven Design (DDD)",
+                "六角形架構": "Hexagonal Architecture",
+                "聚合根": "Aggregate Root",
+                "值對象": "Value Object",
+                "領域事件": "Domain Event",
+                "有界上下文": "Bounded Context",
+                "應用服務": "Application Service",
+                "領域服務": "Domain Service",
+                "基礎設施": "Infrastructure",
+                "事件風暴": "Event Storming",
+                "規格模式": "Specification Pattern",
+                "政策模式": "Policy Pattern",
+                "命令查詢責任分離": "Command Query Responsibility Segregation (CQRS)",
+                "事件溯源": "Event Sourcing"
+            }
+        }
+    ],
+    "settings": {
+        "batch_processing": true,
+        "max_concurrent": 3,
+        "timeout": 30000,
+        "notification": true,
+        "retry_attempts": 3,
+        "retry_delay": 5000,
+        "log_level": "info"
+    },
+    "error_handling": {
+        "on_translation_failure": "log_and_notify",
+        "on_file_write_failure": "retry_with_backup",
+        "on_network_error": "retry_with_exponential_backoff"
+    },
+    "quality_assurance": {
+        "validate_markdown_syntax": true,
+        "preserve_formatting": true,
+        "check_link_integrity": true,
+        "maintain_heading_structure": true
+    }
+}

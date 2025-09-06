@@ -1,29 +1,41 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
+import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
 /** 限量特價規則 */
 @ValueObject
-public final class LimitedQuantityRule implements PromotionRule {
-    private final ProductId productId;
-    private final Money specialPrice;
-    private final Money regularPrice;
-    private final int totalQuantity;
-    private final String promotionId;
+public record LimitedQuantityRule(
+        ProductId productId,
+        Money specialPrice,
+        Money regularPrice,
+        int totalQuantity,
+        String promotionId) implements PromotionRule {
 
-    public LimitedQuantityRule(
+    public LimitedQuantityRule {
+        Objects.requireNonNull(productId, "Product ID cannot be null");
+        Objects.requireNonNull(specialPrice, "Special price cannot be null");
+        Objects.requireNonNull(regularPrice, "Regular price cannot be null");
+        Objects.requireNonNull(promotionId, "Promotion ID cannot be null");
+
+        if (totalQuantity <= 0) {
+            throw new IllegalArgumentException("Total quantity must be positive");
+        }
+        if (specialPrice.amount().compareTo(regularPrice.amount()) > 0) {
+            throw new IllegalArgumentException("Special price cannot be higher than regular price");
+        }
+    }
+
+    public static LimitedQuantityRule create(
             ProductId productId,
             Money specialPrice,
             Money regularPrice,
             int totalQuantity,
             String promotionId) {
-        this.productId = productId;
-        this.specialPrice = specialPrice;
-        this.regularPrice = regularPrice;
-        this.totalQuantity = totalQuantity;
-        this.promotionId = promotionId;
+        return new LimitedQuantityRule(productId, specialPrice, regularPrice, totalQuantity, promotionId);
     }
 
     public ProductId getProductId() {

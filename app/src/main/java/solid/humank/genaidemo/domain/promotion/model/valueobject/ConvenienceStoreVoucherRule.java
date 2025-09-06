@@ -1,21 +1,39 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
 import java.time.Period;
+import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 
 /** 超商優惠券規則 */
 @ValueObject
-public final class ConvenienceStoreVoucherRule implements PromotionRule {
-    private final String voucherName;
-    private final Money price;
-    private final Money regularPrice;
-    private final Period validPeriod;
-    private final String redemptionLocation;
-    private final String contents;
-    private final int quantity;
+public record ConvenienceStoreVoucherRule(
+        String voucherName,
+        Money price,
+        Money regularPrice,
+        Period validPeriod,
+        String redemptionLocation,
+        String contents,
+        int quantity) implements PromotionRule {
 
-    public ConvenienceStoreVoucherRule(
+    public ConvenienceStoreVoucherRule {
+        Objects.requireNonNull(voucherName, "Voucher name cannot be null");
+        Objects.requireNonNull(price, "Price cannot be null");
+        Objects.requireNonNull(regularPrice, "Regular price cannot be null");
+        Objects.requireNonNull(validPeriod, "Valid period cannot be null");
+        Objects.requireNonNull(redemptionLocation, "Redemption location cannot be null");
+        Objects.requireNonNull(contents, "Contents cannot be null");
+
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (price.amount().compareTo(regularPrice.amount()) > 0) {
+            throw new IllegalArgumentException("Price cannot be higher than regular price");
+        }
+    }
+
+    public static ConvenienceStoreVoucherRule create(
             String voucherName,
             Money price,
             Money regularPrice,
@@ -23,13 +41,8 @@ public final class ConvenienceStoreVoucherRule implements PromotionRule {
             String redemptionLocation,
             String contents,
             int quantity) {
-        this.voucherName = voucherName;
-        this.price = price;
-        this.regularPrice = regularPrice;
-        this.validPeriod = validPeriod;
-        this.redemptionLocation = redemptionLocation;
-        this.contents = contents;
-        this.quantity = quantity;
+        return new ConvenienceStoreVoucherRule(
+                voucherName, price, regularPrice, validPeriod, redemptionLocation, contents, quantity);
     }
 
     public String getVoucherName() {

@@ -1,0 +1,29 @@
+<!-- This document needs manual translation from Chinese to English -->
+<!-- 此文檔需要從中文手動翻譯為英文 -->
+
+# 設計文檔
+
+本目錄包含設計相關的文檔。
+
+## 文檔列表
+
+- [DDD 指南](ddd-guide.md) - 領域驅動設計指南
+- [設計原則](design-principles.md) - 軟體設計原則
+- [重構指南](refactoring-guide.md) - 代碼重構指南
+
+## 設計模式
+
+- **領域驅動設計 (DDD)**: 戰術和戰略模式
+- **六角形架構**: 端口與適配器模式
+- **事件驅動架構**: 領域事件和 CQRS
+
+## 適用對象
+
+- 軟體架構師
+- 高級開發者
+- 設計決策者
+
+## 相關連結
+
+- [架構文檔](../architecture/) - 系統架構
+- [圖表文檔](../diagrams/) - 設計圖表

@@ -1,71 +1,74 @@
-# Promotion Module Implementation and Architecture Optimization - 2025-05-21
+<!-- This document needs manual translation from Chinese to English -->
+<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-## Business Requirements Overview
+# 促銷模組實作與架構優化 - 2025-05-21
 
-This update primarily implements the promotion functionality module for the e-commerce platform, including the following core business requirements:
+## 業務需求概述
 
-1. **Convenience Store Voucher System**: Implement voucher functionality for online purchase and redemption of physical products, supporting single purchases and multiple voucher combinations.
-2. **Flash Sales**: Provide product discounts during specific time periods.
-3. **Limited Quantity Sales**: Offer discount prices for specific quantities of products.
-4. **Add-on Purchase**: Allow purchasing additional products at discounted prices when buying main products.
-5. **Gift with Purchase**: Provide gifts when shopping amount reaches specific thresholds.
-6. **Lost Voucher Handling**: Provide reissuance mechanism for lost vouchers.
+本次更新主要實現了電子商務平台的促銷功能模組，包括以下核心業務需求：
 
-## Technical Implementation
+1. **超商優惠券系統**：實現線上購買、兌換實體商品的優惠券功能，支援單次購買和多張優惠券組合。
+2. **限時特價**：在特定時間段內提供商品折扣。
+3. **限量特價**：針對特定數量的商品提供折扣價格。
+4. **加價購**：購買主要商品時可以優惠價格購買附加商品。
+5. **滿額贈禮**：購物金額達到特定門檻時贈送贈品。
+6. **遺失優惠券處理**：提供優惠券遺失後的補發機制。
 
-### Domain Model Design
+## 技術實現
 
-Using Domain-Driven Design (DDD) approach, the promotion module is designed as an independent subdomain:
+### 領域模型設計
 
-1. **Aggregate Root**:
-   - `Promotion`: Core aggregate root for promotional activities, containing promotion rules and conditions.
+採用領域驅動設計(DDD)方法，將促銷模組設計為獨立的子領域：
 
-2. **Entities**:
-   - `Voucher`: Voucher entity with unique identifier, validity period, and usage status.
+1. **聚合根**：
+   - `Promotion`：促銷活動的核心聚合根，包含促銷規則和條件。
 
-3. **Value Objects**:
-   - `PromotionId`: Unique identifier for promotional activities.
-   - `PromotionType`: Promotion types (flash sales, add-on purchase, etc.).
-   - Various promotion rules: `AddOnPurchaseRule`, `FlashSaleRule`, `LimitedQuantityRule`, `GiftWithPurchaseRule`, `ConvenienceStoreVoucherRule`.
+2. **實體**：
+   - `Voucher`：優惠券實體，具有唯一標識、有效期和使用狀態。
 
-4. **Specifications**:
-   - `PromotionSpecification`: Base class for promotion condition specifications.
-   - `AddOnPurchaseSpecification`, `FlashSaleSpecification`, `LimitedQuantitySpecification`, `GiftWithPurchaseSpecification`: Condition specifications for specific promotion types.
-   - `PromotionContext`: Promotion context containing information needed to evaluate promotion conditions.
+3. **值對象**：
+   - `PromotionId`：促銷活動唯一標識。
+   - `PromotionType`：促銷類型（限時特價、加價購等）。
+   - 各種促銷規則：`AddOnPurchaseRule`、`FlashSaleRule`、`LimitedQuantityRule`、`GiftWithPurchaseRule`、`ConvenienceStoreVoucherRule`。
 
-5. **Services**:
-   - `PromotionService`: Domain service handling promotion rule application and voucher creation.
+4. **規格**：
+   - `PromotionSpecification`：促銷條件規格基類。
+   - `AddOnPurchaseSpecification`、`FlashSaleSpecification`、`LimitedQuantitySpecification`、`GiftWithPurchaseSpecification`：特定促銷類型的條件規格。
+   - `PromotionContext`：促銷上下文，包含評估促銷條件所需的信息。
 
-6. **Repositories**:
-   - `PromotionRepository`: Repository interface for promotional activities.
-   - `VoucherRepository`: Repository interface for vouchers.
+5. **服務**：
+   - `PromotionService`：處理促銷規則應用和優惠券創建的領域服務。
 
-### Architecture Optimization
+6. **倉儲**：
+   - `PromotionRepository`：促銷活動的倉儲接口。
+   - `VoucherRepository`：優惠券的倉儲接口。
 
-1. **Architecture Testing**:
-   - Added `PromotionArchitectureTest` to ensure the promotion module follows architectural specifications.
-   - Tests ensure specifications implement the `Specification` interface.
-   - Tests ensure entities, value objects, and aggregate roots are located in correct package structures.
+### 架構優化
 
-2. **Architecture Issue Fixes**:
-   - Reclassified `Voucher` from value object to entity and moved it from `valueobject` package to `entity` package.
-   - Changed `Voucher` annotation from `@ValueObject` to `@Entity`, better reflecting its essential characteristics.
-   - Implemented `Specification` interface for `PromotionContext` class, adding `isSatisfiedBy` method.
+1. **架構測試**：
+   - 新增 `PromotionArchitectureTest` 確保促銷模組遵循架構規範。
+   - 測試確保規格實現 `Specification` 接口。
+   - 測試確保實體、值對象和聚合根位於正確的包結構中。
 
-3. **BDD Testing**:
-   - Added promotion-related Cucumber feature files, such as `convenience_store_vouchers.feature`.
-   - Implemented corresponding step definition classes to ensure business requirements are correctly implemented.
+2. **架構問題修復**：
+   - 將 `Voucher` 從值對象重新分類為實體，並從 `valueobject` 包移動到 `entity` 包。
+   - 修改 `Voucher` 的註解從 `@ValueObject` 改為 `@Entity`，更符合其本質特性。
+   - 實現 `PromotionContext` 類的 `Specification` 接口，添加 `isSatisfiedBy` 方法。
 
-## Technical Details
+3. **BDD 測試**：
+   - 新增促銷相關的 Cucumber 特性文件，如 `convenience_store_vouchers.feature`。
+   - 實現對應的步驟定義類，確保業務需求得到正確實現。
 
-### Voucher Entity Refactoring
+## 技術細節
 
-The `Voucher` class was refactored from value object to entity, considering the following factors:
+### Voucher 實體重構
 
-1. Has unique identifier (ID)
-2. Has mutable state (`isUsed`, `isInvalidated`)
-3. Has lifecycle (issue date, expiration date)
-4. Can be used or invalidated (state changes)
+`Voucher` 類從值對象重構為實體，主要考慮以下因素：
+
+1. 具有唯一標識符 (ID)
+2. 有可變狀態 (`isUsed`, `isInvalidated`)
+3. 有生命週期 (發行日期、到期日期)
+4. 可以被使用或作廢（狀態變化）
 
 ```java
 @Entity
@@ -81,33 +84,33 @@ public class Voucher {
     private boolean isUsed;
     private boolean isInvalidated;
     
-    // Method implementations...
+    // 方法實現...
 }
 ```
 
-### PromotionContext Implementing Specification Interface
+### PromotionContext 實現 Specification 接口
 
-To comply with architectural specifications, `PromotionContext` implements the `Specification` interface:
+為了符合架構規範，`PromotionContext` 實現了 `Specification` 接口：
 
 ```java
 public class PromotionContext implements Specification<Object> {
-    // Properties and other methods...
+    // 屬性和其他方法...
     
     @Override
     public boolean isSatisfiedBy(Object entity) {
-        // Since PromotionContext is a context object, not a true specification,
-        // this provides a default implementation. In actual use, specific promotion specifications should implement this
+        // 由於PromotionContext是上下文對象，不是真正的規格，
+        // 這裡提供一個默認實現，實際使用時應該由具體的促銷規格來實現
         return true;
     }
 }
 ```
 
-## Test Coverage
+## 測試覆蓋
 
-1. **Architecture Tests**: Ensure the promotion module follows DDD tactical patterns and architectural specifications.
-2. **BDD Tests**: Verify business requirement implementation through Cucumber feature files and step definitions.
-3. **Unit Tests**: Unit tests for various promotion rules and conditions.
+1. **架構測試**：確保促銷模組遵循DDD戰術模式和架構規範。
+2. **BDD測試**：通過Cucumber特性文件和步驟定義，驗證業務需求的實現。
+3. **單元測試**：針對各個促銷規則和條件的單元測試。
 
-## Conclusion
+## 結論
 
-This update successfully implements the promotion functionality module for the e-commerce platform and ensures code structure complies with Domain-Driven Design principles through architecture optimization. All tests pass successfully, the system architecture is clearer, class classification is more accurate, facilitating system maintenance and expansion.
+本次更新成功實現了電子商務平台的促銷功能模組，並通過架構優化確保代碼結構符合領域驅動設計的原則。所有測試都能順利通過，系統架構更加清晰，類的分類更加準確，有助於系統的維護和擴展。

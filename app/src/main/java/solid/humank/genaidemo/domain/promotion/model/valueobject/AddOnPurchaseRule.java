@@ -1,26 +1,36 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
+import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
 /** 加價購規則 */
 @ValueObject
-public final class AddOnPurchaseRule implements PromotionRule {
-    private final ProductId mainProductId;
-    private final ProductId addOnProductId;
-    private final Money specialPrice;
-    private final Money regularPrice;
+public record AddOnPurchaseRule(
+        ProductId mainProductId,
+        ProductId addOnProductId,
+        Money specialPrice,
+        Money regularPrice) implements PromotionRule {
 
-    public AddOnPurchaseRule(
+    public AddOnPurchaseRule {
+        Objects.requireNonNull(mainProductId, "Main product ID cannot be null");
+        Objects.requireNonNull(addOnProductId, "Add-on product ID cannot be null");
+        Objects.requireNonNull(specialPrice, "Special price cannot be null");
+        Objects.requireNonNull(regularPrice, "Regular price cannot be null");
+
+        if (specialPrice.amount().compareTo(regularPrice.amount()) > 0) {
+            throw new IllegalArgumentException("Special price cannot be higher than regular price");
+        }
+    }
+
+    public static AddOnPurchaseRule create(
             ProductId mainProductId,
             ProductId addOnProductId,
             Money specialPrice,
             Money regularPrice) {
-        this.mainProductId = mainProductId;
-        this.addOnProductId = addOnProductId;
-        this.specialPrice = specialPrice;
-        this.regularPrice = regularPrice;
+        return new AddOnPurchaseRule(mainProductId, addOnProductId, specialPrice, regularPrice);
     }
 
     public ProductId getMainProductId() {

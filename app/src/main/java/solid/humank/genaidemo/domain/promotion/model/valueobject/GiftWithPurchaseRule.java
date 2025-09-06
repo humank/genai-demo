@@ -1,29 +1,41 @@
 package solid.humank.genaidemo.domain.promotion.model.valueobject;
 
+import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.product.model.valueobject.ProductId;
 
 /** 滿額贈禮規則 */
 @ValueObject
-public final class GiftWithPurchaseRule implements PromotionRule {
-    private final Money minimumPurchaseAmount;
-    private final ProductId giftProductId;
-    private final Money giftValue;
-    private final int maxGiftsPerOrder;
-    private final boolean isMultipleGiftsAllowed;
+public record GiftWithPurchaseRule(
+        Money minimumPurchaseAmount,
+        ProductId giftProductId,
+        Money giftValue,
+        int maxGiftsPerOrder,
+        boolean isMultipleGiftsAllowed) implements PromotionRule {
 
-    public GiftWithPurchaseRule(
+    public GiftWithPurchaseRule {
+        Objects.requireNonNull(minimumPurchaseAmount, "Minimum purchase amount cannot be null");
+        Objects.requireNonNull(giftProductId, "Gift product ID cannot be null");
+        Objects.requireNonNull(giftValue, "Gift value cannot be null");
+
+        if (maxGiftsPerOrder <= 0) {
+            throw new IllegalArgumentException("Max gifts per order must be positive");
+        }
+        if (minimumPurchaseAmount.amount().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Minimum purchase amount must be positive");
+        }
+    }
+
+    public static GiftWithPurchaseRule create(
             Money minimumPurchaseAmount,
             ProductId giftProductId,
             Money giftValue,
             int maxGiftsPerOrder,
             boolean isMultipleGiftsAllowed) {
-        this.minimumPurchaseAmount = minimumPurchaseAmount;
-        this.giftProductId = giftProductId;
-        this.giftValue = giftValue;
-        this.maxGiftsPerOrder = maxGiftsPerOrder;
-        this.isMultipleGiftsAllowed = isMultipleGiftsAllowed;
+        return new GiftWithPurchaseRule(
+                minimumPurchaseAmount, giftProductId, giftValue, maxGiftsPerOrder, isMultipleGiftsAllowed);
     }
 
     public Money getMinimumPurchaseAmount() {
@@ -49,8 +61,7 @@ public final class GiftWithPurchaseRule implements PromotionRule {
     @Override
     public boolean matches(CartSummary cartSummary) {
         // 檢查購物車總額是否達到最低消費金額
-        return cartSummary.totalAmount().getAmount().compareTo(minimumPurchaseAmount.getAmount())
-                >= 0;
+        return cartSummary.totalAmount().getAmount().compareTo(minimumPurchaseAmount.getAmount()) >= 0;
     }
 
     @Override
@@ -76,8 +87,7 @@ public final class GiftWithPurchaseRule implements PromotionRule {
 
         // 根據消費金額計算贈品數量
         Money totalAmount = cartSummary.totalAmount();
-        int multiplier =
-                totalAmount.getAmount().divide(minimumPurchaseAmount.getAmount()).intValue();
+        int multiplier = totalAmount.getAmount().divide(minimumPurchaseAmount.getAmount()).intValue();
         return Math.min(multiplier, maxGiftsPerOrder);
     }
 }

@@ -2,36 +2,30 @@ package solid.humank.genaidemo.domain.product.model.valueobject;
 
 import java.util.Objects;
 import java.util.UUID;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 產品ID值物件 */
 @ValueObject
-public class ProductId {
-    private final String id;
+public record ProductId(String id) {
 
-    public ProductId(String id) {
-        this.id = id;
+    public ProductId {
+        Objects.requireNonNull(id, "Product ID cannot be null");
+        if (id.trim().isEmpty()) {
+            throw new IllegalArgumentException("Product ID cannot be empty");
+        }
     }
 
     public static ProductId generateNew() {
         return new ProductId(UUID.randomUUID().toString());
     }
 
+    public static ProductId of(String id) {
+        return new ProductId(id);
+    }
+
     public String getId() {
         return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductId productId = (ProductId) o;
-        return Objects.equals(id, productId.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

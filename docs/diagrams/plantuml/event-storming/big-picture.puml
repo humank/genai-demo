@@ -1,0 +1,279 @@
+@startuml Big Picture Event Storming
+!theme plain
+title GenAI Demo - Big Picture Event Storming
+
+' Event Storming 標準顏色定義
+!define DOMAIN_EVENT_COLOR #FF8C00
+!define COMMAND_COLOR #1E90FF
+!define AGGREGATE_COLOR #FFD700
+!define EXTERNAL_SYSTEM_COLOR #FF69B4
+!define READ_MODEL_COLOR #32CD32
+!define POLICY_COLOR #9370DB
+!define HOTSPOT_COLOR #FF0000
+!define OPPORTUNITY_COLOR #808080
+!define ACTOR_COLOR #87CEEB
+!define UI_MOCKUP_COLOR #F0E68C
+
+' 參與者
+actor "消費者" as Consumer ACTOR_COLOR
+actor "管理員" as Admin ACTOR_COLOR
+actor "客服" as Support ACTOR_COLOR
+
+' 外部系統
+rectangle "支付閘道" as PaymentGateway EXTERNAL_SYSTEM_COLOR
+rectangle "物流系統" as LogisticsSystem EXTERNAL_SYSTEM_COLOR
+rectangle "郵件服務" as EmailService EXTERNAL_SYSTEM_COLOR
+rectangle "簡訊服務" as SMSService EXTERNAL_SYSTEM_COLOR
+rectangle "分析系統" as AnalyticsSystem EXTERNAL_SYSTEM_COLOR
+
+' 產品瀏覽和選擇流程
+rectangle "瀏覽產品目錄" as BrowseCatalog COMMAND_COLOR
+rectangle "產品已瀏覽" as ProductViewed DOMAIN_EVENT_COLOR
+rectangle "產品" as Product AGGREGATE_COLOR
+rectangle "產品目錄視圖" as ProductCatalogView READ_MODEL_COLOR
+
+rectangle "搜尋產品" as SearchProduct COMMAND_COLOR
+rectangle "搜尋已執行" as SearchExecuted DOMAIN_EVENT_COLOR
+rectangle "搜尋結果視圖" as SearchResultView READ_MODEL_COLOR
+
+rectangle "查看產品詳情" as ViewProductDetails COMMAND_COLOR
+rectangle "產品詳情已查看" as ProductDetailsViewed DOMAIN_EVENT_COLOR
+rectangle "產品詳情視圖" as ProductDetailsView READ_MODEL_COLOR
+
+' 購物車管理流程
+rectangle "添加到購物車" as AddToCart COMMAND_COLOR
+rectangle "商品已添加到購物車" as ItemAddedToCart DOMAIN_EVENT_COLOR
+rectangle "購物車" as ShoppingCart AGGREGATE_COLOR
+rectangle "購物車視圖" as CartView READ_MODEL_COLOR
+
+rectangle "更新購物車數量" as UpdateCartQuantity COMMAND_COLOR
+rectangle "購物車數量已更新" as CartQuantityUpdated DOMAIN_EVENT_COLOR
+
+rectangle "移除購物車商品" as RemoveFromCart COMMAND_COLOR
+rectangle "商品已從購物車移除" as ItemRemovedFromCart DOMAIN_EVENT_COLOR
+
+' 庫存管理流程
+rectangle "檢查庫存" as CheckInventory COMMAND_COLOR
+rectangle "庫存已檢查" as InventoryChecked DOMAIN_EVENT_COLOR
+rectangle "庫存不足" as InsufficientInventory HOTSPOT_COLOR
+rectangle "庫存預留政策" as InventoryReservationPolicy POLICY_COLOR
+rectangle "庫存已預留" as InventoryReserved DOMAIN_EVENT_COLOR
+rectangle "庫存視圖" as InventoryView READ_MODEL_COLOR
+
+' 訂單處理流程
+rectangle "創建訂單" as CreateOrder COMMAND_COLOR
+rectangle "訂單已創建" as OrderCreated DOMAIN_EVENT_COLOR
+rectangle "訂單" as Order AGGREGATE_COLOR
+rectangle "訂單視圖" as OrderView READ_MODEL_COLOR
+
+rectangle "確認訂單" as ConfirmOrder COMMAND_COLOR
+rectangle "訂單已確認" as OrderConfirmed DOMAIN_EVENT_COLOR
+
+rectangle "取消訂單" as CancelOrder COMMAND_COLOR
+rectangle "訂單已取消" as OrderCancelled DOMAIN_EVENT_COLOR
+
+' 客戶管理流程
+rectangle "註冊客戶" as RegisterCustomer COMMAND_COLOR
+rectangle "客戶已註冊" as CustomerRegistered DOMAIN_EVENT_COLOR
+rectangle "客戶" as Customer AGGREGATE_COLOR
+rectangle "客戶資料視圖" as CustomerProfileView READ_MODEL_COLOR
+
+rectangle "更新客戶資料" as UpdateCustomerProfile COMMAND_COLOR
+rectangle "客戶資料已更新" as CustomerProfileUpdated DOMAIN_EVENT_COLOR
+
+rectangle "客戶消費已更新" as CustomerSpendingUpdated DOMAIN_EVENT_COLOR
+rectangle "忠誠度政策" as LoyaltyPolicy POLICY_COLOR
+rectangle "忠誠度積分已獲得" as LoyaltyPointsEarned DOMAIN_EVENT_COLOR
+rectangle "忠誠度視圖" as LoyaltyView READ_MODEL_COLOR
+
+' 支付處理流程
+rectangle "處理支付" as ProcessPayment COMMAND_COLOR
+rectangle "支付已處理" as PaymentProcessed DOMAIN_EVENT_COLOR
+rectangle "支付" as Payment AGGREGATE_COLOR
+rectangle "支付視圖" as PaymentView READ_MODEL_COLOR
+
+rectangle "支付失敗" as PaymentFailed DOMAIN_EVENT_COLOR
+rectangle "支付重試政策" as PaymentRetryPolicy POLICY_COLOR
+rectangle "支付安全問題" as PaymentSecurityIssue HOTSPOT_COLOR
+
+rectangle "退款處理" as ProcessRefund COMMAND_COLOR
+rectangle "退款已處理" as RefundProcessed DOMAIN_EVENT_COLOR
+
+' 物流和配送流程
+rectangle "安排配送" as ArrangeShipping COMMAND_COLOR
+rectangle "配送已安排" as ShippingArranged DOMAIN_EVENT_COLOR
+rectangle "配送狀態已更新" as ShippingStatusUpdated DOMAIN_EVENT_COLOR
+rectangle "配送視圖" as ShippingView READ_MODEL_COLOR
+
+rectangle "訂單已出貨" as OrderShipped DOMAIN_EVENT_COLOR
+rectangle "訂單已送達" as OrderDelivered DOMAIN_EVENT_COLOR
+
+' 通知流程
+rectangle "通知政策" as NotificationPolicy POLICY_COLOR
+rectangle "訂單確認通知已發送" as OrderConfirmationSent DOMAIN_EVENT_COLOR
+rectangle "配送通知已發送" as ShippingNotificationSent DOMAIN_EVENT_COLOR
+rectangle "送達通知已發送" as DeliveryNotificationSent DOMAIN_EVENT_COLOR
+
+' 促銷和折扣流程
+rectangle "應用促銷" as ApplyPromotion COMMAND_COLOR
+rectangle "促銷已應用" as PromotionApplied DOMAIN_EVENT_COLOR
+rectangle "促銷" as Promotion AGGREGATE_COLOR
+rectangle "折扣政策" as DiscountPolicy POLICY_COLOR
+rectangle "促銷視圖" as PromotionView READ_MODEL_COLOR
+
+' 客服和支援流程
+rectangle "創建客服工單" as CreateSupportTicket COMMAND_COLOR
+rectangle "客服工單已創建" as SupportTicketCreated DOMAIN_EVENT_COLOR
+rectangle "客服工單" as SupportTicket AGGREGATE_COLOR
+rectangle "客服視圖" as SupportView READ_MODEL_COLOR
+
+' 分析和報告流程
+rectangle "生成銷售報告" as GenerateSalesReport COMMAND_COLOR
+rectangle "銷售報告已生成" as SalesReportGenerated DOMAIN_EVENT_COLOR
+rectangle "銷售報告視圖" as SalesReportView READ_MODEL_COLOR
+
+' 機會點
+rectangle "個人化推薦" as PersonalizationOpportunity OPPORTUNITY_COLOR
+rectangle "預測性庫存" as PredictiveInventoryOpportunity OPPORTUNITY_COLOR
+rectangle "自動化客服" as AutomatedSupportOpportunity OPPORTUNITY_COLOR
+
+' UI 模型
+rectangle "產品目錄頁面" as ProductCatalogUI UI_MOCKUP_COLOR
+rectangle "購物車頁面" as ShoppingCartUI UI_MOCKUP_COLOR
+rectangle "結帳頁面" as CheckoutUI UI_MOCKUP_COLOR
+rectangle "訂單追蹤頁面" as OrderTrackingUI UI_MOCKUP_COLOR
+rectangle "客戶資料頁面" as CustomerProfileUI UI_MOCKUP_COLOR
+
+' 流程連接 - 產品瀏覽
+Consumer --> BrowseCatalog
+BrowseCatalog --> ProductViewed
+ProductViewed --> Product
+ProductViewed --> ProductCatalogView
+ProductCatalogView --> ProductCatalogUI
+
+Consumer --> SearchProduct
+SearchProduct --> SearchExecuted
+SearchExecuted --> SearchResultView
+
+Consumer --> ViewProductDetails
+ViewProductDetails --> ProductDetailsViewed
+ProductDetailsViewed --> ProductDetailsView
+ProductDetailsView --> ProductCatalogUI
+
+' 流程連接 - 購物車
+Consumer --> AddToCart
+AddToCart --> ItemAddedToCart
+ItemAddedToCart --> ShoppingCart
+ItemAddedToCart --> CartView
+CartView --> ShoppingCartUI
+
+Consumer --> UpdateCartQuantity
+UpdateCartQuantity --> CartQuantityUpdated
+CartQuantityUpdated --> ShoppingCart
+
+Consumer --> RemoveFromCart
+RemoveFromCart --> ItemRemovedFromCart
+ItemRemovedFromCart --> ShoppingCart
+
+' 流程連接 - 庫存
+AddToCart --> CheckInventory
+CheckInventory --> InventoryChecked
+InventoryChecked --> Product
+InventoryChecked --> InventoryView
+InventoryReservationPolicy --> InventoryReserved
+InventoryReserved --> Product
+
+' 流程連接 - 訂單
+Consumer --> CreateOrder
+CreateOrder --> OrderCreated
+OrderCreated --> Order
+OrderCreated --> OrderView
+OrderView --> CheckoutUI
+
+Admin --> ConfirmOrder
+ConfirmOrder --> OrderConfirmed
+OrderConfirmed --> Order
+
+Consumer --> CancelOrder
+CancelOrder --> OrderCancelled
+OrderCancelled --> Order
+
+' 流程連接 - 客戶
+Consumer --> RegisterCustomer
+RegisterCustomer --> CustomerRegistered
+CustomerRegistered --> Customer
+CustomerRegistered --> CustomerProfileView
+CustomerProfileView --> CustomerProfileUI
+
+Consumer --> UpdateCustomerProfile
+UpdateCustomerProfile --> CustomerProfileUpdated
+CustomerProfileUpdated --> Customer
+
+OrderCreated --> CustomerSpendingUpdated
+CustomerSpendingUpdated --> Customer
+LoyaltyPolicy --> LoyaltyPointsEarned
+LoyaltyPointsEarned --> Customer
+LoyaltyPointsEarned --> LoyaltyView
+
+' 流程連接 - 支付
+Consumer --> ProcessPayment
+ProcessPayment --> PaymentProcessed
+ProcessPayment --> PaymentFailed
+PaymentProcessed --> Payment
+PaymentProcessed --> PaymentView
+PaymentFailed --> PaymentRetryPolicy
+PaymentProcessed --> PaymentGateway
+
+Support --> ProcessRefund
+ProcessRefund --> RefundProcessed
+RefundProcessed --> Payment
+
+' 流程連接 - 物流
+OrderConfirmed --> ArrangeShipping
+ArrangeShipping --> ShippingArranged
+ShippingArranged --> LogisticsSystem
+LogisticsSystem --> ShippingStatusUpdated
+ShippingStatusUpdated --> ShippingView
+ShippingView --> OrderTrackingUI
+
+ShippingStatusUpdated --> OrderShipped
+ShippingStatusUpdated --> OrderDelivered
+
+' 流程連接 - 通知
+OrderCreated --> NotificationPolicy
+NotificationPolicy --> OrderConfirmationSent
+OrderConfirmationSent --> EmailService
+OrderConfirmationSent --> SMSService
+
+ShippingArranged --> NotificationPolicy
+NotificationPolicy --> ShippingNotificationSent
+ShippingNotificationSent --> EmailService
+
+OrderDelivered --> NotificationPolicy
+NotificationPolicy --> DeliveryNotificationSent
+DeliveryNotificationSent --> EmailService
+
+' 流程連接 - 促銷
+Consumer --> ApplyPromotion
+ApplyPromotion --> PromotionApplied
+PromotionApplied --> Promotion
+PromotionApplied --> PromotionView
+DiscountPolicy --> PromotionApplied
+
+' 流程連接 - 客服
+Consumer --> CreateSupportTicket
+CreateSupportTicket --> SupportTicketCreated
+SupportTicketCreated --> SupportTicket
+SupportTicketCreated --> SupportView
+
+' 流程連接 - 分析
+Admin --> GenerateSalesReport
+GenerateSalesReport --> SalesReportGenerated
+SalesReportGenerated --> SalesReportView
+SalesReportView --> AnalyticsSystem
+
+' 熱點問題連接
+CheckInventory --> InsufficientInventory
+ProcessPayment --> PaymentSecurityIssue
+
+@enduml

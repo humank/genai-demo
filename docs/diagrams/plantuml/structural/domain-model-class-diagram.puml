@@ -1,0 +1,411 @@
+@startuml Domain Model Class Diagram
+!theme plain
+title GenAI Demo - 領域模型類圖
+
+' 顏色定義
+!define AGGREGATE_COLOR #FFE6CC
+!define ENTITY_COLOR #E6F3FF
+!define VALUE_OBJECT_COLOR #E6FFE6
+!define DOMAIN_SERVICE_COLOR #FFE6F3
+!define SPECIFICATION_COLOR #F0E6FF
+!define POLICY_COLOR #FFF0E6
+
+package "Order 有界上下文" as OrderContext {
+    
+    class Order <<AggregateRoot>> AGGREGATE_COLOR {
+        -orderId: OrderId
+        -customerId: CustomerId
+        -items: List<OrderItem>
+        -status: OrderStatus
+        -totalAmount: Money
+        -createdAt: LocalDateTime
+        -updatedAt: LocalDateTime
+        --
+        +Order(customerId: CustomerId, items: List<OrderItem>)
+        +addItem(item: OrderItem): void
+        +removeItem(productId: ProductId): void
+        +confirm(): void
+        +cancel(): void
+        +calculateTotal(): Money
+        +getId(): OrderId
+        +getStatus(): OrderStatus
+        +getTotalAmount(): Money
+        +getItems(): List<OrderItem>
+        --
+        <<Domain Events>>
+        +OrderCreatedEvent
+        +OrderConfirmedEvent
+        +OrderCancelledEvent
+    }
+    
+    class OrderItem <<Entity>> ENTITY_COLOR {
+        -productId: ProductId
+        -quantity: int
+        -unitPrice: Money
+        -subtotal: Money
+        --
+        +OrderItem(productId: ProductId, quantity: int, unitPrice: Money)
+        +changeQuantity(newQuantity: int): void
+        +getSubtotal(): Money
+        +getProductId(): ProductId
+        +getQuantity(): int
+    }
+    
+    class OrderId <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: UUID
+        --
+        +OrderId(value: UUID)
+        +generate(): OrderId
+        +of(id: String): OrderId
+        +getValue(): UUID
+    }
+    
+    enum OrderStatus VALUE_OBJECT_COLOR {
+        PENDING
+        CONFIRMED
+        SHIPPED
+        DELIVERED
+        CANCELLED
+    }
+    
+    class OrderDiscountSpecification <<Specification>> SPECIFICATION_COLOR {
+        -minimumAmount: Money
+        -currentTime: LocalDateTime
+        --
+        +isSatisfiedBy(order: Order): boolean
+        +weekendSpecial(): OrderDiscountSpecification
+    }
+    
+    class OrderDiscountPolicy <<Policy>> POLICY_COLOR {
+        -specification: OrderDiscountSpecification
+        -discountRate: BigDecimal
+        --
+        +apply(order: Order): Money
+        +isApplicableTo(order: Order): boolean
+        +weekendDiscount(): OrderDiscountPolicy
+    }
+}
+
+package "Customer 有界上下文" as CustomerContext {
+    
+    class Customer <<AggregateRoot>> AGGREGATE_COLOR {
+        -id: CustomerId
+        -name: CustomerName
+        -email: Email
+        -phone: Phone
+        -membershipLevel: MembershipLevel
+        -rewardPoints: RewardPoints
+        -totalSpending: Money
+        -createdAt: LocalDateTime
+        --
+        +Customer(id: CustomerId, name: CustomerName, email: Email, membershipLevel: MembershipLevel)
+        +updateProfile(name: CustomerName, email: Email, phone: Phone): void
+        +updateSpending(amount: Money, orderId: String, spendingType: String): void
+        +addRewardPoints(points: int, reason: String): void
+        +redeemPoints(points: int): void
+        +upgradeMembership(): void
+        +getId(): CustomerId
+        +getRewardPoints(): RewardPoints
+        +getTotalSpending(): Money
+        --
+        <<Domain Events>>
+        +CustomerCreatedEvent
+        +CustomerProfileUpdatedEvent
+        +CustomerSpendingUpdatedEvent
+        +RewardPointsEarnedEvent
+    }
+    
+    class CustomerId <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: String
+        --
+        +CustomerId(value: String)
+        +generate(): CustomerId
+        +of(id: String): CustomerId
+        +getValue(): String
+    }
+    
+    class CustomerName <<ValueObject>> VALUE_OBJECT_COLOR {
+        -firstName: String
+        -lastName: String
+        --
+        +CustomerName(firstName: String, lastName: String)
+        +getFullName(): String
+        +getFirstName(): String
+        +getLastName(): String
+    }
+    
+    class Email <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: String
+        --
+        +Email(value: String)
+        +getValue(): String
+        +getDomain(): String
+        +isValid(): boolean
+    }
+    
+    class Phone <<ValueObject>> VALUE_OBJECT_COLOR {
+        -countryCode: String
+        -number: String
+        --
+        +Phone(countryCode: String, number: String)
+        +getFullNumber(): String
+        +getCountryCode(): String
+        +getNumber(): String
+    }
+    
+    class RewardPoints <<ValueObject>> VALUE_OBJECT_COLOR {
+        -balance: int
+        --
+        +RewardPoints(balance: int)
+        +empty(): RewardPoints
+        +add(points: int): RewardPoints
+        +redeem(points: int): RewardPoints
+        +canRedeem(points: int): boolean
+        +getBalance(): int
+    }
+    
+    enum MembershipLevel VALUE_OBJECT_COLOR {
+        STANDARD
+        SILVER
+        GOLD
+        PLATINUM
+    }
+    
+    class LoyaltyPointsPolicy <<Policy>> POLICY_COLOR {
+        -baseRate: BigDecimal
+        -membershipMultiplier: Map<MembershipLevel, BigDecimal>
+        --
+        +calculatePoints(amount: Money, level: MembershipLevel): int
+        +apply(order: Order): int
+        +isApplicableTo(order: Order): boolean
+    }
+}
+
+package "Product 有界上下文" as ProductContext {
+    
+    class Product <<AggregateRoot>> AGGREGATE_COLOR {
+        -id: ProductId
+        -name: ProductName
+        -description: String
+        -price: Money
+        -category: ProductCategory
+        -inventory: Inventory
+        -isActive: boolean
+        --
+        +Product(id: ProductId, name: ProductName, price: Money, category: ProductCategory)
+        +updatePrice(newPrice: Money): void
+        +updateInventory(quantity: int): void
+        +reserveInventory(quantity: int): void
+        +releaseInventory(quantity: int): void
+        +activate(): void
+        +deactivate(): void
+        +getId(): ProductId
+        +getPrice(): Money
+        +getAvailableStock(): int
+        --
+        <<Domain Events>>
+        +ProductCreatedEvent
+        +ProductPriceUpdatedEvent
+        +InventoryUpdatedEvent
+    }
+    
+    class ProductId <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: String
+        --
+        +ProductId(value: String)
+        +generate(): ProductId
+        +of(id: String): ProductId
+        +getValue(): String
+    }
+    
+    class ProductName <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: String
+        --
+        +ProductName(value: String)
+        +getValue(): String
+    }
+    
+    class Inventory <<ValueObject>> VALUE_OBJECT_COLOR {
+        -totalStock: int
+        -reservedStock: int
+        -availableStock: int
+        --
+        +Inventory(totalStock: int)
+        +reserve(quantity: int): Inventory
+        +release(quantity: int): Inventory
+        +restock(quantity: int): Inventory
+        +getAvailableStock(): int
+        +getTotalStock(): int
+        +getReservedStock(): int
+    }
+    
+    enum ProductCategory VALUE_OBJECT_COLOR {
+        ELECTRONICS
+        CLOTHING
+        BOOKS
+        HOME_GARDEN
+        SPORTS
+    }
+    
+    class InventoryReservationSpecification <<Specification>> SPECIFICATION_COLOR {
+        --
+        +isSatisfiedBy(product: Product, requestedQuantity: int): boolean
+        +hasAvailableStock(product: Product, quantity: int): boolean
+    }
+}
+
+package "Payment 有界上下文" as PaymentContext {
+    
+    class Payment <<AggregateRoot>> AGGREGATE_COLOR {
+        -id: PaymentId
+        -orderId: OrderId
+        -customerId: CustomerId
+        -amount: Money
+        -method: PaymentMethod
+        -status: PaymentStatus
+        -transactionId: String
+        -processedAt: LocalDateTime
+        --
+        +Payment(orderId: OrderId, customerId: CustomerId, amount: Money, method: PaymentMethod)
+        +process(): void
+        +confirm(): void
+        +fail(reason: String): void
+        +refund(amount: Money): void
+        +getId(): PaymentId
+        +getStatus(): PaymentStatus
+        +getAmount(): Money
+        --
+        <<Domain Events>>
+        +PaymentCreatedEvent
+        +PaymentProcessedEvent
+        +PaymentFailedEvent
+        +PaymentRefundedEvent
+    }
+    
+    class PaymentId <<ValueObject>> VALUE_OBJECT_COLOR {
+        -value: UUID
+        --
+        +PaymentId(value: UUID)
+        +generate(): PaymentId
+        +of(id: String): PaymentId
+        +getValue(): UUID
+    }
+    
+    enum PaymentMethod VALUE_OBJECT_COLOR {
+        CREDIT_CARD
+        DEBIT_CARD
+        PAYPAL
+        BANK_TRANSFER
+        DIGITAL_WALLET
+    }
+    
+    enum PaymentStatus VALUE_OBJECT_COLOR {
+        PENDING
+        PROCESSING
+        COMPLETED
+        FAILED
+        REFUNDED
+    }
+}
+
+package "共享核心" as SharedKernel {
+    
+    class Money <<ValueObject>> VALUE_OBJECT_COLOR {
+        -amount: BigDecimal
+        -currency: Currency
+        --
+        +Money(amount: BigDecimal, currency: Currency)
+        +ZERO: Money
+        +twd(amount: double): Money
+        +add(other: Money): Money
+        +subtract(other: Money): Money
+        +multiply(factor: BigDecimal): Money
+        +divide(divisor: BigDecimal): Money
+        +isGreaterThan(other: Money): boolean
+        +getAmount(): BigDecimal
+        +getCurrency(): Currency
+    }
+    
+    interface DomainEvent {
+        +getEventId(): UUID
+        +getOccurredOn(): LocalDateTime
+        +getEventType(): String
+        +getAggregateId(): String
+    }
+    
+    interface Specification<T> {
+        +isSatisfiedBy(candidate: T): boolean
+        +and(other: Specification<T>): Specification<T>
+        +or(other: Specification<T>): Specification<T>
+        +not(): Specification<T>
+    }
+    
+    interface DomainPolicy<T, R> {
+        +apply(input: T): R
+        +isApplicableTo(input: T): boolean
+    }
+    
+    interface AggregateRootInterface {
+        +collectEvent(event: DomainEvent): void
+        +getUncommittedEvents(): List<DomainEvent>
+        +markEventsAsCommitted(): void
+        +hasUncommittedEvents(): boolean
+        +clearEvents(): void
+    }
+}
+
+' 關係定義
+Order ||--o{ OrderItem : contains
+Order ||--|| OrderId : has
+Order ||--|| CustomerId : belongs to
+Order ||--|| Money : has total amount
+OrderItem ||--|| ProductId : references
+OrderItem ||--|| Money : has unit price
+
+Customer ||--|| CustomerId : has
+Customer ||--|| CustomerName : has
+Customer ||--|| Email : has
+Customer ||--|| Phone : has
+Customer ||--|| RewardPoints : has
+Customer ||--|| Money : has total spending
+
+Product ||--|| ProductId : has
+Product ||--|| ProductName : has
+Product ||--|| Money : has price
+Product ||--|| Inventory : has
+
+Payment ||--|| PaymentId : has
+Payment ||--|| OrderId : references
+Payment ||--|| CustomerId : references
+Payment ||--|| Money : has amount
+
+' 規格和政策關係
+OrderDiscountSpecification ..> Order : validates
+OrderDiscountPolicy ..> Order : applies to
+OrderDiscountPolicy --> OrderDiscountSpecification : uses
+
+LoyaltyPointsPolicy ..> Customer : applies to
+LoyaltyPointsPolicy ..> Order : calculates from
+
+InventoryReservationSpecification ..> Product : validates
+
+' 實現關係
+Order ..|> AggregateRootInterface
+Customer ..|> AggregateRootInterface
+Product ..|> AggregateRootInterface
+Payment ..|> AggregateRootInterface
+
+OrderDiscountSpecification ..|> Specification
+InventoryReservationSpecification ..|> Specification
+
+OrderDiscountPolicy ..|> DomainPolicy
+LoyaltyPointsPolicy ..|> DomainPolicy
+
+' 共享值對象使用
+Order --> Money
+Customer --> Money
+Product --> Money
+Payment --> Money
+OrderItem --> Money
+
+@enduml

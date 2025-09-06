@@ -166,7 +166,7 @@ public class PromotionService {
     private boolean isAddOnPurchaseApplicable(Order order, AddOnPurchaseRule rule) {
         // 檢查訂單中是否包含主要商品
         return order.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(rule.getMainProductId()));
+                .anyMatch(item -> item.getProductId().equals(rule.getMainProductId().getId()));
     }
 
     private boolean isFlashSaleApplicable(Order order, FlashSaleRule rule) {
@@ -174,7 +174,7 @@ public class PromotionService {
         LocalDateTime now = LocalDateTime.now();
         boolean inTimeRange = rule.flashSalePeriod().contains(now);
         boolean hasTargetProduct = order.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(rule.targetProductId()));
+                .anyMatch(item -> item.getProductId().equals(rule.targetProductId().getId()));
 
         return inTimeRange && hasTargetProduct;
     }
@@ -183,7 +183,7 @@ public class PromotionService {
             Order order, LimitedQuantityRule rule, Map<String, Integer> promotionInventory) {
         // 檢查是否包含目標商品且庫存充足
         boolean hasTargetProduct = order.getItems().stream()
-                .anyMatch(item -> item.getProductId().equals(rule.getProductId()));
+                .anyMatch(item -> item.getProductId().equals(rule.getProductId().getId()));
 
         int remainingQuantity = promotionInventory.getOrDefault(rule.getPromotionId(), rule.getTotalQuantity());
 
@@ -214,7 +214,7 @@ public class PromotionService {
         List<OrderItem> updatedItems = new ArrayList<>();
 
         for (OrderItem item : order.getItems()) {
-            if (item.getProductId().equals(rule.getAddOnProductId())) {
+            if (item.getProductId().equals(rule.getAddOnProductId().getId())) {
                 // 更新加價購商品的價格
                 OrderItem updatedItem = new OrderItem(
                         item.getProductId(),
@@ -234,7 +234,7 @@ public class PromotionService {
         List<OrderItem> updatedItems = new ArrayList<>();
 
         for (OrderItem item : order.getItems()) {
-            if (item.getProductId().equals(rule.targetProductId())) {
+            if (item.getProductId().equals(rule.targetProductId().getId())) {
                 // 應用數量限制
                 int applicableQuantity = Math.min(item.getQuantity(), rule.quantityLimit());
 
@@ -271,7 +271,7 @@ public class PromotionService {
         List<OrderItem> updatedItems = new ArrayList<>();
 
         for (OrderItem item : order.getItems()) {
-            if (item.getProductId().equals(rule.getProductId())) {
+            if (item.getProductId().equals(rule.getProductId().getId())) {
                 OrderItem updatedItem = new OrderItem(
                         item.getProductId(),
                         item.getProductName(),

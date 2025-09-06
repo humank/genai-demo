@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Markdown Documentation Translation",
+  "description": "Automatically generates English translations of all markdown documentation files and places them in docs/en directory, while also checking and correcting all internal links to ensure proper path references",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A markdown documentation file has been created or modified. Please:\n\n1. **Translation Task**: \n   - Identify if this is a Chinese documentation file that needs English translation\n   - If it's already in docs/en/, check if the source Chinese file has been updated and needs retranslation\n   - Generate a high-quality English translation maintaining the same structure, formatting, and technical accuracy\n   - Place the English version in the corresponding docs/en/ directory structure\n\n2. **Link Verification Task**:\n   - Scan the entire document (both original and translated) for all internal links\n   - Verify that all relative paths and references point to existing files\n   - Check cross-references between documents\n   - Update any broken or incorrect links to ensure proper navigation\n   - Ensure links in English documents point to other English documents when available\n\n3. **File Organization**:\n   - Maintain the same directory structure under docs/en/ as the original docs/ structure\n   - Preserve all markdown formatting, code blocks, diagrams, and special syntax\n   - Keep all technical terms consistent with established project terminology\n   - Ensure file names follow the same naming convention\n\n4. **Quality Assurance**:\n   - Verify technical accuracy of translations, especially for DDD, hexagonal architecture, and Spring Boot concepts\n   - Maintain consistency with existing English documentation style\n   - Ensure all code examples, commands, and technical references remain accurate\n   - Check that all internal document references work correctly in both languages\n\nPlease process this documentation update and ensure both Chinese and English versions are properly maintained with correct internal linking."
+  }
+}

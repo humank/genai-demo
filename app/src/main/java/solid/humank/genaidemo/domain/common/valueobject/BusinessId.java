@@ -1,10 +1,8 @@
 package solid.humank.genaidemo.domain.common.valueobject;
 
 import java.util.UUID;
-import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 共享核心中的業務識別碼基礎類型 用於在不同 Bounded Context 之間共享通用的識別碼概念 */
-@ValueObject
 public abstract class BusinessId {
     protected final UUID id;
 
@@ -31,8 +29,10 @@ public abstract class BusinessId {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         BusinessId that = (BusinessId) o;
         return id.equals(that.id);
     }

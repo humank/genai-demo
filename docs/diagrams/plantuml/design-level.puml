@@ -1,0 +1,290 @@
+@startuml design-level
+left to right direction
+
+skinparam rectangle {
+    RoundCorner 25
+    BorderColor black
+    FontStyle bold
+}
+
+skinparam title {
+    FontSize 20
+    FontStyle bold
+}
+
+skinparam linetype ortho
+skinparam nodesep 80
+skinparam ranksep 100
+
+title 訂單系統事件風暴圖 - 設計級別階段
+
+' 使用包来表示界限上下文
+package "訂單上下文" {
+    ' 命令
+    together {
+        rectangle "建立訂單" as CreateOrderCommand #1E90FF
+        rectangle "添加訂單項目" as AddOrderItemCommand #1E90FF
+        rectangle "提交訂單" as SubmitOrderCommand #1E90FF
+        rectangle "確認訂單" as ConfirmOrderCommand #1E90FF
+        rectangle "取消訂單" as CancelOrderCommand #1E90FF
+    }
+    
+    ' 聚合
+    rectangle "訂單" as OrderAggregate #FFFF00
+    
+    ' 事件
+    together {
+        rectangle "訂單已建立" as OrderCreatedEvent #FFA500
+        rectangle "訂單項目已添加" as OrderItemAddedEvent #FFA500
+        rectangle "訂單已提交" as OrderSubmittedEvent #FFA500
+        rectangle "訂單已確認" as OrderConfirmedEvent #FFA500
+        rectangle "訂單已取消" as OrderCancelledEvent #FFA500
+    }
+    
+    ' 读模型
+    together {
+        rectangle "訂單摘要" as OrderSummaryReadModel #32CD32
+        rectangle "訂單詳情" as OrderDetailReadModel #32CD32
+        rectangle "訂單歷史" as OrderHistoryReadModel #32CD32
+    }
+    
+    ' 服务
+    rectangle "訂單工作流服務" as OrderWorkflowService #ADD8E6
+}
+
+package "庫存上下文" {
+    ' 命令
+    together {
+        rectangle "檢查庫存" as CheckInventoryCommand #1E90FF
+        rectangle "預留庫存" as ReserveInventoryCommand #1E90FF
+        rectangle "釋放庫存" as ReleaseInventoryCommand #1E90FF
+    }
+    
+    ' 聚合
+    rectangle "庫存" as InventoryAggregate #FFFF00
+    
+    ' 事件
+    together {
+        rectangle "庫存已檢查" as InventoryCheckedEvent #FFA500
+        rectangle "庫存已預留" as InventoryReservedEvent #FFA500
+        rectangle "庫存已釋放" as InventoryReleasedEvent #FFA500
+    }
+    
+    ' 读模型
+    together {
+        rectangle "庫存狀態" as InventoryStatusReadModel #32CD32
+        rectangle "庫存報表" as InventoryReportReadModel #32CD32
+    }
+    
+    ' 服务
+    rectangle "庫存管理服務" as InventoryManagementService #ADD8E6
+}
+
+package "支付上下文" {
+    ' 命令
+    together {
+        rectangle "處理支付" as ProcessPaymentCommand #1E90FF
+        rectangle "申請退款" as RequestRefundCommand #1E90FF
+    }
+    
+    ' 聚合
+    rectangle "支付" as PaymentAggregate #FFFF00
+    
+    ' 事件
+    together {
+        rectangle "支付已請求" as PaymentRequestedEvent #FFA500
+        rectangle "支付已完成" as PaymentCompletedEvent #FFA500
+        rectangle "支付已失敗" as PaymentFailedEvent #FFA500
+        rectangle "退款已處理" as RefundProcessedEvent #FFA500
+    }
+    
+    ' 读模型
+    together {
+        rectangle "支付狀態" as PaymentStatusReadModel #32CD32
+        rectangle "支付歷史" as PaymentHistoryReadModel #32CD32
+    }
+    
+    ' 服务
+    rectangle "支付處理服務" as PaymentProcessingService #ADD8E6
+}
+
+package "配送上下文" {
+    ' 命令
+    together {
+        rectangle "安排配送" as ArrangeDeliveryCommand #1E90FF
+        rectangle "更新配送地址" as UpdateDeliveryAddressCommand #1E90FF
+        rectangle "標記配送完成" as MarkDeliveryCompletedCommand #1E90FF
+    }
+    
+    ' 聚合
+    rectangle "配送" as DeliveryAggregate #FFFF00
+    
+    ' 事件
+    together {
+        rectangle "配送已安排" as DeliveryArrangedEvent #FFA500
+        rectangle "配送地址已更新" as DeliveryAddressUpdatedEvent #FFA500
+        rectangle "配送已完成" as DeliveryCompletedEvent #FFA500
+    }
+    
+    ' 读模型
+    together {
+        rectangle "配送狀態" as DeliveryStatusReadModel #32CD32
+        rectangle "配送追蹤" as DeliveryTrackingReadModel #32CD32
+    }
+    
+    ' 服务
+    rectangle "配送管理服務" as DeliveryManagementService #ADD8E6
+}
+
+package "通知上下文" {
+    ' 聚合
+    rectangle "通知" as NotificationAggregate #FFFF00
+    
+    ' 事件
+    rectangle "通知已發送" as NotificationSentEvent #FFA500
+    
+    ' 读模型
+    rectangle "通知歷史" as NotificationHistoryReadModel #32CD32
+    
+    ' 服务
+    rectangle "通知服務" as NotificationService #ADD8E6
+}
+
+' 跨界限上下文读模型
+package "綜合視圖上下文" {
+    together {
+        rectangle "客戶訂單綜合視圖" as CustomerOrderDashboardReadModel #32CD32
+        rectangle "業務分析報表" as BusinessAnalyticsReadModel #32CD32
+        rectangle "庫存與訂單關聯視圖" as InventoryOrderCorrelationReadModel #32CD32
+    }
+}
+
+' 用户
+rectangle "客戶" as Customer #FFD700
+rectangle "系統管理員" as Admin #FFD700
+
+' 外部系统
+together {
+    rectangle "庫存系統" as InventorySystem #FF69B4
+    rectangle "支付網關" as PaymentGateway #FF69B4
+    rectangle "物流系統" as LogisticsSystem #FF69B4
+    rectangle "通知系統" as NotificationSystem #FF69B4
+}
+
+' 命令到聚合的流程
+CreateOrderCommand -[#blue]-> OrderAggregate
+AddOrderItemCommand -[#blue]-> OrderAggregate
+SubmitOrderCommand -[#blue]-> OrderAggregate
+ConfirmOrderCommand -[#blue]-> OrderAggregate
+CancelOrderCommand -[#blue]-> OrderAggregate
+
+CheckInventoryCommand -[#blue]-> InventoryAggregate
+ReserveInventoryCommand -[#blue]-> InventoryAggregate
+ReleaseInventoryCommand -[#blue]-> InventoryAggregate
+
+ProcessPaymentCommand -[#blue]-> PaymentAggregate
+RequestRefundCommand -[#blue]-> PaymentAggregate
+
+ArrangeDeliveryCommand -[#blue]-> DeliveryAggregate
+UpdateDeliveryAddressCommand -[#blue]-> DeliveryAggregate
+MarkDeliveryCompletedCommand -[#blue]-> DeliveryAggregate
+
+' 聚合到事件的流程
+OrderAggregate -[#orange]-> OrderCreatedEvent
+OrderAggregate -[#orange]-> OrderItemAddedEvent
+OrderAggregate -[#orange]-> OrderSubmittedEvent
+OrderAggregate -[#orange]-> OrderConfirmedEvent
+OrderAggregate -[#orange]-> OrderCancelledEvent
+
+InventoryAggregate -[#orange]-> InventoryCheckedEvent
+InventoryAggregate -[#orange]-> InventoryReservedEvent
+InventoryAggregate -[#orange]-> InventoryReleasedEvent
+
+PaymentAggregate -[#orange]-> PaymentRequestedEvent
+PaymentAggregate -[#orange]-> PaymentCompletedEvent
+PaymentAggregate -[#orange]-> PaymentFailedEvent
+PaymentAggregate -[#orange]-> RefundProcessedEvent
+
+DeliveryAggregate -[#orange]-> DeliveryArrangedEvent
+DeliveryAggregate -[#orange]-> DeliveryAddressUpdatedEvent
+DeliveryAggregate -[#orange]-> DeliveryCompletedEvent
+
+NotificationAggregate -[#orange]-> NotificationSentEvent
+
+' 上下文之间的集成 (使用正交线条)
+OrderSubmittedEvent -[#red,thickness=2]-> CheckInventoryCommand : 触发
+InventoryReservedEvent -[#red,thickness=2]-> ProcessPaymentCommand : 触发
+PaymentCompletedEvent -[#red,thickness=2]-> ConfirmOrderCommand : 触发
+OrderConfirmedEvent -[#red,thickness=2]-> ArrangeDeliveryCommand : 触发
+OrderCancelledEvent -[#red,thickness=2]-> ReleaseInventoryCommand : 触发
+OrderCancelledEvent -[#red,thickness=2]-> RequestRefundCommand : 如果已支付
+
+' 事件到读模型的投影
+OrderCreatedEvent -[#green,dashed]-> OrderSummaryReadModel : 即時投影
+OrderItemAddedEvent -[#green,dashed]-> OrderDetailReadModel : 即時投影
+OrderConfirmedEvent -[#green,dashed]-> OrderHistoryReadModel : 即時投影
+InventoryReservedEvent -[#green,dashed]-> InventoryStatusReadModel : 即時投影
+InventoryCheckedEvent -[#green,dashed]-> InventoryReportReadModel : 批量投影
+PaymentCompletedEvent -[#green,dashed]-> PaymentStatusReadModel : 即時投影
+PaymentCompletedEvent -[#green,dashed]-> PaymentHistoryReadModel : 即時投影
+DeliveryArrangedEvent -[#green,dashed]-> DeliveryTrackingReadModel : 即時投影
+DeliveryCompletedEvent -[#green,dashed]-> DeliveryStatusReadModel : 即時投影
+NotificationSentEvent -[#green,dashed]-> NotificationHistoryReadModel : 批量投影
+
+' 跨界限上下文读模型投影 (使用虚线)
+OrderCreatedEvent -[#purple,dashed,thickness=2]-> CustomerOrderDashboardReadModel : 投影
+OrderConfirmedEvent -[#purple,dashed,thickness=2]-> CustomerOrderDashboardReadModel : 投影
+PaymentCompletedEvent -[#purple,dashed,thickness=2]-> CustomerOrderDashboardReadModel : 投影
+DeliveryCompletedEvent -[#purple,dashed,thickness=2]-> CustomerOrderDashboardReadModel : 投影
+
+OrderConfirmedEvent -[#purple,dashed,thickness=2]-> BusinessAnalyticsReadModel : 批量投影
+PaymentCompletedEvent -[#purple,dashed,thickness=2]-> BusinessAnalyticsReadModel : 批量投影
+InventoryReservedEvent -[#purple,dashed,thickness=2]-> BusinessAnalyticsReadModel : 批量投影
+
+InventoryReservedEvent -[#purple,dashed,thickness=2]-> InventoryOrderCorrelationReadModel : 投影
+OrderSubmittedEvent -[#purple,dashed,thickness=2]-> InventoryOrderCorrelationReadModel : 投影
+
+' 用户与读模型的交互
+Customer -[#gold]-> OrderSummaryReadModel : 查詢
+OrderSummaryReadModel -[#gold,dashed]-> Customer : 顯示
+Customer -[#gold]-> OrderDetailReadModel : 查詢
+OrderDetailReadModel -[#gold,dashed]-> Customer : 顯示
+Customer -[#gold]-> DeliveryTrackingReadModel : 查詢
+DeliveryTrackingReadModel -[#gold,dashed]-> Customer : 顯示
+Customer -[#gold]-> CustomerOrderDashboardReadModel : 查詢
+CustomerOrderDashboardReadModel -[#gold,dashed]-> Customer : 顯示
+
+Admin -[#gold]-> InventoryReportReadModel : 查詢
+InventoryReportReadModel -[#gold,dashed]-> Admin : 顯示
+Admin -[#gold]-> BusinessAnalyticsReadModel : 查詢
+BusinessAnalyticsReadModel -[#gold,dashed]-> Admin : 顯示
+Admin -[#gold]-> InventoryOrderCorrelationReadModel : 查詢
+InventoryOrderCorrelationReadModel -[#gold,dashed]-> Admin : 顯示
+
+' 与外部系统的集成
+InventoryAggregate -[#pink]-> InventorySystem : 使用
+PaymentAggregate -[#pink]-> PaymentGateway : 使用
+DeliveryAggregate -[#pink]-> LogisticsSystem : 使用
+NotificationAggregate -[#pink]-> NotificationSystem : 使用
+
+' 图例
+legend right
+  |= 元素類型 |= 顏色 |= 說明 |
+  | <back:#FFD700>   </back> | 參與者 | 執行命令的人或系統 |
+  | <back:#1E90FF>   </back> | 命令 | 觸發事件的行為或意圖 |
+  | <back:#FFFF00>   </back> | 聚合 | 確保業務規則的實體 |
+  | <back:#FFA500>   </back> | 事件 | 系統中發生的事情 |
+  | <back:#32CD32>   </back> | 讀模型 | 用戶查看的信息或視圖 |
+  | <back:#ADD8E6>   </back> | 服務 | 協調聚合和處理業務邏輯 |
+  | <back:#FF69B4>   </back> | 外部系統 | 與核心系統交互的外部系統 |
+  |= 線條類型 |= 顏色 |= 說明 |
+  | <back:#blue>   </back> 實線 | 藍色 | 命令到聚合的流程 |
+  | <back:#orange>   </back> 實線 | 橙色 | 聚合到事件的流程 |
+  | <back:#red>   </back> 實線 | 紅色 | 上下文間的集成 |
+  | <back:#green>   </back> 虛線 | 綠色 | 事件到讀模型的投影 |
+  | <back:#purple>   </back> 虛線 | 紫色 | 跨界限上下文的讀模型投影 |
+  | <back:#gold>   </back> 實/虛線 | 金色 | 用戶與讀模型的交互 |
+  | <back:#pink>   </back> 實線 | 粉色 | 與外部系統的集成 |
+endlegend
+
+@enduml

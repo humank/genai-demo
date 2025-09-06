@@ -1,44 +1,47 @@
 package solid.humank.genaidemo.domain.notification.model.valueobject;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 
 /** 客戶通知偏好值對象 封裝客戶的通知偏好設置 */
 @ValueObject
-public class CustomerNotificationPreference {
-    private final String customerId;
-    private final List<NotificationType> selectedTypes;
-    private final List<NotificationChannel> selectedChannels;
-    private final boolean optedOut;
+public record CustomerNotificationPreference(
+        String customerId,
+        List<NotificationType> selectedTypes,
+        List<NotificationChannel> selectedChannels,
+        boolean optedOut) {
 
     /**
      * 建立客戶通知偏好
-     *
-     * @param customerId 客戶ID
-     * @param selectedTypes 選擇的通知類型
-     * @param selectedChannels 選擇的通知渠道
-     * @param optedOut 是否選擇不接收通知
      */
-    public CustomerNotificationPreference(
+    public CustomerNotificationPreference {
+        Objects.requireNonNull(customerId, "客戶ID不能為空");
+        Objects.requireNonNull(selectedTypes, "選擇的通知類型不能為空");
+        Objects.requireNonNull(selectedChannels, "選擇的通知渠道不能為空");
+
+        if (customerId.trim().isEmpty()) {
+            throw new IllegalArgumentException("客戶ID不能為空字符串");
+        }
+        if (selectedTypes.isEmpty()) {
+            throw new IllegalArgumentException("選擇的通知類型不能為空");
+        }
+        if (selectedChannels.isEmpty()) {
+            throw new IllegalArgumentException("選擇的通知渠道不能為空");
+        }
+
+        // Make defensive copies to ensure immutability
+        selectedTypes = List.copyOf(selectedTypes);
+        selectedChannels = List.copyOf(selectedChannels);
+    }
+
+    public static CustomerNotificationPreference create(
             String customerId,
             List<NotificationType> selectedTypes,
             List<NotificationChannel> selectedChannels,
             boolean optedOut) {
-        this.customerId = Objects.requireNonNull(customerId, "客戶ID不能為空");
-
-        if (selectedTypes == null || selectedTypes.isEmpty()) {
-            throw new IllegalArgumentException("選擇的通知類型不能為空");
-        }
-        this.selectedTypes = Collections.unmodifiableList(selectedTypes);
-
-        if (selectedChannels == null || selectedChannels.isEmpty()) {
-            throw new IllegalArgumentException("選擇的通知渠道不能為空");
-        }
-        this.selectedChannels = Collections.unmodifiableList(selectedChannels);
-
-        this.optedOut = optedOut;
+        return new CustomerNotificationPreference(customerId, selectedTypes, selectedChannels, optedOut);
     }
 
     /**
@@ -102,8 +105,10 @@ public class CustomerNotificationPreference {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         CustomerNotificationPreference that = (CustomerNotificationPreference) o;
         return optedOut == that.optedOut
                 && Objects.equals(customerId, that.customerId)
