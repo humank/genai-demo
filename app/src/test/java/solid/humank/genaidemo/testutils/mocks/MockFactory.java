@@ -172,7 +172,7 @@ public class MockFactory implements TestResource {
         private Object handleObjectMethod(Method method, Object[] args) {
             switch (method.getName()) {
                 case "toString":
-                    return "Mock[" + mockName + "]";
+                    return String.format("Mock[%s]", mockName);
                 case "hashCode":
                     return mockName.hashCode();
                 case "equals":

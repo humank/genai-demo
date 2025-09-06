@@ -3,7 +3,6 @@ package solid.humank.genaidemo.infrastructure.delivery.persistence.adapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +71,7 @@ public class DeliveryRepositoryAdapter
         return ((JpaDeliveryRepository) jpaRepository).findByStatus(status.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -80,7 +79,7 @@ public class DeliveryRepositoryAdapter
         return ((JpaDeliveryRepository) jpaRepository).findFailedDeliveries()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -88,7 +87,7 @@ public class DeliveryRepositoryAdapter
         return ((JpaDeliveryRepository) jpaRepository).findDeliveriesForRedelivery()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -96,6 +95,6 @@ public class DeliveryRepositoryAdapter
         return ((JpaDeliveryRepository) jpaRepository).findByDeliveryPersonName(deliveryPersonId)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

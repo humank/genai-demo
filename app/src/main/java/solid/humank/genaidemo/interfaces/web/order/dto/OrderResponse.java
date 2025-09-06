@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /** 訂單響應 DTO */
 @Schema(
@@ -94,7 +93,7 @@ public class OrderResponse {
         List<WebOrderItemResponse> items =
                 appResponse.getItems().stream()
                         .map(WebOrderItemResponse::fromOrderItemResponse)
-                        .collect(Collectors.toList());
+                        .toList();
 
         return new OrderResponse(
                 appResponse.getId(),

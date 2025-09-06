@@ -3,7 +3,6 @@ package solid.humank.genaidemo.infrastructure.inventory.persistence.adapter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -61,14 +60,14 @@ public class InventoryRepositoryAdapter extends BaseRepositoryAdapter<Inventory,
     public List<Inventory> findBelowThreshold() {
         return jpaInventoryRepository.findBelowThreshold().stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<Inventory> findByOrderId(UUID orderId) {
         return jpaInventoryRepository.findByOrderId(orderId).stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // BaseRepositoryAdapter required methods

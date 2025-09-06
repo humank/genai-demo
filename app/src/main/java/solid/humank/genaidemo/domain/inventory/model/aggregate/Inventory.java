@@ -463,7 +463,7 @@ public class Inventory extends solid.humank.genaidemo.domain.common.aggregate.Ag
         List<StockReservation> expiredReservations = stockReservations.stream()
                 .filter(StockReservation::isExpired)
                 .filter(r -> r.getStatus() == StockReservation.ReservationStatus.ACTIVE)
-                .collect(Collectors.toList());
+                .toList();
 
         for (StockReservation reservation : expiredReservations) {
             reservation.markAsExpired();
@@ -504,7 +504,7 @@ public class Inventory extends solid.humank.genaidemo.domain.common.aggregate.Ag
         return stockReservations.stream()
                 .filter(StockReservation::isActive)
                 .filter(StockReservation::isExpiringSoon)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -516,7 +516,7 @@ public class Inventory extends solid.humank.genaidemo.domain.common.aggregate.Ag
         return thresholds.stream()
                 .filter(InventoryThreshold::isActive)
                 .filter(t -> t.isTriggered(availableQuantity))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

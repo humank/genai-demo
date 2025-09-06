@@ -9,7 +9,7 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 public record VoucherId(String value) {
 
     public VoucherId {
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("優惠券ID不能為空");
         }
     }

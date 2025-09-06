@@ -12,7 +12,7 @@ public record PriceId(String id) {
      * 緊湊建構子 - 驗證參數
      */
     public PriceId {
-        if (id == null || id.trim().isEmpty()) {
+        if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("價格ID不能為空");
         }
     }

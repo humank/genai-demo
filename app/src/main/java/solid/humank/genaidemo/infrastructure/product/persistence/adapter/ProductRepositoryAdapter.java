@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.product.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,14 +44,14 @@ public class ProductRepositoryAdapter extends BaseRepositoryAdapter<Product, Pro
     public List<Product> findByCategory(ProductCategory category) {
         return productJpaRepository.findByCategoryAndStatus(category.getName(), ACTIVE_STATUS).stream()
                 .map(mapper::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<Product> findByName(String name) {
         return productJpaRepository.findByNameContainingIgnoreCaseAndStatus(name, ACTIVE_STATUS).stream()
                 .map(mapper::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ProductRepositoryAdapter extends BaseRepositoryAdapter<Product, Pro
             entity = mapper.toEntity(product);
         }
 
-        ProductJpaEntity savedEntity = productJpaRepository.save(entity);
+        productJpaRepository.save(entity);
         return product; // Return original aggregate root to maintain consistency
     }
 
@@ -92,7 +91,7 @@ public class ProductRepositoryAdapter extends BaseRepositoryAdapter<Product, Pro
     public List<Product> findAll() {
         return productJpaRepository.findByStatus(ACTIVE_STATUS).stream()
                 .map(mapper::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

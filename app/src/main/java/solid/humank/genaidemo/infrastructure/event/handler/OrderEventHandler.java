@@ -125,9 +125,20 @@ public class OrderEventHandler {
         LOGGER.info("更新訂單狀態為已支付 - 訂單ID: {}, 交易ID: {}", orderId, transactionId);
 
         // 實際調用訂單應用服務
-        // orderApplicationService.markOrderAsPaid(orderId, transactionId);
+        try {
+            // 調用訂單應用服務更新狀態
+            LOGGER.info("調用訂單應用服務更新狀態 - 訂單ID: {}, 交易ID: {}", orderId, transactionId);
 
-        // 模擬實作：記錄狀態變更
-        LOGGER.info("訂單 {} 已標記為已支付，交易ID: {}", orderId, transactionId);
+            // 實際調用訂單應用服務的狀態更新方法
+            orderApplicationService.markOrderAsPaid(orderId, transactionId);
+
+            // 當前為模擬實現，記錄狀態變更操作
+            LOGGER.info("訂單 {} 已標記為已支付，交易ID: {} (通過應用服務: {})",
+                    orderId, transactionId, orderApplicationService.getClass().getSimpleName());
+        } catch (Exception e) {
+            LOGGER.error("訂單狀態更新失敗 - 訂單ID: {}, 交易ID: {}, 錯誤: {}",
+                    orderId, transactionId, e.getMessage());
+            throw e;
+        }
     }
 }

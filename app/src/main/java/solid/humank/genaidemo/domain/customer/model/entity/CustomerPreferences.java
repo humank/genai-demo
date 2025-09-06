@@ -99,7 +99,7 @@ public class CustomerPreferences {
 
     /** 更新偏好語言 */
     public void updatePreferredLanguage(String language) {
-        if (language == null || language.trim().isEmpty()) {
+        if (language == null || language.isBlank()) {
             throw new IllegalArgumentException("偏好語言不能為空");
         }
         if (!isValidLanguageCode(language)) {
@@ -111,7 +111,7 @@ public class CustomerPreferences {
 
     /** 更新偏好貨幣 */
     public void updatePreferredCurrency(String currency) {
-        if (currency == null || currency.trim().isEmpty()) {
+        if (currency == null || currency.isBlank()) {
             throw new IllegalArgumentException("偏好貨幣不能為空");
         }
         if (!isValidCurrencyCode(currency)) {
@@ -147,7 +147,7 @@ public class CustomerPreferences {
 
     /** 設定自定義偏好 */
     public void setCustomPreference(String key, String value) {
-        if (key == null || key.trim().isEmpty()) {
+        if (key == null || key.isBlank()) {
             throw new IllegalArgumentException("偏好設定鍵不能為空");
         }
         if (value == null) {

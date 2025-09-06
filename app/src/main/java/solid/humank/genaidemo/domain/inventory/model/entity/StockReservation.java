@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.inventory.model.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import solid.humank.genaidemo.domain.common.annotations.Entity;
@@ -187,7 +188,7 @@ public class StockReservation {
 
     /** 更新備註 */
     public void updateNotes(String notes) {
-        this.notes = notes != null ? notes : "";
+        this.notes = Optional.ofNullable(notes).orElse("");
         this.lastModifiedAt = LocalDateTime.now();
     }
 

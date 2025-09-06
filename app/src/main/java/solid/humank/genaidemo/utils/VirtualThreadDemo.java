@@ -3,7 +3,6 @@ package solid.humank.genaidemo.utils;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -17,7 +16,7 @@ public class VirtualThreadDemo {
     /**
      * 使用虛擬線程執行任務
      *
-     * @param taskCount 任務數量
+     * @param taskCount   任務數量
      * @param sleepMillis 每個任務的睡眠時間（毫秒）
      * @return 執行時間（毫秒）
      */
@@ -25,7 +24,7 @@ public class VirtualThreadDemo {
         Instant start = Instant.now();
 
         try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            List<Future<?>> futures = new ArrayList<>();
+            var futures = new ArrayList<Future<?>>();
 
             for (int i = 0; i < taskCount; i++) {
                 futures.add(
@@ -60,16 +59,15 @@ public class VirtualThreadDemo {
     /**
      * 使用平台線程執行任務
      *
-     * @param taskCount 任務數量
+     * @param taskCount   任務數量
      * @param sleepMillis 每個任務的睡眠時間（毫秒）
      * @return 執行時間（毫秒）
      */
     public static long runWithPlatformThreads(int taskCount, long sleepMillis) {
         Instant start = Instant.now();
 
-        try (ExecutorService executor =
-                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
-            List<Future<?>> futures = new ArrayList<>();
+        try (ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())) {
+            var futures = new ArrayList<Future<?>>();
 
             for (int i = 0; i < taskCount; i++) {
                 futures.add(
@@ -104,7 +102,7 @@ public class VirtualThreadDemo {
     /**
      * 比較虛擬線程和平台線程的性能
      *
-     * @param taskCount 任務數量
+     * @param taskCount   任務數量
      * @param sleepMillis 每個任務的睡眠時間（毫秒）
      * @return 比較結果
      */
@@ -138,23 +136,21 @@ public class VirtualThreadDemo {
     /**
      * 創建並啟動一個虛擬線程
      *
-     * @param name 線程名稱
+     * @param name     線程名稱
      * @param runnable 要執行的任務
      * @return 線程對象
      */
     public static Thread startVirtualThread(String name, Runnable runnable) {
         // 使用 Java 21 的 Thread.Builder API 創建虛擬線程
-        Thread thread =
-                Thread.ofVirtual()
-                        .name(name)
-                        .uncaughtExceptionHandler(
-                                (t, e) ->
-                                        System.err.println(
-                                                "線程 "
-                                                        + t.getName()
-                                                        + " 發生未捕獲異常: "
-                                                        + e.getMessage()))
-                        .start(runnable);
+        Thread thread = Thread.ofVirtual()
+                .name(name)
+                .uncaughtExceptionHandler(
+                        (t, e) -> System.err.println(
+                                "線程 "
+                                        + t.getName()
+                                        + " 發生未捕獲異常: "
+                                        + e.getMessage()))
+                .start(runnable);
 
         return thread;
     }

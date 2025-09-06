@@ -26,7 +26,7 @@ public record ReviewRating(int score, String comment) {
     }
 
     public boolean hasComment() {
-        return comment != null && !comment.trim().isEmpty();
+        return comment != null && !comment.isBlank();
     }
 
     public boolean isPositive() {

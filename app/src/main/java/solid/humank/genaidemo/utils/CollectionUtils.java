@@ -29,7 +29,7 @@ public final class CollectionUtils {
         }
 
         // 使用 Java 21 的 Stream API 增強功能
-        return collection.stream().filter(predicate).collect(Collectors.toList());
+        return collection.stream().filter(predicate).toList();
     }
 
     /**
@@ -47,7 +47,7 @@ public final class CollectionUtils {
         }
 
         // 使用 Java 21 的 Stream API 增強功能
-        return collection.stream().map(mapper).collect(Collectors.toList());
+        return collection.stream().map(mapper).toList();
     }
 
     /**

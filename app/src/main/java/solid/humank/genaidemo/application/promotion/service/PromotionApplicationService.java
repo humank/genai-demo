@@ -3,7 +3,6 @@ package solid.humank.genaidemo.application.promotion.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solid.humank.genaidemo.application.common.service.DomainEventApplicationService;
@@ -71,7 +70,7 @@ public class PromotionApplicationService {
     public List<PromotionDto> getActivePromotions() {
         return promotionRepository.findActivePromotions().stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 根據類型獲取促銷 */
@@ -79,7 +78,7 @@ public class PromotionApplicationService {
     public List<PromotionDto> getPromotionsByType(PromotionType type) {
         return promotionRepository.findByType(type).stream()
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 獲取促銷詳情 */
@@ -93,7 +92,7 @@ public class PromotionApplicationService {
     public List<FlashSaleDto> getFlashSales() {
         return promotionRepository.findByType(PromotionType.FLASH_SALE).stream()
                 .map(this::toFlashSaleDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private PromotionDto toDto(Promotion promotion) {
@@ -163,7 +162,7 @@ public class PromotionApplicationService {
         return promotionRepository.findActivePromotions().stream()
                 .filter(promotion -> promotion.isApplicable(cartSummary))
                 .map(this::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 計算購物車的促銷折扣 */

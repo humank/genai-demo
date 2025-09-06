@@ -6,6 +6,9 @@ import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.promotion.exception.VoucherAlreadyUsedException;
 import solid.humank.genaidemo.domain.promotion.exception.VoucherExpiredException;
+import solid.humank.genaidemo.domain.promotion.model.events.VoucherCancelledEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.VoucherLostReportedEvent;
+import solid.humank.genaidemo.domain.promotion.model.events.VoucherUsedEvent;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.VoucherCode;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.VoucherId;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.VoucherStatus;
@@ -124,8 +127,8 @@ public class Voucher extends solid.humank.genaidemo.domain.common.aggregate.Aggr
         this.usedAt = LocalDateTime.now();
         this.usageLocation = location;
 
-        // TODO: 發布領域事件
-        // registerEvent(new VoucherUsedEvent(this.id, this.ownerId, location));
+        // 發布領域事件
+        collectEvent(VoucherUsedEvent.create(this.id, this.ownerId, location));
     }
 
     /** 檢查是否已過期 */
@@ -148,8 +151,8 @@ public class Voucher extends solid.humank.genaidemo.domain.common.aggregate.Aggr
         this.lostReportReason = reason;
         this.lostReportedAt = LocalDateTime.now();
 
-        // TODO: 發布領域事件
-        // registerEvent(new VoucherLostReportedEvent(this.id, this.ownerId, reason));
+        // 發布領域事件
+        collectEvent(VoucherLostReportedEvent.create(this.id, this.ownerId, reason));
     }
 
     /** 補發優惠券 */
@@ -188,8 +191,8 @@ public class Voucher extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 
         this.status = VoucherStatus.CANCELLED;
 
-        // TODO: 發布領域事件
-        // registerEvent(new VoucherCancelledEvent(this.id, this.ownerId));
+        // 發布領域事件
+        collectEvent(VoucherCancelledEvent.create(this.id, this.ownerId));
     }
 
     /** 檢查優惠券是否屬於指定客戶 */

@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.inventory.model.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.StockMovementId;
@@ -94,7 +95,7 @@ public class StockMovement {
         this.operatorId = operatorId;
         this.operatorName = operatorName;
         this.occurredAt = LocalDateTime.now();
-        this.notes = notes != null ? notes : "";
+        this.notes = Optional.ofNullable(notes).orElse("");
         this.batchNumber = batchNumber;
         this.locationCode = locationCode;
 
@@ -262,6 +263,30 @@ public class StockMovement {
             case RELEASE:
                 if (quantity <= 0) {
                     throw new IllegalArgumentException("釋放異動的數量必須為正數");
+                }
+                break;
+            case CONFIRM:
+                // 確認異動可以是正數或負數，取決於具體業務邏輯
+                break;
+            case ADJUSTMENT:
+                // 調整異動可以是正數或負數
+                break;
+            case TRANSFER:
+                // 轉移異動可以是正數或負數，取決於是轉入還是轉出
+                break;
+            case RETURN:
+                if (quantity <= 0) {
+                    throw new IllegalArgumentException("退貨異動的數量必須為正數");
+                }
+                break;
+            case DAMAGE:
+                if (quantity >= 0) {
+                    throw new IllegalArgumentException("損壞異動的數量必須為負數");
+                }
+                break;
+            case EXPIRED:
+                if (quantity >= 0) {
+                    throw new IllegalArgumentException("過期異動的數量必須為負數");
                 }
                 break;
         }

@@ -83,7 +83,21 @@ public class InventoryEventHandler {
                     productId, quantity, orderId);
 
             // 實際調用庫存應用服務
-            // inventoryApplicationService.reserveInventory(productId, quantity, orderId);
+            try {
+                // 調用庫存應用服務進行預留
+                LOGGER.info("調用庫存應用服務預留庫存 - 商品ID: {}, 數量: {}, 訂單ID: {}", productId, quantity, orderId);
+
+                // 實際調用庫存應用服務的預留方法
+                inventoryApplicationService.reserveInventory(productId, quantity, orderId);
+
+                // 當前為模擬實現，記錄預留操作
+                LOGGER.info("庫存預留操作已記錄 - 商品ID: {}, 數量: {}, 訂單ID: {} (使用應用服務: {})",
+                        productId, quantity, orderId, inventoryApplicationService.getClass().getSimpleName());
+            } catch (Exception e) {
+                LOGGER.error("庫存預留失敗 - 商品ID: {}, 數量: {}, 訂單ID: {}, 錯誤: {}",
+                        productId, quantity, orderId, e.getMessage());
+                throw e;
+            }
         }
     }
 }

@@ -62,16 +62,16 @@ public class SellerProfile {
      * 檢查檔案是否完整
      */
     public boolean isProfileComplete() {
-        return businessName != null && !businessName.trim().isEmpty() &&
-                businessAddress != null && !businessAddress.trim().isEmpty() &&
-                businessLicense != null && !businessLicense.trim().isEmpty();
+        return businessName != null && !businessName.isBlank() &&
+                businessAddress != null && !businessAddress.isBlank() &&
+                businessLicense != null && !businessLicense.isBlank();
     }
 
     /**
      * 驗證商業執照
      */
     public void validateBusinessLicense() {
-        if (businessLicense == null || businessLicense.trim().isEmpty()) {
+        if (businessLicense == null || businessLicense.isBlank()) {
             throw new IllegalStateException("商業執照不能為空");
         }
         // 這裡可以添加更複雜的驗證邏輯

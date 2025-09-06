@@ -1,7 +1,6 @@
 package solid.humank.genaidemo.application.promotion.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.CartSummary;
 import solid.humank.genaidemo.domain.shoppingcart.model.aggregate.ShoppingCart;
@@ -25,7 +24,7 @@ public class CartSummaryConverter {
                                                 item.unitPrice(),
                                                 item.quantity(),
                                                 item.totalPrice()))
-                        .collect(Collectors.toList());
+                        .toList();
 
         return new CartSummary(
                 shoppingCart.getConsumerId(),

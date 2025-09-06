@@ -347,7 +347,7 @@ public class CartPromotion {
             throw new IllegalArgumentException("最大折扣金額不能為負數");
         }
 
-        if (type == PromotionType.COUPON && (couponCode == null || couponCode.trim().isEmpty())) {
+        if (type == PromotionType.COUPON && (couponCode == null || couponCode.isBlank())) {
             throw new IllegalArgumentException("優惠券促銷必須提供優惠券代碼");
         }
     }

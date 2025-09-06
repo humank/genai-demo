@@ -1,45 +1,42 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
+# Reports Documentation
 
-# 報告文檔
+This directory contains project reports and analysis documents.
 
-本目錄包含專案報告和分析文檔。
+## Document List
 
-## 文檔列表
+### 2025 Reports
 
-### 2025年報告
+- [Project Summary 2025](project-summary-2025.md) - 2025 project summary report
+- [Architecture Excellence 2025](architecture-excellence-2025.md) - Architecture excellence assessment
+- [Technology Stack 2025](technology-stack-2025.md) - Technology stack analysis report
+- [Documentation Cleanup 2025](documentation-cleanup-2025.md) - Documentation cleanup report
+- [Diagram System Implementation 2025](diagram-system-implementation-2025.md) - Diagram system implementation report
+- [Directory Cleanup 2025](directory-cleanup-2025.md) - Directory cleanup report
+- [Test Fixes Complete 2025](test-fixes-complete-2025.md) - Test fixes completion report
 
-- [專案總結 2025](project-summary-2025.md) - 2025年專案總結報告
-- [架構卓越性 2025](architecture-excellence-2025.md) - 架構卓越性評估
-- [技術棧 2025](technology-stack-2025.md) - 技術棧分析報告
-- [文檔清理 2025](documentation-cleanup-2025.md) - 文檔清理報告
-- [圖表系統實作 2025](diagram-system-implementation-2025.md) - 圖表系統實作報告
-- [目錄清理 2025](directory-cleanup-2025.md) - 目錄清理報告
-- [測試修復完成 2025](test-fixes-complete-2025.md) - 測試修復完成報告
+### Technical Refactoring Reports
 
-### 技術重構報告
+- [JPA Refactoring Completed](jpa-refactoring-completed.md) - JPA refactoring completion report
+- [DDD Record Refactoring Summary](ddd-record-refactoring-summary.md) - DDD Record refactoring summary
+- [Java 17 to 21 Upgrade](upgrade-java17to21.md) - Java version upgrade report
 
-- [JPA 重構完成報告](jpa-refactoring-completed.md) - JPA 重構完成報告
-- [DDD Record 重構總結](ddd-record-refactoring-summary.md) - DDD Record 重構總結
-- [Java 17 升級到 21](upgrade-java17to21.md) - Java 版本升級報告
+### Analysis Reports
 
-### 分析報告
+- [Code Analysis](code-analysis.md) - Code quality analysis report
 
-- [代碼分析](code-analysis.md) - 代碼品質分析報告
+## Report Types
 
-## 報告類型
+- **Project Summary**: Milestone achievements and statistics
+- **Technical Assessment**: Architecture and technology analysis
+- **Improvement Recommendations**: Optimization and improvement proposals
 
-- **專案總結**: 階段性成果和統計
-- **技術評估**: 架構和技術分析
-- **改進建議**: 優化和改進方案
+## Target Audience
 
-## 適用對象
+- Project Managers
+- Technical Leads
+- Stakeholders
 
-- 專案經理
-- 技術負責人
-- 利益相關者
+## Related Links
 
-## 相關連結
-
-- [發布說明](../releases/) - 版本發布記錄
-- [架構文檔](../architecture/) - 系統架構
+- [Release Notes](../releases/) - Version release records
+- [Architecture Documentation](../architecture/) - System architecture

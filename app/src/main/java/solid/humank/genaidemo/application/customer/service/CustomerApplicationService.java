@@ -2,7 +2,6 @@ package solid.humank.genaidemo.application.customer.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,7 +152,7 @@ public class CustomerApplicationService {
                                 .filter(Optional::isPresent)
                                 .map(Optional::get)
                                 .map(this::convertToDto)
-                                .collect(Collectors.toList());
+                                .toList();
 
                 int totalPages = (int) Math.ceil((double) totalElements / size);
                 boolean isFirst = page == 0;

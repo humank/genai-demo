@@ -1,12 +1,13 @@
 package solid.humank.genaidemo.bdd.logistics;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import solid.humank.genaidemo.bdd.common.TestContext;
 
 /** Logistics Delivery System Step Definitions */
@@ -20,13 +21,12 @@ public class LogisticsDeliveryStepDefinitions {
     public void theFollowingDeliveryMethodsExistInTheSystem(DataTable dataTable) {
         List<Map<String, String>> methods = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> method : methods) {
-            DeliveryMethod deliveryMethod =
-                    new DeliveryMethod(
-                            method.get("Delivery Method"),
-                            Integer.parseInt(method.get("Delivery Fee")),
-                            method.get("Estimated Days"),
-                            method.get("Weight Limit"),
-                            method.get("Region Limit"));
+            DeliveryMethod deliveryMethod = new DeliveryMethod(
+                    method.get("Delivery Method"),
+                    Integer.parseInt(method.get("Delivery Fee")),
+                    method.get("Estimated Days"),
+                    method.get("Weight Limit"),
+                    method.get("Region Limit"));
             deliveryMethods.put(method.get("Delivery Method"), deliveryMethod);
         }
     }
@@ -119,9 +119,8 @@ public class LogisticsDeliveryStepDefinitions {
     public void customerAddsNewDeliveryAddress(DataTable dataTable) {
         List<Map<String, String>> addresses = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> address : addresses) {
-            DeliveryAddress newAddress =
-                    new DeliveryAddress(
-                            address.get("Recipient"), address.get("Phone"), address.get("Address"));
+            DeliveryAddress newAddress = new DeliveryAddress(
+                    address.get("Recipient"), address.get("Phone"), address.get("Address"));
             testContext.put("newDeliveryAddress", newAddress);
         }
     }
@@ -411,6 +410,7 @@ public class LogisticsDeliveryStepDefinitions {
     }
 
     // Inner classes for data models
+    @SuppressWarnings("unused")
     private static class DeliveryMethod {
         private final String name;
         private final int fee;
@@ -453,6 +453,7 @@ public class LogisticsDeliveryStepDefinitions {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class Customer {
         private final String name;
         private final String defaultAddress;
@@ -472,6 +473,7 @@ public class LogisticsDeliveryStepDefinitions {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class DeliveryAddress {
         private final String recipient;
         private final String phone;

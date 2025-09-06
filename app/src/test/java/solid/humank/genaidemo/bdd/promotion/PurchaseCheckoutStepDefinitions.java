@@ -2,8 +2,9 @@ package solid.humank.genaidemo.bdd.promotion;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import io.cucumber.java.en.When;
 import java.math.BigDecimal;
+
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.bdd.common.CartItem;
 import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.bdd.common.TestDataBuilder;
@@ -16,11 +17,16 @@ public class PurchaseCheckoutStepDefinitions {
     private TestDataBuilder dataBuilder;
 
     // 購買和結算相關狀態
+    @SuppressWarnings("unused")
     private BigDecimal discountPercentage = BigDecimal.ZERO;
     private BigDecimal discountAmount = BigDecimal.ZERO;
+    @SuppressWarnings("unused")
     private BigDecimal finalAmount = BigDecimal.ZERO;
+    @SuppressWarnings("unused")
     private String lastPromptMessage;
+    @SuppressWarnings("unused")
     private int chargedUnits = 0;
+    @SuppressWarnings("unused")
     private boolean halfPriceApplied = false;
 
     public PurchaseCheckoutStepDefinitions() {
@@ -53,12 +59,11 @@ public class PurchaseCheckoutStepDefinitions {
         if (existingItem != null) {
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
         } else {
-            CartItem cartItem =
-                    dataBuilder.createCartItem(
-                            phoneProduct.getId().getId(),
-                            phoneProduct.getName().getName(),
-                            phoneProduct.getPrice().getAmount(),
-                            quantity);
+            CartItem cartItem = dataBuilder.createCartItem(
+                    phoneProduct.getId().getId(),
+                    phoneProduct.getName().getName(),
+                    phoneProduct.getPrice().getAmount(),
+                    quantity);
             testContext.addCartItem(phoneProduct.getId().getId(), cartItem);
         }
 
@@ -107,11 +112,11 @@ public class PurchaseCheckoutStepDefinitions {
     // ===== 輔助方法 =====
 
     /** 計算購物車總額（包含促銷折扣） */
+    @SuppressWarnings("unused")
     private BigDecimal calculateCartTotalWithPromotions() {
-        BigDecimal total =
-                testContext.getCartItems().values().stream()
-                        .map(CartItem::getTotalPrice)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal total = testContext.getCartItems().values().stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // 應用折扣
         if (discountAmount.compareTo(BigDecimal.ZERO) > 0) {
@@ -122,6 +127,7 @@ public class PurchaseCheckoutStepDefinitions {
     }
 
     /** 重置促銷狀態 */
+    @SuppressWarnings("unused")
     private void resetPromotionState() {
         this.discountPercentage = BigDecimal.ZERO;
         this.discountAmount = BigDecimal.ZERO;

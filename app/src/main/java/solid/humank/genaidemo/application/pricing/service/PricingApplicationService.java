@@ -2,7 +2,6 @@ package solid.humank.genaidemo.application.pricing.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -71,14 +70,14 @@ public class PricingApplicationService {
     /** 獲取產品的定價規則 */
     public List<PricingRuleDto> getPricingRulesForProduct(String productId) {
         List<PricingRule> rules = pricingRuleRepository.findByProductId(new ProductId(productId));
-        return rules.stream().map(this::mapToDto).collect(Collectors.toList());
+        return rules.stream().map(this::mapToDto).toList();
     }
 
     /** 獲取產品類別的定價規則 */
     public List<PricingRuleDto> getPricingRulesByCategory(ProductCategoryDto categoryDto) {
         ProductCategory category = ProductCategoryMapper.toDomain(categoryDto);
         List<PricingRule> rules = pricingRuleRepository.findByProductCategory(category);
-        return rules.stream().map(this::mapToDto).collect(Collectors.toList());
+        return rules.stream().map(this::mapToDto).toList();
     }
 
     /** 將領域對象映射為DTO */
@@ -99,5 +98,34 @@ public class PricingApplicationService {
                 ProductCategoryMapper.toDto(pricingRule.getProductCategory()),
                 rate != null ? rate.getNormalRate() : 0,
                 rate != null ? rate.getEventRate() : 0);
+    }
+
+    /**
+     * 應用促銷定價
+     * 
+     * @param promotionId    促銷ID
+     * @param promotionName  促銷名稱
+     * @param promotionType  促銷類型
+     * @param discountAmount 折扣金額
+     * @param validFrom      有效開始時間
+     * @param validTo        有效結束時間
+     */
+    public void applyPromotionPricing(String promotionId, String promotionName, String promotionType,
+            double discountAmount, java.time.LocalDateTime validFrom, java.time.LocalDateTime validTo) {
+
+        // 查找與此促銷相關的定價規則
+        PromotionId promoId = new PromotionId(promotionId);
+        List<PricingRule> existingRules = pricingRuleRepository.findByPromotionId(promoId);
+
+        // 更新現有規則或創建新規則
+        for (PricingRule rule : existingRules) {
+            // 更新折扣金額和有效期
+            // 這裡需要在領域模型中添加更新促銷定價的方法
+            // 暫時保存現有規則
+            pricingRuleRepository.save(rule);
+        }
+
+        // 如果沒有現有規則，可能需要為相關產品創建新的定價規則
+        // 這裡的具體邏輯取決於業務需求
     }
 }

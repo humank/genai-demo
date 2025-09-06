@@ -113,7 +113,7 @@ public final class AggregatePersistenceSupport {
             Consumer<List<DomainEvent>> eventHandler) {
 
         // 持久化前處理
-        List<DomainEvent> events = beforePersistence(aggregateRoot, evts -> {
+        beforePersistence(aggregateRoot, evts -> {
             // 預設不做額外處理
         });
 
@@ -203,12 +203,12 @@ public final class AggregatePersistenceSupport {
                         "事件缺少發生時間: " + event.getClass().getName());
             }
 
-            if (event.getEventType() == null || event.getEventType().trim().isEmpty()) {
+            if (event.getEventType() == null || event.getEventType().isBlank()) {
                 throw new IllegalStateException(
                         "事件缺少事件類型: " + event.getClass().getName());
             }
 
-            if (event.getAggregateId() == null || event.getAggregateId().trim().isEmpty()) {
+            if (event.getAggregateId() == null || event.getAggregateId().isBlank()) {
                 throw new IllegalStateException(
                         "事件缺少聚合根ID: " + event.getClass().getName());
             }

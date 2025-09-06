@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.domain.delivery.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
@@ -8,6 +9,7 @@ import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
 import solid.humank.genaidemo.domain.delivery.repository.DeliveryRepository;
+import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
 import solid.humank.genaidemo.domain.notification.service.NotificationService;
 
 /** 配送管理服務 - 實現 DeliveryService 介面，負責處理配送的創建、狀態轉換和完成 */
@@ -266,31 +268,80 @@ public class DeliveryManagementService implements DeliveryService {
 
     private void sendDeliveryArrangementNotification(
             OrderId orderId, LocalDateTime estimatedDeliveryTime) {
-        // 在實際應用中，這裡會發送配送安排通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送已安排",
+                estimatedDeliveryTime,
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendAddressUpdateSuccessNotification(OrderId orderId, String newAddress) {
-        // 在實際應用中，這裡會發送地址更新成功通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送地址已更新: " + newAddress,
+                LocalDateTime.now().plusDays(1),
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendDeliveryFailureNotification(OrderId orderId, String reason) {
-        // 在實際應用中，這裡會發送配送失敗通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送失敗: " + reason,
+                LocalDateTime.now().plusDays(1),
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendRedeliveryNotification(OrderId orderId) {
-        // 在實際應用中，這裡會發送重新配送通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "重新配送已安排",
+                LocalDateTime.now().plusDays(1),
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendDeliveryCompletionNotification(OrderId orderId) {
-        // 在實際應用中，這裡會發送配送完成通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送已完成",
+                LocalDateTime.now(),
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendDeliveryDelayNotification(
             OrderId orderId, String reason, LocalDateTime newEstimatedDeliveryTime) {
-        // 在實際應用中，這裡會發送配送延遲通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送延遲: " + reason,
+                newEstimatedDeliveryTime,
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 
     private void sendRefusalNotification(OrderId orderId, String reason) {
-        // 在實際應用中，這裡會發送拒收通知
+        // 使用通用的配送狀態更新通知
+        notificationService.sendDeliveryStatusUpdateNotification(
+                "CUSTOMER-" + orderId.getValue(),
+                orderId,
+                "配送被拒收: " + reason,
+                LocalDateTime.now().plusDays(1),
+                getDeliveryTrackingLink(DeliveryId.generate()),
+                List.of(NotificationChannel.EMAIL, NotificationChannel.SMS));
     }
 }

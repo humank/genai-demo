@@ -4,13 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.math.BigDecimal;
-import java.util.Map;
-import java.util.UUID;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.aggregate.Payment;
@@ -18,6 +22,8 @@ import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 
 /** Payment Aggregate Root Cucumber Step Definitions */
 public class PaymentStepDefinitions {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentStepDefinitions.class);
 
     private UUID orderId;
     private Payment payment;
@@ -133,8 +139,7 @@ public class PaymentStepDefinitions {
         // 模擬客戶選擇支付方式
         if (payment != null) {
             try {
-                PaymentMethod method =
-                        PaymentMethod.valueOf(paymentType.toUpperCase().replace(" ", "_"));
+                PaymentMethod method = PaymentMethod.valueOf(paymentType.toUpperCase().replace(" ", "_"));
                 payment.setPaymentMethod(method);
             } catch (IllegalArgumentException e) {
                 // 如果支付方式不存在，使用默認的信用卡支付
@@ -155,5 +160,6 @@ public class PaymentStepDefinitions {
         // 記錄原價和折扣信息
         BigDecimal discount = new BigDecimal(originalPrice - discountedPrice);
         // 在實際實現中，這些信息會存儲在支付聚合根中
+        LOGGER.debug("折扣金額: {}", discount);
     }
 }

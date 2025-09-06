@@ -162,7 +162,7 @@ public class ReviewResponse {
     // 私有驗證方法
 
     private void validateContent() {
-        if (content == null || content.trim().isEmpty()) {
+        if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("回覆內容不能為空");
         }
         if (content.length() > 1000) {
@@ -171,7 +171,7 @@ public class ReviewResponse {
     }
 
     private void validateContentForUpdate(String newContent) {
-        if (newContent == null || newContent.trim().isEmpty()) {
+        if (newContent == null || newContent.isBlank()) {
             throw new IllegalArgumentException("回覆內容不能為空");
         }
         if (newContent.length() > 1000) {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import solid.humank.genaidemo.bdd.common.TestContext;
 
 /** 消費者購物測試輔助類別 */
@@ -103,20 +104,14 @@ public class ConsumerShoppingTestHelper {
     /** 獲取商品價格 */
     private BigDecimal getProductPrice(String productId) {
         // 模擬商品價格
-        switch (productId) {
-            case "PROD-001":
-                return new BigDecimal("35900");
-            case "PROD-002":
-                return new BigDecimal("28900");
-            case "PROD-003":
-                return new BigDecimal("58000");
-            case "PROD-004":
-                return new BigDecimal("590");
-            case "PROD-005":
-                return new BigDecimal("8990");
-            default:
-                return new BigDecimal("1000");
-        }
+        return switch (productId) {
+            case "PROD-001" -> new BigDecimal("35900");
+            case "PROD-002" -> new BigDecimal("28900");
+            case "PROD-003" -> new BigDecimal("58000");
+            case "PROD-004" -> new BigDecimal("590");
+            case "PROD-005" -> new BigDecimal("8990");
+            default -> new BigDecimal("1000");
+        };
     }
 
     /** 重新計算購物車總額 */
@@ -180,8 +175,7 @@ public class ConsumerShoppingTestHelper {
         Map<String, Object> userCart = getShoppingCart(userId);
 
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> anonymousItems =
-                (List<Map<String, Object>>) anonymousCart.get("items");
+        List<Map<String, Object>> anonymousItems = (List<Map<String, Object>>) anonymousCart.get("items");
 
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> userItems = (List<Map<String, Object>>) userCart.get("items");
@@ -297,7 +291,7 @@ public class ConsumerShoppingTestHelper {
             Integer stock = testContext.get("stock_" + productId, Integer.class);
             if (stock != null && newQuantity > stock) {
                 testContext.setLastErrorMessage(
-                        "insufficient stock: only " + stock + " units available");
+                        String.format("insufficient stock: only %d units available", stock));
                 return;
             }
 
@@ -404,10 +398,9 @@ public class ConsumerShoppingTestHelper {
             int discountPercentage = (Integer) coupon.get("discountPercentage");
             Map<String, Object> cart = getShoppingCart(customerId);
             BigDecimal cartTotal = (BigDecimal) cart.get("total");
-            BigDecimal discountAmount =
-                    cartTotal
-                            .multiply(new BigDecimal(discountPercentage))
-                            .divide(new BigDecimal(100));
+            BigDecimal discountAmount = cartTotal
+                    .multiply(new BigDecimal(discountPercentage))
+                    .divide(new BigDecimal(100));
 
             result.put("couponApplied", true);
             result.put("couponCode", couponCode);

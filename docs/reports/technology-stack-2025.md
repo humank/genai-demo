@@ -1,4 +1,4 @@
-# 技術棧詳細說明 (2025年8月)
+# 技術棧詳細說明 (2025年1月)
 
 ## 🚀 技術棧概覽
 
@@ -8,7 +8,7 @@ GenAI Demo 專案採用現代化的技術棧，結合了最新的 Java 生態系
 
 ### 核心框架
 
-#### Spring Boot 3.4.5
+#### Spring Boot 3.5.5
 
 - **最新穩定版本**: 使用 Spring Boot 3.x 系列最新穩定版
 - **Spring Framework 6.x**: 基於 Spring Framework 6.x

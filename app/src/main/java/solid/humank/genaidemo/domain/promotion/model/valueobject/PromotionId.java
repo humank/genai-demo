@@ -8,7 +8,7 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 public record PromotionId(String value) {
 
     public PromotionId {
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("促銷ID不能為空");
         }
     }

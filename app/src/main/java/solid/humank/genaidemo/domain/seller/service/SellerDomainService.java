@@ -17,7 +17,14 @@ public class SellerDomainService {
      * @return 是否符合資格
      */
     public boolean validateSellerEligibility(String sellerId) {
-        // TODO: 實作賣家資格驗證邏輯
+        // 基本資格驗證邏輯
+        // 詳細的驗證規則將在業務需求明確後實現
+        if (sellerId == null || sellerId.isBlank()) {
+            return false;
+        }
+
+        // 目前所有非空的賣家ID都視為合格
+        // 未來將加入更複雜的驗證邏輯（如：信用檢查、文件驗證等）
         return true;
     }
 
@@ -28,7 +35,18 @@ public class SellerDomainService {
      * @return 評級分數
      */
     public double calculateSellerRating(String sellerId) {
-        // TODO: 實作賣家評級計算邏輯
-        return 0.0;
+        // 基本評級計算邏輯
+        // 詳細的評級算法將在業務需求明確後實現
+        if (sellerId == null || sellerId.isBlank()) {
+            return 0.0;
+        }
+
+        // 目前返回預設評級 4.0（滿分 5.0）
+        // 未來將基於以下因素計算：
+        // - 客戶評價分數
+        // - 訂單完成率
+        // - 退貨率
+        // - 響應時間
+        return 4.0;
     }
 }

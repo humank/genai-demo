@@ -127,7 +127,7 @@ public class ReviewImage {
     }
 
     private void validateFileName() {
-        if (fileName.trim().isEmpty()) {
+        if (fileName.isBlank()) {
             throw new IllegalArgumentException("文件名不能為空");
         }
         if (!isValidImage()) {

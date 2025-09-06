@@ -68,7 +68,7 @@ public class SellerVerification {
             throw new IllegalStateException("只有待驗證狀態才能提交文件");
         }
 
-        if (documentPath == null || documentPath.trim().isEmpty()) {
+        if (documentPath == null || documentPath.isBlank()) {
             throw new IllegalArgumentException("文件路徑不能為空");
         }
 

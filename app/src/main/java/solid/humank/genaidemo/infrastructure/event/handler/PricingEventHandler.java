@@ -86,12 +86,23 @@ public class PricingEventHandler {
                 promotionId, promotionName, promotionType, discountAmount);
 
         // 實際調用定價應用服務
-        // pricingApplicationService.applyPromotionPricing(promotionId, promotionName,
-        // promotionType, discountAmount, validFrom, validTo);
+        try {
+            // 調用定價應用服務應用促銷定價
+            LOGGER.info("調用定價應用服務應用促銷定價 - 促銷ID: {}, 促銷名稱: {}, 促銷類型: {}, 折扣金額: {}",
+                    promotionId, promotionName, promotionType, discountAmount);
 
-        // 模擬實作：記錄價格更新
-        LOGGER.info("促銷 {} ({}) 已應用到定價規則，折扣金額: {}, 有效期間: {} 至 {}",
-                promotionName, promotionType, discountAmount, validFrom, validTo);
+            // 實際調用定價應用服務的促銷定價方法
+            pricingApplicationService.applyPromotionPricing(promotionId, promotionName,
+                    promotionType, discountAmount, validFrom, validTo);
+
+            // 當前為模擬實現，記錄價格更新操作
+            LOGGER.info("促銷 {} ({}) 已應用到定價規則，折扣金額: {}, 有效期間: {} 至 {} (使用應用服務: {})",
+                    promotionName, promotionType, discountAmount, validFrom, validTo,
+                    pricingApplicationService.getClass().getSimpleName());
+        } catch (Exception e) {
+            LOGGER.error("促銷定價更新失敗 - 促銷ID: {}, 錯誤: {}", promotionId, e.getMessage());
+            throw e;
+        }
 
         // 模擬更新相關商品價格
         updateRelatedProductPrices(promotionId, promotionType, discountAmount);

@@ -88,7 +88,7 @@ public class OpenApiDocumentationTest extends BaseTest {
 
         String openApiJson = result.getResponse().getContentAsString();
         assertNotNull(openApiJson, "OpenAPI JSON 內容不應為空");
-        assertFalse(openApiJson.trim().isEmpty(), "OpenAPI JSON 內容不應為空字串");
+        assertFalse(openApiJson.isBlank(), "OpenAPI JSON 內容不應為空字串");
 
         // 格式化 JSON 內容
         String formattedJson = formatJson(openApiJson);
@@ -120,7 +120,7 @@ public class OpenApiDocumentationTest extends BaseTest {
         String openApiYaml = convertJsonToYaml(jsonContent);
 
         assertNotNull(openApiYaml, "OpenAPI YAML 內容不應為空");
-        assertFalse(openApiYaml.trim().isEmpty(), "OpenAPI YAML 內容不應為空字串");
+        assertFalse(openApiYaml.isBlank(), "OpenAPI YAML 內容不應為空字串");
 
         // 儲存到檔案
         Path yamlFilePath = saveToFile(OPENAPI_YAML_FILE, openApiYaml);
@@ -180,6 +180,7 @@ public class OpenApiDocumentationTest extends BaseTest {
     }
 
     /** 格式化 YAML 內容 */
+    @SuppressWarnings("unused")
     private String formatYaml(String yamlContent) throws IOException {
         try {
             // 如果輸入已經是 YAML，直接返回格式化版本

@@ -9,6 +9,9 @@ import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,6 +23,8 @@ import solid.humank.genaidemo.domain.promotion.model.valueobject.DateRange;
 import solid.humank.genaidemo.domain.promotion.model.valueobject.FlashSaleRule;
 
 public class FlashSaleStepDefinitions {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlashSaleStepDefinitions.class);
 
     private Product product;
     private FlashSaleRule flashSaleRule;
@@ -58,6 +63,7 @@ public class FlashSaleStepDefinitions {
 
         ZoneId zoneId = ZoneId.of("GMT+" + timezone);
         DateRange flashSalePeriod = new DateRange(startTime, endTime);
+        LOGGER.debug("設定時區: {}", zoneId);
         this.flashSaleRule = new FlashSaleRule(
                 productId,
                 Money.of(salePrice),

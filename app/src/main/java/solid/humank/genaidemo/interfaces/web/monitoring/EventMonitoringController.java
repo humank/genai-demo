@@ -112,7 +112,8 @@ public class EventMonitoringController {
     public ResponseEntity<String> forceUpdateSequence(@PathVariable String aggregateId,
             @RequestParam long sequence) {
         eventMonitoringService.forceUpdateSequence(aggregateId, sequence);
-        return ResponseEntity.ok("Sequence updated successfully for aggregate: " + aggregateId + " to: " + sequence);
+        return ResponseEntity
+                .ok(String.format("Sequence updated successfully for aggregate: %s to: %d", aggregateId, sequence));
     }
 
     /**

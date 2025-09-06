@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.payment.persistence.adapter;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,7 @@ public class PaymentRepositoryAdapter extends BaseRepositoryAdapter<Payment, Pay
     public List<Payment> findByOrderId(OrderId orderId) {
         return jpaPaymentRepository.findByOrderId(orderId.toString()).stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package solid.humank.genaidemo.application.stats.service;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -34,26 +33,26 @@ public class StatisticsApplicationService {
 
     public StatsDto getOverallStatistics() {
         try {
-            Map<String, Object> stats = new HashMap<>();
+            var stats = new HashMap<String, Object>();
             stats.put("totalOrders", orderRepository.count());
             stats.put("totalPayments", paymentRepository.count());
             stats.put("totalInventoryItems", inventoryRepository.count());
             stats.put("totalCustomers", customerRepository.count());
             return new StatsDto(stats, "success", "統計數據獲取成功");
         } catch (Exception e) {
-            Map<String, Object> errorStats = new HashMap<>();
+            var errorStats = new HashMap<String, Object>();
             return new StatsDto(errorStats, "error", "獲取統計數據時發生錯誤: " + e.getMessage());
         }
     }
 
     public OrderStatusStatsDto getOrderStatusStatistics() {
         try {
-            Map<String, Integer> statusCounts = new HashMap<>();
+            var statusCounts = new HashMap<String, Integer>();
             long totalOrders = orderRepository.count();
-            statusCounts.put("PENDING", (int)(totalOrders * 0.3));
-            statusCounts.put("PROCESSING", (int)(totalOrders * 0.4));
-            statusCounts.put("COMPLETED", (int)(totalOrders * 0.25));
-            statusCounts.put("CANCELLED", (int)(totalOrders * 0.05));
+            statusCounts.put("PENDING", (int) (totalOrders * 0.3));
+            statusCounts.put("PROCESSING", (int) (totalOrders * 0.4));
+            statusCounts.put("COMPLETED", (int) (totalOrders * 0.25));
+            statusCounts.put("CANCELLED", (int) (totalOrders * 0.05));
             return new OrderStatusStatsDto(statusCounts, "success", null);
         } catch (Exception e) {
             return new OrderStatusStatsDto(new HashMap<>(), "error", "獲取訂單狀態統計時發生錯誤: " + e.getMessage());
@@ -62,12 +61,12 @@ public class StatisticsApplicationService {
 
     public PaymentMethodStatsDto getPaymentMethodStatistics() {
         try {
-            Map<String, Integer> methodCounts = new HashMap<>();
+            var methodCounts = new HashMap<String, Integer>();
             long totalPayments = paymentRepository.count();
-            methodCounts.put("CREDIT_CARD", (int)(totalPayments * 0.5));
-            methodCounts.put("DEBIT_CARD", (int)(totalPayments * 0.2));
-            methodCounts.put("DIGITAL_WALLET", (int)(totalPayments * 0.2));
-            methodCounts.put("BANK_TRANSFER", (int)(totalPayments * 0.1));
+            methodCounts.put("CREDIT_CARD", (int) (totalPayments * 0.5));
+            methodCounts.put("DEBIT_CARD", (int) (totalPayments * 0.2));
+            methodCounts.put("DIGITAL_WALLET", (int) (totalPayments * 0.2));
+            methodCounts.put("BANK_TRANSFER", (int) (totalPayments * 0.1));
             return new PaymentMethodStatsDto(methodCounts, "success", null);
         } catch (Exception e) {
             return new PaymentMethodStatsDto(new HashMap<>(), "error", "獲取支付方式統計時發生錯誤: " + e.getMessage());

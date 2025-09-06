@@ -3,7 +3,6 @@ package solid.humank.genaidemo.infrastructure.customer.persistence.adapter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +55,7 @@ public class CustomerRepositoryAdapter
         return jpaCustomerRepository.findByMembershipLevel(level.name())
                 .stream()
                 .map(customerMapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -64,7 +63,7 @@ public class CustomerRepositoryAdapter
         return jpaCustomerRepository.findByBirthMonth(month)
                 .stream()
                 .map(customerMapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -72,7 +71,7 @@ public class CustomerRepositoryAdapter
         return jpaCustomerRepository.findNewMembersSince(since)
                 .stream()
                 .map(customerMapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -93,7 +92,7 @@ public class CustomerRepositoryAdapter
         return jpaCustomerRepository.findCustomerIds((int) pageable.getOffset(), size)
                 .stream()
                 .map(CustomerId::of)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

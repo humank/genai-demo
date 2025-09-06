@@ -9,7 +9,7 @@ import solid.humank.genaidemo.domain.common.annotations.ValueObject;
 @ValueObject(name = "VoucherCode", description = "優惠券兌換代碼值對象")
 public record VoucherCode(String code, LocalDateTime generatedAt, LocalDateTime expiresAt) {
     public VoucherCode {
-        if (code == null || code.trim().isEmpty()) {
+        if (code == null || code.isBlank()) {
             throw new IllegalArgumentException("優惠券代碼不能為空");
         }
         if (expiresAt.isBefore(generatedAt)) {

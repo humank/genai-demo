@@ -10,7 +10,7 @@ public record ProductCategory(String name, String description) {
     public ProductCategory {
         Objects.requireNonNull(name, "Product category name cannot be null");
         Objects.requireNonNull(description, "Product category description cannot be null");
-        if (name.trim().isEmpty()) {
+        if (name.isBlank()) {
             throw new IllegalArgumentException("Product category name cannot be empty");
         }
     }

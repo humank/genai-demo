@@ -77,33 +77,23 @@ public class ShoppingCartMapper implements DomainMapper<ShoppingCart, JpaShoppin
     /** 將領域狀態映射到JPA狀態 */
     private static JpaShoppingCartEntity.CartStatusEnum mapDomainStatusToJpa(
             ShoppingCartStatus status) {
-        switch (status) {
-            case ACTIVE:
-                return JpaShoppingCartEntity.CartStatusEnum.ACTIVE;
-            case CHECKED_OUT:
-                return JpaShoppingCartEntity.CartStatusEnum.CHECKED_OUT;
-            case ABANDONED:
-                return JpaShoppingCartEntity.CartStatusEnum.ABANDONED;
-            default:
-                throw new IllegalArgumentException("Unknown cart status: " + status);
-        }
+        return switch (status) {
+            case ACTIVE -> JpaShoppingCartEntity.CartStatusEnum.ACTIVE;
+            case CHECKED_OUT -> JpaShoppingCartEntity.CartStatusEnum.CHECKED_OUT;
+            case ABANDONED -> JpaShoppingCartEntity.CartStatusEnum.ABANDONED;
+            default -> throw new IllegalArgumentException("Unknown cart status: " + status);
+        };
     }
 
     /** 將JPA狀態映射到領域狀態 */
     private static ShoppingCartStatus mapJpaStatusToDomain(
             JpaShoppingCartEntity.CartStatusEnum status) {
-        switch (status) {
-            case ACTIVE:
-                return ShoppingCartStatus.ACTIVE;
-            case CHECKED_OUT:
-                return ShoppingCartStatus.CHECKED_OUT;
-            case ABANDONED:
-                return ShoppingCartStatus.ABANDONED;
-            case EXPIRED:
-                return ShoppingCartStatus.ABANDONED;
-            default:
-                throw new IllegalArgumentException("Unknown JPA cart status: " + status);
-        }
+        return switch (status) {
+            case ACTIVE -> ShoppingCartStatus.ACTIVE;
+            case CHECKED_OUT -> ShoppingCartStatus.CHECKED_OUT;
+            case ABANDONED, EXPIRED -> ShoppingCartStatus.ABANDONED;
+            default -> throw new IllegalArgumentException("Unknown JPA cart status: " + status);
+        };
     }
 
 }

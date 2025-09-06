@@ -76,7 +76,7 @@ public class ConsumerProductController {
         List<Map<String, Object>> pageContent = products.subList(start, end);
         Page<Map<String, Object>> productPage = new PageImpl<>(pageContent, pageable, products.size());
 
-        Map<String, Object> response = new HashMap<>();
+        var response = new HashMap<String, Object>();
         response.put("content", productPage.getContent());
         response.put("totalElements", productPage.getTotalElements());
         response.put("totalPages", productPage.getTotalPages());
@@ -93,7 +93,7 @@ public class ConsumerProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        if (keyword == null || keyword.trim().isEmpty()) {
+        if (keyword == null || keyword.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -112,7 +112,7 @@ public class ConsumerProductController {
         List<Map<String, Object>> pageContent = searchResults.subList(start, end);
         Page<Map<String, Object>> productPage = new PageImpl<>(pageContent, pageable, searchResults.size());
 
-        Map<String, Object> response = new HashMap<>();
+        var response = new HashMap<String, Object>();
         response.put("content", productPage.getContent());
         response.put("totalElements", productPage.getTotalElements());
         response.put("totalPages", productPage.getTotalPages());
@@ -188,7 +188,7 @@ public class ConsumerProductController {
             @PathVariable String productId,
             @RequestParam(defaultValue = "30") int days) {
 
-        Map<String, Object> response = new HashMap<>();
+        var response = new HashMap<String, Object>();
         response.put("productId", productId);
         response.put("priceHistory", Arrays.asList(
                 Map.of("date", "2024-01-01", "price", 1000),
@@ -199,9 +199,9 @@ public class ConsumerProductController {
     }
 
     private List<Map<String, Object>> createMockProducts() {
-        List<Map<String, Object>> products = new ArrayList<>();
+        var products = new ArrayList<Map<String, Object>>();
 
-        Map<String, Object> product1 = new HashMap<>();
+        var product1 = new HashMap<String, Object>();
         product1.put("id", "PROD-001");
         product1.put("name", "iPhone 15 Pro");
         product1.put("description", "最新款iPhone");
@@ -211,7 +211,7 @@ public class ConsumerProductController {
         product1.put("stockQuantity", 50);
         products.add(product1);
 
-        Map<String, Object> product2 = new HashMap<>();
+        var product2 = new HashMap<String, Object>();
         product2.put("id", "PROD-002");
         product2.put("name", "MacBook Pro");
         product2.put("description", "專業筆記型電腦");
@@ -221,7 +221,7 @@ public class ConsumerProductController {
         product2.put("stockQuantity", 20);
         products.add(product2);
 
-        Map<String, Object> product3 = new HashMap<>();
+        var product3 = new HashMap<String, Object>();
         product3.put("id", "PROD-003");
         product3.put("name", "AirPods Pro");
         product3.put("description", "無線耳機");

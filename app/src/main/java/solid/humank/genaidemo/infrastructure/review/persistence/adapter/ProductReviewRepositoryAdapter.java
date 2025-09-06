@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.review.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -38,7 +37,7 @@ public class ProductReviewRepositoryAdapter
         return jpaProductReviewRepository.findByProductId(productId.getId())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -46,7 +45,7 @@ public class ProductReviewRepositoryAdapter
         return jpaProductReviewRepository.findByReviewerId(reviewerId.getValue())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class ProductReviewRepositoryAdapter
         return jpaProductReviewRepository.findByStatus(status.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ProductReviewRepositoryAdapter
         return jpaProductReviewRepository.findByIsReportedTrue()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // BaseRepositoryAdapter required methods

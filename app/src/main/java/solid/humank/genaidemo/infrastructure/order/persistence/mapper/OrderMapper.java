@@ -3,7 +3,6 @@ package solid.humank.genaidemo.infrastructure.order.persistence.mapper;
 import java.lang.reflect.Constructor;
 import java.util.Currency;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -52,7 +51,7 @@ public class OrderMapper implements DomainMapper<Order, JpaOrderEntity> {
                                                                                                         .getCurrencyCode());
                                                                         return itemEntity;
                                                                 })
-                                                .collect(Collectors.toList()));
+                                                .toList());
 
                 return jpaEntity;
         }
@@ -84,7 +83,7 @@ public class OrderMapper implements DomainMapper<Order, JpaOrderEntity> {
                                                                                 item.getQuantity(),
                                                                                 price);
                                                         })
-                                        .collect(Collectors.toList());
+                                        .toList();
 
                         // 創建金額值對象
                         Money totalAmount = Money.of(

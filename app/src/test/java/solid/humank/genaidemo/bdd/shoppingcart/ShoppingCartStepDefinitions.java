@@ -41,6 +41,7 @@ public class ShoppingCartStepDefinitions {
 
     private Map<String, Object> getOrCreateCart(String customerId) {
         String cartKey = "cart_" + customerId;
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get(cartKey, Map.class);
         if (cart == null) {
             cart = new HashMap<>();
@@ -114,6 +115,7 @@ public class ShoppingCartStepDefinitions {
     @Then("my cart should contain {int} product type")
     public void myCartShouldContainProductType(Integer expectedTypes) {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         assertNotNull(cart);
         @SuppressWarnings("unchecked")
@@ -124,6 +126,7 @@ public class ShoppingCartStepDefinitions {
     @Then("product {string} quantity should be {int}")
     public void productQuantityShouldBe(String productId, Integer expectedQuantity) {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         assertNotNull(cart);
         @SuppressWarnings("unchecked")
@@ -137,12 +140,13 @@ public class ShoppingCartStepDefinitions {
                 break;
             }
         }
-        assertTrue(found, "Product " + productId + " should be in cart");
+        assertTrue(found, String.format("Product %s should be in cart", productId));
     }
 
     @Then("cart total amount should be {int}")
     public void cartTotalAmountShouldBe(Integer expectedTotal) {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         assertNotNull(cart);
         BigDecimal totalAmount = (BigDecimal) cart.get("totalAmount");
@@ -160,6 +164,7 @@ public class ShoppingCartStepDefinitions {
     public void iUpdateProductQuantityTo(String productId, Integer newQuantity) {
         try {
             String customerId = testContext.getCustomerId();
+            @SuppressWarnings("unchecked")
             Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
             if (cart == null) {
                 testContext.setLastErrorMessage("Cart not found");
@@ -219,6 +224,7 @@ public class ShoppingCartStepDefinitions {
     public void iRemoveProductFromCart(String productId) {
         try {
             String customerId = testContext.getCustomerId();
+            @SuppressWarnings("unchecked")
             Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
             if (cart == null) {
                 testContext.setLastErrorMessage("Cart not found");
@@ -239,6 +245,7 @@ public class ShoppingCartStepDefinitions {
     @Then("only product {string} should be in cart")
     public void onlyProductShouldBeInCart(String productId) {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         assertNotNull(cart);
         @SuppressWarnings("unchecked")
@@ -251,6 +258,7 @@ public class ShoppingCartStepDefinitions {
     public void iClearMyCart() {
         try {
             String customerId = testContext.getCustomerId();
+            @SuppressWarnings("unchecked")
             Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
             if (cart == null) {
                 testContext.setLastErrorMessage("Cart not found");
@@ -270,6 +278,7 @@ public class ShoppingCartStepDefinitions {
     @Then("my cart should be empty")
     public void myCartShouldBeEmpty() {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         assertNotNull(cart);
         @SuppressWarnings("unchecked")
@@ -328,6 +337,7 @@ public class ShoppingCartStepDefinitions {
     public void iViewMyCart() {
         // 重新獲取購物車以反映最新價格
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         if (cart != null) {
             @SuppressWarnings("unchecked")
@@ -386,6 +396,7 @@ public class ShoppingCartStepDefinitions {
     @Then("cart should not contain more than {int} units of the product")
     public void cartShouldNotContainMoreThanUnitsOfTheProduct(Integer maxUnits) {
         String customerId = testContext.getCustomerId();
+        @SuppressWarnings("unchecked")
         Map<String, Object> cart = testContext.get("cart_" + customerId, Map.class);
         if (cart != null) {
             @SuppressWarnings("unchecked")
@@ -411,6 +422,7 @@ public class ShoppingCartStepDefinitions {
         String newCustomerId = "registered-user";
 
         // 獲取匿名購物車
+        @SuppressWarnings("unchecked")
         Map<String, Object> anonymousCart = testContext.get("cart_" + anonymousCustomerId, Map.class);
 
         // 設置新的客戶ID

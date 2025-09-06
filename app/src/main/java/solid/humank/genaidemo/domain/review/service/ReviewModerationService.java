@@ -22,7 +22,7 @@ public class ReviewModerationService {
         String content = review.getRating().comment();
 
         // 如果沒有評論內容，只檢查評分
-        if (content == null || content.trim().isEmpty()) {
+        if (content == null || content.isBlank()) {
             return true; // 只有評分沒有評論的情況下通過
         }
 
@@ -53,7 +53,7 @@ public class ReviewModerationService {
 
         // 根據評價長度調整可信度
         String content = review.getRating().comment();
-        if (content != null && !content.trim().isEmpty()) {
+        if (content != null && !content.isBlank()) {
             int contentLength = content.length();
             if (contentLength > 50) {
                 credibility += 0.2;

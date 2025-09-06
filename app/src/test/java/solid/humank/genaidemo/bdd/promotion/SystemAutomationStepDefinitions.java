@@ -4,12 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.domain.promotion.service.PromotionService;
 
@@ -17,6 +18,7 @@ import solid.humank.genaidemo.domain.promotion.service.PromotionService;
 public class SystemAutomationStepDefinitions {
 
     private final TestContext testContext;
+    @SuppressWarnings("unused")
     private final PromotionService promotionService;
     private final PromotionAutomationService automationService;
 
@@ -142,6 +144,7 @@ public class SystemAutomationStepDefinitions {
     // ===== 贈品標記步驟定義 =====
     // Note: Gift marking step definitions moved to
     // PromotionManagementStepDefinitions to avoid duplicates
+    // GiftMarkingService utility class removed as it was unused
 
     // ===== System Automation Report Step Definitions =====
     // 系統自動化報告步驟定義
@@ -163,8 +166,8 @@ public class SystemAutomationStepDefinitions {
     public void shouldDisplaySystemAutomationEffects() {
         // Verify system automation effects are displayed
         // 驗證顯示系統自動化效果
-        Map<String, Object> reportData =
-                (Map<String, Object>) automationData.get("automation_report");
+        @SuppressWarnings("unchecked")
+        Map<String, Object> reportData = (Map<String, Object>) automationData.get("automation_report");
 
         if (reportData == null) {
             PromotionReportingService reportingService = new PromotionReportingService();
@@ -187,6 +190,7 @@ public class SystemAutomationStepDefinitions {
 
     // ===== 輔助方法 =====
 
+    @SuppressWarnings("unused")
     private LocalDateTime parseTimeString(String timeString) {
         // 簡化的時間解析邏輯
         return LocalDateTime.now().plusHours(1);
@@ -208,31 +212,13 @@ public class SystemAutomationStepDefinitions {
         }
     }
 
-    /** 贈品標記服務類 處理贈品標記和價格計算邏輯 */
-    private static class GiftMarkingService {
-        private int freeGiftCount = 0;
-        private BigDecimal unitPrice = new BigDecimal("100"); // 預設單價
-        private Map<Integer, Boolean> giftMarkers = new HashMap<>();
-
-        public boolean markUnitAsGift(int unitNumber) {
-            giftMarkers.put(unitNumber, true);
-            return true;
-        }
-
-        public BigDecimal calculateTotalWithGifts() {
-            // 計算包含贈品的總價
-            int totalUnits = giftMarkers.size();
-            int paidUnits = totalUnits - freeGiftCount;
-            return unitPrice.multiply(new BigDecimal(paidUnits));
-        }
-    }
-
     /** 促銷自動化服務類 處理促銷的自動激活和停用邏輯 */
     private static class PromotionAutomationService {
         private String currentStatus = "Pending";
         private LocalDateTime scheduledActivationTime;
         private int promotionStock = 100; // 預設庫存
 
+        @SuppressWarnings("unused")
         public boolean hasScheduledPromotionActivation(LocalDateTime currentTime) {
             // 檢查是否有預定的促銷激活
             return scheduledActivationTime != null && currentTime.isBefore(scheduledActivationTime);

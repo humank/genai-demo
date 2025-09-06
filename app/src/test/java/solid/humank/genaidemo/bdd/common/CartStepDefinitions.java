@@ -47,7 +47,7 @@ public class CartStepDefinitions {
     @When("customer adds {int} {string} to cart")
     public void customer_adds_quantity_to_cart(int quantity, String productId) {
         Product product = testContext.getProduct(productId);
-        assertNotNull(product, "Product " + productId + " should exist");
+        assertNotNull(product, String.format("Product %s should exist", productId));
 
         // 使用 ShoppingCart 聚合根添加商品
         shoppingCart.addItem(product.getId(), quantity, product.getPrice());
@@ -79,10 +79,10 @@ public class CartStepDefinitions {
     @When("customer updates {string} quantity to {int}")
     public void customer_updates_quantity_to(String productId, int newQuantity) {
         Product product = testContext.getProduct(productId);
-        assertNotNull(product, "Product " + productId + " should exist");
+        assertNotNull(product, String.format("Product %s should exist", productId));
 
         CartItem item = testContext.getCartItem(productId);
-        assertNotNull(item, "Product " + productId + " should be in cart");
+        assertNotNull(item, String.format("Product %s should be in cart", productId));
 
         if (newQuantity <= 0) {
             shoppingCart.removeItem(product.getId());
@@ -111,7 +111,7 @@ public class CartStepDefinitions {
     @Then("cart should contain {int} items")
     public void cart_should_contain_items(int expectedCount) {
         int actualCount = shoppingCart.getTotalQuantity();
-        assertEquals(expectedCount, actualCount, "Cart should contain " + expectedCount + " items");
+        assertEquals(expectedCount, actualCount, String.format("Cart should contain %d items", expectedCount));
 
         // 也檢查測試上下文的一致性
         int testContextCount =

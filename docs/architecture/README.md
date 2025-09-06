@@ -6,7 +6,7 @@
 
 - [架構概覽](overview.md) - 系統整體架構介紹
 - [六角形架構](hexagonal-architecture.md) - 六角形架構實現詳解
-- [DDD 實現](ddd-implementation.md) - 領域驅動設計實現指南
+- [分層架構設計](layered-architecture-design.md) - 分層架構設計指南
 - [2025年架構改進](improvements-2025.md) - 最新架構改進記錄
 
 ## 適用對象

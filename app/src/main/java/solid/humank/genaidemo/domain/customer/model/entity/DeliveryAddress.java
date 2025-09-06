@@ -84,7 +84,7 @@ public class DeliveryAddress {
 
     /** 更新標籤 */
     public void updateLabel(String newLabel) {
-        if (newLabel == null || newLabel.trim().isEmpty()) {
+        if (newLabel == null || newLabel.isBlank()) {
             throw new IllegalArgumentException("地址標籤不能為空");
         }
         if (newLabel.length() > 20) {
@@ -129,13 +129,13 @@ public class DeliveryAddress {
 
     /** 驗證地址 */
     private void validateAddress() {
-        if (address.getStreet() == null || address.getStreet().trim().isEmpty()) {
+        if (address.getStreet() == null || address.getStreet().isBlank()) {
             throw new IllegalArgumentException("街道地址不能為空");
         }
-        if (address.getCity() == null || address.getCity().trim().isEmpty()) {
+        if (address.getCity() == null || address.getCity().isBlank()) {
             throw new IllegalArgumentException("城市不能為空");
         }
-        if (address.getZipCode() == null || address.getZipCode().trim().isEmpty()) {
+        if (address.getZipCode() == null || address.getZipCode().isBlank()) {
             throw new IllegalArgumentException("郵遞區號不能為空");
         }
     }

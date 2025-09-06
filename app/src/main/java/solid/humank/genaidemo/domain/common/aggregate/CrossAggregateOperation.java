@@ -155,7 +155,7 @@ public final class CrossAggregateOperation {
 
         // 基本驗證：確保事件有聚合根ID
         String eventAggregateId = event.getAggregateId();
-        if (eventAggregateId == null || eventAggregateId.trim().isEmpty()) {
+        if (eventAggregateId == null || eventAggregateId.isBlank()) {
             throw new IllegalArgumentException(
                     "跨聚合根事件必須包含有效的聚合根ID: " + event.getClass().getSimpleName());
         }

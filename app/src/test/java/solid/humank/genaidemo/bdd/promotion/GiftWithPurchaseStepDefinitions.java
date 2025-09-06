@@ -7,15 +7,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.bdd.common.TestDataBuilder;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
@@ -26,10 +30,13 @@ import solid.humank.genaidemo.domain.promotion.model.valueobject.GiftWithPurchas
 import solid.humank.genaidemo.domain.promotion.service.PromotionService;
 
 /**
- * Gift with Purchase Step Definitions - Handles gift with purchase activity creation, management
+ * Gift with Purchase Step Definitions - Handles gift with purchase activity
+ * creation, management
  * and verification related BDD steps
  */
 public class GiftWithPurchaseStepDefinitions {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GiftWithPurchaseStepDefinitions.class);
 
     private final TestContext testContext;
     private final TestDataBuilder dataBuilder;
@@ -38,15 +45,21 @@ public class GiftWithPurchaseStepDefinitions {
     // Gift with purchase related fields
     private List<GiftWithPurchaseActivity> giftActivities = new ArrayList<>();
     private Map<String, CustomerPreference> customerPreferences = new HashMap<>();
+    @SuppressWarnings("unused")
     private List<GiftRecommendation> giftRecommendations = new ArrayList<>();
+    @SuppressWarnings("unused")
     private Map<String, GiftPackaging> giftPackagingInfo = new HashMap<>();
+    @SuppressWarnings("unused")
     private List<QualityIssue> qualityIssues = new ArrayList<>();
     private Map<String, Integer> giftInventory = new HashMap<>();
+    @SuppressWarnings("unused")
     private String lastDisplayMessage;
+    @SuppressWarnings("unused")
     private boolean giftQualificationMet = false;
 
     // Legacy fields for compatibility
     private Product giftProduct;
+    @SuppressWarnings("unused")
     private double minimumPurchaseAmount;
     private List<Product> giftItems = new ArrayList<>();
     private Map<String, Object> promotionDetails = new HashMap<>();
@@ -63,14 +76,13 @@ public class GiftWithPurchaseStepDefinitions {
     public void theFollowingGiftWithPurchaseActivitiesAreConfigured(DataTable dataTable) {
         List<Map<String, String>> activities = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> activity : activities) {
-            GiftWithPurchaseActivity giftActivity =
-                    new GiftWithPurchaseActivity(
-                            activity.get("Activity Name"),
-                            Integer.parseInt(activity.get("Min Spend")),
-                            activity.get("Gift Product ID"),
-                            activity.get("Gift Name"),
-                            Integer.parseInt(activity.get("Gift Quantity")),
-                            Integer.parseInt(activity.get("Gift Stock")));
+            GiftWithPurchaseActivity giftActivity = new GiftWithPurchaseActivity(
+                    activity.get("Activity Name"),
+                    Integer.parseInt(activity.get("Min Spend")),
+                    activity.get("Gift Product ID"),
+                    activity.get("Gift Name"),
+                    Integer.parseInt(activity.get("Gift Quantity")),
+                    Integer.parseInt(activity.get("Gift Stock")));
 
             giftActivities.add(giftActivity);
             giftInventory.put(
@@ -232,11 +244,9 @@ public class GiftWithPurchaseStepDefinitions {
                     // Check if gift still qualifies based on cart total
                     return giftActivities.stream()
                             .noneMatch(
-                                    activity ->
-                                            cartTotal.compareTo(
-                                                            new BigDecimal(
-                                                                    activity.getMinimumSpend()))
-                                                    >= 0);
+                                    activity -> cartTotal.compareTo(
+                                            new BigDecimal(
+                                                    activity.getMinimumSpend())) >= 0);
                 });
         testContext.setLastOperationResult("Unqualified gifts removed");
     }
@@ -263,19 +273,17 @@ public class GiftWithPurchaseStepDefinitions {
         for (Map<String, String> expected : expectedGifts) {
             String giftName = expected.get("Gift");
             String condition = expected.get("Condition");
+            LOGGER.debug("檢查贈品條件 - 贈品: {}, 條件: {}", giftName, condition);
             String expectedStatus = expected.get("Status");
 
             // Find matching activity
-            boolean shouldReceive =
-                    giftActivities.stream()
-                            .anyMatch(
-                                    activity ->
-                                            activity.getGiftName().equals(giftName)
-                                                    && cartTotal.compareTo(
-                                                                    new BigDecimal(
-                                                                            activity
-                                                                                    .getMinimumSpend()))
-                                                            >= 0);
+            boolean shouldReceive = giftActivities.stream()
+                    .anyMatch(
+                            activity -> activity.getGiftName().equals(giftName)
+                                    && cartTotal.compareTo(
+                                            new BigDecimal(
+                                                    activity
+                                                            .getMinimumSpend())) >= 0);
 
             if ("Received".equals(expectedStatus)) {
                 assertTrue(shouldReceive, "Should receive gift: " + giftName);
@@ -583,9 +591,8 @@ public class GiftWithPurchaseStepDefinitions {
         this.minimumPurchaseAmount = minimumPurchase;
 
         // Create gift with purchase rule
-        GiftWithPurchaseRule rule =
-                new GiftWithPurchaseRule(
-                        Money.of(minimumPurchase), giftProductId, Money.of(giftValue), 1, false);
+        GiftWithPurchaseRule rule = new GiftWithPurchaseRule(
+                Money.of(minimumPurchase), giftProductId, Money.of(giftValue), 1, false);
 
         promotionDetails.put("rule", rule);
         promotionDetails.put("giftName", giftName);
@@ -605,9 +612,8 @@ public class GiftWithPurchaseStepDefinitions {
         this.minimumPurchaseAmount = minimumPurchase;
 
         // Create gift with purchase rule
-        GiftWithPurchaseRule rule =
-                new GiftWithPurchaseRule(
-                        Money.of(minimumPurchase), giftProductId, Money.of(50), 1, false);
+        GiftWithPurchaseRule rule = new GiftWithPurchaseRule(
+                Money.of(minimumPurchase), giftProductId, Money.of(50), 1, false);
 
         promotionDetails.put("rule", rule);
         promotionDetails.put("giftName", giftName);

@@ -21,7 +21,7 @@ public record CustomerNotificationPreference(
         Objects.requireNonNull(selectedTypes, "選擇的通知類型不能為空");
         Objects.requireNonNull(selectedChannels, "選擇的通知渠道不能為空");
 
-        if (customerId.trim().isEmpty()) {
+        if (customerId.isBlank()) {
             throw new IllegalArgumentException("客戶ID不能為空字符串");
         }
         if (selectedTypes.isEmpty()) {

@@ -1,4 +1,4 @@
-# GenAI Demo 專案總結報告 (2025年8月)
+# GenAI Demo 專案總結報告 (2025年1月)
 
 ## 🎯 專案概述
 
@@ -45,7 +45,7 @@ GenAI Demo 是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal
 ### 後端技術
 
 - **Java 21**: 使用最新 LTS 版本和預覽功能
-- **Spring Boot 3.4.5**: 最新穩定版本
+- **Spring Boot 3.5.5**: 最新穩定版本
 - **Gradle 8.x**: 現代化構建工具
 - **H2 Database**: 內存數據庫，快速開發和測試
 - **Flyway**: 數據庫版本管理

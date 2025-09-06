@@ -3,7 +3,6 @@ package solid.humank.genaidemo.domain.notification.model.events;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.notification.model.valueobject.NotificationChannel;
@@ -35,7 +34,7 @@ public record NotificationCreatedEvent(
         DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
         List<String> channelNames = channels.stream()
                 .map(NotificationChannel::name)
-                .collect(Collectors.toList());
+                .toList();
         return new NotificationCreatedEvent(notificationId, customerId, type, subject, channelNames,
                 metadata.eventId(), metadata.occurredOn());
     }

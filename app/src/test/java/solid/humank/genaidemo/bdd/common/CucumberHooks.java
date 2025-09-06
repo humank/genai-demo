@@ -6,8 +6,6 @@ import io.cucumber.java.Scenario;
 import solid.humank.genaidemo.testutils.bdd.ConsumerShoppingTestHelper;
 import solid.humank.genaidemo.testutils.cleanup.TestResourceCleaner;
 import solid.humank.genaidemo.testutils.isolation.TestIsolationManager;
-import solid.humank.genaidemo.testutils.mocks.MockFactory;
-import solid.humank.genaidemo.testutils.stubs.StubFactory;
 
 /**
  * Cucumber 鉤子 - 管理測試場景的生命週期
@@ -17,8 +15,9 @@ public class CucumberHooks {
 
     private TestContext testContext;
     private ConsumerShoppingTestHelper shoppingHelper;
-    private MockFactory mockFactory;
-    private StubFactory stubFactory;
+    // Reserved for future mock and stub implementations
+    // private MockFactory mockFactory;
+    // private StubFactory stubFactory;
     private TestResourceCleaner resourceCleaner;
 
     public CucumberHooks() {
@@ -33,8 +32,9 @@ public class CucumberHooks {
         TestIsolationManager.initializeTestContext(scenarioName);
 
         // 初始化測試工具
-        this.mockFactory = MockFactory.getInstance();
-        this.stubFactory = StubFactory.getInstance();
+        // Reserved for future mock and stub implementations
+        // this.mockFactory = MockFactory.getInstance();
+        // this.stubFactory = StubFactory.getInstance();
         this.resourceCleaner = TestResourceCleaner.getInstance();
 
         // 清理測試數據

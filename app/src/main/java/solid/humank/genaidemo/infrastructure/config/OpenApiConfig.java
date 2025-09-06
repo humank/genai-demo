@@ -174,44 +174,39 @@ public class OpenApiConfig {
         }
 
         /** 創建標準錯誤回應 Schema */
-        @SuppressWarnings("rawtypes")
-        private Schema createStandardErrorResponseSchema() {
-                Schema schema = new Schema()
-                                .type("object")
+        private Schema<Object> createStandardErrorResponseSchema() {
+                Schema<Object> schema = new Schema<>();
+                schema.type("object")
                                 .description("標準錯誤回應")
                                 .addProperty(
                                                 "code",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("錯誤代碼")
                                                                 .example("VALIDATION_ERROR"))
                                 .addProperty(
                                                 "message",
-                                                new Schema().type("string").description("錯誤訊息").example("請求參數驗證失敗"))
+                                                new Schema<String>().type("string").description("錯誤訊息")
+                                                                .example("請求參數驗證失敗"))
                                 .addProperty(
                                                 "timestamp",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .format("date-time")
                                                                 .description("錯誤發生時間")
                                                                 .example("2024-01-15T10:30:00"))
                                 .addProperty(
                                                 "path",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("請求路徑")
                                                                 .example("/api/orders"))
                                 .addProperty(
                                                 "details",
-                                                new Schema()
-                                                                .type("array")
-                                                                .description("詳細錯誤資訊")
-                                                                .items(
-                                                                                new Schema()
-                                                                                                .$ref("#/components/schemas/FieldError")))
+                                                createArraySchema("詳細錯誤資訊", "#/components/schemas/FieldError"))
                                 .addProperty(
                                                 "traceId",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("追蹤ID，用於問題排查")
                                                                 .example("abc123def456"));
@@ -220,25 +215,26 @@ public class OpenApiConfig {
         }
 
         /** 創建欄位錯誤 Schema */
-        @SuppressWarnings("rawtypes")
-        private Schema createFieldErrorSchema() {
-                Schema schema = new Schema()
-                                .type("object")
+        private Schema<Object> createFieldErrorSchema() {
+                Schema<Object> schema = new Schema<>();
+                schema.type("object")
                                 .description("欄位錯誤詳情")
                                 .addProperty(
                                                 "field",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("欄位名稱")
                                                                 .example("customerId"))
                                 .addProperty(
                                                 "message",
-                                                new Schema().type("string").description("錯誤訊息").example("客戶ID不能為空"))
+                                                new Schema<String>().type("string").description("錯誤訊息")
+                                                                .example("客戶ID不能為空"))
                                 .addProperty(
-                                                "rejectedValue", new Schema().description("拒絕的值").example("null"))
+                                                "rejectedValue",
+                                                new Schema<Object>().description("拒絕的值").example("null"))
                                 .addProperty(
                                                 "code",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("錯誤代碼")
                                                                 .example("NotBlank"));
@@ -247,85 +243,92 @@ public class OpenApiConfig {
         }
 
         /** 創建驗證錯誤回應 Schema */
-        @SuppressWarnings("rawtypes")
-        private Schema createValidationErrorResponseSchema() {
-                Schema schema = new Schema()
-                                .type("object")
+        private Schema<Object> createValidationErrorResponseSchema() {
+                Schema<Object> schema = new Schema<>();
+                schema.type("object")
                                 .description("驗證錯誤回應，繼承自標準錯誤回應")
                                 .addProperty(
                                                 "code",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("錯誤代碼")
                                                                 .example("VALIDATION_ERROR"))
                                 .addProperty(
                                                 "message",
-                                                new Schema().type("string").description("錯誤訊息").example("請求參數驗證失敗"))
+                                                new Schema<String>().type("string").description("錯誤訊息")
+                                                                .example("請求參數驗證失敗"))
                                 .addProperty(
                                                 "timestamp",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .format("date-time")
                                                                 .description("錯誤發生時間")
                                                                 .example("2024-01-15T10:30:00"))
                                 .addProperty(
                                                 "path",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("請求路徑")
                                                                 .example("/api/orders"))
                                 .addProperty(
                                                 "details",
-                                                new Schema()
-                                                                .type("array")
-                                                                .description("詳細驗證錯誤資訊")
-                                                                .items(
-                                                                                new Schema()
-                                                                                                .$ref("#/components/schemas/FieldError")))
+                                                createArraySchema("詳細驗證錯誤資訊", "#/components/schemas/FieldError"))
                                 .addProperty(
                                                 "traceId",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("追蹤ID")
                                                                 .example("abc123def456"))
                                 .addProperty(
                                                 "validationErrors",
-                                                new Schema().type("integer").description("驗證錯誤總數").example(3));
+                                                new Schema<Integer>().type("integer").description("驗證錯誤總數").example(3));
                 schema.setRequired(List.of("code", "message", "timestamp", "path", "details"));
                 return schema;
         }
 
+        /** 創建陣列 Schema 的輔助方法 */
+        private Schema<Object> createArraySchema(String description, String itemsRef) {
+                Schema<Object> arraySchema = new Schema<>();
+                arraySchema.type("array").description(description);
+
+                Schema<Object> itemSchema = new Schema<>();
+                itemSchema.$ref(itemsRef);
+                arraySchema.setItems(itemSchema);
+
+                return arraySchema;
+        }
+
         /** 創建業務錯誤回應 Schema */
-        @SuppressWarnings("rawtypes")
-        private Schema createBusinessErrorResponseSchema() {
-                Schema schema = new Schema()
-                                .type("object")
+        private Schema<Object> createBusinessErrorResponseSchema() {
+                Schema<Object> schema = new Schema<>();
+                schema.type("object")
                                 .description("業務邏輯錯誤回應")
                                 .addProperty(
                                                 "code",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("業務錯誤代碼")
                                                                 .example("INSUFFICIENT_INVENTORY"))
                                 .addProperty(
                                                 "message",
-                                                new Schema().type("string").description("業務錯誤訊息").example("庫存不足"))
+                                                new Schema<String>().type("string").description("業務錯誤訊息")
+                                                                .example("庫存不足"))
                                 .addProperty(
                                                 "timestamp",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .format("date-time")
                                                                 .description("錯誤發生時間")
                                                                 .example("2024-01-15T10:30:00"))
                                 .addProperty(
                                                 "path",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("請求路徑")
                                                                 .example("/api/orders"))
                                 .addProperty(
                                                 "businessContext",
-                                                new Schema()
+                                                new Schema<Object>()
                                                                 .type("object")
                                                                 .description("業務上下文資訊")
                                                                 .example(
@@ -333,13 +336,13 @@ public class OpenApiConfig {
                                                                                                 + " 10, \"availableQuantity\": 5}"))
                                 .addProperty(
                                                 "traceId",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("追蹤ID")
                                                                 .example("abc123def456"))
                                 .addProperty(
                                                 "suggestedAction",
-                                                new Schema()
+                                                new Schema<String>()
                                                                 .type("string")
                                                                 .description("建議的解決方案")
                                                                 .example("請減少訂購數量或選擇其他產品"));

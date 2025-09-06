@@ -34,7 +34,7 @@ public class PaymentDomainService {
     public boolean isPaymentMethodValid(String customerId, String paymentMethodId) {
         PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId).orElse(null);
         return paymentMethod != null &&
-                paymentMethod.getCustomerId().equals(customerId) &&
+                paymentMethod.getCustomerId().getValue().equals(customerId) &&
                 paymentMethod.isActive();
     }
 

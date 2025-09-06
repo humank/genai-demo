@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.notification.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -42,7 +41,7 @@ public class NotificationTemplateRepositoryAdapter
         return jpaNotificationTemplateRepository.findByType(type.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -50,7 +49,7 @@ public class NotificationTemplateRepositoryAdapter
         return jpaNotificationTemplateRepository.findByChannel(channel.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -58,7 +57,7 @@ public class NotificationTemplateRepositoryAdapter
         return jpaNotificationTemplateRepository.findByIsActiveTrue()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -66,7 +65,7 @@ public class NotificationTemplateRepositoryAdapter
         return jpaNotificationTemplateRepository.findByNameContainingIgnoreCase(name)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // BaseRepositoryAdapter required methods

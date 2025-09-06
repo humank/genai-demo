@@ -216,6 +216,7 @@ public class MembershipStepDefinitions {
     }
 
     // 內部類別
+    @SuppressWarnings("unused")
     private static class MembershipLevel {
         private final String level;
         private final BigDecimal minSpending;
@@ -248,6 +249,7 @@ public class MembershipStepDefinitions {
         }
     }
 
+    @SuppressWarnings("unused")
     private static class Customer {
         private final String name;
         private String membershipLevel;
@@ -553,18 +555,13 @@ public class MembershipStepDefinitions {
     }
 
     private double getLoyaltyRateForLevel(String level) {
-        switch (level) {
-            case "BRONZE":
-                return 1.0;
-            case "SILVER":
-                return 2.0;
-            case "GOLD":
-                return 3.0;
-            case "PLATINUM":
-                return 5.0;
-            default:
-                return 1.0;
-        }
+        return switch (level) {
+            case "BRONZE" -> 1.0;
+            case "SILVER" -> 2.0;
+            case "GOLD" -> 3.0;
+            case "PLATINUM" -> 5.0;
+            default -> 1.0;
+        };
     }
 
     @Given("customer has a {int}% discount coupon")

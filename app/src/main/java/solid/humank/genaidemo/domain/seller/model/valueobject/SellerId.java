@@ -12,7 +12,7 @@ public record SellerId(String id) {
      * 緊湊建構子 - 驗證參數
      */
     public SellerId {
-        if (id == null || id.trim().isEmpty()) {
+        if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("賣家ID不能為空");
         }
     }

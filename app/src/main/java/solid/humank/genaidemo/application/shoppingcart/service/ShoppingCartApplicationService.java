@@ -2,7 +2,6 @@ package solid.humank.genaidemo.application.shoppingcart.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -133,7 +132,7 @@ public class ShoppingCartApplicationService {
     }
 
     private ShoppingCartDto toDto(ShoppingCart cart) {
-        List<CartItemDto> itemDtos = cart.getItems().stream().map(this::toCartItemDto).collect(Collectors.toList());
+        List<CartItemDto> itemDtos = cart.getItems().stream().map(this::toCartItemDto).toList();
 
         // 計算折扣金額（簡化實現）
         java.math.BigDecimal discountAmount = calculateDiscountAmount(cart);

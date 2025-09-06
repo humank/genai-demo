@@ -2,7 +2,6 @@ package solid.humank.genaidemo.domain.product.service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.domain.common.annotations.DomainService;
 import solid.humank.genaidemo.domain.common.valueobject.Money;
@@ -71,7 +70,7 @@ public class BundleService {
                 .sorted(
                         Comparator.comparing(
                                 p -> p.getPrice().getAmount(), Comparator.reverseOrder()))
-                .collect(Collectors.toList());
+                .toList();
 
         // 計算折扣金額
         Money discountAmount = Money.twd(0);

@@ -71,7 +71,6 @@ public class TestIsolationManager {
     /**
      * 獲取測試資源
      */
-    @SuppressWarnings("unchecked")
     public static <T extends TestResource> T getResource(String resourceName, Class<T> resourceType) {
         TestExecutionContext context = getCurrentContext();
         TestResourceRegistry registry = RESOURCE_REGISTRIES.get(context.getTestId());
@@ -182,7 +181,7 @@ public class TestIsolationManager {
             // 如果有清理異常，記錄但不拋出，避免影響測試結果
             if (!exceptions.isEmpty()) {
                 System.err
-                        .println("Warning: " + exceptions.size() + " exceptions occurred during test resource cleanup");
+                        .printf("Warning: %d exceptions occurred during test resource cleanup%n", exceptions.size());
                 for (Exception e : exceptions) {
                     e.printStackTrace();
                 }

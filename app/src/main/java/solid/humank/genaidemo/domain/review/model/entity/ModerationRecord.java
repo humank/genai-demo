@@ -125,7 +125,7 @@ public class ModerationRecord {
     // 私有驗證方法
 
     private void validateModeratorId() {
-        if (moderatorId == null || moderatorId.trim().isEmpty()) {
+        if (moderatorId == null || moderatorId.isBlank()) {
             throw new IllegalArgumentException("審核員ID不能為空");
         }
     }

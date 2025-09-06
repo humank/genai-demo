@@ -122,7 +122,7 @@ public class ContactInfo {
     // 私有驗證方法
 
     private String validateEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
+        if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("郵箱不能為空");
         }
         email = email.trim().toLowerCase();
@@ -133,7 +133,7 @@ public class ContactInfo {
     }
 
     private String validatePhone(String phone) {
-        if (phone == null || phone.trim().isEmpty()) {
+        if (phone == null || phone.isBlank()) {
             throw new IllegalArgumentException("電話不能為空");
         }
         phone = phone.trim().replaceAll("[\\s-()]", "");

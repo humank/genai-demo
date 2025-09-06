@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.payment.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,7 @@ public class PaymentMethodRepositoryAdapter
         return jpaPaymentMethodRepository.findByCustomerId(customerId.getValue())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class PaymentMethodRepositoryAdapter
         return jpaPaymentMethodRepository.findByCustomerIdAndType(customerId.getValue(), type)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -57,7 +56,7 @@ public class PaymentMethodRepositoryAdapter
         return jpaPaymentMethodRepository.findByCustomerIdAndIsActiveTrue(customerId.getValue())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class PaymentMethodRepositoryAdapter
         return jpaPaymentMethodRepository.findByProvider(provider)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // BaseRepositoryAdapter required methods

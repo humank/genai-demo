@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.persistence.test;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.testutils.database.TestDatabaseManager;
 
@@ -47,7 +46,7 @@ public abstract class TestRepositoryAdapter<T, ID> {
     public List<T> findAll() {
         return databaseManager.findAll(tableName).values().stream()
                 .map(entity -> (T) entity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

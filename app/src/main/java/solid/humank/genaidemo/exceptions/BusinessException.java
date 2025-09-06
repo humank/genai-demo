@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.exceptions;
 
+import java.util.Collections;
 import java.util.List;
 
 /** 業務異常 表示業務邏輯錯誤 */
@@ -15,18 +16,18 @@ public class BusinessException extends RuntimeException {
      */
     public BusinessException(String message) {
         super(message);
-        this.errors = List.of(message);
+        this.errors = Collections.singletonList(message);
     }
 
     /**
      * 構造函數
      *
      * @param message 錯誤信息
-     * @param cause 原因
+     * @param cause   原因
      */
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
-        this.errors = List.of(message);
+        this.errors = Collections.singletonList(message);
     }
 
     /**

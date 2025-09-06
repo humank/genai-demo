@@ -459,7 +459,7 @@ public class Order extends solid.humank.genaidemo.domain.common.aggregate.Aggreg
             violationBuilder.addError("CUSTOMER_ID_REQUIRED", "客戶ID不能為空");
         }
 
-        if (this.shippingAddress == null || this.shippingAddress.trim().isEmpty()) {
+        if (this.shippingAddress == null || this.shippingAddress.isBlank()) {
             violationBuilder.addError("SHIPPING_ADDRESS_REQUIRED", "配送地址不能為空");
         }
 

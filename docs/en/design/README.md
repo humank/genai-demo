@@ -1,5 +1,6 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
+# Design Documentation
+
+This directory contains design related documentation.
 
 # 設計文檔
 

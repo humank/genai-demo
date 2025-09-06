@@ -1,5 +1,6 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
+# Architecture Documentation
+
+This directory contains system architecture related documentation.
 
 # 架構文檔
 

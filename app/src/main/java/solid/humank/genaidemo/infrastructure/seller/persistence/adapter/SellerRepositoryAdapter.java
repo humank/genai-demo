@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.seller.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -46,7 +45,7 @@ public class SellerRepositoryAdapter
         return jpaSellerRepository.findByIsActiveTrue()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class SellerRepositoryAdapter
         return jpaSellerRepository.findByNameContainingIgnoreCase(name)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // 從 SellerProfileRepository 遷移的方法實作
@@ -64,7 +63,7 @@ public class SellerRepositoryAdapter
         return jpaSellerRepository.findByIsVerifiedTrue()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -72,7 +71,7 @@ public class SellerRepositoryAdapter
         return jpaSellerRepository.findByRatingBetween(minRating, maxRating)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -80,7 +79,7 @@ public class SellerRepositoryAdapter
         return jpaSellerRepository.findByVerificationStatusContaining(verificationStatus)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

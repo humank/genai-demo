@@ -122,8 +122,9 @@ public class ShoppingCartController {
             @Parameter(description = "客戶ID") @PathVariable String customerId,
             @RequestBody ApplyCouponRequest request) {
 
-        // TODO: 實現優惠券邏輯
-        return ResponseEntity.ok(Map.of("message", "優惠券已應用"));
+        // 優惠券功能將在後續版本中實現
+        // 目前返回成功響應以支持前端開發
+        return ResponseEntity.ok(Map.of("message", "優惠券功能開發中，敬請期待"));
     }
 
     @DeleteMapping("/{customerId}/coupons/{couponCode}")
@@ -132,8 +133,9 @@ public class ShoppingCartController {
             @Parameter(description = "客戶ID") @PathVariable String customerId,
             @Parameter(description = "優惠券代碼") @PathVariable String couponCode) {
 
-        // TODO: 實現移除優惠券邏輯
-        return ResponseEntity.ok(Map.of("message", "優惠券已移除"));
+        // 優惠券功能將在後續版本中實現
+        // 目前返回成功響應以支持前端開發
+        return ResponseEntity.ok(Map.of("message", "優惠券功能開發中，敬請期待"));
     }
 
     @GetMapping("/{customerId}/promotions")
@@ -141,8 +143,9 @@ public class ShoppingCartController {
     public ResponseEntity<Map<String, Object>> getAvailablePromotions(
             @Parameter(description = "客戶ID") @PathVariable String customerId) {
 
-        // TODO: 實現促銷活動邏輯
-        return ResponseEntity.ok(Map.of("promotions", java.util.List.of()));
+        // 促銷活動功能將在後續版本中實現
+        // 目前返回空列表以支持前端開發
+        return ResponseEntity.ok(Map.of("promotions", java.util.List.of(), "message", "促銷活動功能開發中"));
     }
 
     @PostMapping("/{customerId}/promotions")
@@ -151,8 +154,9 @@ public class ShoppingCartController {
             @Parameter(description = "客戶ID") @PathVariable String customerId,
             @RequestBody ApplyPromotionRequest request) {
 
-        // TODO: 實現促銷活動邏輯
-        return ResponseEntity.ok(Map.of("message", "促銷活動已應用"));
+        // 促銷活動功能將在後續版本中實現
+        // 目前返回成功響應以支持前端開發
+        return ResponseEntity.ok(Map.of("message", "促銷活動功能開發中，敬請期待"));
     }
 
     @GetMapping("/{customerId}/inventory-check")
@@ -160,8 +164,9 @@ public class ShoppingCartController {
     public ResponseEntity<Map<String, Object>> checkInventoryAvailability(
             @Parameter(description = "客戶ID") @PathVariable String customerId) {
 
-        // TODO: 實現庫存檢查邏輯
-        return ResponseEntity.ok(Map.of("available", true, "items", java.util.List.of()));
+        // 庫存檢查功能將在後續版本中實現
+        // 目前返回可用狀態以支持前端開發
+        return ResponseEntity.ok(Map.of("available", true, "items", java.util.List.of(), "message", "庫存檢查功能開發中"));
     }
 
 }

@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import solid.humank.genaidemo.domain.customer.model.valueobject.Address;
@@ -23,6 +24,12 @@ import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
  * 驗證 Annotation + Interface Default Methods 的正確性
  */
 class CustomerAggregateRootTest {
+
+    @BeforeEach
+    void setUp() {
+        // 清除所有事件收集器狀態，確保測試隔離
+        solid.humank.genaidemo.domain.common.aggregate.AggregateRootEventCollectorHolder.clearAllEventCollectors();
+    }
 
     @Test
     void testCustomerImplementsAggregateRoot() {
@@ -43,7 +50,9 @@ class CustomerAggregateRootTest {
         customer.getUncommittedEvents()
                 .forEach(event -> System.out.println("事件類型: " + event.getClass().getSimpleName()));
 
+        // 驗證只有一個 CustomerCreatedEvent
         assertEquals(1, customer.getUncommittedEvents().size());
+        assertEquals("CustomerCreatedEvent", customer.getUncommittedEvents().get(0).getClass().getSimpleName());
     }
 
     @Test

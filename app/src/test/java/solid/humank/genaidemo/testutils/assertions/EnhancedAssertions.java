@@ -149,7 +149,7 @@ public class EnhancedAssertions {
     /** 斷言字串不為空且包含指定內容 */
     public static void assertStringNotEmptyAndContains(String actual, String expectedContent) {
         assertNotNull(actual, "String should not be null");
-        assertFalse(actual.trim().isEmpty(), "String should not be empty");
+        assertFalse(actual.isBlank(), "String should not be empty");
         assertTrue(
                 actual.contains(expectedContent),
                 String.format("String should contain '%s' but was '%s'", expectedContent, actual));

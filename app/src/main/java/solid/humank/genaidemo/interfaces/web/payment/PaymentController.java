@@ -11,7 +11,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -286,7 +285,7 @@ public class PaymentController {
         List<PaymentResponseDto> responseDtos = paymentManagementUseCase.getAllPaymentDtos();
 
         List<PaymentResponse> responses =
-                responseDtos.stream().map(PaymentResponse::fromDto).collect(Collectors.toList());
+                responseDtos.stream().map(PaymentResponse::fromDto).toList();
 
         return ResponseEntity.ok(responses);
     }

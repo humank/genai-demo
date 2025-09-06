@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.promotion.persistence.adapter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -34,7 +33,7 @@ public class PromotionRepositoryAdapter
     @Override
     public Promotion save(Promotion promotion) {
         JpaPromotionEntity entity = toEntity(promotion);
-        JpaPromotionEntity savedEntity = jpaRepository.save(entity);
+        jpaRepository.save(entity);
         return promotion; // Return original aggregate root to maintain consistency
     }
 
@@ -42,14 +41,14 @@ public class PromotionRepositoryAdapter
     public List<Promotion> findByType(PromotionType type) {
         return jpaRepository.findByType(type.name()).stream()
                 .map(this::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public List<Promotion> findActivePromotions() {
         return jpaRepository.findActivePromotions(LocalDateTime.now()).stream()
                 .map(this::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class PromotionRepositoryAdapter
     public List<Promotion> findPromotionsValidAt(LocalDateTime dateTime) {
         return jpaRepository.findActivePromotions(dateTime).stream()
                 .map(this::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private JpaPromotionEntity toEntity(Promotion promotion) {

@@ -1,6 +1,6 @@
-<!-- 
-此文件需要手動翻譯
-原文件: deployment/README.md
+# Deployment Documentation
+
+This directory contains deployment related documentation.
 翻譯日期: Thu Aug 21 22:14:37 CST 2025
 
 請將以下中文內容翻譯為英文，保持 Markdown 格式不變
@@ -34,6 +34,5 @@ kubectl apply -f deployment/k8s/
 ```
 
 **注意**: EKS 部署需要先配置 AWS CLI 和 kubectl。
-
 
 <!-- 翻譯完成後請刪除此註釋 -->

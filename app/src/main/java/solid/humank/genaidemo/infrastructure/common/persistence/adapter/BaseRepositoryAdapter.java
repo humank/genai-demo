@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.common.persistence.adapter;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
         }
 
         E entity = toJpaEntity(aggregateRoot);
-        E savedEntity = jpaRepository.save(entity);
+        jpaRepository.save(entity);
 
         // Return the original aggregate root to maintain aggregate consistency
         // The aggregate root should be the single source of truth
@@ -53,7 +52,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
     public List<T> findAll() {
         return jpaRepository.findAll().stream()
                 .map(this::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

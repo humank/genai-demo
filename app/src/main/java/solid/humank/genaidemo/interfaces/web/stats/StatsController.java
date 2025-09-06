@@ -83,7 +83,7 @@ public class StatsController {
         public ResponseEntity<Map<String, Object>> getOrderStatusStats() {
                 OrderStatusStatsDto statsDto = statisticsApplicationService.getOrderStatusStatistics();
 
-                Map<String, Object> result = new HashMap<>();
+                var result = new HashMap<String, Object>();
                 result.put("statusDistribution", statsDto.statusDistribution());
                 result.put("status", statsDto.status());
                 if (statsDto.message() != null) {
@@ -115,7 +115,7 @@ public class StatsController {
         public ResponseEntity<Map<String, Object>> getPaymentMethodStats() {
                 PaymentMethodStatsDto statsDto = statisticsApplicationService.getPaymentMethodStatistics();
 
-                Map<String, Object> result = new HashMap<>();
+                var result = new HashMap<String, Object>();
                 result.put("paymentMethodDistribution", statsDto.paymentMethodDistribution());
                 result.put("status", statsDto.status());
                 if (statsDto.message() != null) {

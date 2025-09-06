@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.notification.persistence.adapter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +58,7 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findByCustomerId(customerId)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findByType(type.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -75,7 +74,7 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findByStatus(status.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -83,7 +82,7 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findPendingNotificationsScheduledBefore(time)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -91,7 +90,7 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findFailedNotifications()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -99,6 +98,6 @@ public class NotificationRepositoryAdapter
         return ((JpaNotificationRepository) jpaRepository).findNotificationsForRetry(maxRetryCount)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

@@ -2,6 +2,7 @@ package solid.humank.genaidemo.domain.inventory.model.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 import solid.humank.genaidemo.domain.common.annotations.Entity;
 import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryThresholdId;
@@ -197,7 +198,7 @@ public class InventoryThreshold {
 
     /** 更新備註 */
     public void updateNotes(String notes) {
-        this.notes = notes != null ? notes : "";
+        this.notes = Optional.ofNullable(notes).orElse("");
         this.lastModifiedAt = LocalDateTime.now();
     }
 
@@ -208,7 +209,7 @@ public class InventoryThreshold {
             if (reorderQuantity <= 0) {
                 throw new IllegalArgumentException("補貨數量必須大於0");
             }
-            if (supplierId == null || supplierId.trim().isEmpty()) {
+            if (supplierId == null || supplierId.isBlank()) {
                 throw new IllegalArgumentException("供應商ID不能為空");
             }
             this.reorderQuantity = reorderQuantity;

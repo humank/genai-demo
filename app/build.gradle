@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.5'
+    id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
@@ -90,6 +90,7 @@ dependencies {
 // 配置 Java 編譯和執行任務啟用預覽功能
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
+    options.compilerArgs += '-Xlint:unchecked'
     options.release = 21
 }
 

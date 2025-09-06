@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import solid.humank.genaidemo.domain.common.aggregate.AggregateReconstruction;
 import solid.humank.genaidemo.domain.common.aggregate.AggregateRootInterface;
@@ -197,7 +196,7 @@ public class Customer implements AggregateRootInterface {
     public List<Address> getDeliveryAddressList() {
         return deliveryAddresses.stream()
                 .map(DeliveryAddress::getAddress)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public CustomerStatus getStatus() {
@@ -482,7 +481,7 @@ public class Customer implements AggregateRootInterface {
         return deliveryAddresses.stream()
                 .filter(DeliveryAddress::isFrequentlyUsed)
                 .sorted((a, b) -> Integer.compare(b.getUsageCount(), a.getUsageCount()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // ==================== 支付方式管理 ====================
@@ -679,14 +678,14 @@ public class Customer implements AggregateRootInterface {
     public List<PaymentMethod> getActivePaymentMethods() {
         return paymentMethods.stream()
                 .filter(PaymentMethod::canUse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 獲取特定類型的支付方式 */
     public List<PaymentMethod> getPaymentMethodsByType(PaymentMethod.PaymentType type) {
         return paymentMethods.stream()
                 .filter(pm -> pm.getType() == type)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** 檢查是否有有效的支付方式 */
@@ -703,7 +702,7 @@ public class Customer implements AggregateRootInterface {
     public void cleanupExpiredPaymentMethods() {
         List<PaymentMethod> expiredMethods = paymentMethods.stream()
                 .filter(PaymentMethod::isExpired)
-                .collect(Collectors.toList());
+                .toList();
 
         for (PaymentMethod expiredMethod : expiredMethods) {
             expiredMethod.markAsExpired();
@@ -848,11 +847,11 @@ public class Customer implements AggregateRootInterface {
             violationBuilder.addError("SPENDING_AMOUNT_NEGATIVE", "消費金額不能為負數");
         }
 
-        if (orderId == null || orderId.trim().isEmpty()) {
+        if (orderId == null || orderId.isBlank()) {
             violationBuilder.addError("ORDER_ID_REQUIRED", "訂單ID不能為空");
         }
 
-        if (spendingType == null || spendingType.trim().isEmpty()) {
+        if (spendingType == null || spendingType.isBlank()) {
             violationBuilder.addError("SPENDING_TYPE_REQUIRED", "消費類型不能為空");
         }
 

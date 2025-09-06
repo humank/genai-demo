@@ -10,7 +10,7 @@ public record CustomerName(String value) {
      * 緊湊建構子 - 驗證參數
      */
     public CustomerName {
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("Customer name cannot be null or empty");
         }
         // 正規化：去除前後空白

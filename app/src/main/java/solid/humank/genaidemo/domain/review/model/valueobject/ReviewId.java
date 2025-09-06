@@ -12,7 +12,7 @@ public record ReviewId(String id) {
      * 緊湊建構子 - 驗證參數
      */
     public ReviewId {
-        if (id == null || id.trim().isEmpty()) {
+        if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("評價ID不能為空");
         }
     }

@@ -58,28 +58,34 @@ public class TestUtils {
 
     /** 驗證金額相等（考慮精度問題） */
     public static boolean isAmountEqual(BigDecimal amount1, BigDecimal amount2) {
-        if (amount1 == null && amount2 == null) return true;
-        if (amount1 == null || amount2 == null) return false;
+        if (amount1 == null && amount2 == null)
+            return true;
+        if (amount1 == null || amount2 == null)
+            return false;
         return amount1.compareTo(amount2) == 0;
     }
 
     /** 格式化金額顯示 */
     public static String formatAmount(BigDecimal amount) {
-        if (amount == null) return "0.00";
-        return amount.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        if (amount == null)
+            return "0.00";
+        return amount.setScale(2, java.math.RoundingMode.HALF_UP).toString();
     }
 
     /** 計算百分比折扣 */
     public static BigDecimal calculateDiscountAmount(
             BigDecimal originalAmount, BigDecimal discountRate) {
-        if (originalAmount == null || discountRate == null) return BigDecimal.ZERO;
+        if (originalAmount == null || discountRate == null)
+            return BigDecimal.ZERO;
         return originalAmount.multiply(discountRate);
     }
 
     /** 應用折扣後的金額 */
     public static BigDecimal applyDiscount(BigDecimal originalAmount, BigDecimal discountRate) {
-        if (originalAmount == null) return BigDecimal.ZERO;
-        if (discountRate == null) return originalAmount;
+        if (originalAmount == null)
+            return BigDecimal.ZERO;
+        if (discountRate == null)
+            return originalAmount;
         return originalAmount.multiply(BigDecimal.ONE.subtract(discountRate));
     }
 

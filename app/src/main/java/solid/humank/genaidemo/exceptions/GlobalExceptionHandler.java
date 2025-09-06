@@ -2,7 +2,6 @@ package solid.humank.genaidemo.exceptions;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class GlobalExceptionHandler {
                 if (ex.getErrors().size() > 1) {
                         details = ex.getErrors().stream()
                                         .map(error -> new StandardErrorResponse.FieldError("business", error))
-                                        .collect(Collectors.toList());
+                                        .toList();
                 }
 
                 return new StandardErrorResponse(
@@ -81,7 +80,7 @@ public class GlobalExceptionHandler {
 
                 List<StandardErrorResponse.FieldError> details = ex.getErrors().stream()
                                 .map(error -> new StandardErrorResponse.FieldError("validation", error))
-                                .collect(Collectors.toList());
+                                .toList();
 
                 return new StandardErrorResponse(
                                 ErrorCode.VALIDATION_ERROR, request.getRequestURI(), details);
@@ -108,7 +107,7 @@ public class GlobalExceptionHandler {
                                                                 fieldError.getDefaultMessage(),
                                                                 fieldError.getRejectedValue(),
                                                                 fieldError.getCode()))
-                                .collect(Collectors.toList());
+                                .toList();
 
                 return new StandardErrorResponse(
                                 ErrorCode.VALIDATION_ERROR, "請求參數驗證失敗", request.getRequestURI(), details, traceId);
@@ -134,7 +133,7 @@ public class GlobalExceptionHandler {
                                                                 getFieldName(violation),
                                                                 violation.getMessage(),
                                                                 violation.getInvalidValue()))
-                                .collect(Collectors.toList());
+                                .toList();
 
                 return new StandardErrorResponse(
                                 ErrorCode.VALIDATION_ERROR, "約束驗證失敗", request.getRequestURI(), details, traceId);

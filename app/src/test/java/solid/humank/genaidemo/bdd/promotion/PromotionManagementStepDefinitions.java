@@ -4,10 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import solid.humank.genaidemo.bdd.common.TestContext;
 import solid.humank.genaidemo.bdd.common.TestDataBuilder;
 import solid.humank.genaidemo.domain.promotion.service.PromotionService;
@@ -83,8 +84,8 @@ public class PromotionManagementStepDefinitions {
             LocalDateTime endTime = parseDateTime(promotion.get("End Time"));
 
             // 創建限時特價促銷數據
-            FlashSalePromotionData flashSaleData =
-                    new FlashSalePromotionData(name, productId, salePrice, startTime, endTime);
+            FlashSalePromotionData flashSaleData = new FlashSalePromotionData(name, productId, salePrice, startTime,
+                    endTime);
 
             // 存儲到促銷數據中
             promotionData.put("flashSale_" + name, flashSaleData);
@@ -106,8 +107,8 @@ public class PromotionManagementStepDefinitions {
             LocalDateTime endTime = parseDateTime(promotion.get("End Time"));
 
             // 創建並存儲限時特價促銷數據
-            FlashSalePromotionData flashSaleData =
-                    new FlashSalePromotionData(name, productId, salePrice, startTime, endTime);
+            FlashSalePromotionData flashSaleData = new FlashSalePromotionData(name, productId, salePrice, startTime,
+                    endTime);
 
             promotionData.put("flashSale_" + name, flashSaleData);
 
@@ -130,9 +131,8 @@ public class PromotionManagementStepDefinitions {
             int soldCount = Integer.parseInt(promotion.get("Sold Count"));
 
             // 創建限量促銷數據
-            LimitedQuantityPromotionData limitedData =
-                    new LimitedQuantityPromotionData(
-                            name, productId, salePrice, quantityLimit, soldCount);
+            LimitedQuantityPromotionData limitedData = new LimitedQuantityPromotionData(
+                    name, productId, salePrice, quantityLimit, soldCount);
 
             // 存儲到促銷數據中
             promotionData.put("limitedQuantity_" + name, limitedData);
@@ -154,9 +154,8 @@ public class PromotionManagementStepDefinitions {
             int soldCount = Integer.parseInt(promotion.get("Sold Count"));
 
             // 創建已售完的限量促銷數據
-            LimitedQuantityPromotionData limitedData =
-                    new LimitedQuantityPromotionData(
-                            name, productId, salePrice, quantityLimit, soldCount);
+            LimitedQuantityPromotionData limitedData = new LimitedQuantityPromotionData(
+                    name, productId, salePrice, quantityLimit, soldCount);
 
             // 存儲到促銷數據中
             promotionData.put("limitedQuantity_" + name, limitedData);
@@ -180,9 +179,8 @@ public class PromotionManagementStepDefinitions {
             String category = promotion.get("Category");
 
             // 創建滿額折扣數據
-            SpendThresholdDiscountData discountData =
-                    new SpendThresholdDiscountData(
-                            name, minAmount, discountType, discountValue, category);
+            SpendThresholdDiscountData discountData = new SpendThresholdDiscountData(
+                    name, minAmount, discountType, discountValue, category);
 
             // 存儲到促銷數據中
             promotionData.put("spendThreshold_" + name, discountData);
@@ -267,12 +265,11 @@ public class PromotionManagementStepDefinitions {
     @Given("Buy {int} Get {int} promotion is created for {string}")
     public void buyNGetNPromotionIsCreatedFor(int buyQuantity, int getQuantity, String productId) {
         // 創建買N送N促銷數據
-        BuyNGetNPromotionData buyNGetNData =
-                new BuyNGetNPromotionData(
-                        "Buy " + buyQuantity + " Get " + getQuantity,
-                        productId,
-                        buyQuantity,
-                        getQuantity);
+        BuyNGetNPromotionData buyNGetNData = new BuyNGetNPromotionData(
+                "Buy " + buyQuantity + " Get " + getQuantity,
+                productId,
+                buyQuantity,
+                getQuantity);
 
         // 存儲到促銷數據中
         promotionData.put("buyNGetN_" + productId, buyNGetNData);
@@ -284,8 +281,8 @@ public class PromotionManagementStepDefinitions {
     @Given("second item half price promotion is created for phone category")
     public void secondItemHalfPricePromotionIsCreatedForPhoneCategory() {
         // 創建第二件半價促銷數據
-        SecondItemHalfPricePromotionData halfPriceData =
-                new SecondItemHalfPricePromotionData("Second Item Half Price", "Phone");
+        SecondItemHalfPricePromotionData halfPriceData = new SecondItemHalfPricePromotionData("Second Item Half Price",
+                "Phone");
 
         // 存儲到促銷數據中
         promotionData.put("secondItemHalfPrice_Phone", halfPriceData);
@@ -529,8 +526,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
                 if (limited.getProductId().equals(productId)) {
                     promotionData.put("product_promotion_" + productId, limited);
                 }
@@ -539,6 +535,7 @@ public class PromotionManagementStepDefinitions {
     }
 
     /** 檢查適用的折扣 */
+    @SuppressWarnings("unused")
     private void checkApplicableDiscounts(BigDecimal cartTotal) {
         // 檢查滿額折扣 - 使用新的 Map 來避免 ConcurrentModificationException
         Map<String, Object> updatesToApply = new HashMap<>();
@@ -555,8 +552,7 @@ public class PromotionManagementStepDefinitions {
 
         // 檢查階梯式折扣
         if (promotionData.containsKey("tieredDiscount")) {
-            TieredSpendDiscountData tiered =
-                    (TieredSpendDiscountData) promotionData.get("tieredDiscount");
+            TieredSpendDiscountData tiered = (TieredSpendDiscountData) promotionData.get("tieredDiscount");
             BigDecimal discountAmount = tiered.getApplicableDiscount(cartTotal);
             String prompt = tiered.getNextTierPrompt(cartTotal);
             updatesToApply.put("tiered_discount_amount", discountAmount);
@@ -584,9 +580,8 @@ public class PromotionManagementStepDefinitions {
     /** 檢查第二件半價促銷 */
     private void checkSecondItemHalfPricePromotion(List<ProductPriceInfo> products) {
         if (promotionData.containsKey("secondItemHalfPrice_Phone")) {
-            SecondItemHalfPricePromotionData halfPrice =
-                    (SecondItemHalfPricePromotionData)
-                            promotionData.get("secondItemHalfPrice_Phone");
+            SecondItemHalfPricePromotionData halfPrice = (SecondItemHalfPricePromotionData) promotionData
+                    .get("secondItemHalfPrice_Phone");
 
             BigDecimal totalPrice = halfPrice.calculateTotalPrice(products);
             ProductPriceInfo lowerPriced = halfPrice.getLowerPricedItem(products);
@@ -629,8 +624,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
                 if (limited.getProductId().equals(productId) && !limited.isSoldOut()) {
                     // 驗證顯示價格是否與限量促銷價格一致
                     assertEquals(
@@ -655,8 +649,7 @@ public class PromotionManagementStepDefinitions {
                             "Sale price should match flash sale promotion price");
                 }
             } else if (entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
                 if (limited.getProductId().equals(productId)) {
                     assertEquals(
                             limited.getSalePrice(),
@@ -680,8 +673,7 @@ public class PromotionManagementStepDefinitions {
                     if (currentTime != null && flashSale.isActiveAt(currentTime)) {
                         // 計算剩餘時間
                         LocalDateTime endTime = flashSale.getEndTime();
-                        long remainingMinutes =
-                                java.time.Duration.between(currentTime, endTime).toMinutes();
+                        long remainingMinutes = java.time.Duration.between(currentTime, endTime).toMinutes();
                         updatesToApply.put("countdown_remaining_minutes", remainingMinutes);
 
                         assertTrue(
@@ -724,8 +716,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
 
                 if (limited.isSoldOut() && "Sold Out".equals(expectedStatus)) {
                     return true;
@@ -739,6 +730,7 @@ public class PromotionManagementStepDefinitions {
     }
 
     /** 驗證特定顯示消息 */
+    @SuppressWarnings("unused")
     private void validateSpecificDisplayMessage(String message) {
         // 檢查限量促銷相關消息
         if (message.contains("Limited") && message.contains("remaining")) {
@@ -779,8 +771,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
                 if (limited.getProductId().equals(productId)) {
                     double progressPercentage = limited.getProgressPercentage();
                     updatesToApply.put("progress_percentage", progressPercentage);
@@ -802,8 +793,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
 
                 if (limited.getQuantityLimit() == limit) {
                     int expectedRemaining = limited.getRemainingQuantity();
@@ -825,8 +815,7 @@ public class PromotionManagementStepDefinitions {
         for (Map.Entry<String, Object> entry : promotionData.entrySet()) {
             if (entry.getKey().startsWith("limitedQuantity_")
                     && entry.getValue() instanceof LimitedQuantityPromotionData) {
-                LimitedQuantityPromotionData limited =
-                        (LimitedQuantityPromotionData) entry.getValue();
+                LimitedQuantityPromotionData limited = (LimitedQuantityPromotionData) entry.getValue();
                 if (limited.isSoldOut()) {
                     hasSoldOutPromotion = true;
                     break;
@@ -1006,7 +995,8 @@ public class PromotionManagementStepDefinitions {
 
         /** 獲取價格較低的商品（第二件） */
         public ProductPriceInfo getLowerPricedItem(List<ProductPriceInfo> products) {
-            if (products.size() < 2) return null;
+            if (products.size() < 2)
+                return null;
 
             products.sort((p1, p2) -> p1.getPrice().compareTo(p2.getPrice()));
             return products.get(0); // 價格最低的
@@ -1219,7 +1209,8 @@ public class PromotionManagementStepDefinitions {
 
         /** 獲取進度百分比 */
         public double getProgressPercentage() {
-            if (quantityLimit == 0) return 100.0;
+            if (quantityLimit == 0)
+                return 100.0;
             return (double) soldCount / quantityLimit * 100.0;
         }
     }

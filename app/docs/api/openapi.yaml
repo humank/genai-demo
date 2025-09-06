@@ -108,14 +108,14 @@ paths:
                     category: 電子產品
                     inStock: true
                     stockQuantity: 50
-        "404":
-          description: 產品不存在
+        "500":
+          description: 系統內部錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 系統內部錯誤
+        "404":
+          description: 產品不存在
           content:
             application/json:
               schema:
@@ -141,6 +141,12 @@ paths:
               $ref: "#/components/schemas/UpdateProductRequest"
         required: true
       responses:
+        "422":
+          description: 業務規則驗證失敗
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 產品更新成功
           content:
@@ -159,26 +165,20 @@ paths:
                     category: 電子產品
                     inStock: true
                     stockQuantity: 50
-        "422":
-          description: 業務規則驗證失敗
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "400":
           description: 請求參數無效
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "404":
-          description: 產品不存在
+        "500":
+          description: 系統內部錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 系統內部錯誤
+        "404":
+          description: 產品不存在
           content:
             application/json:
               schema:
@@ -198,6 +198,12 @@ paths:
             type: string
           example: PROD-001
       responses:
+        "500":
+          description: 系統內部錯誤
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 產品刪除成功
           content:
@@ -215,12 +221,6 @@ paths:
                 $ref: "#/components/schemas/StandardErrorResponse"
         "422":
           description: 產品無法刪除（存在相關訂單）
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 系統內部錯誤
           content:
             application/json:
               schema:
@@ -247,12 +247,6 @@ paths:
               $ref: "#/components/schemas/UpdateCommissionRateRequest"
         required: true
       responses:
-        "400":
-          description: 請求參數無效，如費率值超出合理範圍或格式錯誤
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 佣金費率更新成功
           content:
@@ -261,6 +255,12 @@ paths:
                 $ref: "#/components/schemas/PricingRuleDto"
         "422":
           description: 業務規則違反，如佣金費率設定不符合商業邏輯或超出允許範圍
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "400":
+          description: 請求參數無效，如費率值超出合理範圍或格式錯誤
           content:
             application/json:
               schema:
@@ -354,12 +354,6 @@ paths:
               $ref: "#/components/schemas/CreatePricingRuleRequest"
         required: true
       responses:
-        "400":
-          description: 請求參數無效，如必填欄位缺失、日期格式錯誤或定價邏輯衝突
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 定價規則創建成功
           content:
@@ -368,6 +362,12 @@ paths:
                 $ref: "#/components/schemas/PricingRuleDto"
         "422":
           description: 業務規則違反，如定價規則衝突、有效期間重疊或折扣設定不合理
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "400":
+          description: 請求參數無效，如必填欄位缺失、日期格式錯誤或定價邏輯衝突
           content:
             application/json:
               schema:
@@ -386,18 +386,18 @@ paths:
       description: 獲取系統中所有支付記錄的列表，通常用於管理後台查詢
       operationId: getAllPayments
       responses:
-        "200":
-          description: 成功獲取支付列表
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentResponse"
         "500":
           description: 系統內部錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 成功獲取支付列表
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
     post:
       tags:
         - 支付管理
@@ -411,6 +411,12 @@ paths:
               $ref: "#/components/schemas/PaymentRequest"
         required: true
       responses:
+        "201":
+          description: 支付處理成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
         "422":
           description: 支付處理失敗（業務邏輯錯誤）
           content:
@@ -423,12 +429,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "201":
-          description: 支付處理成功
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentResponse"
         "500":
           description: 系統內部錯誤
           content:
@@ -452,8 +452,20 @@ paths:
             type: string
           example: 123e4567-e89b-12d3-a456-426614174000
       responses:
+        "422":
+          description: 支付狀態不允許退款
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "400":
           description: 支付ID格式無效
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "500":
+          description: 系統內部錯誤
           content:
             application/json:
               schema:
@@ -464,20 +476,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentResponse"
-        "422":
-          description: 支付狀態不允許退款
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "404":
           description: 支付不存在
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 系統內部錯誤
           content:
             application/json:
               schema:
@@ -499,20 +499,8 @@ paths:
             type: string
           example: 123e4567-e89b-12d3-a456-426614174000
       responses:
-        "200":
-          description: 支付取消成功
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentResponse"
         "400":
           description: 支付ID格式無效
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
-        "404":
-          description: 支付不存在
           content:
             application/json:
               schema:
@@ -525,6 +513,18 @@ paths:
                 $ref: "#/components/schemas/StandardErrorResponse"
         "500":
           description: 系統內部錯誤
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 支付取消成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
+        "404":
+          description: 支付不存在
           content:
             application/json:
               schema:
@@ -556,18 +556,18 @@ paths:
             default: 20
           example: 20
       responses:
-        "200":
-          description: 成功獲取訂單列表
-          content:
-            application/json:
-              schema:
-                type: string
         "500":
           description: 內部伺服器錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 成功獲取訂單列表
+          content:
+            application/json:
+              schema:
+                type: string
     post:
       tags:
         - 訂單管理
@@ -581,12 +581,6 @@ paths:
               $ref: "#/components/schemas/CreateOrderRequest"
         required: true
       responses:
-        "201":
-          description: 訂單創建成功
-          content:
-            application/json:
-              schema:
-                type: string
         "500":
           description: 內部伺服器錯誤
           content:
@@ -599,6 +593,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "201":
+          description: 訂單創建成功
+          content:
+            application/json:
+              schema:
+                type: string
   /api/orders/{orderId}/submit:
     post:
       tags:
@@ -615,12 +615,6 @@ paths:
             type: string
           example: order-123
       responses:
-        "404":
-          description: 訂單不存在
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "500":
           description: 內部伺服器錯誤
           content:
@@ -633,6 +627,12 @@ paths:
             application/json:
               schema:
                 type: string
+        "404":
+          description: 訂單不存在
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "400":
           description: 訂單狀態不允許提交
           content:
@@ -661,24 +661,24 @@ paths:
               $ref: "#/components/schemas/AddOrderItemRequest"
         required: true
       responses:
-        "404":
-          description: 訂單不存在
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 內部伺服器錯誤
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 成功添加訂單項目
           content:
             application/json:
               schema:
                 type: string
+        "500":
+          description: 內部伺服器錯誤
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "404":
+          description: 訂單不存在
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "400":
           description: 請求參數無效
           content:
@@ -701,20 +701,14 @@ paths:
             type: string
           example: order-123
       responses:
-        "200":
-          description: 訂單取消成功
-          content:
-            application/json:
-              schema:
-                type: string
-        "404":
-          description: 訂單不存在
+        "500":
+          description: 內部伺服器錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 內部伺服器錯誤
+        "404":
+          description: 訂單不存在
           content:
             application/json:
               schema:
@@ -725,6 +719,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 訂單取消成功
+          content:
+            application/json:
+              schema:
+                type: string
   /api/monitoring/events/statistics/processing/reset:
     post:
       tags:
@@ -807,12 +807,6 @@ paths:
               $ref: "#/components/schemas/AdjustInventoryRequest"
         required: true
       responses:
-        "200":
-          description: 庫存調整成功
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InventoryResponse"
         "422":
           description: 業務規則違反，如庫存不足無法減少、調整後庫存為負數等
           content:
@@ -825,14 +819,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "404":
-          description: 產品不存在
+        "200":
+          description: 庫存調整成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponse"
+        "500":
+          description: 系統內部錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 系統內部錯誤
+        "404":
+          description: 產品不存在
           content:
             application/json:
               schema:
@@ -1069,6 +1069,12 @@ paths:
             default: 20
           example: 20
       responses:
+        "400":
+          description: 請求參數無效
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 成功獲取產品列表
           content:
@@ -1094,12 +1100,6 @@ paths:
                     number: 0
                     first: true
                     last: false
-        "400":
-          description: 請求參數無效
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "500":
           description: 系統內部錯誤
           content:
@@ -1122,20 +1122,14 @@ paths:
             type: string
           example: prod-123e4567-e89b-12d3-a456-426614174000
       responses:
-        "404":
-          description: 指定的產品不存在
+        "400":
+          description: 請求參數無效，如產品ID格式錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "200":
-          description: 成功獲取產品定價規則列表
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PricingRuleDto"
-        "400":
-          description: 請求參數無效，如產品ID格式錯誤
+        "404":
+          description: 指定的產品不存在
           content:
             application/json:
               schema:
@@ -1146,6 +1140,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 成功獲取產品定價規則列表
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricingRuleDto"
   /api/pricing/rules/category/{category}:
     get:
       tags:
@@ -1182,12 +1182,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PricingRuleDto"
-        "422":
-          description: 業務規則違反，如查詢的產品類別不支援定價規則
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
         "400":
           description: 請求參數無效，如產品類別值不在允許範圍內
           content:
@@ -1196,6 +1190,12 @@ paths:
                 $ref: "#/components/schemas/StandardErrorResponse"
         "500":
           description: 系統內部錯誤
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
+        "422":
+          description: 業務規則違反，如查詢的產品類別不支援定價規則
           content:
             application/json:
               schema:
@@ -1223,8 +1223,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "404":
-          description: 支付不存在
+        "500":
+          description: 系統內部錯誤
           content:
             application/json:
               schema:
@@ -1235,8 +1235,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentResponse"
-        "500":
-          description: 系統內部錯誤
+        "404":
+          description: 支付不存在
           content:
             application/json:
               schema:
@@ -1258,6 +1258,12 @@ paths:
             type: string
           example: 123e4567-e89b-12d3-a456-426614174000
       responses:
+        "200":
+          description: 成功獲取訂單支付詳情
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentResponse"
         "400":
           description: 訂單ID格式無效
           content:
@@ -1270,12 +1276,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "200":
-          description: 成功獲取訂單支付詳情
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PaymentResponse"
         "500":
           description: 系統內部錯誤
           content:
@@ -1298,6 +1298,12 @@ paths:
             type: string
           example: order-123
       responses:
+        "500":
+          description: 內部伺服器錯誤
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StandardErrorResponse"
         "200":
           description: 成功獲取訂單資訊
           content:
@@ -1306,12 +1312,6 @@ paths:
                 type: string
         "404":
           description: 訂單不存在
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StandardErrorResponse"
-        "500":
-          description: 內部伺服器錯誤
           content:
             application/json:
               schema:
@@ -1429,18 +1429,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
-        "200":
-          description: 成功獲取庫存資訊
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InventoryResponse"
         "500":
           description: 系統內部錯誤
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 成功獲取庫存資訊
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponse"
   /api/customers:
     get:
       tags:
@@ -1468,18 +1468,18 @@ paths:
             default: 20
           example: 20
       responses:
-        "200":
-          description: 成功獲取客戶列表
-          content:
-            application/json:
-              schema:
-                type: string
         "400":
           description: 請求參數無效
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/StandardErrorResponse"
+        "200":
+          description: 成功獲取客戶列表
+          content:
+            application/json:
+              schema:
+                type: string
         "500":
           description: 系統內部錯誤
           content:
@@ -1502,8 +1502,8 @@ paths:
             type: string
           example: cust-12345-abcde
       responses:
-        "404":
-          description: 客戶不存在
+        "400":
+          description: 客戶ID格式無效
           content:
             application/json:
               schema:
@@ -1514,8 +1514,8 @@ paths:
             application/json:
               schema:
                 type: string
-        "400":
-          description: 客戶ID格式無效
+        "404":
+          description: 客戶不存在
           content:
             application/json:
               schema:

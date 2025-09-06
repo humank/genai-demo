@@ -10,7 +10,7 @@ public record Phone(String phone) {
      * 緊湊建構子 - 驗證參數
      */
     public Phone {
-        if (phone == null || phone.trim().isEmpty()) {
+        if (phone == null || phone.isBlank()) {
             throw new IllegalArgumentException("Phone number cannot be null or empty");
         }
         phone = phone.trim(); // 正規化

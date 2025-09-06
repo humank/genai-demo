@@ -1,12 +1,12 @@
 # GenAI Demo - 電商平台示範專案
 
 > **Language / 語言選擇**  
-> 🇺🇸 **English**: [English Documentation](docs/en/README.md)  
+> 🇺🇸 **English**: [English Documentation](docs/en/README.md) | [English Project README](docs/en/PROJECT_README.md)  
 > 🇹🇼 **繁體中文**: 您正在閱讀繁體中文版本
 
 這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的全棧電商平台示範專案，展示了如何構建一個具有良好架構和測試實踐的現代化應用程式。
 
-## ✨ 新功能亮點 (v3.0.0 - 2025年8月)
+## ✨ 新功能亮點 (v3.0.0 - 2025年1月)
 
 ### 🛒 消費者端功能
 
@@ -30,9 +30,10 @@
 - **容器化部署**: ARM64 優化的 Docker 映像
 - **輕量化設計**: 瘦身 Docker 映像和內存資料庫
 - **健康檢查**: 完整的應用程式監控機制
-- **DDD 架構**: 完整的領域驅動設計實作，包含聚合根、值對象、領域服務、規格模式、政策模式
+- **DDD 架構**: 完整的領域驅動設計實作，包含聚合根、值對象、領域事件、領域服務、規格模式、政策模式
 - **六角形架構**: 嚴格的端口與適配器分離，確保業務邏輯獨立性
-- **Java Record 重構**: 所有值對象和領域事件使用 Java 21 Record 實作，減少 70% 樣板代碼
+- **Java Record 重構**: 值對象和領域事件使用 Java 21 Record 實作，聚合根使用 Interface + Annotation 混搭方案
+- **事件驅動架構**: 完整的領域事件收集、發布和處理機制
 - **測試覆蓋**: BDD 測試、單元測試、整合測試和架構測試，達到 100% 測試通過率
 
 ## 🚀 快速開始
@@ -88,19 +89,25 @@ cd cmc-frontend && npm run dev
 1. **領域層 (Domain Layer)**
    - 包含業務核心邏輯和規則
    - 不依賴於其他層
-   - 包含聚合根、實體、值對象、領域事件、領域服務和領域異常
+   - **聚合根**: 使用 `@AggregateRoot` 註解 + `AggregateRootInterface` 混搭方案
+   - **值對象**: 使用 `@ValueObject` 註解的 Java Record 實作
+   - **領域事件**: 使用 Java Record 實作 `DomainEvent` 介面
+   - **規格模式**: 使用 `@Specification` 註解實作業務規則
+   - **政策模式**: 使用 `@Policy` 註解實作業務決策
+   - **領域服務**: 使用 `@DomainService` 註解
 
 2. **應用層 (Application Layer)**
    - 協調領域對象完成用戶用例
    - 只依賴於領域層
    - 包含應用服務、DTO、命令和查詢對象
+   - 負責領域事件的發布和跨聚合根操作
    - 負責在介面層和領域層之間進行數據轉換
 
 3. **基礎設施層 (Infrastructure Layer)**
    - 提供技術實現
    - 依賴於領域層，實現領域層定義的接口
-   - 包含儲存庫實現、外部系統適配器、ORM 映射等
-   - 按功能分為 persistence（持久化）和 external（外部系統）等子包
+   - 包含儲存庫實現、外部系統適配器、ORM 映射、事件處理器等
+   - 按功能分為 persistence（持久化）、event（事件處理）和 external（外部系統）等子包
 
 ## 📁 專案目錄結構
 
@@ -109,7 +116,8 @@ genai-demo/
 ├── app/                    # 主應用程式
 │   ├── src/main/java/      # Java 原始碼
 │   └── src/test/java/      # 測試程式碼
-├── cmc-frontend/           # Next.js 前端應用
+├── cmc-frontend/           # Next.js 14.2.30 前端應用 (CMC)
+├── consumer-frontend/      # Angular 18.2.0 前端應用 (Consumer)
 ├── deployment/             # 部署相關檔案
 │   ├── k8s/               # Kubernetes 配置
 │   └── deploy-to-eks.sh   # EKS 部署腳本
@@ -119,7 +127,9 @@ genai-demo/
 ├── docs/                   # 專案文檔
 │   ├── api/               # API 文檔
 │   ├── en/                # 英文文檔
-│   └── zh-tw/             # 繁體中文文檔
+│   ├── architecture/      # 架構文檔
+│   ├── diagrams/          # 圖表文檔 (Mermaid + PlantUML)
+│   └── reports/           # 專案報告
 ├── scripts/                # 各種腳本檔案
 │   ├── start-fullstack.sh # 啟動全棧應用
 │   └── stop-fullstack.sh  # 停止所有服務
@@ -133,18 +143,30 @@ genai-demo/
 4. **介面層 (Interfaces Layer)**
    - 處理用戶交互
    - 只依賴於應用層，不直接依賴領域層
-   - 包含控制器、視圖模型、請求/響應對象等
+   - 包含 REST 控制器、視圖模型、請求/響應對象等
    - 使用自己的 DTO 與應用層交互
+   - 整合 OpenAPI 3.0 規範和 Swagger UI
 
-### 前端架構 (現代化 React 生態系統)
+### 前端架構 (現代化雙前端架構)
 
-- **框架**: Next.js 14 with App Router
-- **語言**: TypeScript
-- **樣式**: Tailwind CSS + shadcn/ui 組件庫
-- **狀態管理**: Zustand (全局狀態) + React Query (服務器狀態)
-- **API 集成**: Axios 基於類型安全的 API 調用
+#### CMC Frontend (Next.js)
 
-## 🆕 最新改動 (2025年8月)
+- **框架**: Next.js 14.2.30 with App Router
+- **語言**: TypeScript 5.5.4
+- **樣式**: Tailwind CSS 3.4.9 + shadcn/ui 組件庫
+- **狀態管理**: Zustand 4.5.4 (全局狀態) + React Query 5.51.23 (服務器狀態)
+- **API 集成**: Axios 1.7.3 基於類型安全的 API 調用
+- **表單處理**: React Hook Form 7.52.2 + Zod 3.23.8 驗證
+
+#### Consumer Frontend (Angular)
+
+- **框架**: Angular 18.2.0
+- **語言**: TypeScript 5.5.2
+- **樣式**: Tailwind CSS 3.4.17 + PrimeNG 18.0.2 UI 組件
+- **狀態管理**: RxJS 7.8.0 響應式程式設計
+- **測試**: Jasmine 5.1.0 + Karma 6.4.0
+
+## 🆕 最新改動 (2025年1月)
 
 ### 🏗️ 架構品質大幅提升
 
@@ -179,29 +201,42 @@ genai-demo/
 
 ### 後端技術
 
-- **核心框架**: Spring Boot 3.4.5
+- **核心框架**: Spring Boot 3.5.5
 - **程式語言**: Java 21 (啟用預覽功能)
 - **構建工具**: Gradle 8.x
 - **數據庫**: H2 (開發) + Flyway (遷移管理)
 - **API 文檔**: SpringDoc OpenAPI 3 + Swagger UI
 - **測試框架**:
   - JUnit 5 - 單元測試
-  - Cucumber 7 - BDD 測試
-  - ArchUnit - 架構測試
-  - Mockito - 模擬對象
-  - Allure 2 - 測試報告與可視化
+  - Cucumber 7.15.0 - BDD 測試
+  - ArchUnit 1.3.0 - 架構測試
+  - Mockito 5.8.0 - 模擬對象
+  - Allure 2.22.1 - 測試報告與可視化
 - **其他工具**:
-  - Lombok - 減少樣板代碼
+  - Lombok 1.18.38 - 減少樣板代碼
   - PlantUML - UML 圖表生成
 
 ### 前端技術
 
-- **框架**: Next.js 14, React 18
-- **語言**: TypeScript
-- **樣式**: Tailwind CSS, PostCSS
-- **UI 組件**: shadcn/ui, Radix UI, Lucide Icons
-- **狀態管理**: Zustand, React Query
-- **開發工具**: ESLint, Prettier, Hot Reload
+#### CMC Frontend (Next.js)
+
+- **框架**: Next.js 14.2.30, React 18.3.1
+- **語言**: TypeScript 5.5.4
+- **樣式**: Tailwind CSS 3.4.9, PostCSS
+- **UI 組件**: shadcn/ui, Radix UI, Lucide Icons 0.424.0
+- **狀態管理**: Zustand 4.5.4, React Query 5.51.23
+- **表單處理**: React Hook Form 7.52.2, Zod 3.23.8
+- **HTTP 客戶端**: Axios 1.7.3
+- **開發工具**: ESLint, Prettier, Playwright (E2E 測試)
+
+#### Consumer Frontend (Angular)
+
+- **框架**: Angular 18.2.0
+- **語言**: TypeScript 5.5.2
+- **樣式**: Tailwind CSS 3.4.17, PrimeNG 18.0.2
+- **UI 組件**: PrimeNG, PrimeIcons 7.0.0
+- **狀態管理**: RxJS 7.8.0
+- **測試框架**: Jasmine 5.1.0, Karma 6.4.0
 
 ## 📊 數據與 API
 
@@ -219,7 +254,7 @@ genai-demo/
 
 #### 📖 Swagger UI 文檔
 
-- **Swagger UI**: <http://localhost:8080/swagger-ui.html>
+- **Swagger UI**: <http://localhost:8080/swagger-ui/index.html>
 - **OpenAPI 規範**: <http://localhost:8080/v3/api-docs>
 - **API 分組**:
   - 公開 API: `/v3/api-docs/public-api`
@@ -329,7 +364,7 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 
 - **👨‍💼 專案經理**: [專案總結 2025](docs/reports/project-summary-2025.md) | [架構概覽](docs/diagrams/mermaid/architecture-overview.md)
 - **🏗️ 架構師**: [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/) | [設計文檔](docs/design/)
-- **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [測試指南](docs/development/testing-guide.md)
+- **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [開發說明](docs/development/instructions.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
 
 ### 📊 核心圖表 (Mermaid - GitHub 直接顯示)
@@ -372,16 +407,17 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 ### 運行所有測試
 
 ```bash
-./gradlew runAllTests                    # 運行所有測試
+./gradlew runAllTests                    # 運行所有測試 (272 個測試)
 ./gradlew runAllTestsWithReport         # 運行測試並生成 Allure 報告
+./gradlew runAllTestsComplete           # 運行完整測試套件
 ```
 
 ### 運行特定類型測試
 
 ```bash
-./gradlew test                          # 單元測試
-./gradlew cucumber                      # BDD 測試
-./gradlew testArchitecture             # 架構測試
+./gradlew test                          # 單元測試 (JUnit 5)
+./gradlew cucumber                      # BDD 測試 (Cucumber 7.15.0)
+./gradlew testArchitecture             # 架構測試 (ArchUnit 1.3.0)
 ```
 
 ### 測試報告
@@ -389,25 +425,33 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 - **Cucumber HTML 報告**: `app/build/reports/cucumber/cucumber-report.html`
 - **JUnit HTML 報告**: `app/build/reports/tests/test/index.html`
 - **Allure 報告**: `app/build/reports/allure-report/allureReport/index.html`
+- **Allure 結果目錄**: `app/build/allure-results/`
 
 ### 架構測試
 
-使用 ArchUnit 確保代碼遵循預定的架構規則：
+使用 ArchUnit 1.3.0 確保代碼遵循預定的架構規則：
 
-- **DddArchitectureTest** - 確保遵循 DDD 分層架構
-- **DddTacticalPatternsTest** - 確保正確使用 DDD 戰術模式
-- **PackageStructureTest** - 確保包結構符合規範
+- **DddEntityRefactoringArchitectureTest** - 確保 DDD 實體重構符合架構規範
+- **六角形架構合規性** - 確保端口與適配器分離
+- **DDD 戰術模式** - 確保正確使用聚合根、值對象、領域事件、規格模式、政策模式
+- **包結構規範** - 確保包結構符合 DDD 分層架構
+- **註解驗證** - 確保正確使用 `@AggregateRoot`、`@ValueObject`、`@Specification`、`@Policy` 等註解
 
 ### BDD 測試
 
-使用 Cucumber 進行行為驅動開發測試，覆蓋：
+使用 Cucumber 7.15.0 進行行為驅動開發測試，覆蓋：
 
-- 訂單管理 (Order)
-- 庫存管理 (Inventory)
-- 支付處理 (Payment)
-- 物流配送 (Delivery)
-- 通知服務 (Notification)
-- 完整訂單工作流 (Workflow)
+- **消費者功能** (Consumer) - 購物旅程、購物車管理
+- **客戶管理** (Customer) - 會員系統、紅利點數、會員折扣
+- **訂單管理** (Order) - 訂單聚合根、訂單工作流
+- **庫存管理** (Inventory) - 庫存管理
+- **支付處理** (Payment) - 支付聚合根、支付折扣
+- **物流配送** (Logistics) - 配送管理、配送系統
+- **通知服務** (Notification) - 通知管理、通知服務
+- **促銷活動** (Promotion) - 優惠券系統、閃購活動、超商優惠券、加購活動、贈品活動
+- **產品管理** (Product) - 產品搜尋、產品組合
+- **定價管理** (Pricing) - 佣金費率
+- **完整工作流** (Workflow) - 端到端業務流程
 
 ## 🔧 開發工具
 
@@ -426,12 +470,27 @@ python3 scripts/generate_data.py       # 生成大量測試數據
 
 ### 前端開發
 
+#### CMC Frontend (Next.js)
+
 ```bash
 cd cmc-frontend
 npm install                             # 安裝依賴
-npm run dev                            # 開發模式
+npm run dev                            # 開發模式 (http://localhost:3002)
 npm run build                          # 生產構建
 npm run lint                           # 代碼檢查
+npm run type-check                     # TypeScript 類型檢查
+npm test                               # 運行測試
+npm run test:e2e                       # E2E 測試 (Playwright)
+```
+
+#### Consumer Frontend (Angular)
+
+```bash
+cd consumer-frontend
+npm install                             # 安裝依賴
+npm start                              # 開發模式 (http://localhost:3001)
+npm run build                          # 生產構建
+npm test                               # 運行測試 (Jasmine + Karma)
 ```
 
 ## 🎯 UML 圖表
@@ -443,7 +502,7 @@ npm run lint                           # 代碼檢查
 - 狀態圖、活動圖
 - 領域模型圖、六角形架構圖、DDD分層架構圖
 
-查看 [UML 文檔說明](docs/uml/README.md) 獲取更多信息。
+查看 [圖表文檔說明](docs/diagrams/README.md) 獲取更多信息。
 
 ## 🚨 常見問題
 
@@ -482,19 +541,19 @@ npm install
 - **Consumer 前端**: <http://localhost:3001> (開發模式)
 - **CMC 前端**: <http://localhost:3002> (開發模式)
 - **後端 API**: <http://localhost:8080>
-- **Swagger UI**: <http://localhost:8080/swagger-ui.html>
+- **Swagger UI**: <http://localhost:8080/swagger-ui/index.html>
 - **OpenAPI 規範**: <http://localhost:8080/v3/api-docs>
 - **H2 控制台**: <http://localhost:8080/h2-console>
 
 ---
 
-## 🆕 最新更新 (2025年8月)
+## 🆕 最新更新 (2025年1月)
 
-### 🧪 測試品質改善 (2025-08-19)
+### 🧪 測試品質改善 (2025-01-21)
 
 - ✅ **修復聚合根測試** - 解決 `CustomerAggregateRootTest` 事件數量不一致問題
 - ✅ **事件管理優化** - 改善 `updateProfile` 方法的事件產生邏輯
-- ✅ **測試穩定性** - 確保所有 260 個測試通過，達到 100% 成功率
+- ✅ **測試穩定性** - 確保所有 272 個測試通過，達到 100% 成功率
 - ✅ **領域事件正確性** - 修正聚合根狀態追蹤器的事件收集機制
 
 ### OpenAPI 文檔系統完整實現
@@ -517,23 +576,26 @@ npm install
 
 ### 技術改進
 
+- 🔧 **Spring Boot 升級** - 升級到 Spring Boot 3.5.5 最新版本
+- 🔧 **依賴版本更新** - 更新所有主要依賴到最新穩定版本
 - 🔧 **JPA 實體重構** - 優化數據庫映射和查詢性能
 - 🔧 **API 錯誤處理** - 完善的錯誤處理和用戶反饋
-- 🔧 **前端狀態管理** - React Query 實現數據同步
-- 🔧 **類型安全** - TypeScript 完整類型定義
-- 🔧 **API 文檔自動化** - SpringDoc 自動生成 OpenAPI 規範
+- 🔧 **前端狀態管理** - React Query 5.51.23 實現數據同步
+- 🔧 **類型安全** - TypeScript 5.5.4 完整類型定義
+- 🔧 **API 文檔自動化** - SpringDoc 2.2.0 自動生成 OpenAPI 規範
 - 🔧 **測試品質保證** - 修復領域事件管理，確保測試穩定性
 
 ## 📈 專案統計
 
-- **總代碼行數**: 25,000+ 行 (包含完整的 DDD 和六角形架構實作)
+- **總代碼行數**: 150,000+ 行 (包含完整的 DDD 和六角形架構實作)
 - **測試覆蓋率**: 272 個測試，100% 通過率
 - **業務數據**: 131 筆完整的業務記錄
 - **API 端點**: 30+ 個 RESTful API (完整的業務功能覆蓋)
-- **UI 組件**: 25+ 個可重用組件 (現代化 React 生態系統)
-- **文檔頁面**: 30+ 個詳細文檔 (包含架構、設計和實作指南)
-- **數據庫遷移**: 14 個 Flyway 遷移腳本
+- **UI 組件**: 25+ 個可重用組件 (現代化 React + Angular 生態系統)
+- **文檔頁面**: 50+ 個詳細文檔 (包含架構、設計和實作指南)
+- **數據庫遷移**: 22 個 Flyway 遷移腳本
 - **架構合規性**: 9.5/10 (六角形架構) + 9.5/10 (DDD 實踐)
+- **技術棧版本**: Java 21 + Spring Boot 3.5.5 + Next.js 14.2.30 + Angular 18.2.0
 
 ## 🏆 專案特色
 
@@ -554,8 +616,9 @@ npm install
 ### 🚀 現代化技術棧
 
 - **Java 21**: 使用最新 LTS 版本和預覽功能
-- **Spring Boot 3.4.5**: 最新穩定版本
-- **Next.js 14**: 現代化前端框架
+- **Spring Boot 3.5.5**: 最新穩定版本
+- **Next.js 14.2.30**: 現代化前端框架
+- **Angular 18.2.0**: 現代化消費者前端
 - **Docker 容器化**: ARM64 優化部署
 
-這個專案不僅是一個功能完整的電商平台，更是一個展示如何在複雜業務場景下實現清晰架構分離、完整測試覆蓋和優秀用戶體驗的最佳實踐範例。
+這個專案不僅是一個功能完整的電商平台，更是一個展示如何在複雜業務場景下實現清晰架構分離、完整測試覆蓋和優秀用戶體驗的最佳實踐範例。專案採用最新的技術棧和架構模式，包含 150,000+ 行高品質代碼、272 個測試用例、22 個數據庫遷移腳本，以及 50+ 個詳細文檔，是學習現代化企業級應用開發的理想參考。

@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.pricing.persistence.adapter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +56,7 @@ public class PricingRuleRepositoryAdapter
         return ((JpaPricingRuleRepository) jpaRepository).findByProductId(productId.getId())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class PricingRuleRepositoryAdapter
         return ((JpaPricingRuleRepository) jpaRepository).findByPromotionId(promotionId.value())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -73,7 +72,7 @@ public class PricingRuleRepositoryAdapter
         return ((JpaPricingRuleRepository) jpaRepository).findByIsActiveTrue()
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -81,7 +80,7 @@ public class PricingRuleRepositoryAdapter
         return ((JpaPricingRuleRepository) jpaRepository).findRulesValidAt(dateTime)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -89,6 +88,6 @@ public class PricingRuleRepositoryAdapter
         return ((JpaPricingRuleRepository) jpaRepository).findByProductCategory(category.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

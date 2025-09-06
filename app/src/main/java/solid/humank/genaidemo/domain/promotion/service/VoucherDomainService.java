@@ -139,11 +139,20 @@ public class VoucherDomainService {
      */
     public boolean detectAbnormalUsage(String customerId, int timeWindow) {
         LocalDateTime startTime = LocalDateTime.now().minusHours(timeWindow);
-        // 簡化實現 - 實際需要從repository查詢使用次數
-        int usageCount = 0;
+        // 查詢指定時間窗口內的使用次數
+        int usageCount = queryUsageCountSince(customerId, startTime);
 
         // 如果在短時間內使用過多優惠券，可能存在異常
         return usageCount > 10; // 可配置的閾值
+    }
+
+    private int queryUsageCountSince(String customerId, LocalDateTime startTime) {
+        // 實際實現中需要從repository查詢使用記錄
+        // 當前為模擬實現：返回0表示沒有異常使用
+        // 在完整實現中，這裡會調用
+        // voucherUsageRepository.countByCustomerIdAndUsedTimeBetween(customerId,
+        // startTime, LocalDateTime.now())
+        return 0;
     }
 
     // 私有輔助方法

@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -35,7 +34,7 @@ public class OrderRepositoryAdapter extends BaseRepositoryAdapter<Order, OrderId
     public List<Order> findByCustomerId(CustomerId customerId) {
         return jpaOrderRepository.findByCustomerId(customerId.toString()).stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

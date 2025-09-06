@@ -108,7 +108,7 @@ public class TestResourceCleaner {
 
         // 如果有異常，記錄但不拋出，避免影響測試結果
         if (!exceptions.isEmpty()) {
-            System.err.println("Warning: " + exceptions.size() + " exceptions occurred during cleanup");
+            System.err.printf("Warning: %d exceptions occurred during cleanup%n", exceptions.size());
             for (Exception e : exceptions) {
                 e.printStackTrace();
             }

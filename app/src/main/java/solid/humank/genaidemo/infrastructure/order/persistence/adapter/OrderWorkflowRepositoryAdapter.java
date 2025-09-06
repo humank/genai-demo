@@ -3,7 +3,6 @@ package solid.humank.genaidemo.infrastructure.order.persistence.adapter;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +65,7 @@ public class OrderWorkflowRepositoryAdapter
         return ((JpaOrderWorkflowRepository) jpaRepository).findByStatus(status.name())
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -74,7 +73,7 @@ public class OrderWorkflowRepositoryAdapter
         return ((JpaOrderWorkflowRepository) jpaRepository).findByCreatedAtAfter(time)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -82,7 +81,7 @@ public class OrderWorkflowRepositoryAdapter
         return ((JpaOrderWorkflowRepository) jpaRepository).findByUpdatedAtAfter(time)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -90,6 +89,6 @@ public class OrderWorkflowRepositoryAdapter
         return ((JpaOrderWorkflowRepository) jpaRepository).findCancelledWorkflows(reason)
                 .stream()
                 .map(mapper::toDomainModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
