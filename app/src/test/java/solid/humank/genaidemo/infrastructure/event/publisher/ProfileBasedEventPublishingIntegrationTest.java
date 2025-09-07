@@ -23,8 +23,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * Requirements: 2.1, 2.2, 2.3
  */
 @SpringBootTest(classes = {
-    solid.humank.genaidemo.infrastructure.config.DomainEventConfiguration.class,
-    solid.humank.genaidemo.infrastructure.event.publisher.InMemoryDomainEventPublisher.class
+    solid.humank.genaidemo.infrastructure.config.DomainEventConfiguration.class
 })
 @ActiveProfiles("dev")
 @DisplayName("Profile-Based Event Publishing Integration Tests")

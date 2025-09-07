@@ -19,19 +19,21 @@ import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublishe
 public class DomainServiceConfig {
 
     /**
-     * 註冊領域事件發布器適配器
+     * 註冊領域事件發布器適配器 (備用實現)
+     * 注意：主要的 domainEventPublisher bean 由 DomainEventConfiguration 提供
      */
-    @Bean
-    public DomainEventPublisher domainEventPublisher(ApplicationEventPublisher eventPublisher) {
+    @Bean("domainServiceEventPublisher")
+    public DomainEventPublisher domainServiceEventPublisher(ApplicationEventPublisher eventPublisher) {
         return new DomainEventPublisherAdapter(eventPublisher);
     }
 
     /**
      * 註冊領域事件總線
+     * 使用主要的 domainEventPublisher bean
      */
     @Bean
-    public DomainEventBus domainEventBus(DomainEventPublisher eventPublisher) {
-        return new DomainEventBus(eventPublisher);
+    public DomainEventBus domainEventBus(DomainEventPublisher domainEventPublisher) {
+        return new DomainEventBus(domainEventPublisher);
     }
 
     /**

@@ -25,8 +25,6 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * 
  * Requirements: 2.1, 2.2, 2.3
  */
-@Component
-@Profile("dev")
 public class InMemoryDomainEventPublisher implements DomainEventPublisher {
 
     private static final Logger logger = LoggerFactory.getLogger(InMemoryDomainEventPublisher.class);

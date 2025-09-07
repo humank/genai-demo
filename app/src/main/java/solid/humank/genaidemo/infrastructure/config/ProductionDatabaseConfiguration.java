@@ -207,7 +207,7 @@ public class ProductionDatabaseConfiguration implements DatabaseConfiguration {
         } catch (SQLException e) {
             throw new DatabaseConfigurationException("PostgreSQL database validation failed: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new DatabaseConfigurationException("Unexpected error during PostgreSQL database validation", e);
+            throw new DatabaseConfigurationException("PostgreSQL database validation failed: " + e.getMessage(), e);
         }
         
         log.info("PostgreSQL database configuration validation completed successfully");

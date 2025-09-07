@@ -47,6 +47,10 @@ dependencies {
     // PostgreSQL driver for production profile
     runtimeOnly 'org.postgresql:postgresql'
     
+    // Kafka support for production event publishing
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    
     // OpenAPI 3 (Swagger) 支援 - 升級版本以相容 Spring Boot 3.5.5
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     
