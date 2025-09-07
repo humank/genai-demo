@@ -37,12 +37,12 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
 - [ ] 5. Implement Core Infrastructure Components
-- [ ] 5.1 Create VPC and Network Infrastructure
+- [x] 5.1 Create VPC and Network Infrastructure
   - Create VPC with public and private subnets across multiple AZs
   - Set up Internet Gateway and NAT Gateways for network connectivity
   - Configure Security Groups for EKS, RDS, and MSK
   - _Requirements: 3.1, 3.2_
-- [ ] 5.2 Implement ACM Certificate Manager Configuration
+- [x] 5.2 Implement ACM Certificate Manager Configuration
   - Add ACM import to CDK stack (aws-cdk-lib/aws-certificatemanager)
   - Create Route 53 hosted zone lookup for kimkao.io domain
   - Implement certificate creation with DNS validation method

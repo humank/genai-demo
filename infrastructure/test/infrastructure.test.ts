@@ -8,7 +8,22 @@ describe('GenAI Demo Infrastructure Stack', () => {
     let template: Template;
 
     beforeEach(() => {
-        app = new cdk.App();
+        app = new cdk.App({
+            context: {
+                'genai-demo:networking': {
+                    'availability-zones': 3,
+                    'enable-vpc-flow-logs': true,
+                    'enable-dns-hostnames': true,
+                    'enable-dns-support': true
+                },
+                'genai-demo:environments': {
+                    'test': {
+                        'vpc-cidr': '10.0.0.0/16',
+                        'nat-gateways': 1
+                    }
+                }
+            }
+        });
         stack = new GenAIDemoInfrastructureStack(app, 'TestStack', {
             environment: 'test',
             projectName: 'genai-demo-test',
@@ -69,6 +84,89 @@ describe('GenAI Demo Infrastructure Stack', () => {
                 { Key: 'Name', Value: 'genai-demo-test-test-vpc' },
                 { Key: 'Project', Value: 'genai-demo-test' }
             ]
+        });
+    });
+
+    test('Security groups are created for all services', () => {
+        // ALB Security Group
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            GroupDescription: 'Security group for Application Load Balancer'
+        });
+
+        // EKS Security Group
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            GroupDescription: 'Security group for EKS cluster and worker nodes'
+        });
+
+        // RDS Security Group
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            GroupDescription: 'Security group for RDS PostgreSQL database'
+        });
+
+        // MSK Security Group
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            GroupDescription: 'Security group for Amazon MSK cluster'
+        });
+    });
+
+    test('Security group rules are properly configured', () => {
+        // ALB Security Group has inline ingress rules for HTTP and HTTPS
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            GroupDescription: 'Security group for Application Load Balancer',
+            SecurityGroupIngress: [
+                {
+                    CidrIp: '0.0.0.0/0',
+                    Description: 'Allow HTTP traffic from internet',
+                    FromPort: 80,
+                    IpProtocol: 'tcp',
+                    ToPort: 80
+                },
+                {
+                    CidrIp: '0.0.0.0/0',
+                    Description: 'Allow HTTPS traffic from internet',
+                    FromPort: 443,
+                    IpProtocol: 'tcp',
+                    ToPort: 443
+                },
+                {
+                    CidrIp: '0.0.0.0/0',
+                    Description: 'Allow health check traffic',
+                    FromPort: 8080,
+                    IpProtocol: 'tcp',
+                    ToPort: 8080
+                }
+            ]
+        });
+
+        // Check that separate SecurityGroupIngress resources are created for cross-SG references
+        template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+            IpProtocol: 'tcp',
+            FromPort: 8080,
+            ToPort: 8080,
+            Description: 'Allow Spring Boot application traffic from ALB'
+        });
+
+        // RDS allows PostgreSQL from EKS
+        template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+            IpProtocol: 'tcp',
+            FromPort: 5432,
+            ToPort: 5432,
+            Description: 'Allow PostgreSQL traffic from EKS'
+        });
+
+        // MSK allows Kafka traffic from EKS
+        template.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+            IpProtocol: 'tcp',
+            FromPort: 9092,
+            ToPort: 9092,
+            Description: 'Allow Kafka plaintext traffic from EKS'
+        });
+    });
+
+    test('VPC Flow Logs are configured when enabled', () => {
+        // Check if CloudWatch Log Group is created for VPC Flow Logs
+        template.hasResourceProperties('AWS::Logs::LogGroup', {
+            LogGroupName: '/aws/vpc/flowlogs/genai-demo-test-test'
         });
     });
 });
