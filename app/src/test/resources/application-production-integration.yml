@@ -1,0 +1,63 @@
+# Production integration test configuration with real PostgreSQL
+# This configuration is used for testing with actual PostgreSQL database
+
+spring:
+  profiles:
+    active: production-integration
+  
+  # Real PostgreSQL configuration (requires Docker or TestContainers)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/genai_demo_test
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+  
+  # JPA configuration for PostgreSQL
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+  
+  # Flyway configuration for PostgreSQL
+  flyway:
+    locations: classpath:db/migration/postgresql,classpath:db/migration
+    baseline-on-migrate: true
+    validate-on-migrate: true
+  
+  # Kafka configuration for integration testing
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: genai-demo-integration-test
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+# Environment variables for PostgreSQL integration
+DB_HOST: ${DB_HOST:localhost}
+DB_NAME: ${DB_NAME:genai_demo_test}
+DB_USERNAME: ${DB_USERNAME:postgres}
+
+# Profile configuration
+genai-demo:
+  profile:
+    name: production-integration
+    description: Production integration testing with real PostgreSQL
+    features:
+      h2-console: false
+      debug-logging: false
+      in-memory-events: false
+      kafka-events: true
+
+# Logging configuration
+logging:
+  level:
+    solid.humank.genaidemo: INFO
+    org.springframework: WARN
+    org.hibernate: WARN

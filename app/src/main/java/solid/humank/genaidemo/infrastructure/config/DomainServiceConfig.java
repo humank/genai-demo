@@ -1,10 +1,13 @@
 package solid.humank.genaidemo.infrastructure.config;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
+import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
+import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublisherAdapter;
 
 /**
  * 領域服務配置
@@ -14,6 +17,22 @@ import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycle;
  */
 @Configuration
 public class DomainServiceConfig {
+
+    /**
+     * 註冊領域事件發布器適配器
+     */
+    @Bean
+    public DomainEventPublisher domainEventPublisher(ApplicationEventPublisher eventPublisher) {
+        return new DomainEventPublisherAdapter(eventPublisher);
+    }
+
+    /**
+     * 註冊領域事件總線
+     */
+    @Bean
+    public DomainEventBus domainEventBus(DomainEventPublisher eventPublisher) {
+        return new DomainEventBus(eventPublisher);
+    }
 
     /**
      * 註冊聚合生命週期管理器

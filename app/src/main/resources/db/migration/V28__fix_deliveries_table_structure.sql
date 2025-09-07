@@ -19,18 +19,22 @@ ALTER TABLE deliveries ADD COLUMN IF NOT EXISTS delay_reason VARCHAR(500);
 UPDATE deliveries SET shipping_address = delivery_address WHERE shipping_address IS NULL;
 
 -- 將 estimated_delivery_date 和 actual_delivery_date 轉換為 TIMESTAMP 類型的對應欄位
+-- 只有當原始欄位存在且新欄位為空時才進行轉換
 UPDATE deliveries SET 
     estimated_delivery_time = CASE 
         WHEN estimated_delivery_date IS NOT NULL 
-        THEN TIMESTAMP(estimated_delivery_date, '00:00:00') 
-        ELSE NULL 
-    END,
-    actual_delivery_time = CASE 
-        WHEN actual_delivery_date IS NOT NULL 
-        THEN TIMESTAMP(actual_delivery_date, '00:00:00') 
+        THEN DATEADD('HOUR', 0, estimated_delivery_date)
         ELSE NULL 
     END
-WHERE estimated_delivery_time IS NULL OR actual_delivery_time IS NULL;
+WHERE estimated_delivery_time IS NULL AND estimated_delivery_date IS NOT NULL;
+
+UPDATE deliveries SET 
+    actual_delivery_time = CASE 
+        WHEN actual_delivery_date IS NOT NULL 
+        THEN DATEADD('HOUR', 0, actual_delivery_date)
+        ELSE NULL 
+    END
+WHERE actual_delivery_time IS NULL AND actual_delivery_date IS NOT NULL;
 
 -- 創建索引
 CREATE INDEX IF NOT EXISTS idx_deliveries_delivery_person ON deliveries(delivery_person_name);

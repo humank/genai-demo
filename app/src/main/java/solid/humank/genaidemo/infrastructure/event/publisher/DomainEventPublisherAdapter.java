@@ -1,13 +1,11 @@
 package solid.humank.genaidemo.infrastructure.event.publisher;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 
 /** 領域事件發布適配器 將領域事件轉換為Spring應用事件 */
-@Component
 public class DomainEventPublisherAdapter implements DomainEventPublisher {
 
     private final ApplicationEventPublisher eventPublisher;

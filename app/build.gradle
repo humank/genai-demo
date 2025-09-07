@@ -44,6 +44,9 @@ dependencies {
     implementation 'org.flywaydb:flyway-core'
     implementation 'com.h2database:h2'
     
+    // PostgreSQL driver for production profile
+    runtimeOnly 'org.postgresql:postgresql'
+    
     // OpenAPI 3 (Swagger) 支援
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     

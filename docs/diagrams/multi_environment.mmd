@@ -1,0 +1,115 @@
+graph TB
+    subgraph "Configuration Management" as CONFIG
+        BASE_CONFIG[application.yml<br/>Base Configuration]
+        DEV_CONFIG[application-dev.yml<br/>Development Profile]
+        PROD_CONFIG[application-production.yml<br/>Production Profile]
+    end
+    
+    subgraph "Development Environment" as DEV
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database<br/>In-Memory)]
+        MEMORY_EVENTS[In-Memory Events<br/>ApplicationEventPublisher]
+        LOCAL_PROMETHEUS[Local Prometheus<br/>Docker Compose]
+        CONSOLE_LOGS[Console Logging<br/>Colored Output]
+    end
+    
+    subgraph "Production Environment" as PROD
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL<br/>Multi-AZ)]
+        MSK_EVENTS[MSK Events<br/>Kafka Streaming]
+        CW_INTEGRATION[CloudWatch Integration<br/>Metrics & Logs]
+        JSON_LOGS[JSON Structured Logs<br/>MDC Correlation]
+    end
+    
+    subgraph "Database Migration Strategy" as MIGRATION
+        H2_MIGRATIONS[H2 Migrations<br/>src/main/resources/db/migration/h2/]
+        PG_MIGRATIONS[PostgreSQL Migrations<br/>src/main/resources/db/migration/postgresql/]
+        FLYWAY_CONFIG[Flyway Configuration<br/>Profile-based locations]
+    end
+    
+    subgraph "Event Publishing Strategy" as EVENTS
+        EVENT_INTERFACE[DomainEventPublisher<br/>Interface]
+        MEMORY_PUBLISHER[InMemoryDomainEventPublisher<br/>@Profile("dev")]
+        KAFKA_PUBLISHER[KafkaDomainEventPublisher<br/>@Profile("production")]
+    end
+    
+    subgraph "Observability Strategy" as OBSERVABILITY
+        OBS_INTERFACE[ObservabilityConfig<br/>Profile-based]
+        DEV_OBS[Development Observability<br/>• Local tools<br/>• Simple metrics<br/>• Debug logging]
+        PROD_OBS[Production Observability<br/>• CloudWatch<br/>• X-Ray tracing<br/>• Structured logging<br/>• Prometheus metrics]
+    end
+    
+    %% Configuration Flow
+    BASE_CONFIG -->|Extends| DEV_CONFIG
+    BASE_CONFIG -->|Extends| PROD_CONFIG
+    
+    %% Development Environment
+    DEV_CONFIG -->|Configures| DEV_APP
+    DEV_APP -->|Connects to| H2_DB
+    DEV_APP -->|Publishes to| MEMORY_EVENTS
+    DEV_APP -->|Metrics to| LOCAL_PROMETHEUS
+    DEV_APP -->|Logs to| CONSOLE_LOGS
+    
+    %% Production Environment  
+    PROD_CONFIG -->|Configures| PROD_APP
+    PROD_APP -->|Connects to| RDS_DB
+    PROD_APP -->|Publishes to| MSK_EVENTS
+    PROD_APP -->|Integrates with| CW_INTEGRATION
+    PROD_APP -->|Logs to| JSON_LOGS
+    
+    %% Migration Strategy
+    DEV_APP -->|Uses| H2_MIGRATIONS
+    PROD_APP -->|Uses| PG_MIGRATIONS
+    FLYWAY_CONFIG -->|Routes to| H2_MIGRATIONS
+    FLYWAY_CONFIG -->|Routes to| PG_MIGRATIONS
+    
+    %% Event Publishing
+    EVENT_INTERFACE <---->|Implements| MEMORY_PUBLISHER
+    EVENT_INTERFACE <---->|Implements| KAFKA_PUBLISHER
+    DEV_APP -->|Uses| MEMORY_PUBLISHER
+    PROD_APP -->|Uses| KAFKA_PUBLISHER
+    
+    %% Observability
+    OBS_INTERFACE -->|Configures| DEV_OBS
+    OBS_INTERFACE -->|Configures| PROD_OBS
+    DEV_APP -->|Uses| DEV_OBS
+    PROD_APP -->|Uses| PROD_OBS
+    
+    %% Profile Activation
+    subgraph "Profile Activation" as ACTIVATION
+        LOCAL_RUN[Local Run<br/>SPRING_PROFILES_ACTIVE=dev]
+        DOCKER_RUN[Docker Run<br/>SPRING_PROFILES_ACTIVE=dev]
+        EKS_DEPLOY[EKS Deployment<br/>SPRING_PROFILES_ACTIVE=production]
+    end
+    
+    LOCAL_RUN -.->|Activates| DEV_APP
+    DOCKER_RUN -.->|Activates| DEV_APP
+    EKS_DEPLOY -.->|Activates| PROD_APP
+    
+    %% Configuration Precedence
+    subgraph "Configuration Precedence" as PRECEDENCE
+        ENV_VARS[Environment Variables<br/>Highest Priority]
+        PROFILE_CONFIG[Profile-specific Config<br/>Medium Priority]
+        BASE_CONFIG_P[Base Configuration<br/>Lowest Priority]
+    end
+    
+    ENV_VARS -->|Overrides| PROFILE_CONFIG
+    PROFILE_CONFIG -->|Overrides| BASE_CONFIG_P
+    
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef migration fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef events fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef observability fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    classDef activation fill:#f1f8e9,stroke:#388e3c,stroke-width:2px
+    classDef precedence fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+    class DEV_APP,H2_DB,MEMORY_EVENTS,LOCAL_PROMETHEUS,CONSOLE_LOGS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS,CW_INTEGRATION,JSON_LOGS prod
+    class H2_MIGRATIONS,PG_MIGRATIONS,FLYWAY_CONFIG migration
+    class EVENT_INTERFACE,MEMORY_PUBLISHER,KAFKA_PUBLISHER events
+    class OBS_INTERFACE,DEV_OBS,PROD_OBS observability
+    class LOCAL_RUN,DOCKER_RUN,EKS_DEPLOY activation
+    class ENV_VARS,PROFILE_CONFIG,BASE_CONFIG_P precedence

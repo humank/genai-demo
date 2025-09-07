@@ -1,0 +1,99 @@
+# Production Profile Configuration
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:genaidemo}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:genaidemo}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA Configuration for Production
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  # Flyway Configuration for Production
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/postgresql
+    baseline-on-migrate: false
+    validate-on-migrate: true
+    out-of-order: false
+
+  # Kafka Configuration for Production
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: genai-demo-consumer
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "solid.humank.genaidemo.domain.common.event"
+    
+# Production logging configuration
+logging:
+  level:
+    org.springframework.web: INFO
+    org.hibernate.SQL: WARN
+    solid.humank.genaidemo: INFO
+    org.springframework.kafka: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId:-}] %logger{36} - %msg%n"
+    
+# Production server configuration
+server:
+  error:
+    include-stacktrace: never
+    include-message: never
+    whitelabel:
+      enabled: false
+      
+# Production management endpoints (restricted)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+      
+
+      
+# Profile validation
+genai-demo:
+  profile:
+    name: production
+    description: "Production environment with PostgreSQL and MSK"
+    features:
+      h2-console: false
+      debug-logging: false
+      kafka-events: true
+      
+# Security configuration
+security:
+  require-ssl: true

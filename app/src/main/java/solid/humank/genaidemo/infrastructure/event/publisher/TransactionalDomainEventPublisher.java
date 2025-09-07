@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -18,7 +17,6 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * 需求 6.3: 確保事件在事務提交後才被處理
  * 需求 6.4: 實現事務回滾時事件清理機制
  */
-@Component
 public class TransactionalDomainEventPublisher implements DomainEventPublisher {
 
     private final ApplicationEventPublisher eventPublisher;

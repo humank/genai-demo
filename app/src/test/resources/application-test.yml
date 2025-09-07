@@ -4,7 +4,9 @@ spring:
     url: jdbc:h2:mem:testdb-${random.uuid};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
+    password:
+  
+  # JPA Configuration for Test
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -15,26 +17,49 @@ spring:
         cache:
           '[use_second_level_cache]': false
           '[use_query_cache]': false
+  
+  # Flyway Configuration for Test
   flyway:
     enabled: false
-  aop:
-    auto: false
+  
+  # Main Configuration for Test
   main:
     lazy-initialization: true
+  
+  # Auto-configuration exclusions for Test
   autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
-      - org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+    exclude: org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
+
+# Profile configuration
+genai-demo:
+  profile:
+    name: test
+    description: Test environment with H2 in-memory database
+    features:
+      h2Console: false
+      debugLogging: false
+      inMemoryEvents: true
+      kafkaEvents: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    # 禁用二級快取以避免測試間的資料污染
+    properties:
+      hibernate:
+        cache:
+          use_second_level_cache: false
+          use_query_cache: false
 
 logging:
   level:
-    '[org.springframework]': WARN
-    '[org.hibernate]': WARN
-    '[org.flywaydb]': WARN
-    '[solid.humank.genaidemo]': INFO
-    '[org.aspectj]': OFF
+    org.springframework: WARN
+    org.hibernate: WARN
+    org.flywaydb: WARN
+    solid.humank.genaidemo: INFO
+    org.aspectj: OFF
     # 測試隔離相關日誌
-    '[solid.humank.genaidemo.testutils]': DEBUG
+    solid.humank.genaidemo.testutils: DEBUG
 
 management:
   endpoints:

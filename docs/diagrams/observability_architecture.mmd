@@ -1,0 +1,87 @@
+graph TB
+    subgraph "Spring Boot Application" as APP
+        ACTUATOR[Spring Boot Actuator<br/>Health & Metrics Endpoints]
+        OTEL[OpenTelemetry Agent<br/>Distributed Tracing]
+        LOGBACK[Logback JSON Logging<br/>MDC Correlation IDs]
+        MICROMETER[Micrometer<br/>Metrics Collection]
+    end
+    
+    subgraph "Kubernetes Cluster" as K8S
+        FLUENT[Fluent Bit DaemonSet<br/>Log Collection]
+        PROMETHEUS[Prometheus<br/>Metrics Scraping]
+        GRAFANA[Grafana<br/>Visualization]
+    end
+    
+    subgraph "AWS Observability Services" as AWS
+        CW_LOGS[CloudWatch Logs<br/>Centralized Logging]
+        CW_METRICS[CloudWatch Metrics<br/>Long-term Storage]
+        XRAY[AWS X-Ray<br/>Distributed Tracing]
+        OPENSEARCH[OpenSearch Service<br/>Log Analytics]
+        SNS[SNS<br/>Alerting]
+    end
+    
+    subgraph "Data Lake & Analytics" as ANALYTICS
+        S3[S3 Data Lake<br/>Log Archive]
+        FIREHOSE[Kinesis Data Firehose<br/>Streaming]
+        GLUE[AWS Glue<br/>Data Catalog]
+        QUICKSIGHT[QuickSight<br/>Business Dashboards]
+    end
+    
+    subgraph "Event Streaming" as EVENTS
+        MSK[Amazon MSK<br/>Domain Events]
+        EVENTBRIDGE[EventBridge<br/>System Events]
+    end
+    
+    %% Application to K8s
+    ACTUATOR -->|HTTP /actuator| PROMETHEUS
+    LOGBACK -->|stdout/stderr| FLUENT
+    OTEL -->|OTLP| XRAY
+    MICROMETER -->|Prometheus format| PROMETHEUS
+    
+    %% K8s to AWS
+    FLUENT -->|Forward logs| CW_LOGS
+    PROMETHEUS -->|Remote write| CW_METRICS
+    GRAFANA -->|Query| PROMETHEUS
+    GRAFANA -->|Query| CW_METRICS
+    
+    %% CloudWatch to Analytics
+    CW_LOGS -->|Export (7+ days)| S3
+    CW_LOGS -->|Stream| OPENSEARCH
+    CW_LOGS -->|Stream| FIREHOSE
+    FIREHOSE -->|Store| S3
+    
+    %% Events to Analytics
+    MSK -->|Event stream| FIREHOSE
+    EVENTBRIDGE -->|Event stream| FIREHOSE
+    
+    %% Analytics Pipeline
+    S3 -->|Catalog| GLUE
+    GLUE -->|Schema| QUICKSIGHT
+    OPENSEARCH -->|Query| QUICKSIGHT
+    
+    %% Alerting
+    CW_METRICS -->|Alarms| SNS
+    PROMETHEUS -->|AlertManager| SNS
+    
+    %% Profile-based Configuration
+    subgraph "Environment Profiles" as PROFILES
+        DEV[Development Profile<br/>• H2 Database<br/>• In-memory Events<br/>• Local Prometheus<br/>• Console Logging]
+        PROD[Production Profile<br/>• RDS PostgreSQL<br/>• MSK Events<br/>• CloudWatch Integration<br/>• JSON Logging]
+    end
+    
+    APP -.->|Profile: dev| DEV
+    APP -.->|Profile: production| PROD
+    
+    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef analytics fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef events fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef profiles fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
+    class FLUENT,PROMETHEUS,GRAFANA kubernetes
+    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH,SNS aws
+    class S3,FIREHOSE,GLUE,QUICKSIGHT analytics
+    class MSK,EVENTBRIDGE events
+    class DEV,PROD profiles
