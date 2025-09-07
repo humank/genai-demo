@@ -1,0 +1,51 @@
+{
+  "genai-demo:environments": {
+    "development": {
+      "vpc-cidr": "10.0.0.0/16",
+      "nat-gateways": 1,
+      "eks-node-type": "t3.medium",
+      "eks-min-nodes": 1,
+      "eks-max-nodes": 3,
+      "rds-instance-type": "db.t3.micro",
+      "rds-storage": 20,
+      "rds-multi-az": false,
+      "msk-instance-type": "kafka.t3.small",
+      "msk-brokers": 1
+    },
+    "production": {
+      "vpc-cidr": "10.0.0.0/16",
+      "nat-gateways": 3,
+      "eks-node-type": "m6g.large",
+      "eks-min-nodes": 2,
+      "eks-max-nodes": 10,
+      "rds-instance-type": "db.r6g.large",
+      "rds-storage": 100,
+      "rds-multi-az": true,
+      "msk-instance-type": "kafka.m5.large",
+      "msk-brokers": 3
+    }
+  },
+  "genai-demo:observability": {
+    "log-retention-days": 7,
+    "metrics-retention-days": 30,
+    "trace-sampling-rate": 0.1,
+    "opensearch-instance-type": "t3.small.search",
+    "opensearch-instance-count": 1
+  },
+  "genai-demo:networking": {
+    "availability-zones": 3,
+    "enable-vpc-flow-logs": true,
+    "enable-dns-hostnames": true,
+    "enable-dns-support": true
+  },
+  "availability-zones:account=584518143473:region=ap-northeast-1": [
+    "ap-northeast-1a",
+    "ap-northeast-1c",
+    "ap-northeast-1d"
+  ],
+  "availability-zones:account=584518143473:region=ap-east-2": [
+    "ap-east-2a",
+    "ap-east-2b",
+    "ap-east-2c"
+  ]
+}

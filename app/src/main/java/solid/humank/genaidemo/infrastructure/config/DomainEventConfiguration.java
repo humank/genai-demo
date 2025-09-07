@@ -5,26 +5,46 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.retry.annotation.EnableRetry;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
+import solid.humank.genaidemo.infrastructure.event.publisher.DeadLetterService;
 import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublisherAdapter;
 import solid.humank.genaidemo.infrastructure.event.publisher.InMemoryDomainEventPublisher;
+import solid.humank.genaidemo.infrastructure.event.publisher.KafkaDomainEventPublisher;
 import solid.humank.genaidemo.infrastructure.event.publisher.TransactionalDomainEventPublisher;
 
 /**
- * 領域事件配置
- * 配置事件發布器和相關基礎設施
+ * Enhanced Domain Event Configuration
+ * Configures profile-based event publishing strategy with comprehensive
+ * observability
  * 
- * 需求 6.1: 實現聚合根領域事件的正確捕獲和發布
- * 需求 6.3: 確保事件在事務提交後才被處理
- * 需求 6.4: 實現事務回滾時事件清理機制
+ * Features:
+ * - Profile-based event publisher selection (dev: in-memory, production:
+ * Kafka/MSK)
+ * - Transactional event publishing with @TransactionalEventListener
+ * - Retry mechanisms and dead letter queue handling
+ * - Enhanced logging and tracing support
+ * - Production-ready Kafka configuration for MSK integration
+ * 
+ * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
 @Configuration
+@EnableRetry
 public class DomainEventConfiguration {
 
+    // === Development Profile Configuration ===
+
     /**
-     * 開發環境專用的記憶體事件發布器（開發環境主要使用）
-     * 提供事件追蹤和除錯功能
+     * Enhanced in-memory event publisher for development profile
+     * Features: event tracking, correlation IDs, development metrics, debugging
+     * support
+     * 
+     * Requirements: 2.1, 2.2, 2.3
      */
     @Bean("domainEventPublisher")
     @Primary
@@ -33,20 +53,70 @@ public class DomainEventConfiguration {
         return new InMemoryDomainEventPublisher(eventPublisher);
     }
 
+    // === Production Profile Configuration ===
+
     /**
-     * 事務感知的領域事件發布器（生產環境主要使用）
-     * 確保事件在事務提交後才被處理，事務回滾時清理事件
+     * Enhanced Kafka event publisher for production profile with MSK integration
+     * Features: retry mechanisms, dead letter queue, distributed tracing,
+     * production metrics
+     * 
+     * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
      */
     @Bean("domainEventPublisher")
     @Primary
-    @Profile({"production", "test"})
+    @Profile("production")
+    public DomainEventPublisher kafkaDomainEventPublisher(
+            KafkaTemplate<String, DomainEvent> kafkaTemplate,
+            DeadLetterService deadLetterService) {
+        return new KafkaDomainEventPublisher(kafkaTemplate, deadLetterService);
+    }
+
+    /**
+     * Dead letter service for handling failed events in production
+     * Provides comprehensive error tracking and retry management
+     * 
+     * Requirements: 2.4, 2.5, 2.6
+     */
+    @Bean
+    @Profile("production")
+    public DeadLetterService deadLetterService(
+            KafkaTemplate<String, Object> deadLetterKafkaTemplate,
+            ObjectMapper objectMapper) {
+        return new DeadLetterService(deadLetterKafkaTemplate, objectMapper);
+    }
+
+    /**
+     * Object mapper for JSON serialization in production
+     */
+    @Bean
+    @Profile("production")
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        return mapper;
+    }
+
+    // === Test Profile Configuration ===
+
+    /**
+     * Transactional event publisher for test profile
+     * Ensures events are processed after transaction commit with cleanup on
+     * rollback
+     * 
+     * Requirements: 2.3, 2.4
+     */
+    @Bean("domainEventPublisher")
+    @Primary
+    @Profile("test")
     public DomainEventPublisher transactionalDomainEventPublisher(ApplicationEventPublisher eventPublisher) {
         return new TransactionalDomainEventPublisher(eventPublisher);
     }
 
+    // === Shared Configuration Beans ===
+
     /**
-     * 事務感知的領域事件發布器（備用 Bean）
-     * 確保事件在事務提交後才被處理，事務回滾時清理事件
+     * Transactional domain event publisher (available for all profiles)
+     * Backup bean for scenarios requiring transactional event handling
      */
     @Bean("transactionalDomainEventPublisher")
     public DomainEventPublisher transactionalDomainEventPublisherBean(ApplicationEventPublisher eventPublisher) {
@@ -54,11 +124,24 @@ public class DomainEventConfiguration {
     }
 
     /**
-     * 傳統的領域事件發布器適配器（備用）
-     * 用於需要立即發布事件的場景
+     * Basic domain event publisher adapter (available for all profiles)
+     * Used for immediate event publishing scenarios
      */
     @Bean("domainEventPublisherAdapter")
     public DomainEventPublisher domainEventPublisherAdapter(ApplicationEventPublisher eventPublisher) {
         return new DomainEventPublisherAdapter(eventPublisher);
+    }
+
+    // === Kafka Configuration for Production ===
+
+    /**
+     * Kafka template for dead letter queue (production only)
+     * Separate template to avoid circular dependencies
+     */
+    @Bean("deadLetterKafkaTemplate")
+    @Profile("production")
+    public KafkaTemplate<String, Object> deadLetterKafkaTemplate(
+            org.springframework.kafka.core.ProducerFactory<String, Object> producerFactory) {
+        return new KafkaTemplate<>(producerFactory);
     }
 }

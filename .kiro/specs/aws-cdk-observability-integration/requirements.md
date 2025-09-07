@@ -176,8 +176,8 @@ This feature implements a comprehensive Infrastructure as Code (IaC) solution us
 
 #### Acceptance Criteria
 
-1. WHEN deploying infrastructure THEN the system SHALL create active-active deployments in Taipei (ap-east-2) as primary and Tokyo (ap-northeast-1) as secondary regions
-2. WHEN traffic is routed THEN the system SHALL use Route 53 health checks and latency-based routing to distribute load between regions with Taipei preference
+1. WHEN deploying infrastructure THEN the system SHALL create active-active deployments in Taiwan (ap-east-2) as primary and Tokyo (ap-northeast-1) as secondary regions
+2. WHEN traffic is routed THEN the system SHALL use Route 53 health checks and latency-based routing to distribute load between regions with Taiwan preference
 3. WHEN database replication occurs THEN the system SHALL implement RDS Aurora Global Database with automated failover capability between regions
 4. WHEN domain events are published THEN the system SHALL replicate MSK data across regions using MirrorMaker 2.0 for bidirectional synchronization
 5. WHEN observability data is generated THEN the system SHALL replicate logs, metrics, and traces to both regions in real-time

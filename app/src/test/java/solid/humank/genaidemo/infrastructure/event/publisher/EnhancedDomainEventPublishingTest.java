@@ -30,7 +30,8 @@ import solid.humank.genaidemo.domain.common.event.DomainEvent;
  * Test for enhanced domain event publishing strategy
  * 
  * Tests both development (in-memory) and production (Kafka) publishers
- * Verifies transactional event publishing, retry mechanisms, and dead letter queue handling
+ * Verifies transactional event publishing, retry mechanisms, and dead letter
+ * queue handling
  * 
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
@@ -45,16 +46,15 @@ class EnhancedDomainEventPublishingTest {
     private KafkaTemplate<String, DomainEvent> kafkaTemplate;
 
     @Mock
-    private KafkaDomainEventPublisher.DeadLetterService deadLetterService;
+    private DeadLetterService deadLetterService;
 
     // Test event implementation
     private record TestDomainEvent(
-        String aggregateId,
-        String eventData,
-        UUID eventId,
-        LocalDateTime occurredOn
-    ) implements DomainEvent {
-        
+            String aggregateId,
+            String eventData,
+            UUID eventId,
+            LocalDateTime occurredOn) implements DomainEvent {
+
         public static TestDomainEvent create(String aggregateId, String eventData) {
             DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
             return new TestDomainEvent(aggregateId, eventData, metadata.eventId(), metadata.occurredOn());
@@ -113,16 +113,16 @@ class EnhancedDomainEventPublishingTest {
         void shouldPublishMultipleEventsAndStoreThemForTesting() {
             // Given
             List<DomainEvent> events = List.of(
-                TestDomainEvent.create("AGG-001", "test data 1"),
-                TestDomainEvent.create("AGG-002", "test data 2"),
-                TestDomainEvent.create("AGG-003", "test data 3")
-            );
+                    TestDomainEvent.create("AGG-001", "test data 1"),
+                    TestDomainEvent.create("AGG-002", "test data 2"),
+                    TestDomainEvent.create("AGG-003", "test data 3"));
 
             // When
             publisher.publishAll(events);
 
             // Then
-            verify(applicationEventPublisher, times(3)).publishEvent(any(DomainEventPublisherAdapter.DomainEventWrapper.class));
+            verify(applicationEventPublisher, times(3))
+                    .publishEvent(any(DomainEventPublisherAdapter.DomainEventWrapper.class));
             assertThat(publisher.getPublishedEvents()).hasSize(3);
             assertThat(publisher.getPublishedEventCount()).isEqualTo(3);
         }
@@ -203,9 +203,8 @@ class EnhancedDomainEventPublishingTest {
         void shouldPublishMultipleEventsToKafka() {
             // Given
             List<DomainEvent> events = List.of(
-                TestDomainEvent.create("AGG-001", "test data 1"),
-                TestDomainEvent.create("AGG-002", "test data 2")
-            );
+                    TestDomainEvent.create("AGG-001", "test data 1"),
+                    TestDomainEvent.create("AGG-002", "test data 2"));
             CompletableFuture<SendResult<String, DomainEvent>> future = CompletableFuture.completedFuture(null);
             when(kafkaTemplate.send(any(String.class), any(String.class), any(DomainEvent.class))).thenReturn(future);
 
@@ -243,14 +242,15 @@ class EnhancedDomainEventPublishingTest {
     @DisplayName("Dead Letter Service Tests")
     class DeadLetterServiceTest {
 
-        private KafkaDomainEventPublisher.DeadLetterService deadLetterService;
+        private DeadLetterService deadLetterService;
 
         @Mock
         private KafkaTemplate<String, Object> deadLetterKafkaTemplate;
 
         @BeforeEach
         void setUp() {
-            deadLetterService = new KafkaDomainEventPublisher.DeadLetterService(deadLetterKafkaTemplate);
+            deadLetterService = new DeadLetterService(deadLetterKafkaTemplate,
+                    new com.fasterxml.jackson.databind.ObjectMapper());
         }
 
         @Test
@@ -265,10 +265,9 @@ class EnhancedDomainEventPublishingTest {
 
             // Then
             verify(deadLetterKafkaTemplate).send(
-                eq("genai-demo.dead-letter"), 
-                eq("AGG-001"), 
-                any(KafkaDomainEventPublisher.DeadLetterService.DeadLetterEvent.class)
-            );
+                    eq("genai-demo.dead-letter"),
+                    eq("AGG-001"),
+                    any(DeadLetterService.DeadLetterEvent.class));
         }
     }
 
@@ -284,8 +283,8 @@ class EnhancedDomainEventPublishingTest {
             Exception cause = new RuntimeException("Kafka error");
 
             // When
-            KafkaDomainEventPublisher.EventPublishingException exception = 
-                new KafkaDomainEventPublisher.EventPublishingException(message, cause);
+            KafkaDomainEventPublisher.EventPublishingException exception = new KafkaDomainEventPublisher.EventPublishingException(
+                    message, cause);
 
             // Then
             assertThat(exception.getMessage()).isEqualTo(message);

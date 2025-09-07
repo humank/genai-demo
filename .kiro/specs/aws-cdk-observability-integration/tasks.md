@@ -18,7 +18,7 @@
   - Implement database connectivity validation and error handling
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 3. Enhance Domain Events Publishing Strategy
+- [x] 3. Enhance Domain Events Publishing Strategy
   - Create `InMemoryDomainEventPublisher` for development profile
   - Create `KafkaDomainEventPublisher` for production profile with MSK integration
   - Implement transactional event publishing with `@TransactionalEventListener`
@@ -28,7 +28,7 @@
 
 ## Phase 2: AWS CDK Infrastructure Foundation
 
-- [ ] 4. Create AWS CDK Project Structure
+- [x] 4. Create AWS CDK Project Structure
   - Create `infrastructure/` directory at project root
   - Initialize CDK TypeScript project with `cdk init app --language typescript`
   - Set up CDK project dependencies and configuration files
@@ -37,12 +37,86 @@
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
 - [ ] 5. Implement Core Infrastructure Components
+- [ ] 5.1 Create VPC and Network Infrastructure
   - Create VPC with public and private subnets across multiple AZs
   - Set up Internet Gateway and NAT Gateways for network connectivity
   - Configure Security Groups for EKS, RDS, and MSK
-  - Implement Application Load Balancer with SSL termination
-  - Set up Route 53 hosted zone and DNS configuration
+  - _Requirements: 3.1, 3.2_
+- [ ] 5.2 Implement ACM Certificate Manager Configuration
+  - Add ACM import to CDK stack (aws-cdk-lib/aws-certificatemanager)
+  - Create Route 53 hosted zone lookup for kimkao.io domain
+  - Implement certificate creation with DNS validation method
+  - Configure multi-environment domain strategy (dev.kimkao.io, staging.kimkao.io, kimkao.io, dr.kimkao.io)
+  - Set up wildcard certificates (*.kimkao.io) and explicit subdomains (cmc, shop, api, grafana, logs)
+  - Update certificate regions from ap-northeast-1 to ap-east-2 for Taiwan primary region
+  - _Requirements: 3.3, 3.4_
+- [ ] 5.3 Configure Application Load Balancer with SSL Termination
+  - Implement Application Load Balancer creation
+  - Configure SSL termination using ACM certificates
+  - Set up HTTP to HTTPS redirect
+  - Configure health checks and target groups
+  - _Requirements: 3.5_
+- [ ] 5.4 Set Up DNS and Certificate Outputs
+  - Create DNS A records pointing to ALB
+  - Output certificate ARN for Kubernetes Ingress use
+  - Export hosted zone ID for cross-stack references
+  - Configure certificate validation status monitoring
+  - _Requirements: 3.6_
+- [ ] 5.5 Implement Multi-Stack Architecture Design
+  - Refactor single stack into modular stack architecture
+  - Create NetworkStack for VPC, subnets, and security groups
+  - Create CertificateStack for ACM certificates and Route 53
+  - Create CoreInfrastructureStack for ALB and shared resources
+  - Implement cross-stack references and dependencies
+  - Configure stack-level tagging and naming conventions
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
+- [ ] 5.6 Configure Multi-Region Infrastructure Foundation
+  - Implement conditional DR stack deployment for production environment
+  - Configure cross-region VPC peering for Taiwan-Tokyo connectivity
+  - Set up Route 53 health checks for multi-region failover
+  - Implement region-specific resource sizing from cdk.context.json
+  - Configure cross-region certificate replication strategy
+  - Set up CloudFormation stack dependencies between regions
+  - _Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6_
+- [ ] 5.7 Enhance Configuration Management and Environment-Specific Settings
+  - Implement dynamic resource sizing based on cdk.context.json environment configs
+  - Add missing environment configurations (staging, production-dr)
+  - Configure environment-specific VPC CIDR ranges to avoid conflicts
+  - Implement cost optimization features (spot instances for dev, reserved for prod)
+  - Add resource naming conventions with environment and region prefixes
+  - Configure environment-specific retention policies and backup strategies
+  - Set up AWS Systems Manager Parameter Store integration for runtime configuration
+  - _Requirements: 3.1, 3.2, 12.1, 12.2, 12.3, 12.4_
+- [ ] 5.8 Implement Security and Compliance Infrastructure
+  - Configure VPC Flow Logs for network monitoring and security auditing
+  - Implement AWS Config rules for compliance monitoring
+  - Set up CloudTrail for API call auditing across all regions
+  - Configure AWS GuardDuty for threat detection
+  - Implement AWS Secrets Manager for certificate and credential management
+  - Set up KMS keys for encryption at rest with proper key rotation
+  - Configure Security Groups with least privilege access principles
+  - Implement WAF (Web Application Firewall) for ALB protection
+  - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
+- [ ] 5.9 Set Up Observability Infrastructure Foundation
+  - Create CloudWatch Log Groups with proper retention policies
+  - Configure SNS topics for alerting and notifications
+  - Set up CloudWatch Alarms for infrastructure health monitoring
+  - Implement EventBridge rules for infrastructure event routing
+  - Configure AWS X-Ray tracing enablement at infrastructure level
+  - Set up S3 buckets for log archival and data lake storage
+  - Create IAM roles and policies for observability services integration
+  - Configure cross-region log replication for disaster recovery
+  - _Requirements: 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 7.1, 7.2_
+- [ ] 5.10 Implement CDK Testing and Validation Infrastructure
+  - Enhance CDK unit tests to cover all new infrastructure components
+  - Add integration tests for cross-stack dependencies
+  - Implement CDK snapshot testing for infrastructure drift detection
+  - Configure CDK synthesis validation in CI/CD pipeline
+  - Add infrastructure compliance testing with CDK aspects
+  - Implement cost estimation and budget alerts for infrastructure changes
+  - Set up infrastructure documentation generation from CDK code
+  - Configure automated infrastructure security scanning
+  - _Requirements: 10.1, 10.2, 10.3, 10.4, 12.1, 12.2, 12.3, 12.4_
 
 - [ ] 6. Create EKS Cluster Infrastructure
   - Implement EKS cluster with Graviton3 ARM64 node groups

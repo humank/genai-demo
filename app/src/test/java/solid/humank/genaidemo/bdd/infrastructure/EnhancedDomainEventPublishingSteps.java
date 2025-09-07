@@ -22,13 +22,15 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
+import solid.humank.genaidemo.infrastructure.event.publisher.DeadLetterService;
 import solid.humank.genaidemo.infrastructure.event.publisher.InMemoryDomainEventPublisher;
 import solid.humank.genaidemo.infrastructure.event.publisher.KafkaDomainEventPublisher;
 
 /**
  * Step definitions for enhanced domain event publishing BDD tests
  * 
- * Tests the profile-based event publishing strategy with both development and production configurations
+ * Tests the profile-based event publishing strategy with both development and
+ * production configurations
  * 
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
@@ -45,12 +47,11 @@ public class EnhancedDomainEventPublishingSteps {
 
     // Test event implementation
     private record TestDomainEvent(
-        String aggregateId,
-        String eventData,
-        UUID eventId,
-        LocalDateTime occurredOn
-    ) implements DomainEvent {
-        
+            String aggregateId,
+            String eventData,
+            UUID eventId,
+            LocalDateTime occurredOn) implements DomainEvent {
+
         public static TestDomainEvent create(String aggregateId, String eventData) {
             DomainEvent.EventMetadata metadata = DomainEvent.createEventMetadata();
             return new TestDomainEvent(aggregateId, eventData, metadata.eventId(), metadata.occurredOn());
@@ -87,16 +88,16 @@ public class EnhancedDomainEventPublishingSteps {
     @Given("the system is running with {string} profile")
     public void theSystemIsRunningWithProfile(String profile) {
         this.activeProfile = profile;
-        
+
         // Create appropriate publisher based on profile
         if ("dev".equals(profile)) {
             domainEventPublisher = new InMemoryDomainEventPublisher(applicationEventPublisher);
         } else if ("production".equals(profile)) {
-            KafkaDomainEventPublisher.DeadLetterService deadLetterService = 
-                new KafkaDomainEventPublisher.DeadLetterService(mock(KafkaTemplate.class));
+            DeadLetterService deadLetterService = new DeadLetterService(mock(KafkaTemplate.class),
+                    new com.fasterxml.jackson.databind.ObjectMapper());
             domainEventPublisher = new KafkaDomainEventPublisher(kafkaTemplate, deadLetterService);
         }
-        
+
         assertThat(domainEventPublisher).isNotNull();
     }
 
@@ -109,12 +110,12 @@ public class EnhancedDomainEventPublishingSteps {
         if (kafkaTemplate == null) {
             kafkaTemplate = mock(KafkaTemplate.class);
         }
-        
+
         // Create a default publisher for transactional testing
         if (domainEventPublisher == null) {
             domainEventPublisher = new InMemoryDomainEventPublisher(applicationEventPublisher);
         }
-        
+
         assertThat(domainEventPublisher).isNotNull();
     }
 
@@ -122,20 +123,20 @@ public class EnhancedDomainEventPublishingSteps {
     public void kafkaIsTemporarilyUnavailable() {
         // Mock Kafka template to throw exception initially
         when(kafkaTemplate.send(any(String.class), any(String.class), any(DomainEvent.class)))
-            .thenThrow(new RuntimeException("Kafka temporarily unavailable"));
+                .thenThrow(new RuntimeException("Kafka temporarily unavailable"));
     }
 
     @Given("Kafka publishing fails permanently")
     public void kafkaPublishingFailsPermanently() {
         // Mock Kafka template to always fail
         when(kafkaTemplate.send(any(String.class), any(String.class), any(DomainEvent.class)))
-            .thenThrow(new RuntimeException("Kafka permanently unavailable"));
+                .thenThrow(new RuntimeException("Kafka permanently unavailable"));
     }
 
     @When("a domain event is published")
     public void aDomainEventIsPublished() {
         testEvent = TestDomainEvent.create("AGG-001", "test event data");
-        
+
         try {
             domainEventPublisher.publish(testEvent);
         } catch (Exception e) {
@@ -146,11 +147,10 @@ public class EnhancedDomainEventPublishingSteps {
     @When("multiple domain events are published together")
     public void multipleDomainEventsArePublishedTogether() {
         testEvents = List.<DomainEvent>of(
-            TestDomainEvent.create("AGG-001", "test event data 1"),
-            TestDomainEvent.create("AGG-002", "test event data 2"),
-            TestDomainEvent.create("AGG-003", "test event data 3")
-        );
-        
+                TestDomainEvent.create("AGG-001", "test event data 1"),
+                TestDomainEvent.create("AGG-002", "test event data 2"),
+                TestDomainEvent.create("AGG-003", "test event data 3"));
+
         try {
             domainEventPublisher.publishAll(testEvents);
         } catch (Exception e) {
@@ -167,7 +167,7 @@ public class EnhancedDomainEventPublishingSteps {
             }
             domainEventPublisher = new InMemoryDomainEventPublisher(applicationEventPublisher);
         }
-        
+
         try {
             domainEventPublisher.publish(null);
             domainEventPublisher.publishAll(null);
@@ -222,7 +222,7 @@ public class EnhancedDomainEventPublishingSteps {
         // Mock successful Kafka send
         CompletableFuture<SendResult<String, DomainEvent>> future = CompletableFuture.completedFuture(null);
         when(kafkaTemplate.send(eq("genai-demo.testevent"), eq("AGG-001"), eq(testEvent))).thenReturn(future);
-        
+
         // Verify Kafka template was called with correct parameters
         verify(kafkaTemplate).send("genai-demo.testevent", "AGG-001", testEvent);
     }
@@ -236,7 +236,8 @@ public class EnhancedDomainEventPublishingSteps {
 
     @Then("the event should be processed after transaction commit")
     public void theEventShouldBeProcessedAfterTransactionCommit() {
-        // This is handled by @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+        // This is handled by @TransactionalEventListener(phase =
+        // TransactionPhase.AFTER_COMMIT)
         // In integration tests, this would be verified by checking that event handlers
         // are only called after successful transaction commit
         assertThat(testEvent).isNotNull();
@@ -245,7 +246,8 @@ public class EnhancedDomainEventPublishingSteps {
     @Then("the event should not be processed if transaction rolls back")
     public void theEventShouldNotBeProcessedIfTransactionRollsBack() {
         // This is handled by @TransactionalEventListener
-        // Event handlers with AFTER_COMMIT phase will not be called if transaction rolls back
+        // Event handlers with AFTER_COMMIT phase will not be called if transaction
+        // rolls back
         assertThat(testEvent).isNotNull();
     }
 
@@ -263,7 +265,7 @@ public class EnhancedDomainEventPublishingSteps {
         // Mock Kafka recovery
         CompletableFuture<SendResult<String, DomainEvent>> future = CompletableFuture.completedFuture(null);
         when(kafkaTemplate.send(any(String.class), any(String.class), any(DomainEvent.class))).thenReturn(future);
-        
+
         // Retry would eventually succeed
         assertThat(testEvent).isNotNull();
     }
@@ -278,7 +280,8 @@ public class EnhancedDomainEventPublishingSteps {
     @Then("the failure should be logged for monitoring")
     public void theFailureShouldBeLoggedForMonitoring() {
         // Logging is handled by the KafkaDomainEventPublisher
-        // In production, this would integrate with CloudWatch or other monitoring systems
+        // In production, this would integrate with CloudWatch or other monitoring
+        // systems
         assertThat(testEvent).isNotNull();
     }
 
@@ -286,7 +289,7 @@ public class EnhancedDomainEventPublishingSteps {
     public void allEventsShouldBeProcessedByTheAppropriatePublisher() {
         if (testEvents != null) {
             assertThat(testEvents).hasSize(3);
-            
+
             if (domainEventPublisher instanceof InMemoryDomainEventPublisher inMemoryPublisher) {
                 assertThat(inMemoryPublisher.getPublishedEventCount()).isEqualTo(3);
             }
@@ -324,7 +327,8 @@ public class EnhancedDomainEventPublishingSteps {
         // Verify that no actual publishing calls were made for null/empty inputs
         // This would be verified by checking that no events were stored or sent
         if (domainEventPublisher instanceof InMemoryDomainEventPublisher inMemoryPublisher) {
-            // The publisher might have events from previous tests, but no new ones should be added
+            // The publisher might have events from previous tests, but no new ones should
+            // be added
             // We can't easily verify this without clearing events between scenarios
         }
     }
@@ -335,6 +339,5 @@ public class EnhancedDomainEventPublishingSteps {
         // In integration tests, this could be verified using a test appender
         assertThat(publishingException).isNull();
     }
-
 
 }

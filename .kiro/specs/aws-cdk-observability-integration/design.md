@@ -2458,7 +2458,7 @@ Object.entries(serviceMap).forEach(([domain, config]) => {
 
 ### Overview
 
-The disaster recovery strategy implements a **Multi-Site Active-Active** architecture across **Taipei (ap-east-2)** as the primary region and **Tokyo (ap-northeast-1)** as the secondary region. This design ensures zero data loss (RPO = 0) and minimal downtime (RTO < 60 seconds) with automatic failover capabilities.
+The disaster recovery strategy implements a **Multi-Site Active-Active** architecture across **Taiwan (ap-east-2)** as the primary region and **Tokyo (ap-northeast-1)** as the secondary region. This design ensures zero data loss (RPO = 0) and minimal downtime (RTO < 60 seconds) with automatic failover capabilities.
 
 ### Regional Architecture
 
@@ -2470,18 +2470,18 @@ graph TB
         WAF[AWS WAF<br/>Global Protection]
     end
     
-    subgraph "Taipei Region (ap-east-2) - PRIMARY"
-        subgraph "Taipei Production"
-            EKS_TP[EKS Cluster Taipei]
-            RDS_TP[Aurora Global Primary<br/>PostgreSQL Multi-AZ]
-            MSK_TP[MSK Cluster Taipei]
-            OS_TP[OpenSearch Taipei]
-            CW_TP[CloudWatch Logs Taipei]
+    subgraph "Taiwan Region (ap-east-2) - PRIMARY"
+        subgraph "Taiwan Production"
+            EKS_TW[EKS Cluster Taiwan]
+            RDS_TW[Aurora Global Primary<br/>PostgreSQL Multi-AZ]
+            MSK_TW[MSK Cluster Taiwan]
+            OS_TW[OpenSearch Taiwan]
+            CW_TW[CloudWatch Logs Taiwan]
         end
         
-        subgraph "Taipei Observability"
-            S3_TP[S3 Data Lake Taipei]
-            QS_TP[QuickSight Taipei]
+        subgraph "Taiwan Observability"
+            S3_TW[S3 Data Lake Taiwan]
+            QS_TW[QuickSight Taiwan]
         end
     end
     
@@ -2537,7 +2537,7 @@ export class GlobalDNSStack extends Stack {
     });
     
     // Health checks for both regions
-    const taipeiHealthCheck = new route53.CfnHealthCheck(this, 'TaipeiHealthCheck', {
+    const taiwanHealthCheck = new route53.CfnHealthCheck(this, 'TaiwanHealthCheck', {
       type: 'HTTPS',
       resourcePath: '/actuator/health',
       fullyQualifiedDomainName: 'api-taipei.kimkao.io',
@@ -2733,8 +2733,8 @@ public class MultiRegionConfiguration {
         
         // Dynamic region-based connection
         if ("ap-east-2".equals(currentRegion)) {
-            // Taipei region - connect to primary
-            config.setJdbcUrl("jdbc:postgresql://taipei-cluster.cluster-xyz.ap-east-2.rds.amazonaws.com:5432/genaidemo");
+            // Taiwan region - connect to primary
+            config.setJdbcUrl("jdbc:postgresql://taiwan-cluster.cluster-xyz.ap-east-2.rds.amazonaws.com:5432/genaidemo");
         } else {
             // Tokyo region - connect to secondary (read-only during normal operation)
             config.setJdbcUrl("jdbc:postgresql://tokyo-cluster.cluster-abc.ap-northeast-1.rds.amazonaws.com:5432/genaidemo");
@@ -2806,7 +2806,7 @@ public class MultiRegionHealthIndicator implements HealthIndicator {
     private boolean checkCrossRegionHealth() {
         String targetRegion = "ap-east-2".equals(currentRegion) ? "ap-northeast-1" : "ap-east-2";
         String targetUrl = String.format("https://api-%s.kimkao.io/actuator/health", 
-            "ap-east-2".equals(targetRegion) ? "taipei" : "tokyo");
+            "ap-east-2".equals(targetRegion) ? "taiwan" : "tokyo");
         
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(targetUrl, String.class);
@@ -3730,16 +3730,17 @@ export class GenAIDemoInfrastructureStack extends Stack {
 
 ## Validation
 
-* **Performance**: Infrastructure deployment time < 30 minutes
-* **Reliability**: 99.9% deployment success rate
-* **Maintainability**: Code review process for all infrastructure changes
-* **Cost**: Infrastructure costs within 10% of budget estimates
+- **Performance**: Infrastructure deployment time < 30 minutes
+- **Reliability**: 99.9% deployment success rate
+- **Maintainability**: Code review process for all infrastructure changes
+- **Cost**: Infrastructure costs within 10% of budget estimates
 
 ## Links
 
-* [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/)
-* [CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
-* [Multi-Region CDK Patterns](https://github.com/aws-samples/aws-cdk-examples)
+- [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/)
+- [CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
+- [Multi-Region CDK Patterns](https://github.com/aws-samples/aws-cdk-examples)
+
 ```
 
 ### ADR Management Process
