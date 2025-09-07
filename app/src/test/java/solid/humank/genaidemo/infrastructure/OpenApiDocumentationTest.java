@@ -42,6 +42,14 @@ import solid.humank.genaidemo.testutils.BaseTest;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Tag("unit")
+@org.springframework.test.context.TestPropertySource(properties = {
+    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+    "spring.datasource.driver-class-name=org.h2.Driver",
+    "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+    "spring.jpa.hibernate.ddl-auto=create-drop",
+    "spring.flyway.enabled=false",
+    "spring.h2.console.enabled=false"
+})
 public class OpenApiDocumentationTest extends BaseTest {
 
     @Autowired

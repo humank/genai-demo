@@ -1,66 +1,68 @@
+# Test Profile Configuration
+# This configuration ensures tests run in isolation with minimal dependencies
+
 spring:
+  # Application Configuration
+  application:
+    name: genai-demo
+  
+  # Database Configuration - Use H2 in-memory for all tests
   datasource:
-    # 使用隨機資料庫名稱以確保測試隔離
-    url: jdbc:h2:mem:testdb-${random.uuid};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
-    password:
+    password: ""
   
-  # JPA Configuration for Test
+  # JPA Configuration for Tests
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     show-sql: false
-    # 禁用二級快取以避免測試間的資料污染
-    properties:
-      hibernate:
-        cache:
-          '[use_second_level_cache]': false
-          '[use_query_cache]': false
-  
-  # Flyway Configuration for Test
-  flyway:
-    enabled: false
-  
-  # Main Configuration for Test
-  main:
-    lazy-initialization: true
-  
-  # Auto-configuration exclusions for Test
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration,org.springframework.boot.autoconfigure.aop.AopAutoConfiguration
-
-# Profile configuration
-genai-demo:
-  profile:
-    name: test
-    description: Test environment with H2 in-memory database
-    features:
-      h2Console: false
-      debugLogging: false
-      inMemoryEvents: true
-      kafkaEvents: false
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: false
-    # 禁用二級快取以避免測試間的資料污染
     properties:
       hibernate:
         cache:
           use_second_level_cache: false
-          use_query_cache: false
+        format_sql: false
+  
+  # Disable Flyway for tests
+  flyway:
+    enabled: false
+  
+  # H2 Console - Disabled for security in tests
+  h2:
+    console:
+      enabled: false
+  
+  # Kafka Configuration - Disabled for tests
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  
+  # Performance optimizations for tests
+  main:
+    lazy-initialization: true
+  
+  # Exclude unnecessary auto-configurations
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
 
+# Logging Configuration for Tests
 logging:
   level:
     org.springframework: WARN
     org.hibernate: WARN
-    org.flywaydb: WARN
     solid.humank.genaidemo: INFO
-    org.aspectj: OFF
-    # 測試隔離相關日誌
-    solid.humank.genaidemo.testutils: DEBUG
+    org.springframework.web: INFO
+    org.springframework.boot.autoconfigure: WARN
 
+# Management Endpoints - Minimal for tests
 management:
   endpoints:
     web:
@@ -72,3 +74,34 @@ management:
   metrics:
     enable:
       all: false
+
+# Profile Configuration Properties
+genai-demo:
+  profile:
+    name: test
+    description: Test environment with isolated configuration
+    features:
+      h2Console: false
+      debugLogging: false
+      inMemoryEvents: true
+      kafkaEvents: false
+
+# Additional test configuration
+info:
+  app:
+    version: 2.0.0
+
+# Application Profile Validation
+app:
+  profile:
+    validation:
+      strict: false  # Disable strict validation in tests
+
+# OpenAPI Configuration
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html

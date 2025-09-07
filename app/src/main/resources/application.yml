@@ -1,10 +1,26 @@
 # Base Spring Boot Configuration
+# Configuration Precedence Rules:
+# 1. Environment Variables (highest priority)
+# 2. Profile-specific configuration files (application-{profile}.yml)
+# 3. Base configuration file (application.yml)
+# 4. Default values (lowest priority)
+
 spring:
   application:
     name: genai-demo
+    version: 2.0.0
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-    include: openapi
+    group:
+      dev: "dev,openapi"
+      production: "production,openapi"
+      kubernetes: "kubernetes,openapi"
+      test: "test,openapi"
+  
+  # Default configuration validation
+  config:
+    activate:
+      on-profile: "!test"  # Skip validation in test profile
 
 server:
   port: 8080
@@ -34,8 +50,22 @@ management:
 info:
   app:
     name: ${spring.application.name}
-    description: GenAI Demo Application with Observability Integration
+    description: GenAI Demo Application with AWS CDK Observability Integration
     version: 2.0.0
     encoding: UTF-8
     java:
       version: ${java.version}
+    profiles:
+      active: ${spring.profiles.active}
+      
+# Profile Configuration Validation
+genai-demo:
+  profile:
+    name: ${spring.profiles.active:dev}
+    description: "Base configuration - profile-specific settings will override"
+    features:
+      h2-console: false
+      debug-logging: false
+      in-memory-events: false
+      kafka-events: false
+      observability-enabled: false

@@ -1,4 +1,6 @@
 # Development Profile Configuration
+# Activated by: SPRING_PROFILES_ACTIVE=dev (default)
+# Features: H2 in-memory database, in-memory event publishing, debug logging
 
 spring:
   datasource:
@@ -41,6 +43,7 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     solid.humank.genaidemo: DEBUG
+    solid.humank.genaidemo.infrastructure.event: DEBUG
     
 # Development server configuration
 server:
@@ -58,12 +61,38 @@ management:
     health:
       show-details: always
       
+# Development observability configuration
+observability:
+  tracing:
+    enabled: false  # Use local Jaeger for development
+    endpoint: "http://localhost:14268/api/traces"
+  metrics:
+    enabled: true
+    export:
+      prometheus:
+        enabled: true
+  logging:
+    structured: false  # Simple console logging for development
+    
 # Profile validation
 genai-demo:
   profile:
     name: development
-    description: "Local development environment with H2 database"
+    description: "Local development environment with H2 database and in-memory events"
     features:
       h2-console: true
       debug-logging: true
       in-memory-events: true
+      kafka-events: false
+      observability-enabled: true
+  
+  # Event publishing strategy for development
+  events:
+    publisher:
+      type: in-memory
+      async: false
+      
+  # Database configuration
+  database:
+    type: h2
+    migration-path: h2

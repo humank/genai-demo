@@ -3292,4 +3292,675 @@ DR Premium: ~$1,290/month (108% increase for zero-downtime DR)
 5. **完整監控**：跨區域健康監控和告警
 6. **成本優化**：合理的 DR 成本溢價 (108%)
 
-你覺得這個設計如何？有什麼地方需要調整的嗎？
+## CI/CD Pipeline Architecture
+
+### Overview
+
+The CI/CD pipeline implements GitOps principles using GitHub Actions for continuous integration and ArgoCD for continuous deployment to Amazon EKS. This approach ensures automated, reliable, and auditable deployments while maintaining separation between CI and CD concerns.
+
+### Pipeline Architecture
+
+```mermaid
+graph TB
+    subgraph "Source Control"
+        GH[GitHub Repository]
+        MAIN[main branch]
+        FEATURE[feature branches]
+        PR[Pull Requests]
+    end
+    
+    subgraph "CI Pipeline (GitHub Actions)"
+        BUILD[Build & Test]
+        SECURITY[Security Scan]
+        DOCKER[Docker Build]
+        PUSH[Push to ECR]
+        HELM[Helm Package]
+    end
+    
+    subgraph "GitOps Repository"
+        CONFIG[Config Repository]
+        MANIFEST[K8s Manifests]
+        HELM_CHARTS[Helm Charts]
+    end
+    
+    subgraph "CD Pipeline (ArgoCD)"
+        ARGOCD[ArgoCD Controller]
+        SYNC[Auto Sync]
+        DEPLOY[Deploy to EKS]
+    end
+    
+    subgraph "Target Environment"
+        EKS[Amazon EKS]
+        PODS[Application Pods]
+        SERVICES[K8s Services]
+    end
+    
+    FEATURE --> PR
+    PR --> BUILD
+    MAIN --> BUILD
+    BUILD --> SECURITY
+    SECURITY --> DOCKER
+    DOCKER --> PUSH
+    PUSH --> HELM
+    HELM --> CONFIG
+    CONFIG --> ARGOCD
+    ARGOCD --> SYNC
+    SYNC --> DEPLOY
+    DEPLOY --> EKS
+    EKS --> PODS
+    EKS --> SERVICES
+```
+
+### GitHub Actions CI Pipeline
+
+#### Workflow Configuration
+
+```yaml
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  AWS_REGION: ap-northeast-1
+  ECR_REPOSITORY: genai-demo
+  EKS_CLUSTER_NAME: genai-demo-cluster
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        
+    - name: Run comprehensive test suite
+      run: |
+        ./gradlew test
+        ./gradlew integrationTest
+        ./gradlew cucumber
+        ./gradlew testArchitecture
+        ./gradlew runAllTestsWithReport
+```
+
+#### Multi-Architecture Docker Build
+
+```yaml
+  build:
+    name: Build Multi-Architecture Images
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+        
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+      
+    - name: Build and push multi-arch image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+```
+
+### ArgoCD GitOps Configuration
+
+#### Application Configuration
+
+```yaml
+# argocd/applications/genai-demo.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: genai-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/your-org/genai-demo-config
+    targetRevision: HEAD
+    path: k8s/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: genai-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+```
+
+#### Deployment Strategies
+
+```yaml
+# Blue-Green Deployment for Backend
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-backend
+spec:
+  replicas: 3
+  strategy:
+    blueGreen:
+      activeService: genai-demo-backend-active
+      previewService: genai-demo-backend-preview
+      autoPromotionEnabled: false
+      scaleDownDelaySeconds: 30
+      prePromotionAnalysis:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: genai-demo-backend-preview
+      postPromotionAnalysis:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: genai-demo-backend-active
+
+# Canary Deployment for Frontend
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-frontend
+spec:
+  replicas: 5
+  strategy:
+    canary:
+      steps:
+      - setWeight: 20
+      - pause: {duration: 10m}
+      - setWeight: 40
+      - pause: {duration: 10m}
+      - setWeight: 60
+      - pause: {duration: 10m}
+      - setWeight: 80
+      - pause: {duration: 10m}
+      canaryService: genai-demo-frontend-canary
+      stableService: genai-demo-frontend-stable
+```
+
+## MCP Integration Architecture
+
+### Overview
+
+The MCP (Model Context Protocol) integration provides real-time access to AWS documentation, pricing analysis, and best practices during development and architecture reviews. This enables data-driven decision making and continuous improvement of our AWS infrastructure.
+
+### MCP Tools Configuration
+
+#### Global MCP Configuration
+
+```json
+{
+  "mcpServers": {
+    "aws-docs": {
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {"FASTMCP_LOG_LEVEL": "ERROR"},
+      "disabled": false,
+      "autoApprove": ["search_documentation", "read_documentation", "recommend"]
+    },
+    "aws-pricing": {
+      "command": "uvx",
+      "args": ["awslabs.aws-pricing-mcp-server@latest"],
+      "disabled": false,
+      "autoApprove": ["get_pricing", "analyze_cdk_project", "generate_cost_report"]
+    },
+    "aws-cdk": {
+      "command": "uvx", 
+      "args": ["awslabs.aws-cdk-mcp-server@latest"],
+      "disabled": false,
+      "autoApprove": ["CDKGeneralGuidance", "ExplainCDKNagRule", "SearchGenAICDKConstructs"]
+    },
+    "aws-iam": {
+      "command": "uvx",
+      "args": ["awslabs.iam-mcp-server@latest"], 
+      "disabled": false,
+      "autoApprove": ["list_users", "get_user", "list_policies", "simulate_principal_policy"]
+    }
+  }
+}
+```
+
+### Well-Architected Framework Integration
+
+#### Automated Review Process
+
+```mermaid
+graph TB
+    subgraph "MCP Tools"
+        DOCS[AWS Documentation MCP]
+        PRICING[AWS Pricing MCP]
+        CDK[AWS CDK MCP]
+        IAM[AWS IAM MCP]
+    end
+    
+    subgraph "WA Pillars"
+        OPS[Operational Excellence]
+        SEC[Security]
+        REL[Reliability]
+        PERF[Performance Efficiency]
+        COST[Cost Optimization]
+    end
+    
+    subgraph "Review Process"
+        ANALYZE[Automated Analysis]
+        REPORT[WA Report Generation]
+        ACTIONS[Action Plan Creation]
+        METRICS[Quantitative Metrics]
+    end
+    
+    DOCS --> OPS
+    DOCS --> REL
+    IAM --> SEC
+    PRICING --> PERF
+    PRICING --> COST
+    CDK --> OPS
+    
+    OPS --> ANALYZE
+    SEC --> ANALYZE
+    REL --> ANALYZE
+    PERF --> ANALYZE
+    COST --> ANALYZE
+    
+    ANALYZE --> REPORT
+    REPORT --> ACTIONS
+    ACTIONS --> METRICS
+```
+
+#### Review Automation
+
+```python
+# well-architected-review.py
+class WellArchitectedReview:
+    def __init__(self, mcp_client):
+        self.mcp_client = mcp_client
+        self.pillars = {
+            'operational_excellence': OperationalExcellenceReviewer(),
+            'security': SecurityReviewer(),
+            'reliability': ReliabilityReviewer(),
+            'performance': PerformanceReviewer(),
+            'cost_optimization': CostOptimizationReviewer()
+        }
+    
+    async def conduct_review(self):
+        results = {}
+        
+        for pillar_name, reviewer in self.pillars.items():
+            print(f"Reviewing {pillar_name}...")
+            
+            # Use MCP tools for real-time analysis
+            pillar_results = await reviewer.review_with_mcp(self.mcp_client)
+            results[pillar_name] = pillar_results
+            
+        return self.generate_comprehensive_report(results)
+    
+    def generate_comprehensive_report(self, results):
+        return {
+            'overall_score': self.calculate_overall_score(results),
+            'pillar_scores': {k: v['score'] for k, v in results.items()},
+            'recommendations': self.consolidate_recommendations(results),
+            'action_plan': self.create_action_plan(results),
+            'metrics': self.extract_quantitative_metrics(results)
+        }
+```
+
+## Architecture Decision Records (ADR) Framework
+
+### ADR Template Structure
+
+#### MADR (Markdown Architecture Decision Records) Template
+
+```markdown
+# ADR-001: AWS CDK Infrastructure as Code Approach
+
+## Status
+
+Accepted
+
+## Context
+
+We need to choose an Infrastructure as Code (IaC) solution for deploying our observability-integrated Spring Boot application to AWS. The solution must support multi-region deployment, be maintainable by our development team, and integrate well with our existing CI/CD pipeline.
+
+## Decision Drivers
+
+* **Developer Experience**: Team familiarity and learning curve
+* **AWS Integration**: Native AWS service support and best practices
+* **Multi-Region Support**: Active-active deployment across Taipei and Tokyo
+* **Maintainability**: Code reusability and version control
+* **CI/CD Integration**: Seamless pipeline integration
+* **Cost Management**: Infrastructure cost optimization capabilities
+
+## Considered Options
+
+* **AWS CDK (TypeScript)** - AWS native IaC with programming language constructs
+* **Terraform** - Multi-cloud IaC with HCL configuration language
+* **AWS CloudFormation** - AWS native declarative templates
+* **Pulumi** - Multi-cloud IaC with familiar programming languages
+
+## Decision Outcome
+
+Chosen option: **AWS CDK (TypeScript)**, because it provides the best balance of AWS native integration, developer experience, and maintainability for our use case.
+
+### Positive Consequences
+
+* **Type Safety**: Compile-time error checking and IDE support
+* **AWS Best Practices**: Built-in AWS service integration and security defaults
+* **Code Reusability**: Object-oriented constructs and inheritance
+* **Testing**: Unit testing capabilities for infrastructure code
+* **Documentation**: Self-documenting code with inline comments
+
+### Negative Consequences
+
+* **Learning Curve**: Team needs to learn CDK concepts and TypeScript
+* **AWS Lock-in**: Less portable than multi-cloud solutions
+* **Complexity**: More complex than simple declarative templates
+* **Build Process**: Requires compilation step in CI/CD pipeline
+
+## Implementation
+
+```typescript
+// Example CDK stack structure
+export class GenAIDemoInfrastructureStack extends Stack {
+  constructor(scope: Construct, id: string, props: StackProps) {
+    super(scope, id, props);
+    
+    // Multi-region VPC setup
+    const vpc = this.createMultiRegionVPC();
+    
+    // EKS cluster with Graviton3 nodes
+    const eksCluster = this.createEKSCluster(vpc);
+    
+    // Aurora Global Database
+    const database = this.createAuroraGlobalDatabase(vpc);
+    
+    // MSK cluster for event streaming
+    const mskCluster = this.createMSKCluster(vpc);
+    
+    // Observability stack
+    const observability = new ObservabilityStack(this, 'Observability', {
+      cluster: eksCluster,
+      vpc: vpc
+    });
+  }
+}
+```
+
+## Validation
+
+* **Performance**: Infrastructure deployment time < 30 minutes
+* **Reliability**: 99.9% deployment success rate
+* **Maintainability**: Code review process for all infrastructure changes
+* **Cost**: Infrastructure costs within 10% of budget estimates
+
+## Links
+
+* [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/)
+* [CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
+* [Multi-Region CDK Patterns](https://github.com/aws-samples/aws-cdk-examples)
+```
+
+### ADR Management Process
+
+#### ADR Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Proposed
+    Proposed --> UnderReview : Architecture Review
+    UnderReview --> Accepted : Consensus Reached
+    UnderReview --> Rejected : Alternative Chosen
+    Accepted --> Superseded : New Decision
+    Rejected --> [*]
+    Superseded --> [*]
+    
+    note right of Accepted
+        Implementation begins
+        Monitoring and validation
+    end note
+    
+    note right of Superseded
+        Historical reference
+        Migration plan documented
+    end note
+```
+
+#### ADR Directory Structure
+
+```
+docs/architecture/decisions/
+├── README.md                           # ADR index and process
+├── template.md                         # MADR template
+├── ADR-001-aws-cdk-infrastructure.md   # Infrastructure decisions
+├── ADR-002-multi-region-architecture.md # Multi-region strategy
+├── ADR-003-observability-stack.md      # Observability architecture
+├── ADR-004-event-driven-architecture.md # Domain events and MSK
+├── ADR-005-security-architecture.md    # Security and compliance
+├── ADR-006-disaster-recovery.md        # DR strategy and automation
+├── ADR-007-ci-cd-pipeline.md          # GitOps and deployment
+└── ADR-008-cost-optimization.md       # Cost management strategy
+```
+
+## Enhanced Disaster Recovery Architecture
+
+### Automated DR Infrastructure
+
+#### CDK-Based DR Automation
+
+```typescript
+export class DisasterRecoveryStack extends Stack {
+  constructor(scope: Construct, id: string, props: DRStackProps) {
+    super(scope, id, props);
+    
+    // Automated failover configuration
+    const failoverConfig = new FailoverConfiguration(this, 'FailoverConfig', {
+      primaryRegion: 'ap-east-2',      // Taipei
+      secondaryRegion: 'ap-northeast-1', // Tokyo
+      rtoMinutes: 1,                    // Recovery Time Objective
+      rpoSeconds: 0                     // Recovery Point Objective
+    });
+    
+    // Route 53 health checks and DNS failover
+    const dnsFailover = new DNSFailoverConfiguration(this, 'DNSFailover', {
+      primaryEndpoint: props.taipeiALB,
+      secondaryEndpoint: props.tokyoALB,
+      healthCheckInterval: 30,
+      failureThreshold: 3
+    });
+    
+    // Aurora Global Database automation
+    const dbFailover = new AuroraGlobalFailover(this, 'DBFailover', {
+      globalCluster: props.auroraGlobalCluster,
+      automatedBackupRetention: 35,
+      pointInTimeRecovery: true
+    });
+    
+    // MSK replication monitoring
+    const mskReplication = new MSKReplicationMonitoring(this, 'MSKReplication', {
+      sourceMSK: props.taipeiMSK,
+      targetMSK: props.tokyoMSK,
+      lagThresholdSeconds: 10,
+      alertTopic: props.alertTopic
+    });
+  }
+}
+```
+
+#### Automated Testing Framework
+
+```python
+# dr-testing-framework.py
+class DisasterRecoveryTester:
+    def __init__(self, aws_client, config):
+        self.aws_client = aws_client
+        self.config = config
+        self.test_results = []
+    
+    async def run_monthly_dr_test(self):
+        """Automated monthly DR testing procedure"""
+        
+        print("Starting automated DR test...")
+        
+        # 1. Pre-test validation
+        await self.validate_baseline_health()
+        
+        # 2. Simulate primary region failure
+        await self.simulate_primary_failure()
+        
+        # 3. Validate automatic failover
+        failover_time = await self.measure_failover_time()
+        
+        # 4. Validate data consistency
+        data_loss = await self.validate_data_consistency()
+        
+        # 5. Test application functionality
+        app_health = await self.test_application_health()
+        
+        # 6. Restore primary region
+        await self.restore_primary_region()
+        
+        # 7. Generate test report
+        return self.generate_test_report({
+            'failover_time': failover_time,
+            'data_loss': data_loss,
+            'application_health': app_health,
+            'rto_met': failover_time < self.config.rto_minutes * 60,
+            'rpo_met': data_loss == 0
+        })
+    
+    async def validate_baseline_health(self):
+        """Validate all systems are healthy before testing"""
+        health_checks = [
+            self.check_aurora_replication_lag(),
+            self.check_msk_replication_status(),
+            self.check_application_health(),
+            self.check_dns_resolution()
+        ]
+        
+        results = await asyncio.gather(*health_checks)
+        
+        if not all(results):
+            raise DRTestException("Baseline health check failed")
+    
+    async def measure_failover_time(self):
+        """Measure actual failover time"""
+        start_time = time.time()
+        
+        # Wait for DNS failover to complete
+        while not await self.check_secondary_region_active():
+            await asyncio.sleep(5)
+            
+            if time.time() - start_time > 300:  # 5 minute timeout
+                raise DRTestException("Failover timeout exceeded")
+        
+        return time.time() - start_time
+```
+
+### Cross-Region Observability
+
+#### Unified Monitoring Dashboard
+
+```yaml
+# grafana-dr-dashboard.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dr-dashboard-config
+data:
+  dashboard.json: |
+    {
+      "dashboard": {
+        "title": "Disaster Recovery Status",
+        "panels": [
+          {
+            "title": "Regional Health Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up{region=\"ap-east-2\"}",
+                "legendFormat": "Taipei Primary"
+              },
+              {
+                "expr": "up{region=\"ap-northeast-1\"}",
+                "legendFormat": "Tokyo Secondary"
+              }
+            ]
+          },
+          {
+            "title": "Aurora Replication Lag",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "aws_rds_aurora_replica_lag_maximum",
+                "legendFormat": "Replication Lag (seconds)"
+              }
+            ]
+          },
+          {
+            "title": "MSK Replication Status",
+            "type": "table",
+            "targets": [
+              {
+                "expr": "kafka_consumer_lag_sum",
+                "legendFormat": "Consumer Lag"
+              }
+            ]
+          },
+          {
+            "title": "DNS Failover Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "route53_health_check_status",
+                "legendFormat": "Health Check Status"
+              }
+            ]
+          }
+        ]
+      }
+    }
+```
+
+This comprehensive design update ensures that all the enhanced tasks in your tasks.md file are properly supported by detailed architectural designs and implementation strategies.

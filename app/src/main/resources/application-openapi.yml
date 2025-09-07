@@ -1,157 +1,68 @@
-# OpenAPI 專用配置檔案
-# 用於配置 SpringDoc 的各項設定
+# OpenAPI Profile Configuration
+# This profile provides OpenAPI/Swagger documentation configuration
+# Included by all other profiles for API documentation
 
+# SpringDoc OpenAPI Configuration
 springdoc:
-  # API 文檔配置
   api-docs:
+    enabled: true
     path: /v3/api-docs
-    enabled: true
-    resolve-schema-properties: true
-  
-  # Swagger UI 配置
   swagger-ui:
-    path: /swagger-ui.html
     enabled: true
-    try-it-out-enabled: true
-    operations-sorter: method
-    tags-sorter: alpha
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls-primary-name: GenAI Demo API
     display-request-duration: true
-    display-operation-id: false
-    show-extensions: true
-    show-common-extensions: true
+    display-operation-id: true
     default-models-expand-depth: 1
     default-model-expand-depth: 1
     doc-expansion: none
     filter: false
-    
-  # 顯示 Actuator 端點
-  show-actuator: true
-  
-  # API 分組配置 - 基於 DDD 和使用者角色
-  group-configs:
-    # 終端客戶 API - 面向 Customer 的前端應用
-    - group: 'customer-api'
-      display-name: '客戶端 API'
-      paths-to-match: 
-        - '/api/products/**'        # 商品瀏覽 (客戶視角)
-        - '/api/orders/**'          # 訂單查詢 (客戶自己的訂單)
-        - '/api/payments/**'        # 支付處理 (客戶發起的支付)
-        - '/api/consumer/**'        # 專門的消費者功能
-        - '/api/shopping-cart/**'   # 購物車功能
-        - '/api/promotions/**'      # 促銷活動查詢
-        - '/api/vouchers/**'        # 優惠券使用
-        - '/api/reviews/**'         # 商品評價
-        - '/api/recommendations/**' # 個人化推薦
-        - '/api/notifications/**'   # 個人通知
-        - '/api/delivery-tracking/**' # 配送追蹤
-      paths-to-exclude: 
-        - '/api/admin/**'
-        - '/api/internal/**'
-        - '/api/management/**'
-    
-    # 平台運營者 API - 面向 Operator/Admin 的管理後台
-    - group: 'operator-api'
-      display-name: '運營管理 API'
-      paths-to-match: 
-        - '/api/customers/**'       # 客戶管理 (運營者視角)
-        - '/api/orders/**'          # 訂單管理 (全部訂單管理)
-        - '/api/products/**'        # 商品管理 (CRUD 操作)
-        - '/api/inventory/**'       # 庫存管理
-        - '/api/pricing/**'         # 定價策略管理
-        - '/api/payments/**'        # 支付管理 (退款、對帳等)
-        - '/api/activities/**'      # 系統活動記錄
-        - '/api/stats/**'           # 統計報表
-        - '/api/admin/**'           # 管理員專用功能
-      paths-to-exclude: 
-        - '/api/consumer/**'        # 排除純客戶端功能
-        - '/api/shopping-cart/**'
-        - '/api/recommendations/**'
-        - '/api/delivery-tracking/**'
-    
-    # 系統管理 API - 面向系統維護和監控
-    - group: 'system-api'
-      display-name: '系統管理 API'
-      paths-to-match: 
-        - '/api/internal/**'        # 內部系統整合
-        - '/api/management/**'      # 系統管理功能
-        - '/actuator/**'            # Spring Boot Actuator
-      paths-to-exclude:
-        - '/actuator/health'        # 健康檢查保持公開
-        - '/actuator/info'          # 基本資訊保持公開
-
-  # 預設產生器配置
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
-  
-  # 模型和屬性配置
-  model-and-view-allowed: false
-  override-with-generic-response: false
-  remove-broken-reference-definitions: false
-  auto-tag-classes: true
-  
-  # 快取配置
-  cache:
-    disabled: false
-
----
-# 開發環境配置
-spring:
-  config:
-    activate:
-      on-profile: development
-
-springdoc:
-  swagger-ui:
-    enabled: true
-    try-it-out-enabled: true
-    display-request-duration: true
     show-extensions: true
     show-common-extensions: true
-  api-docs:
-    enabled: true
+    tags-sorter: alpha
+    operations-sorter: alpha
   show-actuator: true
+  group-configs:
+    - group: 'public-api'
+      display-name: 'Public API'
+      paths-to-match: '/api/**'
+    - group: 'management'
+      display-name: 'Management API'
+      paths-to-match: '/actuator/**'
 
----
-# 測試環境配置  
-spring:
-  config:
-    activate:
-      on-profile: test
+# OpenAPI Documentation Information
+openapi:
+  info:
+    title: GenAI Demo API
+    description: |
+      GenAI Demo Application API Documentation
+      
+      This API provides comprehensive e-commerce functionality including:
+      - Customer Management
+      - Product Catalog
+      - Order Processing
+      - Payment Processing
+      - Inventory Management
+      - Promotion Management
+      
+      Built with Domain-Driven Design (DDD) and Hexagonal Architecture principles.
+    version: 2.0.0
+    contact:
+      name: GenAI Demo Team
+      email: support@genaidemo.com
+    license:
+      name: MIT License
+      url: https://opensource.org/licenses/MIT
+  servers:
+    - url: http://localhost:8080
+      description: Development Server
+    - url: https://api.genaidemo.com
+      description: Production Server
+  external-docs:
+    description: Project Documentation
+    url: https://github.com/genai-demo/docs
 
-springdoc:
-  swagger-ui:
-    enabled: true
-    try-it-out-enabled: true
-  api-docs:
-    enabled: true
-  show-actuator: false
-
----
-# 生產環境配置
-spring:
-  config:
-    activate:
-      on-profile: production
-
-springdoc:
-  swagger-ui:
-    enabled: false  # 生產環境關閉 Swagger UI
-    try-it-out-enabled: false
-  api-docs:
-    enabled: true   # 保留 API 文檔端點供內部使用
-  show-actuator: false  # 生產環境不顯示 Actuator 端點
-
----
-# 預發布環境配置
-spring:
-  config:
-    activate:
-      on-profile: staging
-
-springdoc:
-  swagger-ui:
-    enabled: true
-    try-it-out-enabled: false  # 預發布環境允許查看但不允許測試
-  api-docs:
-    enabled: true
-  show-actuator: false
+# OpenAPI Profile - No profile validation needed
+# This profile only provides OpenAPI/Swagger configuration
+# Profile validation is handled by the main profiles (dev, production, test)

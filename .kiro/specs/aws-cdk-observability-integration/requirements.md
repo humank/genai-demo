@@ -218,3 +218,54 @@ This feature implements a comprehensive Infrastructure as Code (IaC) solution us
 10. WHEN managing secrets THEN the system SHALL use secure secret management throughout the CI/CD pipeline
 11. WHEN auditing deployments THEN the system SHALL log all deployment activities for compliance
 12. IF pipeline failures occur THEN the system SHALL provide clear error messages and prevent broken deployments
+
+### Requirement 16: Architecture Decision Records (ADR) Documentation
+
+**User Story:** As a software architect and development team member, I want comprehensive Architecture Decision Records (ADRs) documenting all major architectural decisions, so that I can understand the rationale behind design choices and maintain architectural consistency over time.
+
+#### Acceptance Criteria
+
+1. WHEN making architectural decisions THEN the system SHALL document them using industry-standard ADR format (MADR template)
+2. WHEN documenting decisions THEN the system SHALL include business objectives, alternative solutions analyzed, and trade-offs considered
+3. WHEN recording infrastructure decisions THEN the system SHALL document AWS CDK approach, multi-region strategy, and network architecture choices
+4. WHEN documenting software architecture THEN the system SHALL record Spring Boot profile strategy, domain-driven MSK topics, and observability patterns
+5. WHEN capturing service decisions THEN the system SHALL document EKS vs alternatives, Aurora Global Database vs RDS, and managed vs self-hosted choices
+6. WHEN recording security decisions THEN the system SHALL document IAM strategy, encryption configurations, and compliance requirements
+7. WHEN documenting operational decisions THEN the system SHALL record disaster recovery requirements, monitoring strategy, and cost optimization approaches
+8. WHEN decisions have consequences THEN the system SHALL document risks, mitigation strategies, and future evolution paths
+9. WHEN validating ADRs THEN the system SHALL ensure completeness, accuracy, and traceability of all architectural decisions
+10. IF architectural changes occur THEN the system SHALL update relevant ADRs and maintain decision history
+
+### Requirement 17: MCP Integration and Well-Architected Framework Review
+
+**User Story:** As a cloud architect and DevOps engineer, I want comprehensive AWS MCP tools integration and automated Well-Architected Framework reviews, so that I can leverage AWS best practices and continuously improve our architecture.
+
+#### Acceptance Criteria
+
+1. WHEN configuring development environment THEN the system SHALL setup comprehensive AWS MCP tools in global configuration
+2. WHEN using MCP tools THEN the system SHALL provide access to AWS documentation, pricing analysis, CDK guidance, and IAM policy analysis
+3. WHEN conducting architecture reviews THEN the system SHALL use MCP tools to access real-time AWS best practices and recommendations
+4. WHEN reviewing operational excellence THEN the system SHALL analyze CDK automation, monitoring configurations, and incident response procedures
+5. WHEN assessing security THEN the system SHALL validate IAM policies, encryption implementations, and network security configurations
+6. WHEN evaluating reliability THEN the system SHALL review multi-region architecture, disaster recovery, and backup procedures
+7. WHEN analyzing performance THEN the system SHALL assess resource utilization, auto-scaling, and ARM64 optimization benefits
+8. WHEN optimizing costs THEN the system SHALL analyze resource patterns, data lifecycle policies, and managed vs self-hosted comparisons
+9. WHEN generating reports THEN the system SHALL document findings with MCP tool evidence and quantitative metrics
+10. IF improvements are identified THEN the system SHALL create actionable plans with specific implementation recommendations
+
+### Requirement 18: Enhanced Disaster Recovery Automation
+
+**User Story:** As a reliability engineer and operations team member, I want fully automated disaster recovery capabilities with CDK-based infrastructure automation, so that I can ensure business continuity with minimal manual intervention.
+
+#### Acceptance Criteria
+
+1. WHEN provisioning DR infrastructure THEN the system SHALL use CDK constructs for automated cross-region resource deployment
+2. WHEN failover occurs THEN the system SHALL automatically promote Aurora Global Database and adjust Route 53 DNS routing
+3. WHEN monitoring replication THEN the system SHALL track data consistency, replication lag, and automated remediation across regions
+4. WHEN testing DR procedures THEN the system SHALL conduct automated monthly failover tests with success criteria validation
+5. WHEN collecting DR metrics THEN the system SHALL monitor RTO/RPO compliance and generate automated compliance reports
+6. WHEN managing cross-region observability THEN the system SHALL aggregate monitoring data and provide unified dashboards
+7. WHEN incidents occur THEN the system SHALL trigger automated response procedures and escalation workflows
+8. WHEN capacity planning THEN the system SHALL automatically scale resources across regions based on demand patterns
+9. WHEN validating DR readiness THEN the system SHALL perform chaos engineering tests and automated recovery validation
+10. IF DR automation fails THEN the system SHALL provide clear error diagnostics and fallback to manual procedures

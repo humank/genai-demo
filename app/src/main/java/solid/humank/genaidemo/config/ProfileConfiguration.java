@@ -29,8 +29,8 @@ public class ProfileConfiguration {
     private final String applicationVersion;
 
     public ProfileConfiguration(Environment environment,
-            @Value("${spring.application.name}") String applicationName,
-            @Value("${spring.application.version:unknown}") String applicationVersion) {
+            @Value("${spring.application.name:genai-demo}") String applicationName,
+            @Value("${info.app.version:2.0.0}") String applicationVersion) {
         this.environment = environment;
         this.applicationName = applicationName;
         this.applicationVersion = applicationVersion;
