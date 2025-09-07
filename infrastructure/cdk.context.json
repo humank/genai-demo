@@ -47,5 +47,9 @@
     "ap-east-2a",
     "ap-east-2b",
     "ap-east-2c"
-  ]
+  ],
+  "hosted-zone:account=584518143473:domainName=kimkao.io:region=ap-east-2": {
+    "Id": "/hostedzone/Z2KTO3AQUJG1DT",
+    "Name": "kimkao.io."
+  }
 }

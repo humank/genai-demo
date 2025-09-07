@@ -50,13 +50,13 @@
   - Set up wildcard certificates (*.kimkao.io) and explicit subdomains (cmc, shop, api, grafana, logs)
   - Update certificate regions from ap-northeast-1 to ap-east-2 for Taiwan primary region
   - _Requirements: 3.3, 3.4_
-- [ ] 5.3 Configure Application Load Balancer with SSL Termination
+- [x] 5.3 Configure Application Load Balancer with SSL Termination
   - Implement Application Load Balancer creation
   - Configure SSL termination using ACM certificates
   - Set up HTTP to HTTPS redirect
   - Configure health checks and target groups
   - _Requirements: 3.5_
-- [ ] 5.4 Set Up DNS and Certificate Outputs
+- [x] 5.4 Set Up DNS and Certificate Outputs
   - Create DNS A records pointing to ALB
   - Output certificate ARN for Kubernetes Ingress use
   - Export hosted zone ID for cross-stack references

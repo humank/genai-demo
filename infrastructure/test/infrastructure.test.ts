@@ -170,3 +170,181 @@ describe('GenAI Demo Infrastructure Stack', () => {
         });
     });
 });
+
+describe('GenAI Demo Infrastructure Stack with Domain', () => {
+    let app: cdk.App;
+    let stack: GenAIDemoInfrastructureStack;
+    let template: Template;
+
+    beforeEach(() => {
+        app = new cdk.App({
+            context: {
+                'genai-demo:networking': {
+                    'availability-zones': 3,
+                    'enable-vpc-flow-logs': true,
+                    'enable-dns-hostnames': true,
+                    'enable-dns-support': true
+                },
+                'genai-demo:environments': {
+                    'test': {
+                        'vpc-cidr': '10.0.0.0/16',
+                        'nat-gateways': 1
+                    }
+                },
+                'hosted-zone:account=123456789012:domainName=kimkao.io:region=ap-east-2': {
+                    'Id': '/hostedzone/Z2KTO3AQUJG1DT',
+                    'Name': 'kimkao.io.'
+                }
+            }
+        });
+        stack = new GenAIDemoInfrastructureStack(app, 'TestStackWithDomain', {
+            environment: 'test',
+            projectName: 'genai-demo-test',
+            domain: 'test.kimkao.io',
+            env: {
+                account: '123456789012',
+                region: 'ap-east-2'
+            }
+        });
+        template = Template.fromStack(stack);
+    });
+
+    test('DNS A records are created pointing to ALB', () => {
+        // Main domain A record
+        template.hasResourceProperties('AWS::Route53::RecordSet', {
+            Type: 'A',
+            Name: 'test.kimkao.io.',
+            Comment: 'Main A record for test.kimkao.io pointing to ALB'
+        });
+
+        // Wildcard A record for subdomains
+        template.hasResourceProperties('AWS::Route53::RecordSet', {
+            Type: 'A',
+            Name: '*.test.kimkao.io.',
+            Comment: 'Wildcard A record for *.test.kimkao.io pointing to ALB'
+        });
+
+        // Specific subdomain A records
+        const subdomains = ['api', 'cmc', 'shop', 'grafana', 'logs'];
+        subdomains.forEach(subdomain => {
+            template.hasResourceProperties('AWS::Route53::RecordSet', {
+                Type: 'A',
+                Name: `${subdomain}.test.kimkao.io.`,
+                Comment: `A record for ${subdomain}.test.kimkao.io pointing to ALB`
+            });
+        });
+    });
+
+    test('ACM certificates are created with DNS validation', () => {
+        // Main certificate
+        template.hasResourceProperties('AWS::CertificateManager::Certificate', {
+            DomainName: 'test.kimkao.io',
+            ValidationMethod: 'DNS',
+            SubjectAlternativeNames: [
+                'api.test.kimkao.io',
+                'cmc.test.kimkao.io',
+                'shop.test.kimkao.io',
+                'grafana.test.kimkao.io',
+                'logs.test.kimkao.io'
+            ]
+        });
+
+        // Wildcard certificate
+        template.hasResourceProperties('AWS::CertificateManager::Certificate', {
+            DomainName: '*.kimkao.io',
+            ValidationMethod: 'DNS',
+            SubjectAlternativeNames: ['kimkao.io']
+        });
+    });
+
+    test('Certificate validation monitoring is configured', () => {
+        // SNS topic for certificate alerts
+        template.hasResourceProperties('AWS::SNS::Topic', {
+            TopicName: 'genai-demo-test-test-certificate-alerts',
+            DisplayName: 'Certificate Alerts for genai-demo-test test'
+        });
+
+        // CloudWatch alarms for certificate expiration
+        template.hasResourceProperties('AWS::CloudWatch::Alarm', {
+            AlarmName: 'genai-demo-test-test-certificate-validation-status',
+            AlarmDescription: 'Monitor certificate validation status',
+            MetricName: 'DaysToExpiry',
+            Namespace: 'AWS/CertificateManager',
+            Threshold: 30,
+            ComparisonOperator: 'LessThanThreshold'
+        });
+
+        template.hasResourceProperties('AWS::CloudWatch::Alarm', {
+            AlarmName: 'genai-demo-test-test-wildcard-certificate-validation-status',
+            AlarmDescription: 'Monitor wildcard certificate validation status',
+            MetricName: 'DaysToExpiry',
+            Namespace: 'AWS/CertificateManager',
+            Threshold: 30,
+            ComparisonOperator: 'LessThanThreshold'
+        });
+    });
+
+    test('Certificate ARNs are exported for Kubernetes Ingress use', () => {
+        template.hasOutput('CertificateArn', {
+            Description: 'ACM Certificate ARN for domain - use in Kubernetes Ingress annotations',
+            Export: {
+                Name: 'genai-demo-test-test-certificate-arn'
+            }
+        });
+
+        template.hasOutput('WildcardCertificateArn', {
+            Description: 'ACM Wildcard Certificate ARN for domain - use in Kubernetes Ingress annotations',
+            Export: {
+                Name: 'genai-demo-test-test-wildcard-certificate-arn'
+            }
+        });
+    });
+
+    test('Hosted Zone ID is exported for cross-stack references', () => {
+        template.hasOutput('HostedZoneId', {
+            Description: 'Route 53 Hosted Zone ID for cross-stack DNS management',
+            Export: {
+                Name: 'genai-demo-test-test-hosted-zone-id'
+            }
+        });
+
+        template.hasOutput('HostedZoneName', {
+            Description: 'Route 53 Hosted Zone Name for cross-stack DNS management',
+            Export: {
+                Name: 'genai-demo-test-test-hosted-zone-name'
+            }
+        });
+    });
+
+    test('Kubernetes Ingress annotations are provided', () => {
+        template.hasOutput('KubernetesIngressAnnotations', {
+            Description: 'Kubernetes Ingress annotations for ALB integration with SSL',
+            Export: {
+                Name: 'genai-demo-test-test-k8s-ingress-annotations'
+            }
+        });
+    });
+
+    test('Certificate validation status monitoring outputs are created', () => {
+        template.hasOutput('CertMonitoringAlertsTopicArnOutput', {
+            Description: 'SNS topic ARN for certificate alerts',
+            Export: {
+                Name: 'genai-demo-test-test-certificate-alerts-topic'
+            }
+        });
+
+        template.hasOutput('CertMonitoringValidationAlarmOutput', {
+            Description: 'CloudWatch alarm name for certificate validation monitoring',
+            Export: {
+                Name: 'genai-demo-test-test-certificate-validation-alarm'
+            }
+        });
+
+        template.hasOutput('WildcardCertMonitoringValidationAlarmOutput', {
+            Description: 'CloudWatch alarm name for wildcard certificate validation monitoring',
+            Export: {
+                Name: 'genai-demo-test-test-wildcard-certificate-validation-alarm'
+            }
+        });
+    });
+});
