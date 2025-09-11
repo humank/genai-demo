@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genai-demo-config
+  namespace: genai-demo
+  labels:
+    app: genai-demo
+    app.kubernetes.io/name: genai-demo
+    app.kubernetes.io/component: config
+data:
+  # Kafka Configuration
+  kafka-bootstrap-servers: "genai-demo-msk-cluster.kafka.ap-northeast-1.amazonaws.com:9092"
+  
+  # AWS Configuration
+  aws-region: "ap-northeast-1"
+  
+  # Application Configuration
+  spring-profiles-active: "production"
+  
+  # Health Check Configuration
+  health-check-database-timeout: "5s"
+  health-check-kafka-timeout: "10s"
+  health-check-system-memory-threshold: "85"
+  health-check-system-disk-threshold: "90"
+  
+  # Recovery Configuration
+  health-recovery-enabled: "true"
+  health-recovery-max-attempts: "3"
+  health-recovery-cooldown: "60s"
+  
+  # Observability Configuration
+  observability-enabled: "true"
+  distributed-tracing-enabled: "true"
+  cloudwatch-metrics-enabled: "true"
+  xray-tracing-enabled: "true"
+  
+  # Logging Configuration
+  logging-level-root: "INFO"
+  logging-level-genaidemo: "INFO"
+  structured-logging-enabled: "true"
+  
+  # Metrics Configuration
+  metrics-prometheus-enabled: "true"
+  metrics-cloudwatch-enabled: "true"
+  metrics-cloudwatch-namespace: "GenAIDemo/Production"
+  metrics-cloudwatch-step: "1m"
+  
+  # Tracing Configuration
+  tracing-sampling-ratio: "0.1"
+  tracing-xray-daemon-address: "xray-daemon:2000"
+  
+  # JVM Configuration
+  java-opts: >-
+    -Xms512m
+    -Xmx1g
+    -XX:+UseG1GC
+    -XX:MaxGCPauseMillis=200
+    -XX:+UseStringDeduplication
+    -XX:+OptimizeStringConcat
+    -Djava.security.egd=file:/dev/./urandom
+    -Dspring.profiles.active=production
+    -Dmanagement.endpoints.web.exposure.include=health,info,metrics,prometheus
+    -Dmanagement.endpoint.health.show-details=always
+    -Dmanagement.endpoint.health.probes.enabled=true
+    -Dmanagement.health.livenessstate.enabled=true
+    -Dmanagement.health.readinessstate.enabled=true
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: genai-demo-secrets
+  namespace: genai-demo
+  labels:
+    app: genai-demo
+    app.kubernetes.io/name: genai-demo
+    app.kubernetes.io/component: secrets
+type: Opaque
+stringData:
+  # Database Configuration (these will be populated by CDK/Terraform)
+  db-host: "genai-demo-production-rds.cluster-xyz.ap-northeast-1.rds.amazonaws.com"
+  db-port: "5432"
+  db-name: "genaidemo"
+  db-username: "genaidemo"
+  db-password: "REPLACE_WITH_ACTUAL_PASSWORD"
+  
+  # AWS Credentials (if needed - prefer IAM roles)
+  aws-access-key-id: ""
+  aws-secret-access-key: ""
+  
+  # Application Secrets
+  jwt-secret: "REPLACE_WITH_ACTUAL_JWT_SECRET"
+  encryption-key: "REPLACE_WITH_ACTUAL_ENCRYPTION_KEY"
+  
+  # External Service API Keys
+  external-api-key: "REPLACE_WITH_ACTUAL_API_KEY"
+  
+  # Monitoring and Alerting
+  slack-webhook-url: "https://hooks.slack.com/services/YOUR/PRODUCTION/WEBHOOK"
+  pagerduty-integration-key: "REPLACE_WITH_PAGERDUTY_KEY"

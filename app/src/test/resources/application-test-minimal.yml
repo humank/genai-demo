@@ -1,0 +1,80 @@
+# 最小化測試配置 - 減少記憶體使用
+spring:
+  application:
+    name: genai-demo-test
+  
+  # 最小化 Spring Boot 功能
+  main:
+    allow-bean-definition-overriding: true
+    lazy-initialization: true
+    banner-mode: "off"
+    web-application-type: servlet  # 保持 Web 功能以支持測試切片
+  
+  # 使用最簡單的 H2 配置
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  
+  # 最小化 JPA 配置
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        cache.use_second_level_cache: false
+        generate_statistics: false
+        jdbc.batch_size: 10
+  
+  # 禁用所有不必要的功能
+  flyway:
+    enabled: false
+  h2:
+    console:
+      enabled: false
+  kafka:
+    enabled: false
+  task:
+    scheduling:
+      enabled: false
+  aop:
+    auto: false  # 禁用 AOP
+    proxy-target-class: false
+
+# 禁用所有 Management 端點
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: false
+    info:
+      enabled: false
+  health:
+    defaults:
+      enabled: false
+  metrics:
+    enable:
+      all: false
+
+# 最小化日誌
+logging:
+  level:
+    root: ERROR
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    solid.humank.genaidemo: ERROR
+
+# 禁用 OpenAPI
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+# 禁用追蹤
+tracing:
+  enabled: false

@@ -1,0 +1,113 @@
+package solid.humank.genaidemo.infrastructure.observability.metrics;
+
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
+import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublisherAdapter;
+
+/**
+ * Metrics collector for domain events
+ * Automatically tracks domain event publishing and processing metrics
+ */
+@Component
+public class DomainEventMetricsCollector {
+
+    private final MeterRegistry meterRegistry;
+    private final Counter domainEventsPublished;
+    private final Counter domainEventsProcessed;
+    private final Counter domainEventProcessingErrors;
+    private final Timer domainEventProcessingTime;
+
+    public DomainEventMetricsCollector(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+
+        this.domainEventsPublished = Counter.builder("domain.events.published")
+                .description("Total number of domain events published")
+                .register(meterRegistry);
+
+        this.domainEventsProcessed = Counter.builder("domain.events.processed")
+                .description("Total number of domain events processed")
+                .register(meterRegistry);
+
+        this.domainEventProcessingErrors = Counter.builder("domain.events.processing.errors")
+                .description("Total number of domain event processing errors")
+                .register(meterRegistry);
+
+        this.domainEventProcessingTime = Timer.builder("domain.events.processing.time")
+                .description("Time taken to process domain events")
+                .register(meterRegistry);
+    }
+
+    /**
+     * Listen to domain event publishing and record metrics
+     */
+    @EventListener
+    public void handleDomainEventPublished(DomainEventPublisherAdapter.DomainEventWrapper eventWrapper) {
+        DomainEvent event = eventWrapper.getSource();
+
+        // Record event published
+        domainEventsPublished.increment(
+                "event.type", event.getEventType(),
+                "aggregate.type", getAggregateType(event));
+    }
+
+    /**
+     * Record domain event processing metrics
+     */
+    public void recordEventProcessed(DomainEvent event) {
+        domainEventsProcessed.increment(
+                "event.type", event.getEventType(),
+                "aggregate.type", getAggregateType(event));
+    }
+
+    /**
+     * Record domain event processing error
+     */
+    public void recordEventProcessingError(DomainEvent event, Exception error) {
+        domainEventProcessingErrors.increment(
+                "event.type", event.getEventType(),
+                "aggregate.type", getAggregateType(event),
+                "error.type", error.getClass().getSimpleName());
+    }
+
+    /**
+     * Start timing domain event processing
+     */
+    public Timer.Sample startEventProcessingTimer() {
+        return Timer.start(meterRegistry);
+    }
+
+    /**
+     * Record domain event processing time
+     */
+    public void recordEventProcessingTime(Timer.Sample sample, DomainEvent event) {
+        sample.stop(Timer.builder("domain.events.processing.time")
+                .tag("event.type", event.getEventType())
+                .tag("aggregate.type", getAggregateType(event))
+                .register(meterRegistry));
+    }
+
+    /**
+     * Extract aggregate type from event class name
+     */
+    private String getAggregateType(DomainEvent event) {
+        String eventType = event.getEventType();
+        // Extract aggregate type from event type (e.g., "CustomerCreated" ->
+        // "Customer")
+        if (eventType.contains("Customer"))
+            return "Customer";
+        if (eventType.contains("Order"))
+            return "Order";
+        if (eventType.contains("Product"))
+            return "Product";
+        if (eventType.contains("Payment"))
+            return "Payment";
+        if (eventType.contains("Inventory"))
+            return "Inventory";
+        return "Unknown";
+    }
+}

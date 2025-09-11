@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: xray-daemon
+  namespace: observability
+  labels:
+    app: xray-daemon
+spec:
+  selector:
+    matchLabels:
+      app: xray-daemon
+  template:
+    metadata:
+      labels:
+        app: xray-daemon
+    spec:
+      serviceAccountName: xray-daemon
+      hostNetwork: true
+      containers:
+      - name: xray-daemon
+        image: amazon/aws-xray-daemon:3.3.7
+        command:
+        - /usr/bin/xray
+        - -o
+        - -n
+        - ${AWS_REGION}
+        ports:
+        - containerPort: 2000
+          hostPort: 2000
+          protocol: UDP
+          name: xray-ingest
+        - containerPort: 2000
+          hostPort: 2000
+          protocol: TCP
+          name: xray-tcp
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        env:
+        - name: AWS_REGION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['eks.amazonaws.com/compute-type']
+        - name: _X_AMZN_TRACE_ID
+          value: ""
+        volumeMounts:
+        - name: config-volume
+          mountPath: /aws/xray
+          readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: xray-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xray-daemon
+  namespace: observability
+  labels:
+    app: xray-daemon
+spec:
+  type: ClusterIP
+  ports:
+  - port: 2000
+    targetPort: 2000
+    protocol: UDP
+    name: xray-ingest
+  - port: 2000
+    targetPort: 2000
+    protocol: TCP
+    name: xray-tcp
+  selector:
+    app: xray-daemon
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xray-config
+  namespace: observability
+data:
+  cfg.yaml: |
+    # AWS X-Ray Daemon configuration
+    TotalBufferSizeInMB: 0
+    Concurrency: 8
+    Region: "${AWS_REGION}"
+    NoVerifySSL: false
+    LocalMode: false
+    ResourceARN: ""
+    RoleARN: ""
+    ProxyAddress: ""
+    Endpoint: ""
+    Socket:
+      UDPAddress: "0.0.0.0:2000"
+      TCPAddress: "0.0.0.0:2000"
+    Version: 2
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: xray-daemon
+  namespace: observability
+  annotations:
+    eks.amazonaws.com/role-arn: ${XRAY_DAEMON_ROLE_ARN}
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: xray-daemon
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes", "endpoints"]
+  verbs: ["list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: xray-daemon
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: xray-daemon
+subjects:
+- kind: ServiceAccount
+  name: xray-daemon
+  namespace: observability

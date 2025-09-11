@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: genai-demo
+
+resources:
+- ../../base
+
+patchesStrategicMerge:
+- deployment-patch.yaml
+- hpa-patch.yaml
+- ingress-patch.yaml
+
+images:
+- name: genai-demo
+  newTag: development
+
+commonLabels:
+  environment: development
+  
+commonAnnotations:
+  environment: development
+  managed-by: kustomize

@@ -32,7 +32,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEvent;
  * Requirements: 2.4, 2.5, 2.6
  */
 @Component
-@Profile("production")
+@Profile({ "production", "test" })
 public class DeadLetterService {
 
     private static final Logger logger = LoggerFactory.getLogger(DeadLetterService.class);

@@ -1,0 +1,51 @@
+# Code Owners for GenAI Demo Project
+# This file defines who should review changes to specific parts of the codebase
+
+# Global owners - require review for all changes
+* @genai-demo-team
+
+# Backend code
+/app/ @backend-team @genai-demo-team
+/build.gradle @backend-team @genai-demo-team
+/settings.gradle @backend-team @genai-demo-team
+/gradle.properties @backend-team @genai-demo-team
+/Dockerfile @backend-team @devops-team
+
+# Frontend code
+/cmc-frontend/ @frontend-team @genai-demo-team
+/consumer-frontend/ @frontend-team @genai-demo-team
+/cmc-frontend/Dockerfile @frontend-team @devops-team
+/consumer-frontend/Dockerfile @frontend-team @devops-team
+
+# Infrastructure code
+/infrastructure/ @devops-team @genai-demo-team
+/deployment/ @devops-team @genai-demo-team
+/docker/ @devops-team @genai-demo-team
+/terraform/ @devops-team @genai-demo-team
+
+# CI/CD and automation
+/.github/ @devops-team @genai-demo-team
+/scripts/ @devops-team @genai-demo-team
+
+# Documentation
+/docs/ @genai-demo-team
+/README.md @genai-demo-team
+*.md @genai-demo-team
+
+# Configuration files
+/docker-compose.yml @devops-team @genai-demo-team
+/.gitignore @genai-demo-team
+/.gitattributes @genai-demo-team
+
+# Security-sensitive files
+/.github/workflows/security-scan.yml @security-team @devops-team
+/.github/dependabot.yml @security-team @devops-team
+/infrastructure/lib/stacks/security-stack.ts @security-team @devops-team
+
+# Release management
+/.github/workflows/release.yml @release-team @devops-team
+/.github/workflows/ci-cd.yml @devops-team @genai-demo-team
+
+# Performance and monitoring
+/.github/workflows/performance-test.yml @performance-team @devops-team
+/infrastructure/lib/stacks/observability-stack.ts @performance-team @devops-team

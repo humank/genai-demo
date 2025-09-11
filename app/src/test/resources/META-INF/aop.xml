@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspectj>
+    <!-- 完全禁用 AspectJ Load-Time Weaving 以節省記憶體 -->
     <weaver options="-verbose -showWeaveInfo">
-        <!-- Include all packages for weaving -->
-        <include within="solid.humank.genaidemo..*" />
-        <include within="io.qameta.allure..*" />
+        <!-- 不包含任何包，實際上禁用織入 -->
+        <!-- <include within="solid.humank.genaidemo..*" /> -->
+        <!-- <include within="io.qameta.allure..*" /> -->
 
-        <!-- Exclude problematic Spring Boot classes -->
-        <exclude within="org.springframework.boot.jdbc.DataSourceBuilder*" />
-        <exclude within="org.springframework.boot.liquibase.*" />
-        <exclude within="com.mchange.v2.c3p0.*" />
-        <exclude within="liquibase.exception.*" />
-
-        <!-- Exclude other problematic classes -->
-        <exclude within="org.springframework.boot.diagnostics.*" />
-        <exclude within="org.springframework.boot.autoconfigure.*" />
+        <!-- 排除所有包以確保不進行織入 -->
+        <exclude within="*" />
     </weaver>
 
+    <!-- 不啟用任何 aspects 以節省記憶體 -->
+    <!-- 
     <aspects>
-        <!-- Include Allure aspects -->
         <aspect name="io.qameta.allure.aspects.AttachmentsAspects" />
         <aspect name="io.qameta.allure.aspects.StepsAspects" />
     </aspects>
+    -->
 </aspectj>

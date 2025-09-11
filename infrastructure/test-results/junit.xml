@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="13" failures="6" errors="0" time="7.918">
+  <testsuite name="DisasterRecoveryAutomation" errors="0" failures="6" skipped="0" timestamp="2025-09-11T14:29:11" time="7.714" tests="13">
+    <testcase classname="DisasterRecoveryAutomation › Basic Construction" name="should create DR automation construct with minimal configuration" time="0.363">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Basic Construction" name="should create DR automation construct with full configuration" time="0.025">
+      <failure>ValidationError: TestStack/PrimaryHealthCheck [AWS::Route53::HealthCheck] is missing required property: healthCheckConfig
+    at path [TestStack/PrimaryHealthCheck] in aws-cdk-lib.aws_route53.CfnHealthCheck
+
+    at createHealthCheck (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:10:12)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:66:40)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Lambda Functions" name="should create failover Lambda with correct configuration" time="0.12">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Lambda Functions" name="should create chaos testing Lambda with correct configuration" time="0.045">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Step Functions State Machines" name="should create failover state machine" time="0.046">
+      <failure>Expected value   undefined
+Received:
+  undefined
+
+Message:
+  Template has 2 resources with type AWS::StepFunctions::StateMachine, but none match as expected.
+The 2 closest matches:
+DRAutomationFailoverStateMachine0D7F7BA0 :: {
+  &quot;DeletionPolicy&quot;: &quot;Delete&quot;,
+  &quot;DependsOn&quot;: [ &quot;DRAutomationFailoverStateMachineRoleDefaultPolicy371F274A&quot;, &quot;DRAutomationFailoverStateMachineRoleDBD922CD&quot; ],
+  &quot;Properties&quot;: {
+!!   Missing key &apos;Comment&apos;
+    &quot;Comment&quot;: undefined,
+    &quot;DefinitionString&quot;: { &quot;Fn::Join&quot;: [ ... ] },
+    &quot;RoleArn&quot;: { &quot;Fn::GetAtt&quot;: [ &quot;DRAutomationFailoverStateMachineRoleDBD922CD&quot;, &quot;Arn&quot; ] },
+    &quot;StateMachineName&quot;: &quot;test-project-production-dr-failover&quot;
+  },
+  &quot;Type&quot;: &quot;AWS::StepFunctions::StateMachine&quot;,
+  &quot;UpdateReplacePolicy&quot;: &quot;Delete&quot;
+}
+DRAutomationChaosTestingStateMachine5590AC5C :: {
+  &quot;DeletionPolicy&quot;: &quot;Delete&quot;,
+  &quot;DependsOn&quot;: [ &quot;DRAutomationChaosTestingStateMachineRoleDefaultPolicyC68A7D58&quot;, &quot;DRAutomationChaosTestingStateMachineRoleBA7EEC39&quot; ],
+  &quot;Properties&quot;: {
+!!   Missing key &apos;Comment&apos;
+    &quot;Comment&quot;: undefined,
+    &quot;DefinitionString&quot;: { &quot;Fn::Join&quot;: [ ... ] },
+    &quot;RoleArn&quot;: { &quot;Fn::GetAtt&quot;: [ &quot;DRAutomationChaosTestingStateMachineRoleBA7EEC39&quot;, &quot;Arn&quot; ] },
+!!   Expected test-project-production-dr-failover but received test-project-production-dr-chaos-testing
+    &quot;StateMachineName&quot;: &quot;test-project-production-dr-chaos-testing&quot;
+  },
+  &quot;Type&quot;: &quot;AWS::StepFunctions::StateMachine&quot;,
+  &quot;UpdateReplacePolicy&quot;: &quot;Delete&quot;
+}
+
+Difference:
+
+Compared values have no visual difference.
+    at Template.hasResourceProperties (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/aws-cdk-lib/assertions/lib/template.js:1:3216)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:181:22)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Step Functions State Machines" name="should create chaos testing state machine" time="0.038">
+      <failure>Expected value   undefined
+Received:
+  undefined
+
+Message:
+  Template has 2 resources with type AWS::StepFunctions::StateMachine, but none match as expected.
+The 2 closest matches:
+DRAutomationChaosTestingStateMachine5590AC5C :: {
+  &quot;DeletionPolicy&quot;: &quot;Delete&quot;,
+  &quot;DependsOn&quot;: [ &quot;DRAutomationChaosTestingStateMachineRoleDefaultPolicyC68A7D58&quot;, &quot;DRAutomationChaosTestingStateMachineRoleBA7EEC39&quot; ],
+  &quot;Properties&quot;: {
+!!   Missing key &apos;Comment&apos;
+    &quot;Comment&quot;: undefined,
+    &quot;DefinitionString&quot;: { &quot;Fn::Join&quot;: [ ... ] },
+    &quot;RoleArn&quot;: { &quot;Fn::GetAtt&quot;: [ &quot;DRAutomationChaosTestingStateMachineRoleBA7EEC39&quot;, &quot;Arn&quot; ] },
+    &quot;StateMachineName&quot;: &quot;test-project-production-dr-chaos-testing&quot;
+  },
+  &quot;Type&quot;: &quot;AWS::StepFunctions::StateMachine&quot;,
+  &quot;UpdateReplacePolicy&quot;: &quot;Delete&quot;
+}
+DRAutomationFailoverStateMachine0D7F7BA0 :: {
+  &quot;DeletionPolicy&quot;: &quot;Delete&quot;,
+  &quot;DependsOn&quot;: [ &quot;DRAutomationFailoverStateMachineRoleDefaultPolicy371F274A&quot;, &quot;DRAutomationFailoverStateMachineRoleDBD922CD&quot; ],
+  &quot;Properties&quot;: {
+!!   Missing key &apos;Comment&apos;
+    &quot;Comment&quot;: undefined,
+    &quot;DefinitionString&quot;: { &quot;Fn::Join&quot;: [ ... ] },
+    &quot;RoleArn&quot;: { &quot;Fn::GetAtt&quot;: [ &quot;DRAutomationFailoverStateMachineRoleDBD922CD&quot;, &quot;Arn&quot; ] },
+!!   Expected test-project-production-dr-chaos-testing but received test-project-production-dr-failover
+    &quot;StateMachineName&quot;: &quot;test-project-production-dr-failover&quot;
+  },
+  &quot;Type&quot;: &quot;AWS::StepFunctions::StateMachine&quot;,
+  &quot;UpdateReplacePolicy&quot;: &quot;Delete&quot;
+}
+
+Difference:
+
+Compared values have no visual difference.
+    at Template.hasResourceProperties (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/aws-cdk-lib/assertions/lib/template.js:1:3216)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:202:22)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › EventBridge Rules" name="should create monthly testing rule" time="0.037">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › CloudWatch Dashboard" name="should create DR monitoring dashboard" time="0.037">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › IAM Roles and Policies" name="should create DR automation role with correct permissions" time="0.038">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Systems Manager Parameters" name="should create DR automation configuration parameter" time="0.038">
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Health Check Monitoring" name="should create health check monitoring when health checks are provided" time="0.002">
+      <failure>ValidationError: TestStack/PrimaryHealthCheck [AWS::Route53::HealthCheck] is missing required property: healthCheckConfig
+    at path [TestStack/PrimaryHealthCheck] in aws-cdk-lib.aws_route53.CfnHealthCheck
+
+    at createHealthCheck (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:10:12)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:307:40)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Outputs" name="should create all required outputs" time="0.051">
+      <failure>Expected value   undefined
+Received:
+  undefined
+
+Message:
+  Template has 0 outputs named FailoverStateMachineArn.
+No matches found
+
+Difference:
+
+Compared values have no visual difference.
+    at Template.hasOutput (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/aws-cdk-lib/assertions/lib/template.js:1:4538)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:360:22)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DisasterRecoveryAutomation › Integration Tests" name="should integrate properly with existing infrastructure" time="0.04">
+      <failure>Expected value   undefined
+Received:
+  undefined
+
+Message:
+  Expected 1 resources of type AWS::IAM::Role but found 4
+
+Difference:
+
+Compared values have no visual difference.
+    at Template.resourceCountIs (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/aws-cdk-lib/assertions/lib/template.js:1:2731)
+    at Object.&lt;anonymous&gt; (/Users/yikaikao/git/genai-demo/infrastructure/test/disaster-recovery-automation.test.ts:404:22)
+    at Promise.then.completed (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at _runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:252:3)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:126:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at _runTestsForDescribeBlock (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:121:9)
+    at run (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/run.js:71:3)
+    at runAndTransformResultsToJestFormat (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at jestAdapter (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at runTestInternal (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:367:16)
+    at runTest (/Users/yikaikao/git/genai-demo/infrastructure/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

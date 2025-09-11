@@ -1,0 +1,7 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: genai-demo-ingress
+  namespace: genai-demo
+  annotations:
+    alb.ingress.kubernetes.io/tags: Environment=development,Project=genai-demo,Service=ALB-Ingress

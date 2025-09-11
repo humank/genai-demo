@@ -1,0 +1,173 @@
+package solid.humank.genaidemo.infrastructure.observability.metrics;
+
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Component;
+
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+
+/**
+ * Business metrics collector for domain-specific metrics
+ * Tracks key business KPIs and operational metrics
+ */
+@Component
+public class BusinessMetricsCollector {
+
+    private final MeterRegistry meterRegistry;
+
+    // Counters for business events
+    private final Counter customerRegistrations;
+    private final Counter orderSubmissions;
+    private final Counter orderCompletions;
+    private final Counter paymentSuccesses;
+    private final Counter paymentFailures;
+    private final Counter inventoryUpdates;
+
+    // Timers for business operations
+    private final Timer orderProcessingTime;
+    private final Timer paymentProcessingTime;
+    private final Timer inventoryCheckTime;
+
+    // Gauges for current state
+    private final AtomicLong activeCustomers = new AtomicLong(0);
+    private final AtomicLong pendingOrders = new AtomicLong(0);
+    private final AtomicLong lowStockItems = new AtomicLong(0);
+
+    public BusinessMetricsCollector(MeterRegistry meterRegistry) {
+        this.meterRegistry = meterRegistry;
+
+        // Initialize counters
+        this.customerRegistrations = Counter.builder("business.customer.registrations")
+                .description("Total number of customer registrations")
+                .register(meterRegistry);
+
+        this.orderSubmissions = Counter.builder("business.order.submissions")
+                .description("Total number of order submissions")
+                .register(meterRegistry);
+
+        this.orderCompletions = Counter.builder("business.order.completions")
+                .description("Total number of completed orders")
+                .register(meterRegistry);
+
+        this.paymentSuccesses = Counter.builder("business.payment.successes")
+                .description("Total number of successful payments")
+                .register(meterRegistry);
+
+        this.paymentFailures = Counter.builder("business.payment.failures")
+                .description("Total number of failed payments")
+                .register(meterRegistry);
+
+        this.inventoryUpdates = Counter.builder("business.inventory.updates")
+                .description("Total number of inventory updates")
+                .register(meterRegistry);
+
+        // Initialize timers
+        this.orderProcessingTime = Timer.builder("business.order.processing.time")
+                .description("Time taken to process an order")
+                .register(meterRegistry);
+
+        this.paymentProcessingTime = Timer.builder("business.payment.processing.time")
+                .description("Time taken to process a payment")
+                .register(meterRegistry);
+
+        this.inventoryCheckTime = Timer.builder("business.inventory.check.time")
+                .description("Time taken to check inventory")
+                .register(meterRegistry);
+
+        // Initialize gauges
+        Gauge.builder("business.customer.active")
+                .description("Number of active customers")
+                .register(meterRegistry, activeCustomers, AtomicLong::get);
+
+        Gauge.builder("business.order.pending")
+                .description("Number of pending orders")
+                .register(meterRegistry, pendingOrders, AtomicLong::get);
+
+        Gauge.builder("business.inventory.low_stock")
+                .description("Number of items with low stock")
+                .register(meterRegistry, lowStockItems, AtomicLong::get);
+    }
+
+    // Counter methods
+    public void incrementCustomerRegistrations() {
+        customerRegistrations.increment();
+    }
+
+    public void incrementOrderSubmissions() {
+        orderSubmissions.increment();
+    }
+
+    public void incrementOrderCompletions() {
+        orderCompletions.increment();
+    }
+
+    public void incrementPaymentSuccesses() {
+        paymentSuccesses.increment();
+    }
+
+    public void incrementPaymentFailures() {
+        paymentFailures.increment();
+    }
+
+    public void incrementInventoryUpdates() {
+        inventoryUpdates.increment();
+    }
+
+    // Timer methods
+    public Timer.Sample startOrderProcessingTimer() {
+        return Timer.start(meterRegistry);
+    }
+
+    public void recordOrderProcessingTime(Timer.Sample sample) {
+        sample.stop(orderProcessingTime);
+    }
+
+    public Timer.Sample startPaymentProcessingTimer() {
+        return Timer.start(meterRegistry);
+    }
+
+    public void recordPaymentProcessingTime(Timer.Sample sample) {
+        sample.stop(paymentProcessingTime);
+    }
+
+    public Timer.Sample startInventoryCheckTimer() {
+        return Timer.start(meterRegistry);
+    }
+
+    public void recordInventoryCheckTime(Timer.Sample sample) {
+        sample.stop(inventoryCheckTime);
+    }
+
+    // Gauge methods
+    public void setActiveCustomers(long count) {
+        activeCustomers.set(count);
+    }
+
+    public void setPendingOrders(long count) {
+        pendingOrders.set(count);
+    }
+
+    public void setLowStockItems(long count) {
+        lowStockItems.set(count);
+    }
+
+    // Convenience methods for increment/decrement
+    public void incrementActiveCustomers() {
+        activeCustomers.incrementAndGet();
+    }
+
+    public void decrementActiveCustomers() {
+        activeCustomers.decrementAndGet();
+    }
+
+    public void incrementPendingOrders() {
+        pendingOrders.incrementAndGet();
+    }
+
+    public void decrementPendingOrders() {
+        pendingOrders.decrementAndGet();
+    }
+}

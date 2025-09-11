@@ -1,0 +1,705 @@
+# CDK Infrastructure Validation Pipeline
+# Comprehensive CI/CD pipeline for CDK infrastructure testing and validation
+
+name: CDK Infrastructure Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths: [ 'infrastructure/**' ]
+  pull_request:
+    branches: [ main ]
+    paths: [ 'infrastructure/**' ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment for deployment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - test
+        - production
+
+env:
+  NODE_VERSION: '18'
+  AWS_REGION: 'ap-northeast-1'
+  CDK_DEFAULT_REGION: 'ap-northeast-1'
+
+jobs:
+  # Job 1: Code Quality and Linting
+  code-quality:
+    name: Code Quality & Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run TypeScript compilation
+        working-directory: infrastructure
+        run: npm run build
+
+      - name: Run ESLint
+        working-directory: infrastructure
+        run: npx eslint lib test --ext .ts --format json --output-file eslint-report.json || true
+
+      - name: Upload ESLint results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: eslint-report
+          path: infrastructure/eslint-report.json
+
+  # Job 2: Unit Tests
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run unit tests
+        working-directory: infrastructure
+        run: npm run test:unit -- --coverage --ci --watchAll=false
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: unit-test-results
+          path: |
+            infrastructure/coverage/
+            infrastructure/junit.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: infrastructure/coverage
+          flags: unit-tests
+          name: unit-tests
+
+  # Job 3: Integration Tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run integration tests
+        working-directory: infrastructure
+        run: npm run test:integration -- --ci --watchAll=false
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: integration-test-results
+          path: infrastructure/test-results/
+
+  # Job 4: Snapshot Tests
+  snapshot-tests:
+    name: Snapshot Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run snapshot tests
+        working-directory: infrastructure
+        run: npm run test:snapshot -- --ci --watchAll=false
+
+      - name: Check for snapshot changes
+        working-directory: infrastructure
+        run: |
+          if git diff --exit-code test/**/__snapshots__/; then
+            echo "✅ No snapshot changes detected"
+          else
+            echo "❌ Snapshot changes detected - please review and commit if intentional"
+            git diff test/**/__snapshots__/
+            exit 1
+          fi
+
+  # Job 5: Security and Compliance
+  security-compliance:
+    name: Security & Compliance
+    runs-on: ubuntu-latest
+    needs: code-quality
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run dependency audit
+        working-directory: infrastructure
+        run: npm audit --audit-level moderate
+
+      - name: Run CDK Nag compliance tests
+        working-directory: infrastructure
+        run: npm run test:compliance -- --ci --watchAll=false
+
+      - name: Run security scan
+        working-directory: infrastructure
+        run: npm run security:scan
+
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-scan-results
+          path: |
+            infrastructure/security-scan-report.json
+            infrastructure/cdk-nag-report.json
+
+  # Job 6: CDK Synthesis and Validation
+  cdk-synthesis:
+    name: CDK Synthesis & Validation
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+    strategy:
+      matrix:
+        environment: [development, test, production]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Configure AWS credentials (for synthesis only)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: CDK Synthesis - ${{ matrix.environment }}
+        working-directory: infrastructure
+        run: |
+          npx cdk synth --all \
+            --context environment=${{ matrix.environment }} \
+            --context projectName=genai-demo-${{ matrix.environment }} \
+            --output cdk.out.${{ matrix.environment }}
+
+      - name: Validate CloudFormation templates
+        working-directory: infrastructure
+        run: |
+          for template in cdk.out.${{ matrix.environment }}/*.template.json; do
+            if [ -f "$template" ]; then
+              echo "Validating $template"
+              aws cloudformation validate-template --template-body file://"$template"
+            fi
+          done
+
+      - name: Upload CDK synthesis artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cdk-synthesis-${{ matrix.environment }}
+          path: infrastructure/cdk.out.${{ matrix.environment }}/
+
+  # Job 7: Cost Estimation
+  cost-estimation:
+    name: Cost Estimation
+    runs-on: ubuntu-latest
+    needs: cdk-synthesis
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Download synthesis artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: cdk-synthesis-production
+          path: infrastructure/cdk.out/
+
+      - name: Run cost estimation
+        working-directory: infrastructure
+        run: npm run cost:estimate
+
+      - name: Upload cost estimation report
+        uses: actions/upload-artifact@v3
+        with:
+          name: cost-estimation-report
+          path: |
+            infrastructure/cost-estimation-report.json
+            infrastructure/budget-configuration.json
+
+      - name: Comment cost estimation on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = './infrastructure/cost-estimation-report.json';
+            
+            if (fs.existsSync(path)) {
+              const costReport = JSON.parse(fs.readFileSync(path, 'utf8'));
+              const monthlyCost = costReport.totalMonthlyCost.toFixed(2);
+              const annualCost = (costReport.totalMonthlyCost * 12).toFixed(2);
+              
+              const comment = `## 💰 Infrastructure Cost Estimation
+              
+              **Monthly Cost**: $${monthlyCost}
+              **Annual Cost**: $${annualCost}
+              
+              ### Cost Breakdown by Stack:
+              ${Object.entries(costReport.stacks).map(([stack, data]) => 
+                `- **${stack}**: $${data.totalMonthlyCost.toFixed(2)}/month`
+              ).join('\n')}
+              
+              > 📊 Detailed cost report available in build artifacts
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+  # Job 8: Documentation Generation
+  documentation:
+    name: Documentation Generation
+    runs-on: ubuntu-latest
+    needs: cdk-synthesis
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Generate documentation
+        working-directory: infrastructure
+        run: npm run docs:generate
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: infrastructure-documentation
+          path: infrastructure/docs/
+
+  # Job 9: Deployment (only on main branch or manual trigger)
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment || 'development' }}
+    runs-on: ubuntu-latest
+    if: |
+      (github.ref == 'refs/heads/main' && github.event_name == 'push') ||
+      github.event_name == 'workflow_dispatch'
+    needs: [security-compliance, cdk-synthesis, cost-estimation]
+    environment: ${{ github.event.inputs.environment || 'development' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_DEPLOYMENT_ROLE_ARN }}
+          role-session-name: CDK-Deployment-${{ github.run_id }}
+
+      - name: CDK Bootstrap (if needed)
+        working-directory: infrastructure
+        run: |
+          npx cdk bootstrap aws://${{ secrets.AWS_ACCOUNT_ID }}/${{ env.AWS_REGION }} \
+            --context environment=${{ github.event.inputs.environment || 'development' }}
+
+      - name: CDK Deploy
+        working-directory: infrastructure
+        run: |
+          npx cdk deploy --all --require-approval never \
+            --context environment=${{ github.event.inputs.environment || 'development' }} \
+            --context projectName=genai-demo-${{ github.event.inputs.environment || 'development' }} \
+            ${{ github.event.inputs.environment == 'production' && '--context domain=kimkao.io' || '' }}
+
+      - name: Post-deployment validation
+        working-directory: infrastructure
+        run: |
+          # Validate stack deployment
+          aws cloudformation describe-stacks \
+            --stack-name genai-demo-${{ github.event.inputs.environment || 'development' }}-NetworkStack
+          
+          # Test basic connectivity (if ALB is deployed)
+          if aws elbv2 describe-load-balancers --names genai-demo-${{ github.event.inputs.environment || 'development' }}-alb 2>/dev/null; then
+            ALB_DNS=$(aws elbv2 describe-load-balancers --names genai-demo-${{ github.event.inputs.environment || 'development' }}-alb --query 'LoadBalancers[0].DNSName' --output text)
+            echo "Testing ALB connectivity: $ALB_DNS"
+            curl -I "http://$ALB_DNS" || echo "ALB not yet ready for traffic"
+          fi
+
+  # Job 10: Comprehensive Validation
+  comprehensive-validation:
+    name: Comprehensive Validation
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, snapshot-tests]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run comprehensive validation tests
+        working-directory: infrastructure
+        run: npm run test:comprehensive
+
+      - name: Run template validation
+        working-directory: infrastructure
+        run: npm run validate:templates
+
+      - name: Run performance analysis
+        working-directory: infrastructure
+        run: npm run performance:analyze
+
+      - name: Upload comprehensive validation results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: comprehensive-validation-results
+          path: |
+            infrastructure/template-validation-report.json
+            infrastructure/performance-analysis-report.json
+
+  # Job 11: Infrastructure Drift Detection
+  drift-detection:
+    name: Infrastructure Drift Detection
+    runs-on: ubuntu-latest
+    needs: snapshot-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Run drift detection tests
+        working-directory: infrastructure
+        run: npm run drift:detect
+
+      - name: Check for infrastructure drift
+        working-directory: infrastructure
+        run: |
+          if git diff --exit-code test/**/__snapshots__/; then
+            echo "✅ No infrastructure drift detected"
+            echo "drift_detected=false" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ Infrastructure drift detected"
+            echo "drift_detected=true" >> $GITHUB_OUTPUT
+            git diff test/**/__snapshots__/ > drift-report.txt
+          fi
+        id: drift-check
+
+      - name: Upload drift report
+        if: steps.drift-check.outputs.drift_detected == 'true'
+        uses: actions/upload-artifact@v3
+        with:
+          name: infrastructure-drift-report
+          path: infrastructure/drift-report.txt
+
+      - name: Comment on PR about drift
+        if: github.event_name == 'pull_request' && steps.drift-check.outputs.drift_detected == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const comment = `## ⚠️ Infrastructure Drift Detected
+            
+            This PR introduces changes to the infrastructure templates that differ from the current snapshots.
+            
+            **What this means:**
+            - The CDK synthesis output has changed
+            - This could indicate intentional infrastructure changes or unintended drift
+            
+            **Next steps:**
+            1. Review the drift report in the build artifacts
+            2. If changes are intentional, update snapshots with: \`npm run test:update-snapshots\`
+            3. If changes are unintended, investigate and fix the root cause
+            
+            > 📊 Detailed drift report available in build artifacts
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Job 12: Budget Alert Configuration
+  budget-configuration:
+    name: Budget Alert Configuration
+    runs-on: ubuntu-latest
+    needs: cost-estimation
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+
+      - name: Install dependencies
+        working-directory: infrastructure
+        run: npm ci
+
+      - name: Download cost estimation report
+        uses: actions/download-artifact@v3
+        with:
+          name: cost-estimation-report
+          path: infrastructure/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Configure budget alerts
+        working-directory: infrastructure
+        run: npm run budget:configure
+
+      - name: Upload budget configuration
+        uses: actions/upload-artifact@v3
+        with:
+          name: budget-configuration
+          path: |
+            infrastructure/budget-*.json
+            infrastructure/budget-dashboard.json
+
+  # Job 13: Notification and Reporting
+  notification:
+    name: Notification & Reporting
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [code-quality, unit-tests, integration-tests, snapshot-tests, security-compliance, cdk-synthesis, cost-estimation, documentation, comprehensive-validation, drift-detection, deploy]
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate enhanced pipeline summary
+        run: |
+          echo "# 🚀 CDK Infrastructure Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Job Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Code Quality: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Unit Tests: ${{ needs.unit-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Integration Tests: ${{ needs.integration-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Snapshot Tests: ${{ needs.snapshot-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Security & Compliance: ${{ needs.security-compliance.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- CDK Synthesis: ${{ needs.cdk-synthesis.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Cost Estimation: ${{ needs.cost-estimation.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Documentation: ${{ needs.documentation.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Comprehensive Validation: ${{ needs.comprehensive-validation.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Drift Detection: ${{ needs.drift-detection.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment: ${{ needs.deploy.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📁 Artifacts Generated" >> $GITHUB_STEP_SUMMARY
+          echo "- Test Results and Coverage Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- CDK Synthesis Outputs" >> $GITHUB_STEP_SUMMARY
+          echo "- Cost Estimation Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Infrastructure Documentation" >> $GITHUB_STEP_SUMMARY
+          echo "- Comprehensive Validation Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Infrastructure Drift Report" >> $GITHUB_STEP_SUMMARY
+          echo "- Performance Analysis Report" >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate validation metrics
+        run: |
+          # Count successful jobs
+          SUCCESSFUL_JOBS=0
+          TOTAL_JOBS=11
+          
+          if [ "${{ needs.code-quality.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.unit-tests.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.integration-tests.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.snapshot-tests.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.security-compliance.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.cdk-synthesis.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.cost-estimation.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.documentation.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.comprehensive-validation.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.drift-detection.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          if [ "${{ needs.deploy.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
+          
+          SUCCESS_RATE=$((SUCCESSFUL_JOBS * 100 / TOTAL_JOBS))
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 📈 Pipeline Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "- Success Rate: ${SUCCESS_RATE}% (${SUCCESSFUL_JOBS}/${TOTAL_JOBS})" >> $GITHUB_STEP_SUMMARY
+          echo "- Pipeline Duration: ${{ github.event.head_commit.timestamp }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = '❌ CDK Infrastructure Pipeline Failed';
+            const body = `
+            The CDK infrastructure validation pipeline has failed.
+            
+            **Branch**: ${context.ref}
+            **Commit**: ${context.sha.substring(0, 7)}
+            **Workflow**: ${context.workflow}
+            **Run ID**: ${context.runId}
+            
+            **Failed Jobs:**
+            - Code Quality: ${{ needs.code-quality.result }}
+            - Unit Tests: ${{ needs.unit-tests.result }}
+            - Integration Tests: ${{ needs.integration-tests.result }}
+            - Snapshot Tests: ${{ needs.snapshot-tests.result }}
+            - Security & Compliance: ${{ needs.security-compliance.result }}
+            - CDK Synthesis: ${{ needs.cdk-synthesis.result }}
+            - Cost Estimation: ${{ needs.cost-estimation.result }}
+            - Documentation: ${{ needs.documentation.result }}
+            - Comprehensive Validation: ${{ needs.comprehensive-validation.result }}
+            - Drift Detection: ${{ needs.drift-detection.result }}
+            - Deployment: ${{ needs.deploy.result }}
+            
+            Please check the workflow logs and artifacts for details.
+            `;
+            
+            // Create an issue for pipeline failures on main branch
+            if (context.ref === 'refs/heads/main') {
+              github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['infrastructure', 'ci-cd', 'bug', 'high-priority']
+              });
+            }
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ CDK Infrastructure Pipeline completed successfully!"
+          echo "All validation checks passed and infrastructure is ready for deployment."
+          echo ""
+          echo "🎉 Pipeline completed with enhanced validation:"
+          echo "- ✅ Code quality and linting"
+          echo "- ✅ Comprehensive test suite"
+          echo "- ✅ Security and compliance checks"
+          echo "- ✅ Infrastructure drift detection"
+          echo "- ✅ Cost estimation and budget alerts"
+          echo "- ✅ Performance analysis"
+          echo "- ✅ Documentation generation"

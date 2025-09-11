@@ -1,0 +1,303 @@
+# Blue-Green Deployment for GenAI Demo Backend
+# This provides zero-downtime deployments with automated rollback capabilities
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-backend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    version: v1
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  replicas: 3
+  strategy:
+    blueGreen:
+      # Service that the rollout modifies as the active service
+      activeService: genai-demo-backend-active
+      # Service that the rollout modifies as the preview service
+      previewService: genai-demo-backend-preview
+      # Automatically promote the new version after successful analysis
+      autoPromotionEnabled: false
+      # Time to wait before automatically promoting
+      scaleDownDelaySeconds: 30
+      # Time to wait before scaling down the old version
+      prePromotionAnalysis:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: genai-demo-backend-preview
+        - name: prometheus-server
+          value: http://prometheus.monitoring.svc.cluster.local:9090
+      postPromotionAnalysis:
+        templates:
+        - templateName: success-rate
+        args:
+        - name: service-name
+          value: genai-demo-backend-active
+        - name: prometheus-server
+          value: http://prometheus.monitoring.svc.cluster.local:9090
+      # Metadata to add to the preview service
+      previewMetadata:
+        labels:
+          role: preview
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+      # Metadata to add to the active service
+      activeMetadata:
+        labels:
+          role: active
+        annotations:
+          service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+  selector:
+    matchLabels:
+      app: genai-demo-backend
+  template:
+    metadata:
+      labels:
+        app: genai-demo-backend
+        version: v1
+    spec:
+      serviceAccountName: genai-demo-backend
+      containers:
+      - name: genai-demo-backend
+        image: ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/backend:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: management
+          containerPort: 8081
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production"
+        - name: SERVER_PORT
+          value: "8080"
+        - name: MANAGEMENT_SERVER_PORT
+          value: "8081"
+        - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+          value: "health,info,metrics,prometheus"
+        - name: MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS
+          value: "always"
+        - name: MANAGEMENT_HEALTH_PROBES_ENABLED
+          value: "true"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: host
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: port
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: database
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: password
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: genai-demo-config
+              key: kafka.bootstrap.servers
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: management
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: management
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 30
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+---
+# Active Service for Blue-Green Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-backend-active
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    role: active
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: genai-demo
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: management
+    protocol: TCP
+  selector:
+    app: genai-demo-backend
+
+---
+# Preview Service for Blue-Green Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-backend-preview
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    role: preview
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: genai-demo
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: management
+    protocol: TCP
+  selector:
+    app: genai-demo-backend
+
+---
+# Analysis Template for Success Rate Monitoring
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: success-rate
+  namespace: genai-demo
+spec:
+  args:
+  - name: service-name
+  - name: prometheus-server
+    value: http://prometheus.monitoring.svc.cluster.local:9090
+  metrics:
+  - name: success-rate
+    interval: 30s
+    count: 5
+    successCondition: result[0] >= 0.95
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          sum(rate(http_requests_total{service="{{args.service-name}}",status!~"5.."}[2m])) /
+          sum(rate(http_requests_total{service="{{args.service-name}}"}[2m]))
+  - name: avg-response-time
+    interval: 30s
+    count: 5
+    successCondition: result[0] <= 0.5
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{service="{{args.service-name}}"}[2m])) by (le)
+          )
+  - name: error-rate
+    interval: 30s
+    count: 5
+    successCondition: result[0] <= 0.05
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          sum(rate(http_requests_total{service="{{args.service-name}}",status=~"5.."}[2m])) /
+          sum(rate(http_requests_total{service="{{args.service-name}}"}[2m]))
+
+---
+# ServiceAccount for Backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genai-demo-backend
+  namespace: genai-demo
+  labels:
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: genai-demo
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/genai-demo-backend-role
+
+---
+# ServiceMonitor for Prometheus Integration
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: genai-demo-backend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  selector:
+    matchLabels:
+      app: genai-demo-backend
+      role: active
+  endpoints:
+  - port: management
+    interval: 30s
+    path: /actuator/prometheus
+    honorLabels: true

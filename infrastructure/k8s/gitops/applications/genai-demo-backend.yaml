@@ -1,0 +1,53 @@
+# ArgoCD Application for GenAI Demo Backend with Blue-Green Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: genai-demo-backend
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: genai-demo-backend
+    app.kubernetes.io/part-of: genai-demo
+    environment: production
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: genai-demo
+  source:
+    repoURL: https://github.com/humank/genai-demo
+    targetRevision: main
+    path: infrastructure/k8s/overlays/production
+    kustomize:
+      images:
+      - name: genai-demo/backend
+        newTag: latest
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: genai-demo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
+  - group: argoproj.io
+    kind: Rollout
+    jsonPointers:
+    - /spec/replicas

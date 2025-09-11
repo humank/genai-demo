@@ -1,0 +1,349 @@
+# Security Scanning Workflow
+# Reusable workflow for comprehensive security scanning
+# Can be called from other workflows or run independently
+
+name: Security Scan
+
+on:
+  workflow_call:
+    inputs:
+      scan-type:
+        description: 'Type of security scan to perform'
+        required: false
+        default: 'all'
+        type: string
+      severity-threshold:
+        description: 'Minimum severity level to report'
+        required: false
+        default: 'HIGH'
+        type: string
+  workflow_dispatch:
+    inputs:
+      scan-type:
+        description: 'Type of security scan to perform'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - dependencies
+          - code
+          - containers
+          - infrastructure
+      severity-threshold:
+        description: 'Minimum severity level to report'
+        required: true
+        default: 'HIGH'
+        type: choice
+        options:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+  schedule:
+    # Run security scan daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  SEVERITY_THRESHOLD: ${{ inputs.severity-threshold || 'HIGH' }}
+  SCAN_TYPE: ${{ inputs.scan-type || 'all' }}
+
+jobs:
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    if: inputs.scan-type == 'all' || inputs.scan-type == 'dependencies'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            cmc-frontend/package-lock.json
+            consumer-frontend/package-lock.json
+            infrastructure/package-lock.json
+      
+      - name: Install OWASP Dependency Check
+        run: |
+          wget -O dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v8.4.3/dependency-check-8.4.3-release.zip
+          unzip dependency-check.zip
+          chmod +x dependency-check/bin/dependency-check.sh
+      
+      - name: Run Java dependency scan
+        run: |
+          ./dependency-check/bin/dependency-check.sh \
+            --project "GenAI Demo Backend" \
+            --scan app/ \
+            --format ALL \
+            --out dependency-check-reports/ \
+            --failOnCVSS 7
+      
+      - name: Run Node.js dependency scans
+        run: |
+          # CMC Frontend
+          cd cmc-frontend
+          npm audit --audit-level=high --json > ../cmc-frontend-audit.json || true
+          cd ..
+          
+          # Consumer Frontend
+          cd consumer-frontend
+          npm audit --audit-level=high --json > ../consumer-frontend-audit.json || true
+          cd ..
+          
+          # Infrastructure
+          cd infrastructure
+          npm audit --audit-level=high --json > ../infrastructure-audit.json || true
+          cd ..
+      
+      - name: Upload dependency scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-scan-results
+          path: |
+            dependency-check-reports/
+            *-audit.json
+          retention-days: 30
+
+  code-security-scan:
+    name: Static Code Security Analysis
+    runs-on: ubuntu-latest
+    if: inputs.scan-type == 'all' || inputs.scan-type == 'code'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: java, javascript
+          queries: security-and-quality
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      
+      - name: Build Java application
+        run: ./gradlew build -x test
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:java"
+      
+      - name: Run Semgrep security scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+            p/java
+            p/javascript
+          generateSarif: "1"
+      
+      - name: Upload Semgrep results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+
+  container-security-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    if: inputs.scan-type == 'all' || inputs.scan-type == 'containers'
+    
+    strategy:
+      matrix:
+        dockerfile: [Dockerfile, cmc-frontend/Dockerfile, consumer-frontend/Dockerfile]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image for scanning
+        run: |
+          IMAGE_NAME="security-scan-$(basename ${{ matrix.dockerfile }}):latest"
+          docker build -f ${{ matrix.dockerfile }} -t $IMAGE_NAME .
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+      
+      - name: Run Trivy container scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}
+          format: 'sarif'
+          output: 'trivy-${{ matrix.dockerfile }}.sarif'
+          severity: ${{ env.SEVERITY_THRESHOLD }}
+      
+      - name: Run Hadolint Dockerfile scan
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          format: sarif
+          output-file: hadolint-${{ matrix.dockerfile }}.sarif
+          no-fail: true
+      
+      - name: Upload container scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-scan-$(basename ${{ matrix.dockerfile }})
+          path: |
+            trivy-${{ matrix.dockerfile }}.sarif
+            hadolint-${{ matrix.dockerfile }}.sarif
+          retention-days: 30
+
+  infrastructure-security-scan:
+    name: Infrastructure Security Scan
+    runs-on: ubuntu-latest
+    if: inputs.scan-type == 'all' || inputs.scan-type == 'infrastructure'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: infrastructure/package-lock.json
+      
+      - name: Install CDK dependencies
+        working-directory: infrastructure
+        run: npm ci
+      
+      - name: Run CDK security scan with cdk-nag
+        working-directory: infrastructure
+        run: |
+          npm run synth
+          # cdk-nag rules are integrated in the CDK code
+          echo "CDK security scan completed"
+      
+      - name: Run Checkov infrastructure scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: infrastructure/
+          framework: cloudformation
+          output_format: sarif
+          output_file_path: checkov-infrastructure.sarif
+          quiet: true
+          soft_fail: true
+      
+      - name: Run Trivy infrastructure scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: 'infrastructure/'
+          format: 'sarif'
+          output: 'trivy-infrastructure.sarif'
+          severity: ${{ env.SEVERITY_THRESHOLD }}
+      
+      - name: Upload infrastructure scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-security-scan
+          path: |
+            checkov-infrastructure.sarif
+            trivy-infrastructure.sarif
+          retention-days: 30
+
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    needs: [dependency-scan, code-security-scan, container-security-scan, infrastructure-security-scan]
+    if: always()
+    
+    steps:
+      - name: Download all scan results
+        uses: actions/download-artifact@v4
+        with:
+          path: security-results/
+      
+      - name: Generate security summary
+        run: |
+          cat > security-report.md << 'EOF'
+          # 🔒 Security Scan Report
+          
+          ## Scan Summary
+          - **Scan Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Severity Threshold**: ${{ env.SEVERITY_THRESHOLD }}
+          - **Scan Type**: ${{ env.SCAN_TYPE }}
+          
+          ## Scan Results
+          
+          ### Dependency Vulnerabilities
+          - Status: ${{ needs.dependency-scan.result }}
+          - Java Dependencies: Scanned with OWASP Dependency Check
+          - Node.js Dependencies: Scanned with npm audit
+          
+          ### Code Security Analysis
+          - Status: ${{ needs.code-security-scan.result }}
+          - CodeQL: Static analysis for Java and JavaScript
+          - Semgrep: Security-focused static analysis
+          
+          ### Container Security
+          - Status: ${{ needs.container-security-scan.result }}
+          - Trivy: Container vulnerability scanning
+          - Hadolint: Dockerfile best practices
+          
+          ### Infrastructure Security
+          - Status: ${{ needs.infrastructure-security-scan.result }}
+          - CDK-nag: AWS CDK security rules
+          - Checkov: Infrastructure as Code security
+          - Trivy: Configuration scanning
+          
+          ## Recommendations
+          1. Review all HIGH and CRITICAL severity findings
+          2. Update dependencies with known vulnerabilities
+          3. Fix any infrastructure misconfigurations
+          4. Implement suggested security improvements
+          
+          ## Next Steps
+          - Address critical vulnerabilities immediately
+          - Schedule regular security reviews
+          - Monitor for new vulnerabilities
+          
+          EOF
+      
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.md
+          retention-days: 90
+      
+      - name: Create security issue if critical vulnerabilities found
+        if: needs.dependency-scan.result == 'failure' || needs.code-security-scan.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('security-report.md', 'utf8');
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Critical Security Vulnerabilities Detected',
+              body: `Critical security vulnerabilities have been detected in the latest scan.\n\n${report}`,
+              labels: ['security', 'critical', 'vulnerability']
+            });

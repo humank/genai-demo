@@ -1,16 +1,19 @@
 # Kubernetes Profile Configuration
-# Activated by: SPRING_PROFILES_ACTIVE=kubernetes
-# Features: EKS-optimized settings, service discovery, health checks
+# This configuration is activated when SPRING_PROFILES_ACTIVE=kubernetes
 
 spring:
+  profiles:
+    active: kubernetes
+  
+  # PostgreSQL Database Configuration for Kubernetes
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME}
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      maximum-pool-size: ${DB_POOL_SIZE:15}
-      minimum-idle: ${DB_POOL_MIN_IDLE:5}
+      maximum-pool-size: 20
+      minimum-idle: 5
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
@@ -18,14 +21,14 @@ spring:
 
   # JPA Configuration for Kubernetes
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: false
+        use_sql_comments: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         jdbc:
           batch_size: 20
         order_inserts: true
@@ -37,9 +40,8 @@ spring:
     locations: classpath:db/migration/postgresql
     baseline-on-migrate: false
     validate-on-migrate: true
-    out-of-order: false
 
-  # Kafka Configuration for Kubernetes (Amazon MSK)
+  # Kafka Configuration for Kubernetes (MSK)
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
     producer:
@@ -50,151 +52,152 @@ spring:
       batch-size: 16384
       linger-ms: 5
       buffer-memory: 33554432
-      properties:
-        enable.idempotence: true
-        max.in.flight.requests.per.connection: 5
-        security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
     consumer:
+      group-id: genai-demo-k8s
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      group-id: ${KAFKA_CONSUMER_GROUP_ID:genai-demo-consumer}
       auto-offset-reset: earliest
       enable-auto-commit: false
-      properties:
-        spring.json.trusted.packages: "solid.humank.genaidemo.domain.common.event"
-        security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
-    
-# Kubernetes-optimized logging (JSON for Fluent Bit)
+      max-poll-records: 500
+
+# Kubernetes Logging Configuration
 logging:
   level:
-    org.springframework.web: INFO
+    root: INFO
+    "[solid.humank.genaidemo]": INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
     org.hibernate.SQL: WARN
-    solid.humank.genaidemo: INFO
-    solid.humank.genaidemo.infrastructure.event: INFO
-    org.springframework.kafka: INFO
+    io.opentelemetry: INFO
+    io.micrometer: INFO
   pattern:
-    console: '{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}","level":"%-5level","thread":"%thread","logger":"%logger{36}","correlationId":"%X{correlationId:-}","traceId":"%X{traceId:-}","spanId":"%X{spanId:-}","pod":"%X{pod:-}","node":"%X{node:-}","message":"%msg"}%n'
-    
-# Kubernetes server configuration
-server:
-  port: ${SERVER_PORT:8080}
-  error:
-    include-stacktrace: never
-    include-message: never
-    whitelabel:
-      enabled: false
-  tomcat:
-    max-threads: ${SERVER_TOMCAT_MAX_THREADS:200}
-    min-spare-threads: ${SERVER_TOMCAT_MIN_SPARE_THREADS:10}
-  shutdown: graceful
-      
-# Kubernetes management endpoints (for probes and monitoring)
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-},%X{correlationId:-}] %logger{36} - %msg%n"
+
+# Kubernetes Tracing Configuration
+tracing:
+  enabled: true
+  sampling:
+    ratio: ${TRACING_SAMPLING_RATIO:0.1}  # Configurable via environment variable
+  jaeger:
+    endpoint: http://localhost:14250  # Not used in Kubernetes
+  otlp:
+    endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://adot-collector:4317}
+
+# OpenTelemetry Kubernetes Configuration
+otel:
+  traces:
+    exporter: otlp
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://adot-collector:4317}
+      protocol: grpc
+      timeout: 10s
+      headers:
+        x-honeycomb-team: ${HONEYCOMB_API_KEY:}
+  resource:
+    attributes:
+      deployment.environment: kubernetes
+      service.namespace: ${KUBERNETES_NAMESPACE:default}
+      cloud.provider: aws
+      cloud.platform: aws_eks
+      cloud.region: ${AWS_REGION}
+      k8s.cluster.name: ${EKS_CLUSTER_NAME}
+      k8s.namespace.name: ${KUBERNETES_NAMESPACE:default}
+      k8s.pod.name: ${HOSTNAME}
+      k8s.node.name: ${K8S_NODE_NAME}
+
+# Management Configuration for Kubernetes
 management:
-  server:
-    port: ${MANAGEMENT_PORT:8081}
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus,readiness,liveness
-      base-path: /actuator
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: when-authorized
       probes:
-        enabled: true
-    readiness:
-      enabled: true
-    liveness:
-      enabled: true
-  health:
-    readiness-state:
-      enabled: true
-    liveness-state:
-      enabled: true
+        enabled: true  # Enable Kubernetes health probes
   metrics:
     export:
+      prometheus:
+        enabled: true
+        step: 30s
       cloudwatch:
         enabled: true
-        namespace: GenAIDemo/EKS
+        namespace: GenAIDemo/Kubernetes
+        step: 1m
         batch-size: 20
-      prometheus:
-        enabled: true
-        
-# AWS Observability Configuration for EKS
-observability:
-  tracing:
-    enabled: true
-    sampler:
-      probability: ${TRACING_SAMPLE_RATE:0.1}
-    aws:
-      xray:
-        enabled: true
-        daemon-address: ${AWS_XRAY_DAEMON_ADDRESS:xray-daemon:2000}
-  metrics:
-    enabled: true
-    export:
-      cloudwatch:
-        enabled: true
-        namespace: GenAIDemo/EKS
-      prometheus:
-        enabled: true
-  logging:
-    structured: true
-    mdc:
-      correlation-id: true
-      trace-id: true
-      span-id: true
-      pod-name: ${HOSTNAME:unknown}
-      node-name: ${NODE_NAME:unknown}
-      
-# Profile validation
+    tags:
+      environment: kubernetes
+      cluster: ${EKS_CLUSTER_NAME}
+      namespace: ${KUBERNETES_NAMESPACE:default}
+      pod: ${HOSTNAME}
+      region: ${AWS_REGION}
+
+# Kubernetes Profile Features
 genai-demo:
   profile:
     name: kubernetes
-    description: "EKS deployment with PostgreSQL, MSK, and comprehensive observability"
+    description: "Kubernetes profile with PostgreSQL, MSK, and AWS X-Ray"
     features:
       h2-console: false
       debug-logging: false
-      kafka-events: true
       in-memory-events: false
+      kafka-events: true
       observability-enabled: true
-      kubernetes-optimized: true
-      
-  # Event publishing strategy for Kubernetes
+      distributed-tracing: true
   events:
-    publisher:
-      type: kafka
-      async: true
-      retry:
-        max-attempts: 3
-        backoff-delay: 1000
-      dead-letter:
-        enabled: true
-        topic: genai-demo.dead-letter
-        
-  # Database configuration
-  database:
-    type: postgresql
-    migration-path: postgresql
-    
-# Security configuration
-security:
-  require-ssl: ${SECURITY_REQUIRE_SSL:true}
-  
-# AWS Configuration
+    publisher: kafka
+    async: true
+    topics:
+      customer: genai-demo.customer
+      order: genai-demo.order
+      payment: genai-demo.payment
+      inventory: genai-demo.inventory
+  observability:
+    tracing:
+      enabled: true
+      exporter: xray
+      sampling-rate: ${TRACING_SAMPLING_RATIO:0.1}
+    metrics:
+      enabled: true
+      export-interval: 30s
+      cloudwatch-enabled: true
+    logging:
+      structured: true
+      correlation-enabled: true
+      level: INFO
+
+# AWS X-Ray Configuration for Kubernetes
 aws:
-  region: ${AWS_REGION:ap-northeast-1}
-  credentials:
-    use-instance-profile: true
-    
-# Kubernetes-specific configuration
-kubernetes:
-  namespace: ${KUBERNETES_NAMESPACE:default}
-  service-name: ${KUBERNETES_SERVICE_NAME:genai-demo}
-  pod-name: ${HOSTNAME:unknown}
-  node-name: ${NODE_NAME:unknown}
-  
-# Graceful shutdown configuration
-spring:
-  lifecycle:
-    timeout-per-shutdown-phase: 30s
+  xray:
+    enabled: true
+    daemon-address: ${AWS_XRAY_DAEMON_ADDRESS:xray-daemon:2000}
+    context-missing: LOG_ERROR
+    plugins:
+      - EC2Plugin
+      - EKSPlugin
+    sampling-rules:
+      version: 2
+      default:
+        fixed_target: 1
+        rate: ${TRACING_SAMPLING_RATIO:0.1}
+      rules:
+        - description: "Customer service sampling"
+          service_name: "genai-demo"
+          http_method: "*"
+          url_path: "/api/customers/*"
+          fixed_target: 2
+          rate: 0.2
+        - description: "Order service sampling"
+          service_name: "genai-demo"
+          http_method: "*"
+          url_path: "/api/orders/*"
+          fixed_target: 2
+          rate: 0.2
+        - description: "Health check sampling"
+          service_name: "genai-demo"
+          http_method: "GET"
+          url_path: "/actuator/health"
+          fixed_target: 0
+          rate: 0.0

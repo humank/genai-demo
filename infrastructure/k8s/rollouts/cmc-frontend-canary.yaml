@@ -1,0 +1,343 @@
+# Canary Deployment for GenAI Demo CMC Frontend
+# This provides gradual traffic shifting with automated rollback capabilities
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-cmc-frontend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    version: v1
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  replicas: 3
+  strategy:
+    canary:
+      # Service that the rollout modifies as the stable service
+      stableService: genai-demo-cmc-frontend-stable
+      # Service that the rollout modifies as the canary service
+      canaryService: genai-demo-cmc-frontend-canary
+      # Traffic routing configuration
+      trafficRouting:
+        alb:
+          ingress: genai-demo-cmc-frontend-ingress
+          servicePort: 80
+          rootService: genai-demo-cmc-frontend-root
+      # Canary deployment steps
+      steps:
+      - setWeight: 10
+      - pause:
+          duration: 2m
+      - analysis:
+          templates:
+          - templateName: frontend-success-rate
+          args:
+          - name: service-name
+            value: genai-demo-cmc-frontend-canary
+          - name: prometheus-server
+            value: http://prometheus.monitoring.svc.cluster.local:9090
+      - setWeight: 25
+      - pause:
+          duration: 5m
+      - analysis:
+          templates:
+          - templateName: frontend-success-rate
+          args:
+          - name: service-name
+            value: genai-demo-cmc-frontend-canary
+          - name: prometheus-server
+            value: http://prometheus.monitoring.svc.cluster.local:9090
+      - setWeight: 50
+      - pause:
+          duration: 10m
+      - analysis:
+          templates:
+          - templateName: frontend-success-rate
+          args:
+          - name: service-name
+            value: genai-demo-cmc-frontend-canary
+          - name: prometheus-server
+            value: http://prometheus.monitoring.svc.cluster.local:9090
+      - setWeight: 75
+      - pause:
+          duration: 10m
+      - analysis:
+          templates:
+          - templateName: frontend-success-rate
+          args:
+          - name: service-name
+            value: genai-demo-cmc-frontend-canary
+          - name: prometheus-server
+            value: http://prometheus.monitoring.svc.cluster.local:9090
+      # Analysis configuration
+      analysis:
+        templates:
+        - templateName: frontend-success-rate
+        args:
+        - name: service-name
+          value: genai-demo-cmc-frontend-canary
+        - name: prometheus-server
+          value: http://prometheus.monitoring.svc.cluster.local:9090
+        startingStep: 2
+        successfulRunHistoryLimit: 5
+        unsuccessfulRunHistoryLimit: 3
+      # Automatic rollback configuration
+      abortScaleDownDelaySeconds: 30
+      scaleDownDelaySeconds: 30
+  selector:
+    matchLabels:
+      app: genai-demo-cmc-frontend
+  template:
+    metadata:
+      labels:
+        app: genai-demo-cmc-frontend
+        version: v1
+    spec:
+      serviceAccountName: genai-demo-cmc-frontend
+      containers:
+      - name: genai-demo-cmc-frontend
+        image: ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/cmc-frontend:latest
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: NEXT_PUBLIC_API_URL
+          value: "https://api.kimkao.io"
+        - name: NEXT_PUBLIC_APP_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /api/health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+
+---
+# Stable Service for Canary Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-cmc-frontend-stable
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    role: stable
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: genai-demo-cmc-frontend
+
+---
+# Canary Service for Canary Deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-cmc-frontend-canary
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    role: canary
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: genai-demo-cmc-frontend
+
+---
+# Root Service for ALB Traffic Routing
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-cmc-frontend-root
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    role: root
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: genai-demo-cmc-frontend
+
+---
+# Ingress for ALB Traffic Routing
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: genai-demo-cmc-frontend-ingress
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+    # Canary traffic routing annotations
+    alb.ingress.kubernetes.io/actions.weighted-routing: |
+      {
+        "type": "forward",
+        "forwardConfig": {
+          "targetGroups": [
+            {
+              "serviceName": "genai-demo-cmc-frontend-stable",
+              "servicePort": "80",
+              "weight": 100
+            },
+            {
+              "serviceName": "genai-demo-cmc-frontend-canary",
+              "servicePort": "80",
+              "weight": 0
+            }
+          ]
+        }
+      }
+spec:
+  rules:
+  - host: cmc.kimkao.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: weighted-routing
+            port:
+              name: use-annotation
+
+---
+# Analysis Template for Frontend Success Rate
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: frontend-success-rate
+  namespace: genai-demo
+spec:
+  args:
+  - name: service-name
+  - name: prometheus-server
+    value: http://prometheus.monitoring.svc.cluster.local:9090
+  metrics:
+  - name: success-rate
+    interval: 30s
+    count: 5
+    successCondition: result[0] >= 0.95
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          sum(rate(nginx_ingress_controller_requests{service="{{args.service-name}}",status!~"5.."}[2m])) /
+          sum(rate(nginx_ingress_controller_requests{service="{{args.service-name}}"}[2m]))
+  - name: avg-response-time
+    interval: 30s
+    count: 5
+    successCondition: result[0] <= 1.0
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          histogram_quantile(0.95,
+            sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{service="{{args.service-name}}"}[2m])) by (le)
+          )
+  - name: error-rate
+    interval: 30s
+    count: 5
+    successCondition: result[0] <= 0.05
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: "{{args.prometheus-server}}"
+        query: |
+          sum(rate(nginx_ingress_controller_requests{service="{{args.service-name}}",status=~"5.."}[2m])) /
+          sum(rate(nginx_ingress_controller_requests{service="{{args.service-name}}"}[2m]))
+
+---
+# ServiceAccount for CMC Frontend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genai-demo-cmc-frontend
+  namespace: genai-demo
+  labels:
+    app.kubernetes.io/name: genai-demo-cmc-frontend
+    app.kubernetes.io/component: cmc-frontend
+    app.kubernetes.io/part-of: genai-demo

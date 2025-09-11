@@ -1,0 +1,8 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: genai-demo-hpa
+  namespace: genai-demo
+spec:
+  minReplicas: 1
+  maxReplicas: 3

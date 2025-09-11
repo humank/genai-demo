@@ -1,0 +1,234 @@
+package solid.humank.genaidemo.infrastructure.analytics;
+
+import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import software.amazon.awssdk.services.firehose.model.PutRecordBatchRequest;
+import solid.humank.genaidemo.domain.common.event.DomainEvent;
+
+/**
+ * Implementation of AnalyticsEventPublisher that sends events to AWS Kinesis
+ * Data Firehose.
+ * 
+ * This implementation batches events for efficient delivery and includes retry
+ * logic
+ * for handling transient failures. Events are serialized to JSON format with
+ * additional
+ * metadata for analytics processing.
+ * 
+ * Requirements addressed:
+ * - 9.1: Stream domain events to data lake for real-time analytics
+ * - 9.6: Handle data source unavailability gracefully
+ */
+public class FirehoseAnalyticsEventPublisher implements AnalyticsEventPublisher {
+
+    private static final Logger logger = LoggerFactory.getLogger(FirehoseAnalyticsEventPublisher.class);
+
+    private final AmazonKinesisFirehose firehoseClient;
+    private final AnalyticsProperties.FirehoseConfig config;
+    private final ObjectMapper objectMapper;
+    private final ConcurrentLinkedQueue<DomainEvent> eventQueue;
+    private final ScheduledExecutorService scheduler;
+    private final AtomicBoolean isHealthy;
+
+    public FirehoseAnalyticsEventPublisher(
+            AmazonKinesisFirehose firehoseClient,
+            AnalyticsProperties analyticsProperties) {
+        this.firehoseClient = firehoseClient;
+        this.config = analyticsProperties.firehose();
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
+        this.eventQueue = new ConcurrentLinkedQueue<>();
+        this.scheduler = Executors.newScheduledThreadPool(2);
+        this.isHealthy = new AtomicBoolean(true);
+
+        // Start background batch processor
+        startBatchProcessor();
+    }
+
+    @Override
+    public void publish(DomainEvent event) {
+        if (!isHealthy.get()) {
+            logger.warn("Analytics publisher is unhealthy, dropping event: {}", event.getEventId());
+            return;
+        }
+
+        eventQueue.offer(event);
+        logger.debug("Queued domain event for analytics: {} ({})",
+                event.getEventType(), event.getEventId());
+
+        // If queue is getting full, trigger immediate flush
+        if (eventQueue.size() >= config.batchSize()) {
+            triggerBatchSend();
+        }
+    }
+
+    @Override
+    public void publishBatch(Iterable<DomainEvent> events) {
+        if (!isHealthy.get()) {
+            logger.warn("Analytics publisher is unhealthy, dropping batch of events");
+            return;
+        }
+
+        int count = 0;
+        for (DomainEvent event : events) {
+            eventQueue.offer(event);
+            count++;
+        }
+
+        logger.debug("Queued {} domain events for analytics", count);
+
+        // Trigger batch send if we have enough events
+        if (eventQueue.size() >= config.batchSize()) {
+            triggerBatchSend();
+        }
+    }
+
+    @Override
+    public void flush() {
+        logger.info("Flushing analytics events to Firehose");
+        triggerBatchSend();
+    }
+
+    @Override
+    public boolean isHealthy() {
+        return isHealthy.get();
+    }
+
+    private void startBatchProcessor() {
+        // Schedule periodic batch sending
+        scheduler.scheduleAtFixedRate(
+                this::triggerBatchSend,
+                config.maxWaitTimeMs(),
+                config.maxWaitTimeMs(),
+                TimeUnit.MILLISECONDS);
+
+        // Schedule health check
+        scheduler.scheduleAtFixedRate(
+                this::performHealthCheck,
+                30, // Initial delay
+                30, // Period
+                TimeUnit.SECONDS);
+    }
+
+    @Async
+    private void triggerBatchSend() {
+        if (eventQueue.isEmpty()) {
+            return;
+        }
+
+        List<DomainEvent> batch = new ArrayList<>();
+        DomainEvent event;
+
+        // Collect up to batchSize events
+        while (batch.size() < config.batchSize() && (event = eventQueue.poll()) != null) {
+            batch.add(event);
+        }
+
+        if (!batch.isEmpty()) {
+            sendBatchToFirehose(batch);
+        }
+    }
+
+    private void sendBatchToFirehose(List<DomainEvent> events) {
+        try {
+            List<Record> records = new ArrayList<>();
+
+            for (DomainEvent event : events) {
+                String jsonData = serializeEvent(event);
+                Record record = new Record()
+                        .withData(ByteBuffer.wrap(jsonData.getBytes()));
+                records.add(record);
+            }
+
+            PutRecordBatchRequest request = new PutRecordBatchRequest()
+                    .withDeliveryStreamName(config.streamName())
+                    .withRecords(records);
+
+            PutRecordBatchResult result = firehoseClient.putRecordBatch(request);
+
+            int failedCount = result.getFailedPutCount();
+            if (failedCount > 0) {
+                logger.warn("Failed to send {} out of {} events to Firehose",
+                        failedCount, events.size());
+                isHealthy.set(false);
+            } else {
+                logger.debug("Successfully sent {} events to Firehose", events.size());
+                isHealthy.set(true);
+            }
+
+        } catch (Exception e) {
+            logger.error("Failed to send batch to Firehose", e);
+            isHealthy.set(false);
+
+            // Re-queue events for retry
+            events.forEach(eventQueue::offer);
+        }
+    }
+
+    private String serializeEvent(DomainEvent event) throws JsonProcessingException {
+        // Create analytics event wrapper with additional metadata
+        AnalyticsEvent analyticsEvent = new AnalyticsEvent(
+                event.getEventId().toString(),
+                event.getEventType(),
+                event.getAggregateId(),
+                event.getOccurredOn(),
+                extractEventData(event),
+                System.currentTimeMillis());
+
+        return objectMapper.writeValueAsString(analyticsEvent);
+    }
+
+    private Object extractEventData(DomainEvent event) {
+        // Extract relevant data from domain event for analytics
+        // This could be enhanced to extract specific fields based on event type
+        try {
+            return objectMapper.readValue(
+                    objectMapper.writeValueAsString(event),
+                    Object.class);
+        } catch (JsonProcessingException e) {
+            logger.warn("Failed to extract event data for analytics: {}", event.getEventId(), e);
+            return null;
+        }
+    }
+
+    private void performHealthCheck() {
+        try {
+            // Simple health check - try to describe the delivery stream
+            firehoseClient.describeDeliveryStream(config.streamName());
+            isHealthy.set(true);
+            logger.debug("Analytics health check passed");
+        } catch (Exception e) {
+            logger.warn("Analytics health check failed", e);
+            isHealthy.set(false);
+        }
+    }
+
+    /**
+     * Analytics event wrapper for Firehose delivery.
+     * This includes additional metadata for analytics processing.
+     */
+    private record AnalyticsEvent(
+            String eventId,
+            String eventType,
+            String aggregateId,
+            LocalDateTime occurredOn,
+            Object eventData,
+            long processedAt) {
+    }
+}

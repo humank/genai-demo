@@ -110,16 +110,6 @@
           "example" : "PROD-001"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "產品不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取產品資訊",
             "content" : {
@@ -141,6 +131,16 @@
                       "stockQuantity" : 50
                     }
                   }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "產品不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -183,6 +183,26 @@
           "required" : true
         },
         "responses" : {
+          "422" : {
+            "description" : "業務規則驗證失敗",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "請求參數無效",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "404" : {
             "description" : "產品不存在",
             "content" : {
@@ -227,26 +247,6 @@
                 }
               }
             }
-          },
-          "422" : {
-            "description" : "業務規則驗證失敗",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "請求參數無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
           }
         }
       },
@@ -266,6 +266,16 @@
           "example" : "PROD-001"
         } ],
         "responses" : {
+          "422" : {
+            "description" : "產品無法刪除（存在相關訂單）",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "404" : {
             "description" : "產品不存在",
             "content" : {
@@ -276,8 +286,8 @@
               }
             }
           },
-          "422" : {
-            "description" : "產品無法刪除（存在相關訂單）",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -296,16 +306,6 @@
                     "success" : true,
                     "message" : "產品已成功刪除"
                   }
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -340,16 +340,6 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "指定的定價規則不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "佣金費率更新成功",
             "content" : {
@@ -360,8 +350,8 @@
               }
             }
           },
-          "422" : {
-            "description" : "業務規則違反，如佣金費率設定不符合商業邏輯或超出允許範圍",
+          "400" : {
+            "description" : "請求參數無效，如費率值超出合理範圍或格式錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -380,8 +370,18 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效，如費率值超出合理範圍或格式錯誤",
+          "404" : {
+            "description" : "指定的定價規則不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "業務規則違反，如佣金費率設定不符合商業邏輯或超出允許範圍",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -498,22 +498,22 @@
           "required" : true
         },
         "responses" : {
+          "422" : {
+            "description" : "業務規則違反，如定價規則衝突、有效期間重疊或折扣設定不合理",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "定價規則創建成功",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/PricingRuleDto"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -528,8 +528,8 @@
               }
             }
           },
-          "422" : {
-            "description" : "業務規則違反，如定價規則衝突、有效期間重疊或折扣設定不合理",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -548,22 +548,22 @@
         "description" : "獲取系統中所有支付記錄的列表，通常用於管理後台查詢",
         "operationId" : "getAllPayments",
         "responses" : {
-          "200" : {
-            "description" : "成功獲取支付列表",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentResponse"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取支付列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentResponse"
                 }
               }
             }
@@ -586,6 +586,16 @@
           "required" : true
         },
         "responses" : {
+          "400" : {
+            "description" : "請求參數無效",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "201" : {
             "description" : "支付處理成功",
             "content" : {
@@ -615,16 +625,6 @@
                 }
               }
             }
-          },
-          "400" : {
-            "description" : "請求參數無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -647,18 +647,8 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "422" : {
-            "description" : "支付狀態不允許退款",
+          "400" : {
+            "description" : "支付ID格式無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -677,8 +667,18 @@
               }
             }
           },
-          "400" : {
-            "description" : "支付ID格式無效",
+          "200" : {
+            "description" : "退款處理成功",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -687,12 +687,12 @@
               }
             }
           },
-          "200" : {
-            "description" : "退款處理成功",
+          "422" : {
+            "description" : "支付狀態不允許退款",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/PaymentResponse"
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -718,8 +718,8 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
+          "400" : {
+            "description" : "支付ID格式無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -758,8 +758,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "支付ID格式無效",
+          "404" : {
+            "description" : "支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -839,12 +839,12 @@
           "required" : true
         },
         "responses" : {
-          "201" : {
-            "description" : "訂單創建成功",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "string"
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -859,12 +859,12 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "201" : {
+            "description" : "訂單創建成功",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "type" : "string"
                 }
               }
             }
@@ -899,16 +899,6 @@
               }
             }
           },
-          "400" : {
-            "description" : "訂單狀態不允許提交",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "404" : {
             "description" : "訂單不存在",
             "content" : {
@@ -921,6 +911,16 @@
           },
           "500" : {
             "description" : "內部伺服器錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "訂單狀態不允許提交",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -979,8 +979,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "內部伺服器錯誤",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -989,8 +989,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "500" : {
+            "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1019,6 +1019,16 @@
           "example" : "order-123"
         } ],
         "responses" : {
+          "400" : {
+            "description" : "訂單狀態不允許取消",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "404" : {
             "description" : "訂單不存在",
             "content" : {
@@ -1029,8 +1039,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "訂單狀態不允許取消",
+          "500" : {
+            "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1045,16 +1055,6 @@
               "application/json" : {
                 "schema" : {
                   "type" : "string"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "內部伺服器錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -1173,12 +1173,12 @@
           "required" : true
         },
         "responses" : {
-          "404" : {
-            "description" : "產品不存在",
+          "200" : {
+            "description" : "庫存調整成功",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                  "$ref" : "#/components/schemas/InventoryResponse"
                 }
               }
             }
@@ -1193,8 +1193,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "400" : {
+            "description" : "請求參數無效，如調整數量為負數、調整類型不正確等",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1203,18 +1203,18 @@
               }
             }
           },
-          "200" : {
-            "description" : "庫存調整成功",
+          "404" : {
+            "description" : "產品不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/InventoryResponse"
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效，如調整數量為負數、調整類型不正確等",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1389,16 +1389,6 @@
         "description" : "獲取系統整體統計數據，包括各個數據表的記錄數量、系統狀態等基礎統計信息",
         "operationId" : "getStats",
         "responses" : {
-          "500" : {
-            "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取統計數據",
             "content" : {
@@ -1419,6 +1409,16 @@
                       "message" : "統計數據獲取成功"
                     }
                   }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -1579,8 +1579,8 @@
           "example" : 20
         } ],
         "responses" : {
-          "500" : {
-            "description" : "系統內部錯誤",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1622,8 +1622,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1652,18 +1652,8 @@
           "example" : "prod-123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "指定的產品不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "400" : {
+            "description" : "請求參數無效，如產品ID格式錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1682,8 +1672,18 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效，如產品ID格式錯誤",
+          "404" : {
+            "description" : "指定的產品不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1715,26 +1715,6 @@
           "example" : "ELECTRONICS"
         } ],
         "responses" : {
-          "200" : {
-            "description" : "成功獲取產品類別定價規則列表",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PricingRuleDto"
-                }
-              }
-            }
-          },
-          "422" : {
-            "description" : "業務規則違反，如查詢的產品類別不支援定價規則",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "400" : {
             "description" : "請求參數無效，如產品類別值不在允許範圍內",
             "content" : {
@@ -1747,6 +1727,26 @@
           },
           "500" : {
             "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取產品類別定價規則列表",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PricingRuleDto"
+                }
+              }
+            }
+          },
+          "422" : {
+            "description" : "業務規則違反，如查詢的產品類別不支援定價規則",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1776,8 +1776,18 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "404" : {
-            "description" : "支付不存在",
+          "200" : {
+            "description" : "成功獲取支付詳情",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "支付ID格式無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1796,18 +1806,8 @@
               }
             }
           },
-          "200" : {
-            "description" : "成功獲取支付詳情",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/PaymentResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "支付ID格式無效",
+          "404" : {
+            "description" : "支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1837,26 +1837,6 @@
           "example" : "123e4567-e89b-12d3-a456-426614174000"
         } ],
         "responses" : {
-          "400" : {
-            "description" : "訂單ID格式無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "404" : {
-            "description" : "訂單支付不存在",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取訂單支付詳情",
             "content" : {
@@ -1867,8 +1847,28 @@
               }
             }
           },
+          "400" : {
+            "description" : "訂單ID格式無效",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "500" : {
             "description" : "系統內部錯誤",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "訂單支付不存在",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1897,6 +1897,16 @@
           "example" : "order-123"
         } ],
         "responses" : {
+          "200" : {
+            "description" : "成功獲取訂單資訊",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
           "404" : {
             "description" : "訂單不存在",
             "content" : {
@@ -1913,16 +1923,6 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "成功獲取訂單資訊",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "string"
                 }
               }
             }
@@ -2116,22 +2116,22 @@
         "description" : "獲取資料庫結構和配置的完整驗證報告",
         "operationId" : "getValidationReport",
         "responses" : {
-          "200" : {
-            "description" : "成功獲取資料庫驗證報告",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DatabaseValidationReport"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取資料庫驗證報告",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DatabaseValidationReport"
                 }
               }
             }
@@ -2156,22 +2156,22 @@
               }
             }
           },
-          "503" : {
-            "description" : "資料庫服務不可用",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DatabaseHealthStatus"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "資料庫服務不可用",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DatabaseHealthStatus"
                 }
               }
             }
@@ -2186,22 +2186,22 @@
         "description" : "獲取當前資料庫配置和連線參數資訊",
         "operationId" : "getConfiguration",
         "responses" : {
-          "200" : {
-            "description" : "成功獲取資料庫配置資訊",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/DatabaseHealthInfo"
-                }
-              }
-            }
-          },
           "500" : {
             "description" : "內部伺服器錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "成功獲取資料庫配置資訊",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DatabaseHealthInfo"
                 }
               }
             }
@@ -2239,6 +2239,16 @@
           "example" : 20
         } ],
         "responses" : {
+          "400" : {
+            "description" : "請求參數無效",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "成功獲取客戶列表",
             "content" : {
@@ -2251,16 +2261,6 @@
           },
           "500" : {
             "description" : "系統內部錯誤",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
-          "400" : {
-            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -2289,22 +2289,22 @@
           "example" : "cust-12345-abcde"
         } ],
         "responses" : {
-          "400" : {
-            "description" : "客戶ID格式無效",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/StandardErrorResponse"
-                }
-              }
-            }
-          },
           "200" : {
             "description" : "成功獲取客戶資訊",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "string"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "客戶不存在",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardErrorResponse"
                 }
               }
             }
@@ -2319,8 +2319,8 @@
               }
             }
           },
-          "404" : {
-            "description" : "客戶不存在",
+          "400" : {
+            "description" : "客戶ID格式無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -2865,8 +2865,8 @@
               }
             }
           },
-          "500" : {
-            "description" : "系統內部錯誤",
+          "400" : {
+            "description" : "請求參數無效",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -2875,8 +2875,8 @@
               }
             }
           },
-          "400" : {
-            "description" : "請求參數無效",
+          "500" : {
+            "description" : "系統內部錯誤",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -2928,6 +2928,153 @@
                       "$ref" : "#/components/schemas/Link"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/prometheus" : {
+      "get" : {
+        "tags" : [ "Actuator" ],
+        "summary" : "Actuator web endpoint 'prometheus'",
+        "operationId" : "scrape",
+        "parameters" : [ {
+          "name" : "format",
+          "in" : "query",
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "CONTENT_TYPE_004", "CONTENT_TYPE_OPENMETRICS_100", "CONTENT_TYPE_PROTOBUF" ]
+          }
+        }, {
+          "name" : "includedNames",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "text/plain;version=0.0.4;charset=utf-8" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/openmetrics-text;version=1.0.0;charset=utf-8" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/vnd.google.protobuf;proto=io.prometheus.client.MetricFamily;encoding=delimited" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/metrics" : {
+      "get" : {
+        "tags" : [ "Actuator" ],
+        "summary" : "Actuator web endpoint 'metrics'",
+        "operationId" : "listNames",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/vnd.spring-boot.actuator.v3+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/vnd.spring-boot.actuator.v2+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/actuator/metrics/{requiredMetricName}" : {
+      "get" : {
+        "tags" : [ "Actuator" ],
+        "summary" : "Actuator web endpoint 'metrics-requiredMetricName'",
+        "operationId" : "metric",
+        "parameters" : [ {
+          "name" : "requiredMetricName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tag",
+          "in" : "query",
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/vnd.spring-boot.actuator.v3+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/vnd.spring-boot.actuator.v2+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/actuator/info" : {
+      "get" : {
+        "tags" : [ "Actuator" ],
+        "summary" : "Actuator web endpoint 'info'",
+        "operationId" : "info",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/vnd.spring-boot.actuator.v3+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/vnd.spring-boot.actuator.v2+json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
                 }
               }
             }

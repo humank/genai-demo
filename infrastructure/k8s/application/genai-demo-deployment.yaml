@@ -1,0 +1,237 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: genai-demo
+  labels:
+    name: genai-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: genai-demo-app
+  namespace: genai-demo
+  labels:
+    app: genai-demo
+    component: backend
+    version: "2.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: genai-demo
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: genai-demo
+        component: backend
+        version: "2.0.0"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      serviceAccountName: genai-demo-service-account
+      containers:
+      - name: genai-demo
+        image: ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo:latest
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production,kubernetes"
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: host
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: port
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: database
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: genai-demo-db-secret
+              key: password
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: genai-demo-config
+              key: kafka.bootstrap.servers
+        - name: AWS_REGION
+          value: "ap-northeast-1"
+        - name: AWS_XRAY_DAEMON_ADDRESS
+          value: "xray-daemon.observability.svc.cluster.local:2000"
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: EKS_CLUSTER_NAME
+          value: "genai-demo-cluster"
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        # Tracing configuration
+        - name: TRACING_ENABLED
+          value: "true"
+        - name: TRACING_SAMPLING_RATIO
+          value: "0.1"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://adot-collector.observability.svc.cluster.local:4317"
+        - name: OTEL_SERVICE_NAME
+          value: "genai-demo"
+        - name: OTEL_SERVICE_VERSION
+          value: "2.0.0"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "deployment.environment=kubernetes,service.namespace=genai-demo,cloud.provider=aws,cloud.platform=aws_eks"
+        # Logging configuration
+        - name: LOGGING_LEVEL_ROOT
+          value: "INFO"
+        - name: LOGGING_LEVEL_SOLID_HUMANK_GENAIDEMO
+          value: "INFO"
+        - name: OBSERVABILITY_LOGGING_STRUCTURED
+          value: "true"
+        - name: OBSERVABILITY_TRACING_ENABLED
+          value: "true"
+        - name: OBSERVABILITY_METRICS_ENABLED
+          value: "true"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        # Volume mounts for logging
+        volumeMounts:
+        - name: logs-volume
+          mountPath: /app/logs
+        # Security context
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: logs-volume
+        emptyDir: {}
+      # Pod security context
+      securityContext:
+        fsGroup: 1000
+      # Node selection for ARM64 Graviton3 instances
+      nodeSelector:
+        kubernetes.io/arch: arm64
+        node.kubernetes.io/instance-type: m6g.large
+      tolerations:
+      - key: "arm64"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-service
+  namespace: genai-demo
+  labels:
+    app: genai-demo
+    component: backend
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: genai-demo
+    component: backend
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: genai-demo-service-account
+  namespace: genai-demo
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/GenAIDemoServiceRole
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genai-demo-config
+  namespace: genai-demo
+data:
+  kafka.bootstrap.servers: "genai-demo-msk-cluster.kafka.ap-northeast-1.amazonaws.com:9092"
+  application.name: "genai-demo"
+  application.version: "2.0.0"
+  environment: "production"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: genai-demo-ingress
+  namespace: genai-demo
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERTIFICATE_ID"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: "/actuator/health"
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+    alb.ingress.kubernetes.io/healthy-threshold-count: "2"
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: "3"
+spec:
+  rules:
+  - host: api.kimkao.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: genai-demo-service
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - api.kimkao.io

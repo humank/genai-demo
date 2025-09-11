@@ -1,0 +1,140 @@
+{
+  "timestamp": "2025-09-11T14:29:18.970Z",
+  "testResults": {
+    "total": 13,
+    "passed": 7,
+    "failed": 6,
+    "pending": 0,
+    "todo": 0
+  },
+  "coverage": null,
+  "testSuites": [
+    {
+      "name": "/test/disaster-recovery-automation.test.ts",
+      "status": "failed",
+      "duration": 7714,
+      "tests": [
+        {
+          "title": "DisasterRecoveryAutomation Basic Construction should create DR automation construct with minimal configuration",
+          "status": "passed",
+          "duration": 363
+        },
+        {
+          "title": "DisasterRecoveryAutomation Basic Construction should create DR automation construct with full configuration",
+          "status": "failed",
+          "duration": 25
+        },
+        {
+          "title": "DisasterRecoveryAutomation Lambda Functions should create failover Lambda with correct configuration",
+          "status": "passed",
+          "duration": 120
+        },
+        {
+          "title": "DisasterRecoveryAutomation Lambda Functions should create chaos testing Lambda with correct configuration",
+          "status": "passed",
+          "duration": 45
+        },
+        {
+          "title": "DisasterRecoveryAutomation Step Functions State Machines should create failover state machine",
+          "status": "failed",
+          "duration": 46
+        },
+        {
+          "title": "DisasterRecoveryAutomation Step Functions State Machines should create chaos testing state machine",
+          "status": "failed",
+          "duration": 38
+        },
+        {
+          "title": "DisasterRecoveryAutomation EventBridge Rules should create monthly testing rule",
+          "status": "passed",
+          "duration": 37
+        },
+        {
+          "title": "DisasterRecoveryAutomation CloudWatch Dashboard should create DR monitoring dashboard",
+          "status": "passed",
+          "duration": 37
+        },
+        {
+          "title": "DisasterRecoveryAutomation IAM Roles and Policies should create DR automation role with correct permissions",
+          "status": "passed",
+          "duration": 38
+        },
+        {
+          "title": "DisasterRecoveryAutomation Systems Manager Parameters should create DR automation configuration parameter",
+          "status": "passed",
+          "duration": 38
+        },
+        {
+          "title": "DisasterRecoveryAutomation Health Check Monitoring should create health check monitoring when health checks are provided",
+          "status": "failed",
+          "duration": 2
+        },
+        {
+          "title": "DisasterRecoveryAutomation Outputs should create all required outputs",
+          "status": "failed",
+          "duration": 51
+        },
+        {
+          "title": "DisasterRecoveryAutomation Integration Tests should integrate properly with existing infrastructure",
+          "status": "failed",
+          "duration": 40
+        }
+      ]
+    }
+  ],
+  "performance": {
+    "totalTime": 7714,
+    "slowestTests": [
+      {
+        "name": "DisasterRecoveryAutomation Basic Construction should create DR automation construct with minimal configuration",
+        "duration": 363,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Lambda Functions should create failover Lambda with correct configuration",
+        "duration": 120,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Outputs should create all required outputs",
+        "duration": 51,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Step Functions State Machines should create failover state machine",
+        "duration": 46,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Lambda Functions should create chaos testing Lambda with correct configuration",
+        "duration": 45,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Integration Tests should integrate properly with existing infrastructure",
+        "duration": 40,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Step Functions State Machines should create chaos testing state machine",
+        "duration": 38,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation IAM Roles and Policies should create DR automation role with correct permissions",
+        "duration": 38,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation Systems Manager Parameters should create DR automation configuration parameter",
+        "duration": 38,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      },
+      {
+        "name": "DisasterRecoveryAutomation EventBridge Rules should create monthly testing rule",
+        "duration": 37,
+        "file": "/test/disaster-recovery-automation.test.ts"
+      }
+    ]
+  }
+}

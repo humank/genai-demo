@@ -23,12 +23,15 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @DisplayName("Test Profile Isolation Integration Tests")
 @org.springframework.test.context.TestPropertySource(properties = {
-    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-    "spring.datasource.driver-class-name=org.h2.Driver",
-    "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-    "spring.jpa.hibernate.ddl-auto=create-drop",
-    "spring.flyway.enabled=false",
-    "spring.h2.console.enabled=false"
+        "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.flyway.enabled=false",
+        "spring.h2.console.enabled=false",
+        "management.endpoints.web.exposure.include=health",
+        "management.endpoint.health.show-details=never",
+        "management.metrics.enable.all=false"
 })
 class TestProfileIsolationIntegrationTest {
 
@@ -121,10 +124,10 @@ class TestProfileIsolationIntegrationTest {
         String hibernateLogLevel = environment.getProperty("logging.level.org.hibernate");
         String appLogLevel = environment.getProperty("logging.level.solid.humank.genaidemo");
 
-        // Then - Allow for default values if not explicitly set
-        assertThat(springLogLevel).isIn("WARN", null);
-        assertThat(hibernateLogLevel).isIn("WARN", null);
-        assertThat(appLogLevel).isIn("INFO", null);
+        // Then - Allow for optimized ERROR level or default values
+        assertThat(springLogLevel).isIn("WARN", "ERROR", null);
+        assertThat(hibernateLogLevel).isIn("WARN", "ERROR", null);
+        assertThat(appLogLevel).isIn("INFO", "ERROR", null);
     }
 
     @Test

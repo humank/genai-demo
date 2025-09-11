@@ -20,13 +20,13 @@ class ProfileActivationIntegrationTest {
     private ProfileConfigurationProperties profileProperties;
 
     @Test
-    @DisplayName("Should activate development profile by default")
-    void shouldActivateDevelopmentProfileByDefault() {
+    @DisplayName("Should activate test profile during test execution")
+    void shouldActivateTestProfileDuringTestExecution() {
         // When
         String[] activeProfiles = environment.getActiveProfiles();
 
         // Then
-        assertThat(activeProfiles).contains("dev");
+        assertThat(activeProfiles).contains("test");
     }
 
     @Test
@@ -147,13 +147,12 @@ class ProfileActivationIntegrationTest {
         @DisplayName("Should load production profile features")
         void shouldLoadProductionProfileFeatures() {
             // Test production profile features
-            ProfileConfigurationProperties.ProfileFeatures productionFeatures = 
-                new ProfileConfigurationProperties.ProfileFeatures(
+            ProfileConfigurationProperties.ProfileFeatures productionFeatures = new ProfileConfigurationProperties.ProfileFeatures(
                     false, // h2Console
-                    false, // debugLogging  
+                    false, // debugLogging
                     false, // inMemoryEvents
-                    true   // kafkaEvents
-                );
+                    true // kafkaEvents
+            );
 
             // Verify production features
             assertThat(productionFeatures.h2Console()).isFalse();

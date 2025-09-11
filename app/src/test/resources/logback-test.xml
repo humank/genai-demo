@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 測試環境專用的日誌配置 - 只輸出錯誤級別日誌 -->
+
+    <!-- Console Appender - 只輸出錯誤 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <!-- 只輸出 ERROR 級別的日誌 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!-- 應用程式日誌 - 只輸出錯誤 -->
+    <logger name="solid.humank.genaidemo" level="ERROR" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- Spring 框架日誌 - 只輸出錯誤 -->
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.springframework.web" level="ERROR" />
+    <logger name="org.springframework.boot" level="ERROR" />
+    <logger name="org.springframework.kafka" level="ERROR" />
+    <logger name="org.springframework.test" level="ERROR" />
+
+    <!-- Hibernate 日誌 - 只輸出錯誤 -->
+    <logger name="org.hibernate" level="ERROR" />
+    <logger name="org.hibernate.SQL" level="ERROR" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR" />
+
+    <!-- H2 資料庫日誌 - 只輸出錯誤 -->
+    <logger name="org.h2" level="ERROR" />
+
+    <!-- Cucumber 日誌 - 只輸出錯誤 -->
+    <logger name="io.cucumber" level="ERROR" />
+
+    <!-- JUnit 日誌 - 只輸出錯誤 -->
+    <logger name="org.junit" level="ERROR" />
+
+    <!-- Mockito 日誌 - 只輸出錯誤 -->
+    <logger name="org.mockito" level="ERROR" />
+
+    <!-- ArchUnit 日誌 - 只輸出錯誤 -->
+    <logger name="com.tngtech.archunit" level="ERROR" />
+
+    <!-- Allure 日誌 - 只輸出錯誤 -->
+    <logger name="io.qameta.allure" level="ERROR" />
+
+    <!-- 根日誌級別設為 ERROR -->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

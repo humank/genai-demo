@@ -6,6 +6,12 @@ spring:
   application:
     name: genai-demo
   
+# Main configuration for tests - 優化記憶體使用
+  main:
+    allow-bean-definition-overriding: true
+    lazy-initialization: true
+    banner-mode: "off"  # 關閉啟動橫幅以減少輸出
+  
   # Database Configuration - Use H2 in-memory for all tests
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
@@ -13,7 +19,7 @@ spring:
     username: sa
     password: ""
   
-  # JPA Configuration for Tests
+# JPA Configuration for Tests - 優化記憶體使用
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -24,6 +30,13 @@ spring:
         cache:
           use_second_level_cache: false
         format_sql: false
+        generate_statistics: false
+        use_sql_comments: false
+        jdbc:
+          batch_size: 20
+          batch_versioned_data: true
+        order_inserts: true
+        order_updates: true
   
   # Disable Flyway for tests
   flyway:
@@ -36,6 +49,7 @@ spring:
   
   # Kafka Configuration - Disabled for tests
   kafka:
+    enabled: false
     bootstrap-servers: localhost:9092
     consumer:
       auto-offset-reset: earliest
@@ -43,59 +57,90 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
   
-  # Performance optimizations for tests
-  main:
-    lazy-initialization: true
-  
   # Exclude unnecessary auto-configurations
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
       - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  
+  # Disable scheduling for tests to prevent HealthMetricsCollector issues
+  task:
+    scheduling:
+      enabled: false
 
-# Logging Configuration for Tests
+# Logging Configuration for Tests - 只輸出錯誤級別日誌
 logging:
   level:
-    org.springframework: WARN
-    org.hibernate: WARN
-    solid.humank.genaidemo: INFO
-    org.springframework.web: INFO
-    org.springframework.boot.autoconfigure: WARN
+    root: ERROR
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    solid.humank.genaidemo: ERROR
+    org.springframework.web: ERROR
+    org.springframework.boot.autoconfigure: ERROR
+    org.h2: ERROR
+    io.cucumber: ERROR
+    org.junit: ERROR
+    org.mockito: ERROR
+    com.tngtech.archunit: ERROR
+    io.qameta.allure: ERROR
 
-# Management Endpoints - Minimal for tests
+# Management Endpoints - Minimal configuration for tests
 management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: never
+      show-details: always
+      show-components: always
+      probes:
+        enabled: false  # Disable Kubernetes probes in tests
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  health:
+    livenessstate:
+      enabled: false  # Disable liveness state in tests
+    readinessstate:
+      enabled: false  # Disable readiness state in tests
+    defaults:
+      enabled: false  # Disable default health indicators that might cause issues
+    db:
+      enabled: true   # Keep database health check
+    diskspace:
+      enabled: false  # Disable disk space check for tests
   metrics:
     enable:
-      all: false
+      all: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 # Profile Configuration Properties
-genai-demo:
+app:
   profile:
     name: test
     description: Test environment with isolated configuration
     features:
-      h2Console: false
-      debugLogging: false
-      inMemoryEvents: true
-      kafkaEvents: false
+      h2-console: false
+      debug-logging: false
+      in-memory-events: true
+      kafka-events: false
+    validation:
+      strict: false  # Disable strict validation in tests
+
+genai-demo:
+  events:
+    publisher: in-memory
+    async: false
 
 # Additional test configuration
 info:
   app:
     version: 2.0.0
-
-# Application Profile Validation
-app:
-  profile:
-    validation:
-      strict: false  # Disable strict validation in tests
 
 # OpenAPI Configuration
 springdoc:
@@ -105,3 +150,7 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+# Tracing Configuration - Use noop for tests to avoid global state issues
+tracing:
+  enabled: true  # Enable but use noop implementation

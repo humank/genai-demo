@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+    <!-- Console appender with PII masking -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="solid.humank.genaidemo.infrastructure.security.PiiMaskingPatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- JSON appender for structured logging with PII masking -->
+    <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <logLevel />
+                <loggerName />
+                <mdc />
+                <arguments />
+                <stackTrace />
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ}",
+                        "level": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "message": "%msg",
+                        "mdc": "%mdc",
+                        "application": {
+                        "name": "${spring.application.name:-genai-demo}",
+                        "version": "${application.version:-unknown}",
+                        "profile": "${spring.profiles.active:-default}"
+                        }
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+        <layout class="solid.humank.genaidemo.infrastructure.security.PiiMaskingPatternLayout">
+            <pattern>%msg</pattern>
+        </layout>
+    </appender>
+
+    <!-- File appender for production with PII masking -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/genai-demo.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/genai-demo.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <layout class="solid.humank.genaidemo.infrastructure.security.PiiMaskingPatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- Security events appender -->
+    <appender name="SECURITY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/security.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/security.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>500MB</totalSizeCap>
+        </rollingPolicy>
+        <layout class="solid.humank.genaidemo.infrastructure.security.PiiMaskingPatternLayout">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- Profile-specific configurations -->
+    <springProfile name="dev,test">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="production">
+        <root level="INFO">
+            <appender-ref ref="JSON" />
+            <appender-ref ref="FILE" />
+        </root>
+
+        <!-- Security logger -->
+        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO"
+            additivity="false">
+            <appender-ref ref="SECURITY" />
+            <appender-ref ref="JSON" />
+        </logger>
+    </springProfile>
+
+    <!-- Kubernetes profile for structured JSON logging -->
+    <springProfile name="kubernetes">
+        <root level="INFO">
+            <appender-ref ref="JSON" />
+        </root>
+
+        <!-- Security logger -->
+        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO"
+            additivity="false">
+            <appender-ref ref="SECURITY" />
+            <appender-ref ref="JSON" />
+        </logger>
+    </springProfile>
+</configuration>

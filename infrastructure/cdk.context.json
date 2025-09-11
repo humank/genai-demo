@@ -9,11 +9,61 @@
       "rds-instance-type": "db.t3.micro",
       "rds-storage": 20,
       "rds-multi-az": false,
-      "msk-instance-type": "kafka.t3.small",
-      "msk-brokers": 1
+      "msk": {
+        "broker-instance-type": "kafka.t3.small",
+        "number-of-brokers": 1,
+        "storage-size": 20
+      },
+      "cost-optimization": {
+        "spot-instances": true,
+        "reserved-instances": false,
+        "right-sizing": false,
+        "scheduled-scaling": true,
+        "auto-shutdown": true,
+        "spot-percentage": 80,
+        "reserved-percentage": 0,
+        "monthly-budget": 100
+      },
+      "retention-policies": {
+        "logs": 7,
+        "metrics": 7,
+        "backups": 7,
+        "snapshots": 3
+      }
+    },
+    "staging": {
+      "vpc-cidr": "10.1.0.0/16",
+      "nat-gateways": 2,
+      "eks-node-type": "t3.large",
+      "eks-min-nodes": 1,
+      "eks-max-nodes": 5,
+      "rds-instance-type": "db.t3.small",
+      "rds-storage": 50,
+      "rds-multi-az": true,
+      "msk": {
+        "broker-instance-type": "kafka.t3.small",
+        "number-of-brokers": 2,
+        "storage-size": 50
+      },
+      "cost-optimization": {
+        "spot-instances": true,
+        "reserved-instances": false,
+        "right-sizing": true,
+        "scheduled-scaling": false,
+        "auto-shutdown": false,
+        "spot-percentage": 50,
+        "reserved-percentage": 20,
+        "monthly-budget": 300
+      },
+      "retention-policies": {
+        "logs": 14,
+        "metrics": 30,
+        "backups": 14,
+        "snapshots": 7
+      }
     },
     "production": {
-      "vpc-cidr": "10.0.0.0/16",
+      "vpc-cidr": "10.2.0.0/16",
       "nat-gateways": 3,
       "eks-node-type": "m6g.large",
       "eks-min-nodes": 2,
@@ -21,16 +71,196 @@
       "rds-instance-type": "db.r6g.large",
       "rds-storage": 100,
       "rds-multi-az": true,
-      "msk-instance-type": "kafka.m5.large",
-      "msk-brokers": 3
+      "msk": {
+        "broker-instance-type": "kafka.m5.large",
+        "number-of-brokers": 3,
+        "storage-size": 100
+      },
+      "cost-optimization": {
+        "spot-instances": false,
+        "reserved-instances": true,
+        "right-sizing": true,
+        "scheduled-scaling": false,
+        "auto-shutdown": false,
+        "spot-percentage": 0,
+        "reserved-percentage": 70,
+        "monthly-budget": 1000
+      },
+      "retention-policies": {
+        "logs": 30,
+        "metrics": 90,
+        "backups": 30,
+        "snapshots": 30
+      }
+    },
+    "production-dr": {
+      "vpc-cidr": "10.3.0.0/16",
+      "nat-gateways": 3,
+      "eks-node-type": "m6g.large",
+      "eks-min-nodes": 1,
+      "eks-max-nodes": 8,
+      "rds-instance-type": "db.r6g.large",
+      "rds-storage": 100,
+      "rds-multi-az": true,
+      "msk": {
+        "broker-instance-type": "kafka.m5.large",
+        "number-of-brokers": 3,
+        "storage-size": 100
+      },
+      "cost-optimization": {
+        "spot-instances": false,
+        "reserved-instances": true,
+        "right-sizing": true,
+        "scheduled-scaling": false,
+        "auto-shutdown": false,
+        "spot-percentage": 0,
+        "reserved-percentage": 70,
+        "monthly-budget": 800
+      },
+      "retention-policies": {
+        "logs": 30,
+        "metrics": 90,
+        "backups": 30,
+        "snapshots": 30
+      }
     }
+  },
+  "genai-demo:regions": {
+    "primary": "ap-east-2",
+    "secondary": "ap-northeast-1",
+    "regions": {
+      "ap-east-2": {
+        "name": "Taiwan",
+        "type": "primary",
+        "cost-optimization": {
+          "spot-instances": false,
+          "reserved-instances": true,
+          "right-sizing": true,
+          "scheduled-scaling": false,
+          "auto-shutdown": false,
+          "spot-percentage": 0,
+          "reserved-percentage": 70
+        },
+        "backup-retention": {
+          "rds": 30,
+          "logs": 90,
+          "metrics": 90,
+          "snapshots": 30
+        },
+        "resource-naming": {
+          "prefix-format": "{project}-{environment}-{region-short}",
+          "include-region": true,
+          "include-environment": true
+        }
+      },
+      "ap-northeast-1": {
+        "name": "Tokyo",
+        "type": "secondary",
+        "cost-optimization": {
+          "spot-instances": false,
+          "reserved-instances": true,
+          "right-sizing": true,
+          "scheduled-scaling": false,
+          "auto-shutdown": false,
+          "spot-percentage": 0,
+          "reserved-percentage": 70
+        },
+        "backup-retention": {
+          "rds": 30,
+          "logs": 90,
+          "metrics": 90,
+          "snapshots": 30
+        },
+        "resource-naming": {
+          "prefix-format": "{project}-{environment}-{region-short}",
+          "include-region": true,
+          "include-environment": true
+        }
+      }
+    }
+  },
+  "genai-demo:multi-region": {
+    "enable-dr": true,
+    "enable-cross-region-peering": true,
+    "enable-cross-region-replication": true,
+    "failover-rto-minutes": 1,
+    "failover-rpo-minutes": 0,
+    "health-check-interval": 30,
+    "health-check-failure-threshold": 3
   },
   "genai-demo:observability": {
     "log-retention-days": 7,
     "metrics-retention-days": 30,
     "trace-sampling-rate": 0.1,
-    "opensearch-instance-type": "t3.small.search",
-    "opensearch-instance-count": 1
+    "opensearch": {
+      "development": {
+        "instance-type": "t3.small.search",
+        "instance-count": 1,
+        "multi-az": false,
+        "volume-size": 20
+      },
+      "staging": {
+        "instance-type": "m6g.medium.search",
+        "instance-count": 3,
+        "multi-az": true,
+        "volume-size": 50
+      },
+      "production": {
+        "instance-type": "m6g.large.search",
+        "instance-count": 3,
+        "multi-az": true,
+        "volume-size": 100
+      }
+    }
+  },
+  "genai-demo:parameter-store": {
+    "prefix-format": "/genai-demo/{environment}/{region}",
+    "encryption": {
+      "enabled": true,
+      "kms-key": "alias/aws/ssm"
+    },
+    "access-patterns": {
+      "application": "read-only",
+      "infrastructure": "read-write",
+      "monitoring": "read-only"
+    },
+    "parameter-categories": [
+      "database",
+      "kafka",
+      "observability",
+      "features",
+      "external-services",
+      "environment",
+      "cost-optimization",
+      "backup"
+    ]
+  },
+  "genai-demo:resource-naming": {
+    "conventions": {
+      "format": "{project}-{environment}-{region-short}-{resource-type}",
+      "max-length": 64,
+      "separator": "-",
+      "case": "lowercase"
+    },
+    "region-mappings": {
+      "ap-east-2": "ape2",
+      "ap-northeast-1": "apne1",
+      "us-east-1": "use1",
+      "us-west-2": "usw2",
+      "eu-west-1": "euw1"
+    },
+    "resource-type-mappings": {
+      "vpc": "vpc",
+      "subnet": "subnet",
+      "security-group": "sg",
+      "load-balancer": "alb",
+      "eks-cluster": "eks",
+      "rds-instance": "rds",
+      "msk-cluster": "msk",
+      "parameter": "param",
+      "role": "role",
+      "policy": "policy"
+    }
   },
   "genai-demo:networking": {
     "availability-zones": 3,
@@ -51,5 +281,12 @@
   "hosted-zone:account=584518143473:domainName=kimkao.io:region=ap-east-2": {
     "Id": "/hostedzone/Z2KTO3AQUJG1DT",
     "Name": "kimkao.io."
-  }
+  },
+  "hosted-zone:account=584518143473:domainName=kimkao.io:region=ap-northeast-1": {
+    "Id": "/hostedzone/Z2KTO3AQUJG1DT",
+    "Name": "kimkao.io."
+  },
+  "acknowledged-issue-numbers": [
+    34892
+  ]
 }

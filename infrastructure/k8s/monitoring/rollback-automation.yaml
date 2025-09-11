@@ -1,0 +1,396 @@
+# Automated Rollback Configuration Based on Health Metrics
+# This provides automated rollback capabilities for failed deployments
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rollback-automation-config
+  namespace: genai-demo
+  labels:
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+data:
+  config.yaml: |
+    # Rollback automation configuration
+    rollback:
+      enabled: true
+      # Health check thresholds
+      thresholds:
+        error_rate: 0.05          # 5% error rate threshold
+        response_time: 2.0        # 2 second response time threshold
+        success_rate: 0.95        # 95% success rate threshold
+        availability: 0.99        # 99% availability threshold
+      
+      # Monitoring intervals
+      intervals:
+        check_interval: 30s       # How often to check metrics
+        evaluation_window: 5m     # Time window for metric evaluation
+        cooldown_period: 10m      # Cooldown between rollback attempts
+      
+      # Rollback triggers
+      triggers:
+        consecutive_failures: 3   # Number of consecutive failures to trigger rollback
+        failure_percentage: 60    # Percentage of failed checks to trigger rollback
+        immediate_rollback_errors:
+          - "5xx_rate_spike"      # Immediate rollback on 5xx spike
+          - "total_failure"       # Immediate rollback on total failure
+      
+      # Notification settings
+      notifications:
+        slack:
+          enabled: true
+          webhook_url: "${SLACK_WEBHOOK_URL}"
+          channel: "#genai-demo-alerts"
+        email:
+          enabled: false
+          recipients: []
+      
+      # Applications to monitor
+      applications:
+        - name: genai-demo-backend
+          type: rollout
+          namespace: genai-demo
+          deployment_strategy: blue-green
+          metrics:
+            - name: error_rate
+              query: 'sum(rate(http_requests_total{service="genai-demo-backend-active",status=~"5.."}[5m])) / sum(rate(http_requests_total{service="genai-demo-backend-active"}[5m]))'
+              threshold: 0.05
+            - name: response_time
+              query: 'histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service="genai-demo-backend-active"}[5m])) by (le))'
+              threshold: 2.0
+            - name: availability
+              query: 'up{job="genai-demo-backend"}'
+              threshold: 0.99
+        
+        - name: genai-demo-cmc-frontend
+          type: rollout
+          namespace: genai-demo
+          deployment_strategy: canary
+          metrics:
+            - name: error_rate
+              query: 'sum(rate(nginx_ingress_controller_requests{service="genai-demo-cmc-frontend-canary",status=~"5.."}[5m])) / sum(rate(nginx_ingress_controller_requests{service="genai-demo-cmc-frontend-canary"}[5m]))'
+              threshold: 0.05
+            - name: response_time
+              query: 'histogram_quantile(0.95, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{service="genai-demo-cmc-frontend-canary"}[5m])) by (le))'
+              threshold: 1.0
+        
+        - name: genai-demo-consumer-frontend
+          type: rollout
+          namespace: genai-demo
+          deployment_strategy: canary
+          metrics:
+            - name: error_rate
+              query: 'sum(rate(nginx_ingress_controller_requests{service="genai-demo-consumer-frontend-canary",status=~"5.."}[5m])) / sum(rate(nginx_ingress_controller_requests{service="genai-demo-consumer-frontend-canary"}[5m]))'
+              threshold: 0.05
+            - name: response_time
+              query: 'histogram_quantile(0.95, sum(rate(nginx_ingress_controller_request_duration_seconds_bucket{service="genai-demo-consumer-frontend-canary"}[5m])) by (le))'
+              threshold: 1.0
+
+---
+# Rollback Automation Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rollback-automation
+  namespace: genai-demo
+  labels:
+    app: rollback-automation
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rollback-automation
+  template:
+    metadata:
+      labels:
+        app: rollback-automation
+    spec:
+      serviceAccountName: rollback-automation
+      containers:
+      - name: rollback-automation
+        image: ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/rollback-automation:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        env:
+        - name: CONFIG_PATH
+          value: "/etc/config/config.yaml"
+        - name: PROMETHEUS_URL
+          value: "http://prometheus.monitoring.svc.cluster.local:9090"
+        - name: ARGOCD_SERVER
+          value: "argocd-server.argocd.svc.cluster.local:80"
+        - name: ARGOCD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: argocd-automation-token
+              key: token
+        - name: SLACK_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: rollback-automation-secrets
+              key: slack-webhook-url
+              optional: true
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: DRY_RUN
+          value: "false"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/config
+          readOnly: true
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: config
+        configMap:
+          name: rollback-automation-config
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+
+---
+# ServiceAccount for Rollback Automation
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rollback-automation
+  namespace: genai-demo
+  labels:
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+
+---
+# ClusterRole for Rollback Automation
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rollback-automation
+  labels:
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - rollouts
+  - rollouts/status
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - analysisruns
+  - analysisruns/status
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  - deployments/status
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+# ClusterRoleBinding for Rollback Automation
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rollback-automation
+  labels:
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rollback-automation
+subjects:
+- kind: ServiceAccount
+  name: rollback-automation
+  namespace: genai-demo
+
+---
+# Service for Rollback Automation
+apiVersion: v1
+kind: Service
+metadata:
+  name: rollback-automation
+  namespace: genai-demo
+  labels:
+    app: rollback-automation
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: metrics
+    protocol: TCP
+  selector:
+    app: rollback-automation
+
+---
+# ServiceMonitor for Prometheus Integration
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: rollback-automation
+  namespace: genai-demo
+  labels:
+    app: rollback-automation
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  selector:
+    matchLabels:
+      app: rollback-automation
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+
+---
+# PrometheusRule for Rollback Automation Alerts
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: rollback-automation-alerts
+  namespace: genai-demo
+  labels:
+    app: rollback-automation
+    app.kubernetes.io/name: rollback-automation
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: genai-demo
+spec:
+  groups:
+  - name: rollback-automation
+    rules:
+    - alert: RollbackAutomationDown
+      expr: up{job="rollback-automation"} == 0
+      for: 5m
+      labels:
+        severity: critical
+        component: rollback-automation
+      annotations:
+        summary: "Rollback automation service is down"
+        description: "The rollback automation service has been down for more than 5 minutes"
+    
+    - alert: HighErrorRateDetected
+      expr: |
+        (
+          sum(rate(http_requests_total{service=~"genai-demo-.*",status=~"5.."}[5m])) /
+          sum(rate(http_requests_total{service=~"genai-demo-.*"}[5m]))
+        ) > 0.05
+      for: 2m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is above 5% for {{ $labels.service }}"
+    
+    - alert: HighResponseTimeDetected
+      expr: |
+        histogram_quantile(0.95,
+          sum(rate(http_request_duration_seconds_bucket{service=~"genai-demo-.*"}[5m])) by (le, service)
+        ) > 2.0
+      for: 2m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "High response time detected"
+        description: "95th percentile response time is above 2 seconds for {{ $labels.service }}"
+    
+    - alert: RollbackTriggered
+      expr: increase(rollback_automation_rollbacks_total[5m]) > 0
+      for: 0m
+      labels:
+        severity: warning
+        component: rollback-automation
+      annotations:
+        summary: "Automated rollback triggered"
+        description: "Automated rollback has been triggered for {{ $labels.application }}"

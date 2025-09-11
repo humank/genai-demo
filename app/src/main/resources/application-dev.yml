@@ -1,15 +1,35 @@
 # Development Profile Configuration
-# Activated by: SPRING_PROFILES_ACTIVE=dev (default)
-# Features: H2 in-memory database, in-memory event publishing, debug logging
+# This configuration is activated when SPRING_PROFILES_ACTIVE=dev
 
 spring:
+  
+  # H2 Database Configuration for Development
   datasource:
-    url: jdbc:h2:mem:genaidemo
+    url: jdbc:h2:mem:genaidemo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
-    password: ""
-    
-  # H2 Console Configuration for Development
+    password: 
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 60000
+
+  # JPA Configuration for Development
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+
+  # H2 Console Configuration
   h2:
     console:
       enabled: true
@@ -17,82 +37,121 @@ spring:
       settings:
         web-allow-others: true
 
-  # JPA Configuration for Development
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        format_sql: true
-        use_sql_comments: true
-        
-  # Flyway Configuration for Development
+  # Flyway Configuration for Development - TEMPORARILY DISABLED to avoid circular dependency
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration/h2
     baseline-on-migrate: true
-    validate-on-migrate: true
-    
-# Development-specific logging
+    validate-on-migrate: false
+
+  # Kafka Configuration (Disabled in Development)
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: genai-demo-dev
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+# Development Logging Configuration
 logging:
   level:
+    root: INFO
+    "[solid.humank.genaidemo]": DEBUG
     org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    solid.humank.genaidemo: DEBUG
-    solid.humank.genaidemo.infrastructure.event: DEBUG
-    
-# Development server configuration
-server:
-  error:
-    include-stacktrace: always
-    include-message: always
-    
-# Development management endpoints
+    io.opentelemetry: DEBUG
+    io.micrometer: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-},%X{correlationId:-}] %logger{36} - %msg%n"
+
+# Development Tracing Configuration
+tracing:
+  enabled: true
+  sampling:
+    ratio: 1.0  # Sample all traces in development
+  jaeger:
+    endpoint: http://localhost:14250
+  otlp:
+    endpoint: http://localhost:4317
+
+# OpenTelemetry Development Configuration
+otel:
+  traces:
+    exporter: jaeger
+  exporter:
+    jaeger:
+      endpoint: http://localhost:14250
+  resource:
+    attributes:
+      deployment.environment: development
+      service.namespace: genai-demo-dev
+
+# Management Configuration for Development
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: "*"  # Expose all endpoints in development
   endpoint:
     health:
       show-details: always
-      
-# Development observability configuration
-observability:
-  tracing:
-    enabled: false  # Use local Jaeger for development
-    endpoint: "http://localhost:14268/api/traces"
+      group:
+        readiness:
+          include: "readinessState"  # Remove db from readiness group in dev
   metrics:
-    enabled: true
     export:
       prometheus:
         enabled: true
-  logging:
-    structured: false  # Simple console logging for development
-    
-# Profile validation
-genai-demo:
+      cloudwatch:
+        enabled: false  # Disabled in development
+
+# Analytics Configuration for Development (Disabled)
+analytics:
+  enabled: false
+  firehose:
+    stream-name: "dev-stream"
+    batch-size: 10
+    max-wait-time-ms: 1000
+  data-lake:
+    bucket-name: "dev-bucket"
+    event-prefix: "domain-events/"
+  glue:
+    database-name: "dev_database"
+    crawler-name: "dev-crawler"
+  quicksight:
+    data-source-id: "dev-datasource"
+    executive-dashboard-id: "dev-executive-dashboard"
+    operations-dashboard-id: "dev-operations-dashboard"
+
+# Development Profile Features
+app:
   profile:
     name: development
-    description: "Local development environment with H2 database and in-memory events"
+    description: "Development profile with H2 database and in-memory events"
     features:
       h2-console: true
       debug-logging: true
       in-memory-events: true
       kafka-events: false
-      observability-enabled: true
-  
-  # Event publishing strategy for development
+      analytics-enabled: false
+
+genai-demo:
   events:
-    publisher:
-      type: in-memory
-      async: false
-      
-  # Database configuration
-  database:
-    type: h2
-    migration-path: h2
+    publisher: in-memory
+    async: false
+  observability:
+    tracing:
+      enabled: true
+      exporter: jaeger
+      sampling-rate: 1.0
+    metrics:
+      enabled: true
+      export-interval: 10s
+    logging:
+      structured: true
+      correlation-enabled: true

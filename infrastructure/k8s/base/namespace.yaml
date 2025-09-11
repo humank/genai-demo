@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: genai-demo
+  labels:
+    name: genai-demo
+    app.kubernetes.io/name: genai-demo
+    app.kubernetes.io/component: namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: genai-demo-system
+  labels:
+    name: genai-demo-system
+    app.kubernetes.io/name: genai-demo
+    app.kubernetes.io/component: system-namespace

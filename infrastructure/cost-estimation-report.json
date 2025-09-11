@@ -1,0 +1,659 @@
+{
+  "timestamp": "2025-09-08T07:06:11.084Z",
+  "totalMonthlyCost": 333.66099999999994,
+  "annualEstimate": 4003.9319999999993,
+  "stacks": {
+    "genai-demo-development-primary": {
+      "stackName": "genai-demo-development-primary",
+      "resources": {},
+      "totalMonthlyCost": 0,
+      "resourceCount": 0
+    },
+    "genai-demo-production-dr": {
+      "stackName": "genai-demo-production-dr",
+      "resources": {
+        "CrossRegionReplicationTopicCF1A4BF9": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        }
+      },
+      "totalMonthlyCost": 0.005,
+      "resourceCount": 21
+    },
+    "genai-demo-production-multi-region": {
+      "stackName": "genai-demo-production-multi-region",
+      "resources": {
+        "MultiRegionAlertsTopic2AFEF542": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        }
+      },
+      "totalMonthlyCost": 0.005,
+      "resourceCount": 2
+    },
+    "genai-demo-production-primary": {
+      "stackName": "genai-demo-production-primary",
+      "resources": {},
+      "totalMonthlyCost": 0,
+      "resourceCount": 0
+    },
+    "genaidemodevelopmentprimaryCertificateStackF70B1280": {
+      "stackName": "genaidemodevelopmentprimaryCertificateStackF70B1280",
+      "resources": {
+        "CertMonitoringAlertsTopic55DCE3C9": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "CertMonitoringValidationAlarmDF9163DD": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "WildcardCertMonitoringValidationAlarm8AE00A14": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 0.20500000000000002,
+      "resourceCount": 5
+    },
+    "genaidemodevelopmentprimaryCoreInfrastructureStackA7129811": {
+      "stackName": "genaidemodevelopmentprimaryCoreInfrastructureStackA7129811",
+      "resources": {
+        "ApplicationLoadBalancerFD56DEE1": {
+          "type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+          "monthlyCost": 16.43,
+          "details": [
+            "Application Load Balancer base cost"
+          ],
+          "assumptions": [
+            "Data processing charges not included - depends on traffic volume"
+          ]
+        }
+      },
+      "totalMonthlyCost": 16.43,
+      "resourceCount": 11
+    },
+    "genaidemodevelopmentprimaryNetworkStack451E96DA": {
+      "stackName": "genaidemodevelopmentprimaryNetworkStack451E96DA",
+      "resources": {
+        "VPCFlowLogsGroupEC963D68": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "BillingAlarm3477AF51": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 15.107,
+      "resourceCount": 128
+    },
+    "genaidemodevelopmentprimaryObservabilityStack78D7AFCD": {
+      "stackName": "genaidemodevelopmentprimaryObservabilityStack78D7AFCD",
+      "resources": {
+        "ObservabilityKmsKey51F2375F": {
+          "type": "AWS::KMS::Key",
+          "monthlyCost": 1,
+          "details": [
+            "KMS key monthly cost"
+          ],
+          "assumptions": [
+            "API request costs not included - depends on usage"
+          ]
+        },
+        "AlertingTopic8B299667": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "WarningTopicE070F32B": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "InfoTopic24DB99F1": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "LogArchiveBucketC3E3979A": {
+          "type": "AWS::S3::Bucket",
+          "monthlyCost": 2.3,
+          "details": [
+            "Estimated 100GB standard storage"
+          ],
+          "assumptions": [
+            "Storage volume is estimated - actual cost depends on usage"
+          ]
+        },
+        "DataLakeBucket0256EA8E": {
+          "type": "AWS::S3::Bucket",
+          "monthlyCost": 2.3,
+          "details": [
+            "Estimated 100GB standard storage"
+          ],
+          "assumptions": [
+            "Storage volume is estimated - actual cost depends on usage"
+          ]
+        },
+        "applicationLogGroupB909B333": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "applicationerrorLogGroupC6CD3A15": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "applicationauditLogGroupBCB77B50": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "applicationperformanceLogGroupFA58D4AE": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "eksclusterLogGroupCB81677D": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "eksnodesLogGroup6A07CC04": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "albaccessLogGroupE303A33B": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "rdserrorLogGroup1241A7E9": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "rdsslowqueryLogGroup3D48045F": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "mskbrokerLogGroupE04DDF37": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "xraytracesLogGroupF22298CE": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "cloudwatchinsightsLogGroupCD0C2B1C": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "lambdafunctionsLogGroup9D92483D": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "HighCpuUtilizationAlarmB1C8170A": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "HighMemoryUtilizationAlarmB6212AA0": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "LowDiskSpaceAlarm5CFBE5BC": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "HighErrorRateAlarm9E2FAEE9": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "HighResponseTimeAlarmCB9F63BA": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "DatabaseConnectionFailuresAlarm7B80A03C": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 201.306,
+      "resourceCount": 44
+    },
+    "genaidemodevelopmentprimarySecurityStack0635F888": {
+      "stackName": "genaidemodevelopmentprimarySecurityStack0635F888",
+      "resources": {
+        "SecurityNotificationsTopic5659F7CF": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "SecurityKmsKeyD4DA622F": {
+          "type": "AWS::KMS::Key",
+          "monthlyCost": 1,
+          "details": [
+            "KMS key monthly cost"
+          ],
+          "assumptions": [
+            "API request costs not included - depends on usage"
+          ]
+        },
+        "SecretsManagerKmsKey813BABA3": {
+          "type": "AWS::KMS::Key",
+          "monthlyCost": 1,
+          "details": [
+            "KMS key monthly cost"
+          ],
+          "assumptions": [
+            "API request costs not included - depends on usage"
+          ]
+        },
+        "AuditLogsBucket963995A4": {
+          "type": "AWS::S3::Bucket",
+          "monthlyCost": 2.3,
+          "details": [
+            "Estimated 100GB standard storage"
+          ],
+          "assumptions": [
+            "Storage volume is estimated - actual cost depends on usage"
+          ]
+        },
+        "VpcFlowLogsGroupC5F6A8C5": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "CloudTrailLogGroup2F0A1829": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "ConfigBucket2112C5EC": {
+          "type": "AWS::S3::Bucket",
+          "monthlyCost": 2.3,
+          "details": [
+            "Estimated 100GB standard storage"
+          ],
+          "assumptions": [
+            "Storage volume is estimated - actual cost depends on usage"
+          ]
+        },
+        "UnauthorizedApiCallsAlarmDEEEB676": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "ConsoleSigninWithoutMFAAlarm95DBC804": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "RootAccountUsageAlarm528BA680": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "IAMPolicyChangesAlarm6F00FE53": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "SecurityGroupChangesAlarmF7CAC34B": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 37.119,
+      "resourceCount": 38
+    },
+    "genaidemoproductiondrDRCertificateStack0F3E3521": {
+      "stackName": "genaidemoproductiondrDRCertificateStack0F3E3521",
+      "resources": {
+        "CertMonitoringAlertsTopic55DCE3C9": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "CertMonitoringValidationAlarmDF9163DD": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "WildcardCertMonitoringValidationAlarm8AE00A14": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 0.20500000000000002,
+      "resourceCount": 6
+    },
+    "genaidemoproductiondrDRCoreInfrastructureStack1853829F": {
+      "stackName": "genaidemoproductiondrDRCoreInfrastructureStack1853829F",
+      "resources": {
+        "ApplicationLoadBalancerFD56DEE1": {
+          "type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+          "monthlyCost": 16.43,
+          "details": [
+            "Application Load Balancer base cost"
+          ],
+          "assumptions": [
+            "Data processing charges not included - depends on traffic volume"
+          ]
+        }
+      },
+      "totalMonthlyCost": 16.43,
+      "resourceCount": 13
+    },
+    "genaidemoproductiondrDRNetworkStackBBA9FE38": {
+      "stackName": "genaidemoproductiondrDRNetworkStackBBA9FE38",
+      "resources": {
+        "VPCFlowLogsGroupEC963D68": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "BillingAlarm3477AF51": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 15.107,
+      "resourceCount": 133
+    },
+    "genaidemoproductionprimaryCertificateStackC4BFB66B": {
+      "stackName": "genaidemoproductionprimaryCertificateStackC4BFB66B",
+      "resources": {
+        "CertMonitoringAlertsTopic55DCE3C9": {
+          "type": "AWS::SNS::Topic",
+          "monthlyCost": 0.005,
+          "details": [
+            "Estimated 10000 messages/month"
+          ],
+          "assumptions": [
+            "Message volume is estimated"
+          ]
+        },
+        "CertMonitoringValidationAlarmDF9163DD": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        },
+        "WildcardCertMonitoringValidationAlarm8AE00A14": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 0.20500000000000002,
+      "resourceCount": 5
+    },
+    "genaidemoproductionprimaryCoreInfrastructureStackF19F6D01": {
+      "stackName": "genaidemoproductionprimaryCoreInfrastructureStackF19F6D01",
+      "resources": {
+        "ApplicationLoadBalancerFD56DEE1": {
+          "type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+          "monthlyCost": 16.43,
+          "details": [
+            "Application Load Balancer base cost"
+          ],
+          "assumptions": [
+            "Data processing charges not included - depends on traffic volume"
+          ]
+        }
+      },
+      "totalMonthlyCost": 16.43,
+      "resourceCount": 11
+    },
+    "genaidemoproductionprimaryNetworkStackD96EFAD4": {
+      "stackName": "genaidemoproductionprimaryNetworkStackD96EFAD4",
+      "resources": {
+        "VPCFlowLogsGroupEC963D68": {
+          "type": "AWS::Logs::LogGroup",
+          "monthlyCost": 15.007,
+          "details": [
+            "Retention: 7 days",
+            "Estimated: 1GB/day ingestion"
+          ],
+          "assumptions": [
+            "Log volume is estimated - actual cost depends on application logging"
+          ]
+        },
+        "BillingAlarm3477AF51": {
+          "type": "AWS::CloudWatch::Alarm",
+          "monthlyCost": 0.1,
+          "details": [
+            "Standard CloudWatch alarm"
+          ],
+          "assumptions": []
+        }
+      },
+      "totalMonthlyCost": 15.107,
+      "resourceCount": 132
+    }
+  },
+  "warnings": []
+}

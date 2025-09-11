@@ -1,0 +1,246 @@
+# ArgoCD Installation with Custom Configuration for GenAI Demo
+# This installs ArgoCD with production-ready settings and GitOps integration
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # Enable insecure mode for ALB integration
+  server.insecure: "true"
+  # Enable gRPC-Web for better performance
+  server.grpc.web: "true"
+  # Application controller settings
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  # Repository server settings
+  reposerver.parallelism.limit: "10"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-server-config
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-config
+    app.kubernetes.io/part-of: argocd
+data:
+  # URL configuration for ALB
+  url: "https://argocd.kimkao.io"
+  
+  # OIDC configuration (placeholder for future integration)
+  oidc.config: |
+    name: OIDC
+    issuer: https://argocd.kimkao.io/api/dex
+    clientId: argocd
+    clientSecret: $oidc.clientSecret
+    requestedScopes: ["openid", "profile", "email", "groups"]
+    requestedIDTokenClaims: {"groups": {"essential": true}}
+  
+  # Repository configuration
+  repositories: |
+    - type: git
+      url: https://github.com/humank/genai-demo
+      name: genai-demo-source
+    - type: git
+      url: https://github.com/humank/genai-demo-gitops
+      name: genai-demo-gitops
+  
+  # Application configuration
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  
+  # Resource customizations for better health checks
+  resource.customizations: |
+    argoproj.io/Rollout:
+      health.lua: |
+        hs = {}
+        if obj.status ~= nil then
+          if obj.status.replicas ~= nil and obj.status.updatedReplicas ~= nil and obj.status.readyReplicas ~= nil and obj.status.availableReplicas ~= nil then
+            if obj.status.replicas == obj.status.updatedReplicas and obj.status.replicas == obj.status.readyReplicas and obj.status.replicas == obj.status.availableReplicas then
+              hs.status = "Healthy"
+              hs.message = "Rollout is healthy"
+              return hs
+            end
+          end
+        end
+        hs.status = "Progressing"
+        hs.message = "Waiting for rollout to finish"
+        return hs
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-secret
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-secret
+    app.kubernetes.io/part-of: argocd
+type: Opaque
+data:
+  # Generate with: htpasswd -nbBC 10 "" $ARGO_PWD | tr -d ':\n' | sed 's/$2y/$2a/' | base64 -w0
+  admin.password: JDJhJDEwJGhMTGJuWkdGWVBxVVBxVVBxVVBxVU9aTGJuWkdGWVBxVVBxVVBxVVBxVU9aTGJuWkdGWQ==
+  admin.passwordMtime: "2024-01-15T10:00:00Z"
+  server.secretkey: YWJjZGVmZ2hpams=
+
+---
+# ArgoCD RBAC Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  policy.default: role:readonly
+  policy.csv: |
+    # Admin role
+    p, role:admin, applications, *, */*, allow
+    p, role:admin, clusters, *, *, allow
+    p, role:admin, repositories, *, *, allow
+    
+    # Developer role
+    p, role:developer, applications, get, */*, allow
+    p, role:developer, applications, sync, */*, allow
+    p, role:developer, applications, action/*, */*, allow
+    p, role:developer, logs, get, */*, allow
+    p, role:developer, exec, create, */*, allow
+    
+    # DevOps role
+    p, role:devops, applications, *, */*, allow
+    p, role:devops, repositories, *, *, allow
+    p, role:devops, clusters, get, *, allow
+    
+    # Group mappings (for future OIDC integration)
+    g, genai-demo:admin, role:admin
+    g, genai-demo:developer, role:developer
+    g, genai-demo:devops, role:devops
+
+---
+# ArgoCD Notifications Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-notifications-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  service.slack: |
+    token: $slack-token
+    username: ArgoCD
+    channel: genai-demo-deployments
+    iconEmoji: ":rocket:"
+  
+  template.app-deployed: |
+    message: |
+      {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application {{.app.metadata.name}} is now running new version.
+      {{if ne .serviceType "slack"}}
+      Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+      {{end}}
+  
+  template.app-health-degraded: |
+    message: |
+      {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} has degraded.
+      Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+  
+  template.app-sync-failed: |
+    message: |
+      {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} sync is failed.
+      Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+      {{if ne .serviceType "slack"}}
+      {{range $c := .app.status.conditions}}
+          * {{$c.message}}
+      {{end}}
+      {{end}}
+  
+  trigger.on-deployed: |
+    - description: Application is synced and healthy
+      send:
+      - app-deployed
+      when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
+  
+  trigger.on-health-degraded: |
+    - description: Application has degraded
+      send:
+      - app-health-degraded
+      when: app.status.health.status == 'Degraded'
+  
+  trigger.on-sync-failed: |
+    - description: Application syncing has failed
+      send:
+      - app-sync-failed
+      when: app.status.operationState.phase in ['Error', 'Failed']
+
+---
+# ArgoCD Server Service for ALB
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server-alb
+  namespace: argocd
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  - name: grpc
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: argocd-server
+
+---
+# ArgoCD Ingress for ALB
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-server-ingress
+    app.kubernetes.io/part-of: argocd
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+spec:
+  rules:
+  - host: argocd.kimkao.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80

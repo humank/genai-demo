@@ -1,0 +1,245 @@
+# MSK (Amazon Managed Streaming for Apache Kafka) Configuration
+# This configuration is used when integrating with Amazon MSK for domain events
+
+spring:
+  kafka:
+    # Bootstrap servers will be injected via environment variables or AWS Parameter Store
+    bootstrap-servers: ${MSK_BOOTSTRAP_SERVERS:localhost:9092}
+    
+    # Security configuration for MSK with IAM authentication
+    security:
+      protocol: SASL_SSL
+    sasl:
+      mechanism: AWS_MSK_IAM
+      jaas:
+        config: software.amazon.msk.auth.iam.IAMLoginModule required;
+      client:
+        callback:
+          handler:
+            class: software.amazon.msk.auth.iam.IAMClientCallbackHandler
+    
+    # SSL configuration
+    ssl:
+      trust-store-location: ${KAFKA_SSL_TRUSTSTORE_LOCATION:}
+      trust-store-password: ${KAFKA_SSL_TRUSTSTORE_PASSWORD:}
+      key-store-location: ${KAFKA_SSL_KEYSTORE_LOCATION:}
+      key-store-password: ${KAFKA_SSL_KEYSTORE_PASSWORD:}
+    
+    # Producer configuration optimized for domain events
+    producer:
+      # Serialization
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      
+      # Performance and reliability settings
+      acks: all  # Wait for all replicas to acknowledge
+      retries: 2147483647  # Retry indefinitely
+      max-in-flight-requests-per-connection: 5
+      enable-idempotence: true  # Exactly-once semantics
+      
+      # Batching for better throughput
+      batch-size: 16384  # 16KB
+      linger-ms: 5  # Wait up to 5ms to batch messages
+      
+      # Compression
+      compression-type: snappy
+      
+      # Buffer settings
+      buffer-memory: 33554432  # 32MB
+      
+      # Timeout settings
+      request-timeout-ms: 30000
+      delivery-timeout-ms: 120000
+      
+      # Custom properties for domain events
+      properties:
+        # Enable headers for tracing
+        spring.json.add.type.headers: false
+        spring.json.trusted.packages: "solid.humank.genaidemo.domain.*.events"
+        # Retry backoff
+        retry.backoff.ms: 100
+        # Metadata fetch timeout
+        metadata.fetch.timeout.ms: 60000
+    
+    # Consumer configuration optimized for domain events
+    consumer:
+      # Serialization
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      
+      # Consumer group configuration
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:genai-demo-${spring.profiles.active:development}-consumer-group}
+      auto-offset-reset: earliest  # Start from beginning for new consumer groups
+      
+      # Commit strategy
+      enable-auto-commit: false  # Manual commit for better control
+      
+      # Fetch settings
+      fetch-min-size: 1
+      fetch-max-wait: 500
+      max-poll-records: 500
+      max-poll-interval-ms: 300000  # 5 minutes
+      
+      # Session and heartbeat
+      session-timeout-ms: 30000
+      heartbeat-interval-ms: 3000
+      
+      # Custom properties for domain events
+      properties:
+        # JSON deserializer settings
+        spring.json.trusted.packages: "solid.humank.genaidemo.domain.*.events"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: "solid.humank.genaidemo.domain.common.events.DomainEvent"
+        # Isolation level for exactly-once semantics
+        isolation.level: read_committed
+    
+    # Listener configuration
+    listener:
+      # Acknowledgment mode
+      ack-mode: manual_immediate
+      
+      # Concurrency
+      concurrency: 3
+      
+      # Error handling
+      missing-topics-fatal: false
+      
+      # Retry configuration
+      type: batch
+      
+    # Admin configuration for topic management
+    admin:
+      properties:
+        # Connection timeout
+        connections.max.idle.ms: 540000
+        request.timeout.ms: 30000
+    
+    # Template configuration
+    template:
+      default-topic: ${KAFKA_DEFAULT_TOPIC:genai-demo.${spring.profiles.active:development}.default}
+
+# Domain Events Configuration
+genai-demo:
+  domain-events:
+    # Topic configuration
+    topic:
+      prefix: genai-demo.${spring.profiles.active:development}
+      partitions: 6
+      replication-factor: 3
+      retention-ms: 604800000  # 7 days
+      cleanup-policy: delete
+      compression-type: snappy
+      min-insync-replicas: 2
+    
+    # Event publishing configuration
+    publishing:
+      enabled: true
+      async: true
+      timeout-ms: 30000
+      retry-attempts: 3
+      retry-backoff-ms: 1000
+      
+      # Dead letter queue configuration
+      dlq:
+        enabled: true
+        topic-suffix: .dlq
+        max-retries: 3
+    
+    # Event consumption configuration
+    consumption:
+      enabled: true
+      batch-size: 100
+      concurrency: 3
+      
+      # Error handling
+      error-handling:
+        retry-attempts: 3
+        retry-backoff-ms: 1000
+        skip-on-error: false
+    
+    # Event store configuration (if using event sourcing)
+    event-store:
+      enabled: false
+      topic-suffix: .events
+      snapshot-frequency: 100
+    
+    # Monitoring and observability
+    monitoring:
+      enabled: true
+      metrics:
+        enabled: true
+        include-consumer-lag: true
+        include-producer-metrics: true
+      
+      # Health checks
+      health-check:
+        enabled: true
+        timeout-ms: 5000
+        
+      # Tracing
+      tracing:
+        enabled: true
+        sample-rate: 0.1
+
+# Logging configuration for Kafka
+logging:
+  level:
+    org.apache.kafka: INFO
+    org.springframework.kafka: INFO
+    solid.humank.genaidemo.infrastructure.event: DEBUG
+    solid.humank.genaidemo.application.event: DEBUG
+  
+  # Kafka-specific loggers
+  logger:
+    kafka:
+      producer: INFO
+      consumer: INFO
+      admin: INFO
+
+# Management endpoints for Kafka monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,kafka
+  endpoint:
+    health:
+      show-details: always
+    kafka:
+      enabled: true
+  
+  # Kafka health indicator
+  health:
+    kafka:
+      enabled: true
+  
+  # Metrics configuration
+  metrics:
+    tags:
+      application: genai-demo
+      environment: ${spring.profiles.active:development}
+    export:
+      prometheus:
+        enabled: true
+      cloudwatch:
+        enabled: true
+        namespace: GenAIDemo/Kafka
+        batch-size: 20
+        step: PT1M
+
+# AWS Configuration for MSK
+aws:
+  region: ${AWS_REGION:ap-northeast-1}
+  msk:
+    cluster-name: ${MSK_CLUSTER_NAME:genai-demo-${spring.profiles.active:development}-msk}
+    
+    # IAM configuration
+    iam:
+      role-arn: ${MSK_IAM_ROLE_ARN:}
+      
+    # Monitoring
+    monitoring:
+      enhanced: true
+      prometheus:
+        jmx-exporter: true
+        node-exporter: true

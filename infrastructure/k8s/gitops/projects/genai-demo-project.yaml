@@ -1,0 +1,143 @@
+# ArgoCD Project for GenAI Demo Applications
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: genai-demo
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: genai-demo-project
+    app.kubernetes.io/part-of: genai-demo
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: GenAI Demo Project for managing all application deployments
+  
+  # Source repositories
+  sourceRepos:
+  - 'https://github.com/humank/genai-demo'
+  - 'https://github.com/humank/genai-demo-gitops'
+  - 'https://charts.bitnami.com/bitnami'
+  - 'https://prometheus-community.github.io/helm-charts'
+  - 'https://grafana.github.io/helm-charts'
+  
+  # Destination clusters and namespaces
+  destinations:
+  - namespace: genai-demo
+    server: https://kubernetes.default.svc
+  - namespace: genai-demo-*
+    server: https://kubernetes.default.svc
+  - namespace: monitoring
+    server: https://kubernetes.default.svc
+  - namespace: observability
+    server: https://kubernetes.default.svc
+  
+  # Cluster resource whitelist
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+  
+  # Namespace resource whitelist
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: apps
+    kind: Deployment
+  - group: apps
+    kind: ReplicaSet
+  - group: apps
+    kind: StatefulSet
+  - group: apps
+    kind: DaemonSet
+  - group: batch
+    kind: Job
+  - group: batch
+    kind: CronJob
+  - group: networking.k8s.io
+    kind: Ingress
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  - group: policy
+    kind: PodDisruptionBudget
+  - group: autoscaling
+    kind: HorizontalPodAutoscaler
+  - group: argoproj.io
+    kind: Rollout
+  - group: argoproj.io
+    kind: AnalysisTemplate
+  - group: argoproj.io
+    kind: AnalysisRun
+  - group: argoproj.io
+    kind: Experiment
+  - group: monitoring.coreos.com
+    kind: ServiceMonitor
+  - group: monitoring.coreos.com
+    kind: PodMonitor
+  - group: monitoring.coreos.com
+    kind: PrometheusRule
+  
+  # RBAC roles for project
+  roles:
+  - name: admin
+    description: Admin access to genai-demo project
+    policies:
+    - p, proj:genai-demo:admin, applications, *, genai-demo/*, allow
+    - p, proj:genai-demo:admin, repositories, *, *, allow
+    - p, proj:genai-demo:admin, logs, get, genai-demo/*, allow
+    - p, proj:genai-demo:admin, exec, create, genai-demo/*, allow
+    groups:
+    - genai-demo:admin
+    
+  - name: developer
+    description: Developer access to genai-demo project
+    policies:
+    - p, proj:genai-demo:developer, applications, get, genai-demo/*, allow
+    - p, proj:genai-demo:developer, applications, sync, genai-demo/*, allow
+    - p, proj:genai-demo:developer, applications, action/*, genai-demo/*, allow
+    - p, proj:genai-demo:developer, logs, get, genai-demo/*, allow
+    groups:
+    - genai-demo:developer
+    
+  - name: readonly
+    description: Read-only access to genai-demo project
+    policies:
+    - p, proj:genai-demo:readonly, applications, get, genai-demo/*, allow
+    - p, proj:genai-demo:readonly, logs, get, genai-demo/*, allow
+    groups:
+    - genai-demo:readonly
+  
+  # Sync windows for controlled deployments
+  syncWindows:
+  - kind: allow
+    schedule: '0 9-17 * * 1-5'  # Business hours Monday-Friday
+    duration: 8h
+    applications:
+    - genai-demo-*
+    manualSync: true
+  - kind: deny
+    schedule: '0 18-8 * * *'     # Outside business hours
+    duration: 14h
+    applications:
+    - genai-demo-backend
+    manualSync: false
+  
+  # Signature keys for signed commits (optional)
+  signatureKeys:
+  - keyID: ABCDEF1234567890

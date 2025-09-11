@@ -1,0 +1,106 @@
+package solid.humank.genaidemo.infrastructure.observability.metrics;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
+
+@SpringBootTest
+@ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.application.name=genai-demo-test",
+        "spring.profiles.active=test",
+        "aws.region=ap-northeast-1"
+})
+@DisplayName("Metrics Configuration Tests")
+class MetricsConfigurationTest {
+
+    @Autowired
+    private MeterRegistry meterRegistry;
+
+    @Autowired
+    private BusinessMetricsCollector businessMetricsCollector;
+
+    @Autowired
+    private DomainEventMetricsCollector domainEventMetricsCollector;
+
+    @Test
+    @DisplayName("Should create Prometheus meter registry")
+    void shouldCreatePrometheusMeterRegistry() {
+        // Then
+        assertThat(meterRegistry).isNotNull();
+        assertThat(meterRegistry).isInstanceOf(PrometheusMeterRegistry.class);
+    }
+
+    @Test
+    @DisplayName("Should create business metrics collector")
+    void shouldCreateBusinessMetricsCollector() {
+        // Then
+        assertThat(businessMetricsCollector).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Should create domain event metrics collector")
+    void shouldCreateDomainEventMetricsCollector() {
+        // Then
+        assertThat(domainEventMetricsCollector).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Should have common tags configured")
+    void shouldHaveCommonTagsConfigured() {
+        // When
+        businessMetricsCollector.incrementCustomerRegistrations();
+
+        // Then
+        var counter = meterRegistry.counter("business.customer.registrations");
+        assertThat(counter.getId().getTags()).isNotEmpty();
+
+        // Check for common tags
+        boolean hasApplicationTag = counter.getId().getTags().stream()
+                .anyMatch(tag -> "application".equals(tag.getKey()));
+        boolean hasEnvironmentTag = counter.getId().getTags().stream()
+                .anyMatch(tag -> "environment".equals(tag.getKey()));
+        boolean hasRegionTag = counter.getId().getTags().stream()
+                .anyMatch(tag -> "region".equals(tag.getKey()));
+
+        assertThat(hasApplicationTag).isTrue();
+        assertThat(hasEnvironmentTag).isTrue();
+        assertThat(hasRegionTag).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should register business metrics")
+    void shouldRegisterBusinessMetrics() {
+        // When
+        businessMetricsCollector.incrementCustomerRegistrations();
+        businessMetricsCollector.incrementOrderSubmissions();
+        businessMetricsCollector.incrementPaymentSuccesses();
+
+        // Then
+        assertThat(meterRegistry.counter("business.customer.registrations").count()).isEqualTo(1.0);
+        assertThat(meterRegistry.counter("business.order.submissions").count()).isEqualTo(1.0);
+        assertThat(meterRegistry.counter("business.payment.successes").count()).isEqualTo(1.0);
+    }
+
+    @Test
+    @DisplayName("Should register gauge metrics")
+    void shouldRegisterGaugeMetrics() {
+        // When
+        businessMetricsCollector.setActiveCustomers(100);
+        businessMetricsCollector.setPendingOrders(25);
+        businessMetricsCollector.setLowStockItems(5);
+
+        // Then
+        assertThat(meterRegistry.gauge("business.customer.active").value()).isEqualTo(100.0);
+        assertThat(meterRegistry.gauge("business.order.pending").value()).isEqualTo(25.0);
+        assertThat(meterRegistry.gauge("business.inventory.low_stock").value()).isEqualTo(5.0);
+    }
+}

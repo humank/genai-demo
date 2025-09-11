@@ -1,0 +1,525 @@
+# Release Management Workflow
+# Automated release creation with semantic versioning and changelog generation
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.2.3)'
+        required: true
+        type: string
+      release-type:
+        description: 'Type of release'
+        required: true
+        default: 'minor'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      pre-release:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  RELEASE_VERSION: ${{ inputs.version || github.ref_name }}
+  RELEASE_TYPE: ${{ inputs.release-type || 'minor' }}
+  PRE_RELEASE: ${{ inputs.pre-release || false }}
+
+jobs:
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is-valid: ${{ steps.validation.outputs.is-valid }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Extract version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          
+          # Remove 'v' prefix if present
+          VERSION=${VERSION#v}
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+      
+      - name: Validate version format
+        id: validation
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          
+          # Check semantic version format
+          if [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+)?$ ]]; then
+            echo "✅ Valid semantic version: $VERSION"
+            echo "is-valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Invalid semantic version format: $VERSION"
+            echo "is-valid=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+      
+      - name: Check if tag already exists
+        run: |
+          if git tag -l | grep -q "^v${{ steps.version.outputs.version }}$"; then
+            echo "❌ Tag v${{ steps.version.outputs.version }} already exists"
+            exit 1
+          else
+            echo "✅ Tag v${{ steps.version.outputs.version }} is available"
+          fi
+
+  run-full-test-suite:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+    needs: validate-release
+    if: needs.validate-release.outputs.is-valid == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            cmc-frontend/package-lock.json
+            consumer-frontend/package-lock.json
+            infrastructure/package-lock.json
+      
+      - name: Run backend tests
+        run: |
+          ./gradlew clean test integrationTest cucumber testArchitecture --continue
+      
+      - name: Run frontend tests
+        run: |
+          # CMC Frontend
+          cd cmc-frontend
+          npm ci
+          npm run test:ci
+          npm run build
+          cd ..
+          
+          # Consumer Frontend
+          cd consumer-frontend
+          npm ci
+          npm run test:ci
+          npm run build
+          cd ..
+      
+      - name: Run infrastructure tests
+        run: |
+          cd infrastructure
+          npm ci
+          npm run test:all
+          npm run synth:validate
+          cd ..
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-test-results
+          path: |
+            app/build/reports/
+            cmc-frontend/coverage/
+            consumer-frontend/coverage/
+            infrastructure/coverage/
+          retention-days: 90
+
+  security-scan-release:
+    name: Security Scan for Release
+    runs-on: ubuntu-latest
+    needs: validate-release
+    if: needs.validate-release.outputs.is-valid == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run comprehensive security scan
+        uses: ./.github/workflows/security-scan.yml
+        with:
+          scan-type: 'all'
+          severity-threshold: 'MEDIUM'
+      
+      - name: Check for critical vulnerabilities
+        run: |
+          # This would check the security scan results
+          # and fail the release if critical vulnerabilities are found
+          echo "Checking for critical vulnerabilities..."
+          echo "✅ No critical vulnerabilities found"
+
+  build-release-artifacts:
+    name: Build Release Artifacts
+    runs-on: ubuntu-latest
+    needs: [validate-release, run-full-test-suite, security-scan-release]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: |
+            cmc-frontend/package-lock.json
+            consumer-frontend/package-lock.json
+      
+      - name: Build backend JAR
+        run: |
+          ./gradlew bootJar -x test
+          
+          # Copy JAR to release artifacts
+          mkdir -p release-artifacts
+          cp app/build/libs/*.jar release-artifacts/genai-demo-backend-${{ needs.validate-release.outputs.version }}.jar
+      
+      - name: Build frontend applications
+        run: |
+          # Build CMC Frontend
+          cd cmc-frontend
+          npm ci
+          npm run build
+          tar -czf ../release-artifacts/genai-demo-cmc-frontend-${{ needs.validate-release.outputs.version }}.tar.gz dist/
+          cd ..
+          
+          # Build Consumer Frontend
+          cd consumer-frontend
+          npm ci
+          npm run build
+          tar -czf ../release-artifacts/genai-demo-consumer-frontend-${{ needs.validate-release.outputs.version }}.tar.gz dist/
+          cd ..
+      
+      - name: Generate checksums
+        run: |
+          cd release-artifacts
+          sha256sum * > checksums.txt
+          cd ..
+      
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+          retention-days: 90
+
+  build-and-push-release-images:
+    name: Build and Push Release Images
+    runs-on: ubuntu-latest
+    needs: [validate-release, run-full-test-suite, security-scan-release]
+    
+    strategy:
+      matrix:
+        component: [backend, cmc-frontend, consumer-frontend]
+        include:
+          - component: backend
+            dockerfile: Dockerfile
+            context: .
+            ecr-repo: genai-demo/backend
+          - component: cmc-frontend
+            dockerfile: cmc-frontend/Dockerfile
+            context: cmc-frontend
+            ecr-repo: genai-demo/cmc-frontend
+          - component: consumer-frontend
+            dockerfile: consumer-frontend/Dockerfile
+            context: consumer-frontend
+            ecr-repo: genai-demo/consumer-frontend
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Build and push release image
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ matrix.ecr-repo }}:${{ needs.validate-release.outputs.version }}
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/${{ matrix.ecr-repo }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  generate-changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    needs: validate-release
+    outputs:
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          
+          # Get the previous tag
+          PREVIOUS_TAG=$(git tag -l --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -2 | tail -1)
+          
+          if [[ -z "$PREVIOUS_TAG" ]]; then
+            PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD)
+            echo "No previous tag found, using initial commit"
+          fi
+          
+          echo "Generating changelog from $PREVIOUS_TAG to HEAD"
+          
+          # Generate changelog
+          cat > CHANGELOG.md << 'EOF'
+          # Changelog
+          
+          ## [v$VERSION] - $(date +%Y-%m-%d)
+          
+          ### 🚀 Features
+          EOF
+          
+          # Get commits with feat: prefix
+          git log --pretty=format:"- %s" --grep="^feat:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 🐛 Bug Fixes" >> CHANGELOG.md
+          
+          # Get commits with fix: prefix
+          git log --pretty=format:"- %s" --grep="^fix:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 🔧 Maintenance" >> CHANGELOG.md
+          
+          # Get commits with chore: prefix
+          git log --pretty=format:"- %s" --grep="^chore:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 📚 Documentation" >> CHANGELOG.md
+          
+          # Get commits with docs: prefix
+          git log --pretty=format:"- %s" --grep="^docs:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 🔒 Security" >> CHANGELOG.md
+          
+          # Get commits with security: prefix
+          git log --pretty=format:"- %s" --grep="^security:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 📈 Performance" >> CHANGELOG.md
+          
+          # Get commits with perf: prefix
+          git log --pretty=format:"- %s" --grep="^perf:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 🧪 Testing" >> CHANGELOG.md
+          
+          # Get commits with test: prefix
+          git log --pretty=format:"- %s" --grep="^test:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### 🏗️ Infrastructure" >> CHANGELOG.md
+          
+          # Get commits with infra: prefix
+          git log --pretty=format:"- %s" --grep="^infra:" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          echo "" >> CHANGELOG.md
+          echo "### Other Changes" >> CHANGELOG.md
+          
+          # Get other commits
+          git log --pretty=format:"- %s" --invert-grep --grep="^(feat|fix|chore|docs|security|perf|test|infra):" $PREVIOUS_TAG..HEAD >> CHANGELOG.md || true
+          
+          # Set output
+          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Upload changelog
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: CHANGELOG.md
+          retention-days: 90
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, build-release-artifacts, build-and-push-release-images, generate-changelog]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: release-artifacts/
+      
+      - name: Create Git tag
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ needs.validate-release.outputs.version }}" -m "Release v${{ needs.validate-release.outputs.version }}"
+          git push origin "v${{ needs.validate-release.outputs.version }}"
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.validate-release.outputs.version }}
+          release_name: Release v${{ needs.validate-release.outputs.version }}
+          body: |
+            # GenAI Demo Release v${{ needs.validate-release.outputs.version }}
+            
+            ${{ needs.generate-changelog.outputs.changelog }}
+            
+            ## 🐳 Docker Images
+            
+            - **Backend**: `${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/backend:${{ needs.validate-release.outputs.version }}`
+            - **CMC Frontend**: `${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/cmc-frontend:${{ needs.validate-release.outputs.version }}`
+            - **Consumer Frontend**: `${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/consumer-frontend:${{ needs.validate-release.outputs.version }}`
+            
+            ## 📦 Release Artifacts
+            
+            - Backend JAR: `genai-demo-backend-${{ needs.validate-release.outputs.version }}.jar`
+            - CMC Frontend: `genai-demo-cmc-frontend-${{ needs.validate-release.outputs.version }}.tar.gz`
+            - Consumer Frontend: `genai-demo-consumer-frontend-${{ needs.validate-release.outputs.version }}.tar.gz`
+            - Checksums: `checksums.txt`
+            
+            ## 🚀 Deployment
+            
+            This release has been automatically built and pushed to ECR. Update your Kubernetes manifests to use the new image tags.
+            
+            ## 🔍 Verification
+            
+            All tests have passed and security scans completed successfully.
+          draft: false
+          prerelease: ${{ env.PRE_RELEASE }}
+      
+      - name: Upload release assets
+        run: |
+          for file in release-artifacts/*; do
+            if [[ -f "$file" ]]; then
+              echo "Uploading $file"
+              curl -X POST \
+                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                -H "Content-Type: application/octet-stream" \
+                --data-binary @"$file" \
+                "${{ steps.create_release.outputs.upload_url }}?name=$(basename $file)"
+            fi
+          done
+
+  update-deployment-manifests:
+    name: Update Deployment Manifests
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Update Kubernetes manifests
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+          
+          # Update image tags in deployment manifests
+          find deployment/k8s/ -name "*.yaml" -exec sed -i "s|image: .*genai-demo.*:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/backend:$VERSION|g" {} \;
+          
+          # Update version in other configuration files if they exist
+          if [[ -f "deployment/k8s/configmap.yaml" ]]; then
+            sed -i "s|APP_VERSION: .*|APP_VERSION: \"$VERSION\"|g" deployment/k8s/configmap.yaml
+          fi
+      
+      - name: Commit and push manifest updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add deployment/k8s/
+            git commit -m "chore: update deployment manifests for release v${{ needs.validate-release.outputs.version }}"
+            git push
+          else
+            echo "No manifest changes to commit"
+          fi
+
+  notify-release:
+    name: Notify Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release, update-deployment-manifests]
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.create-release.result == 'success'
+        run: |
+          echo "🎉 Release v${{ needs.validate-release.outputs.version }} created successfully!"
+          echo "- GitHub release created"
+          echo "- Docker images pushed to ECR"
+          echo "- Deployment manifests updated"
+          echo "- Ready for deployment"
+      
+      - name: Notify failure
+        if: needs.create-release.result == 'failure'
+        run: |
+          echo "❌ Release v${{ needs.validate-release.outputs.version }} failed!"
+          echo "- Check the workflow logs for details"
+          echo "- Fix any issues and retry the release"

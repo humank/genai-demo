@@ -38,13 +38,54 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings
+      base-path: /actuator
   endpoint:
     health:
-      show-details: when-authorized
+      show-details: always
+      show-components: always
+      probes:
+        enabled: true  # Enable Kubernetes probes
+      group:
+        liveness:
+          include: "livenessState"
+        readiness:
+          include: "readinessState,db"
+    metrics:
+      access: unrestricted
+    prometheus:
+      access: unrestricted
   info:
     env:
       enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+        step: 10s
+        descriptions: true
+  metrics:
+    export:
+      cloudwatch:
+        enabled: false  # Will be enabled in production profile
+        namespace: GenAIDemo
+        step: 1m
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        spring.data.repository.invocations: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+        spring.data.repository.invocations: 0.5, 0.95, 0.99
+    tags:
+      application: ${spring.application.name}
+      version: ${spring.application.version}
+      environment: ${spring.profiles.active}
 
 # Application Information
 info:
@@ -58,8 +99,33 @@ info:
     profiles:
       active: ${spring.profiles.active}
       
+# Distributed Tracing Configuration
+tracing:
+  enabled: true
+  sampling:
+    ratio: 1.0  # Sample all traces in development
+  jaeger:
+    endpoint: http://localhost:14250
+  otlp:
+    endpoint: http://localhost:4317
+  correlation:
+    enabled: true
+
+# OpenTelemetry Configuration
+otel:
+  service:
+    name: ${spring.application.name}
+    version: ${spring.application.version}
+  resource:
+    attributes:
+      deployment.environment: ${spring.profiles.active}
+  traces:
+    exporter: jaeger  # Will be overridden in production profile
+  metrics:
+    exporter: none    # Disable OTEL metrics, use Micrometer instead
+
 # Profile Configuration Validation
-genai-demo:
+app:
   profile:
     name: ${spring.profiles.active:dev}
     description: "Base configuration - profile-specific settings will override"
@@ -68,4 +134,34 @@ genai-demo:
       debug-logging: false
       in-memory-events: false
       kafka-events: false
-      observability-enabled: false
+
+genai-demo:
+  observability:
+    enabled: false
+    distributed-tracing: true
+    metrics:
+      sampling:
+        enabled: true
+        business-metrics-sampling-rate: 1.0
+        infrastructure-metrics-sampling-rate: 0.1
+        jvm-metrics-sampling-rate: 0.05
+        max-cardinality: 10000
+        retention-period: P15D
+    logging:
+      retention:
+        optimization-enabled: true
+        high-volume-threshold: 1000
+    rightsizing:
+      analysis-enabled: true
+      history-retention-minutes: 60
+      min-samples-for-recommendation: 15
+      cpu-underutilization-threshold: 20.0
+      cpu-overutilization-threshold: 80.0
+      memory-underutilization-threshold: 30.0
+      memory-overutilization-threshold: 85.0
+      recommendation-confidence-threshold: 75.0
+    cost-optimization:
+      enabled: true
+      estimated-monthly-cost: 500.0
+      savings-threshold: 10.0
+      analysis-interval-minutes: 15

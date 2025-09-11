@@ -1,0 +1,8 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: genai-demo-ingress
+  namespace: genai-demo
+  annotations:
+    alb.ingress.kubernetes.io/tags: Environment=production,Project=genai-demo,Service=ALB-Ingress
+    alb.ingress.kubernetes.io/wafv2-acl-arn: "arn:aws:wafv2:REGION:ACCOUNT_ID:regional/webacl/genai-demo-production-waf/WAF_ID"

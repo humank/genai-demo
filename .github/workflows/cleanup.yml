@@ -1,0 +1,251 @@
+# Cleanup Workflow
+# Automated cleanup of old artifacts, branches, and resources
+
+name: Cleanup
+
+on:
+  schedule:
+    # Run cleanup daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      cleanup-type:
+        description: 'Type of cleanup to perform'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - artifacts
+          - branches
+          - images
+          - cache
+
+env:
+  CLEANUP_TYPE: ${{ inputs.cleanup-type || 'all' }}
+
+jobs:
+  cleanup-artifacts:
+    name: Cleanup Old Artifacts
+    runs-on: ubuntu-latest
+    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'artifacts'
+    
+    steps:
+      - name: Delete old workflow runs and artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // Get workflow runs older than 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const workflows = await github.rest.actions.listWorkflowRunsForRepo({
+              owner,
+              repo,
+              per_page: 100,
+              status: 'completed'
+            });
+            
+            for (const run of workflows.data.workflow_runs) {
+              const runDate = new Date(run.created_at);
+              if (runDate < thirtyDaysAgo) {
+                console.log(`Deleting workflow run: ${run.id} from ${run.created_at}`);
+                try {
+                  await github.rest.actions.deleteWorkflowRun({
+                    owner,
+                    repo,
+                    run_id: run.id
+                  });
+                } catch (error) {
+                  console.log(`Failed to delete run ${run.id}: ${error.message}`);
+                }
+              }
+            }
+
+  cleanup-branches:
+    name: Cleanup Merged Branches
+    runs-on: ubuntu-latest
+    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'branches'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Delete merged branches
+        run: |
+          # Get all remote branches
+          git fetch --all --prune
+          
+          # Delete merged feature branches (except main, develop, and release branches)
+          git for-each-ref --format='%(refname:short) %(upstream:track)' refs/remotes/origin | \
+          while read branch track; do
+            branch_name=${branch#origin/}
+            
+            # Skip protected branches
+            if [[ "$branch_name" =~ ^(main|develop|master|release/.*)$ ]]; then
+              continue
+            fi
+            
+            # Check if branch is merged into main
+            if git merge-base --is-ancestor "origin/$branch_name" origin/main 2>/dev/null; then
+              echo "Deleting merged branch: $branch_name"
+              git push origin --delete "$branch_name" || echo "Failed to delete $branch_name"
+            fi
+          done
+      
+      - name: Delete old dependency update branches
+        run: |
+          # Delete dependency update branches older than 7 days
+          git for-each-ref --format='%(refname:short) %(committerdate)' refs/remotes/origin/dependency-updates/ | \
+          while read branch date; do
+            branch_name=${branch#origin/}
+            if [[ $(date -d "$date" +%s) -lt $(date -d "7 days ago" +%s) ]]; then
+              echo "Deleting old dependency branch: $branch_name"
+              git push origin --delete "$branch_name" || echo "Failed to delete $branch_name"
+            fi
+          done
+
+  cleanup-ecr-images:
+    name: Cleanup Old ECR Images
+    runs-on: ubuntu-latest
+    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'images'
+    
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      
+      - name: Cleanup ECR images
+        run: |
+          repositories=("genai-demo/backend" "genai-demo/cmc-frontend" "genai-demo/consumer-frontend")
+          
+          for repo in "${repositories[@]}"; do
+            echo "Cleaning up repository: $repo"
+            
+            # Keep latest 10 images and delete older untagged images
+            aws ecr list-images --repository-name "$repo" \
+              --filter tagStatus=UNTAGGED \
+              --query 'imageIds[?imageDigest!=null]' \
+              --output json | \
+            jq '.[] | select(.imagePushedAt < (now - 86400 * 7))' | \
+            jq -s 'sort_by(.imagePushedAt) | reverse | .[10:]' | \
+            jq -r '.[] | .imageDigest' | \
+            while read digest; do
+              if [[ -n "$digest" ]]; then
+                echo "Deleting image with digest: $digest"
+                aws ecr batch-delete-image \
+                  --repository-name "$repo" \
+                  --image-ids imageDigest="$digest" || echo "Failed to delete image"
+              fi
+            done
+            
+            # Delete images older than 90 days (except latest and release tags)
+            aws ecr describe-images --repository-name "$repo" \
+              --query 'imageDetails[?imagePushedAt < `'$(date -d '90 days ago' -u +%Y-%m-%dT%H:%M:%SZ)'`]' \
+              --output json | \
+            jq -r '.[] | select(.imageTags == null or (.imageTags | map(test("^(latest|v[0-9]+\\.[0-9]+\\.[0-9]+)$")) | any | not)) | .imageDigest' | \
+            while read digest; do
+              if [[ -n "$digest" ]]; then
+                echo "Deleting old image with digest: $digest"
+                aws ecr batch-delete-image \
+                  --repository-name "$repo" \
+                  --image-ids imageDigest="$digest" || echo "Failed to delete old image"
+              fi
+            done
+          done
+
+  cleanup-cache:
+    name: Cleanup GitHub Actions Cache
+    runs-on: ubuntu-latest
+    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'cache'
+    
+    steps:
+      - name: Cleanup old caches
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // Get all caches
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner,
+              repo,
+              per_page: 100
+            });
+            
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            
+            for (const cache of caches.data.actions_caches) {
+              const cacheDate = new Date(cache.last_accessed_at || cache.created_at);
+              
+              // Delete caches older than 7 days or larger than 1GB
+              if (cacheDate < sevenDaysAgo || cache.size_in_bytes > 1073741824) {
+                console.log(`Deleting cache: ${cache.key} (${cache.size_in_bytes} bytes, last accessed: ${cache.last_accessed_at})`);
+                try {
+                  await github.rest.actions.deleteActionsCacheById({
+                    owner,
+                    repo,
+                    cache_id: cache.id
+                  });
+                } catch (error) {
+                  console.log(`Failed to delete cache ${cache.id}: ${error.message}`);
+                }
+              }
+            }
+
+  cleanup-summary:
+    name: Cleanup Summary
+    runs-on: ubuntu-latest
+    needs: [cleanup-artifacts, cleanup-branches, cleanup-ecr-images, cleanup-cache]
+    if: always()
+    
+    steps:
+      - name: Generate cleanup report
+        run: |
+          cat > cleanup-report.md << 'EOF'
+          # 🧹 Cleanup Report
+          
+          ## Cleanup Summary
+          - **Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Type**: ${{ env.CLEANUP_TYPE }}
+          
+          ## Results
+          - **Artifacts Cleanup**: ${{ needs.cleanup-artifacts.result }}
+          - **Branches Cleanup**: ${{ needs.cleanup-branches.result }}
+          - **ECR Images Cleanup**: ${{ needs.cleanup-ecr-images.result }}
+          - **Cache Cleanup**: ${{ needs.cleanup-cache.result }}
+          
+          ## Actions Taken
+          1. Deleted workflow runs older than 30 days
+          2. Removed merged feature branches
+          3. Cleaned up old dependency update branches
+          4. Removed old ECR images (keeping latest 10 and releases)
+          5. Cleared GitHub Actions cache older than 7 days
+          
+          ## Storage Savings
+          - Workflow artifacts: Cleaned up
+          - ECR storage: Optimized
+          - Actions cache: Optimized
+          
+          ## Next Cleanup
+          Scheduled for tomorrow at 3 AM UTC
+          
+          EOF
+      
+      - name: Upload cleanup report
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-report
+          path: cleanup-report.md
+          retention-days: 7

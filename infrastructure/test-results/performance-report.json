@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-09-11T14:29:18.971Z",
+  "totalDuration": 7714,
+  "averageTestDuration": 593.3846153846154,
+  "slowestTests": [
+    {
+      "name": "DisasterRecoveryAutomation Basic Construction should create DR automation construct with minimal configuration",
+      "duration": 363,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Lambda Functions should create failover Lambda with correct configuration",
+      "duration": 120,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Outputs should create all required outputs",
+      "duration": 51,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Step Functions State Machines should create failover state machine",
+      "duration": 46,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Lambda Functions should create chaos testing Lambda with correct configuration",
+      "duration": 45,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Integration Tests should integrate properly with existing infrastructure",
+      "duration": 40,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Step Functions State Machines should create chaos testing state machine",
+      "duration": 38,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation IAM Roles and Policies should create DR automation role with correct permissions",
+      "duration": 38,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation Systems Manager Parameters should create DR automation configuration parameter",
+      "duration": 38,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    },
+    {
+      "name": "DisasterRecoveryAutomation EventBridge Rules should create monthly testing rule",
+      "duration": 37,
+      "file": "/test/disaster-recovery-automation.test.ts"
+    }
+  ],
+  "testSuitePerformance": [
+    {
+      "name": "/test/disaster-recovery-automation.test.ts",
+      "duration": 7714,
+      "testsCount": 13,
+      "averageDuration": 593.3846153846154
+    }
+  ]
+}

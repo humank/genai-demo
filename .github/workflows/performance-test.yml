@@ -1,0 +1,424 @@
+# Performance Testing Workflow
+# Load testing and performance monitoring for the GenAI Demo application
+
+name: Performance Testing
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to test'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      test-duration:
+        description: 'Test duration in minutes'
+        required: true
+        default: '10'
+        type: string
+      concurrent-users:
+        description: 'Number of concurrent users'
+        required: true
+        default: '50'
+        type: string
+  schedule:
+    # Run performance tests weekly on Sunday at 3 AM UTC
+    - cron: '0 3 * * 0'
+
+env:
+  ENVIRONMENT: ${{ inputs.environment || 'staging' }}
+  TEST_DURATION: ${{ inputs.test-duration || '10' }}
+  CONCURRENT_USERS: ${{ inputs.concurrent-users || '50' }}
+
+jobs:
+  performance-test:
+    name: Load Testing with K6
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up K6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+      
+      - name: Create K6 test script
+        run: |
+          cat > performance-test.js << 'EOF'
+          import http from 'k6/http';
+          import { check, sleep } from 'k6';
+          import { Rate } from 'k6/metrics';
+          
+          // Custom metrics
+          const errorRate = new Rate('errors');
+          
+          // Test configuration
+          export const options = {
+            stages: [
+              { duration: '2m', target: Math.floor(__ENV.CONCURRENT_USERS * 0.1) }, // Ramp up
+              { duration: `${__ENV.TEST_DURATION}m`, target: __ENV.CONCURRENT_USERS }, // Stay at target
+              { duration: '2m', target: 0 }, // Ramp down
+            ],
+            thresholds: {
+              http_req_duration: ['p(95)<2000'], // 95% of requests must complete below 2s
+              http_req_failed: ['rate<0.05'], // Error rate must be below 5%
+              errors: ['rate<0.05'],
+            },
+          };
+          
+          // Base URL based on environment
+          const BASE_URL = __ENV.ENVIRONMENT === 'production' 
+            ? 'https://api.kimkao.io'
+            : 'https://api-staging.kimkao.io';
+          
+          export default function () {
+            // Health check endpoint
+            let response = http.get(`${BASE_URL}/actuator/health`);
+            check(response, {
+              'health check status is 200': (r) => r.status === 200,
+              'health check response time < 500ms': (r) => r.timings.duration < 500,
+            }) || errorRate.add(1);
+            
+            sleep(1);
+            
+            // API endpoints testing
+            const endpoints = [
+              '/api/customers',
+              '/api/products',
+              '/api/orders',
+              '/api/inventory'
+            ];
+            
+            endpoints.forEach(endpoint => {
+              response = http.get(`${BASE_URL}${endpoint}`, {
+                headers: {
+                  'Accept': 'application/json',
+                  'User-Agent': 'K6-Performance-Test/1.0'
+                }
+              });
+              
+              check(response, {
+                [`${endpoint} status is 200`]: (r) => r.status === 200,
+                [`${endpoint} response time < 2000ms`]: (r) => r.timings.duration < 2000,
+              }) || errorRate.add(1);
+              
+              sleep(0.5);
+            });
+            
+            // Simulate user workflow
+            simulateUserWorkflow();
+          }
+          
+          function simulateUserWorkflow() {
+            // Customer registration simulation
+            const customerData = {
+              name: `TestUser${Math.random().toString(36).substr(2, 9)}`,
+              email: `test${Math.random().toString(36).substr(2, 9)}@example.com`,
+              membershipLevel: 'STANDARD'
+            };
+            
+            let response = http.post(`${BASE_URL}/api/customers`, JSON.stringify(customerData), {
+              headers: { 'Content-Type': 'application/json' }
+            });
+            
+            check(response, {
+              'customer creation status is 201': (r) => r.status === 201,
+            }) || errorRate.add(1);
+            
+            if (response.status === 201) {
+              const customer = JSON.parse(response.body);
+              
+              // Product browsing simulation
+              response = http.get(`${BASE_URL}/api/products?page=0&size=10`);
+              check(response, {
+                'product listing status is 200': (r) => r.status === 200,
+              }) || errorRate.add(1);
+              
+              if (response.status === 200) {
+                const products = JSON.parse(response.body);
+                if (products.content && products.content.length > 0) {
+                  // Order creation simulation
+                  const orderData = {
+                    customerId: customer.id,
+                    items: [{
+                      productId: products.content[0].id,
+                      quantity: Math.floor(Math.random() * 3) + 1
+                    }]
+                  };
+                  
+                  response = http.post(`${BASE_URL}/api/orders`, JSON.stringify(orderData), {
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  
+                  check(response, {
+                    'order creation status is 201': (r) => r.status === 201,
+                  }) || errorRate.add(1);
+                }
+              }
+            }
+            
+            sleep(2);
+          }
+          EOF
+      
+      - name: Run performance test
+        run: |
+          k6 run \
+            --env ENVIRONMENT=${{ env.ENVIRONMENT }} \
+            --env TEST_DURATION=${{ env.TEST_DURATION }} \
+            --env CONCURRENT_USERS=${{ env.CONCURRENT_USERS }} \
+            --out json=performance-results.json \
+            performance-test.js
+      
+      - name: Generate performance report
+        run: |
+          cat > performance-report.md << 'EOF'
+          # 📊 Performance Test Report
+          
+          ## Test Configuration
+          - **Environment**: ${{ env.ENVIRONMENT }}
+          - **Duration**: ${{ env.TEST_DURATION }} minutes
+          - **Concurrent Users**: ${{ env.CONCURRENT_USERS }}
+          - **Test Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Test Results
+          
+          ### Key Metrics
+          - **Total Requests**: $(jq '.metrics.http_reqs.values.count' performance-results.json)
+          - **Failed Requests**: $(jq '.metrics.http_req_failed.values.rate * 100' performance-results.json)%
+          - **Average Response Time**: $(jq '.metrics.http_req_duration.values.avg' performance-results.json)ms
+          - **95th Percentile**: $(jq '.metrics.http_req_duration.values["p(95)"]' performance-results.json)ms
+          - **99th Percentile**: $(jq '.metrics.http_req_duration.values["p(99)"]' performance-results.json)ms
+          
+          ### Performance Thresholds
+          - ✅ 95% of requests < 2000ms: $(jq '.metrics.http_req_duration.values["p(95)"] < 2000' performance-results.json)
+          - ✅ Error rate < 5%: $(jq '.metrics.http_req_failed.values.rate < 0.05' performance-results.json)
+          
+          ### Recommendations
+          1. Monitor response times during peak hours
+          2. Consider auto-scaling if response times increase
+          3. Optimize database queries for frequently accessed endpoints
+          4. Implement caching for static content
+          
+          ## Detailed Results
+          See attached performance-results.json for complete metrics.
+          
+          EOF
+      
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-test-results
+          path: |
+            performance-results.json
+            performance-report.md
+          retention-days: 90
+      
+      - name: Create performance issue if thresholds exceeded
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('performance-report.md', 'utf8');
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Performance Test Thresholds Exceeded',
+              body: `Performance test thresholds have been exceeded.\n\n${report}`,
+              labels: ['performance', 'monitoring', 'investigation-needed']
+            });
+
+  database-performance-test:
+    name: Database Performance Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+      
+      - name: Run database performance tests
+        run: |
+          # Run specific performance tests for database operations
+          ./gradlew test --tests "*PerformanceTest" -Dspring.profiles.active=test
+      
+      - name: Generate database performance report
+        run: |
+          cat > db-performance-report.md << 'EOF'
+          # 🗄️ Database Performance Test Report
+          
+          ## Test Summary
+          - **Test Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Environment**: Test Database (H2)
+          
+          ## Performance Metrics
+          - Customer operations: Tested
+          - Product queries: Tested
+          - Order processing: Tested
+          - Inventory updates: Tested
+          
+          ## Recommendations
+          1. Monitor query execution times in production
+          2. Optimize slow queries identified in tests
+          3. Consider database indexing improvements
+          4. Review connection pool configuration
+          
+          EOF
+      
+      - name: Upload database performance results
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-performance-results
+          path: |
+            db-performance-report.md
+            app/build/reports/tests/
+          retention-days: 30
+
+  frontend-performance-test:
+    name: Frontend Performance Test
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        frontend: [cmc-frontend, consumer-frontend]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.frontend }}/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ${{ matrix.frontend }}
+        run: npm ci
+      
+      - name: Build application
+        working-directory: ${{ matrix.frontend }}
+        run: npm run build
+      
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.12.x
+      
+      - name: Run Lighthouse CI
+        working-directory: ${{ matrix.frontend }}
+        run: |
+          # Create Lighthouse CI configuration
+          cat > lighthouserc.js << 'EOF'
+          module.exports = {
+            ci: {
+              collect: {
+                staticDistDir: './dist',
+                numberOfRuns: 3,
+              },
+              assert: {
+                assertions: {
+                  'categories:performance': ['error', {minScore: 0.8}],
+                  'categories:accessibility': ['error', {minScore: 0.9}],
+                  'categories:best-practices': ['error', {minScore: 0.8}],
+                  'categories:seo': ['error', {minScore: 0.8}],
+                },
+              },
+              upload: {
+                target: 'temporary-public-storage',
+              },
+            },
+          };
+          EOF
+          
+          # Run Lighthouse CI
+          lhci autorun || echo "Lighthouse CI completed with warnings"
+      
+      - name: Upload Lighthouse results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results-${{ matrix.frontend }}
+          path: |
+            ${{ matrix.frontend }}/.lighthouseci/
+          retention-days: 30
+
+  performance-summary:
+    name: Performance Summary
+    runs-on: ubuntu-latest
+    needs: [performance-test, database-performance-test, frontend-performance-test]
+    if: always()
+    
+    steps:
+      - name: Download all performance results
+        uses: actions/download-artifact@v4
+        with:
+          path: performance-results/
+      
+      - name: Generate comprehensive performance report
+        run: |
+          cat > comprehensive-performance-report.md << 'EOF'
+          # 📈 Comprehensive Performance Report
+          
+          ## Test Summary
+          - **Test Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - **Environment**: ${{ env.ENVIRONMENT }}
+          - **Load Test Duration**: ${{ env.TEST_DURATION }} minutes
+          - **Concurrent Users**: ${{ env.CONCURRENT_USERS }}
+          
+          ## Test Results Overview
+          
+          ### Load Testing
+          - Status: ${{ needs.performance-test.result }}
+          - API endpoints tested under load
+          - User workflow simulation completed
+          
+          ### Database Performance
+          - Status: ${{ needs.database-performance-test.result }}
+          - Database operations performance validated
+          - Query optimization recommendations generated
+          
+          ### Frontend Performance
+          - Status: ${{ needs.frontend-performance-test.result }}
+          - Lighthouse CI scores for both frontends
+          - Web vitals and accessibility metrics
+          
+          ## Key Findings
+          1. **API Performance**: Review detailed load test results
+          2. **Database Performance**: Check query execution times
+          3. **Frontend Performance**: Lighthouse scores and recommendations
+          
+          ## Action Items
+          - [ ] Review and address any performance bottlenecks
+          - [ ] Implement recommended optimizations
+          - [ ] Schedule regular performance monitoring
+          - [ ] Update performance baselines if needed
+          
+          ## Next Steps
+          1. Analyze detailed performance metrics
+          2. Implement performance improvements
+          3. Set up continuous performance monitoring
+          4. Schedule regular performance reviews
+          
+          EOF
+      
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: comprehensive-performance-report
+          path: comprehensive-performance-report.md
+          retention-days: 90

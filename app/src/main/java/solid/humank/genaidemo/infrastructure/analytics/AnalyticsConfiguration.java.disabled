@@ -1,0 +1,68 @@
+package solid.humank.genaidemo.infrastructure.analytics;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+/**
+ * Configuration for analytics pipeline integration.
+ * 
+ * This configuration sets up the necessary beans for integrating with AWS
+ * analytics services
+ * including Kinesis Data Firehose for streaming domain events to the data lake.
+ * 
+ * Requirements addressed:
+ * - 9.1: Automatically update QuickSight datasets for real-time analytics
+ * - 9.2: Display customer lifecycle metrics
+ * - 9.3: Show order processing funnel and conversion rates
+ * - 9.4: Display stock levels and reorder alerts
+ */
+@ConditionalOnClass(name = "com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose")
+@Configuration
+@EnableConfigurationProperties(AnalyticsProperties.class)
+@ConditionalOnProperty(name = "analytics.enabled", havingValue = "true", matchIfMissing = false)
+public class AnalyticsConfiguration {
+
+    /**
+     * Creates Amazon Kinesis Firehose client for streaming events to data lake.
+     * Only available in production profile where analytics is enabled.
+     */
+    @Bean
+    @Profile("production")
+    public AmazonKinesisFirehose kinesisFirehoseClient() {
+        return AmazonKinesisFirehoseClientBuilder.standard()
+                .withRegion(System.getProperty("aws.region", "ap-northeast-1"))
+                .build();
+    }
+
+    /**
+     * Creates the analytics event publisher for streaming domain events.
+     */
+    @Bean
+    @Profile("production")
+    public AnalyticsEventPublisher analyticsEventPublisher(
+            AmazonKinesisFirehose firehoseClient,
+            AnalyticsProperties analyticsProperties) {
+        return new FirehoseAnalyticsEventPublisher(firehoseClient, analyticsProperties);
+    }
+
+    /**
+     * Creates a no-op analytics event publisher for development environments.
+     */
+    @Bean
+    @Profile("!production")
+    public AnalyticsEventPublisher noOpAnalyticsEventPublisher() {
+        return new NoOpAnalyticsEventPublisher();
+    }
+
+    /**
+     * Creates the analytics event listener that handles domain events.
+     */
+    @Bean
+    public AnalyticsEventListener analyticsEventListener(AnalyticsEventPublisher publisher) {
+        return new AnalyticsEventListener(publisher);
+    }
+}
