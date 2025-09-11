@@ -6,55 +6,37 @@
 
 This is a full-stack e-commerce platform demonstration project based on Domain-Driven Design (DDD) and Hexagonal Architecture, showcasing how to build a modern application with excellent architecture and testing practices.
 
-## ✨ New Feature Highlights (v3.1.0 - September 2025)
+## 🌟 Project Highlights
 
-### 🔍 Enterprise-Grade Observability System (NEW!)
+### 🏗️ Enterprise-Grade Architecture Design
 
-- **Distributed Tracing**: Complete request tracing based on AWS X-Ray and Jaeger
-- **Structured Logging**: Unified log format and correlation ID management with PII masking support
-- **Business Metrics Collection**: CloudWatch custom metrics and Prometheus endpoints
-- **Enhanced Health Checks**: Multi-level health checks and automatic recovery mechanisms
-- **Security Monitoring**: Security event logging, compliance monitoring, and data retention policies
-- **Cost Optimization**: Resource right-sizing analysis and real-time cost tracking dashboard
-- **Data Analytics Pipeline**: Complete BI solution with Kinesis + S3 + Glue + QuickSight
+- **DDD + Hexagonal Architecture**: Aggregate Roots + Value Objects + Domain Events + Specification Pattern + Policy Pattern
+- **Event-Driven Design**: Complete event collection, publishing, and processing mechanisms
+- **Java 21 Records**: Reduces 30-40% boilerplate code, enhances type safety
 
-### 🤖 MCP (Model Context Protocol) Integration
+### 🔍 Complete Observability System (v3.1.0 NEW!)
 
-- **AWS Documentation Integration**: Real-time access to AWS official documentation and best practices
-- **CDK Guidance**: AWS CDK build guidance and Nag rule checking
-- **Pricing Analysis**: AWS service pricing queries and cost estimation
-- **IAM Management**: IAM user, role, and policy management tools
-- **GitHub Integration**: Code review, issue tracking, and PR management
+- **Distributed Tracing**: AWS X-Ray + Jaeger cross-service request tracing
+- **Structured Logging**: Unified format + correlation ID + PII masking
+- **Business Metrics**: CloudWatch custom metrics + Prometheus endpoints
+- **Cost Optimization**: Resource right-sizing analysis + real-time cost tracking
 
-### 🛒 Consumer Features
+### 🤖 AI-Assisted Development (MCP Integration)
 
-- **Smart Shopping Cart**: Multi-promotion calculation and promotion rule engine support
-- **Personalized Recommendations**: Product recommendation system based on purchase history and preferences
-- **Membership Loyalty System**: Complete loyalty point accumulation and redemption mechanism
-- **Convenience Store Coupons**: Coupon purchase, usage, and management features
-- **Real-time Delivery Tracking**: Real-time delivery status updates and route tracking
-- **Product Review System**: Review submission, moderation, and statistical analysis
+- **AWS Ecosystem**: Documentation queries + CDK guidance + pricing analysis + IAM management
+- **GitHub Integration**: Code review + issue tracking + PR management
+- **Intelligent Assistant**: Well-Architected reviews + architecture decision support
 
-### 🏢 Business Features
+### 🛒 Dual Frontend Business Features
 
-- **Promotion Management**: Multiple promotion rules and coupon systems
-- **Inventory Management**: Real-time inventory tracking and reservation mechanism
-- **Order Processing**: Complete order lifecycle management
-- **Statistical Analysis**: Sales data and performance metrics analysis
-- **Cost Monitoring**: Real-time cost tracking and optimization recommendations
+**Consumer Side**: Smart shopping cart + personalized recommendations + membership rewards + delivery tracking  
+**Business Side**: Promotion management + inventory management + order processing + statistical analysis
 
-### 🔧 Technical Features
+### 🧪 Testing and Quality Assurance
 
-- **Complete API Documentation**: Interactive documentation based on OpenAPI 3.0 with API grouping support
-- **Containerized Deployment**: ARM64-optimized Docker images
-- **Lightweight Design**: Slim Docker images and in-memory database
-- **Health Checks**: Complete application monitoring mechanisms
-- **DDD Architecture**: Complete Domain-Driven Design implementation including Aggregate Roots, Value Objects, Domain Events, Domain Services, Specification Pattern, Policy Pattern
-- **Hexagonal Architecture**: Strict port and adapter separation ensuring business logic independence
-- **Java Record Refactoring**: Value Objects and Domain Events implemented using Java 21 Records, Aggregate Roots using Interface + Annotation hybrid approach
-- **Event-Driven Architecture**: Complete domain event collection, publishing, and processing mechanisms
-- **Test Coverage**: BDD testing, unit testing, integration testing, and architecture testing achieving 100% test pass rate
-- **CI/CD Pipeline**: GitHub Actions automated testing, building, and deployment
+- **Test-Driven**: BDD + TDD + architecture testing, 272 tests 100% pass rate
+- **Architecture Compliance**: 9.5/10 (Hexagonal Architecture) + 9.5/10 (DDD Practices)
+- **Cloud-Native Deployment**: AWS CDK + Kubernetes + GitOps
 
 ## 🚀 Quick Start
 
@@ -230,19 +212,19 @@ genai-demo/
 
 ## 🆕 Version Updates (v3.1.0 - September 2025)
 
-### Major New Features
+### 🚀 Major New Features
 
 - ✅ **Enterprise-Grade Observability**: X-Ray + CloudWatch + Jaeger + Structured Logging
 - ✅ **MCP AI Assistant**: AWS Ecosystem + GitHub Integration + Intelligent Development Guidance
 - ✅ **Cloud-Native Infrastructure**: AWS CDK + Kubernetes + GitHub Actions CI/CD
 - ✅ **Cost Optimization System**: Resource Right-Sizing + Real-Time Cost Tracking + Optimization Recommendations
 
-### Architecture and Quality Improvements
+### 📈 Architecture and Quality Improvements
 
-- 🏗️ **Hexagonal Architecture**: Compliance improved from 8.5/10 to 9.5/10
+- 🏗️ **Hexagonal Architecture Compliance**: 8.5/10 → 9.5/10
 - 🔧 **Java Record Refactoring**: 22 Value Objects, reducing 30-40% boilerplate code
 - 🧪 **Test Stability**: 272 tests with 100% pass rate
-- 📁 **Project Structure**: File reorganization with clear categorization
+- 📁 **Project Structure Optimization**: File reorganization with clear categorization
 
 ## 🛠️ Technology Stack
 
@@ -669,29 +651,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 🔧 **API Documentation Automation** - SpringDoc 2.2.0 automatic OpenAPI specification generation
 - 🔧 **Test Quality Assurance** - Fixed domain event management ensuring test stability
 
-## 📈 Project Statistics
+## 📊 Project Statistics and Value
 
-- **Total Lines of Code**: 200,000+ lines (including complete DDD, Hexagonal Architecture, and Observability implementation)
-- **Test Coverage**: 272 tests, 100% pass rate
-- **Business Data**: 131 complete business records
-- **API Endpoints**: 35+ RESTful APIs (including cost optimization and monitoring endpoints)
-- **UI Components**: 25+ reusable components (modern React + Angular ecosystem)
-- **Documentation Pages**: 80+ detailed documents (including architecture, design, implementation, and observability guides)
-- **Database Migrations**: 22 Flyway migration scripts
-- **Architecture Compliance**: 9.5/10 (Hexagonal Architecture) + 9.5/10 (DDD Practices)
-- **Technology Stack Versions**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
-- **Infrastructure**: AWS CDK + Kubernetes + GitHub Actions CI/CD
-- **Observability**: X-Ray + CloudWatch + Jaeger + Prometheus
+### 📈 Core Data
 
-## 🏆 Project Value
+- **Code Scale**: 200,000+ lines of high-quality code
+- **Test Quality**: 272 tests, 100% pass rate
+- **API Coverage**: 35+ RESTful API endpoints
+- **UI Components**: 25+ reusable components (React + Angular)
+- **Documentation Completeness**: 80+ detailed documentation pages
+- **Database**: 131 business records + 22 Flyway migration scripts
 
-This is a complete example demonstrating modern enterprise-level application development best practices, including:
+### 🏆 Technical Value
 
-- **200,000+ lines of high-quality code** - DDD + Hexagonal Architecture + Event-Driven Design
-- **272 tests with 100% pass rate** - Complete coverage with BDD + TDD + Architecture Testing
-- **Enterprise-grade observability** - Distributed tracing + Structured logging + Business metrics
-- **AI-assisted development** - MCP integration providing intelligent development guidance
-- **Cloud-native deployment** - Complete implementation with AWS CDK + Kubernetes + GitOps
-- **80+ detailed documents** - Architecture design + Implementation guides + Best practices
-
-An ideal reference project for learning modern enterprise-level application development, microservices architecture, DevOps practices, and cloud-native technologies.
+- **Architecture Excellence**: DDD + Hexagonal Architecture + Event-Driven Design
+- **Quality Assurance**: Complete coverage with BDD + TDD + Architecture Testing
+- **Modern Technology Stack**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
+- **Enterprise Features**: Observability + AI-Assisted Development + Cloud-Native Deployment
+- **Best Practices**: An ideal reference project for learning modern enterprise-level application development
