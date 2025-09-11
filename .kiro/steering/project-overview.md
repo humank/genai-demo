@@ -2,7 +2,7 @@
 
 ## 項目簡介
 
-GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目
+GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目，整合企業級可觀測性和 AI 輔助開發
 
 ## 核心特性
 
@@ -11,6 +11,7 @@ GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目
 - **會員積分系統**: 完整的積分累積與兌換機制
 - **即時配送追蹤**: 實時配送狀態更新
 - **訂單生命週期管理**: 完整的訂單處理流程
+- **成本優化**: 即時成本追蹤和資源右調建議
 
 ## 技術架構亮點
 
@@ -19,6 +20,8 @@ GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目
 - **事件驅動架構**: 鬆耦合的領域事件機制
 - **CQRS 模式**: 命令查詢職責分離
 - **全面測試覆蓋**: BDD + TDD + 架構測試
+- **企業級可觀測性**: 分散式追蹤 + 結構化日誌 + 業務指標
+- **AI 輔助開發**: MCP 整合提供智能開發指導
 
 ## 技術棧
 
@@ -29,6 +32,8 @@ GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目
 - **H2** (開發/測試) + **PostgreSQL** (生產)
 - **SpringDoc OpenAPI 3** + **Swagger UI**
 - **Spring Boot Actuator** (監控)
+- **AWS X-Ray** (分散式追蹤) + **Micrometer** (指標)
+- **Logback** (結構化日誌) + **CloudWatch** (日誌聚合)
 
 ### 前端技術
 
@@ -49,6 +54,9 @@ GenAI Demo - 基於 DDD + 六角架構的全棧電商平台演示項目
 - **Lombok** (減少樣板代碼)
 - **PlantUML** (UML 圖表生成)
 - **Docker** + **Docker Compose**
+- **AWS CDK** (基礎設施即程式碼)
+- **GitHub Actions** (CI/CD 管道)
+- **MCP 伺服器** (AI 輔助開發)
 
 ## 項目結構
 
@@ -57,10 +65,12 @@ genai-demo/
 ├── app/                    # Spring Boot 主應用
 ├── cmc-frontend/           # 商務管理中心 (Next.js)
 ├── consumer-frontend/      # 消費者應用 (Angular)
+├── infrastructure/         # AWS CDK 基礎設施程式碼
 ├── deployment/             # Kubernetes 部署配置
 ├── docker/                 # Docker 構建腳本
 ├── docs/                   # 項目文檔
-└── scripts/                # 開發部署腳本
+├── scripts/                # 開發部署腳本
+└── .github/                # GitHub Actions CI/CD
 ```
 
 ## 開發環境端口
@@ -69,6 +79,8 @@ genai-demo/
 - **Swagger UI**: <http://localhost:8080/swagger-ui/index.html>
 - **H2 控制台**: <http://localhost:8080/h2-console>
 - **健康檢查**: <http://localhost:8080/actuator/health>
+- **應用指標**: <http://localhost:8080/actuator/metrics>
+- **成本優化**: <http://localhost:8080/api/cost-optimization/recommendations>
 - **CMC 前端**: <http://localhost:3002>
 - **消費者前端**: <http://localhost:3001>
 

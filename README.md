@@ -6,7 +6,24 @@
 
 這是一個基於領域驅動設計 (DDD) 和六角形架構 (Hexagonal Architecture) 的全棧電商平台示範專案，展示了如何構建一個具有良好架構和測試實踐的現代化應用程式。
 
-## ✨ 新功能亮點 (v3.0.0 - 2025年1月)
+## ✨ 新功能亮點 (v3.1.0 - 2025年1月)
+
+### 🔍 可觀測性與監控 (NEW!)
+
+- **分散式追蹤**: 基於 AWS X-Ray 和 Jaeger 的完整請求追蹤
+- **結構化日誌**: 統一的日誌格式和關聯 ID 管理
+- **業務指標收集**: CloudWatch 自定義指標和成本優化分析
+- **健康檢查增強**: 多層級健康檢查和自動恢復機制
+- **安全監控**: PII 遮罩、安全事件記錄和合規性監控
+- **成本優化**: 資源右調分析和成本追蹤儀表板
+
+### 🤖 MCP (Model Context Protocol) 整合
+
+- **AWS 文檔整合**: 即時存取 AWS 官方文檔和最佳實踐
+- **CDK 指導**: AWS CDK 構建指導和 Nag 規則檢查
+- **定價分析**: AWS 服務定價查詢和成本估算
+- **IAM 管理**: IAM 用戶、角色和政策管理工具
+- **GitHub 整合**: 程式碼審查、問題追蹤和 PR 管理
 
 ### 🛒 消費者端功能
 
@@ -23,6 +40,7 @@
 - **庫存管理**: 即時庫存追蹤和預留機制
 - **訂單處理**: 完整的訂單生命週期管理
 - **統計分析**: 銷售數據和效能指標分析
+- **成本監控**: 即時成本追蹤和優化建議
 
 ### 🔧 技術特色
 
@@ -35,6 +53,7 @@
 - **Java Record 重構**: 值對象和領域事件使用 Java 21 Record 實作，聚合根使用 Interface + Annotation 混搭方案
 - **事件驅動架構**: 完整的領域事件收集、發布和處理機制
 - **測試覆蓋**: BDD 測試、單元測試、整合測試和架構測試，達到 100% 測試通過率
+- **CI/CD 管道**: GitHub Actions 自動化測試、建構和部署
 
 ## 🚀 快速開始
 
@@ -60,6 +79,22 @@
 
 # 記憶體使用監控
 ./scripts/monitor-memory.sh
+
+# 系統資源檢查
+./scripts/check-system-resources.sh
+```
+
+#### 🔍 可觀測性端點
+
+```bash
+# 應用監控
+curl http://localhost:8080/actuator/health     # 健康檢查
+curl http://localhost:8080/actuator/metrics    # 應用指標
+curl http://localhost:8080/actuator/info       # 應用資訊
+
+# 成本優化 API
+curl http://localhost:8080/api/cost-optimization/recommendations  # 成本建議
+curl http://localhost:8080/api/cost-optimization/analysis         # 成本分析
 ```
 
 ### 方式一：Docker 容器化部署 (推薦)
@@ -82,6 +117,8 @@ docker-compose down
 
 - 🌐 **API 文檔**: <http://localhost:8080/swagger-ui/index.html>
 - 🏥 **健康檢查**: <http://localhost:8080/actuator/health>
+- 📊 **應用指標**: <http://localhost:8080/actuator/metrics>
+- 💰 **成本優化**: <http://localhost:8080/api/cost-optimization/recommendations>
 - 🗄️ **H2 資料庫控制台**: <http://localhost:8080/h2-console>
 
 ### 方式二：本地開發環境
@@ -192,6 +229,20 @@ genai-demo/
 
 ## 🆕 最新改動 (2025年1月)
 
+### 🔍 可觀測性與監控系統 (NEW!)
+
+- **分散式追蹤**: 完整的 AWS X-Ray 和 Jaeger 整合，支援跨服務請求追蹤
+- **結構化日誌**: 統一的日誌格式、關聯 ID 管理和 PII 遮罩
+- **業務指標**: CloudWatch 自定義指標收集和成本優化分析
+- **健康檢查增強**: 多層級健康檢查和自動恢復機制
+- **安全監控**: 安全事件記錄、合規性監控和資料保留政策
+
+### 🤖 MCP (Model Context Protocol) 整合
+
+- **AWS 生態系統**: 完整的 AWS 文檔、CDK 指導和定價分析工具
+- **開發工具**: GitHub 整合、IAM 管理和程式碼審查自動化
+- **智能助手**: 基於 MCP 的開發助手，提供即時技術指導
+
 ### 🏗️ 架構品質大幅提升
 
 - **六角形架構完善**: 嚴格的端口與適配器分離，架構合規性從 8.5/10 提升到 9.5/10
@@ -212,6 +263,7 @@ genai-demo/
 - **Spring Boot 3.4.5**: 升級到最新穩定版本
 - **Record 模式**: 大量使用 Java Record 提升代碼簡潔性
 - **API 文檔**: 完整的 OpenAPI 3.0 規範和 Swagger UI 整合
+- **CI/CD 管道**: GitHub Actions 自動化測試、建構和部署
 
 ### 📁 專案結構優化
 
@@ -220,16 +272,22 @@ genai-demo/
 - **部署檔案**: 移動到 `deployment/` 目錄，包含 Kubernetes 和 EKS 配置
 - **腳本檔案**: 移動到 `scripts/` 目錄，包含啟動、測試和資料生成腳本
 - **工具檔案**: 移動到 `tools/` 目錄，包含 PlantUML 等開發工具
+- **基礎設施**: 完整的 AWS CDK 基礎設施程式碼和多區域部署
 
 ## 🛠️ 技術棧
 
 ### 後端技術
 
-- **核心框架**: Spring Boot 3.5.5
+- **核心框架**: Spring Boot 3.4.5
 - **程式語言**: Java 21 (啟用預覽功能)
 - **構建工具**: Gradle 8.x
-- **數據庫**: H2 (開發) + Flyway (遷移管理)
+- **數據庫**: H2 (開發) + PostgreSQL (生產) + Flyway (遷移管理)
 - **API 文檔**: SpringDoc OpenAPI 3 + Swagger UI
+- **可觀測性**:
+  - Micrometer - 指標收集
+  - AWS X-Ray - 分散式追蹤
+  - Logback - 結構化日誌
+  - Spring Boot Actuator - 健康檢查
 - **測試框架**:
   - JUnit 5 - 單元測試
   - Cucumber 7.15.0 - BDD 測試
@@ -312,6 +370,11 @@ POST /api/payments                # 創建支付
 GET /api/payments/{paymentId}     # 獲取支付詳情
 PUT /api/payments/{paymentId}     # 更新支付狀態
 
+# 成本優化 API
+GET /api/cost-optimization/recommendations  # 獲取成本優化建議
+GET /api/cost-optimization/analysis         # 獲取成本分析報告
+POST /api/cost-optimization/right-sizing    # 執行資源右調分析
+
 # 客戶管理 API
 GET /api/customers                # 客戶列表
 GET /api/customers/{customerId}   # 獲取客戶詳情
@@ -330,8 +393,11 @@ GET /api/stats/database           # 數據庫統計
 # 活動記錄 API
 GET /api/activities               # 系統活動記錄
 
-# 健康檢查
+# 健康檢查與監控
 GET /actuator/health              # 應用健康狀態
+GET /actuator/metrics             # 應用指標
+GET /actuator/info                # 應用資訊
+GET /actuator/prometheus          # Prometheus 指標
 
 # H2 數據庫控制台
 http://localhost:8080/h2-console  # 數據庫管理界面
@@ -390,6 +456,8 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 - **🏗️ 架構師**: [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/) | [設計文檔](docs/design/)
 - **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [開發說明](docs/development/instructions.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
+- **🔍 可觀測性**: [可觀測性系統](docs/observability/) | [監控指南](docs/observability/README.md)
+- **🤖 MCP 整合**: [MCP 指南](docs/mcp/) | [AI 輔助開發](docs/mcp/README.md)
 
 ### 📊 核心圖表 (Mermaid - GitHub 直接顯示)
 
@@ -573,6 +641,28 @@ npm install
 
 ## 🆕 最新更新 (2025年1月)
 
+### 🔍 可觀測性系統實現 (2025-01-22)
+
+- ✅ **分散式追蹤** - AWS X-Ray 和 Jaeger 完整整合，支援跨服務請求追蹤
+- ✅ **結構化日誌** - 統一日誌格式、關聯 ID 管理和 PII 遮罩功能
+- ✅ **業務指標收集** - CloudWatch 自定義指標和成本優化分析
+- ✅ **健康檢查增強** - 多層級健康檢查和自動恢復機制
+- ✅ **安全監控** - 安全事件記錄、合規性監控和資料保留政策
+- ✅ **成本優化 API** - 資源右調分析和成本追蹤儀表板
+
+### 🤖 MCP 整合完成 (2025-01-22)
+
+- ✅ **AWS 生態系統** - AWS 文檔、CDK 指導、定價分析和 IAM 管理
+- ✅ **GitHub 整合** - 程式碼審查、問題追蹤和 PR 管理自動化
+- ✅ **開發助手** - 基於 MCP 的智能開發指導和最佳實踐建議
+
+### 🏗️ 基礎設施現代化 (2025-01-22)
+
+- ✅ **AWS CDK 基礎設施** - 完整的多區域部署和災難恢復
+- ✅ **CI/CD 管道** - GitHub Actions 自動化測試、建構和部署
+- ✅ **Kubernetes 部署** - EKS 集群配置和 GitOps 工作流程
+- ✅ **安全合規** - CDK Nag 規則檢查和 Well-Architected 框架遵循
+
 ### 🧪 測試品質改善 (2025-01-21)
 
 - ✅ **修復聚合根測試** - 解決 `CustomerAggregateRootTest` 事件數量不一致問題
@@ -600,7 +690,7 @@ npm install
 
 ### 技術改進
 
-- 🔧 **Spring Boot 升級** - 升級到 Spring Boot 3.5.5 最新版本
+- 🔧 **Spring Boot 升級** - 升級到 Spring Boot 3.4.5 最新版本
 - 🔧 **依賴版本更新** - 更新所有主要依賴到最新穩定版本
 - 🔧 **JPA 實體重構** - 優化數據庫映射和查詢性能
 - 🔧 **API 錯誤處理** - 完善的錯誤處理和用戶反饋
@@ -611,15 +701,17 @@ npm install
 
 ## 📈 專案統計
 
-- **總代碼行數**: 150,000+ 行 (包含完整的 DDD 和六角形架構實作)
+- **總代碼行數**: 200,000+ 行 (包含完整的 DDD、六角形架構和可觀測性實作)
 - **測試覆蓋率**: 272 個測試，100% 通過率
 - **業務數據**: 131 筆完整的業務記錄
-- **API 端點**: 30+ 個 RESTful API (完整的業務功能覆蓋)
+- **API 端點**: 35+ 個 RESTful API (包含成本優化和監控端點)
 - **UI 組件**: 25+ 個可重用組件 (現代化 React + Angular 生態系統)
-- **文檔頁面**: 50+ 個詳細文檔 (包含架構、設計和實作指南)
+- **文檔頁面**: 80+ 個詳細文檔 (包含架構、設計、實作和可觀測性指南)
 - **數據庫遷移**: 22 個 Flyway 遷移腳本
 - **架構合規性**: 9.5/10 (六角形架構) + 9.5/10 (DDD 實踐)
-- **技術棧版本**: Java 21 + Spring Boot 3.5.5 + Next.js 14.2.30 + Angular 18.2.0
+- **技術棧版本**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
+- **基礎設施**: AWS CDK + Kubernetes + GitHub Actions CI/CD
+- **可觀測性**: X-Ray + CloudWatch + Jaeger + Prometheus
 
 ## 🏆 專案特色
 
@@ -645,4 +737,13 @@ npm install
 - **Angular 18.2.0**: 現代化消費者前端
 - **Docker 容器化**: ARM64 優化部署
 
-這個專案不僅是一個功能完整的電商平台，更是一個展示如何在複雜業務場景下實現清晰架構分離、完整測試覆蓋和優秀用戶體驗的最佳實踐範例。專案採用最新的技術棧和架構模式，包含 150,000+ 行高品質代碼、272 個測試用例、22 個數據庫遷移腳本，以及 50+ 個詳細文檔，是學習現代化企業級應用開發的理想參考。
+這個專案不僅是一個功能完整的電商平台，更是一個展示如何在複雜業務場景下實現清晰架構分離、完整測試覆蓋、企業級可觀測性和優秀用戶體驗的最佳實踐範例。專案採用最新的技術棧和架構模式，包含 200,000+ 行高品質代碼、272 個測試用例、22 個數據庫遷移腳本、完整的 AWS 基礎設施程式碼，以及 80+ 個詳細文檔，是學習現代化企業級應用開發和 DevOps 實踐的理想參考。
+
+### 🌟 專案亮點
+
+- **🏗️ 企業級架構**: DDD + 六角形架構 + 事件驅動設計
+- **🔍 完整可觀測性**: 分散式追蹤 + 結構化日誌 + 業務指標
+- **🤖 AI 輔助開發**: MCP 整合提供智能開發指導
+- **☁️ 雲原生部署**: AWS CDK + Kubernetes + GitOps
+- **🧪 測試驅動**: BDD + TDD + 架構測試，100% 通過率
+- **📊 成本優化**: 即時成本追蹤和資源右調建議
