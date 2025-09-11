@@ -6,7 +6,7 @@
 
 This is a full-stack e-commerce platform demonstration project based on Domain-Driven Design (DDD) and Hexagonal Architecture, showcasing how to build a modern application with excellent architecture and testing practices.
 
-## ✨ New Feature Highlights (v3.1.0 - January 2025)
+## ✨ New Feature Highlights (v3.1.0 - September 2025)
 
 ### 🔍 Enterprise-Grade Observability System (NEW!)
 
@@ -228,7 +228,7 @@ genai-demo/
 - **State Management**: RxJS 7.8.0 reactive programming
 - **Testing**: Jasmine 5.1.0 + Karma 6.4.0
 
-## 🆕 Version Updates (v3.1.0 - January 2025)
+## 🆕 Version Updates (v3.1.0 - September 2025)
 
 ### Major New Features
 

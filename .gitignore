@@ -79,6 +79,11 @@ dist/
 ehthumbs.db
 Thumbs.db
 
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Git folder protection (prevent accidental staging)
 .git/
 .sts4-cache
