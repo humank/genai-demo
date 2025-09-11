@@ -1,40 +1,36 @@
-# GenAI Demo - E-commerce Platform Demo Project
+# GenAI Demo - E-commerce Platform Demonstration Project
 
 > **Language / 語言選擇**  
 > 🇺🇸 **English**: You are reading the English version  
-> 🇹🇼 **繁體中文**: [Chinese Documentation](../../README.md) | [Chinese Project README](../../README.md)
+> 🇹🇼 **繁體中文**: [繁體中文版本](../../README.md)
 
-This is a full-stack e-commerce platform demo project based on Domain-Driven Design (DDD) and Hexagonal Architecture, demonstrating how to build a modern application with good architecture and testing practices.
+This is a full-stack e-commerce platform demonstration project based on Domain-Driven Design (DDD) and Hexagonal Architecture, showcasing how to build a modern application with excellent architecture and testing practices.
 
 ## ✨ New Feature Highlights (v3.1.0 - January 2025)
 
-### 🔍 Enterprise Observability System (NEW!)
+### 🔍 Enterprise-Grade Observability System (NEW!)
 
-- **Distributed Tracing**: Complete AWS X-Ray and Jaeger integration for cross-service request tracing
-- **Structured Logging**: Unified log format, correlation ID management, and PII masking
-- **Business Metrics**: CloudWatch custom metrics collection and cost optimization analysis
-- **Enhanced Health Checks**: Multi-level health checks and automated recovery mechanisms
+- **Distributed Tracing**: Complete request tracing based on AWS X-Ray and Jaeger
+- **Structured Logging**: Unified log format and correlation ID management with PII masking support
+- **Business Metrics Collection**: CloudWatch custom metrics and Prometheus endpoints
+- **Enhanced Health Checks**: Multi-level health checks and automatic recovery mechanisms
 - **Security Monitoring**: Security event logging, compliance monitoring, and data retention policies
-- **Cost Optimization**: Resource right-sizing analysis and cost tracking dashboard
+- **Cost Optimization**: Resource right-sizing analysis and real-time cost tracking dashboard
+- **Data Analytics Pipeline**: Complete BI solution with Kinesis + S3 + Glue + QuickSight
 
-### 🤖 AI-Powered Development with MCP Integration
+### 🤖 MCP (Model Context Protocol) Integration
 
-- **AWS Ecosystem**: Complete AWS documentation, CDK guidance, and pricing analysis tools
-- **Development Tools**: GitHub integration, IAM management, and automated code review
-- **Intelligent Assistant**: MCP-based development assistant providing real-time technical guidance
-
-### 🏗️ Cloud-Native Infrastructure
-
-- **AWS CDK**: Complete infrastructure as code with multi-region deployment
-- **Kubernetes**: EKS cluster configuration and GitOps workflows
-- **CI/CD Pipeline**: GitHub Actions automated testing, building, and deployment
-- **Security Compliance**: CDK Nag rule checking and Well-Architected Framework adherence
+- **AWS Documentation Integration**: Real-time access to AWS official documentation and best practices
+- **CDK Guidance**: AWS CDK build guidance and Nag rule checking
+- **Pricing Analysis**: AWS service pricing queries and cost estimation
+- **IAM Management**: IAM user, role, and policy management tools
+- **GitHub Integration**: Code review, issue tracking, and PR management
 
 ### 🛒 Consumer Features
 
 - **Smart Shopping Cart**: Multi-promotion calculation and promotion rule engine support
 - **Personalized Recommendations**: Product recommendation system based on purchase history and preferences
-- **Member Loyalty System**: Complete loyalty point accumulation and redemption mechanism
+- **Membership Loyalty System**: Complete loyalty point accumulation and redemption mechanism
 - **Convenience Store Coupons**: Coupon purchase, usage, and management features
 - **Real-time Delivery Tracking**: Real-time delivery status updates and route tracking
 - **Product Review System**: Review submission, moderation, and statistical analysis
@@ -50,14 +46,14 @@ This is a full-stack e-commerce platform demo project based on Domain-Driven Des
 ### 🔧 Technical Features
 
 - **Complete API Documentation**: Interactive documentation based on OpenAPI 3.0 with API grouping support
-- **Containerized Deployment**: ARM64 optimized Docker images
+- **Containerized Deployment**: ARM64-optimized Docker images
 - **Lightweight Design**: Slim Docker images and in-memory database
-- **Health Checks**: Complete application monitoring mechanism
+- **Health Checks**: Complete application monitoring mechanisms
 - **DDD Architecture**: Complete Domain-Driven Design implementation including Aggregate Roots, Value Objects, Domain Events, Domain Services, Specification Pattern, Policy Pattern
 - **Hexagonal Architecture**: Strict port and adapter separation ensuring business logic independence
 - **Java Record Refactoring**: Value Objects and Domain Events implemented using Java 21 Records, Aggregate Roots using Interface + Annotation hybrid approach
-- **Event-Driven Architecture**: Complete domain event collection, publishing, and processing mechanism
-- **Test Coverage**: BDD tests, unit tests, integration tests, and architecture tests achieving 100% test pass rate
+- **Event-Driven Architecture**: Complete domain event collection, publishing, and processing mechanisms
+- **Test Coverage**: BDD testing, unit testing, integration testing, and architecture testing achieving 100% test pass rate
 - **CI/CD Pipeline**: GitHub Actions automated testing, building, and deployment
 
 ## 🚀 Quick Start
@@ -122,6 +118,8 @@ docker-compose down
 
 - 🌐 **API Documentation**: <http://localhost:8080/swagger-ui/index.html>
 - 🏥 **Health Check**: <http://localhost:8080/actuator/health>
+- 📊 **Application Metrics**: <http://localhost:8080/actuator/metrics>
+- 💰 **Cost Optimization**: <http://localhost:8080/api/cost-optimization/recommendations>
 - 🗄️ **H2 Database Console**: <http://localhost:8080/h2-console>
 
 ### Method 2: Local Development Environment
@@ -154,10 +152,10 @@ This project adopts Hexagonal Architecture (also known as Ports and Adapters Arc
    - Contains core business logic and rules
    - Does not depend on other layers
    - **Aggregate Roots**: Using `@AggregateRoot` annotation + `AggregateRootInterface` hybrid approach
-   - **Value Objects**: Using `@ValueObject` annotated Java Record implementation
-   - **Domain Events**: Using Java Record implementing `DomainEvent` interface
-   - **Specification Pattern**: Using `@Specification` annotation for business rules implementation
-   - **Policy Pattern**: Using `@Policy` annotation for business decision implementation
+   - **Value Objects**: Implemented using `@ValueObject` annotated Java Records
+   - **Domain Events**: Implemented using Java Records implementing `DomainEvent` interface
+   - **Specification Pattern**: Implemented using `@Specification` annotation for business rules
+   - **Policy Pattern**: Implemented using `@Policy` annotation for business decisions
    - **Domain Services**: Using `@DomainService` annotation
 
 2. **Application Layer**
@@ -168,7 +166,7 @@ This project adopts Hexagonal Architecture (also known as Ports and Adapters Arc
    - Responsible for data transformation between interface layer and domain layer
 
 3. **Infrastructure Layer**
-   - Provides technical implementation
+   - Provides technical implementations
    - Depends on the domain layer, implements interfaces defined by the domain layer
    - Contains repository implementations, external system adapters, ORM mappings, event handlers, etc.
    - Organized by function into sub-packages like persistence, event (event handling), and external (external systems)
@@ -230,46 +228,36 @@ genai-demo/
 - **State Management**: RxJS 7.8.0 reactive programming
 - **Testing**: Jasmine 5.1.0 + Karma 6.4.0
 
-## 🆕 Latest Changes (January 2025)
+## 🆕 Version Updates (v3.1.0 - January 2025)
 
-### 🏗️ Significant Architecture Quality Improvement
+### Major New Features
 
-- **Hexagonal Architecture Enhancement**: Strict port and adapter separation, architecture compliance improved from 8.5/10 to 9.5/10
-- **DDD Practice Optimization**: Complete tactical pattern implementation including Specification Pattern and Policy Pattern
-- **Java Record Refactoring**: 22 major Value Objects and Domain Events converted to Records, reducing 30-40% boilerplate code
-- **Type Safety Enhancement**: Unified use of domain Value Objects, avoiding primitive type leakage
+- ✅ **Enterprise-Grade Observability**: X-Ray + CloudWatch + Jaeger + Structured Logging
+- ✅ **MCP AI Assistant**: AWS Ecosystem + GitHub Integration + Intelligent Development Guidance
+- ✅ **Cloud-Native Infrastructure**: AWS CDK + Kubernetes + GitHub Actions CI/CD
+- ✅ **Cost Optimization System**: Resource Right-Sizing + Real-Time Cost Tracking + Optimization Recommendations
 
-### 🧪 Test Quality Improvement
+### Architecture and Quality Improvements
 
-- **Test Stability**: Fixed all test compilation errors, achieving 100% pass rate for 272 tests
-- **Architecture Testing**: Using ArchUnit to ensure DDD and Hexagonal Architecture compliance
-- **BDD Testing**: Complete business process behavior-driven testing
-- **Event Management**: Fixed aggregate root event collection mechanism, ensuring Domain Event correctness
-
-### 🔧 Technical Modernization
-
-- **Java 21 Upgrade**: Enabled preview features, using latest language features
-- **Spring Boot 3.4.5**: Upgraded to latest stable version
-- **Record Pattern**: Extensive use of Java Records to improve code conciseness
-- **API Documentation**: Complete OpenAPI 3.0 specification and Swagger UI integration
-
-### 📁 Project Structure Optimization
-
-- **File Reorganization**: Organized scattered root directory files into corresponding functional directories
-- **Docker Files**: Moved to `docker/` directory, including build and verification scripts
-- **Deployment Files**: Moved to `deployment/` directory, including Kubernetes and EKS configuration
-- **Script Files**: Moved to `scripts/` directory, including startup, testing, and data generation scripts
-- **Tool Files**: Moved to `tools/` directory, including PlantUML and other development tools
+- 🏗️ **Hexagonal Architecture**: Compliance improved from 8.5/10 to 9.5/10
+- 🔧 **Java Record Refactoring**: 22 Value Objects, reducing 30-40% boilerplate code
+- 🧪 **Test Stability**: 272 tests with 100% pass rate
+- 📁 **Project Structure**: File reorganization with clear categorization
 
 ## 🛠️ Technology Stack
 
 ### Backend Technologies
 
-- **Core Framework**: Spring Boot 3.5.5
+- **Core Framework**: Spring Boot 3.4.5
 - **Programming Language**: Java 21 (preview features enabled)
 - **Build Tool**: Gradle 8.x
-- **Database**: H2 (development) + Flyway (migration management)
+- **Database**: H2 (development) + PostgreSQL (production) + Flyway (migration management)
 - **API Documentation**: SpringDoc OpenAPI 3 + Swagger UI
+- **Observability**:
+  - Micrometer - Metrics collection
+  - AWS X-Ray - Distributed tracing
+  - Logback - Structured logging
+  - Spring Boot Actuator - Health checks
 - **Testing Frameworks**:
   - JUnit 5 - Unit testing
   - Cucumber 7.15.0 - BDD testing
@@ -302,7 +290,7 @@ genai-demo/
 - **State Management**: RxJS 7.8.0
 - **Testing Framework**: Jasmine 5.1.0, Karma 6.4.0
 
-## 📊 Data and API
+## 📊 Data & API
 
 ### Database Initialization
 
@@ -314,7 +302,7 @@ The project uses Flyway for database version management, including rich business
 - **Multiple Payment Methods** - Credit cards, digital wallets, bank transfers, cash on delivery
 - **Independent Product Table** - Supporting complete product lifecycle management
 
-### API Documentation and Endpoints
+### API Documentation & Endpoints
 
 #### 📖 Swagger UI Documentation
 
@@ -329,7 +317,7 @@ The project uses Flyway for database version management, including rich business
 
 ```bash
 # Product Management API
-GET /api/products                 # Product list (with pagination support)
+GET /api/products                 # Product list (with pagination)
 GET /api/products/{productId}     # Get single product
 PUT /api/products/{productId}     # Update product information
 DELETE /api/products/{productId}  # Delete product
@@ -352,6 +340,11 @@ POST /api/payments                # Create payment
 GET /api/payments/{paymentId}     # Get payment details
 PUT /api/payments/{paymentId}     # Update payment status
 
+# Cost Optimization API
+GET /api/cost-optimization/recommendations  # Get cost optimization recommendations
+GET /api/cost-optimization/analysis         # Get cost analysis report
+POST /api/cost-optimization/right-sizing    # Execute resource right-sizing analysis
+
 # Customer Management API
 GET /api/customers                # Customer list
 GET /api/customers/{customerId}   # Get customer details
@@ -370,8 +363,11 @@ GET /api/stats/database           # Database statistics
 # Activity Log API
 GET /api/activities               # System activity logs
 
-# Health Check
+# Health Check & Monitoring
 GET /actuator/health              # Application health status
+GET /actuator/metrics             # Application metrics
+GET /actuator/info                # Application information
+GET /actuator/prometheus          # Prometheus metrics
 
 # H2 Database Console
 http://localhost:8080/h2-console  # Database management interface
@@ -386,21 +382,21 @@ http://localhost:8080/h2-console  # Database management interface
   - Order Details Page (`/orders/[orderId]`) - Complete order information display
 - **Product Management** (`/products`) - Product display and inventory
   - Product Details Page (`/products/[productId]`) - Detailed product information and operations
-  - Product Editing Feature - Support for name, description, price, category modification
+  - Product Edit Feature - Support for name, description, price, category modification
   - Inventory Adjustment Feature - Support for adding, reducing, setting inventory quantities
-  - Product Deletion Feature - Safe product deletion operations
+  - Product Delete Feature - Safe product deletion operations
 - **Customer Management** (`/customers`) - Customer information management
 
 ### Product Management Features
 
 - ✏️ **Product Editing** - Complete product information editing interface
-  - Product name and description modification
+  - Product name, description modification
   - Price and currency settings (TWD, USD, EUR)
-  - Product category management (Electronics, Clothing, Food, etc.)
+  - Product category management (electronics, clothing, food, etc.)
 - 📦 **Inventory Management** - Flexible inventory adjustment system
   - Set Inventory - Directly set inventory quantity
   - Add Inventory - Restock inventory
-  - Reduce Inventory - Handle damage or returns
+  - Reduce Inventory - Handle losses or returns
   - Adjustment Reason Recording - Complete inventory change tracking
 - 🗑️ **Product Deletion** - Safe product deletion feature
   - Confirmation dialog to prevent accidental deletion
@@ -422,21 +418,23 @@ http://localhost:8080/h2-console  # Database management interface
 
 > **Documentation Center**: [docs/README.md](docs/README.md) - Complete documentation navigation and categorization
 
-The project includes rich documentation organized by function:
+The project includes rich documentation organized by functionality:
 
 ### 🎯 Quick Navigation
 
-- **👨‍💼 Project Manager**: [Project Summary 2025](docs/reports/project-summary-2025.md) | [Architecture Overview](docs/diagrams/mermaid/architecture-overview.md)
-- **🏗️ Architect**: [Architecture Documentation](docs/architecture/) | [Diagram Documentation](docs/diagrams/) | [Design Documentation](docs/design/)
-- **👨‍💻 Developer**: [Development Guide](docs/development/) | [API Documentation](docs/api/) | [Development Instructions](docs/development/instructions.md)
+- **👨‍💼 Project Managers**: [Project Summary 2025](docs/reports/project-summary-2025.md) | [Architecture Overview](docs/diagrams/mermaid/architecture-overview.md)
+- **🏗️ Architects**: [Architecture Documentation](docs/architecture/) | [Diagram Documentation](docs/diagrams/) | [Design Documentation](docs/design/)
+- **👨‍💻 Developers**: [Development Guide](docs/development/) | [API Documentation](docs/api/) | [Development Instructions](docs/development/instructions.md)
 - **🚀 DevOps**: [Deployment Documentation](docs/deployment/) | [Docker Guide](docs/deployment/docker-guide.md)
+- **🔍 Observability**: [Observability System](docs/observability/) | [Monitoring Guide](docs/observability/README.md)
+- **🤖 MCP Integration**: [MCP Guide](docs/mcp/) | [AI-Assisted Development](docs/mcp/README.md)
 
 ### 📊 Core Diagrams (Mermaid - Direct GitHub Display)
 
 - [🏗️ System Architecture Overview](docs/diagrams/mermaid/architecture-overview.md) - Complete system architecture diagram
 - [🔵 Hexagonal Architecture](docs/diagrams/mermaid/hexagonal-architecture.md) - Ports and adapters architecture
-- [🏛️ DDD Layered Architecture](docs/diagrams/mermaid/ddd-layered-architecture.md) - Domain-Driven Design layering
-- [⚡ Event-Driven Architecture](docs/diagrams/mermaid/event-driven-architecture.md) - Event processing mechanism
+- [🏛️ DDD Layered Architecture](docs/diagrams/mermaid/ddd-layered-architecture.md) - Domain-driven design layers
+- [⚡ Event-Driven Architecture](docs/diagrams/mermaid/event-driven-architecture.md) - Event processing mechanisms
 - [🔌 API Interaction Diagram](docs/diagrams/mermaid/api-interactions.md) - API call relationships
 
 ### 📋 Detailed UML Diagrams (PlantUML)
@@ -493,20 +491,20 @@ The project includes rich documentation organized by function:
 
 ### Architecture Testing
 
-Using ArchUnit 1.3.0 to ensure code follows predefined architectural rules:
+Using ArchUnit 1.3.0 to ensure code follows predefined architecture rules:
 
-- **DddEntityRefactoringArchitectureTest** - Ensures DDD entity refactoring complies with architectural specifications
+- **DddEntityRefactoringArchitectureTest** - Ensures DDD entity refactoring complies with architecture specifications
 - **Hexagonal Architecture Compliance** - Ensures port and adapter separation
 - **DDD Tactical Patterns** - Ensures correct use of Aggregate Roots, Value Objects, Domain Events, Specification Pattern, Policy Pattern
-- **Package Structure Standards** - Ensures package structure complies with DDD layered architecture
-- **Annotation Validation** - Ensures correct use of `@AggregateRoot`, `@ValueObject`, `@Specification`, `@Policy`, etc.
+- **Package Structure Standards** - Ensures package structure follows DDD layered architecture
+- **Annotation Validation** - Ensures correct use of `@AggregateRoot`, `@ValueObject`, `@Specification`, `@Policy` annotations
 
 ### BDD Testing
 
-Using Cucumber 7.15.0 for Behavior-Driven Development testing, covering:
+Using Cucumber 7.15.0 for behavior-driven development testing, covering:
 
 - **Consumer Features** - Shopping journey, shopping cart management
-- **Customer Management** - Member system, loyalty points, member discounts
+- **Customer Management** - Membership system, loyalty points, member discounts
 - **Order Management** - Order aggregate root, order workflow
 - **Inventory Management** - Inventory management
 - **Payment Processing** - Payment aggregate root, payment discounts
@@ -515,7 +513,7 @@ Using Cucumber 7.15.0 for Behavior-Driven Development testing, covering:
 - **Promotion Activities** - Coupon system, flash sales, convenience store coupons, add-on activities, gift activities
 - **Product Management** - Product search, product combinations
 - **Pricing Management** - Commission rates
-- **Complete Workflow** - End-to-end business processes
+- **Complete Workflows** - End-to-end business processes
 
 ## 🔧 Development Tools
 
@@ -613,9 +611,31 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🆕 Latest Updates (January 2025)
 
-### 🧪 Test Quality Improvement (2025-01-21)
+### 🔍 Observability System Implementation (2025-01-22)
 
-- ✅ **Fixed Aggregate Root Tests** - Resolved `CustomerAggregateRootTest` event count inconsistency issue
+- ✅ **Distributed Tracing** - Complete AWS X-Ray and Jaeger integration supporting cross-service request tracing
+- ✅ **Structured Logging** - Unified log format, correlation ID management, and PII masking functionality
+- ✅ **Business Metrics Collection** - CloudWatch custom metrics and cost optimization analysis
+- ✅ **Enhanced Health Checks** - Multi-level health checks and automatic recovery mechanisms
+- ✅ **Security Monitoring** - Security event logging, compliance monitoring, and data retention policies
+- ✅ **Cost Optimization API** - Resource right-sizing analysis and cost tracking dashboard
+
+### 🤖 MCP Integration Completed (2025-01-22)
+
+- ✅ **AWS Ecosystem** - AWS documentation, CDK guidance, pricing analysis, and IAM management
+- ✅ **GitHub Integration** - Code review, issue tracking, and PR management automation
+- ✅ **Development Assistant** - MCP-based intelligent development guidance and best practice recommendations
+
+### 🏗️ Infrastructure Modernization (2025-01-22)
+
+- ✅ **AWS CDK Infrastructure** - Complete multi-region deployment and disaster recovery
+- ✅ **CI/CD Pipeline** - GitHub Actions automated testing, building, and deployment
+- ✅ **Kubernetes Deployment** - EKS cluster configuration and GitOps workflows
+- ✅ **Security Compliance** - CDK Nag rule checking and Well-Architected Framework adherence
+
+### 🧪 Test Quality Improvements (2025-01-21)
+
+- ✅ **Fixed Aggregate Root Tests** - Resolved `CustomerAggregateRootTest` event count inconsistency issues
 - ✅ **Event Management Optimization** - Improved event generation logic in `updateProfile` method
 - ✅ **Test Stability** - Ensured all 272 tests pass, achieving 100% success rate
 - ✅ **Domain Event Correctness** - Fixed aggregate root state tracker event collection mechanism
@@ -624,10 +644,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - ✅ **Complete OpenAPI 3.0 Specification** - Industry-standard API documentation
 - ✅ **Swagger UI Integration** - Interactive API documentation interface
-- ✅ **API Group Management** - Public API, internal API, management endpoint grouping
+- ✅ **API Group Management** - Public API, Internal API, Management endpoint grouping
 - ✅ **Standardized Error Responses** - Unified error handling format
 - ✅ **Complete Schema Annotations** - Detailed request/response model documentation
-- ✅ **Multi-environment Configuration** - Development, testing, staging, production environment configuration
+- ✅ **Multi-Environment Configuration** - Development, testing, staging, production environment configuration
 
 ### Complete Product Management System Implementation
 
@@ -640,60 +660,38 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Technical Improvements
 
-- 🔧 **Spring Boot Upgrade** - Upgraded to Spring Boot 3.5.5 latest version
+- 🔧 **Spring Boot Upgrade** - Upgraded to Spring Boot 3.4.5 latest version
 - 🔧 **Dependency Version Updates** - Updated all major dependencies to latest stable versions
 - 🔧 **JPA Entity Refactoring** - Optimized database mapping and query performance
 - 🔧 **API Error Handling** - Comprehensive error handling and user feedback
-- 🔧 **Frontend State Management** - React Query 5.51.23 for data synchronization
+- 🔧 **Frontend State Management** - React Query 5.51.23 implementing data synchronization
 - 🔧 **Type Safety** - TypeScript 5.5.4 complete type definitions
 - 🔧 **API Documentation Automation** - SpringDoc 2.2.0 automatic OpenAPI specification generation
-- 🔧 **Test Quality Assurance** - Fixed domain event management, ensuring test stability
+- 🔧 **Test Quality Assurance** - Fixed domain event management ensuring test stability
 
 ## 📈 Project Statistics
 
-- **Total Lines of Code**: 200,000+ lines (including complete DDD, Hexagonal Architecture, and observability implementation)
+- **Total Lines of Code**: 200,000+ lines (including complete DDD, Hexagonal Architecture, and Observability implementation)
 - **Test Coverage**: 272 tests, 100% pass rate
 - **Business Data**: 131 complete business records
 - **API Endpoints**: 35+ RESTful APIs (including cost optimization and monitoring endpoints)
 - **UI Components**: 25+ reusable components (modern React + Angular ecosystem)
-- **Documentation Pages**: 80+ detailed documentation (including architecture, design, implementation, and observability guides)
+- **Documentation Pages**: 80+ detailed documents (including architecture, design, implementation, and observability guides)
 - **Database Migrations**: 22 Flyway migration scripts
 - **Architecture Compliance**: 9.5/10 (Hexagonal Architecture) + 9.5/10 (DDD Practices)
 - **Technology Stack Versions**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
 - **Infrastructure**: AWS CDK + Kubernetes + GitHub Actions CI/CD
 - **Observability**: X-Ray + CloudWatch + Jaeger + Prometheus
 
-## 🏆 Project Features
+## 🏆 Project Value
 
-This project demonstrates best practices for modern enterprise application development:
+This is a complete example demonstrating modern enterprise-level application development best practices, including:
 
-### 🎯 Architectural Excellence
+- **200,000+ lines of high-quality code** - DDD + Hexagonal Architecture + Event-Driven Design
+- **272 tests with 100% pass rate** - Complete coverage with BDD + TDD + Architecture Testing
+- **Enterprise-grade observability** - Distributed tracing + Structured logging + Business metrics
+- **AI-assisted development** - MCP integration providing intelligent development guidance
+- **Cloud-native deployment** - Complete implementation with AWS CDK + Kubernetes + GitOps
+- **80+ detailed documents** - Architecture design + Implementation guides + Best practices
 
-- **Hexagonal Architecture**: Strict port and adapter separation, complete business logic independence
-- **DDD Tactical Patterns**: Complete implementation of Aggregate Roots, Value Objects, Domain Events, Specification Pattern, Policy Pattern
-- **Java Records**: Extensive use of Java 21 Records to reduce boilerplate code and improve code quality
-
-### 🧪 Test-Driven Development
-
-- **BDD + TDD**: Behavior-Driven Development combined with Test-Driven Development
-- **Architecture Testing**: ArchUnit ensures architectural compliance
-- **100% Test Pass Rate**: All 272 tests pass, ensuring code quality
-
-### 🚀 Modern Technology Stack
-
-- **Java 21**: Using latest LTS version and preview features
-- **Spring Boot 3.5.5**: Latest stable version
-- **Next.js 14.2.30**: Modern frontend framework
-- **Angular 18.2.0**: Modern consumer frontend
-- **Docker Containerization**: ARM64 optimized deployment
-
-This project is not only a fully functional e-commerce platform but also a best practice example demonstrating how to achieve clear architectural separation, complete test coverage, enterprise-grade observability, and excellent user experience in complex business scenarios. The project adopts the latest technology stack and architectural patterns, including 200,000+ lines of high-quality code, 272 test cases, 22 database migration scripts, complete AWS infrastructure code, and 80+ detailed documentation, making it an ideal reference for learning modern enterprise application development and DevOps practices.
-
-### 🌟 Project Highlights
-
-- **🏗️ Enterprise Architecture**: DDD + Hexagonal Architecture + Event-Driven Design
-- **🔍 Complete Observability**: Distributed tracing + structured logging + business metrics
-- **🤖 AI-Assisted Development**: MCP integration providing intelligent development guidance
-- **☁️ Cloud-Native Deployment**: AWS CDK + Kubernetes + GitOps
-- **🧪 Test-Driven**: BDD + TDD + architecture testing, 100% pass rate
-- **📊 Cost Optimization**: Real-time cost tracking and resource right-sizing recommendations
+An ideal reference project for learning modern enterprise-level application development, microservices architecture, DevOps practices, and cloud-native technologies.
