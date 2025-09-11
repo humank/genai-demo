@@ -15,7 +15,7 @@
 - **🧪 測試驅動**: BDD + TDD + 架構測試，100% 通過率
 - **📊 成本優化**: 即時成本追蹤和資源右調建議
 
-## ✨ 新功能亮點 (v3.1.0 - 2025年1月)
+## ✨ 新功能亮點 (v3.1.0 - 2025年9月)
 
 ### 🔍 企業級可觀測性系統 (NEW!)
 
@@ -183,7 +183,7 @@ TypeScript + Tailwind CSS + shadcn/ui + Zustand + React Query
 **消費者端 (Angular 18.2.0)**  
 TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 
-## 🆕 版本更新 (v3.1.0 - 2025年1月)
+## 🆕 版本更新 (v3.1.0 - 2025年9月)
 
 ### 主要新增功能
 
@@ -382,7 +382,7 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 - **交互圖**: 時序圖、通信圖、交互概覽圖、時間圖
 - **Event Storming**: Big Picture、Process Level、Design Level
 
-### 🏆 核心報告 (2025年1月更新)
+### 🏆 核心報告 (2025年9月更新)
 
 - [📋 專案總結報告 2025](docs/reports/project-summary-2025.md) - 完整的專案成果和技術亮點總結
 - [🏗️ 架構卓越性報告 2025](docs/reports/architecture-excellence-2025.md) - 詳細的架構評估和最佳實踐分析
