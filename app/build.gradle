@@ -99,8 +99,8 @@ dependencies {
     
     // 確保 JUnit Platform 相關依賴版本一致
     constraints {
-        testImplementation('org.junit.platform:junit-platform-commons:1.10.2')
-        testImplementation('org.junit.platform:junit-platform-engine:1.10.2')
+        testImplementation('org.junit.platform:junit-platform-commons:1.13.4')
+        testImplementation('org.junit.platform:junit-platform-engine:1.13.4')
     }
     
     // Mockito
