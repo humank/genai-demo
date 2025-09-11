@@ -231,7 +231,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Download all update reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: update-reports/
       
