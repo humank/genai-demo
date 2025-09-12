@@ -31,9 +31,17 @@ import solid.humank.genaidemo.config.TestTracingConfiguration;
         "tracing.sampling.ratio=1.0",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "logging.level.solid.humank.genaidemo=INFO",
-        "management.health.defaults.enabled=false"
+        "management.health.defaults.enabled=false",
+        "spring.security.user.name=test",
+        "spring.security.user.password=test",
+        "spring.security.user.roles=USER"
 })
-@Import({ TestHealthConfiguration.class, TestTracingConfiguration.class })
+@Import({
+        TestHealthConfiguration.class,
+        TestTracingConfiguration.class,
+        solid.humank.genaidemo.config.TestHttpClientConfiguration.class,
+        solid.humank.genaidemo.config.TestWebMvcConfiguration.class
+})
 class TracingIntegrationTest {
 
     @LocalServerPort

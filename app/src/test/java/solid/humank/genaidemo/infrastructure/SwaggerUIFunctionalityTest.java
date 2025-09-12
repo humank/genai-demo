@@ -38,13 +38,20 @@ import solid.humank.genaidemo.testutils.BaseTest;
 @DisplayName("Swagger UI 功能驗證測試")
 @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 @org.springframework.test.context.TestPropertySource(properties = {
-    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
-    "spring.datasource.driver-class-name=org.h2.Driver",
-    "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-    "spring.jpa.hibernate.ddl-auto=create-drop",
-    "spring.flyway.enabled=false",
-    "spring.h2.console.enabled=false",
-    "logging.level.org.springframework.web=DEBUG"
+        "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.flyway.enabled=false",
+        "spring.h2.console.enabled=false",
+        "logging.level.org.springframework.web=DEBUG",
+        "spring.security.user.name=test",
+        "spring.security.user.password=test",
+        "spring.security.user.roles=USER"
+})
+@org.springframework.context.annotation.Import({
+        solid.humank.genaidemo.config.TestHttpClientConfiguration.class,
+        solid.humank.genaidemo.config.TestWebMvcConfiguration.class
 })
 public class SwaggerUIFunctionalityTest extends BaseTest {
 

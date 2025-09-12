@@ -68,12 +68,25 @@ logging:
     org.hibernate: ERROR
     solid.humank.genaidemo: ERROR
 
-# 禁用 OpenAPI
+# 完全禁用 SpringDoc 和相關功能
 springdoc:
   api-docs:
     enabled: false
   swagger-ui:
     enabled: false
+  show-actuator: false
+
+# 禁用 Web 相關功能
+server:
+  port: -1  # 禁用嵌入式服務器
+
+# 排除自動配置
+spring:
+  autoconfigure:
+    exclude:
+      - org.springdoc.core.configuration.SpringDocConfiguration
+      - org.springdoc.webmvc.core.configuration.SpringDocWebMvcConfiguration
+      - org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
 
 # 禁用追蹤
 tracing:

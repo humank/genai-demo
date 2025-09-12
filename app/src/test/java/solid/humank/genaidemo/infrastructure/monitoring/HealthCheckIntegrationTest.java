@@ -42,9 +42,16 @@ import solid.humank.genaidemo.config.TestHealthConfiguration;
                 "spring.jpa.hibernate.ddl-auto=create-drop",
                 "spring.main.lazy-initialization=true", // 啟用懶加載
                 "logging.level.org.springframework.web=ERROR", // 減少日誌輸出
-                "logging.level.org.hibernate=ERROR"
+                "logging.level.org.hibernate=ERROR",
+                "spring.security.user.name=test",
+                "spring.security.user.password=test",
+                "spring.security.user.roles=USER"
 })
-@Import({ TestHealthConfiguration.class }) // 只導入必要的配置
+@Import({
+                TestHealthConfiguration.class,
+                solid.humank.genaidemo.config.TestHttpClientConfiguration.class,
+                solid.humank.genaidemo.config.TestWebMvcConfiguration.class
+}) // 導入必要的配置
 class HealthCheckIntegrationTest {
 
         private static final Logger logger = LoggerFactory.getLogger(HealthCheckIntegrationTest.class);

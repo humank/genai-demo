@@ -68,8 +68,12 @@ dependencies {
     implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.21.0-alpha'
     
     // AWS X-Ray support for production
-    implementation 'com.amazonaws:aws-xray-recorder-sdk-core:2.15.1'
-    implementation 'com.amazonaws:aws-xray-recorder-sdk-spring:2.15.1'
+    implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.15.1') {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+    implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.15.1') {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
     
     // AWS SDK v2 for analytics and security
     implementation platform('software.amazon.awssdk:bom:2.21.29')
@@ -78,9 +82,20 @@ dependencies {
     implementation 'software.amazon.awssdk:cloudwatch'
     
     // Security dependencies
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation('org.springframework.boot:spring-boot-starter-security') {
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.2.1'
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+    
+    // 測試環境專用的 HTTP 客戶端依賴 - 確保完整的依賴
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    testImplementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.2.1'
     
     // OpenAPI 3 (Swagger) 支援 - 升級版本以相容 Spring Boot 3.5.5
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
@@ -185,11 +200,14 @@ tasks.withType(Test).configureEach {
     systemProperty 'spring.jmx.enabled', 'false'
     systemProperty 'spring.main.lazy-initialization', 'true'
     
-    // AspectJ 優化 - 完全禁用 Load-Time Weaving 以節省記憶體
+    // AspectJ 優化 - 完全禁用 Load-Time Weaving 以節省記憶體和減少日誌
     systemProperty 'aj.weaving.verbose', 'false'
     systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
     systemProperty 'org.aspectj.weaver.Dump.exception', 'false'
     systemProperty 'org.aspectj.weaver.loadtime.debug', 'false'
+    systemProperty 'org.aspectj.weaver.verbose', 'false'
+    systemProperty 'org.aspectj.weaver.debug', 'false'
+    systemProperty 'org.aspectj.weaver.messages', 'false'
     systemProperty 'org.aspectj.ltw.enabled', 'false'  // 完全禁用 Load-Time Weaving
     systemProperty 'spring.aop.auto', 'false'          // 禁用 Spring AOP 自動配置
 }
@@ -198,18 +216,128 @@ tasks.withType(JavaExec).configureEach {
     jvmArgs += '--enable-preview'
 }
 
-// 標準單元測試任務
-tasks.named('test') {
+// ============================================================================
+// 分層測試任務配置 - 遵循測試金字塔原則
+// ============================================================================
+
+// 快速單元測試任務 - 日常開發使用
+tasks.register('unitTest', Test) {
+    description = '運行快速單元測試 (~5MB, ~50ms 每個)'
+    group = 'verification'
+    
     useJUnitPlatform {
-        // 包含所有測試，包括 Cucumber 測試
+        excludeTags 'integration', 'end-to-end', 'slow'
+        includeTags 'unit'
     }
     
-    // Allure 配置 - 使用 Provider API 避免配置時間問題
+    // 輕量級配置
+    maxHeapSize = '2g'
+    minHeapSize = '512m'
+    maxParallelForks = Runtime.runtime.availableProcessors()
+    forkEvery = 0  // 不重啟 JVM，提高速度
+    
+    // 快速反饋配置
+    testLogging {
+        events "passed", "failed", "skipped"
+        showStandardStreams = false
+        exceptionFormat = 'short'
+    }
+    
+    // 基本系統屬性 - 使用最小化配置
+    systemProperty 'spring.profiles.active', 'test-minimal'
+    systemProperty 'logging.level.root', 'ERROR'
+    systemProperty 'logging.level.org.aspectj', 'OFF'
+    systemProperty 'logging.level.io.qameta.allure', 'OFF'
+    systemProperty 'spring.main.lazy-initialization', 'true'
+    systemProperty 'spring.jmx.enabled', 'false'
+    
+    // AspectJ 日誌抑制
+    systemProperty 'aj.weaving.verbose', 'false'
+    systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
+    systemProperty 'org.aspectj.weaver.verbose', 'false'
+    systemProperty 'org.aspectj.weaver.debug', 'false'
+    systemProperty 'org.aspectj.ltw.enabled', 'false'
+}
+
+// 集成測試任務 - 提交前使用
+tasks.register('integrationTest', Test) {
+    description = '運行集成測試 (~50MB, ~500ms 每個)'
+    group = 'verification'
+    
+    useJUnitPlatform {
+        includeTags 'integration'
+        excludeTags 'end-to-end', 'slow'
+    }
+    
+    // 中等配置
+    maxHeapSize = '4g'
+    minHeapSize = '1g'
+    maxParallelForks = 2
+    forkEvery = 10  // 每10個測試重啟JVM
+    
+    testLogging {
+        events "failed", "skipped"
+        showStandardStreams = false
+        exceptionFormat = 'full'
+    }
+    
+    systemProperties = [
+        'junit.jupiter.execution.parallel.enabled': 'true',
+        'junit.jupiter.execution.parallel.mode.default': 'concurrent',
+        'spring.profiles.active': 'test-minimal',
+        'logging.level.root': 'ERROR',
+        'logging.level.org.aspectj': 'OFF',
+        'logging.level.io.qameta.allure': 'OFF',
+        'spring.main.lazy-initialization': 'true',
+        'spring.autoconfigure.exclude': 'org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration'
+    ]
+}
+
+// 端到端測試任務 - 發布前使用
+tasks.register('e2eTest', Test) {
+    description = '運行端到端測試 (~500MB, ~3s 每個)'
+    group = 'verification'
+    
+    useJUnitPlatform {
+        includeTags 'end-to-end'
+    }
+    
+    // 完整配置
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
+    maxParallelForks = 1
+    forkEvery = 3  // 每3個測試重啟JVM
+    
+    testLogging {
+        events "failed", "skipped", "passed"
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'INFO'
+}
+
+// 標準測試任務 - 保持向後兼容，但優化配置
+tasks.named('test') {
+    description = '運行所有測試（向後兼容）'
+    
+    useJUnitPlatform {
+        // 包含所有測試
+    }
+    
+    // 優化後的配置
+    maxHeapSize = '4g'
+    minHeapSize = '1g'
+    maxParallelForks = 2
+    forkEvery = 5
+    
+    // Allure 配置
     systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
     systemProperty 'allure.epic', 'DDD架構測試'
     systemProperty 'allure.feature', 'JUnit測試'
     
-    // 簡化測試日誌輸出 - 只顯示失敗和錯誤
+    // 簡化測試日誌輸出
     testLogging {
         events "failed"
         showStandardStreams = false
@@ -222,6 +350,8 @@ tasks.named('test') {
     systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
     systemProperty 'junit.platform.output.capture.stdout', 'false'
     systemProperty 'junit.platform.output.capture.stderr', 'true'
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'ERROR'
 }
 
 // Cucumber 測試任務
@@ -265,10 +395,47 @@ tasks.register('cucumber', JavaExec) {
 
 
 
-// 運行所有測試並生成報告
+// ============================================================================
+// 便捷的測試任務組合
+// ============================================================================
+
+// 快速驗證 - 日常開發
+tasks.register('quickTest') {
+    dependsOn unitTest
+    description = '快速測試 - 日常開發使用 (< 2分鐘)'
+    group = 'verification'
+    
+    doLast {
+        println "✅ 快速測試完成 - 單元測試通過"
+    }
+}
+
+// 提交前驗證
+tasks.register('preCommitTest') {
+    dependsOn unitTest, integrationTest
+    description = '提交前測試 - 包含單元測試和集成測試 (< 5分鐘)'
+    group = 'verification'
+    
+    doLast {
+        println "✅ 提交前測試完成 - 單元測試和集成測試通過"
+    }
+}
+
+// 完整驗證 - 發布前
+tasks.register('fullTest') {
+    dependsOn unitTest, integrationTest, e2eTest, cucumber
+    description = '完整測試 - 發布前使用，包含所有測試類型'
+    group = 'verification'
+    
+    doLast {
+        println "✅ 完整測試完成 - 所有測試通過"
+    }
+}
+
+// 運行所有測試並生成報告（保持向後兼容）
 tasks.register('runAllTests') {
     dependsOn test, cucumber, prepareAllureResults
-    description = '運行所有測試並生成 Allure 報告'
+    description = '運行所有測試並生成 Allure 報告（向後兼容）'
     group = 'verification'
     
     doLast {

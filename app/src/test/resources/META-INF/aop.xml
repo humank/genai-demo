@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aspectj>
     <!-- 完全禁用 AspectJ Load-Time Weaving 以節省記憶體 -->
-    <weaver options="-verbose -showWeaveInfo">
+    <weaver options="-nowarn">
         <!-- 不包含任何包，實際上禁用織入 -->
         <!-- <include within="solid.humank.genaidemo..*" /> -->
         <!-- <include within="io.qameta.allure..*" /> -->

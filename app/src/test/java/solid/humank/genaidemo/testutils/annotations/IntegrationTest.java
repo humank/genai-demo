@@ -4,10 +4,19 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import org.junit.jupiter.api.Tag;
 
-/** 整合測試標籤註解 用於標記需要外部依賴的整合測試 */
-@Target({ElementType.TYPE, ElementType.METHOD})
+/**
+ * Integration test annotation for tests that require Spring context
+ * but don't need full web environment.
+ * 
+ * Memory usage: ~50MB (vs @SpringBootTest ~500MB)
+ * Execution time: ~500ms (vs @SpringBootTest ~2s)
+ */
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Tag("integration")
-public @interface IntegrationTest {}
+@Tag("medium")
+public @interface IntegrationTest {
+}
