@@ -2,8 +2,6 @@
 # This configuration is activated when SPRING_PROFILES_ACTIVE=production
 
 spring:
-  profiles:
-    active: production
   
   # Production Database Configuration
   datasource:

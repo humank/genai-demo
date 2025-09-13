@@ -133,15 +133,6 @@ public class DomainEventConfiguration {
     }
 
     // === Kafka Configuration for Production ===
-
-    /**
-     * Kafka template for dead letter queue (production only)
-     * Separate template to avoid circular dependencies
-     */
-    @Bean("deadLetterKafkaTemplate")
-    @Profile("production")
-    public KafkaTemplate<String, Object> deadLetterKafkaTemplate(
-            org.springframework.kafka.core.ProducerFactory<String, Object> producerFactory) {
-        return new KafkaTemplate<>(producerFactory);
-    }
+    // Note: deadLetterKafkaTemplate is provided by KafkaConfiguration to avoid
+    // duplication
 }

@@ -18,6 +18,7 @@ Welcome to the GenAI Demo project documentation center! This contains the comple
 
 System architecture related documentation, suitable for architects and senior developers.
 
+- **[Architecture Decision Records (ADR)](architecture/adr/)** - Complete record of all important architectural decisions
 - [Architecture Overview](architecture/overview.md) - System overall architecture introduction
 - [Hexagonal Architecture](architecture/hexagonal-architecture.md) - Hexagonal architecture implementation details
 - [Layered Architecture Design](architecture/layered-architecture-design.md) - Layered architecture design guide

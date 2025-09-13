@@ -62,6 +62,27 @@ export CLOUDWATCH_REGION=us-east-1
 
 ## 詳細文檔
 
+### 🎯 生產環境指南
+
+- **[生產環境可觀測性測試指南](production-observability-testing-guide.md)** - 完整的生產環境測試策略和最佳實踐 (67頁)
+
+### 📚 實現文檔
+
 - [分散式追蹤實現](../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
 - [結構化日誌實現](../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
 - [指標收集實現](../app/docs/METRICS_IMPLEMENTATION.md)
+
+### 🔧 測試策略
+
+- **開發階段**: Java 集成測試和單元測試
+- **CI/CD 階段**: 腳本化驗證和 SLI/SLO 檢查
+- **生產階段**: Synthetic Monitoring 和 Chaos Engineering
+- **持續改進**: 自動化報告和手動分析
+
+### 🌟 業界最佳實踐
+
+- Bash/Python 腳本測試
+- K6 負載測試
+- Terraform 基礎設施測試
+- DataDog Synthetic Tests
+- Chaos Monkey 韌性測試

@@ -18,7 +18,8 @@ import solid.humank.genaidemo.testutils.annotations.IntegrationTest;
  * including BDD scenarios, performance tests, and infrastructure validation.
  */
 @IntegrationTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = {
+        "springdoc.api-docs.enabled=false", "springdoc.swagger-ui.enabled=false" })
 @ActiveProfiles("test")
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:h2:mem:comprehensive-test",

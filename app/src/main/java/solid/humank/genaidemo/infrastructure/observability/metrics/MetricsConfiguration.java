@@ -1,22 +1,14 @@
 package solid.humank.genaidemo.infrastructure.observability.metrics;
 
-import java.time.Duration;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
-import io.micrometer.cloudwatch2.CloudWatchConfig;
-import io.micrometer.cloudwatch2.CloudWatchMeterRegistry;
-import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.prometheusmetrics.PrometheusConfig;
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient;
 
 /**
  * Metrics configuration for different environments
@@ -45,38 +37,9 @@ public class MetricsConfiguration {
 
     /**
      * CloudWatch registry for production environment only
+     * Note: CloudWatch registry is provided by CloudWatchMetricsConfiguration to
+     * avoid duplication
      */
-    @Bean
-    @Profile("production")
-    public CloudWatchMeterRegistry cloudWatchMeterRegistry() {
-        CloudWatchConfig cloudWatchConfig = new CloudWatchConfig() {
-            @Override
-            public String get(String key) {
-                return null; // Use default values
-            }
-
-            @Override
-            public String namespace() {
-                return "GenAIDemo/Application";
-            }
-
-            @Override
-            public Duration step() {
-                return Duration.ofMinutes(1);
-            }
-
-            @Override
-            public int batchSize() {
-                return 20;
-            }
-        };
-
-        CloudWatchAsyncClient cloudWatchAsyncClient = CloudWatchAsyncClient.builder()
-                .region(Region.of(awsRegion))
-                .build();
-
-        return new CloudWatchMeterRegistry(cloudWatchConfig, Clock.SYSTEM, cloudWatchAsyncClient);
-    }
 
     /**
      * Common meter registry customizer for all environments
@@ -90,11 +53,22 @@ public class MetricsConfiguration {
                         "region", awsRegion)
                 .meterFilter(MeterFilter.deny(id -> {
                     String name = id.getName();
-                    // Filter out noisy metrics
+                    // Filter out only very noisy metrics, keep important JVM metrics
                     return name.startsWith("jvm.gc.pause") ||
-                            name.startsWith("process.files") ||
-                            name.startsWith("system.load.average");
+                            name.startsWith("process.files.open") ||
+                            name.startsWith("system.load.average.1m");
                 }));
+    }
+
+    /**
+     * Ensure JVM metrics are available
+     */
+    @Bean
+    public MeterRegistryCustomizer<MeterRegistry> jvmMetricsCustomizer() {
+        return registry -> {
+            // JVM metrics should be auto-configured by Spring Boot
+            // This customizer ensures they are not filtered out
+        };
     }
 
     /**

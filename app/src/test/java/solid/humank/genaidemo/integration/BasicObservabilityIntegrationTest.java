@@ -12,7 +12,7 @@ import solid.humank.genaidemo.testutils.annotations.IntegrationTest;
  * 基本可觀測性整合測試
  * 驗證基本的可觀測性功能是否正常運作
  */
-@SpringBootTest
+@SpringBootTest(properties = { "springdoc.api-docs.enabled=false", "springdoc.swagger-ui.enabled=false" })
 @ActiveProfiles("test")
 @IntegrationTest
 public class BasicObservabilityIntegrationTest {

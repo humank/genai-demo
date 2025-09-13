@@ -114,6 +114,9 @@ management:
   metrics:
     enable:
       all: true
+      jvm: true
+      system: true
+      process: true
   prometheus:
     metrics:
       export:

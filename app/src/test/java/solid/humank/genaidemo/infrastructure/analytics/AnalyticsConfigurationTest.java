@@ -30,15 +30,26 @@ class AnalyticsConfigurationTest {
 
 /**
  * Test for production analytics configuration.
+ * Uses test profile with analytics enabled to avoid PostgreSQL dependency.
  */
 @SpringBootTest
-@ActiveProfiles("production")
+@ActiveProfiles("test")
 @TestPropertySource(properties = {
         "analytics.enabled=true",
         "analytics.firehose.stream-name=test-stream",
         "analytics.data-lake.bucket-name=test-bucket",
         "analytics.glue.database-name=test-database",
-        "analytics.quicksight.data-source-id=test-datasource"
+        "analytics.quicksight.data-source-id=test-datasource",
+        // Use H2 for testing
+        "spring.datasource.url=jdbc:h2:mem:testdb",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.datasource.username=sa",
+        "spring.datasource.password=",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        // Disable CloudWatch metrics for testing
+        "management.metrics.export.cloudwatch.enabled=false",
+        // Disable Kafka for testing
+        "spring.kafka.enabled=false"
 })
 class AnalyticsConfigurationProductionTest {
 

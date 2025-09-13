@@ -45,11 +45,13 @@ import solid.humank.genaidemo.config.TestHealthConfiguration;
                 "logging.level.org.hibernate=ERROR",
                 "spring.security.user.name=test",
                 "spring.security.user.password=test",
-                "spring.security.user.roles=USER"
+                "spring.security.user.roles=USER",
+                "spring.http.client.factory=simple", // 使用簡單的 HTTP 客戶端工廠
+                "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration"
 })
 @Import({
                 TestHealthConfiguration.class,
-                solid.humank.genaidemo.config.TestHttpClientConfiguration.class,
+                solid.humank.genaidemo.config.SimpleTestHttpClientConfiguration.class,
                 solid.humank.genaidemo.config.TestWebMvcConfiguration.class
 }) // 導入必要的配置
 class HealthCheckIntegrationTest {

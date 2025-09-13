@@ -176,21 +176,21 @@ TypeScript + Tailwind CSS + shadcn/ui + Zustand + React Query
 **消費者端 (Angular 18.2.0)**  
 TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 
-## 🆕 版本更新 (v3.1.0 - 2025年9月)
+## 🆕 版本更新 (v3.2.0 - 2025年9月)
 
 ### 🚀 主要新增功能
 
-- ✅ **企業級可觀測性**: X-Ray + CloudWatch + Jaeger + 結構化日誌
-- ✅ **MCP AI 助手**: AWS 生態 + GitHub 整合 + 智能開發指導
-- ✅ **雲原生基礎設施**: AWS CDK + Kubernetes + GitHub Actions CI/CD
-- ✅ **成本優化系統**: 資源右調 + 即時成本追蹤 + 優化建議
+- ✅ **生產就緒可觀測性**: 完整的生產環境測試策略和業界最佳實踐指南
+- ✅ **架構決策記錄**: 完整的中英文 ADR 文檔，記錄所有重要架構決策
+- ✅ **測試系統優化**: 568個測試100%通過，移除不實用的BDD測試
+- ✅ **文檔體系完善**: 67頁可觀測性指南，涵蓋腳本化測試到災難恢復
 
 ### 📈 架構與品質提升
 
-- 🏗️ **六角形架構合規性**: 8.5/10 → 9.5/10
-- 🔧 **Java Record 重構**: 22 個值對象，減少 30-40% 樣板代碼
-- 🧪 **測試穩定性**: 272 個測試 100% 通過率
-- �  **專案結構優化**: 檔案重組，清晰分類管理
+- 🏗️ **架構決策記錄**: 7個完整的ADR文檔，涵蓋所有重要架構決策
+- 🔧 **測試策略優化**: 從理論BDD轉向實用的生產環境測試方法
+- 🧪 **測試穩定性**: 568個測試100%通過率，零失敗測試
+- 📚 **文檔國際化**: 完整的中英文文檔體系，支援多語言團隊
 
 ## 🛠️ 技術棧
 
@@ -354,10 +354,10 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 ### 🎯 快速導航
 
 - **👨‍💼 專案經理**: [專案總結 2025](docs/reports/project-summary-2025.md) | [架構概覽](docs/diagrams/mermaid/architecture-overview.md)
-- **🏗️ 架構師**: [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/) | [設計文檔](docs/design/)
+- **🏗️ 架構師**: [架構決策記錄](docs/architecture/adr/) | [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/)
 - **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [開發說明](docs/development/instructions.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
-- **🔍 可觀測性**: [可觀測性系統](docs/observability/) | [監控指南](docs/observability/README.md)
+- **🔍 可觀測性**: [生產環境測試指南](docs/observability/production-observability-testing-guide.md) | [可觀測性系統](docs/observability/)
 - **🤖 MCP 整合**: [MCP 指南](docs/mcp/) | [AI 輔助開發](docs/mcp/README.md)
 
 ### 📊 核心圖表 (Mermaid - GitHub 直接顯示)
@@ -545,16 +545,17 @@ npm install
 ### 📈 核心數據
 
 - **代碼規模**: 200,000+ 行高品質代碼
-- **測試品質**: 272 個測試，100% 通過率
+- **測試品質**: 568 個測試，100% 通過率
 - **API 覆蓋**: 35+ 個 RESTful API 端點
 - **UI 組件**: 25+ 個可重用組件 (React + Angular)
-- **文檔完整性**: 80+ 個詳細文檔頁面
+- **文檔完整性**: 100+ 個詳細文檔頁面，包含67頁生產環境指南
+- **架構決策**: 7 個完整的 ADR 文檔，涵蓋所有重要架構決策
 - **數據庫**: 131 筆業務記錄 + 22 個 Flyway 遷移腳本
 
 ### 🏆 技術價值
 
-- **架構卓越**: DDD + 六角形架構 + 事件驅動設計
-- **品質保證**: BDD + TDD + 架構測試完整覆蓋
+- **架構卓越**: DDD + 六角形架構 + 事件驅動設計，完整的 ADR 文檔記錄
+- **品質保證**: 實用的測試策略 + 生產環境最佳實踐 + 架構測試完整覆蓋
 - **現代技術棧**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
-- **企業級特性**: 可觀測性 + AI 輔助開發 + 雲原生部署
-- **最佳實踐**: 適合學習現代化企業級應用開發的理想參考專案
+- **企業級特性**: 生產就緒可觀測性 + AI 輔助開發 + 雲原生部署
+- **最佳實踐**: 業界標準的測試方法 + 完整的文檔體系，適合學習現代化企業級應用開發

@@ -86,6 +86,11 @@ management:
       application: ${spring.application.name}
       version: ${spring.application.version}
       environment: ${spring.profiles.active}
+    # Enable JVM metrics explicitly
+    enable:
+      jvm: true
+      system: true
+      process: true
 
 # Application Information
 info:
