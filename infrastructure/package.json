@@ -60,7 +60,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "22.7.9",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^6.21.0",
+    "@typescript-eslint/parser": "^8.43.0",
     "aws-cdk": "2.1029.0",
     "aws-sdk": "^2.1691.0",
     "cdk-nag": "^2.27.198",
