@@ -293,8 +293,8 @@ tasks.register('integrationTest', Test) {
         'logging.level.root': 'ERROR',
         'logging.level.org.aspectj': 'OFF',
         'logging.level.io.qameta.allure': 'OFF',
-        'spring.main.lazy-initialization': 'true',
-        'spring.autoconfigure.exclude': 'org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration'
+        'spring.main.lazy-initialization': 'true'
+        // Removed WebMVC exclusion as Actuator endpoints need it for JSON serialization
     ]
 }
 

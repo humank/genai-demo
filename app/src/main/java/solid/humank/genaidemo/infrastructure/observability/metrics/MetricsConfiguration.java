@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.config.MeterFilter;
@@ -18,14 +19,22 @@ import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 @Configuration
 public class MetricsConfiguration {
 
+    private final Environment environment;
+
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @Value("${spring.profiles.active:dev}")
-    private String activeProfile;
-
     @Value("${aws.region:ap-northeast-1}")
     private String awsRegion;
+
+    public MetricsConfiguration(Environment environment) {
+        this.environment = environment;
+    }
+
+    private String getActiveProfilesAsString() {
+        String activeProfile = String.join(",", environment.getActiveProfiles());
+        return activeProfile.isEmpty() ? "default" : activeProfile;
+    }
 
     /**
      * Prometheus registry for all environments
@@ -46,6 +55,8 @@ public class MetricsConfiguration {
      */
     @Bean
     public MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+        final String activeProfile = getActiveProfilesAsString();
+
         return registry -> registry.config()
                 .commonTags(
                         "application", applicationName,
