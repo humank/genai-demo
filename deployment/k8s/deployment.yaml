@@ -36,7 +36,7 @@ spec:
         # 環境變數
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "kubernetes"
+          value: "k8s"
         - name: JAVA_OPTS
           value: "-Xms256m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
         

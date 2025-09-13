@@ -5,6 +5,7 @@ This document describes the Spring Boot profile configuration system implemented
 ## Overview
 
 The profile configuration system provides:
+
 - Environment-specific configurations (dev, production, test)
 - Profile validation and error handling
 - Clear configuration precedence rules
@@ -13,10 +14,12 @@ The profile configuration system provides:
 ## Configuration Files
 
 ### Base Configuration
+
 - `application.yml` - Base configuration with defaults
 - Contains common settings shared across all profiles
 
 ### Profile-Specific Configurations
+
 - `application-dev.yml` - Development environment (H2 database, debug logging)
 - `application-production.yml` - Production environment (PostgreSQL, Kafka, optimized settings)
 - `application-test.yml` - Test environment (H2 in-memory, minimal logging)
@@ -24,18 +27,20 @@ The profile configuration system provides:
 ## Profile Activation
 
 ### Environment Variable (Recommended)
+
 ```bash
 # Development
 export SPRING_PROFILES_ACTIVE=dev
 
 # Production
-export SPRING_PROFILES_ACTIVE=production
+export SPRING_PROFILES_ACTIVE=prod
 
 # Testing
 export SPRING_PROFILES_ACTIVE=test
 ```
 
 ### Command Line
+
 ```bash
 # Development
 ./gradlew bootRun --args='--spring.profiles.active=dev'
@@ -45,12 +50,13 @@ java -jar app.jar --spring.profiles.active=production
 ```
 
 ### Docker
+
 ```bash
 # Development
 docker run -e SPRING_PROFILES_ACTIVE=dev genai-demo:latest
 
 # Production
-docker run -e SPRING_PROFILES_ACTIVE=production genai-demo:latest
+docker run -e SPRING_PROFILES_ACTIVE=prod genai-demo:latest
 ```
 
 ## Configuration Precedence Rules
@@ -65,6 +71,7 @@ The configuration follows Spring Boot's standard precedence rules:
 ## Profile Features
 
 ### Development Profile (`dev`)
+
 - **Database**: H2 in-memory database
 - **H2 Console**: Enabled at `/h2-console`
 - **Logging**: Debug level for application packages
@@ -73,6 +80,7 @@ The configuration follows Spring Boot's standard precedence rules:
 - **Error Handling**: Detailed stack traces
 
 ### Production Profile (`production`)
+
 - **Database**: PostgreSQL with connection pooling
 - **Logging**: INFO level with structured JSON format
 - **Events**: Kafka-based event processing
@@ -81,6 +89,7 @@ The configuration follows Spring Boot's standard precedence rules:
 - **Monitoring**: Full actuator endpoints with authentication
 
 ### Test Profile (`test`)
+
 - **Database**: H2 in-memory (clean slate for each test)
 - **Logging**: Minimal logging to reduce test noise
 - **Events**: In-memory event processing
@@ -90,6 +99,7 @@ The configuration follows Spring Boot's standard precedence rules:
 ## Environment Variables
 
 ### Required for Production
+
 ```bash
 # Database Configuration
 DB_HOST=your-database-host
@@ -101,10 +111,11 @@ DB_PASSWORD=your-database-password
 KAFKA_BOOTSTRAP_SERVERS=your-kafka-servers
 
 # Profile Activation
-SPRING_PROFILES_ACTIVE=production
+SPRING_PROFILES_ACTIVE=prod
 ```
 
 ### Optional Configuration
+
 ```bash
 # Strict validation (default: enabled in production)
 APP_PROFILE_VALIDATION_STRICT=true
@@ -118,12 +129,14 @@ DB_PORT=5432
 The system includes comprehensive profile validation:
 
 ### Valid Profiles
+
 - `dev`, `development` - Development environment
 - `production`, `prod` - Production environment
 - `test` - Testing environment
 - `openapi` - Utility profile for API documentation
 
 ### Invalid Profile Combinations
+
 - ❌ `test` + `production` (Security violation)
 - ❌ `test` + `development` (Configuration conflict)
 - ❌ `production` + `development` (Environment conflict)
@@ -131,6 +144,7 @@ The system includes comprehensive profile validation:
 - ✅ `dev` + `openapi` (Valid for development)
 
 ### Validation Modes
+
 - **Strict Mode**: Enabled in production, throws exceptions for invalid configurations
 - **Flexible Mode**: Enabled in development/test, logs warnings but continues
 
@@ -139,24 +153,28 @@ The system includes comprehensive profile validation:
 ### Common Errors and Solutions
 
 #### 1. Invalid Profile Error
+
 ```
 Error: Invalid profile 'invalid-profile' detected
 Solution: Use one of the valid profiles: dev, production, test
 ```
 
 #### 2. Profile Combination Error
+
 ```
 Error: SECURITY VIOLATION: 'test' and 'production' profiles must not be active together
 Solution: Use either 'test' OR 'production', never both
 ```
 
 #### 3. Missing Database Configuration
+
 ```
 Error: Production profile requires PostgreSQL datasource URL
 Solution: Set DB_HOST, DB_NAME, DB_USERNAME, DB_PASSWORD environment variables
 ```
 
 #### 4. Missing Kafka Configuration
+
 ```
 Warning: Kafka bootstrap servers not configured - event publishing may fail
 Solution: Set KAFKA_BOOTSTRAP_SERVERS environment variable
@@ -165,6 +183,7 @@ Solution: Set KAFKA_BOOTSTRAP_SERVERS environment variable
 ## Configuration Properties
 
 ### Profile Configuration Properties
+
 ```yaml
 genai-demo:
   profile:
@@ -178,6 +197,7 @@ genai-demo:
 ```
 
 ### Feature Flags
+
 - `h2-console`: Enable/disable H2 database console
 - `debug-logging`: Enable/disable debug level logging
 - `in-memory-events`: Use in-memory event processing
@@ -186,18 +206,21 @@ genai-demo:
 ## Testing
 
 ### Unit Tests
+
 ```bash
 # Run profile configuration tests
 ./gradlew test --tests="*ProfileConfiguration*"
 ```
 
 ### Integration Tests
+
 ```bash
 # Run with specific profile
 ./gradlew test -Dspring.profiles.active=test
 ```
 
 ### Profile-Specific Testing
+
 ```java
 @SpringBootTest
 @ActiveProfiles("dev")
@@ -218,7 +241,9 @@ class ProductionProfileTest {
 ## Troubleshooting
 
 ### Debug Configuration Loading
+
 1. Enable debug logging for configuration:
+
    ```yaml
    logging:
      level:
@@ -226,11 +251,13 @@ class ProductionProfileTest {
    ```
 
 2. Check active profiles:
+
    ```bash
    curl http://localhost:8080/actuator/info
    ```
 
 3. Verify configuration properties:
+
    ```bash
    curl http://localhost:8080/actuator/configprops
    ```
@@ -238,16 +265,19 @@ class ProductionProfileTest {
 ### Common Issues
 
 #### Profile Not Activated
+
 - Check `SPRING_PROFILES_ACTIVE` environment variable
 - Verify profile name spelling
 - Check for typos in configuration files
 
 #### Configuration Not Loading
+
 - Verify file names match pattern: `application-{profile}.yml`
 - Check YAML syntax and indentation
 - Ensure files are in `src/main/resources/`
 
 #### Database Connection Issues
+
 - Verify database is running and accessible
 - Check connection parameters (host, port, database name)
 - Verify credentials and permissions

@@ -381,7 +381,7 @@ void shouldIncludeCorrelationIdInLogs() {
 ```yaml
 env:
 - name: SPRING_PROFILES_ACTIVE
-  value: "production,kubernetes"
+  value: "prod,k8s"
 - name: OBSERVABILITY_LOGGING_STRUCTURED
   value: "true"
 - name: OBSERVABILITY_TRACING_ENABLED

@@ -41,7 +41,7 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "production,kubernetes"
+          value: "prod,k8s"
         - name: DB_HOST
           valueFrom:
             secretKeyRef:

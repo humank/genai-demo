@@ -75,7 +75,7 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "production"
+          value: "prod"
         - name: SERVER_PORT
           value: "8080"
         - name: MANAGEMENT_SERVER_PORT

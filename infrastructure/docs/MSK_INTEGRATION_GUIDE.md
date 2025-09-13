@@ -260,7 +260,7 @@ export MSK_BOOTSTRAP_SERVERS=$(aws cloudformation describe-stacks \
     --query 'Stacks[0].Outputs[?OutputKey==`MSKBootstrapServersIAM`].OutputValue' \
     --output text)
 
-export SPRING_PROFILES_ACTIVE=production,msk
+export SPRING_PROFILES_ACTIVE=prod,msk
 ```
 
 ### 4. Deploy Application

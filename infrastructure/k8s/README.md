@@ -104,7 +104,7 @@ The manifests can also be templated using Helm for more dynamic configuration.
 
 ### Environment Variables
 
-- `SPRING_PROFILES_ACTIVE`: Spring Boot profile (dev/production)
+- `SPRING_PROFILES_ACTIVE`: Spring Boot profile (dev/prod)
 - `ENVIRONMENT`: Deployment environment
 - `POD_NAME`, `POD_IP`, `NODE_NAME`: Kubernetes metadata
 

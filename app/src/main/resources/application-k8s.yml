@@ -1,9 +1,9 @@
 # Kubernetes Profile Configuration
-# This configuration is activated when SPRING_PROFILES_ACTIVE=kubernetes
+# This configuration is activated when SPRING_PROFILES_ACTIVE=k8s
 
 spring:
   profiles:
-    active: kubernetes
+    active: k8s
   
   # PostgreSQL Database Configuration for Kubernetes
   datasource:
@@ -96,7 +96,7 @@ otel:
         x-honeycomb-team: ${HONEYCOMB_API_KEY:}
   resource:
     attributes:
-      deployment.environment: kubernetes
+      deployment.environment: k8s
       service.namespace: ${KUBERNETES_NAMESPACE:default}
       cloud.provider: aws
       cloud.platform: aws_eks
@@ -124,11 +124,11 @@ management:
         step: 30s
       cloudwatch:
         enabled: true
-        namespace: GenAIDemo/Kubernetes
+        namespace: GenAIDemo/K8s
         step: 1m
         batch-size: 20
     tags:
-      environment: kubernetes
+      environment: k8s
       cluster: ${EKS_CLUSTER_NAME}
       namespace: ${KUBERNETES_NAMESPACE:default}
       pod: ${HOSTNAME}
@@ -137,7 +137,7 @@ management:
 # Kubernetes Profile Features
 genai-demo:
   profile:
-    name: kubernetes
+    name: k8s
     description: "Kubernetes profile with PostgreSQL, MSK, and AWS X-Ray"
     features:
       h2-console: false

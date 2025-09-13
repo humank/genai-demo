@@ -802,7 +802,7 @@ export class CoreInfrastructureStack extends cdk.Stack {
                                 env: [
                                     {
                                         name: 'SPRING_PROFILES_ACTIVE',
-                                        value: environment === 'development' ? 'dev' : 'production'
+                                        value: environment === 'development' ? 'dev' : 'prod'
                                     },
                                     {
                                         name: 'ENVIRONMENT',

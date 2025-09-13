@@ -92,7 +92,7 @@ spring:
 
 - **Local Development**: `SPRING_PROFILES_ACTIVE=dev` (default)
 - **Docker Development**: `SPRING_PROFILES_ACTIVE=dev` (explicit)
-- **EKS Production**: `SPRING_PROFILES_ACTIVE=production` (environment variable)
+- **EKS Production**: `SPRING_PROFILES_ACTIVE=prod` (environment variable)
 
 ### 2. Multi-Environment Database Configuration
 
@@ -1431,7 +1431,7 @@ spec:
           name: http
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "production"
+          value: "prod"
         - name: DB_HOST
           valueFrom:
             secretKeyRef:
@@ -2940,7 +2940,7 @@ spec:
         image: genai-demo-backend:latest
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "production,multiregion"
+          value: "prod,multiregion"
         - name: AWS_REGION
           value: '{{REGION}}'
         - name: PRIMARY_REGION

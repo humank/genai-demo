@@ -88,7 +88,7 @@ otel:
       endpoint: http://localhost:14250
   resource:
     attributes:
-      deployment.environment: development
+      deployment.environment: dev
       service.namespace: genai-demo-dev
 
 # Management Configuration for Development
@@ -131,7 +131,7 @@ analytics:
 # Development Profile Features
 app:
   profile:
-    name: development
+    name: dev
     description: "Development profile with H2 database and in-memory events"
     features:
       h2-console: true

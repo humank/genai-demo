@@ -13,8 +13,8 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:dev}
     group:
       dev: "dev,openapi"
-      production: "production,openapi"
-      kubernetes: "kubernetes,openapi"
+      prod: "prod,openapi"
+      k8s: "k8s,openapi"
       test: "test,openapi"
   
   # Default configuration validation

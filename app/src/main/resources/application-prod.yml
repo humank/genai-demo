@@ -1,5 +1,5 @@
 # Production Profile Configuration
-# This configuration is activated when SPRING_PROFILES_ACTIVE=production
+# This configuration is activated when SPRING_PROFILES_ACTIVE=prod
 
 spring:
   
@@ -99,7 +99,7 @@ management:
         descriptions: true
       cloudwatch:
         enabled: true
-        namespace: GenAIDemo/Production
+        namespace: GenAIDemo/Prod
         step: 1m
         batch-size: 20
     distribution:
@@ -114,7 +114,7 @@ management:
     tags:
       application: ${spring.application.name}
       version: ${spring.application.version}
-      environment: production
+      environment: prod
       region: ${AWS_REGION:ap-northeast-1}
 
 # AWS Configuration
@@ -145,7 +145,7 @@ otel:
     version: ${spring.application.version}
   resource:
     attributes:
-      deployment.environment: production
+      deployment.environment: prod
       service.namespace: genai-demo
       service.instance.id: ${HOSTNAME:unknown}
   traces:
@@ -192,7 +192,7 @@ analytics:
 # Profile Configuration
 genai-demo:
   profile:
-    name: production
+    name: prod
     description: "Production environment with PostgreSQL, Kafka, and AWS services"
     features:
       h2-console: false

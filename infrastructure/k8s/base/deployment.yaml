@@ -39,7 +39,7 @@ spec:
           protocol: TCP
         env:
         - name: SPRING_PROFILES_ACTIVE
-          value: "production"
+          value: "prod"
         - name: ENVIRONMENT
           valueFrom:
             fieldRef:

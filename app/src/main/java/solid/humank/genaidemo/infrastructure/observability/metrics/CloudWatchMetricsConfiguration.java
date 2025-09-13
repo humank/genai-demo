@@ -19,7 +19,7 @@ import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient;
  * Sends application metrics to AWS CloudWatch for monitoring and alerting
  */
 @Configuration
-@Profile("production")
+@Profile("prod")
 @ConditionalOnProperty(name = "management.metrics.export.cloudwatch.enabled", havingValue = "true")
 public class CloudWatchMetricsConfiguration {
 
