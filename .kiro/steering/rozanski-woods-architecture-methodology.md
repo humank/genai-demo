@@ -2,184 +2,184 @@
 inclusion: always
 ---
 
-# Rozanski & Woods 架構方法論 Steering 規則
+# Rozanski & Woods Architecture Methodology Steering Rules
 
-## 架構視點強制檢查
+## Mandatory Architectural Viewpoint Checks
 
-### 每個新功能必須完成以下視點檢查：
+### Each new feature must complete the following viewpoint checks
 
-#### 功能視點
+#### Functional Viewpoint
 
-- [ ] 聚合根邊界明確定義
-- [ ] 領域服務職責清晰
-- [ ] 用例實現符合 DDD 戰術模式
+- [ ] Aggregate boundaries clearly defined
+- [ ] Domain service responsibilities clarified
+- [ ] Use case implementation follows DDD tactical patterns
 
-#### 資訊視點  
+#### Information Viewpoint  
 
-- [ ] 領域事件設計完整
-- [ ] 資料一致性策略明確
-- [ ] 事件溯源考量完備
+- [ ] Domain event design complete
+- [ ] Data consistency strategy defined
+- [ ] Event sourcing considerations addressed
 
-#### 並發視點
+#### Concurrency Viewpoint
 
-- [ ] 異步處理策略文檔化
-- [ ] 事務邊界明確定義
-- [ ] 並發衝突處理機制
+- [ ] Asynchronous processing strategy documented
+- [ ] Transaction boundaries clearly defined
+- [ ] Concurrency conflict handling mechanisms
 
-#### 開發視點
+#### Development Viewpoint
 
-- [ ] 模組依賴符合六角架構
-- [ ] 測試策略包含所有層次
-- [ ] 建置腳本更新完成
+- [ ] Module dependencies comply with hexagonal architecture
+- [ ] Testing strategy covers all layers
+- [ ] Build scripts updated
 
-#### 部署視點
+#### Deployment Viewpoint
 
-- [ ] CDK 基礎設施更新
-- [ ] 環境配置變更記錄
-- [ ] 部署策略影響評估
+- [ ] CDK infrastructure updated
+- [ ] Environment configuration changes recorded
+- [ ] Deployment strategy impact assessed
 
-#### 運營視點
+#### Operational Viewpoint
 
-- [ ] 監控指標定義
-- [ ] 日誌結構設計
-- [ ] 故障處理程序
+- [ ] Monitoring metrics defined
+- [ ] Log structure designed
+- [ ] Failure handling procedures
 
-## 品質屬性場景要求
+## Quality Attribute Scenario Requirements
 
-### 每個用戶故事必須包含至少一個品質屬性場景
+### Each user story must include at least one quality attribute scenario
 
-#### 場景格式：來源 → 刺激 → 環境 → 產出物 → 回應 → 回應測量
+#### Scenario Format: Source → Stimulus → Environment → Artifact → Response → Response Measure
 
-#### 量化指標要求
+#### Quantitative Metrics Requirements
 
-- 性能場景：具體時間、吞吐量或資源使用指標
-- 安全場景：通過 CDK Nag 規則驗證
-- 可用性場景：包含 RTO 和 RPO
-- 可擴展性場景：定義負載增長和擴展策略
+- Performance scenarios: Specific time, throughput, or resource usage metrics
+- Security scenarios: Must pass CDK Nag rule validation
+- Availability scenarios: Must include RTO and RPO
+- Scalability scenarios: Define load growth and scaling strategies
 
-## 架構合規性規則
+## Architecture Compliance Rules
 
-### 強制 ArchUnit 規則
+### Mandatory ArchUnit Rules
 
 ```java
-// Domain 層依賴限制
+// Domain layer dependency restrictions
 @ArchTest
 static final ArchRule domainLayerRules = classes()
     .that().resideInAPackage("..domain..")
     .should().onlyDependOnClassesThat()
     .resideInAnyPackage("..domain..", "java..", "org.springframework..");
 
-// 聚合根規則
+// Aggregate root rules
 @ArchTest  
 static final ArchRule aggregateRootRules = classes()
     .that().areAnnotatedWith(AggregateRoot.class)
     .should().implement(AggregateRootInterface.class);
 
-// 事件處理器規則
+// Event handler rules
 @ArchTest
 static final ArchRule eventHandlerRules = classes()
     .that().areAnnotatedWith(Component.class)
     .and().haveSimpleNameEndingWith("EventHandler")
     .should().beAnnotatedWith(TransactionalEventListener.class);
 
-// 值對象規則
+// Value object rules
 @ArchTest
 static final ArchRule valueObjectRules = classes()
     .that().areAnnotatedWith(ValueObject.class)
     .should().beRecords();
 ```
 
-## ADR 必要內容
+## ADR Required Content
 
-### 每個 ADR 必須包含：
+### Each ADR must include
 
-- 利害關係人影響分析
-- 影響半徑評估 (Local/Bounded Context/System/Enterprise)
-- 風險評估 (高/中/低)
-- 回滾策略和觸發條件
-- 遷移路徑 (階段一/二/三)
+- Stakeholder impact analysis
+- Impact radius assessment (Local/Bounded Context/System/Enterprise)
+- Risk assessment (High/Medium/Low)
+- Rollback strategy and trigger conditions
+- Migration path (Phase 1/2/3)
 
-## 可觀測性要求
+## Observability Requirements
 
-### 新功能強制要求
+### Mandatory for new features
 
-- 每個聚合根必須有對應業務指標
-- 每個用例必須有執行追蹤和性能指標
-- 每個領域事件必須有發布和處理指標
-- 關鍵路徑必須有監控和告警
+- Each aggregate root must have corresponding business metrics
+- Each use case must have execution tracing and performance metrics
+- Each domain event must have publication and processing metrics
+- Critical paths must have monitoring and alerting
 
-## 四大觀點檢查清單
+## Four Perspectives Checklist
 
-### 安全性觀點
+### Security Perspective
 
-- [ ] API 端點通過 CDK Nag 檢查
-- [ ] 敏感資料加密存儲和傳輸
-- [ ] 身份認證和授權機制
-- [ ] 安全事件日誌和監控
+- [ ] API endpoints pass CDK Nag checks
+- [ ] Sensitive data encrypted in storage and transit
+- [ ] Authentication and authorization mechanisms
+- [ ] Security event logging and monitoring
 
-### 性能與可擴展性觀點
+### Performance & Scalability Perspective
 
-- [ ] 關鍵路徑性能基準測試 (< 2秒)
-- [ ] 資料庫查詢優化和索引策略
-- [ ] 快取策略實施
-- [ ] 水平擴展能力驗證
+- [ ] Critical path performance benchmarks (< 2s)
+- [ ] Database query optimization and indexing strategy
+- [ ] Caching strategy implementation
+- [ ] Horizontal scaling capability verification
 
-### 可用性與韌性觀點
+### Availability & Resilience Perspective
 
-- [ ] 健康檢查端點實施
-- [ ] 故障恢復和重試機制
-- [ ] 斷路器模式實施
-- [ ] 災難恢復計劃和測試
+- [ ] Health check endpoints implemented
+- [ ] Failure recovery and retry mechanisms
+- [ ] Circuit breaker pattern implementation
+- [ ] Disaster recovery plan and testing
 
-### 演進性觀點
+### Evolution Perspective
 
-- [ ] 介面向後相容性保證
-- [ ] 版本管理策略實施
-- [ ] 模組化和鬆耦合設計
-- [ ] 重構安全性保證 (測試覆蓋)
+- [ ] Interface backward compatibility guaranteed
+- [ ] Version management strategy implemented
+- [ ] Modular and loosely coupled design
+- [ ] Refactoring safety guaranteed (test coverage)
 
-## 並發策略要求
+## Concurrency Strategy Requirements
 
-### 異步處理設計必須明確：
+### Asynchronous processing design must specify
 
-- 事件處理順序依賴
-- 事務邊界和一致性保證
-- 並發衝突檢測和處理機制
-- 死鎖預防和檢測策略
+- Event processing order dependencies
+- Transaction boundaries and consistency guarantees
+- Concurrency conflict detection and handling mechanisms
+- Deadlock prevention and detection strategies
 
-## 韌性模式強制應用
+## Mandatory Resilience Patterns
 
-### 外部服務調用必須實施：
+### External service calls must implement
 
-- 斷路器模式
-- 重試機制 (最多3次，指數退避)
-- 降級策略
-- 死信佇列處理
+- Circuit breaker pattern
+- Retry mechanism (max 3 attempts, exponential backoff)
+- Fallback strategy
+- Dead letter queue handling
 
-### 關鍵業務流程必須有：
+### Critical business processes must have
 
-- 故障恢復時間測試
-- 監控和告警配置
-- 運營手冊更新
+- Failure recovery time testing
+- Monitoring and alerting configuration
+- Operations manual updates
 
-## 技術演進標準
+## Technology Evolution Standards
 
-### 新技術引入必須滿足：
+### New technology introduction must satisfy
 
-- [ ] 技術成熟度達到"成長"階段以上
-- [ ] 完整文檔和社群支援
-- [ ] 團隊學習和維護能力
-- [ ] 遷移風險可控且有回滾計劃
+- [ ] Technology maturity reaches "Growth" stage or above
+- [ ] Complete documentation and community support
+- [ ] Team learning and maintenance capability
+- [ ] Migration risk controllable with rollback plan
 
-### 版本升級要求：
+### Version upgrade requirements
 
-- 關鍵依賴升級必須有自動化測試覆蓋
-- 主要版本升級必須在測試環境驗證
-- 遺留技術淘汰必須有明確時間表
+- Critical dependency upgrades must have automated test coverage
+- Major version upgrades must be verified in test environment
+- Legacy technology retirement must have clear timeline
 
-## 合規性監控指標
+## Compliance Monitoring Metrics
 
-- 視點覆蓋率：100%
-- 品質屬性場景覆蓋率：100%
-- ArchUnit 測試通過率：100%
-- 架構債務趨勢：持續下降
+- Viewpoint coverage rate: 100%
+- Quality attribute scenario coverage rate: 100%
+- ArchUnit test pass rate: 100%
+- Architecture debt trend: Continuously decreasing

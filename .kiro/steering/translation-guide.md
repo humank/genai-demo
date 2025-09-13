@@ -2,24 +2,24 @@
 inclusion: manual
 ---
 
-# 文檔翻譯指南
+# Documentation Translation Guide
 
-## 翻譯觸發條件
+## Translation Trigger Conditions
 
-自動翻譯會在以下情況觸發：
+Automatic translation will be triggered in the following situations:
 
-1. **文件編輯觸發** (主要方式)：
-   - 當編輯 `README.md` 或 `docs/**/*.md` 文件時自動觸發
-   - 只處理包含中文字符的文件
-   - 排除 `docs/en/` 目錄下的英文文件
+1. **File Edit Trigger** (Primary method):
+   - Automatically triggered when editing `README.md` or `docs/**/*.md` files
+   - Only processes files containing Chinese characters
+   - Excludes English files in `docs/en/` directory
 
-2. **手動觸發** (備用方式)：
-   - 在 commit message 中包含 `[translate]` 或 `[en]`
-   - 在聊天中提及翻譯需求
+2. **Manual Trigger** (Backup method):
+   - Include `[translate]` or `[en]` in commit message
+   - Mention translation requirements in chat
 
-## 目錄結構規範
+## Directory Structure Standards
 
-### 原始結構 (繁體中文)
+### Original Structure (Traditional Chinese)
 
 ```
 ├── README.md
@@ -40,12 +40,12 @@ inclusion: manual
             └── *.md
 ```
 
-### 翻譯後結構
+### Post-Translation Structure
 
 ```
-├── README.md (保持雙語或指向各語言版本)
+├── README.md (Keep bilingual or point to language versions)
 ├── docs/
-    ├── zh-tw/          # 繁體中文版本
+    ├── zh-tw/          # Traditional Chinese version
     │   ├── README.md
     │   ├── aws-eks-architecture.md
     │   ├── microservices-refactoring-plan.md
@@ -55,7 +55,7 @@ inclusion: manual
     │   ├── releases/
     │   ├── uml/
     │   └── requirements/
-    └── en/             # 英文版本 (自動生成)
+    └── en/             # English version (auto-generated)
         ├── README.md
         ├── aws-eks-architecture.md
         ├── microservices-refactoring-plan.md
@@ -67,49 +67,49 @@ inclusion: manual
         └── requirements/
 ```
 
-## 連結轉換規則
+## Link Conversion Rules
 
-### 1. 相對路徑連結
+### 1. Relative Path Links
 
 ```markdown
-<!-- 中文版本 -->
-[架構概覽](docs/architecture-overview.md)
-[設計指南](./DesignGuideline.MD)
-[發布說明](releases/README.md)
+<!-- Chinese version -->
+[Architecture Overview](docs/architecture-overview.md)
+[Design Guidelines](./DesignGuideline.MD)
+[Release Notes](releases/README.md)
 
-<!-- 轉換為英文版本 -->
+<!-- Convert to English version -->
 [Architecture Overview](docs/en/architecture-overview.md)
 [Design Guidelines](./DesignGuideline.MD)
 [Release Notes](releases/README.md)
 ```
 
-### 2. 錨點連結轉換
+### 2. Anchor Link Conversion
 
 ```markdown
-<!-- 中文版本 -->
-[Tell, Don't Ask 原則](DesignGuideline.MD#tell-dont-ask-原則)
-[專案架構](#專案架構)
+<!-- Chinese version -->
+[Tell, Don't Ask Principle](DesignGuideline.MD#tell-dont-ask-原則)
+[Project Architecture](#專案架構)
 
-<!-- 轉換為英文版本 -->
+<!-- Convert to English version -->
 [Tell, Don't Ask Principle](DesignGuideline.MD#tell-dont-ask-principle)
 [Project Architecture](#project-architecture)
 ```
 
-### 3. 圖片連結處理
+### 3. Image Link Handling
 
 ```markdown
-<!-- 中文版本 -->
-![類別圖](./class-diagram.svg)
-![六角形架構圖](../images/hexagonal-architecture.png)
+<!-- Chinese version -->
+![Class Diagram](./class-diagram.svg)
+![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
 
-<!-- 英文版本 (路徑保持不變，只翻譯 alt text) -->
+<!-- English version (path unchanged, only translate alt text) -->
 ![Class Diagram](./class-diagram.svg)
 ![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
 ```
 
-## 翻譯品質要求
+## Translation Quality Requirements
 
-### 1. 技術術語一致性
+### 1. Technical Term Consistency
 
 - Domain-Driven Design (DDD) → 領域驅動設計
 - Hexagonal Architecture → 六角形架構
@@ -118,46 +118,46 @@ inclusion: manual
 - Repository → 儲存庫
 - Specification → 規格
 
-### 2. 程式碼區塊
+### 2. Code Blocks
 
-- 保持程式碼不變
-- 翻譯註解和字串
-- 保持變數名稱的英文形式
+- Keep code unchanged
+- Translate comments and strings
+- Maintain English variable names
 
-### 3. 檔案名稱
+### 3. File Names
 
-- 保持檔案名稱不變 (例如: DesignGuideline.MD)
-- 只翻譯內容，不翻譯檔案路徑
+- Keep file names unchanged (e.g., DesignGuideline.MD)
+- Only translate content, not file paths
 
-## 執行流程
+## Execution Process
 
-1. **檢測變更檔案**: 使用 `git diff --cached --name-only` 找出本次 commit 的 .md 檔案
-2. **建立目錄結構**: 確保 `docs/en/` 目錄結構存在
-3. **翻譯內容**: 逐一翻譯每個檔案，同時轉換內部連結
-4. **驗證連結**: 確保翻譯後的連結指向正確的英文檔案
-5. **加入 commit**: 將翻譯後的檔案自動加入到同一個 commit
+1. **Detect Changed Files**: Use `git diff --cached --name-only` to find .md files in current commit
+2. **Create Directory Structure**: Ensure `docs/en/` directory structure exists
+3. **Translate Content**: Translate each file while converting internal links
+4. **Verify Links**: Ensure translated links point to correct English files
+5. **Add to Commit**: Automatically add translated files to the same commit
 
-## 特殊處理
+## Special Handling
 
-### 1. PlantUML 檔案
+### 1. PlantUML Files
 
-- `.puml` 檔案中的中文註解需要翻譯
-- 保持 PlantUML 語法結構不變
+- Chinese comments in `.puml` files need translation
+- Maintain PlantUML syntax structure
 
-### 2. 表格內容
+### 2. Table Content
 
-- 翻譯表格中的中文內容
-- 保持表格格式不變
+- Translate Chinese content in tables
+- Maintain table formatting
 
-### 3. 程式碼註解
+### 3. Code Comments
 
 ```java
-// 中文註解 → English comment
-/* 多行中文註解 → Multi-line English comment */
+// Chinese comment → English comment
+/* Multi-line Chinese comment → Multi-line English comment */
 ```
 
-## 錯誤處理
+## Error Handling
 
-1. 如果目標檔案已存在且較新，詢問是否覆蓋
-2. 如果連結指向不存在的檔案，記錄警告但繼續處理
-3. 翻譯失敗時，記錄錯誤並跳過該檔案
+1. If target file exists and is newer, ask whether to overwrite
+2. If link points to non-existent file, log warning but continue processing
+3. If translation fails, log error and skip that file

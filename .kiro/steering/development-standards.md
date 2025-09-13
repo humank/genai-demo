@@ -1,8 +1,8 @@
-# 開發標準與規範
+# Development Standards and Guidelines
 
-## 技術棧要求
+## Technology Stack Requirements
 
-### 後端技術
+### Backend Technologies
 
 - Spring Boot 3.4.5 + Java 21 + Gradle 8.x
 - Spring Data JPA + Hibernate + Flyway
@@ -10,168 +10,168 @@
 - SpringDoc OpenAPI 3 + Swagger UI
 - Spring Boot Actuator + AWS X-Ray + Micrometer
 
-### 前端技術
+### Frontend Technologies
 
-- CMC 管理端: Next.js 14 + React 18 + TypeScript
-- 消費者端: Angular 18 + TypeScript
-- UI 組件: shadcn/ui + Radix UI
+- CMC Management: Next.js 14 + React 18 + TypeScript
+- Consumer App: Angular 18 + TypeScript
+- UI Components: shadcn/ui + Radix UI
 
-### 測試框架
+### Testing Frameworks
 
 - JUnit 5 + Mockito + AssertJ
 - Cucumber 7 (BDD) + Gherkin
-- ArchUnit (架構測試)
+- ArchUnit (Architecture Testing)
 
-## 架構約束
+## Architecture Constraints
 
-### 包結構規範
+### Package Structure Standards
 
-- `domain/{context}/model/` - 聚合根、實體、值對象
-- `domain/{context}/events/` - 領域事件 (Records)
-- `application/{context}/` - 用例實現
-- `infrastructure/{context}/persistence/` - 持久化適配器
+- `domain/{context}/model/` - Aggregate roots, entities, value objects
+- `domain/{context}/events/` - Domain events (Records)
+- `application/{context}/` - Use case implementations
+- `infrastructure/{context}/persistence/` - Persistence adapters
 
-### 分層依賴規則
+### Layer Dependency Rules
 
 ```
 interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
-### 領域事件設計約束
+### Domain Event Design Constraints
 
-- 使用不可變 Records 實現
-- 聚合根收集事件，應用服務發布事件
-- 事件處理器在基礎設施層
+- Use immutable Records implementation
+- Aggregate roots collect events, application services publish events
+- Event handlers in infrastructure layer
 
-## 測試標準
+## Testing Standards
 
-### 測試分層要求 (測試金字塔)
+### Test Layer Requirements (Test Pyramid)
 
 - Unit Tests (80%): < 50ms, < 5MB
 - Integration Tests (15%): < 500ms, < 50MB  
 - E2E Tests (5%): < 3s, < 500MB
 
-### 測試分類標準
+### Test Classification Standards
 
-#### Unit Tests (優先使用)
+#### Unit Tests (Preferred)
 
-- 註解: `@ExtendWith(MockitoExtension.class)`
-- 適用: 純業務邏輯、工具類、配置類
-- 禁止: Spring 上下文
+- Annotation: `@ExtendWith(MockitoExtension.class)`
+- Applicable: Pure business logic, utilities, configuration classes
+- Prohibited: Spring context
 
-#### Integration Tests (謹慎使用)
+#### Integration Tests (Use Cautiously)
 
-- 註解: `@DataJpaTest`, `@WebMvcTest`, `@JsonTest`
-- 適用: 數據庫集成、外部服務
-- 要求: 部分 Spring 上下文
+- Annotation: `@DataJpaTest`, `@WebMvcTest`, `@JsonTest`
+- Applicable: Database integration, external services
+- Requirement: Partial Spring context
 
-#### E2E Tests (最少使用)
+#### E2E Tests (Minimal Use)
 
-- 註解: `@SpringBootTest(webEnvironment = RANDOM_PORT)`
-- 適用: 完整業務流程驗證
-- 要求: 完整 Spring 上下文
+- Annotation: `@SpringBootTest(webEnvironment = RANDOM_PORT)`
+- Applicable: Complete business process verification
+- Requirement: Full Spring context
 
-### 測試標籤系統
+### Test Tagging System
 
 ```java
-@UnitTest        // 快速單元測試
-@SmokeTest       // 核心功能測試
-@SlowTest        // 慢速測試標記
-@IntegrationTest // 集成測試
+@UnitTest        // Fast unit tests
+@SmokeTest       // Core functionality tests
+@SlowTest        // Slow test marker
+@IntegrationTest // Integration tests
 ```
 
-### 性能基準要求
+### Performance Benchmark Requirements
 
-- 單元測試: < 100ms, < 10MB, 成功率 > 99%
-- 集成測試: < 1s, < 100MB, 成功率 > 95%
-- 端到端測試: < 5s, < 1GB, 成功率 > 90%
+- Unit tests: < 100ms, < 10MB, success rate > 99%
+- Integration tests: < 1s, < 100MB, success rate > 95%
+- End-to-end tests: < 5s, < 1GB, success rate > 90%
 
-## BDD 開發流程
+## BDD Development Process
 
-### 強制步驟
+### Mandatory Steps
 
-1. 編寫 Gherkin 場景 (`src/test/resources/features/`)
-2. 實現步驟定義 (Red)
-3. TDD 實現領域邏輯 (Green)
-4. 重構優化 (Refactor)
+1. Write Gherkin scenarios (`src/test/resources/features/`)
+2. Implement step definitions (Red)
+3. TDD implement domain logic (Green)
+4. Refactor optimization (Refactor)
 
-## 代碼規範
+## Code Standards
 
-### 命名約定
+### Naming Conventions
 
 ```java
-// 聚合根
+// Aggregate root
 @AggregateRoot
 public class Customer implements AggregateRootInterface { }
 
-// 值對象
+// Value object
 @ValueObject
 public record CustomerId(String value) { }
 
-// 領域事件
+// Domain event
 public record CustomerCreatedEvent(...) implements DomainEvent { }
 
-// 測試類
+// Test class
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceUnitTest { }
 ```
 
-### Mock 使用規則
+### Mock Usage Rules
 
-- 只 mock 測試中實際使用的交互
-- 避免全局 stubbing
-- 處理 null 情況
+- Only mock interactions actually used in tests
+- Avoid global stubbing
+- Handle null cases
 
-## ArchUnit 規則
+## ArchUnit Rules
 
-### 強制架構規則
+### Mandatory Architecture Rules
 
-- 分層依賴檢查
-- DDD 戰術模式驗證
-- 包命名規範檢查
+- Layer dependency checks
+- DDD tactical pattern verification
+- Package naming convention checks
 
-### 禁止的反模式
+### Prohibited Anti-patterns
 
 ```java
-// ❌ 錯誤：配置類測試不需要完整 Spring 上下文
+// ❌ Wrong: Configuration class tests don't need full Spring context
 @SpringBootTest
 class DatabaseConfigurationTest { ... }
 
-// ✅ 正確：使用單元測試
+// ✅ Correct: Use unit tests
 @ExtendWith(MockitoExtension.class)
 class DatabaseConfigurationUnitTest { ... }
 ```
 
-## 質量標準
+## Quality Standards
 
-### 必須達成指標
+### Must-Achieve Metrics
 
-- 代碼覆蓋率 > 80%
-- 測試執行時間 < 15秒 (單元測試)
-- 測試失敗率 < 1%
-- 架構合規性 100%
+- Code coverage > 80%
+- Test execution time < 15s (unit tests)
+- Test failure rate < 1%
+- Architecture compliance 100%
 
-### BDD 場景覆蓋要求
+### BDD Scenario Coverage Requirements
 
-- 核心業務流程 100% 覆蓋
-- 異常處理場景覆蓋
-- 用戶體驗關鍵路徑覆蓋
+- Core business processes 100% coverage
+- Exception handling scenario coverage
+- User experience critical path coverage
 
-## 開發工作流
+## Development Workflow
 
-### 新功能開發順序
+### New Feature Development Sequence
 
-1. BDD 場景設計
-2. 領域建模 (DDD)
-3. TDD 實現
-4. 集成測試
-5. ArchUnit 驗證
+1. BDD scenario design
+2. Domain modeling (DDD)
+3. TDD implementation
+4. Integration testing
+5. ArchUnit verification
 
-### 日常開發命令
+### Daily Development Commands
 
 ```bash
-./gradlew quickTest              # 開發時快速回饋 (2秒)
-./gradlew unitTest               # 提交前完整驗證 (11秒)
-./gradlew integrationTest        # PR 檢查集成測試
-./gradlew test                   # 發布前完整測試
+./gradlew quickTest              # Development quick feedback (2s)
+./gradlew unitTest               # Pre-commit full verification (11s)
+./gradlew integrationTest        # PR integration test check
+./gradlew test                   # Pre-release full test
 ```
