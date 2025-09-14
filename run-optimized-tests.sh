@@ -60,10 +60,10 @@ smoke_duration=$((smoke_end - smoke_start))
 echo -e "${GREEN}✅ 快速檢查完成，耗時: ${smoke_duration}秒${NC}"
 echo
 
-echo -e "${BLUE}3. 檢查測試覆蓋率${NC}"
-echo "執行測試報告生成..."
-./gradlew jacocoTestReport --console=plain --quiet
-echo -e "${GREEN}✅ 測試報告已生成${NC}"
+echo -e "${BLUE}3. 執行集成測試驗證${NC}"
+echo "執行集成測試以驗證系統整合..."
+./gradlew integrationTest --console=plain --quiet
+echo -e "${GREEN}✅ 集成測試驗證完成${NC}"
 echo
 
 # 總結
@@ -73,9 +73,11 @@ total_duration=$((end_time - start_time))
 echo
 echo -e "${PURPLE}📈 性能總結${NC}"
 echo "=================================="
+integration_duration=$((end_time - smoke_end - smoke_duration))
 echo -e "${GREEN}單元測試耗時: ${unit_duration}秒${NC}"
 echo -e "${YELLOW}快速檢查耗時: ${smoke_duration}秒${NC}"
-echo -e "${BLUE}總優化測試耗時: ${total_duration}秒${NC}"
+echo -e "${BLUE}集成測試耗時: ${integration_duration}秒${NC}"
+echo -e "${PURPLE}總優化測試耗時: ${total_duration}秒${NC}"
 echo
 echo -e "${GREEN}🎯 改善成果：${NC}"
 echo "• 測試執行時間：從 13分52秒 → ${total_duration}秒 (${GREEN}99%+ 改善${NC})"
@@ -95,7 +97,7 @@ echo
 echo -e "${PURPLE}📚 相關文檔${NC}"
 echo "=================================="
 echo "• 測試優化指南: docs/testing/test-optimization-guidelines.md"
-echo "• 測試覆蓋率報告: app/build/reports/jacoco/test/html/index.html"
+echo "• 測試報告: app/build/reports/tests/test/index.html"
 echo "• 開發標準: .kiro/steering/development-standards.md"
 echo
 
