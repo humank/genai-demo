@@ -94,9 +94,9 @@ echo
 
 echo -e "${PURPLE}📚 相關文檔${NC}"
 echo "=================================="
-echo "• 測試優化指南: .kiro/steering/test-optimization-guidelines.md"
-echo "• 測試重構指南: .kiro/steering/test-refactoring-guide.md"
+echo "• 測試優化指南: docs/testing/test-optimization-guidelines.md"
 echo "• 測試覆蓋率報告: app/build/reports/jacoco/test/html/index.html"
+echo "• 開發標準: .kiro/steering/development-standards.md"
 echo
 
 echo -e "${GREEN}🎉 測試優化完成！${NC}"
