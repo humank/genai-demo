@@ -39,7 +39,7 @@ import solid.humank.genaidemo.config.TestTracingConfiguration;
 @Import({
         TestHealthConfiguration.class,
         TestTracingConfiguration.class,
-        solid.humank.genaidemo.config.TestHttpClientConfiguration.class,
+        solid.humank.genaidemo.config.UnifiedTestHttpClientConfiguration.class,
         solid.humank.genaidemo.config.TestWebMvcConfiguration.class
 })
 class TracingIntegrationTest {

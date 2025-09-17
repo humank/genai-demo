@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.5'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
 
@@ -38,6 +38,7 @@ def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -53,6 +54,11 @@ dependencies {
     
     // AOP support for logging aspects
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    
+    // Resilience4j for circuit breaker pattern
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.1.0'
     
     // Micrometer for metrics collection
     implementation 'io.micrometer:micrometer-core'
@@ -82,22 +88,14 @@ dependencies {
     implementation 'software.amazon.awssdk:cloudwatch'
     
     // Security dependencies
-    implementation('org.springframework.boot:spring-boot-starter-security') {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     
-    // Apache HttpComponents Client 5.x - 完整依賴集合 (統一版本)
-    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
-    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
-    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
-    implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
+    // Apache HttpComponents Client 4.x - 使用 Spring Boot 管理的版本 (推薦)
+    // Spring Boot 會自動管理版本，無需指定版本號
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
     
-    // 測試環境專用的 HTTP 客戶端依賴 - 重新啟用以修復 NoClassDefFoundError (統一版本)
-    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
-    testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
-    testImplementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
-    testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
+    // 測試環境專用的 HTTP 客戶端依賴 - 使用 Spring Boot 管理的版本
+    // Spring Boot Test 會自動提供 TestRestTemplate 所需的 HTTP 客戶端
     
     // OpenAPI 3 (Swagger) 支援 - 升級版本以相容 Spring Boot 3.5.5
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
@@ -179,7 +177,15 @@ tasks.withType(Test).configureEach {
         '-XX:+UnlockExperimentalVMOptions',
         '-XX:G1NewSizePercent=20',
         '-XX:G1MaxNewSizePercent=30',
-        '-Xshare:off'  // 禁用類共享以避免 bootstrap classpath 警告
+        '-Xshare:off',  // 禁用類共享以避免 bootstrap classpath 警告
+        // HttpComponents 專用JVM參數 - 適用於所有測試
+        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
+        '-Dorg.apache.commons.logging.simplelog.showdatetime=false',
+        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=ERROR',
+        // 網路配置優化
+        '-Dsun.net.useExclusiveBind=false',
+        '-Djava.net.preferIPv4Stack=true',
+        '-Djava.security.egd=file:/dev/./urandom'
     ]
     
     // 測試執行配置 - 優化記憶體使用
@@ -190,10 +196,18 @@ tasks.withType(Test).configureEach {
     minHeapSize = "2g"
     maxHeapSize = "6g"    // 減少到 6g，應該足夠了
     
+    // 測試執行超時配置
+    timeout = Duration.ofMinutes(15)  // 預設測試超時15分鐘
+    
     // Set system properties for test environment
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'management.health.defaults.enabled', 'false'
     systemProperty 'management.endpoint.health.show-details', 'never'
+    
+    // HTTP 客戶端超時配置
+    systemProperty 'http.client.connection.timeout', '5000'
+    systemProperty 'http.client.socket.timeout', '15000'
+    systemProperty 'http.client.connection.request.timeout', '3000'
     
     // 減少日誌輸出 - 只顯示錯誤
     systemProperty 'logging.level.root', 'ERROR'
@@ -274,27 +288,73 @@ tasks.register('integrationTest', Test) {
         excludeTags 'end-to-end', 'slow'
     }
     
-    // 中等配置
-    maxHeapSize = '4g'
-    minHeapSize = '1g'
-    maxParallelForks = 2
-    forkEvery = 10  // 每10個測試重啟JVM
+    // 增強的記憶體配置 - 針對集成測試優化
+    maxHeapSize = '6g'  // 增加到6g以支持更複雜的集成測試
+    minHeapSize = '2g'  // 增加最小堆大小
+    maxParallelForks = 1  // 減少並行度以避免記憶體競爭
+    forkEvery = 5  // 更頻繁重啟JVM以釋放記憶體
+    
+    // 集成測試專用的JVM參數
+    jvmArgs += [
+        '--enable-preview',
+        '-XX:MaxMetaspaceSize=1g',
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        '-Xshare:off',
+        // HttpComponents 專用JVM參數
+        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
+        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
+        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG',
+        '-Dorg.apache.http.wire=DEBUG',
+        // 網路超時配置
+        '-Dsun.net.useExclusiveBind=false',
+        '-Djava.net.preferIPv4Stack=true'
+    ]
+    
+    // 測試執行超時配置
+    timeout = Duration.ofMinutes(30)  // 整體測試套件超時30分鐘
     
     testLogging {
-        events "failed", "skipped"
+        events "failed", "skipped", "started"
         showStandardStreams = false
         exceptionFormat = 'full'
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
     }
     
     systemProperties = [
-        'junit.jupiter.execution.parallel.enabled': 'true',
-        'junit.jupiter.execution.parallel.mode.default': 'concurrent',
-        'spring.profiles.active': 'test-minimal',
+        // JUnit 配置
+        'junit.jupiter.execution.timeout.default': '2m',  // 單個測試方法超時2分鐘
+        'junit.jupiter.execution.timeout.testable.method.default': '2m',
+        'junit.jupiter.execution.timeout.testtemplate.method.default': '2m',
+        'junit.jupiter.execution.parallel.enabled': 'false',  // 禁用並行執行以避免資源競爭
+        
+        // Spring 測試配置
+        'spring.profiles.active': 'test',
+        'spring.main.lazy-initialization': 'true',
+        'spring.jmx.enabled': 'false',
+        
+        // HTTP 客戶端配置
+        'http.client.connection.timeout': '10000',  // 10秒連接超時
+        'http.client.socket.timeout': '30000',      // 30秒讀取超時
+        'http.client.connection.request.timeout': '5000',  // 5秒請求超時
+        
+        // 日誌配置
         'logging.level.root': 'ERROR',
+        'logging.level.solid.humank.genaidemo': 'INFO',
+        'logging.level.org.springframework.web': 'DEBUG',
+        'logging.level.org.apache.http': 'DEBUG',
         'logging.level.org.aspectj': 'OFF',
         'logging.level.io.qameta.allure': 'OFF',
-        'spring.main.lazy-initialization': 'true'
-        // Removed WebMVC exclusion as Actuator endpoints need it for JSON serialization
+        
+        // 測試資源管理
+        'test.resource.cleanup.enabled': 'true',
+        'test.memory.monitoring.enabled': 'true'
     ]
 }
 
@@ -307,20 +367,73 @@ tasks.register('e2eTest', Test) {
         includeTags 'end-to-end'
     }
     
-    // 完整配置
-    maxHeapSize = '6g'
-    minHeapSize = '2g'
+    // 完整配置 - 針對端到端測試優化
+    maxHeapSize = '8g'  // 增加到8g以支持完整的端到端測試
+    minHeapSize = '3g'  // 增加最小堆大小
     maxParallelForks = 1
-    forkEvery = 3  // 每3個測試重啟JVM
+    forkEvery = 2  // 每2個測試重啟JVM以確保乾淨的環境
+    
+    // 端到端測試專用的JVM參數
+    jvmArgs += [
+        '--enable-preview',
+        '-XX:MaxMetaspaceSize=2g',  // 增加Metaspace以支持更多類加載
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        '-Xshare:off',
+        // HttpComponents 專用JVM參數
+        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
+        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
+        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=INFO',
+        // 網路和安全配置
+        '-Dsun.net.useExclusiveBind=false',
+        '-Djava.net.preferIPv4Stack=true',
+        '-Djava.security.egd=file:/dev/./urandom'  // 加速隨機數生成
+    ]
+    
+    // 測試執行超時配置 - 端到端測試需要更長時間
+    timeout = Duration.ofHours(1)  // 整體測試套件超時1小時
     
     testLogging {
-        events "failed", "skipped", "passed"
+        events "failed", "skipped", "passed", "started"
         showStandardStreams = true
         exceptionFormat = 'full'
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
     }
     
-    systemProperty 'spring.profiles.active', 'test'
-    systemProperty 'logging.level.root', 'INFO'
+    systemProperties = [
+        // JUnit 配置 - 端到端測試需要更長超時
+        'junit.jupiter.execution.timeout.default': '5m',  // 單個測試方法超時5分鐘
+        'junit.jupiter.execution.timeout.testable.method.default': '5m',
+        'junit.jupiter.execution.timeout.testtemplate.method.default': '5m',
+        'junit.jupiter.execution.parallel.enabled': 'false',
+        
+        // Spring 測試配置
+        'spring.profiles.active': 'test',
+        'spring.main.lazy-initialization': 'false',  // 端到端測試需要完整初始化
+        'spring.jmx.enabled': 'false',
+        
+        // HTTP 客戶端配置 - 端到端測試需要更長超時
+        'http.client.connection.timeout': '30000',  // 30秒連接超時
+        'http.client.socket.timeout': '60000',      // 60秒讀取超時
+        'http.client.connection.request.timeout': '10000',  // 10秒請求超時
+        
+        // 日誌配置
+        'logging.level.root': 'INFO',
+        'logging.level.solid.humank.genaidemo': 'DEBUG',
+        'logging.level.org.springframework.web': 'DEBUG',
+        'logging.level.org.apache.http': 'INFO',
+        
+        // 測試資源管理
+        'test.resource.cleanup.enabled': 'true',
+        'test.memory.monitoring.enabled': 'true',
+        'test.performance.monitoring.enabled': 'true'
+    ]
 }
 
 // 標準測試任務 - 保持向後兼容，但優化配置
@@ -447,7 +560,26 @@ tasks.register('runAllTests') {
         println "所有測試已完成，包括單元測試和 Cucumber 測試"
     }
     
-    finalizedBy 'allureReport'
+    finalizedBy 'allureReport', 'generatePerformanceReport'
+}
+
+// 生成測試性能報告
+tasks.register('generatePerformanceReport', JavaExec) {
+    description = '生成測試性能報告'
+    group = 'reporting'
+    
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'solid.humank.genaidemo.testutils.TestPerformanceReportGenerator'
+    
+    // 確保報告目錄存在
+    doFirst {
+        mkdir "${buildDir}/reports/test-performance"
+    }
+    
+    doLast {
+        println "測試性能報告已生成: ${buildDir}/reports/test-performance/"
+    }
 }
 
 // 運行所有測試

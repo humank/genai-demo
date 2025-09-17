@@ -1,0 +1,46 @@
+# Profile Groups Configuration
+# This file is conditionally loaded based on active profiles
+
+spring:
+  profiles:
+    group:
+      dev: "dev,openapi"
+      prod: "prod,openapi"
+      k8s: "k8s,openapi"
+      test: "test,openapi"
+
+---
+# Development Profile Group
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+  profiles:
+    include: "openapi"
+
+---
+# Production Profile Group  
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+  profiles:
+    include: "openapi"
+
+---
+# Kubernetes Profile Group
+spring:
+  config:
+    activate:
+      on-profile: "k8s"
+  profiles:
+    include: "openapi"
+
+---
+# Test Profile Group
+spring:
+  config:
+    activate:
+      on-profile: "test"
+  profiles:
+    include: "openapi"

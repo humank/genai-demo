@@ -27,6 +27,25 @@ API 相關的文檔，適合 API 使用者和前端開發者。
 - [OpenAPI 規範](api/openapi-spec.md) - OpenAPI 3.0 規範文檔
 - [前端 API 整合](api/frontend-integration.md) - 前端 API 整合指南
 
+### 🤖 [MCP 整合文檔](mcp/) - NEW
+
+Model Context Protocol 整合相關文檔，適合 AI 輔助開發。
+
+- **[MCP 整合指南](mcp/README.md)** - 完整的 MCP 整合指南和使用說明
+- MCP Servers 配置和管理
+- AI 輔助開發最佳實踐
+- 故障排除和性能優化
+
+### 🧪 [測試文檔](testing/) - NEW
+
+測試相關的文檔，適合 QA 工程師和開發者。
+
+- **[測試性能監控](testing/test-performance-monitoring.md)** - 測試性能監控框架完整指南
+- [測試配置指南](testing/test-configuration-examples.md) - 測試配置範例和最佳實踐
+- [HTTP 客戶端配置](testing/http-client-configuration-guide.md) - 測試 HTTP 客戶端配置
+- [故障排除指南](testing/testresttemplate-troubleshooting-guide.md) - 測試問題排除
+- [新開發者指南](testing/new-developer-onboarding-guide.md) - 新開發者測試入門
+
 ### 📊 [圖表文檔](diagrams/)
 
 系統的各種圖表和視覺化文檔，適合所有角色。

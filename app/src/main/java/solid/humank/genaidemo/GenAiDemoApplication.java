@@ -26,6 +26,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "solid.humank.genaidemo.infrastructure.seller.persistence.entity",
         "solid.humank.genaidemo.infrastructure.pricing.persistence.entity",
         "solid.humank.genaidemo.infrastructure.delivery.persistence.entity",
+        "solid.humank.genaidemo.infrastructure.observability.persistence.entity",
         "solid.humank.genaidemo.infrastructure.entity"
 })
 public class GenAiDemoApplication {

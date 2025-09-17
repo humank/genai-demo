@@ -1,5 +1,20 @@
 {
   "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-time"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "get_current_time",
+        "get_timezone",
+        "convert_time",
+        "format_time",
+        "calculate_time_difference"
+      ]
+    },
     "aws-docs": {
       "command": "uvx",
       "args": [
@@ -44,40 +59,6 @@
         "analyze_cdk_project",
         "get_pricing",
         "generate_cost_report"
-      ]
-    },
-    "aws-iam": {
-      "command": "uvx",
-      "args": [
-        "awslabs.iam-mcp-server@latest",
-        "--readonly"
-      ],
-      "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR",
-        "AWS_PROFILE": "kim-sso",
-        "AWS_REGION": "ap-northeast-1"
-      },
-      "disabled": false,
-      "autoApprove": [
-        "list_users",
-        "list_roles",
-        "get_user_policies",
-        "get_role_policies",
-        "analyze_policy"
-      ]
-    },
-    "aws-core": {
-      "command": "uvx",
-      "args": [
-        "awslabs.core-mcp-server@latest"
-      ],
-      "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      },
-      "disabled": false,
-      "autoApprove": [
-        "prompt_understanding",
-        "well_architected_review"
       ]
     }
   }

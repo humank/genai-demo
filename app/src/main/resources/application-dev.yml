@@ -105,8 +105,6 @@ management:
           include: "readinessState"  # Remove db from readiness group in dev
   metrics:
     export:
-      prometheus:
-        enabled: true
       cloudwatch:
         enabled: false  # Disabled in development
 
@@ -142,16 +140,38 @@ app:
 
 genai-demo:
   events:
-    publisher: in-memory
-    async: false
+    publisher: in-memory  # 記憶體事件處理
+    async: false         # 同步處理便於除錯
   observability:
+    analytics:
+      enabled: true
+      storage: in-memory  # 指標存在記憶體中
+      retention-minutes: 60
+      batch-processing:
+        enabled: false    # 開發環境不需要批次處理
+        batch-size: 10
+        flush-interval-seconds: 5
     tracing:
       enabled: true
       exporter: jaeger
       sampling-rate: 1.0
+      correlation-id-header: "X-Trace-Id"
+      session-id-header: "X-Session-Id"
     metrics:
       enabled: true
       export-interval: 10s
+      business-metrics:
+        enabled: true
+        retention-hours: 24
+      performance-metrics:
+        enabled: true
+        web-vitals-collection: true
     logging:
       structured: true
       correlation-enabled: true
+      mdc-integration: true
+    websocket:
+      enabled: true
+      endpoint: "/ws/analytics"
+      allowed-origins: "http://localhost:4200,http://localhost:3000"
+      heartbeat-interval: 30000

@@ -11,16 +11,10 @@ spring:
     version: 2.0.0
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-    group:
-      dev: "dev,openapi"
-      prod: "prod,openapi"
-      k8s: "k8s,openapi"
-      test: "test,openapi"
   
-  # Default configuration validation
+  # Configuration import - conditional based on profile
   config:
-    activate:
-      on-profile: "!test"  # Skip validation in test profile
+    import: "optional:classpath:application-observability.yml"
 
 server:
   port: 8080
@@ -45,16 +39,10 @@ management:
       show-details: always
       show-components: always
       probes:
-        enabled: true  # Enable Kubernetes probes
-      group:
-        liveness:
-          include: "livenessState"
-        readiness:
-          include: "readinessState,db"
+        enabled: false  # Disable Kubernetes probes for now
     metrics:
-      access: unrestricted
-    prometheus:
-      access: unrestricted
+      enabled: true
+
   info:
     env:
       enabled: true
@@ -63,12 +51,6 @@ management:
       enabled: true
     readinessstate:
       enabled: true
-  prometheus:
-    metrics:
-      export:
-        enabled: true
-        step: 10s
-        descriptions: true
   metrics:
     export:
       cloudwatch:
@@ -141,9 +123,35 @@ app:
       kafka-events: false
 
 genai-demo:
+  # 事件發布配置 (預設值，會被 profile 覆蓋)
+  events:
+    publisher: in-memory  # 預設使用記憶體，生產環境會覆蓋為 kafka
+    async: false         # 預設同步，生產環境會覆蓋為 true
+  
+  # 可觀測性基礎配置
   observability:
-    enabled: false
+    enabled: true        # 預設啟用，可由 profile 覆蓋
     distributed-tracing: true
+    
+    # 分析配置
+    analytics:
+      enabled: true
+      api-endpoints:
+        events: "/api/analytics/events"
+        performance: "/api/analytics/performance"
+        stats: "/api/analytics/stats"
+      
+    # 追蹤配置
+    tracing:
+      enabled: true
+      correlation-id-header: "X-Trace-Id"
+      session-id-header: "X-Session-Id"
+      mdc-keys:
+        correlation-id: "correlationId"
+        trace-id: "traceId" 
+        session-id: "sessionId"
+    
+    # 指標配置
     metrics:
       sampling:
         enabled: true
@@ -152,10 +160,33 @@ genai-demo:
         jvm-metrics-sampling-rate: 0.05
         max-cardinality: 10000
         retention-period: P15D
+      business-metrics:
+        enabled: true
+      performance-metrics:
+        enabled: true
+        web-vitals:
+          - "lcp"  # Largest Contentful Paint
+          - "fid"  # First Input Delay
+          - "cls"  # Cumulative Layout Shift
+          - "ttfb" # Time to First Byte
+    
+    # 日誌配置
     logging:
+      structured: true
+      correlation-enabled: true
+      mdc-integration: true
       retention:
         optimization-enabled: true
         high-volume-threshold: 1000
+    
+    # WebSocket 配置
+    websocket:
+      enabled: true
+      endpoint: "/ws/analytics"
+      heartbeat-interval: 30000
+      connection-timeout: 30000
+    
+    # 資源優化配置
     rightsizing:
       analysis-enabled: true
       history-retention-minutes: 60
@@ -165,6 +196,8 @@ genai-demo:
       memory-underutilization-threshold: 30.0
       memory-overutilization-threshold: 85.0
       recommendation-confidence-threshold: 75.0
+    
+    # 成本優化配置
     cost-optimization:
       enabled: true
       estimated-monthly-cost: 500.0

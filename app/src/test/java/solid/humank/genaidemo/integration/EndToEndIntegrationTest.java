@@ -10,20 +10,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import io.micrometer.core.instrument.MeterRegistry;
@@ -33,7 +28,6 @@ import solid.humank.genaidemo.infrastructure.config.MultiEnvironmentConfigValida
 import solid.humank.genaidemo.infrastructure.disaster.DisasterRecoveryValidator;
 import solid.humank.genaidemo.infrastructure.observability.ObservabilityIntegrationValidator;
 import solid.humank.genaidemo.infrastructure.performance.LoadTestingValidator;
-import solid.humank.genaidemo.testutils.annotations.IntegrationTest;
 import solid.humank.genaidemo.testutils.base.BaseIntegrationTest;
 
 /**
@@ -41,9 +35,7 @@ import solid.humank.genaidemo.testutils.base.BaseIntegrationTest;
  * features
  * and infrastructure components across multiple environments.
  */
-@IntegrationTest
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:h2:mem:e2e-test",
         "logging.level.solid.humank.genaidemo=DEBUG",
@@ -51,14 +43,7 @@ import solid.humank.genaidemo.testutils.base.BaseIntegrationTest;
         "management.endpoint.health.show-details=always"
 })
 @TestMethodOrder(OrderAnnotation.class)
-@Disabled("暫時禁用端到端測試，因為 TestRestTemplate 依賴問題")
 public class EndToEndIntegrationTest extends BaseIntegrationTest {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Autowired
     private MeterRegistry meterRegistry;

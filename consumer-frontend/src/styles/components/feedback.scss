@@ -1,0 +1,538 @@
+// Modern Feedback and Notification Components
+// Success/Error states, toasts, and user feedback animations
+
+// === Toast Notifications ===
+
+.toast-container {
+    position: fixed;
+    top: var(--spacing-6);
+    right: var(--spacing-6);
+    z-index: var(--z-index-toast);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    max-width: 400px;
+
+    @media (max-width: 768px) {
+        top: var(--spacing-4);
+        right: var(--spacing-4);
+        left: var(--spacing-4);
+        max-width: none;
+    }
+}
+
+.toast {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--color-gray-200);
+    padding: var(--spacing-4);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    animation: slideInRight var(--duration-300) var(--easing-ease-out);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+    }
+
+    &.toast-success {
+        &::before {
+            background: var(--color-success-500);
+        }
+
+        .toast-icon {
+            color: var(--color-success-500);
+            background: var(--color-success-50);
+        }
+    }
+
+    &.toast-error {
+        &::before {
+            background: var(--color-error-500);
+        }
+
+        .toast-icon {
+            color: var(--color-error-500);
+            background: var(--color-error-50);
+        }
+    }
+
+    &.toast-warning {
+        &::before {
+            background: var(--color-warning-500);
+        }
+
+        .toast-icon {
+            color: var(--color-warning-500);
+            background: var(--color-warning-50);
+        }
+    }
+
+    &.toast-info {
+        &::before {
+            background: var(--color-info-500);
+        }
+
+        .toast-icon {
+            color: var(--color-info-500);
+            background: var(--color-info-50);
+        }
+    }
+
+    &.toast-exit {
+        animation: slideOutRight var(--duration-200) var(--easing-ease-in) forwards;
+    }
+}
+
+.toast-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    i {
+        font-size: var(--font-size-lg);
+    }
+}
+
+.toast-content {
+    flex: 1;
+    min-width: 0;
+
+    .toast-title {
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-900);
+        margin-bottom: var(--spacing-1);
+    }
+
+    .toast-message {
+        font-size: var(--font-size-sm);
+        color: var(--color-gray-600);
+        line-height: var(--line-height-relaxed);
+    }
+}
+
+.toast-close {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    color: var(--color-gray-400);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+
+    &:hover {
+        color: var(--color-gray-600);
+        background: var(--color-gray-100);
+    }
+}
+
+// === Alert Components ===
+
+.alert {
+    padding: var(--spacing-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+
+    &.alert-success {
+        background: var(--color-success-50);
+        border-color: var(--color-success-200);
+        color: var(--color-success-800);
+
+        .alert-icon {
+            color: var(--color-success-500);
+        }
+    }
+
+    &.alert-error {
+        background: var(--color-error-50);
+        border-color: var(--color-error-200);
+        color: var(--color-error-800);
+
+        .alert-icon {
+            color: var(--color-error-500);
+        }
+    }
+
+    &.alert-warning {
+        background: var(--color-warning-50);
+        border-color: var(--color-warning-200);
+        color: var(--color-warning-800);
+
+        .alert-icon {
+            color: var(--color-warning-500);
+        }
+    }
+
+    &.alert-info {
+        background: var(--color-info-50);
+        border-color: var(--color-info-200);
+        color: var(--color-info-800);
+
+        .alert-icon {
+            color: var(--color-info-500);
+        }
+    }
+}
+
+.alert-icon {
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.alert-content {
+    flex: 1;
+
+    .alert-title {
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--spacing-1);
+    }
+
+    .alert-message {
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-relaxed);
+    }
+}
+
+// === Status Indicators ===
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: var(--radius-full);
+        animation: pulse 2s infinite;
+    }
+
+    &.status-success {
+        background: var(--color-success-100);
+        color: var(--color-success-700);
+
+        .status-dot {
+            background: var(--color-success-500);
+        }
+    }
+
+    &.status-error {
+        background: var(--color-error-100);
+        color: var(--color-error-700);
+
+        .status-dot {
+            background: var(--color-error-500);
+        }
+    }
+
+    &.status-warning {
+        background: var(--color-warning-100);
+        color: var(--color-warning-700);
+
+        .status-dot {
+            background: var(--color-warning-500);
+        }
+    }
+
+    &.status-pending {
+        background: var(--color-gray-100);
+        color: var(--color-gray-700);
+
+        .status-dot {
+            background: var(--color-gray-500);
+        }
+    }
+}
+
+// === Interactive Feedback ===
+
+.feedback-success {
+    animation: successPulse var(--duration-500) var(--easing-ease-out);
+}
+
+.feedback-error {
+    animation: errorShake var(--duration-500) var(--easing-ease-out);
+}
+
+.feedback-added {
+    animation: addedBounce var(--duration-700) var(--easing-bounce);
+}
+
+// === Form Validation Feedback ===
+
+.form-field {
+    position: relative;
+
+    &.field-success {
+        .form-input {
+            border-color: var(--color-success-500);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .field-icon {
+            color: var(--color-success-500);
+        }
+    }
+
+    &.field-error {
+        .form-input {
+            border-color: var(--color-error-500);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+            animation: fieldError var(--duration-300) var(--easing-ease-out);
+        }
+
+        .field-icon {
+            color: var(--color-error-500);
+        }
+    }
+}
+
+.field-message {
+    margin-top: var(--spacing-1);
+    font-size: var(--font-size-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+
+    &.field-message-success {
+        color: var(--color-success-600);
+    }
+
+    &.field-message-error {
+        color: var(--color-error-600);
+    }
+
+    i {
+        font-size: var(--font-size-xs);
+    }
+}
+
+// === Progress Feedback ===
+
+.progress-feedback {
+    text-align: center;
+    padding: var(--spacing-8);
+
+    .progress-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto var(--spacing-4);
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        i {
+            font-size: var(--font-size-2xl);
+        }
+
+        &.progress-loading {
+            background: var(--color-primary-100);
+            color: var(--color-primary-600);
+            animation: pulse 2s infinite;
+        }
+
+        &.progress-success {
+            background: var(--color-success-100);
+            color: var(--color-success-600);
+            animation: successScale var(--duration-500) var(--easing-bounce);
+        }
+
+        &.progress-error {
+            background: var(--color-error-100);
+            color: var(--color-error-600);
+            animation: errorShake var(--duration-500) var(--easing-ease-out);
+        }
+    }
+
+    .progress-title {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-900);
+        margin-bottom: var(--spacing-2);
+    }
+
+    .progress-message {
+        color: var(--color-gray-600);
+        line-height: var(--line-height-relaxed);
+    }
+}
+
+// === Keyframe Animations ===
+
+@keyframes slideInRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes successPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes errorShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-4px);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes addedBounce {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.2);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes successScale {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fieldError {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+// === Responsive Design ===
+
+@media (max-width: 768px) {
+    .toast {
+        padding: var(--spacing-3);
+    }
+
+    .toast-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .progress-feedback .progress-icon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+// === Accessibility ===
+
+@media (prefers-reduced-motion: reduce) {
+
+    .toast,
+    .feedback-success,
+    .feedback-error,
+    .feedback-added,
+    .progress-icon,
+    .status-dot {
+        animation: none;
+    }
+
+    .toast {
+        transform: none;
+        opacity: 1;
+    }
+}

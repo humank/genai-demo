@@ -51,7 +51,7 @@ import solid.humank.genaidemo.config.TestHealthConfiguration;
 })
 @Import({
                 TestHealthConfiguration.class,
-                solid.humank.genaidemo.config.SimpleTestHttpClientConfiguration.class,
+                solid.humank.genaidemo.config.UnifiedTestHttpClientConfiguration.class,
                 solid.humank.genaidemo.config.TestWebMvcConfiguration.class
 }) // 導入必要的配置
 class HealthCheckIntegrationTest {

@@ -66,6 +66,13 @@ export CLOUDWATCH_REGION=us-east-1
 
 - **[生產環境可觀測性測試指南](production-observability-testing-guide.md)** - 完整的生產環境測試策略和最佳實踐 (67頁)
 
+### 📚 前端後端整合文檔
+
+- **[配置指南](configuration-guide.md)** - 環境差異化配置和 MSK 主題設定
+- **[故障排除指南](../troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
+- **[部署指南](../deployment/observability-deployment.md)** - 完整的部署流程和驗證
+- **[API 文檔](../api/observability-api.md)** - 可觀測性 API 端點詳細說明
+
 ### 📚 實現文檔
 
 - [分散式追蹤實現](../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)

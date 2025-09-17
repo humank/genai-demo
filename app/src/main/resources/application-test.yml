@@ -108,8 +108,34 @@ tracing:
   sampling:
     ratio: 0.0
 
-# Disable observability features in tests
+# Test environment observability configuration
 genai-demo:
+  events:
+    publisher: in-memory  # 測試環境使用記憶體事件處理
+    async: false         # 同步處理便於測試
   observability:
-    enabled: false
+    enabled: true        # 啟用可觀測性以便測試
+    analytics:
+      enabled: true
+      storage: in-memory  # 測試環境使用記憶體儲存
+      retention-minutes: 5  # 短期保留便於測試
+      batch-processing:
+        enabled: false    # 測試環境不需要批次處理
+    tracing:
+      enabled: false      # 測試環境關閉追蹤以提高效能
+      sampling-rate: 0.0
+    metrics:
+      enabled: true
+      export-interval: 1s  # 快速匯出便於測試驗證
+      business-metrics:
+        enabled: true
+        retention-hours: 1
+      performance-metrics:
+        enabled: false     # 測試環境不需要效能指標
+    logging:
+      structured: false   # 測試環境使用簡單日誌格式
+      correlation-enabled: true
+      mdc-integration: true
+    websocket:
+      enabled: false      # 測試環境不需要 WebSocket
     distributed-tracing: false

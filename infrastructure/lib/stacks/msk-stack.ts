@@ -621,6 +621,7 @@ export class MSKStack extends cdk.Stack {
 
         // Kafka Topics for Domain Events
         const domainEventTopics = [
+            // 現有業務領域事件
             'customer.created',
             'customer.updated',
             'order.created',
@@ -631,13 +632,45 @@ export class MSKStack extends cdk.Stack {
             'inventory.reserved',
             'inventory.released',
             'product.created',
-            'product.updated'
+            'product.updated',
+            
+            // 新增可觀測性事件
+            'observability.user.behavior',
+            'observability.performance.metrics',
+            'observability.business.analytics'
         ];
 
         new cdk.CfnOutput(this, 'DomainEventsTopics', {
             value: domainEventTopics.map(topic => `${projectName}.${environment}.${topic}`).join(','),
             description: 'List of domain events topics',
             exportName: `${projectName}-${environment}-domain-events-topics`
+        });
+
+        // Dead Letter Queue Topics for Observability Events
+        const observabilityDLQTopics = [
+            'observability.user.behavior.dlq',
+            'observability.performance.metrics.dlq',
+            'observability.business.analytics.dlq'
+        ];
+
+        new cdk.CfnOutput(this, 'ObservabilityDLQTopics', {
+            value: observabilityDLQTopics.map(topic => `${projectName}.${environment}.${topic}`).join(','),
+            description: 'List of observability dead letter queue topics',
+            exportName: `${projectName}-${environment}-observability-dlq-topics`
+        });
+
+        // Observability Topics Configuration
+        new cdk.CfnOutput(this, 'ObservabilityTopicsConfig', {
+            value: JSON.stringify({
+                'user-behavior': `${projectName}.${environment}.observability.user.behavior`,
+                'performance-metrics': `${projectName}.${environment}.observability.performance.metrics`,
+                'business-analytics': `${projectName}.${environment}.observability.business.analytics`,
+                'user-behavior-dlq': `${projectName}.${environment}.observability.user.behavior.dlq`,
+                'performance-metrics-dlq': `${projectName}.${environment}.observability.performance.metrics.dlq`,
+                'business-analytics-dlq': `${projectName}.${environment}.observability.business.analytics.dlq`
+            }),
+            description: 'Observability topics configuration mapping',
+            exportName: `${projectName}-${environment}-observability-topics-config`
         });
 
         // Spring Boot Configuration Helper
@@ -658,6 +691,22 @@ export class MSKStack extends cdk.Stack {
             }),
             description: 'Spring Boot Kafka configuration for MSK integration',
             exportName: `${projectName}-${environment}-spring-kafka-config`
+        });
+
+        // Spring Boot Observability Configuration Helper
+        new cdk.CfnOutput(this, 'SpringBootObservabilityConfig', {
+            value: JSON.stringify({
+                'genai-demo.domain-events.topic.prefix': `${projectName}.${environment}`,
+                'genai-demo.domain-events.topic.observability.user-behavior': `${projectName}.${environment}.observability.user.behavior`,
+                'genai-demo.domain-events.topic.observability.performance-metrics': `${projectName}.${environment}.observability.performance.metrics`,
+                'genai-demo.domain-events.topic.observability.business-analytics': `${projectName}.${environment}.observability.business.analytics`,
+                'genai-demo.domain-events.publishing.dlq.enabled': 'true',
+                'genai-demo.domain-events.publishing.dlq.topic-suffix': '.dlq',
+                'genai-demo.events.publisher': 'kafka',
+                'genai-demo.events.async': 'true'
+            }),
+            description: 'Spring Boot observability configuration for MSK integration',
+            exportName: `${projectName}-${environment}-spring-observability-config`
         });
     }
 }

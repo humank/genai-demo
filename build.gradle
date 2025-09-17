@@ -1,0 +1,117 @@
+plugins {
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+}
+
+group = 'solid.humank'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+// 配置源碼目錄
+sourceSets {
+    main {
+        java {
+            srcDirs = ['app/src/main/java']
+        }
+        resources {
+            srcDirs = ['app/src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['app/src/test/java']
+        }
+        resources {
+            srcDirs = ['app/src/test/resources']
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.kafka:spring-kafka'
+    
+    // OpenAPI/Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    
+    // Database
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    
+    // Flyway for database migrations
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+    
+    // OpenTelemetry
+    implementation platform('io.opentelemetry:opentelemetry-bom:1.32.0')
+    implementation 'io.opentelemetry:opentelemetry-api'
+    implementation 'io.opentelemetry:opentelemetry-sdk'
+    implementation 'io.opentelemetry:opentelemetry-exporter-jaeger'
+    implementation 'io.opentelemetry:opentelemetry-exporter-zipkin'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:1.32.0-alpha'
+    
+    // Observability
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+    implementation 'io.micrometer:micrometer-registry-cloudwatch2'
+    
+    // Resilience4j
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.1.0'
+    
+    // AWS SDK
+    implementation platform('software.amazon.awssdk:bom:2.21.29')
+    implementation 'software.amazon.awssdk:cloudwatch'
+    implementation 'software.amazon.awssdk:regions'
+    
+    // JSON Processing
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:kafka'
+    testImplementation 'org.testcontainers:postgresql'
+    
+    // Architecture Testing
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.2.1'
+    
+    // BDD Testing
+    testImplementation 'io.cucumber:cucumber-java:7.15.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+    testImplementation 'io.cucumber:cucumber-spring:7.15.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+bootRun {
+    systemProperty 'spring.profiles.active', System.getProperty('spring.profiles.active', 'dev')
+    mainClass = 'solid.humank.genaidemo.GenAiDemoApplication'
+}
+
+// 設定主類
+springBoot {
+    mainClass = 'solid.humank.genaidemo.GenAiDemoApplication'
+}
