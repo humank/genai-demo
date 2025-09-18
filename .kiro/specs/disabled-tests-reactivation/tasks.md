@@ -1,161 +1,169 @@
 # Implementation Plan
 
-- [x] 1. Audit and analyze current test configuration issues
-  - Analyze all existing test configuration classes and identify conflicts
-  - Document current HttpComponents dependency versions and conflicts
-  - Review disabled test annotations and reasons for disabling
-  - Create comprehensive inventory of test HTTP client configurations
-  - _Requirements: 1.1, 1.2, 1.3, 1.4_
+- [x] 1. Comprehensive disabled test analysis and categorization
+  - Analyze all 55 disabled tests and categorize by issue type (Configuration, Dependency, Resource, Environment-specific)
+  - Document specific error messages and root causes for each category
+  - Create priority matrix based on core functionality impact and fix complexity
+  - Identify tests that should remain disabled vs. those requiring fixes
+  - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [x] 2. Resolve HttpComponents dependency conflicts
-  - [x] 2.1 Update build.gradle with consistent HttpComponents5 versions
-    - Remove conflicting HttpComponents dependencies
-    - Add complete set of HttpComponents5 dependencies with unified versions
-    - Ensure test and runtime dependencies are aligned
+- [X] 2. Resolve Spring Profile configuration conflicts
+  - [x] 2.1 Implement ProfileConfigurationResolver
+    - Create ProfileConfigurationResolver to handle profile activation conflicts
+    - Implement ProfileActivationValidator to detect and resolve conflicts
+    - Add conditional Bean creation based on active profiles
     - _Requirements: 2.1, 2.2, 2.3_
 
-  - [x] 2.2 Validate dependency resolution in test environment
-    - Create simple test to verify HttpComponents classes are loadable
-    - Test basic HTTP client creation without Spring context
-    - Validate no NoClassDefFoundError occurs during test execution
-    - _Requirements: 2.1, 2.4_
+  - [x] 2.2 Fix ProfileActivationIntegrationTest issues
+    - Remove @Disabled annotation from ProfileActivationIntegrationTest
+    - Resolve Bean definition conflicts in test context
+    - Ensure proper test profile activation without production interference
+    - _Requirements: 2.1, 2.4, 2.5_
 
-- [x] 3. Create unified test HTTP client configuration
-  - [x] 3.1 Implement UnifiedTestHttpClientConfiguration class
-    - Create single @TestConfiguration class for all HTTP client beans
-    - Implement @Primary RestTemplate bean with HttpComponents5 factory
-    - Implement @Primary TestRestTemplate bean with consistent configuration
-    - Add proper timeout and connection pool configuration
+  - [x] 2.3 Fix DevelopmentProfileTest configuration
+    - Remove @Disabled annotation from DevelopmentProfileTest
+    - Resolve H2 database configuration conflicts
+    - Ensure development profile tests don't interfere with other tests
+    - _Requirements: 2.2, 2.3, 2.4_
+
+- [x] 3. Fix HTTP client and TestRestTemplate dependencies
+  - [x] 3.1 Update HttpComponents dependencies in build.gradle
+    - Ensure consistent HttpComponents5 versions across all dependencies
+    - Remove conflicting or redundant HTTP client dependencies
+    - Add missing required dependencies for TestRestTemplate
     - _Requirements: 3.1, 3.2, 3.3_
 
-  - [x] 3.2 Remove redundant test configuration classes
-    - Delete SimpleTestHttpClientConfiguration class
-    - Delete TestHttpClientConfiguration class
-    - Update imports in test classes to use unified configuration
-    - _Requirements: 3.1, 3.4_
+  - [x] 3.2 Implement UnifiedHttpClientConfiguration
+    - Create single @TestConfiguration for all HTTP client beans
+    - Implement @Primary TestRestTemplate with proper error handling
+    - Add @ConditionalOnMissingBean to prevent conflicts
+    - _Requirements: 3.1, 3.4, 3.5_
 
-  - [x] 3.3 Create test profile-specific configuration
-    - Implement test profile activation and validation
-    - Add test-specific property overrides for HTTP client settings
-    - Ensure production configurations don't interfere with tests
-    - _Requirements: 3.4, 7.1, 7.2_
+  - [x] 3.3 Validate HTTP client functionality
+    - Create integration test to verify TestRestTemplate works without errors
+    - Test HTTP requests to actuator endpoints
+    - Ensure no NoClassDefFoundError occurs during test execution
+    - _Requirements: 3.2, 3.3, 3.5_
 
-- [x] 4. Enhance base test classes and utilities
-  - [x] 4.1 Update BaseIntegrationTest class
-    - Add UnifiedTestHttpClientConfiguration import
-    - Implement common test setup and teardown methods
-    - Add utility methods for HTTP requests and validation
-    - Implement proper resource cleanup mechanisms
-    - _Requirements: 5.1, 5.5, 7.4_
+- [-] 4. Resolve Bean definition conflicts and configuration issues
+  - [x] 4.1 Implement BeanConflictResolver
+    - Create BeanConflictResolver to handle overlapping Bean definitions
+    - Add @ConditionalOnProperty annotations to prevent conflicts
+    - Implement @AutoConfigureBefore to control Bean creation order
+    - _Requirements: 4.1, 4.2, 4.3_
 
-  - [x] 4.2 Create ObservabilityTestValidator component
-    - Implement metrics endpoint validation methods
-    - Create health check validation utilities
-    - Add tracing configuration validation
-    - Implement structured logging validation
-    - _Requirements: 6.1, 6.2, 6.3, 6.4_
+  - [x] 4.2 Fix HealthCheckIntegrationTest Bean conflicts
+    - Remove @Disabled annotation from HealthCheckIntegrationTest
+    - Resolve Bean definition conflicts with health indicators
+    - Ensure test-specific health configuration doesn't conflict with production
+    - _Requirements: 4.1, 4.4, 4.5_
 
-- [x] 5. Reactivate SimpleEndToEndValidationTest
-  - [x] 5.1 Remove @Disabled annotation and update configuration
-    - Remove @Disabled annotation from SimpleEndToEndValidationTest
-    - Update class to extend BaseIntegrationTest
-    - Add proper test configuration imports
-    - _Requirements: 4.1, 4.4_
+  - [x] 4.3 Fix TracingWebIntegrationTest configuration issues
+    - Remove @Disabled annotation from TracingWebIntegrationTest
+    - Resolve Bean conflicts in tracing configuration
+    - Simplify test configuration to avoid complex Bean dependencies
+    - _Requirements: 4.2, 4.3, 4.5_
 
-  - [x] 5.2 Fix and enhance health endpoint validation tests
-    - Update health endpoint test methods to use unified HTTP client
-    - Add comprehensive assertions for health check responses
-    - Implement retry logic for transient failures
-    - Add detailed error reporting for test failures
-    - _Requirements: 4.1, 4.4, 6.4_
-
-  - [x] 5.3 Validate actuator endpoints functionality
-    - Test actuator root endpoint accessibility
-    - Validate metrics endpoint response format
-    - Test Prometheus metrics endpoint functionality
-    - Verify info endpoint provides expected information
-    - _Requirements: 4.1, 6.2_
-
-- [x] 6. Reactivate EndToEndIntegrationTest
-  - [x] 6.1 Remove @Disabled annotation and update test structure
-    - Remove @Disabled annotation from EndToEndIntegrationTest
-    - Update class to use unified HTTP client configuration
-    - Fix unused field warnings (meterRegistry, openTelemetry)
-    - _Requirements: 4.2, 4.4_
-
-  - [x] 6.2 Implement comprehensive observability validation
-    - Update observability integration validation methods
-    - Implement metrics collection validation using meterRegistry
-    - Add distributed tracing validation using openTelemetry
-    - Create structured logging validation tests
-    - _Requirements: 6.1, 6.2, 6.3, 6.5_
-
-  - [x] 6.3 Fix concurrent request testing
-    - Update generateConcurrentRequests method to use unified HTTP client
-    - Implement proper concurrent execution with CompletableFuture
-    - Add performance validation and resource monitoring
-    - Ensure proper cleanup after concurrent tests
-    - _Requirements: 5.2, 5.3, 5.4_
-
-  - [x] 6.4 Implement comprehensive system validation
-    - Create end-to-end data flow validation
-    - Implement system recovery validation after load testing
-    - Add comprehensive validation report generation
-    - Ensure all validation components work together
-    - _Requirements: 4.3, 5.1, 6.5_
-
-- [x] 7. Optimize test performance and resource management
-  - [x] 7.1 Update Gradle test configuration for integration tests
-    - Increase memory allocation for integration test tasks
-    - Configure proper JVM arguments for HttpComponents
-    - Set appropriate timeout values for test execution
-    - _Requirements: 5.1, 5.3_
-
-  - [x] 7.2 Implement test resource management
-    - Create TestResourceManager for proper resource allocation
+- [ ] 5. Address memory and resource constraint issues
+  - [x] 5.1 Implement TestResourceManager
+    - Create TestResourceManager to monitor and optimize memory usage
     - Implement memory monitoring during test execution
     - Add automatic cleanup mechanisms for test resources
-    - Configure proper test isolation between test methods
-    - _Requirements: 5.3, 5.5, 7.5_
+    - _Requirements: 5.1, 5.2, 5.4_
 
-  - [x] 7.3 Add test execution monitoring and reporting
-    - Implement test execution time monitoring
-    - Add memory usage tracking during tests
-    - Create detailed test execution reports
-    - Add performance regression detection
-    - _Requirements: 5.1, 5.4_
+  - [x] 5.2 Optimize JVM parameters for memory-intensive tests
+    - Update Gradle test configuration with increased memory allocation
+    - Configure proper JVM arguments for garbage collection
+    - Set appropriate timeout values for memory-intensive operations
+    - _Requirements: 5.1, 5.3, 5.5_
 
-- [x] 8. Create comprehensive test documentation
-  - [x] 8.1 Document HTTP client configuration strategy
-    - Create documentation explaining unified HTTP client approach
-    - Document troubleshooting steps for TestRestTemplate issues
-    - Provide examples of proper test configuration usage
-    - _Requirements: 8.1, 8.2_
+  - [x] 5.3 Fix Prometheus metrics tests memory issues
+    - Remove @Disabled annotation from Prometheus metrics tests
+    - Implement lightweight alternatives for memory-intensive metrics tests
+    - Add memory usage validation before running heavy tests
+    - _Requirements: 5.2, 5.3, 5.5_
 
-  - [x] 8.2 Create test execution and maintenance guide
-    - Document different test categories and execution commands
-    - Provide troubleshooting guide for common test failures
-    - Create maintenance procedures for test configurations
-    - Add onboarding guide for new developers
-    - _Requirements: 8.3, 8.4, 8.5_
+- [ ] 6. Handle environment-specific and non-core feature tests
+  - [ ] 6.1 Implement EnvironmentSpecificTestHandler
+    - Create handler for Kubernetes probe tests with appropriate test doubles
+    - Implement lightweight alternatives for production-specific features
+    - Add conditional test execution based on environment properties
+    - _Requirements: 6.1, 6.2, 6.3_
 
-- [-] 9. Validate complete test suite functionality
-  - [x] 9.1 Run comprehensive test validation
-    - Execute all reactivated tests individually
-    - Run complete test suite to ensure no conflicts
-    - Validate test execution in different environments
-    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [ ] 6.2 Handle Swagger UI functionality tests
+    - Evaluate whether Swagger tests should be reactivated or remain disabled
+    - If reactivated, create lightweight validation that doesn't require full UI
+    - Document rationale for keeping non-core feature tests disabled
+    - _Requirements: 6.2, 6.4, 6.5_
 
-  - [x] 9.2 Performance and reliability testing
-    - Execute tests multiple times to ensure consistency
-    - Validate test execution times meet requirements
-    - Test concurrent test execution scenarios
-    - Verify proper resource cleanup after test completion
-    - _Requirements: 5.1, 5.2, 5.4, 5.5_
+  - [ ] 6.3 Create test doubles for production features
+    - Implement test doubles for AWS X-Ray tracing
+    - Create mock implementations for production-only observability features
+    - Ensure test doubles provide adequate validation without external dependencies
+    - _Requirements: 6.3, 6.4, 6.5_
 
-  - [x] 9.3 Create final validation report
-    - Generate comprehensive test execution report
-    - Document all resolved issues and their solutions
-    - Provide recommendations for ongoing maintenance
-    - Create success metrics and monitoring guidelines
-    - _Requirements: 6.5, 8.4_
+- [ ] 7. Reactivate core integration and observability tests
+  - [ ] 7.1 Reactivate EndToEndIntegrationTest
+    - Remove @Disabled annotation from EndToEndIntegrationTest
+    - Apply all previous fixes (profile, Bean conflicts, HTTP client, memory)
+    - Validate complete system functionality without configuration conflicts
+    - _Requirements: 7.1, 7.2, 7.3_
+
+  - [ ] 7.2 Reactivate BasicObservabilityValidationTest
+    - Remove @Disabled annotation from BasicObservabilityValidationTest
+    - Fix HTTP client dependency issues in observability tests
+    - Validate logging, metrics, and tracing features comprehensively
+    - _Requirements: 7.2, 7.4, 7.5_
+
+  - [ ] 7.3 Reactivate HealthCheckIntegrationTest components
+    - Selectively reactivate health check tests that don't require Kubernetes
+    - Implement lightweight alternatives for resource-intensive health checks
+    - Ensure health indicators work properly in test environment
+    - _Requirements: 7.3, 7.4, 7.5_
+
+  - [ ] 7.4 Create equivalent lightweight tests for unreactivatable tests
+    - For tests that cannot be reactivated, create lightweight alternatives
+    - Ensure core functionality coverage is maintained
+    - Document which tests remain disabled and why
+    - _Requirements: 7.4, 7.5_
+
+- [ ] 8. Implement systematic test reactivation strategy
+  - [ ] 8.1 Execute phased reactivation approach
+    - Phase 1: Fix configuration and dependency issues (Requirements 2, 3, 4)
+    - Phase 2: Address resource constraints and optimize performance (Requirement 5)
+    - Phase 3: Handle environment-specific tests and create alternatives (Requirement 6)
+    - Phase 4: Reactivate core tests and validate system functionality (Requirement 7)
+    - _Requirements: 8.1, 8.2, 8.3_
+
+  - [ ] 8.2 Validate each fix individually before integration
+    - Test each category of fixes in isolation
+    - Ensure fixes don't break existing working tests
+    - Validate that reactivated tests provide meaningful coverage
+    - _Requirements: 8.3, 8.4_
+
+  - [ ] 8.3 Document reactivation decisions and rationale
+    - Create comprehensive documentation of which tests were reactivated
+    - Document which tests remain disabled and why
+    - Provide alternative testing approaches for disabled tests
+    - Create maintenance guide for ongoing test management
+    - _Requirements: 8.4, 8.5_
+
+- [ ] 9. Final validation and monitoring setup
+  - [ ] 9.1 Execute comprehensive test suite validation
+    - Run all reactivated tests individually to ensure they work in isolation
+    - Execute complete test suite to validate no new conflicts are introduced
+    - Test different execution scenarios (unit, integration, e2e test tasks)
+    - _Requirements: 8.3, 8.4_
+
+  - [ ] 9.2 Implement ongoing monitoring for test stability
+    - Set up monitoring for test execution times and success rates
+    - Implement alerts for test failures or performance regressions
+    - Create dashboard for tracking test reactivation success metrics
+    - _Requirements: 8.2, 8.4_
+
+  - [ ] 9.3 Create comprehensive documentation and handover
+    - Document all implemented solutions and their rationale
+    - Create troubleshooting guide for future test issues
+    - Provide maintenance procedures for ongoing test management
+    - Generate final report showing before/after test coverage improvements
+    - _Requirements: 8.4, 8.5_

@@ -2,96 +2,201 @@
 
 ## Overview
 
-This design document outlines the solution for reactivating disabled end-to-end integration tests by resolving TestRestTemplate dependency issues and establishing a robust test HTTP client configuration strategy. The solution focuses on eliminating HttpComponents dependency conflicts while maintaining comprehensive observability testing capabilities.
+This design document outlines a comprehensive solution for systematically reactivating 55 disabled tests across multiple categories. The solution addresses Spring Profile configuration conflicts, Bean definition issues, HTTP client dependency problems, memory constraints, and environment-specific functionality. The design provides a layered approach to fix different types of issues while maintaining system stability and test reliability.
 
 ## Architecture
 
 ### Current Problem Analysis
 
-The disabled tests suffer from several interconnected issues:
+The 55 disabled tests suffer from multiple categories of interconnected issues:
 
-1. **HttpComponents Dependency Conflicts**: Multiple versions and incomplete dependency sets
-2. **Configuration Redundancy**: Multiple test configuration classes with overlapping responsibilities
-3. **Test Environment Inconsistency**: Production and test HTTP client configurations interfering with each other
-4. **Resource Management**: Insufficient memory allocation and cleanup for integration tests
+1. **Configuration Issues (23 tests)**:
+   - Spring Profile activation conflicts (ProfileActivationIntegrationTest - 7 tests)
+   - Bean definition conflicts (HealthCheckIntegrationTest - 13 tests)
+   - Test environment configuration problems
+
+2. **Dependency Issues (12 tests)**:
+   - HttpComponents dependency conflicts causing NoClassDefFoundError
+   - TestRestTemplate configuration failures
+   - AspectJ weaving conflicts
+
+3. **Resource Constraints (8 tests)**:
+   - Memory exhaustion in Prometheus metrics tests
+   - Test execution timeouts
+   - Insufficient JVM heap allocation
+
+4. **Environment-Specific Features (12 tests)**:
+   - Kubernetes probe tests not applicable in test environments
+   - Swagger UI functionality tests for non-core features
+   - Production-specific observability features
 
 ### Solution Architecture
 
 ```mermaid
 graph TB
-    subgraph "Test Configuration Layer"
-        A[UnifiedTestHttpClientConfiguration] --> B[TestRestTemplate Bean]
-        A --> C[RestTemplate Bean]
-        D[TestProfileConfiguration] --> A
+    subgraph "Configuration Resolution Layer"
+        A[ProfileConfigurationResolver] --> B[TestProfileManager]
+        C[BeanConflictResolver] --> D[ConditionalTestConfiguration]
+        E[DependencyResolver] --> F[UnifiedHttpClientConfiguration]
     end
     
-    subgraph "HTTP Client Strategy"
-        B --> E[SimpleClientHttpRequestFactory]
-        C --> E
-        F[HttpComponents5 Dependencies] --> E
+    subgraph "Resource Management Layer"
+        G[TestResourceManager] --> H[MemoryOptimizer]
+        G --> I[TimeoutManager]
+        G --> J[CleanupManager]
     end
     
-    subgraph "Test Execution Layer"
-        G[SimpleEndToEndValidationTest] --> B
-        H[EndToEndIntegrationTest] --> B
-        I[HealthCheckIntegrationTest] --> B
+    subgraph "Test Category Handlers"
+        K[CoreIntegrationTests] --> A
+        L[ObservabilityTests] --> E
+        M[EnvironmentSpecificTests] --> N[TestDoubleProvider]
+        O[NonCoreFeatureTests] --> P[LightweightAlternatives]
     end
     
-    subgraph "Observability Validation"
-        J[Metrics Validation] --> G
-        K[Tracing Validation] --> H
-        L[Health Check Validation] --> I
+    subgraph "Validation and Monitoring"
+        Q[TestExecutionValidator] --> R[PerformanceMonitor]
+        Q --> S[ConfigurationValidator]
+        Q --> T[DependencyValidator]
     end
 ```
 
 ## Components and Interfaces
 
-### 1. Unified Test HTTP Client Configuration
+### 1. Profile Configuration Resolver
 
-**Purpose**: Provide a single, authoritative HTTP client configuration for all tests.
+**Purpose**: Resolve Spring Profile conflicts and ensure proper test environment setup.
 
 ```java
 @TestConfiguration
-@Profile("test")
-public class UnifiedTestHttpClientConfiguration {
+@ConditionalOnProperty(name = "spring.profiles.active", havingValue = "test")
+public class ProfileConfigurationResolver {
     
     @Bean
-    @Primary
-    public RestTemplate testRestTemplate() {
-        // Unified RestTemplate with proper HttpComponents5 configuration
+    @ConditionalOnMissingBean
+    public ProfileConfigurationProperties testProfileProperties() {
+        // Provide test-specific profile configuration
     }
     
     @Bean
-    @Primary
-    public TestRestTemplate testRestTemplateForTesting() {
-        // Unified TestRestTemplate with consistent configuration
+    public ProfileActivationValidator profileValidator() {
+        // Validate profile activation and detect conflicts
     }
     
-    @Bean
-    public ClientHttpRequestFactory clientHttpRequestFactory() {
-        // Properly configured HttpComponents5 factory
+    @EventListener
+    public void handleProfileActivation(ApplicationEnvironmentPreparedEvent event) {
+        // Ensure test profiles are properly activated
     }
 }
 ```
 
-### 2. Test Profile Configuration Manager
+### 2. Bean Conflict Resolver
 
-**Purpose**: Manage test-specific configurations and ensure proper isolation.
+**Purpose**: Eliminate Bean definition conflicts between test configurations.
 
 ```java
 @TestConfiguration
-@ActiveProfiles("test")
-public class TestProfileConfiguration {
+@AutoConfigureBefore({HealthCheckConfiguration.class, TracingConfiguration.class})
+public class BeanConflictResolver {
     
     @Bean
-    @ConditionalOnProperty(name = "spring.profiles.active", havingValue = "test")
-    public TestEnvironmentValidator testEnvironmentValidator() {
-        // Validate test environment setup
+    @ConditionalOnProperty(name = "test.health.enabled", havingValue = "true", matchIfMissing = true)
+    @Primary
+    public HealthIndicator testHealthIndicator() {
+        // Test-specific health indicator that doesn't conflict
     }
     
     @Bean
-    public TestResourceManager testResourceManager() {
-        // Manage test resource allocation and cleanup
+    @ConditionalOnProperty(name = "test.tracing.enabled", havingValue = "true", matchIfMissing = false)
+    public TracingConfiguration testTracingConfiguration() {
+        // Conditional tracing configuration for tests
+    }
+}
+```
+
+### 3. Unified HTTP Client Configuration
+
+**Purpose**: Provide reliable HTTP client configuration for integration tests.
+
+```java
+@TestConfiguration
+@Profile("test")
+@ConditionalOnClass({TestRestTemplate.class, RestTemplate.class})
+public class UnifiedHttpClientConfiguration {
+    
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
+    public TestRestTemplate testRestTemplate() {
+        // Unified TestRestTemplate with proper HttpComponents5 configuration
+    }
+    
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean  
+    public RestTemplate testRestTemplate() {
+        // Unified RestTemplate with consistent configuration
+    }
+    
+    @Bean
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
+        // Properly configured HttpComponents5 factory with error handling
+    }
+}
+```
+
+### 4. Test Resource Manager
+
+**Purpose**: Manage memory allocation, timeouts, and resource cleanup for tests.
+
+```java
+@TestComponent
+@Profile("test")
+public class TestResourceManager {
+    
+    private final MemoryMonitor memoryMonitor;
+    private final TimeoutManager timeoutManager;
+    
+    public void optimizeForTest(TestContext testContext) {
+        // Optimize JVM settings and resource allocation for specific test
+    }
+    
+    public void monitorMemoryUsage(String testName) {
+        // Monitor memory usage during test execution
+    }
+    
+    public void forceCleanup() {
+        // Force garbage collection and resource cleanup
+    }
+    
+    public boolean isMemoryAvailable(long requiredMemoryMB) {
+        // Check if sufficient memory is available for test
+    }
+}
+```
+
+### 5. Environment-Specific Test Handler
+
+**Purpose**: Handle tests that are specific to certain environments or non-core features.
+
+```java
+@TestConfiguration
+public class EnvironmentSpecificTestHandler {
+    
+    @Bean
+    @ConditionalOnProperty(name = "test.kubernetes.enabled", havingValue = "true", matchIfMissing = false)
+    public KubernetesProbeTestDouble kubernetesProbeTestDouble() {
+        // Test double for Kubernetes probe functionality
+    }
+    
+    @Bean
+    @ConditionalOnProperty(name = "test.swagger.enabled", havingValue = "true", matchIfMissing = false)
+    public SwaggerTestValidator swaggerTestValidator() {
+        // Lightweight Swagger validation for test environments
+    }
+    
+    @Bean
+    public ProductionFeatureTestDouble productionFeatureTestDouble() {
+        // Test doubles for production-specific features
     }
 }
 ```

@@ -6,21 +6,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@ActiveProfiles("test")
+@ActiveProfiles({ "test", "openapi" })
 @org.springframework.test.context.TestPropertySource(properties = {
         "spring.flyway.enabled=false",
         "spring.jpa.hibernate.ddl-auto=create-drop",
         "spring.main.lazy-initialization=true",
         "spring.config.import=optional:classpath:application-observability.yml",
         "observability.enabled=true",
-        "management.endpoints.web.exposure.include=health,info,metrics"
+        "management.endpoints.web.exposure.include=health,info,metrics",
+        "app.profile.validation.strict=false"
 })
 @DisplayName("Profile Activation Integration Tests")
-@org.junit.jupiter.api.Disabled("Profile tests disabled temporarily - configuration issues")
 class ProfileActivationIntegrationTest {
 
     @Autowired
@@ -28,6 +29,9 @@ class ProfileActivationIntegrationTest {
 
     @Autowired
     private ProfileConfigurationProperties profileProperties;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Test
     @DisplayName("Should activate test profile during test execution")
@@ -59,10 +63,33 @@ class ProfileActivationIntegrationTest {
         assertThat(activeProfiles).contains("openapi");
     }
 
-    @SpringBootTest
-    @ActiveProfiles("dev")
+    @Test
+    @DisplayName("Should have ProfileConfigurationResolver bean")
+    void shouldHaveProfileConfigurationResolverBean() {
+        // Then
+        assertThat(applicationContext.containsBean("profileConfigurationResolver")).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should have ProfileActivationValidator bean")
+    void shouldHaveProfileActivationValidatorBean() {
+        // Then
+        assertThat(applicationContext.containsBean("profileActivationValidator")).isTrue();
+    }
+
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+    @ActiveProfiles({ "dev", "openapi" })
+    @org.springframework.test.context.TestPropertySource(properties = {
+            "spring.flyway.enabled=false",
+            "spring.jpa.hibernate.ddl-auto=create-drop",
+            "spring.main.lazy-initialization=true",
+            "spring.datasource.url=jdbc:h2:mem:devtest;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+            "spring.datasource.driver-class-name=org.h2.Driver",
+            "spring.h2.console.enabled=true",
+            "spring.flyway.locations=classpath:db/migration/h2",
+            "app.profile.validation.strict=false"
+    })
     @DisplayName("Development Profile Integration Tests")
-    @org.junit.jupiter.api.Disabled("Development profile tests disabled temporarily - configuration issues")
     static class DevelopmentProfileTest {
 
         @Autowired
@@ -70,6 +97,9 @@ class ProfileActivationIntegrationTest {
 
         @Autowired
         private ProfileConfigurationProperties profileProperties;
+
+        @Autowired
+        private ApplicationContext applicationContext;
 
         @Test
         @DisplayName("Should configure H2 database for development profile")

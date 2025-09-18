@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ import org.springframework.kafka.core.ProducerFactory;
  * availability
  */
 @Configuration
+@Profile("!test") // Exclude this configuration when test profile is active
 public class HealthCheckConfig {
 
     /**
@@ -36,6 +38,7 @@ public class HealthCheckConfig {
      * Checks if the database connection is available and responsive
      */
     @Bean
+    @ConditionalOnMissingBean(name = "databaseHealthIndicator")
     public HealthIndicator databaseHealthIndicator(DataSource dataSource) {
         return new DatabaseHealthIndicator(dataSource);
     }
@@ -56,6 +59,7 @@ public class HealthCheckConfig {
      * Checks if the application is ready to serve traffic
      */
     @Bean
+    @ConditionalOnMissingBean(name = "applicationReadinessIndicator")
     public HealthIndicator applicationReadinessIndicator() {
         return new ApplicationReadinessIndicator();
     }
@@ -65,6 +69,7 @@ public class HealthCheckConfig {
      * Monitors memory usage, disk space, and other system resources
      */
     @Bean
+    @ConditionalOnMissingBean(name = "systemResourcesIndicator")
     public HealthIndicator systemResourcesIndicator() {
         return new SystemResourcesIndicator();
     }

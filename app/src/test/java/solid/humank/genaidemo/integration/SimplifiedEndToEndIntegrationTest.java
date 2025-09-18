@@ -37,7 +37,8 @@ import solid.humank.genaidemo.testutils.base.BaseIntegrationTest;
                 "spring.datasource.url=jdbc:h2:mem:simplified-e2e-test",
                 "logging.level.solid.humank.genaidemo=DEBUG",
                 "management.endpoints.web.exposure.include=*",
-                "management.endpoint.health.show-details=always"
+                "management.endpoint.health.show-details=always",
+                "spring.profiles.active=test"
 })
 @TestMethodOrder(OrderAnnotation.class)
 @TestPerformanceExtension(maxExecutionTimeMs = 30000, maxMemoryIncreaseMB = 200)

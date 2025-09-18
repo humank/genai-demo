@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.5'
+    id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
@@ -76,9 +76,11 @@ dependencies {
     // AWS X-Ray support for production
     implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.15.1') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
     implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.15.1') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
     
     // AWS SDK v2 for analytics and security
@@ -90,18 +92,24 @@ dependencies {
     // Security dependencies
     implementation 'org.springframework.boot:spring-boot-starter-security'
     
-    // Apache HttpComponents Client 4.x - 使用 Spring Boot 管理的版本 (推薦)
-    // Spring Boot 會自動管理版本，無需指定版本號
+    // Unified HttpComponents5 dependencies with consistent versions
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    
+    // Test-specific HTTP client dependencies
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
+    testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
+    
+    // Logback encoder for structured logging
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
     
-    // 測試環境專用的 HTTP 客戶端依賴 - 使用 Spring Boot 管理的版本
-    // Spring Boot Test 會自動提供 TestRestTemplate 所需的 HTTP 客戶端
+    // OpenAPI 3 (Swagger) 支援 - 使用與 Spring Boot 3.4.9 兼容的版本
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
     
-    // OpenAPI 3 (Swagger) 支援 - 升級版本以相容 Spring Boot 3.5.5
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
-    
-    // Kotlin reflection for SpringDoc (required by SpringDoc 2.x)
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.22'
+    // Kotlin reflection for SpringDoc (required by SpringDoc 2.x) - 更新版本
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.25'
     
 
     
@@ -164,19 +172,21 @@ tasks.withType(Test).configureEach {
     // 禁用 AspectJ weaver 以避免織入問題
     jvmArgs += '-Dallure.aspectj.enabled=false'
     
-    // 大幅增加記憶體配置以避免 OutOfMemoryError
-    maxHeapSize = '4g'
-    minHeapSize = '1g'
+    // 增強記憶體配置以支持記憶體密集型測試
+    maxHeapSize = '6g'  // 增加預設堆記憶體
+    minHeapSize = '2g'  // 增加最小堆記憶體
     
-    // JVM 優化參數 - 移除 JVMCI 編譯器以避免相容性問題
+    // 優化的JVM參數 - 支持記憶體密集型操作
     jvmArgs += [
         '-XX:MaxMetaspaceSize=1g',
         '-XX:+UseG1GC',
         '-XX:+UseStringDeduplication',
         '-XX:G1HeapRegionSize=32m',
         '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=20',
-        '-XX:G1MaxNewSizePercent=30',
+        '-XX:G1NewSizePercent=25',  // 增加新生代比例
+        '-XX:G1MaxNewSizePercent=35',
+        '-XX:+HeapDumpOnOutOfMemoryError',  // OOM時生成堆轉儲
+        '-XX:HeapDumpPath=build/reports/heap-dumps/',
         '-Xshare:off',  // 禁用類共享以避免 bootstrap classpath 警告
         // HttpComponents 專用JVM參數 - 適用於所有測試
         '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
@@ -288,35 +298,48 @@ tasks.register('integrationTest', Test) {
         excludeTags 'end-to-end', 'slow'
     }
     
-    // 增強的記憶體配置 - 針對集成測試優化
-    maxHeapSize = '6g'  // 增加到6g以支持更複雜的集成測試
-    minHeapSize = '2g'  // 增加最小堆大小
-    maxParallelForks = 1  // 減少並行度以避免記憶體競爭
-    forkEvery = 5  // 更頻繁重啟JVM以釋放記憶體
+    // 優化的記憶體配置 - 針對記憶體密集型測試
+    maxHeapSize = '8g'  // 增加到8g以支持記憶體密集型測試
+    minHeapSize = '3g'  // 增加最小堆大小以減少GC頻率
+    maxParallelForks = 1  // 單線程執行避免記憶體競爭
+    forkEvery = 3  // 更頻繁重啟JVM以釋放記憶體，避免記憶體洩漏
     
-    // 集成測試專用的JVM參數
+    // 記憶體密集型測試專用的JVM參數
     jvmArgs += [
         '--enable-preview',
-        '-XX:MaxMetaspaceSize=1g',
-        '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
+        // 記憶體管理優化
+        '-XX:MaxMetaspaceSize=2g',  // 增加Metaspace以支持更多類加載
+        '-XX:+UseG1GC',  // 使用G1垃圾收集器，適合大堆記憶體
+        '-XX:+UseStringDeduplication',  // 字符串去重以節省記憶體
+        '-XX:G1HeapRegionSize=64m',  // 增大堆區域大小以減少GC開銷
         '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=20',
-        '-XX:G1MaxNewSizePercent=30',
-        '-Xshare:off',
+        '-XX:G1NewSizePercent=30',  // 增加新生代比例
+        '-XX:G1MaxNewSizePercent=40',  // 增加新生代最大比例
+        '-XX:G1MixedGCCountTarget=8',  // 優化混合GC
+        '-XX:G1HeapWastePercent=5',  // 減少堆浪費
+        '-XX:+G1UseAdaptiveIHOP',  // 自適應初始堆佔用百分比
+        '-XX:G1MixedGCLiveThresholdPercent=85',  // 混合GC存活閾值
+        // 記憶體洩漏檢測和優化
+        '-XX:+HeapDumpOnOutOfMemoryError',  // OOM時生成堆轉儲
+        '-XX:HeapDumpPath=build/reports/heap-dumps/',  // 堆轉儲路徑
+        '-XX:+ExitOnOutOfMemoryError',  // OOM時退出JVM
+        // 性能優化
+        '-Xshare:off',  // 禁用類共享以避免bootstrap classpath警告
+        '-XX:+UseCompressedOops',  // 壓縮對象指針
+        '-XX:+UseCompressedClassPointers',  // 壓縮類指針
         // HttpComponents 專用JVM參數
         '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
         '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
         '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG',
         '-Dorg.apache.http.wire=DEBUG',
-        // 網路超時配置
+        // 網路和安全配置
         '-Dsun.net.useExclusiveBind=false',
-        '-Djava.net.preferIPv4Stack=true'
+        '-Djava.net.preferIPv4Stack=true',
+        '-Djava.security.egd=file:/dev/./urandom'  // 加速隨機數生成
     ]
     
-    // 測試執行超時配置
-    timeout = Duration.ofMinutes(30)  // 整體測試套件超時30分鐘
+    // 測試執行超時配置 - 記憶體密集型測試需要更長時間
+    timeout = Duration.ofMinutes(45)  // 整體測試套件超時45分鐘
     
     testLogging {
         events "failed", "skipped", "started"
@@ -328,10 +351,10 @@ tasks.register('integrationTest', Test) {
     }
     
     systemProperties = [
-        // JUnit 配置
-        'junit.jupiter.execution.timeout.default': '2m',  // 單個測試方法超時2分鐘
-        'junit.jupiter.execution.timeout.testable.method.default': '2m',
-        'junit.jupiter.execution.timeout.testtemplate.method.default': '2m',
+        // JUnit 配置 - 記憶體密集型測試需要更長超時
+        'junit.jupiter.execution.timeout.default': '5m',  // 單個測試方法超時5分鐘
+        'junit.jupiter.execution.timeout.testable.method.default': '5m',
+        'junit.jupiter.execution.timeout.testtemplate.method.default': '5m',
         'junit.jupiter.execution.parallel.enabled': 'false',  // 禁用並行執行以避免資源競爭
         
         // Spring 測試配置
@@ -357,6 +380,7 @@ tasks.register('integrationTest', Test) {
         'test.memory.monitoring.enabled': 'true'
     ]
 }
+
 
 // 端到端測試任務 - 發布前使用
 tasks.register('e2eTest', Test) {
@@ -611,8 +635,24 @@ tasks.register('cleanAllureResults', Delete) {
     group = 'build'
 }
 
+// 創建堆轉儲目錄
+tasks.register('createHeapDumpDir') {
+    description = '創建堆轉儲目錄'
+    group = 'build'
+    
+    doLast {
+        mkdir "${buildDir}/reports/heap-dumps"
+        println "堆轉儲目錄已創建: ${buildDir}/reports/heap-dumps"
+    }
+}
+
 tasks.named('clean') {
     dependsOn 'cleanAllureResults'
+}
+
+// 確保測試任務前創建必要目錄
+tasks.withType(Test) {
+    dependsOn 'createHeapDumpDir'
 }
 
 // 手動處理 Allure 報告生成，避免使用內建任務

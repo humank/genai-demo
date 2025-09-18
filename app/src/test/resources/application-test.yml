@@ -12,6 +12,10 @@ spring:
   jmx:
     enabled: false
   
+  # Configuration import - include OpenAPI configuration for tests
+  config:
+    import: "optional:classpath:application-openapi.yml"
+  
   # Database configuration for tests
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE

@@ -140,3 +140,7 @@ app/build/reports/allure-report/
 # Temporary files
 *.tmp
 *.temp
+
+# Prevent accidental user home directory simulation
+~/
+~/*

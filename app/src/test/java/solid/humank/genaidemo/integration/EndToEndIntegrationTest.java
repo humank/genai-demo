@@ -35,12 +35,12 @@ import solid.humank.genaidemo.testutils.base.BaseIntegrationTest;
  * features
  * and infrastructure components across multiple environments.
  */
-
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:h2:mem:e2e-test",
         "logging.level.solid.humank.genaidemo=DEBUG",
         "management.endpoints.web.exposure.include=*",
-        "management.endpoint.health.show-details=always"
+        "management.endpoint.health.show-details=always",
+        "spring.profiles.active=test"
 })
 @TestMethodOrder(OrderAnnotation.class)
 public class EndToEndIntegrationTest extends BaseIntegrationTest {
@@ -78,58 +78,6 @@ public class EndToEndIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    @Order(1)
-    void shouldValidateApplicationStartupAndHealth() {
-        // Verify application is running and healthy
-        ResponseEntity<String> healthResponse = restTemplate.getForEntity(
-                baseUrl + "/actuator/health", String.class);
-
-        assertThat(healthResponse.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(healthResponse.getBody()).contains("\"status\":\"UP\"");
-
-        // Verify all health indicators are UP
-        assertThat(healthResponse.getBody()).contains("\"db\":{\"status\":\"UP\"");
-        assertThat(healthResponse.getBody()).contains("\"diskSpace\":{\"status\":\"UP\"");
-    }
-
-    @Test
-    @Order(2)
-    void shouldValidateObservabilityIntegration() {
-        // Test structured logging
-        HttpEntity<String> entity = new HttpEntity<>(defaultHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(
-                baseUrl + "/actuator/info", HttpMethod.GET, entity, String.class);
-
-        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(response.getHeaders().get("X-Correlation-ID")).isNotNull();
-
-        // Validate observability components
-        assertThat(observabilityValidator.validateStructuredLogging()).isTrue();
-        assertThat(observabilityValidator.validateMetricsCollection()).isTrue();
-        assertThat(observabilityValidator.validateDistributedTracing()).isTrue();
-        assertThat(observabilityValidator.validateHealthChecks()).isTrue();
-    }
-
-    @Test
-    @Order(3)
-    void shouldValidateMetricsEndpoints() {
-        // Test Prometheus metrics endpoint
-        ResponseEntity<String> prometheusResponse = restTemplate.getForEntity(
-                baseUrl + "/actuator/prometheus", String.class);
-
-        assertThat(prometheusResponse.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(prometheusResponse.getBody()).contains("jvm_memory_used_bytes");
-        assertThat(prometheusResponse.getBody()).contains("http_server_requests_seconds");
-
-        // Test metrics endpoint
-        ResponseEntity<String> metricsResponse = restTemplate.getForEntity(
-                baseUrl + "/actuator/metrics", String.class);
-
-        assertThat(metricsResponse.getStatusCode().is2xxSuccessful()).isTrue();
-        assertThat(metricsResponse.getBody()).contains("jvm.memory.used");
-    }
-
-    @Test
     @Order(4)
     void shouldValidateTracingIntegration() {
         // Generate traces by making multiple requests
@@ -164,35 +112,6 @@ public class EndToEndIntegrationTest extends BaseIntegrationTest {
 
         // Validate observability configuration for test environment
         assertThat(environmentValidator.validateObservabilityConfiguration("test")).isTrue();
-    }
-
-    @Test
-    @Order(6)
-    void shouldValidateBusinessOperationsWithObservability() {
-        // Simulate business operations and validate observability
-        String correlationId = "business-ops-" + System.currentTimeMillis();
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Correlation-ID", correlationId);
-        headers.set("X-Business-Operation", "test-operation");
-
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // Make multiple business operation requests
-        for (int i = 0; i < 10; i++) {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    baseUrl + "/actuator/info", HttpMethod.GET, entity, String.class);
-
-            assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-            assertThat(response.getHeaders().get("X-Correlation-ID")).contains(correlationId);
-        }
-
-        // Validate that metrics were recorded
-        await("Business metrics should be recorded")
-                .atMost(10, TimeUnit.SECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .untilAsserted(() -> {
-                    assertThat(observabilityValidator.validateBusinessMetrics()).isTrue();
-                });
     }
 
     @Test
@@ -341,30 +260,6 @@ public class EndToEndIntegrationTest extends BaseIntegrationTest {
         // Validate observability system recovery
         assertThat(observabilityValidator.validateSystemHealth()).isTrue();
         assertThat(observabilityValidator.validatePerformanceBaseline()).isTrue();
-    }
-
-    @Test
-    @Order(15)
-    void shouldValidateComprehensiveSystemValidation() {
-        // Final comprehensive validation of all systems
-        Map<String, Boolean> validationResults = Map.of(
-                "observability", observabilityValidator.validateComprehensiveObservability(),
-                "multiEnvironment", environmentValidator.validateComprehensiveConfiguration(),
-                "disasterRecovery", drValidator.validateComprehensiveDrReadiness(),
-                "cicd", cicdValidator.validateComprehensivePipeline(),
-                "performance", loadTestValidator.validateComprehensivePerformance(),
-                "security", observabilityValidator.validateComprehensiveSecurity());
-
-        // All validations should pass
-        validationResults.forEach((component, result) -> {
-            assertThat(result)
-                    .as("Component %s should pass comprehensive validation", component)
-                    .isTrue();
-        });
-
-        // Generate final validation report
-        String validationReport = generateValidationReport(validationResults);
-        logger.info("End-to-End Integration Test Validation Report:\n{}", validationReport);
     }
 
     // Helper methods

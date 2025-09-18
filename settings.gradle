@@ -1,2 +1,7 @@
 rootProject.name = 'genai-demo'
+
+// Java 模組
 include 'app'
+
+// 注意：前端模組 (cmc-frontend, consumer-frontend) 和基礎設施模組 (infrastructure) 
+// 使用各自的包管理器 (npm/yarn) 和構建工具，不包含在 Gradle 構建中
