@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getCLS, getFCP, getFID, getLCP, getTTFB, onCLS, onFCP, onFID, onLCP, onTTFB } from 'web-vitals';
+import { onCLS, onFCP, onFID, onLCP, onTTFB } from 'web-vitals';
 import { ObservabilityConfigService } from '../config/observability.config';
 import { ObservabilityService } from './observability.service';
 
@@ -50,27 +50,27 @@ export class EnhancedWebVitalsService {
         this.isInitialized = true;
 
         // 監控 LCP (Largest Contentful Paint)
-        onLCP((metric) => {
+        onLCP((metric: any) => {
             this.handleMetric('LCP', metric);
         });
 
         // 監控 FID (First Input Delay)
-        onFID((metric) => {
+        onFID((metric: any) => {
             this.handleMetric('FID', metric);
         });
 
         // 監控 CLS (Cumulative Layout Shift)
-        onCLS((metric) => {
+        onCLS((metric: any) => {
             this.handleMetric('CLS', metric);
         });
 
         // 監控 FCP (First Contentful Paint)
-        onFCP((metric) => {
+        onFCP((metric: any) => {
             this.handleMetric('FCP', metric);
         });
 
         // 監控 TTFB (Time to First Byte)
-        onTTFB((metric) => {
+        onTTFB((metric: any) => {
             this.handleMetric('TTFB', metric);
         });
 
@@ -106,22 +106,10 @@ export class EnhancedWebVitalsService {
      */
     private sendMetricToObservability(metric: WebVitalsMetric): void {
         this.observabilityService.trackPerformanceMetric({
-            metricType: metric.name.toLowerCase(),
+            type: metric.name.toLowerCase() as any,
             value: metric.value,
             page: window.location.pathname,
-            metadata: {
-                rating: metric.rating,
-                delta: metric.delta,
-                id: metric.id,
-                navigationType: metric.navigationType,
-                timestamp: Date.now(),
-                userAgent: navigator.userAgent,
-                viewport: {
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                },
-                connection: this.getConnectionInfo()
-            }
+            timestamp: Date.now()
         });
     }
 
@@ -152,7 +140,7 @@ export class EnhancedWebVitalsService {
 
         try {
             // 獲取 LCP
-            getLCP((metric) => {
+            onLCP((metric: any) => {
                 report.lcp = {
                     name: 'LCP',
                     value: metric.value,
@@ -164,7 +152,7 @@ export class EnhancedWebVitalsService {
             });
 
             // 獲取 FID (只有在有用戶互動時才有值)
-            getFID((metric) => {
+            onFID((metric: any) => {
                 report.fid = {
                     name: 'FID',
                     value: metric.value,
@@ -176,7 +164,7 @@ export class EnhancedWebVitalsService {
             });
 
             // 獲取 CLS
-            getCLS((metric) => {
+            onCLS((metric: any) => {
                 report.cls = {
                     name: 'CLS',
                     value: metric.value,
@@ -188,7 +176,7 @@ export class EnhancedWebVitalsService {
             });
 
             // 獲取 FCP
-            getFCP((metric) => {
+            onFCP((metric: any) => {
                 report.fcp = {
                     name: 'FCP',
                     value: metric.value,
@@ -200,7 +188,7 @@ export class EnhancedWebVitalsService {
             });
 
             // 獲取 TTFB
-            getTTFB((metric) => {
+            onTTFB((metric: any) => {
                 report.ttfb = {
                     name: 'TTFB',
                     value: metric.value,

@@ -88,7 +88,7 @@ export class ObservabilityConfigService {
     if (!this.config.enabled) {
       return false;
     }
-    
+
     return this.config.features[feature] && this.getFeatureFlag(feature);
   }
 
@@ -96,9 +96,9 @@ export class ObservabilityConfigService {
    * 檢查效能監控是否啟用
    */
   isPerformanceMonitoringEnabled(): boolean {
-    return this.config.enabled && 
-           this.config.performanceMonitoring.enabled && 
-           this.shouldSample();
+    return this.config.enabled &&
+      this.config.performanceMonitoring.enabled &&
+      this.shouldSample();
   }
 
   /**
@@ -108,7 +108,7 @@ export class ObservabilityConfigService {
     if (!this.config.enableSampling) {
       return true;
     }
-    
+
     return Math.random() < this.config.performanceMonitoring.sampleRate;
   }
 
@@ -222,8 +222,8 @@ export class ObservabilityConfigService {
       errors.push('Retry attempts cannot be negative');
     }
 
-    if (this.config.performanceMonitoring.sampleRate < 0 || 
-        this.config.performanceMonitoring.sampleRate > 1) {
+    if (this.config.performanceMonitoring.sampleRate < 0 ||
+      this.config.performanceMonitoring.sampleRate > 1) {
       errors.push('Sample rate must be between 0 and 1');
     }
 
@@ -239,12 +239,12 @@ export class ObservabilityConfigService {
 
   private buildRuntimeConfig(): RuntimeObservabilityConfig {
     const envConfig = environment.observability;
-    
+
     return {
       ...envConfig,
-      apiEndpoint: `${environment.apiUrl}/api/analytics/events`,
-      performanceEndpoint: `${environment.apiUrl}/api/analytics/performance`,
-      errorEndpoint: `${environment.apiUrl}/api/monitoring/events`,
+      apiEndpoint: `/api/analytics/events`, // ⚠️ Backend analytics API partially implemented
+      performanceEndpoint: `/api/analytics/performance`, // ⚠️ Backend analytics API partially implemented
+      errorEndpoint: `/api/monitoring/events`, // ✅ Basic monitoring endpoints available
       sessionTimeout: 30 * 60 * 1000, // 30 分鐘
       enableSampling: environment.production // 只在生產環境啟用採樣
     };
@@ -254,7 +254,7 @@ export class ObservabilityConfigService {
     // 預設所有功能都啟用
     const features: (keyof ObservabilityFeatures)[] = [
       'userBehaviorTracking',
-      'performanceMetrics', 
+      'performanceMetrics',
       'businessEvents',
       'errorTracking',
       'apiTracking'

@@ -1,10 +1,15 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ObservabilityService } from './observability.service';
 import { AnalyticsUpdateMessage, RealTimeAnalyticsService } from './real-time-analytics.service';
 
 /**
  * Integration service that connects WebSocket real-time analytics with the observability system.
+ * 
+ * ⚠️ NOTICE: This service is prepared for future WebSocket integration.
+ * Backend WebSocket endpoints are not yet implemented.
+ * Currently processes mock data from RealTimeAnalyticsService.
+ * 
  * Handles real-time updates and provides analytics dashboard functionality.
  */
 @Injectable({
@@ -66,8 +71,19 @@ export class AnalyticsWebSocketIntegrationService implements OnDestroy {
 
   /**
    * Subscribe to all relevant analytics channels
+   * ⚠️ MOCK: Currently subscribes to mock data channels
    */
   private subscribeToAnalyticsChannels(): void {
+    // Since WebSocket is not implemented, directly subscribe to mock channels
+    console.info('Subscribing to mock analytics channels (backend not implemented)');
+    
+    this.realTimeService.subscribe('analytics');
+    this.realTimeService.subscribe('performance');
+    this.realTimeService.subscribe('business-metrics');
+    this.realTimeService.subscribe('system-status');
+    this.realTimeService.subscribe('errors');
+
+    /* DISABLED UNTIL BACKEND IMPLEMENTATION
     // Wait for connection to be established
     this.realTimeService.connectionState$
       .pipe(
@@ -81,6 +97,7 @@ export class AnalyticsWebSocketIntegrationService implements OnDestroy {
         this.realTimeService.subscribe('system-status');
         this.realTimeService.subscribe('errors');
       });
+    */
   }
 
   /**

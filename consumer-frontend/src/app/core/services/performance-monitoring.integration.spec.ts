@@ -44,7 +44,10 @@ describe('Performance Monitoring Integration', () => {
       maxBatchSize: 50,
       maxWaitTime: 30000,
       retryAttempts: 3,
-      backoffMultiplier: 2
+      backoffMultiplier: 2,
+      enableOfflineStorage: true,
+      storageKey: 'test-storage',
+      maxStorageSize: 1000
     });
     mockConfigService.isFeatureEnabled.and.returnValue(true);
 

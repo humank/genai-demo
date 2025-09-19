@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, fromEvent, merge } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, firstValueFrom, fromEvent, merge } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ResilientHttpService } from './resilient-http.service';
 
@@ -173,16 +173,16 @@ export class OfflineManagerService {
     
     try {
       // 計算各種儲存的大小
-      details.syncQueue = this.calculateItemSize(this.syncQueue);
-      details.resilientHttp = this.calculateItemSize(
+      details['syncQueue'] = this.calculateItemSize(this.syncQueue);
+      details['resilientHttp'] = this.calculateItemSize(
         JSON.parse(localStorage.getItem('resilient_http_offline_queue') || '[]')
       );
-      details.observabilityEvents = this.calculateItemSize(
+      details['observabilityEvents'] = this.calculateItemSize(
         JSON.parse(localStorage.getItem('observability_offline_events') || '[]')
       );
       
       // 計算總大小
-      details.total = Object.values(details).reduce((sum, size) => sum + size, 0);
+      details['total'] = Object.values(details).reduce((sum, size) => sum + size, 0);
       
     } catch (error) {
       console.warn('Failed to calculate storage details:', error);
@@ -259,15 +259,15 @@ export class OfflineManagerService {
   private async syncItem(item: SyncItem): Promise<void> {
     switch (item.type) {
       case 'analytics':
-        await this.resilientHttpService.post('/api/analytics/events', item.data, { isCritical: true }).toPromise();
+        await firstValueFrom(this.resilientHttpService.post('/api/analytics/events', item.data, { isCritical: true }));
         break;
         
       case 'performance':
-        await this.resilientHttpService.post('/api/analytics/performance', item.data, { isCritical: true }).toPromise();
+        await firstValueFrom(this.resilientHttpService.post('/api/analytics/performance', item.data, { isCritical: true }));
         break;
         
       case 'error':
-        await this.resilientHttpService.post('/api/monitoring/events', item.data, { isCritical: true }).toPromise();
+        await firstValueFrom(this.resilientHttpService.post('/api/monitoring/events', item.data, { isCritical: true }));
         break;
         
       case 'user_action':

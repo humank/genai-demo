@@ -64,12 +64,18 @@ describe('Observability Performance and Load Tests', () => {
             maxBatchSize: 50,
             maxWaitTime: 5000,
             retryAttempts: 1, // 減少重試以加快測試
-            backoffMultiplier: 1
+            backoffMultiplier: 1,
+            enableOfflineStorage: true,
+            storageKey: 'test-storage',
+            maxStorageSize: 1000
         });
         mockConfigService.isFeatureEnabled.and.returnValue(true);
-        mockConfigService.getPerformanceConfig.and.returnValue({
+        mockConfigService.getObservabilityServiceConfig.and.returnValue({
             enabled: true,
-            sampleRate: 1.0
+            batchSize: 50,
+            flushInterval: 5000,
+            apiEndpoint: '/api/analytics/events',
+            debug: false
         });
 
         TestBed.configureTestingModule({
@@ -131,7 +137,7 @@ describe('Observability Performance and Load Tests', () => {
             // When - 快速收集大量事件
             for (let i = 0; i < LARGE_EVENT_COUNT; i++) {
                 const event = {
-                    type: 'performance_test',
+                    type: 'search' as const,
                     data: { index: i, timestamp: Date.now() },
                     timestamp: Date.now(),
                     sessionId: sessionService.getSessionId()
@@ -144,7 +150,7 @@ describe('Observability Performance and Load Tests', () => {
 
             // Then - 驗證大量事件收集效能
             expect(collectionTime).toBeLessThan(LARGE_EVENT_TIME_LIMIT_MS);
-            expect(events).toHaveLength(LARGE_EVENT_COUNT);
+            expect(events.length).toBe(LARGE_EVENT_COUNT);
 
             console.log(`大量事件收集效能: ${LARGE_EVENT_COUNT} 個事件收集時間 ${collectionTime.toFixed(2)} ms`);
         });
@@ -323,7 +329,10 @@ describe('Observability Performance and Load Tests', () => {
                     maxBatchSize: batchSize,
                     maxWaitTime: 1000,
                     retryAttempts: 1,
-                    backoffMultiplier: 1
+                    backoffMultiplier: 1,
+                    enableOfflineStorage: true,
+                    storageKey: 'test-storage',
+                    maxStorageSize: 1000
                 });
 
                 const startTime = performance.now();
@@ -399,7 +408,7 @@ describe('Observability Performance and Load Tests', () => {
 
             expect(averageResponseTime).toBeLessThan(50); // 平均響應時間應在 50ms 以內
             expect(maxResponseTime).toBeLessThan(100); // 最大響應時間應在 100ms 以內
-            expect(eventCount).toBeGreaterThanOrEqualTo(totalEvents * 0.9); // 至少處理 90% 的事件
+            expect(eventCount).toBeGreaterThanOrEqual(totalEvents * 0.9); // 至少處理 90% 的事件
 
             // 處理所有 HTTP 請求
             while (true) {

@@ -58,7 +58,7 @@ describe('HeaderComponent Observability Integration', () => {
         observabilityService.getSessionId.and.returnValue('test-session-123');
         // Mock cart$ as a property
         Object.defineProperty(cartService, 'cart$', {
-            value: of({ items: [], totalAmount: 0, itemCount: 0 }),
+            value: of({ items: [], totalAmount: { amount: 0, currency: 'USD' }, itemCount: 0 }),
             writable: false
         });
     });

@@ -77,7 +77,7 @@ describe('SessionService', () => {
       const newTraceId = service.generateNewTraceId();
       
       expect(newTraceId).not.toBe(originalTraceId);
-      expect(newTraceId).toMatch(/^trace-\\d+-[a-z0-9]+$/);
+      expect(newTraceId).toMatch(/^trace-\d+-[a-z0-9]+$/);
       expect(service.getCurrentTraceId()).toBe(newTraceId);
     });
 

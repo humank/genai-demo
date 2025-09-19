@@ -1,5 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { of, throwError } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { OfflineManagerConfig, OfflineManagerService, SyncItem } from './offline-manager.service';
 import { ResilientHttpService } from './resilient-http.service';
 
@@ -189,10 +191,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should sync analytics items', async () => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       service.addToSyncQueue({
         type: 'analytics',
@@ -212,10 +213,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should sync performance items', async () => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       service.addToSyncQueue({
         type: 'performance',
@@ -233,10 +233,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should sync error items', async () => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       service.addToSyncQueue({
         type: 'error',
@@ -254,10 +253,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should sync user action items', async () => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       service.addToSyncQueue({
         type: 'user_action',
@@ -275,10 +273,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should prioritize high priority items', async () => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       // 添加不同優先級的項目
       service.addToSyncQueue({
@@ -329,9 +326,9 @@ describe('OfflineManagerService', () => {
         setTimeout(() => resolve({ success: true }), 100);
       });
       
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true }).pipe(delay(100))
+      );
       
       service.addToSyncQueue({
         type: 'analytics',
@@ -359,16 +356,12 @@ describe('OfflineManagerService', () => {
   describe('Error Handling', () => {
     it('should handle sync failures and retry', async () => {
       let callCount = 0;
-      resilientHttpService.post.and.callFake(() => {
+      (resilientHttpService.post as any).and.callFake((endpoint: string, data: any, options?: any) => {
         callCount++;
         if (callCount === 1) {
-          return {
-            toPromise: () => Promise.reject(new Error('Network error'))
-          } as any;
+          return throwError(() => new Error('Network error'));
         } else {
-          return {
-            toPromise: () => Promise.resolve({ success: true })
-          } as any;
+          return of({ success: true });
         }
       });
       
@@ -390,9 +383,9 @@ describe('OfflineManagerService', () => {
     it('should remove items after max retry attempts', async () => {
       service.configure({ maxRetryAttempts: 2 });
       
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => Promise.reject(new Error('Persistent error'))
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        throwError(() => new Error('Persistent error'))
+      );
       
       service.addToSyncQueue({
         type: 'analytics',
@@ -435,10 +428,9 @@ describe('OfflineManagerService', () => {
     });
 
     it('should auto-sync when coming back online', (done) => {
-      const mockResponse = Promise.resolve({ success: true });
-      resilientHttpService.post.and.returnValue({
-        toPromise: () => mockResponse
-      } as any);
+      resilientHttpService.post.and.returnValue(
+        of({ success: true })
+      );
       
       // 添加項目到佇列
       service.addToSyncQueue({
@@ -485,7 +477,7 @@ describe('OfflineManagerService', () => {
       expect(stored).toBeTruthy();
       
       const parsedItems = JSON.parse(stored!);
-      expect(parsedItems).toHaveLength(1);
+      expect(parsedItems.length).toBe(1);
       expect(parsedItems[0].data.event).toBe('test');
     });
 
@@ -511,8 +503,8 @@ describe('OfflineManagerService', () => {
       });
       
       const details = service.getStorageDetails();
-      expect(details.syncQueue).toBeGreaterThan(0);
-      expect(details.total).toBeGreaterThan(0);
+      expect(details['syncQueue']).toBeGreaterThan(0);
+      expect(details['total']).toBeGreaterThan(0);
     });
 
     it('should cleanup expired items', () => {

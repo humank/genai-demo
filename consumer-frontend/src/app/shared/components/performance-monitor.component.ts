@@ -18,6 +18,30 @@ export interface PerformanceMetrics {
   firstPaint?: number;
   firstContentfulPaint?: number;
 
+  // 網路效能
+  downlink?: number;
+  rtt?: number;
+  connectionType?: string;
+  effectiveType?: string;
+
+  // 記憶體效能
+  usedJSHeapSize?: number;
+  totalJSHeapSize?: number;
+  jsHeapSizeLimit?: number;
+}
+
+export interface WebVitalsMetric {
+  value: number;
+  rating: 'good' | 'needs-improvement' | 'poor';
+}
+
+export interface WebVitalsReport {
+  lcp?: WebVitalsMetric;
+  fid?: WebVitalsMetric;
+  cls?: WebVitalsMetric;
+  fcp?: WebVitalsMetric;
+  ttfb?: WebVitalsMetric;
+
   // 記憶體使用
   usedJSHeapSize?: number;
   totalJSHeapSize?: number;
@@ -360,7 +384,6 @@ export class PerformanceMonitorComponent implements OnInit, OnDestroy {
     private observabilityService: ObservabilityService,
     private configService: ObservabilityConfigService,
     private batchProcessor: BatchProcessorService,
-    private enhancedWebVitals: EnhancedWebVitalsService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -478,8 +501,8 @@ export class PerformanceMonitorComponent implements OnInit, OnDestroy {
 
   private async collectWebVitals(): Promise<void> {
     try {
-      // 使用 Enhanced Web Vitals 服務獲取指標
-      this.webVitalsReport = await this.enhancedWebVitals.getCurrentMetrics();
+      // 使用基本的 Web Vitals 指標獲取
+      this.webVitalsReport = this.getBasicWebVitals();
 
       // 更新本地指標對象以保持向後兼容
       if (this.webVitalsReport.lcp) {
@@ -588,28 +611,59 @@ export class PerformanceMonitorComponent implements OnInit, OnDestroy {
     return `${value}Mbps`;
   }
 
-  // Web Vitals 評分方法 (使用 Enhanced Web Vitals 服務)
+  // Web Vitals 評分方法 (基本實現)
   isGoodLCP(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isGoodMetric('LCP', value);
+    return value !== undefined && value <= 2500; // Good LCP threshold
   }
 
   isPoorLCP(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isPoorMetric('LCP', value);
+    return value !== undefined && value > 4000; // Poor LCP threshold
   }
 
   isGoodFID(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isGoodMetric('FID', value);
+    return value !== undefined && value <= 100; // Good FID threshold
   }
 
   isPoorFID(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isPoorMetric('FID', value);
+    return value !== undefined && value > 300; // Poor FID threshold
   }
 
   isGoodCLS(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isGoodMetric('CLS', value);
+    return value !== undefined && value <= 0.1; // Good CLS threshold
   }
 
   isPoorCLS(value?: number): boolean {
-    return value !== undefined && this.enhancedWebVitals.isPoorMetric('CLS', value);
+    return value !== undefined && value > 0.25; // Poor CLS threshold
+  }
+
+  // 基本的 Web Vitals 獲取方法
+  private getBasicWebVitals(): WebVitalsReport {
+    return {
+      lcp: this.metrics.lcp ? {
+        value: this.metrics.lcp,
+        rating: this.isGoodLCP(this.metrics.lcp) ? 'good' :
+          this.isPoorLCP(this.metrics.lcp) ? 'poor' : 'needs-improvement'
+      } : undefined,
+      fid: this.metrics.fid ? {
+        value: this.metrics.fid,
+        rating: this.isGoodFID(this.metrics.fid) ? 'good' :
+          this.isPoorFID(this.metrics.fid) ? 'poor' : 'needs-improvement'
+      } : undefined,
+      cls: this.metrics.cls ? {
+        value: this.metrics.cls,
+        rating: this.isGoodCLS(this.metrics.cls) ? 'good' :
+          this.isPoorCLS(this.metrics.cls) ? 'poor' : 'needs-improvement'
+      } : undefined,
+      fcp: this.metrics.firstContentfulPaint ? {
+        value: this.metrics.firstContentfulPaint,
+        rating: this.metrics.firstContentfulPaint <= 1800 ? 'good' :
+          this.metrics.firstContentfulPaint > 3000 ? 'poor' : 'needs-improvement'
+      } : undefined,
+      ttfb: this.metrics.ttfb ? {
+        value: this.metrics.ttfb,
+        rating: this.metrics.ttfb <= 800 ? 'good' :
+          this.metrics.ttfb > 1800 ? 'poor' : 'needs-improvement'
+      } : undefined
+    };
   }
 }

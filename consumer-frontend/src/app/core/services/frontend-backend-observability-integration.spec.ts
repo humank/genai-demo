@@ -53,12 +53,18 @@ describe('Frontend-Backend Observability Integration', () => {
             maxBatchSize: 20,
             maxWaitTime: 10000,
             retryAttempts: 2,
-            backoffMultiplier: 2
+            backoffMultiplier: 2,
+            enableOfflineStorage: true,
+            storageKey: 'test-storage',
+            maxStorageSize: 1000
         });
         mockConfigService.isFeatureEnabled.and.returnValue(true);
-        mockConfigService.getPerformanceConfig.and.returnValue({
+        mockConfigService.getObservabilityServiceConfig.and.returnValue({
             enabled: true,
-            sampleRate: 1.0
+            batchSize: 50,
+            flushInterval: 5000,
+            apiEndpoint: '/api/analytics/events',
+            debug: false
         });
 
         TestBed.configureTestingModule({
@@ -184,9 +190,12 @@ describe('Frontend-Backend Observability Integration', () => {
 
         it('should sample performance metrics based on configuration', fakeAsync(() => {
             // Given - 設定 50% 採樣率
-            configService.getPerformanceConfig.and.returnValue({
+            configService.getObservabilityServiceConfig.and.returnValue({
                 enabled: true,
-                sampleRate: 0.5
+                batchSize: 50,
+                flushInterval: 5000,
+                apiEndpoint: '/api/analytics/events',
+                debug: false
             });
 
             // When - 追蹤多個效能指標
@@ -324,8 +333,12 @@ describe('Frontend-Backend Observability Integration', () => {
         it('should handle real-time analytics updates', () => {
             // Given - 設定更新回調
             let receivedUpdate: any = null;
-            realTimeAnalytics.subscribe('business-metrics', (data) => {
-                receivedUpdate = data;
+            realTimeAnalytics.subscribe('business-metrics');
+            
+            realTimeAnalytics.messages$.subscribe((data) => {
+                if (data && data.type === 'business-metrics') {
+                    receivedUpdate = data;
+                }
             });
 
             // When - 模擬接收 WebSocket 訊息
@@ -487,7 +500,10 @@ describe('Frontend-Backend Observability Integration', () => {
                 maxBatchSize: 2,
                 maxWaitTime: 5000,
                 retryAttempts: 1,
-                backoffMultiplier: 1
+                backoffMultiplier: 1,
+                enableOfflineStorage: true,
+                storageKey: 'test-storage',
+                maxStorageSize: 1000
             });
 
             // When - 追蹤多個事件

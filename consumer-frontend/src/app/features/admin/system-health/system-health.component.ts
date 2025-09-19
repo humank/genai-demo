@@ -410,14 +410,18 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
   }
 
   private initializeMonitoring(): void {
-    // Subscribe to real-time system health updates
+    // ⚠️ MOCK DATA: WebSocket backend not implemented, using mock data
+    console.info('SystemHealth: Using mock WebSocket data (backend not implemented)');
+    
+    // Subscribe to mock system health updates
     this.realTimeAnalytics.subscribe('system-health');
     this.realTimeAnalytics.subscribe('api-performance');
 
-    // Handle incoming health messages
+    // Handle incoming mock health messages
     this.realTimeAnalytics.messages$
       .pipe(takeUntil(this.destroy$))
       .subscribe(message => {
+        console.info('SystemHealth: Received mock data:', message);
         this.handleHealthMessage(message);
       });
   }
@@ -680,28 +684,28 @@ export class SystemHealthComponent implements OnInit, OnDestroy {
     return value.toLocaleString();
   }
 
-  getMethodSeverity(method: string): 'success' | 'info' | 'warning' | 'danger' {
+  getMethodSeverity(method: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (method) {
       case 'GET': return 'info';
       case 'POST': return 'success';
-      case 'PUT': return 'warning';
+      case 'PUT': return 'warn';
       case 'DELETE': return 'danger';
       default: return 'info';
     }
   }
 
-  getStatusSeverity(status: string): 'success' | 'info' | 'warning' | 'danger' {
+  getStatusSeverity(status: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (status) {
       case 'healthy': return 'success';
-      case 'warning': return 'warning';
+      case 'warning': return 'warn';
       case 'critical': return 'danger';
       default: return 'info';
     }
   }
 
-  getAlertTypeSeverity(type: string): 'success' | 'info' | 'warning' | 'danger' {
+  getAlertTypeSeverity(type: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (type) {
-      case 'performance': return 'warning';
+      case 'performance': return 'warn';
       case 'error': return 'danger';
       case 'system': return 'info';
       default: return 'info';

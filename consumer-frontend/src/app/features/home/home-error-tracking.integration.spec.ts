@@ -107,10 +107,15 @@ describe('HomeComponent Error Tracking Integration', () => {
                     id: 'product-1',
                     name: 'Test Product 1',
                     price: { amount: 100, currency: 'TWD' },
-                    category: 'ELECTRONICS',
+                    category: 'ELECTRONICS' as any,
                     inStock: true,
-                    status: 'ACTIVE',
-                    images: [{ url: 'test-image.jpg' }]
+                    status: 'ACTIVE' as any,
+                    images: [{ 
+                        id: 'img-1', 
+                        url: 'test-image.jpg', 
+                        type: 'PRIMARY' as any, 
+                        sortOrder: 1 
+                    }]
                 }
             ],
             totalElements: 1,
@@ -123,13 +128,13 @@ describe('HomeComponent Error Tracking Integration', () => {
 
         // Mock cart$ as a property
         Object.defineProperty(cartService, 'cart$', {
-            value: of({ items: [], totalAmount: 0, itemCount: 0 }),
+            value: of({ items: [], totalAmount: { amount: 0, currency: 'USD' }, itemCount: 0 }),
             writable: false
         });
 
         cartService.addToCart.and.returnValue(of({
             items: [],
-            totalAmount: 0,
+            totalAmount: { amount: 0, currency: 'USD' },
             itemCount: 0
         }));
     });
@@ -189,9 +194,9 @@ describe('HomeComponent Error Tracking Integration', () => {
             id: 'product-1',
             name: 'Test Product',
             price: { amount: 100, currency: 'TWD' },
-            category: 'ELECTRONICS',
+            category: 'ELECTRONICS' as any,
             inStock: true,
-            status: 'ACTIVE',
+            status: 'ACTIVE' as any,
             images: []
         } as any;
 

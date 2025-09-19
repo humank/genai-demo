@@ -16,6 +16,11 @@ export interface ConnectionStats {
 
 /**
  * Real-time analytics service for WebSocket communication.
+ * 
+ * ⚠️ NOTICE: This service is prepared for future WebSocket integration.
+ * Backend WebSocket endpoints are not yet implemented.
+ * Currently returns mock data and simulated connection states.
+ * 
  * Handles connection management, subscription/unsubscription, and reconnection logic.
  */
 @Injectable({
@@ -50,8 +55,12 @@ export class RealTimeAnalyticsService implements OnDestroy {
     const host = environment.production ? window.location.host : 'localhost:8080';
     this.wsUrl = `${protocol}//${host}/ws/analytics`;
 
-    // Auto-connect on service initialization
-    this.connect();
+    // ⚠️ DISABLED: Auto-connect disabled until backend WebSocket is implemented
+    // this.connect();
+    
+    // Simulate disconnected state for now
+    this.connectionStateSubject.next('disconnected');
+    console.warn('RealTimeAnalyticsService: WebSocket functionality disabled - backend not implemented');
 
     // Handle page visibility changes
     document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
@@ -59,8 +68,17 @@ export class RealTimeAnalyticsService implements OnDestroy {
 
   /**
    * Establish WebSocket connection
+   * ⚠️ DISABLED: Backend WebSocket endpoint not implemented
    */
   connect(): void {
+    console.warn('WebSocket connection disabled - backend endpoint not implemented');
+    console.info('Planned WebSocket URL would be:', this.wsUrl);
+    
+    // Simulate connection attempt failure
+    this.connectionStateSubject.next('error');
+    return;
+
+    /* DISABLED UNTIL BACKEND IMPLEMENTATION
     if (this.isConnecting || (this.socket && this.socket.readyState === WebSocket.OPEN)) {
       return;
     }
@@ -75,6 +93,7 @@ export class RealTimeAnalyticsService implements OnDestroy {
       console.error('Failed to create WebSocket connection:', error);
       this.handleConnectionError();
     }
+    */
   }
 
   /**
@@ -95,16 +114,23 @@ export class RealTimeAnalyticsService implements OnDestroy {
 
   /**
    * Subscribe to a specific analytics channel
+   * ⚠️ MOCK: Returns simulated data until backend is implemented
    */
   subscribe(channel: string): void {
     this.subscriptions.add(channel);
+    console.info(`Mock subscription to channel: ${channel} (backend not implemented)`);
     
+    // Simulate mock data for development
+    this.simulateMockData(channel);
+    
+    /* DISABLED UNTIL BACKEND IMPLEMENTATION
     if (this.isConnected()) {
       this.sendMessage({
         action: 'subscribe',
         channel: channel
       });
     }
+    */
   }
 
   /**
@@ -275,5 +301,76 @@ export class RealTimeAnalyticsService implements OnDestroy {
         this.ping();
       }
     }
+  }
+
+  /**
+   * Simulate mock data for development purposes
+   * ⚠️ TEMPORARY: Remove when backend WebSocket is implemented
+   */
+  private simulateMockData(channel: string): void {
+    // Simulate periodic mock data based on channel type
+    const mockDataInterval = setInterval(() => {
+      let mockMessage: AnalyticsUpdateMessage;
+
+      switch (channel) {
+        case 'business-metrics':
+          mockMessage = {
+            type: 'business-metrics',
+            data: {
+              totalOrders: Math.floor(Math.random() * 1000) + 500,
+              revenue: Math.floor(Math.random() * 50000) + 10000,
+              activeUsers: Math.floor(Math.random() * 200) + 50
+            },
+            timestamp: new Date().toISOString()
+          };
+          break;
+        case 'user-activity':
+          mockMessage = {
+            type: 'user-activity',
+            data: {
+              pageViews: Math.floor(Math.random() * 100) + 20,
+              uniqueVisitors: Math.floor(Math.random() * 50) + 10,
+              bounceRate: (Math.random() * 0.3 + 0.2).toFixed(2)
+            },
+            timestamp: new Date().toISOString()
+          };
+          break;
+        case 'system-health':
+          mockMessage = {
+            type: 'system-health',
+            data: {
+              cpuUsage: (Math.random() * 30 + 20).toFixed(1),
+              memoryUsage: (Math.random() * 40 + 30).toFixed(1),
+              responseTime: Math.floor(Math.random() * 200) + 100
+            },
+            timestamp: new Date().toISOString()
+          };
+          break;
+        case 'api-performance':
+          mockMessage = {
+            type: 'api-performance',
+            data: {
+              averageResponseTime: Math.floor(Math.random() * 300) + 100,
+              requestsPerSecond: Math.floor(Math.random() * 50) + 10,
+              errorRate: (Math.random() * 0.05).toFixed(3)
+            },
+            timestamp: new Date().toISOString()
+          };
+          break;
+        default:
+          mockMessage = {
+            type: 'generic',
+            data: { message: `Mock data for ${channel}` },
+            timestamp: new Date().toISOString()
+          };
+      }
+
+      this.messageSubject.next(mockMessage);
+    }, 5000); // Send mock data every 5 seconds
+
+    // Clean up interval when service is destroyed
+    this.destroy$.subscribe(() => {
+      clearInterval(mockDataInterval);
+    });
   }
 }

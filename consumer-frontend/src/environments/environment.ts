@@ -16,11 +16,17 @@ export const environment = {
       sampleRate: 1.0 // 開發環境 100% 採樣
     },
     features: {
-      userBehaviorTracking: true,
-      performanceMetrics: true,
-      businessEvents: true,
-      errorTracking: true,
-      apiTracking: true
+      userBehaviorTracking: true, // ✅ Works independently
+      performanceMetrics: true,   // ✅ Works independently  
+      businessEvents: true,       // ✅ Works with basic backend API
+      errorTracking: true,        // ✅ Works independently
+      apiTracking: true          // ✅ Works with basic backend API
+    },
+    // Development mode notices
+    notices: {
+      websocketDisabled: true,    // WebSocket features use mock data
+      analyticsPartial: true,     // Analytics API partially implemented
+      realTimeDisabled: true      // Real-time features use mock data
     }
   }
 };

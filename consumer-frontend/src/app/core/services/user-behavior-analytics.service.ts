@@ -38,6 +38,14 @@ export interface ConversionFunnel {
     metadata?: Record<string, any>;
 }
 
+/**
+ * User Behavior Analytics Service
+ * 
+ * ✅ FULLY FUNCTIONAL: This service works independently of backend WebSocket features.
+ * It tracks user interactions locally and sends data through the standard observability service.
+ * 
+ * Note: Real-time analytics dashboard features depend on WebSocket integration (planned for next phase).
+ */
 @Injectable({
     providedIn: 'root'
 })

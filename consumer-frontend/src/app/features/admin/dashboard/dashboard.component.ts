@@ -41,8 +41,8 @@ interface RealtimeData {
   template: `
     <div class="dashboard-container p-6">
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">即時分析儀表板</h1>
-        <p class="text-gray-600">監控業務指標和用戶行為的即時數據</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">分析儀表板</h1>
+        <p class="text-gray-600">監控業務指標和用戶行為數據 (使用模擬數據)</p>
       </div>
 
       <!-- Connection Status -->
@@ -54,13 +54,16 @@ interface RealtimeData {
                 class="w-3 h-3 rounded-full"
                 [class]="getConnectionStatusClass()">
               </div>
-              <span class="font-medium">WebSocket 連接狀態: {{ connectionStatus }}</span>
+              <span class="font-medium">
+                WebSocket 狀態: {{ connectionStatus }} 
+                <span class="text-sm text-orange-600 ml-2">(後端未實現，顯示模擬數據)</span>
+              </span>
             </div>
             <p-button 
               label="重新連接" 
               icon="pi pi-refresh"
-              [disabled]="connectionStatus === 'connected'"
-              (onClick)="reconnect()"
+              [disabled]="true"
+              title="WebSocket 功能將在下一階段實現"
               size="small">
             </p-button>
           </div>
@@ -287,21 +290,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private initializeWebSocketConnection(): void {
-    // Monitor connection state
+    // ⚠️ MOCK DATA: WebSocket backend not implemented, using mock data
+    console.info('Dashboard: Using mock WebSocket data (backend not implemented)');
+    
+    // Monitor connection state (will show 'error' since WebSocket is disabled)
     this.realTimeAnalytics.connectionState$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         this.connectionStatus = state;
       });
 
-    // Subscribe to real-time analytics updates
+    // Subscribe to mock analytics updates
     this.realTimeAnalytics.subscribe('business-metrics');
     this.realTimeAnalytics.subscribe('user-activity');
 
-    // Handle incoming messages
+    // Handle incoming mock messages
     this.realTimeAnalytics.messages$
       .pipe(takeUntil(this.destroy$))
       .subscribe(message => {
+        console.info('Dashboard: Received mock data:', message);
         this.handleRealtimeMessage(message);
       });
   }
@@ -485,11 +492,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return timestamp.toLocaleTimeString();
   }
 
-  getActivitySeverity(status: string): 'success' | 'info' | 'warning' | 'danger' {
+  getActivitySeverity(status: string): 'success' | 'info' | 'warn' | 'danger' {
     switch (status) {
       case 'success': return 'success';
       case 'error': return 'danger';
-      case 'warning': return 'warning';
+      case 'warning': return 'warn';
       default: return 'info';
     }
   }

@@ -72,10 +72,15 @@ describe('HomeComponent Observability Integration', () => {
                     id: 'product-1',
                     name: 'Test Product 1',
                     price: { amount: 100, currency: 'TWD' },
-                    category: 'ELECTRONICS',
+                    category: 'ELECTRONICS' as any,
                     inStock: true,
-                    status: 'ACTIVE',
-                    images: [{ url: 'test-image.jpg' }]
+                    status: 'ACTIVE' as any,
+                    images: [{ 
+                        id: 'img-1', 
+                        url: 'test-image.jpg', 
+                        type: 'PRIMARY' as any, 
+                        sortOrder: 1 
+                    }]
                 }
             ],
             totalElements: 1,
@@ -87,10 +92,10 @@ describe('HomeComponent Observability Integration', () => {
         }));
         // Mock cart$ as a property
         Object.defineProperty(cartService, 'cart$', {
-            value: of({ items: [], totalAmount: 0, itemCount: 0 }),
+            value: of({ items: [], totalAmount: { amount: 0, currency: 'USD' }, itemCount: 0 }),
             writable: false
         });
-        cartService.addToCart.and.returnValue(of({ items: [], totalAmount: 0, itemCount: 0 }));
+        cartService.addToCart.and.returnValue(of({ items: [], totalAmount: { amount: 0, currency: 'USD' }, itemCount: 0 }));
     });
 
     it('should create', () => {
@@ -113,7 +118,7 @@ describe('HomeComponent Observability Integration', () => {
         // Given
         const category = {
             label: '電子產品',
-            value: 'ELECTRONICS',
+            value: 'ELECTRONICS' as any,
             productCount: 156
         };
 
@@ -122,7 +127,7 @@ describe('HomeComponent Observability Integration', () => {
 
         // Then
         expect(observabilityService.trackUserAction).toHaveBeenCalledWith('category_hover', jasmine.objectContaining({
-            categoryId: 'ELECTRONICS',
+            categoryId: 'ELECTRONICS' as any,
             categoryName: '電子產品',
             position: 1,
             section: 'categories_showcase',
@@ -138,7 +143,7 @@ describe('HomeComponent Observability Integration', () => {
                 id: 'product-1',
                 name: 'Test Product',
                 price: { amount: 100, currency: 'TWD' },
-                category: 'ELECTRONICS',
+                category: 'ELECTRONICS' as any,
                 inStock: true,
                 images: []
             } as any
@@ -165,7 +170,7 @@ describe('HomeComponent Observability Integration', () => {
             id: 'product-1',
             name: 'Test Product',
             price: { amount: 100, currency: 'TWD' },
-            category: 'ELECTRONICS',
+            category: 'ELECTRONICS' as any,
             inStock: true,
             images: []
         } as any;
@@ -180,7 +185,7 @@ describe('HomeComponent Observability Integration', () => {
                 productId: 'product-1',
                 productName: 'Test Product',
                 productPrice: 100,
-                productCategory: 'ELECTRONICS',
+                productCategory: 'ELECTRONICS' as any,
                 section: 'products_showcase',
                 inStock: true
             })
@@ -193,7 +198,7 @@ describe('HomeComponent Observability Integration', () => {
             id: 'product-1',
             name: 'Test Product',
             price: { amount: 100, currency: 'TWD' },
-            category: 'ELECTRONICS',
+            category: 'ELECTRONICS' as any,
             inStock: true,
             images: []
         } as any;
@@ -220,7 +225,7 @@ describe('HomeComponent Observability Integration', () => {
             id: 'product-1',
             name: 'Test Product',
             price: { amount: 100, currency: 'TWD' },
-            category: 'ELECTRONICS',
+            category: 'ELECTRONICS' as any,
             inStock: true,
             images: []
         } as any;
