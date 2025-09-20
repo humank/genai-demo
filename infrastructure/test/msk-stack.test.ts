@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import * as sns from 'aws-cdk-lib/aws-sns';
-import { MSKStack } from '../lib/stacks/msk-stack';
+import { MSKStack } from '../src/stacks/msk-stack';
 
 describe('MSKStack', () => {
     let app: cdk.App;

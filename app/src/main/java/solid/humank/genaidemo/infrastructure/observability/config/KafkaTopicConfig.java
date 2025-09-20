@@ -1,7 +1,6 @@
 package solid.humank.genaidemo.infrastructure.observability.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
  * 需求: 3.1, 3.2
  */
 @Configuration
-@ConditionalOnProperty(name = "genai-demo.events.publisher", havingValue = "kafka")
 public class KafkaTopicConfig {
 
     @Value("${genai-demo.domain-events.topic.prefix:genai-demo}")

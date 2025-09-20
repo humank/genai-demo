@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { CertificateStack } from '../lib/stacks/certificate-stack';
+import { CertificateStack } from '../src/stacks/certificate-stack';
 
 describe('Certificate Stack', () => {
     describe('Without Domain', () => {

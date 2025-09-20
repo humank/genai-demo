@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,13 +38,12 @@ public class DataRetentionService {
     }
 
     /**
-     * 定期執行數據清理
-     * 每天凌晨 2 點執行
+     * 手動執行數據清理 (原定期任務已移除)
+     * 可通過 API 或管理界面手動觸發
      */
-    @Scheduled(cron = "0 0 2 * * ?")
     @Transactional
-    public void performScheduledCleanup() {
-        logger.info("Starting scheduled data retention cleanup");
+    public void performManualCleanup() {
+        logger.info("Starting manual data retention cleanup");
 
         try {
             Map<String, Object> beforeStats = getDataRetentionStats();
@@ -61,7 +59,7 @@ public class DataRetentionService {
             logCleanupResults(beforeStats, afterStats, cleanedRecords);
 
         } catch (Exception e) {
-            logger.error("Error during scheduled data retention cleanup", e);
+            logger.error("Error during manual data retention cleanup", e);
             throw e;
         }
     }

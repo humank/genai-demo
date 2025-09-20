@@ -1,0 +1,33 @@
+{
+  "name": "genai-demo",
+  "version": "1.0.0",
+  "description": "Enterprise-grade e-commerce platform with DDD + Hexagonal Architecture, observability, and cloud-native deployment",
+  "main": "excalidraw-mcp-simple.js",
+  "directories": {
+    "doc": "docs",
+    "infrastructure": "infrastructure",
+    "app": "app"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd app && ./gradlew build",
+    "test:backend": "cd app && ./gradlew test",
+    "test:infrastructure": "cd infrastructure && npm test",
+    "deploy:dev": "cd infrastructure && ./deploy-consolidated.sh development us-east-1 false",
+    "deploy:prod": "cd infrastructure && ./deploy-consolidated.sh production us-east-1 true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humank/genai-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/humank/genai-demo/issues"
+  },
+  "homepage": "https://github.com/humank/genai-demo#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.1"
+  }
+}

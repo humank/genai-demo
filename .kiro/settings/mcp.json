@@ -60,6 +60,24 @@
         "get_pricing",
         "generate_cost_report"
       ]
+    },
+    "excalidraw": {
+      "command": "node",
+      "args": [
+        "/Users/yikaikao/git/genai-demo/excalidraw-mcp-full/dist/index.js"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "create_drawing",
+        "get_drawing",
+        "update_drawing",
+        "delete_drawing",
+        "list_drawings",
+        "export_to_svg",
+        "export_to_png",
+        "export_to_json"
+      ]
     }
   }
 }

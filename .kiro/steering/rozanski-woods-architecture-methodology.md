@@ -44,6 +44,15 @@ inclusion: always
 - [ ] Log structure designed
 - [ ] Failure handling procedures
 
+#### Context Viewpoint
+
+- [ ] External system integration boundaries defined
+- [ ] Stakeholder interaction models documented
+- [ ] System boundary and external dependencies mapped
+- [ ] Integration protocols and data exchange formats specified
+- [ ] External service contracts and SLAs defined
+- [ ] Organizational and regulatory constraints identified
+
 ## Quality Attribute Scenario Requirements
 
 ### Each user story must include at least one quality attribute scenario

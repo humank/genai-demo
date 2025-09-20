@@ -52,6 +52,10 @@ spring:
   test:
     database:
       replace: none
+  
+  # Kafka Configuration (Completely Disabled in Tests)
+  kafka:
+    enabled: false  # Explicitly disable Kafka auto-configuration
 
 # Logging Configuration for Tests
 logging:

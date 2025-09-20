@@ -44,16 +44,9 @@ spring:
     baseline-on-migrate: true
     validate-on-migrate: false
 
-  # Kafka Configuration (Disabled in Development)
-  kafka:
-    bootstrap-servers: localhost:9092
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    consumer:
-      group-id: genai-demo-dev
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  # Kafka Configuration (Removed for simplicity)
+  # kafka:
+  #   enabled: false
 
 # Development Logging Configuration
 logging:
@@ -69,20 +62,20 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-},%X{correlationId:-}] %logger{36} - %msg%n"
 
-# Development Tracing Configuration
+# Development Tracing Configuration (DISABLED for compatibility)
 tracing:
-  enabled: true
+  enabled: false
   sampling:
-    ratio: 1.0  # Sample all traces in development
+    ratio: 0.0  # Disable all traces in development
   jaeger:
     endpoint: http://localhost:14250
   otlp:
     endpoint: http://localhost:4317
 
-# OpenTelemetry Development Configuration
+# OpenTelemetry Development Configuration (DISABLED)
 otel:
   traces:
-    exporter: jaeger
+    exporter: none
   exporter:
     jaeger:
       endpoint: http://localhost:14250
@@ -107,33 +100,21 @@ management:
     export:
       cloudwatch:
         enabled: false  # Disabled in development
+  tracing:
+    enabled: false  # Disable tracing completely
 
-# Analytics Configuration for Development (Disabled)
+# Analytics Configuration for Development (Completely Disabled)
 analytics:
-  enabled: false
-  firehose:
-    stream-name: "dev-stream"
-    batch-size: 10
-    max-wait-time-ms: 1000
-  data-lake:
-    bucket-name: "dev-bucket"
-    event-prefix: "domain-events/"
-  glue:
-    database-name: "dev_database"
-    crawler-name: "dev-crawler"
-  quicksight:
-    data-source-id: "dev-datasource"
-    executive-dashboard-id: "dev-executive-dashboard"
-    operations-dashboard-id: "dev-operations-dashboard"
+  enabled: false  # 完全禁用分析功能
 
-# Development Profile Features
+# Development Profile Features - 最小化配置
 app:
   profile:
     name: dev
-    description: "Development profile with H2 database and in-memory events"
+    description: "Development profile - minimal configuration"
     features:
       h2-console: true
-      debug-logging: true
+      debug-logging: false
       in-memory-events: true
       kafka-events: false
       analytics-enabled: false
@@ -142,36 +123,6 @@ genai-demo:
   events:
     publisher: in-memory  # 記憶體事件處理
     async: false         # 同步處理便於除錯
+  
   observability:
-    analytics:
-      enabled: true
-      storage: in-memory  # 指標存在記憶體中
-      retention-minutes: 60
-      batch-processing:
-        enabled: false    # 開發環境不需要批次處理
-        batch-size: 10
-        flush-interval-seconds: 5
-    tracing:
-      enabled: true
-      exporter: jaeger
-      sampling-rate: 1.0
-      correlation-id-header: "X-Trace-Id"
-      session-id-header: "X-Session-Id"
-    metrics:
-      enabled: true
-      export-interval: 10s
-      business-metrics:
-        enabled: true
-        retention-hours: 24
-      performance-metrics:
-        enabled: true
-        web-vitals-collection: true
-    logging:
-      structured: true
-      correlation-enabled: true
-      mdc-integration: true
-    websocket:
-      enabled: true
-      endpoint: "/ws/analytics"
-      allowed-origins: "http://localhost:4200,http://localhost:3000"
-      heartbeat-interval: 30000
+    enabled: false        # 完全禁用可觀測性功能

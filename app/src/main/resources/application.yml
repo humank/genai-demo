@@ -11,6 +11,11 @@ spring:
     version: 2.0.0
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
+    group:
+      dev: "dev,openapi"
+      prod: "prod,openapi"
+      k8s: "k8s,openapi"
+      test: "test,openapi"
   
   # Configuration import - conditional based on profile
   config:
@@ -86,19 +91,19 @@ info:
     profiles:
       active: ${spring.profiles.active}
       
-# Distributed Tracing Configuration
+# Distributed Tracing Configuration (DISABLED)
 tracing:
-  enabled: true
+  enabled: false
   sampling:
-    ratio: 1.0  # Sample all traces in development
+    ratio: 0.0  # Disable all traces
   jaeger:
     endpoint: http://localhost:14250
   otlp:
     endpoint: http://localhost:4317
   correlation:
-    enabled: true
+    enabled: false
 
-# OpenTelemetry Configuration
+# OpenTelemetry Configuration (DISABLED)
 otel:
   service:
     name: ${spring.application.name}
@@ -107,7 +112,7 @@ otel:
     attributes:
       deployment.environment: ${spring.profiles.active}
   traces:
-    exporter: jaeger  # Will be overridden in production profile
+    exporter: none  # Disable tracing
   metrics:
     exporter: none    # Disable OTEL metrics, use Micrometer instead
 

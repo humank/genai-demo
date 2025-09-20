@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '3.3.13'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
@@ -38,7 +38,8 @@ def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // WebSocket support removed for simplicity
+    // implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -48,9 +49,9 @@ dependencies {
     // PostgreSQL driver for production profile
     runtimeOnly 'org.postgresql:postgresql'
     
-    // Kafka support for production event publishing
-    implementation 'org.springframework.kafka:spring-kafka'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    // Kafka support removed for simplicity
+    // implementation 'org.springframework.kafka:spring-kafka'
+    // testImplementation 'org.springframework.kafka:spring-kafka-test'
     
     // AOP support for logging aspects
     implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -155,6 +156,8 @@ dependencies {
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
     options.compilerArgs += '-Xlint:unchecked'
+    // 暫時關閉棄用警告，避免過多輸出
+    // options.compilerArgs += '-Xlint:deprecation'
     options.release = 21
     
     // 增加編譯器記憶體
@@ -169,76 +172,30 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(Test).configureEach {
     jvmArgs += '--enable-preview'
-    // 禁用 AspectJ weaver 以避免織入問題
-    jvmArgs += '-Dallure.aspectj.enabled=false'
     
-    // 增強記憶體配置以支持記憶體密集型測試
-    maxHeapSize = '6g'  // 增加預設堆記憶體
-    minHeapSize = '2g'  // 增加最小堆記憶體
+    // 基本記憶體配置
+    maxHeapSize = '4g'
+    minHeapSize = '1g'
     
-    // 優化的JVM參數 - 支持記憶體密集型操作
+    // 基本JVM參數
     jvmArgs += [
         '-XX:MaxMetaspaceSize=1g',
         '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
-        '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=25',  // 增加新生代比例
-        '-XX:G1MaxNewSizePercent=35',
-        '-XX:+HeapDumpOnOutOfMemoryError',  // OOM時生成堆轉儲
-        '-XX:HeapDumpPath=build/reports/heap-dumps/',
-        '-Xshare:off',  // 禁用類共享以避免 bootstrap classpath 警告
-        // HttpComponents 專用JVM參數 - 適用於所有測試
-        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
-        '-Dorg.apache.commons.logging.simplelog.showdatetime=false',
-        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=ERROR',
-        // 網路配置優化
-        '-Dsun.net.useExclusiveBind=false',
-        '-Djava.net.preferIPv4Stack=true',
-        '-Djava.security.egd=file:/dev/./urandom'
+        '-Xshare:off'
     ]
     
-    // 測試執行配置 - 優化記憶體使用
-    maxParallelForks = 1  // 單線程執行避免記憶體競爭
-    forkEvery = 3         // 更頻繁重啟 JVM 以釋放記憶體
-    
-    // 合理的測試 JVM 記憶體配置
-    minHeapSize = "2g"
-    maxHeapSize = "6g"    // 減少到 6g，應該足夠了
+    // 測試執行配置
+    maxParallelForks = 1
+    forkEvery = 5
     
     // 測試執行超時配置
-    timeout = Duration.ofMinutes(15)  // 預設測試超時15分鐘
+    timeout = Duration.ofMinutes(15)
     
-    // Set system properties for test environment
+    // 基本系統屬性
     systemProperty 'spring.profiles.active', 'test'
-    systemProperty 'management.health.defaults.enabled', 'false'
-    systemProperty 'management.endpoint.health.show-details', 'never'
-    
-    // HTTP 客戶端超時配置
-    systemProperty 'http.client.connection.timeout', '5000'
-    systemProperty 'http.client.socket.timeout', '15000'
-    systemProperty 'http.client.connection.request.timeout', '3000'
-    
-    // 減少日誌輸出 - 只顯示錯誤
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.springframework', 'ERROR'
-    systemProperty 'logging.level.org.hibernate', 'ERROR'
-    systemProperty 'logging.level.solid.humank.genaidemo', 'ERROR'
-    
-    // 禁用不必要的功能以節省記憶體
     systemProperty 'spring.jmx.enabled', 'false'
     systemProperty 'spring.main.lazy-initialization', 'true'
-    
-    // AspectJ 優化 - 完全禁用 Load-Time Weaving 以節省記憶體和減少日誌
-    systemProperty 'aj.weaving.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
-    systemProperty 'org.aspectj.weaver.Dump.exception', 'false'
-    systemProperty 'org.aspectj.weaver.loadtime.debug', 'false'
-    systemProperty 'org.aspectj.weaver.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.debug', 'false'
-    systemProperty 'org.aspectj.weaver.messages', 'false'
-    systemProperty 'org.aspectj.ltw.enabled', 'false'  // 完全禁用 Load-Time Weaving
-    systemProperty 'spring.aop.auto', 'false'          // 禁用 Spring AOP 自動配置
 }
 
 tasks.withType(JavaExec).configureEach {
@@ -251,7 +208,7 @@ tasks.withType(JavaExec).configureEach {
 
 // 快速單元測試任務 - 日常開發使用
 tasks.register('unitTest', Test) {
-    description = '運行快速單元測試 (~5MB, ~50ms 每個)'
+    description = '運行快速單元測試'
     group = 'verification'
     
     useJUnitPlatform {
@@ -259,38 +216,22 @@ tasks.register('unitTest', Test) {
         includeTags 'unit'
     }
     
-    // 輕量級配置
     maxHeapSize = '2g'
     minHeapSize = '512m'
-    maxParallelForks = Runtime.runtime.availableProcessors()
-    forkEvery = 0  // 不重啟 JVM，提高速度
     
-    // 快速反饋配置
     testLogging {
         events "passed", "failed", "skipped"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
     
-    // 基本系統屬性 - 使用最小化配置
-    systemProperty 'spring.profiles.active', 'test-minimal'
+    systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.aspectj', 'OFF'
-    systemProperty 'logging.level.io.qameta.allure', 'OFF'
-    systemProperty 'spring.main.lazy-initialization', 'true'
-    systemProperty 'spring.jmx.enabled', 'false'
-    
-    // AspectJ 日誌抑制
-    systemProperty 'aj.weaving.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
-    systemProperty 'org.aspectj.weaver.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.debug', 'false'
-    systemProperty 'org.aspectj.ltw.enabled', 'false'
 }
 
 // 集成測試任務 - 提交前使用
 tasks.register('integrationTest', Test) {
-    description = '運行集成測試 (~50MB, ~500ms 每個)'
+    description = '運行集成測試'
     group = 'verification'
     
     useJUnitPlatform {
@@ -298,200 +239,65 @@ tasks.register('integrationTest', Test) {
         excludeTags 'end-to-end', 'slow'
     }
     
-    // 優化的記憶體配置 - 針對記憶體密集型測試
-    maxHeapSize = '8g'  // 增加到8g以支持記憶體密集型測試
-    minHeapSize = '3g'  // 增加最小堆大小以減少GC頻率
-    maxParallelForks = 1  // 單線程執行避免記憶體競爭
-    forkEvery = 3  // 更頻繁重啟JVM以釋放記憶體，避免記憶體洩漏
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
+    maxParallelForks = 1
+    forkEvery = 3
     
-    // 記憶體密集型測試專用的JVM參數
-    jvmArgs += [
-        '--enable-preview',
-        // 記憶體管理優化
-        '-XX:MaxMetaspaceSize=2g',  // 增加Metaspace以支持更多類加載
-        '-XX:+UseG1GC',  // 使用G1垃圾收集器，適合大堆記憶體
-        '-XX:+UseStringDeduplication',  // 字符串去重以節省記憶體
-        '-XX:G1HeapRegionSize=64m',  // 增大堆區域大小以減少GC開銷
-        '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=30',  // 增加新生代比例
-        '-XX:G1MaxNewSizePercent=40',  // 增加新生代最大比例
-        '-XX:G1MixedGCCountTarget=8',  // 優化混合GC
-        '-XX:G1HeapWastePercent=5',  // 減少堆浪費
-        '-XX:+G1UseAdaptiveIHOP',  // 自適應初始堆佔用百分比
-        '-XX:G1MixedGCLiveThresholdPercent=85',  // 混合GC存活閾值
-        // 記憶體洩漏檢測和優化
-        '-XX:+HeapDumpOnOutOfMemoryError',  // OOM時生成堆轉儲
-        '-XX:HeapDumpPath=build/reports/heap-dumps/',  // 堆轉儲路徑
-        '-XX:+ExitOnOutOfMemoryError',  // OOM時退出JVM
-        // 性能優化
-        '-Xshare:off',  // 禁用類共享以避免bootstrap classpath警告
-        '-XX:+UseCompressedOops',  // 壓縮對象指針
-        '-XX:+UseCompressedClassPointers',  // 壓縮類指針
-        // HttpComponents 專用JVM參數
-        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
-        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
-        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG',
-        '-Dorg.apache.http.wire=DEBUG',
-        // 網路和安全配置
-        '-Dsun.net.useExclusiveBind=false',
-        '-Djava.net.preferIPv4Stack=true',
-        '-Djava.security.egd=file:/dev/./urandom'  // 加速隨機數生成
-    ]
-    
-    // 測試執行超時配置 - 記憶體密集型測試需要更長時間
-    timeout = Duration.ofMinutes(45)  // 整體測試套件超時45分鐘
+    timeout = Duration.ofMinutes(30)
     
     testLogging {
-        events "failed", "skipped", "started"
+        events "failed", "skipped"
         showStandardStreams = false
-        exceptionFormat = 'full'
-        showExceptions = true
-        showCauses = true
-        showStackTraces = true
+        exceptionFormat = 'short'
     }
     
-    systemProperties = [
-        // JUnit 配置 - 記憶體密集型測試需要更長超時
-        'junit.jupiter.execution.timeout.default': '5m',  // 單個測試方法超時5分鐘
-        'junit.jupiter.execution.timeout.testable.method.default': '5m',
-        'junit.jupiter.execution.timeout.testtemplate.method.default': '5m',
-        'junit.jupiter.execution.parallel.enabled': 'false',  // 禁用並行執行以避免資源競爭
-        
-        // Spring 測試配置
-        'spring.profiles.active': 'test',
-        'spring.main.lazy-initialization': 'true',
-        'spring.jmx.enabled': 'false',
-        
-        // HTTP 客戶端配置
-        'http.client.connection.timeout': '10000',  // 10秒連接超時
-        'http.client.socket.timeout': '30000',      // 30秒讀取超時
-        'http.client.connection.request.timeout': '5000',  // 5秒請求超時
-        
-        // 日誌配置
-        'logging.level.root': 'ERROR',
-        'logging.level.solid.humank.genaidemo': 'INFO',
-        'logging.level.org.springframework.web': 'DEBUG',
-        'logging.level.org.apache.http': 'DEBUG',
-        'logging.level.org.aspectj': 'OFF',
-        'logging.level.io.qameta.allure': 'OFF',
-        
-        // 測試資源管理
-        'test.resource.cleanup.enabled': 'true',
-        'test.memory.monitoring.enabled': 'true'
-    ]
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'ERROR'
 }
 
 
 // 端到端測試任務 - 發布前使用
 tasks.register('e2eTest', Test) {
-    description = '運行端到端測試 (~500MB, ~3s 每個)'
+    description = '運行端到端測試'
     group = 'verification'
     
     useJUnitPlatform {
         includeTags 'end-to-end'
     }
     
-    // 完整配置 - 針對端到端測試優化
-    maxHeapSize = '8g'  // 增加到8g以支持完整的端到端測試
-    minHeapSize = '3g'  // 增加最小堆大小
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
     maxParallelForks = 1
-    forkEvery = 2  // 每2個測試重啟JVM以確保乾淨的環境
+    forkEvery = 2
     
-    // 端到端測試專用的JVM參數
-    jvmArgs += [
-        '--enable-preview',
-        '-XX:MaxMetaspaceSize=2g',  // 增加Metaspace以支持更多類加載
-        '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
-        '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=20',
-        '-XX:G1MaxNewSizePercent=30',
-        '-Xshare:off',
-        // HttpComponents 專用JVM參數
-        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
-        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
-        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=INFO',
-        // 網路和安全配置
-        '-Dsun.net.useExclusiveBind=false',
-        '-Djava.net.preferIPv4Stack=true',
-        '-Djava.security.egd=file:/dev/./urandom'  // 加速隨機數生成
-    ]
-    
-    // 測試執行超時配置 - 端到端測試需要更長時間
-    timeout = Duration.ofHours(1)  // 整體測試套件超時1小時
+    timeout = Duration.ofMinutes(60)
     
     testLogging {
-        events "failed", "skipped", "passed", "started"
-        showStandardStreams = true
-        exceptionFormat = 'full'
-        showExceptions = true
-        showCauses = true
-        showStackTraces = true
+        events "failed", "skipped", "passed"
+        showStandardStreams = false
+        exceptionFormat = 'short'
     }
     
-    systemProperties = [
-        // JUnit 配置 - 端到端測試需要更長超時
-        'junit.jupiter.execution.timeout.default': '5m',  // 單個測試方法超時5分鐘
-        'junit.jupiter.execution.timeout.testable.method.default': '5m',
-        'junit.jupiter.execution.timeout.testtemplate.method.default': '5m',
-        'junit.jupiter.execution.parallel.enabled': 'false',
-        
-        // Spring 測試配置
-        'spring.profiles.active': 'test',
-        'spring.main.lazy-initialization': 'false',  // 端到端測試需要完整初始化
-        'spring.jmx.enabled': 'false',
-        
-        // HTTP 客戶端配置 - 端到端測試需要更長超時
-        'http.client.connection.timeout': '30000',  // 30秒連接超時
-        'http.client.socket.timeout': '60000',      // 60秒讀取超時
-        'http.client.connection.request.timeout': '10000',  // 10秒請求超時
-        
-        // 日誌配置
-        'logging.level.root': 'INFO',
-        'logging.level.solid.humank.genaidemo': 'DEBUG',
-        'logging.level.org.springframework.web': 'DEBUG',
-        'logging.level.org.apache.http': 'INFO',
-        
-        // 測試資源管理
-        'test.resource.cleanup.enabled': 'true',
-        'test.memory.monitoring.enabled': 'true',
-        'test.performance.monitoring.enabled': 'true'
-    ]
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'INFO'
 }
 
-// 標準測試任務 - 保持向後兼容，但優化配置
+// 標準測試任務 - 保持向後兼容
 tasks.named('test') {
-    description = '運行所有測試（向後兼容）'
+    description = '運行所有測試'
     
-    useJUnitPlatform {
-        // 包含所有測試
-    }
+    useJUnitPlatform()
     
-    // 優化後的配置
     maxHeapSize = '4g'
     minHeapSize = '1g'
-    maxParallelForks = 2
-    forkEvery = 5
     
-    // Allure 配置
-    systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
-    systemProperty 'allure.epic', 'DDD架構測試'
-    systemProperty 'allure.feature', 'JUnit測試'
-    
-    // 簡化測試日誌輸出
     testLogging {
         events "failed"
         showStandardStreams = false
         exceptionFormat = 'short'
-        showExceptions = true
-        showCauses = true
-        showStackTraces = false
     }
     
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
-    systemProperty 'junit.platform.output.capture.stdout', 'false'
-    systemProperty 'junit.platform.output.capture.stderr', 'true'
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
 }
@@ -502,37 +308,18 @@ tasks.register('cucumber', JavaExec) {
     getMainClass().set("io.cucumber.core.cli.Main")
     classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
     
-    // 增加記憶體配置
     maxHeapSize = '4g'
-    jvmArgs += [
-        '--enable-preview',
-        '-XX:MaxMetaspaceSize=1g',
-        '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
-        '-Xshare:off'  // 禁用類共享以避免 bootstrap classpath 警告
-    ]
+    jvmArgs += ['--enable-preview', '-Xshare:off']
     
     args = [
-        '--plugin', 'progress',  // 使用簡潔的 progress 輸出而非 pretty
+        '--plugin', 'progress',
         '--plugin', 'html:build/reports/cucumber/cucumber-report.html',
         '--plugin', 'json:build/reports/cucumber/cucumber-report.json',
-        '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
         '--glue', 'solid.humank.genaidemo.bdd',
         'src/test/resources/features'
     ]
     
-    systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
-    systemProperty 'allure.epic', 'BDD功能測試'
-    systemProperty 'allure.feature', 'Cucumber測試'
-    
-    // 減少日誌輸出
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.springframework', 'ERROR'
-    systemProperty 'logging.level.solid.humank.genaidemo', 'ERROR'
-    
-    // 確保 Cucumber 測試結果被正確處理
-    finalizedBy 'prepareAllureResults'
 }
 
 

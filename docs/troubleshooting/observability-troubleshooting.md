@@ -338,9 +338,12 @@ testWebSocket();
 
 **解決方案**:
 
-1. **檢查 WebSocket 配置**:
+1. **檢查 WebSocket 配置 (計劃中的功能)**:
+
+**注意：WebSocket 功能目前尚未完全實現，將在下一階段開發**
 
 ```java
+// 計劃中的 WebSocket 配置
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
