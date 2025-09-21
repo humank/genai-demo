@@ -271,7 +271,7 @@ A: 使用相對路徑，檢查檔案存在性，更新移動後的檔案路徑
 
 - **文件**: [metadata-standards.md](metadata-standards.md)
 - **範例**: [examples/](examples/)
-- **工具**: [../scripts/](../scripts/)
+- **工具**: \1
 - **問題回報**: 使用 GitHub Issues
 
 這個模板系統確保了文件的一致性、可維護性和自動化處理能力，支援整個專案的文件重構需求。

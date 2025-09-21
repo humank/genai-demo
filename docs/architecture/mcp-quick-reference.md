@@ -68,7 +68,7 @@ infrastructure/docs/
 ├── 📊 well-architected-assessment.md      # 詳細 WA 審查
 ├── 🤖 automated-architecture-assessment.md # 自動架構分析  
 ├── 📈 continuous-improvement-report.md     # 持續改進監控
-├── 👔 reports-summaries/infrastructure/executive-summary.md                 # 高層執行摘要
+├── 👔 ../../reports-summaries/infrastructure/executive-summary.md                 # 高層執行摘要
 ├── 🧪 reports-summaries/infrastructure/mcp-integration-test-report.md      # MCP 測試結果
 └── 📋 assessment-summary/                  # 綜合評估摘要
 ```
@@ -77,7 +77,7 @@ infrastructure/docs/
 
 ```bash
 # 查看最新評估結果
-cat infrastructure/docs/reports-summaries/infrastructure/executive-summary.md
+cat infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md
 
 # 檢查 MCP 測試狀態  
 cat infrastructure/docs/reports-summaries/infrastructure/mcp-integration-test-report.md
@@ -124,7 +124,7 @@ jq '.costAnalysis' infrastructure/docs/architecture-assessment-summary.json
 npm run mcp:test
 
 # 查看關鍵指標
-cat infrastructure/docs/reports-summaries/infrastructure/executive-summary.md | head -20
+cat infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md | head -20
 ```
 
 ### 每週任務 (30 分鐘)
@@ -197,8 +197,8 @@ npm run assessment:complete
 ### 必讀文檔
 
 1. [MCP 整合重要性說明](mcp-integration-importance.md)
-2. [任務 22 執行摘要](task-22-reports-summaries/infrastructure/executive-summary.md)
-3. [完整 MCP 整合指南](../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+2. [任務 22 執行摘要](../../reports-summaries/infrastructure/executive-summary.md)
+3. [完整 MCP 整合指南](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 
 ### 外部資源
 

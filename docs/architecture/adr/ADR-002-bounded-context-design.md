@@ -424,7 +424,7 @@ void shouldTriggerPromotionWhenCustomerUpgraded() {
 
 - [ADR-001: DDD + 六角形架構基礎](./ADR-001-ddd-hexagonal-architecture.md)
 - [ADR-003: 領域事件和 CQRS 實現](./ADR-003-domain-events-cqrs.md)
-- [ADR-009: MSK vs EventBridge 事件串流平台](./ADR-009-event-streaming-platform.md)
+- \1
 
 ## 參考資料
 

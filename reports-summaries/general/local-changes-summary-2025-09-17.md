@@ -333,9 +333,9 @@ infrastructure/.jest-cache/
 
 ## 📚 相關文檔
 
-- [變更日誌](../../CHANGELOG.md) - 完整版本變更記錄
-- [MCP 整合指南](../mcp/README.md) - MCP 使用指南
-- [測試性能監控](../testing/test-performance-monitoring.md) - 測試監控框架
+- \1 - 完整版本變更記錄
+- [MCP 整合指南](README.md) - MCP 使用指南
+- [測試性能監控](docs/testing/test-performance-monitoring.md) - 測試監控框架
 - [開發標準](../../.kiro/steering/README.md) - 開發標準索引
 - [專案 README](../../README.md) - 專案概覽
 

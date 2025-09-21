@@ -255,7 +255,7 @@ static final ArchRule aggregates_should_be_annotated =
 
 - [ADR-002: 限界上下文設計Policy](./ADR-002-bounded-context-design.md)
 - [ADR-003: Domain Event和 Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 實現](./ADR-003-domain-events-cqrs.md)
-- [ADR-004: Spring Boot 設定檔配置Policy](./ADR-004-spring-boot-profiles.md)
+- \1
 
 ## Reference
 

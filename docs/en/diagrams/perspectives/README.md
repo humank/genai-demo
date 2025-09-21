@@ -7,42 +7,42 @@
 
 ## 觀點圖表目錄
 
-### [Security Perspective圖表](security/README.md)
+### [Security Perspective圖表](README.md)
 - **security-architecture.puml**: 安全架構圖 (PlantUML)
 - **threat-model.mmd**: 威脅模型圖 (Mermaid)
 - **authentication-flow.puml**: 認證流程圖 (PlantUML)
 
-### [Performance & Scalability Perspective圖表](performance/README.md)
+### [Performance & Scalability Perspective圖表](README.md)
 - **performance-architecture.mmd**: Performance架構圖 (Mermaid)
 - **load-balancing.puml**: 負載平衡圖 (PlantUML)
 - **caching-strategy.mmd**: 快取Policy圖 (Mermaid)
 
-### [Availability & Resilience Perspective圖表](availability/README.md)
+### [Availability & Resilience Perspective圖表](README.md)
 - **resilience-patterns.puml**: Resilience模式圖 (PlantUML)
 - **disaster-recovery.mmd**: 災難恢復圖 (Mermaid)
 - **fault-tolerance.puml**: 容錯機制圖 (PlantUML)
 
-### [Evolution Perspective圖表](evolution/README.md)
+### [Evolution Perspective圖表](README.md)
 - **evolution-roadmap.mmd**: 演進路線圖 (Mermaid)
 - **refactoring-strategy.puml**: RefactoringPolicy圖 (PlantUML)
 - **technology-migration.mmd**: 技術遷移圖 (Mermaid)
 
-### [Availability & Resilience Perspective圖表](usability/README.md)
+### [Availability & Resilience Perspective圖表](README.md)
 - **user-experience-flow.mmd**: User體驗流程圖 (Mermaid)
 - **interface-design.puml**: 介面設計圖 (PlantUML)
 - **accessibility-features.mmd**: 無障礙功能圖 (Mermaid)
 
-### [Regulation Perspective圖表](regulation/README.md)
+### [Regulation Perspective圖表](README.md)
 - **compliance-architecture.puml**: 合規架構圖 (PlantUML)
 - **data-governance.mmd**: 資料治理圖 (Mermaid)
 - **audit-trail.puml**: 稽核軌跡圖 (PlantUML)
 
-### [Location Perspective圖表](location/README.md)
+### [Location Perspective圖表](README.md)
 - **geographic-distribution.mmd**: 地理分佈圖 (Mermaid)
 - **data-locality.puml**: 資料本地化圖 (PlantUML)
 - **edge-computing.mmd**: 邊緣運算圖 (Mermaid)
 
-### [Cost Perspective圖表](cost/README.md)
+### [Cost Perspective圖表](README.md)
 - **cost-optimization.mmd**: 成本優化圖 (Mermaid)
 - **resource-efficiency.puml**: Resource效率圖 (PlantUML)
 - **finops-dashboard.mmd**: FinOps Dashboard圖 (Mermaid)
@@ -120,7 +120,7 @@ graph TD
 
 - [Architectural Viewpoint圖表](../viewpoints/README.md) - 系統架構的不同視角圖表
 - [歷史圖表](../legacy/README.md) - 保留的歷史圖表
-- [Quality Attribute場景](../../architecture/quality-attribute-scenarios.md) - Quality Attribute場景定義
+- \1 - Quality Attribute場景定義
 
 ---
 

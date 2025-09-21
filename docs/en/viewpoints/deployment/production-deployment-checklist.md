@@ -420,8 +420,8 @@ _________________________________________________
 
 ## Related Diagrams
 
-- [Deployment檢查流程](../../diagrams/viewpoints/deployment/deployment-checklist-flow.mmd)
-- [生產Environment架構](../../diagrams/viewpoints/deployment/production-architecture.puml)
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 

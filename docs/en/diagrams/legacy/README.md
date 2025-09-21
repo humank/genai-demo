@@ -114,7 +114,7 @@ legacy/
 
 - [新Architectural Viewpoint圖表](../viewpoints/README.md) - 基於 Rozanski & Woods 的新圖表
 - [Architectural Perspective圖表](../perspectives/README.md) - Quality Attribute相關圖表
-- [架構演進文件](../../architecture/evolution-history.md) - 架構演進的詳細記錄
+- \1 - 架構演進的詳細記錄
 
 ---
 

@@ -10,7 +10,7 @@
 
 **目的**: 識別核心業務事件、發現問題熱點、找出改進機會
 
-![Big Picture Event Storming](big-picture-standardized.svg)
+!\1
 
 **標準配色**:
 - 🟠 **事件** (#FFA500): 系統中發生的重要業務事件
@@ -31,7 +31,7 @@
 
 **目的**: 詳細的命令和事件流程、聚合邊界和職責、業務策略和規則
 
-![Process Level Event Storming](process-level-standardized.svg)
+!\1
 
 **標準配色**:
 - 🟠 **事件** (#FFA500): 業務狀態變化的結果
@@ -52,7 +52,7 @@
 
 **檔案**: `design-level-standardized.puml`
 
-![Design Level Event Storming](design-level-standardized.svg)
+!\1
 
 **目的**: 完整的界限上下文設計、聚合邊界和職責劃分、跨上下文的事件整合
 
@@ -140,10 +140,10 @@ java -jar tools/plantuml.jar -tpng docs/diagrams/plantuml/event-storming/*.puml
 
 ## 相關文檔
 
-- [Event Storming 方法論指南](../../../architecture/event-storming-methodology.md)
+- \1
 - [DDD 戰術模式實現](../../../design/ddd-guide.md)
-- [界限上下文設計](../../../architecture/bounded-context-design.md)
-- [領域事件實現指南](../../../design/domain-events.md)
+- \1
+- [領域事件實現指南](docs/en/.kiro/steering/domain-events.md)
 
 ## 工具和資源
 

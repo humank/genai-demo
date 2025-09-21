@@ -341,9 +341,9 @@ on:
 ### 2. 知識文檔
 
 - [MCP 整合指南](../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
-- [Well-Architected 評估報告](../infrastructure/docs/well-architected-assessment.md)
-- [Architecture Assessment報告](../infrastructure/docs/automated-architecture-assessment.md)
-- [持續改進報告](../infrastructure/docs/continuous-improvement-report.md)
+- [Well-Architected 評估報告](infrastructure/docs/well-architected-assessment.md)
+- [Architecture Assessment報告](infrastructure/docs/automated-architecture-assessment.md)
+- \1
 
 ## 未來發展路線圖
 

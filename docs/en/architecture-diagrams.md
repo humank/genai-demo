@@ -212,10 +212,10 @@ mcp_excalidraw_export_to_svg --id 1758272821927-c24lg7z
 
 ## 🔗 相關文檔
 
-- [CDK Deployment指南](../infrastructure/README.md)
-- [多區域架構文檔](../infrastructure/MULTI_REGION_ARCHITECTURE.md)
-- [安全實施指南](../infrastructure/SECURITY_IMPLEMENTATION.md)
-- [測試指南](../infrastructure/TESTING_GUIDE.md)
+- [CDK Deployment指南](README.md)
+- [多區域架構文檔](infrastructure/MULTI_REGION_ARCHITECTURE.md)
+- [安全實施指南](infrastructure/SECURITY_IMPLEMENTATION.md)
+- [測試指南](infrastructure/TESTING_GUIDE.md)
 - [Rozanski & Woods 架構方法論](../.kiro/steering/rozanski-woods-architecture-methodology.md)
 
 ## 🔍 **最新架構分析圖表**

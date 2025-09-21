@@ -234,7 +234,7 @@ log.info("Order processed successfully",
 
 ### 架構和設計
 
-- [DDD 實踐指南](docs/architecture/ddd-guide.md)
+- [DDD 實踐指南](docs/design/ddd-guide.md)
 - [六角形架構說明](docs/architecture/hexagonal-architecture.md)
 - [事件驅動設計](docs/architecture/event-driven-design.md)
 

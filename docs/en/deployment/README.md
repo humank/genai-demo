@@ -6,7 +6,7 @@
 ## 文檔列表
 
 - [Docker 指南](docker-guide.md) - Docker ContainerizationDeployment
-- [Kubernetes 指南](kubernetes-guide.md) - Kubernetes 集群Deployment
+- [Kubernetes 指南](docs/deployment/kubernetes-guide.md) - Kubernetes 集群Deployment
 
 ## Deployment
 

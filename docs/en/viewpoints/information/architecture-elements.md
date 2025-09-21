@@ -670,6 +670,6 @@ public class DataAccessMetrics {
 
 **相關文件**:
 - [Domain Event設計](domain-events.md)
-- [資料流設計](information-flow.md)
-- [資料一致性Policy](data-consistency.md)
-- [Event Storming 分析](event-storming.md)
+- \1
+- \1
+- \1

@@ -83,18 +83,18 @@ docs/diagrams/
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [領域模型概覽](viewpoints/functional/Domain%20Model%20Overview.png) | PlantUML | DDD 聚合根總覽 | ✅ 自動生成 |
-| [客戶聚合](viewpoints/functional/Customer%20Aggregate%20Details.png) | PlantUML | 客戶聚合根詳細設計 | ✅ 自動生成 |
-| [訂單聚合](viewpoints/functional/Order%20Aggregate%20Details.png) | PlantUML | 訂單聚合根詳細設計 | ✅ 自動生成 |
-| [支付聚合](viewpoints/functional/Payment%20Aggregate%20Details.png) | PlantUML | 支付聚合根詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | DDD 聚合根總覽 | ✅ 自動生成 |
+| \1 | PlantUML | 客戶聚合根詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | 訂單聚合根詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | 支付聚合根詳細設計 | ✅ 自動生成 |
 
 ### Event Storming 圖表
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [Big Picture](viewpoints/functional/Event%20Storming%20Big%20Picture.png) | PlantUML | 事件風暴全景圖 | ✅ 自動生成 |
-| [Process Level](viewpoints/functional/Event%20Storming%20Process%20Level.png) | PlantUML | 流程層級事件圖 | ✅ 自動生成 |
-| [業務流程](viewpoints/functional/Business%20Process%20Flows.png) | PlantUML | 業務流程詳細圖 | ✅ 自動生成 |
+| \1 | PlantUML | 事件風暴全景圖 | ✅ 自動生成 |
+| \1 | PlantUML | 流程層級事件圖 | ✅ 自動生成 |
+| \1 | PlantUML | 業務流程詳細圖 | ✅ 自動生成 |
 
 ### 基礎設施圖表
 

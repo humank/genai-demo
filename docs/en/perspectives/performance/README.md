@@ -28,28 +28,28 @@ Performance & Scalability Perspective關注系統的響應時間、吞吐量、R
 - **快取層**: 多層快取架構 (L1: 應用快取, L2: Redis, L3: CDN)
 - **資料分片**: 水平和垂直分割Policy，支援大規模資料處理
 - **連接池**: Repository連接池的配置和Monitoring優化
-- **相關實現**: [Repository優化](database-optimization.md) | [快取Policy](caching-strategy.md)
+- **相關實現**: \1 | \1
 
 #### [Concurrency Viewpoint](../../viewpoints/concurrency/README.md) - 並發Performance
 - **並發處理能力**: 多執行緒和並發請求的處理效率
 - **執行緒池優化**: 核心執行緒數、最大執行緒數和佇列容量的配置
 - **非同步處理**: 非阻塞 I/O 和非同步操作的Performance優化
 - **Resource競爭**: 共享Resource的競爭處理和鎖定Policy
-- **相關實現**: [並發優化](concurrency-optimization.md) | [非同步處理](async-performance.md)
+- **相關實現**: \1 | \1
 
 #### Deployment
 - **Resource配置**: CPU、記憶體和存儲Resource的最佳化配置
 - **負載均衡**: 流量分散和負載均衡Policy
 - **Auto Scaling**: 水平和垂直Auto Scaling機制
 - **CDN 配置**: 內容分發網路的配置和優化
-- **相關實現**: [DeploymentPerformance優化](deployment-performance.md) | [Auto Scaling](auto-scaling.md)
+- **相關實現**: \1 | \1
 
 #### [Operational Viewpoint](../../viewpoints/operational/README.md) - 運營Performance
 - **PerformanceMonitoring**: 系統Performance的持續Monitoring和基準測試
 - **容量規劃**: Resource容量的預測和規劃
 - **Performance調優**: 運行時Performance的調整和優化
 - **瓶頸分析**: Performance瓶頸的識別和解決
-- **相關實現**: [運營PerformanceMonitoring](operational-performance.md) | [容量規劃](capacity-planning.md)
+- **相關實現**: \1 | \1
 
 ### 🟡 中影響視點
 
@@ -58,14 +58,14 @@ Performance & Scalability Perspective關注系統的響應時間、吞吐量、R
 - **資料結構**: 高效資料結構的選擇和使用
 - **批次處理**: 批次操作的Performance優化和分批Policy
 - **快取Policy**: 功能層面的快取實現和失效Policy
-- **相關實現**: [演算法優化](algorithm-optimization.md) | [功能快取](functional-caching.md)
+- **相關實現**: \1 | \1
 
 #### [Development Viewpoint](../../viewpoints/development/README.md) - 開發Performance
 - **程式碼優化**: Performance關鍵路徑的程式碼優化技術
 - **建置優化**: 建置和Deployment流程的Performance優化
 - **Performance Test**: 開發階段的Performance Test和基準測試
 - **Performance分析**: 程式碼Performance分析工具和技術
-- **相關實現**: [開發Performance優化](development-performance.md) | [Performance Test](performance-testing.md)
+- **相關實現**: \1 | \1
 
 ## Design
 
@@ -182,6 +182,6 @@ Performance & Scalability Perspective關注系統的響應時間、吞吐量、R
 ---
 
 **相關文件**:
-- [Performance需求定義](performance-requirements.md)
-- [Scalability模式](scalability-patterns.md)
-- [快取Policy實現](caching-strategy.md)
+- \1
+- \1
+- \1

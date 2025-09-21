@@ -169,6 +169,6 @@
 ---
 
 **相關文件**:
-- [成本優化策略](cost-optimization.md)
-- [資源效率管理](resource-efficiency.md)
-- [FinOps 實踐指南](finops-practices.md)
+- \1
+- \1
+- \1

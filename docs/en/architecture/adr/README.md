@@ -138,7 +138,7 @@
 
 ### Documentation Generation
 
-- 自動生成 [ADR summary](./reports-summaries/architecture-design/ADR-SUMMARY.md)
+- 自動生成 [ADR summary](reports-summaries/architecture-design/ADR-SUMMARY.md)
 - 更新 ADR 索引和交叉引用
 - 生成架構決策影響分析
 
@@ -162,7 +162,7 @@
 ### Resources
 
 - [架構概覽](../overview.md)
-- [Design Principle](../../design/principles.md)
+- \1
 - [技術棧文檔](../../reports/technology-stack-2025.md)
 
 ### Resources

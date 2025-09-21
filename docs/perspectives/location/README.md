@@ -169,6 +169,6 @@
 ---
 
 **相關文件**:
-- [地理分佈架構](geographic-distribution.md)
-- [資料本地化策略](data-locality.md)
-- [邊緣運算實現](edge-computing.md)
+- \1
+- \1
+- \1

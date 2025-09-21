@@ -942,7 +942,7 @@ public class ZeroTrustSecurityService {
 ---
 
 **相關文件**:
-- [Security設計Policy](design-strategies.md)
-- [SecurityImplementation Technique](implementation-techniques.md)
-- [Security測試驗證](testing-verification.md)
-- [SecurityMonitoring指南](../operational/security-monitoring.md)
+- \1
+- \1
+- \1
+- \1

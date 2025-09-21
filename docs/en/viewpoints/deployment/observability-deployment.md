@@ -573,8 +573,8 @@ spec:
 - **[AWS Observability架構](../../../diagrams/observability_architecture.mmd)** - Observability服務架構圖
 
 ### Deployment
-- [ObservabilityDeployment架構](../../diagrams/viewpoints/deployment/observability-architecture.mmd)
-- [Monitoring數據流](../../diagrams/viewpoints/deployment/monitoring-dataflow.puml)
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 

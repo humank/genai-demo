@@ -170,6 +170,6 @@ Cost Perspective關注系統的總擁有成本、Resource效率和成本優化�
 ---
 
 **相關文件**:
-- [成本優化Policy](cost-optimization.md)
-- [Resource效率管理](resource-efficiency.md)
-- [FinOps 實踐指南](finops-practices.md)
+- \1
+- \1
+- \1

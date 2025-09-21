@@ -240,9 +240,9 @@
 
 ## 📚 相關文檔
 
-- [MCP 整合指南](../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- [MCP 整合指南](docs/en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 - [Excalidraw MCP 使用指南](excalidraw-mcp-usage-guide.md)
-- [故障排除指南](../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md#troubleshooting)
+- \1
 
 ## 🆘 獲得幫助
 

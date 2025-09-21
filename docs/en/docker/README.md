@@ -29,7 +29,7 @@ docker-compose up -d
 ./docker/verify-deployment.sh
 ```
 
-詳細說明請參考：[Docker Deployment指南](../docs/DOCKER_GUIDE.md)
+詳細說明請參考：\1
 
 
 <!-- 翻譯完成後請刪除此註釋 -->

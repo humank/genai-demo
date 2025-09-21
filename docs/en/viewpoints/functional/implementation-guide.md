@@ -912,4 +912,4 @@ class CustomerIntegrationTest extends BaseIntegrationTest {
 - [Architectural Element詳解](architecture-elements.md)
 - [品質考量指南](quality-considerations.md)
 - [Domain Event實現](../information/domain-events.md)
-- [測試Policy](../development/testing-strategy.md)
+- \1

@@ -164,6 +164,6 @@
 ---
 
 **相關文件**:
-- [容錯設計模式](fault-tolerance.md)
-- [災難恢復計畫](disaster-recovery.md)
-- [韌性模式實現](resilience-patterns.md)
+- \1
+- \1
+- \1

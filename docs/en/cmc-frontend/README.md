@@ -320,4 +320,4 @@ async rewrites() {
 
 ## 📄 授權
 
-This project採用 MIT 授權協議 - 詳見 [LICENSE](../LICENSE) 文件。
+This project採用 MIT 授權協議 - 詳見 [LICENSE](LICENSE) 文件。

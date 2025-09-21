@@ -122,7 +122,7 @@ Architectural Perspective (Perspectives) 是跨越所有Architectural Viewpoint�
 
 ### 📈 視覺化和評估
 - **[架構圖表](../diagrams/perspectives/README.md)** - 觀點相關的視覺化表示
-- **[Quality Attribute場景範本](../architecture/quality-attribute-scenarios.md)** - QAS 定義和驗證模板
+- **\1** - QAS 定義和驗證模板
 
 ## 使用交叉引用的recommendations
 

@@ -57,35 +57,35 @@
 - **事件響應**: 安全事件的快速響應和處理流程
 - **存取管理**: 運營人員的存取控制和權限管理
 - **稽核軌跡**: 所有運營活動的完整記錄和稽核
-- **相關實現**: [運營安全](../../perspectives/security/operational-security.md) | [安全監控](../../perspectives/security/security-monitoring.md)
+- **相關實現**: \1 | \1
 
 #### [性能觀點](../../perspectives/performance/README.md)
 - **性能監控**: 系統性能的持續監控和基準測試
 - **容量規劃**: 資源容量的預測和規劃
 - **性能調優**: 運行時性能的調整和優化
 - **監控開銷**: 監控系統本身的性能影響控制 (< 5%)
-- **相關實現**: [運營性能監控](../../perspectives/performance/operational-performance.md) | [容量規劃](../../perspectives/performance/capacity-planning.md)
+- **相關實現**: \1 | \1
 
 #### [可用性觀點](../../perspectives/availability/README.md)
 - **可用性監控**: 系統可用性的實時監控 (目標 99.9%+)
 - **故障處理**: 故障檢測、診斷和自動恢復機制
 - **維護計畫**: 計畫性維護和系統更新策略
 - **業務連續性**: 災難恢復和業務連續性保障
-- **相關實現**: [運營可用性](../../perspectives/availability/operational-availability.md) | [故障管理](../../perspectives/availability/incident-management.md)
+- **相關實現**: \1 | \1
 
 #### [法規觀點](../../perspectives/regulation/README.md)
 - **合規監控**: 合規狀態的持續監控和報告
 - **稽核支援**: 內外部稽核活動的支援和配合
 - **記錄管理**: 運營記錄的管理、保存和檢索
 - **合規報告**: 自動化合規報告和儀表板
-- **相關實現**: [運營合規](../../perspectives/regulation/operational-compliance.md) | [稽核支援](../../perspectives/regulation/audit-support.md)
+- **相關實現**: \1 | \1
 
 #### [成本觀點](../../perspectives/cost/README.md)
 - **成本監控**: 運營成本的實時監控和分析
 - **資源優化**: 運營資源的使用效率優化
 - **預算管理**: 運營預算的管理和控制
 - **成本告警**: 成本異常的告警和通知機制
-- **相關實現**: [運營成本管理](../../perspectives/cost/operational-cost.md) | [資源優化](../../perspectives/cost/resource-optimization.md)
+- **相關實現**: \1 | \1
 
 ### 🟡 中影響觀點
 
@@ -93,25 +93,25 @@
 - **運營流程改進**: 運營流程的持續改進和優化
 - **工具升級**: 監控和運營工具的升級和更新
 - **知識管理**: 運營知識和經驗的管理和傳承
-- **相關實現**: [運營演進](../../perspectives/evolution/operational-evolution.md) | [流程改進](../../perspectives/evolution/process-improvement.md)
+- **相關實現**: \1 | \1
 
 #### [使用性觀點](../../perspectives/usability/README.md)
 - **運營介面**: 監控儀表板和運營工具的易用性
 - **告警設計**: 告警訊息的清晰度和可操作性
 - **運營文檔**: 運營手冊和程序的可讀性
-- **相關實現**: [運營用戶體驗](../../perspectives/usability/operational-ux.md) | [儀表板設計](../../perspectives/usability/dashboard-design.md)
+- **相關實現**: \1 | \1
 
 #### [位置觀點](../../perspectives/location/README.md)
 - **分散式運營**: 多地區運營中心的協調和管理
 - **本地化運營**: 不同地區的運營需求和標準
 - **時區管理**: 跨時區運營和值班安排
-- **相關實現**: [分散式運營](../../perspectives/location/distributed-operations.md) | [本地化運營](../../perspectives/location/localized-operations.md)
+- **相關實現**: \1 | \1
 
 ## 相關圖表
 
-- [可觀測性架構](../../diagrams/viewpoints/operational/observability-architecture.mmd)
-- [監控數據流](../../diagrams/viewpoints/operational/monitoring-dataflow.puml)
-- [告警處理流程](../../diagrams/viewpoints/operational/alert-handling-process.mmd)
+- \1
+- \1
+- \1
 
 ## 與其他視點的關聯
 
@@ -169,11 +169,11 @@
 - [可觀測性系統概覽](observability-overview.md) - 完整的可觀測性系統介紹
 - [配置指南](configuration-guide.md) - 環境配置和 MSK 主題設定
 - [生產環境測試指南](production-observability-testing-guide.md) - 生產環境測試策略
-- [監控策略](monitoring-strategy.md) - 監控實施和最佳實踐
-- [日誌管理](logging-management.md) - 日誌收集和分析
-- [故障排除指南](troubleshooting-guide.md) - 常見問題診斷和解決
-- [SRE 實踐](sre-practices.md) - 站點可靠性工程實踐
-- [維護指南](maintenance-guide.md) - 系統維護和優化
+- \1 - 監控實施和最佳實踐
+- \1 - 日誌收集和分析
+- \1 - 常見問題診斷和解決
+- \1 - 站點可靠性工程實踐
+- \1 - 系統維護和優化
 
 ## 核心組件
 

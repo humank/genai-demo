@@ -690,4 +690,4 @@ echo "配置驗證完成！"
 - [API 文檔](../api/observability-api.md)
 - [部署指南](../deployment/observability-deployment.md)
 - [故障排除指南](../troubleshooting/observability-troubleshooting.md)
-- [效能調優指南](../performance/observability-performance.md)
+- \1

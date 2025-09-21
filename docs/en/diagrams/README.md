@@ -75,39 +75,39 @@ docs/diagrams/
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [系統概覽](viewpoints/functional/system-overview.mmd) | Mermaid | 完整系統架構概覽，展示7層架構和組件關係 | ✅ 新增 |
-| [Hexagonal Architecture](hexagonal_architecture.mmd) | Mermaid | Port和Adapter架構 | ✅ 已更新 |
-| [DDD Layered Architecture](ddd_architecture.mmd) | Mermaid | Domain-Driven Design分層 | ✅ 已更新 |
-| [Event-Driven Architecture](event_driven_architecture.mmd) | Mermaid | 事件處理機制 | ✅ 已更新 |
+| [系統概覽](docs/diagrams/viewpoints/functional/system-overview.mmd) | Mermaid | 完整系統架構概覽，展示7層架構和組件關係 | ✅ 新增 |
+| [Hexagonal Architecture](docs/diagrams/hexagonal_architecture.mmd) | Mermaid | Port和Adapter架構 | ✅ 已更新 |
+| [DDD Layered Architecture](docs/diagrams/ddd_architecture.mmd) | Mermaid | Domain-Driven Design分層 | ✅ 已更新 |
+| [Event-Driven Architecture](docs/diagrams/event_driven_architecture.mmd) | Mermaid | 事件處理機制 | ✅ 已更新 |
 
 ### 領域模型圖表
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [領域模型概覽](viewpoints/functional/Domain%20Model%20Overview.png) | PlantUML | DDD Aggregate Root總覽 | ✅ 自動生成 |
-| [CustomerAggregate](viewpoints/functional/Customer%20Aggregate%20Details.png) | PlantUML | CustomerAggregate Root詳細設計 | ✅ 自動生成 |
-| [訂單Aggregate](viewpoints/functional/Order%20Aggregate%20Details.png) | PlantUML | 訂單Aggregate Root詳細設計 | ✅ 自動生成 |
-| [支付Aggregate](viewpoints/functional/Payment%20Aggregate%20Details.png) | PlantUML | 支付Aggregate Root詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | DDD Aggregate Root總覽 | ✅ 自動生成 |
+| \1 | PlantUML | CustomerAggregate Root詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | 訂單Aggregate Root詳細設計 | ✅ 自動生成 |
+| \1 | PlantUML | 支付Aggregate Root詳細設計 | ✅ 自動生成 |
 
 ### Event Storming 圖表
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [Big Picture](viewpoints/functional/Event%20Storming%20Big%20Picture.png) | PlantUML | Event Storming全景圖 | ✅ 自動生成 |
-| [Process Level](viewpoints/functional/Event%20Storming%20Process%20Level.png) | PlantUML | Process Level事件圖 | ✅ 自動生成 |
-| [業務流程](viewpoints/functional/Business%20Process%20Flows.png) | PlantUML | 業務流程詳細圖 | ✅ 自動生成 |
+| \1 | PlantUML | Event Storming全景圖 | ✅ 自動生成 |
+| \1 | PlantUML | Process Level事件圖 | ✅ 自動生成 |
+| \1 | PlantUML | 業務流程詳細圖 | ✅ 自動生成 |
 
 ### 基礎設施圖表
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
 | **[AWS 基礎設施架構](aws-infrastructure.md)** | **Mermaid** | **完整 AWS CDK 基礎設施架構文檔** | **✅ 新增** |
-| [AWS 基礎設施圖表](aws_infrastructure.mmd) | Mermaid | AWS 服務架構圖 | ✅ 已更新 |
-| [多Environment架構](multi_environment.mmd) | Mermaid | 開發/測試/生產Environment | ✅ 已更新 |
-| [Observability架構](observability_architecture.mmd) | Mermaid | Monitoring、Logging、Tracing系統 | ✅ 已更新 |
-| [基礎設施概覽](viewpoints/deployment/infrastructure-overview.mmd) | Mermaid | 雲端基礎設施架構 | ✅ 已更新 |
-| [Monitoring架構](viewpoints/operational/monitoring-architecture.mmd) | Mermaid | Observability平台 | ✅ 已更新 |
-| [非同步處理](viewpoints/concurrency/async-processing.mmd) | Mermaid | 並發和非同步架構 | ✅ 已更新 |
+| [AWS 基礎設施圖表](docs/diagrams/aws_infrastructure.mmd) | Mermaid | AWS 服務架構圖 | ✅ 已更新 |
+| [多Environment架構](docs/diagrams/multi_environment.mmd) | Mermaid | 開發/測試/生產Environment | ✅ 已更新 |
+| [Observability架構](docs/diagrams/observability_architecture.mmd) | Mermaid | Monitoring、Logging、Tracing系統 | ✅ 已更新 |
+| [基礎設施概覽](docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd) | Mermaid | 雲端基礎設施架構 | ✅ 已更新 |
+| [Monitoring架構](docs/diagrams/viewpoints/operational/monitoring-architecture.mmd) | Mermaid | Observability平台 | ✅ 已更新 |
+| [非同步處理](docs/diagrams/viewpoints/concurrency/async-processing.mmd) | Mermaid | 並發和非同步架構 | ✅ 已更新 |
 
 ## 🔄 自動化圖表生成
 
@@ -183,7 +183,7 @@ docs/diagrams/
 - **[圖表工具使用指南](diagram-tools-guide.md)**: 詳細的工具使用說明
 - **[Viewpoints 總覽](../viewpoints/README.md)**: 七大Architectural Viewpoint文檔
 - **[Perspectives 總覽](../perspectives/README.md)**: 八大Architectural Perspective文檔
-- **[自動化腳本](../../scripts/README.md)**: 圖表生成和維護腳本
+- **[自動化腳本](README.md)**: 圖表生成和維護腳本
 
 ---
 

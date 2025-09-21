@@ -572,8 +572,8 @@ spec:
 - **[AWS 可觀測性架構](../../diagrams/observability_architecture.mmd)** - 可觀測性服務架構圖
 
 ### 部署細節
-- [可觀測性部署架構](../../diagrams/viewpoints/deployment/observability-architecture.mmd)
-- [監控數據流](../../diagrams/viewpoints/deployment/monitoring-dataflow.puml)
+- \1
+- \1
 
 ## 與其他視點的關聯
 

@@ -149,13 +149,13 @@ public record CustomerId(String value) {
 
 ### 概覽圖表
 - **領域模型概覽**: 展示主要聚合和關係
-  - 檔案: [../diagrams/viewpoints/functional/domain-model-overview.mmd](../diagrams/viewpoints/functional/domain-model-overview.mmd)
+  - 檔案: \1
   - 類型: Mermaid
   - 更新頻率: 月度
 
 ### 詳細圖表
 - **聚合根設計**: 詳細的類圖設計
-  - 檔案: [../diagrams/viewpoints/functional/aggregate-design.puml](../diagrams/viewpoints/functional/aggregate-design.puml)
+  - 檔案: \1
   - 類型: PlantUML
   - 更新頻率: 需求驅動
 

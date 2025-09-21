@@ -165,6 +165,6 @@ Availability & Resilience Perspective關注系統的持續運行能力、故障�
 ---
 
 **相關文件**:
-- [容錯Design Pattern](fault-tolerance.md)
-- [災難恢復計畫](disaster-recovery.md)
-- [Resilience模式實現](resilience-patterns.md)
+- \1
+- \1
+- \1

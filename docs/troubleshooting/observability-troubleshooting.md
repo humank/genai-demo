@@ -846,4 +846,4 @@ sysctl -p
 - [配置指南](../observability/configuration-guide.md)
 - [API 文檔](../api/observability-api.md)
 - [部署指南](../deployment/observability-deployment.md)
-- [效能調優指南](../performance/observability-performance.md)
+- \1

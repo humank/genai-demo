@@ -6,42 +6,42 @@
 
 ## 觀點圖表目錄
 
-### [安全性觀點圖表](security/README.md)
+### [安全性觀點圖表](README.md)
 - **security-architecture.puml**: 安全架構圖 (PlantUML)
 - **threat-model.mmd**: 威脅模型圖 (Mermaid)
 - **authentication-flow.puml**: 認證流程圖 (PlantUML)
 
-### [性能觀點圖表](performance/README.md)
+### [性能觀點圖表](README.md)
 - **performance-architecture.mmd**: 性能架構圖 (Mermaid)
 - **load-balancing.puml**: 負載平衡圖 (PlantUML)
 - **caching-strategy.mmd**: 快取策略圖 (Mermaid)
 
-### [可用性觀點圖表](availability/README.md)
+### [可用性觀點圖表](README.md)
 - **resilience-patterns.puml**: 韌性模式圖 (PlantUML)
 - **disaster-recovery.mmd**: 災難恢復圖 (Mermaid)
 - **fault-tolerance.puml**: 容錯機制圖 (PlantUML)
 
-### [演進性觀點圖表](evolution/README.md)
+### [演進性觀點圖表](README.md)
 - **evolution-roadmap.mmd**: 演進路線圖 (Mermaid)
 - **refactoring-strategy.puml**: 重構策略圖 (PlantUML)
 - **technology-migration.mmd**: 技術遷移圖 (Mermaid)
 
-### [可用性觀點圖表](usability/README.md)
+### [可用性觀點圖表](README.md)
 - **user-experience-flow.mmd**: 使用者體驗流程圖 (Mermaid)
 - **interface-design.puml**: 介面設計圖 (PlantUML)
 - **accessibility-features.mmd**: 無障礙功能圖 (Mermaid)
 
-### [法規觀點圖表](regulation/README.md)
+### [法規觀點圖表](README.md)
 - **compliance-architecture.puml**: 合規架構圖 (PlantUML)
 - **data-governance.mmd**: 資料治理圖 (Mermaid)
 - **audit-trail.puml**: 稽核軌跡圖 (PlantUML)
 
-### [位置觀點圖表](location/README.md)
+### [位置觀點圖表](README.md)
 - **geographic-distribution.mmd**: 地理分佈圖 (Mermaid)
 - **data-locality.puml**: 資料本地化圖 (PlantUML)
 - **edge-computing.mmd**: 邊緣運算圖 (Mermaid)
 
-### [成本觀點圖表](cost/README.md)
+### [成本觀點圖表](README.md)
 - **cost-optimization.mmd**: 成本優化圖 (Mermaid)
 - **resource-efficiency.puml**: 資源效率圖 (PlantUML)
 - **finops-dashboard.mmd**: FinOps 儀表板圖 (Mermaid)
@@ -119,7 +119,7 @@ graph TD
 
 - [架構視點圖表](../viewpoints/README.md) - 系統架構的不同視角圖表
 - [歷史圖表](../legacy/README.md) - 保留的歷史圖表
-- [品質屬性場景](../../architecture/quality-attribute-scenarios.md) - 品質屬性場景定義
+- \1 - 品質屬性場景定義
 
 ---
 

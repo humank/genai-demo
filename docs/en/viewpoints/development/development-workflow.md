@@ -185,8 +185,8 @@ AI-DLC (AI-Driven Development Lifecycle) 是一個結合人工智慧輔助的軟
 
 ## Related Diagrams
 
-- [AI-DLC 流程圖](../../diagrams/viewpoints/development/ai-dlc-workflow.mmd)
-- [開發階段關係圖](../../diagrams/viewpoints/development/development-phases.puml)
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 

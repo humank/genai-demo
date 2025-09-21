@@ -266,11 +266,11 @@ skinparam rectangle {
 
 ## 📚 相關文檔
 
-- [Event Storming 標準化指南](../docs/diagrams/plantuml/event-storming/README.md)
-- [UML 2.5 標準化指南](../docs/diagrams/plantuml/UML-STANDARDS.md)
-- [圖表總覽](../docs/diagrams/README.md)
-- [架構文檔](../docs/architecture/)
-- [設計指南](../docs/design/)
+- [Event Storming 標準化指南](README.md)
+- [UML 2.5 標準化指南](docs/diagrams/plantuml/UML-STANDARDS.md)
+- [圖表總覽](README.md)
+- \1
+- \1
 
 ## 🔄 持續改進
 

@@ -235,9 +235,9 @@ log.info("Order processed successfully",
 
 ### Design
 
-- [DDD 實踐指南](..architecture/ddd-guide.md)
-- [Hexagonal Architecture說明](..architecture/hexagonal-architecture.md)
-- [事件驅動設計](..architecture/event-driven-design.md)
+- [DDD 實踐指南](docs/design/ddd-guide.md)
+- [Hexagonal Architecture說明](docs/diagrams/hexagonal-architecture.md)
+- \1
 
 ### Standards
 
@@ -252,4 +252,4 @@ log.info("Order processed successfully",
 
 ---
 
-**快速求助**: 檢查 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) 或 [故障排除文檔](..troubleshooting/)
+**快速求助**: 檢查 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) 或 \1

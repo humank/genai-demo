@@ -178,16 +178,16 @@ docker-compose up -d
 ## 📚 Learning Resources
 
 ### 🎯 Navigation by Learning Goals
-- **Learn Modern Architecture** → [Architecture Viewpoints Documentation](docs/viewpoints/README.md)
-- **Learn DDD Practices** → [Domain-Driven Design](docs/viewpoints/functional/domain-model.md)
-- **Learn Testing Strategy** → [Testing Best Practices](docs/viewpoints/development/testing-strategy.md)
-- **Learn AI-Assisted Development** → [MCP Integration Guide](docs/mcp/README.md)
+- **Learn Modern Architecture** → [Architecture Viewpoints Documentation](README.md)
+- **Learn DDD Practices** → [Domain-Driven Design](docs/en/viewpoints/functional/domain-model.md)
+- **Learn Testing Strategy** → \1
+- **Learn AI-Assisted Development** → [MCP Integration Guide](README.md)
 
 ### 👨‍💼 Navigation by Role
 - **Architect** → [Rozanski & Woods Assessment](docs/architecture/rozanski-woods-architecture-assessment.md)
-- **Developer** → [Development Standards](docs/viewpoints/development/README.md)
-- **DevOps** → [Deployment and Operations](docs/viewpoints/deployment/README.md)
-- **QA Engineer** → [Test Performance Monitoring](docs/viewpoints/development/testing-strategy.md)
+- **Developer** → [Development Standards](README.md)
+- **DevOps** → [Deployment and Operations](README.md)
+- **QA Engineer** → \1
 
 ## 🏆 Project Achievements
 
@@ -551,35 +551,35 @@ The project has established a complete development standards system, located in 
 
 ## 📚 Documentation
 
-> **Documentation Center**: [docs/README.md](docs/README.md) - Complete documentation navigation and categorization
+> **Documentation Center**: [docs/README.md](README.md) - Complete documentation navigation and categorization
 
 ### 📊 Project Reports and Summaries
 
-- **[Reports and Summaries Center](../reports-summaries/)** - Centralized management of all project reports and summaries
-  - **[Task Execution Reports](../reports-summaries/task-execution/)** - Task completion reports and automation results
-  - **[Architecture Design Reports](../reports-summaries/architecture-design/)** - Architecture decisions and design documentation reports
-  - **[Diagram Sync Reports](../reports-summaries/diagrams/)** - Diagram generation and synchronization reports
-  - **[Infrastructure Reports](../reports-summaries/infrastructure/)** - Deployment and infrastructure management reports
-  - **[Frontend Development Reports](../reports-summaries/frontend/)** - Frontend development and UI improvement reports
-  - **[Testing Quality Reports](../reports-summaries/testing/)** - Testing optimization and quality validation reports
-  - **[Translation System Reports](../reports-summaries/translation/)** - Translation system and language processing reports
-  - **[Project Management Reports](../reports-summaries/project-management/)** - Project status and refactoring reports
+- **\1** - Centralized management of all project reports and summaries
+  - **\1** - Task completion reports and automation results
+  - **\1** - Architecture decisions and design documentation reports
+  - **\1** - Diagram generation and synchronization reports
+  - **\1** - Deployment and infrastructure management reports
+  - **\1** - Frontend development and UI improvement reports
+  - **\1** - Testing optimization and quality validation reports
+  - **\1** - Translation system and language processing reports
+  - **\1** - Project status and refactoring reports
 
 The project includes rich documentation, organized by functional categories:
 
 ### 🎯 Quick Navigation
 
-- **👨‍💼 Project Manager**: [Project Summary 2025](docs/reports/reports-summaries/project-management/project-summary-2025.md) | [Architecture Overview](docs/diagrams/mermaid/architecture-overview.md)
-- **🏗️ Architect**: [Architecture Decision Records](docs/architecture/adr/) | [Architecture Documentation](docs/architecture/) | [Diagram Documentation](docs/diagrams/)
-- **👨‍💻 Developer**: [Development Guide](docs/development/) | [API Documentation](docs/api/) | [Development Instructions](docs/development/instructions.md)
-- **🚀 DevOps**: [Deployment Documentation](docs/deployment/) | [Docker Guide](../viewpoints/deployment/docker-guide.md)
-- **🔍 Observability**: [Production Observability Testing Guide](docs/observability/production-observability-testing-guide.md) | [Observability System](docs/observability/)
-- **🤖 MCP Integration**: [MCP Guide](docs/mcp/) | [AI-Assisted Development](docs/mcp/README.md)
+- **👨‍💼 Project Manager**: [Project Summary 2025](reports-summaries/project-management/project-summary-2025.md) | [Architecture Overview](docs/diagrams/architecture-overview.md)
+- **🏗️ Architect**: \1 | \1 | \1
+- **👨‍💻 Developer**: \1 | \1 | [Development Instructions](docs/development/instructions.md)
+- **🚀 DevOps**: \1 | [Docker Guide](../viewpoints/deployment/docker-guide.md)
+- **🔍 Observability**: [Production Observability Testing Guide](docs/viewpoints/operational/production-observability-testing-guide.md) | \1
+- **🤖 MCP Integration**: \1 | [AI-Assisted Development](README.md)
 
 ### 📊 Core Diagrams (Mermaid - Direct GitHub Display)
 
-- [🏗️ System Architecture Overview](docs/diagrams/mermaid/architecture-overview.md) - Complete system architecture diagram
-- [🔵 Hexagonal Architecture](docs/diagrams/mermaid/hexagonal-architecture.md) - Ports and adapters architecture
+- [🏗️ System Architecture Overview](docs/diagrams/architecture-overview.md) - Complete system architecture diagram
+- [🔵 Hexagonal Architecture](docs/diagrams/hexagonal-architecture.md) - Ports and adapters architecture
 - [🏛️ DDD Layered Architecture](docs/diagrams/mermaid/ddd-layered-architecture.md) - Domain-driven design layering
 - [⚡ Event-Driven Architecture](docs/diagrams/mermaid/event-driven-architecture.md) - Event processing mechanisms
 - [🔌 API Interaction Diagram](docs/diagrams/mermaid/api-interactions.md) - API call relationships
@@ -593,10 +593,10 @@ The project includes rich documentation, organized by functional categories:
 
 ### 🏆 Core Reports (September 2025 Update)
 
-- [📋 Project Summary Report 2025](docs/reports/reports-summaries/project-management/project-summary-2025.md) - Complete project achievements and technical highlights summary
-- [🏗️ Architecture Excellence Report 2025](docs/reports/architecture-excellence-2025.md) - Detailed architecture assessment and best practices analysis
-- [🚀 Technology Stack Detailed Description 2025](docs/reports/technology-stack-2025.md) - Complete technology selection and implementation details
-- [📝 Documentation Cleanup Report 2025](docs/reports/documentation-cleanup-2025.md) - Documentation reorganization and optimization records
+- [📋 Project Summary Report 2025](reports-summaries/project-management/project-summary-2025.md) - Complete project achievements and technical highlights summary
+- [🏗️ Architecture Excellence Report 2025](docs/en/reports/architecture-excellence-2025.md) - Detailed architecture assessment and best practices analysis
+- [🚀 Technology Stack Detailed Description 2025](docs/en/reports/technology-stack-2025.md) - Complete technology selection and implementation details
+- [📝 Documentation Cleanup Report 2025](docs/en/reports/documentation-cleanup-2025.md) - Documentation reorganization and optimization records
 
 ### 🛠️ Diagram Generation Tools
 
@@ -735,25 +735,25 @@ npm test                               # Run tests (Jasmine + Karma)
 
 ## 📖 Complete Documentation
 
-> **Documentation Center**: [docs/README.md](docs/README.md)
+> **Documentation Center**: [docs/README.md](README.md)
 
 ### Rozanski & Woods Seven Viewpoints
-1. **[Functional Viewpoint](docs/viewpoints/functional/README.md)** - System functions and responsibilities
-2. **[Information Viewpoint](docs/viewpoints/information/README.md)** - Data and information flow  
-3. **[Concurrency Viewpoint](docs/viewpoints/concurrency/README.md)** - Concurrency and synchronization
-4. **[Development Viewpoint](docs/viewpoints/development/README.md)** - Development and build
-5. **[Deployment Viewpoint](docs/viewpoints/deployment/README.md)** - Deployment and environment
-6. **[Operational Viewpoint](docs/viewpoints/operational/README.md)** - Operations and maintenance
+1. **[Functional Viewpoint](README.md)** - System functions and responsibilities
+2. **[Information Viewpoint](README.md)** - Data and information flow  
+3. **[Concurrency Viewpoint](README.md)** - Concurrency and synchronization
+4. **[Development Viewpoint](README.md)** - Development and build
+5. **[Deployment Viewpoint](README.md)** - Deployment and environment
+6. **[Operational Viewpoint](README.md)** - Operations and maintenance
 
 ### Eight Architecture Perspectives
-1. **[Security](docs/perspectives/security/README.md)** - Security and compliance
-2. **[Performance](docs/perspectives/performance/README.md)** - Performance and scalability
-3. **[Availability](docs/perspectives/availability/README.md)** - Availability and resilience
-4. **[Evolution](docs/perspectives/evolution/README.md)** - Evolution and maintenance
-5. **[Usability](docs/perspectives/usability/README.md)** - User experience
-6. **[Regulation](docs/perspectives/regulation/README.md)** - Regulatory compliance
-7. **[Location](docs/perspectives/location/README.md)** - Geographic distribution
-8. **[Cost](docs/perspectives/cost/README.md)** - Cost optimization
+1. **[Security](README.md)** - Security and compliance
+2. **[Performance](README.md)** - Performance and scalability
+3. **[Availability](README.md)** - Availability and resilience
+4. **[Evolution](README.md)** - Evolution and maintenance
+5. **[Usability](README.md)** - User experience
+6. **[Regulation](README.md)** - Regulatory compliance
+7. **[Location](README.md)** - Geographic distribution
+8. **[Cost](README.md)** - Cost optimization
 
 ## 🎯 UML Diagrams
 
@@ -764,7 +764,7 @@ This project uses PlantUML to generate various UML diagrams:
 - State diagrams, activity diagrams
 - Domain model diagrams, hexagonal architecture diagrams, DDD layered architecture diagrams
 
-See [Diagram Documentation](docs/diagrams/README.md) for more information.
+See [Diagram Documentation](README.md) for more information.
 
 ## 🚨 Common Issues
 

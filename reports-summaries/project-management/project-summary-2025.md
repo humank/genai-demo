@@ -247,23 +247,23 @@ graph TB
 
 ### 架構文檔
 
-- [系統架構概覽](architecture-overview.md)
-- [六角架構實現總結](HexagonalArchitectureSummary.md)
-- [DDD 實體設計指南](DDD_ENTITY_DESIGN_GUIDE.md)
-- [領域事件設計指南](../.kiro/steering/domain-events.md)
+- [系統架構概覽](docs/diagrams/architecture-overview.md)
+- \1
+- \1
+- [領域事件設計指南](docs/en/.kiro/steering/domain-events.md)
 
 ### 開發指南
 
-- [BDD + TDD 開發原則](../.kiro/steering/bdd-tdd-principles.md)
-- [設計指南](DesignGuideline.MD)
-- [重構指南](RefactoringGuidance.md)
-- [代碼分析報告](CodeAnalysis.md)
+- [BDD + TDD 開發原則](docs/en/.kiro/steering/bdd-tdd-principles.md)
+- \1
+- \1
+- \1
 
 ### 技術文檔
 
-- [Docker 部署指南](DOCKER_GUIDE.md)
-- [API 文檔](api/)
-- [UML 圖表](uml/)
+- \1
+- \1
+- \1
 
 ## 🎉 專案亮點
 

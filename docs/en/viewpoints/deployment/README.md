@@ -28,7 +28,7 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 #### 多Environment架構圖
 
-![多Environment架構](../../diagrams/multi_environment.svg)
+![多Environment架構](docs/diagrams/multi_environment.svg)
 
 *開發、測試、預生產和生產Environment的完整配置，包括Resource規格、成本優化和Environment間的Deployment流程*
 
@@ -41,7 +41,7 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 #### AWS 基礎設施架構圖
 
-![AWS 基礎設施架構](../../diagrams/aws_infrastructure.svg)
+![AWS 基礎設施架構](docs/diagrams/aws_infrastructure.svg)
 
 *完整的 AWS 基礎設施架構，包括 CDK Stack、網路安全、容器平台、資料服務和Observability組件*
 
@@ -70,35 +70,35 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 - **容器安全**: Docker 映像的安全掃描和漏洞檢測
 - **網路安全**: VPC、安全群組和網路 ACL 的配置
 - **憑證管理**: SSL/TLS 憑證和密鑰的安全管理
-- **相關實現**: [Deployment安全](../../perspectives/security/deployment-security.md) | [容器安全](../../perspectives/security/container-security.md)
+- **相關實現**: \1 | \1
 
 #### [Performance & Scalability Perspective](../../perspectives/performance/README.md)
 - **Resource配置**: CPU、記憶體和存儲Resource的最佳化配置
 - **負載均衡**: 流量分散和負載均衡Policy
 - **Auto Scaling**: 水平和垂直Auto Scaling機制
 - **網路優化**: CDN、快取和網路延遲優化
-- **相關實現**: [DeploymentPerformance優化](../../perspectives/performance/deployment-performance.md) | [Auto Scaling](../../perspectives/performance/auto-scaling.md)
+- **相關實現**: \1 | \1
 
 #### [Availability & Resilience Perspective](../../perspectives/availability/README.md)
 - **高Availability**: 多可用區和多地區DeploymentPolicy
 - **災難恢復**: 備份、恢復和業務連續性計畫
 - **Health Check**: 服務健康Monitoring和自動故障轉移
 - **零停機Deployment**: 滾動更新和藍綠DeploymentPolicy
-- **相關實現**: [高可用Deployment](../../perspectives/availability/high-availability-deployment.md) | [災難恢復](../../perspectives/availability/disaster-recovery.md)
+- **相關實現**: \1 | \1
 
 #### [Location Perspective](../../perspectives/location/README.md)
 - **地理分佈**: 多地區Deployment和全球負載均衡
 - **邊緣運算**: CDN 和邊緣節點的DeploymentPolicy
 - **資料本地化**: 資料存儲的地理位置和合規要求
 - **網路延遲**: 地理位置對Performance的影響和優化
-- **相關實現**: [地理分佈Deployment](../../perspectives/location/geographic-deployment.md) | [邊緣Deployment](../../perspectives/location/edge-deployment.md)
+- **相關實現**: \1 | \1
 
 #### [Cost Perspective](../../perspectives/cost/README.md)
 - **Resource成本**: 雲端Resource的成本優化和預算控制
 - **運營成本**: Deployment和維護的運營成本管理
 - **成本Monitoring**: 實時成本Monitoring和預算告警
 - **Resource效率**: Resource使用率的Monitoring和優化
-- **相關實現**: [Deployment成本優化](../../perspectives/cost/deployment-cost.md) | [Resource成本管理](../../perspectives/cost/resource-cost-management.md)
+- **相關實現**: \1 | \1
 
 ### 🟡 中影響觀點
 
@@ -106,20 +106,20 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 - **DeploymentPolicy演進**: 從藍綠Deployment到金絲雀Deployment的Policy升級
 - **版本管理**: 應用和基礎設施版本的管理和回滾
 - **技術棧升級**: Kubernetes、Docker 等技術棧的升級路徑
-- **相關實現**: [Deployment演進Policy](../../perspectives/evolution/deployment-evolution.md) | [版本管理](../../perspectives/evolution/version-management.md)
+- **相關實現**: \1 | \1
 
 #### [Regulation Perspective](../../perspectives/regulation/README.md)
 - **合規Deployment**: DeploymentEnvironment的法規合規要求
 - **資料主權**: 資料存儲和處理的法律管轄權
 - **稽核軌跡**: Deployment活動的完整記錄和稽核
-- **相關實現**: [合規Deployment](../../perspectives/regulation/compliant-deployment.md) | [Deployment稽核](../../perspectives/regulation/deployment-audit.md)
+- **相關實現**: \1 | \1
 
 ### 🟢 低影響觀點
 
 #### [Usability Perspective](../../perspectives/usability/README.md)
 - **Deployment介面**: Deployment工具和Dashboard的易用性
 - **Monitoring可視化**: Deployment狀態和Metrics的可視化展示
-- **相關實現**: [Deployment用戶體驗](../../perspectives/usability/deployment-ux.md)
+- **相關實現**: \1
 
 ## Related Diagrams
 
@@ -129,8 +129,8 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 ### Deployment
 - [基礎設施架構](../../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)
-- [Deployment流程圖](../../diagrams/viewpoints/deployment/deployment-pipeline.mmd)
-- [網路拓撲圖](../../diagrams/viewpoints/deployment/network-topology.puml)
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 
@@ -171,10 +171,10 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 - [ObservabilityDeployment](observability-deployment.md) - Monitoring系統Deployment指南
 - [生產Deployment檢查清單](production-deployment-checklist.md) - 生產EnvironmentDeployment檢查
 - [Infrastructure as Code](infrastructure-as-code.md) - AWS CDK 實踐指南
-- [ContainerizationPolicy](containerization.md) - ContainerizationBest Practice
-- [雲端架構](cloud-architecture.md) - AWS 雲端Architecture Design
-- [Environment配置](environments.md) - 多Environment配置管理
-- [DeploymentPolicy](deployment-strategies.md) - Deployment模式和Policy
+- \1 - ContainerizationBest Practice
+- \1 - AWS 雲端Architecture Design
+- \1 - 多Environment配置管理
+- \1 - Deployment模式和Policy
 
 ## Port配置
 

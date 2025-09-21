@@ -318,8 +318,8 @@ docker logs -f genai-demo
 
 ## 相關圖表
 
-- [容器架構圖](../../diagrams/viewpoints/deployment/container-architecture.mmd)
-- [Docker 建置流程](../../diagrams/viewpoints/deployment/docker-build-process.puml)
+- \1
+- \1
 
 ## 與其他視點的關聯
 

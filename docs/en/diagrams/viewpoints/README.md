@@ -29,19 +29,19 @@
 - **use-cases.puml**: 用例圖 (PlantUML)
 - **aggregates.puml**: Aggregate Root設計圖 (PlantUML)
 
-### [Information Viewpoint圖表](information/README.md)
+### [Information Viewpoint圖表](README.md)
 - **data-model.puml**: 資料模型圖 (PlantUML)
 - **event-storming-big-picture.puml**: Event Storming Big Picture (PlantUML)
 - **event-storming-process-level.puml**: Event Storming Process Level (PlantUML)
 - **event-storming-design-level.puml**: Event Storming Design Level (PlantUML)
 - **information-flow.mmd**: 資訊流圖 (Mermaid)
 
-### [Concurrency Viewpoint圖表](concurrency/README.md)
+### [Concurrency Viewpoint圖表](README.md)
 - **event-driven-architecture.mmd**: Event-Driven Architecture圖 (Mermaid)
 - **async-processing.puml**: 非同步處理圖 (PlantUML)
 - **concurrency-patterns.puml**: 並發模式圖 (PlantUML)
 
-### [Development Viewpoint圖表](development/README.md)
+### [Development Viewpoint圖表](README.md)
 - **hexagonal-architecture.mmd**: Hexagonal Architecture圖 (Mermaid)
 - **module-dependencies.puml**: 模組依賴圖 (PlantUML)
 - **build-pipeline.mmd**: 建置流程圖 (Mermaid)
@@ -51,7 +51,7 @@
 - **deployment-diagram.puml**: Deployment圖 (PlantUML)
 - **network-topology.puml**: 網路拓撲圖 (PlantUML)
 
-### [Operational Viewpoint圖表](operational/README.md)
+### [Operational Viewpoint圖表](README.md)
 - **monitoring-architecture.mmd**: Monitoring架構圖 (Mermaid)
 - **observability.puml**: Observability架構圖 (PlantUML)
 - **incident-response.mmd**: 事件響應流程圖 (Mermaid)
@@ -90,7 +90,7 @@
 
 - [Architectural Perspective圖表](../perspectives/README.md) - 跨視點的Quality Attribute圖表
 - [歷史圖表](../legacy/README.md) - 保留的歷史圖表
-- [圖表工具指南](../../tools/diagram-tools.md) - 圖表工具使用指南
+- \1 - 圖表工具使用指南
 
 ---
 

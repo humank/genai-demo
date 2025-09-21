@@ -195,7 +195,7 @@ Customer可以在平台上瀏覽商品、享受各種優惠、完成購買並Tra
 
 - [系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd)
 - [Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)
-- [BDD 測試覆蓋](../../diagrams/viewpoints/development/bdd-test-coverage.puml)
+- \1
 
 ## Relationships with Other Viewpoints
 

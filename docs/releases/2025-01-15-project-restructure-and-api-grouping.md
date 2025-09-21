@@ -229,10 +229,10 @@ http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-confi
 
 ## 📚 相關文檔
 
-- [Docker 部署指南](../DOCKER_GUIDE.md)
+- \1
 - [API 版本管理策略](../api/API_VERSIONING_STRATEGY.md)
 - [專案目錄結構說明](../../README.md#專案目錄結構)
-- [SpringDoc 分組配置指南](../api/SPRINGDOC_GROUPING_GUIDE.md)
+- \1
 
 ---
 

@@ -201,14 +201,14 @@ docker-compose up -d
 ### 🎯 按學習目標導航
 - **學習現代架構** → [架構視點文檔](docs/viewpoints/README.md)
 - **學習 DDD 實踐** → [領域驅動設計](docs/viewpoints/functional/domain-model.md)
-- **學習測試策略** → [測試最佳實踐](docs/viewpoints/development/testing-strategy.md)
+- **學習測試策略** → \1
 - **學習 AI 輔助開發** → [MCP 整合指南](docs/mcp/README.md)
 
 ### 👨‍💼 按角色導航
 - **架構師** → [Rozanski & Woods 評估](docs/architecture/rozanski-woods-architecture-assessment.md)
 - **開發者** → [開發標準規範](docs/viewpoints/development/README.md)
 - **DevOps** → [部署和運營](docs/viewpoints/deployment/README.md)
-- **QA 工程師** → [測試性能監控](docs/viewpoints/development/testing-strategy.md)
+- **QA 工程師** → \1
 
 ## 🏆 專案成果
 
@@ -601,11 +601,11 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 
 ### 🎯 快速導航
 
-- **👨‍💼 專案經理**: [專案總結 2025](docs/reports/reports-summaries/project-management/project-summary-2025.md) | [架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)
+- **👨‍💼 專案經理**: [專案總結 2025](reports-summaries/project-management/project-summary-2025.md) | [架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)
 - **🏗️ 架構師**: [架構決策記錄](docs/architecture/adr/) | [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/)
 - **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [開發說明](docs/development/instructions.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
-- **🔍 可觀測性**: [生產環境測試指南](docs/observability/production-observability-testing-guide.md) | [可觀測性系統](docs/observability/)
+- **🔍 可觀測性**: [生產環境測試指南](docs/viewpoints/operational/production-observability-testing-guide.md) | [可觀測性系統](docs/observability/)
 - **🤖 MCP 整合**: [MCP 指南](docs/mcp/) | [AI 輔助開發](docs/mcp/README.md)
 
 ### 📊 核心圖表 (Mermaid - GitHub 直接顯示)
@@ -625,7 +625,7 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 
 ### 🏆 核心報告 (2025年9月更新)
 
-- [📋 專案總結報告 2025](docs/reports/reports-summaries/project-management/project-summary-2025.md) - 完整的專案成果和技術亮點總結
+- [📋 專案總結報告 2025](reports-summaries/project-management/project-summary-2025.md) - 完整的專案成果和技術亮點總結
 - [🏗️ 架構卓越性報告 2025](docs/reports/architecture-excellence-2025.md) - 詳細的架構評估和最佳實踐分析
 - [🚀 技術棧詳細說明 2025](docs/reports/technology-stack-2025.md) - 完整的技術選型和實現細節
 - [📝 文檔清理報告 2025](docs/reports/documentation-cleanup-2025.md) - 文檔重整和優化記錄

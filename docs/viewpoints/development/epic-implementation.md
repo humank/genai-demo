@@ -194,7 +194,7 @@
 
 - [系統架構概覽](../../diagrams/viewpoints/functional/system-overview.mmd)
 - [六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)
-- [BDD 測試覆蓋](../../diagrams/viewpoints/development/bdd-test-coverage.puml)
+- \1
 
 ## 與其他視點的關聯
 

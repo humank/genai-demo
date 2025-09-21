@@ -119,9 +119,9 @@
 ## 相關文檔
 
 - [功能視點文檔](../../viewpoints/functional/)
-- [領域模型設計](../../viewpoints/functional/domain-model.md)
-- [系統架構概覽](../../viewpoints/development/system-architecture.md)
-- [利害關係人分析](../../viewpoints/context/stakeholder-analysis.md)
+- [領域模型設計](docs/en/viewpoints/functional/domain-model.md)
+- \1
+- \1
 
 ---
 

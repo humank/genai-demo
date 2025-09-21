@@ -343,7 +343,7 @@ graph TB
 
 ## 📚 相關文檔
 
-- [專案summary報告 2025](PROJECT_SUMMARY_2025.md) - 完整的專案成果summary
-- [架構卓越性報告 2025](ARCHITECTURE_EXCELLENCE_2025.md) - 詳細的Architecture Assessment和分析
-- [DDD Record Refactoringsummary](../DDD_RECORD_reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record Refactoring的詳細過程
-- [測試修復完成報告](test-fixes-complete-2025.md) - 測試品質改善的完整記錄
+- \1 - 完整的專案成果summary
+- \1 - 詳細的Architecture Assessment和分析
+- [DDD Record Refactoringsummary](reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record Refactoring的詳細過程
+- [測試修復完成報告](docs/en/reports/test-fixes-complete-2025.md) - 測試品質改善的完整記錄

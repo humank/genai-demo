@@ -198,7 +198,7 @@ npm run assessment:complete
 ### 必讀文檔
 
 1. [MCP 整合重要性說明](mcp-integration-importance.md)
-2. [任務 22 執行摘要](task-22-reports-summaries/infrastructure/executive-summary.md)
+2. [任務 22 執行摘要](reports-summaries/infrastructure/executive-summary.md)
 3. [完整 MCP 整合指南](../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 
 ### Resources

@@ -267,7 +267,7 @@
 
 #### 圖表工具指南
 - **[圖表工具指南](diagrams/diagram-tools-guide.md)** - Mermaid、PlantUML、Excalidraw 使用指南
-- **[圖表生成報告](diagrams/reports-summaries/general/generation-report.md)** - 自動化圖表生成
+- **[圖表生成報告](../reports-summaries/general/generation-report.md)** - 自動化圖表生成
 - **[UML 標準](diagrams/plantuml/UML-STANDARDS.md)** - UML 2.5 標準實踐
 
 </details>
@@ -479,7 +479,7 @@ mindmap
 #### 🛠️ 圖表工具和標準
 - **[圖表工具指南](diagrams/diagram-tools-guide.md)** - Mermaid、PlantUML、Excalidraw 使用指南
 - **[UML 2.5 標準](diagrams/plantuml/UML-STANDARDS.md)** - UML 標準化實踐
-- **[圖表生成報告](diagrams/reports-summaries/general/generation-report.md)** - 自動化圖表生成流程
+- **[圖表生成報告](../reports-summaries/general/generation-report.md)** - 自動化圖表生成流程
 
 </details>
 
@@ -534,7 +534,7 @@ mindmap
 <summary><strong>專案狀態報告</strong> - 專案進展和成果分析</summary>
 
 #### 2025年專案總結
-- **[專案總結 2025](reports/reports-summaries/project-management/project-summary-2025.md)** - 完整的專案成果報告
+- **[專案總結 2025](../reports-summaries/project-management/project-summary-2025.md)** - 完整的專案成果報告
 - **[架構卓越性 2025](reports/architecture-excellence-2025.md)** - Rozanski & Woods 架構評估
 - **[技術棧 2025](reports/technology-stack-2025.md)** - 技術選型和演進分析
 - **[文檔清理 2025](reports/documentation-cleanup-2025.md)** - 文檔重構成果
@@ -577,7 +577,7 @@ mindmap
 
 ### 👨‍💼 我是專案經理
 
-- [專案總結 2025](reports/reports-summaries/project-management/project-summary-2025.md) - 了解專案現狀
+- [專案總結 2025](../reports-summaries/project-management/project-summary-2025.md) - 了解專案現狀
 - [架構概覽](diagrams/mermaid/architecture-overview.md) - 系統整體架構
 - [發布記錄](releases/) - 版本發布歷史
 
@@ -601,14 +601,14 @@ mindmap
 
 ### 🔍 我是 SRE/可觀測性工程師
 
-- **[生產環境可觀測性測試指南](observability/production-observability-testing-guide.md)** - 67頁完整的生產環境測試策略
+- **[生產環境可觀測性測試指南](en/viewpoints/operational/production-observability-testing-guide.md)** - 67頁完整的生產環境測試策略
 - [可觀測性系統](observability/) - 監控、日誌、追蹤系統
 - [MCP 整合](mcp/) - AI 輔助開發和監控
 
 ### 🔍 我是業務分析師
 
 - [Event Storming 圖表](diagrams/plantuml/event-storming/) - 業務流程分析
-- [用例圖](diagrams/plantuml/behavioral/) - 系統功能概覽
+- \1 - 系統功能概覽
 - [API 交互圖](diagrams/mermaid/api-interactions.md) - 系統交互
 
 ## 🛠️ 工具和自動化
@@ -787,7 +787,7 @@ python scripts/check-hook-status.py             # Hook 狀態檢查
 ### 📞 獲得協助
 
 1. **📖 查看相關文檔** - 使用上方搜尋表快速定位
-2. **🔍 檢查 Issues** - 查看 [專案 Issues](../../issues) 是否有類似問題
+2. **🔍 檢查 Issues** - 查看 \1 是否有類似問題
 3. **💬 創建新 Issue** - 詳細描述問題並標記相關標籤
 4. **📧 聯繫維護團隊** - 緊急問題可直接聯繫專案維護者
 

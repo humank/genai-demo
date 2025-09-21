@@ -170,6 +170,6 @@ Location Perspective關注系統的地理分佈、資料本地化和網路拓撲
 ---
 
 **相關文件**:
-- [地理分佈架構](geographic-distribution.md)
-- [資料本地化Policy](data-locality.md)
-- [邊緣運算實現](edge-computing.md)
+- \1
+- \1
+- \1

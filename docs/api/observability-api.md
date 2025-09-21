@@ -438,6 +438,6 @@ kubectl logs -f deployment/genai-demo-backend | grep "ERROR.*observability"
 ## 相關文檔
 
 - [可觀測性配置指南](../observability/configuration-guide.md)
-- [前端 SDK 使用指南](../development/frontend-observability-sdk.md)
+- \1
 - [故障排除指南](../troubleshooting/observability-troubleshooting.md)
 - [部署指南](../deployment/observability-deployment.md)

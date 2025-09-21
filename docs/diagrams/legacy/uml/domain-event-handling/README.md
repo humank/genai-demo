@@ -29,7 +29,7 @@
   - `DomainEventPublisherAdapter`：領域事件發佈適配器
   - `DomainEventSubscriptionManager`：事件訂閱管理器
 
-![領域事件處理 - 類圖](Domain%20Event%20Handling%20-%20Class%20Diagram.svg)
+!\1
 
 ### 序列圖 (Sequence Diagram)
 
@@ -39,7 +39,7 @@
 2. **事件發佈流程**：從聚合根到Spring事件發佈器的事件傳遞路徑
 3. **事件處理流程**：從Spring事件到具體事件處理器的調用過程
 
-![領域事件處理 - 序列圖](Domain%20Event%20Handling%20-%20Sequence%20Diagram.svg)
+!\1
 
 ### 組件圖 (Component Diagram)
 
@@ -49,7 +49,7 @@
 - 與Spring框架的集成點
 - 各組件之間的依賴關係
 
-![領域事件處理 - 組件圖](Domain%20Event%20Handling%20-%20Component%20Diagram.svg)
+!\1
 
 ### 事件流程圖 (Event Flow Diagram)
 
@@ -60,7 +60,7 @@
 - 事件路由和處理的決策點
 - 錯誤處理策略
 
-![領域事件處理 - 事件流程圖](Domain%20Event%20Handling%20-%20Event%20Flow%20Diagram.svg)
+!\1
 
 ## 測試策略
 

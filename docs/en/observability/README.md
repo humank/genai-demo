@@ -76,9 +76,9 @@ export CLOUDWATCH_REGION=us-east-1
 
 ### 📚 實現文檔
 
-- [分散式Tracing實現](../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
-- [結構化Logging實現](../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
-- [Metrics收集實現](../app/docs/METRICS_IMPLEMENTATION.md)
+- \1
+- \1
+- \1
 
 ### Testing
 

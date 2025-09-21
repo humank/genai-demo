@@ -282,8 +282,8 @@ graph TB
 
 ## Related Documentation
 
-- [AWS Infrastructure Architecture](aws_infrastructure.mmd)
-- [Multi-Environment Configuration](multi_environment.mmd)
-- [Event Storming Documentation](mermaid/event-storming/)
-- [DDD Architecture](ddd_architecture.mmd)
-- [Hexagonal Architecture](hexagonal_architecture.mmd)
+- [AWS Infrastructure Architecture](../diagrams/aws_infrastructure.mmd)
+- [Multi-Environment Configuration](../diagrams/multi_environment.mmd)
+- \1
+- [DDD Architecture](../diagrams/ddd_architecture.mmd)
+- [Hexagonal Architecture](../diagrams/hexagonal_architecture.mmd)

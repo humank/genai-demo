@@ -663,9 +663,9 @@ npm run deploy:dev
 - **[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)** - 詳細的 AWS 服務架構圖
 
 ### CDK 實現細節
-- [CDK 架構圖](../../diagrams/viewpoints/deployment/cdk-architecture.mmd)
-- [Deployment流程圖](../../diagrams/viewpoints/deployment/deployment-flow.puml)
-- [Resource依賴圖](../../diagrams/viewpoints/deployment/resource-dependencies.mmd)
+- \1
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 

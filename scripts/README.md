@@ -55,7 +55,7 @@ npm run docs:links:external # Include external links
 ```
 
 **Features:**
-- Validates markdown `[text](url)` and HTML `<a href="">` links
+- Validates markdown `\1` and HTML `<a href="">` links
 - Supports both internal file links and external HTTP/HTTPS links
 - Generates JSON and Markdown reports
 - Handles relative paths and anchor links

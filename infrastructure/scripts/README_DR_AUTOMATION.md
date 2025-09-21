@@ -407,4 +407,4 @@ For issues or questions:
 
 - [DR Automation Implementation Guide](../docs/DR_AUTOMATION_IMPLEMENTATION.md)
 - [Infrastructure Troubleshooting Guide](../TROUBLESHOOTING.md)
-- [Multi-Region Architecture Documentation](../docs/MULTI_REGION_ARCHITECTURE.md)
+- [Multi-Region Architecture Documentation](infrastructure/MULTI_REGION_ARCHITECTURE.md)

@@ -70,15 +70,15 @@ export CLOUDWATCH_REGION=us-east-1
 ### 📚 前端後端整合文檔
 
 - **[配置指南](configuration-guide.md)** - Environment差異化配置和 MSK 主題設定
-- **[故障排除指南](../troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
+- **[故障排除指南](docs/troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
 - **[Deployment指南](../deployment/observability-deployment.md)** - 完整的Deployment流程和驗證
-- **[API 文檔](../api/observability-api.md)** - Observability API 端點詳細說明
+- **[API 文檔](docs/api/observability-api.md)** - Observability API 端點詳細說明
 
 ### 📚 實現文檔
 
-- [分散式Tracing實現](../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
-- [結構化Logging實現](../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
-- [Metrics收集實現](../app/docs/METRICS_IMPLEMENTATION.md)
+- \1
+- \1
+- \1
 
 ### Testing
 
@@ -180,9 +180,9 @@ export CLOUDWATCH_REGION=us-east-1
 
 ## Related Diagrams
 
-- [Observability架構圖](../../diagrams/viewpoints/operational/observability-architecture.mmd)
-- [Monitoring數據流圖](../../diagrams/viewpoints/operational/monitoring-dataflow.puml)
-- [告警處理流程](../../diagrams/viewpoints/operational/alert-handling-process.mmd)
+- \1
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 
@@ -195,5 +195,5 @@ export CLOUDWATCH_REGION=us-east-1
 
 - [配置指南](configuration-guide.md) - 詳細的配置說明
 - [生產Environment測試指南](production-observability-testing-guide.md) - 生產Environment測試Policy
-- [故障排除指南](../troubleshooting/observability-troubleshooting.md) - 問題診斷和解決
+- [故障排除指南](docs/troubleshooting/observability-troubleshooting.md) - 問題診斷和解決
 - [Deployment指南](../deployment/observability-deployment.md) - Deployment流程和驗證

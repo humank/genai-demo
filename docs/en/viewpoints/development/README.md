@@ -29,13 +29,13 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 
 #### DDD Layered Architecture
 
-![DDD Layered Architecture](../../diagrams/viewpoints/development/ddd-layered-architecture.svg)
+![DDD Layered Architecture](docs/diagrams/viewpoints/development/ddd-layered-architecture.svg)
 
 *完整的 DDD Layered Architecture設計，展示各層的職責和依賴關係*
 
 #### Hexagonal Architecture
 
-![Hexagonal Architecture](../../diagrams/viewpoints/development/hexagonal-architecture.svg)
+![Hexagonal Architecture](docs/diagrams/viewpoints/development/hexagonal-architecture.svg)
 
 *Hexagonal Architecture實現，展示Port和Adapter模式在開發中的應用*
 
@@ -70,21 +70,21 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 - **程式碼安全掃描**: 整合 SonarQube、Snyk 等靜態和動態安全掃描工具
 - **依賴管理**: 第三方依賴的Security檢查和漏洞Monitoring
 - **敏感資訊處理**: 密碼、API 金鑰等敏感資訊的安全處理規範
-- **相關實現**: [安全開發實踐](../../perspectives/security/secure-development.md) | [程式碼掃描](../../perspectives/security/code-scanning.md)
+- **相關實現**: \1 | \1
 
 #### [Evolution Perspective](../../perspectives/evolution/README.md)
 - **Code Quality**: 可維護、可擴展的程式碼設計和實現
 - **Architecture Design**: 模組化、鬆耦合的架構Design Principle
 - **Technical Debt管理**: Technical Debt的識別、評估和償還Policy
 - **RefactoringPolicy**: 持續Refactoring和程式碼改進實踐
-- **相關實現**: [Code Quality管理](../../perspectives/evolution/code-quality.md) | [Refactoring指南](../../perspectives/evolution/refactoring-guide.md)
+- **相關實現**: \1 | [Refactoring指南](docs/design/refactoring-guide.md)
 
 #### [Cost Perspective](../../perspectives/cost/README.md)
 - **開發效率**: 開發工具鏈和流程的效率優化
 - **維護成本**: 程式碼維護和支援的長期成本考量
 - **Technology Selection**: 技術選擇對開發和維護成本的影響
 - **Resource使用**: 開發Environment和建置Resource的成本優化
-- **相關實現**: [開發成本優化](../../perspectives/cost/development-cost.md) | [工具鏈效率](../../perspectives/cost/toolchain-efficiency.md)
+- **相關實現**: \1 | \1
 
 ### 🟡 中影響觀點
 
@@ -92,38 +92,38 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 - **程式碼優化**: Performance關鍵路徑的程式碼優化技術
 - **建置優化**: 建置和Deployment流程的Performance優化
 - **測試Performance**: 測試執行時間和Resource使用的優化
-- **相關實現**: [開發Performance優化](../../perspectives/performance/development-performance.md) | [建置優化](../../perspectives/performance/build-optimization.md)
+- **相關實現**: \1 | \1
 
 #### [Availability & Resilience Perspective](../../perspectives/availability/README.md)
 - **錯誤處理**: 健壯的錯誤處理和異常管理機制
 - **測試Policy**: 全面的測試覆蓋和Quality Assurance
 - **Monitoring整合**: 應用Monitoring和Logging記錄的開發整合
-- **相關實現**: [開發Reliability](../../perspectives/availability/development-reliability.md) | [錯誤處理](../../perspectives/availability/error-handling.md)
+- **相關實現**: \1 | \1
 
 #### [Usability Perspective](../../perspectives/usability/README.md)
 - **Developer體驗**: 開發工具和 API 的易用性設計
 - **文件品質**: 技術文件的完整性、準確性和可讀性
 - **API 設計**: RESTful API 的直觀性和一致性
-- **相關實現**: [Developer體驗](../../perspectives/usability/developer-experience.md) | [API 設計](../../perspectives/usability/api-design.md)
+- **相關實現**: \1 | \1
 
 #### [Regulation Perspective](../../perspectives/regulation/README.md)
 - **合規開發**: 開發流程的合規要求和標準
 - **程式碼稽核**: 程式碼的合規性檢查和稽核軌跡
 - **資料處理**: 個人資料處理的開發實踐和合規
-- **相關實現**: [合規開發流程](../../perspectives/regulation/compliant-development.md) | [程式碼合規](../../perspectives/regulation/code-compliance.md)
+- **相關實現**: \1 | \1
 
 ### 🟢 低影響觀點
 
 #### [Location Perspective](../../perspectives/location/README.md)
 - **國際化開發**: 多語言和多地區支援的開發實踐
 - **時區處理**: 時間和日期處理的國際化考量
-- **相關實現**: [國際化開發](../../perspectives/location/i18n-development.md)
+- **相關實現**: \1
 
 ## Related Diagrams
 
 - [Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)
-- [模組依賴關係](../../diagrams/viewpoints/development/module-dependencies.puml)
-- [CI/CD 流程](../../diagrams/viewpoints/development/ci-cd-pipeline.mmd)
+- \1
+- \1
 
 ## Relationships with Other Viewpoints
 
@@ -162,10 +162,10 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 ## 文件列表
 
 - [Hexagonal ArchitectureImplementation Guide](hexagonal-architecture.md) - Hexagonal Architecture的具體實現
-- [模組結構設計](module-structure.md) - 程式碼組織和套件設計
-- [編碼標準](coding-standards.md) - Code Quality和風格指南
-- [測試Policy](testing-strategy.md) - 測試方法和Best Practice
-- [建置系統](build-system.md) - Gradle 建置配置和優化
+- \1 - 程式碼組織和套件設計
+- [編碼標準](docs/development/coding-standards.md) - Code Quality和風格指南
+- \1 - 測試方法和Best Practice
+- \1 - Gradle 建置配置和優化
 - [開發工作流程](development-workflow.md) - AI-DLC 開發流程指南
 
 ## 適用對象

@@ -240,5 +240,5 @@ logging:
 ## 相關文檔
 
 - [README.md](../README.md) - 專案概述
-- [專案summary報告](./PROJECT_SUMMARY_2025.md) - 完整的專案成果summary
-- [API_VERSIONING_STRATEGY.md](./api/API_VERSIONING_STRATEGY.md) - API 版本管理
+- \1 - 完整的專案成果summary
+- [API_VERSIONING_STRATEGY.md](docs/api/API_VERSIONING_STRATEGY.md) - API 版本管理

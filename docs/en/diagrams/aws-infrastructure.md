@@ -200,7 +200,7 @@ graph TB
 
 如果上述 Mermaid 圖表無法正常顯示，請查看靜態 SVG 版本：
 
-![AWS 基礎設施架構](aws_infrastructure.svg)
+![AWS 基礎設施架構](docs/diagrams/aws_infrastructure.svg)
 
 ---
 

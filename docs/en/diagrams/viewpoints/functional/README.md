@@ -37,26 +37,26 @@ Consumer, Customer, Inventory, Logistics, Notification, Order, Payment, Pricing,
 ### System Overview Diagrams
 1. **system-overview.mmd** - Complete system architecture overview showing 7-layer architecture with external systems, API gateway, application services, domain layer, event-driven architecture, infrastructure, observability platform, and deployment platform
 
-![系統概覽](system-overview.svg)
+![系統概覽](docs/diagrams/viewpoints/functional/system-overview.svg)
 
 ### Domain Model Diagrams (from DDD Code)
 1. **domain-model-overview.puml** - Complete domain model overview with all aggregates, entities, and value objects
-   ![領域模型概覽](Domain%20Model%20Overview.svg)
+   !\1
 
 2. **hexagonal-architecture-overview.puml** - Hexagonal architecture showing domain core, application layer, infrastructure layer, and interface layer
-   ![Hexagonal Architecture概覽](Hexagonal%20Architecture%20Overview.svg)
+   !\1
 
 3. **application-services-overview.puml** - Application services grouped by bounded context
-   ![應用服務概覽](Application%20Services%20Overview.svg)
+   !\1
 
 4. **infrastructure-layer-overview.puml** - Infrastructure layer components including repositories
-   ![Infrastructure Layer概覽](Infrastructure%20Layer%20Overview.svg)
+   !\1
 
 5. **bounded-contexts-overview.puml** - High-level bounded context relationships
-   ![Bounded Context概覽](Bounded%20Contexts%20Overview.svg)
+   !\1
 
 6. **domain-events-flow.puml** - Domain events flow between aggregates
-   ![Domain Event流程](Domain%20Events%20Flow.svg)
+   !\1
 
 ### Aggregate Details (per Bounded Context)
 - **customer-aggregate-details.puml** - Customer aggregate detailed design

@@ -407,9 +407,9 @@ export class EksCluster extends Construct {
 
 ## Related Decisions
 
-- [ADR-006: Multi-Region Architecture Strategy](./ADR-006-multi-region-architecture.md)
-- [ADR-007: EKS vs ECS vs Lambda](./ADR-007-container-orchestration.md)
-- [ADR-008: Aurora Global Database vs RDS](./ADR-008-database-strategy.md)
+- \1
+- \1
+- \1
 - [ADR-016: Well-Architected Framework Compliance](./ADR-016-well-architected-compliance.md)
 
 ## References

@@ -163,6 +163,6 @@
 ---
 
 **相關文件**:
-- [可維護性設計](maintainability.md)
-- [技術演進策略](technology-evolution.md)
-- [重構指南](refactoring-guide.md)
+- \1
+- \1
+- [重構指南](docs/design/refactoring-guide.md)
