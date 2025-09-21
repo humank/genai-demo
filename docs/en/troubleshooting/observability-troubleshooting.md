@@ -1,29 +1,30 @@
-# Observability Troubleshooting Guide
 
-## Overview
+# Troubleshooting
 
-This guide provides common issue diagnosis and solutions for frontend-backend observability integration systems, including connection issues, performance problems, and data processing issues.
+## 概述
 
-## Quick Diagnostic Checklist
+本指南提供前端後端Observability整合系統的常見問題診斷和解決方案，包括連接問題、效能問題和數據處理問題。
 
-### System Health Check
+## 快速診斷檢查清單
+
+### 系統Health Check
 
 ```bash
 #!/bin/bash
 # quick-health-check.sh
 
-echo "=== Observability System Health Check ==="
+echo "=== Observability系統Health Check ==="
 
-# 1. Check backend service status
-echo "1. Checking backend service..."
-curl -s http://localhost:8080/actuator/health | jq '.status' || echo "❌ Backend service unavailable"
+# 1. 檢查後端服務狀態
+echo "1. 檢查後端服務..."
+curl -s http://localhost:8080/actuator/health | jq '.status' || echo "❌ 後端服務不可用"
 
-# 2. Check Kafka connection (production environment)
-echo "2. Checking Kafka connection..."
-curl -s http://localhost:8080/actuator/health/kafka | jq '.status' || echo "⚠️  Kafka connection issue"
+# 2. 檢查 Kafka 連接 (生產Environment)
+echo "2. 檢查 Kafka 連接..."
+curl -s http://localhost:8080/actuator/health/kafka | jq '.status' || echo "⚠️  Kafka 連接問題"
 
-# 3. Check analytics API
-echo "3. Testing analytics API..."
+# 3. 檢查分析 API
+echo "3. 測試分析 API..."
 response=$(curl -s -w "%{http_code}" -X POST http://localhost:8080/api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: health-check-$(date +%s)" \
@@ -31,73 +32,73 @@ response=$(curl -s -w "%{http_code}" -X POST http://localhost:8080/api/analytics
   -d '[{"eventId":"health-check","eventType":"page_view","sessionId":"health-check-session","traceId":"health-check-'$(date +%s)'","timestamp":'$(date +%s000)',"data":{"page":"/health-check"}}]')
 
 if [[ "${response: -3}" == "200" ]]; then
-    echo "✅ Analytics API normal"
+    echo "✅ 分析 API 正常"
 else
-    echo "❌ Analytics API abnormal: HTTP ${response: -3}"
+    echo "❌ 分析 API 異常: HTTP ${response: -3}"
 fi
 
-# 4. Check WebSocket connection (Planned Feature)
-echo "4. WebSocket feature not yet implemented..."
-echo "ℹ️ WebSocket real-time monitoring will be developed in the next phase"
+# 4. 檢查 WebSocket 連接
+echo "4. 檢查 WebSocket..."
+timeout 5 wscat -c ws://localhost:8080/ws/analytics?sessionId=health-check 2>/dev/null && echo "✅ WebSocket 正常" || echo "❌ WebSocket 連接失敗"
 
-# 5. Check metrics endpoint
-echo "5. Checking metrics..."
-curl -s http://localhost:8080/actuator/metrics/observability.events.received >/dev/null && echo "✅ Metrics endpoint normal" || echo "❌ Metrics endpoint abnormal"
+# 5. 檢查Metrics端點
+echo "5. 檢查Metrics..."
+curl -s http://localhost:8080/actuator/metrics/observability.events.received >/dev/null && echo "✅ Metrics端點正常" || echo "❌ Metrics端點異常"
 
-echo "=== Health check completed ==="
+echo "=== Health Check完成 ==="
 ```
 
-## Common Issues and Solutions
+## 常見問題和解決方案
 
-### 1. Frontend Event Sending Issues
+### 1. 前端事件發送問題
 
-#### Issue: Frontend events not sent to backend
+#### 問題: 前端事件未發送到後端
 
-**Symptoms**:
+**症狀**:
 
-- No `/api/analytics/events` requests visible in browser network tab
-- No error messages in frontend console
-- No event reception logs in backend logs
+- 瀏覽器網路標籤中看不到 `/api/analytics/events` 請求
+- 前端控制台沒有錯誤訊息
+- 後端Logging中沒有收到事件的記錄
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```javascript
-// Execute diagnostics in browser console
-console.log('=== Frontend Observability Diagnostics ===');
+// 在瀏覽器控制台執行診斷
+console.log('=== 前端Observability診斷 ===');
 
-// Check configuration
-console.log('1. Check configuration:', window.environment?.observability);
+// 檢查配置
+console.log('1. 檢查配置:', window.environment?.observability);
 
-// Check service status
+// 檢查服務狀態
 const observabilityService = document.querySelector('app-root')?._ngElementStrategy?.componentRef?.instance?.observabilityService;
-console.log('2. Service status:', observabilityService);
+console.log('2. 服務狀態:', observabilityService);
 
-// Check batch processor
-console.log('3. Batch processor status:', observabilityService?.batchProcessor);
+// 檢查批次處理器
+console.log('3. 批次處理器狀態:', observabilityService?.batchProcessor);
 
-// Check local storage
-console.log('4. Local storage events:', localStorage.getItem('observability-events'));
+// 檢查本地儲存
+console.log('4. 本地儲存事件:', localStorage.getItem('observability-events'));
 
-// Manually send test event
+// 手動發送測試事件
 observabilityService?.trackPageView('/test-page', { test: true });
-console.log('5. Test event sent');
+console.log('5. 測試事件已發送');
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check configuration enabled status**:
+1. **檢查配置啟用狀態**:
 
 ```typescript
 // environments/environment.ts
 export const environment = {
   observability: {
-    enabled: true, // Ensure enabled
-    // ...other configuration
+    enabled: true, // 確保啟用
+    // ...其他配置
   }
 };
 ```
 
-2. **Check service injection**:
+2. **檢查服務注入**:
 
 ```typescript
 // app.component.ts
@@ -106,42 +107,42 @@ constructor(private observabilityService: ObservabilityService) {
 }
 ```
 
-3. **Check interceptor registration**:
+3. **檢查攔截器註冊**:
 
 ```typescript
 // app.config.ts
 export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(
-      withInterceptors([observabilityTraceInterceptor]) // Ensure interceptor is registered
+      withInterceptors([observabilityTraceInterceptor]) // 確保攔截器已註冊
     )
   ]
 };
 ```
 
-#### Issue: CORS Error
+#### 問題: CORS 錯誤
 
-**Symptoms**:
+**症狀**:
 
 ```
 Access to XMLHttpRequest at 'http://localhost:8080/api/analytics/events' 
 from origin 'http://localhost:4200' has been blocked by CORS policy
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check backend CORS configuration**:
+1. **檢查後端 CORS 配置**:
 
 ```java
 @RestController
 @RequestMapping("/api/analytics")
-@CrossOrigin(origins = "*") // Ensure CORS configuration is correct
+@CrossOrigin(origins = "*") // 確保 CORS 配置正確
 public class AnalyticsController {
     // ...
 }
 ```
 
-2. **Global CORS configuration**:
+2. **全域 CORS 配置**:
 
 ```java
 @Configuration
@@ -161,35 +162,35 @@ public class CorsConfiguration {
 }
 ```
 
-### 2. Backend Event Processing Issues
+### 2. 後端事件處理問題
 
-#### Issue: Events received but not processed
+#### 問題: 事件接收但未處理
 
-**Symptoms**:
+**症狀**:
 
-- Backend logs show "Received X analytics events"
-- But no "Successfully processed analytics events" logs
-- Event counter metrics don't increase
+- 後端Logging顯示 "Received X analytics events"
+- 但沒有 "Successfully processed analytics events" Logging
+- 事件計數器Metrics不增加
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```bash
-# Check backend logs
+# 檢查後端Logging
 tail -f logs/genai-demo.log | grep -E "(analytics|observability)"
 
-# Check event processing metrics
+# 檢查事件處理Metrics
 curl -s http://localhost:8080/actuator/metrics/observability.events.processed | jq
 
-# Check error metrics
+# 檢查錯誤Metrics
 curl -s http://localhost:8080/actuator/metrics/observability.events.failed | jq
 
-# Check MDC context
+# 檢查 MDC 上下文
 grep "correlationId" logs/genai-demo.log | tail -10
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check event transformation logic**:
+1. **檢查事件轉換邏輯**:
 
 ```java
 @Service
@@ -197,12 +198,12 @@ public class ObservabilityEventService {
     
     public void processAnalyticsEvents(List<AnalyticsEventDto> events, String traceId, String sessionId) {
         try {
-            // Add detailed logging
+            // 添加詳細Logging
             logger.info("Processing {} events with traceId: {}", events.size(), traceId);
             
             for (AnalyticsEventDto event : events) {
                 logger.debug("Processing event: {}", event.eventId());
-                // Processing logic...
+                // 處理邏輯...
             }
             
         } catch (Exception e) {
@@ -213,7 +214,7 @@ public class ObservabilityEventService {
 }
 ```
 
-2. **Check Domain Event publishing**:
+2. **檢查Domain Event發布**:
 
 ```java
 @Component
@@ -239,34 +240,34 @@ public class ObservabilityEventPublisher {
 }
 ```
 
-#### Issue: Kafka Connection Failure
+#### 問題: Kafka 連接失敗
 
-**Symptoms**:
+**症狀**:
 
 ```
 org.apache.kafka.common.errors.TimeoutException: 
 Failed to update metadata after 60000 ms.
 ```
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```bash
-# Check MSK cluster status
+# 檢查 MSK 叢集狀態
 aws kafka describe-cluster --cluster-arn ${MSK_CLUSTER_ARN}
 
-# Check network connection
+# 檢查網路連接
 telnet ${MSK_BOOTSTRAP_SERVERS} 9098
 
-# Check IAM permissions
+# 檢查 IAM 權限
 aws sts get-caller-identity
 
-# Check security groups
+# 檢查安全群組
 aws ec2 describe-security-groups --group-ids ${MSK_SECURITY_GROUP_ID}
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check MSK configuration**:
+1. **檢查 MSK 配置**:
 
 ```yaml
 spring:
@@ -283,7 +284,7 @@ spring:
       sasl.client.callback.handler.class: software.amazon.msk.auth.iam.IAMClientCallbackHandler
 ```
 
-2. **Check IAM role permissions**:
+2. **檢查 IAM 角色權限**:
 
 ```json
 {
@@ -307,43 +308,43 @@ spring:
 }
 ```
 
-### 3. WebSocket Connection Issues
+### 3. WebSocket 連接問題
 
-#### Issue: WebSocket connection failure
+#### 問題: WebSocket 連接失敗
 
-**Symptoms**:
+**症狀**:
 
-- Frontend cannot establish WebSocket connection
-- Browser console shows WebSocket errors
-- Real-time update functionality doesn't work
+- 前端無法建立 WebSocket 連接
+- 瀏覽器控制台顯示 WebSocket 錯誤
+- 即時更新功能不工作
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```javascript
-// Browser console test
+// 瀏覽器控制台測試
 const testWebSocket = () => {
   const ws = new WebSocket('ws://localhost:8080/ws/analytics?sessionId=test-session');
   
-  ws.onopen = () => console.log('✅ WebSocket connection successful');
-  ws.onerror = (error) => console.error('❌ WebSocket error:', error);
-  ws.onclose = (event) => console.log('WebSocket closed:', event.code, event.reason);
-  ws.onmessage = (message) => console.log('Received message:', message.data);
+  ws.onopen = () => console.log('✅ WebSocket 連接成功');
+  ws.onerror = (error) => console.error('❌ WebSocket 錯誤:', error);
+  ws.onclose = (event) => console.log('WebSocket 關閉:', event.code, event.reason);
+  ws.onmessage = (message) => console.log('收到訊息:', message.data);
   
-  // Close connection after 5 seconds
+  // 5 秒後關閉連接
   setTimeout(() => ws.close(), 5000);
 };
 
 testWebSocket();
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check WebSocket configuration (Planned Feature)**:
+1. **檢查 WebSocket 配置 (計劃中的功能)**:
 
-**Note: WebSocket functionality is not yet fully implemented and will be developed in the next phase**
+**注意：WebSocket 功能目前尚未完全實現，將在下一階段開發**
 
 ```java
-// Planned WebSocket configuration
+// 計劃中的 WebSocket 配置
 @Configuration
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
@@ -351,13 +352,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new AnalyticsWebSocketHandler(), "/ws/analytics")
-                .setAllowedOrigins("*") // Ensure cross-origin is allowed
-                .withSockJS(); // Add SockJS support
+                .setAllowedOrigins("*") // 確保允許跨域
+                .withSockJS(); // 添加 SockJS 支援
     }
 }
 ```
 
-2. **Check firewall and proxy settings**:
+2. **檢查防火牆和代理設定**:
 
 ```nginx
 # nginx.conf
@@ -370,84 +371,84 @@ location /ws/ {
 }
 ```
 
-### 4. Performance Issues
+### 4. 效能問題
 
-#### Issue: High event processing latency
+#### 問題: 事件處理延遲過高
 
-**Symptoms**:
+**症狀**:
 
-- Event processing delay from sending to processing exceeds 1 second
-- Batch processing backlog
-- Memory usage continuously rising
+- 事件從發送到處理延遲超過 1 秒
+- 批次處理積壓
+- 記憶體使用率持續上升
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```bash
-# Check JVM memory usage
+# 檢查 JVM 記憶體使用
 curl -s http://localhost:8080/actuator/metrics/jvm.memory.used | jq
 
-# Check GC statistics
+# 檢查 GC 統計
 curl -s http://localhost:8080/actuator/metrics/jvm.gc.pause | jq
 
-# Check event processing latency
+# 檢查事件處理延遲
 curl -s http://localhost:8080/actuator/metrics/observability.processing.latency | jq
 
-# Check Kafka consumer lag
+# 檢查 Kafka 消費者延遲
 curl -s http://localhost:8080/actuator/metrics/kafka.consumer.lag | jq
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Adjust batch processing configuration**:
+1. **調整批次處理配置**:
 
 ```yaml
 genai-demo:
   observability:
     analytics:
-      batch-size: 50        # Reduce batch size
-      flush-interval: 15s   # Reduce flush interval
-      max-queue-size: 1000  # Limit queue size
+      batch-size: 50        # 減少批次大小
+      flush-interval: 15s   # 減少刷新間隔
+      max-queue-size: 1000  # 限制佇列大小
 ```
 
-2. **Optimize JVM parameters**:
+2. **優化 JVM 參數**:
 
 ```bash
-# Increase heap memory
+# 增加堆記憶體
 export JAVA_OPTS="-Xms2g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
 ```
 
-3. **Increase Kafka partition count**:
+3. **增加 Kafka 分區數**:
 
 ```bash
-# Use Kafka management tools to increase partitions
+# Tools
 kafka-topics.sh --bootstrap-server ${MSK_BOOTSTRAP_SERVERS} \
   --alter --topic genai-demo.production.observability.user.behavior \
   --partitions 12
 ```
 
-#### Issue: Memory leak
+#### 問題: 記憶體洩漏
 
-**Symptoms**:
+**症狀**:
 
-- Memory usage continuously rising
-- Frequent Full GC
-- Eventually leads to OutOfMemoryError
+- 記憶體使用率持續上升
+- 頻繁的 Full GC
+- 最終導致 OutOfMemoryError
 
-**Diagnostic Steps**:
+**診斷步驟**:
 
 ```bash
-# Generate heap dump
+# 生成堆轉儲
 jcmd <pid> GC.run_finalization
 jcmd <pid> VM.gc
 jmap -dump:format=b,file=heap-dump.hprof <pid>
 
-# Analyze heap dump (using Eclipse MAT or VisualVM)
-# Look for root causes of memory leaks
+# 分析堆轉儲 (使用 Eclipse MAT 或 VisualVM)
+# 查找記憶體洩漏的根本原因
 ```
 
-**Solutions**:
+**解決方案**:
 
-1. **Check event cache cleanup**:
+1. **檢查事件緩存清理**:
 
 ```java
 @Component
@@ -455,7 +456,7 @@ public class EventCacheManager {
     
     private final Map<String, List<ObservabilityEvent>> eventCache = new ConcurrentHashMap<>();
     
-    @Scheduled(fixedRate = 300000) // Clean up every 5 minutes
+    @Scheduled(fixedRate = 300000) // 每 5 分鐘清理一次
     public void cleanupExpiredEvents() {
         long cutoffTime = System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(10);
         
@@ -469,37 +470,37 @@ public class EventCacheManager {
 }
 ```
 
-2. **Limit event queue size**:
+2. **限制事件佇列大小**:
 
 ```java
 @Component
 public class BatchProcessor {
     
     private final BlockingQueue<ObservabilityEvent> eventQueue = 
-        new ArrayBlockingQueue<>(1000); // Limit queue size
+        new ArrayBlockingQueue<>(1000); // 限制佇列大小
     
     public void addEvent(ObservabilityEvent event) {
         if (!eventQueue.offer(event)) {
             logger.warn("Event queue is full, dropping event: {}", event.getId());
-            // Optional: trigger alert
+            // 可選：觸發Alerting
         }
     }
 }
 ```
 
-### 5. Data Consistency Issues
+### 5. 數據一致性問題
 
-#### Issue: Duplicate event processing
+#### 問題: 事件重複處理
 
-**Symptoms**:
+**症狀**:
 
-- Same event processed multiple times
-- Business metrics calculation errors
-- Duplicate Domain Events
+- 同一個事件被處理多次
+- 業務Metrics計算錯誤
+- 重複的Domain Event
 
-**Solutions**:
+**解決方案**:
 
-1. **Implement idempotency check**:
+1. **實施冪等性檢查**:
 
 ```java
 @Component
@@ -507,10 +508,10 @@ public class IdempotentEventProcessor {
     
     private final Set<String> processedEventIds = ConcurrentHashMap.newKeySet();
     
-    @Scheduled(fixedRate = 600000) // Clean up every 10 minutes
+    @Scheduled(fixedRate = 600000) // 每 10 分鐘清理
     public void cleanupProcessedEvents() {
-        // Clean up event IDs from 1 hour ago
-        // Actual implementation might need to use Redis or database
+        // 清理 1 小時前的事件 ID
+        // 實際實現可能需要使用 Redis 或Repository
     }
     
     public boolean isEventProcessed(String eventId) {
@@ -519,7 +520,7 @@ public class IdempotentEventProcessor {
 }
 ```
 
-2. **Use database unique constraints**:
+2. **使用Repository唯一Constraint**:
 
 ```sql
 CREATE TABLE processed_events (
@@ -532,16 +533,16 @@ CREATE TABLE processed_events (
 CREATE INDEX idx_processed_events_timestamp ON processed_events(processed_at);
 ```
 
-#### Issue: Event order confusion
+#### 問題: 事件順序錯亂
 
-**Symptoms**:
+**症狀**:
 
-- Page view events processed after user action events
-- Business process order incorrect
+- 頁面瀏覽事件在用戶操作事件之後處理
+- 業務流程順序不正確
 
-**Solutions**:
+**解決方案**:
 
-1. **Use session ID as partition key**:
+1. **使用會話 ID 作為分區鍵**:
 
 ```java
 @Component
@@ -558,64 +559,64 @@ public class SessionBasedPartitioner implements Partitioner {
 }
 ```
 
-2. **Add sequence number**:
+2. **添加序列號**:
 
 ```java
 public record AnalyticsEventDto(
     String eventId,
     String eventType,
     String sessionId,
-    Long sequenceNumber, // Add sequence number
+    Long sequenceNumber, // 添加序列號
     Long timestamp,
     Map<String, Object> data
 ) {}
 ```
 
-## Monitoring and Alerting
+## Monitoring和Alerting
 
-### Key Metrics Monitoring
+### 關鍵MetricsMonitoring
 
-#### 1. System Health Metrics
+#### 1. 系統健康Metrics
 
 ```bash
-# Script to check system health metrics
+# 檢查系統健康Metrics的腳本
 #!/bin/bash
 
-echo "=== Observability System Monitoring ==="
+echo "=== Observability系統Monitoring ==="
 
-# API response time
+# API 響應時間
 api_latency=$(curl -s http://localhost:8080/actuator/metrics/http.server.requests | jq -r '.measurements[] | select(.statistic=="MEAN") | .value')
-echo "API average response time: ${api_latency}ms"
+echo "API 平均響應時間: ${api_latency}ms"
 
-# Event processing rate
+# 事件處理率
 events_processed=$(curl -s http://localhost:8080/actuator/metrics/observability.events.processed | jq -r '.measurements[0].value')
-echo "Events processed: ${events_processed}"
+echo "已處理事件數: ${events_processed}"
 
-# Error rate
+# 錯誤率
 events_failed=$(curl -s http://localhost:8080/actuator/metrics/observability.events.failed | jq -r '.measurements[0].value // 0')
-echo "Failed events: ${events_failed}"
+echo "失敗事件數: ${events_failed}"
 
-# Memory usage
+# 記憶體使用率
 memory_used=$(curl -s http://localhost:8080/actuator/metrics/jvm.memory.used | jq -r '.measurements[0].value')
 memory_max=$(curl -s http://localhost:8080/actuator/metrics/jvm.memory.max | jq -r '.measurements[0].value')
 memory_usage=$(echo "scale=2; $memory_used / $memory_max * 100" | bc)
-echo "Memory usage: ${memory_usage}%"
+echo "記憶體使用率: ${memory_usage}%"
 
-# Alert checks
+# Alerting檢查
 if (( $(echo "$api_latency > 1000" | bc -l) )); then
-    echo "⚠️  Alert: API response time too high"
+    echo "⚠️  Alerting: API 響應時間過長"
 fi
 
 if (( $(echo "$memory_usage > 80" | bc -l) )); then
-    echo "⚠️  Alert: Memory usage too high"
+    echo "⚠️  Alerting: 記憶體使用率過高"
 fi
 
 if (( events_failed > 10 )); then
-    echo "⚠️  Alert: Event processing failure rate too high"
+    echo "⚠️  Alerting: 事件處理失敗率過高"
 fi
 ```
 
-#### 2. Business Metrics Monitoring
+#### 2. 業務MetricsMonitoring
 
 ```java
 @Component
@@ -623,21 +624,21 @@ public class BusinessMetricsMonitor {
     
     private final MeterRegistry meterRegistry;
     
-    @Scheduled(fixedRate = 60000) // Check every minute
+    @Scheduled(fixedRate = 60000) // 每分鐘檢查
     public void checkBusinessMetrics() {
-        // Check page views
+        // 檢查頁面瀏覽量
         Counter pageViews = meterRegistry.counter("business.page.views");
         if (pageViews.count() == 0) {
             logger.warn("No page views recorded in the last minute");
         }
         
-        // Check user activity
+        // 檢查用戶活動
         Counter userActions = meterRegistry.counter("business.user.actions");
         if (userActions.count() < 10) {
             logger.warn("Low user activity detected: {} actions", userActions.count());
         }
         
-        // Check conversion rate
+        // 檢查轉換率
         double conversionRate = calculateConversionRate();
         if (conversionRate < 0.02) { // 2%
             logger.warn("Low conversion rate detected: {}%", conversionRate * 100);
@@ -646,9 +647,9 @@ public class BusinessMetricsMonitor {
 }
 ```
 
-### Automated Failure Recovery
+### 自動化故障恢復
 
-#### 1. Automatic Restart Mechanism
+#### 1. 自動重啟機制
 
 ```bash
 #!/bin/bash
@@ -663,19 +664,19 @@ check_service_health() {
 }
 
 restart_service() {
-    echo "$(date): Service anomaly detected, restarting..."
+    echo "$(date): 檢測到服務異常，正在重啟..."
     systemctl restart genai-demo
     sleep 30
     
     if check_service_health; then
-        echo "$(date): Service restart successful"
+        echo "$(date): 服務重啟成功"
     else
-        echo "$(date): Service restart failed, manual intervention required"
-        # Send alert notification
+        echo "$(date): 服務重啟失敗，需要人工介入"
+        # 發送Alerting通知
     fi
 }
 
-# Main monitoring loop
+# 主Monitoring循環
 while true; do
     if ! check_service_health; then
         restart_service
@@ -684,7 +685,7 @@ while true; do
 done
 ```
 
-#### 2. Auto-scaling Configuration
+#### 2. Auto Scaling配置
 
 ```yaml
 # kubernetes/hpa.yaml
@@ -721,44 +722,44 @@ spec:
         averageValue: "100"
 ```
 
-## Log Analysis and Debugging
+## Logging分析和除錯
 
-### Structured Log Queries
+### 結構化Logging查詢
 
 ```bash
-# Query all logs for specific trace ID
+# 查詢特定Tracing ID 的所有Logging
 grep "correlationId:trace-123" logs/genai-demo.log
 
-# Query event processing errors
+# 查詢事件處理錯誤
 grep -E "(ERROR|WARN).*observability" logs/genai-demo.log | tail -20
 
-# Query performance issues
+# 查詢效能問題
 grep "processing.*took.*ms" logs/genai-demo.log | awk '{print $NF}' | sort -n | tail -10
 
-# Query Kafka-related issues
+# 查詢 Kafka 相關問題
 grep -i kafka logs/genai-demo.log | grep -E "(ERROR|WARN)"
 ```
 
-### Distributed Tracing Analysis
+### 分散式Tracing分析
 
 ```bash
-# Query traces using AWS X-Ray
+# 使用 AWS X-Ray 查詢Tracing
 aws xray get-trace-summaries \
   --time-range-type TimeRangeByStartTime \
   --start-time 2024-01-01T00:00:00Z \
   --end-time 2024-01-01T23:59:59Z \
   --filter-expression 'service("genai-demo") AND error'
 
-# Query specific trace details
+# 查詢特定Tracing詳情
 aws xray batch-get-traces --trace-ids trace-123-456-789
 ```
 
-## Performance Tuning Recommendations
+## 效能調優recommendations
 
-### 1. JVM Tuning
+### 1. JVM 調優
 
 ```bash
-# Recommended JVM parameters for production
+# 生產Environment推薦 JVM 參數
 JAVA_OPTS="-server \
   -Xms4g -Xmx8g \
   -XX:+UseG1GC \
@@ -771,10 +772,10 @@ JAVA_OPTS="-server \
   -Dspring.profiles.active=msk"
 ```
 
-### 2. Database Tuning
+### 2. Repository調優
 
 ```sql
--- Add indexes for observability-related tables
+-- 為Observability相關表添加索引
 CREATE INDEX CONCURRENTLY idx_observability_events_timestamp 
 ON observability_events(timestamp DESC);
 
@@ -784,15 +785,15 @@ ON observability_events(session_id, timestamp DESC);
 CREATE INDEX CONCURRENTLY idx_observability_events_trace_id 
 ON observability_events(trace_id);
 
--- Regularly clean up old data
+-- 定期清理舊數據
 DELETE FROM observability_events 
 WHERE timestamp < NOW() - INTERVAL '90 days';
 ```
 
-### 3. Network Tuning
+### 3. 網路調優
 
 ```bash
-# Adjust TCP parameters to optimize Kafka connections
+# 調整 TCP 參數以優化 Kafka 連接
 echo 'net.core.rmem_max = 134217728' >> /etc/sysctl.conf
 echo 'net.core.wmem_max = 134217728' >> /etc/sysctl.conf
 echo 'net.ipv4.tcp_rmem = 4096 65536 134217728' >> /etc/sysctl.conf
@@ -800,50 +801,50 @@ echo 'net.ipv4.tcp_wmem = 4096 65536 134217728' >> /etc/sysctl.conf
 sysctl -p
 ```
 
-## Contact Support
+## 聯絡支援
 
-### Emergency Contact Information
+### 緊急聯絡資訊
 
-- **Technical Support**: <tech-support@company.com>
-- **On-call Phone**: +1-xxx-xxx-xxxx
-- **Slack Channel**: #observability-support
+- **技術支援**: <tech-support@company.com>
+- **值班電話**: +1-xxx-xxx-xxxx
+- **Slack 頻道**: #observability-support
 
-### Issue Report Format
+### 問題回報格式
 
 ```markdown
-## Issue Description
-[Brief description of the issue]
+## 問題描述
+[簡要描述問題]
 
-## Environment Information
+## Environment資訊
 - Environment: [dev/test/production]
-- Version: [application version]
-- Time: [time when issue occurred]
+- 版本: [應用程式版本]
+- 時間: [問題發生時間]
 
-## Reproduction Steps
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+## 重現步驟
+1. [步驟 1]
+2. [步驟 2]
+3. [步驟 3]
 
-## Expected Behavior
-[Describe expected normal behavior]
+## 預期行為
+[描述預期的正常行為]
 
-## Actual Behavior
-[Describe actual abnormal behavior]
+## 實際行為
+[描述實際發生的異常行為]
 
-## Logs and Error Messages
+## Logging和錯誤訊息
 ```
 
-[Paste relevant logs]
+[貼上相關Logging]
 
 ```
 
-## Attempted Solutions
-[List solutions already tried]
+## 已嘗試的解決方案
+[列出已經嘗試過的解決方法]
 ```
 
-## Related Documentation
+## 相關文檔
 
-- [Configuration Guide](../observability/configuration-guide.md)
-- [API Documentation](../api/observability-api.md)
-- [Deployment Guide](../deployment/observability-deployment.md)
-- [Performance Tuning Guide](../performance/observability-performance.md)
+- [配置指南](../observability/configuration-guide.md)
+- [API 文檔](../api/observability-api.md)
+- [Deployment指南](../deployment/observability-deployment.md)
+- [效能調優指南](../performance/observability-performance.md)

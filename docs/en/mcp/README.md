@@ -1,96 +1,97 @@
-# MCP (Model Context Protocol) Integration Guide
 
-## Overview
+# Guidelines
 
-This project integrates Model Context Protocol (MCP), providing AI-assisted development capabilities. MCP is an open standard that allows AI assistants to interact with various tools and services.
+## 概述
 
-## 🔧 Integrated MCP Servers
+This project整合了 Model Context Protocol (MCP)，提供 AI 輔助開發功能。MCP 是一個開放標準，允許 AI 助手與各種工具和服務進行交互。
 
-### Project-Level Servers (`.kiro/settings/mcp.json`)
+## 🔧 已整合的 MCP Servers
+
+### 專案級別 Servers (`.kiro/settings/mcp.json`)
 
 #### ⏰ Time Server
 
-- **Features**: Time and timezone conversion
-- **Usage**: Get current time, timezone conversion, time formatting
-- **Status**: ✅ Running Stable
+- **功能**: 時間和時區轉換
+- **用途**: 獲取當前時間、時區轉換、時間格式化
+- **狀態**: ✅ 穩定運行
 
 #### 📚 AWS Documentation Server
 
-- **Features**: AWS official documentation search and query
-- **Usage**: Real-time search of AWS service documentation, best practices queries
-- **Status**: ✅ Running Stable
+- **功能**: AWS 官方文檔搜索和查詢
+- **用途**: 即時搜索 AWS 服務文檔、Best Practice查詢
+- **狀態**: ✅ 穩定運行
 
 #### 🏗️ AWS CDK Server
 
-- **Features**: CDK development guidance and best practices
-- **Usage**: CDK Nag rule explanations, architecture guidance, best practice recommendations
-- **Status**: ✅ Running Stable
+- **功能**: CDK 開發指導和Best Practice
+- **用途**: CDK Nag 規則解釋、架構指導、Best Practicerecommendations
+- **狀態**: ✅ 穩定運行
 
 #### 💰 AWS Pricing Server
 
-- **Features**: AWS cost analysis and pricing queries
-- **Usage**: Project cost assessment, pricing queries, cost optimization recommendations
-- **Status**: ✅ Running Stable
+- **功能**: AWS 成本分析和定價查詢
+- **用途**: 專案成本評估、定價查詢、成本優化recommendations
+- **狀態**: ✅ 穩定運行
 
-### User-Level Servers (`~/.kiro/settings/mcp.json`)
+### 用戶級別 Servers (`~/.kiro/settings/mcp.json`)
 
 #### 🐙 GitHub Server
 
-- **Features**: GitHub operations and workflow management
-- **Usage**: Code reviews, issue tracking, PR management, repository operations
-- **Status**: ✅ Running Stable
+- **功能**: GitHub 操作和工作流管理
+- **用途**: Code Review、問題Tracing、PR 管理、倉庫操作
+- **狀態**: ✅ 穩定運行
 
-## 🚀 Usage
+## 🚀 使用方式
 
-### Basic Queries
-
-```bash
-# Time-related queries
-"What time is it in Taipei now?"
-"Convert UTC time to Taipei time"
-
-# AWS documentation queries
-"How to configure S3 bucket versioning?"
-"What are the best practices for Lambda functions?"
-
-# CDK development guidance
-"Explain CDK Nag rule AwsSolutions-IAM4"
-"How to implement security best practices in CDK?"
-
-# Cost analysis
-"Analyze the cost of this CDK project"
-"What's the price of EC2 t3.medium in us-east-1?"
-
-# GitHub operations
-"List recent pull requests"
-"Create a new issue"
-```
-
-### Advanced Features
-
-#### Project Cost Analysis
-
-MCP can analyze your CDK or Terraform projects and provide detailed cost assessments:
+### 基本查詢
 
 ```bash
-"Analyze current project AWS costs"
-"Provide cost optimization recommendations"
-"Compare prices across different AWS regions"
+# 時間相關查詢
+"現在台北時間是幾點？"
+"將 UTC 時間轉換為台北時間"
+
+# AWS 文檔查詢
+"如何配置 S3 bucket 的版本控制？"
+"Lambda 函數的Best Practice是什麼？"
+
+# CDK 開發指導
+"解釋 CDK Nag 規則 AwsSolutions-IAM4"
+"如何在 CDK 中實現最佳安全實踐？"
+
+# 成本分析
+"分析這個 CDK 專案的成本"
+"EC2 t3.medium 在 us-east-1 的價格是多少？"
+
+# GitHub 操作
+"列出最近的 pull requests"
+"創建一個新的 issue"
 ```
 
-#### Architecture Decision Support
+### 進階功能
 
-Combining AWS documentation and CDK best practices to provide architecture decision support:
+#### 專案成本分析
+
+MCP 可以分析你的 CDK 或 Terraform 專案，提供詳細的成本評估：
 
 ```bash
-"Recommend suitable AWS service architecture"
-"Check if my CDK code follows best practices"
-"Explain the use cases for this AWS service"
+"分析當前專案的 AWS 成本"
+"提供成本優化recommendations"
+"比較不同 AWS 區域的價格"
 ```
 
-## ⚙️ Configuration Management
+#### 架構決策支援
 
-### Project Configuration (`.kiro/settings/mcp.json`)
+結合 AWS 文檔和 CDK Best Practice，提供架構決策支援：
+
+```bash
+"推薦適合的 AWS 服務架構"
+"檢查我的 CDK 代碼是否符合Best Practice"
+"解釋這個 AWS 服務的使用場景"
+```
+
+## ⚙️ 配置管理
+
+### 專案配置 (`.kiro/settings/mcp.json`)
 
 ```json
 {
@@ -112,7 +113,7 @@ Combining AWS documentation and CDK best practices to provide architecture decis
 }
 ```
 
-### User Configuration (`~/.kiro/settings/mcp.json`)
+### 用戶配置 (`~/.kiro/settings/mcp.json`)
 
 ```json
 {
@@ -132,60 +133,60 @@ Combining AWS documentation and CDK best practices to provide architecture decis
 }
 ```
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### Common Issues
+### 常見問題
 
-#### MCP Server Connection Failure
+#### MCP Server 連接失敗
 
-1. Check network connectivity
-2. Ensure `uv` and `uvx` are installed
-3. Clear UV cache: `uv cache clean`
-4. Restart Kiro IDE
+1. 檢查網路連接
+2. 確認 `uv` 和 `uvx` 已安裝
+3. 清理 UV 快取：`uv cache clean`
+4. 重新啟動 Kiro IDE
 
-#### Server Installation Stuck
+#### Server 安裝卡住
 
-Some MCP servers (like aws-core) may get stuck due to dependency issues:
+某些 MCP servers（如 aws-core）可能因為依賴問題卡住：
 
 ```bash
-# Clean stuck processes
+# 清理卡住的進程
 pkill -f "uvx.*mcp"
 
-# Clear UV cache
+# 清理 UV 快取
 uv cache clean
 
-# Reconfigure MCP servers
+# 重新配置 MCP servers
 ```
 
-#### Performance Optimization
+#### Performance優化
 
-- Set `FASTMCP_LOG_LEVEL=ERROR` to reduce log output
-- Use `autoApprove` to automatically approve common tools
-- Regularly clean up unused servers
+- 設置 `FASTMCP_LOG_LEVEL=ERROR` 減少Logging輸出
+- 使用 `autoApprove` 自動批准常用工具
+- 定期清理不使用的 servers
 
-### Log Checking
+### Logging檢查
 
-View MCP logs in Kiro IDE:
+在 Kiro IDE 中查看 MCP Logging：
 
-1. Open command palette (Cmd/Ctrl + Shift + P)
-2. Search for "MCP Logs"
-3. Check connection status and error information
+1. 打開Command面板 (Cmd/Ctrl + Shift + P)
+2. 搜索 "MCP Logs"
+3. 查看連接狀態和錯誤信息
 
-## 🛠️ Development and Extension
+## 🛠️ 開發和擴展
 
-### Adding New MCP Server
+### 添加新的 MCP Server
 
-1. Add server definition in configuration file
-2. Configure necessary environment variables
-3. Set up `autoApprove` list
-4. Restart Kiro IDE
+1. 在配置文件中添加 server 定義
+2. 配置必要的Environment變數
+3. 設置 `autoApprove` 列表
+4. 重新啟動 Kiro IDE
 
-### Custom MCP Server
+### 自定義 MCP Server
 
-You can develop custom MCP servers to extend functionality:
+可以開發自定義的 MCP server 來擴展功能：
 
 ```python
-# Example: Custom MCP server
+# Examples
 from mcp import Server
 from mcp.types import Tool
 
@@ -193,51 +194,51 @@ server = Server("custom-server")
 
 @server.tool()
 def custom_function(param: str) -> str:
-    return f"Processing result: {param}"
+    return f"處理結果: {param}"
 
 if __name__ == "__main__":
     server.run()
 ```
 
-## 📊 Benefits Assessment
+## 📊 效益評估
 
-### Development Efficiency Improvements
+### 開發效率提升
 
-- **Documentation Query Time**: Reduced by 70% (from manual search to instant queries)
-- **Architecture Decision Speed**: Improved by 50% (instant access to best practice recommendations)
-- **Cost Assessment Accuracy**: Improved by 80% (real-time pricing queries and analysis)
-- **Code Review Efficiency**: Improved by 60% (automated GitHub operations)
+- **文檔查詢時間**: 減少 70% (從手動搜索到即時查詢)
+- **架構決策速度**: 提升 50% (即時獲得Best Practicerecommendations)
+- **成本評估準確性**: 提升 80% (即時價格查詢和分析)
+- **Code Review效率**: 提升 60% (自動化 GitHub 操作)
 
-### Usage Statistics
+### 使用統計
 
-- **Average Daily Queries**: 50+ AWS documentation queries
-- **Cost Analysis Frequency**: 10+ project cost assessments per week
-- **GitHub Operations**: 20+ automated operations daily
-- **Time Queries**: 30+ timezone conversions daily
+- **平均每日查詢**: 50+ 次 AWS 文檔查詢
+- **成本分析頻率**: 每週 10+ 次專案成本評估
+- **GitHub 操作**: 每日 20+ 次自動化操作
+- **時間查詢**: 每日 30+ 次時區轉換
 
-## 🔮 Future Plans
+## 🔮 未來規劃
 
-### Planned New MCP Servers
+### 計劃新增的 MCP Servers
 
-- **AWS Lambda Server**: Lambda function management and deployment
-- **AWS EC2 Server**: EC2 instance management (removed, planned for reintegration)
-- **Terraform Server**: Terraform configuration analysis and best practices
-- **Database Server**: Database queries and management
+- **AWS Lambda Server**: Lambda 函數管理和Deployment
+- **AWS EC2 Server**: EC2 實例管理（已移除，計劃重新整合）
+- **Terraform Server**: Terraform 配置分析和Best Practice
+- **Database Server**: Repository查詢和管理
 
-### Feature Enhancements
+### 功能增強
 
-- **Intelligent Code Generation**: Automated code generation based on best practices
-- **Architecture Review**: Automated architecture compliance checking
-- **Cost Alerts**: Real-time cost monitoring and alert system
-- **Documentation Sync**: Automatic updates to project documentation and API specifications
+- **智能Code Generation**: 基於Best Practice的程式碼自動生成
+- **架構審查**: 自動化架構合規性檢查
+- **成本預警**: 即時成本Monitoring和預警系統
+- **文檔同步**: 自動更新專案文檔和 API 規範
 
-## 📚 Related Resources
+## Resources
 
-- [MCP Official Documentation](https://modelcontextprotocol.io/)
+- [MCP 官方文檔](https://modelcontextprotocol.io/)
 - [AWS Labs MCP Servers](https://github.com/awslabs)
-- [Kiro IDE MCP Integration Guide](https://docs.kiro.ai/mcp)
-- [UV Package Manager](https://docs.astral.sh/uv/)
+- [Kiro IDE MCP 整合指南](https://docs.kiro.ai/mcp)
+- [UV 包管理器](https://docs.astral.sh/uv/)
 
 ---
 
-**Note**: MCP integration requires stable network connectivity and appropriate system resources. It is recommended to use in a good network environment and regularly update MCP servers to get the latest features.
+**注意**: MCP 整合需要穩定的網路連接和適當的系統Resource。recommendations在良好的網路Environment下使用，並定期更新 MCP servers 以獲得最新功能。

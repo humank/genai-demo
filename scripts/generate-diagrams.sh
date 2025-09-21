@@ -81,11 +81,11 @@ generate_diagram() {
     
     print_info "生成圖表: $filename"
     
-    # 生成 PNG 格式
-    if java -jar "$PLANTUML_JAR" -tpng -o "../../generated/$output_subdir" "$puml_file"; then
-        print_success "PNG 生成成功: $output_path/$filename.png"
+    # 生成 SVG 格式 (高解析度向量圖)
+    if java -jar "$PLANTUML_JAR" -tsvg -o "../../generated/$output_subdir" "$puml_file"; then
+        print_success "SVG 生成成功: $output_path/$filename.svg"
     else
-        print_error "PNG 生成失敗: $puml_file"
+        print_error "SVG 生成失敗: $puml_file"
         return 1
     fi
     

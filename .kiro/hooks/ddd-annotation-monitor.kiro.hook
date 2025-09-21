@@ -1,0 +1,25 @@
+{
+  "enabled": true,
+  "name": "DDD Annotation Monitor Hook",
+  "description": "Monitors changes to DDD annotations and domain events, triggering content analysis and diagram generation (works with diagram-documentation-sync.kiro.hook)",
+  "version": "1.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/src/main/java/**/domain/**/*.java",
+      "app/src/main/java/**/application/**/*.java",
+      "app/src/main/java/**/infrastructure/**/*.java"
+    ],
+    "exclude": [
+      "**/*.class",
+      "**/target/**",
+      "**/build/**",
+      "**/.git/**",
+      "**/.kiro/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "DDD-related Java files have been modified. Please analyze the changes and update diagrams:\n\n## Quick DDD Change Analysis\n\nAnalyze the modified Java files for structural changes:\n- **@AggregateRoot annotations**: New or modified aggregates\n- **Domain Events**: New Event classes or modifications\n- **Application Services**: New or modified services\n- **Entities and Value Objects**: Structural changes\n\n## Recommended Actions\n\n### 1. Analyze DDD Structure Changes\n```bash\n# Analyze current DDD structure\npython3 scripts/analyze-ddd-code.py\n```\n\n### 2. Update Affected Diagrams\n```bash\n# Update domain model diagrams\npython3 scripts/smart-diagram-update.py\n```\n\n### 3. Sync Documentation References\n```bash\n# Ensure all diagram references are up-to-date\npython3 scripts/sync-diagram-references.py --comprehensive\n```\n\n## Expected Outcomes\n- Domain model diagrams reflect code changes\n- Aggregate detail diagrams are updated\n- Documentation references are synchronized\n- New bounded contexts are documented\n\nPlease execute these commands and report any structural changes detected."
+  }
+}

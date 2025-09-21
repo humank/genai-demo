@@ -1,21 +1,19 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# Docker 部署指南
+# Deployment
 
 ## 概述
 
-本指南說明如何使用 Docker 部署 GenAI Demo 應用程式。我們提供了針對 ARM64 架構優化的輕量化 Docker 映像。
+本指南說明如何使用 Docker Deployment GenAI Demo 應用程式。我們提供了針對 ARM64 架構優化的輕量化 Docker 映像。
 
-## 系統需求
+## Requirements
 
-### 硬體需求
+### Requirements
 
 - **CPU**: ARM64 架構 (Apple Silicon M1/M2/M3 或 ARM64 伺服器)
-- **記憶體**: 最少 1GB RAM (建議 2GB+)
+- **記憶體**: 最少 1GB RAM (recommendations 2GB+)
 - **儲存空間**: 最少 2GB 可用空間
 
-### 軟體需求
+### Requirements
 
 - **Docker**: 20.10+
 - **Docker Compose**: 2.0+
@@ -42,15 +40,15 @@ docker-compose up -d
 # 查看服務狀態
 docker-compose ps
 
-# 查看日誌
+# 查看Logging
 docker-compose logs -f genai-demo
 ```
 
 ### 3. 訪問應用
 
 - **API 文檔**: <http://localhost:8080/swagger-ui/index.html>
-- **健康檢查**: <http://localhost:8080/actuator/health>
-- **H2 資料庫控制台**: <http://localhost:8080/h2-console>
+- **Health Check**: <http://localhost:8080/actuator/health>
+- **H2 Repository控制台**: <http://localhost:8080/h2-console>
 
 ## 映像優化特色
 
@@ -73,7 +71,7 @@ FROM eclipse-temurin:21-jre-alpine
 ### 3. JVM 優化
 
 ```bash
-# 針對容器環境優化的 JVM 參數
+# 針對容器Environment優化的 JVM 參數
 JAVA_OPTS="-Xms256m -Xmx512m \
     -XX:+UseSerialGC \
     -XX:+TieredCompilation \
@@ -82,7 +80,7 @@ JAVA_OPTS="-Xms256m -Xmx512m \
     -XX:MaxRAMPercentage=75.0"
 ```
 
-### 4. 安全性增強
+### 4. Security增強
 
 - 使用非 root 用戶執行應用程式
 - 最小化基礎映像 (Alpine Linux)
@@ -90,23 +88,23 @@ JAVA_OPTS="-Xms256m -Xmx512m \
 
 ## 配置說明
 
-### 環境變數
+### Environment變數
 
 | 變數名稱 | 預設值 | 說明 |
 |---------|--------|------|
 | `SPRING_PROFILES_ACTIVE` | `docker` | Spring Boot 設定檔 |
 | `JAVA_OPTS` | 見上方 | JVM 啟動參數 |
-| `SPRING_DATASOURCE_URL` | `jdbc:h2:mem:genaidemo` | 資料庫連接 URL |
+| `SPRING_DATASOURCE_URL` | `jdbc:h2:mem:genaidemo` | Repository連接 URL |
 
 ### 資料持久化
 
 ```yaml
 # docker-compose.yml 中的 volume 配置
 volumes:
-  - ./logs:/app/logs  # 日誌持久化
+  - ./logs:/app/logs  # Logging持久化
 ```
 
-### 健康檢查
+### Health Check
 
 ```yaml
 healthcheck:
@@ -117,7 +115,7 @@ healthcheck:
   start_period: 60s
 ```
 
-## 故障排除
+## Troubleshooting
 
 ### 1. 映像構建失敗
 
@@ -138,7 +136,7 @@ export JAVA_OPTS="-Xms128m -Xmx256m"
 docker-compose up -d
 ```
 
-### 3. 健康檢查失敗
+### 3. Health Check失敗
 
 **問題**: 應用程式啟動時間過長
 
@@ -149,16 +147,16 @@ healthcheck:
   start_period: 120s  # 增加到 2 分鐘
 ```
 
-### 4. 日誌查看
+### 4. Logging查看
 
 ```bash
-# 查看應用程式日誌
+# 查看應用程式Logging
 docker-compose logs -f genai-demo
 
-# 查看特定時間範圍的日誌
+# 查看特定時間範圍的Logging
 docker-compose logs --since="2024-01-01T00:00:00" genai-demo
 
-# 查看最後 100 行日誌
+# 查看最後 100 行Logging
 docker-compose logs --tail=100 genai-demo
 ```
 
@@ -182,13 +180,13 @@ export JAVA_OPTS="-Xms512m -Xmx1024m"
 ### 2. 垃圾收集器選擇
 
 ```bash
-# 低記憶體環境 (< 1GB)
+# 低記憶體Environment (< 1GB)
 -XX:+UseSerialGC
 
-# 中等記憶體環境 (1-4GB)
+# 中等記憶體Environment (1-4GB)
 -XX:+UseG1GC
 
-# 高記憶體環境 (4GB+)
+# 高記憶體Environment (4GB+)
 -XX:+UseZGC  # Java 17+
 ```
 
@@ -202,17 +200,17 @@ export JAVA_OPTS="-Xms512m -Xmx1024m"
 -Dspring.jmx.enabled=false
 ```
 
-## 生產環境部署
+## Deployment
 
-### 1. 安全性檢查清單
+### 1. Security檢查清單
 
 - [ ] 使用非 root 用戶執行
 - [ ] 移除開發工具和除錯端點
-- [ ] 設定適當的資源限制
-- [ ] 啟用日誌輪轉
-- [ ] 配置監控和告警
+- [ ] 設定適當的Resource限制
+- [ ] 啟用Logging輪轉
+- [ ] 配置Monitoring和告警
 
-### 2. 資源限制
+### Resources
 
 ```yaml
 # docker-compose.yml
@@ -228,10 +226,10 @@ services:
           memory: 512M
 ```
 
-### 3. 日誌管理
+### 3. Logging管理
 
 ```yaml
-# 日誌輪轉配置
+# Logging輪轉配置
 logging:
   driver: "json-file"
   options:
@@ -242,5 +240,5 @@ logging:
 ## 相關文檔
 
 - [README.md](../README.md) - 專案概述
-- [專案總結報告](./PROJECT_SUMMARY_2025.md) - 完整的專案成果總結
+- [專案summary報告](./PROJECT_SUMMARY_2025.md) - 完整的專案成果summary
 - [API_VERSIONING_STRATEGY.md](./api/API_VERSIONING_STRATEGY.md) - API 版本管理

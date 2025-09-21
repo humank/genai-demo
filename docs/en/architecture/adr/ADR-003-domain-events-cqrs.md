@@ -1,4 +1,4 @@
-# ADR-003: Domain Events and CQRS Implementation
+# ADR-003: Domain Events and Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) Implementation
 
 ## Status
 
@@ -20,11 +20,11 @@ The GenAI Demo e-commerce platform requires robust event-driven architecture to 
 - **Development Environment**: Simple, fast event processing for debugging
 - **Production Environment**: Reliable, scalable event streaming with MSK
 - **Event Sourcing**: Capability to rebuild aggregate state from events
-- **CQRS**: Separate read and write models for optimal performance
+- **Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))**: Separate read and write models for optimal performance
 
 ## Decision
 
-We implement **Domain Events with CQRS pattern** using profile-based event publishing strategies and comprehensive event sourcing capabilities.
+We implement **Domain Events with Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) pattern** using profile-based event publishing strategies and comprehensive event sourcing capabilities.
 
 ### Architecture Overview
 
@@ -284,7 +284,7 @@ public class CustomerEventHandler extends AbstractDomainEventHandler<CustomerCre
 }
 ```
 
-#### 6. CQRS Read Model Projections
+#### 6. Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) Read Model Projections
 
 **Order Summary Projection**
 
@@ -419,7 +419,7 @@ public class AggregateReconstruction {
 
 - **Profile Separation**: Different strategies for dev/prod environments
 - **Debugging**: In-memory events simplify development debugging
-- **Performance**: Optimized read models through CQRS
+- **Performance**: Optimized read models through Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))
 - **Maintainability**: Clear separation of command and query responsibilities
 
 ### Negative Outcomes
@@ -534,7 +534,7 @@ public record PaymentProcessedEvent(
 
 ### Performance Efficiency
 
-- **CQRS**: Optimized read and write models
+- **Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))**: Optimized read and write models
 - **Async Processing**: Non-blocking event processing
 - **Caching**: Event-based cache invalidation
 
@@ -553,6 +553,6 @@ public record PaymentProcessedEvent(
 ## References
 
 - [Domain Events Pattern](https://martinfowler.com/eaaDev/DomainEvent.html)
-- [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)
+- [Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) Pattern](https://martinfowler.com/bliki/Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)).html)
 - [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 - [Implementing Domain-Driven Design](https://www.informit.com/store/implementing-domain-driven-design-9780321834577)

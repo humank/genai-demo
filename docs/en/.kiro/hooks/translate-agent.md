@@ -26,9 +26,9 @@ Agent 會自動執行以下步驟：
 3. 翻譯內容並轉換內部連結
 4. 將翻譯結果加入 git
 
-## 範例
+## Examples
 
-假設你修改了 `docs/releases/new-feature.md`，使用以下命令觸發翻譯：
+Assumption你修改了 `docs/releases/new-feature.md`，使用以下Command觸發翻譯：
 
 ```bash
 git add docs/releases/new-feature.md

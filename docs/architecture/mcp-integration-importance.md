@@ -208,7 +208,7 @@ cat infrastructure/docs/well-architected-assessment.md
 npm run architecture:assess
 
 # 生成執行摘要
-cat infrastructure/docs/executive-summary.md
+cat infrastructure/docs/reports-summaries/infrastructure/executive-summary.md
 ```
 
 ### 階段 3: 持續監控 (第 5-6 週)

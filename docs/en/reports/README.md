@@ -1,42 +1,43 @@
-# Reports Documentation
 
-This directory contains project reports and analysis documents.
+# 報告文檔
 
-## Document List
+本目錄包含專案報告和分析文檔。
 
-### 2025 Reports
+## 文檔列表
 
-- [Project Summary 2025](project-summary-2025.md) - 2025 project summary report
-- [Architecture Excellence 2025](architecture-excellence-2025.md) - Architecture excellence assessment
-- [Technology Stack 2025](technology-stack-2025.md) - Technology stack analysis report
-- [Documentation Cleanup 2025](documentation-cleanup-2025.md) - Documentation cleanup report
-- [Diagram System Implementation 2025](diagram-system-implementation-2025.md) - Diagram system implementation report
-- [Directory Cleanup 2025](directory-cleanup-2025.md) - Directory cleanup report
-- [Test Fixes Complete 2025](test-fixes-complete-2025.md) - Test fixes completion report
+### 2025年報告
 
-### Technical Refactoring Reports
+- [專案summary 2025](reports-summaries/project-management/reports-summaries/project-management/project-summary-2025.md) - 2025年專案summary報告
+- [架構卓越性 2025](architecture-excellence-2025.md) - 架構卓越性評估
+- [技術棧 2025](technology-stack-2025.md) - 技術棧分析報告
+- [文檔清理 2025](documentation-cleanup-2025.md) - 文檔清理報告
+- [圖表系統實作 2025](diagram-system-implementation-2025.md) - 圖表系統實作報告
+- [目錄清理 2025](directory-cleanup-2025.md) - 目錄清理報告
+- [測試修復完成 2025](test-fixes-complete-2025.md) - 測試修復完成報告
 
-- [JPA Refactoring Completed](jpa-refactoring-completed.md) - JPA refactoring completion report
-- [DDD Record Refactoring Summary](ddd-record-refactoring-summary.md) - DDD Record refactoring summary
-- [Java 17 to 21 Upgrade](upgrade-java17to21.md) - Java version upgrade report
+### 技術Refactoring報告
 
-### Analysis Reports
+- [JPA Refactoring完成報告](jpa-refactoring-completed.md) - JPA Refactoring完成報告
+- [DDD Record Refactoringsummary](reports-summaries/architecture-design/reports-summaries/architecture-design/ddd-record-refactoring-summary.md) - DDD Record Refactoringsummary
+- [Java 17 升級到 21](upgrade-java17to21.md) - Java 版本升級報告
 
-- [Code Analysis](code-analysis.md) - Code quality analysis report
+### 分析報告
 
-## Report Types
+- [代碼分析](code-analysis.md) - 代碼品質分析報告
 
-- **Project Summary**: Milestone achievements and statistics
-- **Technical Assessment**: Architecture and technology analysis
-- **Improvement Recommendations**: Optimization and improvement proposals
+## 報告類型
 
-## Target Audience
+- **專案summary**: 階段性成果和統計
+- **技術評估**: 架構和技術分析
+- **改進recommendations**: 優化和改進方案
 
-- Project Managers
-- Technical Leads
-- Stakeholders
+## 適用對象
 
-## Related Links
+- Project Manager
+- 技術負責人
+- 利益相關者
 
-- [Release Notes](../releases/) - Version release records
-- [Architecture Documentation](../architecture/) - System architecture
+## related links
+
+- [發布說明](../releases/) - 版本發布記錄
+- [架構文檔](../architecture/) - 系統架構

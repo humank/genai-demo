@@ -64,19 +64,25 @@
     "excalidraw": {
       "command": "node",
       "args": [
-        "/Users/yikaikao/git/genai-demo/excalidraw-mcp-full/dist/index.js"
+        "/Users/yikaikao/git/genai-demo/node_modules/mcp-excalidraw-server/src/index.js"
       ],
-      "env": {},
+      "env": {
+        "ENABLE_CANVAS_SYNC": "false"
+      },
       "disabled": false,
       "autoApprove": [
-        "create_drawing",
-        "get_drawing",
-        "update_drawing",
-        "delete_drawing",
-        "list_drawings",
-        "export_to_svg",
-        "export_to_png",
-        "export_to_json"
+        "create_element",
+        "update_element",
+        "delete_element",
+        "query_elements",
+        "get_resource",
+        "group_elements",
+        "ungroup_elements",
+        "align_elements",
+        "distribute_elements",
+        "lock_elements",
+        "unlock_elements",
+        "batch_create_elements"
       ]
     }
   }

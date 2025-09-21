@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# API 版本管理策略
+# API 版本管理Policy
 
 ## 概述
 
-本文檔定義了 GenAI Demo 專案的 API 版本管理策略，確保 API 的向後相容性和平滑升級。
+This document定義了 GenAI Demo 專案的 API 版本管理Policy，確保 API 的向後相容性和平滑升級。
 
 ## 版本控制方案
 
@@ -39,7 +37,7 @@ API-Version: v1
 
 - **基礎路徑**: `/api/consumer/v1/`
 - **目標用戶**: 終端消費者
-- **版本策略**: 嚴格向後相容，長期支援
+- **版本Policy**: 嚴格向後相容，長期支援
 
 ```
 /api/consumer/v1/products          # 商品瀏覽
@@ -49,19 +47,19 @@ API-Version: v1
 /api/consumer/v1/reviews           # 商品評價
 /api/consumer/v1/recommendations   # 推薦系統
 /api/consumer/v1/notifications     # 通知系統
-/api/consumer/v1/delivery-tracking # 配送追蹤
+/api/consumer/v1/delivery-tracking # 配送Tracing
 ```
 
 ### 商務 API (Business API)
 
 - **基礎路徑**: `/api/business/v1/`
 - **目標用戶**: 商務管理人員
-- **版本策略**: 快速迭代，定期升級
+- **版本Policy**: 快速迭代，定期升級
 
 ```
 /api/business/v1/orders      # 訂單管理
 /api/business/v1/products    # 商品管理
-/api/business/v1/customers   # 客戶管理
+/api/business/v1/customers   # Customer管理
 /api/business/v1/inventory   # 庫存管理
 /api/business/v1/pricing     # 定價管理
 /api/business/v1/stats       # 統計分析
@@ -71,7 +69,7 @@ API-Version: v1
 
 - **基礎路徑**: `/api/internal/v1/`
 - **目標用戶**: 內部系統整合
-- **版本策略**: 靈活變更，內部協調
+- **版本Policy**: 靈活變更，內部協調
 
 ## 版本生命週期
 
@@ -90,7 +88,7 @@ API-Version: v1
 - **DEPRECATED**: 棄用版本，計劃移除
 - **RETIRED**: 已退役版本，不再支援
 
-## 變更管理
+## Change Management
 
 ### 1. 向後相容的變更 (MINOR/PATCH)
 
@@ -116,9 +114,9 @@ API-Version: v1
 
 1. **提案階段**: 在 GitHub Issues 中提出變更提案
 2. **評估階段**: 技術團隊評估影響範圍
-3. **通知階段**: 提前通知 API 使用者
+3. **通知階段**: 提前通知 API User
 4. **實施階段**: 發布新版本
-5. **監控階段**: 監控使用情況和問題
+5. **Monitoring階段**: Monitoring使用情況和問題
 
 ## 實作細節
 
@@ -164,7 +162,7 @@ public class ApiVersionInterceptor implements HandlerInterceptor {
 }
 ```
 
-## 監控和指標
+## Monitoring和Metrics
 
 ### 1. 版本使用統計
 
@@ -172,11 +170,11 @@ public class ApiVersionInterceptor implements HandlerInterceptor {
 - 版本分布統計
 - 棄用 API 使用情況
 
-### 2. 效能監控
+### 2. 效能Monitoring
 
 - 各版本回應時間
 - 錯誤率統計
-- 使用者滿意度
+- User滿意度
 
 ### 3. 告警設定
 
@@ -184,32 +182,32 @@ public class ApiVersionInterceptor implements HandlerInterceptor {
 - 新版本錯誤率過高
 - 版本遷移進度緩慢
 
-## 最佳實踐
+## Best Practices
 
-### 1. API 設計原則
+### Design
 
 - **一致性**: 保持 API 設計風格一致
 - **可預測性**: API 行為應該可預測
 - **文檔完整**: 提供完整的 API 文檔
 - **測試覆蓋**: 確保充分的測試覆蓋
 
-### 2. 版本遷移指南
+### Guidelines
 
 - 提供詳細的遷移文檔
 - 提供程式碼範例
 - 提供遷移工具
 - 提供技術支援
 
-### 3. 溝通策略
+### 3. 溝通Policy
 
 - 定期發布版本更新通知
-- 維護變更日誌
-- 提供開發者論壇
+- 維護變更Logging
+- 提供Developer論壇
 - 舉辦技術分享會
 
 ## 相關文檔
 
 - [API 文檔](./README.md)
-- [變更日誌](../releases/)
+- [變更Logging](../releases/)
 - [SpringDoc 分組指南](./SPRINGDOC_GROUPING_GUIDE.md)
 - [技術棧說明](../TECHNOLOGY_STACK_2025.md)

@@ -1,10 +1,3 @@
-<!-- 
-此文件需要手動翻譯
-原文件: .kiro/steering/domain-events.md
-翻譯日期: Thu Aug 21 22:24:38 CST 2025
-
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
 
 # Domain Events Design and Implementation Guidelines
 
@@ -75,7 +68,7 @@ public record CustomerCreatedEvent(
 
 ### Event Collection in Aggregate Roots
 ```java
-@AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
+@AggregateRoot(name = "Customer", description = "CustomerAggregate Root", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
@@ -995,6 +988,3 @@ When moving between event store implementations:
 3. **Testing**: Always test migration with realistic data volumes
 
 This comprehensive approach ensures reliable event handling across all development stages while maintaining flexibility for future changes.
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

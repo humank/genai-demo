@@ -6,7 +6,7 @@
 
 ### 2025年報告
 
-- [專案總結 2025](project-summary-2025.md) - 2025年專案總結報告
+- [專案總結 2025](reports-summaries/project-management/reports-summaries/project-management/project-summary-2025.md) - 2025年專案總結報告
 - [架構卓越性 2025](architecture-excellence-2025.md) - 架構卓越性評估
 - [技術棧 2025](technology-stack-2025.md) - 技術棧分析報告
 - [文檔清理 2025](documentation-cleanup-2025.md) - 文檔清理報告
@@ -17,7 +17,7 @@
 ### 技術重構報告
 
 - [JPA 重構完成報告](jpa-refactoring-completed.md) - JPA 重構完成報告
-- [DDD Record 重構總結](ddd-record-refactoring-summary.md) - DDD Record 重構總結
+- [DDD Record 重構總結](reports-summaries/architecture-design/reports-summaries/architecture-design/ddd-record-refactoring-summary.md) - DDD Record 重構總結
 - [Java 17 升級到 21](upgrade-java17to21.md) - Java 版本升級報告
 
 ### 分析報告

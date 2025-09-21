@@ -1,0 +1,81 @@
+{
+  "defaultSettings": {
+    "fontFamily": "Excalifont",
+    "fontSize": 14,
+    "strokeColor": "#1e1e1e",
+    "backgroundColor": "transparent",
+    "strokeWidth": 2,
+    "roughness": 1,
+    "opacity": 100
+  },
+  "elementDefaults": {
+    "text": {
+      "fontFamily": "Excalifont",
+      "fontSize": 14
+    },
+    "label": {
+      "fontFamily": "Excalifont",
+      "fontSize": 14
+    },
+    "title": {
+      "fontFamily": "Excalifont",
+      "fontSize": 24
+    },
+    "subtitle": {
+      "fontFamily": "Excalifont",
+      "fontSize": 18
+    },
+    "caption": {
+      "fontFamily": "Excalifont",
+      "fontSize": 12
+    }
+  },
+  "colorSchemes": {
+    "business": {
+      "primary": "#1976d2",
+      "secondary": "#e3f2fd",
+      "accent": "#0d47a1"
+    },
+    "technical": {
+      "primary": "#388e3c",
+      "secondary": "#e8f5e8",
+      "accent": "#1b5e20"
+    },
+    "user": {
+      "primary": "#f57c00",
+      "secondary": "#fff3e0",
+      "accent": "#e65100"
+    },
+    "process": {
+      "primary": "#7b1fa2",
+      "secondary": "#f3e5f5",
+      "accent": "#4a148c"
+    }
+  },
+  "templates": {
+    "boundedContext": {
+      "type": "rectangle",
+      "width": 150,
+      "height": 80,
+      "strokeWidth": 2,
+      "fontFamily": "Excalifont",
+      "fontSize": 14
+    },
+    "stakeholder": {
+      "type": "ellipse",
+      "width": 120,
+      "height": 80,
+      "strokeWidth": 2,
+      "fontFamily": "Excalifont",
+      "fontSize": 14
+    },
+    "process": {
+      "type": "rectangle",
+      "width": 120,
+      "height": 60,
+      "strokeWidth": 2,
+      "fontFamily": "Excalifont",
+      "fontSize": 14
+    }
+  }
+}

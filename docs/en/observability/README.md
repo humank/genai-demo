@@ -1,67 +1,96 @@
-# Observability System Documentation
+
+# Observability系統文檔
 
 ## Overview
 
-This project implements a complete enterprise-grade observability system, including distributed tracing, structured logging, business metrics collection, and cost optimization analysis.
+This project實現了完整的企業級Observability系統，包含分散式Tracing、結構化Logging、業務Metrics收集和成本優化分析。
 
-## Core Components
+## 核心組件
 
-### 🔍 Distributed Tracing
+### 🔍 分散式Tracing
 
-- **AWS X-Ray**: Cross-service request tracing
-- **Jaeger**: Local development environment tracing
-- **Correlation ID**: Unified request tracking identifier
+- **AWS X-Ray**: 跨服務請求Tracing
+- **Jaeger**: 本地開發EnvironmentTracing
+- **關聯 ID**: 統一的請求Tracing標識
 
-### 📝 Structured Logging
+### 📝 結構化Logging
 
-- **Logback**: Unified log format
-- **PII Masking**: Sensitive data protection
-- **CloudWatch**: Log aggregation and analysis
+- **Logback**: 統一Logging格式
+- **PII 遮罩**: 敏感資料保護
+- **CloudWatch**: LoggingAggregate和分析
 
-### 📊 Business Metrics
+### 📊 業務Metrics
 
-- **Micrometer**: Metrics collection framework
-- **CloudWatch**: Custom business metrics
-- **Prometheus**: Metrics exposure endpoint
+- **Micrometer**: Metrics收集框架
+- **CloudWatch**: 自定義業務Metrics
+- **Prometheus**: Metrics暴露端點
 
-### 💰 Cost Optimization
+### 💰 成本優化
 
-- **Resource Right-sizing**: Automated resource analysis
-- **Cost Tracking**: Real-time cost monitoring
-- **Optimization Recommendations**: Intelligent cost suggestions
+- **Resource右調**: 自動化Resource分析
+- **成本Tracing**: 即時成本Monitoring
+- **優化recommendations**: 智能成本recommendations
 
-## Quick Start
+## 快速開始
 
-### Enable Observability Features
+### 啟用Observability功能
 
 ```bash
-# Start application (automatically enables observability)
+# 啟動應用 (自動啟用Observability)
 ./gradlew bootRun
 
-# Check health status
+# 檢查健康狀態
 curl http://localhost:8080/actuator/health
 
-# View application metrics
+# 查看應用Metrics
 curl http://localhost:8080/actuator/metrics
 
-# Get cost optimization recommendations
+# 獲取成本優化recommendations
 curl http://localhost:8080/api/cost-optimization/recommendations
 ```
 
-### Configure Environment Variables
+### 配置Environment變數
 
 ```bash
-# AWS X-Ray configuration
+# AWS X-Ray 配置
 export AWS_XRAY_TRACING_NAME=genai-demo
 export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR
 
-# CloudWatch configuration
+# CloudWatch 配置
 export CLOUDWATCH_NAMESPACE=GenAI/Demo
 export CLOUDWATCH_REGION=us-east-1
 ```
 
-## Detailed Documentation
+## 詳細文檔
 
-- [Distributed Tracing Implementation](../../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
-- [Structured Logging Implementation](../../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
-- [Metrics Implementation](../../app/docs/METRICS_IMPLEMENTATION.md)
+### Guidelines
+
+- **[生產EnvironmentObservability測試指南](production-observability-testing-guide.md)** - 完整的生產Environment測試Policy和Best Practice (67頁)
+
+### 📚 前端後端整合文檔
+
+- **[配置指南](configuration-guide.md)** - Environment差異化配置和 MSK 主題設定
+- **[故障排除指南](../troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
+- **[Deployment指南](../deployment/observability-deployment.md)** - 完整的Deployment流程和驗證
+- **[API 文檔](../api/observability-api.md)** - Observability API 端點詳細說明
+
+### 📚 實現文檔
+
+- [分散式Tracing實現](../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
+- [結構化Logging實現](../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
+- [Metrics收集實現](../app/docs/METRICS_IMPLEMENTATION.md)
+
+### Testing
+
+- **開發階段**: Java 集成測試和Unit Test
+- **CI/CD 階段**: 腳本化驗證和 SLI/SLO 檢查
+- **生產階段**: Synthetic Monitoring 和 Chaos Engineering
+- **持續改進**: 自動化報告和手動分析
+
+### Best Practices
+
+- Bash/Python 腳本測試
+- K6 Load Test
+- Terraform 基礎設施測試
+- DataDog Synthetic Tests
+- Chaos Monkey Resilience測試

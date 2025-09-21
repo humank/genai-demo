@@ -1,30 +1,27 @@
-# Design Documentation
 
-This directory contains design related documentation.
-
-# 設計文檔
+# Design
 
 本目錄包含設計相關的文檔。
 
 ## 文檔列表
 
-- [DDD 指南](ddd-guide.md) - 領域驅動設計指南
-- [設計原則](design-principles.md) - 軟體設計原則
-- [重構指南](refactoring-guide.md) - 代碼重構指南
+- [DDD 指南](ddd-guide.md) - Domain-Driven Design指南
+- [Design Principle](design-principles.md) - 軟體Design Principle
+- [Refactoring指南](refactoring-guide.md) - 代碼Refactoring指南
 
-## 設計模式
+## Design
 
-- **領域驅動設計 (DDD)**: 戰術和戰略模式
-- **六角形架構**: 端口與適配器模式
-- **事件驅動架構**: 領域事件和 CQRS
+- **Domain-Driven Design (DDD)**: 戰術和戰略模式
+- **Hexagonal Architecture**: Port與Adapter模式
+- **Event-Driven Architecture**: Domain Event和 Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))
 
 ## 適用對象
 
-- 軟體架構師
-- 高級開發者
-- 設計決策者
+- 軟體Architect
+- 高級Developer
+- Design Decision者
 
-## 相關連結
+## related links
 
 - [架構文檔](../architecture/) - 系統架構
 - [圖表文檔](../diagrams/) - 設計圖表

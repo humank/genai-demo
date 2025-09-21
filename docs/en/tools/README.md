@@ -34,7 +34,7 @@ PlantUML 是一個開源工具，可以從文字描述生成 UML 圖表。
 - 組件圖 (Component Diagram)
 - 狀態圖 (State Diagram)
 
-### 範例
+### Examples
 
 ```bash
 # 生成所有 UML 圖表

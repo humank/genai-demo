@@ -100,11 +100,11 @@ Automatic translation will be triggered in the following situations:
 ```markdown
 <!-- Chinese version -->
 ![Class Diagram](./class-diagram.svg)
-![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
+![Hexagonal Architecture Diagram](../images/hexagonal-architecture.svg)
 
 <!-- English version (path unchanged, only translate alt text) -->
 ![Class Diagram](./class-diagram.svg)
-![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
+![Hexagonal Architecture Diagram](../images/hexagonal-architecture.svg)
 ```
 
 ## Translation Quality Requirements

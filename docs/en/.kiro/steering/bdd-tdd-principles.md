@@ -127,7 +127,7 @@ public class Order {
 }
 
 // Value Objects as Records - following project conventions
-@ValueObject(name = "CustomerId", description = "客戶唯一標識符")
+@ValueObject(name = "CustomerId", description = "Customer唯一標識符")
 public record CustomerId(String value) {
     public CustomerId {
         Objects.requireNonNull(value, "Customer ID cannot be null");
@@ -478,7 +478,7 @@ public record Money(BigDecimal amount, Currency currency) {
     }
 }
 
-@ValueObject(name = "CustomerId", description = "客戶唯一標識符")
+@ValueObject(name = "CustomerId", description = "Customer唯一標識符")
 public record CustomerId(String value) {
     public CustomerId {
         Objects.requireNonNull(value, "Customer ID cannot be null");
@@ -527,7 +527,7 @@ public record CustomerCreatedEvent(
 ) implements DomainEvent {
     
     /**
-     * 工廠方法，自動設定 eventId 和 occurredOn
+     * Factory方法，自動設定 eventId 和 occurredOn
      */
     public static CustomerCreatedEvent create(
         CustomerId customerId, 
@@ -609,7 +609,7 @@ Aggregate roots must use `@AggregateRoot` annotation and implement `AggregateRoo
 
 ```java
 // Following project style - using AggregateRootInterface only
-@AggregateRoot(name = "Order", description = "訂單聚合根", boundedContext = "Order", version = "1.0")
+@AggregateRoot(name = "Order", description = "訂單Aggregate Root", boundedContext = "Order", version = "1.0")
 public class Order implements AggregateRootInterface {
     private final OrderId orderId;
     private final CustomerId customerId;
@@ -666,7 +666,7 @@ public class Order implements AggregateRootInterface {
 }
 
 // Customer aggregate example - also using AggregateRootInterface
-@AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
+@AggregateRoot(name = "Customer", description = "CustomerAggregate Root", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     private final CustomerId id;
     private CustomerName name;
@@ -945,7 +945,7 @@ public class OrderDiscountPolicy implements DomainPolicy<Order, Money> {
 }
 
 // Usage in Aggregate Root
-@AggregateRoot(name = "Order", description = "訂單聚合根", boundedContext = "Order", version = "1.0")
+@AggregateRoot(name = "Order", description = "訂單Aggregate Root", boundedContext = "Order", version = "1.0")
 public class Order implements AggregateRootInterface {
     // ... other fields
     
@@ -1049,7 +1049,7 @@ void shouldEarnLoyaltyPointsOnPurchase() {
 }
 
 // GREEN - Following project style
-@AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
+@AggregateRoot(name = "Customer", description = "CustomerAggregate Root", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     private final CustomerId id;
     private CustomerName name;

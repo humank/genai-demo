@@ -1,517 +1,518 @@
-# CI/CD Pipeline Documentation
 
-This directory contains the complete CI/CD pipeline configuration for the GenAI Demo project, implementing automated testing, security scanning, multi-architecture Docker builds, and GitOps deployment strategies.
+# CI/CD Pipeline文檔
 
-## 🏗️ Pipeline Architecture
+本目錄包含 GenAI Demo 專案的完整 CI/CD Pipeline配置，實現Automated Testing、安全掃描、多架構 Docker 構建和 GitOps DeploymentPolicy。
+
+## 🏗️ Pipeline架構
 
 ### Overview
 
-The CI/CD pipeline follows modern DevOps practices:
+CI/CD Pipeline遵循現代 DevOps 實踐：
 
-- **Comprehensive Testing**: Unit tests, integration tests, BDD tests, and architecture tests
-- **Security-First Approach**: Multi-layer security scanning and vulnerability assessment
-- **Multi-Architecture Builds**: ARM64 Graviton3 optimized Docker images
-- **Quality Gates**: Automated quality assurance and compliance checks
-- **GitOps Deployment**: Automated manifest updates with ArgoCD
+- **全面測試**: Unit Test、Integration Test、BDD 測試和Architecture Test
+- **安全優先方法**: 多層安全掃描和漏洞評估
+- **多架構構建**: ARM64 Graviton3 優化的 Docker 映像
+- **品質閘門**: 自動化Quality Assurance和合規檢查
+- **GitOps Deployment**: ArgoCD 的自動化清單更新
 
-### Pipeline Flow
+### Pipeline流程
 
 ```mermaid
 graph TB
-    A[Code Push/PR] --> B[Code Analysis]
-    B --> C[Parallel Testing]
-    C --> D[Security Scanning]
-    D --> E[Quality Gates]
-    E --> F[Docker Build & Push]
-    F --> G[GitOps Update]
+    A[程式碼推送/PR] --> B[程式碼分析]
+    B --> C[並行測試]
+    C --> D[安全掃描]
+    D --> E[品質閘門]
+    E --> F[Docker 構建與推送]
+    F --> G[GitOps 更新]
     G --> H[ArgoCD Deployment]
     
-    C --> C1[Backend Tests]
-    C --> C2[Frontend Tests]
-    C --> C3[Infrastructure Tests]
+    C --> C1[後端測試]
+    C --> C2[前端測試]
+    C --> C3[基礎設施測試]
     
-    D --> D1[Dependency Scan]
-    D --> D2[Code Security]
-    D --> D3[Container Scan]
-    D --> D4[Infrastructure Scan]
+    D --> D1[依賴掃描]
+    D --> D2[程式碼安全]
+    D --> D3[容器掃描]
+    D --> D4[基礎設施掃描]
 ```
 
-## 📁 Workflow Files
+## 📁 工作流程文件
 
-### Core Workflows
+### 核心工作流程
 
-#### 1. `ci-cd.yml` - Main CI/CD Pipeline
+#### 1. `ci-cd.yml` - 主要 CI/CD Pipeline
 
-**Triggers**: Push to main/develop branches, Pull Requests  
-**Purpose**: Complete CI/CD pipeline with testing, security, and deployment
+**觸發條件**: 推送到 main/develop 分支、Pull Request  
+**目的**: 包含測試、安全和Deployment的完整 CI/CD Pipeline
 
-**Key Features**:
+**主要功能**:
 
-- **Change Detection**: Run relevant tests only based on file changes
-- **Parallel Execution**: Backend, frontend, and infrastructure tests run in parallel
-- **Multi-Architecture Builds**: ARM64 and AMD64 Docker images
-- **Quality Gates**: Automated quality assurance with configurable thresholds
-- **GitOps Integration**: Automatic Kubernetes manifest updates
+- **變更檢測**: 僅根據文件變更運行相關測試
+- **並行執行**: 後端、前端和基礎設施測試並行運行
+- **多架構構建**: ARM64 和 AMD64 Docker 映像
+- **品質閘門**: 具有可配置閾值的自動化Quality Assurance
+- **GitOps 整合**: 自動 Kubernetes 清單更新
 
-**Jobs**:
+**作業**:
 
-1. **Code Analysis** - Change detection and dependency vulnerability scanning
-2. **Backend Tests** - Unit, integration, BDD, and architecture tests
-3. **Frontend Tests** - CMC and consumer frontend tests with Lighthouse
-4. **Infrastructure Tests** - CDK unit, integration, and compliance tests
-5. **Security Scanning** - Comprehensive security analysis
-6. **Build & Push** - Multi-architecture Docker image builds
-7. **Quality Gates** - Automated quality assurance and reporting
-8. **Deploy Preparation** - GitOps manifest updates
-9. **Notifications** - Status reporting and cleanup
+1. **程式碼分析** - 變更檢測和依賴漏洞掃描
+2. **後端測試** - 單元、整合、BDD 和Architecture Test
+3. **前端測試** - CMC 和消費者前端測試與 Lighthouse
+4. **基礎設施測試** - CDK 單元、整合和合規測試
+5. **安全掃描** - 全面安全分析
+6. **構建與推送** - 多架構 Docker 映像構建
+7. **品質閘門** - 自動化Quality Assurance和報告
+8. **Deployment準備** - GitOps 清單更新
+9. **通知** - 狀態報告和清理
 
-#### 2. `security-scan.yml` - Security Scanning Workflow
+#### 2. `security-scan.yml` - 安全掃描工作流程
 
-**Triggers**: Workflow call, manual dispatch, daily schedule  
-**Purpose**: Comprehensive security scanning across all components
+**觸發條件**: 工作流程調用、手動調度、每日排程  
+**目的**: 跨所有組件的全面安全掃描
 
-**Scan Types**:
+**掃描類型**:
 
-- **Dependency Vulnerabilities**: OWASP Dependency Check, npm audit
-- **Static Code Analysis**: CodeQL, Semgrep
-- **Container Security**: Trivy, Hadolint
-- **Infrastructure Security**: CDK-nag, Checkov
+- **依賴漏洞**: OWASP Dependency Check、npm audit
+- **靜態程式碼分析**: CodeQL、Semgrep
+- **容器安全**: Trivy、Hadolint
+- **基礎設施安全**: CDK-nag、Checkov
 
-#### 3. `performance-test.yml` - Performance Testing
+#### Testing
 
-**Triggers**: Manual dispatch, weekly schedule  
-**Purpose**: Load testing and performance monitoring
+**觸發條件**: 手動調度、每週排程  
+**目的**: Load Test和效能Monitoring
 
-**Test Types**:
+**測試類型**:
 
-- **Load Testing**: K6-based API load testing
-- **Database Performance**: Database operation benchmarks
-- **Frontend Performance**: Lighthouse CI performance audits
+- **Load Test**: 基於 K6 的 API Load Test
+- **Repository效能**: Repository操作基準測試
+- **前端效能**: Lighthouse CI 效能審計
 
-#### 4. `dependency-update.yml` - Dependency Management
+#### 4. `dependency-update.yml` - 依賴管理
 
-**Triggers**: Weekly schedule, manual dispatch  
-**Purpose**: Security-focused automated dependency updates
+**觸發條件**: 每週排程、手動調度  
+**目的**: 以安全為重點的自動化依賴更新
 
-**Update Types**:
+**更新類型**:
 
-- **Security Updates**: Critical vulnerability patches
-- **Minor Updates**: Compatible feature updates
-- **Major Updates**: Breaking change updates (manual review)
+- **安全更新**: 關鍵漏洞修補
+- **次要更新**: 相容功能更新
+- **主要更新**: 破壞性變更更新（手動審查）
 
-#### 5. `release.yml` - Release Management
+#### 5. `release.yml` - 發布管理
 
-**Triggers**: Git tags, manual dispatch  
-**Purpose**: Automated release creation with semantic versioning
+**觸發條件**: Git 標籤、手動調度  
+**目的**: 使用語義版本控制的自動化發布創建
 
-**Release Process**:
+**發布流程**:
 
-1. Version validation and tag creation
-2. Full test suite execution
-3. Security scan validation
-4. Release artifact builds
-5. Docker image publishing
-6. Changelog generation
-7. GitHub release creation
-8. Deployment manifest updates
+1. 版本驗證和標籤創建
+2. 完整測試套件執行
+3. 安全掃描驗證
+4. 發布工件構建
+5. Docker 映像發布
+6. 變更Logging生成
+7. GitHub 發布創建
+8. Deployment清單更新
 
-### Supporting Files
+### 支援文件
 
-#### `dependabot.yml` - Automated Dependency Updates
+#### `dependabot.yml` - 自動化依賴更新
 
-Configures Dependabot for:
+配置 Dependabot 用於:
 
-- Java/Gradle dependencies
-- Node.js/npm dependencies
-- Docker base images
+- Java/Gradle 依賴
+- Node.js/npm 依賴
+- Docker 基礎映像
 - GitHub Actions
 
-#### `CODEOWNERS` - Code Review Requirements
+#### `CODEOWNERS` - Code Review要求
 
-Defines review requirements for:
+定義審查要求:
 
-- Backend code (@backend-team)
-- Frontend code (@frontend-team)
-- Infrastructure code (@devops-team)
-- Security-sensitive files (@security-team)
+- 後端程式碼 (@backend-team)
+- 前端程式碼 (@frontend-team)
+- 基礎設施程式碼 (@devops-team)
+- 安全敏感文件 (@security-team)
 
-#### `pull_request_template.md` - PR Template
+#### Templates
 
-Standardized PR template including:
+標準化 PR 模板包含:
 
-- Change description and type
-- Testing checklist
-- Security considerations
-- Performance impact assessment
-- Deployment considerations
+- 變更描述和類型
+- 測試檢查清單
+- 安全考量
+- 效能影響評估
+- Deployment考量
 
-## 🔧 Configuration
+## 🔧 配置
 
-### Environment Variables
+### Environment變數
 
-#### Required Secrets
+#### 必需的機密
 
 ```yaml
-AWS_ACCESS_KEY_ID: AWS access key for ECR and deployment
-AWS_SECRET_ACCESS_KEY: AWS secret key
-AWS_ACCOUNT_ID: AWS account ID for ECR repositories
-GITHUB_TOKEN: GitHub token for releases and PR comments
+AWS_ACCESS_KEY_ID: 用於 ECR 和Deployment的 AWS 存取金鑰
+AWS_SECRET_ACCESS_KEY: AWS 秘密金鑰
+AWS_ACCOUNT_ID: ECR 儲存庫的 AWS 帳戶 ID
+GITHUB_TOKEN: 用於發布和 PR 評論的 GitHub 權杖
 ```
 
-#### Pipeline Configuration
+#### Pipeline配置
 
 ```yaml
-# AWS Configuration
-AWS_REGION: ap-northeast-1 (primary region)
-AWS_REGION_DR: ap-east-2 (disaster recovery region)
+# AWS 配置
+AWS_REGION: ap-northeast-1 (主要區域)
+AWS_REGION_DR: ap-east-2 (災難恢復區域)
 
-# Build Configuration
+# 構建配置
 JAVA_VERSION: '21'
 NODE_VERSION: '18'
 
-# Quality Gates
+# 品質閘門
 QUALITY_GATE_COVERAGE_THRESHOLD: 80
 VULNERABILITY_SEVERITY_THRESHOLD: 'HIGH'
 ```
 
-### ECR Repositories
+### ECR 儲存庫
 
-Pipeline pushes to these ECR repositories:
+Pipeline推送到這些 ECR 儲存庫:
 
-- `genai-demo/backend` - Spring Boot backend
-- `genai-demo/cmc-frontend` - Next.js CMC frontend
-- `genai-demo/consumer-frontend` - Angular consumer frontend
+- `genai-demo/backend` - Spring Boot 後端
+- `genai-demo/cmc-frontend` - Next.js CMC 前端
+- `genai-demo/consumer-frontend` - Angular 消費者前端
 
-### Docker Image Tags
+### Docker 映像標籤
 
-Image tags include:
+映像標籤包含:
 
-- `latest` - Latest main branch build
-- `{branch-name}` - Branch-specific builds
-- `{branch-name}-{sha}` - Commit-specific builds
-- `{version}` - Release versions (e.g., v1.2.3)
+- `latest` - 最新 main 分支構建
+- `{branch-name}` - 分支特定構建
+- `{branch-name}-{sha}` - 提交特定構建
+- `{version}` - 發布版本（例如 v1.2.3）
 
-## 🧪 Testing Strategy
+## Testing
 
-### Test Categories
+### Testing
 
-#### Backend Tests
+#### Testing
 
-1. **Unit Tests** (`./gradlew test`)
-   - Pure business logic testing
-   - Mock external dependencies
-   - Fast execution (< 100ms per test)
+1. **Unit Test** (`./gradlew test`)
+   - 純業務邏輯測試
+   - 模擬外部依賴
+   - 快速執行（< 100ms 每個測試）
 
-2. **Integration Tests** (`./gradlew integrationTest`)
-   - Database integration testing
-   - External service integration
-   - Spring context loading
+2. **Integration Test** (`./gradlew integrationTest`)
+   - RepositoryIntegration Test
+   - 外部服務整合
+   - Spring 上下文載入
 
-3. **BDD Tests** (`./gradlew cucumber`)
-   - Behavior-driven development scenarios
-   - End-to-end user workflows
-   - Gherkin feature specifications
+3. **BDD 測試** (`./gradlew cucumber`)
+   - Behavior-Driven Development (BDD)場景
+   - 端到端用戶工作流程
+   - Gherkin 功能規範
 
-4. **Architecture Tests** (`./gradlew testArchitecture`)
-   - ArchUnit-based architecture validation
-   - Domain-Driven Design (DDD) pattern compliance
-   - Dependency rule enforcement
+4. **Architecture Test** (`./gradlew testArchitecture`)
+   - 基於 ArchUnit 的架構驗證
+   - DDD 模式合規性
+   - 依賴規則執行
 
-#### Frontend Tests
+#### Testing
 
-1. **Unit Tests** (`npm run test:ci`)
-   - Component testing
-   - Service testing
-   - Utility function testing
+1. **Unit Test** (`npm run test:ci`)
+   - 組件測試
+   - 服務測試
+   - 工具函數測試
 
-2. **Build Validation** (`npm run build`)
-   - TypeScript compilation
-   - Bundle optimization
-   - Asset generation
+2. **構建驗證** (`npm run build`)
+   - TypeScript 編譯
+   - 包優化
+   - 資產生成
 
-3. **Code Linting** (`npm run lint`)
-   - Code style enforcement
-   - Best practice validation
-   - Accessibility checks
+3. **程式碼檢查** (`npm run lint`)
+   - 程式碼風格執行
+   - Best Practice驗證
+   - 無障礙檢查
 
-#### Infrastructure Tests
+#### Testing
 
-1. **CDK Unit Tests** (`npm run test:unit`)
-   - Construct testing
-   - Resource configuration validation
-   - Stack composition testing
+1. **CDK Unit Test** (`npm run test:unit`)
+   - Construct測試
+   - Resource配置驗證
+   - Stack組合測試
 
-2. **CDK Integration Tests** (`npm run test:integration`)
-   - Cross-stack dependencies
-   - Resource relationships
-   - Configuration validation
+2. **CDK Integration Test** (`npm run test:integration`)
+   - 跨Stack依賴
+   - Resource關係
+   - 配置驗證
 
-3. **CDK Snapshot Tests** (`npm run test:snapshot`)
-   - CloudFormation template validation
-   - Infrastructure drift detection
-   - Change impact analysis
+3. **CDK 快照測試** (`npm run test:snapshot`)
+   - CloudFormation 模板驗證
+   - 基礎設施漂移檢測
+   - 變更影響分析
 
-4. **Compliance Tests** (`npm run test:compliance`)
-   - Security rule validation
-   - Best practice compliance
-   - Cost optimization checks
+4. **合規測試** (`npm run test:compliance`)
+   - 安全規則驗證
+   - Best Practice合規性
+   - 成本優化檢查
 
-### Test Execution Strategy
+### Testing
 
-#### Parallel Execution
+#### 並行執行
 
-- Backend, frontend, and infrastructure tests run in parallel
-- Matrix strategy for multiple test suites
-- Optimized resource utilization
+- 後端、前端和基礎設施測試並行運行
+- 多個測試套件的矩陣Policy
+- 優化Resource利用
 
-#### Conditional Execution
+#### 條件執行
 
-- Run tests only when relevant code changes
-- Path-based change detection
-- Efficient CI resource usage
+- 僅在相關程式碼變更時運行測試
+- 基於路徑的變更檢測
+- 高效的 CI Resource使用
 
-#### Quality Thresholds
+#### 品質閾值
 
-- Minimum test coverage: 80%
-- Security vulnerability threshold: HIGH
-- Performance regression detection
+- Test Coverage最低: 80%
+- 安全漏洞閾值: HIGH
+- 效能回歸檢測
 
-## 🔒 Security Implementation
+## Implementation
 
-### Multi-Layer Security Scanning
+### 多層安全掃描
 
-#### 1. Dependency Vulnerability Scanning
+#### 1. 依賴漏洞掃描
 
-- **OWASP Dependency Check**: Java dependencies
-- **npm audit**: Node.js dependencies
-- **Trivy**: Container base images
-- **GitHub Security Advisories**: Automated vulnerability detection
+- **OWASP Dependency Check**: Java 依賴
+- **npm audit**: Node.js 依賴
+- **Trivy**: 容器基礎映像
+- **GitHub Security Advisories**: 自動化漏洞檢測
 
-#### 2. Static Code Analysis
+#### 2. 靜態程式碼分析
 
-- **CodeQL**: Security-focused code analysis
-- **Semgrep**: Custom security rules
-- **ESLint Security**: Frontend security patterns
+- **CodeQL**: 以安全為重點的程式碼分析
+- **Semgrep**: 自定義安全規則
+- **ESLint Security**: 前端安全模式
 
-#### 3. Container Security
+#### 3. 容器安全
 
-- **Trivy**: Container vulnerability scanning
-- **Hadolint**: Dockerfile best practices
-- **Multi-stage builds**: Minimal attack surface
+- **Trivy**: 容器漏洞掃描
+- **Hadolint**: Dockerfile Best Practice
+- **多階段構建**: 最小攻擊面
 
-#### 4. Infrastructure Security
+#### 4. 基礎設施安全
 
-- **CDK-nag**: AWS security best practices
-- **Checkov**: Infrastructure as Code security
-- **AWS Config**: Runtime compliance monitoring
+- **CDK-nag**: AWS 安全Best Practice
+- **Checkov**: Infrastructure as Code安全
+- **AWS Config**: 運行時合規Monitoring
 
-### Security Automation
+### 安全自動化
 
-#### Automated Security Updates
+#### 自動化安全更新
 
-- Daily security scans
-- Automated dependency updates for critical vulnerabilities
-- Security issue creation for critical findings
-- SARIF integration with GitHub Security tab
+- 每日安全掃描
+- 關鍵漏洞的自動化依賴更新
+- 關鍵發現的安全問題創建
+- 與 GitHub Security 標籤的 SARIF 整合
 
-#### Security Quality Gates
+#### 安全品質閘門
 
-- Block deployments with critical vulnerabilities
-- Require security team review for security-sensitive changes
-- Automated security regression testing
+- 阻止具有關鍵漏洞的Deployment
+- 要求安全團隊審查安全敏感變更
+- 自動化安全回歸測試
 
-## 🚀 Deployment Strategy
+## Deployment
 
-### GitOps Workflow
+### GitOps 工作流程
 
-#### 1. Image Building
+#### 1. 映像構建
 
-- Multi-architecture Docker builds (ARM64/AMD64)
-- Optimized for AWS Graviton3 processors
-- Cached builds for faster execution
+- 多架構 Docker 構建（ARM64/AMD64）
+- 針對 AWS Graviton3 處理器優化
+- 快取構建以加快執行
 
-#### 2. Manifest Updates
+#### 2. 清單更新
 
-- Automatic Kubernetes manifest updates
-- Image tag updates with commit SHA
-- Configuration version management
+- 自動 Kubernetes 清單更新
+- 使用提交 SHA 的映像標籤更新
+- 配置版本管理
 
-#### 3. ArgoCD Integration
+#### 3. ArgoCD 整合
 
-- Automatic deployment detection
-- Blue-green deployment strategy
-- Rollback capabilities
+- 自動Deployment檢測
+- 藍綠DeploymentPolicy
+- 回滾功能
 
-### Deployment Environments
+### Deployment
 
-#### Development Environment
+#### 開發Environment
 
-- Automatic deployment from main branch
-- Lightweight resource allocation
-- Development-specific configuration
+- main 分支自動Deployment
+- 輕量級Resource分配
+- 開發特定配置
 
-#### Staging Environment
+#### 預發布Environment
 
-- Manual deployment triggers
-- Production-like environment
-- Performance and integration testing
+- 手動Deployment觸發
+- 類生產Environment
+- 效能和Integration Test
 
-#### Production Environment
+#### 生產Environment
 
-- Release-based deployments
-- Full resource allocation
-- Multi-region deployment support
+- 基於發布的Deployment
+- 完整Resource分配
+- 多區域Deployment支援
 
-## 📊 Monitoring and Observability
+## 📊 Monitoring和Observability
 
-### Pipeline Monitoring
+### PipelineMonitoring
 
-#### Metrics Collection
+#### Metrics收集
 
-- Build duration tracking
-- Test execution metrics
-- Security scan results
-- Deployment success rates
+- 構建持續時間Tracing
+- 測試執行Metrics
+- 安全掃描結果
+- Deployment成功率
 
 #### Alerting
 
-- Pipeline failure notifications
-- Security vulnerability alerts
-- Performance regression alerts
-- Deployment status updates
+- Pipeline失敗通知
+- 安全漏洞Alerting
+- 效能回歸Alerting
+- Deployment狀態更新
 
-#### Reporting
+#### 報告
 
-- Quality gate reports
-- Security scan summaries
-- Performance test results
-- Dependency update reports
+- 品質閘門報告
+- 安全掃描摘要
+- 效能測試結果
+- 依賴更新報告
 
-### Artifact Management
+### 工件管理
 
-#### Test Results
+#### Testing
 
-- JUnit XML reports
-- Coverage reports
-- Security scan results (SARIF)
-- Performance test results
+- JUnit XML 報告
+- 覆蓋率報告
+- 安全掃描結果（SARIF）
+- 效能測試結果
 
-#### Build Artifacts
+#### 構建工件
 
-- Docker images in ECR
-- Release binaries
-- Documentation artifacts
-- Infrastructure templates
+- ECR 中的 Docker 映像
+- 發布二進制文件
+- 文檔工件
+- 基礎設施模板
 
-#### Retention Policies
+#### 保留政策
 
-- Test results: 30 days
-- Security scans: 30 days
-- Release artifacts: 90 days
-- Performance reports: 90 days
+- 測試結果: 30 天
+- 安全掃描: 30 天
+- 發布工件: 90 天
+- 效能報告: 90 天
 
-## 🔄 Maintenance and Updates
+## Maintenance
 
-### Regular Maintenance Tasks
+### Maintenance
 
-#### Weekly
+#### 每週
 
-- Dependency updates (automated)
-- Security scans (automated)
-- Performance tests (automated)
+- 依賴更新（自動化）
+- 安全掃描（自動化）
+- 效能測試（自動化）
 
-#### Monthly
+#### 每月
 
-- Pipeline optimization reviews
-- Security policy updates
-- Performance baseline updates
+- Pipeline優化審查
+- 安全政策更新
+- 效能基準更新
 
-#### Quarterly
+#### 每季
 
-- Tool version updates
-- Security audits
-- Performance optimization reviews
+- 工具版本更新
+- 安全審計
+- 效能優化審查
 
-### Pipeline Evolution
+### Pipeline演進
 
-#### Continuous Improvement
+#### 持續改進
 
-- Pipeline performance optimization
-- New tool integration
-- Security enhancements
-- Quality gate improvements
+- Pipeline效能優化
+- 新工具整合
+- 安全增強
+- 品質閘門改進
 
-#### Version Management
+#### 版本管理
 
-- Workflow versioning
-- Backward compatibility
-- Migration strategies
-- Documentation updates
+- 工作流程版本控制
+- 向後相容性
+- 遷移Policy
+- 文檔更新
 
-## 🆘 Troubleshooting
+## Troubleshooting
 
-### Common Issues
+### 常見問題
 
-#### Build Failures
+#### 構建失敗
 
-1. **Memory Issues**: Increase JVM heap size in Gradle configuration
-2. **Test Timeouts**: Optimize test execution or increase timeout values
-3. **Dependency Conflicts**: Review dependency updates and compatibility
+1. **記憶體問題**: 在 Gradle 配置中增加 JVM 堆大小
+2. **測試超時**: 優化測試執行或增加超時值
+3. **依賴衝突**: 審查依賴更新和相容性
 
-#### Security Scan Failures
+#### 安全掃描失敗
 
-1. **False Positives**: Update security scan configuration
-2. **New Vulnerabilities**: Review and update dependencies
-3. **Policy Violations**: Update security policies or fix violations
+1. **誤報**: 更新安全掃描配置
+2. **新漏洞**: 審查和更新依賴
+3. **政策違規**: 更新安全政策或修復違規
 
-#### Deployment Issues
+#### Deployment
 
-1. **Image Pull Errors**: Verify ECR permissions and image tags
-2. **Manifest Errors**: Validate Kubernetes manifest syntax
-3. **ArgoCD Sync Issues**: Check ArgoCD configuration and connectivity
+1. **映像拉取錯誤**: 驗證 ECR 權限和映像標籤
+2. **清單錯誤**: 驗證 Kubernetes 清單語法
+3. **ArgoCD 同步問題**: 檢查 ArgoCD 配置和連接性
 
-### Debugging Procedures
+### 除錯程序
 
-#### Pipeline Debugging
+#### Pipeline除錯
 
-1. Enable debug logging in workflow files
-2. Use workflow dispatch for manual testing
-3. Review GitHub Actions logs and artifacts
+1. 在工作流程文件中啟用除錯Logging
+2. 使用工作流程調度進行手動測試
+3. 審查 GitHub Actions Logging和工件
 
-#### Security Debugging
+#### 安全除錯
 
-1. Review SARIF files for detailed findings
-2. Check security scan configuration
-3. Validate security tool versions
+1. 審查 SARIF 文件以獲取詳細發現
+2. 檢查安全掃描配置
+3. 驗證安全工具版本
 
-#### Performance Debugging
+#### 效能除錯
 
-1. Analyze performance test results
-2. Review resource utilization metrics
-3. Check for performance regressions
+1. 分析效能測試結果
+2. 審查Resource利用Metrics
+3. 檢查效能回歸
 
-## 📚 Additional Resources
+## Resources
 
-### Documentation
+### 文檔
 
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [Docker Multi-Architecture Builds](https://docs.docker.com/build/building/multi-platform/)
-- [AWS CDK Testing](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
+- [GitHub Actions 文檔](https://docs.github.com/en/actions)
+- [Docker 多架構構建](https://docs.docker.com/build/building/multi-platform/)
+- [AWS CDK 測試](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
 - [ArgoCD GitOps](https://argo-cd.readthedocs.io/en/stable/)
 
-### Tools and Services
+### Tools
 
-- [Trivy Security Scanner](https://trivy.dev/)
+- [Trivy 安全掃描器](https://trivy.dev/)
 - [CodeQL](https://codeql.github.com/)
-- [K6 Load Testing](https://k6.io/)
+- [K6 Load Test](https://k6.io/)
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
 
 ### Best Practices
 
-- [CI/CD Security Best Practices](https://owasp.org/www-project-devsecops-guideline/)
-- [Container Security Best Practices](https://kubernetes.io/docs/concepts/security/)
-- [GitOps Best Practices](https://www.gitops.tech/)
+- [CI/CD 安全Best Practice](https://owasp.org/www-project-devsecops-guideline/)
+- [容器安全Best Practice](https://kubernetes.io/docs/concepts/security/)
+- [GitOps Best Practice](https://www.gitops.tech/)
 
 ---
 
-For questions or support, please contact the DevOps team or create an issue in the repository.
+如有問題或需要支援，請聯繫 DevOps 團隊或在儲存庫中建立問題。

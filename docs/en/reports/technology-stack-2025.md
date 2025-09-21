@@ -1,9 +1,7 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 技術棧詳細說明 (2025年8月)
+# 技術棧詳細說明 (2025年1月)
 
-## 🚀 技術棧概覽
+## Overview
 
 GenAI Demo 專案採用現代化的技術棧，結合了最新的 Java 生態系統、現代前端框架和企業級開發工具。
 
@@ -11,12 +9,12 @@ GenAI Demo 專案採用現代化的技術棧，結合了最新的 Java 生態系
 
 ### 核心框架
 
-#### Spring Boot 3.4.5
+#### Spring Boot 3.5.5
 
 - **最新穩定版本**: 使用 Spring Boot 3.x 系列最新穩定版
 - **Spring Framework 6.x**: 基於 Spring Framework 6.x
 - **原生編譯支持**: 支援 GraalVM 原生映像編譯
-- **可觀測性增強**: 內建 Micrometer 和 OpenTelemetry 支持
+- **Observability增強**: 內建 Micrometer 和 OpenTelemetry 支持
 
 ```gradle
 implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -45,7 +43,7 @@ public record Money(BigDecimal amount, Currency currency) {
 }
 ```
 
-### 構建工具
+### Tools
 
 #### Gradle 8.x
 
@@ -80,9 +78,9 @@ tasks.withType(JavaCompile).configureEach {
 #### Flyway
 
 - **數據庫版本管理**: 自動化數據庫遷移
-- **版本控制**: 數據庫結構變更追蹤
+- **版本控制**: 數據庫結構變更Tracing
 - **團隊協作**: 確保數據庫結構一致性
-- **生產就緒**: 支持生產環境部署
+- **生產就緒**: 支持生產EnvironmentDeployment
 
 ```sql
 -- V1__Create_customer_table.sql
@@ -122,7 +120,7 @@ public class OrderController {
 }
 ```
 
-### 測試框架
+### Testing
 
 #### JUnit 5
 
@@ -133,7 +131,7 @@ public class OrderController {
 
 ```java
 @Test
-@DisplayName("應該在創建訂單時收集領域事件")
+@DisplayName("應該在創建訂單時收集Domain Event")
 void should_collect_domain_event_when_creating_order() {
     // Given
     CustomerId customerId = CustomerId.of("CUST-001");
@@ -151,19 +149,19 @@ void should_collect_domain_event_when_creating_order() {
 
 #### Cucumber 7
 
-- **行為驅動開發**: BDD 測試框架
+- **Behavior-Driven Development (BDD)**: BDD 測試框架
 - **Gherkin 語法**: 業務可讀的測試場景
 - **多語言支持**: 支持中文測試場景
 - **豐富的報告**: HTML 和 JSON 格式報告
 
 ```gherkin
 Feature: 訂單處理
-  作為一個客戶
+  作為一個Customer
   我想要下訂單
   以便購買商品
 
   Scenario: 成功創建訂單
-    Given 我是註冊客戶 "CUST-001"
+    Given 我是註冊Customer "CUST-001"
     When 我下訂單包含商品 "PROD-001" 數量 1
     Then 訂單應該成功創建
     And 訂單總額應該是 999
@@ -171,14 +169,14 @@ Feature: 訂單處理
 
 #### ArchUnit
 
-- **架構測試**: 確保代碼遵循架構規則
+- **Architecture Test**: 確保代碼遵循架構規則
 - **依賴檢查**: 驗證層間依賴關係
 - **命名約定**: 檢查類和方法命名規範
 - **DDD 合規性**: 驗證 DDD 模式實現
 
 ```java
 @Test
-@DisplayName("領域層不應依賴基礎設施層")
+@DisplayName("Domain Layer不應依賴Infrastructure Layer")
 void domain_should_not_depend_on_infrastructure() {
     noClasses()
         .that().resideInAPackage("..domain..")
@@ -198,17 +196,17 @@ void domain_should_not_depend_on_infrastructure() {
 
 - **測試報告**: 美觀的測試報告生成
 - **多格式支持**: HTML、JSON 等格式
-- **歷史趨勢**: 測試結果歷史追蹤
+- **歷史趨勢**: 測試結果歷史Tracing
 - **豐富的註解**: 詳細的測試描述
 
-### 開發工具
+### Tools
 
 #### Lombok
 
 - **樣板代碼減少**: 自動生成 getter、setter 等
 - **註解驅動**: 基於註解的代碼生成
 - **IDE 支持**: 主流 IDE 都有插件支持
-- **編譯時處理**: 不影響運行時性能
+- **編譯時處理**: 不影響運行時Performance
 
 ```java
 @Data
@@ -260,15 +258,15 @@ export default async function OrdersPage() {
 
 - **並發功能**: Concurrent Features 支持
 - **Suspense**: 數據獲取和代碼分割
-- **自動批處理**: 性能優化
+- **自動批處理**: Performance優化
 - **Hooks**: 現代化的狀態管理
 
 #### TypeScript
 
 - **類型安全**: 編譯時類型檢查
 - **IDE 支持**: 優秀的開發體驗
-- **重構友好**: 安全的代碼重構
-- **團隊協作**: 提升代碼可維護性
+- **Refactoring友好**: 安全的代碼Refactoring
+- **團隊協作**: 提升代碼Maintainability
 
 ```typescript
 interface Order {
@@ -356,7 +354,7 @@ function useOrders() {
 - **輕量級狀態管理**: 簡單的全局狀態管理
 - **TypeScript 支持**: 完整的類型支持
 - **中間件支持**: 豐富的中間件生態
-- **DevTools**: 開發者工具支持
+- **DevTools**: Developer工具支持
 
 ```typescript
 interface AppState {
@@ -380,7 +378,7 @@ const useAppStore = create<AppState>((set) => ({
 
 #### React Hook Form
 
-- **高性能表單**: 最小重渲染
+- **高Performance表單**: 最小重渲染
 - **驗證支持**: 內建和自定義驗證
 - **TypeScript**: 完整的類型支持
 - **易於使用**: 簡潔的 API
@@ -395,8 +393,8 @@ const onSubmit = (data: OrderForm) => {
 return (
   <form onSubmit={handleSubmit(onSubmit)}>
     <input
-      {...register('customerName', { required: '客戶姓名為必填' })}
-      placeholder="客戶姓名"
+      {...register('customerName', { required: 'Customer姓名為必填' })}
+      placeholder="Customer姓名"
     />
     {errors.customerName && (
       <span className="text-red-500">{errors.customerName.message}</span>
@@ -414,7 +412,7 @@ return (
 
 ```typescript
 const orderSchema = z.object({
-  customerName: z.string().min(1, '客戶姓名為必填'),
+  customerName: z.string().min(1, 'Customer姓名為必填'),
   email: z.string().email('請輸入有效的電子郵件'),
   items: z.array(z.object({
     productId: z.string(),
@@ -425,14 +423,14 @@ const orderSchema = z.object({
 type OrderForm = z.infer<typeof orderSchema>;
 ```
 
-## 🐳 容器化和部署
+## Deployment
 
 ### Docker
 
-- **容器化部署**: 一致的運行環境
+- **ContainerizationDeployment**: 一致的運行Environment
 - **ARM64 優化**: 支持 Apple Silicon 和 AWS Graviton
 - **多階段構建**: 優化映像大小
-- **健康檢查**: 內建健康檢查機制
+- **Health Check**: 內建Health Check機制
 
 ```dockerfile
 FROM openjdk:21-jdk-slim as builder
@@ -454,7 +452,7 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 - **多容器編排**: 管理多個相關容器
 - **網絡配置**: 自動網絡配置
 - **卷管理**: 數據持久化
-- **環境變量**: 靈活的配置管理
+- **Environment變量**: 靈活的配置管理
 
 ```yaml
 version: '3.8'
@@ -473,13 +471,13 @@ services:
       retries: 3
 ```
 
-## 🔧 開發工具和流程
+## Tools
 
 ### 版本控制
 
 - **Git**: 分散式版本控制
 - **GitHub**: 代碼託管和協作
-- **分支策略**: GitFlow 或 GitHub Flow
+- **分支Policy**: GitFlow 或 GitHub Flow
 
 ### IDE 支持
 
@@ -495,23 +493,23 @@ services:
 
 ### CI/CD
 
-- **GitHub Actions**: 自動化構建和部署
+- **GitHub Actions**: 自動化構建和Deployment
 - **Docker Hub**: 容器映像倉庫
-- **自動化測試**: 每次提交自動運行測試
+- **Automated Testing**: 每次提交自動運行測試
 
-## 📊 技術選型理由
+## 📊 Technology Selection理由
 
-### 後端技術選型
+### 後端Technology Selection
 
 | 技術 | 選擇理由 | 替代方案 |
 |------|----------|----------|
 | Java 21 | 最新 LTS，Record 支持 | Java 17, Kotlin |
 | Spring Boot 3.4.5 | 成熟生態，企業級 | Quarkus, Micronaut |
 | H2 Database | 快速開發，零配置 | PostgreSQL, MySQL |
-| Gradle | 靈活構建，性能好 | Maven |
+| Gradle | 靈活構建，Performance好 | Maven |
 | JUnit 5 | 現代化測試框架 | TestNG |
 
-### 前端技術選型
+### 前端Technology Selection
 
 | 技術 | 選擇理由 | 替代方案 |
 |------|----------|----------|
@@ -521,20 +519,20 @@ services:
 | React Query | 服務器狀態管理專家 | SWR, Apollo Client |
 | Zustand | 輕量級，簡單易用 | Redux, Context API |
 
-## 🚀 性能優化
+## 🚀 Performance優化
 
 ### 後端優化
 
 - **JVM 調優**: 內存和垃圾回收優化
 - **數據庫優化**: 索引和查詢優化
-- **緩存策略**: Redis 緩存 (未來計劃)
+- **緩存Policy**: Redis 緩存 (未來計劃)
 - **異步處理**: 事件異步處理
 
 ### 前端優化
 
 - **代碼分割**: 自動代碼分割
 - **圖片優化**: Next.js 圖片優化
-- **緩存策略**: React Query 緩存
+- **緩存Policy**: React Query 緩存
 - **Bundle 分析**: 包大小分析和優化
 
 ## 🔮 技術發展規劃
@@ -542,19 +540,19 @@ services:
 ### 短期計劃 (1-3 個月)
 
 - **Spring Boot 升級**: 升級到最新版本
-- **性能監控**: 添加 APM 監控
+- **PerformanceMonitoring**: 添加 APM Monitoring
 - **安全增強**: OAuth2 認證授權
 
 ### 中期計劃 (3-6 個月)
 
 - **微服務拆分**: 基於 DDD 邊界拆分
-- **事件驅動**: 完整的事件驅動架構
+- **事件驅動**: 完整的Event-Driven Architecture
 - **API Gateway**: 統一 API 網關
 
 ### 長期計劃 (6-12 個月)
 
-- **雲原生**: Kubernetes 部署
-- **服務網格**: Istio 服務網格
+- **Cloud Native**: Kubernetes Deployment
+- **Service Mesh**: Istio Service Mesh
 - **AI 集成**: 機器學習和 AI 功能
 
-這個技術棧展示了現代化企業級應用開發的最佳實踐，結合了穩定性、性能和開發效率的平衡。
+這個技術棧展示了現代化企業級應用開發的Best Practice，結合了穩定性、Performance和開發效率的平衡。

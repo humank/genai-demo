@@ -1,28 +1,21 @@
-<!-- 
-此文件需要手動翻譯
-原文件: .kiro/specs/ddd-entity-refactoring/design.md
-翻譯日期: Thu Aug 21 22:30:38 CST 2025
 
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
-
-# DDD Entity 重構設計文件
+# Design
 
 ## 概述
 
-本設計文件提供直接的程式碼重構方案，解決專案中的 DDD Entity 設計問題。我們將採用漸進式重構策略，確保每次變更都是安全且可驗證的。
+本設計文件提供直接的程式碼Refactoring方案，解決專案中的 DDD Entity 設計問題。我們將採用漸進式RefactoringPolicy，確保每次變更都是安全且可驗證的。
 
-## 重構策略
+## RefactoringPolicy
 
-### 1. Seller 聚合重構策略
+### 1. Seller AggregateRefactoringPolicy
 
 #### 目標架構
 
 ```java
-// 重構後的 Seller 聚合根
+// Refactoring後的 Seller Aggregate Root
 public class Seller extends AggregateRoot {
     private SellerId sellerId;
-    private SellerProfile profile;           // Entity (原 SellerProfile 聚合根)
+    private SellerProfile profile;           // Entity (原 SellerProfile Aggregate Root)
     private ContactInfo contactInfo;         // 新 Entity
     private List<SellerRating> ratings;      // 新 Entity 集合
     private SellerVerification verification; // 新 Entity
@@ -30,19 +23,19 @@ public class Seller extends AggregateRoot {
 }
 ```
 
-#### 新增 Entity 設計
+#### Design
 
 - **SellerProfile Entity**: 管理商業資訊和描述
 - **ContactInfo Entity**: 管理聯繫方式和通訊偏好
 - **SellerRating Entity**: 管理評級歷史和統計
 - **SellerVerification Entity**: 管理驗證狀態和文件
 
-### 2. ProductReview 聚合重構策略
+### 2. ProductReview AggregateRefactoringPolicy
 
 #### 目標架構
 
 ```java
-// 重構後的 ProductReview 聚合根
+// Refactoring後的 ProductReview Aggregate Root
 public class ProductReview extends AggregateRoot {
     private final ReviewId id;
     private final ProductId productId;
@@ -52,40 +45,40 @@ public class ProductReview extends AggregateRoot {
     
     // Entity 集合
     private List<ReviewImage> images;           // 原 List<String>
-    private List<ModerationRecord> moderations; // 原 ReviewModeration 聚合根
+    private List<ModerationRecord> moderations; // 原 ReviewModeration Aggregate Root
     private List<ReviewResponse> responses;     // 新增商家回覆功能
 }
 ```
 
-#### 新增 Entity 設計
+#### Design
 
 - **ReviewImage Entity**: 管理評價圖片的完整生命週期
 - **ModerationRecord Entity**: 管理審核歷史和決策
 - **ReviewResponse Entity**: 管理商家回覆和互動
 
-### 3. Customer 聚合豐富策略
+### 3. Customer Aggregate豐富Policy
 
 #### 目標架構
 
 ```java
-// 豐富後的 Customer 聚合根
+// 豐富後的 Customer Aggregate Root
 public class Customer implements AggregateRootInterface {
     // 現有屬性保持不變
     
     // Entity 集合改善
     private List<DeliveryAddress> deliveryAddresses; // 原 List<Address>
-    private List<PaymentMethod> paymentMethods;      // 從獨立聚合根遷移
+    private List<PaymentMethod> paymentMethods;      // 從獨立Aggregate Root遷移
     private CustomerPreferences preferences;         // 新 Entity
 }
 ```
 
-#### Entity 改善設計
+#### Design
 
 - **DeliveryAddress Entity**: 豐富地址管理功能
-- **PaymentMethod Entity**: 從聚合根降級為 Entity
-- **CustomerPreferences Entity**: 統一管理客戶偏好設定
+- **PaymentMethod Entity**: 從Aggregate Root降級為 Entity
+- **CustomerPreferences Entity**: 統一管理Customer偏好設定
 
-### 新增 Value Object 設計
+### Design
 
 #### Entity ID Value Objects
 
@@ -242,12 +235,12 @@ public enum AddressStatus {
 }
 ```
 
-### 4. Inventory 聚合改善策略
+### 4. Inventory Aggregate改善Policy
 
 #### 目標架構
 
 ```java
-// 改善後的 Inventory 聚合根
+// 改善後的 Inventory Aggregate Root
 public class Inventory extends AggregateRoot {
     // 現有屬性保持不變
     
@@ -264,7 +257,7 @@ public class Inventory extends AggregateRoot {
 
 ```java
 // 如果 SellerProfile 作為獨立查詢需求，可能需要專門的查詢方法
-@Repository(name = "SellerRepository", description = "賣家聚合根儲存庫")
+@Repository(name = "SellerRepository", description = "賣家Aggregate Root儲存庫")
 public interface SellerRepository extends BaseRepository<Seller, SellerId> {
     
     /**
@@ -309,7 +302,7 @@ public class SellerProfileService {
 }
 ```
 
-## 組件設計
+## Design
 
 ### 專案現有 DDD 戰術模式分析
 
@@ -317,47 +310,47 @@ public class SellerProfileService {
 
 #### 1. **註解使用模式**
 
-- `@AggregateRoot(name, description, boundedContext, version)` - 聚合根
-- `@Entity(name, description)` - 實體
-- `@ValueObject(name, description)` - 值對象
+- `@AggregateRoot(name, description, boundedContext, version)` - Aggregate Root
+- `@Entity(name, description)` - Entity
+- `@ValueObject(name, description)` - Value Object
 - `@Repository(name, description)` - 儲存庫
-- `@DomainService(name, description, boundedContext)` - 領域服務
-- `@Factory(name, description)` - 工廠
+- `@DomainService(name, description, boundedContext)` - Domain Service
+- `@Factory(name, description)` - Factory
 
-#### 2. **Value Object 設計模式**
+#### Design
 
 - 使用 `record` 實作，提供不可變性
 - 在緊湊建構子中進行驗證
-- 提供靜態工廠方法（如 `generate()`, `of()`, `from()`）
+- 提供靜態Factory方法（如 `generate()`, `of()`, `from()`）
 - 提供向後相容的 getter 方法
 
 #### 3. **Repository 模式**
 
 - 繼承 `BaseRepository<T, ID>` 介面
 - 使用 `@Repository` 註解標記
-- 提供聚合根特定的查詢方法
+- 提供Aggregate Root特定的查詢方法
 
 #### 4. **Domain Service 模式**
 
 - 使用 `@DomainService` 註解
-- 處理跨聚合根的複雜業務邏輯
+- 處理跨Aggregate Root的複雜業務邏輯
 - 無狀態設計，依賴注入 Repository
 
-### Entity 設計原則
+### Design
 
 遵循專案現有模式：
 
 1. **具體 Entity 類別** - 每個 Entity 都是獨立的具體類別
 2. **業務導向設計** - 專注於領域邏輯而非技術抽象
-3. **ID 值對象** - 每個 Entity 使用強型別的 ID Value Object
+3. **ID Value Object** - 每個 Entity 使用強型別的 ID Value Object
 4. **狀態管理** - 使用 enum Value Object 管理狀態
 
-### 具體 Entity 實作範例
+### Examples
 
 #### SellerProfile Entity
 
 ```java
-@Entity(name = "SellerProfile", description = "賣家檔案實體")
+@Entity(name = "SellerProfile", description = "賣家檔案Entity")
 public class SellerProfile {
     private final SellerProfileId id;
     private String businessName;
@@ -393,7 +386,7 @@ public class SellerProfile {
 #### ContactInfo Entity
 
 ```java
-@Entity(name = "ContactInfo", description = "聯繫資訊實體")
+@Entity(name = "ContactInfo", description = "聯繫資訊Entity")
 public class ContactInfo {
     private final ContactInfoId id;
     private String email;
@@ -437,7 +430,7 @@ public class ContactInfo {
 #### SellerRating Entity
 
 ```java
-@Entity(name = "SellerRating", description = "賣家評級實體")
+@Entity(name = "SellerRating", description = "賣家評級Entity")
 public class SellerRating {
     private final SellerRatingId id;
     private final CustomerId customerId;
@@ -476,7 +469,7 @@ public class SellerRating {
 #### ReviewImage Entity
 
 ```java
-@Entity(name = "ReviewImage", description = "評價圖片實體")
+@Entity(name = "ReviewImage", description = "評價圖片Entity")
 public class ReviewImage {
     private final ReviewImageId id;
     private String originalUrl;
@@ -514,7 +507,7 @@ public class ReviewImage {
 #### ModerationRecord Entity
 
 ```java
-@Entity(name = "ModerationRecord", description = "審核記錄實體")
+@Entity(name = "ModerationRecord", description = "審核記錄Entity")
 public class ModerationRecord {
     private final ModerationRecordId id;
     private final String moderatorId;
@@ -551,7 +544,7 @@ public class ModerationRecord {
 #### StockReservation Entity
 
 ```java
-@Entity(name = "StockReservation", description = "庫存預留實體")
+@Entity(name = "StockReservation", description = "庫存預留Entity")
 public class StockReservation {
     private final StockReservationId id;
     private final ReservationId reservationId;
@@ -594,7 +587,7 @@ public class StockReservation {
 #### DeliveryAddress Entity
 
 ```java
-@Entity(name = "DeliveryAddress", description = "配送地址實體")
+@Entity(name = "DeliveryAddress", description = "配送地址Entity")
 public class DeliveryAddress {
     private final DeliveryAddressId id;
     private Address address;
@@ -661,7 +654,7 @@ public interface EntityLifecycle {
 }
 ```
 
-## 遷移策略
+## 遷移Policy
 
 ### 階段 1：基礎設施準備
 
@@ -670,7 +663,7 @@ public interface EntityLifecycle {
 3. 測試框架已就緒
 4. **遵循專案現有模式** - 確保所有新組件符合現有的設計慣例
 
-### 重構實施原則
+### Implementation
 
 #### 1. **保持向後相容性**
 
@@ -684,49 +677,49 @@ public interface EntityLifecycle {
 - 遵循現有的命名慣例
 - 保持與現有 Value Object 的一致性
 
-#### 3. **測試策略**
+#### Testing
 
-- 為每個新 Entity 編寫單元測試
-- 確保聚合根的業務不變性
+- 為每個新 Entity 編寫Unit Test
+- 確保Aggregate Root的業務不變性
 - 驗證 Repository 和 Domain Service 的正確性
 
-### 階段 2：Seller 聚合重構
+### 階段 2：Seller AggregateRefactoring
 
 1. 創建新的 Entity 類別
-2. 重構 Seller 聚合根
+2. Refactoring Seller Aggregate Root
 3. 遷移 SellerProfile 資料和邏輯
 4. 更新相關測試
 
-### 階段 3：ProductReview 聚合重構
+### 階段 3：ProductReview AggregateRefactoring
 
 1. 創建 ReviewImage, ModerationRecord Entity
-2. 重構 ProductReview 聚合根
-3. 移除 ReviewModeration 聚合根
+2. Refactoring ProductReview Aggregate Root
+3. 移除 ReviewModeration Aggregate Root
 4. 更新審核流程
 
-### 階段 4：其他聚合改善
+### 階段 4：其他Aggregate改善
 
-1. 改善 Customer 聚合的 Entity 結構
-2. 改善 Inventory 聚合的 Entity 結構
-3. 處理 PaymentMethod 聚合根問題
+1. 改善 Customer Aggregate的 Entity 結構
+2. 改善 Inventory Aggregate的 Entity 結構
+3. 處理 PaymentMethod Aggregate Root問題
 
-## 測試策略
+## Testing
 
-### 現有測試覆蓋
+### Testing
 
-所有 Domain Model（聚合根、Entity、Value Object）已由現有的 BDD 測試完整覆蓋，無需額外的單元測試：
+所有 Domain Model（Aggregate Root、Entity、Value Object）已由現有的 BDD 測試完整覆蓋，無需額外的Unit Test：
 
-1. **BDD 測試**: 使用 Cucumber 測試完整的業務場景，涵蓋所有聚合根和 Entity 的行為
-2. **整合測試**: 測試聚合根與 Repository 和 Domain Service 的互動
-3. **架構測試**: 使用 ArchUnit 驗證聚合邊界和 DDD 模式合規性
+1. **BDD 測試**: 使用 Cucumber 測試完整的業務場景，涵蓋所有Aggregate Root和 Entity 的行為
+2. **Integration Test**: 測試Aggregate Root與 Repository 和 Domain Service 的互動
+3. **Architecture Test**: 使用 ArchUnit 驗證Aggregate邊界和 DDD 模式合規性
 
-### 重構後的測試重點
+### Testing
 
 1. **架構合規性**: 確保新的 Entity 結構符合 DDD 戰術模式
 2. **向後相容性**: 驗證 API 層面的相容性
-3. **資料完整性**: 確保重構不影響資料一致性
+3. **資料完整性**: 確保Refactoring不影響資料一致性
 
-### 遷移測試
+### Testing
 
 1. **資料遷移測試**: 驗證資料完整性
 2. **向後相容性測試**: 確保 API 相容性
@@ -742,23 +735,20 @@ public interface EntityLifecycle {
 
 ### 業務風險
 
-- **功能中斷風險**: 採用漸進式部署策略
-- **使用者體驗風險**: 確保 UI 層不受影響
+- **功能中斷風險**: 採用漸進式DeploymentPolicy
+- **User體驗風險**: 確保 UI 層不受影響
 - **資料一致性風險**: 實作強一致性檢查
 
-## 成功指標
+## 成功Metrics
 
-### 程式碼品質指標
+### Code QualityMetrics
 
 - Entity 覆蓋率達到 80% 以上
-- 聚合根複雜度降低 30%
+- Aggregate Root複雜度降低 30%
 - 程式碼重複率降低 50%
 
-### DDD 合規性指標
+### DDD 合規性Metrics
 
-- 所有聚合根都包含至少一個 Entity 或複雜 Value Object
-- 聚合邊界清晰，無跨聚合直接依賴
+- 所有Aggregate Root都包含至少一個 Entity 或複雜 Value Object
+- Aggregate邊界清晰，無跨Aggregate直接依賴
 - Entity 都有豐富的業務邏輯和狀態管理
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

@@ -35,10 +35,12 @@
 7. **定價處理時序圖 (pricing-sequence-diagram.puml)**
    - 描述定價處理的主要流程
    - 包括創建定價規則、更新佣金費率、獲取產品類別的定價規則和計算佣金
+   - ![定價處理時序圖](pricing-sequence-diagram.svg)
 
 8. **配送處理時序圖 (delivery-sequence-diagram.puml)**
    - 描述配送處理的主要流程
    - 包括創建配送、安排配送、分配配送資源、更新配送地址、標記為已送達等操作
+   - ![配送處理時序圖](delivery-sequence-diagram.svg)
 
 9. **狀態圖 (state-diagram.puml)**
    - 展示訂單在不同狀態之間的轉換

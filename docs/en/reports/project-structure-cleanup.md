@@ -26,9 +26,9 @@ This cleanup aims to optimize the project root directory structure, improving re
 
 ### Moved to `docs/reports/`
 
-- `CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/CI_CD_IMPLEMENTATION_SUMMARY.md`
+- `reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md`
 - `FINAL_TEST_ANALYSIS.md` → `docs/reports/FINAL_TEST_ANALYSIS.md`
-- `TESTING_OPTIMIZATION_SUMMARY.md` → `docs/reports/TESTING_OPTIMIZATION_SUMMARY.md`
+- `reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md` → `docs/reports/reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md`
 
 ### Moved to `scripts/`
 

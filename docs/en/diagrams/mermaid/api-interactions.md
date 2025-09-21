@@ -1,15 +1,13 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # API 交互圖
 
-本文檔展示系統中各種 API 的交互關係和調用流程。
+This document展示系統中各種 API 的交互關係和調用流程。
 
 ## API 交互架構圖
 
 ```mermaid
 graph TB
-    subgraph "🌐 客戶端"
+    subgraph "🌐 Customer端"
         WEB_ADMIN[👨‍💼 管理員<br/>CMC Frontend]
         WEB_CONSUMER[🛒 消費者<br/>Consumer Frontend]
         MOBILE[📱 Mobile App]
@@ -64,14 +62,14 @@ graph TB
         ANALYTICS[📊 Analytics Service]
     end
     
-    subgraph "📊 監控和文檔"
+    subgraph "📊 Monitoring和文檔"
         SWAGGER[📖 Swagger UI]
         ACTUATOR[🔍 Spring Actuator]
         METRICS[📈 Metrics]
         LOGS[📝 Logs]
     end
     
-    %% 客戶端到 API 閘道
+    %% Customer端到 API 閘道
     WEB_ADMIN --> API_GATEWAY
     WEB_CONSUMER --> API_GATEWAY
     MOBILE --> API_GATEWAY
@@ -127,11 +125,11 @@ graph TB
     NOTIFICATION_SVC --> SMS_SERVICE
     ORDER_SVC --> LOGISTICS
     
-    %% 監控和分析
+    %% Monitoring和分析
     ORDER_SVC --> ANALYTICS
     CUSTOMER_SVC --> ANALYTICS
     
-    %% 文檔和監控
+    %% 文檔和Monitoring
     API_GATEWAY --> SWAGGER
     ORDER_REST --> ACTUATOR
     CUSTOMER_REST --> METRICS
@@ -153,7 +151,7 @@ graph TB
     class SWAGGER,ACTUATOR,METRICS,LOGS monitoring
 ```
 
-## API 端點詳細設計
+## Design
 
 ### 📦 訂單 API
 
@@ -168,7 +166,7 @@ DELETE /api/v1/orders/{orderId}          # 取消訂單
 
 # 訂單查詢
 GET    /api/v1/orders                    # 查詢訂單列表
-GET    /api/v1/customers/{customerId}/orders  # 客戶訂單
+GET    /api/v1/customers/{customerId}/orders  # Customer訂單
 ```
 
 #### GraphQL Schema
@@ -214,15 +212,15 @@ type Mutation {
 }
 ```
 
-### 👥 客戶 API
+### 👥 Customer API
 
 #### REST API 端點
 
 ```http
-# 客戶管理
-POST   /api/v1/customers                 # 註冊客戶
-GET    /api/v1/customers/{customerId}    # 獲取客戶資訊
-PUT    /api/v1/customers/{customerId}    # 更新客戶資訊
+# Customer管理
+POST   /api/v1/customers                 # 註冊Customer
+GET    /api/v1/customers/{customerId}    # 獲取Customer資訊
+PUT    /api/v1/customers/{customerId}    # 更新Customer資訊
 
 # 忠誠度系統
 GET    /api/v1/customers/{customerId}/loyalty  # 獲取忠誠度資訊
@@ -284,8 +282,8 @@ sequenceDiagram
     
     Consumer->>Gateway: 3. 創建訂單
     Gateway->>OrderAPI: POST /api/v1/orders
-    OrderAPI->>CustomerAPI: 驗證客戶資訊
-    CustomerAPI-->>OrderAPI: 客戶驗證結果
+    OrderAPI->>CustomerAPI: 驗證Customer資訊
+    CustomerAPI-->>OrderAPI: Customer驗證結果
     OrderAPI->>ProductAPI: 預留庫存
     ProductAPI-->>OrderAPI: 庫存預留結果
     OrderAPI-->>Gateway: 訂單創建成功
@@ -304,7 +302,7 @@ sequenceDiagram
     OrderAPI-->>PaymentAPI: 狀態更新確認
 ```
 
-## API 安全設計
+## Design
 
 ### 🔐 認證和授權
 
@@ -344,7 +342,7 @@ X-RateLimit-Reset: 1642781400
 
 ## API 版本管理
 
-### 📋 版本策略
+### 📋 版本Policy
 
 - **URL 版本**: `/api/v1/orders`, `/api/v2/orders`
 - **標頭版本**: `Accept: application/vnd.api+json;version=1`
@@ -359,19 +357,19 @@ Sunset: Wed, 11 Nov 2025 23:59:59 GMT
 Link: </api/v2/orders>; rel="successor-version"
 ```
 
-## API 監控和可觀測性
+## API Monitoring和Observability
 
-### 📊 關鍵指標
+### 📊 關鍵Metrics
 
 - **回應時間**: P50, P95, P99
 - **錯誤率**: 4xx, 5xx 錯誤百分比
 - **吞吐量**: 每秒請求數 (RPS)
-- **可用性**: 正常運行時間百分比
+- **Availability**: 正常運行時間百分比
 
-### 🔍 分散式追蹤
+### 🔍 分散式Tracing
 
 ```http
-# 追蹤標頭
+# Tracing標頭
 X-Trace-Id: 550e8400-e29b-41d4-a716-446655440000
 X-Span-Id: 6e0c63257de34c92
 X-Parent-Span-Id: 05e3ac9a4f6e3b90
@@ -380,5 +378,5 @@ X-Parent-Span-Id: 05e3ac9a4f6e3b90
 ## 相關文檔
 
 - [架構概覽](architecture-overview.md) - 整體系統架構
-- [事件驅動架構](event-driven-architecture.md) - 事件處理機制
+- [Event-Driven Architecture](event-driven-architecture.md) - 事件處理機制
 - [API 文檔](../../api/) - 詳細 API 規範

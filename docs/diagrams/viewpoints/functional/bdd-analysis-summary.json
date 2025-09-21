@@ -1,0 +1,1739 @@
+{
+  "timestamp": "2025-09-21T19:48:57.564725",
+  "features_count": 27,
+  "scenarios_count": 225,
+  "business_events_count": 51,
+  "user_journeys_count": 99,
+  "bounded_contexts": [
+    "Consumer",
+    "Customer",
+    "Inventory",
+    "Logistics",
+    "Notification",
+    "Order",
+    "Payment",
+    "Pricing",
+    "Product",
+    "Promotion",
+    "Workflow"
+  ],
+  "actors": [
+    "0",
+    "1 Promotion",
+    "Anonymous User",
+    "Another Customer",
+    "Automated Rollback",
+    "Based Routing",
+    "Bundle",
+    "Bundle Price",
+    "Card Installment",
+    "Cart Total",
+    "Cart Weight",
+    "Ci Pipeline",
+    "Cost Monitoring",
+    "Current Level",
+    "Current Month",
+    "Current Time",
+    "Customer",
+    "Data",
+    "Delivery Address",
+    "Delivery Status",
+    "Discount Promotion",
+    "Email Address",
+    "Email Service",
+    "For Electronics",
+    "Gift Stock",
+    "Gitops Repository",
+    "Global Database",
+    "Inventory Quantity",
+    "Kafka",
+    "Limited Quantity",
+    "Logistics System",
+    "Network Monitoring",
+    "Observability Data",
+    "Order",
+    "Original Price",
+    "Performance Monitoring",
+    "Performance Testing",
+    "Phone Number",
+    "Pipeline Monitoring",
+    "Price",
+    "Price Promotion",
+    "Promotion",
+    "Quantity Promotion",
+    "Recovery Automation",
+    "Recovery Testing",
+    "Redemption Rate",
+    "Replication",
+    "S Item",
+    "Sale Promotion",
+    "Standard Delivery",
+    "The System",
+    "Tiered Discount",
+    "Total Amount",
+    "Vpc Peering",
+    "Warehouse System"
+  ],
+  "features": [
+    {
+      "name": "Add-on Purchase Offers",
+      "description": "As an e-commerce platform I want to provide add-on purchase offers So that I can increase customer purchase value and platform revenue",
+      "scenarios_count": 9,
+      "file_path": "app/src/test/resources/features/promotion/add_on_purchase.feature",
+      "tags": []
+    },
+    {
+      "name": "Flash Sale and Limited Quantity Promotions",
+      "description": "As an e-commerce platform I want to offer time-limited and quantity-limited promotions So that customers are motivated to make quick purchase decisions",
+      "scenarios_count": 4,
+      "file_path": "app/src/test/resources/features/promotion/flash_sale.feature",
+      "tags": []
+    },
+    {
+      "name": "Coupon System",
+      "description": "As an e-commerce platform I want to provide diverse coupons So that I can promote sales and improve customer satisfaction",
+      "scenarios_count": 3,
+      "file_path": "app/src/test/resources/features/promotion/coupon_system.feature",
+      "tags": []
+    },
+    {
+      "name": "Promotion Management",
+      "description": "As an e-commerce platform I want to create and manage various promotional activities So that I can boost sales performance and customer engagement",
+      "scenarios_count": 8,
+      "file_path": "app/src/test/resources/features/promotion/promotion_management.feature",
+      "tags": []
+    },
+    {
+      "name": "Convenience Store Vouchers",
+      "description": "As an e-commerce platform I want to offer convenience store vouchers and combos So that customers can purchase physical goods for redemption at convenience stores",
+      "scenarios_count": 3,
+      "file_path": "app/src/test/resources/features/promotion/convenience_store_vouchers.feature",
+      "tags": []
+    },
+    {
+      "name": "Gift with Purchase",
+      "description": "As an e-commerce platform I want to provide gift with purchase promotions So that I can encourage customers to increase their purchase amount",
+      "scenarios_count": 18,
+      "file_path": "app/src/test/resources/features/promotion/gift_with_purchase.feature",
+      "tags": []
+    },
+    {
+      "name": "Order Aggregate Root",
+      "description": "As a developer I want to test the Order aggregate root functionality So that I can ensure the domain model works correctly",
+      "scenarios_count": 7,
+      "file_path": "app/src/test/resources/features/order/order_aggregate.feature",
+      "tags": []
+    },
+    {
+      "name": "Notification Management System",
+      "description": "As an e-commerce platform I want to provide comprehensive notification management functionality So that I can maintain good communication with customers",
+      "scenarios_count": 8,
+      "file_path": "app/src/test/resources/features/notification/notification_management.feature",
+      "tags": []
+    },
+    {
+      "name": "Notification Service",
+      "description": "As an order system I need to send various notifications to customers So that customers are informed about the latest status of their orders",
+      "scenarios_count": 8,
+      "file_path": "app/src/test/resources/features/notification/notification_service.feature",
+      "tags": []
+    },
+    {
+      "name": "Payment Method Discounts",
+      "description": "As an e-commerce platform I want to provide discounts based on different payment methods So that I can encourage customers to use specific payment methods",
+      "scenarios_count": 10,
+      "file_path": "app/src/test/resources/features/payment/payment_discounts.feature",
+      "tags": []
+    },
+    {
+      "name": "Payment Aggregate Root",
+      "description": "As a developer I want to test the Payment aggregate root functionality So that I can ensure the domain model works correctly",
+      "scenarios_count": 9,
+      "file_path": "app/src/test/resources/features/payment/payment_aggregate.feature",
+      "tags": []
+    },
+    {
+      "name": "Product Bundle Pricing",
+      "description": "As an e-commerce platform I want to offer various product bundle pricing options So that customers can save money when buying related products together",
+      "scenarios_count": 3,
+      "file_path": "app/src/test/resources/features/product/product_bundle.feature",
+      "tags": []
+    },
+    {
+      "name": "Advanced Product Bundle Sales",
+      "description": "As an e-commerce platform I want to provide diverse product bundle sales solutions So that I can increase customer purchase value and platform revenue",
+      "scenarios_count": 10,
+      "file_path": "app/src/test/resources/features/product/product_bundle_advanced.feature",
+      "tags": []
+    },
+    {
+      "name": "Product Search",
+      "description": "As a consumer I want to search for products So that I can quickly find the products I need",
+      "scenarios_count": 16,
+      "file_path": "app/src/test/resources/features/product/product_search.feature",
+      "tags": []
+    },
+    {
+      "name": "Inventory Management",
+      "description": "As an order system I need to check and manage product inventory So that products in orders have sufficient stock for delivery",
+      "scenarios_count": 7,
+      "file_path": "app/src/test/resources/features/inventory/inventory_management.feature",
+      "tags": []
+    },
+    {
+      "name": "Order Workflow",
+      "description": "As an order system I need to manage the complete order lifecycle From creation to completion or cancellation",
+      "scenarios_count": 4,
+      "file_path": "app/src/test/resources/features/workflow/order_workflow.feature",
+      "tags": []
+    },
+    {
+      "name": "Shopping Cart Management",
+      "description": "As a consumer I want to manage my shopping cart So that I can adjust products and quantities before purchase",
+      "scenarios_count": 10,
+      "file_path": "app/src/test/resources/features/consumer/shopping_cart_management.feature",
+      "tags": []
+    },
+    {
+      "name": "Load Testing and Performance Validation",
+      "description": "As a performance engineer I want to validate system performance under various load conditions So that I can ensure the system meets performance requirements and scales appropriately",
+      "scenarios_count": 12,
+      "file_path": "app/src/test/resources/features/performance/load-testing-integration.feature",
+      "tags": [
+        "@performance",
+        "@load-testing",
+        "@baseline"
+      ]
+    },
+    {
+      "name": "CI/CD Pipeline Integration Testing",
+      "description": "As a DevOps engineer I want to validate CI/CD pipeline with real deployments So that I can ensure reliable and automated software delivery",
+      "scenarios_count": 12,
+      "file_path": "app/src/test/resources/features/infrastructure/cicd-pipeline-integration.feature",
+      "tags": [
+        "@cicd",
+        "@github-actions",
+        "@build"
+      ]
+    },
+    {
+      "name": "Disaster Recovery Integration Testing",
+      "description": "As a reliability engineer I want to validate disaster recovery procedures and failover scenarios So that I can ensure business continuity with minimal downtime and data loss",
+      "scenarios_count": 12,
+      "file_path": "app/src/test/resources/features/infrastructure/disaster-recovery-integration.feature",
+      "tags": [
+        "@disaster-recovery",
+        "@failover",
+        "@database"
+      ]
+    },
+    {
+      "name": "Enhanced Domain Event Publishing Strategy",
+      "description": "As a system architect I want profile-based domain event publishing So that I can use different event publishing strategies for development and production environments",
+      "scenarios_count": 7,
+      "file_path": "app/src/test/resources/features/infrastructure/enhanced-domain-event-publishing.feature",
+      "tags": []
+    },
+    {
+      "name": "Platform Commission Rates",
+      "description": "As an e-commerce platform I want to apply different commission rates based on product categories and events So that the platform can generate appropriate revenue while incentivizing sellers",
+      "scenarios_count": 2,
+      "file_path": "app/src/test/resources/features/pricing/commission_rates.feature",
+      "tags": []
+    },
+    {
+      "name": "Logistics Delivery System",
+      "description": "As an e-commerce platform I want to provide comprehensive logistics delivery services So that customers can receive their products on time",
+      "scenarios_count": 17,
+      "file_path": "app/src/test/resources/features/logistics/delivery_system.feature",
+      "tags": []
+    },
+    {
+      "name": "Delivery Management",
+      "description": "As a customer I want to track the delivery status of my order So that I know when I will receive my products",
+      "scenarios_count": 7,
+      "file_path": "app/src/test/resources/features/logistics/delivery_management.feature",
+      "tags": []
+    },
+    {
+      "name": "Customer Reward Points",
+      "description": "As an e-commerce platform I want to offer a reward points system So that customers are incentivized to make repeat purchases",
+      "scenarios_count": 3,
+      "file_path": "app/src/test/resources/features/customer/reward_points.feature",
+      "tags": []
+    },
+    {
+      "name": "Member Discounts",
+      "description": "As an e-commerce platform I want to offer special discounts to members So that customers are incentivized to join our membership program",
+      "scenarios_count": 3,
+      "file_path": "app/src/test/resources/features/customer/member_discounts.feature",
+      "tags": []
+    },
+    {
+      "name": "Membership System Management",
+      "description": "As an e-commerce platform I want to provide a comprehensive membership system So that I can improve customer loyalty and purchase experience",
+      "scenarios_count": 13,
+      "file_path": "app/src/test/resources/features/customer/membership_system.feature",
+      "tags": []
+    }
+  ],
+  "business_events": [
+    {
+      "name": "Tries To Nother \"prod-002\" As Add-on Added",
+      "trigger": "customer tries to add another \"PROD-002\" as add-on",
+      "context": "Add-on Purchase Offers",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Customer",
+        "Product"
+      ],
+      "commands": [
+        "Tries To Add Nother \"prod-002\" As Add-on"
+      ]
+    },
+    {
+      "name": "Main Product \"prod-001\" Removed",
+      "trigger": "customer removes main product \"PROD-001\"",
+      "context": "Add-on Purchase Offers",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Customer",
+        "Product"
+      ],
+      "commands": [
+        "Remove Main Product \"prod-001\""
+      ]
+    },
+    {
+      "name": "Tries To \"prod-002\" As Add-on Added",
+      "trigger": "customer tries to add \"PROD-002\" as add-on",
+      "context": "Add-on Purchase Offers",
+      "actors": [
+        "Another Customer"
+      ],
+      "aggregates": [
+        "Cart",
+        "Customer",
+        "Product"
+      ],
+      "commands": [
+        "Tries To Add \"prod-002\" As Add-on"
+      ]
+    },
+    {
+      "name": "Coupon \"welcome10\" Applied",
+      "trigger": "customer applies coupon \"WELCOME10\"",
+      "context": "Coupon System",
+      "actors": [
+        "Cart Total"
+      ],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": []
+    },
+    {
+      "name": "Coupon \"save500\" Applied",
+      "trigger": "customer applies coupon \"SAVE500\"",
+      "context": "Coupon System",
+      "actors": [
+        "Cart Total"
+      ],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": []
+    },
+    {
+      "name": "Flash Sale Promotion: Created",
+      "trigger": "admin creates flash sale promotion:",
+      "context": "Promotion Management",
+      "actors": [],
+      "aggregates": [
+        "Promotion"
+      ],
+      "commands": [
+        "Create Flash Sale Promotion:"
+      ]
+    },
+    {
+      "name": "Items Reducing Total To 4500 Removed",
+      "trigger": "customer removes items reducing total to 4500",
+      "context": "Gift with Purchase",
+      "actors": [
+        "Cart Total"
+      ],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": [
+        "Remove Items Reducing Total To 4500"
+      ]
+    },
+    {
+      "name": "New Order With Customer Id \"customer-123\" And Shipping Address \"台北市信義區\" Created",
+      "trigger": "create a new order with customer ID \"customer-123\" and shipping address \"台北市信義區\"",
+      "context": "Order Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Customer",
+        "Order"
+      ],
+      "commands": [
+        "Create New Order With Customer Id \"customer-123\" And Shipping Address \"台北市信義區\""
+      ]
+    },
+    {
+      "name": "Product \"iphone 15\" To Order With Quantity 2 And Unit Price 35000 Added",
+      "trigger": "add product \"iPhone 15\" to order with quantity 2 and unit price 35000",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Add Product \"iphone 15\" To Order With Quantity 2 And Unit Price 35000",
+        "Add Product \"airpods Pro\" To Order With Quantity 1 And Unit Price 7500"
+      ]
+    },
+    {
+      "name": "Product \"airpods Pro\" To Order With Quantity 1 And Unit Price 7500 Added",
+      "trigger": "add product \"AirPods Pro\" to order with quantity 1 and unit price 7500",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Add Product \"iphone 15\" To Order With Quantity 2 And Unit Price 35000",
+        "Add Product \"airpods Pro\" To Order With Quantity 1 And Unit Price 7500"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "submit order",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "Order Cancelled",
+      "trigger": "cancel order",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Cancel Order"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "submit order",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order"
+      ],
+      "commands": [
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "Product \"超貴產品\" To Order With Quantity 1 And Unit Price 1000000 Added",
+      "trigger": "add product \"超貴產品\" to order with quantity 1 and unit price 1000000",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Add Product \"超貴產品\" To Order With Quantity 1 And Unit Price 1000000",
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "submit order",
+      "context": "Order Aggregate Root",
+      "actors": [
+        "Order"
+      ],
+      "aggregates": [
+        "Customer",
+        "Order",
+        "Product"
+      ],
+      "commands": [
+        "Add Product \"超貴產品\" To Order With Quantity 1 And Unit Price 1000000",
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "\"john\" Notification Preferences Updated",
+      "trigger": "customer \"John\" updates notification preferences",
+      "context": "Notification Management System",
+      "actors": [],
+      "aggregates": [
+        "Promotion",
+        "Customer",
+        "Notification"
+      ],
+      "commands": [
+        "\"john\" Update Notification Preferences"
+      ]
+    },
+    {
+      "name": "A Customer New Order Created",
+      "trigger": "a customer creates a new order",
+      "context": "Notification Service",
+      "actors": [],
+      "aggregates": [
+        "Notification",
+        "Customer",
+        "Order"
+      ],
+      "commands": [
+        "A Customer Create New Order"
+      ]
+    },
+    {
+      "name": "A Customer Notification Preferences Updated",
+      "trigger": "a customer updates notification preferences",
+      "context": "Notification Service",
+      "actors": [],
+      "aggregates": [
+        "Delivery",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "A Customer Update Notification Preferences"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "Payment Created",
+      "trigger": "create payment",
+      "context": "Payment Aggregate Root",
+      "actors": [],
+      "aggregates": [
+        "Payment"
+      ],
+      "commands": [
+        "Create Payment"
+      ]
+    },
+    {
+      "name": "\"home Appliance Set\" To The Cart Added",
+      "trigger": "the customer adds the \"Home Appliance Set\" to the cart",
+      "context": "Product Bundle Pricing",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": [
+        "Add \"home Appliance Set\" To The Cart"
+      ]
+    },
+    {
+      "name": "Following Eligible Items From Category A To The Cart Added",
+      "trigger": "the customer adds the following eligible items from Category A to the cart",
+      "context": "Product Bundle Pricing",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": [
+        "Add Following Eligible Items From Category A To The Cart"
+      ]
+    },
+    {
+      "name": "5 Eligible Items From Category A To The Cart Added",
+      "trigger": "the customer adds 5 eligible items from Category A to the cart",
+      "context": "Product Bundle Pricing",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Customer"
+      ],
+      "commands": [
+        "Add 5 Eligible Items From Category A To The Cart"
+      ]
+    },
+    {
+      "name": "Product To The Order Added",
+      "trigger": "the customer adds the product to the order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Product",
+        "Delivery",
+        "Inventory",
+        "Customer",
+        "Order",
+        "Notification"
+      ],
+      "commands": [
+        "Add Product To The Order",
+        "Submit Order",
+        "The Payment System Process Payment",
+        "The Logistics System Create Workflow Delivery Order"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "the customer submits the order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Product",
+        "Delivery",
+        "Inventory",
+        "Customer",
+        "Order",
+        "Notification"
+      ],
+      "commands": [
+        "Add Product To The Order",
+        "Submit Order",
+        "The Payment System Process Payment",
+        "The Logistics System Create Workflow Delivery Order"
+      ]
+    },
+    {
+      "name": "The Payment System Payment Processed",
+      "trigger": "the payment system processes the payment",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Product",
+        "Delivery",
+        "Inventory",
+        "Customer",
+        "Order",
+        "Notification"
+      ],
+      "commands": [
+        "Add Product To The Order",
+        "Submit Order",
+        "The Payment System Process Payment",
+        "The Logistics System Create Workflow Delivery Order"
+      ]
+    },
+    {
+      "name": "The Logistics System Workflow Delivery Order Created",
+      "trigger": "the logistics system creates a workflow delivery order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Product",
+        "Delivery",
+        "Inventory",
+        "Customer",
+        "Order",
+        "Notification"
+      ],
+      "commands": [
+        "Add Product To The Order",
+        "Submit Order",
+        "The Payment System Process Payment",
+        "The Logistics System Create Workflow Delivery Order"
+      ]
+    },
+    {
+      "name": "N Order Containing Product \"limited Edition Phone\" Created",
+      "trigger": "the customer creates an order containing product \"Limited Edition Phone\"",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Product",
+        "Inventory",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order Containing Product \"limited Edition Phone\"",
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "the customer submits the order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Product",
+        "Inventory",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order Containing Product \"limited Edition Phone\"",
+        "Submit Order"
+      ]
+    },
+    {
+      "name": "N Order With Valid Products Created",
+      "trigger": "the customer creates an order with valid products",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Inventory",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order With Valid Products",
+        "Submit Order",
+        "The Payment System Process Payment"
+      ]
+    },
+    {
+      "name": "Order Submitted",
+      "trigger": "the customer submits the order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Inventory",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order With Valid Products",
+        "Submit Order",
+        "The Payment System Process Payment"
+      ]
+    },
+    {
+      "name": "The Payment System Payment Processed",
+      "trigger": "the payment system processes the payment",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Payment",
+        "Inventory",
+        "Customer",
+        "Notification",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order With Valid Products",
+        "Submit Order",
+        "The Payment System Process Payment"
+      ]
+    },
+    {
+      "name": "N Order With Valid Products Created",
+      "trigger": "the customer creates an order with valid products",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Inventory",
+        "Notification",
+        "Customer",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order With Valid Products",
+        "Requests To Cancel Order"
+      ]
+    },
+    {
+      "name": "Requests To Order Cancelled",
+      "trigger": "the customer requests to cancel the order",
+      "context": "Order Workflow",
+      "actors": [],
+      "aggregates": [
+        "Inventory",
+        "Notification",
+        "Customer",
+        "Order"
+      ],
+      "commands": [
+        "Create N Order With Valid Products",
+        "Requests To Cancel Order"
+      ]
+    },
+    {
+      "name": "2 Units Of \"prod-001\" To Cart Added",
+      "trigger": "I add 2 units of \"PROD-001\" to cart",
+      "context": "Shopping Cart Management",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Product"
+      ],
+      "commands": [
+        "Add 2 Units Of \"prod-001\" To Cart"
+      ]
+    },
+    {
+      "name": "Product \"prod-001\" Quantity To 3 Updated",
+      "trigger": "I update product \"PROD-001\" quantity to 3",
+      "context": "Shopping Cart Management",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Product"
+      ],
+      "commands": [
+        "Update Product \"prod-001\" Quantity To 3"
+      ]
+    },
+    {
+      "name": "Product \"prod-001\" From Cart Removed",
+      "trigger": "I remove product \"PROD-001\" from cart",
+      "context": "Shopping Cart Management",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Product"
+      ],
+      "commands": [
+        "Remove Product \"prod-001\" From Cart"
+      ]
+    },
+    {
+      "name": "Try To Product \"prod-003\" Quantity To 8 Updated",
+      "trigger": "I try to update product \"PROD-003\" quantity to 8",
+      "context": "Shopping Cart Management",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Product"
+      ],
+      "commands": [
+        "Try To Update Product \"prod-003\" Quantity To 8"
+      ]
+    },
+    {
+      "name": "Try To More Than 99 Units Of \"prod-004\" To Cart Added",
+      "trigger": "I try to add more than 99 units of \"PROD-004\" to cart",
+      "context": "Shopping Cart Management",
+      "actors": [],
+      "aggregates": [
+        "Cart",
+        "Product"
+      ],
+      "commands": [
+        "Try To Add More Than 99 Units Of \"prod-004\" To Cart"
+      ]
+    },
+    {
+      "name": "New Delivery Address Added",
+      "trigger": "customer adds new delivery address",
+      "context": "Logistics Delivery System",
+      "actors": [],
+      "aggregates": [
+        "Customer",
+        "Delivery"
+      ],
+      "commands": [
+        "Add New Delivery Address"
+      ]
+    },
+    {
+      "name": "The Logistics System Delivery Order Created",
+      "trigger": "the logistics system creates a delivery order",
+      "context": "Delivery Management",
+      "actors": [],
+      "aggregates": [
+        "Notification",
+        "Order",
+        "Delivery"
+      ],
+      "commands": [
+        "The Logistics System Create Delivery Order"
+      ]
+    },
+    {
+      "name": "The Delivery Person Delay Reason Updated",
+      "trigger": "the delivery person updates the delay reason",
+      "context": "Delivery Management",
+      "actors": [
+        "Delivery Status"
+      ],
+      "aggregates": [
+        "Notification",
+        "Delivery"
+      ],
+      "commands": [
+        "The Delivery Person Update Delay Reason"
+      ]
+    },
+    {
+      "name": "Request To Delivery Address Updated",
+      "trigger": "I request to update the delivery address",
+      "context": "Delivery Management",
+      "actors": [
+        "Delivery Status"
+      ],
+      "aggregates": [
+        "Notification",
+        "Order",
+        "Delivery"
+      ],
+      "commands": [
+        "Request To Update Delivery Address"
+      ]
+    },
+    {
+      "name": "\"john\" Birthday Information Updated",
+      "trigger": "customer \"John\" updates birthday information",
+      "context": "Membership System Management",
+      "actors": [],
+      "aggregates": [
+        "Customer"
+      ],
+      "commands": [
+        "\"john\" Update Birthday Information"
+      ]
+    }
+  ],
+  "user_journeys": [
+    {
+      "name": "Add-on offers stacking with other discounts",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Add-on product out of stock",
+      "actor": "Another Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Customer attempts to buy a limited-quantity deal",
+      "actor": "Limited Quantity",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Customer attempts to buy a limited-quantity deal after it's sold out",
+      "actor": "Limited Quantity",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Successfully apply percentage coupon",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Successfully apply fixed amount coupon",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Flash sale promotion becomes active",
+      "actor": "Sale Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "Limited quantity promotion",
+      "actor": "Quantity Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Limited quantity promotion sold out",
+      "actor": "Quantity Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Spend threshold discount promotion",
+      "actor": "Discount Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Tiered spend discount promotion",
+      "actor": "Discount Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Buy N Get N promotion",
+      "actor": "1 Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Second item half price promotion",
+      "actor": "Price Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Customer reports a lost voucher",
+      "actor": "Customer",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Meeting gift with purchase conditions",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Automatically add qualifying gifts",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [
+        "Page"
+      ],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Manual gift selection",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Gift out of stock",
+      "actor": "Gift Stock",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Cart amount change affects gifts",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Tiered gift with purchase",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Gift with purchase and coupon combination",
+      "actor": "Original Price",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Gift activity expiration",
+      "actor": "Current Time",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Gift preview and reminder",
+      "actor": "Cart Total",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Limited time gift with purchase",
+      "actor": "Current Time",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Add items to an order",
+      "actor": "Order",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Submit an order",
+      "actor": "Order",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Cancel an order",
+      "actor": "Order",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Apply discount to an order",
+      "actor": "Order",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Validate order with no items",
+      "actor": "Order",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Validate order with excessive total amount",
+      "actor": "Order",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Notification delivery failure handling",
+      "actor": "Phone Number",
+      "steps_count": 2,
+      "touchpoints": [
+        "Sms"
+      ],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Notification retry mechanism",
+      "actor": "Email Service",
+      "steps_count": 1,
+      "touchpoints": [
+        "Email"
+      ],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Handle notification delivery failure",
+      "actor": "Email Address",
+      "steps_count": 2,
+      "touchpoints": [
+        "Notification"
+      ],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Payment discount stacking with other offers",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Installment payment fees",
+      "actor": "Card Installment",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Fixed bundle package",
+      "actor": "Bundle",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Pick any bundle discount - meets criteria",
+      "actor": "Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "Pick any bundle discount - exceeds quantity",
+      "actor": "Promotion",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Tiered bundle discount",
+      "actor": "Tiered Discount",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Successfully check sufficient inventory",
+      "actor": "Inventory Quantity",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Insufficient inventory",
+      "actor": "Inventory Quantity",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Multiple product inventory check",
+      "actor": "Inventory Quantity",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "Inventory reservation timeout",
+      "actor": "Inventory Quantity",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Release inventory after order cancellation",
+      "actor": "Inventory Quantity",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Inventory synchronization",
+      "actor": "Warehouse System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Cart item price update",
+      "actor": "Price",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Anonymous cart transfer",
+      "actor": "Anonymous User",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Baseline performance validation",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Stress testing under high load",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Spike testing for sudden load increases",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Endurance testing for sustained load",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Database performance under load",
+      "actor": "Performance Monitoring",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Network performance and bandwidth validation",
+      "actor": "Network Monitoring",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Performance recovery after load events",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Cost optimization during performance testing",
+      "actor": "Cost Monitoring",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Multi-architecture Docker image build and push",
+      "actor": "Ci Pipeline",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "ArgoCD GitOps deployment validation",
+      "actor": "Gitops Repository",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "CI/CD pipeline monitoring and observability",
+      "actor": "Pipeline Monitoring",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Automated rollback and recovery procedures",
+      "actor": "Automated Rollback",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Automated performance and load testing in CI/CD",
+      "actor": "Performance Testing",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Aurora Global Database automated failover",
+      "actor": "Global Database",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Route 53 health checks and DNS failover",
+      "actor": "Based Routing",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "MSK cross-region data replication and failover",
+      "actor": "0",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "Cross-region observability during disaster recovery",
+      "actor": "Observability Data",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Automated disaster recovery procedures",
+      "actor": "Recovery Automation",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Monthly disaster recovery testing",
+      "actor": "Recovery Testing",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 6
+    },
+    {
+      "name": "Data consistency validation during failover",
+      "actor": "Data",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Cross-region network connectivity and security",
+      "actor": "Vpc Peering",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Development profile uses in-memory event publishing",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Production profile uses Kafka event publishing",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Transactional event publishing ensures consistency",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Retry mechanism handles temporary failures in production",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Dead letter queue handles permanent failures",
+      "actor": "The System",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Multiple events are published efficiently",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Event publishing handles null and empty inputs gracefully",
+      "actor": "The System",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Seller participates in a promotional event with higher commission",
+      "actor": "For Electronics",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Select delivery method",
+      "actor": "Cart Weight",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 1
+    },
+    {
+      "name": "Delivery method restrictions - Weight limit exceeded",
+      "actor": "Cart Weight",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Delivery method restrictions - Region restrictions",
+      "actor": "Delivery Address",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Free shipping threshold",
+      "actor": "Standard Delivery",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Store pickup overdue handling",
+      "actor": "S Item",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Same day delivery service",
+      "actor": "Delivery Address",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Delivery rating",
+      "actor": "Customer",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Emergency delivery",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Delivery resource allocation",
+      "actor": "Logistics System",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Successfully complete delivery",
+      "actor": "Delivery Status",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Delivery delay",
+      "actor": "Delivery Status",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Update delivery address",
+      "actor": "Delivery Status",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Delivery failure - No one to sign",
+      "actor": "Delivery Status",
+      "steps_count": 2,
+      "touchpoints": [],
+      "outcomes_count": 5
+    },
+    {
+      "name": "Customer refuses delivery",
+      "actor": "Delivery Status",
+      "steps_count": 3,
+      "touchpoints": [],
+      "outcomes_count": 4
+    },
+    {
+      "name": "Customer uses reward points for a discount",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Customer partially redeems reward points",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Customer attempts to redeem more points than available",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Member receives a birthday month discount",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Member with multiple eligible discounts",
+      "actor": "Customer",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Automatic membership level upgrade",
+      "actor": "Current Level",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Loyalty points redemption",
+      "actor": "Redemption Rate",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 2
+    },
+    {
+      "name": "Birthday month discount",
+      "actor": "Current Month",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    },
+    {
+      "name": "Multiple discount priority",
+      "actor": "Current Month",
+      "steps_count": 1,
+      "touchpoints": [],
+      "outcomes_count": 3
+    }
+  ]
+}

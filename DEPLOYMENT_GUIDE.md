@@ -179,7 +179,7 @@ aws logs describe-log-groups --log-group-name-prefix /aws/lambda/genai-demo
 ## 📞 支援資源
 
 - **專案文檔**: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
-- **重構總結**: [REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md)
+- **重構總結**: [reports-summaries/project-management/REFACTORING_SUMMARY.md](reports-summaries/project-management/reports-summaries/project-management/REFACTORING_SUMMARY.md)
 - **基礎設施指南**: [infrastructure/CONSOLIDATED_DEPLOYMENT.md](infrastructure/CONSOLIDATED_DEPLOYMENT.md)
 - **故障排除**: [docs/troubleshooting/](docs/troubleshooting/)
 

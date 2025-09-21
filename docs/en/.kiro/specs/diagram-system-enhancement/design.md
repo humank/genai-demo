@@ -1,18 +1,11 @@
-<!-- 
-此文件需要手動翻譯
-原文件: .kiro/specs/diagram-system-enhancement/design.md
-翻譯日期: Thu Aug 21 22:36:38 CST 2025
 
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
-
-# 專案結構重整和圖表系統增強設計文檔
+# Design
 
 ## 概述
 
 本設計文檔詳細說明如何實現專案結構重整、雙語文檔系統和圖表系統增強，包括 Kiro Hook 自動翻譯機制的技術設計。
 
-## 架構設計
+## Design
 
 ### 整體架構
 
@@ -40,7 +33,7 @@ graph TB
     subgraph "🔧 自動化系統"
         HOOK[Kiro Hook]
         TRANSLATE[翻譯引擎]
-        MONITOR[文件監控]
+        MONITOR[文件Monitoring]
     end
     
     ROOT --> DOCS
@@ -64,9 +57,9 @@ graph TB
     TRANSLATE --> EN
 ```
 
-## 組件設計
+## Design
 
-### 1. 專案目錄結構設計
+### Design
 
 #### 新的目錄結構
 
@@ -77,14 +70,14 @@ genai-demo/
 ├── app/                               # 主應用程式
 ├── cmc-frontend/                      # Next.js 前端應用
 ├── consumer-frontend/                 # Angular 前端應用
-├── deployment/                        # 部署相關檔案
+├── deployment/                        # Deployment
 ├── docker/                           # Docker 相關檔案
 ├── scripts/                          # 腳本檔案
 │   ├── generate-diagrams.sh         # 圖表生成腳本
 │   ├── sync-docs.sh                 # 文檔同步腳本
 │   └── validate-translations.sh     # 翻譯驗證腳本
-├── tools/                            # 開發工具
-│   └── plantuml.jar                 # PlantUML 工具
+├── tools/                            # Tools
+│   └── plantuml.jar                 # Tools
 ├── docs/                             # 中文文檔
 │   ├── README.md                    # 文檔索引
 │   ├── architecture/                # 架構文檔
@@ -107,16 +100,16 @@ genai-demo/
 │   │       ├── domain-model.puml
 │   │       ├── sequence-diagrams/
 │   │       └── event-storming/
-│   ├── development/                 # 開發指南
+│   ├── development/                 # Guidelines
 │   │   ├── README.md
 │   │   ├── getting-started.md
 │   │   ├── coding-standards.md
 │   │   └── testing-guide.md
-│   ├── deployment/                  # 部署文檔
+│   ├── deployment/                  # Deployment
 │   │   ├── README.md
 │   │   ├── docker-guide.md
 │   │   └── kubernetes-guide.md
-│   ├── design/                      # 設計文檔
+│   ├── design/                      # Design
 │   │   ├── README.md
 │   │   ├── ddd-guide.md
 │   │   ├── design-principles.md
@@ -126,7 +119,7 @@ genai-demo/
 │   │   └── 2025/
 │   └── reports/                     # 報告文檔
 │       ├── README.md
-│       ├── project-summary-2025.md
+│       ├── reports-summaries/project-management/project-summary-2025.md
 │       ├── architecture-excellence-2025.md
 │       └── technology-stack-2025.md
 └── docs/en/                         # 英文文檔（鏡像結構）
@@ -141,7 +134,7 @@ genai-demo/
     └── reports/
 ```
 
-### 2. Kiro Hook 設計
+### Design
 
 #### Hook 配置文件
 
@@ -206,7 +199,7 @@ flowchart TD
     M --> Z
 ```
 
-### 3. 圖表系統設計
+### Design
 
 #### Mermaid 圖表組件
 
@@ -245,14 +238,14 @@ interface PlantUMLDiagram {
 
 // UML 圖表分類
 enum UMLDiagramCategory {
-  STRUCTURAL = 'structural',      // 結構圖：類圖、對象圖、組件圖、部署圖、包圖、複合結構圖
+  STRUCTURAL = 'structural',      // 結構圖：類圖、對象圖、組件圖、Deployment圖、包圖、複合結構圖
   BEHAVIORAL = 'behavioral',      // 行為圖：用例圖、活動圖、狀態圖
   INTERACTION = 'interaction',    // 交互圖：時序圖、通信圖、交互概覽圖、時間圖
   BUSINESS = 'business'          // 業務圖：Event Storming、業務流程圖
 }
 ```
 
-### 4. 翻譯引擎設計
+### Design
 
 #### 翻譯處理器
 
@@ -290,7 +283,7 @@ class MarkdownTranslator {
 
 ### 5. 文檔同步機制
 
-#### 同步狀態追蹤
+#### 同步狀態Tracing
 
 ```typescript
 interface DocumentSyncStatus {
@@ -318,21 +311,21 @@ class DocumentSyncManager {
 }
 ```
 
-### 6. Event Storming 顏色標準
+### Standards
 
 #### 官方 Event Storming 顏色編碼
 
 ```typescript
 enum EventStormingColors {
-  DOMAIN_EVENT = '#FF8C00',      // 橙色 - 領域事件 (Domain Events)
-  COMMAND = '#1E90FF',           // 藍色 - 命令 (Commands)
-  AGGREGATE = '#FFD700',         // 黃色 - 聚合根 (Aggregates)
-  EXTERNAL_SYSTEM = '#FF69B4',   // 粉色 - 外部系統 (External Systems)
-  READ_MODEL = '#32CD32',        // 綠色 - 讀模型 (Read Models/Views)
+  DOMAIN_EVENT = '#FF8C00',      // 橙色 - Domain Event (Domain Events)
+  COMMAND = '#1E90FF',           // 藍色 - Command (Commands)
+  AGGREGATE = '#FFD700',         // 黃色 - Aggregate Root (Aggregates)
+  EXTERNAL_SYSTEM = '#FF69B4',   // 粉色 - External System (External Systems)
+  READ_MODEL = '#32CD32',        // 綠色 - Read Model (Read Models/Views)
   POLICY = '#9370DB',            // 紫色 - 政策 (Policies)
-  HOTSPOT = '#FF0000',           // 紅色 - 熱點問題 (Hotspots)
+  HOTSPOT = '#FF0000',           // 紅色 - Hotspot問題 (Hotspots)
   OPPORTUNITY = '#808080',       // 灰色 - 機會 (Opportunities)
-  ACTOR = '#87CEEB',             // 淺藍色 - 參與者 (Actors/Users)
+  ACTOR = '#87CEEB',             // 淺藍色 - Actor (Actors/Users)
   UI_MOCKUP = '#F0E68C'          // 卡其色 - UI 模型 (UI Mockups)
 }
 
@@ -346,7 +339,7 @@ interface EventStormingElement {
 }
 ```
 
-#### PlantUML Event Storming 模板
+#### Templates
 
 ```plantuml
 @startuml
@@ -362,15 +355,15 @@ interface EventStormingElement {
 !define UI_MOCKUP_COLOR #F0E68C
 
 ' Event Storming 元素定義
-rectangle "領域事件" as DE DOMAIN_EVENT_COLOR
-rectangle "命令" as CMD COMMAND_COLOR
-rectangle "聚合根" as AGG AGGREGATE_COLOR
-rectangle "外部系統" as EXT EXTERNAL_SYSTEM_COLOR
-rectangle "讀模型" as RM READ_MODEL_COLOR
+rectangle "Domain Event" as DE DOMAIN_EVENT_COLOR
+rectangle "Command" as CMD COMMAND_COLOR
+rectangle "Aggregate Root" as AGG AGGREGATE_COLOR
+rectangle "External System" as EXT EXTERNAL_SYSTEM_COLOR
+rectangle "Read Model" as RM READ_MODEL_COLOR
 rectangle "政策" as POL POLICY_COLOR
-rectangle "熱點問題" as HOT HOTSPOT_COLOR
+rectangle "Hotspot問題" as HOT HOTSPOT_COLOR
 rectangle "機會" as OPP OPPORTUNITY_COLOR
-actor "參與者" as ACT ACTOR_COLOR
+actor "Actor" as ACT ACTOR_COLOR
 rectangle "UI模型" as UI UI_MOCKUP_COLOR
 
 @enduml
@@ -454,9 +447,9 @@ class DiagramErrorHandler {
 }
 ```
 
-## 性能考慮
+## Performance考慮
 
-### 翻譯性能優化
+### 翻譯Performance優化
 
 - 批處理多個文件的翻譯請求
 - 緩存常用術語翻譯
@@ -470,36 +463,36 @@ class DiagramErrorHandler {
 - 並行生成多個圖表
 - 壓縮輸出文件大小
 
-## 測試策略
+## Testing
 
-### Hook 測試
+### Testing
 
-- 單元測試：翻譯邏輯、文件處理
-- 整合測試：Hook 觸發機制
-- 端到端測試：完整的翻譯流程
+- Unit Test：翻譯邏輯、文件處理
+- Integration Test：Hook 觸發機制
+- End-to-End Test：完整的翻譯流程
 
-### 圖表測試
+### Testing
 
 - 語法驗證測試
 - 生成結果驗證
-- 性能基準測試
+- Performance基準測試
 
-### 文檔同步測試
+### Testing
 
 - 同步狀態檢測
 - 衝突解決機制
 - 批量操作測試
 
-## 部署和配置
+## Deployment
 
-### Hook 部署
+### Deployment
 
 1. 將 Hook 配置文件放置在 `.kiro/hooks/` 目錄
 2. 配置翻譯 API 密鑰
-3. 設置文件監控規則
+3. 設置文件Monitoring規則
 4. 測試 Hook 觸發機制
 
-### 圖表工具配置
+### Tools
 
 1. 安裝 PlantUML JAR 文件到 `tools/` 目錄
 2. 配置圖表生成腳本
@@ -511,10 +504,7 @@ class DiagramErrorHandler {
 1. 創建新的目錄結構
 2. 遷移現有文檔到新位置
 3. 更新所有內部連結
-4. 生成英文版本文檔
+4. 生成英文版This document
 5. 驗證連結完整性
 
 這個設計提供了完整的技術架構來實現專案重整、雙語文檔系統和自動化翻譯功能。
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

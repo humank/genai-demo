@@ -1,38 +1,32 @@
-# Deployment Documentation
 
-This directory contains deployment related documentation.
-翻譯日期: Thu Aug 21 22:14:37 CST 2025
+# Deployment
 
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
+本目錄包含Deployment相關的文檔。
 
-# Deployment 目錄
+## 文檔列表
 
-此目錄包含專案的部署相關檔案。
+- [Docker 指南](docker-guide.md) - Docker ContainerizationDeployment
+- [Kubernetes 指南](kubernetes-guide.md) - Kubernetes 集群Deployment
 
-## 檔案說明
+## Deployment
 
-### Kubernetes 部署
+- **開發Environment**: 本地 Docker Compose
+- **測試Environment**: Kubernetes 集群
+- **生產Environment**: AWS EKS + Graviton3
 
-- `k8s/` - Kubernetes 部署配置檔案
-  - `configmap.yaml` - 配置映射
-  - `deployment.yaml` - 部署配置
+## Port配置
 
-### AWS EKS 部署
+- **後端**: 8080
+- **CMC 前端**: 3002
+- **Consumer 前端**: 3001
 
-- `deploy-to-eks.sh` - EKS 部署腳本
-- `aws-eks-architecture.md` - AWS EKS 架構說明
+## 適用對象
 
-## 使用方式
+- DevOps 工程師
+- 運維人員
+- Deployment管理員
 
-```bash
-# 部署到 EKS
-./deployment/deploy-to-eks.sh
+## related links
 
-# 使用 kubectl 部署
-kubectl apply -f deployment/k8s/
-```
-
-**注意**: EKS 部署需要先配置 AWS CLI 和 kubectl。
-
-<!-- 翻譯完成後請刪除此註釋 -->
+- [開發指南](../development/) - 開發Environment設置
+- [架構文檔](../architecture/) - 系統架構

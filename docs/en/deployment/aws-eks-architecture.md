@@ -1,12 +1,5 @@
-<!-- 
-此文件需要手動翻譯
-原文件: deployment/aws-eks-architecture.md
-翻譯日期: Thu Aug 21 22:12:37 CST 2025
 
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
-
-# AWS EKS 原生微服務架構
+# AWS EKS 原生Microservices Architecture
 
 ## 🏗️ 整體架構圖
 
@@ -206,7 +199,7 @@ resource "aws_elasticache_replication_group" "redis" {
 }
 ```
 
-## 📊 監控和可觀測性：AWS 原生方案
+## 📊 Monitoring和Observability：AWS 原生方案
 
 ### 1. **CloudWatch + X-Ray 替代 Jaeger**
 ```java
@@ -228,7 +221,7 @@ public class AwsObservabilityConfig {
     }
 }
 
-// 自定義指標
+// 自定義Metrics
 @Component
 public class OrderMetrics {
     private final Counter orderCreatedCounter;
@@ -246,7 +239,7 @@ public class OrderMetrics {
 }
 ```
 
-### 2. **日誌管理：CloudWatch Logs**
+### 2. **Logging管理：CloudWatch Logs**
 ```yaml
 # Fluent Bit DaemonSet for log collection
 apiVersion: apps/v1
@@ -275,7 +268,7 @@ spec:
           value: "/aws/eks/genai-demo/application"
 ```
 
-## 🔐 安全性：AWS 原生方案
+## 🔐 Security：AWS 原生方案
 
 ### 1. **服務間認證：IAM Roles for Service Accounts (IRSA)**
 ```yaml
@@ -377,9 +370,9 @@ resource "aws_security_group" "rds" {
 }
 ```
 
-## 🚀 部署策略
+## Deployment
 
-### 1. **藍綠部署使用 AWS Load Balancer Controller**
+### Deployment
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
@@ -446,7 +439,7 @@ artifacts:
     - k8s-manifests/*
 ```
 
-## 💰 成本優化建議
+## 💰 成本優化recommendations
 
 ### 1. **使用 Spot Instances**
 ```yaml
@@ -497,18 +490,15 @@ spec:
         averageUtilization: 80
 ```
 
-## 📋 總結
+## 📋 summary
 
 這個 AWS EKS 原生架構具有以下優勢：
 
 1. **簡化複雜度**：避免 Kong、Istio 等複雜組件
 2. **AWS 原生整合**：充分利用 AWS 服務生態
 3. **成本效益**：使用 Spot Instances 和自動擴縮容
-4. **安全性**：IRSA + VPC + Security Groups
-5. **可觀測性**：CloudWatch + X-Ray 完整監控
+4. **Security**：IRSA + VPC + Security Groups
+5. **Observability**：CloudWatch + X-Ray 完整Monitoring
 6. **易於維護**：減少第三方依賴，降低運維複雜度
 
 這個架構可以讓你專注於業務邏輯，而不是基礎設施的複雜性。
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "name": "BDD Feature Monitor Hook",
+  "description": "Monitors changes to BDD feature files and updates Event Storming and business process diagrams (coordinates with diagram-documentation-sync.kiro.hook)",
+  "version": "1.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/src/test/resources/features/**/*.feature"
+    ],
+    "exclude": [
+      "**/.git/**",
+      "**/.kiro/**",
+      "**/target/**",
+      "**/build/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "BDD Feature files have been modified. Please analyze the changes and update business diagrams:\n\n## Quick BDD Change Analysis\n\nAnalyze the modified .feature files for:\n- **New Features**: New business capabilities\n- **New Scenarios**: New user journeys or business flows\n- **New Actors**: New user roles or system actors\n- **Business Events**: Events implied by When/Then steps\n\n## Recommended Actions\n\n### 1. Analyze BDD Features\n```bash\n# Analyze BDD features and extract business events\npython3 scripts/analyze-bdd-features.py app/src/test/resources/features docs/diagrams/viewpoints/functional\n```\n\n### 2. Update Business Process Diagrams\n```bash\n# Update Event Storming and business process diagrams\npython3 scripts/smart-diagram-update.py\n```\n\n### 3. Sync Documentation References\n```bash\n# Ensure all diagram references are up-to-date\npython3 scripts/sync-diagram-references.py --comprehensive\n```\n\n## Expected Outcomes\n- Event Storming diagrams reflect new business events\n- User journey diagrams are updated\n- Business process flows are refreshed\n- Documentation references are synchronized\n\n## Focus Areas\n- Extract **Domain Events** from \"When\" steps\n- Identify **Commands** from user actions\n- Map **Actors** from \"Given\" contexts\n- Update **Business Rules** from \"Then\" assertions\n\nPlease execute these commands and report any new business events or user journeys discovered."
+  }
+}

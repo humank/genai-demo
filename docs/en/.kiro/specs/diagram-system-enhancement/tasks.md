@@ -1,10 +1,3 @@
-<!-- 
-此文件需要手動翻譯
-原文件: .kiro/specs/diagram-system-enhancement/tasks.md
-翻譯日期: Thu Aug 21 22:34:38 CST 2025
-
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
 
 # 專案結構重整和圖表系統增強實作計劃
 
@@ -41,7 +34,7 @@
 
 - [x] 2.1 創建 Hook 配置文件
   - 在 `.kiro/hooks/` 目錄創建 `auto-translation.json` 配置文件
-  - 定義文件監控規則和排除模式
+  - 定義文件Monitoring規則和排除模式
   - 設置翻譯參數和輸出路徑規則
   - _需求: 15.1, 16.1, 16.2_
 
@@ -57,44 +50,44 @@
   - 實作錨點連結的正確處理
   - _需求: 15.4, 17.3, 10.3_
 
-- [x] 2.4 實作批處理和性能優化
+- [x] 2.4 實作批處理和Performance優化
   - 實作批量翻譯處理邏輯
   - 添加翻譯緩存機制
   - 實作並行處理和超時控制
   - _需求: 18.2, 18.1, 18.5_
 
 - [x] 3. 建立 Mermaid 核心架構圖表
-  - 創建系統架構概覽、六角形架構、DDD 分層架構等核心圖表
+  - 創建系統架構概覽、Hexagonal Architecture、DDD Layered Architecture等核心圖表
   - 使用現代化的 Mermaid 語法和視覺設計
   - _需求: 4.1, 5.1, 5.2, 5.3_
 
 - [x] 3.1 創建系統架構概覽圖
   - 在 `docs/diagrams/mermaid/architecture-overview.md` 創建整體架構圖
-  - 包含外部系統、應用層、領域層、基礎設施層的完整視圖
+  - 包含External System、Application Layer、Domain Layer、Infrastructure Layer的完整視圖
   - 使用 emoji 和顏色增強可讀性
   - _需求: 5.1, 11.1, 11.2_
 
-- [x] 3.2 創建六角形架構圖
-  - 在 `docs/diagrams/mermaid/hexagonal-architecture.md` 創建六角形架構圖
-  - 清晰展示端口與適配器的分離
-  - 標註入站和出站端口的區別
+- [x] 3.2 創建Hexagonal Architecture圖
+  - 在 `docs/diagrams/mermaid/hexagonal-architecture.md` 創建Hexagonal Architecture圖
+  - 清晰展示Port與Adapter的分離
+  - 標註入站和出站Port的區別
   - _需求: 5.2, 4.2, 11.1_
 
-- [x] 3.3 創建 DDD 分層架構圖
+- [x] 3.3 創建 DDD Layered Architecture圖
   - 在 `docs/diagrams/mermaid/ddd-layered-architecture.md` 創建 DDD 分層圖
-  - 展示表現層、應用層、領域層、基礎設施層的依賴關係
+  - 展示表現層、Application Layer、Domain Layer、Infrastructure Layer的依賴關係
   - 包含 DDD 戰術模式的視覺表示
   - _需求: 5.2, 4.2, 11.1_
 
-- [x] 3.4 創建事件驅動架構圖
+- [x] 3.4 創建Event-Driven Architecture圖
   - 在 `docs/diagrams/mermaid/event-driven-architecture.md` 創建事件架構圖
-  - 展示事件流、處理器和聚合根的關係
+  - 展示事件流、處理器和Aggregate Root的關係
   - 包含事件發布和訂閱機制
   - _需求: 5.4, 4.2, 11.1_
 
 - [x] 3.5 創建 API 交互圖
   - 在 `docs/diagrams/mermaid/api-interactions.md` 創建 API 交互圖
-  - 展示前後端和外部系統的 API 調用關係
+  - 展示前後端和External System的 API 調用關係
   - 包含認證和錯誤處理流程
   - _需求: 5.5, 10.4, 11.1_
 
@@ -104,20 +97,20 @@
   - _需求: 6.1-6.15_
 
 - [ ] 4.1 創建結構圖 (Structural Diagrams)
-  - 創建類圖、對象圖、組件圖、部署圖、包圖、複合結構圖
+  - 創建類圖、對象圖、組件圖、Deployment圖、包圖、複合結構圖
   - 展示系統的靜態結構和組織關係
   - _需求: 6.1, 6.2, 6.4, 6.8, 6.9, 6.11, 6.12_
 
 - [ ] 4.1.1 創建領域模型類圖
   - 在 `docs/diagrams/plantuml/structural/domain-model-class-diagram.puml` 創建完整的領域模型
-  - 包含所有聚合根、實體、值對象的詳細關係
+  - 包含所有Aggregate Root、Entity、Value Object的詳細關係
   - 使用標準 UML 類圖符號和 DDD 註解
   - _需求: 6.1, 11.5, 6.15_
 
-- [ ] 4.1.2 創建聚合根詳細類圖
-  - 在 `docs/diagrams/plantuml/structural/aggregate-root-details.puml` 創建聚合根內部結構圖
-  - 展示聚合邊界和內部實體關係
-  - 包含領域事件的觸發點和規格模式
+- [ ] 4.1.2 創建Aggregate Root詳細類圖
+  - 在 `docs/diagrams/plantuml/structural/aggregate-root-details.puml` 創建Aggregate Root內部結構圖
+  - 展示Aggregate邊界和內部Entity關係
+  - 包含Domain Event的觸發點和Specification Pattern
   - _需求: 6.2, 11.5, 6.15_
 
 - [ ] 4.1.3 創建對象圖
@@ -129,13 +122,13 @@
 - [ ] 4.1.4 創建系統組件圖
   - 在 `docs/diagrams/plantuml/structural/component-diagram.puml` 創建組件關係圖
   - 展示系統各組件之間的依賴關係和接口
-  - 包含六角形架構的端口和適配器
+  - 包含Hexagonal Architecture的Port和Adapter
   - _需求: 6.4, 11.5, 6.15_
 
-- [ ] 4.1.5 創建部署圖
-  - 在 `docs/diagrams/plantuml/structural/deployment-diagram.puml` 創建部署架構圖
-  - 展示系統在不同環境中的部署架構
-  - 包含 Docker、Kubernetes 和雲端部署視圖
+- [ ] 4.1.5 創建Deployment圖
+  - 在 `docs/diagrams/plantuml/structural/deployment-diagram.puml` 創建Deployment架構圖
+  - 展示系統在不同Environment中的Deployment架構
+  - 包含 Docker、Kubernetes 和雲端Deployment視圖
   - _需求: 6.8, 11.5, 6.15_
 
 - [ ] 4.1.6 創建包圖
@@ -147,7 +140,7 @@
 - [ ] 4.1.7 創建複合結構圖
   - 在 `docs/diagrams/plantuml/structural/composite-structure-diagram.puml` 創建複合結構圖
   - 展示複雜組件的內部結構和協作
-  - 包含聚合根的內部結構和端口
+  - 包含Aggregate Root的內部結構和Port
   - _需求: 6.12, 11.5, 6.15_
 
 - [ ] 4.2 創建行為圖 (Behavioral Diagrams)
@@ -169,7 +162,7 @@
 
 - [ ] 4.2.3 創建狀態圖
   - 在 `docs/diagrams/plantuml/behavioral/state-diagrams.puml` 創建狀態轉換圖
-  - 展示聚合根和實體的狀態轉換
+  - 展示Aggregate Root和Entity的狀態轉換
   - 包含狀態守衛條件和轉換動作
   - _需求: 6.7, 11.5, 6.15_
 
@@ -181,13 +174,13 @@
 - [ ] 4.3.1 創建業務流程時序圖
   - 在 `docs/diagrams/plantuml/interaction/sequence-diagrams/` 目錄創建各種時序圖
   - 包含訂單處理、支付流程、庫存管理等核心業務流程
-  - 展示跨層和跨聚合的交互序列
+  - 展示跨層和跨Aggregate的交互序列
   - _需求: 6.3, 11.5, 6.15_
 
 - [ ] 4.3.2 創建通信圖
   - 在 `docs/diagrams/plantuml/interaction/communication-diagrams.puml` 創建通信圖
   - 展示對象間的消息傳遞和協作關係
-  - 包含領域事件的發布和訂閱模式
+  - 包含Domain Event的發布和訂閱模式
   - _需求: 6.10, 11.5, 6.15_
 
 - [ ] 4.3.3 創建交互概覽圖
@@ -199,7 +192,7 @@
 - [ ] 4.3.4 創建時間圖
   - 在 `docs/diagrams/plantuml/interaction/timing-diagrams.puml` 創建時間圖
   - 展示對象狀態隨時間的變化
-  - 包含事件驅動架構的時間序列
+  - 包含Event-Driven Architecture的時間序列
   - _需求: 6.14, 11.5, 6.15_
 
 - [ ] 5. 建立 Event Storming 圖表
@@ -208,21 +201,21 @@
   - _需求: 7.1, 7.2, 7.3, 7.4_
 
 - [ ] 5.1 創建 Big Picture Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/big-picture.puml` 創建整體事件風暴圖
-  - 使用標準 Event Storming 顏色：橙色領域事件、藍色命令、黃色聚合根、粉色外部系統、綠色讀模型、紫色政策、紅色熱點問題
+  - 在 `docs/diagrams/plantuml/event-storming/big-picture.puml` 創建整體Event Storming圖
+  - 使用標準 Event Storming 顏色：橙色Domain Event、藍色Command、黃色Aggregate Root、粉色External System、綠色Read Model、紫色政策、紅色Hotspot問題
   - 展示完整的業務流程事件流
   - _需求: 7.1, 7.4, 11.4_
 
 - [ ] 5.2 創建 Process Level Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/process-level.puml` 創建流程級事件風暴圖
+  - 在 `docs/diagrams/plantuml/event-storming/process-level.puml` 創建流程級Event Storming圖
   - 專注於特定業務流程的詳細事件
-  - 包含外部系統和讀模型
+  - 包含External System和Read Model
   - _需求: 7.2, 7.4, 11.4_
 
 - [ ] 5.3 創建 Design Level Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/design-level.puml` 創建設計級事件風暴圖
+  - 在 `docs/diagrams/plantuml/event-storming/design-level.puml` 創建設計級Event Storming圖
   - 展示技術實現層面的事件設計
-  - 包含聚合邊界和一致性規則
+  - 包含Aggregate邊界和一致性規則
   - _需求: 7.3, 7.4, 11.4_
 
 - [ ] 6. 實作圖表生成和管理工具
@@ -244,17 +237,17 @@
 
 - [ ] 6.3 建立圖表管理系統
   - 創建圖表索引和分類系統
-  - 實作圖表依賴關係追蹤
+  - 實作圖表依賴關係Tracing
   - 添加圖表版本控制支持
   - _需求: 8.3, 8.4, 8.5_
 
 - [ ] 7. 建立文檔同步和管理系統
-  - 實作文檔同步狀態追蹤和批量同步功能
+  - 實作文檔同步狀態Tracing和批量同步功能
   - 創建文檔品質檢查和驗證工具
   - _需求: 12.1, 12.2, 12.3, 12.4_
 
-- [ ] 7.1 實作文檔同步狀態追蹤
-  - 創建 `DocumentSyncManager` 類追蹤中英文文檔同步狀態
+- [ ] 7.1 實作文檔同步狀態Tracing
+  - 創建 `DocumentSyncManager` 類Tracing中英文文檔同步狀態
   - 實作同步狀態檢查和報告功能
   - 添加過期文檔識別和提醒
   - _需求: 12.1, 12.2, 12.4_
@@ -311,21 +304,21 @@
   - 生成文檔品質報告
   - _需求: 9.4, 17.4, 12.3_
 
-- [ ] 9.3 實作 Hook 測試和驗證
+- [ ] 9.3 實作 Hook Testing and Verification
   - 創建 Hook 功能測試用例
   - 實作翻譯品質驗證測試
-  - 添加性能和穩定性測試
+  - 添加Performance和穩定性測試
   - _需求: 16.4, 17.5, 18.1_
 
-- [ ] 10. 建立文檔維護和品質保證流程
-  - 創建文檔維護指南和最佳實踐
+- [ ] 10. 建立文檔維護和Quality Assurance流程
+  - 創建文檔維護指南和Best Practice
   - 實作品質檢查和審核流程
   - _需求: 11.1, 11.2, 11.3, 11.4_
 
 - [ ] 10.1 創建文檔維護指南
   - 在 `docs/development/documentation-guide.md` 創建文檔維護指南
   - 定義文檔創建、更新、審核的標準流程
-  - 包含圖表創建和維護的最佳實踐
+  - 包含圖表創建和維護的Best Practice
   - _需求: 8.4, 11.1, 11.2_
 
 - [ ] 10.2 實作品質檢查流程
@@ -335,17 +328,17 @@
   - _需求: 11.3, 17.5, 8.5_
 
 - [ ] 10.3 建立版本控制和發布流程
-  - 定義文檔版本控制策略
+  - 定義文檔版本控制Policy
   - 實作文檔發布和更新通知機制
-  - 創建變更日誌和追蹤系統
+  - 創建變更Logging和Tracing系統
   - _需求: 12.4, 12.5, 8.4_
 
-- [ ] 11. 測試和驗證整個系統
+- [ ] 11. Testing and Verification整個系統
   - 對整個重整後的系統進行全面測試
   - 驗證所有功能正常運作並符合需求
   - _需求: 所有需求的整合驗證_
 
-- [ ] 11.1 執行端到端測試
+- [ ] 11.1 執行End-to-End Test
   - 測試完整的文檔創建到翻譯的流程
   - 驗證 Hook 觸發和翻譯功能
   - 測試圖表生成和更新流程
@@ -357,17 +350,14 @@
   - 測試雙語切換和導航功能
   - _需求: 1.1, 1.2, 10.1, 14.2_
 
-- [ ] 11.3 執行性能和穩定性測試
-  - 測試大量文件的批量翻譯性能
+- [ ] 11.3 執行Performance和穩定性測試
+  - 測試大量文件的批量翻譯Performance
   - 驗證 Hook 系統的穩定性和錯誤恢復
-  - 測試圖表生成的性能和品質
+  - 測試圖表生成的Performance和品質
   - _需求: 18.1, 18.2, 18.5, 9.1_
 
 - [ ] 11.4 建立使用文檔和培訓材料
   - 創建系統使用指南和故障排除文檔
-  - 建立開發者培訓材料
+  - 建立Developer培訓材料
   - 創建維護和更新流程文檔
   - _需求: 10.5, 16.4, 9.5_
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

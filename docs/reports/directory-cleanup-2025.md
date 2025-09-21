@@ -14,7 +14,7 @@
 
 #### 移動的文件
 
-- `DDD_RECORD_REFACTORING_SUMMARY.md` → `docs/reports/ddd-record-refactoring-summary.md`
+- `DDD_RECORD_reports-summaries/project-management/REFACTORING_SUMMARY.md` → `docs/reports/reports-summaries/architecture-design/ddd-record-refactoring-summary.md`
 
 #### 刪除的目錄
 

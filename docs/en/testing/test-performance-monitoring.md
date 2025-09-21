@@ -1,107 +1,108 @@
-# Test Performance Monitoring Framework
 
-## Overview
+# Testing
 
-This project implements a comprehensive test performance monitoring framework that automatically tracks test execution time, memory usage, and generates detailed performance analysis reports.
+## 概述
 
-## 🚀 Core Features
+This project實現了完整的測試PerformanceMonitoring框架，自動Tracing測試執行時間、記憶體使用量，並生成詳細的Performance分析報告。
+
+## 🚀 核心功能
 
 ### TestPerformanceExtension
 
-Core component for automated test performance monitoring:
+Automated TestingPerformanceMonitoring的核心組件：
 
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 10000, maxMemoryIncreaseMB = 100)
 @IntegrationTest
 public class MyIntegrationTest extends BaseIntegrationTest {
-    // Test methods are automatically monitored for performance
+    // 測試方法會自動被MonitoringPerformance
     
     @Test
     void should_process_order_within_performance_limits() {
-        // Test logic
-        // Automatic monitoring of execution time and memory usage
+        // 測試邏輯
+        // 自動Monitoring執行時間和記憶體使用
     }
 }
 ```
 
-### Configuration Options
+### 配置選項
 
-- `maxExecutionTimeMs`: Maximum allowed execution time (default: 5000ms)
-- `maxMemoryIncreaseMB`: Maximum allowed memory increase (default: 50MB)
-- `generateReports`: Whether to generate detailed reports (default: true)
-- `checkRegressions`: Whether to check for performance regressions (default: true)
+- `maxExecutionTimeMs`: 最大允許執行時間（預設：5000ms）
+- `maxMemoryIncreaseMB`: 最大允許記憶體增長（預設：50MB）
+- `generateReports`: 是否生成詳細報告（預設：true）
+- `checkRegressions`: 是否檢查Performance回歸（預設：true）
 
-## 📊 Monitoring Metrics
+## 📊 MonitoringMetrics
 
-### Execution Time Tracking
+### 執行時間Tracing
 
-- **Millisecond Precision**: Precisely tracks execution time of each test method
-- **Slow Test Identification**: Automatically marks tests exceeding 5 seconds as slow tests
-- **Very Slow Test Warning**: Tests exceeding 30 seconds are marked as errors
+- **毫秒級精度**: 精確Tracing每個測試方法的執行時間
+- **慢測試識別**: 自動標記超過 5 秒的測試為慢測試
+- **超慢測試警告**: 超過 30 秒的測試會被標記為錯誤
 
-### Memory Usage Monitoring
+### 記憶體使用Monitoring
 
-- **Heap Memory Tracking**: Comparison of heap memory usage before and after tests
-- **Memory Growth Calculation**: Precise calculation of memory growth during tests
-- **Memory Usage Percentage**: Usage percentage relative to maximum available memory
+- **堆記憶體Tracing**: 測試前後的堆記憶體使用量對比
+- **記憶體增長計算**: 精確計算測試期間的記憶體增長
+- **記憶體使用百分比**: 相對於最大可用記憶體的使用百分比
 
-### Performance Thresholds
+### Performance閾值
 
-- **Slow Test Warning**: > 5 seconds
-- **Very Slow Test Error**: > 30 seconds
-- **Memory Usage Warning**: > 50MB increase
-- **Memory Usage Critical**: > 80% of available heap memory
+- **慢測試警告**: > 5 秒
+- **超慢測試錯誤**: > 30 秒
+- **記憶體使用警告**: > 50MB 增長
+- **記憶體使用嚴重**: > 80% 可用堆記憶體
 
-## 🛠️ Core Components
+## 🛠️ 核心組件
 
 ### TestPerformanceMonitor
 
-JUnit 5 extension providing comprehensive test performance monitoring:
+JUnit 5 擴展，提供全面的測試PerformanceMonitoring：
 
 ```java
 public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallback,
         BeforeEachCallback, AfterEachCallback, TestWatcher {
     
-    // Automatically tracks:
-    // - Test execution time
-    // - Memory usage during tests
-    // - Performance regressions
-    // - Resource cleanup
+    // 自動Tracing：
+    // - 測試執行時間
+    // - 測試期間記憶體使用
+    // - Performance回歸
+    // - Resource清理
 }
 ```
 
-**Key Features**:
+**功能特色**：
 
-- Concurrent test execution tracking (thread-safe data structures)
-- Automatic report generation in `build/reports/test-performance/`
-- Performance regression detection
-- Slow test identification and warnings
+- 併發測試執行Tracing（線程安全的數據結構）
+- 自動報告生成在 `build/reports/test-performance/`
+- Performance回歸檢測
+- 慢測試識別和警告
 
 ### TestPerformanceResourceManager
 
-Test resource monitoring and management component:
+測試ResourceMonitoring和管理組件：
 
 ```java
 @TestComponent
 public class TestPerformanceResourceManager {
     
     public ResourceUsageStats getResourceUsageStats() {
-        // Returns current resource usage statistics:
-        // - Current memory usage and maximum available memory
-        // - Memory usage percentage
-        // - Active test resources count
+        // 返回當前Resource使用統計：
+        // - 當前記憶體使用和最大可用記憶體
+        // - 記憶體使用百分比
+        // - 活躍測試Resource數量
     }
     
     public void forceCleanup() {
-        // Forces cleanup of all test resources
-        // Triggers System.gc() to release memory
+        // 強制清理所有測試Resource
+        // 觸發 System.gc() 釋放記憶體
     }
 }
 ```
 
 ### TestPerformanceConfiguration
 
-Spring test configuration for performance monitoring setup:
+Spring 測試配置，用於PerformanceMonitoring設置：
 
 ```java
 @TestConfiguration
@@ -115,74 +116,74 @@ public class TestPerformanceConfiguration {
 }
 ```
 
-**TestPerformanceListener provides**:
+**TestPerformanceListener 提供**：
 
-- Automatic cleanup before and after each test method
-- Database cleanup (proper handling of foreign key constraints)
-- Cache clearing
-- Mock reset functionality
-- Application state reset
-- Temporary resource cleanup
-- Final cleanup after test class completion
+- 每個測試方法前後的自動清理
+- Repository清理（正確處理外鍵Constraint）
+- 快取清理
+- Mock 重置功能
+- 應用程式狀態重置
+- 臨時Resource清理
+- 測試類完成後的最終清理
 
-## 📈 Reporting System
+## 📈 報告系統
 
-### Report Structure
+### 報告結構
 
 ```
 build/reports/test-performance/
-├── performance-report.html          # Interactive HTML report (via TestPerformanceReportGenerator)
-├── performance-data.csv             # Raw performance data (via TestPerformanceReportGenerator)
-├── overall-performance-summary.txt  # Overall statistics (via TestPerformanceMonitor)
-└── {TestClass}-performance-report.txt # Individual class reports (via TestPerformanceMonitor)
+├── performance-report.html          # 互動式 HTML 報告（透過 TestPerformanceReportGenerator）
+├── performance-data.csv             # 原始Performance數據（透過 TestPerformanceReportGenerator）
+├── overall-performance-summary.txt  # 總體統計（透過 TestPerformanceMonitor）
+└── {TestClass}-performance-report.txt # 個別類別報告（透過 TestPerformanceMonitor）
 ```
 
-### Report Contents
+### 報告內容
 
-#### Individual Class Reports
+#### 個別類別報告
 
-- Test execution times
-- Memory usage conditions
-- Failure cause analysis
+- 測試執行時間
+- 記憶體使用情況
+- 失敗原因分析
 
-#### Overall Summary Report
+#### 總體摘要報告
 
-- Total number of tests executed
-- Success rate statistics
-- Average execution time
-- Performance analysis: slow test identification, top 5 slowest tests
+- 執行的測試總數
+- 成功率統計
+- 平均執行時間
+- Performance分析：慢測試識別、前 5 名最慢測試
 
-#### HTML Reports
+#### HTML 報告
 
-- Interactive charts and detailed analysis (generated separately)
-- Visual performance trends
-- Drillable detailed data
+- 互動式圖表和詳細分析（單獨生成）
+- 視覺化Performance趨勢
+- 可鑽取的詳細數據
 
-#### CSV Data
+#### CSV 數據
 
-- Raw performance data for further analysis
-- Can be imported into other analysis tools
+- 原始Performance數據，供進一步分析使用
+- 可匯入其他分析工具
 
-## 🔧 Gradle Test Task Configuration
+## Testing
 
-### Optimized Test Tasks
+### Testing
 
 ```gradle
-// Unit tests - fast feedback for daily development
+// Unit Test - 日常開發的快速回饋
 tasks.register('unitTest', Test) {
-    description = 'Fast unit tests (~5MB, ~50ms each)'
+    description = '快速Unit Test (~5MB, ~50ms 每個)'
     useJUnitPlatform {
         excludeTags 'integration', 'end-to-end', 'slow'
         includeTags 'unit'
     }
     maxHeapSize = '2g'
     maxParallelForks = Runtime.runtime.availableProcessors()
-    forkEvery = 0  // No JVM restart for speed
+    forkEvery = 0  // 不重啟 JVM 以提高速度
 }
 
-// Integration tests - pre-commit verification
+// Integration Test - 提交前驗證
 tasks.register('integrationTest', Test) {
-    description = 'Integration tests (~50MB, ~500ms each)'
+    description = 'Integration Test (~50MB, ~500ms 每個)'
     useJUnitPlatform {
         includeTags 'integration'
         excludeTags 'end-to-end', 'slow'
@@ -193,20 +194,20 @@ tasks.register('integrationTest', Test) {
     forkEvery = 5
     timeout = Duration.ofMinutes(30)
     
-    // HttpComponents optimization and JVM tuning
+    // HttpComponents 優化和 JVM 調優
     jvmArgs += [
         '--enable-preview',
         '-XX:MaxMetaspaceSize=1g',
         '-XX:+UseG1GC',
         '-XX:+UseStringDeduplication',
         '-XX:G1HeapRegionSize=32m',
-        // HttpComponents specific JVM parameters
+        // HttpComponents 特定 JVM 參數
         '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
         '-Dsun.net.useExclusiveBind=false',
         '-Djava.net.preferIPv4Stack=true'
     ]
     
-    // Enhanced system properties for integration tests
+    // Integration Test的增強系統屬性
     systemProperties = [
         'junit.jupiter.execution.timeout.default': '2m',
         'spring.profiles.active': 'test',
@@ -216,98 +217,98 @@ tasks.register('integrationTest', Test) {
 }
 ```
 
-### Test Task Hierarchy
+### Testing
 
 ```bash
-# Development workflow
-./gradlew quickTest              # Daily development (< 2 minutes)
-./gradlew preCommitTest          # Pre-commit verification (< 5 minutes)
-./gradlew fullTest               # Pre-release verification (< 30 minutes)
+# 開發工作流程
+./gradlew quickTest              # 日常開發（< 2 分鐘）
+./gradlew preCommitTest          # 提交前驗證（< 5 分鐘）
+./gradlew fullTest               # 發布前驗證（< 30 分鐘）
 
-# Specific test types
-./gradlew unitTest               # Unit tests only
-./gradlew integrationTest        # Integration tests only
-./gradlew e2eTest               # End-to-end tests only
-./gradlew cucumber              # BDD Cucumber tests
+# Testing
+./gradlew unitTest               # Testing
+./gradlew integrationTest        # Testing
+./gradlew e2eTest               # Testing
+./gradlew cucumber              # Testing
 ```
 
-## 🎯 Performance Thresholds and Monitoring
+## 🎯 Performance閾值和Monitoring
 
-### Performance Thresholds
+### Performance閾值
 
-- **Slow Test Warning**: > 5 seconds
-- **Very Slow Test Error**: > 30 seconds
-- **Memory Usage Warning**: > 50MB increase
-- **Memory Usage Critical**: > 80% of available heap memory
+- **慢測試警告**: > 5 秒
+- **超慢測試錯誤**: > 30 秒
+- **記憶體使用警告**: > 50MB 增長
+- **記憶體使用嚴重**: > 80% 可用堆記憶體
 
-### Automatic Performance Monitoring
+### 自動PerformanceMonitoring
 
-#### Test Execution Monitoring
+#### Testing
 
 ```java
-// TestPerformanceMonitor automatic monitoring
+// TestPerformanceMonitor 自動Monitoring
 public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallback,
         BeforeEachCallback, AfterEachCallback, TestWatcher {
     
-    // Automatically tracks:
-    // - Test execution time
-    // - Memory usage during tests
-    // - Performance regressions
-    // - Resource cleanup
+    // 自動Tracing：
+    // - 測試執行時間
+    // - 測試期間記憶體使用
+    // - Performance回歸
+    // - Resource清理
 }
 ```
 
-#### Performance Report Generation
+#### Performance報告生成
 
-- **HTML Reports**: Interactive charts and detailed analysis
-- **CSV Export**: Raw data for further analysis
-- **Trend Analysis**: Performance regression detection
-- **Resource Usage**: Memory and CPU usage tracking
+- **HTML 報告**: 互動式圖表和詳細分析
+- **CSV 匯出**: 原始數據供進一步分析
+- **趨勢分析**: Performance回歸檢測
+- **Resource使用**: 記憶體和 CPU 使用率Tracing
 
-## 🧹 Test Resource Management
+## Testing
 
-### Resource Cleanup Strategy
+### Resources
 
-#### Automatic Cleanup
+#### 自動清理
 
 ```java
-// TestPerformanceConfiguration provides automatic cleanup
+// TestPerformanceConfiguration 提供自動清理
 public static class TestPerformanceListener extends AbstractTestExecutionListener {
     
     @Override
     public void afterTestMethod(TestContext testContext) throws Exception {
-        // Automatic cleanup after each test method:
-        // - Database cleanup
-        // - Cache clearing
-        // - Mock resetting
-        // - Temporary resource cleanup
+        // 每個測試方法後的自動清理：
+        // - Repository清理
+        // - 快取清理
+        // - Mock 重置
+        // - 臨時Resource清理
     }
 }
 ```
 
-#### Manual Resource Management
+#### Resources
 
 ```java
-// BaseIntegrationTest provides manual resource management
+// BaseIntegrationTest 提供手動Resource管理
 protected void forceResourceCleanup() {
-    // Force cleanup when needed during tests
+    // 測試期間需要時強制清理
 }
 
 protected boolean isMemoryUsageAcceptable() {
-    // Check if memory usage is within acceptable limits
+    // 檢查記憶體使用是否在可接受範圍內
 }
 
 protected void waitForCondition(BooleanSupplier condition, Duration timeout, String description) {
-    // Wait for asynchronous operations to complete with timeout
+    // 等待異步操作完成，設定超時
 }
 ```
 
-### Memory Management Best Practices
+### Best Practices
 
-#### JVM Configuration for Tests
+#### Testing
 
 ```gradle
-// Optimized JVM parameters for test execution
+// 測試執行的優化 JVM 參數
 jvmArgs += [
     '--enable-preview',
     '-XX:MaxMetaspaceSize=1g',
@@ -321,16 +322,16 @@ jvmArgs += [
 ]
 ```
 
-#### Memory Monitoring
+#### 記憶體Monitoring
 
-- **Warning Threshold**: 80% memory usage
-- **Critical Threshold**: 90% memory usage
-- **Automatic GC**: Triggered on critical usage
-- **Periodic Cleanup**: Every 5 tests
+- **警告閾值**: 80% 記憶體使用
+- **嚴重閾值**: 90% 記憶體使用
+- **自動 GC**: 在嚴重使用時觸發
+- **定期清理**: 每 5 個測試清理一次
 
-## 📊 Usage Examples
+## Examples
 
-### Basic Usage
+### 基本使用
 
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 5000, maxMemoryIncreaseMB = 50)
@@ -339,13 +340,13 @@ public class OrderProcessingTest extends BaseIntegrationTest {
     
     @Test
     void should_process_order_quickly() {
-        // Test logic
-        // Automatic performance monitoring
+        // 測試邏輯
+        // 自動MonitoringPerformance
     }
 }
 ```
 
-### Advanced Configuration
+### 進階配置
 
 ```java
 @TestPerformanceExtension(
@@ -359,71 +360,71 @@ public class ComplexIntegrationTest extends BaseIntegrationTest {
     
     @Test
     void should_handle_complex_scenario() {
-        // Complex test logic
-        // Higher performance thresholds
+        // 複雜測試邏輯
+        // 更高的Performance閾值
     }
 }
 ```
 
-### Performance Report Generation
+### Performance報告生成
 
 ```bash
-# Generate performance reports
+# 生成Performance報告
 ./gradlew generatePerformanceReport
 
-# Run all tests and generate reports
+# Testing
 ./gradlew runAllTestsWithReport
 
-# View reports
+# 查看報告
 open build/reports/test-performance/performance-report.html
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
-### Common Issues
+### 常見問題
 
-#### Memory Shortage
+#### 記憶體不足
 
-- Increase test JVM heap memory size
-- Check for memory leaks in tests
-- Use `forceResourceCleanup()` for manual cleanup
+- 增加測試 JVM 堆記憶體大小
+- 檢查測試中的記憶體洩漏
+- 使用 `forceResourceCleanup()` 手動清理
 
-#### Slow Test Execution
+#### Testing
 
-- Check slow test reports
-- Optimize database queries
-- Reduce unnecessary Spring context loading
+- 檢查慢測試報告
+- 優化Repository查詢
+- 減少不必要的 Spring 上下文載入
 
-#### Performance Regression
+#### Performance回歸
 
-- Review performance trend reports
-- Compare historical execution data
-- Identify performance bottlenecks
+- 查看Performance趨勢報告
+- 比較歷史執行數據
+- 識別Performance瓶頸
 
-### Monitoring and Reporting
+### Monitoring和報告
 
-#### Performance Metrics
+#### PerformanceMetrics
 
-- **Test Execution Time**: Per test and per class
-- **Memory Usage**: Before and after each test
-- **Resource Utilization**: CPU, memory, database connections
-- **Failure Rate**: Success/failure statistics
+- **測試執行時間**: 每個測試和每個類別
+- **記憶體使用**: 每個測試前後
+- **Resource利用率**: CPU、記憶體、Repository連接
+- **失敗率**: 成功/失敗統計
 
-#### Report Generation
+#### 報告生成
 
 ```bash
-# Generate performance reports
+# 生成Performance報告
 ./gradlew generatePerformanceReport
 
-# View reports
+# 查看報告
 open build/reports/test-performance/performance-report.html
 ```
 
-#### Performance Regression Detection
+#### Performance回歸檢測
 
-- Automatic detection of tests exceeding thresholds
-- Historical performance comparison
-- Trend analysis and alerting
-- Integration with CI/CD pipelines
+- 自動檢測超過閾值的測試
+- 歷史Performance比較
+- 趨勢分析和Alerting
+- 與 CI/CD Pipeline整合
 
-This framework ensures consistent, monitored, and optimized test performance across the entire application.
+這個框架確保整個應用程式的測試Performance一致、受Monitoring且優化。

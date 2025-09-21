@@ -1,5 +1,3 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # 電子商務系統 UML 文檔說明
 
@@ -11,7 +9,7 @@
 
 1. **類別圖 (class-diagram.puml)**
    - 描述系統中的主要類別及其關係
-   - 包括訂單、支付、定價和配送聚合根，以及相關實體、值對象和領域服務
+   - 包括訂單、支付、定價和配送Aggregate Root，以及相關Entity、Value Object和Domain Service
 
 2. **對象圖 (object-diagram.puml)**
    - 展示領域模型的實例關係
@@ -19,16 +17,16 @@
 
 3. **組件圖 (component-diagram.puml)**
    - 展示系統的主要組件及其交互
-   - 基於六角形架構，展示端口和適配器
-   - 包括持久化適配器和外部系統適配器
+   - 基於Hexagonal Architecture，展示Port和Adapter
+   - 包括持久化Adapter和External SystemAdapter
 
-4. **部署圖 (deployment-diagram.puml)**
-   - 描述系統的部署架構
-   - 包括服務器、數據庫、消息中間件和外部系統
+4. **Deployment圖 (deployment-diagram.puml)**
+   - 描述系統的Deployment架構
+   - 包括服務器、數據庫、消息中間件和External System
 
 5. **套件圖 (package-diagram.puml)**
    - 展示系統的套件結構和依賴關係
-   - 按照六角形架構劃分為接口層、應用層、領域層和基礎設施層
+   - 按照Hexagonal Architecture劃分為接口層、Application Layer、Domain Layer和Infrastructure Layer
    - 包括定價和配送模組的套件結構
 
 6. **時序圖 (sequence-diagram.puml)**
@@ -38,10 +36,12 @@
 7. **定價處理時序圖 (pricing-sequence-diagram.puml)**
    - 描述定價處理的主要流程
    - 包括創建定價規則、更新佣金費率、獲取產品類別的定價規則和計算佣金
+   - ![定價處理時序圖](pricing-sequence-diagram.svg)
 
 8. **配送處理時序圖 (delivery-sequence-diagram.puml)**
    - 描述配送處理的主要流程
-   - 包括創建配送、安排配送、分配配送資源、更新配送地址、標記為已送達等操作
+   - 包括創建配送、安排配送、分配配送Resource、更新配送地址、標記為已送達等操作
+   - ![配送處理時序圖](delivery-sequence-diagram.svg)
 
 9. **狀態圖 (state-diagram.puml)**
    - 展示訂單在不同狀態之間的轉換
@@ -49,57 +49,57 @@
 
 10. **活動圖概覽 (activity-diagram-overview.puml)**
     - 高層次展示電子商務系統的主要業務流程
-    - 包括客戶、訂單系統、支付系統和物流系統的交互
+    - 包括Customer、訂單系統、支付系統和物流系統的交互
 
 11. **活動圖詳細 (activity-diagram-detail.puml)**
     - 詳細展示訂單處理的具體步驟
     - 包括各層之間的交互和事件流
 
 12. **使用案例圖 (use-case-diagram.puml)**
-    - 描述系統的主要功能和參與者
+    - 描述系統的主要功能和Actor
     - 區分核心用例和擴展用例
 
-### 領域驅動設計圖表
+### Design
 
 13. **領域模型圖 (domain-model-diagram.puml)**
-    - 詳細展示系統中的聚合根、實體、值對象和領域服務
+    - 詳細展示系統中的Aggregate Root、Entity、Value Object和Domain Service
     - 按照領域上下文組織
-    - 包括訂單、支付、定價和配送聚合
+    - 包括訂單、支付、定價和配送Aggregate
 
-14. **六角形架構圖 (hexagonal-architecture-diagram.puml)**
-    - 詳細展示系統的端口和適配器模式
-    - 包括驅動適配器、應用核心和被驅動適配器
-    - 展示應用層映射器的作用
+14. **Hexagonal Architecture圖 (hexagonal-architecture-diagram.puml)**
+    - 詳細展示系統的Port和Adapter模式
+    - 包括驅動Adapter、Application Core和被驅動Adapter
+    - 展示Application Layer映射器的作用
 
-15. **DDD分層架構圖 (ddd-layers-diagram.puml)**
-    - 展示DDD分層架構的依賴關係和數據流向
+15. **DDDLayered Architecture圖 (ddd-layers-diagram.puml)**
+    - 展示DDDLayered Architecture的依賴關係和數據流向
     - 詳細說明每一層的職責和組件
     - 特別強調數據轉換和映射器的作用
 
-16. **Saga模式圖 (saga-pattern-diagram.puml)**
+16. **Saga Pattern圖 (saga-pattern-diagram.puml)**
     - 展示分布式事務處理流程
     - 包括正常流程和補償事務
 
 17. **限界上下文圖 (bounded-context-diagram.puml)**
     - 展示系統中不同上下文之間的關係
-    - 包括上下文映射模式
+    - 包括Context Mapping模式
 
-18. **事件風暴圖 (big-picture-exploration.puml, process-modeling.puml, design-level.puml)**
-    - 展示系統中的命令、事件、聚合根、策略和讀模型
-    - 基於事件風暴工作坊的結果
-    - **大圖探索階段 (Big Picture Exploration)**：快速了解整個業務領域
+18. **Event Storming圖 (big-picture-exploration.puml, process-modeling.puml, design-level.puml)**
+    - 展示系統中的Command、事件、Aggregate Root、Policy和Read Model
+    - 基於Event Storming工作坊的結果
+    - **Big Picture Exploration階段 (Big Picture Exploration)**：快速了解整個業務領域
     - **流程建模階段 (Process Modeling)**：深入理解事件之間的因果關係
     - **設計級別階段 (Design Level)**：為軟體實現提供詳細設計
 
 ### 進階架構圖表
 
-19. **CQRS模式圖 (cqrs-pattern-diagram.puml)**
-    - 展示命令和查詢責任分離模式
-    - 包括命令端和查詢端的架構
+19. **Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖 (cqrs-pattern-diagram.puml)**
+    - 展示Command和查詢責任分離模式
+    - 包括Command端和查詢端的架構
 
-20. **事件溯源圖 (event-sourcing-diagram.puml)**
+20. **Event Sourcing圖 (event-sourcing-diagram.puml)**
     - 展示事件的存儲和重放機制
-    - 包括如何從事件構建讀模型
+    - 包括如何從事件構建Read Model
 
 21. **API接口圖 (api-interface-diagram.puml)**
     - 展示系統對外提供的API接口
@@ -111,11 +111,11 @@
 
 23. **安全架構圖 (security-architecture-diagram.puml)**
     - 展示系統的安全機制和認證授權流程
-    - 包括安全控制和監控
+    - 包括安全控制和Monitoring
 
-24. **可觀測性架構圖 (observability-diagram.puml)**
-    - 展示系統的監控、日誌和可觀測性架構
-    - 包括指標、日誌、追蹤和告警
+24. **Observability架構圖 (observability-diagram.puml)**
+    - 展示系統的Monitoring、Logging和Observability架構
+    - 包括Metrics、Logging、Tracing和告警
 
 ## 如何查看圖表
 
@@ -127,13 +127,13 @@
 
 2. **使用 PlantUML 本地渲染**：
    - 使用項目根目錄中的 plantuml.jar
-   - 執行命令：`java -jar plantuml.jar docs/uml/圖表名稱.puml`
+   - 執行Command：`java -jar plantuml.jar docs/uml/圖表名稱.puml`
 
 3. **使用 IDE 插件**：
    - IntelliJ IDEA、VS Code 等 IDE 都有 PlantUML 插件
    - 安裝插件後可直接在 IDE 中預覽
 
-## 圖表更新指南
+## Guidelines
 
 更新這些 UML 圖表時，請遵循以下原則：
 
@@ -141,17 +141,17 @@
 2. 使用中文命名和註釋，提高可讀性
 3. 適當使用顏色和分組，增強視覺效果
 4. 添加必要的註釋，解釋複雜的關係或概念
-5. 更新後在本文檔中記錄變更
+5. 更新後在This document中記錄變更
 
 ## 最近更新
 
 - 2023-03-23：初始版本創建
 - 2024-05-10：更新所有圖表以反映最新系統架構
-- 2024-05-10：添加新的領域驅動設計圖表
+- 2024-05-10：添加新的Domain-Driven Design圖表
 - 2024-05-10：添加進階架構圖表
 - 2024-05-10：添加對象圖和活動圖
-- 2024-06-08：更新類別圖、組件圖、領域模型圖、六角形架構圖和套件圖
-- 2024-06-08：添加定價處理時序圖、配送處理時序圖和DDD分層架構圖
+- 2024-06-08：更新類別圖、組件圖、領域模型圖、Hexagonal Architecture圖和套件圖
+- 2024-06-08：添加定價處理時序圖、配送處理時序圖和DDDLayered Architecture圖
 
 ## 圖表預覽
 
@@ -169,9 +169,9 @@
 
 ![組件圖](./電子商務系統組件圖.svg)
 
-### 部署圖
+### Deployment
 
-![部署圖](./deployment-diagram.svg)
+![Deployment圖](./deployment-diagram.svg)
 
 ### 套件圖
 
@@ -193,7 +193,7 @@
 
 ![狀態圖](./訂單狀態圖.svg)
 
-### 活動圖概覽
+### Overview
 
 ![活動圖概覽](./訂單系統活動圖概覽.svg)
 
@@ -209,41 +209,41 @@
 
 ![領域模型圖](./領域模型圖.svg)
 
-### 六角形架構圖
+### Hexagonal Architecture圖
 
-![六角形架構圖](./六角形架構圖.svg)
+![Hexagonal Architecture圖](./Hexagonal Architecture圖.svg)
 
-### DDD分層架構圖
+### DDDLayered Architecture圖
 
-![DDD分層架構圖](./DDD分層架構圖.svg)
+![DDDLayered Architecture圖](./DDDLayered Architecture圖.svg)
 
-### Saga模式圖
+### Saga Pattern圖
 
-![Saga模式圖](./訂單處理Saga模式圖.svg)
+![Saga Pattern圖](./訂單處理Saga Pattern圖.svg)
 
 ### 限界上下文圖
 
 ![限界上下文圖](./限界上下文圖.svg)
 
-### 事件風暴圖-Big Picture Exploration
+### Event Storming圖-Big Picture Exploration
 
-![事件風暴圖- Big Picture Exploration](./big-picture-exploration.svg)
+![Event Storming圖- Big Picture Exploration](./big-picture-exploration.svg)
 
-### 事件風暴圖-Process Modeling
+### Event Storming圖-Process Modeling
 
-![事件風暴圖- Process Modeling](./process-modeling.svg)
+![Event Storming圖- Process Modeling](./process-modeling.svg)
 
-### 事件風暴圖-Design Level
+### Event Storming圖-Design Level
 
-![事件風暴圖- design-level](./design-level.svg)
+![Event Storming圖- design-level](./design-level.svg)
 
-### CQRS模式圖
+### Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖
 
-![CQRS模式圖](./cqrs-pattern-diagram.svg)
+![Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖](./cqrs-pattern-diagram.svg)
 
-### 事件溯源圖
+### Event Sourcing圖
 
-![事件溯源圖](./event-sourcing-diagram.svg)
+![Event Sourcing圖](./event-sourcing-diagram.svg)
 
 ### API接口圖
 
@@ -257,6 +257,6 @@
 
 ![安全架構圖](./security-architecture-diagram.svg)
 
-### 可觀測性架構圖
+### Observability架構圖
 
-![可觀測性架構圖](./observability-diagram.svg)
+![Observability架構圖](./observability-diagram.svg)
