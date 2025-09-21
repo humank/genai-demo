@@ -16,6 +16,7 @@
 
 - **[domain-events.md](domain-events.md)** - Domain event implementation guide
 - **[translation-guide.md](translation-guide.md)** - Documentation translation rules
+- **[reports-organization-standards.md](reports-organization-standards.md)** - Report and summary file organization standards
 
 ## Usage Guidelines
 
@@ -26,6 +27,7 @@
 5. **Domain Events** → Reference `domain-events.md`
 6. **Code Reviews** → Reference `code-review-standards.md`
 7. **Documentation Translation** → Reference `translation-guide.md`
+8. **Report Organization** → Reference `reports-organization-standards.md`
 
 ## Quick Reference by Development Phase
 
@@ -57,3 +59,10 @@
 
 - Translation guide (translation-guide.md)
 - Architecture documentation (rozanski-woods-architecture-methodology.md)
+- Report organization (reports-organization-standards.md)
+
+### Report Creation Phase
+
+- Report organization standards (reports-organization-standards.md)
+- File naming conventions (reports-organization-standards.md)
+- Category assignment guidelines (reports-organization-standards.md)

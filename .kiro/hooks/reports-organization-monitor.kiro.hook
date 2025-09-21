@@ -1,0 +1,29 @@
+{
+  "name": "Reports Organization Monitor",
+  "description": "Automatically monitor and organize report and summary files according to project standards",
+  "version": "1.0.0",
+  "author": "Kiro AI Assistant",
+  "when": {
+    "patterns": [
+      "*report*.md",
+      "*summary*.md", 
+      "*REPORT*.md",
+      "*SUMMARY*.md",
+      "*Report*.md",
+      "*Summary*.md"
+    ],
+    "exclude_patterns": [
+      "reports-summaries/**",
+      ".kiro/**",
+      "node_modules/**",
+      "build/**",
+      "gradle/**"
+    ]
+  },
+  "then": {
+    "prompt": "🔍 **Report Organization Alert**\n\nA report or summary file has been detected outside the standardized `reports-summaries/` directory structure.\n\n**File detected**: {{file_path}}\n\n**Required Actions**:\n1. **Categorize**: Determine the appropriate category based on content:\n   - `architecture-design/` - Architecture and design reports\n   - `diagrams/` - Diagram-related reports  \n   - `frontend/` - Frontend development reports\n   - `infrastructure/` - Infrastructure and deployment reports\n   - `project-management/` - Project management reports\n   - `task-execution/` - Task completion reports\n   - `testing/` - Testing and QA reports\n   - `translation/` - Translation system reports\n   - `general/` - General reports\n   - `quality-ux/` - UX and quality reports\n\n2. **Move File**: Transfer to `reports-summaries/{category}/`\n3. **Update Links**: Update all references in other documents\n4. **Verify**: Ensure all links work correctly\n5. **Index**: Add to `reports-summaries/README.md` if significant\n\n**Tools Available**:\n- `scripts/organize-reports-summaries.py` - Automated organization\n- `scripts/update-report-links.py` - Link updates\n\n**Standards Reference**: `.kiro/steering/reports-organization-standards.md`\n\nPlease organize this file according to the project standards to maintain clean documentation structure."
+  },
+  "priority": "high",
+  "tags": ["organization", "documentation", "reports", "standards"],
+  "enabled": true
+}
