@@ -77,9 +77,9 @@ Contains terminology categories:
 | Chinese File | English File |
 |-------------|-------------|
 | `README.md` | `docs/en/PROJECT_README.md` |
-| `docs/viewpoints/**/*.md` | `docs/en/viewpoints/**/*.md` |
+| `../viewpoints/**/*.md` | `viewpoints/**/*.md` |
 | `docs/perspectives/**/*.md` | `docs/en/perspectives/**/*.md` |
-| `docs/diagrams/**/*.md` | `docs/en/diagrams/**/*.md` |
+| `../diagrams/**/*.md` | `docs/en/diagrams/**/*.md` |
 | `docs/templates/**/*.md` | `docs/en/templates/**/*.md` |
 
 ### Directory Structure

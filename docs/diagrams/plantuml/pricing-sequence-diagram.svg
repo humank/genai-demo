@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
+  <text x="200" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6c757d">
+    Pricing Sequence Diagram
+  </text>
+  <text x="200" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6c757d">
+    Diagram will be generated from PlantUML source
+  </text>
+</svg>

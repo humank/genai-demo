@@ -630,7 +630,7 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "cr
 
 ### 內部文檔
 
-- [MCP 整合指南](docs/en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- [MCP 整合指南](docs/en/../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 - [架構文檔](../architecture/)
 - [Deployment指南](../deployment/)
 

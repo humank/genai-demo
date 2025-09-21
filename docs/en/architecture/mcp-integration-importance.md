@@ -199,7 +199,7 @@ npm run mcp:setup
 npm run well-architected:assessment
 
 # 查看結果
-cat infrastructure/docs/well-architected-assessment.md
+cat ../../infrastructure/docs/well-architected-assessment.md
 ```
 
 #### 2.2 架構分析
@@ -209,7 +209,7 @@ cat infrastructure/docs/well-architected-assessment.md
 npm run architecture:assess
 
 # 生成執行摘要
-cat infrastructure/docs/reports-summaries/infrastructure/executive-summary.md
+cat ../../infrastructure/docs/../../reports-summaries/../../infrastructure/executive-summary.md
 ```
 
 ### 階段 3: 持續Monitoring (第 5-6 週)
@@ -340,9 +340,9 @@ on:
 
 ### 2. 知識文檔
 
-- [MCP 整合指南](../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
-- [Well-Architected 評估報告](infrastructure/docs/well-architected-assessment.md)
-- [Architecture Assessment報告](infrastructure/docs/automated-architecture-assessment.md)
+- [MCP 整合指南](../../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- [Well-Architected 評估報告](../../infrastructure/docs/well-architected-assessment.md)
+- [Architecture Assessment報告](../../infrastructure/docs/automated-architecture-assessment.md)
 - \1
 
 ## 未來發展路線圖

@@ -331,7 +331,7 @@ consistency_checks:
   # 檢查圖表檔案是否存在
   diagrams:
     check: file_exists
-    base_path: "docs/diagrams/"
+    base_path: "../diagrams/"
   
   # 檢查視點和觀點的一致性
   viewpoint_perspective_consistency:

@@ -27,7 +27,7 @@ Functional Viewpoint描述系統的功能元素、職責和介面，展示系統
 
 #### Overview
 
-![功能架構概覽](docs/diagrams/viewpoints/functional/functional-overview.svg)
+![功能架構概覽](../diagrams/viewpoints/functional/functional-overview.svg)
 
 *系統功能架構的整體概覽，展示主要功能模組和它們之間的關係*
 

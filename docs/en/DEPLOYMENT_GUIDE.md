@@ -180,8 +180,8 @@ aws logs describe-log-groups --log-group-name-prefix /aws/lambda/genai-demo
 ## Resources
 
 - **專案文檔**: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
-- **Refactoringsummary**: [reports-summaries/project-management/REFACTORING_SUMMARY.md](reports-summaries/project-management/REFACTORING_SUMMARY.md)
-- **基礎設施指南**: [infrastructure/CONSOLIDATED_DEPLOYMENT.md](infrastructure/CONSOLIDATED_DEPLOYMENT.md)
+- **Refactoringsummary**: [../../reports-summaries/project-management/REFACTORING_SUMMARY.md](../../reports-summaries/project-management/REFACTORING_SUMMARY.md)
+- **基礎設施指南**: [../../infrastructure/CONSOLIDATED_DEPLOYMENT.md](../../infrastructure/CONSOLIDATED_DEPLOYMENT.md)
 - **故障排除**: \1
 
 ---

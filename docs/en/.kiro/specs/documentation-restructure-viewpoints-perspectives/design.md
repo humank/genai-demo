@@ -318,7 +318,7 @@ docs/
 > **基於 Rozanski & Woods 方法論的企業級架構展示**
 
 [![Architecture Excellence](https://img.shields.io/badge/Architecture-Excellence-blue.svg)](..architecture/rozanski-woods-architecture-assessment.md)
-[![Test Coverage](https://img.shields.io/badge/Tests-568%20Passed-green.svg)](..reports/reports-summaries/project-management/project-summary-2025.md)
+[![Test Coverage](https://img.shields.io/badge/Tests-568%20Passed-green.svg)](..reports/../../reports-summaries/project-management/project-summary-2025.md)
 [![Documentation](https://img.shields.io/badge/Docs-120%2B%20Pages-orange.svg)](..README.md)
 
 ## 🎯 專案價值主張
@@ -505,17 +505,17 @@ docker-compose up -d
 
 **1. Mermaid - 主要架構圖表 (高解析度 SVG 輸出)**
 ```
-docs/diagrams/viewpoints/functional/
+../diagrams/viewpoints/functional/
 ├── system-overview.mmd              # Overview
 ├── bounded-contexts.mmd             # Bounded Context圖
 └── use-case-flow.mmd               # 用例流程圖
 
-docs/diagrams/viewpoints/information/
+../diagrams/viewpoints/information/
 ├── event-driven-architecture.mmd   # Event-Driven Architecture
 ├── data-flow.mmd                   # 資料流圖
 └── event-storming-overview.mmd     # Overview
 
-docs/diagrams/viewpoints/development/
+../diagrams/viewpoints/development/
 ├── hexagonal-architecture.mmd      # Hexagonal Architecture圖
 ├── module-dependencies.mmd         # 模組依賴圖
 └── development-workflow.mmd        # 開發工作流程圖
@@ -523,12 +523,12 @@ docs/diagrams/viewpoints/development/
 
 **2. PlantUML - 詳細技術圖表 (自動生成 SVG)**
 ```
-docs/diagrams/viewpoints/functional/
+../diagrams/viewpoints/functional/
 ├── domain-model-class.puml         # 領域模型類圖
 ├── aggregate-details.puml          # Design
 └── use-case-diagram.puml           # 用例圖
 
-docs/diagrams/viewpoints/information/
+../diagrams/viewpoints/information/
 ├── event-storming-big-picture.puml # Event Storming Big Picture
 ├── event-storming-process.puml     # Event Storming Process Level
 ├── event-storming-design.puml      # Event Storming Design Level
@@ -537,7 +537,7 @@ docs/diagrams/viewpoints/information/
     ├── payment-processing.puml
     └── inventory-management.puml
 
-docs/diagrams/viewpoints/deployment/
+../diagrams/viewpoints/deployment/
 ├── infrastructure-architecture.puml # 基礎設施架構
 ├── deployment-diagram.puml         # Deployment
 └── network-topology.puml           # 網路拓撲圖
@@ -545,7 +545,7 @@ docs/diagrams/viewpoints/deployment/
 
 **3. Excalidraw - 概念設計和腦力激盪 (MCP 輔助)**
 ```
-docs/diagrams/concepts/
+../diagrams/concepts/
 ├── architecture-brainstorm.excalidraw  # 架構腦力激盪
 ├── design-sketches.excalidraw          # Design
 └── stakeholder-mapping.excalidraw      # Stakeholder對應圖
@@ -663,28 +663,28 @@ This project使用 AWS CDK v2 實現完整的Infrastructure as Code，展示現�
     {
       "type": "analyze_ddd_code",
       "source_dir": "app/src/main/java/",
-      "output_dir": "docs/diagrams/viewpoints/functional/",
+      "output_dir": "../diagrams/viewpoints/functional/",
       "generate_plantuml": true,
       "generate_mermaid": true
     },
     {
       "type": "analyze_bdd_features",
       "source_dir": "app/src/test/resources/features/",
-      "output_dir": "docs/diagrams/viewpoints/information/",
+      "output_dir": "../diagrams/viewpoints/information/",
       "generate_event_storming": true,
       "generate_process_flow": true
     },
     {
       "type": "generate_excalidraw_concepts",
       "mcp_service": "excalidraw",
-      "output_dir": "docs/diagrams/concepts/",
+      "output_dir": "../diagrams/concepts/",
       "auto_convert_svg": true
     },
     {
       "type": "update_documentation",
       "target_files": [
-        "docs/viewpoints/functional/domain-model.md",
-        "docs/viewpoints/information/event-storming.md"
+        "../viewpoints/functional/domain-model.md",
+        "../viewpoints/information/event-storming.md"
       ]
     }
   ],
@@ -696,7 +696,7 @@ This project使用 AWS CDK v2 實現完整的Infrastructure as Code，展示現�
     },
     {
       "type": "update_diagram_index",
-      "index_file": "docs/diagrams/README.md"
+      "index_file": "../diagrams/README.md"
     }
   ]
 }

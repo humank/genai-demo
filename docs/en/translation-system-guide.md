@@ -101,14 +101,14 @@ Hook 會自動Monitoring以下檔案變更：
 | 中文檔案 | 英文檔案 | 說明 |
 |---------|---------|------|
 | `README.md` | `docs/en/PROJECT_README.md` | 專案主要說明 |
-| `docs/viewpoints/**/*.md` | `docs/en/viewpoints/**/*.md` | 七大Architectural Viewpoint |
+| `../viewpoints/**/*.md` | `viewpoints/**/*.md` | 七大Architectural Viewpoint |
 | `docs/perspectives/**/*.md` | `docs/en/perspectives/**/*.md` | 八大Architectural Perspective |
-| `docs/diagrams/**/*.md` | `docs/en/diagrams/**/*.md` | 圖表文件 |
+| `../diagrams/**/*.md` | `docs/en/diagrams/**/*.md` | 圖表文件 |
 | `docs/templates/**/*.md` | `docs/en/templates/**/*.md` | 文件模板 |
-| `docs/api/**/*.md` | `docs/en/api/**/*.md` | API 文件 |
+| `../api/**/*.md` | `docs/en/api/**/*.md` | API 文件 |
 | `docs/mcp/**/*.md` | `docs/en/mcp/**/*.md` | MCP 整合文件 |
 | `docs/releases/**/*.md` | `docs/en/releases/**/*.md` | 發布說明 |
-| `docs/reports/**/*.md` | `docs/en/reports/**/*.md` | 專案報告 |
+| `docs/reports/**/*.md` | `reports/**/*.md` | 專案報告 |
 
 ### 目錄結構
 

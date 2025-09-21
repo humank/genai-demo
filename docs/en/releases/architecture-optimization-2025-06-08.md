@@ -84,7 +84,7 @@ public static ProductCategory toDomain(ProductCategoryDto dto) {
 將Adapter類移動到符合DDD架構規範的包結構中：
 
 ```
-infrastructure/
+../../infrastructure/
 ├── external/
 │   └── adapter/
 │       └── DeliveryServiceAdapter.java

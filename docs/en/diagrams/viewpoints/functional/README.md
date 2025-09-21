@@ -37,7 +37,7 @@ Consumer, Customer, Inventory, Logistics, Notification, Order, Payment, Pricing,
 ### System Overview Diagrams
 1. **system-overview.mmd** - Complete system architecture overview showing 7-layer architecture with external systems, API gateway, application services, domain layer, event-driven architecture, infrastructure, observability platform, and deployment platform
 
-![系統概覽](docs/diagrams/viewpoints/functional/system-overview.svg)
+![系統概覽](../diagrams/viewpoints/functional/system-overview.svg)
 
 ### Domain Model Diagrams (from DDD Code)
 1. **domain-model-overview.puml** - Complete domain model overview with all aggregates, entities, and value objects
@@ -120,10 +120,10 @@ These diagrams can be used with PlantUML to generate visual representations:
 
 ```bash
 # Generate PNG from PlantUML
-plantuml -tpng docs/diagrams/viewpoints/functional/*.puml
+plantuml -tpng ../diagrams/viewpoints/functional/*.puml
 
 # Generate SVG from PlantUML
-plantuml -tsvg docs/diagrams/viewpoints/functional/*.puml
+plantuml -tsvg ../diagrams/viewpoints/functional/*.puml
 ```
 
 ## Regeneration
@@ -132,10 +132,10 @@ To regenerate these diagrams after code changes:
 
 ```bash
 # Analyze DDD code and generate domain diagrams
-python3 scripts/analyze-ddd-code.py app/src/main/java/solid/humank/genaidemo docs/diagrams/viewpoints/functional
+python3 scripts/analyze-ddd-code.py app/src/main/java/solid/humank/genaidemo ../diagrams/viewpoints/functional
 
 # Analyze BDD features and generate business process diagrams
-python3 scripts/analyze-bdd-features.py app/src/test/resources/features docs/diagrams/viewpoints/functional
+python3 scripts/analyze-bdd-features.py app/src/test/resources/features ../diagrams/viewpoints/functional
 ```
 
 ## Next Steps

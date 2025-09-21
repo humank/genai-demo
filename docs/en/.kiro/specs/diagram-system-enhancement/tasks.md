@@ -9,14 +9,14 @@
   - _需求: 1.1, 13.1, 13.2, 13.3_
 
 - [x] 1.1 創建核心目錄結構
-  - 創建 `docs/architecture/`, `docs/api/`, `docs/diagrams/`, `docs/development/`, `docs/deployment/`, `docs/design/`, `docs/releases/`, `docs/reports/` 目錄
-  - 創建對應的英文目錄結構 `docs/en/architecture/` 等
+  - 創建 `../architecture/`, `../api/`, `../diagrams/`, `../development/`, `../deployment/`, `docs/design/`, `docs/releases/`, `docs/reports/` 目錄
+  - 創建對應的英文目錄結構 `architecture/` 等
   - 為每個目錄創建 README.md 索引文件
   - _需求: 1.1, 1.2, 13.1_
 
 - [x] 1.2 遷移現有文檔到新結構
-  - 將現有的架構文檔移動到 `docs/architecture/` 目錄
-  - 將 API 相關文檔移動到 `docs/api/` 目錄
+  - 將現有的架構文檔移動到 `../architecture/` 目錄
+  - 將 API 相關文檔移動到 `../api/` 目錄
   - 將設計相關文檔移動到 `docs/design/` 目錄
   - 將報告文檔移動到 `docs/reports/` 目錄
   - _需求: 1.3, 3.1, 3.2_
@@ -62,31 +62,31 @@
   - _需求: 4.1, 5.1, 5.2, 5.3_
 
 - [x] 3.1 創建系統架構概覽圖
-  - 在 `docs/diagrams/mermaid/architecture-overview.md` 創建整體架構圖
+  - 在 `../diagrams/mermaid/architecture-overview.md` 創建整體架構圖
   - 包含External System、Application Layer、Domain Layer、Infrastructure Layer的完整視圖
   - 使用 emoji 和顏色增強可讀性
   - _需求: 5.1, 11.1, 11.2_
 
 - [x] 3.2 創建Hexagonal Architecture圖
-  - 在 `docs/diagrams/mermaid/hexagonal-architecture.md` 創建Hexagonal Architecture圖
+  - 在 `../diagrams/mermaid/hexagonal-architecture.md` 創建Hexagonal Architecture圖
   - 清晰展示Port與Adapter的分離
   - 標註入站和出站Port的區別
   - _需求: 5.2, 4.2, 11.1_
 
 - [x] 3.3 創建 DDD Layered Architecture圖
-  - 在 `docs/diagrams/mermaid/ddd-layered-architecture.md` 創建 DDD 分層圖
+  - 在 `../diagrams/mermaid/ddd-layered-architecture.md` 創建 DDD 分層圖
   - 展示表現層、Application Layer、Domain Layer、Infrastructure Layer的依賴關係
   - 包含 DDD 戰術模式的視覺表示
   - _需求: 5.2, 4.2, 11.1_
 
 - [x] 3.4 創建Event-Driven Architecture圖
-  - 在 `docs/diagrams/mermaid/event-driven-architecture.md` 創建事件架構圖
+  - 在 `../diagrams/mermaid/event-driven-architecture.md` 創建事件架構圖
   - 展示事件流、處理器和Aggregate Root的關係
   - 包含事件發布和訂閱機制
   - _需求: 5.4, 4.2, 11.1_
 
 - [x] 3.5 創建 API 交互圖
-  - 在 `docs/diagrams/mermaid/api-interactions.md` 創建 API 交互圖
+  - 在 `../diagrams/mermaid/api-interactions.md` 創建 API 交互圖
   - 展示前後端和External System的 API 調用關係
   - 包含認證和錯誤處理流程
   - _需求: 5.5, 10.4, 11.1_
@@ -102,43 +102,43 @@
   - _需求: 6.1, 6.2, 6.4, 6.8, 6.9, 6.11, 6.12_
 
 - [ ] 4.1.1 創建領域模型類圖
-  - 在 `docs/diagrams/plantuml/structural/domain-model-class-diagram.puml` 創建完整的領域模型
+  - 在 `../diagrams/plantuml/structural/domain-model-class-diagram.puml` 創建完整的領域模型
   - 包含所有Aggregate Root、Entity、Value Object的詳細關係
   - 使用標準 UML 類圖符號和 DDD 註解
   - _需求: 6.1, 11.5, 6.15_
 
 - [ ] 4.1.2 創建Aggregate Root詳細類圖
-  - 在 `docs/diagrams/plantuml/structural/aggregate-root-details.puml` 創建Aggregate Root內部結構圖
+  - 在 `../diagrams/plantuml/structural/aggregate-root-details.puml` 創建Aggregate Root內部結構圖
   - 展示Aggregate邊界和內部Entity關係
   - 包含Domain Event的觸發點和Specification Pattern
   - _需求: 6.2, 11.5, 6.15_
 
 - [ ] 4.1.3 創建對象圖
-  - 在 `docs/diagrams/plantuml/structural/object-diagrams.puml` 創建運行時實例圖
+  - 在 `../diagrams/plantuml/structural/object-diagrams.puml` 創建運行時實例圖
   - 展示具體的對象實例和它們之間的關係
   - 包含典型的業務場景實例
   - _需求: 6.9, 11.5, 6.15_
 
 - [ ] 4.1.4 創建系統組件圖
-  - 在 `docs/diagrams/plantuml/structural/component-diagram.puml` 創建組件關係圖
+  - 在 `../diagrams/plantuml/structural/component-diagram.puml` 創建組件關係圖
   - 展示系統各組件之間的依賴關係和接口
   - 包含Hexagonal Architecture的Port和Adapter
   - _需求: 6.4, 11.5, 6.15_
 
 - [ ] 4.1.5 創建Deployment圖
-  - 在 `docs/diagrams/plantuml/structural/deployment-diagram.puml` 創建Deployment架構圖
+  - 在 `../diagrams/plantuml/structural/deployment-diagram.puml` 創建Deployment架構圖
   - 展示系統在不同Environment中的Deployment架構
   - 包含 Docker、Kubernetes 和雲端Deployment視圖
   - _需求: 6.8, 11.5, 6.15_
 
 - [ ] 4.1.6 創建包圖
-  - 在 `docs/diagrams/plantuml/structural/package-diagram.puml` 創建包依賴圖
+  - 在 `../diagrams/plantuml/structural/package-diagram.puml` 創建包依賴圖
   - 展示系統模塊和包的依賴關係
   - 包含 DDD 有界上下文的包結構
   - _需求: 6.11, 11.5, 6.15_
 
 - [ ] 4.1.7 創建複合結構圖
-  - 在 `docs/diagrams/plantuml/structural/composite-structure-diagram.puml` 創建複合結構圖
+  - 在 `../diagrams/plantuml/structural/composite-structure-diagram.puml` 創建複合結構圖
   - 展示複雜組件的內部結構和協作
   - 包含Aggregate Root的內部結構和Port
   - _需求: 6.12, 11.5, 6.15_
@@ -149,19 +149,19 @@
   - _需求: 6.5, 6.6, 6.7_
 
 - [ ] 4.2.1 創建用例圖
-  - 在 `docs/diagrams/plantuml/behavioral/usecase-diagram.puml` 創建系統用例圖
+  - 在 `../diagrams/plantuml/behavioral/usecase-diagram.puml` 創建系統用例圖
   - 展示系統功能和用戶角色的關係
   - 包含主要業務用例和擴展點
   - _需求: 6.5, 11.5, 6.15_
 
 - [ ] 4.2.2 創建活動圖
-  - 在 `docs/diagrams/plantuml/behavioral/activity-diagrams.puml` 創建業務流程活動圖
+  - 在 `../diagrams/plantuml/behavioral/activity-diagrams.puml` 創建業務流程活動圖
   - 展示業務流程的詳細步驟和決策點
   - 包含並行處理和異常處理流程
   - _需求: 6.6, 11.5, 6.15_
 
 - [ ] 4.2.3 創建狀態圖
-  - 在 `docs/diagrams/plantuml/behavioral/state-diagrams.puml` 創建狀態轉換圖
+  - 在 `../diagrams/plantuml/behavioral/state-diagrams.puml` 創建狀態轉換圖
   - 展示Aggregate Root和Entity的狀態轉換
   - 包含狀態守衛條件和轉換動作
   - _需求: 6.7, 11.5, 6.15_
@@ -172,25 +172,25 @@
   - _需求: 6.3, 6.10, 6.13, 6.14_
 
 - [ ] 4.3.1 創建業務流程時序圖
-  - 在 `docs/diagrams/plantuml/interaction/sequence-diagrams/` 目錄創建各種時序圖
+  - 在 `../diagrams/plantuml/interaction/sequence-diagrams/` 目錄創建各種時序圖
   - 包含訂單處理、支付流程、庫存管理等核心業務流程
   - 展示跨層和跨Aggregate的交互序列
   - _需求: 6.3, 11.5, 6.15_
 
 - [ ] 4.3.2 創建通信圖
-  - 在 `docs/diagrams/plantuml/interaction/communication-diagrams.puml` 創建通信圖
+  - 在 `../diagrams/plantuml/interaction/communication-diagrams.puml` 創建通信圖
   - 展示對象間的消息傳遞和協作關係
   - 包含Domain Event的發布和訂閱模式
   - _需求: 6.10, 11.5, 6.15_
 
 - [ ] 4.3.3 創建交互概覽圖
-  - 在 `docs/diagrams/plantuml/interaction/interaction-overview-diagram.puml` 創建交互概覽圖
+  - 在 `../diagrams/plantuml/interaction/interaction-overview-diagram.puml` 創建交互概覽圖
   - 展示多個交互場景的概覽和流程控制
   - 包含複雜業務流程的高層視圖
   - _需求: 6.13, 11.5, 6.15_
 
 - [ ] 4.3.4 創建時間圖
-  - 在 `docs/diagrams/plantuml/interaction/timing-diagrams.puml` 創建時間圖
+  - 在 `../diagrams/plantuml/interaction/timing-diagrams.puml` 創建時間圖
   - 展示對象狀態隨時間的變化
   - 包含Event-Driven Architecture的時間序列
   - _需求: 6.14, 11.5, 6.15_
@@ -201,19 +201,19 @@
   - _需求: 7.1, 7.2, 7.3, 7.4_
 
 - [ ] 5.1 創建 Big Picture Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/big-picture.puml` 創建整體Event Storming圖
+  - 在 `../diagrams/plantuml/event-storming/big-picture.puml` 創建整體Event Storming圖
   - 使用標準 Event Storming 顏色：橙色Domain Event、藍色Command、黃色Aggregate Root、粉色External System、綠色Read Model、紫色政策、紅色Hotspot問題
   - 展示完整的業務流程事件流
   - _需求: 7.1, 7.4, 11.4_
 
 - [ ] 5.2 創建 Process Level Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/process-level.puml` 創建流程級Event Storming圖
+  - 在 `../diagrams/plantuml/event-storming/process-level.puml` 創建流程級Event Storming圖
   - 專注於特定業務流程的詳細事件
   - 包含External System和Read Model
   - _需求: 7.2, 7.4, 11.4_
 
 - [ ] 5.3 創建 Design Level Event Storming
-  - 在 `docs/diagrams/plantuml/event-storming/design-level.puml` 創建設計級Event Storming圖
+  - 在 `../diagrams/plantuml/event-storming/design-level.puml` 創建設計級Event Storming圖
   - 展示技術實現層面的事件設計
   - 包含Aggregate邊界和一致性規則
   - _需求: 7.3, 7.4, 11.4_
@@ -316,7 +316,7 @@
   - _需求: 11.1, 11.2, 11.3, 11.4_
 
 - [ ] 10.1 創建文檔維護指南
-  - 在 `docs/development/documentation-guide.md` 創建文檔維護指南
+  - 在 `../development/documentation-guide.md` 創建文檔維護指南
   - 定義文檔創建、更新、審核的標準流程
   - 包含圖表創建和維護的Best Practice
   - _需求: 8.4, 11.1, 11.2_

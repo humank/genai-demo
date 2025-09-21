@@ -28,7 +28,7 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 #### 多Environment架構圖
 
-![多Environment架構](docs/diagrams/multi_environment.svg)
+![多Environment架構](../diagrams/multi_environment.svg)
 
 *開發、測試、預生產和生產Environment的完整配置，包括Resource規格、成本優化和Environment間的Deployment流程*
 
@@ -41,7 +41,7 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 #### AWS 基礎設施架構圖
 
-![AWS 基礎設施架構](docs/diagrams/aws_infrastructure.svg)
+![AWS 基礎設施架構](../diagrams/aws_infrastructure.svg)
 
 *完整的 AWS 基礎設施架構，包括 CDK Stack、網路安全、容器平台、資料服務和Observability組件*
 

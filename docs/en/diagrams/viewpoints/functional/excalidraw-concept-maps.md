@@ -120,7 +120,7 @@ This document記錄了使用 Excalidraw MCP 生成的四個核心概念圖，這
 ## 相關文檔
 
 - [Functional Viewpoint文檔](../../viewpoints/functional/)
-- [領域模型設計](docs/en/viewpoints/functional/domain-model.md)
+- [領域模型設計](viewpoints/functional/domain-model.md)
 - \1
 - \1
 

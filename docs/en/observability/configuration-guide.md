@@ -319,7 +319,7 @@ genai-demo.${environment}.observability.business.analytics.dlq
 
 ### CDK 配置更新
 
-在 `infrastructure/lib/stacks/msk-stack.ts` 中的主題配置已包含Observability主題：
+在 `../../infrastructure/lib/stacks/msk-stack.ts` 中的主題配置已包含Observability主題：
 
 ```typescript
 const domainEventTopics = [

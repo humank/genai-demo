@@ -287,3 +287,5 @@ graph TB
 - \1
 - [DDD Architecture](../diagrams/ddd_architecture.mmd)
 - [Hexagonal Architecture](../diagrams/hexagonal_architecture.mmd)
+
+> **Note**: The AWS infrastructure diagram has been simplified to show core components (EKS, RDS, S3, CloudWatch, ALB). For detailed infrastructure including CDK stacks, networking, observability services, and complete multi-service architecture, refer to the infrastructure documentation and deployment guides.

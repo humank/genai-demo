@@ -158,7 +158,7 @@ cat .kiro/hooks/diagram-documentation-sync.kiro.hook
 find docs/diagrams -name "*.puml" -o -name "*.mmd" -o -name "*.excalidraw"
 
 # 檢查文件引用
-grep -r "diagrams.*\.puml\|diagrams.*\.mmd" docs/viewpoints/ docs/perspectives/
+grep -r "diagrams.*\.puml\|diagrams.*\.mmd" ../viewpoints/ docs/perspectives/
 
 # 驗證引用完整性
 python3 scripts/sync-diagram-references.py --validate --report

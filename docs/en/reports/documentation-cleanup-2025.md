@@ -31,8 +31,8 @@
 ### 重複的Refactoring文件 (4個)
 
 - `docs/shared-kernel-refactoring.md` - 過時的Shared KernelRefactoring文件
-- `docs/JPA_reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
-- `docs/DDD_ENTITY_reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
+- `docs/JPA_../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
+- `docs/DDD_ENTITY_../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
 
 ### 英文文檔清理 (4個)
 
@@ -47,20 +47,20 @@
 
 - 保持現有連結正確性
 
-### docs/api/README.md
+### ../api/README.md
 
 - 修復 `../README.md` → `../../README.md`
 - 修復 `../aws-eks-architecture.md` → `../DOCKER_GUIDE.md`
 
-### docs/api/API_VERSIONING_STRATEGY.md
+### ../api/API_VERSIONING_STRATEGY.md
 
 - 修復 `./MIGRATION_GUIDE.md` → `./SPRINGDOC_GROUPING_GUIDE.md`
 - 修復 `../DEVELOPER_GUIDE.md` → `../TECHNOLOGY_STACK_2025.md`
 
 ### docs/PROJECT_SUMMARY_2025.md
 
-- 修復 `domain-events.md` → `../.kiro/steering/domain-events.md`
-- 修復 `bdd-tdd-principles.md` → `../.kiro/steering/bdd-tdd-principles.md`
+- 修復 `domain-events.md` → `../../../.kiro/steering/domain-events.md`
+- 修復 `bdd-tdd-principles.md` → `../../../.kiro/steering/bdd-tdd-principles.md`
 
 ### docs/DOCKER_GUIDE.md
 

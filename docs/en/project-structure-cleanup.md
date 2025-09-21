@@ -27,9 +27,9 @@
 
 ### 移動到 `docs/reports/`
 
-- `reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md`
+- `../../reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/../../reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md`
 - `FINAL_TEST_ANALYSIS.md` → `docs/reports/FINAL_TEST_ANALYSIS.md`
-- `reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md` → `docs/reports/reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md`
+- `../../reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md` → `docs/reports/../../reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md`
 
 ### 移動到 `scripts/`
 
@@ -80,7 +80,7 @@ genai-demo/
 │   ├── setup/                 # Guidelines
 │   ├── cicd/                  # CI/CD 文檔
 │   └── ...                    # 其他文檔分類
-├── infrastructure/             # AWS CDK 基礎設施
+├── ../../infrastructure/             # AWS CDK 基礎設施
 ├── scripts/                    # Deployment
 ├── tools/                      # Tools
 ├── CHANGELOG.md               # 版本更新記錄

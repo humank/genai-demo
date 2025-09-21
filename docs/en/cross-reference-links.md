@@ -39,8 +39,8 @@
 - **[Bounded Context](viewpoints/functional/bounded-contexts.md)** ↔ **[Infrastructure as Code](viewpoints/deployment/infrastructure-as-code.md)**
 
 #### Related Diagrams
-- **[領域模型圖](docs/diagrams/plantuml/domain-model-diagram.svg)** - 完整領域模型視覺化
-- **[Bounded Context圖](docs/diagrams/plantuml/bounded-context-diagram.svg)** - 上下文劃分
+- **[領域模型圖](../diagrams/plantuml/domain-model-diagram.svg)** - 完整領域模型視覺化
+- **[Bounded Context圖](../diagrams/plantuml/bounded-context-diagram.svg)** - 上下文劃分
 - **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 業務流程分析
 
 ### Information Viewpoint (Information Viewpoint)
@@ -57,8 +57,8 @@
 - **[Architectural Element](viewpoints/information/architecture-elements.md)** ↔ **[Concurrency Viewpoint總覽](viewpoints/concurrency/README.md)**
 
 #### Related Diagrams
-- **[Event-Driven Architecture圖](docs/diagrams/event_driven_architecture.mmd)** - 事件驅動模式
-- **[Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 模式圖](docs/diagrams/plantuml/cqrs-pattern-diagram.svg)** - Command查詢責任分離
+- **[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)** - 事件驅動模式
+- **[Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 模式圖](../diagrams/plantuml/cqrs-pattern-diagram.svg)** - Command查詢責任分離
 - **[Event Storming 詳細分析](diagrams/plantuml/event-storming/)** - Big Picture、Process Level、Design Level
 
 ### Concurrency Viewpoint (Concurrency Viewpoint)
@@ -74,7 +74,7 @@
 - **非同步處理** ↔ **[Observability概覽](viewpoints/operational/observability-overview.md)**
 
 #### Related Diagrams
-- **[Event-Driven Architecture圖](docs/diagrams/event_driven_architecture.mmd)** - 並發事件處理
+- **[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)** - 並發事件處理
 - **[系統架構概覽圖](diagrams/mermaid/architecture-overview.md)** - 並發處理層
 
 ### Development Viewpoint (Development Viewpoint)
@@ -108,9 +108,9 @@
 - **[ObservabilityDeployment](viewpoints/deployment/observability-deployment.md)** ↔ **[生產Environment測試指南](viewpoints/operational/production-observability-testing-guide.md)**
 
 #### Related Diagrams
-- **[Deployment架構圖](docs/diagrams/plantuml/deployment-diagram.svg)** - 完整Deployment架構
-- **[AWS 基礎設施圖](docs/diagrams/aws_infrastructure.mmd)** - 雲端基礎設施
-- **[多Environment架構圖](docs/diagrams/multi_environment.mmd)** - Environment管理Policy
+- **[Deployment架構圖](../diagrams/plantuml/deployment-diagram.svg)** - 完整Deployment架構
+- **[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)** - 雲端基礎設施
+- **[多Environment架構圖](../diagrams/multi_environment.mmd)** - Environment管理Policy
 
 ### Operational Viewpoint (Operational Viewpoint)
 
@@ -127,8 +127,8 @@
 - **[配置指南](viewpoints/operational/configuration-guide.md)** ↔ **[Infrastructure as Code](viewpoints/deployment/infrastructure-as-code.md)**
 
 #### Related Diagrams
-- **[Observability架構圖](docs/diagrams/observability_architecture.mmd)** - Monitoring系統架構
-- **[Observability詳細圖](docs/diagrams/plantuml/observability-diagram.svg)** - Monitoring組件詳細設計
+- **[Observability架構圖](../diagrams/observability_architecture.mmd)** - Monitoring系統架構
+- **[Observability詳細圖](../diagrams/plantuml/observability-diagram.svg)** - Monitoring組件詳細設計
 
 ## 🎯 觀點間交叉引用
 
@@ -147,7 +147,7 @@
 - **[跨視點安全應用](perspectives/security/cross-viewpoint-application.md)** - 安全在各視點的具體實現
 
 #### Related Diagrams
-- **[安全架構圖](docs/diagrams/plantuml/security-architecture-diagram.svg)** - 完整安全Architecture Design
+- **[安全架構圖](../diagrams/plantuml/security-architecture-diagram.svg)** - 完整安全Architecture Design
 
 ### Performance & Scalability Perspective (Performance Perspective)
 
@@ -161,7 +161,7 @@
 
 #### Related Diagrams
 - **[系統Performance架構](diagrams/mermaid/architecture-overview.md)** - Performance關鍵路徑
-- **[事件驅動Performance](docs/diagrams/event_driven_architecture.mmd)** - 高Performance事件處理
+- **[事件驅動Performance](../diagrams/event_driven_architecture.mmd)** - 高Performance事件處理
 
 ### Availability & Resilience Perspective (Availability Perspective)
 
@@ -174,8 +174,8 @@
 - **[Operational ViewpointAvailability考量](viewpoints/operational/README.md)** - 故障檢測和自動恢復
 
 #### Related Diagrams
-- **[高可用架構](docs/diagrams/multi_environment.mmd)** - 多Environment高可用設計
-- **[災難恢復架構](docs/diagrams/aws_infrastructure.mmd)** - 災難恢復Policy
+- **[高可用架構](../diagrams/multi_environment.mmd)** - 多Environment高可用設計
+- **[災難恢復架構](../diagrams/aws_infrastructure.mmd)** - 災難恢復Policy
 
 ### Evolution Perspective (Evolution Perspective)
 
@@ -207,7 +207,7 @@
 - **[Operational Viewpoint法規考量](viewpoints/operational/README.md)** - 合規Monitoring和稽核支援
 
 #### Related Diagrams
-- **[合規架構圖](docs/diagrams/plantuml/observability-diagram.svg)** - 合規Monitoring和稽核
+- **[合規架構圖](../diagrams/plantuml/observability-diagram.svg)** - 合規Monitoring和稽核
 
 ### Location Perspective (Location Perspective)
 
@@ -217,7 +217,7 @@
 - **[Deployment Viewpoint位置考量](viewpoints/deployment/README.md)** - 地理分佈DeploymentPolicy
 
 #### Related Diagrams
-- **[地理分佈圖](docs/diagrams/aws_infrastructure.mmd)** - 多區域Deployment架構
+- **[地理分佈圖](../diagrams/aws_infrastructure.mmd)** - 多區域Deployment架構
 
 ### Cost Perspective (Cost Perspective)
 
@@ -229,7 +229,7 @@
 - **[Operational Viewpoint成本考量](viewpoints/operational/README.md)** - 運營成本Monitoring
 
 #### Related Diagrams
-- **[成本優化圖](docs/diagrams/multi_environment.mmd)** - 成本效益Architecture Design
+- **[成本優化圖](../diagrams/multi_environment.mmd)** - 成本效益Architecture Design
 
 ## 🔧 專業領域交叉引用
 
@@ -253,7 +253,7 @@
 
 #### 核心文檔
 - **[測試PerformanceMonitoring](testing/test-performance-monitoring.md)** ↔ **[Performance & Scalability Perspective](perspectives/performance/README.md)**
-- **[測試配置範例](docs/testing/test-configuration-examples.md)** ↔ **[Development Viewpoint](viewpoints/development/README.md)**
+- **[測試配置範例](../testing/test-configuration-examples.md)** ↔ **[Development Viewpoint](viewpoints/development/README.md)**
 
 ## 📊 圖表交叉引用
 
@@ -267,27 +267,27 @@
 - **[API 交互圖](diagrams/mermaid/api-interactions.md)** - 連結到Usability Perspective
 
 #### PlantUML 圖表 (詳細 UML)
-- **[領域模型圖](docs/diagrams/plantuml/domain-model-diagram.svg)** - 連結到Functional Viewpoint
-- **[Bounded Context圖](docs/diagrams/plantuml/bounded-context-diagram.svg)** - 連結到Functional Viewpoint
+- **[領域模型圖](../diagrams/plantuml/domain-model-diagram.svg)** - 連結到Functional Viewpoint
+- **[Bounded Context圖](../diagrams/plantuml/bounded-context-diagram.svg)** - 連結到Functional Viewpoint
 - **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 連結到Information Viewpoint
-- **[安全架構圖](docs/diagrams/plantuml/security-architecture-diagram.svg)** - 連結到Security Perspective
-- **[Deployment架構圖](docs/diagrams/plantuml/deployment-diagram.svg)** - 連結到Deployment Viewpoint
-- **[Observability圖](docs/diagrams/plantuml/observability-diagram.svg)** - 連結到Operational Viewpoint
+- **[安全架構圖](../diagrams/plantuml/security-architecture-diagram.svg)** - 連結到Security Perspective
+- **[Deployment架構圖](../diagrams/plantuml/deployment-diagram.svg)** - 連結到Deployment Viewpoint
+- **[Observability圖](../diagrams/plantuml/observability-diagram.svg)** - 連結到Operational Viewpoint
 
 ### 按視點分類的圖表
 
 #### Functional Viewpoint相關圖表
-- **[領域模型圖](docs/diagrams/plantuml/domain-model-diagram.svg)**
-- **[Bounded Context圖](docs/diagrams/plantuml/bounded-context-diagram.svg)**
-- **[用例圖](docs/diagrams/plantuml/use-case-diagram.svg)**
+- **[領域模型圖](../diagrams/plantuml/domain-model-diagram.svg)**
+- **[Bounded Context圖](../diagrams/plantuml/bounded-context-diagram.svg)**
+- **[用例圖](../diagrams/plantuml/use-case-diagram.svg)**
 
 #### Information Viewpoint相關圖表
 - **[Event Storming 系列](diagrams/plantuml/event-storming/)**
-- **[Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 模式圖](docs/diagrams/plantuml/cqrs-pattern-diagram.svg)**
-- **[Event Sourcing圖](docs/diagrams/plantuml/event-sourcing-diagram.svg)**
+- **[Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 模式圖](../diagrams/plantuml/cqrs-pattern-diagram.svg)**
+- **[Event Sourcing圖](../diagrams/plantuml/event-sourcing-diagram.svg)**
 
 #### Concurrency Viewpoint相關圖表
-- **[Event-Driven Architecture圖](docs/diagrams/event_driven_architecture.mmd)**
+- **[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)**
 - **[並發處理圖](diagrams/mermaid/architecture-overview.md)**
 
 #### Development Viewpoint相關圖表
@@ -295,13 +295,13 @@
 - **[DDD Layered Architecture圖](diagrams/mermaid/ddd-layered-architecture.md)**
 
 #### Deployment
-- **[Deployment架構圖](docs/diagrams/plantuml/deployment-diagram.svg)**
-- **[AWS 基礎設施圖](docs/diagrams/aws_infrastructure.mmd)**
-- **[多Environment架構圖](docs/diagrams/multi_environment.mmd)**
+- **[Deployment架構圖](../diagrams/plantuml/deployment-diagram.svg)**
+- **[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)**
+- **[多Environment架構圖](../diagrams/multi_environment.mmd)**
 
 #### Operational Viewpoint相關圖表
-- **[Observability架構圖](docs/diagrams/observability_architecture.mmd)**
-- **[Observability詳細圖](docs/diagrams/plantuml/observability-diagram.svg)**
+- **[Observability架構圖](../diagrams/observability_architecture.mmd)**
+- **[Observability詳細圖](../diagrams/plantuml/observability-diagram.svg)**
 
 ## 🎯 使用recommendations
 

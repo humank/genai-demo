@@ -31,13 +31,13 @@ Information Viewpoint描述系統如何儲存、操作、管理和分發資訊�
 
 #### Event-Driven Architecture圖
 
-![Event-Driven Architecture](docs/diagrams/event_driven_architecture.svg)
+![Event-Driven Architecture](../diagrams/event_driven_architecture.svg)
 
 *完整的Event-Driven Architecture，展示Domain Event的產生、發布、處理和監聽流程，包括 Saga 模式的協調機制*
 
 #### Information Viewpoint詳細架構
 
-![Information Viewpoint詳細架構](docs/diagrams/viewpoints/information/information-detailed.svg)
+![Information Viewpoint詳細架構](../diagrams/viewpoints/information/information-detailed.svg)
 
 *Information Viewpoint的詳細Architecture Design，包括資料模型、資訊流和事件處理的完整實現*
 

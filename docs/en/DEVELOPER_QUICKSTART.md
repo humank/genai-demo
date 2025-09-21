@@ -235,15 +235,15 @@ log.info("Order processed successfully",
 
 ### Design
 
-- [DDD 實踐指南](docs/design/ddd-guide.md)
-- [Hexagonal Architecture說明](docs/diagrams/hexagonal-architecture.md)
+- [DDD 實踐指南](../../design/ddd-guide.md)
+- [Hexagonal Architecture說明](../diagrams/hexagonal-architecture.md)
 - \1
 
 ### Standards
 
-- [代碼審查標準](.kiro/steering/code-review-standards.md)
-- [開發標準](.kiro/steering/development-standards.md)
-- [安全標準](.kiro/steering/security-standards.md)
+- [代碼審查標準](../../.kiro/steering/code-review-standards.md)
+- [開發標準](../../.kiro/steering/development-standards.md)
+- [安全標準](../../.kiro/steering/security-standards.md)
 
 ### API 文檔
 

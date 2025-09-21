@@ -29,13 +29,13 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 
 #### DDD Layered Architecture
 
-![DDD Layered Architecture](docs/diagrams/viewpoints/development/ddd-layered-architecture.svg)
+![DDD Layered Architecture](../diagrams/viewpoints/development/ddd-layered-architecture.svg)
 
 *完整的 DDD Layered Architecture設計，展示各層的職責和依賴關係*
 
 #### Hexagonal Architecture
 
-![Hexagonal Architecture](docs/diagrams/viewpoints/development/hexagonal-architecture.svg)
+![Hexagonal Architecture](../diagrams/viewpoints/development/hexagonal-architecture.svg)
 
 *Hexagonal Architecture實現，展示Port和Adapter模式在開發中的應用*
 
@@ -163,7 +163,7 @@ Development Viewpoint關注系統的開發和建置過程，包括模組結構�
 
 - [Hexagonal ArchitectureImplementation Guide](hexagonal-architecture.md) - Hexagonal Architecture的具體實現
 - \1 - 程式碼組織和套件設計
-- [編碼標準](docs/development/coding-standards.md) - Code Quality和風格指南
+- [編碼標準](../development/coding-standards.md) - Code Quality和風格指南
 - \1 - 測試方法和Best Practice
 - \1 - Gradle 建置配置和優化
 - [開發工作流程](development-workflow.md) - AI-DLC 開發流程指南

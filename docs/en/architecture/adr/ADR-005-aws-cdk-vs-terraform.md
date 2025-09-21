@@ -43,7 +43,7 @@ We choose **AWS CDK (Cloud Development Kit) with TypeScript** as our primary Inf
 #### Project Structure
 
 ```typescript
-infrastructure/
+../../infrastructure/
 ├── bin/
 │   ├── infrastructure.ts          // Main deployment entry
 │   ├── multi-region-deployment.ts // Multi-region orchestration

@@ -15,13 +15,13 @@
 
 #### 移動的文件
 
-- `DDD_RECORD_reports-summaries/project-management/REFACTORING_SUMMARY.md` → `docs/reports/reports-summaries/architecture-design/ddd-record-refactoring-summary.md`
+- `DDD_RECORD_../../reports-summaries/project-management/REFACTORING_SUMMARY.md` → `docs/reports/../../reports-summaries/architecture-design/ddd-record-refactoring-summary.md`
 
 #### 刪除的目錄
 
-- `images/` - 內容已移動到 `docs/diagrams/`
+- `images/` - 內容已移動到 `../diagrams/`
 - `src/` - 空目錄，已刪除
-- `aidlc/` - 內容已移動到 `docs/development/`
+- `aidlc/` - 內容已移動到 `../development/`
 
 ### docs 目錄重組
 
@@ -29,9 +29,9 @@
 
 - `CodeAnalysis.md` → `docs/reports/code-analysis.md`
 - `DesignGuideline.MD` → `docs/design/design-guidelines.md`
-- `HexagonalRefactoring.MD` → `docs/architecture/hexagonal-refactoring.md`
+- `HexagonalRefactoring.MD` → `../architecture/hexagonal-refactoring.md`
 - `JPA_REFACTORING_COMPLETED.md` → `docs/reports/jpa-refactoring-completed.md`
-- `LayeredArchitectureDesign.MD` → `docs/architecture/layered-architecture-design.md`
+- `LayeredArchitectureDesign.MD` → `../architecture/layered-architecture-design.md`
 - `SoftwareDesignClassics.md` → `docs/design/software-design-classics.md`
 - `test-fixes-complete-2025.md` → `docs/reports/test-fixes-complete-2025.md`
 - `UpgradeJava17to21.md` → `docs/reports/upgrade-java17to21.md`
@@ -39,7 +39,7 @@
 #### 重組的目錄
 
 - `docs/requirements/promotion-pricing/` → `docs/design/promotion-pricing/`
-- `docs/uml/` → `docs/diagrams/legacy-uml/`
+- `docs/uml/` → `../diagrams/legacy-uml/`
 
 #### 刪除的空目錄
 
@@ -193,9 +193,9 @@ docs/
 |--------|--------|------|
 | `docs/CodeAnalysis.md` | `docs/reports/code-analysis.md` | 代碼分析報告 |
 | `docs/DesignGuideline.MD` | `docs/design/design-guidelines.md` | 設計指南 |
-| `docs/uml/` | `docs/diagrams/legacy-uml/` | 舊版 UML 圖表 |
-| `images/` | `docs/diagrams/` | 圖片文件 |
-| `aidlc/` | `docs/development/` | 開發相關文檔 |
+| `docs/uml/` | `../diagrams/legacy-uml/` | 舊版 UML 圖表 |
+| `images/` | `../diagrams/` | 圖片文件 |
+| `aidlc/` | `../development/` | 開發相關文檔 |
 
 ### 問題回報
 

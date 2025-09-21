@@ -223,13 +223,13 @@ endlegend
 
 ```bash
 # 生成 PNG 圖片
-java -jar tools/plantuml.jar -tpng docs/diagrams/plantuml/*.puml
+java -jar tools/plantuml.jar -tpng ../diagrams/plantuml/*.puml
 
 # 生成 SVG 圖片
-java -jar tools/plantuml.jar -tsvg docs/diagrams/plantuml/*.puml
+java -jar tools/plantuml.jar -tsvg ../diagrams/plantuml/*.puml
 
 # 檢查語法
-java -jar tools/plantuml.jar -checkonly docs/diagrams/plantuml/*.puml
+java -jar tools/plantuml.jar -checkonly ../diagrams/plantuml/*.puml
 ```
 
 ### 2. 自動化腳本
@@ -241,7 +241,7 @@ java -jar tools/plantuml.jar -checkonly docs/diagrams/plantuml/*.puml
 echo "生成標準化 UML 圖表..."
 
 # 生成所有 PlantUML 圖表
-find docs/diagrams/plantuml -name "*.puml" -exec java -jar tools/plantuml.jar -tpng {} \;
+find ../diagrams/plantuml -name "*.puml" -exec java -jar tools/plantuml.jar -tpng {} \;
 
 echo "圖表生成完成！"
 ```
@@ -253,7 +253,7 @@ echo "圖表生成完成！"
 # .git/hooks/pre-commit
 
 # 檢查 PlantUML 語法
-java -jar tools/plantuml.jar -checkonly docs/diagrams/plantuml/*.puml
+java -jar tools/plantuml.jar -checkonly ../diagrams/plantuml/*.puml
 
 if [ $? -ne 0 ]; then
     echo "PlantUML 語法錯誤，請修正後再提交"

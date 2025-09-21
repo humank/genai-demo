@@ -1088,4 +1088,4 @@ echo "=== 合規性檢查完成 ==="
 - [配置指南](../observability/configuration-guide.md)
 - [API 文檔](../api/observability-api.md)
 - [故障排除指南](../troubleshooting/observability-troubleshooting.md)
-- [架構文檔](docs/architecture/observability-architecture.md)
+- [架構文檔](../../architecture/observability-architecture.md)

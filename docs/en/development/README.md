@@ -5,10 +5,10 @@
 
 ## 文檔列表
 
-- [快速入門](docs/development/getting-started.md) - 專案快速入門指南
-- [編碼標準](docs/development/coding-standards.md) - 編碼規範和Best Practice
-- [測試指南](docs/development/testing-guide.md) - 測試Policy和實踐
-- [文檔維護指南](docs/development/documentation-guide.md) - 文檔創建和維護指南
+- [快速入門](../../development/getting-started.md) - 專案快速入門指南
+- [編碼標準](../../development/coding-standards.md) - 編碼規範和Best Practice
+- [測試指南](../../development/testing-guide.md) - 測試Policy和實踐
+- [文檔維護指南](../../development/documentation-guide.md) - 文檔創建和維護指南
 
 ## 開發Environment
 

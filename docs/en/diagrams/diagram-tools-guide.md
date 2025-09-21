@@ -59,7 +59,7 @@ graph TB
 ### 目錄結構
 
 ```
-docs/diagrams/viewpoints/
+../diagrams/viewpoints/
 ├── functional/
 │   ├── system-overview.mmd              # Overview
 │   ├── bounded-contexts.mmd             # Bounded Context圖
@@ -125,7 +125,7 @@ Customer --> CustomerId : uses
 ### 目錄結構
 
 ```
-docs/diagrams/viewpoints/
+../diagrams/viewpoints/
 ├── functional/
 │   ├── domain-model-class.puml         # 領域模型類圖
 │   ├── aggregate-details.puml          # Design
@@ -221,7 +221,7 @@ const conceptDiagram = await excalidrawMCP.createDiagram({
 ### 目錄結構
 
 ```
-docs/diagrams/concepts/
+../diagrams/concepts/
 ├── architecture-brainstorm.excalidraw  # 架構腦力激盪
 ├── design-sketches.excalidraw          # Design
 ├── stakeholder-mapping.excalidraw      # Stakeholder對應圖
@@ -238,8 +238,8 @@ name: Generate Diagrams
 on:
   push:
     paths:
-      - 'docs/diagrams/**/*.puml'
-      - 'docs/diagrams/**/*.excalidraw'
+      - '../diagrams/**/*.puml'
+      - '../diagrams/**/*.excalidraw'
 
 jobs:
   generate-diagrams:
@@ -250,7 +250,7 @@ jobs:
       - name: Generate PlantUML diagrams
         uses: cloudbees/plantuml-github-action@master
         with:
-          args: -v -tpng docs/diagrams/**/*.puml
+          args: -v -tpng ../diagrams/**/*.puml
           
       - name: Generate Excalidraw PNGs
         run: |
@@ -261,7 +261,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add docs/diagrams/**/*.png
+          git add ../diagrams/**/*.png
           git commit -m "Auto-generate diagram images" || exit 0
           git push
 ```
@@ -330,7 +330,7 @@ echo "✅ 所有圖表生成完成！"
 wget https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar -O tools/plantuml.jar
 
 # 生成圖表
-java -jar tools/plantuml.jar -tpng docs/diagrams/**/*.puml
+java -jar tools/plantuml.jar -tpng ../diagrams/**/*.puml
 ```
 
 ### Mermaid CLI 設置

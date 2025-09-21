@@ -3772,7 +3772,7 @@ stateDiagram-v2
 #### ADR Directory Structure
 
 ```
-docs/architecture/decisions/
+../architecture/decisions/
 ├── README.md                           # ADR index and process
 ├── template.md                         # MADR template
 ├── ADR-001-aws-cdk-infrastructure.md   # Infrastructure decisions

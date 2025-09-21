@@ -90,7 +90,7 @@ python3 scripts/validate-diagrams.py
 python3 scripts/test-user-experience.py
 
 # View test reports
-cat reports-summaries/testing/user-experience-test-report.md
+cat ../../reports-summaries/testing/user-experience-test-report.md
 ```
 
 ## Content Maintenance Standards

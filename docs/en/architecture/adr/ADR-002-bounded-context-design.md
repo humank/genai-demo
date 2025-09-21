@@ -175,7 +175,7 @@ solid.humank.genaidemo/
 │   ├── customer/          # Customer用例
 │   ├── order/             # 訂單用例
 │   └── ...                # 其他用例
-└── infrastructure/
+└── ../../infrastructure/
     ├── persistence/       # 持久化實現
     └── messaging/         # 訊息處理
 ```

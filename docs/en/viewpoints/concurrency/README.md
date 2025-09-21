@@ -26,7 +26,7 @@ Concurrency Viewpoint描述系統的並發結構和執行時行為，關注多�
 
 #### 非同步處理架構
 
-![非同步處理架構](docs/diagrams/viewpoints/concurrency/async-processing.svg)
+![非同步處理架構](../diagrams/viewpoints/concurrency/async-processing.svg)
 
 *完整的非同步處理架構，包括同步處理層、非同步處理層、事件驅動處理和背景任務處理機制*
 

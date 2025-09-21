@@ -12,9 +12,9 @@
   - _需求: 需求 1, 需求 7_
 
 - [x] 2. 建立新的文件目錄結構
-  - 建立 `docs/viewpoints/` 目錄結構，包含 7 大 Viewpoints
+  - 建立 `../viewpoints/` 目錄結構，包含 7 大 Viewpoints
   - 建立 `docs/perspectives/` 目錄結構，包含 8 大 Perspectives  
-  - 建立對應的圖表目錄結構 `docs/diagrams/viewpoints/` 和 `docs/diagrams/perspectives/`
+  - 建立對應的圖表目錄結構 `../diagrams/viewpoints/` 和 `../diagrams/perspectives/`
   - 保留 `docs/legacy/` 目錄存放現有圖表
   - _需求: 需求 1_
 
@@ -85,7 +85,7 @@
   - 將 `development/` 相關文件遷移到 `viewpoints/development/`
   - 將 `deployment/` 相關文件遷移到 `viewpoints/deployment/`
   - 將 `observability/` 相關文件遷移到 `viewpoints/operational/`
-  - 將 `infrastructure/` CDK 相關文件整合到 `viewpoints/deployment/infrastructure-as-code.md`
+  - 將 `../../infrastructure/` CDK 相關文件整合到 `viewpoints/deployment/infrastructure-as-code.md`
   - _需求: 需求 1_
 
 - [x] 8. 更新和現代化 DDD 相關內容
@@ -120,7 +120,7 @@
     - 新增18個Policy性引用，增強文件覆蓋率
     - 識別35個孤立圖表和77個缺失圖表，建立整合計劃
     - 建立自動化同步系統，支援未來架構演進
-    - 生成詳細分析報告：reports-summaries/diagrams/diagram-sync-comprehensive-analysis-report.md
+    - 生成詳細分析報告：../../reports-summaries/diagrams/diagram-sync-comprehensive-analysis-report.md
   - _需求: 需求 4_
 
 - [x] 10. 建立完整的 Viewpoints & Perspectives 文件和圖表矩陣

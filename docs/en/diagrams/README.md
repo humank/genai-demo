@@ -32,7 +32,7 @@
 ### 📁 按 Viewpoints 組織
 
 ```
-docs/diagrams/
+../../diagrams/
 ├── viewpoints/                      # 七大Architectural Viewpoint
 │   ├── functional/                  # Functional Viewpoint
 │   │   ├── system-overview.mmd     # Overview
@@ -75,10 +75,10 @@ docs/diagrams/
 
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
-| [系統概覽](docs/diagrams/viewpoints/functional/system-overview.mmd) | Mermaid | 完整系統架構概覽，展示7層架構和組件關係 | ✅ 新增 |
-| [Hexagonal Architecture](docs/diagrams/hexagonal_architecture.mmd) | Mermaid | Port和Adapter架構 | ✅ 已更新 |
-| [DDD Layered Architecture](docs/diagrams/ddd_architecture.mmd) | Mermaid | Domain-Driven Design分層 | ✅ 已更新 |
-| [Event-Driven Architecture](docs/diagrams/event_driven_architecture.mmd) | Mermaid | 事件處理機制 | ✅ 已更新 |
+| [系統概覽](../../diagrams/viewpoints/functional/system-overview.mmd) | Mermaid | 完整系統架構概覽，展示7層架構和組件關係 | ✅ 新增 |
+| [Hexagonal Architecture](../../diagrams/hexagonal_architecture.mmd) | Mermaid | Port和Adapter架構 | ✅ 已更新 |
+| [DDD Layered Architecture](../../diagrams/ddd_architecture.mmd) | Mermaid | Domain-Driven Design分層 | ✅ 已更新 |
+| [Event-Driven Architecture](../../diagrams/event_driven_architecture.mmd) | Mermaid | 事件處理機制 | ✅ 已更新 |
 
 ### 領域模型圖表
 
@@ -102,12 +102,12 @@ docs/diagrams/
 | 圖表 | 類型 | 描述 | 狀態 |
 |------|------|------|------|
 | **[AWS 基礎設施架構](aws-infrastructure.md)** | **Mermaid** | **完整 AWS CDK 基礎設施架構文檔** | **✅ 新增** |
-| [AWS 基礎設施圖表](docs/diagrams/aws_infrastructure.mmd) | Mermaid | AWS 服務架構圖 | ✅ 已更新 |
-| [多Environment架構](docs/diagrams/multi_environment.mmd) | Mermaid | 開發/測試/生產Environment | ✅ 已更新 |
-| [Observability架構](docs/diagrams/observability_architecture.mmd) | Mermaid | Monitoring、Logging、Tracing系統 | ✅ 已更新 |
-| [基礎設施概覽](docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd) | Mermaid | 雲端基礎設施架構 | ✅ 已更新 |
-| [Monitoring架構](docs/diagrams/viewpoints/operational/monitoring-architecture.mmd) | Mermaid | Observability平台 | ✅ 已更新 |
-| [非同步處理](docs/diagrams/viewpoints/concurrency/async-processing.mmd) | Mermaid | 並發和非同步架構 | ✅ 已更新 |
+| [AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd) | Mermaid | AWS 服務架構圖 | ✅ 已更新 |
+| [多Environment架構](../../diagrams/multi_environment.mmd) | Mermaid | 開發/測試/生產Environment | ✅ 已更新 |
+| [Observability架構](../../diagrams/observability_architecture.mmd) | Mermaid | Monitoring、Logging、Tracing系統 | ✅ 已更新 |
+| [基礎設施概覽](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd) | Mermaid | 雲端基礎設施架構 | ✅ 已更新 |
+| [Monitoring架構](../../diagrams/viewpoints/operational/monitoring-architecture.mmd) | Mermaid | Observability平台 | ✅ 已更新 |
+| [非同步處理](../../diagrams/viewpoints/concurrency/async-processing.mmd) | Mermaid | 並發和非同步架構 | ✅ 已更新 |
 
 ## 🔄 自動化圖表生成
 

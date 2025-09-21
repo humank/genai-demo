@@ -36,13 +36,13 @@ docs/templates/
 4. 確保所有必填欄位都已完成
 
 **命名規範**:
-- 檔案路徑: `docs/viewpoints/{viewpoint}/README.md`
-- 具體文件: `docs/viewpoints/{viewpoint}/{specific-topic}.md`
+- 檔案路徑: `../viewpoints/{viewpoint}/README.md`
+- 具體文件: `../viewpoints/{viewpoint}/{specific-topic}.md`
 
 **範例**:
 ```bash
 # 創建Functional Viewpoint文件
-cp docs/templates/viewpoint-template.md docs/viewpoints/functional/domain-model.md
+cp docs/templates/viewpoint-template.md ../viewpoints/functional/domain-model.md
 
 # 編輯元資料
 # 將 viewpoint: "[viewpoint]" 改為 viewpoint: "functional"
@@ -126,7 +126,7 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 ./scripts/validate-metadata.sh
 
 # 檢查特定目錄
-./scripts/validate-metadata.sh docs/viewpoints/
+./scripts/validate-metadata.sh ../viewpoints/
 
 # 生成元資料報告
 ./scripts/generate-metadata-report.sh
@@ -157,7 +157,7 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 
 ```bash
 # 觸發自動翻譯
-./scripts/trigger-translation.sh docs/viewpoints/functional/domain-model.md
+./scripts/trigger-translation.sh ../viewpoints/functional/domain-model.md
 
 # 檢查翻譯狀態
 ./scripts/check-translation-status.sh

@@ -6,12 +6,12 @@ This system提供全自動的圖表生成和管理，支援最大化目錄覆蓋
 ## 🎯 系統特色
 
 ### ✅ 最大化目錄支援
-- **Event Storming**: `docs/diagrams/plantuml/event-storming/`
-- **UML 圖表**: `docs/diagrams/plantuml/`
-- **結構圖**: `docs/diagrams/plantuml/structural/`
-- **Domain Event**: `docs/diagrams/plantuml/domain-event-handling/`
-- **視點圖表**: `docs/diagrams/viewpoints/*/`
-- **觀點圖表**: `docs/diagrams/perspectives/*/`
+- **Event Storming**: `../diagrams/plantuml/event-storming/`
+- **UML 圖表**: `../diagrams/plantuml/`
+- **結構圖**: `../diagrams/plantuml/structural/`
+- **Domain Event**: `../diagrams/plantuml/domain-event-handling/`
+- **視點圖表**: `../diagrams/viewpoints/*/`
+- **觀點圖表**: `../diagrams/perspectives/*/`
 
 ### Standards
 - **Event Storming**: 官方標準配色 (橙色事件、紅色Hotspot、黃色Actor)
@@ -64,10 +64,10 @@ python3 scripts/diagram-automation-manager.py setup
   "patterns": [
     "app/src/main/java/**/*.java",           // Java 程式碼變更
     "app/src/test/resources/features/**/*.feature", // BDD 功能檔案
-    "docs/diagrams/**/*.puml",               // PlantUML 圖表
-    "docs/diagrams/**/*.mmd",                // Mermaid 圖表
-    "docs/diagrams/**/*.md",                 // 圖表文檔
-    "docs/architecture/**/*.md",             // 架構文檔
+    "../diagrams/**/*.puml",               // PlantUML 圖表
+    "../diagrams/**/*.mmd",                // Mermaid 圖表
+    "../diagrams/**/*.md",                 // 圖表文檔
+    "../architecture/**/*.md",             // 架構文檔
     "docs/design/**/*.md"                    // 設計文檔
   ]
 }
@@ -239,7 +239,7 @@ export DEBUG=1
 ./scripts/generate-standardized-diagrams.sh
 
 # 檢查特定目錄
-java -jar tools/plantuml.jar -checkonly docs/diagrams/plantuml/event-storming/*.puml
+java -jar tools/plantuml.jar -checkonly ../diagrams/plantuml/event-storming/*.puml
 ```
 
 ## 🎨 自訂配色
@@ -267,7 +267,7 @@ skinparam rectangle {
 ## 📚 相關文檔
 
 - [Event Storming 標準化指南](README.md)
-- [UML 2.5 標準化指南](docs/diagrams/plantuml/UML-STANDARDS.md)
+- [UML 2.5 標準化指南](../diagrams/plantuml/UML-STANDARDS.md)
 - [圖表總覽](README.md)
 - \1
 - \1

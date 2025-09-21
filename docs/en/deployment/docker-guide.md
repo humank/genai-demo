@@ -241,4 +241,4 @@ logging:
 
 - [README.md](../README.md) - 專案概述
 - \1 - 完整的專案成果summary
-- [API_VERSIONING_STRATEGY.md](docs/api/API_VERSIONING_STRATEGY.md) - API 版本管理
+- [API_VERSIONING_STRATEGY.md](../api/API_VERSIONING_STRATEGY.md) - API 版本管理

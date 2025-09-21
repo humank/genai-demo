@@ -345,5 +345,5 @@ graph TB
 
 - \1 - 完整的專案成果summary
 - \1 - 詳細的Architecture Assessment和分析
-- [DDD Record Refactoringsummary](reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record Refactoring的詳細過程
-- [測試修復完成報告](docs/en/reports/test-fixes-complete-2025.md) - 測試品質改善的完整記錄
+- [DDD Record Refactoringsummary](../../reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record Refactoring的詳細過程
+- [測試修復完成報告](../reports/test-fixes-complete-2025.md) - 測試品質改善的完整記錄

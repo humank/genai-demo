@@ -179,12 +179,12 @@ docker-compose up -d
 
 ### 🎯 Navigation by Learning Goals
 - **Learn Modern Architecture** → [Architecture Viewpoints Documentation](README.md)
-- **Learn DDD Practices** → [Domain-Driven Design](docs/en/viewpoints/functional/domain-model.md)
+- **Learn DDD Practices** → [Domain-Driven Design](viewpoints/functional/domain-model.md)
 - **Learn Testing Strategy** → \1
 - **Learn AI-Assisted Development** → [MCP Integration Guide](README.md)
 
 ### 👨‍💼 Navigation by Role
-- **Architect** → [Rozanski & Woods Assessment](docs/architecture/rozanski-woods-architecture-assessment.md)
+- **Architect** → [Rozanski & Woods Assessment](../architecture/rozanski-woods-architecture-assessment.md)
 - **Developer** → [Development Standards](README.md)
 - **DevOps** → [Deployment and Operations](README.md)
 - **QA Engineer** → \1
@@ -298,7 +298,7 @@ cd cmc-frontend && npm run dev
 ### Hexagonal Architecture + DDD Layering
 
 ```
-interfaces/ → application/ → domain/ ← infrastructure/
+interfaces/ → application/ → domain/ ← ../../infrastructure/
 ```
 
 - **Domain Layer**: Business logic + Aggregate Root + Value Object + Domain Event + Specification Pattern
@@ -523,19 +523,19 @@ http://localhost:8080/h2-console  # Database management interface
 
 ## 📋 Development Standards & Specifications - NEW
 
-The project has established a complete development standards system, located in the `.kiro/steering/` directory:
+The project has established a complete development standards system, located in the `../../.kiro/steering/` directory:
 
 ### 🎯 Core Development Standards
 
-- **[Development Standards](/.kiro/steering/development-standards.md)**: Technology stack, error handling, API design, testing strategy
-- **[Security Standards](/.kiro/steering/security-standards.md)**: Authentication authorization, data protection, input validation, security testing
-- **[Performance Standards](/.kiro/steering/performance-standards.md)**: Response time, throughput, caching strategy, performance monitoring
-- **[Code Review Standards](/.kiro/steering/code-review-standards.md)**: Review process, quality checks, feedback guidelines
-- **[Test Performance Standards](/.kiro/steering/test-performance-standards.md)**: Test monitoring, resource management, performance optimization
+- **[Development Standards](../../.kiro/steering/development-standards.md)**: Technology stack, error handling, API design, testing strategy
+- **[Security Standards](../../.kiro/steering/security-standards.md)**: Authentication authorization, data protection, input validation, security testing
+- **[Performance Standards](../../.kiro/steering/performance-standards.md)**: Response time, throughput, caching strategy, performance monitoring
+- **[Code Review Standards](../../.kiro/steering/code-review-standards.md)**: Review process, quality checks, feedback guidelines
+- **[Test Performance Standards](../../.kiro/steering/test-performance-standards.md)**: Test monitoring, resource management, performance optimization
 
 ### 🏗️ Architecture Methodology
 
-- **[Rozanski & Woods Architecture Methodology](/.kiro/steering/rozanski-woods-architecture-methodology.md)**:
+- **[Rozanski & Woods Architecture Methodology](../../.kiro/steering/rozanski-woods-architecture-methodology.md)**:
   - Mandatory architectural viewpoint checks (functional, information, concurrency, development, deployment, operational)
   - Quality attribute scenario requirements (performance, security, availability, scalability, usability)
   - Architecture compliance rules and ArchUnit tests
@@ -543,7 +543,7 @@ The project has established a complete development standards system, located in 
 
 ### 📐 Domain Event Design
 
-- **[Domain Event Guide](/.kiro/steering/domain-events.md)**:
+- **[Domain Event Guide](../../.kiro/steering/domain-events.md)**:
   - Event definition and collection standards
   - Event handling and publishing mechanisms
   - Event versioning and backward compatibility
@@ -569,20 +569,20 @@ The project includes rich documentation, organized by functional categories:
 
 ### 🎯 Quick Navigation
 
-- **👨‍💼 Project Manager**: [Project Summary 2025](reports-summaries/project-management/project-summary-2025.md) | [Architecture Overview](docs/diagrams/architecture-overview.md)
+- **👨‍💼 Project Manager**: [Project Summary 2025](../../reports-summaries/project-management/project-summary-2025.md) | [Architecture Overview](../diagrams/architecture-overview.md)
 - **🏗️ Architect**: \1 | \1 | \1
-- **👨‍💻 Developer**: \1 | \1 | [Development Instructions](docs/development/instructions.md)
+- **👨‍💻 Developer**: \1 | \1 | [Development Instructions](../development/instructions.md)
 - **🚀 DevOps**: \1 | [Docker Guide](../viewpoints/deployment/docker-guide.md)
-- **🔍 Observability**: [Production Observability Testing Guide](docs/viewpoints/operational/production-observability-testing-guide.md) | \1
+- **🔍 Observability**: [Production Observability Testing Guide](../viewpoints/operational/production-observability-testing-guide.md) | \1
 - **🤖 MCP Integration**: \1 | [AI-Assisted Development](README.md)
 
 ### 📊 Core Diagrams (Mermaid - Direct GitHub Display)
 
-- [🏗️ System Architecture Overview](docs/diagrams/architecture-overview.md) - Complete system architecture diagram
-- [🔵 Hexagonal Architecture](docs/diagrams/hexagonal-architecture.md) - Ports and adapters architecture
-- [🏛️ DDD Layered Architecture](docs/diagrams/mermaid/ddd-layered-architecture.md) - Domain-driven design layering
-- [⚡ Event-Driven Architecture](docs/diagrams/mermaid/event-driven-architecture.md) - Event processing mechanisms
-- [🔌 API Interaction Diagram](docs/diagrams/mermaid/api-interactions.md) - API call relationships
+- [🏗️ System Architecture Overview](../diagrams/architecture-overview.md) - Complete system architecture diagram
+- [🔵 Hexagonal Architecture](../diagrams/hexagonal-architecture.md) - Ports and adapters architecture
+- [🏛️ DDD Layered Architecture](../diagrams/mermaid/ddd-layered-architecture.md) - Domain-driven design layering
+- [⚡ Event-Driven Architecture](../diagrams/mermaid/event-driven-architecture.md) - Event processing mechanisms
+- [🔌 API Interaction Diagram](../diagrams/mermaid/api-interactions.md) - API call relationships
 
 ### 📋 Detailed UML Diagrams (PlantUML)
 
@@ -593,10 +593,10 @@ The project includes rich documentation, organized by functional categories:
 
 ### 🏆 Core Reports (September 2025 Update)
 
-- [📋 Project Summary Report 2025](reports-summaries/project-management/project-summary-2025.md) - Complete project achievements and technical highlights summary
-- [🏗️ Architecture Excellence Report 2025](docs/en/reports/architecture-excellence-2025.md) - Detailed architecture assessment and best practices analysis
-- [🚀 Technology Stack Detailed Description 2025](docs/en/reports/technology-stack-2025.md) - Complete technology selection and implementation details
-- [📝 Documentation Cleanup Report 2025](docs/en/reports/documentation-cleanup-2025.md) - Documentation reorganization and optimization records
+- [📋 Project Summary Report 2025](../../reports-summaries/project-management/project-summary-2025.md) - Complete project achievements and technical highlights summary
+- [🏗️ Architecture Excellence Report 2025](reports/architecture-excellence-2025.md) - Detailed architecture assessment and best practices analysis
+- [🚀 Technology Stack Detailed Description 2025](reports/technology-stack-2025.md) - Complete technology selection and implementation details
+- [📝 Documentation Cleanup Report 2025](reports/documentation-cleanup-2025.md) - Documentation reorganization and optimization records
 
 ### 🛠️ Diagram Generation Tools
 
@@ -795,7 +795,7 @@ Welcome to submit Pull Requests or open Issues to discuss improvement suggestion
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [../../LICENSE](../../LICENSE) file for details.
 
 ## 🔗 Related Links
 

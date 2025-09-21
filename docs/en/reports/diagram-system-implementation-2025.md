@@ -249,8 +249,8 @@ docs/
 
 - **中文文檔**: `docs/` 目錄
 - **英文文檔**: `docs/en/` 目錄
-- **圖表源文件**: `docs/diagrams/plantuml/`
-- **生成圖表**: `docs/diagrams/generated/`
+- **圖表源文件**: `../diagrams/plantuml/`
+- **生成圖表**: `../diagrams/generated/`
 
 ### Hook 配置
 

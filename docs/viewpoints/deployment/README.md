@@ -40,9 +40,17 @@
 
 #### AWS 基礎設施架構圖
 
+**簡化概覽**
+
 ![AWS 基礎設施架構](../../diagrams/aws_infrastructure.svg)
 
-*完整的 AWS 基礎設施架構，包括 CDK 堆疊、網路安全、容器平台、資料服務和可觀測性組件*
+*簡化的 AWS 基礎設施架構，展示核心組件：EKS 集群、RDS 資料庫、S3 儲存、CloudWatch 監控和應用程式負載均衡器*
+
+**詳細架構**
+
+![AWS 詳細基礎設施架構](../../diagrams/aws-infrastructure-detailed.svg)
+
+*完整的 AWS 基礎設施架構，包括 CDK 堆疊、網路安全、容器平台、資料服務、可觀測性組件和環境特定配置*
 
 ### 部署工具
 

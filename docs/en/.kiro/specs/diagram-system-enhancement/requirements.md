@@ -172,9 +172,9 @@
 
 #### Standards
 
-1. WHEN 我需要添加新的架構文檔時 THEN 我應該知道放在 `docs/architecture/` 目錄
-2. WHEN 我需要添加 API 文檔時 THEN 我應該知道放在 `docs/api/` 目錄
-3. WHEN 我需要添加圖表時 THEN 我應該知道放在 `docs/diagrams/` 目錄
+1. WHEN 我需要添加新的架構文檔時 THEN 我應該知道放在 `../architecture/` 目錄
+2. WHEN 我需要添加 API 文檔時 THEN 我應該知道放在 `../api/` 目錄
+3. WHEN 我需要添加圖表時 THEN 我應該知道放在 `../diagrams/` 目錄
 4. WHEN 我需要添加發布說明時 THEN 我應該知道放在 `docs/releases/` 目錄
 5. WHEN 我查看任何目錄時 THEN 我應該看到 README.md 說明該目錄的用途和內容
 

@@ -119,7 +119,7 @@ genai-demo/
 │   │   └── 2025/
 │   └── reports/                     # 報告文檔
 │       ├── README.md
-│       ├── reports-summaries/project-management/project-summary-2025.md
+│       ├── ../../reports-summaries/project-management/project-summary-2025.md
 │       ├── architecture-excellence-2025.md
 │       └── technology-stack-2025.md
 └── docs/en/                         # 英文文檔（鏡像結構）
