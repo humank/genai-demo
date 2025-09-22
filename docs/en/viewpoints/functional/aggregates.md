@@ -1,125 +1,195 @@
-
-# Design
+# Aggregate Root Design Guide
 
 ## Overview
 
-本指南基於專案中 17 個Aggregate Root的實際實現經驗，提供Aggregate Root設計的Best Practice和具體範例。專案採用混合實現模式，支援兩種Aggregate Root實現方式，並通過註解驅動的方式提供統一的Aggregate Root管理。
+This guide is based on practical implementation experience with 15 Aggregate Roots in the project, providing best practices and concrete examples for Aggregate Root design. The project adopts a hybrid implementation pattern, supporting two Aggregate Root implementation approaches and providing unified Aggregate Root management through annotation-driven design.
 
-## Aggregate Root實現模式
+## Current Project Aggregate Root Overview
 
-### Guidelines
+### Aggregate Root Distribution Statistics
 
-| 實現模式 | 適用場景 | 優勢 | 劣勢 |
-|---------|---------|------|------|
-| **介面模式** | 新開發的Aggregate Root | 零 override、類型安全、自動驗證 | 需要理解介面設計 |
-| **繼承模式** | 遺留系統整合 | 傳統 OOP 模式、易於理解 | 需要 override 方法 |
+| Bounded Context | Aggregate Root Count | Primary Aggregate Root | Implementation Pattern | Version |
+|----------------|---------------------|----------------------|----------------------|---------|
+| Customer | 1 | Customer | Interface | 2.0 |
+| Order | 1 | Order | Interface | 1.0 |
+| Product | 1 | Product | Inheritance | 1.0 |
+| Inventory | 1 | Inventory | Inheritance | 1.0 |
+| Payment | 1 | Payment | Inheritance | 1.0 |
+| Delivery | 1 | Delivery | Inheritance | 1.0 |
+| Review | 1 | ProductReview | Interface | 2.0 |
+| Seller | 1 | Seller | Interface | 2.0 |
+| ShoppingCart | 1 | ShoppingCart | Inheritance | 1.0 |
+| Promotion | 1 | Promotion | Inheritance | 1.0 |
+| Pricing | 1 | PricingRule | Inheritance | 1.0 |
+| Notification | 1 | Notification | Interface | 1.0 |
+| Observability | 2 | ObservabilitySession, AnalyticsSession | Interface | 1.0 |
 
-### 模式 A: 介面實現模式 (推薦)
+**Total**: 15 Aggregate Roots across 13 Bounded Contexts
+
+## Aggregate Root Implementation Patterns
+
+### Pattern Selection Guide
+
+| Implementation Pattern | Applicable Scenarios | Advantages | Disadvantages | Project Usage |
+|----------------------|---------------------|------------|---------------|---------------|
+| **Interface Pattern** | Newly developed Aggregate Roots | Zero override, type safety, automatic validation | Requires understanding of interface design | 7 Aggregate Roots |
+| **Inheritance Pattern** | Legacy system integration | Traditional OOP pattern, easy to understand | Requires method overrides | 8 Aggregate Roots |
+
+### Pattern A: Interface Implementation Pattern (Recommended)
+
+Based on the actual implementation of the `Customer` Aggregate Root in the project:
 
 ```java
 @AggregateRoot(
     name = "Customer", 
-    description = "增強的CustomerAggregate Root，支援完整的消費者功能", 
+    description = "Enhanced customer aggregate root supporting complete consumer functionality", 
     boundedContext = "Customer", 
     version = "2.0"
 )
 public class Customer implements AggregateRootInterface {
     
     private final CustomerId id;
+    private final AggregateStateTracker<Customer> stateTracker = new AggregateStateTracker<>(this);
     private CustomerName name;
     private Email email;
     private Phone phone;
+    private Address address;
     private MembershipLevel membershipLevel;
-    private final List<DeliveryAddress> addresses;
-    private final List<PaymentMethod> paymentMethods;
-    private CustomerPreferences preferences;
+    private LocalDate birthDate;
+    private LocalDateTime registrationDate;
     private RewardPoints rewardPoints;
+    private CustomerStatus status;
+    private Money totalSpending;
     
-    // 建構子
-    public Customer(CustomerId id, CustomerName name, Email email, MembershipLevel membershipLevel) {
-        this.id = Objects.requireNonNull(id, "Customer ID cannot be null");
-        this.name = Objects.requireNonNull(name, "Customer name cannot be null");
-        this.email = Objects.requireNonNull(email, "Email cannot be null");
-        this.membershipLevel = Objects.requireNonNull(membershipLevel, "Membership level cannot be null");
-        this.addresses = new ArrayList<>();
+    // Entity collections
+    private final List<DeliveryAddress> deliveryAddresses;
+    private CustomerPreferences preferences;
+    private final List<PaymentMethod> paymentMethods;
+    
+    // Primary constructor
+    public Customer(
+            CustomerId id,
+            CustomerName name,
+            Email email,
+            Phone phone,
+            Address address,
+            MembershipLevel membershipLevel,
+            LocalDate birthDate,
+            LocalDateTime registrationDate) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.membershipLevel = membershipLevel;
+        this.birthDate = birthDate;
+        this.registrationDate = registrationDate != null ? registrationDate : LocalDateTime.now();
+        this.rewardPoints = RewardPoints.empty();
+        this.status = CustomerStatus.ACTIVE;
+        this.totalSpending = Money.twd(0);
+        this.deliveryAddresses = new ArrayList<>();
+        this.preferences = new CustomerPreferences(CustomerPreferencesId.generate());
         this.paymentMethods = new ArrayList<>();
-        this.preferences = CustomerPreferences.defaultPreferences();
-        this.rewardPoints = RewardPoints.zero();
-        
-        // 收集Domain Event
+
+        // Publish customer created event
         collectEvent(CustomerCreatedEvent.create(id, name, email, membershipLevel));
     }
     
-    // 業務方法
+    // Business methods
+    
+    /** Update profile */
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
+        // Validate business rules
         validateProfileUpdate(newName, newEmail, newPhone);
-        
-        CustomerName oldName = this.name;
-        Email oldEmail = this.email;
-        
-        this.name = newName;
-        this.email = newEmail;
-        this.phone = newPhone;
-        
-        collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
+
+        // Check if there are any changes
+        boolean hasChanges = !Objects.equals(this.name, newName) ||
+                !Objects.equals(this.email, newEmail) ||
+                !Objects.equals(this.phone, newPhone);
+
+        if (hasChanges) {
+            // Use state tracker to track changes (without generating events)
+            stateTracker.trackChange("name", this.name, newName);
+            stateTracker.trackChange("email", this.email, newEmail);
+            stateTracker.trackChange("phone", this.phone, newPhone);
+
+            // Update values
+            this.name = newName;
+            this.email = newEmail;
+            this.phone = newPhone;
+
+            // Generate single profile update event
+            collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
+        }
     }
     
-    public void addDeliveryAddress(Address address) {
-        if (addresses.size() >= 10) {
-            throw new TooManyAddressesException("Customer最多只能有 10 個配送地址");
+    /** Add delivery address */
+    public DeliveryAddressId addDeliveryAddress(Address address, String label) {
+        if (address == null) {
+            throw new IllegalArgumentException("Address cannot be null");
         }
-        
+        if (deliveryAddresses.size() >= 10) {
+            throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
+        }
+
+        // Check if the same address already exists
+        boolean addressExists = deliveryAddresses.stream()
+                .anyMatch(da -> da.isSameAddress(address));
+        if (addressExists) {
+            throw new IllegalArgumentException("Address already exists");
+        }
+
         DeliveryAddress deliveryAddress = new DeliveryAddress(
-            DeliveryAddressId.generate(),
-            address,
-            false // 預設非主要地址
-        );
-        
-        this.addresses.add(deliveryAddress);
-        
-        collectEvent(DeliveryAddressAddedEvent.create(
-            this.id, 
-            deliveryAddress.getId(), 
-            address, 
-            addresses.size()
-        ));
+                DeliveryAddressId.generate(), address, label);
+
+        // If it's the first address, automatically set as default
+        if (deliveryAddresses.isEmpty()) {
+            deliveryAddress.setAsDefault();
+        }
+
+        deliveryAddresses.add(deliveryAddress);
+
+        // Publish delivery address added event
+        collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
+
+        return deliveryAddress.getId();
     }
     
-    public void upgradeMembership(MembershipLevel newLevel) {
-        if (!canUpgradeTo(newLevel)) {
-            throw new InvalidMembershipUpgradeException(
-                String.format("無法從 %s 升級到 %s", membershipLevel, newLevel)
-            );
-        }
-        
-        MembershipLevel oldLevel = this.membershipLevel;
+    /** Upgrade membership level */
+    public void upgradeMembershipLevel(MembershipLevel newLevel) {
+        // Validate business rules
+        validateMembershipUpgrade(newLevel);
+
+        // Use state tracker to track changes and automatically generate events
+        stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
+                (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
+
         this.membershipLevel = newLevel;
-        
-        collectEvent(MembershipLevelUpgradedEvent.create(this.id, oldLevel, newLevel));
+
+        // Cross-aggregate operation: notify promotion system to update customer discount eligibility
+        CrossAggregateOperation.publishEventIf(this,
+                newLevel == MembershipLevel.VIP,
+                () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
     }
     
-    public void earnRewardPoints(int points, String reason) {
-        if (points <= 0) {
-            throw new IllegalArgumentException("獲得的點數必須大於 0");
-        }
-        
+    /** Add reward points */
+    public void addRewardPoints(int points, String reason) {
         this.rewardPoints = this.rewardPoints.add(points);
-        
-        collectEvent(RewardPointsEarnedEvent.create(this.id, points, reason));
+
+        // Publish reward points earned event
+        collectEvent(RewardPointsEarnedEvent.create(this.id, points, this.rewardPoints.balance(), reason));
     }
     
-    public boolean redeemRewardPoints(int points, String reason) {
-        if (!canRedeemPoints(points)) {
-            return false;
-        }
-        
-        this.rewardPoints = this.rewardPoints.subtract(points);
-        
-        collectEvent(RewardPointsRedeemedEvent.create(this.id, points, reason));
-        return true;
+    /** Redeem reward points */
+    public void redeemPoints(int points, String reason) {
+        this.rewardPoints = this.rewardPoints.redeem(points);
+
+        // Publish reward points redeemed event
+        collectEvent(RewardPointsRedeemedEvent.create(
+                this.id, points, this.rewardPoints.balance(), reason));
     }
     
-    // 查詢方法
+    // Query methods
     public boolean isVip() {
         return membershipLevel == MembershipLevel.VIP;
     }
@@ -134,11 +204,11 @@ public class Customer implements AggregateRootInterface {
             .findFirst();
     }
     
-    // 私有輔助方法
+    // Private helper methods
     private void validateProfileUpdate(CustomerName name, Email email, Phone phone) {
         Objects.requireNonNull(name, "Customer name cannot be null");
         Objects.requireNonNull(email, "Email cannot be null");
-        // phone 可以為 null
+        // phone can be null
     }
     
     private boolean canUpgradeTo(MembershipLevel newLevel) {
@@ -156,12 +226,14 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### 模式 B: 繼承基類模式
+### Pattern B: Inheritance Base Class Pattern
+
+Based on the actual implementation of the `Product` Aggregate Root in the project:
 
 ```java
 @AggregateRoot(
     name = "Product", 
-    description = "產品Aggregate Root，管理產品信息和庫存", 
+    description = "Product aggregate root managing product information and inventory", 
     boundedContext = "Product", 
     version = "1.0"
 )
@@ -171,64 +243,91 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
     private ProductName name;
     private ProductDescription description;
     private Money price;
-    private ProductCategory category;
-    private ProductStatus status;
-    private final List<ProductImage> images;
+    private final ProductCategory category;
+    private StockQuantity stockQuantity;
+    private boolean inStock;
+    private boolean isActive;
     
-    public Product(ProductId id, ProductName name, ProductDescription description, 
-                   Money price, ProductCategory category) {
-        this.id = Objects.requireNonNull(id);
-        this.name = Objects.requireNonNull(name);
-        this.description = Objects.requireNonNull(description);
-        this.price = Objects.requireNonNull(price);
-        this.category = Objects.requireNonNull(category);
-        this.status = ProductStatus.DRAFT;
-        this.images = new ArrayList<>();
-        
-        // 使用基類方法收集事件
-        addDomainEvent(ProductCreatedEvent.create(id, name, category, price));
+    public Product(
+            ProductId id,
+            ProductName name,
+            ProductDescription description,
+            Money price,
+            ProductCategory category,
+            StockQuantity stockQuantity) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.stockQuantity = stockQuantity;
+        this.inStock = stockQuantity.getValue() > 0;
+        this.isActive = true;
+
+        // Publish product created event
+        collectEvent(ProductCreatedEvent.create(id, name, price, category));
     }
     
+    /** Update product price */
     public void updatePrice(Money newPrice) {
-        validatePrice(newPrice);
-        
+        if (newPrice == null) {
+            throw new IllegalArgumentException("Product price cannot be null");
+        }
+
         Money oldPrice = this.price;
         this.price = newPrice;
-        
-        addDomainEvent(ProductPriceChangedEvent.create(this.id, oldPrice, newPrice));
+
+        // Publish product price changed event
+        collectEvent(new ProductPriceChangedEvent(this.id, oldPrice, newPrice));
     }
-    
+
+    /** Update stock */
+    public void updateStock(StockQuantity newStock) {
+        if (newStock == null) {
+            throw new IllegalArgumentException("Stock quantity cannot be null");
+        }
+
+        StockQuantity oldStock = this.stockQuantity;
+        this.stockQuantity = newStock;
+        this.inStock = newStock.getValue() > 0;
+
+        // Publish product stock updated event
+        collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
+    }
+
+    /** Discontinue product */
+    public void discontinue(String reason) {
+        if (!this.isActive) {
+            throw new IllegalStateException("Product is already discontinued");
+        }
+
+        this.isActive = false;
+
+        // Publish product discontinued event
+        collectEvent(new ProductDiscontinuedEvent(this.id, reason));
+    }
+
+    /** Reactivate product */
     public void activate() {
-        if (status == ProductStatus.ACTIVE) {
-            throw new IllegalStateException("產品已經是活躍狀態");
+        if (this.isActive) {
+            throw new IllegalStateException("Product is already active");
         }
-        
-        validateCanActivate();
-        
-        this.status = ProductStatus.ACTIVE;
-        
-        addDomainEvent(ProductActivatedEvent.create(this.id));
-    }
-    
-    public void discontinue() {
-        if (status == ProductStatus.DISCONTINUED) {
-            throw new IllegalStateException("產品已經停產");
-        }
-        
-        this.status = ProductStatus.DISCONTINUED;
-        
-        addDomainEvent(ProductDiscontinuedEvent.create(this.id));
+
+        this.isActive = true;
+
+        // Publish product activated event
+        collectEvent(ProductActivatedEvent.create(this.id));
     }
     
     private void validatePrice(Money price) {
         if (price.isNegativeOrZero()) {
-            throw new IllegalArgumentException("產品價格必須大於 0");
+            throw new IllegalArgumentException("Product price must be greater than 0");
         }
     }
     
     private void validateCanActivate() {
         if (name == null || description == null || price == null) {
-            throw new IllegalStateException("產品資訊不完整，無法啟用");
+            throw new IllegalStateException("Product information is incomplete, cannot activate");
         }
     }
     
@@ -240,139 +339,264 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 }
 ```
 
-## Design
+## Core Architecture Features
 
-### 1. 單一職責原則
+### 1. Annotation-Driven Design
 
-每個Aggregate Root應該只負責一個業務概念的完整性：
+All Aggregate Roots must use the `@AggregateRoot` annotation, providing unified metadata management:
 
 ```java
-// ✅ 好的設計：Order Aggregate Root只管理訂單相關邏輯
-@AggregateRoot(name = "Order", boundedContext = "Order")
-public class Order implements AggregateRootInterface {
-    
-    public void addItem(ProductId productId, int quantity, Money unitPrice) {
-        // 訂單項目管理邏輯
-    }
-    
-    public void confirm() {
-        // 訂單確認邏輯
-    }
-    
-    public void cancel(String reason) {
-        // 訂單取消邏輯
-    }
-}
+@AggregateRoot(
+    name = "Aggregate Root Name",           // Required: Aggregate Root identifier
+    description = "Aggregate Root Description",     // Required: Business description
+    boundedContext = "Context Name", // Required: Owning Bounded Context
+    version = "Version Number",           // Required: Aggregate Root version
+    enableEventCollection = true  // Optional: Whether to enable event collection (default true)
+)
+```
 
-// ❌ 不好的設計：混合多個業務概念
-public class OrderAndPayment {
-    // 同時管理訂單和支付 - 違反單一職責
+### 2. Zero Override Design
+
+Interface pattern Aggregate Roots require no method overrides, all event management functionality is provided by default methods in `AggregateRootInterface`:
+
+```java
+public interface AggregateRootInterface {
+    // Automatic event collection
+    default void collectEvent(DomainEvent event) { ... }
+    
+    // Automatic event management
+    default List<DomainEvent> getUncommittedEvents() { ... }
+    default void markEventsAsCommitted() { ... }
+    default boolean hasUncommittedEvents() { ... }
+    
+    // Automatic metadata management
+    default String getAggregateRootName() { ... }
+    default String getBoundedContext() { ... }
+    default String getVersion() { ... }
 }
 ```
 
-### 2. 一致性邊界
+### 3. State Tracker (AggregateStateTracker)
 
-Aggregate Root定義了強一致性的邊界：
+The `Customer` Aggregate Root in the project uses an advanced state tracker pattern:
 
 ```java
-@AggregateRoot(name = "ShoppingCart", boundedContext = "ShoppingCart")
-public class ShoppingCart implements AggregateRootInterface {
+public class Customer implements AggregateRootInterface {
+    private final AggregateStateTracker<Customer> stateTracker = new AggregateStateTracker<>(this);
     
-    private final List<CartItem> items;
-    private Money totalAmount;
+    public void upgradeMembershipLevel(MembershipLevel newLevel) {
+        // Use state tracker to track changes and automatically generate events
+        stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
+                (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
+        
+        this.membershipLevel = newLevel;
+    }
+}
+```
+
+### 4. Cross-Aggregate Operations (CrossAggregateOperation)
+
+Supports conditional cross-aggregate event publishing:
+
+```java
+// Cross-aggregate operation: notify promotion system to update customer discount eligibility
+CrossAggregateOperation.publishEventIf(this,
+        newLevel == MembershipLevel.VIP,
+        () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
+```
+
+### 5. Aggregate Reconstruction Support (AggregateReconstruction)
+
+Supports rebuilding Aggregate Roots from persistent state without generating Domain Events:
+
+```java
+@AggregateReconstruction.ReconstructionConstructor("Rebuild customer aggregate root from persistent state")
+protected Customer(CustomerId id, CustomerName name, ...) {
+    // Reconstruction logic, no event publishing
+}
+```
+
+## Aggregate Root Design Principles
+
+### 1. Single Responsibility Principle
+
+Each Aggregate Root should only be responsible for the integrity of one business concept:
+
+```java
+// ✅ Good design: ShoppingCart Aggregate Root only manages shopping cart related logic
+@AggregateRoot(name = "ShoppingCart", description = "Shopping cart aggregate root managing consumer cart state and product items", 
+               boundedContext = "ShoppingCart", version = "1.0")
+public class ShoppingCart extends AggregateRoot {
     
     public void addItem(ProductId productId, int quantity, Money unitPrice) {
-        CartItem existingItem = findItem(productId);
+        // Shopping cart item management logic
+        if (quantity <= 0) {
+            throw new InvalidQuantityException("Product quantity must be greater than 0");
+        }
         
-        if (existingItem != null) {
-            // 更新現有項目
-            existingItem.updateQuantity(existingItem.getQuantity() + quantity);
+        Optional<CartItem> existingItem = findItemOptional(productId);
+        if (existingItem.isPresent()) {
+            CartItem updatedItem = existingItem.get().increaseQuantity(quantity);
+            replaceItem(existingItem.get(), updatedItem);
         } else {
-            // 添加新項目
             CartItem newItem = new CartItem(productId, quantity, unitPrice);
             items.add(newItem);
         }
         
-        // 重新計算總金額 - 保持一致性
-        recalculateTotalAmount();
-        
-        collectEvent(CartItemAddedEvent.create(getId(), productId, quantity, unitPrice));
+        collectEvent(CartItemAddedEvent.create(this.id, this.consumerId, productId, quantity, unitPrice));
     }
     
-    private void recalculateTotalAmount() {
-        this.totalAmount = items.stream()
-            .map(item -> item.getUnitPrice().multiply(item.getQuantity()))
-            .reduce(Money.ZERO, Money::add);
+    public void checkout() {
+        // Shopping cart checkout logic
+        if (isEmpty()) {
+            throw new IllegalStateException("Cannot checkout empty shopping cart");
+        }
+        
+        updateStatus(ShoppingCartStatus.CHECKED_OUT);
+        collectEvent(CartCheckedOutEvent.create(this.id, this.consumerId, items, calculateTotal(), getTotalQuantity()));
     }
+}
+
+// ❌ Bad design: mixing multiple business concepts
+public class OrderAndPaymentAndDelivery {
+    // Simultaneously managing orders, payments, and delivery - violates single responsibility
 }
 ```
 
-### Maintenance
+### 2. Consistency Boundary
 
-Aggregate Root負責維護業務不變性：
+Aggregate Roots define strong consistency boundaries, based on the actual `Customer` Aggregate Root implementation:
 
 ```java
-@AggregateRoot(name = "Inventory", boundedContext = "Inventory")
-public class Inventory extends AggregateRoot {
+@AggregateRoot(name = "Customer", description = "Enhanced customer aggregate root supporting complete consumer functionality", 
+               boundedContext = "Customer", version = "2.0")
+public class Customer implements AggregateRootInterface {
     
-    private int availableQuantity;
-    private int reservedQuantity;
+    private final List<DeliveryAddress> deliveryAddresses;
+    private final List<PaymentMethod> paymentMethods;
+    private RewardPoints rewardPoints;
+    private Money totalSpending;
     
-    public void reserve(OrderId orderId, int quantity) {
-        // 業務不變性：可用數量必須足夠
-        if (availableQuantity < quantity) {
-            throw new InsufficientStockException(
-                String.format("庫存不足：需要 %d，可用 %d", quantity, availableQuantity)
-            );
+    public DeliveryAddressId addDeliveryAddress(Address address, String label) {
+        // Business rule validation - maintain consistency
+        if (deliveryAddresses.size() >= 10) {
+            throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
         }
         
-        // 維護不變性：總庫存 = 可用 + 已預留
-        this.availableQuantity -= quantity;
-        this.reservedQuantity += quantity;
+        boolean addressExists = deliveryAddresses.stream()
+                .anyMatch(da -> da.isSameAddress(address));
+        if (addressExists) {
+            throw new IllegalArgumentException("Address already exists");
+        }
+
+        DeliveryAddress deliveryAddress = new DeliveryAddress(
+                DeliveryAddressId.generate(), address, label);
+
+        // If it's the first address, automatically set as default - maintain consistency
+        if (deliveryAddresses.isEmpty()) {
+            deliveryAddress.setAsDefault();
+        }
+
+        deliveryAddresses.add(deliveryAddress);
         
-        addDomainEvent(StockReservedEvent.create(getProductId(), orderId, quantity, availableQuantity));
+        // Publish event
+        collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
+        
+        return deliveryAddress.getId();
     }
     
-    public void release(OrderId orderId, int quantity) {
-        // 業務不變性：預留數量必須足夠
-        if (reservedQuantity < quantity) {
-            throw new IllegalStateException("預留數量不足");
-        }
-        
-        this.reservedQuantity -= quantity;
-        this.availableQuantity += quantity;
-        
-        addDomainEvent(StockReleasedEvent.create(getProductId(), orderId, quantity, availableQuantity));
+    public void updateSpending(Money amount, String orderId, String spendingType) {
+        // Validate business rules
+        validateSpendingUpdate(amount, orderId, spendingType);
+
+        Money oldTotalSpending = this.totalSpending;
+        this.totalSpending = this.totalSpending.add(amount);
+
+        // Use state tracker to maintain consistency
+        stateTracker.trackChange("totalSpending", oldTotalSpending, this.totalSpending,
+                (oldValue, newValue) -> CustomerSpendingUpdatedEvent.create(
+                        this.id, amount, newValue, orderId, spendingType));
+
+        // Check if membership upgrade conditions are met - cross-attribute consistency
+        checkMembershipUpgradeEligibility();
     }
 }
 ```
 
-## Aggregate Root生命週期管理
+### 3. Invariant Maintenance
 
-### 1. 創建階段
+Aggregate Roots are responsible for maintaining business invariants, based on the actual `Product` Aggregate Root implementation:
+
+```java
+@AggregateRoot(name = "Product", description = "Product aggregate root managing product information and inventory", 
+               boundedContext = "Product", version = "1.0")
+public class Product extends AggregateRoot {
+    
+    private StockQuantity stockQuantity;
+    private boolean inStock;
+    private boolean isActive;
+    
+    public void updateStock(StockQuantity newStock) {
+        // Business invariant: stock quantity cannot be null
+        if (newStock == null) {
+            throw new IllegalArgumentException("Stock quantity cannot be null");
+        }
+
+        StockQuantity oldStock = this.stockQuantity;
+        this.stockQuantity = newStock;
+        
+        // Maintain invariant: stock status consistent with quantity
+        this.inStock = newStock.getValue() > 0;
+
+        // Publish product stock updated event
+        collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
+    }
+    
+    public void discontinue(String reason) {
+        // Business invariant: only active products can be discontinued
+        if (!this.isActive) {
+            throw new IllegalStateException("Product is already discontinued");
+        }
+
+        this.isActive = false;
+
+        // Publish product discontinued event
+        collectEvent(new ProductDiscontinuedEvent(this.id, reason));
+    }
+    
+    public boolean canBePurchased() {
+        // Business invariant: purchasable = active + in stock
+        return isActive && inStock;
+    }
+}
+```
+
+## Aggregate Root Lifecycle Management
+
+### 1. Creation Phase
 
 ```java
 public class Customer implements AggregateRootInterface {
     
-    // Factory方法
+    // Factory method
     public static Customer createNew(CustomerName name, Email email) {
         CustomerId id = CustomerId.generate();
         return new Customer(id, name, email, MembershipLevel.STANDARD);
     }
     
-    // 重建方法 (從持久化載入)
+    // Reconstruction method (loading from persistence)
     public static Customer reconstruct(CustomerId id, CustomerName name, Email email, 
                                      MembershipLevel membershipLevel, List<DeliveryAddress> addresses) {
         Customer customer = new Customer(id, name, email, membershipLevel);
         customer.addresses.addAll(addresses);
-        // 重建時不發布事件
+        // No event publishing during reconstruction
         customer.markEventsAsCommitted();
         return customer;
     }
 }
 ```
 
-### 2. 狀態轉換
+### 2. State Transitions
 
 ```java
 public class Order implements AggregateRootInterface {
@@ -390,7 +614,7 @@ public class Order implements AggregateRootInterface {
     
     public void confirm() {
         if (status != OrderStatus.SUBMITTED) {
-            throw new IllegalStateException("只有已提交的訂單可以確認");
+            throw new IllegalStateException("Only submitted orders can be confirmed");
         }
         
         this.status = OrderStatus.CONFIRMED;
@@ -400,7 +624,7 @@ public class Order implements AggregateRootInterface {
     
     public void cancel(String reason) {
         if (!canCancel()) {
-            throw new IllegalStateException("訂單無法取消");
+            throw new IllegalStateException("Order cannot be cancelled");
         }
         
         this.status = OrderStatus.CANCELLED;
@@ -416,7 +640,7 @@ public class Order implements AggregateRootInterface {
 }
 ```
 
-### 3. Aggregate內Entity管理
+### 3. Intra-Aggregate Entity Management
 
 ```java
 public class Seller implements AggregateRootInterface {
@@ -426,9 +650,9 @@ public class Seller implements AggregateRootInterface {
     private ContactInfo contactInfo;
     
     public void addRating(CustomerId customerId, int rating, String comment) {
-        // 業務規則：同一Customer只能評價一次
+        // Business rule: same customer can only rate once
         if (hasRatingFromCustomer(customerId)) {
-            throw new DuplicateRatingException("Customer已經評價過此賣家");
+            throw new DuplicateRatingException("Customer has already rated this seller");
         }
         
         SellerRating newRating = new SellerRating(
@@ -464,41 +688,41 @@ public class Seller implements AggregateRootInterface {
 }
 ```
 
-## Aggregate Root間協作
+## Inter-Aggregate Root Collaboration
 
-### 1. 通過Domain Event協作
+### 1. Collaboration Through Domain Events
 
 ```java
-// Order Aggregate Root發布事件
+// Order Aggregate Root publishes events
 public class Order implements AggregateRootInterface {
     
     public void submit() {
-        // ... 狀態變更邏輯
+        // ... state change logic
         
-        // 發布事件，觸發其他Aggregate Root的處理
+        // Publish event to trigger processing by other Aggregate Roots
         collectEvent(OrderSubmittedEvent.create(getId(), getCustomerId(), getItems()));
     }
 }
 
-// 事件處理器協調其他Aggregate Root
+// Event handler coordinates other Aggregate Roots
 @Component
 public class OrderSubmittedEventHandler extends AbstractDomainEventHandler<OrderSubmittedEvent> {
     
     @Override
     protected void handleEvent(OrderSubmittedEvent event) {
-        // 預留庫存
+        // Reserve inventory
         inventoryService.reserveStock(event.orderId(), event.items());
         
-        // 處理支付
+        // Process payment
         paymentService.processPayment(event.orderId(), event.totalAmount());
         
-        // 更新Customer統計
+        // Update customer statistics
         customerService.updateOrderStatistics(event.customerId());
     }
 }
 ```
 
-### 2. 通過Domain Service協作
+### 2. Collaboration Through Domain Services
 
 ```java
 @DomainService(name = "OrderProcessingService", boundedContext = "Order")
@@ -510,32 +734,32 @@ public class OrderProcessingService {
     
     @Transactional
     public void processOrder(OrderId orderId) {
-        // 載入訂單Aggregate Root
+        // Load order Aggregate Root
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
         
-        // 檢查庫存
+        // Check inventory
         boolean stockAvailable = inventoryService.checkAvailability(order.getItems());
         if (!stockAvailable) {
             order.markAsOutOfStock();
             return;
         }
         
-        // 預留庫存
+        // Reserve inventory
         inventoryService.reserveStock(orderId, order.getItems());
         
-        // 確認訂單
+        // Confirm order
         order.confirm();
         
-        // 保存變更
+        // Save changes
         orderRepository.save(order);
     }
 }
 ```
 
-## Testing
+## Aggregate Root Testing Strategy
 
-### Testing
+### 1. Unit Testing
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -584,7 +808,7 @@ class CustomerTest {
 }
 ```
 
-### Testing
+### 2. Integration Testing
 
 ```java
 @SpringBootTest
@@ -617,30 +841,30 @@ class CustomerIntegrationTest {
 }
 ```
 
-### Testing
+### 3. BDD Testing
 
 ```gherkin
-Feature: Customer會員等級管理
+Feature: Customer membership level management
   
-  Scenario: 標準會員升級為高級會員
-    Given 一個標準會員Customer
-    When Customer升級會員等級為高級會員
-    Then Customer的會員等級應該是高級會員
-    And 應該發布會員等級升級事件
+  Scenario: Standard member upgrades to premium member
+    Given a standard member customer
+    When the customer upgrades membership level to premium
+    Then the customer's membership level should be premium
+    And a membership level upgraded event should be published
   
-  Scenario: 嘗試降級會員等級
-    Given 一個高級會員Customer
-    When Customer嘗試降級會員等級為標準會員
-    Then 應該拋出無效升級異常
-    And Customer的會員等級應該保持不變
+  Scenario: Attempt to downgrade membership level
+    Given a premium member customer
+    When the customer attempts to downgrade membership level to standard
+    Then an invalid upgrade exception should be thrown
+    And the customer's membership level should remain unchanged
 ```
 
-## 效能考量
+## Performance Considerations
 
-### 1. Aggregate Root大小控制
+### 1. Aggregate Root Size Control
 
 ```java
-// ✅ 好的設計：控制Aggregate Root大小
+// ✅ Good design: control Aggregate Root size
 public class Order implements AggregateRootInterface {
     
     private static final int MAX_ITEMS = 100;
@@ -648,32 +872,32 @@ public class Order implements AggregateRootInterface {
     
     public void addItem(ProductId productId, int quantity, Money unitPrice) {
         if (items.size() >= MAX_ITEMS) {
-            throw new TooManyItemsException("訂單項目不能超過 " + MAX_ITEMS + " 個");
+            throw new TooManyItemsException("Order items cannot exceed " + MAX_ITEMS);
         }
         
-        // ... 添加邏輯
+        // ... add logic
     }
 }
 
-// ❌ 不好的設計：無限制的Aggregate Root
+// ❌ Bad design: unlimited Aggregate Root
 public class Customer {
-    private final List<Order> allOrders; // 可能包含數千個訂單
+    private final List<Order> allOrders; // Could contain thousands of orders
 }
 ```
 
-### 2. 延遲載入
+### 2. Lazy Loading
 
 ```java
 public class Seller implements AggregateRootInterface {
     
-    // 避免一次載入所有評級
+    // Avoid loading all ratings at once
     public List<SellerRating> getRecentRatings(int days) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
         return ratings.stream()
             .filter(rating -> rating.getRatedAt().isAfter(cutoff))
             .filter(SellerRating::isVisible)
             .sorted((r1, r2) -> r2.getRatedAt().compareTo(r1.getRatedAt()))
-            .limit(10) // 限制數量
+            .limit(10) // Limit quantity
             .toList();
     }
 }
@@ -681,36 +905,36 @@ public class Seller implements AggregateRootInterface {
 
 ## Related Diagrams
 
-- [CustomerAggregate Root詳細圖](../../../diagrams/viewpoints/functional/customer-aggregate-details.puml)
-- [訂單Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/order-aggregate-details.puml)
-- [產品Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/product-aggregate-details.puml)
-- [賣家Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/seller-aggregate-details.puml)
-- [領域模型概覽圖](../../../diagrams/viewpoints/functional/domain-model-overview.puml)
-- [支付Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/payment-aggregate-details.puml)
-- [庫存Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/inventory-aggregate-details.puml)
-- [評價Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/review-aggregate-details.puml)
-- [購物車Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/shoppingcart-aggregate-details.puml)
-- [促銷Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/promotion-aggregate-details.puml)
-- [定價Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/pricing-aggregate-details.puml)
-- [通知Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/notification-aggregate-details.puml)
-- [配送Aggregate Root詳細圖](../../../diagrams/viewpoints/functional/delivery-aggregate-details.puml)
-- [ObservabilityAggregate Root詳細圖](../../../diagrams/viewpoints/functional/observability-aggregate-details.puml)
+- [Customer Aggregate Root Details](../../diagrams/generated/functional/Customer%20Aggregate%20Details.png)
+- [Order Aggregate Root Details](../../diagrams/generated/functional/Order%20Aggregate%20Details.png)
+- [Product Aggregate Root Details](../../diagrams/generated/functional/Product%20Aggregate%20Details.png)
+- [Seller Aggregate Root Details](../../diagrams/generated/functional/Seller%20Aggregate%20Details.png)
+- [Domain Model Overview](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
+- [Payment Aggregate Root Details](../../diagrams/generated/functional/Payment%20Aggregate%20Details.png)
+- [Inventory Aggregate Root Details](../../diagrams/generated/functional/Inventory%20Aggregate%20Details.png)
+- [Review Aggregate Root Details](../../diagrams/generated/functional/Review%20Aggregate%20Details.png)
+- [ShoppingCart Aggregate Root Details](../../diagrams/generated/functional/ShoppingCart%20Aggregate%20Details.png)
+- [Promotion Aggregate Root Details](../../diagrams/generated/functional/Promotion%20Aggregate%20Details.png)
+- [Pricing Aggregate Root Details](../../diagrams/generated/functional/Pricing%20Aggregate%20Details.png)
+- [Notification Aggregate Root Details](../../diagrams/generated/functional/Notification%20Aggregate%20Details.png)
+- [Delivery Aggregate Root Details](../../diagrams/generated/functional/Delivery%20Aggregate%20Details.png)
+- [Observability Aggregate Root Details](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png)
 
 ## Relationships with Other Viewpoints
 
-- **[Information Viewpoint](../information/README.md)**: Domain Event設計和Aggregate Root間通信
-- **[Concurrency Viewpoint](../concurrency/README.md)**: Aggregate Root的交易邊界和並發控制
-- **[Development Viewpoint](../development/README.md)**: Aggregate Root的測試Policy和程式碼組織
+- **[Information Viewpoint](../information/README.md)**: Domain Event design and inter-Aggregate Root communication
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Transaction boundaries and concurrency control for Aggregate Roots
+- **[Development Viewpoint](../development/README.md)**: Testing strategies and code organization for Aggregate Roots
 
-## Best Practices
+## Best Practices Summary
 
-1. **明確邊界**: 每個Aggregate Root有清晰的業務邊界和職責
-2. **保持小型**: 控制Aggregate Root大小，避免Performance問題
-3. **強一致性**: Aggregate Root內部保持強一致性
-4. **事件驅動**: 通過Domain Event實現Aggregate Root間協作
-5. **不變性維護**: 確保業務規則和不變性得到維護
-6. **測試覆蓋**: 完整的Unit Test和Integration Test
-7. **版本管理**: 支援Aggregate Root結構的演進
-8. **效能優化**: 考慮載入Policy和查詢優化
+1. **Clear Boundaries**: Each Aggregate Root has clear business boundaries and responsibilities
+2. **Keep Small**: Control Aggregate Root size to avoid performance issues
+3. **Strong Consistency**: Maintain strong consistency within Aggregate Roots
+4. **Event-Driven**: Implement inter-Aggregate Root collaboration through Domain Events
+5. **Invariant Maintenance**: Ensure business rules and invariants are maintained
+6. **Test Coverage**: Complete unit and integration testing
+7. **Version Management**: Support evolution of Aggregate Root structure
+8. **Performance Optimization**: Consider loading strategies and query optimization
 
-這套Aggregate Root設計指南確保了領域模型的正確性、Maintainability和高效能。
+This Aggregate Root design guide ensures correctness, maintainability, and high performance of the domain model.

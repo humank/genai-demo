@@ -2,18 +2,42 @@
 
 ## 概覽
 
-本指南基於專案中 17 個聚合根的實際實現經驗，提供聚合根設計的最佳實踐和具體範例。專案採用混合實現模式，支援兩種聚合根實現方式，並通過註解驅動的方式提供統一的聚合根管理。
+本指南基於專案中 15 個聚合根的實際實現經驗，提供聚合根設計的最佳實踐和具體範例。專案採用混合實現模式，支援兩種聚合根實現方式，並通過註解驅動的方式提供統一的聚合根管理。
+
+## 當前專案聚合根概覽
+
+### 聚合根分佈統計
+
+| 界限上下文 | 聚合根數量 | 主要聚合根 | 實現模式 | 版本 |
+|-----------|-----------|-----------|----------|------|
+| Customer | 1 | Customer | Interface | 2.0 |
+| Order | 1 | Order | Interface | 1.0 |
+| Product | 1 | Product | Inheritance | 1.0 |
+| Inventory | 1 | Inventory | Inheritance | 1.0 |
+| Payment | 1 | Payment | Inheritance | 1.0 |
+| Delivery | 1 | Delivery | Inheritance | 1.0 |
+| Review | 1 | ProductReview | Interface | 2.0 |
+| Seller | 1 | Seller | Interface | 2.0 |
+| ShoppingCart | 1 | ShoppingCart | Inheritance | 1.0 |
+| Promotion | 1 | Promotion | Inheritance | 1.0 |
+| Pricing | 1 | PricingRule | Inheritance | 1.0 |
+| Notification | 1 | Notification | Interface | 1.0 |
+| Observability | 2 | ObservabilitySession, AnalyticsSession | Interface | 1.0 |
+
+**總計**: 15 個聚合根，13 個界限上下文
 
 ## 聚合根實現模式
 
 ### 模式選擇指南
 
-| 實現模式 | 適用場景 | 優勢 | 劣勢 |
-|---------|---------|------|------|
-| **介面模式** | 新開發的聚合根 | 零 override、類型安全、自動驗證 | 需要理解介面設計 |
-| **繼承模式** | 遺留系統整合 | 傳統 OOP 模式、易於理解 | 需要 override 方法 |
+| 實現模式 | 適用場景 | 優勢 | 劣勢 | 專案使用情況 |
+|---------|---------|------|------|-------------|
+| **介面模式** | 新開發的聚合根 | 零 override、類型安全、自動驗證 | 需要理解介面設計 | 7個聚合根 |
+| **繼承模式** | 遺留系統整合 | 傳統 OOP 模式、易於理解 | 需要 override 方法 | 8個聚合根 |
 
 ### 模式 A: 介面實現模式 (推薦)
+
+基於專案實際實現的 `Customer` 聚合根：
 
 ```java
 @AggregateRoot(
@@ -25,97 +49,144 @@
 public class Customer implements AggregateRootInterface {
     
     private final CustomerId id;
+    private final AggregateStateTracker<Customer> stateTracker = new AggregateStateTracker<>(this);
     private CustomerName name;
     private Email email;
     private Phone phone;
+    private Address address;
     private MembershipLevel membershipLevel;
-    private final List<DeliveryAddress> addresses;
-    private final List<PaymentMethod> paymentMethods;
-    private CustomerPreferences preferences;
+    private LocalDate birthDate;
+    private LocalDateTime registrationDate;
     private RewardPoints rewardPoints;
+    private CustomerStatus status;
+    private Money totalSpending;
     
-    // 建構子
-    public Customer(CustomerId id, CustomerName name, Email email, MembershipLevel membershipLevel) {
-        this.id = Objects.requireNonNull(id, "Customer ID cannot be null");
-        this.name = Objects.requireNonNull(name, "Customer name cannot be null");
-        this.email = Objects.requireNonNull(email, "Email cannot be null");
-        this.membershipLevel = Objects.requireNonNull(membershipLevel, "Membership level cannot be null");
-        this.addresses = new ArrayList<>();
+    // Entity 集合
+    private final List<DeliveryAddress> deliveryAddresses;
+    private CustomerPreferences preferences;
+    private final List<PaymentMethod> paymentMethods;
+    
+    // 主要建構子
+    public Customer(
+            CustomerId id,
+            CustomerName name,
+            Email email,
+            Phone phone,
+            Address address,
+            MembershipLevel membershipLevel,
+            LocalDate birthDate,
+            LocalDateTime registrationDate) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.membershipLevel = membershipLevel;
+        this.birthDate = birthDate;
+        this.registrationDate = registrationDate != null ? registrationDate : LocalDateTime.now();
+        this.rewardPoints = RewardPoints.empty();
+        this.status = CustomerStatus.ACTIVE;
+        this.totalSpending = Money.twd(0);
+        this.deliveryAddresses = new ArrayList<>();
+        this.preferences = new CustomerPreferences(CustomerPreferencesId.generate());
         this.paymentMethods = new ArrayList<>();
-        this.preferences = CustomerPreferences.defaultPreferences();
-        this.rewardPoints = RewardPoints.zero();
-        
-        // 收集領域事件
+
+        // 發布客戶創建事件
         collectEvent(CustomerCreatedEvent.create(id, name, email, membershipLevel));
     }
     
     // 業務方法
+    
+    /** 更新個人資料 */
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
+        // 驗證業務規則
         validateProfileUpdate(newName, newEmail, newPhone);
-        
-        CustomerName oldName = this.name;
-        Email oldEmail = this.email;
-        
-        this.name = newName;
-        this.email = newEmail;
-        this.phone = newPhone;
-        
-        collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
+
+        // 檢查是否有任何變化
+        boolean hasChanges = !Objects.equals(this.name, newName) ||
+                !Objects.equals(this.email, newEmail) ||
+                !Objects.equals(this.phone, newPhone);
+
+        if (hasChanges) {
+            // 使用狀態追蹤器追蹤變化（不產生事件）
+            stateTracker.trackChange("name", this.name, newName);
+            stateTracker.trackChange("email", this.email, newEmail);
+            stateTracker.trackChange("phone", this.phone, newPhone);
+
+            // 更新值
+            this.name = newName;
+            this.email = newEmail;
+            this.phone = newPhone;
+
+            // 產生單一的個人資料更新事件
+            collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
+        }
     }
     
-    public void addDeliveryAddress(Address address) {
-        if (addresses.size() >= 10) {
-            throw new TooManyAddressesException("客戶最多只能有 10 個配送地址");
+    /** 添加配送地址 */
+    public DeliveryAddressId addDeliveryAddress(Address address, String label) {
+        if (address == null) {
+            throw new IllegalArgumentException("Address cannot be null");
         }
-        
+        if (deliveryAddresses.size() >= 10) {
+            throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
+        }
+
+        // 檢查是否已存在相同地址
+        boolean addressExists = deliveryAddresses.stream()
+                .anyMatch(da -> da.isSameAddress(address));
+        if (addressExists) {
+            throw new IllegalArgumentException("Address already exists");
+        }
+
         DeliveryAddress deliveryAddress = new DeliveryAddress(
-            DeliveryAddressId.generate(),
-            address,
-            false // 預設非主要地址
-        );
-        
-        this.addresses.add(deliveryAddress);
-        
-        collectEvent(DeliveryAddressAddedEvent.create(
-            this.id, 
-            deliveryAddress.getId(), 
-            address, 
-            addresses.size()
-        ));
+                DeliveryAddressId.generate(), address, label);
+
+        // 如果是第一個地址，自動設為預設
+        if (deliveryAddresses.isEmpty()) {
+            deliveryAddress.setAsDefault();
+        }
+
+        deliveryAddresses.add(deliveryAddress);
+
+        // 發布配送地址添加事件
+        collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
+
+        return deliveryAddress.getId();
     }
     
-    public void upgradeMembership(MembershipLevel newLevel) {
-        if (!canUpgradeTo(newLevel)) {
-            throw new InvalidMembershipUpgradeException(
-                String.format("無法從 %s 升級到 %s", membershipLevel, newLevel)
-            );
-        }
-        
-        MembershipLevel oldLevel = this.membershipLevel;
+    /** 升級會員等級 */
+    public void upgradeMembershipLevel(MembershipLevel newLevel) {
+        // 驗證業務規則
+        validateMembershipUpgrade(newLevel);
+
+        // 使用狀態追蹤器追蹤變化並自動產生事件
+        stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
+                (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
+
         this.membershipLevel = newLevel;
-        
-        collectEvent(MembershipLevelUpgradedEvent.create(this.id, oldLevel, newLevel));
+
+        // 跨聚合根操作：通知促銷系統更新客戶折扣資格
+        CrossAggregateOperation.publishEventIf(this,
+                newLevel == MembershipLevel.VIP,
+                () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
     }
     
-    public void earnRewardPoints(int points, String reason) {
-        if (points <= 0) {
-            throw new IllegalArgumentException("獲得的點數必須大於 0");
-        }
-        
+    /** 添加紅利點數 */
+    public void addRewardPoints(int points, String reason) {
         this.rewardPoints = this.rewardPoints.add(points);
-        
-        collectEvent(RewardPointsEarnedEvent.create(this.id, points, reason));
+
+        // 發布紅利點數獲得事件
+        collectEvent(RewardPointsEarnedEvent.create(this.id, points, this.rewardPoints.balance(), reason));
     }
     
-    public boolean redeemRewardPoints(int points, String reason) {
-        if (!canRedeemPoints(points)) {
-            return false;
-        }
-        
-        this.rewardPoints = this.rewardPoints.subtract(points);
-        
-        collectEvent(RewardPointsRedeemedEvent.create(this.id, points, reason));
-        return true;
+    /** 兌換紅利點數 */
+    public void redeemPoints(int points, String reason) {
+        this.rewardPoints = this.rewardPoints.redeem(points);
+
+        // 發布紅利點數兌換事件
+        collectEvent(RewardPointsRedeemedEvent.create(
+                this.id, points, this.rewardPoints.balance(), reason));
     }
     
     // 查詢方法
@@ -157,6 +228,8 @@ public class Customer implements AggregateRootInterface {
 
 ### 模式 B: 繼承基類模式
 
+基於專案實際實現的 `Product` 聚合根：
+
 ```java
 @AggregateRoot(
     name = "Product", 
@@ -170,53 +243,80 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
     private ProductName name;
     private ProductDescription description;
     private Money price;
-    private ProductCategory category;
-    private ProductStatus status;
-    private final List<ProductImage> images;
+    private final ProductCategory category;
+    private StockQuantity stockQuantity;
+    private boolean inStock;
+    private boolean isActive;
     
-    public Product(ProductId id, ProductName name, ProductDescription description, 
-                   Money price, ProductCategory category) {
-        this.id = Objects.requireNonNull(id);
-        this.name = Objects.requireNonNull(name);
-        this.description = Objects.requireNonNull(description);
-        this.price = Objects.requireNonNull(price);
-        this.category = Objects.requireNonNull(category);
-        this.status = ProductStatus.DRAFT;
-        this.images = new ArrayList<>();
-        
-        // 使用基類方法收集事件
-        addDomainEvent(ProductCreatedEvent.create(id, name, category, price));
+    public Product(
+            ProductId id,
+            ProductName name,
+            ProductDescription description,
+            Money price,
+            ProductCategory category,
+            StockQuantity stockQuantity) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.stockQuantity = stockQuantity;
+        this.inStock = stockQuantity.getValue() > 0;
+        this.isActive = true;
+
+        // 發布商品創建事件
+        collectEvent(ProductCreatedEvent.create(id, name, price, category));
     }
     
+    /** 更新商品價格 */
     public void updatePrice(Money newPrice) {
-        validatePrice(newPrice);
-        
+        if (newPrice == null) {
+            throw new IllegalArgumentException("商品價格不能為空");
+        }
+
         Money oldPrice = this.price;
         this.price = newPrice;
-        
-        addDomainEvent(ProductPriceChangedEvent.create(this.id, oldPrice, newPrice));
+
+        // 發布商品價格變更事件
+        collectEvent(new ProductPriceChangedEvent(this.id, oldPrice, newPrice));
     }
-    
+
+    /** 更新庫存 */
+    public void updateStock(StockQuantity newStock) {
+        if (newStock == null) {
+            throw new IllegalArgumentException("庫存數量不能為空");
+        }
+
+        StockQuantity oldStock = this.stockQuantity;
+        this.stockQuantity = newStock;
+        this.inStock = newStock.getValue() > 0;
+
+        // 發布商品庫存更新事件
+        collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
+    }
+
+    /** 下架商品 */
+    public void discontinue(String reason) {
+        if (!this.isActive) {
+            throw new IllegalStateException("商品已經下架");
+        }
+
+        this.isActive = false;
+
+        // 發布商品下架事件
+        collectEvent(new ProductDiscontinuedEvent(this.id, reason));
+    }
+
+    /** 重新上架商品 */
     public void activate() {
-        if (status == ProductStatus.ACTIVE) {
-            throw new IllegalStateException("產品已經是活躍狀態");
+        if (this.isActive) {
+            throw new IllegalStateException("商品已經上架");
         }
-        
-        validateCanActivate();
-        
-        this.status = ProductStatus.ACTIVE;
-        
-        addDomainEvent(ProductActivatedEvent.create(this.id));
-    }
-    
-    public void discontinue() {
-        if (status == ProductStatus.DISCONTINUED) {
-            throw new IllegalStateException("產品已經停產");
-        }
-        
-        this.status = ProductStatus.DISCONTINUED;
-        
-        addDomainEvent(ProductDiscontinuedEvent.create(this.id));
+
+        this.isActive = true;
+
+        // 發布商品重新上架事件
+        collectEvent(ProductActivatedEvent.create(this.id));
     }
     
     private void validatePrice(Money price) {
@@ -239,6 +339,83 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 }
 ```
 
+## 核心架構特性
+
+### 1. 註解驅動設計
+
+所有聚合根都必須使用 `@AggregateRoot` 註解，提供統一的元數據管理：
+
+```java
+@AggregateRoot(
+    name = "聚合根名稱",           // 必填：聚合根識別名稱
+    description = "聚合根描述",     // 必填：業務描述
+    boundedContext = "上下文名稱", // 必填：所屬界限上下文
+    version = "版本號",           // 必填：聚合根版本
+    enableEventCollection = true  // 可選：是否啟用事件收集（預設true）
+)
+```
+
+### 2. 零 Override 設計
+
+介面模式聚合根無需重寫任何方法，所有事件管理功能都由 `AggregateRootInterface` 的 default 方法提供：
+
+```java
+public interface AggregateRootInterface {
+    // 自動事件收集
+    default void collectEvent(DomainEvent event) { ... }
+    
+    // 自動事件管理
+    default List<DomainEvent> getUncommittedEvents() { ... }
+    default void markEventsAsCommitted() { ... }
+    default boolean hasUncommittedEvents() { ... }
+    
+    // 自動元數據管理
+    default String getAggregateRootName() { ... }
+    default String getBoundedContext() { ... }
+    default String getVersion() { ... }
+}
+```
+
+### 3. 狀態追蹤器 (AggregateStateTracker)
+
+專案中的 `Customer` 聚合根使用了先進的狀態追蹤器模式：
+
+```java
+public class Customer implements AggregateRootInterface {
+    private final AggregateStateTracker<Customer> stateTracker = new AggregateStateTracker<>(this);
+    
+    public void upgradeMembershipLevel(MembershipLevel newLevel) {
+        // 使用狀態追蹤器追蹤變化並自動產生事件
+        stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
+                (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
+        
+        this.membershipLevel = newLevel;
+    }
+}
+```
+
+### 4. 跨聚合根操作 (CrossAggregateOperation)
+
+支援條件式跨聚合根事件發布：
+
+```java
+// 跨聚合根操作：通知促銷系統更新客戶折扣資格
+CrossAggregateOperation.publishEventIf(this,
+        newLevel == MembershipLevel.VIP,
+        () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
+```
+
+### 5. 聚合重建支援 (AggregateReconstruction)
+
+支援從持久化狀態重建聚合根，不產生領域事件：
+
+```java
+@AggregateReconstruction.ReconstructionConstructor("從持久化狀態重建客戶聚合根")
+protected Customer(CustomerId id, CustomerName name, ...) {
+    // 重建邏輯，不發布事件
+}
+```
+
 ## 聚合根設計原則
 
 ### 1. 單一職責原則
@@ -246,102 +423,150 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 每個聚合根應該只負責一個業務概念的完整性：
 
 ```java
-// ✅ 好的設計：Order 聚合根只管理訂單相關邏輯
-@AggregateRoot(name = "Order", boundedContext = "Order")
-public class Order implements AggregateRootInterface {
+// ✅ 好的設計：ShoppingCart 聚合根只管理購物車相關邏輯
+@AggregateRoot(name = "ShoppingCart", description = "購物車聚合根，管理消費者的購物車狀態和商品項目", 
+               boundedContext = "ShoppingCart", version = "1.0")
+public class ShoppingCart extends AggregateRoot {
     
     public void addItem(ProductId productId, int quantity, Money unitPrice) {
-        // 訂單項目管理邏輯
+        // 購物車項目管理邏輯
+        if (quantity <= 0) {
+            throw new InvalidQuantityException("商品數量必須大於 0");
+        }
+        
+        Optional<CartItem> existingItem = findItemOptional(productId);
+        if (existingItem.isPresent()) {
+            CartItem updatedItem = existingItem.get().increaseQuantity(quantity);
+            replaceItem(existingItem.get(), updatedItem);
+        } else {
+            CartItem newItem = new CartItem(productId, quantity, unitPrice);
+            items.add(newItem);
+        }
+        
+        collectEvent(CartItemAddedEvent.create(this.id, this.consumerId, productId, quantity, unitPrice));
     }
     
-    public void confirm() {
-        // 訂單確認邏輯
-    }
-    
-    public void cancel(String reason) {
-        // 訂單取消邏輯
+    public void checkout() {
+        // 購物車結帳邏輯
+        if (isEmpty()) {
+            throw new IllegalStateException("無法結帳空的購物車");
+        }
+        
+        updateStatus(ShoppingCartStatus.CHECKED_OUT);
+        collectEvent(CartCheckedOutEvent.create(this.id, this.consumerId, items, calculateTotal(), getTotalQuantity()));
     }
 }
 
 // ❌ 不好的設計：混合多個業務概念
-public class OrderAndPayment {
-    // 同時管理訂單和支付 - 違反單一職責
+public class OrderAndPaymentAndDelivery {
+    // 同時管理訂單、支付和配送 - 違反單一職責
 }
 ```
 
 ### 2. 一致性邊界
 
-聚合根定義了強一致性的邊界：
+聚合根定義了強一致性的邊界，基於實際的 `Customer` 聚合根實現：
 
 ```java
-@AggregateRoot(name = "ShoppingCart", boundedContext = "ShoppingCart")
-public class ShoppingCart implements AggregateRootInterface {
+@AggregateRoot(name = "Customer", description = "增強的客戶聚合根，支援完整的消費者功能", 
+               boundedContext = "Customer", version = "2.0")
+public class Customer implements AggregateRootInterface {
     
-    private final List<CartItem> items;
-    private Money totalAmount;
+    private final List<DeliveryAddress> deliveryAddresses;
+    private final List<PaymentMethod> paymentMethods;
+    private RewardPoints rewardPoints;
+    private Money totalSpending;
     
-    public void addItem(ProductId productId, int quantity, Money unitPrice) {
-        CartItem existingItem = findItem(productId);
-        
-        if (existingItem != null) {
-            // 更新現有項目
-            existingItem.updateQuantity(existingItem.getQuantity() + quantity);
-        } else {
-            // 添加新項目
-            CartItem newItem = new CartItem(productId, quantity, unitPrice);
-            items.add(newItem);
+    public DeliveryAddressId addDeliveryAddress(Address address, String label) {
+        // 業務規則驗證 - 保持一致性
+        if (deliveryAddresses.size() >= 10) {
+            throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
         }
         
-        // 重新計算總金額 - 保持一致性
-        recalculateTotalAmount();
+        boolean addressExists = deliveryAddresses.stream()
+                .anyMatch(da -> da.isSameAddress(address));
+        if (addressExists) {
+            throw new IllegalArgumentException("Address already exists");
+        }
+
+        DeliveryAddress deliveryAddress = new DeliveryAddress(
+                DeliveryAddressId.generate(), address, label);
+
+        // 如果是第一個地址，自動設為預設 - 維護一致性
+        if (deliveryAddresses.isEmpty()) {
+            deliveryAddress.setAsDefault();
+        }
+
+        deliveryAddresses.add(deliveryAddress);
         
-        collectEvent(CartItemAddedEvent.create(getId(), productId, quantity, unitPrice));
+        // 發布事件
+        collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
+        
+        return deliveryAddress.getId();
     }
     
-    private void recalculateTotalAmount() {
-        this.totalAmount = items.stream()
-            .map(item -> item.getUnitPrice().multiply(item.getQuantity()))
-            .reduce(Money.ZERO, Money::add);
+    public void updateSpending(Money amount, String orderId, String spendingType) {
+        // 驗證業務規則
+        validateSpendingUpdate(amount, orderId, spendingType);
+
+        Money oldTotalSpending = this.totalSpending;
+        this.totalSpending = this.totalSpending.add(amount);
+
+        // 使用狀態追蹤器維護一致性
+        stateTracker.trackChange("totalSpending", oldTotalSpending, this.totalSpending,
+                (oldValue, newValue) -> CustomerSpendingUpdatedEvent.create(
+                        this.id, amount, newValue, orderId, spendingType));
+
+        // 檢查是否達到會員升級條件 - 跨屬性一致性
+        checkMembershipUpgradeEligibility();
     }
 }
 ```
 
 ### 3. 不變性維護
 
-聚合根負責維護業務不變性：
+聚合根負責維護業務不變性，基於實際的 `Product` 聚合根實現：
 
 ```java
-@AggregateRoot(name = "Inventory", boundedContext = "Inventory")
-public class Inventory extends AggregateRoot {
+@AggregateRoot(name = "Product", description = "產品聚合根，管理產品信息和庫存", 
+               boundedContext = "Product", version = "1.0")
+public class Product extends AggregateRoot {
     
-    private int availableQuantity;
-    private int reservedQuantity;
+    private StockQuantity stockQuantity;
+    private boolean inStock;
+    private boolean isActive;
     
-    public void reserve(OrderId orderId, int quantity) {
-        // 業務不變性：可用數量必須足夠
-        if (availableQuantity < quantity) {
-            throw new InsufficientStockException(
-                String.format("庫存不足：需要 %d，可用 %d", quantity, availableQuantity)
-            );
+    public void updateStock(StockQuantity newStock) {
+        // 業務不變性：庫存數量不能為空
+        if (newStock == null) {
+            throw new IllegalArgumentException("庫存數量不能為空");
         }
+
+        StockQuantity oldStock = this.stockQuantity;
+        this.stockQuantity = newStock;
         
-        // 維護不變性：總庫存 = 可用 + 已預留
-        this.availableQuantity -= quantity;
-        this.reservedQuantity += quantity;
-        
-        addDomainEvent(StockReservedEvent.create(getProductId(), orderId, quantity, availableQuantity));
+        // 維護不變性：庫存狀態與數量一致
+        this.inStock = newStock.getValue() > 0;
+
+        // 發布商品庫存更新事件
+        collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
     }
     
-    public void release(OrderId orderId, int quantity) {
-        // 業務不變性：預留數量必須足夠
-        if (reservedQuantity < quantity) {
-            throw new IllegalStateException("預留數量不足");
+    public void discontinue(String reason) {
+        // 業務不變性：只有活躍商品可以下架
+        if (!this.isActive) {
+            throw new IllegalStateException("商品已經下架");
         }
-        
-        this.reservedQuantity -= quantity;
-        this.availableQuantity += quantity;
-        
-        addDomainEvent(StockReleasedEvent.create(getProductId(), orderId, quantity, availableQuantity));
+
+        this.isActive = false;
+
+        // 發布商品下架事件
+        collectEvent(new ProductDiscontinuedEvent(this.id, reason));
+    }
+    
+    public boolean canBePurchased() {
+        // 業務不變性：可購買 = 活躍 + 有庫存
+        return isActive && inStock;
     }
 }
 ```
@@ -713,29 +938,4 @@ public class Seller implements AggregateRootInterface {
 8. **效能優化**: 考慮載入策略和查詢優化
 
 這套聚合根設計指南確保了領域模型的正確性、可維護性和高效能。
-![Delivery Aggregate Details](../../diagrams/generated/functional/Delivery%20Aggregate%20Details.png)
-![ShoppingCart Aggregate Details](../../diagrams/generated/functional/ShoppingCart%20Aggregate%20Details.png)
-![Review Aggregate Details](../../diagrams/generated/functional/Review%20Aggregate%20Details.png)
-![Payment Aggregate Details](../../diagrams/generated/functional/Payment%20Aggregate%20Details.png)
-![Pricing Aggregate Details](../../diagrams/generated/functional/Pricing%20Aggregate%20Details.png)
-![Order Aggregate Details](../../diagrams/generated/functional/Order%20Aggregate%20Details.png)
-![Product Aggregate Details](../../diagrams/generated/functional/Product%20Aggregate%20Details.png)
-![Observability Aggregate Details](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png)
-![Inventory Aggregate Details](../../diagrams/generated/functional/Inventory%20Aggregate%20Details.png)
-![Notification Aggregate Details](../../diagrams/generated/functional/Notification%20Aggregate%20Details.png)
-![Seller Aggregate Details](../../diagrams/generated/functional/Seller%20Aggregate%20Details.png)
-![Customer Aggregate Details](../../diagrams/generated/functional/Customer%20Aggregate%20Details.png)
-![Promotion Aggregate Details](../../diagrams/generated/functional/Promotion%20Aggregate%20Details.png)
-![Delivery Aggregate Details](../../diagrams/viewpoints/functional/delivery-aggregate-details.puml)
-![Shoppingcart Aggregate Details](../../diagrams/viewpoints/functional/shoppingcart-aggregate-details.puml)
-![Review Aggregate Details](../../diagrams/viewpoints/functional/review-aggregate-details.puml)
-![Payment Aggregate Details](../../diagrams/viewpoints/functional/payment-aggregate-details.puml)
-![Pricing Aggregate Details](../../diagrams/viewpoints/functional/pricing-aggregate-details.puml)
-![Order Aggregate Details](../../diagrams/viewpoints/functional/order-aggregate-details.puml)
-![Product Aggregate Details](../../diagrams/viewpoints/functional/product-aggregate-details.puml)
-![Observability Aggregate Details](../../diagrams/viewpoints/functional/observability-aggregate-details.puml)
-![Inventory Aggregate Details](../../diagrams/viewpoints/functional/inventory-aggregate-details.puml)
-![Notification Aggregate Details](../../diagrams/viewpoints/functional/notification-aggregate-details.puml)
-![Seller Aggregate Details](../../diagrams/viewpoints/functional/seller-aggregate-details.puml)
-![Customer Aggregate Details](../../diagrams/viewpoints/functional/customer-aggregate-details.puml)
-![Promotion Aggregate Details](../../diagrams/viewpoints/functional/promotion-aggregate-details.puml)
+

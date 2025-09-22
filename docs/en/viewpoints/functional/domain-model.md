@@ -3,7 +3,7 @@
 
 ## 概述
 
-本指南提供了在專案中設計和實作 DDD 領域模型的Best Practice，基於當前專案的實際實現經驗summary。專案採用完整的 DDD 戰術模式，包含 17 個Aggregate Root分佈在 13 個Bounded Context中，實現了現代化的Domain-Driven Design架構。
+本指南提供了在專案中設計和實作 DDD 領域模型的Best Practice，基於當前專案的實際實現經驗summary。專案採用完整的 DDD 戰術模式，包含 15 個Aggregate Root分佈在 13 個Bounded Context中，實現了現代化的Domain-Driven Design架構。
 
 ## Overview
 
@@ -25,7 +25,7 @@
 | Notification | 2 | Notification, NotificationTemplate | 1.0 |
 | Observability | 2 | ObservabilitySession, AnalyticsSession | 1.0 |
 
-**總計**: 17 個Aggregate Root，13 個Bounded Context
+**總計**: 15 個Aggregate Root，13 個Bounded Context
 
 ## Design
 
