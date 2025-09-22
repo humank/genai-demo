@@ -38,21 +38,38 @@
 - **利害關係人**: 運維工程師、系統管理員、支援團隊
 - **關注點**: 監控、日誌、故障處理
 
+### 7. [上下文視點 (Context Viewpoint)](context/README.md)
+- **目的**: 描述系統與其環境之間的關係和互動
+- **利害關係人**: 系統架構師、業務分析師、合規官員
+- **關注點**: 系統邊界、外部依賴、利害關係人、法規合規
+
 ## 視點間的關聯
 
 各視點之間存在密切關聯，共同構成完整的系統架構描述：
 
 ```mermaid
 graph TD
-    F[功能視點] --> I[資訊視點]
+    Ctx[上下文視點] --> F[功能視點]
+    Ctx --> I[資訊視點]
+    F --> I
     F --> C[並發視點]
     I --> C
     F --> Dev[開發視點]
     I --> Dev
     C --> Dev
-    Dev --> Dep[部署視點]
+    Ctx --> Dep[部署視點]
+    Dev --> Dep
     Dep --> O[運營視點]
     C --> O
+    Ctx --> O
+    
+    classDef contextViewpoint fill:#e1f5fe,stroke:#0277bd,stroke-width:3px
+    classDef coreViewpoint fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef implementationViewpoint fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    
+    class Ctx contextViewpoint
+    class F,I,C coreViewpoint
+    class Dev,Dep,O implementationViewpoint
 ```
 
 ## 使用指南
