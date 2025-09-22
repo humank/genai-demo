@@ -242,6 +242,6 @@ npm test -- --testPathPatterns="consolidated-stack.test.ts"
 ## Resources
 
 - [AWS CDK Testing Guide](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
-- [CDK Assertions Library](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.assertions-readme.html)
+- [CDK Assertions Library](https://docs.aws.amazon.com/cdk/../api/v2/docs/aws-cdk-lib.assertions-readme.html)
 - [CDK Nag Documentation](https://github.com/cdklabs/cdk-nag)
 - [Jest Testing Framework](https://jestjs.io/docs/getting-started)

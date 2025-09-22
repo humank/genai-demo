@@ -166,7 +166,7 @@ docs/
 │   │       └── cost-optimization.mmd
 │   └── legacy/                        # 保留現有圖表
 │       └── [現有圖表檔案]
-├── api/                               # API 文件 (保持現有結構)
+├── ../api/                               # API 文件 (保持現有結構)
 ├── mcp/                               # MCP 整合文件 (保持現有結構)
 ├── releases/                          # 發布說明 (保持現有結構)
 ├── reports/                           # 專案報告 (保持現有結構)
@@ -235,8 +235,8 @@ docs/
 
 ## 相關圖表
 
-- [圖表1](../diagrams/viewpoints/[viewpoint]/[diagram1].mmd)
-- [圖表2](../diagrams/viewpoints/[viewpoint]/[diagram2].puml)
+- 圖表1
+- 圖表2
 
 ## 與其他視點的關聯
 
@@ -317,8 +317,8 @@ docs/
 > **基於 Rozanski & Woods 方法論的企業級架構展示**
 
 [![Architecture Excellence](https://img.shields.io/badge/Architecture-Excellence-blue.svg)](docs/architecture/rozanski-woods-architecture-assessment.md)
-[![Test Coverage](https://img.shields.io/badge/Tests-568%20Passed-green.svg)](docs/reports/reports-summaries/project-management/project-summary-2025.md)
-[![Documentation](https://img.shields.io/badge/Docs-120%2B%20Pages-orange.svg)](docs/README.md)
+[![Test Coverage](https://img.shields.io/badge/Tests-568-Passed-green.svg)](docs/reports/reports-summaries/project-management/project-summary-2025.md)
+[![Documentation](https://img.shields.io/badge/Docs-120%2B-Pages-orange.svg)](docs/README.md)
 
 ## 🎯 專案價值主張
 
@@ -358,21 +358,21 @@ docker-compose up -d
 - 🌐 **API 文檔**: http://localhost:8080/swagger-ui/index.html
 - 📊 **管理介面**: http://localhost:3002
 - 🛒 **消費者介面**: http://localhost:3001
-- 💰 **成本分析**: http://localhost:8080/api/cost-optimization/recommendations
+- 💰 **成本分析**: http://localhost:8080/../api/cost-optimization/recommendations
 
 ## 📚 學習資源
 
 ### 🎯 按學習目標導航
 - **學習現代架構** → [架構視點文檔](docs/viewpoints/README.md)
-- **學習 DDD 實踐** → [領域驅動設計](docs/viewpoints/functional/domain-model.md)
-- **學習測試策略** → [測試最佳實踐](docs/viewpoints/development/testing-strategy.md)
-- **學習 AI 輔助開發** → [MCP 整合指南](docs/mcp/README.md)
+- **學習 DDD 實踐** → 領域驅動設計
+- **學習測試策略** → 測試最佳實踐
+- **學習 AI 輔助開發** → MCP 整合指南
 
 ### 👨‍💼 按角色導航
-- **架構師** → [Rozanski & Woods 評估](docs/architecture/rozanski-woods-architecture-assessment.md)
-- **開發者** → [開發標準規範](docs/viewpoints/development/README.md)
-- **DevOps** → [部署和運營](docs/viewpoints/deployment/README.md)
-- **QA 工程師** → [測試性能監控](docs/viewpoints/development/testing-strategy.md)
+- **架構師** → Rozanski & Woods 評估
+- **開發者** → 開發標準規範
+- **DevOps** → 部署和運營
+- **QA 工程師** → 測試性能監控
 
 ## 🏆 專案成果
 
@@ -394,22 +394,22 @@ docker-compose up -d
 > **文檔中心**: [docs/README.md](docs/README.md)
 
 ### Rozanski & Woods 七大視點
-1. **[功能視點](docs/viewpoints/functional/README.md)** - 系統功能和職責
-2. **[資訊視點](docs/viewpoints/information/README.md)** - 資料和資訊流  
-3. **[並發視點](docs/viewpoints/concurrency/README.md)** - 並發和同步
-4. **[開發視點](docs/viewpoints/development/README.md)** - 開發和建置
-5. **[部署視點](docs/viewpoints/deployment/README.md)** - 部署和環境
-6. **[運營視點](docs/viewpoints/operational/README.md)** - 運營和維護
+1. **功能視點** - 系統功能和職責
+2. **資訊視點** - 資料和資訊流  
+3. **並發視點** - 並發和同步
+4. **開發視點** - 開發和建置
+5. **部署視點** - 部署和環境
+6. **運營視點** - 運營和維護
 
 ### 八大架構觀點
-1. **[安全性](docs/perspectives/security/README.md)** - 安全和合規
-2. **[性能](docs/perspectives/performance/README.md)** - 性能和可擴展性
-3. **[可用性](docs/perspectives/availability/README.md)** - 可用性和韌性
-4. **[演進性](docs/perspectives/evolution/README.md)** - 演進和維護
-5. **[使用性](docs/perspectives/usability/README.md)** - 使用者體驗
-6. **[法規](docs/perspectives/regulation/README.md)** - 法規合規
-7. **[位置](docs/perspectives/location/README.md)** - 地理分佈
-8. **[成本](docs/perspectives/cost/README.md)** - 成本優化
+1. **安全性** - 安全和合規
+2. **性能** - 性能和可擴展性
+3. **可用性** - 可用性和韌性
+4. **演進性** - 演進和維護
+5. **使用性** - 使用者體驗
+6. **法規** - 法規合規
+7. **位置** - 地理分佈
+8. **成本** - 成本優化
 
 ## 🤝 適用場景
 
@@ -450,40 +450,40 @@ docker-compose up -d
 
 ### 👨‍💼 按角色導航
 - **架構師** → [架構視點總覽](viewpoints/README.md)
-- **開發者** → [開發視點](viewpoints/development/README.md)
-- **運維工程師** → [運營視點](viewpoints/operational/README.md)
-- **安全工程師** → [安全性觀點](perspectives/security/README.md)
+- **開發者** → 開發視點
+- **運維工程師** → 運營視點
+- **安全工程師** → 安全性觀點
 
 ### 🔍 按關注點導航
-- **系統功能** → [功能視點](viewpoints/functional/README.md)
-- **資料架構** → [資訊視點](viewpoints/information/README.md)
-- **性能優化** → [性能觀點](perspectives/performance/README.md)
-- **系統韌性** → [可用性觀點](perspectives/availability/README.md)
+- **系統功能** → 功能視點
+- **資料架構** → 資訊視點
+- **性能優化** → 性能觀點
+- **系統韌性** → 可用性觀點
 
 ### 📊 視覺化導航
-- **架構圖表** → [圖表總覽](diagrams/README.md)
-- **Event Storming** → [事件風暴分析](viewpoints/information/event-storming.md)
-- **系統概覽** → [架構概覽圖](diagrams/viewpoints/functional/system-overview.mmd)
+- **架構圖表** → 圖表總覽
+- **Event Storming** → 事件風暴分析
+- **系統概覽** → 架構概覽圖
 
 ## 📚 Rozanski & Woods 方法論
 
 ### 七大架構視點 (Architectural Viewpoints)
-1. **[功能視點](viewpoints/functional/README.md)** - 系統功能和職責
-2. **[資訊視點](viewpoints/information/README.md)** - 資料和資訊流
-3. **[並發視點](viewpoints/concurrency/README.md)** - 並發和同步
-4. **[開發視點](viewpoints/development/README.md)** - 開發和建置
-5. **[部署視點](viewpoints/deployment/README.md)** - 部署和環境
-6. **[運營視點](viewpoints/operational/README.md)** - 運營和維護
+1. **功能視點** - 系統功能和職責
+2. **資訊視點** - 資料和資訊流
+3. **並發視點** - 並發和同步
+4. **開發視點** - 開發和建置
+5. **部署視點** - 部署和環境
+6. **運營視點** - 運營和維護
 
 ### 八大架構觀點 (Architectural Perspectives)
-1. **[安全性觀點](perspectives/security/README.md)** - 安全和合規
-2. **[性能觀點](perspectives/performance/README.md)** - 性能和可擴展性
-3. **[可用性觀點](perspectives/availability/README.md)** - 可用性和韌性
-4. **[演進性觀點](perspectives/evolution/README.md)** - 演進和維護
-5. **[使用性觀點](perspectives/usability/README.md)** - 使用者體驗和介面
-6. **[法規觀點](perspectives/regulation/README.md)** - 法規合規和治理
-7. **[位置觀點](perspectives/location/README.md)** - 地理分佈和本地化
-8. **[成本觀點](perspectives/cost/README.md)** - 成本優化和資源效率
+1. **安全性觀點** - 安全和合規
+2. **性能觀點** - 性能和可擴展性
+3. **可用性觀點** - 可用性和韌性
+4. **演進性觀點** - 演進和維護
+5. **使用性觀點** - 使用者體驗和介面
+6. **法規觀點** - 法規合規和治理
+7. **位置觀點** - 地理分佈和本地化
+8. **成本觀點** - 成本優化和資源效率
 
 ## 🔗 交叉引用矩陣
 
@@ -561,7 +561,7 @@ echo "🎨 生成所有圖表..."
 
 # 生成 PlantUML 圖表
 echo "📊 生成 PlantUML 圖表..."
-find docs/diagrams -name "*.puml" -exec java -jar tools/plantuml.jar -tsvg {} \;
+find docs/diagrams -name "*.puml" -exec java -jar tools-and-environment/plantuml.jar -tsvg {} \;
 
 # 生成 Excalidraw 圖表 (透過 MCP)
 echo "✏️ 生成 Excalidraw 圖表..."
@@ -628,9 +628,9 @@ if (file) {
 - **CDK Nag 規則解釋**: AI 輔助安全合規檢查
 
 ## 相關圖表
-- [基礎設施架構圖](../../diagrams/viewpoints/deployment/infrastructure-architecture.mmd)
-- [部署流程圖](../../diagrams/viewpoints/deployment/deployment-pipeline.mmd)
-- [多環境架構](../../diagrams/viewpoints/deployment/multi-environment.puml)
+- 基礎設施架構圖
+- 部署流程圖
+- 多環境架構
 ```
 
 ### Kiro Hook 自動化圖表生成系統

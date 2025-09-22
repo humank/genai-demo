@@ -14,7 +14,7 @@
 | `docs/design/` | 7 個文件 | DDD 指南、設計原則、重構指南 | 🔴 高 |
 | `docs/testing/` | 9 個文件 | 整合測試、效能監控、故障排除 | 🔴 高 |
 | `docs/architecture/` | 12 個文件 | 六角架構、事件驅動、可觀測性 | 🟡 中 |
-| `docs/api/` | 4 個文件 | API 版本管理、前端整合 | 🟡 中 |
+| `docs/../api/` | 4 個文件 | API 版本管理、前端整合 | 🟡 中 |
 
 ### 圖表分佈分析
 
@@ -66,14 +66,14 @@
 | `docs/development/testing-guide.md` | `docs/viewpoints/development/testing/README.md` | 整合 | P0 |
 | `docs/design/ddd-guide.md` | `docs/viewpoints/development/architecture/ddd-patterns/tactical-patterns.md` | 重構+實作導向 | P0 |
 | `docs/architecture/hexagonal-architecture.md` | `docs/viewpoints/development/architecture/hexagonal-architecture/README.md` | 遷移+擴展 | P0 |
-| `docs/design/design-principles.md` | `docs/viewpoints/development/architecture/design-principles.md` | 遷移 | P1 |
+| `docs/design/design-principles.md` | `docs/viewpoints/development/architecture/solid-design-patterns.md` | 遷移 | P1 |
 
 ### 測試相關內容遷移
 
 | 原始位置 | 目標位置 | 處理方式 | 優先級 |
 |----------|----------|----------|--------|
 | `docs/testing/README.md` | `docs/viewpoints/development/testing/README.md` | 整合+重構 | P0 |
-| `docs/testing/test-performance-monitoring.md` | `docs/viewpoints/development/testing/performance-testing.md` | 遷移+@TestPerformanceExtension | P0 |
+| `docs/testing/test-performance-monitoring.md` | `docs/viewpoints/development/testing/tdd-bdd-testing.md#效能測試` | 遷移+@TestPerformanceExtension | P0 |
 | `docs/testing/new-developer-onboarding-guide.md` | `docs/viewpoints/development/getting-started/first-contribution.md` | 整合 | P1 |
 | `docs/testing/http-client-configuration-guide.md` | `docs/viewpoints/development/tools-and-environment/technology-stack/testing-stack.md` | 整合 | P1 |
 

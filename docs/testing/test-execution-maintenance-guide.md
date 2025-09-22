@@ -399,7 +399,7 @@ test:
 @Test
 void slow_test_with_multiple_calls() {
     for (int i = 0; i < 10; i++) {
-        restTemplate.getForEntity(baseUrl + "/api/endpoint/" + i, String.class);
+        restTemplate.getForEntity(baseUrl + "/../api/endpoint/" + i, String.class);
     }
 }
 
@@ -408,7 +408,7 @@ void slow_test_with_multiple_calls() {
 void optimized_test_with_batch_operations() {
     List<String> ids = Arrays.asList("1", "2", "3", "4", "5");
     ResponseEntity<List<String>> response = restTemplate.postForEntity(
-        baseUrl + "/api/batch/endpoint", ids, List.class);
+        baseUrl + "/../api/batch/endpoint", ids, List.class);
 }
 ```
 
@@ -643,7 +643,7 @@ void should_create_and_retrieve_resource() {
     
     // When - Create resource
     ResponseEntity<ResourceResponse> createResponse = restTemplate.postForEntity(
-        baseUrl + "/api/v1/resources", request, ResourceResponse.class);
+        baseUrl + "/../api/v1/resources", request, ResourceResponse.class);
     
     // Then - Verify creation
     assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -651,7 +651,7 @@ void should_create_and_retrieve_resource() {
     
     // When - Retrieve resource
     ResponseEntity<ResourceResponse> getResponse = restTemplate.getForEntity(
-        baseUrl + "/api/v1/resources/" + resourceId, ResourceResponse.class);
+        baseUrl + "/../api/v1/resources/" + resourceId, ResourceResponse.class);
     
     // Then - Verify retrieval
     assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -703,7 +703,7 @@ headers.setContentType(MediaType.APPLICATION_JSON);
 HttpEntity<RequestDto> entity = new HttpEntity<>(requestDto, headers);
 
 ResponseEntity<ResponseDto> response = restTemplate.postForEntity(
-    baseUrl + "/api/v1/endpoint", entity, ResponseDto.class);
+    baseUrl + "/../api/v1/endpoint", entity, ResponseDto.class);
 ```
 
 **Error Handling Pattern**:
@@ -711,7 +711,7 @@ ResponseEntity<ResponseDto> response = restTemplate.postForEntity(
 ```java
 // Test error responses
 ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
-    baseUrl + "/api/v1/nonexistent", ErrorResponse.class);
+    baseUrl + "/../api/v1/nonexistent", ErrorResponse.class);
 
 assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 assertThat(response.getBody().getErrorCode()).isEqualTo("RESOURCE_NOT_FOUND");
@@ -767,8 +767,8 @@ void cleanup() {
 - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
 - [TestRestTemplate Troubleshooting Guide](testresttemplate-troubleshooting-guide.md)
 - [Test Configuration Examples](test-configuration-examples.md)
-- [Performance Standards](../../.kiro/steering/performance-standards.md)
-- [Development Standards](../../.kiro/steering/development-standards.md)
+- **Performance Standards** (請參考專案內部文檔)
+- **Development Standards** (請參考專案內部文檔)
 
 #### Code Examples
 

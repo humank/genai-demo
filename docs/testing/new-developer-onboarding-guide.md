@@ -211,7 +211,7 @@ open build/reports/test-performance/performance-report.html
 void should_retrieve_customer_by_id() {
     // Given
     String customerId = "test-customer-123";
-    String endpoint = baseUrl + "/api/v1/customers/" + customerId;
+    String endpoint = baseUrl + "/../api/v1/customers/" + customerId;
     
     // When
     ResponseEntity<CustomerResponse> response = restTemplate.getForEntity(
@@ -242,7 +242,7 @@ void should_create_new_customer() {
     
     // When
     ResponseEntity<CustomerResponse> response = restTemplate.postForEntity(
-        baseUrl + "/api/v1/customers", entity, CustomerResponse.class);
+        baseUrl + "/../api/v1/customers", entity, CustomerResponse.class);
     
     // Then
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -257,7 +257,7 @@ void should_create_new_customer() {
 void should_return_not_found_for_invalid_customer_id() {
     // Given
     String invalidId = "non-existent-customer";
-    String endpoint = baseUrl + "/api/v1/customers/" + invalidId;
+    String endpoint = baseUrl + "/../api/v1/customers/" + invalidId;
     
     // When
     ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(
@@ -385,7 +385,7 @@ void should_handle_unique_email_constraint() {
 @Test
 void slow_test_multiple_requests() {
     for (int i = 1; i <= 5; i++) {
-        restTemplate.getForEntity(baseUrl + "/api/customers/" + i, CustomerResponse.class);
+        restTemplate.getForEntity(baseUrl + "/../api/customers/" + i, CustomerResponse.class);
     }
 }
 
@@ -394,7 +394,7 @@ void slow_test_multiple_requests() {
 void optimized_test_batch_request() {
     List<String> customerIds = Arrays.asList("1", "2", "3", "4", "5");
     ResponseEntity<List<CustomerResponse>> response = restTemplate.postForEntity(
-        baseUrl + "/api/customers/batch", customerIds, List.class);
+        baseUrl + "/../api/customers/batch", customerIds, List.class);
 }
 ```
 
@@ -434,7 +434,7 @@ void test_without_cleanup() {
 }
 
 // Don't use hardcoded URLs
-String url = "http://localhost:8080/api/endpoint";
+String url = "http://localhost:8080/../api/endpoint";
 ```
 
 ### ✅ Do This Instead
@@ -459,7 +459,7 @@ void cleanup() {
 }
 
 // Use the provided baseUrl
-String endpoint = baseUrl + "/api/endpoint";
+String endpoint = baseUrl + "/../api/endpoint";
 ```
 
 ## Debugging Your Tests
@@ -486,7 +486,7 @@ String endpoint = baseUrl + "/api/endpoint";
 void debug_connection_timeout() {
     try {
         ResponseEntity<String> response = restTemplate.getForEntity(
-            baseUrl + "/api/slow-endpoint", String.class);
+            baseUrl + "/../api/slow-endpoint", String.class);
     } catch (ResourceAccessException e) {
         // Log the actual error for debugging
         System.out.println("Connection error: " + e.getMessage());

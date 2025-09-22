@@ -87,7 +87,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_create_customer_successfully() {
         // Given
-        String createCustomerEndpoint = baseUrl + "/api/v1/customers";
+        String createCustomerEndpoint = baseUrl + "/../api/v1/customers";
         
         CreateCustomerRequest request = new CreateCustomerRequest(
             "John Doe",
@@ -115,7 +115,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
     void should_retrieve_customer_by_id() {
         // Given - Create a customer first
         String customerId = createTestCustomer();
-        String getCustomerEndpoint = baseUrl + "/api/v1/customers/" + customerId;
+        String getCustomerEndpoint = baseUrl + "/../api/v1/customers/" + customerId;
         
         // When
         ResponseEntity<CustomerResponse> response = restTemplate.getForEntity(
@@ -131,7 +131,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
     void should_return_not_found_for_non_existent_customer() {
         // Given
         String nonExistentId = "non-existent-id";
-        String getCustomerEndpoint = baseUrl + "/api/v1/customers/" + nonExistentId;
+        String getCustomerEndpoint = baseUrl + "/../api/v1/customers/" + nonExistentId;
         
         // When
         ResponseEntity<String> response = restTemplate.getForEntity(
@@ -153,7 +153,7 @@ class CustomerApiIntegrationTest extends BaseIntegrationTest {
         HttpEntity<CreateCustomerRequest> entity = new HttpEntity<>(request, headers);
         
         ResponseEntity<CustomerResponse> response = restTemplate.postForEntity(
-            baseUrl + "/api/v1/customers", entity, CustomerResponse.class);
+            baseUrl + "/../api/v1/customers", entity, CustomerResponse.class);
         
         return response.getBody().getId();
     }
@@ -248,7 +248,7 @@ class ObservabilityIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_validate_structured_logging() {
         // Given
-        String testEndpoint = baseUrl + "/api/v1/test/logging";
+        String testEndpoint = baseUrl + "/../api/v1/test/logging";
         
         // When
         ResponseEntity<String> response = restTemplate.getForEntity(testEndpoint, String.class);
@@ -406,7 +406,7 @@ class CustomTimeoutIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_handle_slow_endpoint_with_custom_timeout() {
         // Given
-        String slowEndpoint = baseUrl + "/api/v1/slow-operation";
+        String slowEndpoint = baseUrl + "/../api/v1/slow-operation";
         
         // When - This endpoint might take up to 45 seconds
         ResponseEntity<String> response = restTemplate.getForEntity(slowEndpoint, String.class);
@@ -448,7 +448,7 @@ class AuthenticatedEndpointIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_access_protected_endpoint_with_valid_token() {
         // Given
-        String protectedEndpoint = baseUrl + "/api/v1/protected/resource";
+        String protectedEndpoint = baseUrl + "/../api/v1/protected/resource";
         
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
@@ -465,7 +465,7 @@ class AuthenticatedEndpointIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_reject_access_without_token() {
         // Given
-        String protectedEndpoint = baseUrl + "/api/v1/protected/resource";
+        String protectedEndpoint = baseUrl + "/../api/v1/protected/resource";
         
         // When
         ResponseEntity<String> response = restTemplate.getForEntity(
@@ -484,7 +484,7 @@ class AuthenticatedEndpointIntegrationTest extends BaseIntegrationTest {
         HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
         
         ResponseEntity<LoginResponse> response = restTemplate.postForEntity(
-            baseUrl + "/api/v1/auth/login", entity, LoginResponse.class);
+            baseUrl + "/../api/v1/auth/login", entity, LoginResponse.class);
         
         return response.getBody().getToken();
     }
@@ -539,7 +539,7 @@ class ErrorHandlingIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_return_validation_error_for_invalid_request() {
         // Given
-        String createCustomerEndpoint = baseUrl + "/api/v1/customers";
+        String createCustomerEndpoint = baseUrl + "/../api/v1/customers";
         
         // Invalid request - missing required fields
         InvalidCustomerRequest request = new InvalidCustomerRequest("", "", "");
@@ -562,7 +562,7 @@ class ErrorHandlingIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_handle_internal_server_error_gracefully() {
         // Given
-        String errorEndpoint = baseUrl + "/api/v1/test/error";
+        String errorEndpoint = baseUrl + "/../api/v1/test/error";
         
         // When
         ResponseEntity<ErrorResponse> response = restTemplate.getForEntity(

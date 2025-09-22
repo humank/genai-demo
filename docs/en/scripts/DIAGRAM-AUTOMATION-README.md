@@ -211,7 +211,7 @@ brew install openjdk
 
 # 手動下載
 mkdir -p tools
-curl -L -o tools/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar
+curl -L -o tools-and-environment/plantuml.jar https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar
 ```
 
 #### 3. Hook 未觸發

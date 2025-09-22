@@ -66,7 +66,7 @@
 │   └── cost/                       # Cost Perspective
 ├── concepts/                       # Design
 ├── legacy/                         # 歷史圖表
-└── tools/                          # Tools
+└── tools-and-environment/                          # Tools
 ```
 
 ## 🎯 核心架構圖表

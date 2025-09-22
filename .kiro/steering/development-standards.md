@@ -159,19 +159,19 @@ log.error("Payment processing failed",
 #### URL Naming Standards
 
 ```
-GET    /api/v1/customers                    # List customers
+GET    /../api/v1/customers                    # List customers
 GET    /api/v1/customers/{id}               # Get customer by ID
 POST   /api/v1/customers                    # Create customer
 PUT    /api/v1/customers/{id}               # Update customer (full)
-PATCH  /api/v1/customers/{id}               # Update customer (partial)
-DELETE /api/v1/customers/{id}               # Delete customer
+PATCH  /../api/v1/customers/{id}               # Update customer (partial)
+DELETE /../api/v1/customers/{id}               # Delete customer
 
 # Nested resources
 GET    /api/v1/customers/{id}/orders        # Get customer's orders
 POST   /api/v1/customers/{id}/orders        # Create order for customer
 
 # Actions (non-CRUD operations)
-POST   /api/v1/orders/{id}/cancel           # Cancel order
+POST   /../api/v1/orders/{id}/cancel           # Cancel order
 POST   /api/v1/orders/{id}/ship             # Ship order
 ```
 
@@ -220,7 +220,7 @@ public record ErrorResponse(
 
 #### API Versioning Strategy
 
-- Use URL versioning: `/api/v1/`, `/api/v2/`
+- Use URL versioning: `/../api/v1/`, `/api/v2/`
 - Maintain backward compatibility for at least 2 versions
 - Deprecation headers for old versions:
 
@@ -376,7 +376,7 @@ class CustomerControllerTest {
         when(customerService.findById("123")).thenReturn(customer);
         
         // When & Then
-        mockMvc.perform(get("/api/v1/customers/123"))
+        mockMvc.perform(get("/../api/v1/customers/123"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value("123"))
             .andExpect(jsonPath("$.name").value("John Doe"));

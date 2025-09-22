@@ -234,15 +234,15 @@ log.info("Order processed successfully",
 
 ### 架構和設計
 
-- [DDD 實踐指南](docs/viewpoints/development/architecture/ddd-patterns/tactical-patterns.md)
-- [六角形架構說明](docs/viewpoints/development/architecture/hexagonal-architecture/README.md)
+- [DDD 實踐指南](docs/viewpoints/development/architecture/ddd-domain-driven-design.md)
+- [六角形架構說明](docs/viewpoints/development/architecture/hexagonal-architecture.md)
 - [事件驅動設計](docs/architecture/event-driven-design.md)
 
 ### 開發標準
 
-- [代碼審查標準](.kiro/steering/code-review-standards.md)
-- [開發標準](.kiro/steering/development-standards.md)
-- [安全標準](.kiro/steering/security-standards.md)
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: **代碼審查標準** (請參考專案內部文檔) --> -->
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: **開發標準** (請參考專案內部文檔) --> -->
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: **安全標準** (請參考專案內部文檔) --> -->
 
 ### API 文檔
 
@@ -251,4 +251,4 @@ log.info("Order processed successfully",
 
 ---
 
-**快速求助**: 檢查 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) 或 [故障排除文檔](docs/troubleshooting/)
+**快速求助**: 檢查 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) 或 [故障排除文檔](docs/troubleshooting/README.md)

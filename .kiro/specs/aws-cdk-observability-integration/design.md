@@ -1518,7 +1518,7 @@ spec:
             cpu: "200m"
         livenessProbe:
           httpGet:
-            path: /api/health
+            path: /../api/health
             port: 3002
           initialDelaySeconds: 30
           periodSeconds: 30
@@ -1857,7 +1857,7 @@ Container Configuration:
   - Base Image: node:18-alpine (ARM64)
   - Build: Multi-stage with standalone output
   - Runtime: Node.js server
-  - Health Check: /api/health endpoint
+  - Health Check: /../api/health endpoint
 ```
 
 #### Consumer Frontend (Angular) - shop.kimkao.io
@@ -1986,7 +1986,7 @@ spec:
             cpu: "200m"
         livenessProbe:
           httpGet:
-            path: /api/health
+            path: /../api/health
             port: 3002
           initialDelaySeconds: 30
           periodSeconds: 30
@@ -2114,7 +2114,7 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: '/api/health',
+        source: '/../api/health',
         destination: '/api/health'
       }
     ];
@@ -2275,7 +2275,7 @@ services:
     dockerfile: cmc-frontend/Dockerfile  
     context: cmc-frontend/
     port: 3002
-    health_check: /api/health
+    health_check: /../api/health
     
   consumer-frontend:
     dockerfile: consumer-frontend/Dockerfile
@@ -2425,7 +2425,7 @@ const serviceMap = {
   'cmc.kimkao.io': {
     service: 'genai-demo-cmc-frontend-service', 
     port: 3002,
-    healthCheck: '/api/health'
+    healthCheck: '/../api/health'
   },
   'shop.kimkao.io': {
     service: 'genai-demo-consumer-frontend-service',

@@ -222,7 +222,7 @@ endlegend
 
 ```bash
 # 生成 PNG 圖片
-java -jar tools/plantuml.jar -tpng docs/diagrams/plantuml/*.puml
+java -jar tools-and-environment/plantuml.jar -tpng docs/diagrams/plantuml/*.puml
 
 # 生成 SVG 圖片
 java -jar tools/plantuml.jar -tsvg docs/diagrams/plantuml/*.puml

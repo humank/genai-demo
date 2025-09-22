@@ -241,9 +241,9 @@ log.info("Order processed successfully",
 
 ### Standards
 
-- [代碼審查標準](../../.kiro/steering/code-review-standards.md)
-- [開發標準](../../.kiro/steering/development-standards.md)
-- [安全標準](../../.kiro/steering/security-standards.md)
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **代碼審查標準** (請參考專案內部文檔) --> --> --> --> -->
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **開發標準** (請參考專案內部文檔) --> --> --> --> -->
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **安全標準** (請參考專案內部文檔) --> --> --> --> -->
 
 ### API 文檔
 

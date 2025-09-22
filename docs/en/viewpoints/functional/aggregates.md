@@ -905,20 +905,20 @@ public class Seller implements AggregateRootInterface {
 
 ## Related Diagrams
 
-- [Customer Aggregate Root Details](../../diagrams/generated/functional/Customer%20Aggregate%20Details.png)
-- [Order Aggregate Root Details](../../diagrams/generated/functional/Order%20Aggregate%20Details.png)
-- [Product Aggregate Root Details](../../diagrams/generated/functional/Product%20Aggregate%20Details.png)
-- [Seller Aggregate Root Details](../../diagrams/generated/functional/Seller%20Aggregate%20Details.png)
-- [Domain Model Overview](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
-- [Payment Aggregate Root Details](../../diagrams/generated/functional/Payment%20Aggregate%20Details.png)
-- [Inventory Aggregate Root Details](../../diagrams/generated/functional/Inventory%20Aggregate%20Details.png)
-- [Review Aggregate Root Details](../../diagrams/generated/functional/Review%20Aggregate%20Details.png)
-- [ShoppingCart Aggregate Root Details](../../diagrams/generated/functional/ShoppingCart%20Aggregate%20Details.png)
-- [Promotion Aggregate Root Details](../../diagrams/generated/functional/Promotion%20Aggregate%20Details.png)
-- [Pricing Aggregate Root Details](../../diagrams/generated/functional/Pricing%20Aggregate%20Details.png)
-- [Notification Aggregate Root Details](../../diagrams/generated/functional/Notification%20Aggregate%20Details.png)
-- [Delivery Aggregate Root Details](../../diagrams/generated/functional/Delivery%20Aggregate%20Details.png)
-- [Observability Aggregate Root Details](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png)
+- !!!!![Customer Aggregate Root Details](../../../diagrams/generated/functional/customer-aggregate-details.png)
+- !!!!![Order Aggregate Root Details](../../../diagrams/generated/functional/order-aggregate-details.png)
+- !!!!![Product Aggregate Root Details](../../../diagrams/generated/functional/product-aggregate-details.png)
+- !!!!![Seller Aggregate Root Details](../../../diagrams/generated/functional/seller-aggregate-details.png)
+- !!!!![Domain Model Overview](../../../diagrams/generated/functional/domain-model-overview.png)
+- !!!!![Payment Aggregate Root Details](../../../diagrams/generated/functional/payment-aggregate-details.png)
+- !!!!![Inventory Aggregate Root Details](../../../diagrams/generated/functional/inventory-aggregate-details.png)
+- !!!!![Review Aggregate Root Details](../../../diagrams/generated/functional/review-aggregate-details.png)
+- !!!!![ShoppingCart Aggregate Root Details](../../../diagrams/generated/functional/shoppingcart-aggregate-details.png)
+- !!!!![Promotion Aggregate Root Details](../../../diagrams/generated/functional/promotion-aggregate-details.png)
+- !!!!![Pricing Aggregate Root Details](../../../diagrams/generated/functional/pricing-aggregate-details.png)
+- !!!!![Notification Aggregate Root Details](../../../diagrams/generated/functional/notification-aggregate-details.png)
+- !!!!![Delivery Aggregate Root Details](../../../diagrams/generated/functional/delivery-aggregate-details.png)
+- !!!!![Observability Aggregate Root Details](../../../diagrams/generated/functional/observability-aggregate-details.png)
 
 ## Relationships with Other Viewpoints
 

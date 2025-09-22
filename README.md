@@ -89,7 +89,7 @@ npm install mcp-excalidraw-server
 **詳細指南**:
 - 📖 [MCP 整合指南](infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 - 🎨 [Excalidraw MCP 使用指南](docs/mcp/excalidraw-mcp-usage-guide.md)
-- 🚀 [快速開始指南](infrastructure/docs/MCP_INTEGRATION_GUIDE.md#-quick-start-installation-guide)
+- 🚀 快速開始指南
 
 ### 🤖 AI 輔助開發展示
 
@@ -194,21 +194,21 @@ docker-compose up -d
 - 🌐 **API 文檔**: http://localhost:8080/swagger-ui/index.html
 - 📊 **管理介面**: http://localhost:3002
 - 🛒 **消費者介面**: http://localhost:3001
-- 💰 **成本分析**: http://localhost:8080/api/cost-optimization/recommendations
+- 💰 **成本分析**: http://localhost:8080/../api/cost-optimization/recommendations
 
 ## 📚 學習資源
 
 ### 🎯 按學習目標導航
 - **學習現代架構** → [架構視點文檔](docs/viewpoints/README.md)
 - **學習 DDD 實踐** → [領域驅動設計](docs/viewpoints/functional/domain-model.md)
-- **學習測試策略** → [測試策略總覽](docs/viewpoints/development/testing/README.md)
+- **學習測試策略** → [測試策略總覽](docs/viewpoints/development/testing/tdd-bdd-testing.md)
 - **學習 AI 輔助開發** → [MCP 整合指南](docs/mcp/README.md)
 
 ### 👨‍💼 按角色導航
 - **架構師** → [Rozanski & Woods 評估](docs/architecture/rozanski-woods-architecture-assessment.md)
 - **開發者** → [開發標準規範](docs/viewpoints/development/README.md)
 - **DevOps** → [部署和運營](docs/viewpoints/deployment/README.md)
-- **QA 工程師** → [品質保證](docs/viewpoints/development/quality-assurance/README.md)
+- **QA 工程師** → [品質保證](docs/viewpoints/development/quality-assurance/../quality-assurance/../quality-assurance/quality-assurance.md)
 
 ## 🏆 專案成果
 
@@ -289,7 +289,7 @@ curl http://localhost:8080/actuator/metrics    # 應用指標
 curl http://localhost:8080/actuator/info       # 應用資訊
 
 # 成本優化 API
-curl http://localhost:8080/api/cost-optimization/recommendations  # 成本建議
+curl http://localhost:8080/../api/cost-optimization/recommendations  # 成本建議
 curl http://localhost:8080/api/cost-optimization/analysis         # 成本分析
 ```
 
@@ -314,7 +314,7 @@ docker-compose down
 - 🌐 **API 文檔**: <http://localhost:8080/swagger-ui/index.html>
 - 🏥 **健康檢查**: <http://localhost:8080/actuator/health>
 - 📊 **應用指標**: <http://localhost:8080/actuator/metrics>
-- 💰 **成本優化**: <http://localhost:8080/api/cost-optimization/recommendations>
+- 💰 **成本優化**: <http://localhost:8080/../api/cost-optimization/recommendations>
 - 🗄️ **H2 資料庫控制台**: <http://localhost:8080/h2-console>
 
 ### 方式二：本地開發環境
@@ -366,7 +366,7 @@ genai-demo/
 │   ├── docker-build.sh    # 映像構建腳本
 │   └── verify-deployment.sh # 部署驗證腳本
 ├── docs/                   # 專案文檔
-│   ├── api/               # API 文檔
+│   ├── ../api/               # API 文檔
 │   ├── en/                # 英文文檔
 │   ├── architecture/      # 架構文檔
 │   ├── diagrams/          # 圖表文檔 (Mermaid + PlantUML)
@@ -374,7 +374,7 @@ genai-demo/
 ├── scripts/                # 各種腳本檔案
 │   ├── start-fullstack.sh # 啟動全棧應用
 │   └── stop-fullstack.sh  # 停止所有服務
-├── tools/                  # 開發工具
+├── tools-and-environment/                  # 開發工具
 │   └── plantuml.jar       # UML 圖表生成工具
 ├── docker-compose.yml      # Docker Compose 配置
 ├── Dockerfile             # Docker 映像定義
@@ -469,8 +469,8 @@ TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 
 ```bash
 # 產品管理 API
-GET /api/products                 # 產品列表 (支持分頁)
-GET /api/products/{productId}     # 獲取單個產品
+GET /../api/products                 # 產品列表 (支持分頁)
+GET /../api/products/{productId}     # 獲取單個產品
 PUT /api/products/{productId}     # 更新產品信息
 DELETE /api/products/{productId}  # 刪除產品
 POST /api/products                # 創建新產品
@@ -572,15 +572,15 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 
 ### 🎯 核心開發標準
 
-- **[開發標準](/.kiro/steering/development-standards.md)**: 技術棧、錯誤處理、API 設計、測試策略
-- **[安全標準](/.kiro/steering/security-standards.md)**: 認證授權、資料保護、輸入驗證、安全測試
-- **[性能標準](/.kiro/steering/performance-standards.md)**: 響應時間、吞吐量、快取策略、性能監控
-- **[程式碼審查標準](/.kiro/steering/code-review-standards.md)**: 審查流程、品質檢查、回饋指南
-- **[測試性能標準](/.kiro/steering/test-performance-standards.md)**: 測試監控、資源管理、性能優化
+- **<!-- Kiro 配置連結: **開發標準** (請參考專案內部文檔) -->**: 技術棧、錯誤處理、API 設計、測試策略
+- **<!-- Kiro 配置連結: **安全標準** (請參考專案內部文檔) -->**: 認證授權、資料保護、輸入驗證、安全測試
+- **<!-- Kiro 配置連結: **性能標準** (請參考專案內部文檔) -->**: 響應時間、吞吐量、快取策略、性能監控
+- **<!-- Kiro 配置連結: **程式碼審查標準** (請參考專案內部文檔) -->**: 審查流程、品質檢查、回饋指南
+- **<!-- Kiro 配置連結: **測試性能標準** (請參考專案內部文檔) -->**: 測試監控、資源管理、性能優化
 
 ### 🏗️ 架構方法論
 
-- **[Rozanski & Woods 架構方法論](/.kiro/steering/rozanski-woods-architecture-methodology.md)**:
+- **<!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **Rozanski & Woods 架構方法論** (請參考專案內部文檔) --> --> -->**:
   - 強制性架構觀點檢查 (功能、資訊、並發、開發、部署、營運)
   - 品質屬性場景需求 (性能、安全、可用性、可擴展性、可用性)
   - 架構合規規則和 ArchUnit 測試
@@ -588,7 +588,7 @@ http://localhost:8080/h2-console  # 數據庫管理界面
 
 ### 📐 領域事件設計
 
-- **[領域事件指南](/.kiro/steering/domain-events.md)**:
+- ****領域事件指南** (請參考專案內部文檔)**:
   - 事件定義和收集標準
   - 事件處理和發布機制
   - 事件版本控制和向後相容性
@@ -833,7 +833,7 @@ graph TB
     class IAM,WAF,SECRETS,COMPLIANCE security
 ```
 - **🏗️ 架構師**: [架構決策記錄](docs/architecture/adr/) | [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/)
-- **👨‍💻 開發者**: [開發視點](docs/viewpoints/development/) | [API 文檔](docs/api/) | [開發工作流程](docs/viewpoints/development/workflows/development-workflow.md)
+- **👨‍💻 開發者**: [開發視點](docs/viewpoints/development/) | [API 文檔](docs/api/) | [開發工作流程](docs/viewpoints/development/workflows/../workflows/../workflows/workflows-collaboration.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
 - **🔍 可觀測性**: [生產環境測試指南](docs/viewpoints/operational/production-observability-testing-guide.md) | [可觀測性系統](docs/observability/)
 - **🤖 MCP 整合**: [MCP 指南](docs/mcp/) | [AI 輔助開發](docs/mcp/README.md)

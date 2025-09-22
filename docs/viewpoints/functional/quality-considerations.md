@@ -364,7 +364,7 @@ public class PricingService {
 
 ```java
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("/../api/v1/customers")
 public class CustomerV1Controller {
     
     @PostMapping
@@ -375,7 +375,7 @@ public class CustomerV1Controller {
 }
 
 @RestController
-@RequestMapping("/api/v2/customers")
+@RequestMapping("/../api/v2/customers")
 public class CustomerV2Controller {
     
     @PostMapping

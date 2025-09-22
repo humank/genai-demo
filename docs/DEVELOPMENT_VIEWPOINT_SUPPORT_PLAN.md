@@ -15,11 +15,11 @@
 **Coverage**: Common questions and basic navigation  
 
 #### Resources Available
-- **[Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)** - Immediate navigation help
+- **Quick Start Guide** - Immediate navigation help
 - **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)** - Complete transition instructions
-- **[FAQ Document](docs/viewpoints/development/FAQ.md)** - Common questions and answers
-- **[Video Library](training-materials/videos/)** - Self-paced learning resources
-- **[Interactive Tutorial](docs/viewpoints/development/tutorial/)** - Hands-on exploration
+- **FAQ Document** - Common questions and answers
+- **Video Library** - Self-paced learning resources
+- **Interactive Tutorial** - Hands-on exploration
 
 ### Tier 2: Community Support
 **Availability**: Business hours (9 AM - 6 PM)  
@@ -376,10 +376,10 @@
 - **Internal Portal**: support.company.com/dev-viewpoint
 
 ### Resource Links
-- **[Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)**
+- **Quick Start Guide**
 - **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)**
 - **[Training Materials](DEVELOPMENT_VIEWPOINT_TRAINING_MATERIALS.md)**
-- **[FAQ](docs/viewpoints/development/FAQ.md)**
+- **FAQ**
 - **[Change Log](DEVELOPMENT_VIEWPOINT_REORGANIZATION_CHANGELOG.md)**
 
 ### Office Hours Schedule

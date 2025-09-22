@@ -23,7 +23,7 @@
 ## 相關資源
 
 - [開發視點總覽](../README.md)
-- [架構指南](../architecture/README.md)
+- 架構指南
 
 ---
 

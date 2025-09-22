@@ -25,7 +25,7 @@ curl -s http://localhost:8080/actuator/health/kafka | jq '.status' || echo "⚠�
 
 # 3. 檢查分析 API
 echo "3. 測試分析 API..."
-response=$(curl -s -w "%{http_code}" -X POST http://localhost:8080/api/analytics/events \
+response=$(curl -s -w "%{http_code}" -X POST http://localhost:8080/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: health-check-$(date +%s)" \
   -H "X-Session-Id: health-check-session" \
@@ -56,7 +56,7 @@ echo "=== Health Check完成 ==="
 
 **症狀**:
 
-- 瀏覽器網路標籤中看不到 `/api/analytics/events` 請求
+- 瀏覽器網路標籤中看不到 `/../api/analytics/events` 請求
 - 前端控制台沒有錯誤訊息
 - 後端Logging中沒有收到事件的記錄
 
@@ -125,7 +125,7 @@ export const appConfig: ApplicationConfig = {
 **症狀**:
 
 ```
-Access to XMLHttpRequest at 'http://localhost:8080/api/analytics/events' 
+Access to XMLHttpRequest at 'http://localhost:8080/../api/analytics/events' 
 from origin 'http://localhost:4200' has been blocked by CORS policy
 ```
 
@@ -156,7 +156,7 @@ public class CorsConfiguration {
         configuration.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/../api/**", configuration);
         return source;
     }
 }
@@ -845,6 +845,6 @@ sysctl -p
 ## 相關文檔
 
 - [配置指南](../observability/configuration-guide.md)
-- [API 文檔](../api/observability-api.md)
+- [API 文檔](../../api/observability-api.md)
 - [Deployment指南](../deployment/observability-deployment.md)
 - \1

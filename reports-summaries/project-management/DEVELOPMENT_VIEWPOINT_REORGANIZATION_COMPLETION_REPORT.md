@@ -180,11 +180,11 @@ The Development Viewpoint reorganization project has been successfully completed
 - [x] Release announcement prepared
 
 **Key Outputs**:
-- [Development Viewpoint Reorganization Changelog](../DEVELOPMENT_VIEWPOINT_REORGANIZATION_CHANGELOG.md)
-- [Stakeholder Communication Document](../STAKEHOLDER_COMMUNICATION_DEVELOPMENT_VIEWPOINT.md)
-- [Training Materials](../DEVELOPMENT_VIEWPOINT_TRAINING_MATERIALS.md)
-- [Support Plan](../DEVELOPMENT_VIEWPOINT_SUPPORT_PLAN.md)
-- [Monitoring Plan](../DEVELOPMENT_VIEWPOINT_MONITORING_PLAN.md)
+- Development Viewpoint Reorganization Changelog
+- Stakeholder Communication Document
+- Training Materials
+- Support Plan
+- Monitoring Plan
 
 ## 🎯 Success Metrics Analysis
 

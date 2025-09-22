@@ -1,10 +1,10 @@
 
 # GenAI Demo 項目結構
 
-![Infrastructure Status](https://img.shields.io/badge/Infrastructure-✅%20Production%20Ready-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-103%20Passing-brightgreen)
+![Infrastructure Status](https://img.shields.io/badge/Infrastructure-✅-Production-Ready-brightgreen)
+![Tests](https://img.shields.io/badge/Tests-103-Passing-brightgreen)
 ![CDK](https://img.shields.io/badge/CDK-v2.208.0+-blue)
-![Architecture](https://img.shields.io/badge/Architecture-DDD%20%2B%20Hexagonal-orange)
+![Architecture](https://img.shields.io/badge/Architecture-DDD-%2B-Hexagonal-orange)
 
 ## 🏗️ 整體架構
 
@@ -66,7 +66,7 @@ genai-demo/
 ├── 📚 文檔和工具
 │   ├── docs/                     # 項目文檔
 │   │   ├── architecture/         # 架構文檔
-│   │   ├── api/                  # API 文檔
+│   │   ├── ../api/                  # API 文檔
 │   │   ├── development/          # Guidelines
 │   │   └── deployment/           # Deployment
 │   │

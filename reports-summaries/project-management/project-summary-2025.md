@@ -250,11 +250,11 @@ graph TB
 - [系統架構概覽](../../docs/diagrams/architecture-overview.md)
 - \1
 - \1
-- [領域事件設計指南](../../.kiro/steering/domain-events.md)
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **領域事件設計指南** (請參考專案內部文檔) --> --> --> --> -->
 
 ### 開發指南
 
-- [BDD + TDD 開發原則](../../.kiro/steering/bdd-tdd-principles.md)
+- <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **領域事件設計指南** (請參考專案內部文檔) --> --> --> --> -->
 - \1
 - \1
 - \1

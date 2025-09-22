@@ -159,7 +159,7 @@ graph TB
 
 ```http
 # 訂單管理
-POST   /api/v1/orders                    # 創建訂單
+POST   /../api/v1/orders                    # 創建訂單
 GET    /api/v1/orders/{orderId}          # 獲取訂單詳情
 PUT    /api/v1/orders/{orderId}/confirm  # 確認訂單
 DELETE /api/v1/orders/{orderId}          # 取消訂單
@@ -218,7 +218,7 @@ type Mutation {
 
 ```http
 # Customer管理
-POST   /api/v1/customers                 # 註冊Customer
+POST   /../api/v1/customers                 # 註冊Customer
 GET    /api/v1/customers/{customerId}    # 獲取Customer資訊
 PUT    /api/v1/customers/{customerId}    # 更新Customer資訊
 
@@ -344,7 +344,7 @@ X-RateLimit-Reset: 1642781400
 
 ### 📋 版本Policy
 
-- **URL 版本**: `/api/v1/orders`, `/api/v2/orders`
+- **URL 版本**: `/../api/v1/orders`, `/api/v2/orders`
 - **標頭版本**: `Accept: application/vnd.api+json;version=1`
 - **向後相容**: 支援舊版本至少 6 個月
 

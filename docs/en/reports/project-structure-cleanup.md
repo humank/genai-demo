@@ -81,7 +81,7 @@ genai-demo/
 │   └── ...                    # Other documentation categories
 ├── ../../../../../../infrastructure/             # AWS CDK infrastructure code
 ├── scripts/                    # Development and deployment scripts
-├── tools/                      # Development tools
+├── tools-and-environment/                      # Development tools
 ├── CHANGELOG.md               # Version update records
 ├── README.md                  # Project description (Chinese)
 ├── docker-compose.yml         # Docker Compose configuration

@@ -64,7 +64,7 @@ cat .kiro/settings/mcp.json | jq '.mcpServers | keys'
 
 ```bash
 # Test Excalidraw MCP server
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
   node node_modules/mcp-excalidraw-server/src/index.js | head -3
 
 # Test Time MCP server
@@ -232,7 +232,7 @@ The Excalidraw MCP server should already be configured in `.kiro/settings/mcp.js
 
 ```bash
 # Test the server directly
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
   node node_modules/mcp-excalidraw-server/src/index.js
 
 # Expected output: JSON response with available tools
@@ -620,7 +620,7 @@ Ask Kiro: "Calculate the time difference between New York and London"
    ls node_modules/mcp-excalidraw-server/src/index.js
    
    # Test the server manually with absolute path
-   echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+   echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
      node /ABSOLUTE/PATH/TO/PROJECT/node_modules/mcp-excalidraw-server/src/index.js
    
    # Verify Node.js version (requires v16+)

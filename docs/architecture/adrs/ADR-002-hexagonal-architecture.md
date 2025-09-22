@@ -47,9 +47,9 @@ infrastructure/
 ## 相關文檔
 
 - [架構總覽](../README.md)
-- [DDD 模式](../ddd-patterns/README.md)
-- [六角架構](../hexagonal-architecture/README.md)
+- DDD 模式
+- 六角架構
 
 ---
 
-*本文檔遵循 [Rozanski & Woods 架構方法論](../../../../.kiro/steering/rozanski-woods-architecture-methodology.md)*
+*本文檔遵循 <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **Rozanski & Woods 架構方法論** (請參考專案內部文檔) --> --> --> --> -->*

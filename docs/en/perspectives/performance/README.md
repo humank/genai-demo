@@ -19,7 +19,7 @@ Performance & Scalability Perspective關注系統的響應時間、吞吐量、R
 
 ## Cross-Viewpoint Application
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解Performance & Scalability Perspective對所有視點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md) 了解Performance & Scalability Perspective對所有視點的詳細影響分析
 
 ### 🔴 高影響視點
 

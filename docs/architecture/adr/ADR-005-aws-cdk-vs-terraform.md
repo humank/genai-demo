@@ -415,6 +415,6 @@ export class EksCluster extends Construct {
 ## References
 
 - [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/)
-- [AWS CDK API Reference](https://docs.aws.amazon.com/cdk/api/v2/)
+- [AWS CDK API Reference](https://docs.aws.amazon.com/cdk/../api/v2/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Infrastructure as Code Best Practices](https://aws.amazon.com/blogs/devops/best-practices-for-developing-cloud-applications-with-aws-cdk/)

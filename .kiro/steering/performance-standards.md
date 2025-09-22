@@ -313,7 +313,7 @@ public class AsyncConfiguration {
       
       <HTTPSamplerProxy testname="Get Customer">
         <stringProp name="HTTPSampler.domain">${baseUrl}</stringProp>
-        <stringProp name="HTTPSampler.path">/api/v1/customers/${customerId}</stringProp>
+        <stringProp name="HTTPSampler.path">/../api/v1/customers/${customerId}</stringProp>
         <stringProp name="HTTPSampler.method">GET</stringProp>
       </HTTPSamplerProxy>
       
@@ -359,7 +359,7 @@ class PerformanceTest extends BaseIntegrationTest {
                         long startTime = System.currentTimeMillis();
                         
                         ResponseEntity<CustomerResponse> response = restTemplate.getForEntity(
-                            "http://localhost:" + port + "/api/v1/customers/test-customer-" + j,
+                            "http://localhost:" + port + "/../api/v1/customers/test-customer-" + j,
                             CustomerResponse.class
                         );
                         

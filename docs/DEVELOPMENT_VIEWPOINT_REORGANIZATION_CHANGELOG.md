@@ -165,8 +165,8 @@ Users with bookmarks to development documentation will need to update them using
 
 Detailed migration instructions are available in:
 - **[Development Viewpoint Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)**
-- **[Quick Start Guide](docs/viewpoints/development/getting-started/README.md)**
-- **[Navigation Reference](docs/viewpoints/development/README.md)**
+- **Quick Start Guide**
+- **Navigation Reference**
 
 ## Rollback Plan
 

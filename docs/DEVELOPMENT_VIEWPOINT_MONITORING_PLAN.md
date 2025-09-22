@@ -211,7 +211,7 @@ def generate_report(all_results):
 
 <script>
 function submitFeedback(rating) {
-  fetch('/api/feedback', {
+  fetch('/../api/feedback', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({

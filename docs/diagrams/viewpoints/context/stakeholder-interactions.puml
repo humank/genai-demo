@@ -1,0 +1,89 @@
+@startuml stakeholder-interactions
+
+title 利害關係人互動圖
+
+' 主要利害關係人
+actor "終端客戶" as EndCustomer
+actor "企業客戶" as BusinessCustomer
+actor "個人賣家" as IndividualSeller
+actor "企業賣家" as BusinessSeller
+actor "平台管理員" as PlatformAdmin
+actor "客服人員" as CustomerService
+actor "配送員" as DeliveryPerson
+actor "財務人員" as FinanceTeam
+
+' 外部利害關係人
+actor "支付服務商" as PaymentProvider
+actor "物流合作夥伴" as LogisticsPartner
+actor "監管機構" as Regulator
+actor "技術合作夥伴" as TechPartner
+
+package "GenAI Demo 電商平台" as Platform {
+    component "使用者介面層" as UILayer
+    component "業務邏輯層" as BusinessLayer
+    component "資料存取層" as DataLayer
+    component "整合服務層" as IntegrationLayer
+}
+
+' 客戶互動
+EndCustomer --> UILayer : 瀏覽、購買、評價
+BusinessCustomer --> UILayer : 批量採購、合約管理
+EndCustomer --> CustomerService : 諮詢、申訴
+BusinessCustomer --> CustomerService : 商務洽談
+
+' 賣家互動
+IndividualSeller --> UILayer : 商品上架、訂單管理
+BusinessSeller --> UILayer : 大量商品管理、數據分析
+IndividualSeller --> CustomerService : 平台使用諮詢
+BusinessSeller --> PlatformAdmin : 合作洽談
+
+' 內部人員互動
+PlatformAdmin --> BusinessLayer : 系統管理、政策制定
+CustomerService --> BusinessLayer : 客戶問題處理
+FinanceTeam --> DataLayer : 財務報表、對帳
+DeliveryPerson --> IntegrationLayer : 配送狀態更新
+
+' 外部合作夥伴互動
+Platform --> PaymentProvider : 金流處理
+Platform --> LogisticsPartner : 物流服務
+Platform --> TechPartner : 技術支援
+Platform --> Regulator : 合規報告
+
+' 資訊流向
+UILayer --> BusinessLayer : 使用者請求
+BusinessLayer --> DataLayer : 資料操作
+BusinessLayer --> IntegrationLayer : 外部服務呼叫
+
+note top of EndCustomer
+  終端客戶需求:
+  - 便利的購物體驗
+  - 安全的支付環境
+  - 快速的配送服務
+  - 完善的售後服務
+end note
+
+note top of BusinessSeller
+  企業賣家需求:
+  - 強大的管理工具
+  - 詳細的數據分析
+  - 靈活的定價策略
+  - 多通路整合
+end note
+
+note right of PaymentProvider
+  合作關係:
+  - 手續費分潤
+  - 技術對接
+  - 風險控制
+  - 合規要求
+end note
+
+note right of Regulator
+  監管要求:
+  - 資料保護法規
+  - 消費者權益保護
+  - 稅務合規
+  - 反洗錢規定
+end note
+
+@enduml

@@ -109,7 +109,7 @@ void should_handle_connection_with_retry() {
         .build();
     
     ResponseEntity<String> response = retryTemplate.execute(context -> 
-        restTemplate.getForEntity(baseUrl + "/api/endpoint", String.class)
+        restTemplate.getForEntity(baseUrl + "/../api/endpoint", String.class)
     );
     
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -437,5 +437,5 @@ If issues persist after following this troubleshooting guide:
 
 - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
 - [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-- [Performance Standards](../../.kiro/steering/performance-standards.md)
-- [Development Standards](../../.kiro/steering/development-standards.md)
+- **Performance Standards** (請參考專案內部文檔)
+- **Development Standards** (請參考專案內部文檔)

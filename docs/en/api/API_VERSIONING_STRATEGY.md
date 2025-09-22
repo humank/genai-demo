@@ -20,7 +20,7 @@ This document定義了 GenAI Demo 專案的 API 版本管理Policy，確保 API 
 #### URL 路徑版本控制 (主要方式)
 
 ```
-/api/v1/products
+/../api/v1/products
 /api/v2/products
 ```
 
@@ -35,7 +35,7 @@ API-Version: v1
 
 ### 消費者 API (Consumer API)
 
-- **基礎路徑**: `/api/consumer/v1/`
+- **基礎路徑**: `/../api/consumer/v1/`
 - **目標用戶**: 終端消費者
 - **版本Policy**: 嚴格向後相容，長期支援
 
@@ -52,7 +52,7 @@ API-Version: v1
 
 ### 商務 API (Business API)
 
-- **基礎路徑**: `/api/business/v1/`
+- **基礎路徑**: `/../api/business/v1/`
 - **目標用戶**: 商務管理人員
 - **版本Policy**: 快速迭代，定期升級
 
@@ -67,7 +67,7 @@ API-Version: v1
 
 ### 內部 API (Internal API)
 
-- **基礎路徑**: `/api/internal/v1/`
+- **基礎路徑**: `/../api/internal/v1/`
 - **目標用戶**: 內部系統整合
 - **版本Policy**: 靈活變更，內部協調
 
@@ -124,7 +124,7 @@ API-Version: v1
 
 ```java
 @RestController
-@RequestMapping("/api/consumer/v1")
+@RequestMapping("/../api/consumer/v1")
 @Tag(name = "Consumer API v1", description = "消費者 API 第一版")
 public class ConsumerProductController {
     // 實作內容

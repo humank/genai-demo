@@ -60,17 +60,17 @@
 
 #### 產品控制器 (`ProductController.java`)
 
-- `GET /api/products` - 獲取產品列表（支持分頁）
+- `GET /../api/products` - 獲取產品列表（支持分頁）
 - `GET /api/products/{id}` - 獲取單個產品
 
 #### 客戶控制器 (`CustomerController.java`)
 
-- `GET /api/customers` - 獲取客戶列表（支持分頁）
+- `GET /../api/customers` - 獲取客戶列表（支持分頁）
 - `GET /api/customers/{id}` - 獲取單個客戶
 
 #### 活動記錄控制器 (`ActivityController.java`)
 
-- `GET /api/activities` - 獲取系統活動記錄
+- `GET /../api/activities` - 獲取系統活動記錄
 
 #### 統計控制器擴展 (`StatsController.java`)
 
@@ -81,7 +81,7 @@
 ### 統計相關
 
 ```
-GET /api/stats                    # 系統總體統計
+GET /../api/stats                    # 系統總體統計
 GET /api/stats/order-status       # 訂單狀態分布
 GET /api/stats/payment-methods    # 支付方式分布
 ```

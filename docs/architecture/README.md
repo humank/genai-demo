@@ -5,7 +5,7 @@
 ## 文檔列表
 
 - [架構概覽](overview.md) - 系統整體架構介紹
-- [六角形架構](../viewpoints/development/architecture/hexagonal-architecture/README.md) - 六角形架構實現詳解
+- 六角形架構 - 六角形架構實現詳解
 - [分層架構設計](layered-architecture-design.md) - 分層架構設計指南
 - [2025年架構改進](improvements-2025.md) - 最新架構改進記錄
 

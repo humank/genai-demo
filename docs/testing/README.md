@@ -6,19 +6,19 @@
 
 所有測試相關文檔現在統一整合在 **[Development Viewpoint 測試策略](../viewpoints/development/testing/)** 中，提供更完整和系統化的測試指南。
 
-**主要入口**: [測試策略總覽](../viewpoints/development/testing/README.md)
+**主要入口**: 測試策略總覽
 
 ## 📋 文檔遷移對照表
 
 | 原始文檔 | 新位置 | 說明 |
 |----------|--------|------|
-| [test-execution-maintenance-guide.md](test-execution-maintenance-guide.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 測試執行和維護指南 |
-| [test-performance-monitoring.md](test-performance-monitoring.md) | **[TestPerformanceExtension](../viewpoints/development/testing/performance-monitoring/test-performance-extension.md)** | 測試效能監控框架 |
-| [http-client-configuration-guide.md](http-client-configuration-guide.md) | **[整合測試](../viewpoints/development/testing/integration-testing.md)** | HTTP 客戶端配置指南 |
-| [new-developer-onboarding-guide.md](new-developer-onboarding-guide.md) | **[入門指南](../viewpoints/development/getting-started/first-contribution.md)** | 新開發者測試入門 |
-| [test-optimization-guidelines.md](test-optimization-guidelines.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 測試優化指南 |
-| [testresttemplate-troubleshooting-guide.md](testresttemplate-troubleshooting-guide.md) | **[整合測試](../viewpoints/development/testing/integration-testing.md)** | TestRestTemplate 故障排除 |
-| [common-test-failures-troubleshooting.md](common-test-failures-troubleshooting.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 常見測試失敗排除 |
+| [test-execution-maintenance-guide.md](test-execution-maintenance-guide.md) | **測試優化** | 測試執行和維護指南 |
+| [test-performance-monitoring.md](test-performance-monitoring.md) | **TestPerformanceExtension** | 測試效能監控框架 |
+| [http-client-configuration-guide.md](http-client-configuration-guide.md) | **整合測試** | HTTP 客戶端配置指南 |
+| [new-developer-onboarding-guide.md](new-developer-onboarding-guide.md) | **入門指南** | 新開發者測試入門 |
+| [test-optimization-guidelines.md](test-optimization-guidelines.md) | **測試優化** | 測試優化指南 |
+| [testresttemplate-troubleshooting-guide.md](testresttemplate-troubleshooting-guide.md) | **整合測試** | TestRestTemplate 故障排除 |
+| [common-test-failures-troubleshooting.md](common-test-failures-troubleshooting.md) | **測試優化** | 常見測試失敗排除 |
 
 ## 📚 新的測試文檔結構
 

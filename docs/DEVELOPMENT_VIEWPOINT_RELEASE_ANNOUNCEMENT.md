@@ -77,7 +77,7 @@ We've documented **every** development pattern we use:
 Use our **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)** - it has exact mappings from old to new locations.
 
 ### Step 2: Explore the New Structure (5 minutes)
-Start with our **[Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)** - you'll be navigating like a pro in minutes!
+Start with our **Quick Start Guide** - you'll be navigating like a pro in minutes!
 
 ### Step 3: Join the Community (1 minute)
 Join **#dev-viewpoint-migration** on Slack for tips, tricks, and instant support.
@@ -97,10 +97,10 @@ Join **#dev-viewpoint-migration** on Slack for tips, tricks, and instant support
 - **Office Hours**: Daily 4:00 PM - 4:30 PM (first week)
 
 ### 📚 Resources Ready for You
-- **[Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)** - 5-minute navigation mastery
+- **Quick Start Guide** - 5-minute navigation mastery
 - **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)** - Complete transition help
 - **[Training Materials](DEVELOPMENT_VIEWPOINT_TRAINING_MATERIALS.md)** - Self-paced learning
-- **[FAQ](docs/viewpoints/development/FAQ.md)** - Common questions answered
+- **FAQ** - Common questions answered
 
 ## 📊 What Success Looks Like
 
@@ -170,7 +170,7 @@ Suggest improvements and earn the **Documentation Champion Badge**!
 ## 🎯 Ready to Get Started?
 
 ### Your 5-Minute Quick Start
-1. **Bookmark** the [Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)
+1. **Bookmark** the Quick Start Guide
 2. **Join** #dev-viewpoint-migration on Slack
 3. **Explore** your most-used documentation areas
 4. **Update** your browser bookmarks
@@ -212,11 +212,11 @@ This is just the beginning! We have exciting plans for:
 
 ### Training and Learning
 - **Training Schedule**: [Training Materials](DEVELOPMENT_VIEWPOINT_TRAINING_MATERIALS.md)
-- **Self-Paced Learning**: [Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)
+- **Self-Paced Learning**: Quick Start Guide
 - **Video Library**: Available in training materials
 
 ### Resources and Documentation
-- **[Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)** - Start here!
+- **Quick Start Guide** - Start here!
 - **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)** - Complete transition help
 - **[Change Log](DEVELOPMENT_VIEWPOINT_REORGANIZATION_CHANGELOG.md)** - Detailed changes
 - **[Support Plan](DEVELOPMENT_VIEWPOINT_SUPPORT_PLAN.md)** - Ongoing support details

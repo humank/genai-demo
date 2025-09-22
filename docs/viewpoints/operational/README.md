@@ -48,7 +48,7 @@
 
 ## 品質屬性考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#運營視點-operational-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

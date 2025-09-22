@@ -49,7 +49,7 @@ docs/viewpoints/development/
 1. Update browser bookmarks to new locations
 2. Review the [Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)
 3. Attend optional training session (scheduled for next week)
-4. Use new [Quick Start Guide](docs/viewpoints/development/getting-started/README.md)
+4. Use new Quick Start Guide
 
 ### Architecture Team
 **Impact**: Medium - Documentation references updated  
@@ -58,7 +58,7 @@ docs/viewpoints/development/
 **Support**: Enhanced architecture pattern documentation  
 
 **Immediate Actions**:
-1. Review new [Architecture Patterns](docs/viewpoints/development/architecture/README.md)
+1. Review new Architecture Patterns
 2. Validate DDD and Saga pattern documentation accuracy
 3. Update any external architecture references
 4. Provide feedback on new structure
@@ -81,7 +81,7 @@ docs/viewpoints/development/
 **Support**: Enhanced build system documentation  
 
 **Immediate Actions**:
-1. Review [Build System Documentation](docs/viewpoints/development/build-system/README.md)
+1. Review Build System Documentation
 2. Validate CI/CD integration guides
 3. Update any automation scripts referencing old paths
 
@@ -92,7 +92,7 @@ docs/viewpoints/development/
 **Support**: Comprehensive testing strategy documentation  
 
 **Immediate Actions**:
-1. Review new [Testing Documentation](docs/viewpoints/development/testing/README.md)
+1. Review new Testing Documentation
 2. Update test plan templates with new references
 3. Validate BDD and TDD documentation accuracy
 
@@ -142,8 +142,8 @@ docs/viewpoints/development/
 
 ### Immediate Resources Available
 1. **[Migration Guide](DEVELOPMENT_VIEWPOINT_MIGRATION_GUIDE.md)** - Step-by-step transition instructions
-2. **[Quick Reference Card](docs/viewpoints/development/QUICK_REFERENCE.md)** - New navigation cheat sheet
-3. **[FAQ Document](docs/viewpoints/development/FAQ.md)** - Common questions and answers
+2. **Quick Reference Card** - New navigation cheat sheet
+3. **FAQ Document** - Common questions and answers
 4. **Support Channel**: #dev-viewpoint-migration (Slack)
 
 ### Training Schedule
@@ -153,7 +153,7 @@ docs/viewpoints/development/
 - **Office Hours**: Daily 4:00 PM - 4:30 PM (first week)
 
 ### Self-Service Options
-- **Interactive Tutorial**: Available at [docs/viewpoints/development/tutorial/](docs/viewpoints/development/tutorial/)
+- **Interactive Tutorial**: Available at docs/viewpoints/development/tutorial/
 - **Video Walkthrough**: 15-minute overview video (link in migration guide)
 - **Practice Environment**: Sandbox documentation for exploration
 

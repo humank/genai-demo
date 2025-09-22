@@ -19,7 +19,7 @@ Security Perspective關注系統的安全防護能力，包括認證、授權、
 
 ## Cross-Viewpoint Application
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解Security Perspective對所有視點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md) 了解Security Perspective對所有視點的詳細影響分析
 
 ### 🔴 高影響視點
 

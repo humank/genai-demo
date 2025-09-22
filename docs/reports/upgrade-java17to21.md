@@ -4,13 +4,13 @@
 
 ## 目錄
 
-1. [Pattern Matching for instanceof](#1-pattern-matching-for-instanceof)
+1. Pattern Matching for instanceof
 2. [增強型 Switch 表達式](#2-增強型-switch-表達式)
 3. [String Templates](#3-string-templates)
 4. [Record 類型](#4-record-類型)
 5. [SequencedCollection 接口](#5-sequencedcollection-接口)
 6. [虛擬線程](#6-虛擬線程)
-7. [Pattern Matching for Switch](#7-pattern-matching-for-switch)
+7. Pattern Matching for Switch
 8. [函數式接口與延遲計算](#8-函數式接口與延遲計算)
 9. [總結與 DDD 合規性](#9-總結與-ddd-合規性)
 

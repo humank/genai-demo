@@ -16,8 +16,8 @@ The file contained duplicate image references at the end, with some pointing to:
 ### 2. Mixed Link Formats
 
 Some links were using different formats:
-- Correct: `![Alt Text](../../diagrams/generated/functional/File%20Name.png)`
-- Incorrect: `![Alt Text](../../diagrams/viewpoints/functional/file-name.puml)`
+- Correct: `!!!!!![Alt Text](../../docs/diagrams/generated/legacy/.png)`
+- Incorrect: `!Alt Text`
 
 ## Fixes Applied
 
@@ -26,17 +26,17 @@ Some links were using different formats:
 Removed the following duplicate and incorrect references from the end of the file:
 
 ```markdown
-![User Journey Overview](../../diagrams/viewpoints/functional/user-journey-overview.puml)
-![Application Services Overview](../../diagrams/viewpoints/functional/application-services-overview.puml)
-![Domain Model Overview](../../diagrams/viewpoints/functional/domain-model-overview.puml)
-![Infrastructure Layer Overview](../../diagrams/viewpoints/functional/infrastructure-layer-overview.puml)
-![Bdd Features Overview](../../diagrams/viewpoints/functional/bdd-features-overview.puml)
-![Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
-![Hexagonal Architecture Overview](../../diagrams/viewpoints/functional/hexagonal-architecture-overview.puml)
-![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.mmd)
-![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.svg)
-![System Overview](../../diagrams/viewpoints/functional/system-overview.mmd)
-![System Overview](../../diagrams/viewpoints/functional/system-overview.svg)
+!User Journey Overview
+!Application Services Overview
+!Domain Model Overview
+!Infrastructure Layer Overview
+!Bdd Features Overview
+!Bounded Contexts Overview
+!Hexagonal Architecture Overview
+!Functional Overview
+!Functional Overview
+!System Overview
+!System Overview
 ```
 
 ### Verified Correct References Remain
@@ -44,22 +44,22 @@ Removed the following duplicate and incorrect references from the end of the fil
 The following correct references were preserved:
 
 #### Overview Sections
-- `![功能架構概覽](../../diagrams/generated/functional/functional-detailed.png)`
-- `![領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)`
-- `![界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)`
+- `!!!!!![功能架構概覽](../../docs/diagrams/generated/functional/functional-detailed.png)`
+- `!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)`
+- `!!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)`
 
 #### Use Case Analysis Links
-- `[業務流程概覽](../../diagrams/generated/functional/Business%20Process%20Flows.png)`
-- `[用戶旅程概覽](../../diagrams/generated/functional/User%20Journey%20Overview.png)`
-- `[應用服務概覽](../../diagrams/generated/functional/Application%20Services%20Overview.png)`
+- `!!!!![業務流程概覽](../../docs/diagrams/generated/functional/business-process-flows.png)`
+- `!!!!![用戶旅程概覽](../../docs/diagrams/generated/functional/user-journey-overview.png)`
+- `!!!!![應用服務概覽](../../docs/diagrams/generated/functional/application-services-overview.png)`
 
 #### Architecture Overview Links
-- `[六角架構概覽 (PlantUML)](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png)`
+- `!!!!![六角架構概覽 (PlantUML)](../../docs/diagrams/generated/functional/hexagonal-architecture-overview.png)`
 
 #### Domain Model Charts
-- `[領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)`
-- `[界限上下文概念圖](../../diagrams/generated/functional/Bounded%20Contexts%20Concept.png)`
-- `[界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)`
+- `!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)`
+- `!!!!![界限上下文概念圖](../../docs/diagrams/generated/functional/bounded-contexts-concept.png)`
+- `!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)`
 
 ## Validation Results
 
@@ -79,13 +79,13 @@ All referenced diagram files exist and are accessible:
 
 ```bash
 ✅ docs/diagrams/generated/functional/functional-detailed.png
-✅ docs/diagrams/generated/functional/Domain Model Overview.png
-✅ docs/diagrams/generated/functional/Bounded Contexts Overview.png
-✅ docs/diagrams/generated/functional/Business Process Flows.png
-✅ docs/diagrams/generated/functional/User Journey Overview.png
-✅ docs/diagrams/generated/functional/Application Services Overview.png
-✅ docs/diagrams/generated/functional/Hexagonal Architecture Overview.png
-✅ docs/diagrams/generated/functional/Bounded Contexts Concept.png
+✅ docs/diagrams/generated/functional/domain-model-overview.png
+✅ docs/diagrams/generated/functional/bounded-contexts-overview.png
+✅ docs/diagrams/generated/functional/business-process-flows.png
+✅ docs/diagrams/generated/functional/user-journey-overview.png
+✅ docs/diagrams/generated/functional/application-services-overview.png
+✅ docs/diagrams/generated/functional/hexagonal-architecture-overview.png
+✅ docs/diagrams/generated/functional/bounded-contexts-concept.png
 ```
 
 ## Best Practices Applied

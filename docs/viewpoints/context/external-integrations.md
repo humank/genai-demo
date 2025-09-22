@@ -47,7 +47,7 @@ stripe_integration:
     publishable_key: "${STRIPE_PUBLISHABLE_KEY}"
   
   webhooks:
-    endpoint: "/api/v1/webhooks/stripe"
+    endpoint: "/../api/v1/webhooks/stripe"
     events:
       - "payment_intent.succeeded"
       - "payment_intent.payment_failed"
@@ -132,7 +132,7 @@ paypal_integration:
     get_order: "/v2/checkout/orders/{id}"
   
   webhooks:
-    endpoint: "/api/v1/webhooks/paypal"
+    endpoint: "/../api/v1/webhooks/paypal"
     events:
       - "CHECKOUT.ORDER.APPROVED"
       - "PAYMENT.CAPTURE.COMPLETED"

@@ -6,111 +6,110 @@ Development Viewpoint 提供了完整的開發指南和最佳實踐，整合了�
 
 ## 🚀 快速開始
 
-### 新手入門
-- [📚 快速入門指南](getting-started/README.md) - 環境設置和首次貢獻
-- [⚙️ 環境配置](getting-started/environment-setup.md) - 開發環境完整設置
-- [✅ 前置需求](getting-started/prerequisites.md) - 必要工具和知識檢查清單
+### 🎯 新手入門
+- [📚 快速入門指南](getting-started.md) - 完整的新手入門指南，包含環境設置、專案結構和第一次貢獻
 
-### 核心概念
-- [🏗️ 架構設計](architecture/README.md) - DDD、六角架構、微服務、Saga 模式
-- [📋 編碼標準](coding-standards/README.md) - Java、前端、API 設計規範
-- [🧪 測試策略](testing/README.md) - TDD、BDD、效能測試、架構測試
+### 🏗️ 核心概念
+- [🏗️ 架構設計](architecture/) - DDD、六角架構、微服務、Saga 模式
+- [📋 編碼標準](coding-standards.md) - Java、前端、API 設計和文檔標準
+- [🧪 測試策略](testing/) - TDD、BDD、效能測試、架構測試
 
 ## 🏗️ 架構與設計模式
 
 ### DDD 領域驅動設計
-- [🎯 DDD 戰術模式](architecture/ddd-patterns/README.md)
-  - [@AggregateRoot 聚合根](architecture/ddd-patterns/tactical-patterns.md#aggregateroot)
-  - [@ValueObject 值對象](architecture/ddd-patterns/tactical-patterns.md#valueobject)
-  - [@Entity 實體](architecture/ddd-patterns/tactical-patterns.md#entity)
-  - [@DomainService 領域服務](architecture/ddd-patterns/tactical-patterns.md#domainservice)
-- [📡 領域事件](architecture/ddd-patterns/domain-events.md) - Record 實作、事件收集與發布
+- 🎯 DDD 領域驅動設計 - 完整的 DDD 實作指南
+  - @AggregateRoot 聚合根 - 事件收集與管理
+  - @ValueObject 值對象 - Record 實作模式
+  - @Entity 實體 - 業務邏輯封裝
+  - @DomainService 領域服務 - 跨聚合業務邏輯
+  - 📡 領域事件 - Record 實作、事件收集與發布
 
 ### 六角架構
-- [🔵 六角架構總覽](architecture/hexagonal-architecture/README.md)
-- [🔌 Port-Adapter 模式](architecture/hexagonal-architecture/ports-adapters.md)
-- [🔄 依賴反轉](architecture/hexagonal-architecture/dependency-inversion.md)
-- [📚 分層設計](architecture/hexagonal-architecture/layered-design.md)
+- 🔵 六角架構 - 完整的六角架構指南
+  - 六角架構總覽 - 核心概念與架構原則
+  - 🔌 Port-Adapter 模式 - 端口與適配器設計
+  - 🔄 依賴反轉 - 依賴反轉原則應用
+  - 📚 分層設計 - 清晰的層級職責劃分
 
 ### 微服務架構
-- [🌐 微服務設計](architecture/microservices/README.md)
-- [🚪 API Gateway](architecture/microservices/api-gateway.md)
-- [🔍 Service Discovery](architecture/microservices/service-discovery.md)
-- [⚖️ Load Balancing](architecture/microservices/load-balancing.md)
-- [🔧 Circuit Breaker](architecture/microservices/circuit-breaker.md)
+- 🌐 微服務架構 - 微服務設計與實作
+  - 微服務設計原則
+  - 🚪 API Gateway 配置
+  - 🔍 Service Discovery 實作
+  - ⚖️ Load Balancing 策略
+  - 🔧 Circuit Breaker 模式
 
 ### Saga 模式
-- [🎭 Saga 模式總覽](architecture/saga-patterns/README.md)
-- [🎼 編排式 Saga](architecture/saga-patterns/orchestration.md)
-- [💃 編舞式 Saga](architecture/saga-patterns/choreography.md)
-- [🛒 訂單處理 Saga](architecture/saga-patterns/order-processing-saga.md)
-- [💳 支付 Saga](architecture/saga-patterns/payment-saga.md)
+- 🎭 Saga 模式 - 分散式事務處理
+  - Saga 模式總覽
+  - 🎼 編排式 Saga 實作
+  - 💃 編舞式 Saga 設計
+  - 🛒 訂單處理 Saga 範例
+  - 💳 支付 Saga 流程
 
 ## 🧪 測試與品質保證
 
-### TDD 測試驅動開發
-- [🔴🟢🔵 Red-Green-Refactor](testing/tdd-practices/red-green-refactor.md)
-- [🏗️ 測試金字塔](testing/tdd-practices/test-pyramid.md)
-- [⚡ 單元測試模式](testing/tdd-practices/unit-testing-patterns.md)
-
-### BDD 行為驅動開發
-- [📝 Gherkin 語法](testing/bdd-practices/gherkin-guidelines.md)
-- [📋 Given-When-Then](testing/bdd-practices/given-when-then.md)
-- [🎬 Feature 文件編寫](testing/bdd-practices/feature-writing.md)
-- [🎯 場景設計](testing/bdd-practices/scenario-design.md)
-
-### 測試類型
-- [🔗 整合測試](testing/integration-testing.md)
-- [⚡ 效能測試](testing/performance-testing.md) - @TestPerformanceExtension
-- [🏛️ 架構測試](testing/architecture-testing.md) - ArchUnit 規則
-- [🤖 測試自動化](testing/test-automation.md)
+### TDD 測試驅動開發 & BDD 行為驅動開發
+- 🧪 TDD & BDD 完整指南 - 測試驅動開發與行為驅動開發
+  - 🔴🟢🔵 Red-Green-Refactor 循環
+  - 🏗️ 測試金字塔 - 單元、整合、端到端測試
+  - ⚡ 單元測試模式 - 測試建構器與命名規範
+  - 📝 Gherkin 語法 - BDD 場景描述語言
+  - 📋 Given-When-Then 模式
+  - 🎬 Feature 文件編寫指南
+  - 🎯 場景設計原則
+  - 🔗 整合測試策略
+  - ⚡ 效能測試 - @TestPerformanceExtension
+  - 🏛️ 架構測試 - ArchUnit 規則
+  - 🤖 測試自動化 - CI/CD 整合
 
 ## 🛠️ 技術棧與工具鏈
 
-### 後端技術
-- [☕ Spring Boot 3.4.5 + Java 21](tools-and-environment/technology-stack/backend-stack.md)
-- [🗄️ PostgreSQL + H2 + Flyway](tools-and-environment/technology-stack/database-stack.md)
-- [📊 Spring Boot Actuator + AWS X-Ray](tools-and-environment/technology-stack/monitoring-stack.md)
-
-### 前端技術
-- [⚛️ Next.js 14 + React 18](tools-and-environment/technology-stack/frontend-stack.md)
-- [🅰️ Angular 18 + TypeScript](tools-and-environment/technology-stack/frontend-stack.md)
-- [🎨 shadcn/ui + Radix UI](tools-and-environment/technology-stack/frontend-stack.md)
-
-### 測試框架
-- [🧪 JUnit 5 + Mockito + AssertJ](tools-and-environment/technology-stack/testing-stack.md)
-- [🥒 Cucumber 7 + Gherkin](tools-and-environment/technology-stack/testing-stack.md)
-
-### 基礎設施
-- [☁️ AWS CDK + TypeScript](tools-and-environment/technology-stack/infrastructure-stack.md)
-- [🐳 EKS + MSK + Route 53](tools-and-environment/technology-stack/infrastructure-stack.md)
+### 完整技術棧指南
+- 🛠️ 技術棧與工具鏈 - 完整的技術棧整合指南
+  - ☕ Spring Boot 3.4.5 + Java 21 + Gradle 8.x - 後端核心技術
+  - 🗄️ PostgreSQL + H2 + Flyway - 資料庫技術棧
+  - 📊 Spring Boot Actuator + AWS X-Ray - 監控與追蹤
+  - ⚛️ Next.js 14 + React 18 - CMC 管理介面
+  - 🅰️ Angular 18 + TypeScript - 消費者應用
+  - 🎨 shadcn/ui + Radix UI - UI 組件庫
+  - 🧪 JUnit 5 + Mockito + AssertJ - 測試框架
+  - 🥒 Cucumber 7 + Gherkin - BDD 測試
+  - ☁️ AWS CDK + TypeScript - 基礎設施即代碼
+  - 🐳 EKS + MSK + Route 53 - AWS 雲端服務
+  - 🔧 建置與部署 - Gradle、CI/CD、品質保證
 
 ## 🔧 建置與部署
 
-### 建置系統
-- [🐘 Gradle 配置](build-system/gradle-configuration.md)
-- [📦 多模組設置](build-system/multi-module-setup.md)
-- [📚 依賴管理](build-system/dependency-management.md)
-- [🚀 CI/CD 整合](build-system/ci-cd-integration.md)
+### 完整建置與部署指南
+- 🔧 建置與部署 - 完整的建置與部署指南
+  - 🐘 Gradle 配置 - 基本配置、建置任務、Wrapper 設定
+  - 📦 多模組設置 - 專案結構、子模組配置
+  - 📚 依賴管理 - 版本目錄、依賴策略
+  - 🚀 CI/CD 整合 - GitHub Actions、Docker、部署自動化
+  - 部署策略 - 環境配置、部署腳本、健康檢查
+  - 效能優化 - 建置效能、應用程式效能
+  - 監控與日誌 - 應用程式監控、日誌配置
 
 ### 品質保證
-- [👀 程式碼審查](quality-assurance/code-review.md)
-- [🔍 靜態分析](quality-assurance/static-analysis.md)
-- [🔒 安全掃描](quality-assurance/security-scanning.md)
-- [📊 效能監控](quality-assurance/performance-monitoring.md)
+- 🔍 品質保證 - 完整的品質保證指南
+  - 👀 程式碼審查 - 審查流程、檢查清單、反饋指南
+  - 🔍 靜態分析 - SonarQube、Checkstyle、SpotBugs
+  - 🔒 安全掃描 - OWASP、依賴檢查、安全程式碼
+  - 📊 效能監控 - Micrometer、業務指標、效能測試
+  - 品質門檻與自動化 - 品質標準、自動化檢查
 
 ## 🔄 工作流程與協作
 
-### 開發流程
-- [🔄 開發工作流程](workflows/development-workflow.md)
-- [🚀 發布流程](workflows/release-process.md)
-- [🔥 熱修復流程](workflows/hotfix-process.md)
-- [♻️ 重構策略](workflows/refactoring-strategy.md)
-
-### 團隊協作
-- [🤝 協作指南](workflows/collaboration-guidelines.md)
-- [📝 文檔標準](coding-standards/documentation-standards.md)
-- [🔍 程式碼審查指南](coding-standards/code-review-guidelines.md)
+### 完整工作流程與協作指南
+- 🔄 工作流程與協作 - 完整的工作流程指南
+  - 🔄 開發工作流程 - 需求分析、設計、BDD、TDD、審查
+  - 🚀 發布流程 - 版本控制、發布分支、部署管道
+  - 🔥 熱修復流程 - 緊急修復、決策矩陣
+  - ♻️ 重構策略 - 安全重構、重構檢查清單
+  - 🤝 團隊協作 - 溝通原則、會議管理、知識分享
+  - 協作工具 - 專案管理、溝通工具
+  - 📊 指標和改進 - 開發指標、持續改進
 
 ## 📊 相關圖表
 
@@ -129,38 +128,38 @@ Development Viewpoint 提供了完整的開發指南和最佳實踐，整合了�
 ## 🎯 SOLID 原則與設計模式
 
 ### SOLID 原則
-- [📏 單一職責原則 (SRP)](architecture/design-principles.md#single-responsibility)
-- [🔓 開放封閉原則 (OCP)](architecture/design-principles.md#open-closed)
-- [🔄 里氏替換原則 (LSP)](architecture/design-principles.md#liskov-substitution)
-- [🔌 介面隔離原則 (ISP)](architecture/design-principles.md#interface-segregation)
-- [🔄 依賴反轉原則 (DIP)](architecture/design-principles.md#dependency-inversion)
+- 📏 單一職責原則 (SRP)
+- 🔓 開放封閉原則 (OCP)
+- 🔄 里氏替換原則 (LSP)
+- 🔌 介面隔離原則 (ISP)
+- 🔄 依賴反轉原則 (DIP)
 
 ### 設計模式
-- [🏭 Factory 模式](architecture/design-principles.md#factory-pattern)
-- [🔨 Builder 模式](architecture/design-principles.md#builder-pattern)
-- [📋 Strategy 模式](architecture/design-principles.md#strategy-pattern)
-- [👁️ Observer 模式](architecture/design-principles.md#observer-pattern)
-- [🙈 Show Don't Ask](architecture/design-principles.md#show-dont-ask)
+- 🏭 Factory 模式
+- 🔨 Builder 模式
+- 📋 Strategy 模式
+- 👁️ Observer 模式
+- 🙈 Show Don't Ask
 
 ## 📚 學習路徑
 
 ### 初學者路徑
-1. [📚 快速入門](getting-started/README.md)
-2. [☕ Java 編碼標準](coding-standards/java-standards.md)
-3. [🧪 單元測試基礎](testing/tdd-practices/unit-testing-patterns.md)
-4. [🏗️ 基本架構概念](architecture/README.md)
+1. [📚 快速入門](getting-started.md)
+2. [☕ Java 編碼標準](coding-standards.md#java-編碼標準)
+3. 🧪 單元測試基礎
+4. 🏗️ 基本架構概念
 
 ### 中級開發者路徑
-1. [🎯 DDD 戰術模式](architecture/ddd-patterns/tactical-patterns.md)
-2. [🔵 六角架構實作](architecture/hexagonal-architecture/README.md)
-3. [🔴🟢🔵 TDD 實踐](testing/tdd-practices/red-green-refactor.md)
-4. [📝 BDD 場景設計](testing/bdd-practices/scenario-design.md)
+1. 🎯 DDD 戰術模式
+2. 🔵 六角架構實作
+3. 🔴🟢🔵 TDD 實踐
+4. 📝 BDD 場景設計
 
 ### 高級架構師路徑
-1. [🌐 微服務設計](architecture/microservices/README.md)
-2. [🎭 Saga 模式實作](architecture/saga-patterns/README.md)
-3. [🔧 分散式系統模式](architecture/microservices/distributed-patterns.md)
-4. [📊 系統監控與可觀測性](tools-and-environment/technology-stack/monitoring-stack.md)
+1. 🌐 微服務設計
+2. 🎭 Saga 模式實作
+3. 🔧 分散式系統模式
+4. 📊 系統監控與可觀測性
 
 ## 🔗 相關資源
 

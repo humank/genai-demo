@@ -2,6 +2,6 @@
 
 Please refer to our documentation standards:
 
-- [Translation Guide](../../.kiro/steering/translation-guide.md)
+- **Translation Guide** (請參考專案內部文檔)
 - [Documentation Maintenance Guide](../DOCUMENTATION_MAINTENANCE_GUIDE.md)
-- [Reports Organization Standards](../../.kiro/steering/reports-organization-standards.md)
+- **Reports Organization Standards** (請參考專案內部文檔)

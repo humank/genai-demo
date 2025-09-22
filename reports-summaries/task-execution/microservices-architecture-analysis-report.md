@@ -429,7 +429,7 @@ public class ExternalServiceClient {
 public class ApiController {
     
     @RateLimiter(name = "api-limiter")
-    @GetMapping("/api/orders")
+    @GetMapping("/../api/orders")
     public ResponseEntity<List<Order>> getOrders() {
         // API 實作
     }
@@ -449,7 +449,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /api/v1
+        prefix: /../api/v1
     route:
     - destination:
         host: genai-demo-service

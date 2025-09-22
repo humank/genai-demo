@@ -4,13 +4,13 @@
 
 此文檔已遷移到新的開發視點結構中。請使用以下連結存取最新內容：
 
-**新位置**: [DDD 戰術模式實作指南](../viewpoints/development/architecture/ddd-patterns/tactical-patterns.md)
+**新位置**: DDD 戰術模式實作指南
 
 ## 🔗 相關文檔
 
-- [聚合根設計指南](../viewpoints/development/architecture/ddd-patterns/aggregate-root-guide.md)
-- [值對象設計指南](../viewpoints/development/architecture/ddd-patterns/value-object-guide.md)
-- [領域事件設計指南](../viewpoints/development/architecture/ddd-patterns/domain-event-guide.md)
+- 聚合根設計指南
+- 值對象設計指南
+- 領域事件設計指南
 - [開發視點總覽](../viewpoints/development/README.md)
 
 ## 📅 遷移資訊

@@ -225,7 +225,7 @@ The synchronization system now provides:
 ## 📄 Generated Artifacts
 
 The following artifacts have been generated:
-- **PNG Diagram**: `docs/diagrams/viewpoints/functional/Hexagonal Architecture Overview.png`
+- **PNG Diagram**: `docs/diagrams/viewpoints/functional/hexagonal-architecture-overview.png`
 - **SVG Diagram**: `docs/diagrams/viewpoints/functional/Hexagonal Architecture Overview.svg`
 - **Synchronization Report**: This comprehensive analysis document
 - **Updated Documentation**: 48 documentation files with corrected references

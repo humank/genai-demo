@@ -103,7 +103,7 @@ CREATE TABLE customers (
 
 ```java
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/../api/orders")
 @Tag(name = "訂單管理", description = "訂單相關的 API 端點")
 public class OrderController {
     
@@ -341,7 +341,7 @@ function useOrders() {
   return useQuery({
     queryKey: ['orders'],
     queryFn: async () => {
-      const response = await fetch('/api/orders');
+      const response = await fetch('/../api/orders');
       return response.json();
     },
     staleTime: 5 * 60 * 1000, // 5 分鐘

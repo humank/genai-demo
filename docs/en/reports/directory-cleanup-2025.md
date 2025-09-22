@@ -83,7 +83,7 @@ genai-demo/
 ├── logs/                    # Logging文件
 ├── mcp-configs-backup/      # MCP 配置備份
 ├── scripts/                 # 腳本文件
-├── tools/                   # Tools
+├── tools-and-environment/                   # Tools
 ├── docker-compose.yml       # Docker Compose 配置
 ├── Dockerfile              # Docker 映像定義
 ├── README.md               # 專案說明
@@ -94,7 +94,7 @@ genai-demo/
 
 ```
 docs/
-├── api/                     # API 文檔
+├── ../api/                     # API 文檔
 ├── architecture/            # 架構文檔
 ├── deployment/              # Deployment
 ├── design/                  # Design

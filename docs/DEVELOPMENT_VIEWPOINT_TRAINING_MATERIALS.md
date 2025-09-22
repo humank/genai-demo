@@ -41,9 +41,9 @@
    - Clarify navigation concerns
 
 #### Materials Provided
-- [Quick Start Guide](docs/viewpoints/development/QUICK_START_GUIDE.md)
+- Quick Start Guide
 - [Navigation Cheat Sheet](#navigation-cheat-sheet)
-- [Video Recording](training-materials/module1-overview.mp4)
+- Video Recording
 
 ### Module 2: Architecture Patterns Deep Dive (60 minutes)
 **Objective**: Master the new architecture documentation  
@@ -77,7 +77,7 @@
    - Navigate between related concepts
 
 #### Materials Provided
-- [Architecture Patterns Guide](docs/viewpoints/development/architecture/README.md)
+- Architecture Patterns Guide
 - [Hands-on Exercise Workbook](#exercise-workbook)
 - [Code Examples Repository](#code-examples)
 
@@ -113,8 +113,8 @@
    - Find specific testing patterns
 
 #### Materials Provided
-- [Testing Strategy Guide](docs/viewpoints/development/testing/README.md)
-- [Performance Testing Examples](#performance-examples)
+- Testing Strategy Guide
+- [Performance Testing Examples](#效能-examples)
 - [Quality Checklist](#quality-checklist)
 
 ### Module 4: Tools and Technology Stack (45 minutes)
@@ -149,7 +149,7 @@
    - Verify configurations
 
 #### Materials Provided
-- [Technology Stack Guide](docs/viewpoints/development/tools-and-environment/technology-stack/README.md)
+- Technology Stack Guide
 - [Configuration Templates](#configuration-templates)
 - [Setup Verification Scripts](#verification-scripts)
 
@@ -304,8 +304,8 @@ Quick Navigation Reference Card
 4. Plan event collection and publishing strategy
 
 **Reference Materials**:
-- [DDD Tactical Patterns](docs/viewpoints/development/architecture/ddd-patterns/tactical-patterns.md)
-- [Domain Events Guide](docs/viewpoints/development/architecture/ddd-patterns/domain-events.md)
+- DDD Tactical Patterns
+- Domain Events Guide
 
 #### Exercise 3: Testing Implementation (15 minutes)
 **Objective**: Set up testing using new testing strategy documentation
@@ -319,8 +319,8 @@ Quick Navigation Reference Card
 4. Use performance testing annotations
 
 **Reference Materials**:
-- [TDD Practices](docs/viewpoints/development/testing/tdd-practices/README.md)
-- [Performance Testing](docs/viewpoints/development/testing/performance-testing.md)
+- TDD Practices
+- Performance Testing
 
 ### Configuration Templates
 

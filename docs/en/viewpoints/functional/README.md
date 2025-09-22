@@ -27,7 +27,7 @@ Functional Viewpoint描述系統的功能元素、職責和介面，展示系統
 
 #### Overview
 
-![功能架構概覽](../../../diagrams/generated/functional/functional-detailed.png)
+!!!!!![功能架構概覽](../../../diagrams/generated/functional/functional-detailed.png)
 
 *系統功能架構的整體概覽，展示主要功能模組和它們之間的關係*
 
@@ -49,7 +49,7 @@ Functional Viewpoint描述系統的功能元素、職責和介面，展示系統
 
 ## Quality Attributes考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#Functional Viewpoint-functional-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md#Functional Viewpoint-functional-viewpoint) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

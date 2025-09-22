@@ -89,7 +89,7 @@ npm install mcp-excalidraw-server
 **Detailed Guides**:
 - 📖 [MCP Integration Guide](infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 - 🎨 [Excalidraw MCP Usage Guide](../mcp/excalidraw-mcp-usage-guide.md)
-- 🚀 [Quick Start Guide](infrastructure/docs/MCP_INTEGRATION_GUIDE.md#-quick-start-installation-guide)
+- 🚀 Quick Start Guide
 
 ### 🤖 AI-Assisted Development Showcase
 
@@ -194,7 +194,7 @@ docker-compose up -d
 - 🌐 **API Documentation**: http://localhost:8080/swagger-ui/index.html
 - 📊 **Management Interface**: http://localhost:3002
 - 🛒 **Consumer Interface**: http://localhost:3001
-- 💰 **Cost Analysis**: http://localhost:8080/api/cost-optimization/recommendations
+- 💰 **Cost Analysis**: http://localhost:8080/../api/cost-optimization/recommendations
 
 ## 📚 Learning Resources
 
@@ -289,7 +289,7 @@ curl http://localhost:8080/actuator/metrics    # Application metrics
 curl http://localhost:8080/actuator/info       # Application info
 
 # Cost optimization API
-curl http://localhost:8080/api/cost-optimization/recommendations  # Cost recommendations
+curl http://localhost:8080/../api/cost-optimization/recommendations  # Cost recommendations
 curl http://localhost:8080/api/cost-optimization/analysis         # Cost analysis
 ```
 
@@ -314,7 +314,7 @@ docker-compose down
 - 🌐 **API Documentation**: <http://localhost:8080/swagger-ui/index.html>
 - 🏥 **Health Check**: <http://localhost:8080/actuator/health>
 - 📊 **Application Metrics**: <http://localhost:8080/actuator/metrics>
-- 💰 **Cost Optimization**: <http://localhost:8080/api/cost-optimization/recommendations>
+- 💰 **Cost Optimization**: <http://localhost:8080/../api/cost-optimization/recommendations>
 - 🗄️ **H2 Database Console**: <http://localhost:8080/h2-console>
 
 ### Method 2: Local Development Environment
@@ -366,7 +366,7 @@ genai-demo/
 │   ├── docker-build.sh    # Image build script
 │   └── verify-deployment.sh # Deployment verification script
 ├── docs/                   # Project documentation
-│   ├── api/               # API documentation
+│   ├── ../api/               # API documentation
 │   ├── en/                # English documentation
 │   ├── architecture/      # Architecture documentation
 │   ├── diagrams/          # Diagram documentation (Mermaid + PlantUML)
@@ -374,7 +374,7 @@ genai-demo/
 ├── scripts/                # Various script files
 │   ├── start-fullstack.sh # Start full-stack application
 │   └── stop-fullstack.sh  # Stop all services
-├── tools/                  # Development tools
+├── tools-and-environment/                  # Development tools
 │   └── plantuml.jar       # UML diagram generation tool
 ├── docker-compose.yml      # Docker Compose configuration
 ├── Dockerfile             # Docker image definition
@@ -469,8 +469,8 @@ The project uses Flyway for database version management, including rich business
 
 ```bash
 # Product Management API
-GET /api/products                 # Product list (supports pagination)
-GET /api/products/{productId}     # Get single product
+GET /../api/products                 # Product list (supports pagination)
+GET /../api/products/{productId}     # Get single product
 PUT /api/products/{productId}     # Update product information
 DELETE /api/products/{productId}  # Delete product
 POST /api/products                # Create new product
@@ -572,15 +572,15 @@ The project has established a complete development standards system, located in 
 
 ### �️ Core Development Standards
 
-- **[Development Standards](/.kiro/steering/development-standards.md)**: Technology stack, error handling, API design, testing strategy
-- **[Security Standards](/.kiro/steering/security-standards.md)**: Authentication authorization, data protection, input validation, security testing
-- **[Performance Standards](/.kiro/steering/performance-standards.md)**: Response time, throughput, caching strategy, performance monitoring
-- **[Code Review Standards](/.kiro/steering/code-review-standards.md)**: Review process, quality checks, feedback guidelines
-- **[Test Performance Standards](/.kiro/steering/test-performance-standards.md)**: Test monitoring, resource management, performance optimization
+- ****Development Standards** (請參考專案內部文檔)**: Technology stack, error handling, API design, testing strategy
+- ****Security Standards** (請參考專案內部文檔)**: Authentication authorization, data protection, input validation, security testing
+- ****Performance Standards** (請參考專案內部文檔)**: Response time, throughput, caching strategy, performance monitoring
+- ****Code Review Standards** (請參考專案內部文檔)**: Review process, quality checks, feedback guidelines
+- ****Test Performance Standards** (請參考專案內部文檔)**: Test monitoring, resource management, performance optimization
 
 ### 🏗️ Architectural Methodology
 
-- **[Rozanski & Woods Architectural Methodology](/.kiro/steering/rozanski-woods-architecture-methodology.md)**:
+- ****Rozanski & Woods Architectural Methodology** (請參考專案內部文檔)**:
   - Mandatory architectural viewpoint checks (functional, information, concurrency, development, deployment, operational)
   - Quality attribute scenario requirements (performance, security, availability, scalability, usability)
   - Architecture compliance rules and ArchUnit tests
@@ -588,7 +588,7 @@ The project has established a complete development standards system, located in 
 
 ### 📐 Domain Event Design
 
-- **[Domain Event Guide](/.kiro/steering/domain-events.md)**:
+- ****Domain Event Guide** (請參考專案內部文檔)**:
   - Event definition and collection standards
   - Event handling and publishing mechanisms
   - Event versioning and backward compatibility
@@ -928,7 +928,7 @@ sequenceDiagram
     participant DS as Delivery Service
     
     C->>UI: Place Order
-    UI->>API: POST /api/orders
+    UI->>API: POST /../api/orders
     API->>OS: Create Order
     
     OS->>OS: Validate Order

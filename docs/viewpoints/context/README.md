@@ -448,7 +448,7 @@ monitoring_targets:
     alert_threshold: "99.0%"
     
   logistics_api:
-    endpoint: "https://logistics-partner.com/api/v1/status"
+    endpoint: "https://logistics-partner.com/../api/v1/status"
     check_interval: "5m"
     timeout: "30s"
     alert_threshold: "95.0%"
@@ -476,10 +476,10 @@ monitoring_targets:
 
 ## 相關圖表
 
-- [系統上下文圖](../../diagrams/generated/context/system-context-overview.png)
-- [外部整合架構圖](../../diagrams/generated/context/external-integrations.png)
-- [利害關係人互動圖](../../diagrams/generated/context/stakeholder-interactions.png)
-- [合規架構圖](../../diagrams/generated/context/compliance-architecture.png)
+- ![系統上下文圖](../../diagrams/generated/context/system-context-overview.png)
+- ![外部整合架構圖](../../diagrams/generated/context/external-integrations.png)
+- ![利害關係人互動圖](../../diagrams/generated/context/stakeholder-interactions.png)
+- ![合規架構圖](../../diagrams/generated/context/compliance-architecture.png)
 
 ## 與其他視點的關聯
 

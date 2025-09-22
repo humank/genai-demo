@@ -81,7 +81,7 @@ genai-demo/
 │   └── ...                    # 其他文檔分類
 ├── infrastructure/             # AWS CDK 基礎設施
 ├── scripts/                    # 開發和部署腳本
-├── tools/                      # 開發工具
+├── tools-and-environment/                      # 開發工具
 ├── CHANGELOG.md               # 版本更新記錄
 ├── README.md                  # 專案說明（中文）
 ├── docker-compose.yml         # Docker Compose 配置

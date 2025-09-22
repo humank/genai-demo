@@ -393,7 +393,7 @@ public class CorsConfiguration {
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/../api/**", configuration);
         
         return source;
     }
@@ -413,7 +413,7 @@ class AuthenticationSecurityTest {
     
     @Test
     void should_reject_request_without_token() throws Exception {
-        mockMvc.perform(get("/api/v1/customers/123"))
+        mockMvc.perform(get("/../api/v1/customers/123"))
             .andExpect(status().isUnauthorized());
     }
     
@@ -421,7 +421,7 @@ class AuthenticationSecurityTest {
     void should_reject_request_with_expired_token() throws Exception {
         String expiredToken = createExpiredToken();
         
-        mockMvc.perform(get("/api/v1/customers/123")
+        mockMvc.perform(get("/../api/v1/customers/123")
                 .header("Authorization", "Bearer " + expiredToken))
             .andExpect(status().isUnauthorized());
     }
@@ -430,7 +430,7 @@ class AuthenticationSecurityTest {
     void should_reject_request_with_invalid_signature() throws Exception {
         String tamperedToken = createTamperedToken();
         
-        mockMvc.perform(get("/api/v1/customers/123")
+        mockMvc.perform(get("/../api/v1/customers/123")
                 .header("Authorization", "Bearer " + tamperedToken))
             .andExpected(status().isUnauthorized());
     }
@@ -444,7 +444,7 @@ class AuthenticationSecurityTest {
 void should_allow_user_to_access_own_data() throws Exception {
     String userToken = createTokenForUser("user123");
     
-    mockMvc.perform(get("/api/v1/customers/user123")
+    mockMvc.perform(get("/../api/v1/customers/user123")
             .header("Authorization", "Bearer " + userToken))
         .andExpect(status().isOk());
 }
@@ -453,7 +453,7 @@ void should_allow_user_to_access_own_data() throws Exception {
 void should_deny_user_access_to_other_user_data() throws Exception {
     String userToken = createTokenForUser("user123");
     
-    mockMvc.perform(get("/api/v1/customers/user456")
+    mockMvc.perform(get("/../api/v1/customers/user456")
             .header("Authorization", "Bearer " + userToken))
         .andExpect(status().isForbidden());
 }
@@ -472,7 +472,7 @@ void should_reject_sql_injection_attempt() throws Exception {
         "ValidPassword123!"
     );
     
-    mockMvc.perform(post("/api/v1/customers")
+    mockMvc.perform(post("/../api/v1/customers")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest())
@@ -489,7 +489,7 @@ void should_sanitize_xss_attempt() throws Exception {
         "ValidPassword123!"
     );
     
-    mockMvc.perform(post("/api/v1/customers")
+    mockMvc.perform(post("/../api/v1/customers")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isBadRequest());

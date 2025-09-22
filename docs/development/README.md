@@ -12,12 +12,12 @@
 
 | 原始文檔 | 新位置 | 說明 |
 |----------|--------|------|
-| [getting-started.md](getting-started.md) | **[入門指南](../viewpoints/development/getting-started/README.md)** | 開發環境設置和快速開始 |
-| [coding-standards.md](coding-standards.md) | **[編碼標準](../viewpoints/development/coding-standards/README.md)** | 程式碼風格和品質標準 |
-| [testing-guide.md](testing-guide.md) | **[測試策略](../viewpoints/development/testing/README.md)** | 測試策略和最佳實踐 |
-| [documentation-guide.md](documentation-guide.md) | **[文檔標準](../viewpoints/development/coding-standards/documentation-standards.md)** | 文檔撰寫和維護標準 |
-| [instructions.md](instructions.md) | **[開發工作流程](../viewpoints/development/workflows/development-workflow.md)** | 詳細的開發流程和工具使用 |
-| [epic.md](epic.md) | **[Epic 實現指南](../viewpoints/development/workflows/epic-implementation.md)** | 大型功能開發指南 |
+| [getting-started.md](getting-started.md) | **入門指南** | 開發環境設置和快速開始 |
+| [coding-standards.md](coding-standards.md) | **編碼標準** | 程式碼風格和品質標準 |
+| [testing-guide.md](testing-guide.md) | **測試策略** | 測試策略和最佳實踐 |
+| [documentation-guide.md](documentation-guide.md) | **文檔標準** | 文檔撰寫和維護標準 |
+| [instructions.md](instructions.md) | **開發工作流程** | 詳細的開發流程和工具使用 |
+| [epic.md](epic.md) | **Epic 實現指南** | 大型功能開發指南 |
 
 ## 📚 新的開發文檔結構
 

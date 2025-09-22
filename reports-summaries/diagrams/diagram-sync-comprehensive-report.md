@@ -57,14 +57,14 @@ The system successfully fixed the broken references in the functional viewpoint 
 
 **Before (Broken)**:
 ```markdown
-![領域模型概覽](!\1)
-![界限上下文概覽](!\1)
+!領域模型概覽
+!界限上下文概覽
 ```
 
 **After (Fixed)**:
 ```markdown
-![領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
-![界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
+!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)
+!!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)
 ```
 
 #### 2. PNG Image Generation

@@ -224,14 +224,14 @@ docs/viewpoints/development/
 
 ```markdown
 <!-- 舊引用 -->
-[開發指南](docs/development/README.md)
-[DDD 指南](docs/design/ddd-guide.md)
-[測試指南](docs/testing/README.md)
+開發指南
+DDD 指南
+測試指南
 
 <!-- 新引用 -->
-[開發指南](docs/viewpoints/development/README.md)
-[DDD 指南](docs/viewpoints/development/architecture/ddd-patterns/tactical-patterns.md)
-[測試指南](docs/viewpoints/development/testing/README.md)
+開發指南
+DDD 指南
+測試指南
 ```
 
 ### Wiki 和外部文檔
@@ -266,7 +266,7 @@ docs/viewpoints/development/
 ### 常見問題
 
 **Q: 我找不到某個特定的文檔，怎麼辦？**
-A: 請參考上面的完整對照表，或查看 [Development Viewpoint 總覽](docs/viewpoints/development/README.md)
+A: 請參考上面的完整對照表，或查看 Development Viewpoint 總覽
 
 **Q: 舊的連結還能用嗎？**
 A: 在過渡期間（2025年2月底前），舊目錄中的 README 文件會提供重定向指引
@@ -280,7 +280,7 @@ A: 更系統化的組織、更完整的內容、更好的維護性，以及符�
 
 1. **查看重定向文檔** - 舊目錄中的 README.md 文件
 2. **參考對照表** - 本文檔中的完整對照表
-3. **查看新結構** - [Development Viewpoint 總覽](docs/viewpoints/development/README.md)
+3. **查看新結構** - Development Viewpoint 總覽
 4. **提出問題** - 在專案中創建 Issue
 
 ---

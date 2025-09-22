@@ -175,7 +175,7 @@ interface StorageManager {
 
 ```java
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("/../api/analytics")
 @Validated
 public class AnalyticsController {
     
@@ -808,7 +808,7 @@ const domainEventTopics = [
 export class ResilientHttpService {
   
   sendAnalyticsData(data: any[]): Observable<any> {
-    return this.http.post('/api/analytics/events', data).pipe(
+    return this.http.post('/../api/analytics/events', data).pipe(
       retry({
         count: 3,
         delay: (error, retryCount) => timer(Math.pow(2, retryCount) * 1000)
@@ -1019,7 +1019,7 @@ describe('Analytics Integration', () => {
     tick(30000); // Trigger batch processing
     
     // Then
-    const req = httpTestingController.expectOne('/api/analytics/events');
+    const req = httpTestingController.expectOne('/../api/analytics/events');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toHaveLength(2);
     req.flush({});
@@ -1086,7 +1086,7 @@ class AnalyticsControllerWebMvcTest {
             """;
         
         // When & Then
-        mockMvc.perform(post("/api/analytics/events")
+        mockMvc.perform(post("/../api/analytics/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("X-Trace-Id", "test-trace-123")
                 .content(eventsJson))
@@ -1157,7 +1157,7 @@ class CriticalObservabilityFlowE2ETest {
         
         // When
         ResponseEntity<Void> response = restTemplate.postForEntity(
-            "/api/analytics/events", 
+            "/../api/analytics/events", 
             new HttpEntity<>(criticalEvents, headers), 
             Void.class
         );

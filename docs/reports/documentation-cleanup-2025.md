@@ -46,7 +46,7 @@
 
 - 保持現有連結正確性
 
-### docs/api/README.md
+### docs/../api/README.md
 
 - 修復 `../README.md` → `../../README.md`
 - 修復 `../aws-eks-architecture.md` → `../DOCKER_GUIDE.md`
