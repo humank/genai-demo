@@ -1,0 +1,29 @@
+{
+  "timestamp": "2025-09-22T19:17:19.963916",
+  "viewpoint": "development",
+  "directory": "docs/viewpoints/development",
+  "checks": {
+    "structure": {
+      "status": "failed",
+      "return_code": 1,
+      "output": "Validating development viewpoint structure at: docs/viewpoints/development\nValidation report saved to: reports-summaries/quality-ux/viewpoint-structure-validation-development-20250922_191720.md\n\n\u274c Viewpoint structure validation failed\n",
+      "errors": ""
+    },
+    "documentation_quality": {
+      "status": "failed",
+      "return_code": 1,
+      "output": "Assessing documentation quality in: docs/viewpoints/development\nWarning: Could not assess docs/viewpoints/development/hexagonal-architecture.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/QUICK_START_GUIDE.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/testing/test-optimization.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/testing/tdd-practices/test-pyramid.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/testing/performance-monitoring/test-performance-extension.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/design-principles.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/fault-recovery.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/circuit-breaker.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/authentication-authorization.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/rate-limiting.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/aws-xray-integration.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/service-discovery.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/distributed-tracing.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/aws-alb-config.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/distributed-patterns.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/health-checks.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/microservices/load-balancing.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/design-principles/ddd-patterns/tactical-patterns.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/hexagonal-architecture/layered-design.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/hexagonal-architecture/README.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/hexagonal-architecture/ports-adapters.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/tools-and-environment/technology-stack/README.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/ddd-patterns/README.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/ddd-patterns/tactical-patterns.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/architecture/ddd-patterns/domain-events.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/getting-started/README.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/getting-started/environment-setup.md: name 'block' is not defined\nWarning: Could not assess docs/viewpoints/development/tools-and-environment/technology-stack/README.md: name 'block' is not defined\nQuality assessment report saved to: reports-summaries/quality-ux/documentation-quality-development-20250922_191720.md\n\n\u26a0\ufe0f  Documentation quality needs improvement (score: 72.6)\n",
+      "errors": ""
+    },
+    "content_duplication": {
+      "status": "error",
+      "error": "Command '['python3', 'scripts/detect-content-duplication.py', '--source', 'docs/viewpoints/development', '--threshold', '0.8']' timed out after 120 seconds"
+    },
+    "link_integrity": {
+      "status": "failed",
+      "return_code": 2,
+      "output": "",
+      "errors": "usage: validate-diagram-links.py [-h] [--fix-broken]\nvalidate-diagram-links.py: error: unrecognized arguments: --scope development-viewpoint\n"
+    }
+  }
+}

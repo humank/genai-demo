@@ -1,0 +1,130 @@
+graph TB
+    %% Test Pyramid - Testing Strategy Visualization
+    %% Shows the distribution and characteristics of different test types
+    
+    subgraph "Test Pyramid Structure"
+        subgraph "E2E Tests (5%)"
+            E2E_LAYER[End-to-End Tests<br/>🔺 Slow, Expensive, Brittle<br/>🔺 Full system integration<br/>🔺 User journey validation<br/>🔺 < 3s execution, < 500MB memory]
+            
+            E2E_EXAMPLES[E2E Test Examples:<br/>• Complete order processing flow<br/>• User registration to first purchase<br/>• Payment processing end-to-end<br/>• Multi-service integration scenarios<br/>• Cross-browser compatibility]
+        end
+        
+        subgraph "Integration Tests (15%)"
+            INT_LAYER[Integration Tests<br/>🔶 Medium speed, Medium cost<br/>🔶 Component interaction<br/>🔶 Database integration<br/>🔶 < 500ms execution, < 50MB memory]
+            
+            INT_EXAMPLES[Integration Test Examples:<br/>• Repository database operations<br/>• REST API endpoint testing<br/>• Message queue integration<br/>• External service integration<br/>• Spring context loading]
+        end
+        
+        subgraph "Unit Tests (80%)"
+            UNIT_LAYER[Unit Tests<br/>🟢 Fast, Cheap, Reliable<br/>🟢 Isolated components<br/>🟢 Business logic focus<br/>🟢 < 50ms execution, < 5MB memory]
+            
+            UNIT_EXAMPLES[Unit Test Examples:<br/>• Domain logic validation<br/>• Business rule enforcement<br/>• Calculation accuracy<br/>• Value object behavior<br/>• Service method logic]
+        end
+    end
+    
+    %% Test Pyramid Layers
+    E2E_LAYER --> INT_LAYER
+    INT_LAYER --> UNIT_LAYER
+    
+    %% Detailed Test Categories
+    subgraph "Unit Test Categories"
+        DOMAIN_TESTS[Domain Tests<br/>MockitoExtension<br/>• Aggregate root behavior<br/>• Value object validation<br/>• Domain service logic<br/>• Business rule enforcement]
+        
+        SERVICE_TESTS[Service Tests<br/>MockitoExtension<br/>• Application service logic<br/>• Use case implementation<br/>• Mock external dependencies<br/>• Command/query handling]
+        
+        UTIL_TESTS[Utility Tests<br/>MockitoExtension<br/>• Helper method testing<br/>• Configuration validation<br/>• Mapper/converter logic<br/>• Algorithm implementation]
+    end
+    
+    subgraph "Integration Test Categories"
+        REPO_TESTS[Repository Tests<br/>@DataJpaTest<br/>• Database query validation<br/>• Entity relationship testing<br/>• Custom query implementation<br/>• Transaction behavior]
+        
+        WEB_TESTS[Web Layer Tests<br/>@WebMvcTest<br/>• Controller endpoint testing<br/>• Request/response validation<br/>• Security configuration<br/>• Error handling]
+        
+        SLICE_TESTS[Spring Slice Tests<br/>@JsonTest, @JdbcTest<br/>• Specific layer testing<br/>• Minimal context loading<br/>• Focused integration<br/>• Performance optimized]
+    end
+    
+    subgraph "E2E Test Categories"
+        JOURNEY_TESTS[User Journey Tests<br/>SpringBootTest with RANDOM_PORT<br/>• Complete business flows<br/>• Multi-service interaction<br/>• Real database usage<br/>• Full Spring context]
+        
+        CONTRACT_TESTS[Contract Tests<br/>SpringBootTest annotation<br/>• API contract validation<br/>• Service interface testing<br/>• Backward compatibility<br/>• Consumer-driven contracts]
+        
+        SMOKE_TESTS[Smoke Tests<br/>@SpringBootTest<br/>• Critical path validation<br/>• Deployment verification<br/>• Health check testing<br/>• Basic functionality]
+    end
+    
+    %% Test Performance Monitoring
+    subgraph "Test Performance Standards"
+        UNIT_PERF[Unit Test Performance<br/>@TestPerformanceExtension<br/>• Execution time: < 50ms<br/>• Memory usage: < 5MB<br/>• Success rate: > 99%<br/>• No external dependencies]
+        
+        INT_PERF[Integration Test Performance<br/>@TestPerformanceExtension<br/>• Execution time: < 500ms<br/>• Memory usage: < 50MB<br/>• Success rate: > 95%<br/>• Controlled dependencies]
+        
+        E2E_PERF[E2E Test Performance<br/>@TestPerformanceExtension<br/>• Execution time: < 3s<br/>• Memory usage: < 500MB<br/>• Success rate: > 90%<br/>• Full system load]
+    end
+    
+    %% Test Tools and Frameworks
+    subgraph "Testing Tools by Layer"
+        UNIT_TOOLS[Unit Test Tools<br/>• JUnit 5: Test framework<br/>• Mockito: Mocking framework<br/>• AssertJ: Fluent assertions<br/>• TestDataBuilder: Test data creation]
+        
+        INT_TOOLS[Integration Test Tools<br/>• Spring Boot Test: Context loading<br/>• TestContainers: Database testing<br/>• WireMock: External service mocking<br/>• TestRestTemplate: HTTP testing]
+        
+        E2E_TOOLS[E2E Test Tools<br/>• Selenium: Browser automation<br/>• Cucumber: BDD scenarios<br/>• REST Assured: API testing<br/>• Allure: Test reporting]
+    end
+    
+    %% Test Strategy Guidelines
+    subgraph "Test Strategy Guidelines"
+        FAST_FEEDBACK[Fast Feedback Loop<br/>• Unit tests run in < 2 minutes<br/>• Integration tests in < 5 minutes<br/>• E2E tests in < 30 minutes<br/>• Fail fast on critical issues]
+        
+        ISOLATION[Test Isolation<br/>• Independent test execution<br/>• No shared state between tests<br/>• Clean setup/teardown<br/>• Deterministic results]
+        
+        MAINTAINABILITY[Test Maintainability<br/>• Clear test naming<br/>• DRY principle application<br/>• Page Object pattern for UI<br/>• Regular refactoring]
+    end
+    
+    %% Test Execution Strategy
+    subgraph "Test Execution Strategy"
+        DAILY_DEV[Daily Development<br/>./gradlew quickTest<br/>• Unit tests only<br/>• Fast feedback under 2 min<br/>• TDD cycle support]
+        
+        PRE_COMMIT[Pre-Commit<br/>./gradlew preCommitTest<br/>• Unit + Integration tests<br/>• Quality assurance under 5 min<br/>• CI/CD gate]
+        
+        PRE_RELEASE[Pre-Release<br/>./gradlew fullTest<br/>• All test types<br/>• Complete validation under 30 min<br/>• Release readiness]
+    end
+    
+    %% Test Coverage and Quality
+    subgraph "Coverage and Quality Metrics"
+        COVERAGE_TARGETS[Coverage Targets<br/>• Unit tests: > 90% line coverage<br/>• Integration tests: > 80% feature coverage<br/>• E2E tests: > 95% critical path coverage<br/>• Overall: > 80% code coverage]
+        
+        QUALITY_METRICS[Quality Metrics<br/>• Test execution time trends<br/>• Test failure rate analysis<br/>• Code coverage evolution<br/>• Test maintenance effort]
+    end
+    
+    %% Anti-patterns to Avoid
+    subgraph "Test Anti-patterns to Avoid"
+        ICE_CREAM[❌ Ice Cream Cone<br/>Too many E2E tests<br/>Few unit tests<br/>Slow feedback<br/>High maintenance cost]
+        
+        TESTING_TROPHY[❌ Testing Trophy Misuse<br/>Overemphasis on integration<br/>Neglecting unit tests<br/>Complex test setup<br/>Flaky test results]
+        
+        NO_TESTS[❌ No Testing Strategy<br/>Manual testing only<br/>No automation<br/>High defect rate<br/>Slow delivery]
+    end
+    
+    %% Best Practices
+    subgraph "Testing Best Practices"
+        AAA_PATTERN[AAA Pattern<br/>• Arrange: Set up test data<br/>• Act: Execute the behavior<br/>• Assert: Verify the outcome<br/>• Clear test structure]
+        
+        GIVEN_WHEN_THEN[Given-When-Then<br/>• Given: Initial context<br/>• When: Action performed<br/>• Then: Expected result<br/>• BDD-style clarity]
+        
+        TEST_NAMING[Test Naming<br/>• should_return_error_when_email_invalid<br/>• Descriptive method names<br/>• Business behavior focus<br/>• Self-documenting tests]
+    end
+    
+    %% Styling
+    classDef e2eStyle fill:#ffebee,stroke:#c62828,stroke-width:3px
+    classDef integrationStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:3px
+    classDef unitStyle fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef toolStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef practiceStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef antipatternStyle fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef performanceStyle fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    class E2E_LAYER,E2E_EXAMPLES,JOURNEY_TESTS,CONTRACT_TESTS,SMOKE_TESTS,E2E_PERF,E2E_TOOLS e2eStyle
+    class INT_LAYER,INT_EXAMPLES,REPO_TESTS,WEB_TESTS,SLICE_TESTS,INT_PERF,INT_TOOLS integrationStyle
+    class UNIT_LAYER,UNIT_EXAMPLES,DOMAIN_TESTS,SERVICE_TESTS,UTIL_TESTS,UNIT_PERF,UNIT_TOOLS unitStyle
+    class DAILY_DEV,PRE_COMMIT,PRE_RELEASE,FAST_FEEDBACK,ISOLATION,MAINTAINABILITY toolStyle
+    class AAA_PATTERN,GIVEN_WHEN_THEN,TEST_NAMING,COVERAGE_TARGETS,QUALITY_METRICS practiceStyle
+    class ICE_CREAM,TESTING_TROPHY,NO_TESTS antipatternStyle
+    class UNIT_PERF,INT_PERF,E2E_PERF performanceStyle

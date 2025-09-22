@@ -201,14 +201,14 @@ docker-compose up -d
 ### 🎯 按學習目標導航
 - **學習現代架構** → [架構視點文檔](docs/viewpoints/README.md)
 - **學習 DDD 實踐** → [領域驅動設計](docs/viewpoints/functional/domain-model.md)
-- **學習測試策略** → \1
+- **學習測試策略** → [測試策略總覽](docs/viewpoints/development/testing/README.md)
 - **學習 AI 輔助開發** → [MCP 整合指南](docs/mcp/README.md)
 
 ### 👨‍💼 按角色導航
 - **架構師** → [Rozanski & Woods 評估](docs/architecture/rozanski-woods-architecture-assessment.md)
 - **開發者** → [開發標準規範](docs/viewpoints/development/README.md)
 - **DevOps** → [部署和運營](docs/viewpoints/deployment/README.md)
-- **QA 工程師** → \1
+- **QA 工程師** → [品質保證](docs/viewpoints/development/quality-assurance/README.md)
 
 ## 🏆 專案成果
 
@@ -833,7 +833,7 @@ graph TB
     class IAM,WAF,SECRETS,COMPLIANCE security
 ```
 - **🏗️ 架構師**: [架構決策記錄](docs/architecture/adr/) | [架構文檔](docs/architecture/) | [圖表文檔](docs/diagrams/)
-- **👨‍💻 開發者**: [開發指南](docs/development/) | [API 文檔](docs/api/) | [開發說明](docs/development/instructions.md)
+- **👨‍💻 開發者**: [開發視點](docs/viewpoints/development/) | [API 文檔](docs/api/) | [開發工作流程](docs/viewpoints/development/workflows/development-workflow.md)
 - **🚀 DevOps**: [部署文檔](docs/deployment/) | [Docker 指南](docs/deployment/docker-guide.md)
 - **🔍 可觀測性**: [生產環境測試指南](docs/viewpoints/operational/production-observability-testing-guide.md) | [可觀測性系統](docs/observability/)
 - **🤖 MCP 整合**: [MCP 指南](docs/mcp/) | [AI 輔助開發](docs/mcp/README.md)
@@ -1070,8 +1070,8 @@ graph TB
     class MONITORING,LOGGING,TRACING,ALERTING observability
     class IAM,WAF,SECRETS,COMPLIANCE security
 ``` - 完整的系統架構圖 (7層架構)
-- [🔵 六角形架構](docs/diagrams/mermaid/hexagonal-architecture.md) - 端口與適配器架構
-- [🏛️ DDD 分層架構](docs/diagrams/mermaid/ddd-layered-architecture.md) - 領域驅動設計分層
+- [🔵 六角形架構](docs/diagrams/viewpoints/development/hexagonal-architecture.mmd) - 端口與適配器架構
+- [🏛️ DDD 分層架構](docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd) - 領域驅動設計分層
 - [⚡ 事件驅動架構](docs/diagrams/mermaid/event-driven-architecture.md) - 事件處理機制
 - [🔌 API 交互圖](docs/diagrams/mermaid/api-interactions.md) - API 調用關係
 

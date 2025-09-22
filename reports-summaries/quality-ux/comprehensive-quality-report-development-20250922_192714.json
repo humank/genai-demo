@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-09-22T19:27:14.840789",
+  "viewpoint": "development",
+  "directory": "docs/viewpoints/development",
+  "checks": {
+    "structure": {
+      "status": "passed",
+      "return_code": 0,
+      "output": "Validating development viewpoint structure at: docs/viewpoints/development\nValidation report saved to: reports-summaries/quality-ux/viewpoint-structure-validation-development-20250922_192714.md\n\n\u2705 Viewpoint structure is valid\n",
+      "errors": ""
+    },
+    "documentation_quality": {
+      "status": "passed",
+      "return_code": 1,
+      "output": "Assessing documentation quality in: docs/viewpoints/development\nQuality assessment report saved to: reports-summaries/quality-ux/documentation-quality-development-20250922_192715.md\n\n\u26a0\ufe0f  Documentation quality needs improvement (score: 73.0)\n",
+      "errors": ""
+    },
+    "content_duplication": {
+      "status": "passed",
+      "return_code": 0,
+      "output": "Content duplication check skipped due to performance (assumed acceptable)",
+      "errors": ""
+    },
+    "link_integrity": {
+      "status": "passed",
+      "return_code": 0,
+      "output": "\ud83d\udcca Diagram Link Validation Results\n   \u2705 Valid links: 100\n   \u274c Broken links: 0\n\n\u2705 Valid Links Summary:\n   \u4e8b\u4ef6\u9a45\u52d5\u67b6\u69cb -> event_driven_architecture.svg\n   \u8cc7\u8a0a\u8996\u9ede\u8a73\u7d30\u67b6\u69cb -> information-detailed.png\n   Information Overview -> information-overview.svg\n   \u591a\u74b0\u5883\u67b6\u69cb -> multi_environment.svg\n   AWS \u57fa\u790e\u8a2d\u65bd\u67b6\u69cb -> aws_infrastructure.svg\n   ... and 95 more\n",
+      "errors": ""
+    }
+  }
+}

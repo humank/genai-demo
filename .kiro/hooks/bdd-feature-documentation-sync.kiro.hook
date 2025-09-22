@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "BDD Feature Documentation Sync",
+  "description": "Automatically synchronizes BDD practices documentation when Feature files change",
+  "version": "1.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/src/test/resources/features/**/*.feature"
+    ],
+    "exclude": [
+      "**/.git/**",
+      "**/.kiro/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "## BDD Feature Documentation Synchronization\n\n**BDD Feature files have been modified. Update related documentation:**\n\n### 1. Analyze Feature File Changes\n```bash\n# Extract scenarios and business rules from changed feature files\ngrep -E \"Feature:|Scenario:|Given|When|Then\" [CHANGED_FILES]\n```\n\n### 2. Update BDD Practices Documentation\n```bash\n# Update BDD practices with new examples from feature files\n# Check: docs/viewpoints/development/testing/bdd-practices/\n```\n\n### 3. Update Given-When-Then Examples\n```bash\n# Update given-when-then.md with new scenario patterns\n# File: docs/viewpoints/development/testing/bdd-practices/given-when-then.md\n```\n\n### 4. Update Feature Writing Guidelines\n```bash\n# Update feature-writing.md with new patterns and best practices\n# File: docs/viewpoints/development/testing/bdd-practices/feature-writing.md\n```\n\n### 5. Update BDD Process Diagrams\n```bash\n# Regenerate BDD process diagrams if workflow changes\n./scripts/generate-diagrams.sh --format=png docs/diagrams/viewpoints/development/workflows/bdd-process.mmd\n```\n\n### 6. Update Scenario Design Documentation\n```bash\n# Update scenario-design.md with new design patterns\n# File: docs/viewpoints/development/testing/bdd-practices/scenario-design.md\n```\n\n### 7. Validate Documentation Completeness\n```bash\n# Ensure BDD documentation covers all feature patterns\npython3 scripts/assess-documentation-quality.py --viewpoint=development\n```\n\n**BDD Documentation Areas to Update:**\n- **New Scenarios**: Add examples to given-when-then.md\n- **Business Rules**: Update feature-writing.md with new rule patterns\n- **Domain Language**: Ensure ubiquitous language consistency\n- **Test Patterns**: Update scenario-design.md with new testing patterns\n- **Integration Examples**: Update integration-testing.md if needed\n\n**Quality Checks:**\n- Ensure Gherkin syntax examples are correct\n- Verify business language consistency across documentation\n- Update any outdated scenario examples\n- Check that documentation reflects current feature structure\n\n**Expected outcome**: BDD practices documentation stays current with actual feature file implementations and business scenarios."
+  }
+}

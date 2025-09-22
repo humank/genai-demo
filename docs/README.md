@@ -38,8 +38,8 @@
 
 #### 開發指南
 - **[開發視點](viewpoints/development/README.md)** - 開發和建置相關文檔
-- **[開發工作流程](viewpoints/development/development-workflow.md)** - 完整的開發流程
-- **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)** - 六角形架構開發指南
+- **[開發工作流程](viewpoints/development/workflows/development-workflow.md)** - 完整的開發流程
+- **[六角形架構實現](viewpoints/development/architecture/hexagonal-architecture/README.md)** - 六角形架構開發指南
 
 #### 領域驅動設計
 - **[功能視點](viewpoints/functional/README.md)** - 系統功能和職責
@@ -281,7 +281,7 @@ graph LR
 - **[八大觀點總覽](perspectives/README.md)** - 安全、性能、可用性、演進、使用、法規、位置、成本觀點
 
 #### 架構模式
-- **[六角形架構](viewpoints/development/hexagonal-architecture.md)** - 端口和適配器模式
+- **[六角形架構](viewpoints/development/architecture/hexagonal-architecture/README.md)** - 端口和適配器模式
 - **[分層架構](architecture/layered-architecture-design.md)** - DDD 分層架構設計
 - **## 事件驅動架構
 
@@ -1116,14 +1116,14 @@ graph TB
 <summary><strong>開發指南</strong> - 開發流程和最佳實踐</summary>
 
 #### 開發流程
-- **[開發工作流程](viewpoints/development/development-workflow.md)** - 完整的開發流程
-- **[Epic 實現指南](viewpoints/development/epic-implementation.md)** - 大型功能開發策略
-- **[開發說明](development/instructions.md)** - 開發環境和工具使用
+- **[開發工作流程](viewpoints/development/workflows/development-workflow.md)** - 完整的開發流程
+- **[Epic 實現指南](viewpoints/development/workflows/epic-implementation.md)** - 大型功能開發策略
+- **[開發說明](viewpoints/development/getting-started/README.md)** - 開發環境和工具使用
 
 #### 代碼品質
-- **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)** - 架構實現指南
-- **[DDD 指南](design/ddd-guide.md)** - 領域驅動設計實踐
-- **[設計原則](design/design-principles.md)** - 軟體設計原則
+- **[六角形架構實現](viewpoints/development/architecture/hexagonal-architecture/README.md)** - 架構實現指南
+- **[DDD 指南](viewpoints/development/architecture/ddd-patterns/tactical-patterns.md)** - 領域驅動設計實踐
+- **[設計原則](viewpoints/development/architecture/design-principles/solid-principles.md)** - 軟體設計原則
 - **[重構指南](design/refactoring-guide.md)** - 代碼重構最佳實踐
 
 #### 技術棧
@@ -1315,9 +1315,9 @@ graph TB
 
 ### 👨‍💻 我是開發者
 
-- [開發指南](development/) - 開發環境和規範
+- [開發指南](viewpoints/development/) - 開發環境和規範
 - [API 文檔](api/) - API 使用指南
-- [開發說明](development/instructions.md) - 開發流程和說明
+- [開發說明](viewpoints/development/getting-started/README.md) - 開發流程和說明
 
 ### 🚀 我是 DevOps 工程師
 

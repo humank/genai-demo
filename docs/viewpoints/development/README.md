@@ -1,377 +1,186 @@
-# 開發視點
+# Development Viewpoint
 
 ## 概覽
 
-開發視點關注系統的開發和建置過程，包括模組結構、編碼標準、測試策略和建置系統。
+Development Viewpoint 提供了完整的開發指南和最佳實踐，整合了專案中的所有開發模式、技術棧和工具鏈。本視點遵循 Rozanski & Woods 架構方法論，為開發者、架構師和技術團隊提供統一的開發標準。
 
-## 利害關係人
+## 🚀 快速開始
 
-- **主要關注者**: 開發者、技術主管、架構師
-- **次要關注者**: DevOps 工程師、QA 工程師、專案經理
+### 新手入門
+- [📚 快速入門指南](getting-started/README.md) - 環境設置和首次貢獻
+- [⚙️ 環境配置](getting-started/environment-setup.md) - 開發環境完整設置
+- [✅ 前置需求](getting-started/prerequisites.md) - 必要工具和知識檢查清單
 
-## 關注點
+### 核心概念
+- [🏗️ 架構設計](architecture/README.md) - DDD、六角架構、微服務、Saga 模式
+- [📋 編碼標準](coding-standards/README.md) - Java、前端、API 設計規範
+- [🧪 測試策略](testing/README.md) - TDD、BDD、效能測試、架構測試
 
-1. **模組結構設計**: 如何組織程式碼模組和套件
-2. **編碼標準**: 程式碼品質和一致性要求
-3. **測試策略**: 單元測試、整合測試、端到端測試
-4. **建置系統**: 自動化建置和部署流程
-5. **開發工具鏈**: IDE、版本控制、CI/CD 工具
+## 🏗️ 架構與設計模式
 
-## 架構元素
+### DDD 領域驅動設計
+- [🎯 DDD 戰術模式](architecture/ddd-patterns/README.md)
+  - [@AggregateRoot 聚合根](architecture/ddd-patterns/tactical-patterns.md#aggregateroot)
+  - [@ValueObject 值對象](architecture/ddd-patterns/tactical-patterns.md#valueobject)
+  - [@Entity 實體](architecture/ddd-patterns/tactical-patterns.md#entity)
+  - [@DomainService 領域服務](architecture/ddd-patterns/tactical-patterns.md#domainservice)
+- [📡 領域事件](architecture/ddd-patterns/domain-events.md) - Record 實作、事件收集與發布
 
-### 模組結構
+### 六角架構
+- [🔵 六角架構總覽](architecture/hexagonal-architecture/README.md)
+- [🔌 Port-Adapter 模式](architecture/hexagonal-architecture/ports-adapters.md)
+- [🔄 依賴反轉](architecture/hexagonal-architecture/dependency-inversion.md)
+- [📚 分層設計](architecture/hexagonal-architecture/layered-design.md)
 
-- **領域層模組**: 核心業務邏輯和領域模型
-- **應用層模組**: 用例實現和應用服務
-- **基礎設施模組**: 持久化、外部服務整合
-- **介面層模組**: REST API、GraphQL、消息處理
+### 微服務架構
+- [🌐 微服務設計](architecture/microservices/README.md)
+- [🚪 API Gateway](architecture/microservices/api-gateway.md)
+- [🔍 Service Discovery](architecture/microservices/service-discovery.md)
+- [⚖️ Load Balancing](architecture/microservices/load-balancing.md)
+- [🔧 Circuit Breaker](architecture/microservices/circuit-breaker.md)
 
-#### DDD 分層架構
+### Saga 模式
+- [🎭 Saga 模式總覽](architecture/saga-patterns/README.md)
+- [🎼 編排式 Saga](architecture/saga-patterns/orchestration.md)
+- [💃 編舞式 Saga](architecture/saga-patterns/choreography.md)
+- [🛒 訂單處理 Saga](architecture/saga-patterns/order-processing-saga.md)
+- [💳 支付 Saga](architecture/saga-patterns/payment-saga.md)
 
-![DDD 分層架構](../../diagrams/viewpoints/development/ddd-layered-architecture.svg)
+## 🧪 測試與品質保證
 
-*完整的 DDD 分層架構設計，展示各層的職責和依賴關係*
+### TDD 測試驅動開發
+- [🔴🟢🔵 Red-Green-Refactor](testing/tdd-practices/red-green-refactor.md)
+- [🏗️ 測試金字塔](testing/tdd-practices/test-pyramid.md)
+- [⚡ 單元測試模式](testing/tdd-practices/unit-testing-patterns.md)
 
-#### 六角形架構
+### BDD 行為驅動開發
+- [📝 Gherkin 語法](testing/bdd-practices/gherkin-guidelines.md)
+- [📋 Given-When-Then](testing/bdd-practices/given-when-then.md)
+- [🎬 Feature 文件編寫](testing/bdd-practices/feature-writing.md)
+- [🎯 場景設計](testing/bdd-practices/scenario-design.md)
 
-![六角形架構](../../diagrams/viewpoints/development/hexagonal-architecture.svg)
+### 測試類型
+- [🔗 整合測試](testing/integration-testing.md)
+- [⚡ 效能測試](testing/performance-testing.md) - @TestPerformanceExtension
+- [🏛️ 架構測試](testing/architecture-testing.md) - ArchUnit 規則
+- [🤖 測試自動化](testing/test-automation.md)
 
-*六角形架構實現，展示端口和適配器模式在開發中的應用*
+## 🛠️ 技術棧與工具鏈
 
-### 開發環境
+### 後端技術
+- [☕ Spring Boot 3.4.5 + Java 21](tools-and-environment/technology-stack/backend-stack.md)
+- [🗄️ PostgreSQL + H2 + Flyway](tools-and-environment/technology-stack/database-stack.md)
+- [📊 Spring Boot Actuator + AWS X-Ray](tools-and-environment/technology-stack/monitoring-stack.md)
 
-- **Java**: 21 (啟用預覽功能)
-- **Spring Boot**: 3.4.5
-- **Gradle**: 8.x (多模組建置)
-- **Node.js**: 18+ (前端開發)
+### 前端技術
+- [⚛️ Next.js 14 + React 18](tools-and-environment/technology-stack/frontend-stack.md)
+- [🅰️ Angular 18 + TypeScript](tools-and-environment/technology-stack/frontend-stack.md)
+- [🎨 shadcn/ui + Radix UI](tools-and-environment/technology-stack/frontend-stack.md)
 
 ### 測試框架
+- [🧪 JUnit 5 + Mockito + AssertJ](tools-and-environment/technology-stack/testing-stack.md)
+- [🥒 Cucumber 7 + Gherkin](tools-and-environment/technology-stack/testing-stack.md)
 
-- **單元測試**: JUnit 5 + Mockito + AssertJ
-- **BDD 測試**: Cucumber 7 + Gherkin
-- **架構測試**: ArchUnit
-- **性能測試**: TestPerformanceExtension
+### 基礎設施
+- [☁️ AWS CDK + TypeScript](tools-and-environment/technology-stack/infrastructure-stack.md)
+- [🐳 EKS + MSK + Route 53](tools-and-environment/technology-stack/infrastructure-stack.md)
 
-### 程式碼品質工具
+## 🔧 建置與部署
 
-- **格式化**: Spotless 自動格式化
-- **靜態分析**: SonarQube、SpotBugs
-- **測試報告**: Allure、JaCoCo
+### 建置系統
+- [🐘 Gradle 配置](build-system/gradle-configuration.md)
+- [📦 多模組設置](build-system/multi-module-setup.md)
+- [📚 依賴管理](build-system/dependency-management.md)
+- [🚀 CI/CD 整合](build-system/ci-cd-integration.md)
 
-## 品質屬性考量
+### 品質保證
+- [👀 程式碼審查](quality-assurance/code-review.md)
+- [🔍 靜態分析](quality-assurance/static-analysis.md)
+- [🔒 安全掃描](quality-assurance/security-scanning.md)
+- [📊 效能監控](quality-assurance/performance-monitoring.md)
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#開發視點-development-viewpoint) 了解所有觀點的詳細影響分析
-
-### 🔴 高影響觀點
-
-#### [安全性觀點](../../perspectives/security/README.md)
-- **安全編碼標準**: 遵循 OWASP 安全編碼實踐和指南
-- **程式碼安全掃描**: 整合 SonarQube、Snyk 等靜態和動態安全掃描工具
-- **依賴管理**: 第三方依賴的安全性檢查和漏洞監控
-- **敏感資訊處理**: 密碼、API 金鑰等敏感資訊的安全處理規範
-- **相關實現**: \1 | \1
-
-#### [演進性觀點](../../perspectives/evolution/README.md)
-- **程式碼品質**: 可維護、可擴展的程式碼設計和實現
-- **架構設計**: 模組化、鬆耦合的架構設計原則
-- **技術債務管理**: 技術債務的識別、評估和償還策略
-- **重構策略**: 持續重構和程式碼改進實踐
-- **相關實現**: \1 | [重構指南](../../design/refactoring-guide.md)
-
-#### [成本觀點](../../perspectives/cost/README.md)
-- **開發效率**: 開發工具鏈和流程的效率優化
-- **維護成本**: 程式碼維護和支援的長期成本考量
-- **技術選型**: 技術選擇對開發和維護成本的影響
-- **資源使用**: 開發環境和建置資源的成本優化
-- **相關實現**: \1 | \1
-
-### 🟡 中影響觀點
-
-#### [性能觀點](../../perspectives/performance/README.md)
-- **程式碼優化**: 性能關鍵路徑的程式碼優化技術
-- **建置優化**: 建置和部署流程的性能優化
-- **測試性能**: 測試執行時間和資源使用的優化
-- **相關實現**: \1 | \1
-
-#### [可用性觀點](../../perspectives/availability/README.md)
-- **錯誤處理**: 健壯的錯誤處理和異常管理機制
-- **測試策略**: 全面的測試覆蓋和品質保證
-- **監控整合**: 應用監控和日誌記錄的開發整合
-- **相關實現**: \1 | \1
-
-#### [使用性觀點](../../perspectives/usability/README.md)
-- **開發者體驗**: 開發工具和 API 的易用性設計
-- **文件品質**: 技術文件的完整性、準確性和可讀性
-- **API 設計**: RESTful API 的直觀性和一致性
-- **相關實現**: \1 | \1
-
-#### [法規觀點](../../perspectives/regulation/README.md)
-- **合規開發**: 開發流程的合規要求和標準
-- **程式碼稽核**: 程式碼的合規性檢查和稽核軌跡
-- **資料處理**: 個人資料處理的開發實踐和合規
-- **相關實現**: \1 | \1
-
-### 🟢 低影響觀點
-
-#### [位置觀點](../../perspectives/location/README.md)
-- **國際化開發**: 多語言和多地區支援的開發實踐
-- **時區處理**: 時間和日期處理的國際化考量
-- **相關實現**: \1
-
-## 相關圖表
-
-- ## 六角架構實現
-
-```mermaid
-graph TB
-    subgraph ACTORS ["External Actors"]
-        CUSTOMER[👤 Customer<br/>Web & Mobile Users]
-        ADMIN[👨‍💼 Admin<br/>Management Dashboard]
-        DELIVERY[🚚 Delivery Person<br/>Logistics Interface]
-    end
-    
-    subgraph EXTERNAL ["External Systems"]
-        STRIPE[💳 Stripe Payment<br/>Payment Processing]
-        EMAIL[📧 Email Service<br/>SES/SMTP]
-        SMS[📱 SMS Service<br/>SNS/Twilio]
-        POSTGRES[(🗄️ PostgreSQL<br/>Primary Database)]
-        REDIS[(⚡ Redis Cache<br/>Session & Cache)]
-        MSK[📊 MSK/Kafka<br/>Event Streaming]
-    end
-    
-    subgraph PRIMARY_ADAPTERS ["Primary Adapters (Driving Side)"]
-        WEB_UI[🌐 Web UI<br/>Next.js Frontend]
-        MOBILE_UI[📱 Mobile UI<br/>Angular App]
-        ADMIN_UI[🖥️ Admin Dashboard<br/>Management Interface]
-        REST_API[🔌 REST Controllers<br/>HTTP API Endpoints]
-        GRAPHQL[📡 GraphQL API<br/>Query Interface]
-    end
-    
-    subgraph APPLICATION ["Application Layer"]
-        CUSTOMER_APP[👤 CustomerApplicationService<br/>Customer Management]
-        ORDER_APP[📦 OrderApplicationService<br/>Order Processing]
-        PRODUCT_APP[🛍️ ProductApplicationService<br/>Product Management]
-        PAYMENT_APP[💰 PaymentApplicationService<br/>Payment Processing]
-        CART_APP[🛒 ShoppingCartApplicationService<br/>Cart Management]
-        INVENTORY_APP[📊 InventoryApplicationService<br/>Stock Management]
-        PRICING_APP[💲 PricingApplicationService<br/>Price Calculation]
-        PROMOTION_APP[🎁 PromotionApplicationService<br/>Discount Management]
-        NOTIFICATION_APP[🔔 NotificationApplicationService<br/>Message Delivery]
-        OBSERVABILITY_APP[📈 ObservabilityApplicationService<br/>Monitoring & Metrics]
-        STATS_APP[📊 StatsApplicationService<br/>Analytics & Reports]
-        MONITORING_APP[🔍 MonitoringApplicationService<br/>Health Checks]
-    end
-    
-    subgraph DOMAIN_CORE ["Domain Core (Hexagon)"]
-        subgraph AGGREGATES ["Aggregate Roots"]
-            CUSTOMER_AGG[👤 Customer<br/>@AggregateRoot<br/>Customer Lifecycle]
-            ORDER_AGG[📦 Order<br/>@AggregateRoot<br/>Order Management]
-            PRODUCT_AGG[🛍️ Product<br/>@AggregateRoot<br/>Product Catalog]
-            PAYMENT_AGG[💰 Payment<br/>@AggregateRoot<br/>Payment Processing]
-            CART_AGG[🛒 ShoppingCart<br/>@AggregateRoot<br/>Cart State]
-            INVENTORY_AGG[📊 Inventory<br/>@AggregateRoot<br/>Stock Control]
-            PROMOTION_AGG[🎁 Promotion<br/>@AggregateRoot<br/>Discount Rules]
-            DELIVERY_AGG[🚚 Delivery<br/>@AggregateRoot<br/>Shipping Info]
-            NOTIFICATION_AGG[🔔 Notification<br/>@AggregateRoot<br/>Message Queue]
-            REVIEW_AGG[⭐ Review<br/>@AggregateRoot<br/>Product Reviews]
-            SELLER_AGG[🏪 Seller<br/>@AggregateRoot<br/>Vendor Management]
-            OBSERVABILITY_AGG[📈 Observability<br/>@AggregateRoot<br/>Metrics Collection]
-        end
-        
-        subgraph DOMAIN_SERVICES ["Domain Services"]
-            ORDER_DOMAIN_SVC[📦 OrderDomainService<br/>Complex Order Logic]
-            PRICING_DOMAIN_SVC[💲 PricingDomainService<br/>Pricing Algorithms]
-            PROMOTION_DOMAIN_SVC[🎁 PromotionDomainService<br/>Discount Calculations]
-        end
-        
-        subgraph REPOSITORY_PORTS ["Repository Ports"]
-            CUSTOMER_REPO_PORT[👤 CustomerRepository<br/>Interface]
-            ORDER_REPO_PORT[📦 OrderRepository<br/>Interface]
-            PRODUCT_REPO_PORT[🛍️ ProductRepository<br/>Interface]
-            PAYMENT_REPO_PORT[💰 PaymentRepository<br/>Interface]
-            INVENTORY_REPO_PORT[📊 InventoryRepository<br/>Interface]
-            PROMOTION_REPO_PORT[🎁 PromotionRepository<br/>Interface]
-        end
-        
-        subgraph SERVICE_PORTS ["Service Ports"]
-            PAYMENT_PORT[💳 PaymentPort<br/>Payment Gateway Interface]
-            NOTIFICATION_PORT[🔔 NotificationPort<br/>Messaging Interface]
-            EVENT_PORT[📡 EventPublisherPort<br/>Event Streaming Interface]
-            CACHE_PORT[⚡ CachePort<br/>Caching Interface]
-        end
-    end
-    
-    subgraph SECONDARY_ADAPTERS ["Secondary Adapters (Driven Side)"]
-        subgraph PERSISTENCE ["Persistence Adapters"]
-            JPA_CUSTOMER[👤 JpaCustomerRepository<br/>Customer Data Access]
-            JPA_ORDER[📦 JpaOrderRepository<br/>Order Data Access]
-            JPA_PRODUCT[🛍️ JpaProductRepository<br/>Product Data Access]
-            JPA_PAYMENT[💰 JpaPaymentRepository<br/>Payment Data Access]
-            JPA_INVENTORY[📊 JpaInventoryRepository<br/>Inventory Data Access]
-            JPA_PROMOTION[🎁 JpaPromotionRepository<br/>Promotion Data Access]
-        end
-        
-        subgraph EXTERNAL_ADAPTERS ["External Service Adapters"]
-            STRIPE_ADAPTER[💳 StripePaymentAdapter<br/>Stripe Integration]
-            EMAIL_ADAPTER[📧 EmailNotificationAdapter<br/>Email Service Integration]
-            SMS_ADAPTER[📱 SmsNotificationAdapter<br/>SMS Service Integration]
-        end
-        
-        subgraph EVENT_ADAPTERS ["Event & Cache Adapters"]
-            MSK_ADAPTER[📊 MskEventAdapter<br/>Kafka Event Publishing]
-            MEMORY_EVENT_ADAPTER[🧠 InMemoryEventAdapter<br/>Development Events]
-            REDIS_ADAPTER[⚡ RedisCacheAdapter<br/>Cache Management]
-            OPENSEARCH_ADAPTER[🔍 OpenSearchAdapter<br/>Search & Analytics]
-        end
-    end
-    
-    %% Primary Flow (Inbound)
-    CUSTOMER --> WEB_UI
-    CUSTOMER --> MOBILE_UI
-    ADMIN --> ADMIN_UI
-    DELIVERY --> REST_API
-    
-    WEB_UI --> REST_API
-    MOBILE_UI --> REST_API
-    ADMIN_UI --> REST_API
-    REST_API --> GRAPHQL
-    
-    REST_API --> CUSTOMER_APP
-    REST_API --> ORDER_APP
-    REST_API --> PRODUCT_APP
-    REST_API --> PAYMENT_APP
-    REST_API --> CART_APP
-    REST_API --> INVENTORY_APP
-    REST_API --> PRICING_APP
-    REST_API --> PROMOTION_APP
-    REST_API --> NOTIFICATION_APP
-    REST_API --> OBSERVABILITY_APP
-    REST_API --> STATS_APP
-    REST_API --> MONITORING_APP
-    
-    %% Application to Domain
-    CUSTOMER_APP --> CUSTOMER_AGG
-    ORDER_APP --> ORDER_AGG
-    ORDER_APP --> ORDER_DOMAIN_SVC
-    PRODUCT_APP --> PRODUCT_AGG
-    PAYMENT_APP --> PAYMENT_AGG
-    CART_APP --> CART_AGG
-    INVENTORY_APP --> INVENTORY_AGG
-    PRICING_APP --> PRICING_DOMAIN_SVC
-    PROMOTION_APP --> PROMOTION_AGG
-    PROMOTION_APP --> PROMOTION_DOMAIN_SVC
-    NOTIFICATION_APP --> NOTIFICATION_AGG
-    OBSERVABILITY_APP --> OBSERVABILITY_AGG
-    
-    %% Domain to Repository Ports
-    CUSTOMER_APP --> CUSTOMER_REPO_PORT
-    ORDER_APP --> ORDER_REPO_PORT
-    PRODUCT_APP --> PRODUCT_REPO_PORT
-    PAYMENT_APP --> PAYMENT_REPO_PORT
-    INVENTORY_APP --> INVENTORY_REPO_PORT
-    PROMOTION_APP --> PROMOTION_REPO_PORT
-    
-    %% Domain to Service Ports
-    PAYMENT_APP --> PAYMENT_PORT
-    NOTIFICATION_APP --> NOTIFICATION_PORT
-    ORDER_APP --> EVENT_PORT
-    PRODUCT_APP --> CACHE_PORT
-    
-    %% Secondary Flow (Outbound) - Repository Implementations
-    CUSTOMER_REPO_PORT -.-> JPA_CUSTOMER
-    ORDER_REPO_PORT -.-> JPA_ORDER
-    PRODUCT_REPO_PORT -.-> JPA_PRODUCT
-    PAYMENT_REPO_PORT -.-> JPA_PAYMENT
-    INVENTORY_REPO_PORT -.-> JPA_INVENTORY
-    PROMOTION_REPO_PORT -.-> JPA_PROMOTION
-    
-    %% Secondary Flow (Outbound) - Service Implementations
-    PAYMENT_PORT -.-> STRIPE_ADAPTER
-    NOTIFICATION_PORT -.-> EMAIL_ADAPTER
-    NOTIFICATION_PORT -.-> SMS_ADAPTER
-    EVENT_PORT -.-> MSK_ADAPTER
-    EVENT_PORT -.-> MEMORY_EVENT_ADAPTER
-    CACHE_PORT -.-> REDIS_ADAPTER
-    CACHE_PORT -.-> OPENSEARCH_ADAPTER
-    
-    %% External System Connections
-    JPA_CUSTOMER --> POSTGRES
-    JPA_ORDER --> POSTGRES
-    JPA_PRODUCT --> POSTGRES
-    JPA_PAYMENT --> POSTGRES
-    JPA_INVENTORY --> POSTGRES
-    JPA_PROMOTION --> POSTGRES
-    
-    STRIPE_ADAPTER --> STRIPE
-    EMAIL_ADAPTER --> EMAIL
-    SMS_ADAPTER --> SMS
-    MSK_ADAPTER --> MSK
-    REDIS_ADAPTER --> REDIS
-    
-    %% Styling
-    classDef actor fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-    classDef external fill:#ffebee,stroke:#d32f2f,stroke-width:2px
-    classDef primary fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
-    classDef application fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef domain fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    classDef secondary fill:#fafafa,stroke:#616161,stroke-width:2px
-    
-    class CUSTOMER,ADMIN,DELIVERY actor
-    class STRIPE,EMAIL,SMS,POSTGRES,REDIS,MSK external
-    class WEB_UI,MOBILE_UI,ADMIN_UI,REST_API,GRAPHQL primary
-    class CUSTOMER_APP,ORDER_APP,PRODUCT_APP,PAYMENT_APP,CART_APP,INVENTORY_APP,PRICING_APP,PROMOTION_APP,NOTIFICATION_APP,OBSERVABILITY_APP,STATS_APP,MONITORING_APP application
-    class CUSTOMER_AGG,ORDER_AGG,PRODUCT_AGG,PAYMENT_AGG,CART_AGG,INVENTORY_AGG,PROMOTION_AGG,DELIVERY_AGG,NOTIFICATION_AGG,REVIEW_AGG,SELLER_AGG,OBSERVABILITY_AGG,ORDER_DOMAIN_SVC,PRICING_DOMAIN_SVC,PROMOTION_DOMAIN_SVC,CUSTOMER_REPO_PORT,ORDER_REPO_PORT,PRODUCT_REPO_PORT,PAYMENT_REPO_PORT,INVENTORY_REPO_PORT,PROMOTION_REPO_PORT,PAYMENT_PORT,NOTIFICATION_PORT,EVENT_PORT,CACHE_PORT domain
-    class JPA_CUSTOMER,JPA_ORDER,JPA_PRODUCT,JPA_PAYMENT,JPA_INVENTORY,JPA_PROMOTION,STRIPE_ADAPTER,EMAIL_ADAPTER,SMS_ADAPTER,MSK_ADAPTER,MEMORY_EVENT_ADAPTER,REDIS_ADAPTER,OPENSEARCH_ADAPTER secondary
-```
-- \1
-- \1
-
-## 與其他視點的關聯
-
-- **[功能視點](../functional/README.md)**: 領域模型實現和業務邏輯開發
-- **[資訊視點](../information/README.md)**: 資料模型實現和事件處理
-- **[並發視點](../concurrency/README.md)**: 並發程式設計和執行緒安全
-- **[部署視點](../deployment/README.md)**: 建置產物和部署策略
-- **[運營視點](../operational/README.md)**: 監控整合和日誌記錄
-
-## 實現指南
+## 🔄 工作流程與協作
 
 ### 開發流程
+- [🔄 開發工作流程](workflows/development-workflow.md)
+- [🚀 發布流程](workflows/release-process.md)
+- [🔥 熱修復流程](workflows/hotfix-process.md)
+- [♻️ 重構策略](workflows/refactoring-strategy.md)
 
-1. **需求分析**: BDD 場景設計和驗收條件定義
-2. **領域建模**: DDD 戰術模式實現
-3. **TDD 開發**: 測試驅動開發實踐
-4. **程式碼審查**: 同儕審查和品質檢查
-5. **整合測試**: 端到端功能驗證
+### 團隊協作
+- [🤝 協作指南](workflows/collaboration-guidelines.md)
+- [📝 文檔標準](coding-standards/documentation-standards.md)
+- [🔍 程式碼審查指南](coding-standards/code-review-guidelines.md)
 
-### 最佳實踐
+## 📊 相關圖表
 
-- 遵循 SOLID 原則和 DDD 戰術模式
-- 實施測試金字塔策略 (80% 單元測試, 15% 整合測試, 5% E2E 測試)
-- 使用依賴注入和控制反轉
-- 實現適當的錯誤處理和日誌記錄
-- 定期重構和技術債務清理
+### 架構圖表
+- [🔵 六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)
+- [🏛️ DDD 分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)
+- [🌐 微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
+- [🎭 Saga 編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)
 
-## 驗證標準
+### 流程圖表
+- [🔄 開發工作流程](../../diagrams/viewpoints/development/workflows/development-workflow.mmd)
+- [🔴🟢🔵 TDD 循環](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd)
+- [📝 BDD 流程](../../diagrams/viewpoints/development/workflows/bdd-process.mmd)
+- [👀 程式碼審查流程](../../diagrams/viewpoints/development/workflows/code-review-process.mmd)
 
-- 程式碼覆蓋率 > 80%
-- 所有 BDD 場景通過測試
-- ArchUnit 架構合規性檢查通過
-- 無高風險安全漏洞
-- 建置時間 < 10 分鐘
+## 🎯 SOLID 原則與設計模式
 
-## 文件列表
+### SOLID 原則
+- [📏 單一職責原則 (SRP)](architecture/design-principles.md#single-responsibility)
+- [🔓 開放封閉原則 (OCP)](architecture/design-principles.md#open-closed)
+- [🔄 里氏替換原則 (LSP)](architecture/design-principles.md#liskov-substitution)
+- [🔌 介面隔離原則 (ISP)](architecture/design-principles.md#interface-segregation)
+- [🔄 依賴反轉原則 (DIP)](architecture/design-principles.md#dependency-inversion)
 
-- [六角架構實現指南](hexagonal-architecture.md) - 六角架構的具體實現
-- \1 - 程式碼組織和套件設計
-- [編碼標準](../../development/coding-standards.md) - 程式碼品質和風格指南
-- \1 - 測試方法和最佳實踐
-- \1 - Gradle 建置配置和優化
-- [開發工作流程](development-workflow.md) - AI-DLC 開發流程指南
+### 設計模式
+- [🏭 Factory 模式](architecture/design-principles.md#factory-pattern)
+- [🔨 Builder 模式](architecture/design-principles.md#builder-pattern)
+- [📋 Strategy 模式](architecture/design-principles.md#strategy-pattern)
+- [👁️ Observer 模式](architecture/design-principles.md#observer-pattern)
+- [🙈 Show Don't Ask](architecture/design-principles.md#show-dont-ask)
 
-## 適用對象
+## 📚 學習路徑
 
-- 新加入的開發者
-- 專案貢獻者
-- 技術主管和架構師
-- DevOps 和 QA 工程師
+### 初學者路徑
+1. [📚 快速入門](getting-started/README.md)
+2. [☕ Java 編碼標準](coding-standards/java-standards.md)
+3. [🧪 單元測試基礎](testing/tdd-practices/unit-testing-patterns.md)
+4. [🏗️ 基本架構概念](architecture/README.md)
+
+### 中級開發者路徑
+1. [🎯 DDD 戰術模式](architecture/ddd-patterns/tactical-patterns.md)
+2. [🔵 六角架構實作](architecture/hexagonal-architecture/README.md)
+3. [🔴🟢🔵 TDD 實踐](testing/tdd-practices/red-green-refactor.md)
+4. [📝 BDD 場景設計](testing/bdd-practices/scenario-design.md)
+
+### 高級架構師路徑
+1. [🌐 微服務設計](architecture/microservices/README.md)
+2. [🎭 Saga 模式實作](architecture/saga-patterns/README.md)
+3. [🔧 分散式系統模式](architecture/microservices/distributed-patterns.md)
+4. [📊 系統監控與可觀測性](tools-and-environment/technology-stack/monitoring-stack.md)
+
+## 🔗 相關資源
+
+### 內部連結
+- [📋 Functional Viewpoint](../functional/README.md) - 功能需求和業務邏輯
+- [📊 Information Viewpoint](../information/README.md) - 資料模型和資訊流
+- [⚡ Concurrency Viewpoint](../concurrency/README.md) - 並發處理和事件驅動
+- [🚀 Deployment Viewpoint](../deployment/README.md) - 部署和基礎設施
+
+### 外部資源
+- [Rozanski & Woods Architecture Viewpoints](https://www.viewpoints-and-perspectives.info/)
+- [Domain-Driven Design Reference](https://domainlanguage.com/ddd/reference/)
+- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
+- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
+
+---
+
+**最後更新**: 2025年1月21日  
+**維護者**: Development Team  
+**版本**: 1.0  
+**狀態**: Active
+
+> 💡 **提示**: 這是一個活躍維護的文檔。如果你發現任何問題或有改進建議，請通過 GitHub Issues 或直接聯繫開發團隊。

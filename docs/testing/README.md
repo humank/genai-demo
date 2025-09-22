@@ -1,250 +1,85 @@
-# Integration Testing Documentation
+# 📍 測試文檔已遷移
 
-## Overview
+> **重要通知**: 測試相關文檔已遷移到新的 Development Viewpoint 測試策略中
 
-This directory contains comprehensive documentation for the integration testing framework, particularly focusing on the unified HTTP client configuration strategy and reactivated test suite.
+## 🚀 新位置
 
-## Quick Start
+所有測試相關文檔現在統一整合在 **[Development Viewpoint 測試策略](../viewpoints/development/testing/)** 中，提供更完整和系統化的測試指南。
 
-- **New to the project?** Start with the [New Developer Onboarding Guide](new-developer-onboarding-guide.md)
-- **Need to run tests?** Check the [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-- **Having issues?** Consult the [Troubleshooting Guides](#troubleshooting)
+**主要入口**: [測試策略總覽](../viewpoints/development/testing/README.md)
 
-## Documentation Index
+## 📋 文檔遷移對照表
 
-### Core Guides
+| 原始文檔 | 新位置 | 說明 |
+|----------|--------|------|
+| [test-execution-maintenance-guide.md](test-execution-maintenance-guide.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 測試執行和維護指南 |
+| [test-performance-monitoring.md](test-performance-monitoring.md) | **[TestPerformanceExtension](../viewpoints/development/testing/performance-monitoring/test-performance-extension.md)** | 測試效能監控框架 |
+| [http-client-configuration-guide.md](http-client-configuration-guide.md) | **[整合測試](../viewpoints/development/testing/integration-testing.md)** | HTTP 客戶端配置指南 |
+| [new-developer-onboarding-guide.md](new-developer-onboarding-guide.md) | **[入門指南](../viewpoints/development/getting-started/first-contribution.md)** | 新開發者測試入門 |
+| [test-optimization-guidelines.md](test-optimization-guidelines.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 測試優化指南 |
+| [testresttemplate-troubleshooting-guide.md](testresttemplate-troubleshooting-guide.md) | **[整合測試](../viewpoints/development/testing/integration-testing.md)** | TestRestTemplate 故障排除 |
+| [common-test-failures-troubleshooting.md](common-test-failures-troubleshooting.md) | **[測試優化](../viewpoints/development/testing/test-optimization.md)** | 常見測試失敗排除 |
 
-#### 🚀 [New Developer Onboarding Guide](new-developer-onboarding-guide.md)
+## 📚 新的測試文檔結構
 
-**Start here if you're new to the project**
+```
+docs/viewpoints/development/testing/
+├── README.md                           # 測試策略總覽
+├── tdd-practices/                      # TDD 實踐指南
+│   ├── red-green-refactor.md          # Red-Green-Refactor 循環
+│   ├── test-pyramid.md                # 測試金字塔策略
+│   └── unit-testing-patterns.md       # 單元測試模式
+├── bdd-practices/                      # BDD 實踐指南
+│   ├── gherkin-guidelines.md          # Gherkin 語法指南
+│   ├── given-when-then.md             # Given-When-Then 模式
+│   ├── feature-writing.md             # Feature 文件編寫
+│   └── scenario-design.md             # 場景設計最佳實踐
+├── performance-monitoring/             # 效能監控
+│   └── test-performance-extension.md  # @TestPerformanceExtension 使用指南
+├── integration-testing.md             # 整合測試指南
+├── architecture-testing.md            # 架構測試指南
+├── test-optimization.md               # 測試優化指南
+└── test-automation.md                 # 測試自動化指南
+```
 
-- Quick 5-minute setup verification
-- Your first integration test walkthrough
-- Common patterns and best practices
-- Performance monitoring basics
-- Week-by-week learning plan
+## 📅 遷移資訊
 
-#### 📋 [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
+- **遷移日期**: 2025年1月21日
+- **原因**: 統一測試文檔到 Development Viewpoint 結構
+- **狀態**: 已完成，內容已整合並增強
 
-**Complete guide for running and maintaining tests**
+## 🚀 快速開始
 
-- Test categories and classification (Unit, Integration, E2E)
-- Execution commands for different scenarios
-- Performance monitoring and optimization
-- Maintenance procedures and schedules
-- CI/CD integration
-
-### Technical Configuration
-
-#### ⚙️ [HTTP Client Configuration Guide](http-client-configuration-guide.md)
-
-**Deep dive into the unified HTTP client strategy**
-
-- Problem background and solution architecture
-- UnifiedTestHttpClientConfiguration details
-- Implementation guidelines and best practices
-- Dependency management and Gradle configuration
-- Migration checklist for existing tests
-
-#### 📝 [Test Configuration Examples](test-configuration-examples.md)
-
-**Practical examples for different test scenarios**
-
-- Basic integration test patterns
-- Advanced observability testing
-- Custom configuration examples
-- Error handling patterns
-- Performance optimization examples
-
-### Troubleshooting
-
-#### 🔧 [TestRestTemplate Troubleshooting Guide](testresttemplate-troubleshooting-guide.md)
-
-**Solutions for HTTP client and TestRestTemplate issues**
-
-- NoClassDefFoundError resolution
-- Connection timeout solutions
-- Configuration conflict resolution
-- SSL/TLS certificate issues
-- Port conflict prevention
-
-#### 🚨 [Common Test Failures Troubleshooting](common-test-failures-troubleshooting.md)
-
-**Comprehensive troubleshooting for test failures**
-
-- HTTP client and connection issues
-- Configuration and bean creation problems
-- Memory and performance issues
-- Test data and state conflicts
-- Environment and CI/CD issues
-
-## Quick Reference
-
-### Test Execution Commands
+### 測試執行命令
 
 ```bash
-# Daily development - fast feedback
-./gradlew quickTest              # Unit tests only (< 2 minutes)
+# 日常開發 - 快速反饋
+./gradlew quickTest              # 單元測試 (< 2 分鐘)
 
-# Pre-commit verification  
-./gradlew preCommitTest          # Unit + Integration (< 5 minutes)
+# 提交前驗證  
+./gradlew preCommitTest          # 單元 + 整合測試 (< 5 分鐘)
 
-# Pre-release validation
-./gradlew fullTest               # All tests including E2E (< 30 minutes)
+# 發布前驗證
+./gradlew fullTest               # 所有測試包括 E2E (< 30 分鐘)
 
-# Specific test types
-./gradlew unitTest               # Fast unit tests
-./gradlew integrationTest        # Integration tests with HTTP client
-./gradlew e2eTest               # End-to-end tests
-./gradlew cucumber              # BDD Cucumber tests
+# 特定測試類型
+./gradlew unitTest               # 快速單元測試
+./gradlew integrationTest        # 整合測試
+./gradlew e2eTest               # 端到端測試
+./gradlew cucumber              # BDD Cucumber 測試
 
-# Performance monitoring
-./gradlew generatePerformanceReport  # Generate performance reports
+# 效能監控
+./gradlew generatePerformanceReport  # 生成效能報告
 ```
 
-### Performance Thresholds
+### 效能基準
 
-| Test Type | Execution Time | Memory Usage | Success Rate |
-|-----------|---------------|--------------|--------------|
-| Unit Tests | < 50ms | < 5MB | > 99% |
-| Integration Tests | < 500ms | < 50MB | > 95% |
-| E2E Tests | < 3s | < 500MB | > 90% |
+| 測試類型 | 執行時間 | 記憶體使用 | 成功率 |
+|----------|----------|------------|--------|
+| 單元測試 | < 50ms | < 5MB | > 99% |
+| 整合測試 | < 500ms | < 50MB | > 95% |
+| E2E 測試 | < 3s | < 500MB | > 90% |
 
-### Test Class Template
+---
 
-```java
-@TestPerformanceExtension(maxExecutionTimeMs = 10000, maxMemoryIncreaseMB = 100)
-class MyFeatureIntegrationTest extends BaseIntegrationTest {
-    
-    @Test
-    void should_validate_feature_functionality() {
-        // Given
-        String endpoint = baseUrl + "/api/v1/my-feature";
-        
-        // When
-        ResponseEntity<String> response = restTemplate.getForEntity(endpoint, String.class);
-        
-        // Then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-    
-    @AfterEach
-    void cleanup() {
-        if (!isMemoryUsageAcceptable()) {
-            forceResourceCleanup();
-        }
-    }
-}
-```
-
-## Key Components
-
-### BaseIntegrationTest
-
-- Pre-configured `TestRestTemplate` with proper timeouts
-- Random port assignment for test isolation
-- Resource management utilities
-- Performance monitoring integration
-
-### @TestPerformanceExtension
-
-- Automatic execution time monitoring
-- Memory usage tracking
-- Performance regression detection
-- Report generation
-
-### UnifiedTestHttpClientConfiguration
-
-- Consistent HTTP client setup across all tests
-- HttpComponents dependency management
-- Timeout configuration for test environments
-
-## Best Practices Summary
-
-### ✅ Do This
-
-- Extend `BaseIntegrationTest` for integration tests
-- Use `@TestPerformanceExtension` for performance monitoring
-- Implement proper resource cleanup in `@AfterEach`
-- Use the provided `TestRestTemplate` instance
-- Generate unique test data to avoid conflicts
-- Follow Given-When-Then test structure
-
-### ❌ Avoid This
-
-- Creating custom `TestRestTemplate` instances
-- Skipping performance monitoring annotations
-- Ignoring memory usage warnings
-- Using hardcoded URLs instead of `baseUrl`
-- Leaving resources uncleaned after tests
-- Writing tests that depend on each other
-
-## Performance Monitoring
-
-### Reports Location
-
-- **HTML Reports**: `build/reports/test-performance/performance-report.html`
-- **Text Summaries**: `build/reports/test-performance/overall-performance-summary.txt`
-- **Individual Reports**: `build/reports/test-performance/{TestClass}-performance-report.txt`
-
-### Key Metrics
-
-- **Execution Time**: Per test and per class
-- **Memory Usage**: Before/after each test with increase tracking
-- **Resource Utilization**: CPU, memory, database connections
-- **Performance Trends**: Regression detection over time
-
-## Troubleshooting Quick Reference
-
-| Issue | Quick Fix | Documentation |
-|-------|-----------|---------------|
-| NoClassDefFoundError | Check HttpComponents dependencies | [TestRestTemplate Troubleshooting](testresttemplate-troubleshooting-guide.md#noclassdeffounderror-httpcomponents-classes) |
-| Connection Timeout | Verify timeout configuration | [TestRestTemplate Troubleshooting](testresttemplate-troubleshooting-guide.md#testresttemplate-connection-timeouts) |
-| Memory Issues | Increase heap size, implement cleanup | [Common Failures](common-test-failures-troubleshooting.md#outofmemoryerror-during-tests) |
-| Bean Conflicts | Remove redundant configurations | [Common Failures](common-test-failures-troubleshooting.md#multiple-bean-definition-conflicts) |
-| Port Conflicts | Use random port assignment | [TestRestTemplate Troubleshooting](testresttemplate-troubleshooting-guide.md#port-conflicts-in-parallel-test-execution) |
-
-## Getting Help
-
-### Documentation Path
-
-1. **Start Here**: [New Developer Onboarding Guide](new-developer-onboarding-guide.md)
-2. **Learn Patterns**: [Test Configuration Examples](test-configuration-examples.md)
-3. **Understand Architecture**: [HTTP Client Configuration Guide](http-client-configuration-guide.md)
-4. **Troubleshoot Issues**: [Troubleshooting Guides](#troubleshooting)
-5. **Maintain Tests**: [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-
-### Team Resources
-
-- **Pair Programming**: Schedule with experienced team members
-- **Code Reviews**: Get feedback on test implementations
-- **Performance Reports**: Review and optimize based on metrics
-- **Team Meetings**: Discuss testing strategies and improvements
-
-## Related Documentation
-
-- **[Performance Standards](../../.kiro/steering/performance-standards.md)** - Overall performance guidelines
-- **[Development Standards](../../.kiro/steering/development-standards.md)** - General development practices
-- **[Security Standards](../../.kiro/steering/security-standards.md)** - Security testing requirements
-- **[Test Optimization Guidelines](test-optimization-guidelines.md)** - Existing optimization guide
-
-## Contributing to Documentation
-
-When updating this documentation:
-
-1. **Keep Examples Current**: Ensure code examples match current implementation
-2. **Update Performance Thresholds**: Adjust based on actual performance data
-3. **Add New Patterns**: Document new testing patterns as they emerge
-4. **Maintain Links**: Ensure all internal links work correctly
-5. **Test Instructions**: Verify all commands and examples work
-
-## Feedback and Improvements
-
-This documentation is continuously improved based on:
-
-- Developer feedback and questions
-- Common issues encountered in practice
-- Performance monitoring insights
-- New testing patterns and requirements
-
-Please contribute improvements and report issues to help maintain high-quality documentation that serves the entire development team.
+*此目錄將在下一個版本中重構。請更新您的書籤和引用到新的位置。*
