@@ -1,205 +1,220 @@
 #!/usr/bin/env python3
 """
-Validate all diagram links in Markdown files.
-Check if referenced files exist and categorize issues.
+Validate and fix diagram links in documentation files
 """
 
 import os
 import re
-import glob
+import argparse
 from pathlib import Path
-from urllib.parse import urlparse
+import urllib.parse
 
-def is_external_url(path):
-    """Check if path is an external URL."""
-    return path.startswith(('http://', 'https://'))
+def find_correct_diagram_path(broken_path, alt_text, md_file_dir):
+    """Find the correct path for a broken diagram reference"""
+    project_root = Path(".")
+    diagrams_dir = project_root / "docs" / "diagrams"
+    
+    # Extract diagram name from broken path or alt text
+    diagram_name = Path(broken_path).stem if broken_path != "\\1" else alt_text.lower().replace(" ", "-")
+    
+    # Search for matching diagrams
+    candidates = []
+    
+    # Look for PNG files first (preferred for PlantUML)
+    for png_file in diagrams_dir.rglob("*.png"):
+        if diagram_name.lower() in png_file.stem.lower():
+            candidates.append(png_file)
+    
+    # Look for SVG files (for Mermaid)
+    for svg_file in diagrams_dir.rglob("*.svg"):
+        if diagram_name.lower() in svg_file.stem.lower():
+            candidates.append(svg_file)
+    
+    if candidates:
+        # Prefer generated PNG files
+        png_candidates = [c for c in candidates if c.suffix == '.png' and 'generated' in str(c)]
+        if png_candidates:
+            best_candidate = png_candidates[0]
+        else:
+            best_candidate = candidates[0]
+        
+        # Calculate relative path
+        relative_path = os.path.relpath(best_candidate, md_file_dir)
+        return relative_path.replace('\\', '/')
+    
+    return None
 
-def validate_diagram_links():
-    """Validate all diagram links in Markdown files."""
-    print("🔍 Validating diagram links in Markdown files...")
+def fix_broken_references(md_file, broken_links):
+    """Fix broken references in a markdown file"""
+    try:
+        with open(md_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        original_content = content
+        fixes_made = []
+        
+        for link in broken_links:
+            if link['file'] == str(md_file):
+                # Find correct path
+                correct_path = find_correct_diagram_path(
+                    link['link'], 
+                    link['alt'], 
+                    md_file.parent
+                )
+                
+                if correct_path:
+                    # Replace the broken reference
+                    old_ref = f"![{link['alt']}]({link['link']})"
+                    new_ref = f"![{link['alt']}]({correct_path})"
+                    
+                    if old_ref in content:
+                        content = content.replace(old_ref, new_ref)
+                        fixes_made.append(f"{link['link']} → {correct_path}")
+                    elif link['link'] == "\\1":
+                        # Handle placeholder references
+                        placeholder_pattern = rf"!\[{re.escape(link['alt'])}\]\(\\1\)"
+                        content = re.sub(placeholder_pattern, new_ref, content)
+                        fixes_made.append(f"\\1 → {correct_path}")
+        
+        # Write back if changes were made
+        if content != original_content:
+            with open(md_file, 'w', encoding='utf-8') as f:
+                f.write(content)
+            return fixes_made
+        
+    except Exception as e:
+        print(f"Error fixing {md_file}: {e}")
     
-    # Find all Markdown files
-    md_files = []
-    for pattern in ['**/*.md', '*.md']:
-        md_files.extend(glob.glob(pattern, recursive=True))
+    return []
+
+def validate_diagram_links(fix_broken=False):
+    """Validate all diagram links in markdown files"""
+    project_root = Path(".")
+    docs_dir = project_root / "docs"
     
-    # Remove duplicates and sort
-    md_files = sorted(set(md_files))
+    broken_links = []
+    valid_links = []
     
-    # Statistics
-    total_files = 0
-    total_links = 0
-    valid_links = 0
-    invalid_links = 0
-    external_links = 0
-    mermaid_links = 0
+    # Find all markdown files
+    md_files = list(docs_dir.rglob("*.md"))
     
-    # Issue tracking
-    issues = {
-        'missing_files': [],
-        'svg_should_be_png': [],
-        'puml_not_converted': [],
-        'broken_paths': []
-    }
-    
-    # Pattern to match image references
-    img_pattern = r'!\[([^\]]*)\]\(([^)]+\.(png|svg|puml|mmd))\)'
+    # Pattern to match diagram references
+    pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
     
     for md_file in md_files:
-        # Skip certain directories
-        if any(skip_dir in md_file for skip_dir in ['.git', 'node_modules', '.kiro/hooks']):
-            continue
-            
-        total_files += 1
-        
         try:
             with open(md_file, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            matches = re.findall(img_pattern, content)
-            
-            for alt_text, image_path, extension in matches:
-                total_links += 1
+            matches = re.finditer(pattern, content)
+            for match in matches:
+                alt_text = match.group(1)
+                link_path = match.group(2)
                 
                 # Skip external URLs
-                if is_external_url(image_path):
-                    external_links += 1
+                if link_path.startswith('http'):
                     continue
                 
-                # Skip Mermaid files (they're handled differently)
-                if '.mmd' in image_path:
-                    mermaid_links += 1
+                # Skip if not a diagram reference
+                if 'diagrams' not in link_path and link_path != "\\1":
                     continue
                 
-                # Calculate absolute path
-                current_dir = Path(md_file).parent
-                if image_path.startswith('/'):
-                    # Absolute path from root
-                    abs_path = Path(image_path[1:])
-                else:
-                    # Relative path
-                    abs_path = current_dir / image_path
-                
-                # Normalize path
-                abs_path = abs_path.resolve()
-                
-                # Check if file exists
-                if abs_path.exists():
-                    valid_links += 1
-                    
-                    # Check for optimization opportunities
-                    if extension == 'svg' and 'diagrams/viewpoints' in image_path:
-                        # Check if PNG alternative exists
-                        png_path = str(abs_path).replace('.svg', '.png')
-                        if 'generated' not in png_path:
-                            # Look for PNG in generated directory
-                            svg_name = abs_path.stem
-                            for category in ['functional', 'information', 'deployment', 'concurrency', 'development', 'operational', 'perspectives']:
-                                potential_png = Path(f"docs/diagrams/generated/{category}/{svg_name}.png")
-                                if potential_png.exists():
-                                    issues['svg_should_be_png'].append({
-                                        'file': md_file,
-                                        'current': image_path,
-                                        'suggested': str(potential_png.relative_to(current_dir)),
-                                        'alt_text': alt_text
-                                    })
-                                    break
-                    
-                    elif extension == 'puml':
-                        issues['puml_not_converted'].append({
-                            'file': md_file,
-                            'path': image_path,
-                            'alt_text': alt_text
-                        })
-                        
-                else:
-                    invalid_links += 1
-                    issues['missing_files'].append({
-                        'file': md_file,
-                        'path': image_path,
-                        'alt_text': alt_text,
-                        'extension': extension
+                # Handle placeholder references
+                if link_path == "\\1":
+                    broken_links.append({
+                        'file': str(md_file),
+                        'link': link_path,
+                        'alt': alt_text,
+                        'resolved': 'PLACEHOLDER'
                     })
-        
+                    continue
+                
+                # Resolve the path
+                md_dir = md_file.parent
+                
+                # Handle URL encoding
+                decoded_path = urllib.parse.unquote(link_path)
+                full_path = (md_dir / decoded_path).resolve()
+                
+                if full_path.exists():
+                    valid_links.append({
+                        'file': str(md_file),
+                        'link': link_path,
+                        'alt': alt_text,
+                        'resolved': str(full_path)
+                    })
+                else:
+                    broken_links.append({
+                        'file': str(md_file),
+                        'link': link_path,
+                        'alt': alt_text,
+                        'resolved': str(full_path)
+                    })
+                    
         except Exception as e:
-            print(f"❌ Error processing {md_file}: {e}")
+            print(f"Error processing {md_file}: {e}")
     
-    # Print summary
-    print(f"\n📊 Validation Summary:")
-    print(f"  Total files scanned: {total_files}")
-    print(f"  Total image links found: {total_links}")
-    print(f"  Valid links: {valid_links}")
-    print(f"  Invalid links: {invalid_links}")
-    print(f"  External links: {external_links}")
-    print(f"  Mermaid links: {mermaid_links}")
+    # Fix broken links if requested
+    total_fixes = 0
+    if fix_broken and broken_links:
+        print(f"🔧 Fixing {len(broken_links)} broken references...")
+        
+        # Group by file
+        files_to_fix = {}
+        for link in broken_links:
+            file_path = Path(link['file'])
+            if file_path not in files_to_fix:
+                files_to_fix[file_path] = []
+            files_to_fix[file_path].append(link)
+        
+        # Fix each file
+        for md_file, file_broken_links in files_to_fix.items():
+            fixes = fix_broken_references(md_file, file_broken_links)
+            if fixes:
+                print(f"   ✅ Fixed {len(fixes)} references in {md_file.name}")
+                for fix in fixes:
+                    print(f"      • {fix}")
+                total_fixes += len(fixes)
+        
+        # Re-validate after fixes
+        if total_fixes > 0:
+            print(f"\n🔄 Re-validating after {total_fixes} fixes...")
+            return validate_diagram_links(fix_broken=False)
     
-    # Print issues
-    if issues['missing_files']:
-        print(f"\n❌ Missing Files ({len(issues['missing_files'])}):")
-        for issue in issues['missing_files'][:10]:  # Show first 10
-            print(f"  📄 {issue['file']}")
-            print(f"     Missing: {issue['path']}")
-            print(f"     Alt text: {issue['alt_text']}")
-        if len(issues['missing_files']) > 10:
-            print(f"     ... and {len(issues['missing_files']) - 10} more")
+    # Report results
+    print(f"📊 Diagram Link Validation Results")
+    print(f"   ✅ Valid links: {len(valid_links)}")
+    print(f"   ❌ Broken links: {len(broken_links)}")
     
-    if issues['svg_should_be_png']:
-        print(f"\n⚠️ SVG Should Be PNG ({len(issues['svg_should_be_png'])}):")
-        for issue in issues['svg_should_be_png'][:10]:  # Show first 10
-            print(f"  📄 {issue['file']}")
-            print(f"     Current: {issue['current']}")
-            print(f"     Suggested: {issue['suggested']}")
-        if len(issues['svg_should_be_png']) > 10:
-            print(f"     ... and {len(issues['svg_should_be_png']) - 10} more")
+    if broken_links:
+        print(f"\n❌ Broken Links:")
+        for link in broken_links:
+            print(f"   File: {Path(link['file']).name}")
+            print(f"   Link: {link['link']}")
+            print(f"   Alt: {link['alt']}")
+            print()
     
-    if issues['puml_not_converted']:
-        print(f"\n⚠️ PlantUML Not Converted ({len(issues['puml_not_converted'])}):")
-        for issue in issues['puml_not_converted'][:10]:  # Show first 10
-            print(f"  📄 {issue['file']}")
-            print(f"     PlantUML: {issue['path']}")
-        if len(issues['puml_not_converted']) > 10:
-            print(f"     ... and {len(issues['puml_not_converted']) - 10} more")
+    if valid_links and len(valid_links) <= 10:
+        print(f"\n✅ Valid Links:")
+        for link in valid_links:
+            print(f"   {link['alt']} -> {Path(link['resolved']).name}")
+    elif valid_links:
+        print(f"\n✅ Valid Links Summary:")
+        for link in valid_links[:5]:
+            print(f"   {link['alt']} -> {Path(link['resolved']).name}")
+        print(f"   ... and {len(valid_links) - 5} more")
     
-    # Overall status
-    if invalid_links == 0 and len(issues['svg_should_be_png']) == 0 and len(issues['puml_not_converted']) == 0:
-        print(f"\n✅ All diagram links are valid and optimized!")
-    else:
-        print(f"\n📋 Issues found that need attention:")
-        if invalid_links > 0:
-            print(f"  - {invalid_links} broken links")
-        if issues['svg_should_be_png']:
-            print(f"  - {len(issues['svg_should_be_png'])} SVG links that should be PNG")
-        if issues['puml_not_converted']:
-            print(f"  - {len(issues['puml_not_converted'])} PlantUML links not converted")
-    
-    return {
-        'total_files': total_files,
-        'total_links': total_links,
-        'valid_links': valid_links,
-        'invalid_links': invalid_links,
-        'external_links': external_links,
-        'mermaid_links': mermaid_links,
-        'issues': issues
-    }
+    return len(broken_links) == 0
 
 def main():
-    """Main function."""
-    results = validate_diagram_links()
+    parser = argparse.ArgumentParser(description='Validate and fix diagram links')
+    parser.add_argument('--fix-broken', action='store_true', 
+                       help='Automatically fix broken references')
     
-    # Generate recommendations
-    print(f"\n💡 Recommendations:")
+    args = parser.parse_args()
     
-    if results['issues']['svg_should_be_png']:
-        print(f"  1. Run fix-diagram-references.py again to convert remaining SVG references")
-    
-    if results['issues']['missing_files']:
-        print(f"  2. Check if missing files need to be regenerated or paths corrected")
-    
-    if results['issues']['puml_not_converted']:
-        print(f"  3. Ensure all PlantUML files are converted to PNG references")
-    
-    if results['invalid_links'] == 0 and not any(results['issues'].values()):
-        print(f"  🎉 No action needed - all links are valid and optimized!")
+    success = validate_diagram_links(fix_broken=args.fix_broken)
+    exit(0 if success else 1)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

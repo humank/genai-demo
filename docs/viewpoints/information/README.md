@@ -195,5 +195,7 @@ graph LR
 
 **相關文件**:
 - [領域事件實現指南](domain-events.md)
-- \1
-- \1
+- 資料架構師和資料工程師
+- 系統整合工程師和API設計師
+
+![Information Overview](../../diagrams/viewpoints/information/information-overview.svg)

@@ -32,19 +32,20 @@
 
 #### 領域模型概覽
 
-!\1
+![領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
 
 *完整的領域模型設計，包括所有聚合根、實體和值對象的關係*
 
 #### 界限上下文概覽
 
-!\1
+![界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
 
 *13個界限上下文的劃分和它們之間的集成關係*
 
 ### 用例分析
-- \1 - 系統用例和業務流程
-- \1 - API 和系統介面設計
+- [業務流程概覽](../../diagrams/generated/functional/Business%20Process%20Flows.png) - 系統用例和業務流程
+- [用戶旅程概覽](../../diagrams/generated/functional/User%20Journey%20Overview.png) - 用戶體驗流程設計
+- [應用服務概覽](../../diagrams/generated/functional/Application%20Services%20Overview.png) - API 和系統介面設計
 
 ## 品質屬性考量
 
@@ -57,21 +58,21 @@
 - **存取控制**: 功能層面的權限控制，確保用戶只能存取授權功能
 - **輸入驗證**: API 和用戶輸入的全面安全驗證，防止注入攻擊
 - **輸出編碼**: 防止 XSS 攻擊的輸出處理和資料清理
-- **相關實現**: \1 | \1
+- **相關實現**: [安全架構圖](../../diagrams/generated/perspectives/security/security-architecture.png) | [安全標準文檔](../../.kiro/steering/security-standards.md)
 
 #### [可用性觀點](../../perspectives/availability/README.md)
 - **關鍵功能保護**: 核心業務功能的容錯設計和冗餘機制
 - **功能降級**: 部分功能失效時的優雅降級策略
 - **業務連續性**: 關鍵業務流程的持續運行保障
 - **故障隔離**: 功能故障的隔離，避免級聯失效
-- **相關實現**: \1 | \1
+- **相關實現**: [可用性架構設計](../../perspectives/availability/README.md) | [容錯機制實現](../../infrastructure/README.md)
 
 #### [使用性觀點](../../perspectives/usability/README.md)
 - **用戶體驗**: 功能設計符合用戶期望和使用習慣
 - **介面設計**: API 和 UI 的直觀性和易用性設計
 - **錯誤處理**: 用戶友好的錯誤訊息和處理流程
 - **工作流程**: 業務流程的簡化和優化
-- **相關實現**: \1 | \1
+- **相關實現**: [用戶旅程設計](../../diagrams/generated/functional/User%20Journey%20Overview.png) | [API 設計標準](../../.kiro/steering/development-standards.md)
 
 ### 🟡 中影響觀點
 
@@ -79,32 +80,32 @@
 - **響應時間**: 核心功能的性能需求和 SLA 定義
 - **吞吐量**: 高頻使用功能的處理能力和擴展性
 - **資源使用**: 功能執行的資源消耗優化
-- **相關實現**: \1 | \1
+- **相關實現**: [性能監控架構](../../perspectives/performance/README.md) | [性能標準文檔](../../.kiro/steering/performance-standards.md)
 
 #### [演進性觀點](../../perspectives/evolution/README.md)
 - **功能擴展**: 新功能的添加能力和向後相容性
 - **業務規則靈活性**: 業務邏輯的可配置性和適應性
 - **模組化設計**: 功能模組的獨立性和可重用性
-- **相關實現**: \1 | \1
+- **相關實現**: [六角架構設計](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png) | [模組化架構指南](bounded-contexts.md)
 
 #### [法規觀點](../../perspectives/regulation/README.md)
 - **合規功能**: 法規要求的功能實現和驗證
 - **稽核軌跡**: 業務操作的完整記錄和追蹤
 - **資料治理**: 功能層面的資料管理和保護
-- **相關實現**: \1 | \1
+- **相關實現**: [審計服務設計](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png) | [合規標準文檔](../../perspectives/regulation/README.md)
 
 #### [成本觀點](../../perspectives/cost/README.md)
 - **功能成本**: 功能實現和維護的成本效益分析
 - **資源效率**: 功能執行的資源使用效率
 - **開發成本**: 功能開發的時間和人力成本
-- **相關實現**: \1 | \1
+- **相關實現**: [成本優化架構](../../perspectives/cost/README.md) | [資源效率監控](../../diagrams/generated/functional/Infrastructure%20Layer%20Overview.png)
 
 ### 🟢 低影響觀點
 
 #### [位置觀點](../../perspectives/location/README.md)
 - **地理分佈**: 功能在不同地區的可用性和本地化
 - **資料主權**: 功能相關資料的地理位置要求
-- **相關實現**: \1
+- **相關實現**: [多環境部署架構](../../diagrams/multi_environment.svg)
 
 ## 相關圖表
 
@@ -338,7 +339,9 @@ graph TB
     class STRIPE,PAYPAL,EMAIL_SVC,SMS_SVC,LOGISTICS external
     class MONITORING,LOGGING,TRACING,ALERTING observability
     class IAM,WAF,SECRETS,COMPLIANCE security
-``` - 完整系統架構概覽，展示用戶角色、前端應用、API網關、微服務架構、基礎設施、可觀測性和安全合規
+```
+
+*完整系統架構概覽，展示用戶角色、前端應用、API網關、微服務架構、基礎設施、可觀測性和安全合規*
 - [六角架構概覽 (PlantUML)](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png) - 端口和適配器架構，基於實際代碼結構
 - ## 六角架構概覽 (Mermaid)
 
@@ -542,7 +545,9 @@ graph TB
     class CUSTOMER_APP,ORDER_APP,PRODUCT_APP,PAYMENT_APP,CART_APP,INVENTORY_APP,PRICING_APP,PROMOTION_APP,NOTIFICATION_APP,OBSERVABILITY_APP,STATS_APP,MONITORING_APP application
     class CUSTOMER_AGG,ORDER_AGG,PRODUCT_AGG,PAYMENT_AGG,CART_AGG,INVENTORY_AGG,PROMOTION_AGG,DELIVERY_AGG,NOTIFICATION_AGG,REVIEW_AGG,SELLER_AGG,OBSERVABILITY_AGG,ORDER_DOMAIN_SVC,PRICING_DOMAIN_SVC,PROMOTION_DOMAIN_SVC,CUSTOMER_REPO_PORT,ORDER_REPO_PORT,PRODUCT_REPO_PORT,PAYMENT_REPO_PORT,INVENTORY_REPO_PORT,PROMOTION_REPO_PORT,PAYMENT_PORT,NOTIFICATION_PORT,EVENT_PORT,CACHE_PORT domain
     class JPA_CUSTOMER,JPA_ORDER,JPA_PRODUCT,JPA_PAYMENT,JPA_INVENTORY,JPA_PROMOTION,STRIPE_ADAPTER,EMAIL_ADAPTER,SMS_ADAPTER,MSK_ADAPTER,MEMORY_EVENT_ADAPTER,REDIS_ADAPTER,OPENSEARCH_ADAPTER secondary
-``` - 互動式六角架構圖表
+```
+
+*互動式六角架構圖表*
 
 ### 領域模型圖表
 - [領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png) - DDD 聚合根總覽
@@ -804,7 +809,9 @@ graph TB
     class ORDER_AGG,CUSTOMER_AGG,PRODUCT_AGG,PAYMENT_AGG,CART_AGG,INVENTORY_AGG,PROMOTION_AGG,DELIVERY_AGG,NOTIFICATION_AGG,REVIEW_AGG,SELLER_AGG,OBSERVABILITY_AGG,ORDER_ITEM,CUSTOMER_PROFILE,PRODUCT_VARIANT,PAYMENT_METHOD,CART_ITEM,MONEY,ADDRESS,EMAIL,ORDER_ID,CUSTOMER_ID,PRODUCT_ID,ORDER_CREATED,PAYMENT_PROCESSED,CUSTOMER_REGISTERED,INVENTORY_RESERVED,CART_UPDATED,PROMOTION_APPLIED,ORDER_PRICING_SVC,PAYMENT_VALIDATION_SVC,PROMOTION_CALCULATION_SVC,INVENTORY_ALLOCATION_SVC,ORDER_REPO_INTF,CUSTOMER_REPO_INTF,PRODUCT_REPO_INTF,PAYMENT_REPO_INTF,INVENTORY_REPO_INTF,PROMOTION_REPO_INTF,PAYMENT_PORT,NOTIFICATION_PORT,EVENT_PUBLISHER_PORT,CACHE_PORT domain
     class JPA_ORDER_REPO,JPA_CUSTOMER_REPO,JPA_PRODUCT_REPO,JPA_PAYMENT_REPO,JPA_INVENTORY_REPO,JPA_PROMOTION_REPO,STRIPE_ADAPTER,SES_ADAPTER,SNS_ADAPTER,SMS_ADAPTER,MSK_EVENT_ADAPTER,REDIS_ADAPTER,OPENSEARCH_ADAPTER,DEV_CONFIG,PROD_CONFIG,PROFILE_VALIDATOR infrastructure
     class POSTGRESQL,H2_DB,REDIS_CACHE,OPENSEARCH_DB,MSK_STREAM,S3_STORAGE storage
-``` - 完整的DDD分層架構實現
+```
+
+*完整的DDD分層架構實現*
 
 ### 業務流程圖表
 - [Event Storming Big Picture](../../diagrams/viewpoints/functional/event-storming-big-picture.puml) - 事件風暴全景圖
@@ -853,7 +860,9 @@ graph TB
     class DEV_APP,H2_DB,MEMORY_EVENTS dev
     class PROD_APP,RDS_DB,MSK_EVENTS prod
     class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
-``` - 開發、測試、生產環境配置
+```
+
+*開發、測試、生產環境配置*
 - ## 可觀測性架構
 
 ```mermaid
@@ -896,7 +905,9 @@ graph TB
     class ACTUATOR,OTEL,LOGBACK,MICROMETER application
     class FLUENT,PROMETHEUS,GRAFANA kubernetes
     class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
-``` - 監控、日誌、追蹤系統架構
+```
+
+*監控、日誌、追蹤系統架構*
 
 ## 與其他視點的關聯
 
@@ -935,3 +946,19 @@ graph TB
 - [領域驅動設計指南](domain-model.md)
 - [界限上下文設計](bounded-contexts.md)
 - [聚合根實現](aggregates.md)
+![User Journey Overview](../../diagrams/generated/functional/User%20Journey%20Overview.png)
+![Application Services Overview](../../diagrams/generated/functional/Application%20Services%20Overview.png)
+![Infrastructure Layer Overview](../../diagrams/generated/functional/Infrastructure%20Layer%20Overview.png)
+![BDD Features Overview](../../diagrams/generated/functional/BDD%20Features%20Overview.png)
+![Hexagonal Architecture Overview](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png)
+![User Journey Overview](../../diagrams/viewpoints/functional/user-journey-overview.puml)
+![Application Services Overview](../../diagrams/viewpoints/functional/application-services-overview.puml)
+![Domain Model Overview](../../diagrams/viewpoints/functional/domain-model-overview.puml)
+![Infrastructure Layer Overview](../../diagrams/viewpoints/functional/infrastructure-layer-overview.puml)
+![Bdd Features Overview](../../diagrams/viewpoints/functional/bdd-features-overview.puml)
+![Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
+![Hexagonal Architecture Overview](../../diagrams/viewpoints/functional/hexagonal-architecture-overview.puml)
+![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.mmd)
+![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.svg)
+![System Overview](../../diagrams/viewpoints/functional/system-overview.mmd)
+![System Overview](../../diagrams/viewpoints/functional/system-overview.svg)

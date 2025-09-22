@@ -447,3 +447,4 @@ graph TB
 - 部署管理員和發布經理
 - 雲端架構師和平台工程師
 - 開發團隊和技術主管
+![Infrastructure Overview](../../diagrams/viewpoints/deployment/infrastructure-overview.svg)

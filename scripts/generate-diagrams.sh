@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# GenAI Demo - PlantUML 圖表生成腳本
-# 此腳本用於生成所有 PlantUML 圖表為 PNG 和 SVG 格式
+# GenAI Demo - PlantUML 圖表生成腳本 (增量版本)
+# 此腳本用於生成 PlantUML 圖表為 PNG 和 SVG 格式
+# 支持增量生成，只處理變更的文件
 # 遵循 diagram-generation-standards.md 標準
 
 set -e  # 遇到錯誤時退出
@@ -19,6 +20,7 @@ PLANTUML_URL="https://github.com/plantuml/plantuml/releases/latest/download/plan
 DIAGRAMS_DIR="docs/diagrams"
 OUTPUT_DIR="docs/diagrams/generated"
 DEFAULT_FORMAT="png"  # PNG 推薦用於 GitHub 文檔 (更清晰易讀)
+CHANGED_ONLY=false  # 是否只處理變更的文件
 
 # 函數：打印帶顏色的消息
 print_info() {
@@ -79,6 +81,36 @@ create_output_dirs() {
     print_info "輸出目錄已創建"
 }
 
+# 函數：檢查文件是否需要重新生成
+needs_regeneration() {
+    local puml_file="$1"
+    local output_subdir="$2"
+    local filename=$(basename "$puml_file" .puml)
+    local output_path="$OUTPUT_DIR/$output_subdir"
+    
+    # 如果不是增量模式，總是生成
+    if [ "$CHANGED_ONLY" = false ]; then
+        return 0
+    fi
+    
+    # 檢查輸出文件是否存在且比源文件新
+    local png_file="$output_path/$filename.png"
+    local svg_file="$output_path/$filename.svg"
+    
+    # 如果輸出文件不存在，需要生成
+    if [ ! -f "$png_file" ] && [ ! -f "$svg_file" ]; then
+        return 0
+    fi
+    
+    # 如果源文件比輸出文件新，需要重新生成
+    if [ "$puml_file" -nt "$png_file" ] || [ "$puml_file" -nt "$svg_file" ]; then
+        return 0
+    fi
+    
+    # 不需要重新生成
+    return 1
+}
+
 # 函數：生成單個圖表
 generate_diagram() {
     local puml_file="$1"
@@ -86,6 +118,12 @@ generate_diagram() {
     local format="${3:-both}"  # png, svg, or both
     local filename=$(basename "$puml_file" .puml)
     local output_path="$OUTPUT_DIR/$output_subdir"
+    
+    # 檢查是否需要重新生成
+    if ! needs_regeneration "$puml_file" "$output_subdir"; then
+        print_info "跳過 $filename (無變更)"
+        return 0
+    fi
     
     print_info "生成圖表: $filename (格式: $format)"
     
@@ -381,9 +419,10 @@ show_help() {
     echo "  -v, --validate     驗證圖表語法"
     echo "  -c, --clean        清理生成的文件"
     echo "  -a, --all          生成所有圖表 (默認)"
-    echo "  --format=FORMAT    指定輸出格式: png, svg, both (默認: both)"
+    echo "  --format=FORMAT    指定輸出格式: png, svg, both (默認: png)"
     echo "                     PNG 推薦用於 GitHub 文檔 (更清晰易讀)"
     echo "                     SVG 適合高解析度顯示和打印"
+    echo "  --changed-only     只生成變更的圖表 (增量生成)"
     echo ""
     echo "範例:"
     echo "  $0                                    # 生成所有圖表"
@@ -403,44 +442,59 @@ main() {
     check_plantuml
     
     # 解析命令行參數
-    case "${1:-}" in
-        -h|--help)
-            show_help
-            exit 0
-            ;;
-        -l|--list)
-            list_available_diagrams
-            exit 0
-            ;;
-        -v|--validate)
-            validate_diagrams
-            exit 0
-            ;;
-        -c|--clean)
-            clean_generated
-            exit 0
-            ;;
-        -a|--all|"")
-            create_output_dirs
-            local format="$DEFAULT_FORMAT"
-            if [[ "$1" == --format=* ]]; then
+    local format="$DEFAULT_FORMAT"
+    local action="generate_all"
+    local diagram_name=""
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -l|--list)
+                list_available_diagrams
+                exit 0
+                ;;
+            -v|--validate)
+                validate_diagrams
+                exit 0
+                ;;
+            -c|--clean)
+                clean_generated
+                exit 0
+                ;;
+            -a|--all)
+                action="generate_all"
+                shift
+                ;;
+            --format=*)
                 format="${1#--format=}"
                 shift
-            fi
+                ;;
+            --changed-only)
+                CHANGED_ONLY=true
+                shift
+                ;;
+            *)
+                if [ -z "$diagram_name" ]; then
+                    diagram_name="$1"
+                    action="generate_specific"
+                fi
+                shift
+                ;;
+        esac
+    done
+    
+    # 執行相應的操作
+    create_output_dirs
+    
+    case "$action" in
+        generate_all)
             generate_all_diagrams "$format"
             ;;
-        --format=*)
-            create_output_dirs
-            local format="${1#--format=}"
-            generate_all_diagrams "$format"
-            ;;
-        *)
-            create_output_dirs
-            local format="$DEFAULT_FORMAT"
-            if [[ "$2" == --format=* ]]; then
-                format="${2#--format=}"
-            fi
-            generate_specific_diagram "$1" "$format"
+        generate_specific)
+            generate_specific_diagram "$diagram_name" "$format"
             ;;
     esac
 }
