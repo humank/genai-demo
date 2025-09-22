@@ -235,7 +235,7 @@ log.info("Order processed successfully",
 
 ### Design
 
-- [DDD 實踐指南](../../design/ddd-guide.md)
+- [DDD 實踐指南](../design/ddd-guide.md)
 - [Hexagonal Architecture說明](../diagrams/hexagonal-architecture.md)
 - \1
 

@@ -384,17 +384,17 @@ This assessment evaluates your architecture across all six pillars:
 
 The assessment generates three types of reports:
 
-1. **Detailed Report**: `../../infrastructure/docs/well-architected-assessment.md`
+1. **Detailed Report**: `../../../../../../infrastructure/docs/well-architected-assessment.md`
    - Comprehensive analysis of all pillars
    - Best practices implemented
    - Risks identified
    - Detailed recommendations
 
-2. **JSON Summary**: `../../infrastructure/docs/well-architected-summary.json`
+2. **JSON Summary**: `../../../../../../infrastructure/docs/well-architected-summary.json`
    - Machine-readable assessment results
    - Suitable for automation and tracking
 
-3. **Executive Summary**: `../../infrastructure/docs/../../reports-summaries/../../infrastructure/executive-summary.md`
+3. **Executive Summary**: `../../../../../../infrastructure/docs/../../../../../../reports-summaries/../../../../../../infrastructure/executive-summary.md`
    - High-level overview for stakeholders
    - Key metrics and priorities
    - Action items with timelines
@@ -704,7 +704,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: architecture-assessment
-          path: ../../infrastructure/docs/
+          path: ../../../../../../infrastructure/docs/
 ```
 
 ### Automated Alerts
@@ -713,7 +713,7 @@ Set up automated alerts for assessment results:
 
 ```bash
 # Example: Send Slack notification for high-priority findings
-if [ $(jq '.actionItems | map(select(.priority == "HIGH")) | length' ../../infrastructure/docs/well-architected-summary.json) -gt 0 ]; then
+if [ $(jq '.actionItems | map(select(.priority == "HIGH")) | length' ../../../../../../infrastructure/docs/well-architected-summary.json) -gt 0 ]; then
   curl -X POST -H 'Content-type: application/json' \
     --data '{"text":"High priority architecture issues found. Check the assessment report."}' \
     $SLACK_WEBHOOK_URL
@@ -745,7 +745,7 @@ Use the continuous monitoring system to track improvements:
 npm run monitoring:continuous
 
 # View historical trends
-cat ../../infrastructure/docs/metrics-history.json | jq '.[] | {date: .timestamp, score: .overallScore}'
+cat ../../../../../../infrastructure/docs/metrics-history.json | jq '.[] | {date: .timestamp, score: .overallScore}'
 ```
 
 ## Advanced Usage
@@ -755,7 +755,7 @@ cat ../../infrastructure/docs/metrics-history.json | jq '.[] | {date: .timestamp
 Extend the assessment framework with custom criteria:
 
 ```javascript
-// ../../infrastructure/scripts/custom-assessment.js
+// ../../../../../../infrastructure/scripts/custom-assessment.js
 class CustomAssessment extends WellArchitectedAssessment {
   async assessCustomCriteria() {
     // Add your custom assessment logic
@@ -776,7 +776,7 @@ Integrate MCP assessments with external monitoring tools:
 ```bash
 # Export metrics to Prometheus
 curl -X POST http://prometheus-pushgateway:9091/metrics/job/architecture-assessment \
-  -d "well_architected_score $(jq '.overallScore' ../../infrastructure/docs/well-architected-summary.json)"
+  -d "well_architected_score $(jq '.overallScore' ../../../../../../infrastructure/docs/well-architected-summary.json)"
 ```
 
 ## Support and Resources
@@ -791,7 +791,7 @@ curl -X POST http://prometheus-pushgateway:9091/metrics/job/architecture-assessm
 
 - Architecture Decision Records: `../architecture/adr/`
 - Deployment Documentation: `../deployment/`
-- Troubleshooting Guide: `../../infrastructure/TROUBLESHOOTING.md`
+- Troubleshooting Guide: `../../../../../../infrastructure/TROUBLESHOOTING.md`
 
 ### Getting Help
 

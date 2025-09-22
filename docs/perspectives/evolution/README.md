@@ -165,4 +165,4 @@
 **相關文件**:
 - \1
 - \1
-- [重構指南](docs/design/refactoring-guide.md)
+- [重構指南](../../design/refactoring-guide.md)

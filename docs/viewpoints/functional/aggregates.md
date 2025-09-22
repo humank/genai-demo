@@ -680,20 +680,20 @@ public class Seller implements AggregateRootInterface {
 
 ## 相關圖表
 
-- [客戶聚合根詳細圖](../../diagrams/viewpoints/functional/customer-aggregate-details.puml)
-- [訂單聚合根詳細圖](../../diagrams/viewpoints/functional/order-aggregate-details.puml)
-- [產品聚合根詳細圖](../../diagrams/viewpoints/functional/product-aggregate-details.puml)
-- [賣家聚合根詳細圖](../../diagrams/viewpoints/functional/seller-aggregate-details.puml)
-- [領域模型概覽圖](../../diagrams/viewpoints/functional/domain-model-overview.puml)
-- [支付聚合根詳細圖](../../diagrams/viewpoints/functional/payment-aggregate-details.puml)
-- [庫存聚合根詳細圖](../../diagrams/viewpoints/functional/inventory-aggregate-details.puml)
-- [評價聚合根詳細圖](../../diagrams/viewpoints/functional/review-aggregate-details.puml)
-- [購物車聚合根詳細圖](../../diagrams/viewpoints/functional/shoppingcart-aggregate-details.puml)
-- [促銷聚合根詳細圖](../../diagrams/viewpoints/functional/promotion-aggregate-details.puml)
-- [定價聚合根詳細圖](../../diagrams/viewpoints/functional/pricing-aggregate-details.puml)
-- [通知聚合根詳細圖](../../diagrams/viewpoints/functional/notification-aggregate-details.puml)
-- [配送聚合根詳細圖](../../diagrams/viewpoints/functional/delivery-aggregate-details.puml)
-- [可觀測性聚合根詳細圖](../../diagrams/viewpoints/functional/observability-aggregate-details.puml)
+- [客戶聚合根詳細圖](../../diagrams/generated/functional/Customer%20Aggregate%20Details.png)
+- [訂單聚合根詳細圖](../../diagrams/generated/functional/Order%20Aggregate%20Details.png)
+- [產品聚合根詳細圖](../../diagrams/generated/functional/Product%20Aggregate%20Details.png)
+- [賣家聚合根詳細圖](../../diagrams/generated/functional/Seller%20Aggregate%20Details.png)
+- [領域模型概覽圖](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
+- [支付聚合根詳細圖](../../diagrams/generated/functional/Payment%20Aggregate%20Details.png)
+- [庫存聚合根詳細圖](../../diagrams/generated/functional/Inventory%20Aggregate%20Details.png)
+- [評價聚合根詳細圖](../../diagrams/generated/functional/Review%20Aggregate%20Details.png)
+- [購物車聚合根詳細圖](../../diagrams/generated/functional/ShoppingCart%20Aggregate%20Details.png)
+- [促銷聚合根詳細圖](../../diagrams/generated/functional/Promotion%20Aggregate%20Details.png)
+- [定價聚合根詳細圖](../../diagrams/generated/functional/Pricing%20Aggregate%20Details.png)
+- [通知聚合根詳細圖](../../diagrams/generated/functional/Notification%20Aggregate%20Details.png)
+- [配送聚合根詳細圖](../../diagrams/generated/functional/Delivery%20Aggregate%20Details.png)
+- [可觀測性聚合根詳細圖](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png)
 
 ## 與其他視點的關聯
 

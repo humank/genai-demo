@@ -320,7 +320,7 @@ npm run deploy:dev
 
 - [`TESTING_GUIDE.md`](./TESTING_GUIDE.md) - Comprehensive testing documentation
 - [`CONSOLIDATED_DEPLOYMENT.md`](./CONSOLIDATED_DEPLOYMENT.md) - Deployment guide
-- [`CDK_COMPLETION_SUMMARY.md`](reports-summaries/task-execution/CDK_COMPLETION_SUMMARY.md) - Project completion status
+- [`CDK_COMPLETION_SUMMARY.md`](../reports-summaries/task-execution/CDK_COMPLETION_SUMMARY.md) - Project completion status
 - [`MIGRATION_GUIDE.md`](./MIGRATION_GUIDE.md) - Migration from old structure
 
 ## 🤝 Contributing

@@ -659,7 +659,23 @@ npm run deploy:dev
 
 ### AWS 基礎設施概覽
 - **[AWS 基礎設施架構](../../diagrams/aws-infrastructure.md)** - 完整的 AWS CDK 基礎設施架構文檔
-- **[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)** - 詳細的 AWS 服務架構圖
+- **## AWS 基礎設施圖表
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```** - 詳細的 AWS 服務架構圖
 
 ### CDK 實現細節
 - \1

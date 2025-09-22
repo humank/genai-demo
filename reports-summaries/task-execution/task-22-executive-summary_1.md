@@ -183,9 +183,9 @@ infrastructure/docs/
 
 ### Resources
 
-- [完整實施指南](docs/architecture/mcp-integration-importance.md)
-- [MCP 整合指南](docs/en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
-- [故障排除指南](infrastructure/docs/README_MCP_INTEGRATION.md)
+- [完整實施指南](../../docs/architecture/mcp-integration-importance.md)
+- [MCP 整合指南](../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- [故障排除指南](../../infrastructure/docs/README_MCP_INTEGRATION.md)
 
 ### 團隊聯繫
 

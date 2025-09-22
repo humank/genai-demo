@@ -236,7 +236,7 @@ docs/
 
 ## Related Diagrams
 
-- [圖表1](../diagrams/viewpoints/[viewpoint]/[diagram1].mmd)
+- [圖表1](../diagrams/viewpoints/[viewpoint]/[diagram1].md)
 - [圖表2](../diagrams/viewpoints/[viewpoint]/[diagram2].puml)
 
 ## Relationships with Other Viewpoints
@@ -318,7 +318,7 @@ docs/
 > **基於 Rozanski & Woods 方法論的企業級架構展示**
 
 [![Architecture Excellence](https://img.shields.io/badge/Architecture-Excellence-blue.svg)](..architecture/rozanski-woods-architecture-assessment.md)
-[![Test Coverage](https://img.shields.io/badge/Tests-568%20Passed-green.svg)](..reports/../../reports-summaries/project-management/project-summary-2025.md)
+[![Test Coverage](https://img.shields.io/badge/Tests-568%20Passed-green.svg)](..reports/../../../../../../reports-summaries/project-management/project-summary-2025.md)
 [![Documentation](https://img.shields.io/badge/Docs-120%2B%20Pages-orange.svg)](..README.md)
 
 ## 🎯 專案價值主張
@@ -506,7 +506,7 @@ docker-compose up -d
 **1. Mermaid - 主要架構圖表 (高解析度 SVG 輸出)**
 ```
 ../diagrams/viewpoints/functional/
-├── system-overview.mmd              # Overview
+├── system-overview.md  # 包含 Mermaid 代碼塊              # Overview
 ├── bounded-contexts.mmd             # Bounded Context圖
 └── use-case-flow.mmd               # 用例流程圖
 
@@ -855,7 +855,7 @@ perspective: ["security", "performance", "availability", "evolution", "usability
 stakeholders: ["architect", "developer", "operator", "security-engineer"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]
 related_documents: ["doc1.md", "doc2.md"]
-diagrams: ["diagram1.mmd", "diagram2.puml"]
+diagrams: ["diagram1.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "diagram2.puml"]
 last_updated: "2025-01-21"
 version: "1.0"
 ---

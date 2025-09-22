@@ -767,7 +767,7 @@ if (correlationId == null) {
 
 #### Requirements
 
-需要在 `../../infrastructure/lib/stacks/msk-stack.ts` 中添加Observability topics：
+需要在 `../../../../../../infrastructure/lib/stacks/msk-stack.ts` 中添加Observability topics：
 
 ```typescript
 // 在 createOutputs 方法中更新 domainEventTopics 陣列

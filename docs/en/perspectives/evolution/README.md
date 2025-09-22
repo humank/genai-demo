@@ -166,4 +166,4 @@ Evolution Perspective關注系統的Maintainability、Scalability和技術演進
 **相關文件**:
 - \1
 - \1
-- [Refactoring指南](docs/design/refactoring-guide.md)
+- [Refactoring指南](../../../design/refactoring-guide.md)

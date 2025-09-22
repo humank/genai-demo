@@ -366,12 +366,12 @@ graph LR
 
 ## 相關圖表
 
-- [界限上下文概念圖](../../diagrams/viewpoints/functional/bounded-contexts-concept.puml) - **New**: Comprehensive bounded contexts concept diagram showing all 13 contexts with their relationships, responsibilities, and domain events
-- [界限上下文概覽圖](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
-- [Event Storming Big Picture](../../diagrams/viewpoints/functional/event-storming-big-picture.puml)
-- [Event Storming Process Level](../../diagrams/viewpoints/functional/event-storming-process-level.puml)
-- [業務流程圖](../../diagrams/viewpoints/functional/business-process-flows.puml) - **Recently Updated**: Comprehensive e-commerce core processes including customer shopping journey, order processing workflow, coupon management, inventory management, and customer notifications
-- [使用者旅程概覽圖](../../diagrams/viewpoints/functional/user-journey-overview.puml)
+- [界限上下文概念圖](../../diagrams/generated/functional/Bounded%20Contexts%20Concept.png) - **New**: Comprehensive bounded contexts concept diagram showing all 13 contexts with their relationships, responsibilities, and domain events
+- [界限上下文概覽圖](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
+- [Event Storming Big Picture](../../diagrams/generated/functional/Event%20Storming%20Big%20Picture.png)
+- [Event Storming Process Level](../../diagrams/generated/functional/Event%20Storming%20Process%20Level.png)
+- [業務流程圖](../../diagrams/generated/functional/Business%20Process%20Flows.png) - **Recently Updated**: Comprehensive e-commerce core processes including customer shopping journey, order processing workflow, coupon management, inventory management, and customer notifications
+- [使用者旅程概覽圖](../../diagrams/generated/functional/User%20Journey%20Overview.png)
 
 ## 與其他視點的關聯
 

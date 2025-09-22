@@ -569,7 +569,49 @@ spec:
 
 ### AWS 基礎設施架構
 - **[AWS 基礎設施架構](../../diagrams/aws-infrastructure.md)** - 包含完整可觀測性服務的 AWS 架構
-- **[AWS 可觀測性架構](../../diagrams/observability_architecture.mmd)** - 可觀測性服務架構圖
+- **## AWS 可觀測性架構
+
+```mermaid
+graph TB
+    subgraph APP ["Spring Boot Application"]
+        ACTUATOR[Spring Boot Actuator]
+        OTEL[OpenTelemetry Agent]
+        LOGBACK[Logback JSON Logging]
+        MICROMETER[Micrometer Metrics]
+    end
+    
+    subgraph K8S ["Kubernetes Cluster"]
+        FLUENT[Fluent Bit DaemonSet]
+        PROMETHEUS[Prometheus]
+        GRAFANA[Grafana]
+    end
+    
+    subgraph AWS ["AWS Services"]
+        CW_LOGS[CloudWatch Logs]
+        CW_METRICS[CloudWatch Metrics]
+        XRAY[AWS X-Ray]
+        OPENSEARCH[OpenSearch Service]
+    end
+    
+    ACTUATOR --> PROMETHEUS
+    LOGBACK --> FLUENT
+    OTEL --> XRAY
+    MICROMETER --> PROMETHEUS
+    
+    FLUENT --> CW_LOGS
+    PROMETHEUS --> CW_METRICS
+    GRAFANA --> PROMETHEUS
+    
+    CW_LOGS --> OPENSEARCH
+    
+    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
+    class FLUENT,PROMETHEUS,GRAFANA kubernetes
+    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
+```** - 可觀測性服務架構圖
 
 ### 部署細節
 - \1

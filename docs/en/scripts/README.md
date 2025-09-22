@@ -205,13 +205,13 @@ npm run docs:validate     # Run all checks
 ### Report Structure
 ```
 build/reports/documentation-quality/
-├── ../../reports-summaries/frontend/documentation-quality-summary.md     # Main summary report
+├── ../../../../../../reports-summaries/frontend/documentation-quality-summary.md     # Main summary report
 ├── markdown-lint-report.txt             # Markdown syntax issues
 ├── link-check-report.txt                # Link validation results
 ├── advanced-link-check.json             # Detailed link analysis
 ├── advanced-link-check.md               # Link check summary
 ├── diagram-validation-report.json       # Diagram validation data
-├── ../../reports-summaries/diagrams/diagram-validation-report.md         # Diagram validation summary
+├── ../../../../../../reports-summaries/diagrams/diagram-validation-report.md         # Diagram validation summary
 ├── metadata-validation-report.json      # Metadata validation data
 ├── metadata-validation-report.md        # Metadata validation summary
 └── translation-sync-report.txt          # Translation quality results
@@ -269,7 +269,7 @@ npm run docs:links:external
 npm run docs:validate
 
 # Review reports
-open build/reports/documentation-quality/../../reports-summaries/frontend/documentation-quality-summary.md
+open build/reports/documentation-quality/../../../../../../reports-summaries/frontend/documentation-quality-summary.md
 ```
 
 ### Continuous Integration

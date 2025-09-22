@@ -60,25 +60,25 @@ graph TB
 ```
 docs/diagrams/viewpoints/
 ├── functional/
-│   ├── system-overview.mmd              # 系統概覽圖
-│   ├── bounded-contexts.mmd             # 界限上下文圖
-│   └── use-case-flow.mmd               # 用例流程圖
+│   ├── system-overview.md              # 系統概覽圖 (包含 Mermaid 代碼塊)
+│   ├── bounded-contexts.md             # 界限上下文圖 (包含 Mermaid 代碼塊)
+│   └── use-case-flow.md               # 用例流程圖 (包含 Mermaid 代碼塊)
 ├── information/
-│   ├── event-driven-architecture.mmd   # 事件驅動架構
-│   ├── data-flow.mmd                   # 資料流圖
-│   └── event-storming-overview.mmd     # Event Storming 概覽
+│   ├── event-driven-architecture.md   # 事件驅動架構 (包含 Mermaid 代碼塊)
+│   ├── data-flow.md                   # 資料流圖 (包含 Mermaid 代碼塊)
+│   └── event-storming-overview.md     # Event Storming 概覽 (包含 Mermaid 代碼塊)
 ├── development/
-│   ├── hexagonal-architecture.mmd      # 六角架構圖
-│   ├── ddd-layered-architecture.mmd    # DDD 分層架構
-│   └── ci-cd-pipeline.mmd              # CI/CD 流程圖
+│   ├── hexagonal-architecture.md      # 六角架構圖 (包含 Mermaid 代碼塊)
+│   ├── ddd-layered-architecture.md    # DDD 分層架構 (包含 Mermaid 代碼塊)
+│   └── ci-cd-pipeline.md              # CI/CD 流程圖 (包含 Mermaid 代碼塊)
 ├── deployment/
-│   ├── infrastructure-overview.mmd     # 基礎設施概覽
-│   └── deployment-pipeline.mmd         # 部署流程圖
+│   ├── infrastructure-overview.md     # 基礎設施概覽 (包含 Mermaid 代碼塊)
+│   └── deployment-pipeline.md         # 部署流程圖 (包含 Mermaid 代碼塊)
 ├── operational/
-│   ├── monitoring-architecture.mmd     # 監控架構
-│   └── observability-flow.mmd          # 可觀測性流程
+│   ├── monitoring-architecture.md     # 監控架構 (包含 Mermaid 代碼塊)
+│   └── observability-flow.md          # 可觀測性流程 (包含 Mermaid 代碼塊)
 └── concurrency/
-    └── async-processing.mmd             # 非同步處理架構
+    └── async-processing.md             # 非同步處理架構 (包含 Mermaid 代碼塊)
 ```
 
 ## PlantUML - 詳細技術圖表

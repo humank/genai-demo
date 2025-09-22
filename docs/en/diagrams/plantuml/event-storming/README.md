@@ -144,7 +144,7 @@ java -jar tools/plantuml.jar -tpng ../diagrams/plantuml/event-storming/*.puml
 - \1
 - [DDD 戰術模式實現](../../../design/ddd-guide.md)
 - \1
-- [Domain EventImplementation Guide](../../../../.kiro/steering/domain-events.md)
+- [Domain EventImplementation Guide](../../../../../.kiro/steering/domain-events.md)
 
 ## Tools
 

@@ -298,7 +298,7 @@ cd cmc-frontend && npm run dev
 ### Hexagonal Architecture + DDD Layering
 
 ```
-interfaces/ → application/ → domain/ ← ../../infrastructure/
+interfaces/ → application/ → domain/ ← ../../../../../../infrastructure/
 ```
 
 - **Domain Layer**: Business logic + Aggregate Root + Value Object + Domain Event + Specification Pattern

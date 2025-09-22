@@ -61,7 +61,7 @@ The infrastructure is organized into **6 coordinated stacks**:
 ## Project Structure
 
 ```
-../../infrastructure/
+../../../../../../infrastructure/
 ├── src/                          # Source code
 │   ├── stacks/                   # CDK Stack definitions
 │   ├── constructs/               # Custom CDK Constructs

@@ -64,7 +64,7 @@ export CLOUDWATCH_REGION=us-east-1
 
 ### 🎯 生產環境指南
 
-- **[生產環境可觀測性測試指南](docs/en/observability/production-observability-testing-guide.md)** - 完整的生產環境測試策略和最佳實踐 (67頁)
+- **[生產環境可觀測性測試指南](../en/observability/production-observability-testing-guide.md)** - 完整的生產環境測試策略和最佳實踐 (67頁)
 
 ### 📚 前端後端整合文檔
 

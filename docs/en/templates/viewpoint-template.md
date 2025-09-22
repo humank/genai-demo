@@ -1,4 +1,12 @@
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # [Viewpoint Name] 視點
 
 ---
@@ -8,7 +16,7 @@ perspective: ["security", "performance", "availability", "evolution", "usability
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]
 related_documents: ["doc1.md", "doc2.md"]
-diagrams: ["diagram1.mmd", "diagram2.puml"]
+diagrams: ["diagram1.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "diagram2.puml"]
 last_updated: "YYYY-MM-DD"
 version: "1.0"
 author: "Architecture Team"

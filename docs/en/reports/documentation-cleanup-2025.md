@@ -31,8 +31,8 @@
 ### 重複的Refactoring文件 (4個)
 
 - `docs/shared-kernel-refactoring.md` - 過時的Shared KernelRefactoring文件
-- `docs/JPA_../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
-- `docs/DDD_ENTITY_../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
+- `docs/JPA_../../../../../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
+- `docs/DDD_ENTITY_../../../../../../reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
 
 ### 英文文檔清理 (4個)
 
@@ -59,8 +59,8 @@
 
 ### docs/PROJECT_SUMMARY_2025.md
 
-- 修復 `domain-events.md` → `../../../.kiro/steering/domain-events.md`
-- 修復 `bdd-tdd-principles.md` → `../../../.kiro/steering/bdd-tdd-principles.md`
+- 修復 `domain-events.md` → `../../../../../../../.kiro/steering/domain-events.md`
+- 修復 `bdd-tdd-principles.md` → `../../../../../../../.kiro/steering/bdd-tdd-principles.md`
 
 ### docs/DOCKER_GUIDE.md
 

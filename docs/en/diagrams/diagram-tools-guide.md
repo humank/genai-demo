@@ -61,25 +61,25 @@ graph TB
 ```
 ../diagrams/viewpoints/
 ├── functional/
-│   ├── system-overview.mmd              # Overview
-│   ├── bounded-contexts.mmd             # Bounded Context圖
-│   └── use-case-flow.mmd               # 用例流程圖
+│   ├── system-overview.md              # Overview (with Mermaid code blocks)
+│   ├── bounded-contexts.md             # Bounded Context (with Mermaid code blocks)
+│   └── use-case-flow.md               # Use Case Flow (with Mermaid code blocks)
 ├── information/
-│   ├── event-driven-architecture.mmd   # Event-Driven Architecture
-│   ├── data-flow.mmd                   # 資料流圖
-│   └── event-storming-overview.mmd     # Overview
+│   ├── event-driven-architecture.md   # Event-Driven Architecture (with Mermaid code blocks)
+│   ├── data-flow.md                   # Data Flow (with Mermaid code blocks)
+│   └── event-storming-overview.md     # Overview (with Mermaid code blocks)
 ├── development/
-│   ├── hexagonal-architecture.mmd      # Hexagonal Architecture圖
-│   ├── ddd-layered-architecture.mmd    # DDD Layered Architecture
-│   └── ci-cd-pipeline.mmd              # CI/CD 流程圖
+│   ├── hexagonal-architecture.md      # Hexagonal Architecture (with Mermaid code blocks)
+│   ├── ddd-layered-architecture.md    # DDD Layered Architecture (with Mermaid code blocks)
+│   └── ci-cd-pipeline.md              # CI/CD Pipeline (with Mermaid code blocks)
 ├── deployment/
-│   ├── infrastructure-overview.mmd     # Overview
-│   └── deployment-pipeline.mmd         # Deployment
+│   ├── infrastructure-overview.md     # Overview (with Mermaid code blocks)
+│   └── deployment-pipeline.md         # Deployment (with Mermaid code blocks)
 ├── operational/
-│   ├── monitoring-architecture.mmd     # Monitoring架構
-│   └── observability-flow.mmd          # Observability流程
+│   ├── monitoring-architecture.md     # Monitoring Architecture (with Mermaid code blocks)
+│   └── observability-flow.md          # Observability Flow (with Mermaid code blocks)
 └── concurrency/
-    └── async-processing.mmd             # 非同步處理架構
+    └── async-processing.md             # Async Processing (with Mermaid code blocks)
 ```
 
 ## PlantUML - 詳細技術圖表

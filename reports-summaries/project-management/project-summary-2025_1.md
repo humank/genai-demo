@@ -248,14 +248,14 @@ graph TB
 
 ### 架構文檔
 
-- [系統架構概覽](docs/diagrams/architecture-overview.md)
+- [系統架構概覽](../../docs/diagrams/architecture-overview.md)
 - \1
 - \1
-- [Domain Event設計指南](docs/en/.kiro/steering/domain-events.md)
+- [Domain Event設計指南](../../.kiro/steering/domain-events.md)
 
 ### Guidelines
 
-- [BDD + TDD 開發原則](docs/en/.kiro/steering/bdd-tdd-principles.md)
+- [BDD + TDD 開發原則](../../.kiro/steering/bdd-tdd-principles.md)
 - \1
 - \1
 - \1

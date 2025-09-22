@@ -1,4 +1,12 @@
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Design
 
 ---
@@ -8,7 +16,7 @@ perspective: ["security", "performance", "evolution"]
 stakeholders: ["architect", "developer", "business-analyst"]
 related_viewpoints: ["information", "development"]
 related_documents: ["../information/domain-events.md", "../development/testing-strategy.md"]
-diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd", "../diagrams/viewpoints/functional/bounded-contexts.puml"]
+diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "../diagrams/viewpoints/functional/bounded-contexts.puml"]
 last_updated: "2025-01-21"
 version: "2.1"
 author: "Architecture Team"

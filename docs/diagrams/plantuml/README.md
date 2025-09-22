@@ -166,7 +166,7 @@
 
 ### 組件圖
 
-![組件圖](./電子商務系統組件圖.svg)
+![組件圖](../generated/legacy/電子商務系統組件圖.png)
 
 ### 部署圖
 
@@ -174,87 +174,87 @@
 
 ### 套件圖
 
-![套件圖](./訂單系統套件圖.svg)
+![套件圖](../generated/legacy/訂單系統套件圖.png)
 
 ### 時序圖
 
-![時序圖](./訂單處理時序圖.svg)
+![時序圖](../generated/legacy/訂單處理時序圖.png)
 
 ### 定價處理時序圖
 
-![定價處理時序圖](./定價處理時序圖.svg)
+![定價處理時序圖](../generated/legacy/定價處理時序圖.png)
 
 ### 配送處理時序圖
 
-![配送處理時序圖](./配送處理時序圖.svg)
+![配送處理時序圖](../generated/legacy/配送處理時序圖.png)
 
 ### 狀態圖
 
-![狀態圖](./訂單狀態圖.svg)
+![狀態圖](../generated/legacy/訂單狀態圖.png)
 
 ### 活動圖概覽
 
-![活動圖概覽](./訂單系統活動圖概覽.svg)
+![活動圖概覽](../generated/legacy/訂單系統活動圖概覽.png)
 
 ### 活動圖詳細
 
-![活動圖詳細](./訂單處理詳細活動圖.svg)
+![活動圖詳細](../generated/legacy/訂單處理詳細活動圖.png)
 
 ### 使用案例圖
 
-![使用案例圖](./訂單系統使用案例圖.svg)
+![使用案例圖](../generated/legacy/訂單系統使用案例圖.png)
 
 ### 領域模型圖
 
-![領域模型圖](./領域模型圖.svg)
+![領域模型圖](../generated/legacy/領域模型圖.png)
 
 ### 六角形架構圖
 
-![六角形架構圖](./六角形架構圖.svg)
+![六角形架構圖](../generated/legacy/六角形架構圖.png)
 
 ### DDD分層架構圖
 
-![DDD分層架構圖](./DDD分層架構圖.svg)
+![DDD分層架構圖](../generated/legacy/DDD分層架構圖.png)
 
 ### Saga模式圖
 
-![Saga模式圖](./訂單處理Saga模式圖.svg)
+![Saga模式圖](../generated/legacy/訂單處理Saga模式圖.png)
 
 ### 限界上下文圖
 
-![限界上下文圖](./限界上下文圖.svg)
+![限界上下文圖](../generated/legacy/限界上下文圖.png)
 
 ### 事件風暴圖-Big Picture Exploration
 
-![事件風暴圖- Big Picture Exploration](./big-picture-exploration.svg)
+![事件風暴圖- Big Picture Exploration](../generated/legacy/big-picture-exploration.png)
 
 ### 事件風暴圖-Process Modeling
 
-![事件風暴圖- Process Modeling](./process-modeling.svg)
+![事件風暴圖- Process Modeling](../generated/legacy/process-modeling.png)
 
 ### 事件風暴圖-Design Level
 
-![事件風暴圖- design-level](./design-level.svg)
+![事件風暴圖- design-level](../generated/legacy/design-level.png)
 
 ### CQRS模式圖
 
-![CQRS模式圖](./cqrs-pattern-diagram.svg)
+![CQRS模式圖](../generated/legacy/cqrs pattern diagram.png)
 
 ### 事件溯源圖
 
-![事件溯源圖](./event-sourcing-diagram.svg)
+![事件溯源圖](../generated/legacy/event sourcing diagram.png)
 
 ### API接口圖
 
-![API接口圖](./api-interface-diagram.svg)
+![API接口圖](../generated/legacy/api interface diagram.png)
 
 ### 數據模型圖
 
-![數據模型圖](./data-model-diagram.svg)
+![數據模型圖](../generated/legacy/data model diagram.png)
 
 ### 安全架構圖
 
-![安全架構圖](./security-architecture-diagram.svg)
+![安全架構圖](../generated/legacy/security architecture diagram.png)
 
 ### 可觀測性架構圖
 

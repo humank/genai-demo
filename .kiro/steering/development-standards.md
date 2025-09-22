@@ -22,6 +22,36 @@
 - Cucumber 7 (BDD) + Gherkin
 - ArchUnit (Architecture Testing)
 
+### Documentation and Diagrams
+
+#### Diagram Format Standards
+
+**PlantUML Diagrams:**
+- **Primary Format**: PNG (recommended for GitHub documentation)
+  - Better readability and text clarity in GitHub
+  - Consistent rendering across different browsers
+  - Optimal file size for documentation
+- **Secondary Format**: SVG (for high-resolution needs)
+  - Use for printing or scalable displays
+  - Vector format for infinite zoom capability
+- **Generation Command**: `./scripts/generate-diagrams.sh --format=png`
+- **Documentation Links**: Always reference PNG files in Markdown
+
+**Mermaid Diagrams:**
+- **Native GitHub Support**: Use `.mmd` files or inline code blocks
+- **Direct Rendering**: GitHub renders Mermaid diagrams automatically
+- **Preferred for**: Process flows, simple architecture diagrams
+- **File Extension**: `.mmd` for standalone files
+
+**Diagram Organization:**
+```
+docs/diagrams/
+├── generated/          # Generated PNG/SVG files from PlantUML
+├── viewpoints/         # PlantUML source files organized by viewpoint
+├── mermaid/           # Mermaid diagram files (.mmd)
+└── legacy/            # Legacy diagram files
+```
+
 ## Error Handling Standards
 
 ### Exception Design Patterns

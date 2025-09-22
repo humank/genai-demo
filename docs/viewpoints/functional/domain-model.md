@@ -500,11 +500,33 @@ public class SellerProfile {
 
 ## 相關圖表
 
-- [領域模型概覽圖](../../diagrams/viewpoints/functional/domain-model-overview.puml)
-- [界限上下文概覽圖](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
-- [六角形架構概覽圖](../../diagrams/viewpoints/functional/hexagonal-architecture-overview.puml)
-- [應用服務概覽圖](../../diagrams/viewpoints/functional/application-services-overview.puml)
-- [六角形架構圖](../../diagrams/hexagonal_architecture.mmd)
+- [領域模型概覽圖](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
+- [界限上下文概覽圖](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
+- [六角形架構概覽圖](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png)
+- [應用服務概覽圖](../../diagrams/generated/functional/Application%20Services%20Overview.png)
+- ## 六角形架構圖
+
+```mermaid
+graph TB
+    subgraph "Core Domain"
+        Domain[Domain Logic]
+        Ports[Ports/Interfaces]
+    end
+    
+    subgraph "Adapters"
+        WebAdapter[Web Adapter]
+        DatabaseAdapter[Database Adapter]
+        MessageAdapter[Message Adapter]
+        ExternalAdapter[External Service Adapter]
+    end
+    
+    WebAdapter --> Ports
+    Ports --> Domain
+    Domain --> Ports
+    Ports --> DatabaseAdapter
+    Ports --> MessageAdapter
+    Ports --> ExternalAdapter
+```
 
 ## 與其他視點的關聯
 

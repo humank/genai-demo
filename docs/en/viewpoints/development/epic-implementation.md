@@ -193,8 +193,439 @@ Customer可以在平台上瀏覽商品、享受各種優惠、完成購買並Tra
 
 ## Related Diagrams
 
-- [系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd)
-- [Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)
+- ## 系統架構概覽
+
+```mermaid
+graph TB
+    subgraph USERS ["用戶與角色"]
+        CUSTOMER[👤 顧客<br/>購物與下單]
+        SELLER[🏪 賣家<br/>商品管理]
+        ADMIN[👨‍💼 管理員<br/>系統管理]
+        DELIVERY[🚚 配送員<br/>物流配送]
+    end
+    
+    subgraph FRONTEND ["前端應用"]
+        WEB_APP[🌐 Web 應用<br/>Next.js 14 + TypeScript<br/>顧客購物界面]
+        MOBILE_APP[📱 移動應用<br/>Angular 18 + TypeScript<br/>消費者應用]
+        ADMIN_PANEL[🖥️ 管理面板<br/>React Admin Dashboard<br/>後台管理系統]
+        SELLER_PORTAL[🏪 賣家門戶<br/>商家管理界面<br/>商品與訂單管理]
+    end
+    
+    subgraph API_GATEWAY ["API 網關層"]
+        GATEWAY[🚪 API Gateway<br/>路由與認證<br/>限流與監控]
+        LOAD_BALANCER[⚖️ 負載均衡器<br/>流量分發<br/>健康檢查]
+    end
+    
+    subgraph MICROSERVICES ["微服務架構"]
+        subgraph CORE_SERVICES ["核心業務服務"]
+            CUSTOMER_SVC[👤 Customer Service<br/>客戶管理服務<br/>會員系統與檔案]
+            ORDER_SVC[📦 Order Service<br/>訂單管理服務<br/>訂單生命週期]
+            PRODUCT_SVC[🛍️ Product Service<br/>商品管理服務<br/>商品目錄與搜尋]
+            PAYMENT_SVC[💰 Payment Service<br/>支付處理服務<br/>多種支付方式]
+            INVENTORY_SVC[📊 Inventory Service<br/>庫存管理服務<br/>庫存追蹤與預留]
+        end
+        
+        subgraph BUSINESS_SERVICES ["業務支援服務"]
+            CART_SVC[🛒 Shopping Cart Service<br/>購物車服務<br/>購物流程管理]
+            PRICING_SVC[💲 Pricing Service<br/>定價服務<br/>動態定價與折扣]
+            PROMOTION_SVC[🎁 Promotion Service<br/>促銷服務<br/>優惠券與活動]
+            DELIVERY_SVC[🚚 Delivery Service<br/>配送服務<br/>物流與追蹤]
+            REVIEW_SVC[⭐ Review Service<br/>評價服務<br/>商品評價系統]
+        end
+        
+        subgraph PLATFORM_SERVICES ["平台服務"]
+            NOTIFICATION_SVC[🔔 Notification Service<br/>通知服務<br/>多渠道消息推送]
+            SEARCH_SVC[🔍 Search Service<br/>搜尋服務<br/>全文搜索與推薦]
+            ANALYTICS_SVC[📈 Analytics Service<br/>分析服務<br/>數據統計與報表]
+            AUDIT_SVC[📋 Audit Service<br/>審計服務<br/>操作日誌與合規]
+        end
+    end
+    
+    subgraph INFRASTRUCTURE ["基礎設施層"]
+        subgraph DATABASES ["數據存儲"]
+            POSTGRES[(🗄️ PostgreSQL<br/>主資料庫<br/>事務性數據)]
+            REDIS[(⚡ Redis<br/>快取資料庫<br/>會話與快取)]
+            OPENSEARCH[(🔍 OpenSearch<br/>搜尋引擎<br/>全文搜索)]
+            S3[(📁 S3<br/>對象存儲<br/>文件與媒體)]
+        end
+        
+        subgraph MESSAGE_QUEUE ["消息隊列"]
+            MSK[📊 Amazon MSK<br/>Kafka 集群<br/>事件流處理]
+            SQS[📬 Amazon SQS<br/>消息隊列<br/>異步任務處理]
+            SNS[📢 Amazon SNS<br/>通知服務<br/>消息推送]
+        end
+        
+        subgraph EXTERNAL_SERVICES ["外部服務"]
+            STRIPE[💳 Stripe<br/>支付網關<br/>信用卡處理]
+            PAYPAL[💰 PayPal<br/>支付平台<br/>數字錢包]
+            EMAIL_SVC[📧 Email Service<br/>郵件服務<br/>SES/SMTP]
+            SMS_SVC[📱 SMS Service<br/>簡訊服務<br/>SNS/Twilio]
+            LOGISTICS[🚚 Logistics API<br/>物流服務<br/>第三方配送]
+        end
+    end
+    
+    subgraph OBSERVABILITY ["可觀測性"]
+        MONITORING[📊 Monitoring<br/>Prometheus + Grafana<br/>指標監控]
+        LOGGING[📝 Logging<br/>ELK Stack<br/>日誌聚合]
+        TRACING[🔍 Tracing<br/>AWS X-Ray<br/>分布式追蹤]
+        ALERTING[🚨 Alerting<br/>CloudWatch Alarms<br/>告警通知]
+    end
+    
+    subgraph SECURITY ["安全與合規"]
+        IAM[🔐 Identity & Access<br/>AWS IAM<br/>身份認證授權]
+        WAF[🛡️ Web Application Firewall<br/>AWS WAF<br/>應用防護]
+        SECRETS[🔑 Secrets Management<br/>AWS Secrets Manager<br/>密鑰管理]
+        COMPLIANCE[📋 Compliance<br/>合規監控<br/>GDPR/PCI DSS]
+    end
+    
+    %% User to Frontend Connections
+    CUSTOMER --> WEB_APP
+    CUSTOMER --> MOBILE_APP
+    SELLER --> SELLER_PORTAL
+    ADMIN --> ADMIN_PANEL
+    DELIVERY --> MOBILE_APP
+    
+    %% Frontend to API Gateway
+    WEB_APP --> GATEWAY
+    MOBILE_APP --> GATEWAY
+    ADMIN_PANEL --> GATEWAY
+    SELLER_PORTAL --> GATEWAY
+    
+    %% API Gateway to Load Balancer
+    GATEWAY --> LOAD_BALANCER
+    
+    %% Load Balancer to Core Services
+    LOAD_BALANCER --> CUSTOMER_SVC
+    LOAD_BALANCER --> ORDER_SVC
+    LOAD_BALANCER --> PRODUCT_SVC
+    LOAD_BALANCER --> PAYMENT_SVC
+    LOAD_BALANCER --> INVENTORY_SVC
+    
+    %% Load Balancer to Business Services
+    LOAD_BALANCER --> CART_SVC
+    LOAD_BALANCER --> PRICING_SVC
+    LOAD_BALANCER --> PROMOTION_SVC
+    LOAD_BALANCER --> DELIVERY_SVC
+    LOAD_BALANCER --> REVIEW_SVC
+    
+    %% Load Balancer to Platform Services
+    LOAD_BALANCER --> NOTIFICATION_SVC
+    LOAD_BALANCER --> SEARCH_SVC
+    LOAD_BALANCER --> ANALYTICS_SVC
+    LOAD_BALANCER --> AUDIT_SVC
+    
+    %% Service to Database Connections
+    CUSTOMER_SVC --> POSTGRES
+    ORDER_SVC --> POSTGRES
+    PRODUCT_SVC --> POSTGRES
+    PAYMENT_SVC --> POSTGRES
+    INVENTORY_SVC --> POSTGRES
+    CART_SVC --> REDIS
+    PRICING_SVC --> REDIS
+    PROMOTION_SVC --> POSTGRES
+    DELIVERY_SVC --> POSTGRES
+    REVIEW_SVC --> POSTGRES
+    SEARCH_SVC --> OPENSEARCH
+    ANALYTICS_SVC --> POSTGRES
+    AUDIT_SVC --> POSTGRES
+    
+    %% Service to Cache Connections
+    CUSTOMER_SVC --> REDIS
+    PRODUCT_SVC --> REDIS
+    PRICING_SVC --> REDIS
+    SEARCH_SVC --> REDIS
+    
+    %% Service to Message Queue Connections
+    ORDER_SVC --> MSK
+    PAYMENT_SVC --> MSK
+    INVENTORY_SVC --> MSK
+    NOTIFICATION_SVC --> MSK
+    NOTIFICATION_SVC --> SQS
+    NOTIFICATION_SVC --> SNS
+    ANALYTICS_SVC --> MSK
+    AUDIT_SVC --> MSK
+    
+    %% Service to External Service Connections
+    PAYMENT_SVC --> STRIPE
+    PAYMENT_SVC --> PAYPAL
+    NOTIFICATION_SVC --> EMAIL_SVC
+    NOTIFICATION_SVC --> SMS_SVC
+    DELIVERY_SVC --> LOGISTICS
+    
+    %% File Storage Connections
+    PRODUCT_SVC --> S3
+    CUSTOMER_SVC --> S3
+    AUDIT_SVC --> S3
+    
+    %% Observability Connections
+    CUSTOMER_SVC --> MONITORING
+    ORDER_SVC --> MONITORING
+    PRODUCT_SVC --> MONITORING
+    PAYMENT_SVC --> MONITORING
+    INVENTORY_SVC --> MONITORING
+    CART_SVC --> MONITORING
+    PRICING_SVC --> MONITORING
+    PROMOTION_SVC --> MONITORING
+    DELIVERY_SVC --> MONITORING
+    REVIEW_SVC --> MONITORING
+    NOTIFICATION_SVC --> MONITORING
+    SEARCH_SVC --> MONITORING
+    ANALYTICS_SVC --> MONITORING
+    AUDIT_SVC --> MONITORING
+    
+    MONITORING --> LOGGING
+    MONITORING --> TRACING
+    MONITORING --> ALERTING
+    
+    %% Security Connections
+    GATEWAY --> IAM
+    GATEWAY --> WAF
+    CUSTOMER_SVC --> SECRETS
+    PAYMENT_SVC --> SECRETS
+    NOTIFICATION_SVC --> SECRETS
+    AUDIT_SVC --> COMPLIANCE
+    
+    %% Inter-Service Communication (Event-Driven)
+    ORDER_SVC -.->|OrderCreated| INVENTORY_SVC
+    ORDER_SVC -.->|OrderCreated| PAYMENT_SVC
+    ORDER_SVC -.->|OrderCreated| NOTIFICATION_SVC
+    PAYMENT_SVC -.->|PaymentProcessed| ORDER_SVC
+    PAYMENT_SVC -.->|PaymentProcessed| DELIVERY_SVC
+    INVENTORY_SVC -.->|StockReserved| ORDER_SVC
+    INVENTORY_SVC -.->|StockUpdated| PRODUCT_SVC
+    CUSTOMER_SVC -.->|CustomerRegistered| NOTIFICATION_SVC
+    REVIEW_SVC -.->|ReviewCreated| PRODUCT_SVC
+    DELIVERY_SVC -.->|DeliveryStatusChanged| ORDER_SVC
+    DELIVERY_SVC -.->|DeliveryStatusChanged| NOTIFICATION_SVC
+    
+    %% Styling
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef frontend fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef gateway fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef core fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef business fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef platform fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef database fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    classDef message fill:#fff8e1,stroke:#fbc02d,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef observability fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef security fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    
+    class CUSTOMER,SELLER,ADMIN,DELIVERY user
+    class WEB_APP,MOBILE_APP,ADMIN_PANEL,SELLER_PORTAL frontend
+    class GATEWAY,LOAD_BALANCER gateway
+    class CUSTOMER_SVC,ORDER_SVC,PRODUCT_SVC,PAYMENT_SVC,INVENTORY_SVC core
+    class CART_SVC,PRICING_SVC,PROMOTION_SVC,DELIVERY_SVC,REVIEW_SVC business
+    class NOTIFICATION_SVC,SEARCH_SVC,ANALYTICS_SVC,AUDIT_SVC platform
+    class POSTGRES,REDIS,OPENSEARCH,S3 database
+    class MSK,SQS,SNS message
+    class STRIPE,PAYPAL,EMAIL_SVC,SMS_SVC,LOGISTICS external
+    class MONITORING,LOGGING,TRACING,ALERTING observability
+    class IAM,WAF,SECRETS,COMPLIANCE security
+```
+- ## Hexagonal Architecture實現
+
+```mermaid
+graph TB
+    subgraph ACTORS ["External Actors"]
+        CUSTOMER[👤 Customer<br/>Web & Mobile Users]
+        ADMIN[👨‍💼 Admin<br/>Management Dashboard]
+        DELIVERY[🚚 Delivery Person<br/>Logistics Interface]
+    end
+    
+    subgraph EXTERNAL ["External Systems"]
+        STRIPE[💳 Stripe Payment<br/>Payment Processing]
+        EMAIL[📧 Email Service<br/>SES/SMTP]
+        SMS[📱 SMS Service<br/>SNS/Twilio]
+        POSTGRES[(🗄️ PostgreSQL<br/>Primary Database)]
+        REDIS[(⚡ Redis Cache<br/>Session & Cache)]
+        MSK[📊 MSK/Kafka<br/>Event Streaming]
+    end
+    
+    subgraph PRIMARY_ADAPTERS ["Primary Adapters (Driving Side)"]
+        WEB_UI[🌐 Web UI<br/>Next.js Frontend]
+        MOBILE_UI[📱 Mobile UI<br/>Angular App]
+        ADMIN_UI[🖥️ Admin Dashboard<br/>Management Interface]
+        REST_API[🔌 REST Controllers<br/>HTTP API Endpoints]
+        GRAPHQL[📡 GraphQL API<br/>Query Interface]
+    end
+    
+    subgraph APPLICATION ["Application Layer"]
+        CUSTOMER_APP[👤 CustomerApplicationService<br/>Customer Management]
+        ORDER_APP[📦 OrderApplicationService<br/>Order Processing]
+        PRODUCT_APP[🛍️ ProductApplicationService<br/>Product Management]
+        PAYMENT_APP[💰 PaymentApplicationService<br/>Payment Processing]
+        CART_APP[🛒 ShoppingCartApplicationService<br/>Cart Management]
+        INVENTORY_APP[📊 InventoryApplicationService<br/>Stock Management]
+        PRICING_APP[💲 PricingApplicationService<br/>Price Calculation]
+        PROMOTION_APP[🎁 PromotionApplicationService<br/>Discount Management]
+        NOTIFICATION_APP[🔔 NotificationApplicationService<br/>Message Delivery]
+        OBSERVABILITY_APP[📈 ObservabilityApplicationService<br/>Monitoring & Metrics]
+        STATS_APP[📊 StatsApplicationService<br/>Analytics & Reports]
+        MONITORING_APP[🔍 MonitoringApplicationService<br/>Health Checks]
+    end
+    
+    subgraph DOMAIN_CORE ["Domain Core (Hexagon)"]
+        subgraph AGGREGATES ["Aggregate Roots"]
+            CUSTOMER_AGG[👤 Customer<br/>@AggregateRoot<br/>Customer Lifecycle]
+            ORDER_AGG[📦 Order<br/>@AggregateRoot<br/>Order Management]
+            PRODUCT_AGG[🛍️ Product<br/>@AggregateRoot<br/>Product Catalog]
+            PAYMENT_AGG[💰 Payment<br/>@AggregateRoot<br/>Payment Processing]
+            CART_AGG[🛒 ShoppingCart<br/>@AggregateRoot<br/>Cart State]
+            INVENTORY_AGG[📊 Inventory<br/>@AggregateRoot<br/>Stock Control]
+            PROMOTION_AGG[🎁 Promotion<br/>@AggregateRoot<br/>Discount Rules]
+            DELIVERY_AGG[🚚 Delivery<br/>@AggregateRoot<br/>Shipping Info]
+            NOTIFICATION_AGG[🔔 Notification<br/>@AggregateRoot<br/>Message Queue]
+            REVIEW_AGG[⭐ Review<br/>@AggregateRoot<br/>Product Reviews]
+            SELLER_AGG[🏪 Seller<br/>@AggregateRoot<br/>Vendor Management]
+            OBSERVABILITY_AGG[📈 Observability<br/>@AggregateRoot<br/>Metrics Collection]
+        end
+        
+        subgraph DOMAIN_SERVICES ["Domain Services"]
+            ORDER_DOMAIN_SVC[📦 OrderDomainService<br/>Complex Order Logic]
+            PRICING_DOMAIN_SVC[💲 PricingDomainService<br/>Pricing Algorithms]
+            PROMOTION_DOMAIN_SVC[🎁 PromotionDomainService<br/>Discount Calculations]
+        end
+        
+        subgraph REPOSITORY_PORTS ["Repository Ports"]
+            CUSTOMER_REPO_PORT[👤 CustomerRepository<br/>Interface]
+            ORDER_REPO_PORT[📦 OrderRepository<br/>Interface]
+            PRODUCT_REPO_PORT[🛍️ ProductRepository<br/>Interface]
+            PAYMENT_REPO_PORT[💰 PaymentRepository<br/>Interface]
+            INVENTORY_REPO_PORT[📊 InventoryRepository<br/>Interface]
+            PROMOTION_REPO_PORT[🎁 PromotionRepository<br/>Interface]
+        end
+        
+        subgraph SERVICE_PORTS ["Service Ports"]
+            PAYMENT_PORT[💳 PaymentPort<br/>Payment Gateway Interface]
+            NOTIFICATION_PORT[🔔 NotificationPort<br/>Messaging Interface]
+            EVENT_PORT[📡 EventPublisherPort<br/>Event Streaming Interface]
+            CACHE_PORT[⚡ CachePort<br/>Caching Interface]
+        end
+    end
+    
+    subgraph SECONDARY_ADAPTERS ["Secondary Adapters (Driven Side)"]
+        subgraph PERSISTENCE ["Persistence Adapters"]
+            JPA_CUSTOMER[👤 JpaCustomerRepository<br/>Customer Data Access]
+            JPA_ORDER[📦 JpaOrderRepository<br/>Order Data Access]
+            JPA_PRODUCT[🛍️ JpaProductRepository<br/>Product Data Access]
+            JPA_PAYMENT[💰 JpaPaymentRepository<br/>Payment Data Access]
+            JPA_INVENTORY[📊 JpaInventoryRepository<br/>Inventory Data Access]
+            JPA_PROMOTION[🎁 JpaPromotionRepository<br/>Promotion Data Access]
+        end
+        
+        subgraph EXTERNAL_ADAPTERS ["External Service Adapters"]
+            STRIPE_ADAPTER[💳 StripePaymentAdapter<br/>Stripe Integration]
+            EMAIL_ADAPTER[📧 EmailNotificationAdapter<br/>Email Service Integration]
+            SMS_ADAPTER[📱 SmsNotificationAdapter<br/>SMS Service Integration]
+        end
+        
+        subgraph EVENT_ADAPTERS ["Event & Cache Adapters"]
+            MSK_ADAPTER[📊 MskEventAdapter<br/>Kafka Event Publishing]
+            MEMORY_EVENT_ADAPTER[🧠 InMemoryEventAdapter<br/>Development Events]
+            REDIS_ADAPTER[⚡ RedisCacheAdapter<br/>Cache Management]
+            OPENSEARCH_ADAPTER[🔍 OpenSearchAdapter<br/>Search & Analytics]
+        end
+    end
+    
+    %% Primary Flow (Inbound)
+    CUSTOMER --> WEB_UI
+    CUSTOMER --> MOBILE_UI
+    ADMIN --> ADMIN_UI
+    DELIVERY --> REST_API
+    
+    WEB_UI --> REST_API
+    MOBILE_UI --> REST_API
+    ADMIN_UI --> REST_API
+    REST_API --> GRAPHQL
+    
+    REST_API --> CUSTOMER_APP
+    REST_API --> ORDER_APP
+    REST_API --> PRODUCT_APP
+    REST_API --> PAYMENT_APP
+    REST_API --> CART_APP
+    REST_API --> INVENTORY_APP
+    REST_API --> PRICING_APP
+    REST_API --> PROMOTION_APP
+    REST_API --> NOTIFICATION_APP
+    REST_API --> OBSERVABILITY_APP
+    REST_API --> STATS_APP
+    REST_API --> MONITORING_APP
+    
+    %% Application to Domain
+    CUSTOMER_APP --> CUSTOMER_AGG
+    ORDER_APP --> ORDER_AGG
+    ORDER_APP --> ORDER_DOMAIN_SVC
+    PRODUCT_APP --> PRODUCT_AGG
+    PAYMENT_APP --> PAYMENT_AGG
+    CART_APP --> CART_AGG
+    INVENTORY_APP --> INVENTORY_AGG
+    PRICING_APP --> PRICING_DOMAIN_SVC
+    PROMOTION_APP --> PROMOTION_AGG
+    PROMOTION_APP --> PROMOTION_DOMAIN_SVC
+    NOTIFICATION_APP --> NOTIFICATION_AGG
+    OBSERVABILITY_APP --> OBSERVABILITY_AGG
+    
+    %% Domain to Repository Ports
+    CUSTOMER_APP --> CUSTOMER_REPO_PORT
+    ORDER_APP --> ORDER_REPO_PORT
+    PRODUCT_APP --> PRODUCT_REPO_PORT
+    PAYMENT_APP --> PAYMENT_REPO_PORT
+    INVENTORY_APP --> INVENTORY_REPO_PORT
+    PROMOTION_APP --> PROMOTION_REPO_PORT
+    
+    %% Domain to Service Ports
+    PAYMENT_APP --> PAYMENT_PORT
+    NOTIFICATION_APP --> NOTIFICATION_PORT
+    ORDER_APP --> EVENT_PORT
+    PRODUCT_APP --> CACHE_PORT
+    
+    %% Secondary Flow (Outbound) - Repository Implementations
+    CUSTOMER_REPO_PORT -.-> JPA_CUSTOMER
+    ORDER_REPO_PORT -.-> JPA_ORDER
+    PRODUCT_REPO_PORT -.-> JPA_PRODUCT
+    PAYMENT_REPO_PORT -.-> JPA_PAYMENT
+    INVENTORY_REPO_PORT -.-> JPA_INVENTORY
+    PROMOTION_REPO_PORT -.-> JPA_PROMOTION
+    
+    %% Secondary Flow (Outbound) - Service Implementations
+    PAYMENT_PORT -.-> STRIPE_ADAPTER
+    NOTIFICATION_PORT -.-> EMAIL_ADAPTER
+    NOTIFICATION_PORT -.-> SMS_ADAPTER
+    EVENT_PORT -.-> MSK_ADAPTER
+    EVENT_PORT -.-> MEMORY_EVENT_ADAPTER
+    CACHE_PORT -.-> REDIS_ADAPTER
+    CACHE_PORT -.-> OPENSEARCH_ADAPTER
+    
+    %% External System Connections
+    JPA_CUSTOMER --> POSTGRES
+    JPA_ORDER --> POSTGRES
+    JPA_PRODUCT --> POSTGRES
+    JPA_PAYMENT --> POSTGRES
+    JPA_INVENTORY --> POSTGRES
+    JPA_PROMOTION --> POSTGRES
+    
+    STRIPE_ADAPTER --> STRIPE
+    EMAIL_ADAPTER --> EMAIL
+    SMS_ADAPTER --> SMS
+    MSK_ADAPTER --> MSK
+    REDIS_ADAPTER --> REDIS
+    
+    %% Styling
+    classDef actor fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef primary fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef application fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef domain fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef secondary fill:#fafafa,stroke:#616161,stroke-width:2px
+    
+    class CUSTOMER,ADMIN,DELIVERY actor
+    class STRIPE,EMAIL,SMS,POSTGRES,REDIS,MSK external
+    class WEB_UI,MOBILE_UI,ADMIN_UI,REST_API,GRAPHQL primary
+    class CUSTOMER_APP,ORDER_APP,PRODUCT_APP,PAYMENT_APP,CART_APP,INVENTORY_APP,PRICING_APP,PROMOTION_APP,NOTIFICATION_APP,OBSERVABILITY_APP,STATS_APP,MONITORING_APP application
+    class CUSTOMER_AGG,ORDER_AGG,PRODUCT_AGG,PAYMENT_AGG,CART_AGG,INVENTORY_AGG,PROMOTION_AGG,DELIVERY_AGG,NOTIFICATION_AGG,REVIEW_AGG,SELLER_AGG,OBSERVABILITY_AGG,ORDER_DOMAIN_SVC,PRICING_DOMAIN_SVC,PROMOTION_DOMAIN_SVC,CUSTOMER_REPO_PORT,ORDER_REPO_PORT,PRODUCT_REPO_PORT,PAYMENT_REPO_PORT,INVENTORY_REPO_PORT,PROMOTION_REPO_PORT,PAYMENT_PORT,NOTIFICATION_PORT,EVENT_PORT,CACHE_PORT domain
+    class JPA_CUSTOMER,JPA_ORDER,JPA_PRODUCT,JPA_PAYMENT,JPA_INVENTORY,JPA_PROMOTION,STRIPE_ADAPTER,EMAIL_ADAPTER,SMS_ADAPTER,MSK_ADAPTER,MEMORY_EVENT_ADAPTER,REDIS_ADAPTER,OPENSEARCH_ADAPTER secondary
+```
 - \1
 
 ## Relationships with Other Viewpoints

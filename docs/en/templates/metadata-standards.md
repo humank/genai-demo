@@ -1,4 +1,12 @@
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Standards
 
 ## Overview
@@ -17,7 +25,7 @@ perspective: ["security", "performance", "availability", "evolution", "usability
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst", "product-manager", "end-user"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]
 related_documents: ["doc1.md", "doc2.md"]
-diagrams: ["diagram1.mmd", "diagram2.puml", "diagram3.excalidraw"]
+diagrams: ["diagram1.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "diagram2.puml", "diagram3.excalidraw"]
 last_updated: "YYYY-MM-DD"
 version: "1.0"
 author: "Architecture Team"
@@ -60,7 +68,7 @@ perspective: ["security", "performance", "evolution"]
 stakeholders: ["architect", "developer", "business-analyst"]
 related_viewpoints: ["information", "development"]
 related_documents: ["../information/domain-events.md", "../development/testing-strategy.md"]
-diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd", "../diagrams/viewpoints/functional/bounded-contexts.puml"]
+diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "../diagrams/viewpoints/functional/bounded-contexts.puml"]
 last_updated: "2025-01-21"
 version: "2.1"
 author: "Architecture Team"
@@ -161,7 +169,7 @@ diagram_level: "overview|detailed|conceptual"
 target_audience: ["architect", "developer", "stakeholder"]
 description: "圖表描述和用途"
 related_documents: ["doc1.md", "doc2.md"]
-source_file: "diagram-source.mmd"
+source_file: "diagram-source.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件
 generated_files: ["diagram.svg"]
 last_updated: "YYYY-MM-DD"
 version: "1.0"
@@ -290,6 +298,14 @@ tags: ["tag1", "tag2"]
 ### 必填欄位驗證
 
 ```yaml
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Examples
 validation_rules:
   title:
@@ -347,6 +363,14 @@ consistency_checks:
 
 ```bash
 #!/bin/bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 提取所有文件的元資料
 find docs/ -name "*.md" -exec grep -l "^---$" {} \; | while read file; do
     echo "Processing: $file"
@@ -358,6 +382,14 @@ done
 ### 元資料驗證
 
 ```python
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Examples
 import yaml
 import os
@@ -403,6 +435,14 @@ def validate_fields(metadata):
 ### 元資料索引生成
 
 ```python
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 生成文件索引
 def generate_document_index():
     index = {

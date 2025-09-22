@@ -437,5 +437,5 @@ If issues persist after following this troubleshooting guide:
 
 - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
 - [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-- [Performance Standards](../performance-standards.md)
-- [Development Standards](../development-standards.md)
+- [Performance Standards](../../.kiro/steering/performance-standards.md)
+- [Development Standards](../../.kiro/steering/development-standards.md)

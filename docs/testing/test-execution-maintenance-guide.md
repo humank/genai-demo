@@ -767,8 +767,8 @@ void cleanup() {
 - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
 - [TestRestTemplate Troubleshooting Guide](testresttemplate-troubleshooting-guide.md)
 - [Test Configuration Examples](test-configuration-examples.md)
-- [Performance Standards](../performance-standards.md)
-- [Development Standards](../development-standards.md)
+- [Performance Standards](../../.kiro/steering/performance-standards.md)
+- [Development Standards](../../.kiro/steering/development-standards.md)
 
 #### Code Examples
 

@@ -57,7 +57,7 @@ GenAI Demo 專案需要一個強健的軟體架構，能夠：
 interfaces/     → Interface Layer（REST 控制器、Web UI）
 application/    → Application Layer（用例協調、事件發布）
 domain/         → Domain Layer（業務邏輯、領域模型）
-../../infrastructure/ → Infrastructure Layer（持久化、外部服務）
+../../../../../../infrastructure/ → Infrastructure Layer（持久化、外部服務）
 ```
 
 ### 實現Policy
@@ -76,7 +76,7 @@ solid.humank.genaidemo/
 │   ├── customer/      # CustomerAggregate
 │   ├── order/         # 訂單Aggregate
 │   └── inventory/     # 庫存Aggregate
-└── ../../infrastructure/
+└── ../../../../../../infrastructure/
     ├── persistence/   # 資料持久化
     └── messaging/     # 訊息處理
 ```

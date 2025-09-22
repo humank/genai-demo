@@ -1,6 +1,6 @@
 <!-- 
 此文件需要手動翻譯
-原文件: ../../.kiro/steering/bdd-tdd-principles.md
+原文件: ../../../../../../.kiro/steering/bdd-tdd-principles.md
 翻譯日期: Thu Aug 21 22:22:38 CST 2025
 
 請將以下中文內容翻譯為英文，保持 Markdown 格式不變
@@ -371,7 +371,7 @@ void shouldSaveAndRetrieveOrder() {
 #### 3. Integration Tests (Spring Boot Test)
 - **Purpose**: Test component interactions
 - **Scope**: Multiple components
-- **Location**: `src/test/java/.../../../infrastructure/`
+- **Location**: `src/test/java/.../../../../../../../infrastructure/`
 - **Tools**: Spring Boot Test, TestContainers
 - **Database**: Test database
 

@@ -13,7 +13,7 @@
 
 - `.kiro/settings/mcp.json` - 專案級別 MCP 配置
 - `~/.kiro/settings/mcp.json` - 用戶級別 MCP 配置
-- `docs/mcp/README.md` - MCP 整合完整指南
+- `docs/mcp/../../README.md` - MCP 整合完整指南
 
 #### 整合的 MCP Servers
 
@@ -216,13 +216,13 @@ app/docs/
 
 ```
 ├── app/lombok.config
-├── docker/README.md
+├── docker/../../README.md
 ├── docker/docker-build.sh
 ├── docker/postgres/init.sql
 ├── docker/verify-deployment.sh
 ├── lombok.config
 ├── terraform/main.tf
-└── tools/README.md
+└── tools/../../README.md
 ```
 
 ### 2. 程式碼Refactoring
@@ -335,9 +335,9 @@ infrastructure/.jest-cache/
 ## 📚 相關文檔
 
 - \1 - 完整版本變更記錄
-- [MCP 整合指南](README.md) - MCP 使用指南
-- [測試PerformanceMonitoring](docs/testing/test-performance-monitoring.md) - 測試Monitoring框架
-- [開發標準](../../.kiro/steering/README.md) - 開發標準索引
+- [MCP 整合指南](../../README.md) - MCP 使用指南
+- [測試PerformanceMonitoring](../../docs/testing/test-performance-monitoring.md) - 測試Monitoring框架
+- [開發標準](../../README.md) - 開發標準索引
 - [專案 README](../../README.md) - 專案概覽
 
 ---

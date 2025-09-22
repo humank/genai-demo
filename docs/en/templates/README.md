@@ -1,4 +1,12 @@
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Templates
 
 ## Overview
@@ -18,7 +26,7 @@ docs/templates/
     ├── functional-viewpoint-example.md
     ├── security-perspective-example.md
     └── diagram-examples/
-        ├── system-overview.mmd
+        ├── system-overview.md  # 包含 Mermaid 代碼塊
         ├── domain-model.puml
         └── concept-diagram.excalidraw
 ```
@@ -41,11 +49,43 @@ docs/templates/
 
 **範例**:
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 創建Functional Viewpoint文件
 cp docs/templates/viewpoint-template.md ../viewpoints/functional/domain-model.md
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 編輯元資料
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 將 viewpoint: "[viewpoint]" 改為 viewpoint: "functional"
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 更新其他相關欄位
 ```
 
@@ -65,11 +105,43 @@ cp docs/templates/viewpoint-template.md ../viewpoints/functional/domain-model.md
 
 **範例**:
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 創建Security Perspective文件
 cp docs/templates/perspective-template.md docs/perspectives/security/authentication.md
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 編輯元資料
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 將 perspective_type: "[perspective]" 改為 perspective_type: "security"
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 更新適用視點和Quality Attribute
 ```
 
@@ -84,7 +156,7 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 4. 配置自動生成和維護資訊
 
 **支援的圖表類型**:
-- **Mermaid** (.mmd): 適合概覽圖和流程圖
+- **Mermaid** (.md with ```mermaid blocks): 適合概覽圖和流程圖，使用 GitHub 原生支援的代碼塊格式
 - **PlantUML** (.puml): 適合詳細的 UML 圖表
 - **Excalidraw** (.excalidraw): 適合概念設計和手繪風格
 
@@ -122,11 +194,35 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 使用以下腳本驗證元資料完整性:
 
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 檢查所有文件的元資料
 ./scripts/validate-metadata.sh
 
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 檢查特定目錄
 ./scripts/validate-metadata.sh ../viewpoints/
+
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
 
 # 生成元資料報告
 ./scripts/generate-metadata-report.sh
@@ -137,6 +233,14 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 ### 文件生成器
 
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # Templates
 ./scripts/create-viewpoint-doc.sh functional domain-model
 ./scripts/create-perspective-doc.sh security authentication
@@ -146,8 +250,24 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 ### 元資料更新器
 
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 批量更新元資料
 ./scripts/update-metadata.sh --field last_updated --value $(date +%Y-%m-%d)
+
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
 
 # 驗證關聯性
 ./scripts/validate-references.sh
@@ -156,8 +276,24 @@ cp docs/templates/perspective-template.md docs/perspectives/security/authenticat
 ### 翻譯自動化
 
 ```bash
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 觸發自動翻譯
 ./scripts/trigger-translation.sh ../viewpoints/functional/domain-model.md
+
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
 
 # 檢查翻譯狀態
 ./scripts/check-translation-status.sh

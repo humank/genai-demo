@@ -1,3 +1,11 @@
+
+<!-- 
+注意：Mermaid 圖表格式更新
+- 舊格式：.mmd 文件引用
+- 新格式：.md 文件中的 ```mermaid 代碼塊
+- 原因：GitHub 原生支援，更好的可讀性和維護性
+-->
+
 # 圖表元資料標準格式
 
 ## 概覽
@@ -19,7 +27,7 @@ diagram_level: "overview|detailed|conceptual|implementation"
 target_audience: ["architect", "developer", "stakeholder", "business", "operator"]
 description: "圖表的詳細描述和用途"
 related_documents: ["../viewpoints/functional/domain-model.md", "../perspectives/security/authentication.md"]
-source_file: "diagram-source.mmd"
+source_file: "diagram-source.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件
 generated_files: ["diagram.svg"]
 dependencies: ["other-diagram.mmd", "reference-model.puml"]
 last_updated: "YYYY-MM-DD"
@@ -87,7 +95,7 @@ mermaid_type: "graph|flowchart|sequence|class|state|pie|journey|gantt|gitgraph"
 direction: "TD|LR|BT|RL"
 theme: "default|dark|forest|neutral"
 related_documents: ["../viewpoints/functional/system-overview.md"]
-source_file: "system-architecture.mmd"
+source_file: "system-architecture.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件
 generated_files: ["system-architecture.svg"]
 last_updated: "2025-01-21"
 version: "1.2"
@@ -127,7 +135,7 @@ mermaid_type: "flowchart"
 direction: "TD"
 theme: "default"
 related_documents: ["../viewpoints/functional/customer-management.md"]
-source_file: "customer-flow.mmd"
+source_file: "customer-flow.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件
 generated_files: ["customer-flow.svg"]
 last_updated: "2025-01-21"
 version: "2.0"
@@ -305,11 +313,11 @@ generation_config:
   triggers:
     - type: "file_change"
       patterns: ["**/*.java", "**/*.ts"]
-      target_diagrams: ["class-diagram.puml", "component-diagram.mmd"]
+      target_diagrams: ["class-diagram.puml", "component-diagram.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件]
     
     - type: "scheduled"
       cron: "0 2 * * 1"  # 每週一凌晨2點
-      target_diagrams: ["architecture-overview.mmd"]
+      target_diagrams: ["architecture-overview.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件]
     
     - type: "manual"
       command: "generate-diagrams"

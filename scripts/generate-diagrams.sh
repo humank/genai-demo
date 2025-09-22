@@ -2,6 +2,7 @@
 
 # GenAI Demo - PlantUML 圖表生成腳本
 # 此腳本用於生成所有 PlantUML 圖表為 PNG 和 SVG 格式
+# 遵循 diagram-generation-standards.md 標準
 
 set -e  # 遇到錯誤時退出
 
@@ -15,8 +16,9 @@ NC='\033[0m' # No Color
 # 配置
 PLANTUML_JAR="tools/plantuml.jar"
 PLANTUML_URL="https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar"
-DIAGRAMS_DIR="docs/diagrams/plantuml"
+DIAGRAMS_DIR="docs/diagrams"
 OUTPUT_DIR="docs/diagrams/generated"
+DEFAULT_FORMAT="png"  # PNG 推薦用於 GitHub 文檔 (更清晰易讀)
 
 # 函數：打印帶顏色的消息
 print_info() {
@@ -65,10 +67,15 @@ check_java() {
 
 # 函數：創建輸出目錄
 create_output_dirs() {
-    mkdir -p "$OUTPUT_DIR/structural"
-    mkdir -p "$OUTPUT_DIR/behavioral"
-    mkdir -p "$OUTPUT_DIR/interaction"
-    mkdir -p "$OUTPUT_DIR/event-storming"
+    mkdir -p "$OUTPUT_DIR/functional"
+    mkdir -p "$OUTPUT_DIR/information"
+    mkdir -p "$OUTPUT_DIR/deployment"
+    mkdir -p "$OUTPUT_DIR/development"
+    mkdir -p "$OUTPUT_DIR/operational"
+    mkdir -p "$OUTPUT_DIR/concurrency"
+    mkdir -p "$OUTPUT_DIR/perspectives"
+    mkdir -p "$OUTPUT_DIR/plantuml"
+    mkdir -p "$OUTPUT_DIR/legacy"
     print_info "輸出目錄已創建"
 }
 
@@ -76,24 +83,37 @@ create_output_dirs() {
 generate_diagram() {
     local puml_file="$1"
     local output_subdir="$2"
+    local format="${3:-both}"  # png, svg, or both
     local filename=$(basename "$puml_file" .puml)
     local output_path="$OUTPUT_DIR/$output_subdir"
     
-    print_info "生成圖表: $filename"
+    print_info "生成圖表: $filename (格式: $format)"
     
-    # 生成 SVG 格式 (高解析度向量圖)
-    if java -jar "$PLANTUML_JAR" -tsvg -o "../../generated/$output_subdir" "$puml_file"; then
-        print_success "SVG 生成成功: $output_path/$filename.svg"
-    else
-        print_error "SVG 生成失敗: $puml_file"
-        return 1
+    local success=true
+    
+    # 生成 PNG 格式 (推薦用於 GitHub 文檔 - 更清晰易讀)
+    if [ "$format" = "png" ] || [ "$format" = "both" ]; then
+        if java -jar "$PLANTUML_JAR" -tpng -o "../../generated/$output_subdir" "$puml_file"; then
+            print_success "PNG 生成成功: $output_path/$filename.png"
+        else
+            print_error "PNG 生成失敗: $puml_file"
+            success=false
+        fi
     fi
     
-    # 生成 SVG 格式
-    if java -jar "$PLANTUML_JAR" -tsvg -o "../../generated/$output_subdir" "$puml_file"; then
-        print_success "SVG 生成成功: $output_path/$filename.svg"
+    # 生成 SVG 格式 (高解析度向量圖，適合打印)
+    if [ "$format" = "svg" ] || [ "$format" = "both" ]; then
+        if java -jar "$PLANTUML_JAR" -tsvg -o "../../generated/$output_subdir" "$puml_file"; then
+            print_success "SVG 生成成功: $output_path/$filename.svg"
+        else
+            print_error "SVG 生成失敗: $puml_file"
+            success=false
+        fi
+    fi
+    
+    if [ "$success" = true ]; then
+        return 0
     else
-        print_error "SVG 生成失敗: $puml_file"
         return 1
     fi
 }
@@ -102,67 +122,76 @@ generate_diagram() {
 generate_all_diagrams() {
     local total_files=0
     local success_files=0
+    local format="${1:-$DEFAULT_FORMAT}"
     
-    print_info "開始生成所有 PlantUML 圖表..."
+    print_info "開始生成所有 PlantUML 圖表 (格式: $format)..."
     
-    # 結構圖
-    if [ -d "$DIAGRAMS_DIR/structural" ]; then
-        print_info "生成結構圖..."
-        for puml_file in "$DIAGRAMS_DIR/structural"/*.puml; do
-            if [ -f "$puml_file" ]; then
-                total_files=$((total_files + 1))
-                if generate_diagram "$puml_file" "structural"; then
-                    success_files=$((success_files + 1))
+    # Viewpoints 圖表
+    for viewpoint in functional information deployment development operational concurrency; do
+        if [ -d "$DIAGRAMS_DIR/viewpoints/$viewpoint" ]; then
+            print_info "生成 $viewpoint viewpoint 圖表..."
+            for puml_file in "$DIAGRAMS_DIR/viewpoints/$viewpoint"/*.puml; do
+                if [ -f "$puml_file" ]; then
+                    total_files=$((total_files + 1))
+                    if generate_diagram "$puml_file" "$viewpoint" "$format"; then
+                        success_files=$((success_files + 1))
+                    fi
                 fi
+            done
+        fi
+    done
+    
+    # Perspectives 圖表
+    if [ -d "$DIAGRAMS_DIR/perspectives" ]; then
+        print_info "生成 perspectives 圖表..."
+        for perspective_dir in "$DIAGRAMS_DIR/perspectives"/*; do
+            if [ -d "$perspective_dir" ]; then
+                for puml_file in "$perspective_dir"/*.puml; do
+                    if [ -f "$puml_file" ]; then
+                        total_files=$((total_files + 1))
+                        if generate_diagram "$puml_file" "perspectives" "$format"; then
+                            success_files=$((success_files + 1))
+                        fi
+                    fi
+                done
             fi
         done
     fi
     
-    # 行為圖
-    if [ -d "$DIAGRAMS_DIR/behavioral" ]; then
-        print_info "生成行為圖..."
-        for puml_file in "$DIAGRAMS_DIR/behavioral"/*.puml; do
+    # PlantUML 目錄圖表
+    if [ -d "$DIAGRAMS_DIR/plantuml" ]; then
+        print_info "生成 plantuml 目錄圖表..."
+        for puml_file in "$DIAGRAMS_DIR/plantuml"/*.puml; do
             if [ -f "$puml_file" ]; then
                 total_files=$((total_files + 1))
-                if generate_diagram "$puml_file" "behavioral"; then
-                    success_files=$((success_files + 1))
-                fi
-            fi
-        done
-    fi
-    
-    # 交互圖
-    if [ -d "$DIAGRAMS_DIR/interaction" ]; then
-        print_info "生成交互圖..."
-        for puml_file in "$DIAGRAMS_DIR/interaction"/*.puml; do
-            if [ -f "$puml_file" ]; then
-                total_files=$((total_files + 1))
-                if generate_diagram "$puml_file" "interaction"; then
+                if generate_diagram "$puml_file" "plantuml" "$format"; then
                     success_files=$((success_files + 1))
                 fi
             fi
         done
         
         # 處理子目錄
-        if [ -d "$DIAGRAMS_DIR/interaction/sequence-diagrams" ]; then
-            for puml_file in "$DIAGRAMS_DIR/interaction/sequence-diagrams"/*.puml; do
-                if [ -f "$puml_file" ]; then
-                    total_files=$((total_files + 1))
-                    if generate_diagram "$puml_file" "interaction"; then
-                        success_files=$((success_files + 1))
+        for subdir in "$DIAGRAMS_DIR/plantuml"/*; do
+            if [ -d "$subdir" ]; then
+                for puml_file in "$subdir"/*.puml; do
+                    if [ -f "$puml_file" ]; then
+                        total_files=$((total_files + 1))
+                        if generate_diagram "$puml_file" "plantuml" "$format"; then
+                            success_files=$((success_files + 1))
+                        fi
                     fi
-                fi
-            done
-        fi
+                done
+            fi
+        done
     fi
     
-    # Event Storming 圖
-    if [ -d "$DIAGRAMS_DIR/event-storming" ]; then
-        print_info "生成 Event Storming 圖..."
-        for puml_file in "$DIAGRAMS_DIR/event-storming"/*.puml; do
+    # Legacy 圖表
+    if [ -d "$DIAGRAMS_DIR/legacy" ]; then
+        print_info "生成 legacy 圖表..."
+        for puml_file in $(find "$DIAGRAMS_DIR/legacy" -name "*.puml"); do
             if [ -f "$puml_file" ]; then
                 total_files=$((total_files + 1))
-                if generate_diagram "$puml_file" "event-storming"; then
+                if generate_diagram "$puml_file" "legacy" "$format"; then
                     success_files=$((success_files + 1))
                 fi
             fi
@@ -183,37 +212,53 @@ generate_all_diagrams() {
 # 函數：生成特定圖表
 generate_specific_diagram() {
     local diagram_name="$1"
+    local format="${2:-$DEFAULT_FORMAT}"
     local found=false
     
     print_info "搜尋圖表: $diagram_name"
     
-    # 在所有子目錄中搜尋
-    for subdir in structural behavioral interaction event-storming; do
-        local puml_file="$DIAGRAMS_DIR/$subdir/$diagram_name"
-        if [ -f "$puml_file" ]; then
-            found=true
-            generate_diagram "$puml_file" "$subdir"
-            break
-        fi
-        
-        # 檢查是否需要添加 .puml 擴展名
-        if [ -f "$puml_file.puml" ]; then
-            found=true
-            generate_diagram "$puml_file.puml" "$subdir"
-            break
+    # 搜尋所有可能的位置
+    local search_paths=(
+        "$DIAGRAMS_DIR/viewpoints/functional"
+        "$DIAGRAMS_DIR/viewpoints/information"
+        "$DIAGRAMS_DIR/viewpoints/deployment"
+        "$DIAGRAMS_DIR/viewpoints/development"
+        "$DIAGRAMS_DIR/viewpoints/operational"
+        "$DIAGRAMS_DIR/viewpoints/concurrency"
+        "$DIAGRAMS_DIR/perspectives"
+        "$DIAGRAMS_DIR/plantuml"
+        "$DIAGRAMS_DIR/legacy"
+    )
+    
+    for search_path in "${search_paths[@]}"; do
+        if [ -d "$search_path" ]; then
+            # 直接搜尋
+            local puml_file="$search_path/$diagram_name"
+            if [ -f "$puml_file" ]; then
+                found=true
+                local category=$(basename "$(dirname "$puml_file")")
+                generate_diagram "$puml_file" "$category" "$format"
+                break
+            fi
+            
+            # 添加 .puml 擴展名搜尋
+            if [ -f "$puml_file.puml" ]; then
+                found=true
+                local category=$(basename "$(dirname "$puml_file.puml")")
+                generate_diagram "$puml_file.puml" "$category" "$format"
+                break
+            fi
+            
+            # 遞歸搜尋子目錄
+            local found_file=$(find "$search_path" -name "$diagram_name" -o -name "$diagram_name.puml" 2>/dev/null | head -1)
+            if [ -n "$found_file" ]; then
+                found=true
+                local category=$(basename "$(dirname "$found_file")")
+                generate_diagram "$found_file" "$category" "$format"
+                break
+            fi
         fi
     done
-    
-    # 檢查 sequence-diagrams 子目錄
-    local seq_file="$DIAGRAMS_DIR/interaction/sequence-diagrams/$diagram_name"
-    if [ -f "$seq_file" ] || [ -f "$seq_file.puml" ]; then
-        found=true
-        if [ -f "$seq_file" ]; then
-            generate_diagram "$seq_file" "interaction"
-        else
-            generate_diagram "$seq_file.puml" "interaction"
-        fi
-    fi
     
     if [ "$found" = false ]; then
         print_error "找不到圖表: $diagram_name"
@@ -227,23 +272,63 @@ generate_specific_diagram() {
 list_available_diagrams() {
     print_info "可用的 PlantUML 圖表:"
     
-    for subdir in structural behavioral interaction event-storming; do
-        if [ -d "$DIAGRAMS_DIR/$subdir" ]; then
-            echo -e "${YELLOW}$subdir:${NC}"
-            for puml_file in "$DIAGRAMS_DIR/$subdir"/*.puml; do
+    # Viewpoints
+    echo -e "${YELLOW}Viewpoints:${NC}"
+    for viewpoint in functional information deployment development operational concurrency; do
+        if [ -d "$DIAGRAMS_DIR/viewpoints/$viewpoint" ]; then
+            echo -e "  ${BLUE}$viewpoint:${NC}"
+            for puml_file in "$DIAGRAMS_DIR/viewpoints/$viewpoint"/*.puml; do
                 if [ -f "$puml_file" ]; then
-                    echo "  - $(basename "$puml_file")"
+                    echo "    - $(basename "$puml_file")"
                 fi
             done
         fi
     done
     
-    if [ -d "$DIAGRAMS_DIR/interaction/sequence-diagrams" ]; then
-        echo -e "${YELLOW}sequence-diagrams:${NC}"
-        for puml_file in "$DIAGRAMS_DIR/interaction/sequence-diagrams"/*.puml; do
+    # Perspectives
+    if [ -d "$DIAGRAMS_DIR/perspectives" ]; then
+        echo -e "${YELLOW}Perspectives:${NC}"
+        for perspective_dir in "$DIAGRAMS_DIR/perspectives"/*; do
+            if [ -d "$perspective_dir" ]; then
+                local perspective_name=$(basename "$perspective_dir")
+                echo -e "  ${BLUE}$perspective_name:${NC}"
+                for puml_file in "$perspective_dir"/*.puml; do
+                    if [ -f "$puml_file" ]; then
+                        echo "    - $(basename "$puml_file")"
+                    fi
+                done
+            fi
+        done
+    fi
+    
+    # PlantUML directory
+    if [ -d "$DIAGRAMS_DIR/plantuml" ]; then
+        echo -e "${YELLOW}PlantUML:${NC}"
+        for puml_file in "$DIAGRAMS_DIR/plantuml"/*.puml; do
             if [ -f "$puml_file" ]; then
                 echo "  - $(basename "$puml_file")"
             fi
+        done
+        
+        # 子目錄
+        for subdir in "$DIAGRAMS_DIR/plantuml"/*; do
+            if [ -d "$subdir" ]; then
+                local subdir_name=$(basename "$subdir")
+                echo -e "  ${BLUE}$subdir_name:${NC}"
+                for puml_file in "$subdir"/*.puml; do
+                    if [ -f "$puml_file" ]; then
+                        echo "    - $(basename "$puml_file")"
+                    fi
+                done
+            fi
+        done
+    fi
+    
+    # Legacy
+    if [ -d "$DIAGRAMS_DIR/legacy" ]; then
+        echo -e "${YELLOW}Legacy:${NC}"
+        find "$DIAGRAMS_DIR/legacy" -name "*.puml" | while read puml_file; do
+            echo "  - $(basename "$puml_file")"
         done
     fi
 }
@@ -254,19 +339,18 @@ validate_diagrams() {
     local total_files=0
     local valid_files=0
     
-    for subdir in structural behavioral interaction event-storming; do
-        if [ -d "$DIAGRAMS_DIR/$subdir" ]; then
-            for puml_file in "$DIAGRAMS_DIR/$subdir"/*.puml; do
-                if [ -f "$puml_file" ]; then
-                    total_files=$((total_files + 1))
-                    if java -jar "$PLANTUML_JAR" -checkonly "$puml_file" >/dev/null 2>&1; then
-                        valid_files=$((valid_files + 1))
-                        print_success "語法正確: $(basename "$puml_file")"
-                    else
-                        print_error "語法錯誤: $(basename "$puml_file")"
-                    fi
-                fi
-            done
+    # 找到所有 PlantUML 文件
+    local puml_files=$(find "$DIAGRAMS_DIR" -name "*.puml" 2>/dev/null)
+    
+    for puml_file in $puml_files; do
+        if [ -f "$puml_file" ]; then
+            total_files=$((total_files + 1))
+            if java -jar "$PLANTUML_JAR" -checkonly "$puml_file" >/dev/null 2>&1; then
+                valid_files=$((valid_files + 1))
+                print_success "語法正確: $(basename "$puml_file")"
+            else
+                print_error "語法錯誤: $(basename "$puml_file")"
+            fi
         fi
     done
     
@@ -292,11 +376,14 @@ show_help() {
     echo "  $0 [選項] [圖表名稱]"
     echo ""
     echo "選項:"
-    echo "  -h, --help      顯示此幫助信息"
-    echo "  -l, --list      列出所有可用的圖表"
-    echo "  -v, --validate  驗證圖表語法"
-    echo "  -c, --clean     清理生成的文件"
-    echo "  -a, --all       生成所有圖表 (默認)"
+    echo "  -h, --help         顯示此幫助信息"
+    echo "  -l, --list         列出所有可用的圖表"
+    echo "  -v, --validate     驗證圖表語法"
+    echo "  -c, --clean        清理生成的文件"
+    echo "  -a, --all          生成所有圖表 (默認)"
+    echo "  --format=FORMAT    指定輸出格式: png, svg, both (默認: both)"
+    echo "                     PNG 推薦用於 GitHub 文檔 (更清晰易讀)"
+    echo "                     SVG 適合高解析度顯示和打印"
     echo ""
     echo "範例:"
     echo "  $0                                    # 生成所有圖表"
@@ -335,11 +422,25 @@ main() {
             ;;
         -a|--all|"")
             create_output_dirs
-            generate_all_diagrams
+            local format="$DEFAULT_FORMAT"
+            if [[ "$1" == --format=* ]]; then
+                format="${1#--format=}"
+                shift
+            fi
+            generate_all_diagrams "$format"
+            ;;
+        --format=*)
+            create_output_dirs
+            local format="${1#--format=}"
+            generate_all_diagrams "$format"
             ;;
         *)
             create_output_dirs
-            generate_specific_diagram "$1"
+            local format="$DEFAULT_FORMAT"
+            if [[ "$2" == --format=* ]]; then
+                format="${2#--format=}"
+            fi
+            generate_specific_diagram "$1" "$format"
             ;;
     esac
 }

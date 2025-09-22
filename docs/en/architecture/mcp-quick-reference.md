@@ -65,12 +65,12 @@ Performance效率: 100/100 🟢 優秀
 ### 主要報告文件
 
 ```
-../../infrastructure/docs/
+../../../infrastructure/docs/
 ├── 📊 well-architected-assessment.md      # 詳細 WA 審查
 ├── 🤖 automated-architecture-assessment.md # 自動架構分析  
 ├── 📈 continuous-improvement-report.md     # 持續改進Monitoring
-├── 👔 ../../reports-summaries/infrastructure/executive-summary.md                 # 高層執行摘要
-├── 🧪 ../../reports-summaries/../../infrastructure/mcp-integration-test-report.md      # Testing
+├── 👔 ../../../reports-summaries/infrastructure/executive-summary.md                 # 高層執行摘要
+├── 🧪 ../../../../../reports-summaries/../../../infrastructure/mcp-integration-test-report.md      # Testing
 └── 📋 assessment-summary/                  # 綜合評估摘要
 ```
 
@@ -78,13 +78,13 @@ Performance效率: 100/100 🟢 優秀
 
 ```bash
 # 查看最新評估結果
-cat ../../infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md
+cat ../../../infrastructure/docs/../../../reports-summaries/infrastructure/executive-summary.md
 
 # Testing
-cat ../../infrastructure/docs/../../reports-summaries/../../infrastructure/mcp-integration-test-report.md
+cat ../../../infrastructure/docs/../../../../../reports-summaries/../../../infrastructure/mcp-integration-test-report.md
 
 # 查看成本分析
-jq '.costAnalysis' ../../infrastructure/docs/architecture-assessment-summary.json
+jq '.costAnalysis' ../../../infrastructure/docs/architecture-assessment-summary.json
 ```
 
 ## 🚨 告警與閾值
@@ -125,7 +125,7 @@ jq '.costAnalysis' ../../infrastructure/docs/architecture-assessment-summary.jso
 npm run mcp:test
 
 # 查看關鍵Metrics
-cat ../../infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md | head -20
+cat ../../../infrastructure/docs/../../../reports-summaries/infrastructure/executive-summary.md | head -20
 ```
 
 ### 每週任務 (30 分鐘)
@@ -198,7 +198,7 @@ npm run assessment:complete
 ### 必讀文檔
 
 1. [MCP 整合重要性說明](mcp-integration-importance.md)
-2. [任務 22 執行摘要](../../reports-summaries/infrastructure/executive-summary.md)
+2. [任務 22 執行摘要](../../../reports-summaries/infrastructure/executive-summary.md)
 3. [完整 MCP 整合指南](../../../infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 
 ### Resources

@@ -31,13 +31,57 @@ Information Viewpoint描述系統如何儲存、操作、管理和分發資訊�
 
 #### Event-Driven Architecture圖
 
-![Event-Driven Architecture](../diagrams/event_driven_architecture.svg)
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```
 
 *完整的Event-Driven Architecture，展示Domain Event的產生、發布、處理和監聽流程，包括 Saga 模式的協調機制*
 
 #### Information Viewpoint詳細架構
 
-![Information Viewpoint詳細架構](../diagrams/viewpoints/information/information-detailed.svg)
+![Information Viewpoint詳細架構](../../../diagrams/generated/information/information-detailed.png)
 
 *Information Viewpoint的詳細Architecture Design，包括資料模型、資訊流和事件處理的完整實現*
 
@@ -106,7 +150,53 @@ Information Viewpoint描述系統如何儲存、操作、管理和分發資訊�
 - [Event Storming Big Picture](../../../diagrams/viewpoints/functional/event-storming-big-picture.puml)
 - [Event Storming Process Level](../../../diagrams/viewpoints/functional/event-storming-process-level.puml)
 - [Domain Event流程圖](../../../diagrams/viewpoints/functional/domain-events-flow.puml)
-- [Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)
+- ## Event-Driven Architecture圖
+
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```
 - [應用服務概覽圖](../../../diagrams/viewpoints/functional/application-services-overview.puml)
 
 ## Relationships with Other Viewpoints

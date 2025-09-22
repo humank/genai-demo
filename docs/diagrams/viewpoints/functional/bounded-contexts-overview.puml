@@ -1,79 +1,103 @@
 @startuml Bounded Contexts Overview
 !theme plain
+skinparam dpi 300
+skinparam backgroundColor white
+skinparam rectangle {
+    BackgroundColor lightblue
+    BorderColor darkblue
+    FontSize 12
+}
 
-title Bounded Contexts Overview\nGenerated: 2025-09-21 19:48:57\n\n
+title Bounded Contexts Overview\nGenerated: 2025-09-22\n\n
 
+' 核心業務上下文 (第一行)
 rectangle "Customer Context" as Customer {
-  [<b>Customer</b>\n增強的客戶聚合根，支援完整的消費者功能...] as Customer_1
-  [<b>Customer</b>\n...] as Customer_2
-  [<b>Customer</b>\n...] as Customer_3
-  [<b>Customer</b>\n...] as Customer_4
-}
-
-rectangle "Delivery Context" as Delivery {
-  [<b>Delivery</b>\n配送聚合根，管理訂單的配送流程和狀態...] as Delivery_1
-}
-
-rectangle "Inventory Context" as Inventory {
-  [<b>Inventory</b>\n庫存聚合根，管理產品庫存和預留...] as Inventory_1
-}
-
-rectangle "Notification Context" as Notification {
-  [<b>Notification</b>\n通知聚合根，管理系統通知的發送和狀態...] as Notification_1
-  [<b>NotificationTemplate</b>\n通知模板聚合根，管理通知模板的內容和格式...] as NotificationTemplate
-}
-
-rectangle "Observability Context" as Observability {
-  [<b>AnalyticsSession</b>\n分析會話聚合根...] as AnalyticsSession
-  [<b>ObservabilitySession</b>\n可觀測性會話聚合根...] as ObservabilitySession
+  [<b>Customer</b>\n客戶聚合根\n消費者功能管理] as Customer_1
 }
 
 rectangle "Order Context" as Order {
-  [<b>Order</b>\n訂單聚合根，封裝訂單相關的業務規則和行為...] as Order_1
-  [<b>OrderWorkflow</b>\n訂單工作流聚合根，管理訂單從創建到完成的整個生命週期...] as OrderWorkflow
-}
-
-rectangle "Payment Context" as Payment {
-  [<b>Payment</b>\n支付聚合根，管理支付流程和狀態...] as Payment_1
-  [<b>PaymentMethod</b>\n支付方式聚合根，管理客戶的支付方式配置...] as PaymentMethod
-}
-
-rectangle "Pricing Context" as Pricing {
-  [<b>PricingRule</b>\n定價規則聚合根，負責管理產品定價、折扣和佣金費率...] as PricingRule
+  [<b>Order</b>\n訂單聚合根\n訂單業務規則] as Order_1
+  [<b>OrderWorkflow</b>\n訂單工作流\n生命週期管理] as OrderWorkflow
 }
 
 rectangle "Product Context" as Product {
-  [<b>Product</b>\n產品聚合根，管理產品信息和庫存...] as Product_1
+  [<b>Product</b>\n產品聚合根\n商品信息管理] as Product_1
+}
+
+rectangle "Payment Context" as Payment {
+  [<b>Payment</b>\n支付聚合根\n支付流程管理] as Payment_1
+  [<b>PaymentMethod</b>\n支付方式\n支付配置管理] as PaymentMethod
+}
+
+' 業務支援上下文 (第二行)
+rectangle "ShoppingCart Context" as ShoppingCart {
+  [<b>ShoppingCart</b>\n購物車聚合根\n購物車狀態管理] as ShoppingCart_1
+}
+
+rectangle "Inventory Context" as Inventory {
+  [<b>Inventory</b>\n庫存聚合根\n庫存預留管理] as Inventory_1
+}
+
+rectangle "Pricing Context" as Pricing {
+  [<b>PricingRule</b>\n定價規則聚合根\n定價折扣管理] as PricingRule
 }
 
 rectangle "Promotion Context" as Promotion {
-  [<b>Promotion</b>\n促銷聚合根，管理各種促銷活動規則...] as Promotion_1
-  [<b>Voucher</b>\n超商優惠券聚合根，管理優惠券的完整生命週期...] as Voucher
+  [<b>Promotion</b>\n促銷聚合根\n促銷活動管理] as Promotion_1
+  [<b>Voucher</b>\n優惠券聚合根\n優惠券生命週期] as Voucher
+}
+
+' 平台服務上下文 (第三行)
+rectangle "Seller Context" as Seller {
+  [<b>Seller</b>\n賣家聚合根\n賣家資訊管理] as Seller_1
+}
+
+rectangle "Delivery Context" as Delivery {
+  [<b>Delivery</b>\n配送聚合根\n配送流程管理] as Delivery_1
 }
 
 rectangle "Review Context" as Review {
-  [<b>ProductReview</b>\n商品評價聚合根，管理消費者的商品評價和評分...] as ProductReview
+  [<b>ProductReview</b>\n商品評價聚合根\n評價評分管理] as ProductReview
 }
 
-rectangle "Seller Context" as Seller {
-  [<b>Seller</b>\n賣家聚合根，管理賣家基本資訊和狀態...] as Seller_1
+rectangle "Notification Context" as Notification {
+  [<b>Notification</b>\n通知聚合根\n通知發送管理] as Notification_1
+  [<b>NotificationTemplate</b>\n通知模板\n模板格式管理] as NotificationTemplate
 }
 
-rectangle "ShoppingCart Context" as ShoppingCart {
-  [<b>ShoppingCart</b>\n購物車聚合根，管理消費者的購物車狀態和商品項目...] as ShoppingCart_1
+' 監控分析上下文 (第四行)
+rectangle "Observability Context" as Observability {
+  [<b>AnalyticsSession</b>\n分析會話聚合根] as AnalyticsSession
+  [<b>ObservabilitySession</b>\n可觀測性會話聚合根] as ObservabilitySession
 }
 
-Customer ..> Delivery : integrates
-Delivery ..> Inventory : integrates
-Inventory ..> Notification : integrates
-Notification ..> Observability : integrates
-Observability ..> Order : integrates
-Order ..> Payment : integrates
-Payment ..> Pricing : integrates
-Pricing ..> Product : integrates
-Product ..> Promotion : integrates
-Promotion ..> Review : integrates
-Review ..> Seller : integrates
-Seller ..> ShoppingCart : integrates
+' 佈局安排 - 垂直分層
+Customer -[hidden]down- ShoppingCart
+Order -[hidden]down- Inventory  
+Product -[hidden]down- Pricing
+Payment -[hidden]down- Promotion
+
+ShoppingCart -[hidden]down- Seller
+Inventory -[hidden]down- Delivery
+Pricing -[hidden]down- Review
+Promotion -[hidden]down- Notification
+
+Seller -[hidden]down- Observability
+Delivery -[hidden]down- Observability
+Review -[hidden]down- Observability
+Notification -[hidden]down- Observability
+
+' 業務關係
+Customer --> Order : 下單
+Customer --> ShoppingCart : 購物車
+Order --> Product : 商品
+Order --> Payment : 支付
+Order --> Inventory : 庫存
+Product --> Pricing : 定價
+Product --> Promotion : 促銷
+Seller --> Product : 商品管理
+Order --> Delivery : 配送
+Product --> Review : 評價
+Customer --> Notification : 通知
 
 @enduml

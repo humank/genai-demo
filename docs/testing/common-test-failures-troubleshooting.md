@@ -687,7 +687,7 @@ If issues persist after following this troubleshooting guide:
 3. **Consult Documentation**:
    - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
    - [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-   - [Performance Standards](../performance-standards.md)
+   - [Performance Standards](../../.kiro/steering/performance-standards.md)
 
 4. **Team Escalation**:
    - Reach out to team members familiar with test infrastructure

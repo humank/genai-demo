@@ -37,7 +37,7 @@ Consumer, Customer, Inventory, Logistics, Notification, Order, Payment, Pricing,
 ### System Overview Diagrams
 1. **system-overview.mmd** - Complete system architecture overview showing 7-layer architecture with external systems, API gateway, application services, domain layer, event-driven architecture, infrastructure, observability platform, and deployment platform
 
-![系統概覽](../diagrams/viewpoints/functional/system-overview.svg)
+![系統概覽](../../../../diagrams/viewpoints/functional/system-overview.svg)
 
 ### Domain Model Diagrams (from DDD Code)
 1. **domain-model-overview.puml** - Complete domain model overview with all aggregates, entities, and value objects

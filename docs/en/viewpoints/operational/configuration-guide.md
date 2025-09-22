@@ -531,4 +531,4 @@ echo "配置驗證完成！"
 
 - [Observability系統概覽](observability-overview.md)
 - [生產Environment測試指南](production-observability-testing-guide.md)
-- [故障排除指南](docs/troubleshooting/observability-troubleshooting.md)
+- [故障排除指南](../../troubleshooting/observability-troubleshooting.md)

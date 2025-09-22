@@ -29,7 +29,7 @@ Operational Viewpoint關注系統的日常運營和維護，包括Monitoring、L
 
 #### Observability架構圖
 
-![Observability架構](../diagrams/observability_architecture.svg)
+![Observability架構](../../../diagrams/observability_architecture.svg)
 
 *完整的Observability架構，包括Metrics收集、LoggingAggregate、分散式Tracing、視覺化Dashboard、Alerting系統和自動化修復機制*
 

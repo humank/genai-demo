@@ -40,7 +40,7 @@ genai-demo/
 │       └── angular.json          # Angular 配置
 │
 ├── 🏗️ 基礎設施 (已完成整合)
-│   ├── ../../infrastructure/           # 統一的 AWS CDK 基礎設施 (TypeScript)
+│   ├── ../../../../../../infrastructure/           # 統一的 AWS CDK 基礎設施 (TypeScript)
 │   │   ├── bin/                  # CDK 應用入口點
 │   │   │   └── infrastructure.ts # 主要 CDK 應用 (6 個協調的Stack)
 │   │   ├── src/                  # CDK 源碼
@@ -96,7 +96,7 @@ genai-demo/
 └── 📄 項目文件
     ├── README.md                 # 項目說明
     ├── CHANGELOG.md              # 變更Logging
-    ├── ../../LICENSE                   # 授權條款
+    ├── ../../../../../../LICENSE                   # 授權條款
     └── .gitignore                # Git 忽略規則
 ```
 
@@ -124,7 +124,7 @@ genai-demo/
 - **構建**: npm/yarn + Angular CLI
 - **用戶**: 終端消費者
 
-### **../../infrastructure/** - 統一基礎設施 ✅
+### **../../../../../../infrastructure/** - 統一基礎設施 ✅
 
 - **技術棧**: AWS CDK v2 + TypeScript 5.6+
 - **架構**: 6 個協調的Stack (Network, Security, Alerting, Core, Observability, Analytics)
@@ -147,7 +147,7 @@ genai-demo/
 ### **基礎設施架構**
 
 ```
-統一 CDK 應用 (../../infrastructure/)
+統一 CDK 應用 (../../../../../../infrastructure/)
 ├── NetworkStack        # VPC、子網、安全組
 ├── SecurityStack       # KMS 密鑰、IAM 角色
 ├── AlertingStack       # SNS 主題、通知

@@ -69,9 +69,9 @@ export CLOUDWATCH_REGION=us-east-1
 ### 📚 前端後端整合文檔
 
 - **[配置指南](configuration-guide.md)** - 環境差異化配置和 MSK 主題設定
-- **[故障排除指南](docs/troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
+- **[故障排除指南](../../troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
 - **[部署指南](../deployment/observability-deployment.md)** - 完整的部署流程和驗證
-- **[API 文檔](docs/api/observability-api.md)** - 可觀測性 API 端點詳細說明
+- **[API 文檔](../../api/observability-api.md)** - 可觀測性 API 端點詳細說明
 
 ### 📚 實現文檔
 
@@ -194,5 +194,5 @@ export CLOUDWATCH_REGION=us-east-1
 
 - [配置指南](configuration-guide.md) - 詳細的配置說明
 - [生產環境測試指南](production-observability-testing-guide.md) - 生產環境測試策略
-- [故障排除指南](docs/troubleshooting/observability-troubleshooting.md) - 問題診斷和解決
+- [故障排除指南](../../troubleshooting/observability-troubleshooting.md) - 問題診斷和解決
 - [部署指南](../deployment/observability-deployment.md) - 部署流程和驗證

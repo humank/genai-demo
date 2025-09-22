@@ -505,7 +505,29 @@ public class SellerProfile {
 - [Bounded Context概覽圖](../../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
 - [Hexagonal Architecture概覽圖](../../../diagrams/viewpoints/functional/hexagonal-architecture-overview.puml)
 - [應用服務概覽圖](../../../diagrams/viewpoints/functional/application-services-overview.puml)
-- [Hexagonal Architecture圖](../../../diagrams/hexagonal_architecture.mmd)
+- ## Hexagonal Architecture圖
+
+```mermaid
+graph TB
+    subgraph "Core Domain"
+        Domain[Domain Logic]
+        Ports[Ports/Interfaces]
+    end
+    
+    subgraph "Adapters"
+        WebAdapter[Web Adapter]
+        DatabaseAdapter[Database Adapter]
+        MessageAdapter[Message Adapter]
+        ExternalAdapter[External Service Adapter]
+    end
+    
+    WebAdapter --> Ports
+    Ports --> Domain
+    Domain --> Ports
+    Ports --> DatabaseAdapter
+    Ports --> MessageAdapter
+    Ports --> ExternalAdapter
+```
 
 ## Relationships with Other Viewpoints
 

@@ -223,9 +223,9 @@ class MyFeatureIntegrationTest extends BaseIntegrationTest {
 
 ## Related Documentation
 
-- **[Performance Standards](../performance-standards.md)** - Overall performance guidelines
-- **[Development Standards](../development-standards.md)** - General development practices
-- **[Security Standards](../security-standards.md)** - Security testing requirements
+- **[Performance Standards](../../.kiro/steering/performance-standards.md)** - Overall performance guidelines
+- **[Development Standards](../../.kiro/steering/development-standards.md)** - General development practices
+- **[Security Standards](../../.kiro/steering/security-standards.md)** - Security testing requirements
 - **[Test Optimization Guidelines](test-optimization-guidelines.md)** - Existing optimization guide
 
 ## Contributing to Documentation

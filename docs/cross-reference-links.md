@@ -56,7 +56,53 @@
 - **[架構元素](viewpoints/information/architecture-elements.md)** ↔ **[並發視點總覽](viewpoints/concurrency/README.md)**
 
 #### 相關圖表
-- **[事件驅動架構圖](diagrams/event_driven_architecture.mmd)** - 事件驅動模式
+- **## 事件驅動架構圖
+
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```** - 事件驅動模式
 - **[CQRS 模式圖](diagrams/plantuml/cqrs-pattern-diagram.svg)** - 命令查詢責任分離
 - **[Event Storming 詳細分析](diagrams/plantuml/event-storming/)** - Big Picture、Process Level、Design Level
 
@@ -73,7 +119,53 @@
 - **非同步處理** ↔ **[可觀測性概覽](viewpoints/operational/observability-overview.md)**
 
 #### 相關圖表
-- **[事件驅動架構圖](diagrams/event_driven_architecture.mmd)** - 並發事件處理
+- **## 事件驅動架構圖
+
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```** - 並發事件處理
 - **[系統架構概覽圖](diagrams/mermaid/architecture-overview.md)** - 並發處理層
 
 ### 開發視點 (Development Viewpoint)
@@ -108,8 +200,65 @@
 
 #### 相關圖表
 - **[部署架構圖](diagrams/plantuml/deployment-diagram.svg)** - 完整部署架構
-- **[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)** - 雲端基礎設施
-- **[多環境架構圖](diagrams/multi_environment.mmd)** - 環境管理策略
+- **## AWS 基礎設施圖
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```** - 雲端基礎設施
+- **## 多環境架構圖
+
+```mermaid
+graph TB
+    subgraph DEV ["Development Environment"]
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database)]
+        MEMORY_EVENTS[In-Memory Events]
+    end
+    
+    subgraph PROD ["Production Environment"]
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL)]
+        MSK_EVENTS[MSK Events]
+    end
+    
+    subgraph CONFIG ["Configuration"]
+        BASE_CONFIG[application.yml]
+        DEV_CONFIG[application-dev.yml]
+        PROD_CONFIG[application-production.yml]
+    end
+    
+    BASE_CONFIG --> DEV_CONFIG
+    BASE_CONFIG --> PROD_CONFIG
+    
+    DEV_CONFIG --> DEV_APP
+    PROD_CONFIG --> PROD_APP
+    
+    DEV_APP --> H2_DB
+    DEV_APP --> MEMORY_EVENTS
+    
+    PROD_APP --> RDS_DB
+    PROD_APP --> MSK_EVENTS
+    
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class DEV_APP,H2_DB,MEMORY_EVENTS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS prod
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+```** - 環境管理策略
 
 ### 運營視點 (Operational Viewpoint)
 
@@ -126,7 +275,49 @@
 - **[配置指南](viewpoints/operational/configuration-guide.md)** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
 
 #### 相關圖表
-- **[可觀測性架構圖](diagrams/observability_architecture.mmd)** - 監控系統架構
+- **## 可觀測性架構圖
+
+```mermaid
+graph TB
+    subgraph APP ["Spring Boot Application"]
+        ACTUATOR[Spring Boot Actuator]
+        OTEL[OpenTelemetry Agent]
+        LOGBACK[Logback JSON Logging]
+        MICROMETER[Micrometer Metrics]
+    end
+    
+    subgraph K8S ["Kubernetes Cluster"]
+        FLUENT[Fluent Bit DaemonSet]
+        PROMETHEUS[Prometheus]
+        GRAFANA[Grafana]
+    end
+    
+    subgraph AWS ["AWS Services"]
+        CW_LOGS[CloudWatch Logs]
+        CW_METRICS[CloudWatch Metrics]
+        XRAY[AWS X-Ray]
+        OPENSEARCH[OpenSearch Service]
+    end
+    
+    ACTUATOR --> PROMETHEUS
+    LOGBACK --> FLUENT
+    OTEL --> XRAY
+    MICROMETER --> PROMETHEUS
+    
+    FLUENT --> CW_LOGS
+    PROMETHEUS --> CW_METRICS
+    GRAFANA --> PROMETHEUS
+    
+    CW_LOGS --> OPENSEARCH
+    
+    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
+    class FLUENT,PROMETHEUS,GRAFANA kubernetes
+    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
+```** - 監控系統架構
 - **[可觀測性詳細圖](diagrams/plantuml/observability-diagram.svg)** - 監控組件詳細設計
 
 ## 🎯 觀點間交叉引用
@@ -160,7 +351,53 @@
 
 #### 相關圖表
 - **[系統性能架構](diagrams/mermaid/architecture-overview.md)** - 性能關鍵路徑
-- **[事件驅動性能](diagrams/event_driven_architecture.mmd)** - 高性能事件處理
+- **## 事件驅動性能
+
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```** - 高性能事件處理
 
 ### 可用性觀點 (Availability Perspective)
 
@@ -173,8 +410,65 @@
 - **[運營視點可用性考量](viewpoints/operational/README.md)** - 故障檢測和自動恢復
 
 #### 相關圖表
-- **[高可用架構](diagrams/multi_environment.mmd)** - 多環境高可用設計
-- **[災難恢復架構](diagrams/aws_infrastructure.mmd)** - 災難恢復策略
+- **## 高可用架構
+
+```mermaid
+graph TB
+    subgraph DEV ["Development Environment"]
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database)]
+        MEMORY_EVENTS[In-Memory Events]
+    end
+    
+    subgraph PROD ["Production Environment"]
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL)]
+        MSK_EVENTS[MSK Events]
+    end
+    
+    subgraph CONFIG ["Configuration"]
+        BASE_CONFIG[application.yml]
+        DEV_CONFIG[application-dev.yml]
+        PROD_CONFIG[application-production.yml]
+    end
+    
+    BASE_CONFIG --> DEV_CONFIG
+    BASE_CONFIG --> PROD_CONFIG
+    
+    DEV_CONFIG --> DEV_APP
+    PROD_CONFIG --> PROD_APP
+    
+    DEV_APP --> H2_DB
+    DEV_APP --> MEMORY_EVENTS
+    
+    PROD_APP --> RDS_DB
+    PROD_APP --> MSK_EVENTS
+    
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class DEV_APP,H2_DB,MEMORY_EVENTS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS prod
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+```** - 多環境高可用設計
+- **## 災難恢復架構
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```** - 災難恢復策略
 
 ### 演進性觀點 (Evolution Perspective)
 
@@ -216,7 +510,23 @@
 - **[部署視點位置考量](viewpoints/deployment/README.md)** - 地理分佈部署策略
 
 #### 相關圖表
-- **[地理分佈圖](diagrams/aws_infrastructure.mmd)** - 多區域部署架構
+- **## 地理分佈圖
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```** - 多區域部署架構
 
 ### 成本觀點 (Cost Perspective)
 
@@ -228,7 +538,48 @@
 - **[運營視點成本考量](viewpoints/operational/README.md)** - 運營成本監控
 
 #### 相關圖表
-- **[成本優化圖](diagrams/multi_environment.mmd)** - 成本效益架構設計
+- **## 成本優化圖
+
+```mermaid
+graph TB
+    subgraph DEV ["Development Environment"]
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database)]
+        MEMORY_EVENTS[In-Memory Events]
+    end
+    
+    subgraph PROD ["Production Environment"]
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL)]
+        MSK_EVENTS[MSK Events]
+    end
+    
+    subgraph CONFIG ["Configuration"]
+        BASE_CONFIG[application.yml]
+        DEV_CONFIG[application-dev.yml]
+        PROD_CONFIG[application-production.yml]
+    end
+    
+    BASE_CONFIG --> DEV_CONFIG
+    BASE_CONFIG --> PROD_CONFIG
+    
+    DEV_CONFIG --> DEV_APP
+    PROD_CONFIG --> PROD_APP
+    
+    DEV_APP --> H2_DB
+    DEV_APP --> MEMORY_EVENTS
+    
+    PROD_APP --> RDS_DB
+    PROD_APP --> MSK_EVENTS
+    
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class DEV_APP,H2_DB,MEMORY_EVENTS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS prod
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+```** - 成本效益架構設計
 
 ## 🔧 專業領域交叉引用
 
@@ -286,7 +637,53 @@
 - **[事件溯源圖](diagrams/plantuml/event-sourcing-diagram.svg)**
 
 #### 並發視點相關圖表
-- **[事件驅動架構圖](diagrams/event_driven_architecture.mmd)**
+- **## 事件驅動架構圖
+
+```mermaid
+graph LR
+    subgraph 領域事件 ["領域事件"]
+        OCE[OrderCreatedEvent]
+        OIAE[OrderItemAddedEvent]
+        PRE[PaymentRequestedEvent]
+        PFE[PaymentFailedEvent]
+    end
+    
+    subgraph 事件處理 ["事件處理"]
+        EP[DomainEventPublisherService]
+        EB[DomainEventBus]
+        OS[OrderProcessingSaga]
+    end
+    
+    subgraph 事件監聽器 ["事件監聽器"]
+        PS[PaymentService]
+        LS[LogisticsService]
+    end
+    
+    AGG[Order<br>聚合根] -->|產生| OCE
+    AGG -->|產生| OIAE
+    OCE -->|發布至| EP
+    OIAE -->|發布至| EP
+    EP -->|發送至| EB
+    EB -->|分發| OS
+    EB -->|分發| PS
+    EB -->|分發| LS
+    OS -->|協調| PS
+    OS -->|協調| LS
+    PS -->|產生| PRE
+    PS -->|產生| PFE
+    PRE -->|發布至| EP
+    PFE -->|發布至| EP
+    
+    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
+    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
+    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
+    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
+    
+    class OCE,OIAE,PRE,PFE event
+    class EP,EB publisher
+    class OS,PS,LS handler
+    class AGG aggregateRoot
+```**
 - **[並發處理圖](diagrams/mermaid/architecture-overview.md)**
 
 #### 開發視點相關圖表
@@ -295,11 +692,110 @@
 
 #### 部署視點相關圖表
 - **[部署架構圖](diagrams/plantuml/deployment-diagram.svg)**
-- **[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)**
-- **[多環境架構圖](diagrams/multi_environment.mmd)**
+- **## AWS 基礎設施圖
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```**
+- **## 多環境架構圖
+
+```mermaid
+graph TB
+    subgraph DEV ["Development Environment"]
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database)]
+        MEMORY_EVENTS[In-Memory Events]
+    end
+    
+    subgraph PROD ["Production Environment"]
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL)]
+        MSK_EVENTS[MSK Events]
+    end
+    
+    subgraph CONFIG ["Configuration"]
+        BASE_CONFIG[application.yml]
+        DEV_CONFIG[application-dev.yml]
+        PROD_CONFIG[application-production.yml]
+    end
+    
+    BASE_CONFIG --> DEV_CONFIG
+    BASE_CONFIG --> PROD_CONFIG
+    
+    DEV_CONFIG --> DEV_APP
+    PROD_CONFIG --> PROD_APP
+    
+    DEV_APP --> H2_DB
+    DEV_APP --> MEMORY_EVENTS
+    
+    PROD_APP --> RDS_DB
+    PROD_APP --> MSK_EVENTS
+    
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class DEV_APP,H2_DB,MEMORY_EVENTS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS prod
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+```**
 
 #### 運營視點相關圖表
-- **[可觀測性架構圖](diagrams/observability_architecture.mmd)**
+- **## 可觀測性架構圖
+
+```mermaid
+graph TB
+    subgraph APP ["Spring Boot Application"]
+        ACTUATOR[Spring Boot Actuator]
+        OTEL[OpenTelemetry Agent]
+        LOGBACK[Logback JSON Logging]
+        MICROMETER[Micrometer Metrics]
+    end
+    
+    subgraph K8S ["Kubernetes Cluster"]
+        FLUENT[Fluent Bit DaemonSet]
+        PROMETHEUS[Prometheus]
+        GRAFANA[Grafana]
+    end
+    
+    subgraph AWS ["AWS Services"]
+        CW_LOGS[CloudWatch Logs]
+        CW_METRICS[CloudWatch Metrics]
+        XRAY[AWS X-Ray]
+        OPENSEARCH[OpenSearch Service]
+    end
+    
+    ACTUATOR --> PROMETHEUS
+    LOGBACK --> FLUENT
+    OTEL --> XRAY
+    MICROMETER --> PROMETHEUS
+    
+    FLUENT --> CW_LOGS
+    PROMETHEUS --> CW_METRICS
+    GRAFANA --> PROMETHEUS
+    
+    CW_LOGS --> OPENSEARCH
+    
+    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
+    class FLUENT,PROMETHEUS,GRAFANA kubernetes
+    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
+```**
 - **[可觀測性詳細圖](diagrams/plantuml/observability-diagram.svg)**
 
 ## 🎯 使用建議
