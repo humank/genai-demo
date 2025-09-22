@@ -1,95 +1,73 @@
-# 可觀測性系統文檔
+# 可觀測性指南
 
-## 概覽
+## 概述
 
-本專案實現了完整的企業級可觀測性系統，包含分散式追蹤、結構化日誌、業務指標收集和成本優化分析。
+本文檔提供完整的可觀測性實作指南，包含監控、日誌、追蹤和告警的配置與最佳實踐。
 
-## 核心組件
+## 監控架構
 
-### 🔍 分散式追蹤
+### 核心組件
+- **Prometheus**: 指標收集和儲存
+- **Grafana**: 視覺化儀表板
+- **AWS X-Ray**: 分散式追蹤
+- **CloudWatch**: AWS 原生監控
 
-- **AWS X-Ray**: 跨服務請求追蹤
-- **Jaeger**: 本地開發環境追蹤
-- **關聯 ID**: 統一的請求追蹤標識
+### 應用監控
+- **健康檢查**: `/actuator/health`
+- **指標端點**: `/actuator/metrics`
+- **Prometheus 端點**: `/actuator/prometheus`
 
-### 📝 結構化日誌
+## 日誌管理
 
-- **Logback**: 統一日誌格式
-- **PII 遮罩**: 敏感資料保護
-- **CloudWatch**: 日誌聚合和分析
+### 結構化日誌
+- **格式**: JSON 結構化日誌
+- **等級**: ERROR, WARN, INFO, DEBUG, TRACE
+- **上下文**: 追蹤 ID、使用者 ID、請求 ID
 
-### 📊 業務指標
+### 日誌聚合
+- **本地開發**: 控制台輸出
+- **測試環境**: CloudWatch Logs
+- **生產環境**: ELK Stack 或 CloudWatch Insights
 
-- **Micrometer**: 指標收集框架
-- **CloudWatch**: 自定義業務指標
-- **Prometheus**: 指標暴露端點
+## 分散式追蹤
 
-### 💰 成本優化
+### AWS X-Ray 整合
+- **自動追蹤**: HTTP 請求、資料庫查詢
+- **自定義追蹤**: 業務邏輯追蹤點
+- **效能分析**: 請求延遲和瓶頸識別
 
-- **資源右調**: 自動化資源分析
-- **成本追蹤**: 即時成本監控
-- **優化建議**: 智能成本建議
+## 告警配置
 
-## 快速開始
+### 關鍵指標告警
+- **回應時間**: 95th percentile > 2s
+- **錯誤率**: > 1%
+- **可用性**: < 99.9%
+- **資源使用**: CPU > 80%, Memory > 85%
 
-### 啟用可觀測性功能
+### 告警通道
+- **即時通知**: Slack/Teams
+- **事件管理**: PagerDuty
+- **郵件通知**: 非緊急告警
 
-```bash
-# 啟動應用 (自動啟用可觀測性)
-./gradlew bootRun
+## 儀表板
 
-# 檢查健康狀態
-curl http://localhost:8080/actuator/health
+### 技術儀表板
+- **應用效能**: 回應時間、吞吐量、錯誤率
+- **基礎設施**: CPU、記憶體、網路、磁碟
+- **資料庫**: 連接池、查詢效能、鎖等待
 
-# 查看應用指標
-curl http://localhost:8080/actuator/metrics
+### 業務儀表板
+- **關鍵指標**: 訂單量、使用者活躍度、轉換率
+- **業務流程**: 註冊漏斗、購買流程、客服指標
 
-# 獲取成本優化建議
-curl http://localhost:8080/../api/cost-optimization/recommendations
-```
+## 相關文檔
 
-### 配置環境變數
+- [部署指南](../deployment/README.md)
+- [監控配置](../viewpoints/development/tools-and-environment/technology-stack.md)
+- [基礎設施配置](../deployment/README.md)
 
-```bash
-# AWS X-Ray 配置
-export AWS_XRAY_TRACING_NAME=genai-demo
-export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR
+---
 
-# CloudWatch 配置
-export CLOUDWATCH_NAMESPACE=GenAI/Demo
-export CLOUDWATCH_REGION=us-east-1
-```
-
-## 詳細文檔
-
-### 🎯 生產環境指南
-
-- **[生產環境可觀測性測試指南](../en/observability/production-observability-testing-guide.md)** - 完整的生產環境測試策略和最佳實踐 (67頁)
-
-### 📚 前端後端整合文檔
-
-- **[配置指南](configuration-guide.md)** - 環境差異化配置和 MSK 主題設定
-- **[故障排除指南](../troubleshooting/observability-troubleshooting.md)** - 常見問題診斷和解決方案
-- **[部署指南](../deployment/observability-deployment.md)** - 完整的部署流程和驗證
-- **API 文檔** - 可觀測性 API 端點詳細說明
-
-### 📚 實現文檔
-
-- \1
-- \1
-- \1
-
-### 🔧 測試策略
-
-- **開發階段**: Java 集成測試和單元測試
-- **CI/CD 階段**: 腳本化驗證和 SLI/SLO 檢查
-- **生產階段**: Synthetic Monitoring 和 Chaos Engineering
-- **持續改進**: 自動化報告和手動分析
-
-### 🌟 業界最佳實踐
-
-- Bash/Python 腳本測試
-- K6 負載測試
-- Terraform 基礎設施測試
-- DataDog Synthetic Tests
-- Chaos Monkey 韌性測試
+**維護者**: DevOps 團隊  
+**最後更新**: 2025-09-23  
+**版本**: 1.0

@@ -19,7 +19,7 @@
    **連結**: `編碼標準`
 
 4. **文件**: `/Users/yikaikao/git/genai-demo/development-viewpoint-reorganization-plan.md`
-   **連結**: `[測試指南](docs/docs/viewpoints/development/testing/tdd-bdd-testing.md)`
+   **連結**: `[測試指南](../../docs/viewpoints/development/testing/tdd-bdd-testing.md)`
 
 5. **文件**: `/Users/yikaikao/git/genai-demo/development-viewpoint-reorganization-plan.md`
    **連結**: `六角架構`

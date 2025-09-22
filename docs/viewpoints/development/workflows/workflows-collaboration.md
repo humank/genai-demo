@@ -4,20 +4,26 @@
 
 本文檔定義了完整的開發工作流程和團隊協作指南，涵蓋從需求分析到產品發布的整個軟體開發生命週期。我們採用敏捷開發方法論，結合 AI-DLC (AI-Driven Development Lifecycle) 和現代 DevOps 實踐，確保高效、高品質的軟體交付。
 
-## 🔄 核心開發工作流程
+## 核心開發原則
 
-### 開發生命週期概覽
-
-我們的開發流程基於以下核心原則：
+### 開發理念
 - **測試驅動開發 (TDD)**: 先寫測試，再實現功能
 - **行為驅動開發 (BDD)**: 使用業務語言描述系統行為
 - **持續整合/持續部署 (CI/CD)**: 自動化建置、測試和部署
 - **程式碼審查**: 確保程式碼品質和知識分享
 - **增量交付**: 小步快跑，頻繁交付價值
 
-### 標準開發流程
+### 品質標準
+- **程式碼覆蓋率**: 單元測試 > 80%，整合測試 > 15%
+- **效能要求**: API 回應時間 < 2秒，資料庫查詢 < 100ms
+- **安全標準**: 無高風險漏洞，所有輸入驗證，輸出編碼
+- **可維護性**: 循環複雜度 < 10，方法長度 < 50行
 
-#### 1. 需求分析階段
+## 標準開發工作流程
+
+### 階段 1: 需求分析和設計
+
+#### 需求收集流程
 ```mermaid
 graph LR
     A[產品需求] --> B[使用者故事]
@@ -27,13 +33,56 @@ graph LR
 ```
 
 **步驟詳解**:
-1. **產品需求收集**: 與產品經理和利害關係人確認需求
-2. **使用者故事編寫**: 使用 "As a... I want... So that..." 格式
-3. **驗收條件定義**: 明確的 Done Definition
-4. **BDD 場景設計**: 使用 Gherkin 語法編寫可執行規格
-5. **技術設計評估**: 架構影響分析和技術方案設計
 
-#### 2. 開發實現階段
+1. **產品需求收集**
+   - 與產品經理和利害關係人確認需求
+   - 分析業務價值和優先級
+   - 識別技術風險和依賴關係
+
+2. **使用者故事編寫**
+   ```gherkin
+   # 使用者故事範本
+   As a [角色]
+   I want [功能]
+   So that [價值]
+   
+   # 範例
+   As a customer
+   I want to register for an account
+   So that I can access personalized services
+   ```
+
+3. **驗收條件定義**
+   - 明確的 Done Definition
+   - 可測試的成功標準
+   - 效能和安全要求
+
+4. **BDD 場景設計**
+   ```gherkin
+   Feature: Customer Registration
+     Scenario: Successful registration
+       Given I am a new customer
+       When I submit valid registration information
+       Then I should receive a confirmation email
+       And my account should be created
+   ```
+
+5. **技術設計評估**
+   - 架構影響分析
+   - 技術方案設計
+   - 資料庫設計變更
+   - API 介面設計
+
+#### 設計審查檢查清單
+- [ ] 業務需求完整且明確
+- [ ] 技術方案可行且最佳化
+- [ ] 安全和效能考量已納入
+- [ ] 測試策略已定義
+- [ ] 部署計劃已制定
+
+### 階段 2: 開發實現
+
+#### TDD 開發循環
 ```mermaid
 graph TD
     A[建立功能分支] --> B[編寫 BDD 測試]
@@ -45,58 +94,464 @@ graph TD
     G --> H[合併主分支]
 ```
 
-**TDD 循環實踐**:
-1. **Red**: 編寫失敗的測試
+**詳細實踐步驟**:
+
+1. **建立功能分支**
    ```bash
-   ./gradlew test  # 確認測試失敗
+   git checkout main
+   git pull origin main
+   git checkout -b feature/customer-registration
    ```
 
-2. **Green**: 實現最小可行功能
-   ```java
-   // 實現剛好讓測試通過的程式碼
-   public class CustomerService {
-       public Customer createCustomer(CreateCustomerCommand command) {
-           // 最簡實現
-           return new Customer(command.getName(), command.getEmail());
-       }
-   }
+2. **編寫 BDD 測試**
+   ```gherkin
+   # src/test/resources/features/customer-registration.feature
+   Feature: Customer Registration
+     Scenario: Valid customer registration
+       Given I have valid customer information
+       When I submit the registration form
+       Then I should see a success message
+       And I should receive a confirmation email
    ```
 
-3. **Refactor**: 重構和優化
+3. **Red-Green-Refactor 循環**
    ```bash
-   ./gradlew test  # 確保重構後測試仍然通過
-   ./gradlew checkstyleMain  # 檢查程式碼風格
+   # Red: 確認測試失敗
+   ./gradlew cucumber
+   
+   # Green: 實現功能
+   # 編寫最小可行程式碼
+   
+   # Refactor: 重構優化
+   ./gradlew test checkstyleMain
    ```
 
-#### 3. 品質保證階段
-```mermaid
-graph LR
-    A[單元測試] --> B[整合測試]
-    B --> C[BDD 測試]
-    C --> D[效能測試]
-    D --> E[安全掃描]
-    E --> F[程式碼審查]
+4. **程式碼品質檢查**
+   ```bash
+   # 執行所有品質檢查
+   ./gradlew clean build
+   ./gradlew jacocoTestReport
+   ./gradlew spotbugsMain
+   ```
+
+#### 開發最佳實踐
+
+**程式碼組織**:
+```java
+// ✅ 正確：清晰的分層架構
+@RestController
+@RequestMapping("/../api/v1/customers")
+public class CustomerController {
+    
+    private final CustomerApplicationService customerService;
+    
+    @PostMapping
+    public ResponseEntity<CustomerResponse> createCustomer(
+            @Valid @RequestBody CreateCustomerRequest request) {
+        
+        CreateCustomerCommand command = CreateCustomerCommand.from(request);
+        Customer customer = customerService.createCustomer(command);
+        CustomerResponse response = CustomerResponse.from(customer);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+}
+
+@Service
+@Transactional
+public class CustomerApplicationService {
+    
+    private final CustomerRepository customerRepository;
+    private final DomainEventPublisher eventPublisher;
+    
+    public Customer createCustomer(CreateCustomerCommand command) {
+        // 1. 驗證業務規則
+        validateCustomerCreation(command);
+        
+        // 2. 建立聚合根
+        Customer customer = Customer.create(
+            command.getName(),
+            command.getEmail(),
+            command.getPassword()
+        );
+        
+        // 3. 持久化
+        Customer savedCustomer = customerRepository.save(customer);
+        
+        // 4. 發布領域事件
+        eventPublisher.publishEventsFromAggregate(savedCustomer);
+        
+        return savedCustomer;
+    }
+}
 ```
 
 **測試策略**:
-- **單元測試**: 覆蓋率 > 80%
-- **整合測試**: 驗證組件間互動
-- **BDD 測試**: 驗證業務需求
-- **效能測試**: 確保效能指標
-- **安全掃描**: 識別安全漏洞
+```java
+// 單元測試
+@ExtendWith(MockitoExtension.class)
+class CustomerApplicationServiceTest {
+    
+    @Test
+    void should_create_customer_when_valid_command_provided() {
+        // Given
+        CreateCustomerCommand command = new CreateCustomerCommand(
+            "John Doe", "john@example.com", "password123"
+        );
+        
+        // When
+        Customer result = customerService.createCustomer(command);
+        
+        // Then
+        assertThat(result.getName()).isEqualTo("John Doe");
+        verify(customerRepository).save(any(Customer.class));
+    }
+}
 
-#### 4. 部署發布階段
+// 整合測試
+@SpringBootTest
+@Transactional
+class CustomerIntegrationTest {
+    
+    @Test
+    void should_create_customer_end_to_end() {
+        // Given
+        CreateCustomerRequest request = new CreateCustomerRequest(
+            "John Doe", "john@example.com", "password123"
+        );
+        
+        // When
+        ResponseEntity<CustomerResponse> response = restTemplate.postForEntity(
+            "/../api/v1/customers", request, CustomerResponse.class
+        );
+        
+        // Then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(customerRepository.findByEmail("john@example.com")).isPresent();
+    }
+}
+```
+
+### 階段 3: 品質保證
+
+#### 測試金字塔實踐
+```mermaid
+graph TD
+    A[E2E Tests 5%] --> B[Integration Tests 15%]
+    B --> C[Unit Tests 80%]
+```
+
+**測試執行策略**:
+```bash
+# 日常開發 - 快速回饋
+./gradlew unitTest                    # < 2 分鐘
+
+# 提交前 - 完整驗證
+./gradlew preCommitTest              # < 5 分鐘
+
+# 發布前 - 全面測試
+./gradlew fullTest                   # < 30 分鐘
+```
+
+**品質門檻**:
+- 所有測試必須通過
+- 程式碼覆蓋率 > 80%
+- 無高風險安全漏洞
+- 效能測試通過
+- 程式碼審查通過
+
+#### 自動化品質檢查
+```yaml
+# .github/workflows/quality-check.yml
+name: Quality Check
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          
+      - name: Run Tests
+        run: ./gradlew test jacocoTestReport
+        
+      - name: Security Scan
+        run: ./gradlew dependencyCheckAnalyze
+        
+      - name: Code Quality
+        run: ./gradlew sonarqube
+```
+
+### 階段 4: 程式碼審查
+
+#### 審查檢查清單
+
+**功能性審查**:
+- [ ] 程式碼正確實現需求
+- [ ] 邊界條件處理完善
+- [ ] 錯誤處理適當
+- [ ] 效能考量合理
+
+**程式碼品質審查**:
+- [ ] 程式碼可讀性良好
+- [ ] 命名清晰有意義
+- [ ] 結構組織合理
+- [ ] 遵循編碼標準
+
+**安全性審查**:
+- [ ] 輸入驗證完整
+- [ ] 輸出編碼正確
+- [ ] 認證授權適當
+- [ ] 敏感資料保護
+
+**測試審查**:
+- [ ] 測試覆蓋充分
+- [ ] 測試案例有意義
+- [ ] 測試資料適當
+- [ ] 測試可維護
+
+#### 審查流程
+```mermaid
+graph LR
+    A[提交 PR] --> B[自動檢查]
+    B --> C[同儕審查]
+    C --> D[修正問題]
+    D --> E[再次審查]
+    E --> F[合併主分支]
+```
+
+**審查時間要求**:
+- 小型 PR (< 200 行): 24 小時內
+- 中型 PR (200-500 行): 48 小時內
+- 大型 PR (> 500 行): 72 小時內
+
+### 階段 5: 部署發布
+
+#### 環境管理策略
 ```mermaid
 graph LR
     A[開發環境] --> B[測試環境]
     B --> C[預生產環境]
     C --> D[生產環境]
-    D --> E[監控驗證]
 ```
 
-## 🚀 發布管理流程
+**環境配置**:
+- **開發環境**: 本地開發，H2 資料庫，模擬外部服務
+- **測試環境**: 自動化測試，PostgreSQL，真實外部服務
+- **預生產環境**: 生產環境鏡像，完整資料集，效能測試
+- **生產環境**: 正式服務，高可用性，監控告警
 
-### 版本控制策略
+#### 部署流程
+```bash
+# 1. 建置和打包
+./gradlew clean build
+docker build -t genai-demo:latest .
+
+# 2. 部署到測試環境
+kubectl apply -f k8s/test/
+kubectl rollout status deployment/genai-demo
+
+# 3. 執行煙霧測試
+./scripts/smoke-test.sh test
+
+# 4. 部署到生產環境
+kubectl apply -f k8s/prod/
+kubectl rollout status deployment/genai-demo
+
+# 5. 驗證部署
+./scripts/health-check.sh prod
+```
+
+## 團隊協作規範
+
+### 溝通協作
+
+#### 溝通管道
+- **即時溝通**: Slack/Teams (緊急問題、快速討論)
+- **異步溝通**: GitHub Issues/PR (功能需求、程式碼審查)
+- **正式溝通**: 會議記錄、文檔更新 (決策記錄、架構變更)
+
+#### 會議規範
+- **每日站會**: 15 分鐘，同步進度和阻礙
+- **Sprint 規劃**: 2 小時，規劃下個 Sprint 工作
+- **Sprint 回顧**: 1 小時，檢討改進點
+- **技術分享**: 每週 1 小時，知識分享
+
+### 分支管理策略
+
+#### Git Flow 實踐
+```mermaid
+graph LR
+    A[main] --> B[develop]
+    B --> C[feature/xxx]
+    B --> D[release/v1.0]
+    A --> E[hotfix/xxx]
+```
+
+**分支命名規範**:
+- `feature/功能描述`: 新功能開發
+- `fix/問題描述`: 錯誤修正
+- `docs/文檔描述`: 文檔更新
+- `refactor/重構描述`: 程式碼重構
+- `test/測試描述`: 測試改進
+
+**提交訊息規範**:
+```bash
+# 格式: type(scope): description
+feat(customer): add customer registration validation
+fix(order): correct order total calculation
+docs(api): update customer API documentation
+test(customer): add unit tests for customer service
+refactor(order): extract order calculation logic
+```
+
+### 知識管理
+
+#### 文檔維護
+- **架構決策記錄 (ADR)**: 重要技術決策的記錄
+- **API 文檔**: 自動生成和維護的 API 規格
+- **操作手冊**: 部署、監控、故障排除指南
+- **開發指南**: 編碼標準、最佳實踐、工具使用
+
+#### 知識分享機制
+- **程式碼審查**: 透過審查過程傳遞知識
+- **技術分享會**: 定期分享新技術和經驗
+- **導師制度**: 資深開發者指導新成員
+- **文檔貢獻**: 鼓勵團隊成員改進文檔
+
+## 持續改進
+
+### 效能監控
+
+#### 關鍵指標 (KPI)
+- **開發效率**: 功能交付速度、缺陷率
+- **程式碼品質**: 測試覆蓋率、程式碼複雜度
+- **系統效能**: 回應時間、吞吐量、錯誤率
+- **團隊協作**: 程式碼審查時間、知識分享頻率
+
+#### 監控工具
+```bash
+# 程式碼品質監控
+./gradlew sonarqube
+
+# 效能監控
+./gradlew performanceTest
+
+# 安全掃描
+./gradlew dependencyCheckAnalyze
+
+# 測試覆蓋率
+./gradlew jacocoTestReport
+```
+
+### 流程優化
+
+#### 定期回顧
+- **每週回顧**: 檢討本週工作流程問題
+- **Sprint 回顧**: 分析 Sprint 執行效果
+- **季度回顧**: 評估整體流程改進成效
+
+#### 改進實施
+1. **識別問題**: 收集團隊回饋和數據分析
+2. **分析原因**: 深入分析問題根本原因
+3. **制定方案**: 設計具體的改進措施
+4. **試點實施**: 小範圍試驗改進方案
+5. **全面推廣**: 驗證有效後全團隊採用
+
+## 工具和自動化
+
+### 開發工具鏈
+
+#### 必要工具
+- **IDE**: IntelliJ IDEA Ultimate, VS Code
+- **版本控制**: Git, GitHub
+- **建置工具**: Gradle, Maven
+- **容器化**: Docker, Docker Compose
+- **雲端工具**: AWS CLI, CDK
+
+#### 自動化腳本
+```bash
+# 環境設置
+./scripts/setup-dev-environment.sh
+
+# 程式碼品質檢查
+./scripts/quality-check.sh
+
+# 自動化測試
+./scripts/run-all-tests.sh
+
+# 部署腳本
+./scripts/deploy.sh [environment]
+```
+
+### CI/CD 管道
+
+#### 管道階段
+```mermaid
+graph LR
+    A[程式碼提交] --> B[建置]
+    B --> C[單元測試]
+    C --> D[整合測試]
+    D --> E[安全掃描]
+    E --> F[部署測試環境]
+    F --> G[E2E 測試]
+    G --> H[部署生產環境]
+```
+
+#### 自動化配置
+```yaml
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          
+      - name: Build application
+        run: ./gradlew clean build
+        
+      - name: Run tests
+        run: ./gradlew test integrationTest
+        
+      - name: Security scan
+        run: ./gradlew dependencyCheckAnalyze
+        
+      - name: Deploy to staging
+        if: github.ref == 'refs/heads/develop'
+        run: ./scripts/deploy.sh staging
+        
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: ./scripts/deploy.sh production
+```
+
+---
+
+**相關文檔**:
+- [編碼標準](../coding-standards/README.md)
+- [測試策略](../testing/README.md)
+- [部署指南](../../deployment/README.md)
+- [監控運維](../../../observability/README.md)
+
+**下一步**: [品質保證流程](../quality-assurance/README.md) →
 
 我們採用 **Git Flow** 變體，簡化分支管理：
 

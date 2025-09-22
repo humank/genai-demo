@@ -351,22 +351,14 @@ export class CustomerService {
 ### REST API 約定
 
 #### URL 命名標準
-```
-GET    /../api/v1/customers                    # 列出客戶
-GET    /api/v1/customers/{id}               # 根據 ID 取得客戶
-POST   /api/v1/customers                    # 建立客戶
-PUT    /api/v1/customers/{id}               # 更新客戶（完整）
-PATCH  /api/v1/customers/{id}               # 更新客戶（部分）
-DELETE /api/v1/customers/{id}               # 刪除客戶
 
-# 巢狀資源
-GET    /api/v1/customers/{id}/orders        # 取得客戶的訂單
-POST   /api/v1/customers/{id}/orders        # 為客戶建立訂單
+遵循 RESTful 設計原則：
+- 使用複數名詞表示資源
+- 使用 HTTP 動詞表示操作
+- 巢狀資源表示關聯關係
+- 動作端點用於非 CRUD 操作
 
-# 動作（非 CRUD 操作）
-POST   /api/v1/orders/{id}/cancel           # 取消訂單
-POST   /api/v1/orders/{id}/ship             # 出貨訂單
-```
+詳細的 API 設計規範請參考：[API 設計標準](coding-standards/api-design-standards.md)
 
 #### HTTP 狀態碼標準
 - **200 OK**: 成功的 GET、PUT、PATCH

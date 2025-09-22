@@ -1283,8 +1283,8 @@ graph TB
 ## Resources
 
 - **[圖表工具使用指南](diagram-tools-guide.md)**: 詳細的工具使用說明
-- **[Viewpoints 總覽](../viewpoints/README.md)**: 七大Architectural Viewpoint文檔
-- **[Perspectives 總覽](../perspectives/README.md)**: 八大Architectural Perspective文檔
+- **[Viewpoints 總覽](../viewpoints/development/README.md)**: Development Viewpoint 文檔
+- **[Perspectives 總覽](../diagrams/perspectives/README.md)**: 架構視角文檔
 - **[自動化腳本](README.md)**: 圖表生成和維護腳本
 
 ---

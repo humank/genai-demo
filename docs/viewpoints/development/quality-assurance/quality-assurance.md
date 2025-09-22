@@ -544,29 +544,9 @@ public class CustomerController {
 
 #### Micrometer 配置
 
-```java
-@Configuration
-public class MetricsConfiguration {
-    
-    @Bean
-    public MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
-        return registry -> registry.config().commonTags(
-            "application", "genai-demo",
-            "environment", getEnvironment(),
-            "version", getApplicationVersion()
-        );
-    }
-    
-    @Bean
-    public TimedAspect timedAspect(MeterRegistry registry) {
-        return new TimedAspect(registry);
-    }
-    
-    @Bean
-    public CountedAspect countedAspect(MeterRegistry registry) {
-        return new CountedAspect(registry);
-    }
-}
+Micrometer 用於收集應用程式指標和監控資料。詳細的配置和使用方式請參考：
+- [技術堆疊 - 監控配置](../tools-and-environment/technology-stack.md#監控與追蹤)
+- [效能標準](../../../../.kiro/steering/performance-standards.md)
 
 // 業務指標監控
 @Component

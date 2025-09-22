@@ -705,29 +705,9 @@ public class CustomerStepDefinitions {
 
 #### Cucumber Feature 文件
 
-```gherkin
-# src/test/resources/features/customer-management.feature
-Feature: 客戶管理
-  作為系統管理員
-  我想要管理客戶資料
-  以便提供更好的服務
-
-  Background:
-    Given 系統已經啟動
-    And 資料庫已經初始化
-
-  Scenario: 成功創建新客戶
-    Given 一個有效的客戶資料
-    When 提交客戶創建請求
-    Then 應該成功創建客戶
-    And 客戶應該存在於資料庫中
-    And 應該發送歡迎郵件
-
-  Scenario Outline: 驗證客戶資料格式
-    Given 客戶姓名為 "<name>"
-    And 客戶電子郵件為 "<email>"
-    When 提交客戶創建請求
-    Then 應該返回 "<status>" 狀態
+Cucumber 使用 Gherkin 語法編寫 BDD 測試場景。詳細的 Gherkin 語法和範例請參考：
+- [BDD 實踐指南](../testing/bdd-practices/README.md)
+- [TDD/BDD 測試](../testing/tdd-bdd-testing.md)
     And 錯誤訊息應該包含 "<error_message>"
 
     Examples:
