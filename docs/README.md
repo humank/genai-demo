@@ -277,7 +277,7 @@ graph LR
 
 #### 架構方法論
 - **[Rozanski & Woods 方法論](architecture/rozanski-woods-architecture-assessment.md)** - 完整的架構評估
-- **[七大視點總覽](viewpoints/README.md)** - 功能、資訊、並發、開發、部署、運營視點
+- **[七大視點總覽](viewpoints/README.md)** - 功能、資訊、並發、開發、部署、運營、情境視點
 - **[八大觀點總覽](perspectives/README.md)** - 安全、性能、可用性、演進、使用、法規、位置、成本觀點
 
 #### 架構模式
@@ -739,6 +739,7 @@ mindmap
         開發視點
         部署視點
         運營視點
+        情境視點
       [八大觀點]
         安全性觀點
         性能觀點
@@ -894,6 +895,7 @@ graph TB
     class FLUENT,PROMETHEUS,GRAFANA kubernetes
     class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
 ``` |
+| **[情境視點](viewpoints/context/README.md)** | 系統邊界和外部依賴 | 架構師、業務分析師、整合工程師 | 🔴 安全性、法規、位置、成本 | [系統邊界圖](viewpoints/context/README.md#系統邊界定義) |
 
 ### 八大架構觀點 (Architectural Perspectives)
 

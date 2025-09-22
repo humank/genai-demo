@@ -236,6 +236,7 @@ docker-compose up -d
 4. **[開發視點](docs/viewpoints/development/README.md)** - 開發和建置
 5. **[部署視點](docs/viewpoints/deployment/README.md)** - 部署和環境
 6. **[運營視點](docs/viewpoints/operational/README.md)** - 運營和維護
+7. **[情境視點](docs/viewpoints/context/README.md)** - 系統邊界和外部依賴
 
 ### 八大架構觀點
 1. **[安全性](docs/perspectives/security/README.md)** - 安全和合規

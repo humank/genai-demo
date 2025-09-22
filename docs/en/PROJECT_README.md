@@ -1,18 +1,18 @@
 # Modern Software Architecture Best Practices Example Project
 
-> **Enterprise-Grade Architecture Showcase Based on Rozanski & Woods Methodology**
+> **Enterprise-Level Architecture Showcase Based on Rozanski & Woods Methodology**
 
 > **Language / 語言選擇**  
 > 🇺🇸 **English**: You are reading the English version  
-> 🇹🇼 **繁體中文**: [繁體中文文檔](../../README.md)
+> 🇹🇼 **繁體中文**: [繁體中文文檔](../../README.md) | [繁體中文專案說明](../../README.md)
 
-This is not a simple e-commerce demo, but a **comprehensive showcase of modern software architecture best practices**, fully implementing enterprise-grade architecture methodologies, AI-assisted development, and quality engineering standards.
+This is not a simple e-commerce demo, but a **comprehensive showcase of modern software architecture best practices**, fully implementing enterprise-level architectural methodologies, AI-assisted development, and quality engineering standards.
 
 ## 🎯 Project Value Proposition
 
 This project demonstrates the complete practice of modern software architecture, covering all aspects from architectural design to quality engineering:
 
-### 🏗️ Architecture Methodology Showcase
+### 🏗️ Architectural Methodology Showcase
 
 **Complete Implementation of Rozanski & Woods' 7 Viewpoints + 8 Perspectives**
 - **Functional Viewpoint**: DDD Tactical Patterns + Aggregate Root Design + Bounded Context
@@ -27,30 +27,22 @@ This project demonstrates the complete practice of modern software architecture,
 **DDD + Hexagonal Architecture + Event-Driven + Test-Driven Development**
 - **13 Bounded Contexts**: Complete tactical and strategic pattern implementation
 - **568 Tests**: BDD + TDD + Architecture Testing, 100% pass rate
-- **Java 21 Record**: Reduces 30-40% boilerplate code, enhances type safety
+- **Java 21 Record**: 30-40% reduction in boilerplate code, enhanced type safety
 - **Event-Driven Design**: Complete event collection, publishing, and processing mechanisms
 
-## 🌟 Project Highlights
-
-### 🏗️ Enterprise Architecture Design
-
-- **DDD + Hexagonal Architecture**: Aggregate Root + Value Object + Domain Event + Specification Pattern + Policy Pattern
-- **Event-Driven Design**: Complete event collection, publishing, and processing mechanisms
-- **Java 21 Record**: Reduces 30-40% boilerplate code, enhances type safety
-
-### 📊 Observability System Current Status
+### 📊 Observability System Status
 
 #### ✅ Currently Implemented
 
 - **Structured Logging**: Unified format + Correlation ID + PII masking
 - **Basic Monitoring**: Spring Boot Actuator + Health checks
 - **Frontend Tracking**: User behavior analysis and performance monitoring (local processing)
-- **Basic API**: Partial Analytics API endpoints available
+- **Basic API**: Some Analytics API endpoints available
 
 #### 🚧 Partially Implemented (Frontend Ready, Backend Planned)
 
 - **Analytics API**: Frontend fully implemented, backend partially available
-- **Management Dashboard**: UI complete, using mock data for display
+- **Management Dashboard**: UI complete, using mock data for demonstration
 
 #### 🚀 Next Phase Development Plan
 
@@ -58,7 +50,7 @@ This project demonstrates the complete practice of modern software architecture,
 
 - **🔌 WebSocket Backend**: Implement `/ws/analytics` endpoints and message processing
 - **📊 Real-time Dashboard**: Enable real-time data push
-- **📈 Event Streaming**: Complete event tracking and analysis system
+- **📈 Event Streaming**: Complete event tracking and analytics system
 
 **Phase 2: Advanced Analytics Features (2-3 months)**
 
@@ -69,65 +61,94 @@ This project demonstrates the complete practice of modern software architecture,
 **Phase 3: Enterprise Features (3+ months)**
 
 - **⚡ Kafka Message Middleware**: Distributed event processing
-- **🤖 Intelligent Alerts**: Machine learning-based anomaly detection
+- **🤖 Intelligent Alerting**: Machine learning-based anomaly detection
 - **📊 Advanced Analytics**: Predictive analytics and business intelligence
 
-### 🤖 AI-Assisted Development (MCP Integration) - NEW
+### 🤖 AI-Assisted Development Tools
 
-**Model Context Protocol (MCP) Integration**, providing intelligent development assistant features:
+#### MCP (Model Context Protocol) Integration
 
-#### 🔧 Integrated MCP Servers
+This project integrates a complete MCP tool ecosystem, providing AI-assisted architectural analysis, cost optimization, and visualization capabilities:
 
-- **⏰ Time Server**: Time and timezone conversion functionality
-- **📚 AWS Docs**: AWS official documentation search and query
-- **🏗️ AWS CDK**: CDK best practices guidance and Nag rule explanations
-- **💰 AWS Pricing**: Cost analysis, pricing queries, and project cost assessment
-- **🐙 GitHub**: Code review, issue tracking, PR management (user-level)
+- **🎨 Excalidraw MCP**: AI-driven diagram creation and architecture visualization
+- **📚 AWS Docs MCP**: Real-time AWS documentation queries and best practice guidance
+- **💰 AWS Pricing MCP**: Automated cost analysis and optimization recommendations
+- **🔧 AWS CDK MCP**: CDK best practice checks and Nag rule explanations
+- **⏰ Time MCP**: Timezone conversion and time formatting tools
 
-#### 🚀 MCP Feature Highlights
-
-- **Intelligent Documentation Query**: Real-time search of AWS official documentation for accurate technical information
-- **CDK Development Guidance**: Automatic CDK Nag rule explanations and best practice recommendations
-- **Cost Optimization Analysis**: Analyze CDK/Terraform projects and provide cost optimization suggestions
-- **GitHub Workflow**: Automated code review, issue management, and PR operations
-- **Development Efficiency Enhancement**: Reduce documentation lookup time, improve development decision quality
-
-#### ⚙️ MCP Configuration Management
+#### Quick Start MCP Setup
 
 ```bash
-# MCP configuration file locations
-.kiro/settings/mcp.json          # Project-level configuration
-~/.kiro/settings/mcp.json        # User-level configuration
+# One-click install all MCP servers
+./scripts/setup-mcp-servers.sh
 
-# Reconnect MCP servers
-# Use command palette in Kiro IDE to search for "MCP" related commands
+# Or manually install Excalidraw MCP
+npm install mcp-excalidraw-server
 ```
 
-### 🛒 Dual Frontend Business Features
+**Detailed Guides**:
+- 📖 [MCP Integration Guide](infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- 🎨 [Excalidraw MCP Usage Guide](../mcp/excalidraw-mcp-usage-guide.md)
+- 🚀 [Quick Start Guide](infrastructure/docs/MCP_INTEGRATION_GUIDE.md#-quick-start-installation-guide)
 
-**Consumer Side**: Smart shopping cart + Personalized recommendations + Membership rewards + Delivery tracking  
-**Business Side**: Promotion management + Inventory management + Order processing + Statistical analysis
+### 🤖 AI-Assisted Development Showcase
 
-### 🧪 Testing & Quality Assurance
+**Model Context Protocol (MCP) Integration, Demonstrating Future Development Patterns**
 
-- **Test-Driven**: BDD + TDD + Architecture testing, 568 tests 100% pass
-- **Test Performance Monitoring**: New TestPerformanceExtension automatically tracks test performance
-- **Architecture Compliance**: 9.5/10 (Hexagonal Architecture) + 9.5/10 (DDD Practices)
-- **Cloud-Native Deployment**: AWS CDK + Kubernetes + GitOps
+#### 🔧 Complete AI-Assisted Development Toolchain
+
+- **📚 Intelligent Documentation Query**: Real-time AWS official documentation search and best practice guidance
+- **💰 Cost Optimization Analysis**: Automated CDK/Terraform cost analysis and optimization recommendations
+- **🏗️ Architecture Decision Support**: CDK Nag rule explanations and best practice recommendations
+- **🎨 Visualization Design**: Excalidraw MCP supports AI-driven diagram creation
+- **⏰ Development Tools**: Timezone conversion, time formatting, and other utility tools
+
+#### � uAI-Assisted Development Value
+
+- **Development Efficiency Improvement**: Reduce documentation lookup time, improve development decision quality
+- **Architecture Compliance Checking**: Automated architecture best practice validation
+- **Cost-Conscious Development**: Real-time cost analysis and optimization recommendations during development
+- **Knowledge Management**: Integrate enterprise knowledge into development workflows
+
+#### ⚙️ MCP Configuration Example
+
+```bash
+# Project-level MCP configuration
+.kiro/settings/mcp.json
+
+# One-click install all MCP servers
+./scripts/setup-mcp-servers.sh
+```
+
+### � MLearning Resources
+
+**120+ Documents, Covering Complete Enterprise Development Standards**
+- **Architecture Documentation**: Complete Rozanski & Woods methodology practice
+- **Development Standards**: Security, performance, code review, testing standards
+- **Best Practices**: DDD, Hexagonal Architecture, Event-Driven Design guides
+- **Practical Examples**: Complete implementation based on real business scenarios
+
+### 🧪 Quality Engineering
+
+**568 Tests, Test Performance Monitoring Framework, Architecture Compliance Verification**
+- **Test Pyramid**: Unit (80%) + Integration (15%) + E2E (5%)
+- **Test Performance Monitoring**: TestPerformanceExtension automatically tracks test performance
+- **Architecture Compliance**: ArchUnit tests ensure architectural consistency
+- **Quality Metrics**: Code coverage > 80%, test execution time optimization 99%+
 
 #### 🚀 Test Performance Monitoring Framework - NEW
 
 **TestPerformanceExtension** provides automated test performance monitoring:
 
 - **⏱️ Execution Time Tracking**: Millisecond-precision test execution time monitoring
-- **💾 Memory Usage Monitoring**: Heap memory usage tracking before/after tests
-- **📊 Performance Regression Detection**: Automatic performance degradation detection with configurable thresholds
+- **💾 Memory Usage Monitoring**: Heap memory usage tracking before/after each test
+- **📊 Performance Regression Detection**: Automatic detection of performance degradation with configurable thresholds
 - **📈 Detailed Report Generation**: Text and HTML format performance analysis reports
 - **🐌 Slow Test Identification**: Automatically flag tests exceeding 5 seconds
-- **🧹 Resource Management**: Automatic test resource cleanup, preventing memory leaks
+- **🧹 Resource Management**: Automatic test resource cleanup, prevent memory leaks
 
 ```java
-// Usage example
+// Usage Example
 @TestPerformanceExtension(maxExecutionTimeMs = 10000, maxMemoryIncreaseMB = 100)
 @IntegrationTest
 public class MyIntegrationTest extends BaseIntegrationTest {
@@ -140,7 +161,7 @@ public class MyIntegrationTest extends BaseIntegrationTest {
 ## 🤝 Applicable Scenarios
 
 ### 🎓 Learning and Education
-- **Software Architecture Courses**: Complete practical examples of Rozanski & Woods methodology
+- **Software Architecture Courses**: Complete practical example of Rozanski & Woods methodology
 - **DDD and Hexagonal Architecture**: Complete implementation from theory to practice
 - **Modern Testing Strategy**: Best practices for BDD + TDD + Architecture Testing
 - **AI-Assisted Development**: Practical application and integration of MCP protocol
@@ -149,10 +170,10 @@ public class MyIntegrationTest extends BaseIntegrationTest {
 - **Enterprise Architecture Design**: Directly referenceable architectural decisions and implementation patterns
 - **Development Standards and Specifications**: Complete development, security, performance standards templates
 - **Observability System**: Production-ready monitoring and logging system implementation guide
-- **Cloud-Native Deployment**: Best practices for AWS CDK + Kubernetes
+- **Cloud Native Deployment**: AWS CDK + Kubernetes best practices
 
-### 🔬 Technical Research
-- **Architecture Methodology**: Application of Rozanski & Woods in actual projects
+### � Techunical Research
+- **Architectural Methodology**: Application of Rozanski & Woods in actual projects
 - **Test Performance Optimization**: Optimization techniques from 13min52s → <30s
 - **MCP Protocol Integration**: Practice and integration patterns of Model Context Protocol
 - **Modern Java Ecosystem**: Comprehensive application of Java 21 + Spring Boot 3.4.5
@@ -177,17 +198,17 @@ docker-compose up -d
 
 ## 📚 Learning Resources
 
-### 🎯 Navigation by Learning Goals
-- **Learn Modern Architecture** → [Architecture Viewpoints Documentation](README.md)
-- **Learn DDD Practices** → [Domain-Driven Design](viewpoints/functional/domain-model.md)
-- **Learn Testing Strategy** → \1
-- **Learn AI-Assisted Development** → [MCP Integration Guide](README.md)
+### 🎯 Navigate by Learning Goals
+- **Learn Modern Architecture** → [Architectural Viewpoint Documentation](../viewpoints/README.md)
+- **Learn DDD Practice** → [Domain-Driven Design](../viewpoints/functional/domain-model.md)
+- **Learn Testing Strategy** → [Testing Documentation](../development/testing-guide.md)
+- **Learn AI-Assisted Development** → [MCP Integration Guide](../mcp/README.md)
 
-### 👨‍💼 Navigation by Role
+### �Q‍💼 Navigate by Role
 - **Architect** → [Rozanski & Woods Assessment](../architecture/rozanski-woods-architecture-assessment.md)
-- **Developer** → [Development Standards](README.md)
-- **DevOps** → [Deployment and Operations](README.md)
-- **QA Engineer** → \1
+- **Developer** → [Development Standards](../viewpoints/development/README.md)
+- **DevOps** → [Deployment and Operations](../viewpoints/deployment/README.md)
+- **QA Engineer** → [Testing Guide](../development/testing-guide.md)
 
 ## 🏆 Project Achievements
 
@@ -196,23 +217,46 @@ docker-compose up -d
 - **Test Coverage**: 568 tests, 100% pass rate
 - **Performance Optimization**: Test execution time optimization 99%+ (13min52s → <30s)
 - **Documentation Completeness**: 120+ detailed documentation pages
-- **Architecture Compliance**: ArchUnit tests ensure architecture consistency
+- **Architecture Compliance**: ArchUnit tests ensure architectural consistency
 
 ### 🎯 Technical Highlights
 - **Java 21 + Spring Boot 3.4.5**: Latest technology stack
 - **Dual Frontend Architecture**: Next.js 14 + Angular 18
 - **Complete CI/CD**: GitHub Actions + AWS CDK
-- **Enterprise-Grade Observability**: Monitoring, logging, tracing, alerting
+- **Enterprise Observability**: Monitoring, logging, tracing, alerting
+
+## 📖 Complete Documentation
+
+> **Documentation Center**: [docs/README.md](../README.md)
+
+### Rozanski & Woods Seven Viewpoints
+1. **[Functional Viewpoint](../viewpoints/functional/README.md)** - System functions and responsibilities
+2. **[Information Viewpoint](../viewpoints/information/README.md)** - Data and information flow  
+3. **[Concurrency Viewpoint](../viewpoints/concurrency/README.md)** - Concurrency and synchronization
+4. **[Development Viewpoint](../viewpoints/development/README.md)** - Development and build
+5. **[Deployment Viewpoint](../viewpoints/deployment/README.md)** - Deployment and environment
+6. **[Operational Viewpoint](../viewpoints/operational/README.md)** - Operations and maintenance
+7. **[Context Viewpoint](../viewpoints/context/README.md)** - System boundaries and external dependencies
+
+### Eight Architectural Perspectives
+1. **[Security](../perspectives/security/README.md)** - Security and compliance
+2. **[Performance](../perspectives/performance/README.md)** - Performance and scalability
+3. **[Availability](../perspectives/availability/README.md)** - Availability and resilience
+4. **[Evolution](../perspectives/evolution/README.md)** - Evolution and maintenance
+5. **[Usability](../perspectives/usability/README.md)** - User experience
+6. **[Regulation](../perspectives/regulation/README.md)** - Regulatory compliance
+7. **[Location](../perspectives/location/README.md)** - Geographic distribution
+8. **[Cost](../perspectives/cost/README.md)** - Cost optimization
 
 ## 🚀 Quick Start
 
-### Memory and Performance Optimization (v3.0.1 Added)
+### Memory and Performance Optimization (v3.0.1 New)
 
 This project has been optimized for memory usage during compilation and testing:
 
 #### 🔧 Optimization Configuration
 
-- **Memory Configuration**: Compilation and testing maximum heap memory increased to 4GB
+- **Memory Configuration**: Maximum heap memory increased to 4GB for compilation and testing
 - **Log Optimization**: Only ERROR level logs output during testing, significantly reducing output volume
 - **JVM Optimization**: Using G1 garbage collector and string deduplication optimization
 - **Parallel Processing**: Optimized Gradle parallel execution configuration
@@ -220,7 +264,7 @@ This project has been optimized for memory usage during compilation and testing:
 #### 🛠️ Optimized Execution Scripts
 
 ```bash
-# Test optimization demo (recommended) - showcases test performance optimization results
+# Test optimization demonstration (recommended) - showcase test performance optimization results
 ./run-optimized-tests.sh
 
 # Optimized compilation (reduced log output, increased memory)
@@ -252,7 +296,7 @@ curl http://localhost:8080/api/cost-optimization/analysis         # Cost analysi
 ### Method 1: Docker Containerized Deployment (Recommended)
 
 ```bash
-# Build ARM64 optimized image
+# Build ARM64 optimized images
 ./docker/docker-build.sh
 
 # Start containerized environment
@@ -276,7 +320,7 @@ docker-compose down
 ### Method 2: Local Development Environment
 
 ```bash
-# Start complete frontend and backend application
+# Start complete frontend and backend applications
 ./scripts/start-fullstack.sh
 
 # Stop all services
@@ -298,10 +342,10 @@ cd cmc-frontend && npm run dev
 ### Hexagonal Architecture + DDD Layering
 
 ```
-interfaces/ → application/ → domain/ ← ../../../../../../infrastructure/
+interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
-- **Domain Layer**: Business logic + Aggregate Root + Value Object + Domain Event + Specification Pattern
+- **Domain Layer**: Business logic + Aggregate roots + Value objects + Domain events + Specification pattern
 - **Application Layer**: Use case coordination + Event publishing + Cross-aggregate operations
 - **Infrastructure Layer**: Persistence + External systems + Event handling
 - **Interface Layer**: REST API + OpenAPI 3.0 + Swagger UI
@@ -342,7 +386,7 @@ genai-demo/
 **CMC Management (Next.js 14.2.30)**  
 TypeScript + Tailwind CSS + shadcn/ui + Zustand + React Query
 
-**Consumer Side (Angular 18.2.0)**  
+**Consumer (Angular 18.2.0)**  
 TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 
 ## 🆕 Version Updates (v3.3.0 - September 2025)
@@ -350,23 +394,24 @@ TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 ### 🚀 Major New Features
 
 - ✅ **AI-Assisted Development (MCP Integration)**: Complete Model Context Protocol integration, supporting AWS ecosystem and GitHub operations
-- ✅ **Test Performance Monitoring Framework**: New test performance monitoring system, automatically tracking execution time and memory usage
-- ✅ **Observability System Enhancement**: Added analytics service, WebSocket integration, and event tracking
-- ✅ **Development Standards Specification**: Complete development, security, performance, and code review standards documentation
+- ✅ **Test Performance Monitoring Framework**: Brand new test performance monitoring system, automatically tracking execution time and memory usage
+- 🚧 **Observability System Refactoring**: Frontend fully implemented, backend simplified to core functions (frontend ready, backend planned)
+- ✅ **Development Standards**: Complete development, security, performance, and code review standards documentation
 
-### 📈 Architecture & Quality Improvements
+### � Architecture and Quality Improvements
 
-- 🤖 **MCP Servers**: Integrated 4 stable MCP servers (time, aws-docs, aws-cdk, aws-pricing)
-- 🧪 **Test Performance Optimization**: Added TestPerformanceExtension for automatic test execution performance monitoring
-- 🏗️ **Observability Architecture**: Added Analytics, Event Tracking, and WebSocket real-time communication
+- 🤖 **MCP Servers**: Integration of 4 stable MCP servers (time, aws-docs, aws-cdk, aws-pricing)
+- 🧪 **Test Performance Optimization**: New TestPerformanceExtension automatically monitors test execution performance
+- 🚧 **Observability Architecture Refactoring**: Simplified to core monitoring functions, removed complex Analytics and WebSocket (completed)
+- 📋 **Next Phase Plan**: Analytics, Event Tracking, and WebSocket real-time communication will be implemented in subsequent versions
 - 📋 **Development Standards**: Added 5 core development standards documents covering complete development lifecycle
 
 ### 🔧 Technical Debt Cleanup
 
-- 🗑️ **Removed Outdated Documentation**: Cleaned up 20+ outdated technical documents and configuration files
+- 🗑️ **Remove Outdated Documentation**: Cleaned up 20+ outdated technical documents and configuration files
 - 🧹 **Code Refactoring**: Removed duplicate HTTP client configurations, unified test infrastructure
 - 📦 **Dependency Optimization**: Cleaned Jest cache and unnecessary build files
-- 🤖 **IDE Automatic Fixes**: Kiro IDE automatically formatted and optimized frontend code while preserving comment integrity
+- 🤖 **IDE Auto-fix**: Kiro IDE automatically formatted and optimized frontend code, maintaining comment integrity
 
 ## 🛠️ Technology Stack
 
@@ -395,9 +440,9 @@ TypeScript + Tailwind CSS + PrimeNG + RxJS + Jasmine
 ### Frontend Technologies
 
 **CMC Management**: Next.js 14.2.30 + TypeScript + Tailwind + shadcn/ui + Zustand + React Query  
-**Consumer Side**: Angular 18.2.0 + TypeScript + Tailwind + PrimeNG + RxJS + Jasmine
+**Consumer**: Angular 18.2.0 + TypeScript + Tailwind + PrimeNG + RxJS + Jasmine
 
-## 📊 Data & API
+## 📊 Data and API
 
 ### Database Initialization
 
@@ -406,10 +451,10 @@ The project uses Flyway for database version management, including rich business
 - **100+ Product inventory records** - Covering electronics, clothing, home goods, etc.
 - **Complete order process data** - Orders, order items, payment records
 - **Taiwan localized data** - Real addresses, Traditional Chinese product names
-- **Multiple payment methods** - Credit card, digital wallet, bank transfer, cash on delivery
+- **Multiple payment methods** - Credit cards, digital wallets, bank transfers, cash on delivery
 - **Independent product table** - Supporting complete product lifecycle management
 
-### API Documentation & Endpoints
+### API Documentation and Endpoints
 
 #### 📖 Swagger UI Documentation
 
@@ -418,7 +463,7 @@ The project uses Flyway for database version management, including rich business
 - **API Groups**:
   - Public API: `/v3/api-docs/public-api`
   - Internal API: `/v3/api-docs/internal-api`
-  - Management endpoints: `/v3/api-docs/management`
+  - Management Endpoints: `/v3/api-docs/management`
 
 #### 🔧 Main API Endpoints
 
@@ -470,7 +515,7 @@ GET /api/stats/database           # Database statistics
 # Activity Log API
 GET /api/activities               # System activity logs
 
-# Health Check & Monitoring
+# Health Check and Monitoring
 GET /actuator/health              # Application health status
 GET /actuator/metrics             # Application metrics
 GET /actuator/info                # Application information
@@ -486,12 +531,12 @@ http://localhost:8080/h2-console  # Database management interface
 
 - **Dashboard** (`/`) - System overview and statistics
 - **Order Management** (`/orders`) - Order list and details
-  - Order details page (`/orders/[orderId]`) - Complete order information display
+  - Order Details Page (`/orders/[orderId]`) - Complete order information display
 - **Product Management** (`/products`) - Product display and inventory
-  - Product details page (`/products/[productId]`) - Detailed product information and operations
-  - Product editing functionality - Support name, description, price, category modification
-  - Inventory adjustment functionality - Support add, reduce, set inventory quantity
-  - Product deletion functionality - Safe product deletion operations
+  - Product Details Page (`/products/[productId]`) - Detailed product information and operations
+  - Product Edit Function - Support name, description, price, category modification
+  - Inventory Adjustment Function - Support add, reduce, set inventory quantity
+  - Product Delete Function - Safe product deletion operation
 - **Customer Management** (`/customers`) - Customer information management
 
 ### Product Management Features
@@ -501,13 +546,13 @@ http://localhost:8080/h2-console  # Database management interface
   - Price and currency settings (TWD, USD, EUR)
   - Product category management (electronics, clothing, food, etc.)
 - 📦 **Inventory Management** - Flexible inventory adjustment system
-  - Set inventory - Directly set inventory quantity
-  - Add inventory - Restock inventory
-  - Reduce inventory - Loss or return processing
-  - Adjustment reason recording - Complete inventory change tracking
-- 🗑️ **Product Deletion** - Safe product deletion functionality
-  - Confirmation dialog to prevent accidental deletion
-  - Automatic product list updates
+  - Set Inventory - Directly set inventory quantity
+  - Add Inventory - Restock inventory
+  - Reduce Inventory - Loss or return processing
+  - Adjustment Reason Recording - Complete inventory change tracking
+- 🗑️ **Product Deletion** - Safe product deletion function
+  - Confirmation dialog prevents accidental deletion
+  - Automatic product list update
 
 ### UI/UX Features
 
@@ -521,322 +566,593 @@ http://localhost:8080/h2-console  # Database management interface
 - 📝 Form validation and user feedback
 - 🔔 Toast notification system
 
-## 📋 Development Standards & Specifications - NEW
+## 📋 Development Standards and Specifications - NEW
 
-The project has established a complete development standards system, located in the `../../.kiro/steering/` directory:
+The project has established a complete development standards system, located in the `.kiro/steering/` directory:
 
-### 🎯 Core Development Standards
+### �️ Core Development Standards
 
-- **[Development Standards](../../.kiro/steering/development-standards.md)**: Technology stack, error handling, API design, testing strategy
-- **[Security Standards](../../.kiro/steering/security-standards.md)**: Authentication authorization, data protection, input validation, security testing
-- **[Performance Standards](../../.kiro/steering/performance-standards.md)**: Response time, throughput, caching strategy, performance monitoring
-- **[Code Review Standards](../../.kiro/steering/code-review-standards.md)**: Review process, quality checks, feedback guidelines
-- **[Test Performance Standards](../../.kiro/steering/test-performance-standards.md)**: Test monitoring, resource management, performance optimization
+- **[Development Standards](/.kiro/steering/development-standards.md)**: Technology stack, error handling, API design, testing strategy
+- **[Security Standards](/.kiro/steering/security-standards.md)**: Authentication authorization, data protection, input validation, security testing
+- **[Performance Standards](/.kiro/steering/performance-standards.md)**: Response time, throughput, caching strategy, performance monitoring
+- **[Code Review Standards](/.kiro/steering/code-review-standards.md)**: Review process, quality checks, feedback guidelines
+- **[Test Performance Standards](/.kiro/steering/test-performance-standards.md)**: Test monitoring, resource management, performance optimization
 
-### 🏗️ Architecture Methodology
+### 🏗️ Architectural Methodology
 
-- **[Rozanski & Woods Architecture Methodology](../../.kiro/steering/rozanski-woods-architecture-methodology.md)**:
+- **[Rozanski & Woods Architectural Methodology](/.kiro/steering/rozanski-woods-architecture-methodology.md)**:
   - Mandatory architectural viewpoint checks (functional, information, concurrency, development, deployment, operational)
   - Quality attribute scenario requirements (performance, security, availability, scalability, usability)
   - Architecture compliance rules and ArchUnit tests
-  - Four perspectives checklist (security, performance, availability, evolution)
+  - Four perspective checklists (security, performance, availability, evolution)
 
 ### 📐 Domain Event Design
 
-- **[Domain Event Guide](../../.kiro/steering/domain-events.md)**:
+- **[Domain Event Guide](/.kiro/steering/domain-events.md)**:
   - Event definition and collection standards
   - Event handling and publishing mechanisms
   - Event versioning and backward compatibility
   - Event Store solutions (EventStore DB, JPA, In-Memory)
 
-## 📚 Documentation
+## � Documientation
 
-> **Documentation Center**: [docs/README.md](README.md) - Complete documentation navigation and categorization
-
-### 📊 Project Reports and Summaries
-
-- **\1** - Centralized management of all project reports and summaries
-  - **\1** - Task completion reports and automation results
-  - **\1** - Architecture decisions and design documentation reports
-  - **\1** - Diagram generation and synchronization reports
-  - **\1** - Deployment and infrastructure management reports
-  - **\1** - Frontend development and UI improvement reports
-  - **\1** - Testing optimization and quality validation reports
-  - **\1** - Translation system and language processing reports
-  - **\1** - Project status and refactoring reports
+> **Documentation Center**: [docs/README.md](../README.md) - Complete documentation navigation and categorization
 
 The project includes rich documentation, organized by functional categories:
 
 ### 🎯 Quick Navigation
 
-- **👨‍💼 Project Manager**: [Project Summary 2025](../../reports-summaries/project-management/project-summary-2025.md) | [Architecture Overview](../diagrams/architecture-overview.md)
-- **🏗️ Architect**: \1 | \1 | \1
-- **👨‍💻 Developer**: \1 | \1 | [Development Instructions](../development/instructions.md)
-- **🚀 DevOps**: \1 | [Docker Guide](../viewpoints/deployment/docker-guide.md)
-- **🔍 Observability**: [Production Observability Testing Guide](../viewpoints/operational/production-observability-testing-guide.md) | \1
-- **🤖 MCP Integration**: \1 | [AI-Assisted Development](README.md)
+- **👨‍💼 Project Manager**: [Project Summary 2025](../../reports-summaries/project-management/project-summary-2025.md) | [Project Status](../PROJECT_STATUS.md)
+- **🏗️ Architect**: [Architecture Decision Records](../architecture/adr/) | [Architecture Documentation](../architecture/) | [Diagram Documentation](../diagrams/)
+- **👨‍💻 Developer**: [Development Guide](../development/) | [API Documentation](../api/) | [Development Instructions](../development/instructions.md)
+- **🚀 DevOps**: [Deployment Documentation](../deployment/) | [Docker Guide](../deployment/docker-guide.md)
+- **🔍 Observability**: [Production Environment Testing Guide](../viewpoints/operational/production-observability-testing-guide.md) | [Observability System](../observability/)
+- **🤖 MCP Integration**: [MCP Guide](../mcp/) | [AI-Assisted Development](../mcp/README.md)
 
 ### 📊 Core Diagrams (Mermaid - Direct GitHub Display)
 
-- [🏗️ System Architecture Overview](../diagrams/architecture-overview.md) - Complete system architecture diagram
-- [🔵 Hexagonal Architecture](../diagrams/hexagonal-architecture.md) - Ports and adapters architecture
-- [🏛️ DDD Layered Architecture](../diagrams/mermaid/ddd-layered-architecture.md) - Domain-driven design layering
-- [⚡ Event-Driven Architecture](../diagrams/mermaid/event-driven-architecture.md) - Event processing mechanisms
-- [🔌 API Interaction Diagram](../diagrams/mermaid/api-interactions.md) - API call relationships
+## 🏗️ System Architecture Overview
 
-### 📋 Detailed UML Diagrams (PlantUML)
-
-- **Structural Diagrams**: Class diagram, object diagram, component diagram, deployment diagram, package diagram, composite structure diagram
-- **Behavioral Diagrams**: Use case diagram, activity diagram, state diagram
-- **Interaction Diagrams**: Sequence diagram, communication diagram, interaction overview diagram, timing diagram
-- **Event Storming**: Big Picture, Process Level, Design Level
-
-### 🏆 Core Reports (September 2025 Update)
-
-- [📋 Project Summary Report 2025](../../reports-summaries/project-management/project-summary-2025.md) - Complete project achievements and technical highlights summary
-- [🏗️ Architecture Excellence Report 2025](reports/architecture-excellence-2025.md) - Detailed architecture assessment and best practices analysis
-- [🚀 Technology Stack Detailed Description 2025](reports/technology-stack-2025.md) - Complete technology selection and implementation details
-- [📝 Documentation Cleanup Report 2025](reports/documentation-cleanup-2025.md) - Documentation reorganization and optimization records
-
-### 🛠️ Diagram Generation Tools
-
-```bash
-# Generate all PlantUML diagrams
-./scripts/generate-diagrams.sh
-
-# Generate specific diagram
-./scripts/generate-diagrams.sh domain-model-class-diagram.puml
-
-# Validate diagram syntax
-./scripts/generate-diagrams.sh --validate
+```mermaid
+graph TB
+    subgraph USERS ["Users and Roles"]
+        CUSTOMER[👤 Customer<br/>Shopping & Ordering]
+        SELLER[🏪 Seller<br/>Product Management]
+        ADMIN[👨‍💼 Administrator<br/>System Management]
+        DELIVERY[🚚 Delivery<br/>Logistics Delivery]
+    end
+    
+    subgraph FRONTEND ["Frontend Applications"]
+        WEB_APP[🌐 Web App<br/>Next.js 14 + TypeScript<br/>Customer Shopping Interface]
+        MOBILE_APP[📱 Mobile App<br/>Angular 18 + TypeScript<br/>Consumer Application]
+        ADMIN_PANEL[🖥️ Admin Panel<br/>React Admin Dashboard<br/>Backend Management System]
+        SELLER_PORTAL[🏪 Seller Portal<br/>Merchant Management Interface<br/>Product & Order Management]
+    end
+    
+    subgraph API_GATEWAY ["API Gateway Layer"]
+        GATEWAY[🚪 API Gateway<br/>Routing & Authentication<br/>Rate Limiting & Monitoring]
+        LOAD_BALANCER[⚖️ Load Balancer<br/>Traffic Distribution<br/>Health Check]
+    end
+    
+    subgraph MICROSERVICES ["Microservices Architecture"]
+        subgraph CORE_SERVICES ["Core Business Services"]
+            CUSTOMER_SVC[👤 Customer Service<br/>Customer Management Service<br/>Member System & Profile]
+            ORDER_SVC[📦 Order Service<br/>Order Management Service<br/>Order Lifecycle]
+            PRODUCT_SVC[🛍️ Product Service<br/>Product Management Service<br/>Product Catalog & Search]
+            PAYMENT_SVC[💰 Payment Service<br/>Payment Processing Service<br/>Multiple Payment Methods]
+            INVENTORY_SVC[📊 Inventory Service<br/>Inventory Management Service<br/>Stock Tracking & Reservation]
+        end
+        
+        subgraph BUSINESS_SERVICES ["Business Support Services"]
+            CART_SVC[🛒 Shopping Cart Service<br/>Shopping Cart Service<br/>Shopping Process Management]
+            PRICING_SVC[💲 Pricing Service<br/>Pricing Service<br/>Dynamic Pricing & Discounts]
+            PROMOTION_SVC[🎁 Promotion Service<br/>Promotion Service<br/>Coupons & Activities]
+            DELIVERY_SVC[🚚 Delivery Service<br/>Delivery Service<br/>Logistics & Tracking]
+            REVIEW_SVC[⭐ Review Service<br/>Review Service<br/>Product Review System]
+        end
+        
+        subgraph PLATFORM_SERVICES ["Platform Services"]
+            NOTIFICATION_SVC[🔔 Notification Service<br/>Notification Service<br/>Multi-channel Message Push]
+            SEARCH_SVC[🔍 Search Service<br/>Search Service<br/>Full-text Search & Recommendation]
+            ANALYTICS_SVC[📈 Analytics Service<br/>Analytics Service<br/>Data Statistics & Reports]
+            AUDIT_SVC[📋 Audit Service<br/>Audit Service<br/>Operation Logs & Compliance]
+        end
+    end
+    
+    subgraph INFRASTRUCTURE ["Infrastructure Layer"]
+        subgraph DATABASES ["Data Storage"]
+            POSTGRES[(🗄️ PostgreSQL<br/>Main Database<br/>Transactional Data)]
+            REDIS[(⚡ Redis<br/>Cache Database<br/>Session & Cache)]
+            OPENSEARCH[(🔍 OpenSearch<br/>Search Engine<br/>Full-text Search)]
+            S3[(📁 S3<br/>Object Storage<br/>Files & Media)]
+        end
+        
+        subgraph MESSAGE_QUEUE ["Message Queue"]
+            MSK[📊 Amazon MSK<br/>Kafka Cluster<br/>Event Stream Processing]
+            SQS[📬 Amazon SQS<br/>Message Queue<br/>Async Task Processing]
+            SNS[📢 Amazon SNS<br/>Notification Service<br/>Message Push]
+        end
+        
+        subgraph EXTERNAL_SERVICES ["External Services"]
+            STRIPE[💳 Stripe<br/>Payment Gateway<br/>Credit Card Processing]
+            PAYPAL[💰 PayPal<br/>Payment Platform<br/>Digital Wallet]
+            EMAIL_SVC[📧 Email Service<br/>Email Service<br/>SES/SMTP]
+            SMS_SVC[📱 SMS Service<br/>SMS Service<br/>SNS/Twilio]
+            LOGISTICS[🚚 Logistics API<br/>Logistics Service<br/>Third-party Delivery]
+        end
+    end
+    
+    subgraph OBSERVABILITY ["Observability"]
+        MONITORING[📊 Monitoring<br/>Prometheus + Grafana<br/>Metrics Monitoring]
+        LOGGING[📝 Logging<br/>ELK Stack<br/>Log Aggregation]
+        TRACING[🔍 Tracing<br/>AWS X-Ray<br/>Distributed Tracing]
+        ALERTING[🚨 Alerting<br/>CloudWatch Alarms<br/>Alert Notifications]
+    end
+    
+    subgraph SECURITY ["Security & Compliance"]
+        IAM[🔐 Identity & Access<br/>AWS IAM<br/>Identity Authentication Authorization]
+        WAF[🛡️ Web Application Firewall<br/>AWS WAF<br/>Application Protection]
+        SECRETS[🔑 Secrets Management<br/>AWS Secrets Manager<br/>Key Management]
+        COMPLIANCE[📋 Compliance<br/>Compliance Monitoring<br/>GDPR/PCI DSS]
+    end
+    
+    %% User to Frontend Connections
+    CUSTOMER --> WEB_APP
+    CUSTOMER --> MOBILE_APP
+    SELLER --> SELLER_PORTAL
+    ADMIN --> ADMIN_PANEL
+    DELIVERY --> MOBILE_APP
+    
+    %% Frontend to API Gateway
+    WEB_APP --> GATEWAY
+    MOBILE_APP --> GATEWAY
+    ADMIN_PANEL --> GATEWAY
+    SELLER_PORTAL --> GATEWAY
+    
+    %% API Gateway to Load Balancer
+    GATEWAY --> LOAD_BALANCER
+    
+    %% Load Balancer to Core Services
+    LOAD_BALANCER --> CUSTOMER_SVC
+    LOAD_BALANCER --> ORDER_SVC
+    LOAD_BALANCER --> PRODUCT_SVC
+    LOAD_BALANCER --> PAYMENT_SVC
+    LOAD_BALANCER --> INVENTORY_SVC
+    
+    %% Load Balancer to Business Services
+    LOAD_BALANCER --> CART_SVC
+    LOAD_BALANCER --> PRICING_SVC
+    LOAD_BALANCER --> PROMOTION_SVC
+    LOAD_BALANCER --> DELIVERY_SVC
+    LOAD_BALANCER --> REVIEW_SVC
+    
+    %% Load Balancer to Platform Services
+    LOAD_BALANCER --> NOTIFICATION_SVC
+    LOAD_BALANCER --> SEARCH_SVC
+    LOAD_BALANCER --> ANALYTICS_SVC
+    LOAD_BALANCER --> AUDIT_SVC
+    
+    %% Service to Database Connections
+    CUSTOMER_SVC --> POSTGRES
+    ORDER_SVC --> POSTGRES
+    PRODUCT_SVC --> POSTGRES
+    PAYMENT_SVC --> POSTGRES
+    INVENTORY_SVC --> POSTGRES
+    CART_SVC --> REDIS
+    PRICING_SVC --> REDIS
+    PROMOTION_SVC --> POSTGRES
+    DELIVERY_SVC --> POSTGRES
+    REVIEW_SVC --> POSTGRES
+    SEARCH_SVC --> OPENSEARCH
+    ANALYTICS_SVC --> POSTGRES
+    AUDIT_SVC --> POSTGRES
+    
+    %% Service to Cache Connections
+    CUSTOMER_SVC --> REDIS
+    PRODUCT_SVC --> REDIS
+    PRICING_SVC --> REDIS
+    SEARCH_SVC --> REDIS
+    
+    %% Service to Message Queue Connections
+    ORDER_SVC --> MSK
+    PAYMENT_SVC --> MSK
+    INVENTORY_SVC --> MSK
+    NOTIFICATION_SVC --> MSK
+    NOTIFICATION_SVC --> SQS
+    NOTIFICATION_SVC --> SNS
+    ANALYTICS_SVC --> MSK
+    AUDIT_SVC --> MSK
+    
+    %% Service to External Service Connections
+    PAYMENT_SVC --> STRIPE
+    PAYMENT_SVC --> PAYPAL
+    NOTIFICATION_SVC --> EMAIL_SVC
+    NOTIFICATION_SVC --> SMS_SVC
+    DELIVERY_SVC --> LOGISTICS
+    
+    %% File Storage Connections
+    PRODUCT_SVC --> S3
+    CUSTOMER_SVC --> S3
+    AUDIT_SVC --> S3
+    
+    %% Observability Connections
+    CUSTOMER_SVC --> MONITORING
+    ORDER_SVC --> MONITORING
+    PRODUCT_SVC --> MONITORING
+    PAYMENT_SVC --> MONITORING
+    INVENTORY_SVC --> MONITORING
+    CART_SVC --> MONITORING
+    PRICING_SVC --> MONITORING
+    PROMOTION_SVC --> MONITORING
+    DELIVERY_SVC --> MONITORING
+    REVIEW_SVC --> MONITORING
+    NOTIFICATION_SVC --> MONITORING
+    SEARCH_SVC --> MONITORING
+    ANALYTICS_SVC --> MONITORING
+    AUDIT_SVC --> MONITORING
+    
+    MONITORING --> LOGGING
+    MONITORING --> TRACING
+    MONITORING --> ALERTING
+    
+    %% Security Connections
+    GATEWAY --> IAM
+    GATEWAY --> WAF
+    CUSTOMER_SVC --> SECRETS
+    PAYMENT_SVC --> SECRETS
+    NOTIFICATION_SVC --> SECRETS
+    AUDIT_SVC --> COMPLIANCE
+    
+    %% Inter-Service Communication (Event-Driven)
+    ORDER_SVC -.->|OrderCreated| INVENTORY_SVC
+    ORDER_SVC -.->|OrderCreated| PAYMENT_SVC
+    ORDER_SVC -.->|OrderCreated| NOTIFICATION_SVC
+    PAYMENT_SVC -.->|PaymentProcessed| ORDER_SVC
+    PAYMENT_SVC -.->|PaymentProcessed| DELIVERY_SVC
+    INVENTORY_SVC -.->|StockReserved| ORDER_SVC
+    INVENTORY_SVC -.->|StockUpdated| PRODUCT_SVC
+    CUSTOMER_SVC -.->|CustomerRegistered| NOTIFICATION_SVC
+    REVIEW_SVC -.->|ReviewCreated| PRODUCT_SVC
+    DELIVERY_SVC -.->|DeliveryStatusChanged| ORDER_SVC
+    DELIVERY_SVC -.->|DeliveryStatusChanged| NOTIFICATION_SVC
+    
+    %% Styling
+    classDef user fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef frontend fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef gateway fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef core fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef business fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef platform fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef database fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    classDef message fill:#fff8e1,stroke:#fbc02d,stroke-width:2px
+    classDef external fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef observability fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef security fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px
+    
+    class CUSTOMER,SELLER,ADMIN,DELIVERY user
+    class WEB_APP,MOBILE_APP,ADMIN_PANEL,SELLER_PORTAL frontend
+    class GATEWAY,LOAD_BALANCER gateway
+    class CUSTOMER_SVC,ORDER_SVC,PRODUCT_SVC,PAYMENT_SVC,INVENTORY_SVC core
+    class CART_SVC,PRICING_SVC,PROMOTION_SVC,DELIVERY_SVC,REVIEW_SVC business
+    class NOTIFICATION_SVC,SEARCH_SVC,ANALYTICS_SVC,AUDIT_SVC platform
+    class POSTGRES,REDIS,OPENSEARCH,S3 database
+    class MSK,SQS,SNS message
+    class STRIPE,PAYPAL,EMAIL_SVC,SMS_SVC,LOGISTICS external
+    class MONITORING,LOGGING,TRACING,ALERTING observability
+    class IAM,WAF,SECRETS,COMPLIANCE security
 ```
 
-## 🧪 Testing
+### 📊 Domain-Driven Design Architecture
 
-### 🚀 Test Optimization Demo Script (Recommended)
-
-The project provides a test optimization demo script showcasing test performance optimization results:
-
-```bash
-# Run test optimization demo - showcases before/after optimization comparison
-./run-optimized-tests.sh
+```mermaid
+graph TB
+    subgraph BC_CUSTOMER ["Customer Management BC"]
+        CUSTOMER_AGG[Customer Aggregate<br/>- Customer Profile<br/>- Membership Level<br/>- Preferences]
+        CUSTOMER_EVENTS[Customer Events<br/>- CustomerRegistered<br/>- ProfileUpdated<br/>- MembershipChanged]
+    end
+    
+    subgraph BC_PRODUCT ["Product Catalog BC"]
+        PRODUCT_AGG[Product Aggregate<br/>- Product Information<br/>- Category<br/>- Specifications]
+        CATALOG_EVENTS[Catalog Events<br/>- ProductCreated<br/>- ProductUpdated<br/>- CategoryChanged]
+    end
+    
+    subgraph BC_INVENTORY ["Inventory Management BC"]
+        INVENTORY_AGG[Inventory Aggregate<br/>- Stock Level<br/>- Reservations<br/>- Adjustments]
+        INVENTORY_EVENTS[Inventory Events<br/>- StockReserved<br/>- StockReleased<br/>- StockAdjusted]
+    end
+    
+    subgraph BC_ORDER ["Order Management BC"]
+        ORDER_AGG[Order Aggregate<br/>- Order Items<br/>- Order Status<br/>- Delivery Info]
+        ORDER_EVENTS[Order Events<br/>- OrderCreated<br/>- OrderConfirmed<br/>- OrderShipped]
+    end
+    
+    subgraph BC_PAYMENT ["Payment Processing BC"]
+        PAYMENT_AGG[Payment Aggregate<br/>- Payment Method<br/>- Transaction<br/>- Status]
+        PAYMENT_EVENTS[Payment Events<br/>- PaymentInitiated<br/>- PaymentCompleted<br/>- PaymentFailed]
+    end
+    
+    subgraph BC_PRICING ["Pricing & Promotion BC"]
+        PRICING_AGG[Pricing Aggregate<br/>- Base Price<br/>- Discounts<br/>- Rules]
+        PROMOTION_AGG[Promotion Aggregate<br/>- Campaigns<br/>- Coupons<br/>- Conditions]
+        PRICING_EVENTS[Pricing Events<br/>- PriceUpdated<br/>- DiscountApplied<br/>- PromotionActivated]
+    end
+    
+    subgraph BC_DELIVERY ["Delivery & Logistics BC"]
+        DELIVERY_AGG[Delivery Aggregate<br/>- Shipping Method<br/>- Tracking<br/>- Status]
+        DELIVERY_EVENTS[Delivery Events<br/>- DeliveryScheduled<br/>- InTransit<br/>- Delivered]
+    end
+    
+    subgraph BC_ANALYTICS ["Analytics & Reporting BC"]
+        ANALYTICS_AGG[Analytics Aggregate<br/>- Metrics<br/>- Reports<br/>- KPIs]
+        ANALYTICS_EVENTS[Analytics Events<br/>- DataCollected<br/>- ReportGenerated<br/>- MetricUpdated]
+    end
+    
+    %% Event Flow Connections
+    CUSTOMER_EVENTS -.->|CustomerRegistered| BC_ORDER
+    ORDER_EVENTS -.->|OrderCreated| BC_INVENTORY
+    ORDER_EVENTS -.->|OrderCreated| BC_PAYMENT
+    ORDER_EVENTS -.->|OrderCreated| BC_DELIVERY
+    INVENTORY_EVENTS -.->|StockReserved| BC_ORDER
+    PAYMENT_EVENTS -.->|PaymentCompleted| BC_ORDER
+    PAYMENT_EVENTS -.->|PaymentCompleted| BC_DELIVERY
+    DELIVERY_EVENTS -.->|Delivered| BC_ORDER
+    PRICING_EVENTS -.->|PriceUpdated| BC_PRODUCT
+    
+    %% Analytics Integration
+    ORDER_EVENTS -.->|All Events| BC_ANALYTICS
+    CUSTOMER_EVENTS -.->|All Events| BC_ANALYTICS
+    PAYMENT_EVENTS -.->|All Events| BC_ANALYTICS
+    DELIVERY_EVENTS -.->|All Events| BC_ANALYTICS
+    
+    %% Styling
+    classDef boundedContext fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef aggregate fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef events fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class BC_CUSTOMER,BC_PRODUCT,BC_INVENTORY,BC_ORDER,BC_PAYMENT,BC_PRICING,BC_DELIVERY,BC_ANALYTICS boundedContext
+    class CUSTOMER_AGG,PRODUCT_AGG,INVENTORY_AGG,ORDER_AGG,PAYMENT_AGG,PRICING_AGG,PROMOTION_AGG,DELIVERY_AGG,ANALYTICS_AGG aggregate
+    class CUSTOMER_EVENTS,CATALOG_EVENTS,INVENTORY_EVENTS,ORDER_EVENTS,PAYMENT_EVENTS,PRICING_EVENTS,DELIVERY_EVENTS,ANALYTICS_EVENTS events
 ```
 
-**Script Features:**
+### 🔄 Event-Driven Architecture Flow
 
-- 📊 **Performance Comparison Display**: Before optimization 13min52s → After optimization < 30s (99%+ improvement)
-- 🎯 **Layered Testing Strategy**: Unit → Integration → E2E test pyramid
-- 💾 **Memory Optimization**: From 6GB → 1-3GB (50-83% savings)
-- ⚡ **Parallel Execution**: Multi-core parallel processing, significantly improving efficiency
-- 📈 **Real-time Performance Statistics**: Shows execution time for each test phase
-- 🎨 **Colored Output**: Clear visual progress and result display
-
-**Recommended Development Workflow:**
-
-1. **During Development**: `./gradlew quickTest` (quick feedback, < 5s)
-2. **Before Commit**: `./gradlew unitTest` (complete unit tests, < 10s)
-3. **PR Check**: `./gradlew integrationTest` (integration verification)
-4. **Before Release**: `./gradlew test` (complete test suite)
-
-### Run All Tests
-
-```bash
-./gradlew runAllTests                    # Run all tests (568 tests)
-./gradlew runAllTestsWithReport         # Run tests and generate Allure report
-./gradlew runAllTestsComplete           # Run complete test suite
+```mermaid
+sequenceDiagram
+    participant C as Customer
+    participant UI as Frontend
+    participant API as API Gateway
+    participant OS as Order Service
+    participant IS as Inventory Service
+    participant PS as Payment Service
+    participant NS as Notification Service
+    participant DS as Delivery Service
+    
+    C->>UI: Place Order
+    UI->>API: POST /api/orders
+    API->>OS: Create Order
+    
+    OS->>OS: Validate Order
+    OS->>+IS: Check Inventory
+    IS-->>-OS: Inventory Available
+    
+    OS->>OS: Create Order Aggregate
+    OS->>OS: Collect OrderCreated Event
+    OS->>OS: Save Order
+    OS->>OS: Publish Events
+    
+    par Event Processing
+        OS-->>IS: OrderCreated Event
+        IS->>IS: Reserve Stock
+        IS->>IS: Collect StockReserved Event
+        IS->>IS: Publish Events
+        
+        OS-->>PS: OrderCreated Event  
+        PS->>PS: Process Payment
+        PS->>PS: Collect PaymentProcessed Event
+        PS->>PS: Publish Events
+        
+        OS-->>NS: OrderCreated Event
+        NS->>NS: Send Order Confirmation
+        NS->>C: Email/SMS Notification
+    end
+    
+    PS-->>OS: PaymentProcessed Event
+    OS->>OS: Update Order Status
+    
+    PS-->>DS: PaymentProcessed Event
+    DS->>DS: Schedule Delivery
+    DS->>DS: Collect DeliveryScheduled Event
+    DS->>DS: Publish Events
+    
+    DS-->>NS: DeliveryScheduled Event
+    NS->>C: Delivery Notification
+    
+    API-->>UI: Order Created Response
+    UI-->>C: Order Confirmation
 ```
 
-### Run Specific Test Types
+### 📊 Test Performance Monitoring
 
-```bash
-./gradlew test                          # Unit tests (JUnit 5)
-./gradlew unitTest                      # Quick unit tests (~5MB, ~50ms each)
-./gradlew quickTest                     # Quick tests - daily development use (< 2 minutes)
-./gradlew integrationTest               # Integration tests (~50MB, ~500ms each)
-./gradlew e2eTest                       # End-to-end tests (~500MB, ~3s each)
-./gradlew preCommitTest                 # Pre-commit tests (< 5 minutes)
-./gradlew fullTest                      # Full tests - pre-release use
-./gradlew cucumber                      # BDD tests (Cucumber 7.15.0)
-./gradlew testArchitecture             # Architecture tests (ArchUnit 1.3.0)
+```mermaid
+graph LR
+    subgraph TEST_EXECUTION ["Test Execution"]
+        UT[Unit Tests<br/>~50ms each<br/>~5MB memory]
+        IT[Integration Tests<br/>~500ms each<br/>~50MB memory]
+        E2E[E2E Tests<br/>~3s each<br/>~500MB memory]
+    end
+    
+    subgraph MONITORING ["Performance Monitoring"]
+        TPE[TestPerformanceExtension<br/>- Execution Time Tracking<br/>- Memory Usage Monitoring<br/>- Regression Detection]
+        TPM[TestPerformanceMonitor<br/>- JUnit 5 Extension<br/>- Thread-safe Data Collection<br/>- Report Generation]
+        TRM[TestResourceManager<br/>- Resource Cleanup<br/>- Memory Management<br/>- Usage Statistics]
+    end
+    
+    subgraph REPORTS ["Performance Reports"]
+        TR[Text Reports<br/>- Individual Class Reports<br/>- Overall Summary<br/>- Slow Test Analysis]
+        HR[HTML Reports<br/>- Interactive Charts<br/>- Visual Analysis<br/>- Trend Detection]
+        CSV[CSV Data<br/>- Raw Performance Data<br/>- Custom Analysis<br/>- Historical Tracking]
+    end
+    
+    subgraph THRESHOLDS ["Performance Thresholds"]
+        SLOW[Slow Test Warning<br/>> 5 seconds]
+        VERY_SLOW[Very Slow Test Error<br/>> 30 seconds]
+        MEMORY[Memory Usage Warning<br/>> 50MB increase]
+        CRITICAL[Memory Critical<br/>> 80% heap usage]
+    end
+    
+    UT --> TPE
+    IT --> TPE
+    E2E --> TPE
+    
+    TPE --> TPM
+    TPM --> TRM
+    
+    TPM --> TR
+    TPM --> HR
+    TPM --> CSV
+    
+    TPM --> SLOW
+    TPM --> VERY_SLOW
+    TPM --> MEMORY
+    TPM --> CRITICAL
+    
+    %% Styling
+    classDef test fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef monitor fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef report fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef threshold fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    
+    class UT,IT,E2E test
+    class TPE,TPM,TRM monitor
+    class TR,HR,CSV report
+    class SLOW,VERY_SLOW,MEMORY,CRITICAL threshold
 ```
 
-### Test Reports
+## 🧪 Testing Strategy
 
-- **Cucumber HTML Report**: `app/build/reports/cucumber/cucumber-report.html`
-- **JUnit HTML Report**: `app/build/reports/tests/test/index.html`
-- **Allure Report**: `app/build/reports/allure-report/allureReport/index.html`
-- **Allure Results Directory**: `app/build/allure-results/`
+### Test Performance Optimization Results
 
-### Architecture Testing
+**Before Optimization**: 13 minutes 52 seconds  
+**After Optimization**: < 30 seconds  
+**Improvement**: 99%+ performance gain
 
-Using ArchUnit 1.3.0 to ensure code follows predefined architectural rules:
+### Test Categories and Performance Targets
 
-- **DddEntityRefactoringArchitectureTest** - Ensures DDD entity refactoring complies with architectural specifications
-- **Hexagonal Architecture Compliance** - Ensures ports and adapters separation
-- **DDD Tactical Patterns** - Ensures correct use of Aggregate Root, Value Object, Domain Event, Specification Pattern, Policy Pattern
-- **Package Structure Standards** - Ensures package structure follows DDD layered architecture
-- **Annotation Validation** - Ensures correct use of `@AggregateRoot`, `@ValueObject`, `@Specification`, `@Policy` annotations
+- **Unit Tests (80%)**: < 50ms execution, < 5MB memory usage
+- **Integration Tests (15%)**: < 500ms execution, < 50MB memory usage  
+- **End-to-End Tests (5%)**: < 3s execution, < 500MB memory usage
 
-### BDD Testing
-
-Using Cucumber 7.15.0 for behavior-driven development testing, covering:
-
-- **Consumer Features** (Consumer) - Shopping journey, shopping cart management
-- **Customer Management** (Customer) - Membership system, loyalty points, member discounts
-- **Order Management** (Order) - Order aggregate root, order workflow
-- **Inventory Management** (Inventory) - Inventory management
-- **Payment Processing** (Payment) - Payment aggregate root, payment discounts
-- **Logistics Delivery** (Logistics) - Delivery management, delivery system
-- **Notification Service** (Notification) - Notification management, notification service
-- **Promotional Activities** (Promotion) - Coupon system, flash sales, convenience store coupons, add-on activities, gift activities
-- **Product Management** (Product) - Product search, product combinations
-- **Pricing Management** (Pricing) - Commission rates
-- **Complete Workflow** (Workflow) - End-to-end business processes
-
-## 🔧 Development Tools
-
-### Data Generation
+### Test Execution Commands
 
 ```bash
-python3 scripts/generate_data.py       # Generate large amounts of test data
+# Daily development - fast feedback
+./gradlew quickTest              # Unit tests only (< 2 minutes)
+
+# Pre-commit verification  
+./gradlew preCommitTest          # Unit + Integration tests (< 5 minutes)
+
+# Pre-release verification
+./gradlew fullTest               # All test types including E2E and Cucumber
+
+# Specific test types
+./gradlew unitTest               # Fast unit tests (~5MB, ~50ms each)
+./gradlew integrationTest        # Integration tests (~50MB, ~500ms each)  
+./gradlew e2eTest               # End-to-end tests (~500MB, ~3s each)
+./gradlew cucumber              # BDD Cucumber tests
+
+# Performance monitoring and reporting
+./gradlew generatePerformanceReport  # Generate test performance reports
+./gradlew runAllTestsWithReport     # Run all tests + generate reports
 ```
 
-### Service Management
+### Test Performance Monitoring Features
+
+- **Automatic Performance Tracking**: TestPerformanceExtension monitors execution time and memory usage
+- **Regression Detection**: Configurable thresholds for performance regression detection
+- **Detailed Reporting**: Text-based and HTML performance analysis reports
+- **Resource Management**: Automatic cleanup and memory leak prevention
+- **Slow Test Identification**: Automatic flagging of tests exceeding performance thresholds
+
+## 🚀 Deployment and Infrastructure
+
+### Container Deployment
 
 ```bash
-./scripts/start-fullstack.sh           # Start full-stack application
-./scripts/stop-fullstack.sh            # Stop all services
+# Build optimized Docker images
+./docker/docker-build.sh
+
+# Start all services
+docker-compose up -d
+
+# Health check
+curl http://localhost:8080/actuator/health
 ```
 
-### Frontend Development
-
-#### CMC Frontend (Next.js)
+### AWS Infrastructure (CDK)
 
 ```bash
-cd cmc-frontend
-npm install                             # Install dependencies
-npm run dev                            # Development mode (http://localhost:3002)
-npm run build                          # Production build
-npm run lint                           # Code linting
-npm run type-check                     # TypeScript type checking
-npm test                               # Run tests
-npm run test:e2e                       # E2E tests (Playwright)
-```
-
-#### Consumer Frontend (Angular)
-
-```bash
-cd consumer-frontend
-npm install                             # Install dependencies
-npm start                              # Development mode (http://localhost:3001)
-npm run build                          # Production build
-npm test                               # Run tests (Jasmine + Karma)
-```
-
-## 📖 Complete Documentation
-
-> **Documentation Center**: [docs/README.md](README.md)
-
-### Rozanski & Woods Seven Viewpoints
-1. **[Functional Viewpoint](README.md)** - System functions and responsibilities
-2. **[Information Viewpoint](README.md)** - Data and information flow  
-3. **[Concurrency Viewpoint](README.md)** - Concurrency and synchronization
-4. **[Development Viewpoint](README.md)** - Development and build
-5. **[Deployment Viewpoint](README.md)** - Deployment and environment
-6. **[Operational Viewpoint](README.md)** - Operations and maintenance
-
-### Eight Architecture Perspectives
-1. **[Security](README.md)** - Security and compliance
-2. **[Performance](README.md)** - Performance and scalability
-3. **[Availability](README.md)** - Availability and resilience
-4. **[Evolution](README.md)** - Evolution and maintenance
-5. **[Usability](README.md)** - User experience
-6. **[Regulation](README.md)** - Regulatory compliance
-7. **[Location](README.md)** - Geographic distribution
-8. **[Cost](README.md)** - Cost optimization
-
-## 🎯 UML Diagrams
-
-This project uses PlantUML to generate various UML diagrams:
-
-- Class diagrams, object diagrams, component diagrams, deployment diagrams
-- Sequence diagrams (order processing, pricing processing, delivery processing)
-- State diagrams, activity diagrams
-- Domain model diagrams, hexagonal architecture diagrams, DDD layered architecture diagrams
-
-See [Diagram Documentation](README.md) for more information.
-
-## 🚨 Common Issues
-
-### Configuration Cache Issues
-
-```bash
-./gradlew --no-configuration-cache <task>
-```
-
-### Allure Report Issues
-
-```bash
-./gradlew clean
-./gradlew runAllTestsWithReport
-```
-
-### Frontend Dependency Issues
-
-```bash
-cd cmc-frontend
-rm -rf node_modules package-lock.json
+# Deploy to AWS
+cd infrastructure
 npm install
+cdk deploy --all
 ```
+
+### Kubernetes Deployment
+
+```bash
+# Deploy to EKS
+./deployment/deploy-to-eks.sh
+```
+
+## 🔍 Monitoring and Observability
+
+### Health Checks and Metrics
+
+- **Application Health**: `/actuator/health`
+- **Metrics**: `/actuator/metrics`  
+- **Prometheus**: `/actuator/prometheus`
+- **Custom Metrics**: Business KPIs and performance indicators
+
+### Logging and Tracing
+
+- **Structured Logging**: JSON format with correlation IDs
+- **Distributed Tracing**: AWS X-Ray integration
+- **Log Aggregation**: Centralized logging with ELK stack
+- **Error Tracking**: Comprehensive error monitoring and alerting
 
 ## 🤝 Contributing
 
-Welcome to submit Pull Requests or open Issues to discuss improvement suggestions.
+### Development Workflow
+
+1. **Feature Development**: Follow BDD/TDD practices
+2. **Code Review**: Mandatory peer review process
+3. **Testing**: Comprehensive test coverage required
+4. **Documentation**: Update relevant documentation
+5. **Performance**: Monitor test performance impact
+
+### Quality Gates
+
+- **Code Coverage**: > 80%
+- **Test Performance**: Meet established thresholds
+- **Architecture Compliance**: Pass ArchUnit tests
+- **Security**: Pass security scans
+- **Performance**: No performance regressions
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [../../LICENSE](../../LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](../../LICENSE) file for details.
 
-## 🔗 Related Links
+## 🙏 Acknowledgments
 
-- **DeepWiki Integration**: [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/humank/genai-demo)
-- **Consumer Frontend**: <http://localhost:3001> (development mode)
-- **CMC Frontend**: <http://localhost:3002> (development mode)
-- **Backend API**: <http://localhost:8080>
-- **Swagger UI**: <http://localhost:8080/swagger-ui/index.html>
-- **OpenAPI Specification**: <http://localhost:8080/v3/api-docs>
-- **H2 Console**: <http://localhost:8080/h2-console>
+- **Rozanski & Woods**: For the comprehensive architectural methodology
+- **Domain-Driven Design Community**: For DDD patterns and practices
+- **Spring Boot Team**: For the excellent framework and ecosystem
+- **Open Source Community**: For the amazing tools and libraries used in this project
 
 ---
 
-## 📊 Project Statistics & Value
+**Project Status**: Active Development  
+**Last Updated**: September 2025  
+**Version**: v3.3.0
 
-### 📈 Core Data
-
-- **Code Scale**: 250,000+ lines of high-quality code (added 50,000+ lines)
-- **Test Quality**: 568 tests, 100% pass rate
-- **Test Performance**: Optimized test execution time from 13min52s → < 30s (99%+ improvement)
-- **API Coverage**: 35+ RESTful API endpoints
-- **UI Components**: 30+ reusable components (React + Angular)
-- **Documentation Completeness**: 120+ detailed documentation pages, including complete development standards specifications
-- **Architecture Decisions**: 7 complete ADR documents covering all important architectural decisions
-- **Database**: 131 business records + 23 Flyway migration scripts
-- **MCP Integration**: 4 stable MCP servers supporting AI-assisted development
-- **Development Standards**: 5 core development standards documents covering complete development lifecycle
-
-### 🏆 Technical Value
-
-- **Architecture Excellence**: DDD + Hexagonal Architecture + Event-Driven Design, complete ADR documentation
-- **Quality Assurance**: Practical testing strategy + Test performance monitoring framework + Complete architecture test coverage
-- **Modern Technology Stack**: Java 21 + Spring Boot 3.4.5 + Next.js 14.2.30 + Angular 18.2.0
-- **Enterprise Features**: Production-ready observability + AI-assisted development (MCP) + Cloud-native deployment
-- **Development Standards**: Complete development standards specification system covering security, performance, code review, etc.
-- **AI Integration**: Model Context Protocol integration providing intelligent development assistant functionality
-
----
-
-**Project Maintainers**: Modern Software Architecture Practice Team  
-**Technology Stack**: Java 21 + Spring Boot 3.4.5 + Next.js 14 + Angular 18  
-**Architecture Methodology**: Rozanski & Woods + DDD + Hexagonal Architecture + Event-Driven  
-**Last Updated**: January 21, 2025
-- **Best Practices**: Industry-standard testing methods + Complete documentation system, suitable for learning modern enterprise application development
+For more information, visit our [Documentation Center](../README.md) or check out the [API Documentation](http://localhost:8080/swagger-ui/index.html) when running locally.
