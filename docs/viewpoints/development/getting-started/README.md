@@ -180,18 +180,10 @@ tail -f logs/application.log
 - [Spring Boot Guide](https://spring.io/guides)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 
-## 🤝 獲得幫助
-
-### 團隊聯繫
-- **Slack**: #development-team
-- **Email**: dev-team@company.com
-- **會議**: 每週三 10:00 AM 技術分享
-
 ### 文檔反饋
 如果你發現文檔有任何問題或改進建議，請：
 1. 創建 GitHub Issue
 2. 直接提交 PR 修正
-3. 在 Slack 頻道討論
 
 ---
 

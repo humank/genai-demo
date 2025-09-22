@@ -65,7 +65,7 @@ graph TD
 - **資料工程師**: 重點關注Information Viewpoint
 
 ### 按Concern導航
-- **系統設計**: Functional Viewpoint → Information Viewpoint → Concurrency Viewpoint
+- **系統設計**: Context Viewpoint → Functional Viewpoint → Information Viewpoint → Concurrency Viewpoint
 - **實現規劃**: Development Viewpoint → Deployment Viewpoint
 - **運營準備**: Operational Viewpoint
 

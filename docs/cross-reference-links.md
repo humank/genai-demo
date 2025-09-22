@@ -42,6 +42,25 @@
 - **[界限上下文圖](diagrams/plantuml/bounded-context-diagram.svg)** - 上下文劃分
 - **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 業務流程分析
 
+### 情境視點 (Context Viewpoint)
+
+**主文檔**: [情境視點總覽](viewpoints/context/README.md)
+
+#### 強關聯視點
+- **[功能視點](viewpoints/functional/README.md)** - 外部系統整合的功能需求
+- **[部署視點](viewpoints/deployment/README.md)** - 外部系統的部署整合
+- **[運營視點](viewpoints/operational/README.md)** - 外部系統監控和整合狀態
+
+#### 相關文檔
+- **[系統邊界定義](viewpoints/context/README.md#系統邊界和外部依賴)** ↔ **[功能邊界設計](viewpoints/functional/bounded-contexts.md)**
+- **[外部系統整合](viewpoints/context/README.md#外部系統整合)** ↔ **[基礎設施部署](viewpoints/deployment/README.md)**
+- **[利害關係人分析](viewpoints/context/README.md#利害關係人分析)** ↔ **[運營監控需求](viewpoints/operational/README.md)**
+
+#### 相關圖表
+- **[系統上下文圖](diagrams/generated/context/system-context-overview.png)** - 完整系統邊界和外部依賴
+- **[外部整合架構圖](diagrams/generated/context/external-integrations.png)** - 外部系統整合設計
+- **[利害關係人互動圖](diagrams/generated/context/stakeholder-interactions.png)** - 利害關係人關係分析
+
 ### 資訊視點 (Information Viewpoint)
 
 **主文檔**: [資訊視點總覽](viewpoints/information/README.md)

@@ -392,10 +392,12 @@ graph TB
 
 ## 與其他視點的關聯
 
+- **[情境視點](../context/README.md)**: 外部系統的部署整合
+- **[功能視點](../functional/README.md)**: 業務功能的部署需求
+- **[資訊視點](../information/README.md)**: 資料庫和存儲的部署
+- **[並發視點](../concurrency/README.md)**: 分散式部署和負載處理
 - **[開發視點](../development/README.md)**: 建置產物和 CI/CD 整合
 - **[運營視點](../operational/README.md)**: 監控、日誌和維護
-- **[並發視點](../concurrency/README.md)**: 分散式部署和負載處理
-- **[功能視點](../functional/README.md)**: 業務功能的部署需求
 
 ## 實現指南
 

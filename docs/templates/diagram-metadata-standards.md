@@ -21,7 +21,7 @@
 title: "圖表標題"
 type: "mermaid|plantuml|excalidraw"
 format: "mmd|puml|excalidraw|png|svg|pdf"
-viewpoint: "functional|information|concurrency|development|deployment|operational"
+viewpoint: "functional|information|concurrency|development|deployment|operational|context"
 perspective: ["security", "performance", "availability", "evolution", "usability", "regulation", "location", "cost"]
 diagram_level: "overview|detailed|conceptual|implementation"
 target_audience: ["architect", "developer", "stakeholder", "business", "operator"]

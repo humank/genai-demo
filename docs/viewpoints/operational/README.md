@@ -115,10 +115,12 @@
 
 ## 與其他視點的關聯
 
-- **[部署視點](../deployment/README.md)**: 部署監控和基礎設施管理
-- **[開發視點](../development/README.md)**: 開發階段的監控整合
-- **[並發視點](../concurrency/README.md)**: 並發系統的監控和調優
+- **[情境視點](../context/README.md)**: 外部系統監控和整合狀態
 - **[功能視點](../functional/README.md)**: 業務功能的監控和指標
+- **[資訊視點](../information/README.md)**: 資料流和事件監控
+- **[並發視點](../concurrency/README.md)**: 並發系統的監控和調優
+- **[開發視點](../development/README.md)**: 開發階段的監控整合
+- **[部署視點](../deployment/README.md)**: 部署監控和基礎設施管理
 
 ## 實現指南
 
