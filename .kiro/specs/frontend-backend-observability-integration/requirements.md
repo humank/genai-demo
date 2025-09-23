@@ -15,7 +15,7 @@
 #### 驗收標準
 
 1. 當前端需要商品功能時，系統應整合以下 API：
-   - `/api/products` - 產品管理 API（管理端）
+   - `/../api/products` - 產品管理 API（管理端）
    - `/api/consumer/products` - 消費者商品瀏覽 API
    - `/api/consumer/products/search` - 商品搜尋 API
    - `/api/consumer/products/{productId}` - 商品詳情 API

@@ -398,7 +398,7 @@ public class SecureTransactionService {
 ```java
 // 安全的輸入驗證
 @RestController
-@RequestMapping("/api/v1/customers")
+@RequestMapping("/../api/v1/customers")
 @Validated
 public class CustomerController {
     
@@ -457,7 +457,7 @@ class CustomerSecurityTest {
     void should_allow_authorized_user_to_create_customer() throws Exception {
         CreateCustomerRequest request = new CreateCustomerRequest("John Doe", "john@example.com");
         
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/../api/v1/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -469,7 +469,7 @@ class CustomerSecurityTest {
     void should_deny_anonymous_user_access() throws Exception {
         CreateCustomerRequest request = new CreateCustomerRequest("John Doe", "john@example.com");
         
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/../api/v1/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpected(status().isUnauthorized());
@@ -482,7 +482,7 @@ class CustomerSecurityTest {
             "john@example.com"
         );
         
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/../api/v1/customers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())

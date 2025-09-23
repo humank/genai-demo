@@ -114,7 +114,7 @@ System.out.println("超時率: " + stats.getTimeoutRate() * 100 + "%");
 
 系統提供了 REST API 端點用於Monitoring：
 
-- `GET /api/monitoring/events/health` - 系統健康狀態
+- `GET /../api/monitoring/events/health` - 系統健康狀態
 - `GET /api/monitoring/events/statistics/processing` - 事件處理統計
 - `GET /api/monitoring/events/statistics/retry` - 重試統計
 - `GET /api/monitoring/events/backpressure/status` - 背壓狀態

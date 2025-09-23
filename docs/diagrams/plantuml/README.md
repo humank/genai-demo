@@ -166,7 +166,7 @@
 
 ### 組件圖
 
-![組件圖](../generated/legacy/電子商務系統組件圖.png)
+![組件圖](../generated/legacy/.png)
 
 ### 部署圖
 
@@ -174,55 +174,55 @@
 
 ### 套件圖
 
-![套件圖](../generated/legacy/訂單系統套件圖.png)
+![套件圖](../generated/legacy/.png)
 
 ### 時序圖
 
-![時序圖](../generated/legacy/訂單處理時序圖.png)
+![時序圖](../generated/legacy/.png)
 
 ### 定價處理時序圖
 
-![定價處理時序圖](../generated/legacy/定價處理時序圖.png)
+![定價處理時序圖](../generated/legacy/.png)
 
 ### 配送處理時序圖
 
-![配送處理時序圖](../generated/legacy/配送處理時序圖.png)
+![配送處理時序圖](../generated/legacy/.png)
 
 ### 狀態圖
 
-![狀態圖](../generated/legacy/訂單狀態圖.png)
+![狀態圖](../generated/legacy/.png)
 
 ### 活動圖概覽
 
-![活動圖概覽](../generated/legacy/訂單系統活動圖概覽.png)
+![活動圖概覽](../generated/legacy/.png)
 
 ### 活動圖詳細
 
-![活動圖詳細](../generated/legacy/訂單處理詳細活動圖.png)
+![活動圖詳細](../generated/legacy/.png)
 
 ### 使用案例圖
 
-![使用案例圖](../generated/legacy/訂單系統使用案例圖.png)
+![使用案例圖](../generated/legacy/.png)
 
 ### 領域模型圖
 
-![領域模型圖](../generated/legacy/領域模型圖.png)
+![領域模型圖](../generated/legacy/.png)
 
 ### 六角形架構圖
 
-![六角形架構圖](../generated/legacy/六角形架構圖.png)
+![六角形架構圖](../generated/legacy/.png)
 
 ### DDD分層架構圖
 
-![DDD分層架構圖](../generated/legacy/DDD分層架構圖.png)
+![DDD分層架構圖](../generated/legacy/DDD.png)
 
 ### Saga模式圖
 
-![Saga模式圖](../generated/legacy/訂單處理Saga模式圖.png)
+![Saga模式圖](../generated/legacy/saga.png)
 
 ### 限界上下文圖
 
-![限界上下文圖](../generated/legacy/限界上下文圖.png)
+![限界上下文圖](../generated/legacy/.png)
 
 ### 事件風暴圖-Big Picture Exploration
 

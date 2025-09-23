@@ -107,7 +107,7 @@
 使用 PlantUML 生成 PNG 圖片：
 
 ```bash
-java -jar tools/plantuml.jar -tpng docs/diagrams/plantuml/event-storming/*.puml
+java -jar tools-and-environment/plantuml.jar -tpng docs/diagrams/plantuml/event-storming/*.puml
 ```
 
 ### 3. 圖表更新
@@ -143,7 +143,7 @@ java -jar tools/plantuml.jar -tpng docs/diagrams/plantuml/event-storming/*.puml
 - \1
 - [DDD 戰術模式實現](../../../design/ddd-guide.md)
 - \1
-- [領域事件實現指南](../../../../.kiro/steering/domain-events.md)
+- **領域事件實現指南** (請參考專案內部文檔)
 
 ## 工具和資源
 

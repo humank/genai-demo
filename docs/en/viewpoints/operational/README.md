@@ -49,7 +49,7 @@ Operational Viewpoint關注系統的日常運營和維護，包括Monitoring、L
 
 ## Quality Attributes考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#Operational Viewpoint-operational-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md#Operational Viewpoint-operational-viewpoint) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

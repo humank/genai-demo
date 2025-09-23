@@ -165,7 +165,7 @@
 
 ### 組件圖
 
-![組件圖](../../../diagrams/generated/legacy/電子商務系統組件圖.png)
+!!!!!![組件圖](../../../diagrams/generated/legacy/.png)
 
 ### Deployment
 
@@ -173,39 +173,39 @@
 
 ### 套件圖
 
-![套件圖](../../../diagrams/generated/legacy/訂單系統套件圖.png)
+!!!!!![套件圖](../../../diagrams/generated/legacy/.png)
 
 ### 時序圖
 
-![時序圖](../../../diagrams/generated/legacy/訂單處理時序圖.png)
+!!!!!![時序圖](../../../diagrams/generated/legacy/.png)
 
 ### 定價處理時序圖
 
-![定價處理時序圖](../../../diagrams/generated/legacy/定價處理時序圖.png)
+!!!!!![定價處理時序圖](../../../diagrams/generated/legacy/.png)
 
 ### 配送處理時序圖
 
-![配送處理時序圖](../../../diagrams/generated/legacy/配送處理時序圖.png)
+!!!!!![配送處理時序圖](../../../diagrams/generated/legacy/.png)
 
 ### 狀態圖
 
-![狀態圖](../../../diagrams/generated/legacy/訂單狀態圖.png)
+!!!!!![狀態圖](../../../diagrams/generated/legacy/.png)
 
 ### Overview
 
-![活動圖概覽](../../../diagrams/generated/legacy/訂單系統活動圖概覽.png)
+!!!!!![活動圖概覽](../../../diagrams/generated/legacy/.png)
 
 ### 活動圖詳細
 
-![活動圖詳細](../../../diagrams/generated/legacy/訂單處理詳細活動圖.png)
+!!!!!![活動圖詳細](../../../diagrams/generated/legacy/.png)
 
 ### 使用案例圖
 
-![使用案例圖](../../../diagrams/generated/legacy/訂單系統使用案例圖.png)
+!!!!!![使用案例圖](../../../diagrams/generated/legacy/.png)
 
 ### 領域模型圖
 
-![領域模型圖](../../../diagrams/generated/legacy/領域模型圖.png)
+!!!!!![領域模型圖](../../../diagrams/generated/legacy/.png)
 
 ### Hexagonal Architecture圖
 
@@ -221,39 +221,39 @@
 
 ### 限界上下文圖
 
-![限界上下文圖](../../../diagrams/generated/legacy/限界上下文圖.png)
+!!!!!![限界上下文圖](../../../diagrams/generated/legacy/.png)
 
 ### Event Storming圖-Big Picture Exploration
 
-![Event Storming圖- Big Picture Exploration](../../../diagrams/generated/legacy/big-picture-exploration.png)
+!!!!!![Event Storming圖- Big Picture Exploration](../../../diagrams/generated/legacy/big-picture-exploration.png)
 
 ### Event Storming圖-Process Modeling
 
-![Event Storming圖- Process Modeling](../../../diagrams/generated/legacy/process-modeling.png)
+!!!!!![Event Storming圖- Process Modeling](../../../diagrams/generated/legacy/process-modeling.png)
 
 ### Event Storming圖-Design Level
 
-![Event Storming圖- design-level](../../../diagrams/generated/legacy/design-level.png)
+!!!!!![Event Storming圖- design-level](../../../diagrams/generated/legacy/design-level.png)
 
 ### Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖
 
-![Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖](../../../diagrams/generated/legacy/cqrs pattern diagram.png)
+!!!!!![Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))模式圖](../../../diagrams/generated/legacy/.png)
 
 ### Event Sourcing圖
 
-![Event Sourcing圖](../../../diagrams/generated/legacy/event sourcing diagram.png)
+!!!!!![Event Sourcing圖](../../../diagrams/generated/legacy/.png)
 
 ### API接口圖
 
-![API接口圖](../../../diagrams/generated/legacy/api interface diagram.png)
+!!!!!![API接口圖](../../../diagrams/generated/legacy/.png)
 
 ### 數據模型圖
 
-![數據模型圖](../../../diagrams/generated/legacy/data model diagram.png)
+!!!!!![數據模型圖](../../../diagrams/generated/legacy/.png)
 
 ### 安全架構圖
 
-![安全架構圖](../../../diagrams/generated/legacy/security architecture diagram.png)
+!!!!!![安全架構圖](../../../diagrams/generated/legacy/.png)
 
 ### Observability架構圖
 

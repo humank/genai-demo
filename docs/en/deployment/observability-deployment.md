@@ -154,7 +154,7 @@ curl -f http://localhost:8080/actuator/health/redis || exit 1
 
 # Testing
 echo "5. 測試Observability API..."
-curl -X POST http://localhost:8080/api/analytics/events \
+curl -X POST http://localhost:8080/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: dev-test-$(date +%s)" \
   -H "X-Session-Id: dev-session" \
@@ -683,7 +683,7 @@ server {
     }
 
     # API 代理
-    location /api/ {
+    location /../api/ {
         proxy_pass http://backend;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -786,7 +786,7 @@ echo "3. 檢查Observability功能..."
 TRACE_ID="prod-verify-$(date +%s)"
 SESSION_ID="prod-verify-session"
 
-ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/api/analytics/events \
+ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: $TRACE_ID" \
   -H "X-Session-Id: $SESSION_ID" \
@@ -1086,6 +1086,6 @@ echo "=== 合規性檢查完成 ==="
 ## 相關文檔
 
 - [配置指南](../observability/configuration-guide.md)
-- [API 文檔](../api/observability-api.md)
+- [API 文檔](../../api/observability-api.md)
 - [故障排除指南](../troubleshooting/observability-troubleshooting.md)
 - [架構文檔](../../architecture/observability-architecture.md)

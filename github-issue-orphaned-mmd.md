@@ -84,7 +84,7 @@
 
 - [孤立文件詳細報告](reports-summaries/diagrams/orphaned-mmd-files-report.md)
 - [Mermaid 遷移完成報告](reports-summaries/diagrams/mermaid-migration-complete-report.md)
-- [圖表生成標準](.kiro/steering/diagram-generation-standards.md)
+- **圖表生成標準** (請參考專案內部文檔)
 
 ## 💡 備註
 

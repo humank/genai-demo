@@ -19,7 +19,7 @@
 ```yaml
 ---
 title: "文件標題"
-viewpoint: "functional|information|concurrency|development|deployment|operational"
+viewpoint: "functional|information|concurrency|development|deployment|operational|context"
 perspective: ["security", "performance", "availability", "evolution", "usability", "regulation", "location", "cost"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst", "product-manager", "end-user"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]
@@ -86,7 +86,7 @@ tags: ["ddd", "domain-model", "aggregates", "bounded-context"]
 ---
 title: "觀點標題"
 perspective_type: "security|performance|availability|evolution|usability|regulation|location|cost"
-applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational"]
+applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational", "context"]
 quality_attributes: ["attribute1", "attribute2", "attribute3"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst"]
 related_perspectives: ["perspective1", "perspective2"]
@@ -162,7 +162,7 @@ tags: ["authentication", "authorization", "oauth2", "jwt", "security"]
 title: "圖表標題"
 type: "mermaid|plantuml|excalidraw"
 format: "mmd|puml|excalidraw|png|svg"
-viewpoint: "functional|information|concurrency|development|deployment|operational"
+viewpoint: "functional|information|concurrency|development|deployment|operational|context"
 perspective: ["security", "performance", "availability"]
 diagram_level: "overview|detailed|conceptual"
 target_audience: ["architect", "developer", "stakeholder"]
@@ -316,7 +316,7 @@ validation_rules:
   viewpoint:
     required: true
     type: string
-    allowed_values: ["functional", "information", "concurrency", "development", "deployment", "operational"]
+    allowed_values: ["functional", "information", "concurrency", "development", "deployment", "operational", "context"]
   
   last_updated:
     required: true

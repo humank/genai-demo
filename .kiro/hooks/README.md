@@ -228,6 +228,6 @@ python3 scripts/sync-diagram-references.py --validate --report
 
 ## 相關文件
 
-- [同步規則配置](.kiro/settings/diagram-sync-rules.json)
-- [同步腳本](../scripts/sync-diagram-references.py)
+- 同步規則配置
+- 同步腳本
 - [Kiro 設定](../settings/)

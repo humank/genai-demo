@@ -14,6 +14,7 @@
 | **[開發視點](viewpoints/development/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🟡 中 | 🟢 低 | 🔴 高 |
 | **[部署視點](viewpoints/deployment/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟢 低 | 🟡 中 | 🔴 高 | 🔴 高 |
 | **[運營視點](viewpoints/operational/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🔴 高 |
+| **[情境視點](viewpoints/context/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🟡 中 | 🟡 中 | 🔴 高 | 🔴 高 | 🟡 中 |
 
 **影響程度說明**:
 - 🔴 **高**: 該觀點對此視點有重大影響，需要深度整合考慮

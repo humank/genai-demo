@@ -141,7 +141,7 @@ For existing scattered report/summary files:
 
 #### Internal References
 - Use relative paths from the referencing document
-- Example: `[Report](reports-summaries/task-execution/automation-report.md)`
+- Example: `Report`
 - Update all references when moving files
 
 #### Cross-References

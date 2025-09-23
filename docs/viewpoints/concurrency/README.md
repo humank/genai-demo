@@ -81,7 +81,7 @@ graph TB
 
 ## 品質屬性考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#並發視點-concurrency-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 
@@ -567,11 +567,12 @@ graph TB
 
 ## 與其他視點的關聯
 
-- **功能視點**: 業務功能的並發需求
-- **資訊視點**: 資料存取的並發控制
-- **開發視點**: 並發程式碼的實現
-- **部署視點**: 並發資源的配置
-- **運營視點**: 並發性能的監控
+- **[情境視點](../context/README.md)**: 外部系統的並發整合
+- **[功能視點](../functional/README.md)**: 業務功能的並發需求
+- **[資訊視點](../information/README.md)**: 資料存取的並發控制
+- **[開發視點](../development/README.md)**: 並發程式碼的實現
+- **[部署視點](../deployment/README.md)**: 並發資源的配置
+- **[運營視點](../operational/README.md)**: 並發性能的監控
 
 ## 實現指南
 

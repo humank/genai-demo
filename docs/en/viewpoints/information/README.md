@@ -81,13 +81,13 @@ graph LR
 
 #### Information Viewpoint詳細架構
 
-![Information Viewpoint詳細架構](../../../diagrams/generated/information/information-detailed.png)
+!!!!!![Information Viewpoint詳細架構](../../../diagrams/generated/information/information-detailed.png)
 
 *Information Viewpoint的詳細Architecture Design，包括資料模型、資訊流和事件處理的完整實現*
 
 ## Quality Attributes考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#Information Viewpoint-information-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md#Information Viewpoint-information-viewpoint) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

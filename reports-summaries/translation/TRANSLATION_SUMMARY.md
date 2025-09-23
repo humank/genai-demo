@@ -19,7 +19,7 @@ The translation process has created a complete mirror of the Chinese documentati
 ```
 docs/en/
 ├── README.md                    # English documentation index
-├── api/                         # API documentation
+├── ../api/                         # API documentation
 ├── architecture/                # System architecture docs
 ├── deployment/                  # Deployment guides
 ├── design/                      # Design principles and guidelines
@@ -87,7 +87,7 @@ grep -r "此文檔需要" docs/en/
 ### High Priority (Core Documentation):
 1. `README.md` - Main project documentation
 2. `architecture/` - System architecture guides
-3. `api/` - API documentation
+3. `../api/` - API documentation
 4. `deployment/` - Deployment guides
 
 ### Medium Priority:

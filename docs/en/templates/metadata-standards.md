@@ -20,7 +20,7 @@
 ```yaml
 ---
 title: "文件標題"
-viewpoint: "functional|information|concurrency|development|deployment|operational"
+viewpoint: "functional|information|concurrency|development|deployment|operational|context"
 perspective: ["security", "performance", "availability", "evolution", "usability", "regulation", "location", "cost"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst", "product-manager", "end-user"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]
@@ -87,7 +87,7 @@ tags: ["ddd", "domain-model", "aggregates", "bounded-context"]
 ---
 title: "觀點標題"
 perspective_type: "security|performance|availability|evolution|usability|regulation|location|cost"
-applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational"]
+applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational", "context"]
 quality_attributes: ["attribute1", "attribute2", "attribute3"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst"]
 related_perspectives: ["perspective1", "perspective2"]

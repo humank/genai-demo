@@ -55,14 +55,14 @@ This document defines the standards for generating and managing diagrams in the 
 #### Markdown Link Format
 ```markdown
 <!-- ✅ CORRECT: Reference PNG for better GitHub display -->
-![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
+<!-- Diagram: Bounded Contexts Overview (需要重新生成) -->
 
 <!-- ❌ AVOID: SVG may appear too small in GitHub -->
-![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.svg)
+<!-- Diagram: Bounded Contexts Overview SVG (需要重新生成) -->
 
 <!-- 📋 OPTIONAL: Provide both formats -->
-![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
-*[High-resolution SVG version](../../diagrams/generated/functional/bounded-contexts-overview.svg)*
+<!-- Diagram: Bounded Contexts Overview (需要重新生成) -->
+*High-resolution SVG version*
 ```
 
 #### HTML Format (when needed)

@@ -67,7 +67,7 @@ export const environment = {
     enableDebugLogs: true,
     sampleRate: 1.0, // 100% sampling for development
     endpoints: {
-      analytics: '/api/analytics/events',
+      analytics: '/../api/analytics/events',
       performance: '/api/analytics/performance',
       errors: '/api/monitoring/events'
     },
@@ -132,7 +132,7 @@ export const environment = {
     enableDebugLogs: false,
     sampleRate: 0.1, // 10% sampling for testing
     endpoints: {
-      analytics: '/api/analytics/events',
+      analytics: '/../api/analytics/events',
       performance: '/api/analytics/performance',
       errors: '/api/monitoring/events'
     }
@@ -245,7 +245,7 @@ export const environment = {
     enableDebugLogs: false,
     sampleRate: 0.1, // 10% sampling for production
     endpoints: {
-      analytics: '/api/analytics/events',
+      analytics: '/../api/analytics/events',
       performance: '/api/analytics/performance',
       errors: '/api/monitoring/events'
     },
@@ -395,7 +395,7 @@ EventProcessingFailureRate:
 AnalyticsAPILatency:
   MetricName: http.server.requests
   Dimensions:
-    uri: /api/analytics/events
+    uri: /../api/analytics/events
   Threshold: 1000  # 1 秒
   ComparisonOperator: GreaterThanThreshold
   Statistic: Average
@@ -651,7 +651,7 @@ curl -f http://localhost:8080/actuator/health || exit 1
 curl -f http://localhost:8080/actuator/health/kafka || exit 1
 
 # 測試分析 API
-curl -X POST http://localhost:8080/api/analytics/events \
+curl -X POST http://localhost:8080/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: test-trace-123" \
   -H "X-Session-Id: test-session-456" \

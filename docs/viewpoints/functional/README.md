@@ -26,30 +26,30 @@
 
 #### 功能架構概覽
 
-![功能架構概覽](../../diagrams/generated/functional/functional-detailed.png)
+!!!!!![功能架構概覽](../../diagrams/generated/functional/functional-detailed.png)
 
 *系統功能架構的整體概覽，展示主要功能模組和它們之間的關係*
 
 #### 領域模型概覽
 
-![領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
+!!!!!![領域模型概覽](../../diagrams/generated/functional/domain-model-overview.png)
 
 *完整的領域模型設計，包括所有聚合根、實體和值對象的關係*
 
 #### 界限上下文概覽
 
-![界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
+!!!!!![界限上下文概覽](../../diagrams/generated/functional/bounded-contexts-overview.png)
 
 *13個界限上下文的劃分和它們之間的集成關係*
 
 ### 用例分析
-- [業務流程概覽](../../diagrams/generated/functional/Business%20Process%20Flows.png) - 系統用例和業務流程
-- [用戶旅程概覽](../../diagrams/generated/functional/User%20Journey%20Overview.png) - 用戶體驗流程設計
-- [應用服務概覽](../../diagrams/generated/functional/Application%20Services%20Overview.png) - API 和系統介面設計
+- !!!!![業務流程概覽](../../diagrams/generated/functional/business-process-flows.png) - 系統用例和業務流程
+- !!!!![用戶旅程概覽](../../diagrams/generated/functional/user-journey-overview.png) - 用戶體驗流程設計
+- !!!!![應用服務概覽](../../diagrams/generated/functional/application-services-overview.png) - API 和系統介面設計
 
 ## 品質屬性考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#功能視點-functional-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 
@@ -58,21 +58,21 @@
 - **存取控制**: 功能層面的權限控制，確保用戶只能存取授權功能
 - **輸入驗證**: API 和用戶輸入的全面安全驗證，防止注入攻擊
 - **輸出編碼**: 防止 XSS 攻擊的輸出處理和資料清理
-- **相關實現**: [安全架構圖](../../diagrams/generated/perspectives/security/security-architecture.png) | [安全標準文檔](../../.kiro/steering/security-standards.md)
+- **相關實現**: !!!!![安全架構圖](../../diagrams/generated/legacy/.png) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **安全標準文檔** (請參考專案內部文檔) --> --> --> --> -->
 
 #### [可用性觀點](../../perspectives/availability/README.md)
 - **關鍵功能保護**: 核心業務功能的容錯設計和冗餘機制
 - **功能降級**: 部分功能失效時的優雅降級策略
 - **業務連續性**: 關鍵業務流程的持續運行保障
 - **故障隔離**: 功能故障的隔離，避免級聯失效
-- **相關實現**: [可用性架構設計](../../perspectives/availability/README.md) | [容錯機制實現](../../infrastructure/README.md)
+- **相關實現**: [可用性架構設計](../../perspectives/availability/README.md) | 容錯機制實現
 
 #### [使用性觀點](../../perspectives/usability/README.md)
 - **用戶體驗**: 功能設計符合用戶期望和使用習慣
 - **介面設計**: API 和 UI 的直觀性和易用性設計
 - **錯誤處理**: 用戶友好的錯誤訊息和處理流程
 - **工作流程**: 業務流程的簡化和優化
-- **相關實現**: [用戶旅程設計](../../diagrams/generated/functional/User%20Journey%20Overview.png) | [API 設計標準](../../.kiro/steering/development-standards.md)
+- **相關實現**: !!!!![用戶旅程設計](../../diagrams/generated/functional/user-journey-overview.png) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **API 設計標準** (請參考專案內部文檔) --> --> --> --> -->
 
 ### 🟡 中影響觀點
 
@@ -80,25 +80,25 @@
 - **響應時間**: 核心功能的性能需求和 SLA 定義
 - **吞吐量**: 高頻使用功能的處理能力和擴展性
 - **資源使用**: 功能執行的資源消耗優化
-- **相關實現**: [性能監控架構](../../perspectives/performance/README.md) | [性能標準文檔](../../.kiro/steering/performance-standards.md)
+- **相關實現**: [性能監控架構](../../perspectives/performance/README.md) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **性能標準文檔** (請參考專案內部文檔) --> --> --> --> -->
 
 #### [演進性觀點](../../perspectives/evolution/README.md)
 - **功能擴展**: 新功能的添加能力和向後相容性
 - **業務規則靈活性**: 業務邏輯的可配置性和適應性
 - **模組化設計**: 功能模組的獨立性和可重用性
-- **相關實現**: [六角架構設計](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png) | [模組化架構指南](bounded-contexts.md)
+- **相關實現**: !!!!![六角架構設計](../../diagrams/generated/functional/hexagonal-architecture-overview.png) | [模組化架構指南](bounded-contexts.md)
 
 #### [法規觀點](../../perspectives/regulation/README.md)
 - **合規功能**: 法規要求的功能實現和驗證
 - **稽核軌跡**: 業務操作的完整記錄和追蹤
 - **資料治理**: 功能層面的資料管理和保護
-- **相關實現**: [審計服務設計](../../diagrams/generated/functional/Observability%20Aggregate%20Details.png) | [合規標準文檔](../../perspectives/regulation/README.md)
+- **相關實現**: !!!!![審計服務設計](../../diagrams/generated/functional/observability-aggregate-details.png) | [合規標準文檔](../../perspectives/regulation/README.md)
 
 #### [成本觀點](../../perspectives/cost/README.md)
 - **功能成本**: 功能實現和維護的成本效益分析
 - **資源效率**: 功能執行的資源使用效率
 - **開發成本**: 功能開發的時間和人力成本
-- **相關實現**: [成本優化架構](../../perspectives/cost/README.md) | [資源效率監控](../../diagrams/generated/functional/Infrastructure%20Layer%20Overview.png)
+- **相關實現**: [成本優化架構](../../perspectives/cost/README.md) | !!!!![資源效率監控](../../diagrams/generated/functional/infrastructure-layer-overview.png)
 
 ### 🟢 低影響觀點
 
@@ -342,7 +342,7 @@ graph TB
 ```
 
 *完整系統架構概覽，展示用戶角色、前端應用、API網關、微服務架構、基礎設施、可觀測性和安全合規*
-- [六角架構概覽 (PlantUML)](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png) - 端口和適配器架構，基於實際代碼結構
+- !!!!![六角架構概覽 (PlantUML)](../../diagrams/generated/functional/hexagonal-architecture-overview.png) - 端口和適配器架構，基於實際代碼結構
 - ## 六角架構概覽 (Mermaid)
 
 ```mermaid
@@ -550,9 +550,9 @@ graph TB
 *互動式六角架構圖表*
 
 ### 領域模型圖表
-- [領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png) - DDD 聚合根總覽
-- [界限上下文概念圖](../../diagrams/generated/functional/Bounded%20Contexts%20Concept.png) - **New**: 界限上下文概念設計，展示所有13個上下文的職責、關係和領域事件
-- [界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png) - 13個界限上下文設計
+- !!!!![領域模型概覽](../../diagrams/generated/functional/domain-model-overview.png) - DDD 聚合根總覽
+- !!!!![界限上下文概念圖](../../diagrams/generated/functional/bounded-contexts-concept.png) - **New**: 界限上下文概念設計，展示所有13個上下文的職責、關係和領域事件
+- !!!!![界限上下文概覽](../../diagrams/generated/functional/bounded-contexts-overview.png) - 13個界限上下文設計
 - ## DDD分層架構
 
 ```mermaid
@@ -911,11 +911,12 @@ graph TB
 
 ## 與其他視點的關聯
 
-- **資訊視點**: 功能需求驅動資料模型設計
-- **並發視點**: 功能執行的並發需求
-- **開發視點**: 功能實現的模組結構
-- **部署視點**: 功能分佈和部署需求
-- **運營視點**: 功能監控和維護需求
+- **[情境視點](../context/README.md)**: 外部系統整合的功能需求
+- **[資訊視點](../information/README.md)**: 功能需求驅動資料模型設計
+- **[並發視點](../concurrency/README.md)**: 功能執行的並發需求
+- **[開發視點](../development/README.md)**: 功能實現的模組結構
+- **[部署視點](../deployment/README.md)**: 功能分佈和部署需求
+- **[運營視點](../operational/README.md)**: 功能監控和維護需求
 
 ## 實現指南
 
@@ -946,8 +947,8 @@ graph TB
 - [領域驅動設計指南](domain-model.md)
 - [界限上下文設計](bounded-contexts.md)
 - [聚合根實現](aggregates.md)
-![User Journey Overview](../../diagrams/generated/functional/User%20Journey%20Overview.png)
-![Application Services Overview](../../diagrams/generated/functional/Application%20Services%20Overview.png)
-![Infrastructure Layer Overview](../../diagrams/generated/functional/Infrastructure%20Layer%20Overview.png)
-![BDD Features Overview](../../diagrams/generated/functional/BDD%20Features%20Overview.png)
-![Hexagonal Architecture Overview](../../diagrams/generated/functional/Hexagonal%20Architecture%20Overview.png)
+!!!!!![User Journey Overview](../../diagrams/generated/functional/user-journey-overview.png)
+!!!!!![Application Services Overview](../../diagrams/generated/functional/application-services-overview.png)
+!!!!!![Infrastructure Layer Overview](../../diagrams/generated/functional/infrastructure-layer-overview.png)
+!!!!!![BDD Features Overview](../../diagrams/generated/functional/bdd-features-overview.png)
+!!!!!![Hexagonal Architecture Overview](../../diagrams/generated/functional/hexagonal-architecture-overview.png)

@@ -61,7 +61,7 @@ Deployment Viewpoint關注系統的Deployment和Environment配置，包括基礎
 
 ## Quality Attributes考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#Deployment Viewpoint-deployment-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md#Deployment Viewpoint-deployment-viewpoint) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

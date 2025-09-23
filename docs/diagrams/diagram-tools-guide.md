@@ -275,7 +275,7 @@ echo "🎨 生成所有圖表..."
 
 # 生成 PlantUML 圖表
 echo "📊 生成 PlantUML 圖表..."
-find docs/diagrams -name "*.puml" -exec java -jar tools/plantuml.jar -tpng {} \;
+find docs/diagrams -name "*.puml" -exec java -jar tools-and-environment/plantuml.jar -tpng {} \;
 
 # 生成 Excalidraw 圖表 (透過 MCP)
 echo "✏️ 生成 Excalidraw 圖表..."
@@ -326,7 +326,7 @@ echo "✅ 所有圖表生成完成！"
 
 ```bash
 # 下載 PlantUML JAR
-wget https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar -O tools/plantuml.jar
+wget https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar -O tools-and-environment/plantuml.jar
 
 # 生成圖表
 java -jar tools/plantuml.jar -tpng docs/diagrams/**/*.puml

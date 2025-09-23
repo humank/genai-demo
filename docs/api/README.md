@@ -18,7 +18,7 @@
 
 ### 可觀測性端點
 
-- **分析事件**: `POST /api/analytics/events`
+- **分析事件**: `POST /../api/analytics/events`
 - **效能指標**: `POST /api/analytics/performance`
 - **統計查詢**: `GET /api/analytics/stats`
 - **WebSocket**: `WS /ws/analytics`

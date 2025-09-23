@@ -51,15 +51,18 @@ needs_regeneration() {
     
     # 如果輸出文件不存在，需要生成
     if [ ! -f "$output_file" ]; then
+        print_info "需要生成 $(basename "$mmd_file") - 輸出文件不存在"
         return 0
     fi
     
     # 如果源文件比輸出文件新，需要重新生成
     if [ "$mmd_file" -nt "$output_file" ]; then
+        print_info "需要生成 $(basename "$mmd_file") - 源文件較新"
         return 0
     fi
     
     # 不需要重新生成
+    print_info "跳過 $(basename "$mmd_file") - 無變更"
     return 1
 }
 
@@ -71,7 +74,6 @@ generate_mermaid_diagram() {
     
     # 檢查是否需要重新生成
     if ! needs_regeneration "$mmd_file" "$output_file"; then
-        print_info "跳過 $filename (無變更)"
         return 0
     fi
     

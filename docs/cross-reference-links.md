@@ -34,13 +34,32 @@
 
 #### 相關文檔
 - **[領域模型設計](viewpoints/functional/domain-model.md)** ↔ **[領域事件設計](viewpoints/information/domain-events.md)**
-- **[聚合根設計](viewpoints/functional/aggregates.md)** ↔ **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)**
+- **[聚合根設計](viewpoints/functional/aggregates.md)** ↔ **六角形架構實現**
 - **[界限上下文](viewpoints/functional/bounded-contexts.md)** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
 
 #### 相關圖表
 - **[領域模型圖](diagrams/plantuml/domain-model-diagram.svg)** - 完整領域模型視覺化
 - **[界限上下文圖](diagrams/plantuml/bounded-context-diagram.svg)** - 上下文劃分
 - **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 業務流程分析
+
+### 情境視點 (Context Viewpoint)
+
+**主文檔**: [情境視點總覽](viewpoints/context/README.md)
+
+#### 強關聯視點
+- **[功能視點](viewpoints/functional/README.md)** - 外部系統整合的功能需求
+- **[部署視點](viewpoints/deployment/README.md)** - 外部系統的部署整合
+- **[運營視點](viewpoints/operational/README.md)** - 外部系統監控和整合狀態
+
+#### 相關文檔
+- **[系統邊界定義](viewpoints/context/README.md#系統邊界和外部依賴)** ↔ **[功能邊界設計](viewpoints/functional/bounded-contexts.md)**
+- **[外部系統整合](viewpoints/context/README.md#外部系統整合)** ↔ **[基礎設施部署](viewpoints/deployment/README.md)**
+- **[利害關係人分析](viewpoints/context/README.md#利害關係人分析)** ↔ **[運營監控需求](viewpoints/operational/README.md)**
+
+#### 相關圖表
+- **[系統上下文圖](diagrams/generated/context/system-context-overview.png)** - 完整系統邊界和外部依賴
+- **[外部整合架構圖](diagrams/generated/context/external-integrations.png)** - 外部系統整合設計
+- **[利害關係人互動圖](diagrams/generated/context/stakeholder-interactions.png)** - 利害關係人關係分析
 
 ### 資訊視點 (Information Viewpoint)
 
@@ -177,9 +196,9 @@ graph LR
 - **[部署視點](viewpoints/deployment/README.md)** - 開發環境和 CI/CD 流程
 
 #### 相關文檔
-- **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)** ↔ **[領域模型設計](viewpoints/functional/domain-model.md)**
-- **[開發工作流程](viewpoints/development/development-workflow.md)** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
-- **[Epic 實現指南](viewpoints/development/epic-implementation.md)** ↔ **[聚合根設計](viewpoints/functional/aggregates.md)**
+- **六角形架構實現** ↔ **[領域模型設計](viewpoints/functional/domain-model.md)**
+- **開發工作流程** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
+- **Epic 實現指南** ↔ **[聚合根設計](viewpoints/functional/aggregates.md)**
 
 #### 相關圖表
 - **[六角形架構圖](diagrams/mermaid/hexagonal-architecture.md)** - 端口和適配器實現
@@ -194,7 +213,7 @@ graph LR
 - **[運營視點](viewpoints/operational/README.md)** - 部署後的監控和維護
 
 #### 相關文檔
-- **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)** ↔ **[開發工作流程](viewpoints/development/development-workflow.md)**
+- **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)** ↔ **開發工作流程**
 - **[生產部署檢查清單](viewpoints/deployment/production-deployment-checklist.md)** ↔ **[可觀測性概覽](viewpoints/operational/observability-overview.md)**
 - **[可觀測性部署](viewpoints/deployment/observability-deployment.md)** ↔ **[生產環境測試指南](viewpoints/operational/production-observability-testing-guide.md)**
 
@@ -586,9 +605,9 @@ graph TB
 ### API 設計和整合
 
 #### 核心文檔
-- **[API 版本策略](api/API_VERSIONING_STRATEGY.md)** ↔ **[演進性觀點](perspectives/evolution/README.md)**
-- **[前端整合指南](api/frontend-integration.md)** ↔ **[使用性觀點](perspectives/usability/README.md)**
-- **[可觀測性 API](api/observability-api.md)** ↔ **[運營視點](viewpoints/operational/README.md)**
+- **API 版本策略** ↔ **[演進性觀點](perspectives/evolution/README.md)**
+- **前端整合指南** ↔ **[使用性觀點](perspectives/usability/README.md)**
+- **可觀測性 API** ↔ **[運營視點](viewpoints/operational/README.md)**
 
 #### 相關圖表
 - **[API 交互圖](diagrams/mermaid/api-interactions.md)** - API 設計和交互關係

@@ -11,7 +11,7 @@
 
 ---
 title: "[Viewpoint Name] 視點"
-viewpoint: "functional|information|concurrency|development|deployment|operational"
+viewpoint: "functional|information|concurrency|development|deployment|operational|context"
 perspective: ["security", "performance", "availability", "evolution", "usability", "regulation", "location", "cost"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst"]
 related_viewpoints: ["viewpoint1", "viewpoint2"]

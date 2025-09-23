@@ -9,7 +9,7 @@ This document描述了前端後端Observability整合系統的 API 端點，包�
 
 ### 分析事件 API
 
-#### POST /api/analytics/events
+#### POST /../api/analytics/events
 
 接收前端發送的用戶行為分析事件。
 
@@ -53,7 +53,7 @@ X-Correlation-Id: string (可選) - 關聯 ID
 **範例請求**
 
 ```bash
-curl -X POST http://localhost:8080/api/analytics/events \
+curl -X POST http://localhost:8080/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: trace-1640995200000-abc123" \
   -H "X-Session-Id: session-xyz789" \
@@ -115,7 +115,7 @@ X-Session-Id: string (必需) - 會話 ID
 **範例請求**
 
 ```bash
-curl -X POST http://localhost:8080/api/analytics/performance \
+curl -X POST http://localhost:8080/../api/analytics/performance \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: trace-1640995200000-abc123" \
   -H "X-Session-Id: session-xyz789" \
@@ -176,7 +176,7 @@ X-Trace-Id: string (可選) - Tracing ID
 
 ### Monitoring事件 API (現有端點擴展)
 
-#### POST /api/monitoring/events
+#### POST /../api/monitoring/events
 
 接收前端 JavaScript 錯誤和Monitoring事件。
 

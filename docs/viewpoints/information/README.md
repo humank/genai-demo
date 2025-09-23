@@ -36,13 +36,13 @@
 
 #### 資訊視點詳細架構
 
-![資訊視點詳細架構](../../diagrams/generated/information/information-detailed.png)
+!!!!!![資訊視點詳細架構](../../diagrams/generated/information/information-detailed.png)
 
 *資訊視點的詳細架構設計，包括資料模型、資訊流和事件處理的完整實現*
 
 ## 品質屬性考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#資訊視點-information-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 
@@ -156,11 +156,12 @@ graph LR
 
 ## 與其他視點的關聯
 
-- **功能視點**: 業務功能驅動資料需求
-- **並發視點**: 資料存取的並發控制
-- **開發視點**: 資料存取層的實現
-- **部署視點**: 資料庫部署和配置
-- **運營視點**: 資料監控和維護
+- **[情境視點](../context/README.md)**: 外部資料交換和整合協議
+- **[功能視點](../functional/README.md)**: 業務功能驅動資料需求
+- **[並發視點](../concurrency/README.md)**: 資料存取的並發控制
+- **[開發視點](../development/README.md)**: 資料存取層的實現
+- **[部署視點](../deployment/README.md)**: 資料庫部署和配置
+- **[運營視點](../operational/README.md)**: 資料監控和維護
 
 ## 實現指南
 

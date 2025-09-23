@@ -54,7 +54,7 @@
 
 #### 開發文檔
 - `docs/development/coding-standards.md`
-- `docs/api/observability-api.md`
+- `docs/../api/observability-api.md`
 - `docs/troubleshooting/observability-troubleshooting.md`
 - `docs/testing/test-performance-monitoring.md`
 

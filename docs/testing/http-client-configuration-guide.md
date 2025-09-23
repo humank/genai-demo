@@ -185,7 +185,7 @@ class MyNewIntegrationTest extends BaseIntegrationTest {
     @Test
     void should_validate_my_endpoint() {
         // Given
-        String endpoint = baseUrl + "/api/v1/my-endpoint";
+        String endpoint = baseUrl + "/../api/v1/my-endpoint";
         
         // When
         ResponseEntity<String> response = restTemplate.getForEntity(endpoint, String.class);

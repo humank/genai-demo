@@ -38,8 +38,8 @@
 
 #### 開發指南
 - **[開發視點](viewpoints/development/README.md)** - 開發和建置相關文檔
-- **[開發工作流程](viewpoints/development/development-workflow.md)** - 完整的開發流程
-- **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)** - 六角形架構開發指南
+- **開發工作流程** - 完整的開發流程
+- **六角形架構實現** - 六角形架構開發指南
 
 #### 領域驅動設計
 - **[功能視點](viewpoints/functional/README.md)** - 系統功能和職責
@@ -281,7 +281,7 @@ graph LR
 - **[八大觀點總覽](perspectives/README.md)** - 安全、性能、可用性、演進、使用、法規、位置、成本觀點
 
 #### 架構模式
-- **[六角形架構](viewpoints/development/hexagonal-architecture.md)** - 端口和適配器模式
+- **六角形架構** - 端口和適配器模式
 - **[分層架構](architecture/layered-architecture-design.md)** - DDD 分層架構設計
 - **## 事件驅動架構
 
@@ -723,7 +723,7 @@ graph TB
 | **性能優化** | `performance`, `scalability`, `caching`, `load balancing` | [性能觀點](perspectives/performance/README.md), [並發視點](viewpoints/concurrency/README.md) |
 | **部署運維** | `deployment`, `kubernetes`, `docker`, `observability` | [部署視點](viewpoints/deployment/README.md), [運營視點](viewpoints/operational/README.md) |
 | **測試品質** | `testing`, `performance monitoring`, `quality assurance` | [測試文檔](testing/), [測試性能監控](testing/test-performance-monitoring.md) |
-| **API 整合** | `API`, `REST`, `integration`, `frontend` | [API 文檔](api/), [前端整合](api/frontend-integration.md) |
+| **API 整合** | `API`, `REST`, `integration`, `frontend` | [API 文檔](api/), 前端整合 |
 | **圖表視覺化** | `diagram`, `mermaid`, `plantuml`, `architecture diagram` | [圖表總覽](diagrams/README.md), [視覺化導航](#-視覺化導航) |
 
 ### 📍 主題導航地圖
@@ -1035,9 +1035,9 @@ graph TB
 <summary><strong>API 文檔總覽</strong> - RESTful API 設計和整合</summary>
 
 #### API 設計
-- **[API 版本策略](api/API_VERSIONING_STRATEGY.md)** - API 版本管理策略
-- **[前端整合指南](api/frontend-integration.md)** - 前端 API 整合最佳實踐
-- **[可觀測性 API](api/observability-api.md)** - 監控和追蹤 API
+- **API 版本策略** - API 版本管理策略
+- **前端整合指南** - 前端 API 整合最佳實踐
+- **可觀測性 API** - 監控和追蹤 API
 
 #### API 文檔
 - **Swagger UI**: <http://localhost:8080/swagger-ui/index.html> - 互動式 API 文檔
@@ -1116,14 +1116,14 @@ graph TB
 <summary><strong>開發指南</strong> - 開發流程和最佳實踐</summary>
 
 #### 開發流程
-- **[開發工作流程](viewpoints/development/development-workflow.md)** - 完整的開發流程
-- **[Epic 實現指南](viewpoints/development/epic-implementation.md)** - 大型功能開發策略
-- **[開發說明](development/instructions.md)** - 開發環境和工具使用
+- **開發工作流程** - 完整的開發流程
+- **Epic 實現指南** - 大型功能開發策略
+- **開發說明** - 開發環境和工具使用
 
 #### 代碼品質
-- **[六角形架構實現](viewpoints/development/hexagonal-architecture.md)** - 架構實現指南
-- **[DDD 指南](design/ddd-guide.md)** - 領域驅動設計實踐
-- **[設計原則](design/design-principles.md)** - 軟體設計原則
+- **六角形架構實現** - 架構實現指南
+- **DDD 指南** - 領域驅動設計實踐
+- **設計原則** - 軟體設計原則
 - **[重構指南](design/refactoring-guide.md)** - 代碼重構最佳實踐
 
 #### 技術棧
@@ -1315,9 +1315,9 @@ graph TB
 
 ### 👨‍💻 我是開發者
 
-- [開發指南](development/) - 開發環境和規範
+- [開發指南](viewpoints/development/) - 開發環境和規範
 - [API 文檔](api/) - API 使用指南
-- [開發說明](development/instructions.md) - 開發流程和說明
+- 開發說明 - 開發流程和說明
 
 ### 🚀 我是 DevOps 工程師
 
@@ -1433,7 +1433,7 @@ python scripts/check-hook-status.py             # Hook 狀態檢查
 - **💚 健康檢查**: <http://localhost:8080/actuator/health>
 - **🏢 CMC 管理前端**: <http://localhost:3002>
 - **🛒 Consumer 前端**: <http://localhost:3001>
-- **💰 成本分析**: <http://localhost:8080/api/cost-optimization/recommendations>
+- **💰 成本分析**: <http://localhost:8080/../api/cost-optimization/recommendations>
 
 #### 在線工具
 - **[Mermaid Live Editor](https://mermaid.live/)** - Mermaid 圖表在線編輯和預覽

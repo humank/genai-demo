@@ -13,7 +13,7 @@
   - `docs/en/viewpoints/**/*.md`
   - `docs/en/perspectives/**/*.md`
   - `docs/templates/**/*.md`
-  - `docs/viewpoint-perspective-matrix.md`
+  - `docs/../viewpoint-perspective-matrix.md`
   - `docs/.terminology.json`
 
 #### 2. 增強現有翻譯 Hook

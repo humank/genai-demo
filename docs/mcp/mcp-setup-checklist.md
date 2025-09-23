@@ -56,7 +56,7 @@
 - [ ] **測試服務器**
   ```bash
   # 使用絕對路徑測試
-  echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+  echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
     node /ABSOLUTE/PATH/TO/PROJECT/node_modules/mcp-excalidraw-server/src/index.js | head -3
   # 應該返回 JSON 響應
   

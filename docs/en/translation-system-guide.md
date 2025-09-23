@@ -105,7 +105,7 @@ Hook 會自動Monitoring以下檔案變更：
 | `docs/perspectives/**/*.md` | `docs/en/perspectives/**/*.md` | 八大Architectural Perspective |
 | `../diagrams/**/*.md` | `docs/en/diagrams/**/*.md` | 圖表文件 |
 | `docs/templates/**/*.md` | `docs/en/templates/**/*.md` | 文件模板 |
-| `../api/**/*.md` | `docs/en/api/**/*.md` | API 文件 |
+| `../../api/**/*.md` | `docs/en/api/**/*.md` | API 文件 |
 | `docs/mcp/**/*.md` | `docs/en/mcp/**/*.md` | MCP 整合文件 |
 | `docs/releases/**/*.md` | `docs/en/releases/**/*.md` | 發布說明 |
 | `docs/reports/**/*.md` | `reports/**/*.md` | 專案報告 |

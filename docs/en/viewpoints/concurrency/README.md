@@ -36,7 +36,7 @@ Concurrency Viewpoint描述系統的並發結構和執行時行為，關注多�
 
 ## Quality Attributes考量
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md#Concurrency Viewpoint-concurrency-viewpoint) 了解所有觀點的詳細影響分析
+> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../../viewpoint-perspective-matrix.md#Concurrency Viewpoint-concurrency-viewpoint) 了解所有觀點的詳細影響分析
 
 ### 🔴 高影響觀點
 

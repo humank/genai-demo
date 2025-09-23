@@ -40,7 +40,7 @@ npm install mcp-excalidraw-server
 ls node_modules/mcp-excalidraw-server/src/index.js
 
 # Testing
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
   node node_modules/mcp-excalidraw-server/src/index.js | head -3
 ```
 
@@ -510,7 +510,7 @@ cat .kiro/settings/mcp.json | jq '.'
 
 ```bash
 # Testing
-echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}' | \
+echo '{"jsonrpc": "2.0", "id": 1, "method": "tools-and-environment/list", "params": {}}' | \
   node node_modules/mcp-excalidraw-server/src/index.js
 
 # Testing

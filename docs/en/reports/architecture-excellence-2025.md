@@ -56,7 +56,7 @@ public interface OrderPersistencePort {
 ```java
 // 入站Adapter (Primary Adapter) - REST 控制器
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/../api/orders")
 public class OrderController {
     private final OrderManagementUseCase orderManagementUseCase;
     

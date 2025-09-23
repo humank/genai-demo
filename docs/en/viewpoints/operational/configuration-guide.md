@@ -68,7 +68,7 @@ export const environment = {
     enableDebugLogs: true,
     sampleRate: 1.0, // 100% sampling for development
     endpoints: {
-      analytics: '/api/analytics/events',
+      analytics: '/../api/analytics/events',
       performance: '/api/analytics/performance',
       errors: '/api/monitoring/events'
     },
@@ -309,7 +309,7 @@ EventProcessingFailureRate:
 AnalyticsAPILatency:
   MetricName: http.server.requests
   Dimensions:
-    uri: /api/analytics/events
+    uri: /../api/analytics/events
   Threshold: 1000  # 1 秒
   ComparisonOperator: GreaterThanThreshold
   Statistic: Average

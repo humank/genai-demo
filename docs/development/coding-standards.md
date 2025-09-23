@@ -2,6 +2,6 @@
 
 Please refer to our comprehensive coding standards in the steering rules:
 
-- [Development Standards](../../.kiro/steering/development-standards.md)
-- [Code Review Standards](../../.kiro/steering/code-review-standards.md)
-- [Security Standards](../../.kiro/steering/security-standards.md)
+- **Development Standards** (請參考專案內部文檔)
+- **Code Review Standards** (請參考專案內部文檔)
+- **Security Standards** (請參考專案內部文檔)

@@ -15,6 +15,7 @@
 | **[Development Viewpoint](viewpoints/development/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🟡 中 | 🟢 低 | 🔴 高 |
 | **[Deployment Viewpoint](viewpoints/deployment/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟢 低 | 🟡 中 | 🔴 高 | 🔴 高 |
 | **[Operational Viewpoint](viewpoints/operational/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🔴 高 |
+| **[Context Viewpoint](viewpoints/context/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🟡 中 | 🟡 中 | 🔴 高 | 🔴 高 | 🟡 中 |
 
 **影響程度說明**:
 - 🔴 **高**: 該觀點對此視點有重大影響，需要深度整合考慮

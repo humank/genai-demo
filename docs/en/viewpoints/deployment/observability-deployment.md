@@ -154,7 +154,7 @@ curl -f http://localhost:8080/actuator/health/redis || exit 1
 
 # Testing
 echo "5. 測試Observability API..."
-curl -X POST http://localhost:8080/api/analytics/events \
+curl -X POST http://localhost:8080/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: dev-test-$(date +%s)" \
   -H "X-Session-Id: dev-session" \
@@ -481,7 +481,7 @@ echo "3. 檢查Observability功能..."
 TRACE_ID="prod-verify-$(date +%s)"
 SESSION_ID="prod-verify-session"
 
-ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/api/analytics/events \
+ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/../api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: $TRACE_ID" \
   -H "X-Session-Id: $SESSION_ID" \

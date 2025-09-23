@@ -214,7 +214,7 @@ void shouldTraceAcrossMultipleServices() {
     headers.set("X-Trace-ID", traceId);
     
     ResponseEntity<OrderResponse> response = restTemplate.exchange(
-        "/api/orders", HttpMethod.POST, 
+        "/../api/orders", HttpMethod.POST, 
         new HttpEntity<>(createOrderRequest(), headers),
         OrderResponse.class
     );
@@ -386,7 +386,7 @@ void shouldRespectSamplingConfiguration() {
     // When: 生成大量請求
     int totalRequests = 10000;
     for (int i = 0; i < totalRequests; i++) {
-        makeRequest("/api/test");
+        makeRequest("/../api/test");
     }
     
     // Then: 驗證採樣率
@@ -1159,7 +1159,7 @@ public class ObservabilityTestDataGenerator {
 curl -s http://localhost:8080/actuator/loggers | jq .
 
 # 測試 MDC 功能
-curl -H "X-Correlation-ID: test-123" http://localhost:8080/api/test
+curl -H "X-Correlation-ID: test-123" http://localhost:8080/../api/test
 
 # 查看 CloudWatch 日誌
 aws logs describe-log-groups --log-group-name-prefix "/aws/ecs/genai-demo"
@@ -1333,7 +1333,7 @@ chaos_experiments:
         - name: "check-observability-metrics"
           type: "httpProbe"
           httpProbe/inputs:
-            url: "http://prometheus:9090/api/v1/query"
+            url: "http://prometheus:9090/../api/v1/query"
             method:
               get:
                 criteria: "=="
@@ -1353,14 +1353,14 @@ check_prometheus_metrics() {
     echo "Checking Prometheus metrics..."
     
     # 檢查應用指標
-    APP_METRICS=$(curl -s "http://prometheus:9090/api/v1/query?query=up{job=\"app\"}" | jq -r '.data.result[0].value[1]')
+    APP_METRICS=$(curl -s "http://prometheus:9090/../api/v1/query?query=up{job=\"app\"}" | jq -r '.data.result[0].value[1]')
     if [ "$APP_METRICS" != "1" ]; then
         echo "❌ Application metrics not available"
         exit 1
     fi
     
     # 檢查錯誤率
-    ERROR_RATE=$(curl -s "http://prometheus:9090/api/v1/query?query=rate(http_requests_total{status=~\"5..\"}[5m])" | jq -r '.data.result[0].value[1]')
+    ERROR_RATE=$(curl -s "http://prometheus:9090/../api/v1/query?query=rate(http_requests_total{status=~\"5..\"}[5m])" | jq -r '.data.result[0].value[1]')
     if (( $(echo "$ERROR_RATE > 0.01" | bc -l) )); then
         echo "❌ Error rate too high: $ERROR_RATE"
         exit 1
@@ -1390,7 +1390,7 @@ check_tracing_data() {
     echo "Checking tracing data..."
     
     # 檢查 Jaeger 中的追蹤
-    TRACE_COUNT=$(curl -s "http://jaeger:16686/api/traces?service=app&lookback=5m" | jq '.data | length')
+    TRACE_COUNT=$(curl -s "http://jaeger:16686/../api/traces?service=app&lookback=5m" | jq '.data | length')
     
     if [ "$TRACE_COUNT" -lt 10 ]; then
         echo "❌ Insufficient traces: $TRACE_COUNT"
@@ -1494,7 +1494,7 @@ class ObservabilityValidator:
         print("🔍 Validating alerting rules...")
         
         # 檢查 Prometheus 告警規則
-        response = requests.get(f"{self.prometheus_url}/api/v1/rules")
+        response = requests.get(f"{self.prometheus_url}/../api/v1/rules")
         rules = response.json()['data']['groups']
         
         required_alerts = [
@@ -1519,7 +1519,7 @@ class ObservabilityValidator:
     def _query_prometheus(self, query):
         """查詢 Prometheus 指標"""
         response = requests.get(
-            f"{self.prometheus_url}/api/v1/query",
+            f"{self.prometheus_url}/../api/v1/query",
             params={'query': query}
         )
         result = response.json()['data']['result']
@@ -1529,7 +1529,7 @@ class ObservabilityValidator:
         """生成測試日誌"""
         # 調用應用 API 生成日誌
         requests.get(
-            "http://app:8080/api/test/logs",
+            "http://app:8080/../api/test/logs",
             headers={"X-Correlation-ID": correlation_id}
         )
 
@@ -1684,7 +1684,7 @@ export default function () {
   // 測試主要業務 API
   const startTime = Date.now();
   
-  const response = http.get('http://app:8080/api/orders', {
+  const response = http.get('http://app:8080/../api/orders', {
     headers: {
       'X-Correlation-ID': `k6-test-${__VU}-${__ITER}`,
       'X-Load-Test': 'true',

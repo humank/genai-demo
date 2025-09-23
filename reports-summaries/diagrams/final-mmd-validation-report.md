@@ -1059,11 +1059,11 @@
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:22`
 **匹配**: `系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `- `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)` → 直接 Mermaid 代碼塊`
+**內容**: `- `🏗️ 系統架構概覽` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:24`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `- `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)` → 直接 Mermaid 代碼塊`
+**內容**: `- `AWS 基礎設施圖` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:30`
 **匹配**: `.mmd`
@@ -1183,163 +1183,136 @@
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:20`
 **匹配**: `系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)``
+**內容**: `**原始引用**: `🏗️ 系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:34`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:70`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:84`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:120`
 **匹配**: `基礎設施](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:124`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:156`
 **匹配**: `基礎設施圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:174`
 **匹配**: `分層架構](ddd_architecture.mmd`
-**內容**: `**原始引用**: `[DDD 分層架構](ddd_architecture.mmd)``
+**內容**: `**原始引用**: `DDD 分層架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:182`
 **匹配**: `基礎設施圖表](aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:208`
 **匹配**: `Architecture](../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS Infrastructure Architecture](../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS Infrastructure Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:212`
 **匹配**: `Configuration](../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[Multi-Environment Configuration](../diagrams/multi_environment.mmd)``
+**內容**: `**原始引用**: `Multi-Environment Configuration``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:216`
 **匹配**: `Architecture](../diagrams/ddd_architecture.mmd`
-**內容**: `**原始引用**: `[DDD Architecture](../diagrams/ddd_architecture.mmd)``
+**內容**: `**原始引用**: `DDD Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:220`
 **匹配**: `Architecture](../diagrams/hexagonal_architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture](../diagrams/hexagonal_architecture.mmd)``
+**內容**: `**原始引用**: `Hexagonal Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:226`
 **匹配**: `Architecture圖](../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:230`
 **匹配**: `Architecture圖](../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:234`
 **匹配**: `基礎設施圖](../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:266`
 **匹配**: `Architecture圖](../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:270`
 **匹配**: `基礎設施圖](../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:288`
 **匹配**: `Architecture](../../diagrams/hexagonal_architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture](../../diagrams/hexagonal_architecture.mmd)``
+**內容**: `**原始引用**: `Hexagonal Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:292`
 **匹配**: `Architecture](../../diagrams/ddd_architecture.mmd`
-**內容**: `**原始引用**: `[DDD Layered Architecture](../../diagrams/ddd_architecture.mmd)``
+**內容**: `**原始引用**: `DDD Layered Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:296`
 **匹配**: `Architecture](../../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture](../../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:300`
 **匹配**: `基礎設施圖表](../../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:326`
 **匹配**: `Architecture圖](../../../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:332`
 **匹配**: `Architecture圖](../../../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)``
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:338`
 **匹配**: `(Mermaid)](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture概覽圖 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:346`
-**匹配**: `Architecture圖](../../../diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `**原始引用**: `[DDDLayered Architecture圖](../../../diagrams/viewpoints/development/ddd-layered-architect...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:360`
-**匹配**: `Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architectur...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:370`
-**匹配**: `Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architectur...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:376`
-**匹配**: `Architecture圖](../../../diagrams/viewpoints/information/event-driven-architecture.mmd`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/viewpoints/information/event-driven-archit...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:386`
-**匹配**: `基礎設施圖表](../../../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `Hexagonal Architecture概覽圖 (Mermaid)``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:392`
 **匹配**: `基礎設施圖表](../../../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:402`
 **匹配**: `Observability架構](../../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[AWS Observability架構](../../../diagrams/observability_architecture.mmd)``
+**內容**: `**原始引用**: `AWS Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:408`
 **匹配**: `Architecture圖](../../../diagrams/hexagonal_architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture圖](../../../diagrams/hexagonal_architecture.mmd)``
+**內容**: `**原始引用**: `Hexagonal Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:418`
 **匹配**: `(Mermaid)](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[Hexagonal Architecture概覽 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-a...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:422`
-**匹配**: `Architecture](../../../diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `**原始引用**: `[DDDLayered Architecture](../../../diagrams/viewpoints/development/ddd-layered-architectu...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:448`
-**匹配**: `(Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[六角架構概覽圖 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**內容**: `**原始引用**: `Hexagonal Architecture概覽 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
+**內容**: `**原始引用**: `六角架構概覽圖 (Mermaid)``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:496`
 **匹配**: `基礎設施圖表](../../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:502`
 **匹配**: `基礎設施圖表](../../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:512`
 **匹配**: `可觀測性架構](../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[AWS 可觀測性架構](../../diagrams/observability_architecture.mmd)``
+**內容**: `**原始引用**: `AWS 可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:528`
 **匹配**: `(Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[六角架構概覽 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**內容**: `**原始引用**: `六角架構概覽 (Mermaid)``
 
 **文件**: `reports-summaries/diagrams/diagram-references-fix-report.md:109`
 **匹配**: ``.mmd`
@@ -2304,820 +2277,718 @@
 ### Markdown Link (206 個)
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:21`
-**匹配**: `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `- `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: `架構概覽`
+**內容**: `- `架構概覽` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:21`
-**匹配**: ``[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `- `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: ``架構概覽` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:22`
-**匹配**: `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `- `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: `🏗️ 系統架構概覽`
+**內容**: `- `🏗️ 系統架構概覽` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:23`
-**匹配**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)`
-**內容**: `- `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: `事件驅動架構圖`
+**內容**: `- `事件驅動架構圖` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:23`
-**匹配**: ``[事件驅動架構圖](diagrams/event_driven_architecture.mmd`
-**內容**: `- `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: ``事件驅動架構圖` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-fix-final-report.md:24`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `- `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)` → 直接 Mermaid 代碼塊`
+**匹配**: `AWS 基礎設施圖`
+**內容**: `- `AWS 基礎設施圖` → 直接 Mermaid 代碼塊`
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:16`
-**匹配**: `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `架構概覽`
+**內容**: `**原始引用**: `架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:16`
-**匹配**: ``[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:20`
-**匹配**: `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[🏗️ 系統架構概覽](docs/diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `🏗️ 系統架構概覽`
+**內容**: `**原始引用**: `🏗️ 系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:26`
-**匹配**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:26`
-**匹配**: ``[事件驅動架構圖](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:30`
-**匹配**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:30`
-**匹配**: ``[事件驅動架構圖](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:34`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:38`
-**匹配**: `[多環境架構圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: `多環境架構圖`
+**內容**: `**原始引用**: `多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:38`
-**匹配**: ``[多環境架構圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:42`
-**匹配**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構圖`
+**內容**: `**原始引用**: `可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:42`
-**匹配**: ``[可觀測性架構圖](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:46`
-**匹配**: `[事件驅動性能](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動性能](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動性能`
+**內容**: `**原始引用**: `事件驅動性能``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:46`
-**匹配**: ``[事件驅動性能](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動性能](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動性能``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:50`
-**匹配**: `[高可用架構](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[高可用架構](diagrams/multi_environment.mmd)``
+**匹配**: `高可用架構`
+**內容**: `**原始引用**: `高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:50`
-**匹配**: ``[高可用架構](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[高可用架構](diagrams/multi_environment.mmd)``
+**匹配**: ``高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:54`
-**匹配**: `[災難恢復架構](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[災難恢復架構](diagrams/aws_infrastructure.mmd)``
+**匹配**: `災難恢復架構`
+**內容**: `**原始引用**: `災難恢復架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:54`
-**匹配**: ``[災難恢復架構](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[災難恢復架構](diagrams/aws_infrastructure.mmd)``
+**匹配**: ``災難恢復架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:58`
-**匹配**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `地理分佈圖`
+**內容**: `**原始引用**: `地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:58`
-**匹配**: ``[地理分佈圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: ``地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:62`
-**匹配**: `[成本優化圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[成本優化圖](diagrams/multi_environment.mmd)``
+**匹配**: `成本優化圖`
+**內容**: `**原始引用**: `成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:62`
-**匹配**: ``[成本優化圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[成本優化圖](diagrams/multi_environment.mmd)``
+**匹配**: ``成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:66`
-**匹配**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:66`
-**匹配**: ``[事件驅動架構圖](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:70`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:74`
-**匹配**: `[多環境架構圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: `多環境架構圖`
+**內容**: `**原始引用**: `多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:74`
-**匹配**: ``[多環境架構圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:78`
-**匹配**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構圖`
+**內容**: `**原始引用**: `可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:78`
-**匹配**: ``[可觀測性架構圖](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:84`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:88`
-**匹配**: `[多環境架構圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: `多環境架構圖`
+**內容**: `**原始引用**: `多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:88`
-**匹配**: ``[多環境架構圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:92`
-**匹配**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構圖`
+**內容**: `**原始引用**: `可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:92`
-**匹配**: ``[可觀測性架構圖](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構圖](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:96`
-**匹配**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:96`
-**匹配**: ``[事件驅動架構圖](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:100`
-**匹配**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構`
+**內容**: `**原始引用**: `事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:100`
-**匹配**: ``[事件驅動架構](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:104`
-**匹配**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構`
+**內容**: `**原始引用**: `事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:104`
-**匹配**: ``[事件驅動架構](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:108`
-**匹配**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構`
+**內容**: `**原始引用**: `事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:108`
-**匹配**: ``[事件驅動架構](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:112`
-**匹配**: `[可觀測性架構](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構`
+**內容**: `**原始引用**: `可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:112`
-**匹配**: ``[可觀測性架構](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:116`
-**匹配**: `[多環境架構](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構](diagrams/multi_environment.mmd)``
+**匹配**: `多環境架構`
+**內容**: `**原始引用**: `多環境架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:116`
-**匹配**: ``[多環境架構](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:120`
-**匹配**: `[AWS 基礎設施](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施`
+**內容**: `**原始引用**: `AWS 基礎設施``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:124`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:128`
-**匹配**: `[多環境架構圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: `多環境架構圖`
+**內容**: `**原始引用**: `多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:128`
-**匹配**: ``[多環境架構圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構圖](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:132`
-**匹配**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構`
+**內容**: `**原始引用**: `事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:132`
-**匹配**: ``[事件驅動架構](diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構](diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:136`
-**匹配**: `[可觀測性架構](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構`
+**內容**: `**原始引用**: `可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:136`
-**匹配**: ``[可觀測性架構](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:140`
-**匹配**: `[高可用架構](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[高可用架構](diagrams/multi_environment.mmd)``
+**匹配**: `高可用架構`
+**內容**: `**原始引用**: `高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:140`
-**匹配**: ``[高可用架構](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[高可用架構](diagrams/multi_environment.mmd)``
+**匹配**: ``高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:144`
-**匹配**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `地理分佈圖`
+**內容**: `**原始引用**: `地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:144`
-**匹配**: ``[地理分佈圖](diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[地理分佈圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: ``地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:148`
-**匹配**: `[成本優化圖](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[成本優化圖](diagrams/multi_environment.mmd)``
+**匹配**: `成本優化圖`
+**內容**: `**原始引用**: `成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:148`
-**匹配**: ``[成本優化圖](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[成本優化圖](diagrams/multi_environment.mmd)``
+**匹配**: ``成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:152`
-**匹配**: `[多環境管理](diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境管理](diagrams/multi_environment.mmd)``
+**匹配**: `多環境管理`
+**內容**: `**原始引用**: `多環境管理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:152`
-**匹配**: ``[多環境管理](diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境管理](diagrams/multi_environment.mmd)``
+**匹配**: ``多環境管理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:156`
-**匹配**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:160`
-**匹配**: `[可觀測性架構](diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構`
+**內容**: `**原始引用**: `可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:160`
-**匹配**: ``[可觀測性架構](diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構](diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:166`
-**匹配**: `[系統概覽](viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統概覽](viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統概覽`
+**內容**: `**原始引用**: `系統概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:166`
-**匹配**: ``[系統概覽](viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統概覽](viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:170`
-**匹配**: `[六角架構](hexagonal_architecture.mmd)`
-**內容**: `**原始引用**: `[六角架構](hexagonal_architecture.mmd)``
+**匹配**: `六角架構`
+**內容**: `**原始引用**: `六角架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:170`
-**匹配**: ``[六角架構](hexagonal_architecture.mmd`
-**內容**: `**原始引用**: `[六角架構](hexagonal_architecture.mmd)``
+**匹配**: ``六角架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:174`
-**匹配**: `[DDD 分層架構](ddd_architecture.mmd)`
-**內容**: `**原始引用**: `[DDD 分層架構](ddd_architecture.mmd)``
+**匹配**: `DDD 分層架構`
+**內容**: `**原始引用**: `DDD 分層架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:178`
-**匹配**: `[事件驅動架構](event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構](event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構`
+**內容**: `**原始引用**: `事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:178`
-**匹配**: ``[事件驅動架構](event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構](event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:182`
-**匹配**: `[AWS 基礎設施圖表](aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:186`
-**匹配**: `[多環境架構](multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境架構](multi_environment.mmd)``
+**匹配**: `多環境架構`
+**內容**: `**原始引用**: `多環境架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:186`
-**匹配**: ``[多環境架構](multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境架構](multi_environment.mmd)``
+**匹配**: ``多環境架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:190`
-**匹配**: `[可觀測性架構](observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構](observability_architecture.mmd)``
+**匹配**: `可觀測性架構`
+**內容**: `**原始引用**: `可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:190`
-**匹配**: ``[可觀測性架構](observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構](observability_architecture.mmd)``
+**匹配**: ``可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:194`
-**匹配**: `[基礎設施概覽](viewpoints/deployment/infrastructure-overview.mmd)`
-**內容**: `**原始引用**: `[基礎設施概覽](viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: `基礎設施概覽`
+**內容**: `**原始引用**: `基礎設施概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:194`
-**匹配**: ``[基礎設施概覽](viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `**原始引用**: `[基礎設施概覽](viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: ``基礎設施概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:198`
-**匹配**: `[監控架構](viewpoints/operational/monitoring-architecture.mmd)`
-**內容**: `**原始引用**: `[監控架構](viewpoints/operational/monitoring-architecture.mmd)``
+**匹配**: `監控架構`
+**內容**: `**原始引用**: `監控架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:198`
-**匹配**: ``[監控架構](viewpoints/operational/monitoring-architecture.mmd`
-**內容**: `**原始引用**: `[監控架構](viewpoints/operational/monitoring-architecture.mmd)``
+**匹配**: ``監控架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:202`
-**匹配**: `[非同步處理](viewpoints/concurrency/async-processing.mmd)`
-**內容**: `**原始引用**: `[非同步處理](viewpoints/concurrency/async-processing.mmd)``
+**匹配**: `非同步處理`
+**內容**: `**原始引用**: `非同步處理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:202`
-**匹配**: ``[非同步處理](viewpoints/concurrency/async-processing.mmd`
-**內容**: `**原始引用**: `[非同步處理](viewpoints/concurrency/async-processing.mmd)``
+**匹配**: ``非同步處理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:208`
-**匹配**: `[AWS Infrastructure Architecture](../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS Infrastructure Architecture](../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS Infrastructure Architecture`
+**內容**: `**原始引用**: `AWS Infrastructure Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:212`
-**匹配**: `[Multi-Environment Configuration](../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[Multi-Environment Configuration](../diagrams/multi_environment.mmd)``
+**匹配**: `Multi-Environment Configuration`
+**內容**: `**原始引用**: `Multi-Environment Configuration``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:216`
-**匹配**: `[DDD Architecture](../diagrams/ddd_architecture.mmd)`
-**內容**: `**原始引用**: `[DDD Architecture](../diagrams/ddd_architecture.mmd)``
+**匹配**: `DDD Architecture`
+**內容**: `**原始引用**: `DDD Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:220`
-**匹配**: `[Hexagonal Architecture](../diagrams/hexagonal_architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture](../diagrams/hexagonal_architecture.mmd)``
+**匹配**: `Hexagonal Architecture`
+**內容**: `**原始引用**: `Hexagonal Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:226`
-**匹配**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:230`
-**匹配**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:234`
-**匹配**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:238`
-**匹配**: `[多Environment架構圖](../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多Environment架構圖](../diagrams/multi_environment.mmd)``
+**匹配**: `多Environment架構圖`
+**內容**: `**原始引用**: `多Environment架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:238`
-**匹配**: ``[多Environment架構圖](../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多Environment架構圖](../diagrams/multi_environment.mmd)``
+**匹配**: ``多Environment架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:242`
-**匹配**: `[Observability架構圖](../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[Observability架構圖](../diagrams/observability_architecture.mmd)``
+**匹配**: `Observability架構圖`
+**內容**: `**原始引用**: `Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:242`
-**匹配**: ``[Observability架構圖](../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[Observability架構圖](../diagrams/observability_architecture.mmd)``
+**匹配**: ``Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:246`
-**匹配**: `[事件驅動Performance](../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動Performance](../diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動Performance`
+**內容**: `**原始引用**: `事件驅動Performance``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:246`
-**匹配**: ``[事件驅動Performance](../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動Performance](../diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動Performance``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:250`
-**匹配**: `[高可用架構](../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[高可用架構](../diagrams/multi_environment.mmd)``
+**匹配**: `高可用架構`
+**內容**: `**原始引用**: `高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:250`
-**匹配**: ``[高可用架構](../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[高可用架構](../diagrams/multi_environment.mmd)``
+**匹配**: ``高可用架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:254`
-**匹配**: `[災難恢復架構](../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[災難恢復架構](../diagrams/aws_infrastructure.mmd)``
+**匹配**: `災難恢復架構`
+**內容**: `**原始引用**: `災難恢復架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:254`
-**匹配**: ``[災難恢復架構](../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[災難恢復架構](../diagrams/aws_infrastructure.mmd)``
+**匹配**: ``災難恢復架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:258`
-**匹配**: `[地理分佈圖](../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[地理分佈圖](../diagrams/aws_infrastructure.mmd)``
+**匹配**: `地理分佈圖`
+**內容**: `**原始引用**: `地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:258`
-**匹配**: ``[地理分佈圖](../diagrams/aws_infrastructure.mmd`
-**內容**: `**原始引用**: `[地理分佈圖](../diagrams/aws_infrastructure.mmd)``
+**匹配**: ``地理分佈圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:262`
-**匹配**: `[成本優化圖](../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[成本優化圖](../diagrams/multi_environment.mmd)``
+**匹配**: `成本優化圖`
+**內容**: `**原始引用**: `成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:262`
-**匹配**: ``[成本優化圖](../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[成本優化圖](../diagrams/multi_environment.mmd)``
+**匹配**: ``成本優化圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:266`
-**匹配**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:270`
-**匹配**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖](../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖`
+**內容**: `**原始引用**: `AWS 基礎設施圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:274`
-**匹配**: `[多Environment架構圖](../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多Environment架構圖](../diagrams/multi_environment.mmd)``
+**匹配**: `多Environment架構圖`
+**內容**: `**原始引用**: `多Environment架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:274`
-**匹配**: ``[多Environment架構圖](../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多Environment架構圖](../diagrams/multi_environment.mmd)``
+**匹配**: ``多Environment架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:278`
-**匹配**: `[Observability架構圖](../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[Observability架構圖](../diagrams/observability_architecture.mmd)``
+**匹配**: `Observability架構圖`
+**內容**: `**原始引用**: `Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:278`
-**匹配**: ``[Observability架構圖](../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[Observability架構圖](../diagrams/observability_architecture.mmd)``
+**匹配**: ``Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:284`
-**匹配**: `[系統概覽](../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統概覽](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統概覽`
+**內容**: `**原始引用**: `系統概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:284`
-**匹配**: ``[系統概覽](../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統概覽](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:288`
-**匹配**: `[Hexagonal Architecture](../../diagrams/hexagonal_architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture](../../diagrams/hexagonal_architecture.mmd)``
+**匹配**: `Hexagonal Architecture`
+**內容**: `**原始引用**: `Hexagonal Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:292`
-**匹配**: `[DDD Layered Architecture](../../diagrams/ddd_architecture.mmd)`
-**內容**: `**原始引用**: `[DDD Layered Architecture](../../diagrams/ddd_architecture.mmd)``
+**匹配**: `DDD Layered Architecture`
+**內容**: `**原始引用**: `DDD Layered Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:296`
-**匹配**: `[Event-Driven Architecture](../../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture](../../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture`
+**內容**: `**原始引用**: `Event-Driven Architecture``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:300`
-**匹配**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:304`
-**匹配**: `[多Environment架構](../../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多Environment架構](../../diagrams/multi_environment.mmd)``
+**匹配**: `多Environment架構`
+**內容**: `**原始引用**: `多Environment架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:304`
-**匹配**: ``[多Environment架構](../../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多Environment架構](../../diagrams/multi_environment.mmd)``
+**匹配**: ``多Environment架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:308`
-**匹配**: `[Observability架構](../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[Observability架構](../../diagrams/observability_architecture.mmd)``
+**匹配**: `Observability架構`
+**內容**: `**原始引用**: `Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:308`
-**匹配**: ``[Observability架構](../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[Observability架構](../../diagrams/observability_architecture.mmd)``
+**匹配**: ``Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:312`
-**匹配**: `[基礎設施概覽](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)`
-**內容**: `**原始引用**: `[基礎設施概覽](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: `基礎設施概覽`
+**內容**: `**原始引用**: `基礎設施概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:312`
-**匹配**: ``[基礎設施概覽](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `**原始引用**: `[基礎設施概覽](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: ``基礎設施概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:316`
-**匹配**: `[Monitoring架構](../../diagrams/viewpoints/operational/monitoring-architecture.mmd)`
-**內容**: `**原始引用**: `[Monitoring架構](../../diagrams/viewpoints/operational/monitoring-architecture.mmd)``
+**匹配**: `Monitoring架構`
+**內容**: `**原始引用**: `Monitoring架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:316`
-**匹配**: ``[Monitoring架構](../../diagrams/viewpoints/operational/monitoring-architecture.mmd`
-**內容**: `**原始引用**: `[Monitoring架構](../../diagrams/viewpoints/operational/monitoring-architecture.mmd)``
+**匹配**: ``Monitoring架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:320`
-**匹配**: `[非同步處理](../../diagrams/viewpoints/concurrency/async-processing.mmd)`
-**內容**: `**原始引用**: `[非同步處理](../../diagrams/viewpoints/concurrency/async-processing.mmd)``
+**匹配**: `非同步處理`
+**內容**: `**原始引用**: `非同步處理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:320`
-**匹配**: ``[非同步處理](../../diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `**原始引用**: `[非同步處理](../../diagrams/viewpoints/concurrency/async-processing.mmd)``
+**匹配**: ``非同步處理``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:326`
-**匹配**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:332`
-**匹配**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/event_driven_architecture.mmd)``
+**匹配**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `Event-Driven Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:338`
-**匹配**: `[Hexagonal Architecture概覽圖 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture概覽圖 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-...`
+**匹配**: `Hexagonal Architecture概覽圖 (Mermaid)`
+**內容**: `**原始引用**: `Hexagonal Architecture概覽圖 (Mermaid)`
+**內容**: `**原始引用**: `系統整體架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:342`
-**匹配**: `[系統整體架構圖](../../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統整體架構圖](../../../diagrams/viewpoints/functional/system-overview.mmd)``
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:342`
-**匹配**: ``[系統整體架構圖](../../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統整體架構圖](../../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統整體架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:346`
-**匹配**: `[DDDLayered Architecture圖](../../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)`
-**內容**: `**原始引用**: `[DDDLayered Architecture圖](../../../diagrams/viewpoints/development/ddd-layered-architect...`
+**匹配**: `DDDLayered Architecture圖`
+**內容**: `**原始引用**: `DDDLayered Architecture圖`
+**內容**: `**原始引用**: `多Environment配置圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:350`
-**匹配**: `[多Environment配置圖](../../../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多Environment配置圖](../../../diagrams/multi_environment.mmd)``
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:350`
-**匹配**: ``[多Environment配置圖](../../../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多Environment配置圖](../../../diagrams/multi_environment.mmd)``
+**匹配**: ``多Environment配置圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:354`
-**匹配**: `[Observability架構圖](../../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[Observability架構圖](../../../diagrams/observability_architecture.mmd)``
+**匹配**: `Observability架構圖`
+**內容**: `**原始引用**: `Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:354`
-**匹配**: ``[Observability架構圖](../../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[Observability架構圖](../../../diagrams/observability_architecture.mmd)``
+**匹配**: ``Observability架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:360`
-**匹配**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architectur...`
+**匹配**: `Hexagonal Architecture實現`
+**內容**: `**原始引用**: `Hexagonal Architecture實現`
+**內容**: `**原始引用**: `系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:366`
-**匹配**: `[系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd)``
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:366`
-**匹配**: ``[系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統架構概覽](../../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:370`
-**匹配**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture實現](../../../diagrams/viewpoints/development/hexagonal-architectur...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:376`
-**匹配**: `[Event-Driven Architecture圖](../../../diagrams/viewpoints/information/event-driven-architecture.mmd)`
-**內容**: `**原始引用**: `[Event-Driven Architecture圖](../../../diagrams/viewpoints/information/event-driven-archit...`
+**匹配**: `Hexagonal Architecture實現`
+**內容**: `**原始引用**: `Hexagonal Architecture實現`
+**內容**: `**原始引用**: `Event-Driven Architecture圖`
+**內容**: `**原始引用**: `非同步處理流程``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:380`
-**匹配**: `[非同步處理流程](../../../diagrams/viewpoints/concurrency/async-processing.mmd)`
-**內容**: `**原始引用**: `[非同步處理流程](../../../diagrams/viewpoints/concurrency/async-processing.mmd)``
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:380`
-**匹配**: ``[非同步處理流程](../../../diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `**原始引用**: `[非同步處理流程](../../../diagrams/viewpoints/concurrency/async-processing.mmd)``
+**匹配**: ``非同步處理流程``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:386`
-**匹配**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:392`
-**匹配**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:396`
-**匹配**: `[基礎設施架構](../../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)`
-**內容**: `**原始引用**: `[基礎設施架構](../../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: `基礎設施架構`
+**內容**: `**原始引用**: `基礎設施架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:396`
-**匹配**: ``[基礎設施架構](../../../diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `**原始引用**: `[基礎設施架構](../../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: ``基礎設施架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:402`
-**匹配**: `[AWS Observability架構](../../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[AWS Observability架構](../../../diagrams/observability_architecture.mmd)``
+**匹配**: `AWS Observability架構`
+**內容**: `**原始引用**: `AWS Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:408`
-**匹配**: `[Hexagonal Architecture圖](../../../diagrams/hexagonal_architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture圖](../../../diagrams/hexagonal_architecture.mmd)``
+**匹配**: `Hexagonal Architecture圖`
+**內容**: `**原始引用**: `Hexagonal Architecture圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:414`
-**匹配**: `[系統概覽圖](../../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統概覽圖](../../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統概覽圖`
+**內容**: `**原始引用**: `系統概覽圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:414`
-**匹配**: ``[系統概覽圖](../../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統概覽圖](../../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統概覽圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:418`
-**匹配**: `[Hexagonal Architecture概覽 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[Hexagonal Architecture概覽 (Mermaid)](../../../diagrams/viewpoints/development/hexagonal-a...`
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:422`
-**匹配**: `[DDDLayered Architecture](../../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)`
-**內容**: `**原始引用**: `[DDDLayered Architecture](../../../diagrams/viewpoints/development/ddd-layered-architectu...`
+**匹配**: `Hexagonal Architecture概覽 (Mermaid)`
+**內容**: `**原始引用**: `Hexagonal Architecture概覽 (Mermaid)`
+**內容**: `**原始引用**: `DDDLayered Architecture`
+**內容**: `**原始引用**: `多Environment配置``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:426`
-**匹配**: `[多Environment配置](../../../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多Environment配置](../../../diagrams/multi_environment.mmd)``
-
-**文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:426`
-**匹配**: ``[多Environment配置](../../../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多Environment配置](../../../diagrams/multi_environment.mmd)``
+**匹配**: ``多Environment配置``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:430`
-**匹配**: `[Observability架構](../../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[Observability架構](../../../diagrams/observability_architecture.mmd)``
+**匹配**: `Observability架構`
+**內容**: `**原始引用**: `Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:430`
-**匹配**: ``[Observability架構](../../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[Observability架構](../../../diagrams/observability_architecture.mmd)``
+**匹配**: ``Observability架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:436`
-**匹配**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:436`
-**匹配**: ``[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:442`
-**匹配**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:442`
-**匹配**: ``[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/event_driven_architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:448`
-**匹配**: `[六角架構概覽圖 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[六角架構概覽圖 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: `六角架構概覽圖 (Mermaid)`
+**內容**: `**原始引用**: `六角架構概覽圖 (Mermaid)``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:452`
-**匹配**: `[系統整體架構圖](../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統整體架構圖](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統整體架構圖`
+**內容**: `**原始引用**: `系統整體架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:452`
-**匹配**: ``[系統整體架構圖](../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統整體架構圖](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統整體架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:456`
-**匹配**: `[DDD分層架構圖](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)`
-**內容**: `**原始引用**: `[DDD分層架構圖](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)``
+**匹配**: `DDD分層架構圖`
+**內容**: `**原始引用**: `DDD分層架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:456`
-**匹配**: ``[DDD分層架構圖](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `**原始引用**: `[DDD分層架構圖](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)``
+**匹配**: ``DDD分層架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:460`
-**匹配**: `[多環境配置圖](../../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境配置圖](../../diagrams/multi_environment.mmd)``
+**匹配**: `多環境配置圖`
+**內容**: `**原始引用**: `多環境配置圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:460`
-**匹配**: ``[多環境配置圖](../../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境配置圖](../../diagrams/multi_environment.mmd)``
+**匹配**: ``多環境配置圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:464`
-**匹配**: `[可觀測性架構圖](../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構圖](../../diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構圖`
+**內容**: `**原始引用**: `可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:464`
-**匹配**: ``[可觀測性架構圖](../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構圖](../../diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:470`
-**匹配**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: `六角架構實現`
+**內容**: `**原始引用**: `六角架構實現``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:470`
-**匹配**: ``[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: ``六角架構實現``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:476`
-**匹配**: `[系統架構概覽](../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統架構概覽](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統架構概覽`
+**內容**: `**原始引用**: `系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:476`
-**匹配**: ``[系統架構概覽](../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統架構概覽](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統架構概覽``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:480`
-**匹配**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: `六角架構實現`
+**內容**: `**原始引用**: `六角架構實現``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:480`
-**匹配**: ``[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `**原始引用**: `[六角架構實現](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: ``六角架構實現``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:486`
-**匹配**: `[事件驅動架構圖](../../diagrams/viewpoints/information/event-driven-architecture.mmd)`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/viewpoints/information/event-driven-architecture.mmd)``
+**匹配**: `事件驅動架構圖`
+**內容**: `**原始引用**: `事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:486`
-**匹配**: ``[事件驅動架構圖](../../diagrams/viewpoints/information/event-driven-architecture.mmd`
-**內容**: `**原始引用**: `[事件驅動架構圖](../../diagrams/viewpoints/information/event-driven-architecture.mmd)``
+**匹配**: ``事件驅動架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:490`
-**匹配**: `[非同步處理流程](../../diagrams/viewpoints/concurrency/async-processing.mmd)`
-**內容**: `**原始引用**: `[非同步處理流程](../../diagrams/viewpoints/concurrency/async-processing.mmd)``
+**匹配**: `非同步處理流程`
+**內容**: `**原始引用**: `非同步處理流程``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:490`
-**匹配**: ``[非同步處理流程](../../diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `**原始引用**: `[非同步處理流程](../../diagrams/viewpoints/concurrency/async-processing.mmd)``
+**匹配**: ``非同步處理流程``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:496`
-**匹配**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:502`
-**匹配**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)`
-**內容**: `**原始引用**: `[AWS 基礎設施圖表](../../diagrams/aws_infrastructure.mmd)``
+**匹配**: `AWS 基礎設施圖表`
+**內容**: `**原始引用**: `AWS 基礎設施圖表``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:506`
-**匹配**: `[基礎設施架構](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)`
-**內容**: `**原始引用**: `[基礎設施架構](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: `基礎設施架構`
+**內容**: `**原始引用**: `基礎設施架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:506`
-**匹配**: ``[基礎設施架構](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `**原始引用**: `[基礎設施架構](../../diagrams/viewpoints/deployment/infrastructure-overview.mmd)``
+**匹配**: ``基礎設施架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:512`
-**匹配**: `[AWS 可觀測性架構](../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[AWS 可觀測性架構](../../diagrams/observability_architecture.mmd)``
+**匹配**: `AWS 可觀測性架構`
+**內容**: `**原始引用**: `AWS 可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:518`
-**匹配**: `[六角形架構圖](../../diagrams/hexagonal_architecture.mmd)`
-**內容**: `**原始引用**: `[六角形架構圖](../../diagrams/hexagonal_architecture.mmd)``
+**匹配**: `六角形架構圖`
+**內容**: `**原始引用**: `六角形架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:518`
-**匹配**: ``[六角形架構圖](../../diagrams/hexagonal_architecture.mmd`
-**內容**: `**原始引用**: `[六角形架構圖](../../diagrams/hexagonal_architecture.mmd)``
+**匹配**: ``六角形架構圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:524`
-**匹配**: `[系統概覽圖](../../diagrams/viewpoints/functional/system-overview.mmd)`
-**內容**: `**原始引用**: `[系統概覽圖](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: `系統概覽圖`
+**內容**: `**原始引用**: `系統概覽圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:524`
-**匹配**: ``[系統概覽圖](../../diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `**原始引用**: `[系統概覽圖](../../diagrams/viewpoints/functional/system-overview.mmd)``
+**匹配**: ``系統概覽圖``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:528`
-**匹配**: `[六角架構概覽 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `**原始引用**: `[六角架構概覽 (Mermaid)](../../diagrams/viewpoints/development/hexagonal-architecture.mmd)``
+**匹配**: `六角架構概覽 (Mermaid)`
+**內容**: `**原始引用**: `六角架構概覽 (Mermaid)``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:532`
-**匹配**: `[DDD分層架構](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)`
-**內容**: `**原始引用**: `[DDD分層架構](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)``
+**匹配**: `DDD分層架構`
+**內容**: `**原始引用**: `DDD分層架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:532`
-**匹配**: ``[DDD分層架構](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `**原始引用**: `[DDD分層架構](../../diagrams/viewpoints/development/ddd-layered-architecture.mmd)``
+**匹配**: ``DDD分層架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:536`
-**匹配**: `[多環境配置](../../diagrams/multi_environment.mmd)`
-**內容**: `**原始引用**: `[多環境配置](../../diagrams/multi_environment.mmd)``
+**匹配**: `多環境配置`
+**內容**: `**原始引用**: `多環境配置``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:536`
-**匹配**: ``[多環境配置](../../diagrams/multi_environment.mmd`
-**內容**: `**原始引用**: `[多環境配置](../../diagrams/multi_environment.mmd)``
+**匹配**: ``多環境配置``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:540`
-**匹配**: `[可觀測性架構](../../diagrams/observability_architecture.mmd)`
-**內容**: `**原始引用**: `[可觀測性架構](../../diagrams/observability_architecture.mmd)``
+**匹配**: `可觀測性架構`
+**內容**: `**原始引用**: `可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:540`
-**匹配**: ``[可觀測性架構](../../diagrams/observability_architecture.mmd`
-**內容**: `**原始引用**: `[可觀測性架構](../../diagrams/observability_architecture.mmd)``
+**匹配**: ``可觀測性架構``
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:548`
-**匹配**: `[text](path.mmd)`
-**內容**: `1. **Mermaid 文件引用** (`[text](path.mmd)`) → **直接 Mermaid 代碼塊**`
+**匹配**: `text`
+**內容**: `1. **Mermaid 文件引用** (`text`) → **直接 Mermaid 代碼塊**`
 
 **文件**: `reports-summaries/diagrams/mermaid-references-fix-report.md:548`
-**匹配**: `(`[text](path.mmd`
-**內容**: `1. **Mermaid 文件引用** (`[text](path.mmd)`) → **直接 Mermaid 代碼塊**`
+**匹配**: `(`text`) → **直接 Mermaid 代碼塊**`
 
 **文件**: `docs/templates/viewpoint-template.md:200`
 **匹配**: `[../diagrams/viewpoints/[viewpoint]/[diagram1].mmd](../diagrams/viewpoints/[viewpoint]/[diagram1].mmd`
@@ -3333,7 +3204,7 @@
 
 **文件**: `docs/en/templates/metadata-standards.md:71`
 **匹配**: `"../diagrams/viewpoints/functional/domain-model.mmd"`
-**內容**: `diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "....`
+**內容**: `diagrams: "../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "....`
 
 **文件**: `docs/en/templates/metadata-standards.md:71`
 **匹配**: `["../diagrams/viewpoints/functional/domain-model.mmd`
@@ -3360,7 +3231,7 @@
 
 本次驗證檢查了以下項目：
 
-1. **Markdown 鏈接** - `[text](file.mmd)` 格式的引用
+1. **Markdown 鏈接** - `[text` 格式的引用
 2. **YAML Front Matter** - 元資料中的 .mmd 引用
 3. **目錄結構** - 文檔中的目錄樹顯示
 4. **文檔說明** - 關於 .mmd 文件的說明文字

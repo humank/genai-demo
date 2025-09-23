@@ -45,9 +45,9 @@
     ✅ Cost Perspective
 
 🔗 Testing Cross-References...
-  ✅ Matrix file exists: docs/viewpoint-perspective-matrix.md
+  ✅ Matrix file exists: docs/../viewpoint-perspective-matrix.md
     ⚠️ Matrix may be incomplete
-  ✅ Matrix file exists: docs/en/viewpoint-perspective-matrix.md
+  ✅ Matrix file exists: docs/en/../viewpoint-perspective-matrix.md
     ✅ Matrix contains expected viewpoints and perspectives
 
 📊 Testing Diagram Integration...
@@ -97,7 +97,7 @@ ality attributes
 
 
 ### Medium Priority  
-- Address: ⚠️ Matrix content incomplete: docs/viewpoint-perspective-matrix.md
+- Address: ⚠️ Matrix content incomplete: docs/../viewpoint-perspective-matrix.md
 
 ### Enhancement Opportunities
 - Add more diagram examples for each viewpoint

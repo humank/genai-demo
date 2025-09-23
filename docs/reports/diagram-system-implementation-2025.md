@@ -58,7 +58,7 @@
 ```
 docs/
 ├── architecture/          # 架構文檔
-├── api/                   # API 文檔
+├── ../api/                   # API 文檔
 ├── diagrams/              # 圖表文檔
 │   ├── mermaid/          # Mermaid 圖表
 │   └── plantuml/         # PlantUML 圖表

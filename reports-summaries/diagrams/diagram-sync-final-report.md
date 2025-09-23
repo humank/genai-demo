@@ -33,14 +33,14 @@ The intelligent diagram-documentation synchronization system has **successfully 
 
 **Original Broken References**:
 ```markdown
-![領域模型概覽](!\1)
-![界限上下文概覽](!\1)
+!領域模型概覽
+!界限上下文概覽
 ```
 
 **Fixed References**:
 ```markdown
-![領域模型概覽](../../diagrams/generated/functional/Domain%20Model%20Overview.png)
-![界限上下文概覽](../../diagrams/generated/functional/Bounded%20Contexts%20Overview.png)
+!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)
+!!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)
 ```
 
 ### 2. Format Standardization ✅
@@ -51,10 +51,10 @@ The intelligent diagram-documentation synchronization system has **successfully 
 **Example Transformation**:
 ```markdown
 # Before
-![User Journey Overview](../../diagrams/viewpoints/functional/user-journey-overview.puml)
+!User Journey Overview
 
 # After  
-![User Journey Overview](../../diagrams/generated/functional/User%20Journey%20Overview.png)
+!!!!!![User Journey Overview](../../docs/diagrams/generated/functional/user-journey-overview.png)
 ```
 
 ### 3. Comprehensive Coverage ✅
@@ -139,9 +139,9 @@ docs/diagrams/
 ```
 
 **Sample Validated References**:
-- Domain Model Overview → `Domain Model Overview.png` ✅
-- Bounded Contexts Overview → `Bounded Contexts Overview.png` ✅
-- Hexagonal Architecture → `Hexagonal Architecture Overview.png` ✅
+- Domain Model Overview → `domain-model-overview.png` ✅
+- Bounded Contexts Overview → `bounded-contexts-overview.png` ✅
+- Hexagonal Architecture → `hexagonal-architecture-overview.png` ✅
 - All 13 Aggregate Details → Individual PNG files ✅
 
 ### 📋 Quality Metrics

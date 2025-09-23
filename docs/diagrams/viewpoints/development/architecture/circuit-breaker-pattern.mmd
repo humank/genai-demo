@@ -1,0 +1,29 @@
+stateDiagram-v2
+    [*] --> Closed : Initial State
+    
+    Closed --> Open : Failure Rate >= 50%
+    Open --> HalfOpen : Timeout Expires (30s)
+    HalfOpen --> Closed : 3 Consecutive Successes
+    HalfOpen --> Open : Any Failure
+    
+    note right of Closed
+        • Requests pass through normally
+        • Success/failure counts tracked
+        • Failure threshold: 5 failures in 10 requests
+        • Time window: 60 seconds
+    end note
+    
+    note right of Open
+        • All requests immediately rejected
+        • Fast-fail with CircuitBreakerException
+        • Timeout period: 30 seconds
+        • Fallback mechanism activated
+    end note
+    
+    note right of HalfOpen
+        • Limited requests allowed through
+        • Test requests: 3 consecutive successes
+        • Single failure → back to Open
+        • Success threshold: 3/3 requests
+    end note
+

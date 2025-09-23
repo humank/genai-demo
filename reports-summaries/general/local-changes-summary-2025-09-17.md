@@ -204,7 +204,7 @@ app/docs/
 ├── STRUCTURED_LOGGING_IMPLEMENTATION.md
 ├── aggregate-fixes-summary.md
 ├── aggregate-state-changes-analysis.md
-├── api/openapi.json
+├── ../api/openapi.json
 ├── api/openapi.yaml
 ├── compilation-fix-final-status.md
 ├── compilation-fix-progress.md
@@ -221,7 +221,7 @@ app/docs/
 ├── docker/verify-deployment.sh
 ├── lombok.config
 ├── terraform/main.tf
-└── tools/../../README.md
+└── tools-and-environment/../../README.md
 ```
 
 ### 2. 程式碼重構
@@ -335,7 +335,7 @@ infrastructure/.jest-cache/
 
 - \1 - 完整版本變更記錄
 - [MCP 整合指南](../../README.md) - MCP 使用指南
-- [測試性能監控](../../docs/testing/test-performance-monitoring.md) - 測試監控框架
+- 測試性能監控 - 測試監控框架
 - [開發標準](../../README.md) - 開發標準索引
 - [專案 README](../../README.md) - 專案概覽
 

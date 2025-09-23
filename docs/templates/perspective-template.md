@@ -3,7 +3,7 @@
 ---
 title: "[Perspective Name] 觀點"
 perspective_type: "security|performance|availability|evolution|usability|regulation|location|cost"
-applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational"]
+applicable_viewpoints: ["functional", "information", "concurrency", "development", "deployment", "operational", "context"]
 quality_attributes: ["attribute1", "attribute2", "attribute3"]
 stakeholders: ["architect", "developer", "operator", "security-engineer", "business-analyst"]
 related_perspectives: ["perspective1", "perspective2"]

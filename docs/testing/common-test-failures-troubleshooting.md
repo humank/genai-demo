@@ -120,7 +120,7 @@ void should_handle_endpoint_with_retry() {
         .build();
     
     ResponseEntity<String> response = retryTemplate.execute(context -> 
-        restTemplate.getForEntity(baseUrl + "/api/endpoint", String.class)
+        restTemplate.getForEntity(baseUrl + "/../api/endpoint", String.class)
     );
     
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -356,7 +356,7 @@ void optimized_test_with_join_fetch() {
 @Test
 void slow_test_with_multiple_requests() {
     for (int i = 0; i < 10; i++) {
-        restTemplate.getForEntity(baseUrl + "/api/resource/" + i, String.class);
+        restTemplate.getForEntity(baseUrl + "/../api/resource/" + i, String.class);
     }
 }
 
@@ -365,7 +365,7 @@ void slow_test_with_multiple_requests() {
 void optimized_test_with_batch_request() {
     List<String> ids = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
     ResponseEntity<List<String>> response = restTemplate.postForEntity(
-        baseUrl + "/api/batch/resources", ids, List.class);
+        baseUrl + "/../api/batch/resources", ids, List.class);
 }
 ```
 
@@ -464,14 +464,14 @@ void should_create_customer() {
 @Test
 void should_wait_for_async_operation() {
     // Trigger async operation
-    restTemplate.postForEntity(baseUrl + "/api/async-operation", request, String.class);
+    restTemplate.postForEntity(baseUrl + "/../api/async-operation", request, String.class);
     
     // Wait for completion with timeout
     await().atMost(10, SECONDS)
         .pollInterval(500, MILLISECONDS)
         .until(() -> {
             ResponseEntity<String> status = restTemplate.getForEntity(
-                baseUrl + "/api/operation-status", String.class);
+                baseUrl + "/../api/operation-status", String.class);
             return "COMPLETED".equals(status.getBody());
         });
 }
@@ -571,7 +571,7 @@ void should_handle_ci_environment_delays() {
         .build();
     
     ResponseEntity<String> response = retryTemplate.execute(context -> 
-        restTemplate.getForEntity(baseUrl + "/api/endpoint", String.class)
+        restTemplate.getForEntity(baseUrl + "/../api/endpoint", String.class)
     );
 }
 ```
@@ -687,7 +687,7 @@ If issues persist after following this troubleshooting guide:
 3. **Consult Documentation**:
    - [HTTP Client Configuration Guide](http-client-configuration-guide.md)
    - [Test Execution and Maintenance Guide](test-execution-maintenance-guide.md)
-   - [Performance Standards](../../.kiro/steering/performance-standards.md)
+   - **Performance Standards** (請參考專案內部文檔)
 
 4. **Team Escalation**:
    - Reach out to team members familiar with test infrastructure
