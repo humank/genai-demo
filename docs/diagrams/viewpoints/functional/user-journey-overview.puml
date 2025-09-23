@@ -1,0 +1,319 @@
+@startuml User Journey Overview
+!theme plain
+skinparam usecase {
+  BackgroundColor #E8F5E8
+  BorderColor #4CAF50
+}
+
+title User Journey Overview\nGenerated from BDD Features: 2025-09-21 19:48:57\n\n
+
+actor "Customer" as Customer
+usecase "Add-on offers stacking with other discounts" as Addon_offers_stacking_with_other_discounts
+Customer --> Addon_offers_stacking_with_other_discounts
+usecase "Customer reports a lost voucher" as Customer_reports_a_lost_voucher
+Customer --> Customer_reports_a_lost_voucher
+usecase "Payment discount stacking with other offers" as Payment_discount_stacking_with_other_offers
+Customer --> Payment_discount_stacking_with_other_offers
+usecase "Delivery rating" as Delivery_rating
+Customer --> Delivery_rating
+usecase "Emergency delivery" as Emergency_delivery
+Customer --> Emergency_delivery
+usecase "Customer uses reward points for a discount" as Customer_uses_reward_points_for_a_discount
+Customer --> Customer_uses_reward_points_for_a_discount
+usecase "Customer partially redeems reward points" as Customer_partially_redeems_reward_points
+Customer --> Customer_partially_redeems_reward_points
+usecase "Customer attempts to redeem more points than available" as Customer_attempts_to_redeem_more_points_than_available
+Customer --> Customer_attempts_to_redeem_more_points_than_available
+usecase "Member receives a birthday month discount" as Member_receives_a_birthday_month_discount
+Customer --> Member_receives_a_birthday_month_discount
+usecase "Member with multiple eligible discounts" as Member_with_multiple_eligible_discounts
+Customer --> Member_with_multiple_eligible_discounts
+
+actor "Another Customer" as Another_Customer
+usecase "Add-on product out of stock" as Addon_product_out_of_stock
+Another_Customer --> Addon_product_out_of_stock
+
+actor "Limited Quantity" as Limited_Quantity
+usecase "Customer attempts to buy a limited-quantity deal" as Customer_attempts_to_buy_a_limitedquantity_deal
+Limited_Quantity --> Customer_attempts_to_buy_a_limitedquantity_deal
+usecase "Customer attempts to buy a limited-quantity deal after it's sold out" as Customer_attempts_to_buy_a_limitedquantity_deal_after_its_sold_out
+Limited_Quantity --> Customer_attempts_to_buy_a_limitedquantity_deal_after_its_sold_out
+
+actor "Cart Total" as Cart_Total
+usecase "Successfully apply percentage coupon" as Successfully_apply_percentage_coupon
+Cart_Total --> Successfully_apply_percentage_coupon
+usecase "Successfully apply fixed amount coupon" as Successfully_apply_fixed_amount_coupon
+Cart_Total --> Successfully_apply_fixed_amount_coupon
+usecase "Meeting gift with purchase conditions" as Meeting_gift_with_purchase_conditions
+Cart_Total --> Meeting_gift_with_purchase_conditions
+usecase "Automatically add qualifying gifts" as Automatically_add_qualifying_gifts
+Cart_Total --> Automatically_add_qualifying_gifts
+rectangle "Page" as Page
+Automatically_add_qualifying_gifts --> Page
+usecase "Manual gift selection" as Manual_gift_selection
+Cart_Total --> Manual_gift_selection
+usecase "Cart amount change affects gifts" as Cart_amount_change_affects_gifts
+Cart_Total --> Cart_amount_change_affects_gifts
+usecase "Tiered gift with purchase" as Tiered_gift_with_purchase
+Cart_Total --> Tiered_gift_with_purchase
+usecase "Gift preview and reminder" as Gift_preview_and_reminder
+Cart_Total --> Gift_preview_and_reminder
+
+actor "Sale Promotion" as Sale_Promotion
+usecase "Flash sale promotion becomes active" as Flash_sale_promotion_becomes_active
+Sale_Promotion --> Flash_sale_promotion_becomes_active
+
+actor "Quantity Promotion" as Quantity_Promotion
+usecase "Limited quantity promotion" as Limited_quantity_promotion
+Quantity_Promotion --> Limited_quantity_promotion
+usecase "Limited quantity promotion sold out" as Limited_quantity_promotion_sold_out
+Quantity_Promotion --> Limited_quantity_promotion_sold_out
+
+actor "Discount Promotion" as Discount_Promotion
+usecase "Spend threshold discount promotion" as Spend_threshold_discount_promotion
+Discount_Promotion --> Spend_threshold_discount_promotion
+usecase "Tiered spend discount promotion" as Tiered_spend_discount_promotion
+Discount_Promotion --> Tiered_spend_discount_promotion
+
+actor "1 Promotion" as 1_Promotion
+usecase "Buy N Get N promotion" as Buy_N_Get_N_promotion
+1_Promotion --> Buy_N_Get_N_promotion
+
+actor "Price Promotion" as Price_Promotion
+usecase "Second item half price promotion" as Second_item_half_price_promotion
+Price_Promotion --> Second_item_half_price_promotion
+
+actor "Gift Stock" as Gift_Stock
+usecase "Gift out of stock" as Gift_out_of_stock
+Gift_Stock --> Gift_out_of_stock
+
+actor "Original Price" as Original_Price
+usecase "Gift with purchase and coupon combination" as Gift_with_purchase_and_coupon_combination
+Original_Price --> Gift_with_purchase_and_coupon_combination
+
+actor "Current Time" as Current_Time
+usecase "Gift activity expiration" as Gift_activity_expiration
+Current_Time --> Gift_activity_expiration
+usecase "Limited time gift with purchase" as Limited_time_gift_with_purchase
+Current_Time --> Limited_time_gift_with_purchase
+
+actor "Order" as Order
+usecase "Add items to an order" as Add_items_to_an_order
+Order --> Add_items_to_an_order
+usecase "Submit an order" as Submit_an_order
+Order --> Submit_an_order
+usecase "Cancel an order" as Cancel_an_order
+Order --> Cancel_an_order
+usecase "Apply discount to an order" as Apply_discount_to_an_order
+Order --> Apply_discount_to_an_order
+usecase "Validate order with no items" as Validate_order_with_no_items
+Order --> Validate_order_with_no_items
+usecase "Validate order with excessive total amount" as Validate_order_with_excessive_total_amount
+Order --> Validate_order_with_excessive_total_amount
+
+actor "Phone Number" as Phone_Number
+usecase "Notification delivery failure handling" as Notification_delivery_failure_handling
+Phone_Number --> Notification_delivery_failure_handling
+rectangle "Sms" as Sms
+Notification_delivery_failure_handling --> Sms
+
+actor "Email Service" as Email_Service
+usecase "Notification retry mechanism" as Notification_retry_mechanism
+Email_Service --> Notification_retry_mechanism
+rectangle "Email" as Email
+Notification_retry_mechanism --> Email
+
+actor "Email Address" as Email_Address
+usecase "Handle notification delivery failure" as Handle_notification_delivery_failure
+Email_Address --> Handle_notification_delivery_failure
+rectangle "Notification" as Notification
+Handle_notification_delivery_failure --> Notification
+
+actor "Card Installment" as Card_Installment
+usecase "Installment payment fees" as Installment_payment_fees
+Card_Installment --> Installment_payment_fees
+
+actor "Bundle" as Bundle
+usecase "Fixed bundle package" as Fixed_bundle_package
+Bundle --> Fixed_bundle_package
+
+actor "Promotion" as Promotion
+usecase "Pick any bundle discount - meets criteria" as Pick_any_bundle_discount_meets_criteria
+Promotion --> Pick_any_bundle_discount_meets_criteria
+usecase "Pick any bundle discount - exceeds quantity" as Pick_any_bundle_discount_exceeds_quantity
+Promotion --> Pick_any_bundle_discount_exceeds_quantity
+
+actor "Tiered Discount" as Tiered_Discount
+usecase "Tiered bundle discount" as Tiered_bundle_discount
+Tiered_Discount --> Tiered_bundle_discount
+
+actor "Inventory Quantity" as Inventory_Quantity
+usecase "Successfully check sufficient inventory" as Successfully_check_sufficient_inventory
+Inventory_Quantity --> Successfully_check_sufficient_inventory
+usecase "Insufficient inventory" as Insufficient_inventory
+Inventory_Quantity --> Insufficient_inventory
+usecase "Multiple product inventory check" as Multiple_product_inventory_check
+Inventory_Quantity --> Multiple_product_inventory_check
+usecase "Inventory reservation timeout" as Inventory_reservation_timeout
+Inventory_Quantity --> Inventory_reservation_timeout
+usecase "Release inventory after order cancellation" as Release_inventory_after_order_cancellation
+Inventory_Quantity --> Release_inventory_after_order_cancellation
+
+actor "Warehouse System" as Warehouse_System
+usecase "Inventory synchronization" as Inventory_synchronization
+Warehouse_System --> Inventory_synchronization
+
+actor "Price" as Price
+usecase "Cart item price update" as Cart_item_price_update
+Price --> Cart_item_price_update
+
+actor "Anonymous User" as Anonymous_User
+usecase "Anonymous cart transfer" as Anonymous_cart_transfer
+Anonymous_User --> Anonymous_cart_transfer
+
+actor "The System" as The_System
+usecase "Baseline performance validation" as Baseline_performance_validation
+The_System --> Baseline_performance_validation
+usecase "Stress testing under high load" as Stress_testing_under_high_load
+The_System --> Stress_testing_under_high_load
+usecase "Spike testing for sudden load increases" as Spike_testing_for_sudden_load_increases
+The_System --> Spike_testing_for_sudden_load_increases
+usecase "Endurance testing for sustained load" as Endurance_testing_for_sustained_load
+The_System --> Endurance_testing_for_sustained_load
+usecase "Performance recovery after load events" as Performance_recovery_after_load_events
+The_System --> Performance_recovery_after_load_events
+usecase "Development profile uses in-memory event publishing" as Development_profile_uses_inmemory_event_publishing
+The_System --> Development_profile_uses_inmemory_event_publishing
+usecase "Production profile uses Kafka event publishing" as Production_profile_uses_Kafka_event_publishing
+The_System --> Production_profile_uses_Kafka_event_publishing
+usecase "Transactional event publishing ensures consistency" as Transactional_event_publishing_ensures_consistency
+The_System --> Transactional_event_publishing_ensures_consistency
+usecase "Retry mechanism handles temporary failures in production" as Retry_mechanism_handles_temporary_failures_in_production
+The_System --> Retry_mechanism_handles_temporary_failures_in_production
+usecase "Dead letter queue handles permanent failures" as Dead_letter_queue_handles_permanent_failures
+The_System --> Dead_letter_queue_handles_permanent_failures
+usecase "Multiple events are published efficiently" as Multiple_events_are_published_efficiently
+The_System --> Multiple_events_are_published_efficiently
+usecase "Event publishing handles null and empty inputs gracefully" as Event_publishing_handles_null_and_empty_inputs_gracefully
+The_System --> Event_publishing_handles_null_and_empty_inputs_gracefully
+
+actor "Performance Monitoring" as Performance_Monitoring
+usecase "Database performance under load" as Database_performance_under_load
+Performance_Monitoring --> Database_performance_under_load
+
+actor "Network Monitoring" as Network_Monitoring
+usecase "Network performance and bandwidth validation" as Network_performance_and_bandwidth_validation
+Network_Monitoring --> Network_performance_and_bandwidth_validation
+
+actor "Cost Monitoring" as Cost_Monitoring
+usecase "Cost optimization during performance testing" as Cost_optimization_during_performance_testing
+Cost_Monitoring --> Cost_optimization_during_performance_testing
+
+actor "Ci Pipeline" as Ci_Pipeline
+usecase "Multi-architecture Docker image build and push" as Multiarchitecture_Docker_image_build_and_push
+Ci_Pipeline --> Multiarchitecture_Docker_image_build_and_push
+
+actor "Gitops Repository" as Gitops_Repository
+usecase "ArgoCD GitOps deployment validation" as ArgoCD_GitOps_deployment_validation
+Gitops_Repository --> ArgoCD_GitOps_deployment_validation
+
+actor "Pipeline Monitoring" as Pipeline_Monitoring
+usecase "CI/CD pipeline monitoring and observability" as CICD_pipeline_monitoring_and_observability
+Pipeline_Monitoring --> CICD_pipeline_monitoring_and_observability
+
+actor "Automated Rollback" as Automated_Rollback
+usecase "Automated rollback and recovery procedures" as Automated_rollback_and_recovery_procedures
+Automated_Rollback --> Automated_rollback_and_recovery_procedures
+
+actor "Performance Testing" as Performance_Testing
+usecase "Automated performance and load testing in CI/CD" as Automated_performance_and_load_testing_in_CICD
+Performance_Testing --> Automated_performance_and_load_testing_in_CICD
+
+actor "Global Database" as Global_Database
+usecase "Aurora Global Database automated failover" as Aurora_Global_Database_automated_failover
+Global_Database --> Aurora_Global_Database_automated_failover
+
+actor "Based Routing" as Based_Routing
+usecase "Route 53 health checks and DNS failover" as Route_53_health_checks_and_DNS_failover
+Based_Routing --> Route_53_health_checks_and_DNS_failover
+
+actor "0" as 0
+usecase "MSK cross-region data replication and failover" as MSK_crossregion_data_replication_and_failover
+0 --> MSK_crossregion_data_replication_and_failover
+
+actor "Observability Data" as Observability_Data
+usecase "Cross-region observability during disaster recovery" as Crossregion_observability_during_disaster_recovery
+Observability_Data --> Crossregion_observability_during_disaster_recovery
+
+actor "Recovery Automation" as Recovery_Automation
+usecase "Automated disaster recovery procedures" as Automated_disaster_recovery_procedures
+Recovery_Automation --> Automated_disaster_recovery_procedures
+
+actor "Recovery Testing" as Recovery_Testing
+usecase "Monthly disaster recovery testing" as Monthly_disaster_recovery_testing
+Recovery_Testing --> Monthly_disaster_recovery_testing
+
+actor "Data" as Data
+usecase "Data consistency validation during failover" as Data_consistency_validation_during_failover
+Data --> Data_consistency_validation_during_failover
+
+actor "Vpc Peering" as Vpc_Peering
+usecase "Cross-region network connectivity and security" as Crossregion_network_connectivity_and_security
+Vpc_Peering --> Crossregion_network_connectivity_and_security
+
+actor "For Electronics" as For_Electronics
+usecase "Seller participates in a promotional event with higher commission" as Seller_participates_in_a_promotional_event_with_higher_commission
+For_Electronics --> Seller_participates_in_a_promotional_event_with_higher_commission
+
+actor "Cart Weight" as Cart_Weight
+usecase "Select delivery method" as Select_delivery_method
+Cart_Weight --> Select_delivery_method
+usecase "Delivery method restrictions - Weight limit exceeded" as Delivery_method_restrictions_Weight_limit_exceeded
+Cart_Weight --> Delivery_method_restrictions_Weight_limit_exceeded
+
+actor "Delivery Address" as Delivery_Address
+usecase "Delivery method restrictions - Region restrictions" as Delivery_method_restrictions_Region_restrictions
+Delivery_Address --> Delivery_method_restrictions_Region_restrictions
+usecase "Same day delivery service" as Same_day_delivery_service
+Delivery_Address --> Same_day_delivery_service
+
+actor "Standard Delivery" as Standard_Delivery
+usecase "Free shipping threshold" as Free_shipping_threshold
+Standard_Delivery --> Free_shipping_threshold
+
+actor "S Item" as S_Item
+usecase "Store pickup overdue handling" as Store_pickup_overdue_handling
+S_Item --> Store_pickup_overdue_handling
+
+actor "Logistics System" as Logistics_System
+usecase "Delivery resource allocation" as Delivery_resource_allocation
+Logistics_System --> Delivery_resource_allocation
+
+actor "Delivery Status" as Delivery_Status
+usecase "Successfully complete delivery" as Successfully_complete_delivery
+Delivery_Status --> Successfully_complete_delivery
+usecase "Delivery delay" as Delivery_delay
+Delivery_Status --> Delivery_delay
+usecase "Update delivery address" as Update_delivery_address
+Delivery_Status --> Update_delivery_address
+usecase "Delivery failure - No one to sign" as Delivery_failure_No_one_to_sign
+Delivery_Status --> Delivery_failure_No_one_to_sign
+usecase "Customer refuses delivery" as Customer_refuses_delivery
+Delivery_Status --> Customer_refuses_delivery
+
+actor "Current Level" as Current_Level
+usecase "Automatic membership level upgrade" as Automatic_membership_level_upgrade
+Current_Level --> Automatic_membership_level_upgrade
+
+actor "Redemption Rate" as Redemption_Rate
+usecase "Loyalty points redemption" as Loyalty_points_redemption
+Redemption_Rate --> Loyalty_points_redemption
+
+actor "Current Month" as Current_Month
+usecase "Birthday month discount" as Birthday_month_discount
+Current_Month --> Birthday_month_discount
+usecase "Multiple discount priority" as Multiple_discount_priority
+Current_Month --> Multiple_discount_priority
+
+
+@enduml

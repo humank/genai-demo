@@ -5,17 +5,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.retry.annotation.EnableRetry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
-import solid.humank.genaidemo.infrastructure.event.publisher.DeadLetterService;
+// Removed imports for deleted classes
+// import solid.humank.genaidemo.infrastructure.event.publisher.DeadLetterService;
 import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublisherAdapter;
 import solid.humank.genaidemo.infrastructure.event.publisher.InMemoryDomainEventPublisher;
-import solid.humank.genaidemo.infrastructure.event.publisher.KafkaDomainEventPublisher;
+// import solid.humank.genaidemo.infrastructure.event.publisher.KafkaDomainEventPublisher;
 import solid.humank.genaidemo.infrastructure.event.publisher.TransactionalDomainEventPublisher;
 
 /**
@@ -34,7 +32,7 @@ import solid.humank.genaidemo.infrastructure.event.publisher.TransactionalDomain
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
 @Configuration
-@EnableRetry
+// @EnableRetry // Removed for simplicity
 public class DomainEventConfiguration {
 
     // === Development Profile Configuration ===
@@ -56,34 +54,30 @@ public class DomainEventConfiguration {
     // === Production Profile Configuration ===
 
     /**
-     * Enhanced Kafka event publisher for production profile with MSK integration
-     * Features: retry mechanisms, dead letter queue, distributed tracing,
-     * production metrics
-     * 
-     * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
+     * Kafka event publisher removed for simplicity
+     * In production, consider adding back with proper Kafka dependencies
      */
-    @Bean("domainEventPublisher")
-    @Primary
-    @Profile("production")
-    public DomainEventPublisher kafkaDomainEventPublisher(
-            KafkaTemplate<String, DomainEvent> kafkaTemplate,
-            DeadLetterService deadLetterService) {
-        return new KafkaDomainEventPublisher(kafkaTemplate, deadLetterService);
-    }
-
-    /**
-     * Dead letter service for handling failed events in production
-     * Provides comprehensive error tracking and retry management
+    /*
+     * @Bean("domainEventPublisher")
      * 
-     * Requirements: 2.4, 2.5, 2.6
+     * @Primary
+     * 
+     * @Profile("production")
+     * public DomainEventPublisher kafkaDomainEventPublisher(
+     * KafkaTemplate<String, DomainEvent> kafkaTemplate,
+     * DeadLetterService deadLetterService) {
+     * return new KafkaDomainEventPublisher(kafkaTemplate, deadLetterService);
+     * }
+     * 
+     * @Bean
+     * 
+     * @Profile("production")
+     * public DeadLetterService deadLetterService(
+     * KafkaTemplate<String, Object> deadLetterKafkaTemplate,
+     * ObjectMapper objectMapper) {
+     * return new DeadLetterService(deadLetterKafkaTemplate, objectMapper);
+     * }
      */
-    @Bean
-    @Profile("production")
-    public DeadLetterService deadLetterService(
-            KafkaTemplate<String, Object> deadLetterKafkaTemplate,
-            ObjectMapper objectMapper) {
-        return new DeadLetterService(deadLetterKafkaTemplate, objectMapper);
-    }
 
     /**
      * Object mapper for JSON serialization in production

@@ -191,6 +191,11 @@ analytics:
 
 # Profile Configuration
 genai-demo:
+  # 事件發布配置 (生產環境)
+  events:
+    publisher: kafka     # 生產環境使用 Kafka
+    async: true         # 非同步處理
+  
   profile:
     name: prod
     description: "Production environment with PostgreSQL, Kafka, and AWS services"
@@ -207,9 +212,35 @@ genai-demo:
       analytics-enabled: true
       cost-optimization-enabled: true
   
-  # Cost Optimization Configuration
+  # 可觀測性配置 (生產環境)
   observability:
+    enabled: true
+    analytics:
+      enabled: true
+      storage: kafka      # 生產環境使用 Kafka 持久化
+      retention-days: 90
+      batch-processing:
+        enabled: true
+        batch-size: 200
+        flush-interval-seconds: 60
+        max-wait-time-ms: 10000
+    tracing:
+      enabled: true
+      exporter: xray      # 生產環境使用 AWS X-Ray
+      sampling-rate: 0.05 # 生產環境降低採樣率到 5%
+      correlation-id-header: "X-Trace-Id"
+      session-id-header: "X-Session-Id"
     metrics:
+      enabled: true
+      export-interval: 300s  # 5 分鐘匯出一次
+      business-metrics:
+        enabled: true
+        retention-days: 365
+        aggregation-interval: 900s  # 15 分鐘聚合
+      performance-metrics:
+        enabled: true
+        web-vitals-collection: true
+        percentiles: [0.5, 0.95, 0.99]
       sampling:
         enabled: true
         business-metrics-sampling-rate: 1.0
@@ -218,9 +249,19 @@ genai-demo:
         max-cardinality: 5000
         retention-period: P15D
     logging:
+      structured: true
+      correlation-enabled: true
+      mdc-integration: true
+      log-level: INFO
       retention:
         optimization-enabled: true
         high-volume-threshold: 500
+    websocket:
+      enabled: true
+      endpoint: "/ws/analytics"
+      allowed-origins: "${FRONTEND_ORIGINS:https://app.genai-demo.com}"
+      heartbeat-interval: 120000  # 2 分鐘
+      connection-timeout: 60000   # 1 分鐘
     rightsizing:
       analysis-enabled: true
       history-retention-minutes: 120

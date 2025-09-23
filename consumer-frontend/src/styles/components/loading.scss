@@ -1,0 +1,529 @@
+// Modern Loading and Skeleton Components
+// Based on 2024 e-commerce design trends
+
+// === Skeleton Loading Components ===
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.6) 50%,
+            transparent 100%);
+    animation: shimmer-wave 2s infinite;
+}
+
+// Skeleton Variants
+.skeleton-text {
+    height: 1em;
+    margin-bottom: 0.5em;
+    border-radius: var(--radius-sm);
+
+    &:last-child {
+        margin-bottom: 0;
+        width: 60%;
+    }
+
+    &.skeleton-text-sm {
+        height: 0.75em;
+    }
+
+    &.skeleton-text-lg {
+        height: 1.25em;
+    }
+}
+
+.skeleton-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+
+    &.skeleton-avatar-sm {
+        width: 32px;
+        height: 32px;
+    }
+
+    &.skeleton-avatar-lg {
+        width: 64px;
+        height: 64px;
+    }
+}
+
+.skeleton-button {
+    height: 40px;
+    border-radius: var(--radius-lg);
+
+    &.skeleton-button-sm {
+        height: 32px;
+    }
+
+    &.skeleton-button-lg {
+        height: 48px;
+    }
+}
+
+.skeleton-image {
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+
+    &.skeleton-image-rect {
+        aspect-ratio: 16/9;
+    }
+
+    &.skeleton-image-square {
+        aspect-ratio: 1;
+    }
+}
+
+.skeleton-card {
+    padding: var(--spacing-4);
+    border-radius: var(--radius-2xl);
+    background: white;
+    box-shadow: var(--shadow-sm);
+
+    .skeleton-image {
+        margin-bottom: var(--spacing-4);
+    }
+
+    .skeleton-text {
+        margin-bottom: var(--spacing-2);
+    }
+
+    .skeleton-button {
+        margin-top: var(--spacing-4);
+    }
+}
+
+// === Page Loading Animations ===
+
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-modal);
+
+    &.fade-out {
+        animation: fadeOut var(--duration-500) var(--easing-ease-in) forwards;
+    }
+}
+
+.page-loader-content {
+    text-align: center;
+
+    .loader-logo {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto var(--spacing-6);
+        background: var(--gradient-primary);
+        border-radius: var(--radius-2xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: pulse 2s ease-in-out infinite;
+
+        i {
+            font-size: var(--font-size-2xl);
+            color: white;
+        }
+    }
+
+    .loader-text {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-700);
+        margin-bottom: var(--spacing-4);
+    }
+
+    .loader-progress {
+        width: 200px;
+        height: 4px;
+        background: var(--color-gray-200);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+        margin: 0 auto;
+
+        .loader-progress-bar {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            animation: loading-progress 2s ease-in-out infinite;
+        }
+    }
+}
+
+// === Spinner Components ===
+
+.spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-gray-200);
+    border-top: 3px solid var(--color-primary-500);
+    border-radius: var(--radius-full);
+    animation: spin var(--duration-1000) linear infinite;
+
+    &.spinner-sm {
+        width: 20px;
+        height: 20px;
+        border-width: 2px;
+    }
+
+    &.spinner-lg {
+        width: 48px;
+        height: 48px;
+        border-width: 4px;
+    }
+
+    &.spinner-white {
+        border-color: rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+    }
+}
+
+.dots-loader {
+    display: inline-flex;
+    gap: var(--spacing-1);
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        background: var(--color-primary-500);
+        border-radius: var(--radius-full);
+        animation: dots-bounce 1.4s ease-in-out infinite both;
+
+        &:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        &:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 0s;
+        }
+    }
+}
+
+.pulse-loader {
+    width: 40px;
+    height: 40px;
+    background: var(--color-primary-500);
+    border-radius: var(--radius-full);
+    animation: pulse-scale 1.5s ease-in-out infinite;
+}
+
+// === Progress Indicators ===
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--color-gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+
+    .progress-fill {
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: var(--radius-full);
+        transition: width var(--duration-300) var(--easing-ease-out);
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 100%);
+            animation: progress-shine 2s infinite;
+        }
+    }
+
+    &.progress-bar-sm {
+        height: 4px;
+    }
+
+    &.progress-bar-lg {
+        height: 12px;
+    }
+}
+
+.circular-progress {
+    position: relative;
+    width: 60px;
+    height: 60px;
+
+    svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .progress-bg {
+        fill: none;
+        stroke: var(--color-gray-200);
+        stroke-width: 4;
+    }
+
+    .progress-fill {
+        fill: none;
+        stroke: var(--color-primary-500);
+        stroke-width: 4;
+        stroke-linecap: round;
+        transition: stroke-dashoffset var(--duration-500) var(--easing-ease-out);
+    }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-700);
+    }
+}
+
+// === Loading States for Components ===
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-index-overlay);
+    border-radius: inherit;
+}
+
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border: 2px solid currentColor;
+        border-radius: var(--radius-full);
+        border-top-color: transparent;
+        animation: spin var(--duration-1000) linear infinite;
+    }
+}
+
+.card-loading {
+    .product-image-container {
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .product-info>* {
+        background: var(--color-gray-200);
+        border-radius: var(--radius-md);
+        color: transparent;
+        animation: shimmer 1.5s infinite;
+    }
+}
+
+// === Keyframe Animations ===
+
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+@keyframes shimmer-wave {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes loading-progress {
+    0% {
+        width: 0%;
+    }
+
+    50% {
+        width: 70%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes dots-bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse-scale {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+}
+
+@keyframes progress-shine {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+// === Responsive Design ===
+
+@media (max-width: 768px) {
+    .skeleton-card {
+        padding: var(--spacing-3);
+    }
+
+    .page-loader-content .loader-logo {
+        width: 60px;
+        height: 60px;
+    }
+
+    .circular-progress {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+// === Accessibility ===
+
+@media (prefers-reduced-motion: reduce) {
+
+    .skeleton,
+    .skeleton::after,
+    .spinner,
+    .dots-loader .dot,
+    .pulse-loader,
+    .progress-fill::after {
+        animation: none;
+    }
+
+    .skeleton {
+        background: var(--color-gray-200);
+    }
+}
+
+// === Dark Mode Support ===
+
+@media (prefers-color-scheme: dark) {
+    .skeleton {
+        background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    }
+
+    .page-loader {
+        background: var(--color-gray-900);
+    }
+
+    .loading-overlay {
+        background: rgba(0, 0, 0, 0.8);
+    }
+}

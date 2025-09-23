@@ -1,0 +1,164 @@
+@startuml Big Picture Event Storming - 標準化版本
+!theme plain
+title GenAI Demo - Big Picture Event Storming (標準化配色)
+
+' Event Storming 標準配色定義 - 符合官方規範
+skinparam rectangle {
+    ' 事件 - 橙色系 (#FFA500)
+    BackgroundColor<<Event>> #FFA500
+    BorderColor<<Event>> #FF8C00
+    FontColor<<Event>> #000000
+    
+    ' 熱點/問題 - 紅色系 (#FF0000)
+    BackgroundColor<<Hotspot>> #FF0000
+    BorderColor<<Hotspot>> #DC143C
+    FontColor<<Hotspot>> #FFFFFF
+    
+    ' 參與者 - 黃色系 (#FFD700)
+    BackgroundColor<<Actor>> #FFD700
+    BorderColor<<Actor>> #DAA520
+    FontColor<<Actor>> #000000
+    
+    ' 外部系統 - 粉色系 (#FF69B4)
+    BackgroundColor<<ExternalSystem>> #FF69B4
+    BorderColor<<ExternalSystem>> #FF1493
+    FontColor<<ExternalSystem>> #000000
+    
+    ' 機會點 - 綠色系 (#32CD32)
+    BackgroundColor<<Opportunity>> #32CD32
+    BorderColor<<Opportunity>> #228B22
+    FontColor<<Opportunity>> #000000
+}
+
+' 參與者 (Actor - 黃色)
+rectangle "消費者" as Consumer <<Actor>>
+rectangle "管理員" as Admin <<Actor>>
+rectangle "客服人員" as Support <<Actor>>
+
+' 外部系統 (External System - 粉色)
+rectangle "支付閘道" as PaymentGateway <<ExternalSystem>>
+rectangle "物流系統" as LogisticsSystem <<ExternalSystem>>
+rectangle "郵件服務" as EmailService <<ExternalSystem>>
+rectangle "簡訊服務" as SMSService <<ExternalSystem>>
+rectangle "分析系統" as AnalyticsSystem <<ExternalSystem>>
+
+' 核心業務事件 (Event - 橙色)
+rectangle "客戶已註冊" as CustomerRegistered <<Event>>
+rectangle "產品已瀏覽" as ProductViewed <<Event>>
+rectangle "商品已添加到購物車" as ItemAddedToCart <<Event>>
+rectangle "購物車已更新" as CartUpdated <<Event>>
+rectangle "訂單已創建" as OrderCreated <<Event>>
+rectangle "庫存已檢查" as InventoryChecked <<Event>>
+rectangle "庫存已預留" as InventoryReserved <<Event>>
+rectangle "訂單已提交" as OrderSubmitted <<Event>>
+rectangle "支付已請求" as PaymentRequested <<Event>>
+rectangle "支付已完成" as PaymentCompleted <<Event>>
+rectangle "訂單已確認" as OrderConfirmed <<Event>>
+rectangle "配送已安排" as ShippingArranged <<Event>>
+rectangle "訂單已出貨" as OrderShipped <<Event>>
+rectangle "訂單已送達" as OrderDelivered <<Event>>
+rectangle "訂單已完成" as OrderCompleted <<Event>>
+rectangle "訂單已取消" as OrderCancelled <<Event>>
+rectangle "退款已處理" as RefundProcessed <<Event>>
+rectangle "客戶資料已更新" as CustomerProfileUpdated <<Event>>
+rectangle "忠誠度積分已獲得" as LoyaltyPointsEarned <<Event>>
+rectangle "促銷已應用" as PromotionApplied <<Event>>
+rectangle "客服工單已創建" as SupportTicketCreated <<Event>>
+rectangle "通知已發送" as NotificationSent <<Event>>
+
+' 熱點問題 (Hotspot - 紅色)
+rectangle "庫存不足時如何處理?" as InventoryShortage <<Hotspot>>
+rectangle "支付失敗重試策略?" as PaymentFailureRetry <<Hotspot>>
+rectangle "配送失敗處理流程?" as DeliveryFailure <<Hotspot>>
+rectangle "大量併發訂單處理?" as ConcurrentOrders <<Hotspot>>
+rectangle "客戶資料隱私保護?" as DataPrivacy <<Hotspot>>
+rectangle "系統性能瓶頸?" as PerformanceBottleneck <<Hotspot>>
+
+' 機會點 (Opportunity - 綠色)
+rectangle "個人化推薦系統" as PersonalizedRecommendation <<Opportunity>>
+rectangle "預測性庫存管理" as PredictiveInventory <<Opportunity>>
+rectangle "自動化客服機器人" as AutomatedCustomerService <<Opportunity>>
+rectangle "智能定價策略" as SmartPricing <<Opportunity>>
+rectangle "即時配送追蹤" as RealTimeTracking <<Opportunity>>
+
+' 主要業務流程連接
+Consumer --> CustomerRegistered : 註冊
+Consumer --> ProductViewed : 瀏覽商品
+Consumer --> ItemAddedToCart : 加入購物車
+Consumer --> CartUpdated : 修改購物車
+Consumer --> OrderCreated : 創建訂單
+OrderCreated --> InventoryChecked : 觸發庫存檢查
+InventoryChecked --> InventoryReserved : 庫存充足時
+InventoryReserved --> OrderSubmitted : 提交訂單
+OrderSubmitted --> PaymentRequested : 請求支付
+PaymentRequested --> PaymentCompleted : 支付成功
+PaymentCompleted --> OrderConfirmed : 確認訂單
+OrderConfirmed --> ShippingArranged : 安排配送
+ShippingArranged --> OrderShipped : 出貨
+OrderShipped --> OrderDelivered : 送達
+OrderDelivered --> OrderCompleted : 完成訂單
+
+' 異常流程
+InventoryChecked --> InventoryShortage : 庫存不足
+PaymentRequested --> PaymentFailureRetry : 支付失敗
+OrderCreated --> OrderCancelled : 取消訂單
+OrderCancelled --> RefundProcessed : 已支付時退款
+
+' 客戶服務流程
+Consumer --> SupportTicketCreated : 創建客服工單
+Support --> SupportTicketCreated : 處理工單
+
+' 行銷和忠誠度流程
+Consumer --> PromotionApplied : 使用促銷
+OrderCompleted --> LoyaltyPointsEarned : 獲得積分
+CustomerRegistered --> CustomerProfileUpdated : 更新資料
+
+' 通知流程
+OrderConfirmed --> NotificationSent : 訂單確認通知
+OrderShipped --> NotificationSent : 出貨通知
+OrderDelivered --> NotificationSent : 送達通知
+
+' 外部系統整合
+PaymentRequested --> PaymentGateway : 支付處理
+ShippingArranged --> LogisticsSystem : 物流安排
+NotificationSent --> EmailService : 郵件通知
+NotificationSent --> SMSService : 簡訊通知
+OrderCompleted --> AnalyticsSystem : 數據分析
+
+' 熱點問題關聯
+InventoryChecked -.-> InventoryShortage : 可能發生
+PaymentRequested -.-> PaymentFailureRetry : 可能發生
+ShippingArranged -.-> DeliveryFailure : 可能發生
+OrderCreated -.-> ConcurrentOrders : 高峰期問題
+CustomerRegistered -.-> DataPrivacy : 隱私考量
+OrderSubmitted -.-> PerformanceBottleneck : 性能考量
+
+' 機會點關聯
+ProductViewed -.-> PersonalizedRecommendation : 改進機會
+InventoryChecked -.-> PredictiveInventory : 優化機會
+SupportTicketCreated -.-> AutomatedCustomerService : 自動化機會
+PromotionApplied -.-> SmartPricing : 智能化機會
+OrderShipped -.-> RealTimeTracking : 追蹤改進
+
+' 圖例
+legend right
+  |= 元素類型 |= 顏色 |= 說明 |
+  | <back:#FFA500>   </back> | 事件 | 系統中發生的重要業務事件 |
+  | <back:#FFD700>   </back> | 參與者 | 觸發事件的人或角色 |
+  | <back:#FF69B4>   </back> | 外部系統 | 與系統整合的外部服務 |
+  | <back:#FF0000>   </back> | 熱點問題 | 需要解決的問題或風險點 |
+  | <back:#32CD32>   </back> | 機會點 | 系統改進和優化的機會 |
+  |= 連線類型 |= 說明 |
+  | 實線箭頭 | 直接的因果關係或觸發關係 |
+  | 虛線箭頭 | 潛在的問題或改進機會 |
+endlegend
+
+note top of Consumer
+  Big Picture 階段重點：
+  - 識別核心業務事件
+  - 發現問題熱點
+  - 找出改進機會
+  - 理解整體業務流程
+end note
+
+@enduml

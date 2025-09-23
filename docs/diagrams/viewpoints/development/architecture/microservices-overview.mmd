@@ -1,0 +1,126 @@
+graph TB
+    %% Microservices Architecture Overview
+    %% This diagram shows the overall microservices architecture with key components
+    
+    subgraph "Client Layer"
+        WEB[Web Application<br/>Next.js + React]
+        MOBILE[Mobile App<br/>Angular]
+        API_CLIENT[API Clients]
+    end
+    
+    subgraph "API Gateway Layer"
+        ALB[Application Load Balancer<br/>AWS ALB]
+        API_GW[API Gateway<br/>Spring Cloud Gateway]
+        AUTH[Authentication Service<br/>JWT + OAuth2]
+    end
+    
+    subgraph "Core Services"
+        CUSTOMER[Customer Service<br/>Customer Management]
+        ORDER[Order Service<br/>Order Processing]
+        PAYMENT[Payment Service<br/>Payment Processing]
+        INVENTORY[Inventory Service<br/>Stock Management]
+        NOTIFICATION[Notification Service<br/>Email/SMS]
+    end
+    
+    subgraph "Infrastructure Services"
+        CONFIG[Config Server<br/>Centralized Configuration]
+        DISCOVERY[Service Discovery<br/>EKS Service Discovery]
+        MONITORING[Monitoring<br/>AWS X-Ray + CloudWatch]
+        LOGGING[Logging<br/>Centralized Logging]
+    end
+    
+    subgraph "Data Layer"
+        CUSTOMER_DB[(Customer DB<br/>PostgreSQL)]
+        ORDER_DB[(Order DB<br/>PostgreSQL)]
+        PAYMENT_DB[(Payment DB<br/>PostgreSQL)]
+        INVENTORY_DB[(Inventory DB<br/>PostgreSQL)]
+        CACHE[(Redis Cache<br/>Distributed Cache)]
+    end
+    
+    subgraph "Message Layer"
+        MSK[Amazon MSK<br/>Event Streaming]
+        SQS[Amazon SQS<br/>Message Queues]
+        SNS[Amazon SNS<br/>Notifications]
+    end
+    
+    %% Client connections
+    WEB --> ALB
+    MOBILE --> ALB
+    API_CLIENT --> ALB
+    
+    %% API Gateway connections
+    ALB --> API_GW
+    API_GW --> AUTH
+    
+    %% Service connections
+    API_GW --> CUSTOMER
+    API_GW --> ORDER
+    API_GW --> PAYMENT
+    API_GW --> INVENTORY
+    API_GW --> NOTIFICATION
+    
+    %% Inter-service communication
+    ORDER --> CUSTOMER
+    ORDER --> INVENTORY
+    ORDER --> PAYMENT
+    PAYMENT --> NOTIFICATION
+    ORDER --> NOTIFICATION
+    
+    %% Infrastructure connections
+    CUSTOMER --> CONFIG
+    ORDER --> CONFIG
+    PAYMENT --> CONFIG
+    INVENTORY --> CONFIG
+    NOTIFICATION --> CONFIG
+    
+    CUSTOMER --> DISCOVERY
+    ORDER --> DISCOVERY
+    PAYMENT --> DISCOVERY
+    INVENTORY --> DISCOVERY
+    NOTIFICATION --> DISCOVERY
+    
+    %% Data connections
+    CUSTOMER --> CUSTOMER_DB
+    ORDER --> ORDER_DB
+    PAYMENT --> PAYMENT_DB
+    INVENTORY --> INVENTORY_DB
+    
+    CUSTOMER --> CACHE
+    ORDER --> CACHE
+    PAYMENT --> CACHE
+    INVENTORY --> CACHE
+    
+    %% Message connections
+    ORDER --> MSK
+    PAYMENT --> MSK
+    INVENTORY --> MSK
+    NOTIFICATION --> SQS
+    NOTIFICATION --> SNS
+    
+    %% Monitoring connections
+    CUSTOMER --> MONITORING
+    ORDER --> MONITORING
+    PAYMENT --> MONITORING
+    INVENTORY --> MONITORING
+    NOTIFICATION --> MONITORING
+    
+    CUSTOMER --> LOGGING
+    ORDER --> LOGGING
+    PAYMENT --> LOGGING
+    INVENTORY --> LOGGING
+    NOTIFICATION --> LOGGING
+    
+    %% Styling
+    classDef clientStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef gatewayStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef serviceStyle fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef infraStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef dataStyle fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef messageStyle fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class WEB,MOBILE,API_CLIENT clientStyle
+    class ALB,API_GW,AUTH gatewayStyle
+    class CUSTOMER,ORDER,PAYMENT,INVENTORY,NOTIFICATION serviceStyle
+    class CONFIG,DISCOVERY,MONITORING,LOGGING infraStyle
+    class CUSTOMER_DB,ORDER_DB,PAYMENT_DB,INVENTORY_DB,CACHE dataStyle
+    class MSK,SQS,SNS messageStyle

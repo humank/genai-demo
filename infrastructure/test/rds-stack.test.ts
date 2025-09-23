@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Match, Template } from 'aws-cdk-lib/assertions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import { RdsStack } from '../lib/stacks/rds-stack';
+import { RdsStack } from '../src/stacks/rds-stack';
 
 describe('RDS Stack', () => {
     let app: cdk.App;

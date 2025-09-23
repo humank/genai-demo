@@ -1,0 +1,49 @@
+@startuml Promotion Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Promotion Bounded Context - Aggregate Details\nGenerated: 2025-09-21 19:48:57\n\n
+
+class Promotion <<AggregateRoot>> {
+  -id: PromotionId
+  -name: String
+  -description: String
+  -type: PromotionType
+  -rule: PromotionRule
+  -... (6 more fields)
+  --
+  +getId(): PromotionId
+  +getName(): String
+  +getDescription(): String
+  +... (24 more methods)
+}
+
+note right of Promotion
+  促銷聚合根，管理各種促銷活動規則
+  Version: 1.0
+end note
+
+class Voucher <<AggregateRoot>> {
+  -id: VoucherId
+  -type: VoucherType
+  -name: String
+  -description: String
+  -value: Money
+  -... (9 more fields)
+  --
+  +getId(): VoucherId
+  +getType(): VoucherType
+  +getName(): String
+  +... (25 more methods)
+}
+
+note right of Voucher
+  超商優惠券聚合根，管理優惠券的完整生命週期
+  Version: 1.0
+end note
+
+
+' Relationships
+
+@enduml

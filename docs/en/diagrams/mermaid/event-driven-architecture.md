@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 事件驅動架構
+# Event-Driven Architecture
 
-本文檔展示系統的事件驅動架構設計和實現。
+This document展示系統的Event-Driven Architecture設計和實現。
 
-## 事件驅動架構圖
+## Event-Driven Architecture圖
 
 ```mermaid
 graph TB
@@ -21,14 +19,14 @@ graph TB
         INVENTORY_SVC[📊 Inventory Service]
     end
     
-    subgraph "🏛️ 領域層 - 聚合根"
+    subgraph "🏛️ Domain Layer - Aggregate Root"
         ORDER_AGG[📋 Order Aggregate]
         CUSTOMER_AGG[👤 Customer Aggregate]
         PRODUCT_AGG[🏷️ Product Aggregate]
         PAYMENT_AGG[💰 Payment Aggregate]
     end
     
-    subgraph "📡 領域事件"
+    subgraph "📡 Domain Event"
         ORDER_CREATED[📦 OrderCreatedEvent]
         ORDER_CONFIRMED[✅ OrderConfirmedEvent]
         PAYMENT_PROCESSED[💳 PaymentProcessedEvent]
@@ -53,7 +51,7 @@ graph TB
             STOCK_HANDLER[📈 StockUpdateHandler]
         end
         
-        subgraph "👥 客戶事件處理器"
+        subgraph "👥 Customer事件處理器"
             CUSTOMER_HANDLER[👤 CustomerUpdatedHandler]
             LOYALTY_HANDLER[🎁 LoyaltyPointsHandler]
             NOTIFICATION_HANDLER[📧 NotificationHandler]
@@ -67,7 +65,7 @@ graph TB
         DEAD_LETTER[💀 Dead Letter Queue]
     end
     
-    subgraph "🔗 外部系統"
+    subgraph "🔗 External System"
         EMAIL_SVC[📧 Email Service]
         SMS_SVC[📱 SMS Service]
         PAYMENT_GATEWAY[💳 Payment Gateway]
@@ -75,7 +73,7 @@ graph TB
         ANALYTICS[📊 Analytics System]
     end
     
-    subgraph "📊 讀模型 (CQRS)"
+    subgraph "📊 Read Model (Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)))"
         ORDER_VIEW[📋 Order View Model]
         CUSTOMER_VIEW[👤 Customer View Model]
         INVENTORY_VIEW[📊 Inventory View Model]
@@ -88,13 +86,13 @@ graph TB
     API_CALL --> CUSTOMER_SVC
     API_CALL --> PAYMENT_SVC
     
-    %% 應用服務到聚合根
+    %% 應用服務到Aggregate Root
     ORDER_SVC --> ORDER_AGG
     CUSTOMER_SVC --> CUSTOMER_AGG
     PAYMENT_SVC --> PAYMENT_AGG
     INVENTORY_SVC --> PRODUCT_AGG
     
-    %% 聚合根產生事件
+    %% Aggregate Root產生事件
     ORDER_AGG --> ORDER_CREATED
     ORDER_AGG --> ORDER_CONFIRMED
     PAYMENT_AGG --> PAYMENT_PROCESSED
@@ -119,13 +117,13 @@ graph TB
     EVENT_BUS --> LOYALTY_HANDLER
     EVENT_BUS --> NOTIFICATION_HANDLER
     
-    %% 事件處理器到外部系統
+    %% 事件處理器到External System
     NOTIFICATION_HANDLER --> EMAIL_SVC
     NOTIFICATION_HANDLER --> SMS_SVC
     PAYMENT_HANDLER --> PAYMENT_GATEWAY
     INVENTORY_HANDLER --> WAREHOUSE
     
-    %% 事件處理器到讀模型
+    %% 事件處理器到Read Model
     ORDER_CREATED_HANDLER --> ORDER_VIEW
     ORDER_CONFIRMED_HANDLER --> ORDER_VIEW
     CUSTOMER_HANDLER --> CUSTOMER_VIEW
@@ -161,7 +159,7 @@ graph TB
     class ORDER_VIEW,CUSTOMER_VIEW,INVENTORY_VIEW,ANALYTICS_VIEW readModel
 ```
 
-## 事件流程範例
+## Examples
 
 ### 📦 訂單創建流程
 
@@ -198,18 +196,18 @@ sequenceDiagram
     API-->>User: 訂單創建成功
 ```
 
-## 事件設計原則
+## Design
 
 ### 📡 事件命名規範
 
 - 使用過去式動詞：`OrderCreated`, `PaymentProcessed`
-- 包含聚合名稱：`Customer*Event`, `Order*Event`
+- 包含Aggregate名稱：`Customer*Event`, `Order*Event`
 - 具體描述發生的事情：`CustomerProfileUpdated`
 
-### 💎 事件內容設計
+### Design
 
 ```java
-// 領域事件作為不可變記錄
+// Domain Event作為不可變記錄
 public record OrderCreatedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -234,7 +232,7 @@ public record OrderCreatedEvent(
 }
 ```
 
-### 🔄 事件處理器設計
+### Design
 
 ```java
 @Component
@@ -270,21 +268,21 @@ public class OrderCreatedEventHandler extends AbstractDomainEventHandler<OrderCr
 }
 ```
 
-## CQRS 實現
+## Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 實現
 
-### 📝 命令端 (Command Side)
+### 📝 Command端 (Command Side)
 
 - 處理寫入操作
-- 維護聚合根狀態
-- 發布領域事件
+- 維護Aggregate Root狀態
+- 發布Domain Event
 
 ### 📖 查詢端 (Query Side)
 
 - 處理讀取操作
-- 維護讀模型
-- 監聽領域事件更新視圖
+- 維護Read Model
+- 監聽Domain Event更新視圖
 
-### 🔄 事件溯源 (Event Sourcing)
+### 🔄 Event Sourcing (Event Sourcing)
 
 ```java
 @Component
@@ -317,7 +315,7 @@ public class EventStore {
 
 - 處理失敗的事件
 - 支援手動重試
-- 錯誤分析和監控
+- 錯誤分析和Monitoring
 
 ### 🔄 重試機制
 
@@ -341,23 +339,23 @@ public class ResilientEventHandler {
 }
 ```
 
-## 監控和可觀測性
+## Monitoring和Observability
 
-### 📊 事件指標
+### 📊 事件Metrics
 
 - 事件發布率
 - 處理延遲
 - 錯誤率
 - 重試次數
 
-### 🔍 事件追蹤
+### 🔍 事件Tracing
 
-- 分散式追蹤
+- 分散式Tracing
 - 事件關聯 ID
-- 處理鏈追蹤
+- 處理鏈Tracing
 
 ## 相關文檔
 
 - [架構概覽](architecture-overview.md) - 整體系統架構
-- [DDD 分層架構](ddd-layered-architecture.md) - DDD 實現
+- [DDD Layered Architecture](ddd-layered-architecture.md) - DDD 實現
 - [API 交互圖](api-interactions.md) - API 設計

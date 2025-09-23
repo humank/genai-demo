@@ -1,0 +1,133 @@
+graph TB
+    subgraph "外部系統 (External Systems)"
+        EXT1[電子郵件服務<br/>Email Service]
+        EXT2[支付閘道<br/>Payment Gateway]
+        EXT3[物流系統<br/>Shipping System]
+        EXT4[身份提供者<br/>Identity Provider]
+    end
+    
+    subgraph "API 閘道層 (API Gateway Layer)"
+        API[API Gateway<br/>路由、認證、限流]
+    end
+    
+    subgraph "應用服務層 (Application Service Layer)"
+        AS1[CustomerApplicationService<br/>客戶應用服務]
+        AS2[OrderApplicationService<br/>訂單應用服務]
+        AS3[ProductApplicationService<br/>產品應用服務]
+        AS4[PaymentApplicationService<br/>支付應用服務]
+        AS5[InventoryApplicationService<br/>庫存應用服務]
+    end
+    
+    subgraph "領域層 (Domain Layer)"
+        subgraph "聚合根 (Aggregate Roots)"
+            AR1[Customer<br/>客戶聚合根]
+            AR2[Order<br/>訂單聚合根]
+            AR3[Product<br/>產品聚合根]
+            AR4[Payment<br/>支付聚合根]
+            AR5[Inventory<br/>庫存聚合根]
+        end
+        
+        subgraph "領域服務 (Domain Services)"
+            DS1[PricingService<br/>定價服務]
+            DS2[InventoryAllocationService<br/>庫存分配服務]
+            DS3[PromotionService<br/>促銷服務]
+        end
+        
+        subgraph "值對象 (Value Objects)"
+            VO1[CustomerId<br/>客戶ID]
+            VO2[Money<br/>金額]
+            VO3[Address<br/>地址]
+            VO4[Email<br/>電子郵件]
+        end
+    end
+    
+    subgraph "領域事件 (Domain Events)"
+        DE1[CustomerRegistered<br/>客戶已註冊]
+        DE2[OrderCreated<br/>訂單已創建]
+        DE3[PaymentProcessed<br/>支付已處理]
+        DE4[InventoryReserved<br/>庫存已預留]
+    end
+    
+    subgraph "基礎設施層 (Infrastructure Layer)"
+        subgraph "儲存庫實現 (Repository Implementations)"
+            REPO1[CustomerRepository<br/>客戶儲存庫]
+            REPO2[OrderRepository<br/>訂單儲存庫]
+            REPO3[ProductRepository<br/>產品儲存庫]
+        end
+        
+        subgraph "外部服務適配器 (External Service Adapters)"
+            ADAPT1[EmailServiceAdapter<br/>郵件服務適配器]
+            ADAPT2[PaymentGatewayAdapter<br/>支付閘道適配器]
+            ADAPT3[ShippingServiceAdapter<br/>物流服務適配器]
+        end
+    end
+    
+    subgraph "資料庫 (Database)"
+        DB[(PostgreSQL<br/>主資料庫)]
+        CACHE[(Redis<br/>快取)]
+    end
+    
+    %% 外部系統連接
+    API --> AS1
+    API --> AS2
+    API --> AS3
+    API --> AS4
+    API --> AS5
+    
+    %% 應用服務到聚合根
+    AS1 --> AR1
+    AS2 --> AR2
+    AS3 --> AR3
+    AS4 --> AR4
+    AS5 --> AR5
+    
+    %% 聚合根使用領域服務
+    AR2 --> DS1
+    AR2 --> DS2
+    AR2 --> DS3
+    
+    %% 聚合根使用值對象
+    AR1 --> VO1
+    AR1 --> VO4
+    AR1 --> VO3
+    AR2 --> VO2
+    AR3 --> VO2
+    AR4 --> VO2
+    
+    %% 聚合根產生領域事件
+    AR1 --> DE1
+    AR2 --> DE2
+    AR4 --> DE3
+    AR5 --> DE4
+    
+    %% 基礎設施層連接
+    AS1 --> REPO1
+    AS2 --> REPO2
+    AS3 --> REPO3
+    
+    ADAPT1 --> EXT1
+    ADAPT2 --> EXT2
+    ADAPT3 --> EXT3
+    
+    REPO1 --> DB
+    REPO2 --> DB
+    REPO3 --> DB
+    
+    AS1 --> CACHE
+    AS2 --> CACHE
+    AS3 --> CACHE
+    
+    %% 樣式定義
+    classDef external fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    classDef application fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    classDef domain fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    classDef infrastructure fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    classDef event fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef database fill:#fafafa,stroke:#607d8b,stroke-width:2px
+    
+    class EXT1,EXT2,EXT3,EXT4 external
+    class AS1,AS2,AS3,AS4,AS5,API application
+    class AR1,AR2,AR3,AR4,AR5,DS1,DS2,DS3,VO1,VO2,VO3,VO4 domain
+    class REPO1,REPO2,REPO3,ADAPT1,ADAPT2,ADAPT3 infrastructure
+    class DE1,DE2,DE3,DE4 event
+    class DB,CACHE database

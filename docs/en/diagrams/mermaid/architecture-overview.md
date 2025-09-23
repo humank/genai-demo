@@ -1,18 +1,16 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 系統架構概覽
+# Overview
 
-本文檔展示 GenAI Demo 專案的整體系統架構。
+This document展示 GenAI Demo 專案的整體系統架構。
 
 ## 整體架構圖
 
 ```mermaid
 graph TB
-    subgraph "🌐 外部系統"
+    subgraph "🌐 External System"
         USER[👤 用戶]
         EXTERNAL[🔗 外部 API]
-        DB_EXTERNAL[🗄️ 外部資料庫]
+        DB_EXTERNAL[🗄️ 外部Repository]
     end
     
     subgraph "🖥️ 表現層 (Presentation Layer)"
@@ -21,32 +19,32 @@ graph TB
         API[🔌 REST API<br/>Spring Boot 3.4.5]
     end
     
-    subgraph "⚙️ 應用層 (Application Layer)"
+    subgraph "⚙️ Application Layer (Application Layer)"
         ORDER_APP[📦 Order Application Service]
         CUSTOMER_APP[👥 Customer Application Service]
         PRODUCT_APP[🏷️ Product Application Service]
         PAYMENT_APP[💳 Payment Application Service]
     end
     
-    subgraph "🏛️ 領域層 (Domain Layer)"
+    subgraph "🏛️ Domain Layer (Domain Layer)"
         ORDER_DOM[📋 Order Domain]
         CUSTOMER_DOM[👤 Customer Domain]
         PRODUCT_DOM[📦 Product Domain]
         PAYMENT_DOM[💰 Payment Domain]
         
-        subgraph "📊 領域事件"
+        subgraph "📊 Domain Event"
             EVENTS[🔔 Domain Events]
         end
     end
     
-    subgraph "🔧 基礎設施層 (Infrastructure Layer)"
+    subgraph "🔧 Infrastructure Layer (Infrastructure Layer)"
         H2_DB[(🗃️ H2 Database)]
         EVENT_BUS[📡 Event Bus]
         CACHE[⚡ Cache]
         LOGGING[📝 Logging]
     end
     
-    subgraph "☁️ 部署環境"
+    subgraph "☁️ DeploymentEnvironment"
         DOCKER[🐳 Docker]
         K8S[⚓ Kubernetes]
         AWS[☁️ AWS EKS]
@@ -60,19 +58,19 @@ graph TB
     CMC --> API
     CONSUMER --> API
     
-    %% API 到應用層
+    %% API 到Application Layer
     API --> ORDER_APP
     API --> CUSTOMER_APP
     API --> PRODUCT_APP
     API --> PAYMENT_APP
     
-    %% 應用層到領域層
+    %% Application Layer到Domain Layer
     ORDER_APP --> ORDER_DOM
     CUSTOMER_APP --> CUSTOMER_DOM
     PRODUCT_APP --> PRODUCT_DOM
     PAYMENT_APP --> PAYMENT_DOM
     
-    %% 領域事件
+    %% Domain Event
     ORDER_DOM --> EVENTS
     CUSTOMER_DOM --> EVENTS
     PRODUCT_DOM --> EVENTS
@@ -88,11 +86,11 @@ graph TB
     API --> CACHE
     API --> LOGGING
     
-    %% 外部系統
+    %% External System
     API --> EXTERNAL
     H2_DB --> DB_EXTERNAL
     
-    %% 部署
+    %% Deployment
     API --> DOCKER
     CMC --> DOCKER
     CONSUMER --> DOCKER
@@ -115,35 +113,35 @@ graph TB
 
 ## 架構特點
 
-### 🏗️ 分層架構
+### 🏗️ Layered Architecture
 
 - **表現層**: 處理用戶界面和 API 端點
-- **應用層**: 協調業務用例和事務管理
-- **領域層**: 核心業務邏輯和規則
-- **基礎設施層**: 技術實現和外部整合
+- **Application Layer**: 協調業務用例和事務管理
+- **Domain Layer**: 核心業務邏輯和規則
+- **Infrastructure Layer**: 技術實現和外部整合
 
 ### 🔄 事件驅動
 
-- 使用領域事件實現鬆耦合
+- 使用Domain Event實現鬆耦合
 - 支援異步處理和最終一致性
 - 便於系統擴展和維護
 
 ### 🎯 DDD 戰術模式
 
-- 聚合根管理一致性邊界
-- 值對象確保資料完整性
-- 領域服務處理跨聚合邏輯
+- Aggregate Root管理一致性邊界
+- Value Object確保資料完整性
+- Domain Service處理跨Aggregate邏輯
 
 ### 🚀 現代技術棧
 
 - Java 21 + Spring Boot 3.4.5
 - Next.js 14 + Angular 18
-- Docker + Kubernetes 部署
+- Docker + Kubernetes Deployment
 - ARM64 優化 (Apple Silicon + AWS Graviton3)
 
 ## 相關文檔
 
-- [六角形架構](hexagonal-architecture.md) - 端口與適配器詳解
-- [DDD 分層架構](ddd-layered-architecture.md) - DDD 實現細節
-- [事件驅動架構](event-driven-architecture.md) - 事件處理機制
+- [Hexagonal Architecture](hexagonal-architecture.md) - Port與Adapter詳解
+- [DDD Layered Architecture](ddd-layered-architecture.md) - DDD 實現細節
+- [Event-Driven Architecture](event-driven-architecture.md) - 事件處理機制
 - [API 交互圖](api-interactions.md) - API 調用關係

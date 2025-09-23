@@ -1,5 +1,3 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # 編譯錯誤修復進度
 
@@ -16,7 +14,7 @@
 
 ### 2. AbstractDomainEvent 基類更新
 
-- ✅ 移除構造函數參數
+- ✅ 移除Construct函數參數
 - ✅ 添加抽象 `getAggregateId()` 方法
 
 ### 3. Record 事件修復（12 個）
@@ -42,7 +40,7 @@
 
 ### 1. AbstractDomainEvent 子類（16 個）
 
-需要修復構造函數調用和添加 `getAggregateId()` 方法：
+需要修復Construct函數調用和添加 `getAggregateId()` 方法：
 
 **Order 事件（2 個）**:
 
@@ -136,7 +134,7 @@ public class CartEvent implements DomainEvent {
 - ShoppingCart 事件：每個約 1-2 分鐘 × 5 = 5-10 分鐘
 - **總計：約 40-60 分鐘**
 
-## 修復策略
+## 修復Policy
 
 1. **批量修復 AbstractDomainEvent 子類**：使用相同的模式
 2. **修復 ShoppingCart 事件**：添加 `getAggregateId()` 方法
@@ -145,7 +143,7 @@ public class CartEvent implements DomainEvent {
 
 ## 下一步行動
 
-建議按以下順序修復：
+recommendations按以下順序修復：
 
 1. 先修復 Order 事件（2 個）- 驗證修復模式
 2. 批量修復 Payment 事件（8 個）

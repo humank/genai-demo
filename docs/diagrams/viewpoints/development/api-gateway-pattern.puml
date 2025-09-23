@@ -1,0 +1,77 @@
+@startuml api-gateway-pattern
+!theme plain
+title API Gateway Pattern Implementation
+
+actor "Client" as client
+participant "API Gateway" as gateway
+participant "Auth Service" as auth
+participant "Rate Limiter" as limiter
+participant "Customer Service" as customer
+participant "Order Service" as order
+participant "Payment Service" as payment
+
+== Request Processing ==
+
+client -> gateway : HTTP Request
+activate gateway
+
+gateway -> auth : Validate Token
+activate auth
+auth --> gateway : Token Valid
+deactivate auth
+
+gateway -> limiter : Check Rate Limit
+activate limiter
+limiter --> gateway : Within Limit
+deactivate limiter
+
+gateway -> gateway : Route Request
+note right : Based on URL pattern\n/api/v1/customers -> Customer Service\n/api/v1/orders -> Order Service
+
+alt Customer Request
+  gateway -> customer : Forward Request
+  activate customer
+  customer --> gateway : Response
+  deactivate customer
+else Order Request
+  gateway -> order : Forward Request
+  activate order
+  order -> payment : Process Payment
+  activate payment
+  payment --> order : Payment Result
+  deactivate payment
+  order --> gateway : Response
+  deactivate order
+end
+
+gateway -> gateway : Transform Response
+gateway --> client : HTTP Response
+deactivate gateway
+
+== Error Handling ==
+
+client -> gateway : Invalid Request
+activate gateway
+
+gateway -> auth : Validate Token
+activate auth
+auth --> gateway : Token Invalid
+deactivate auth
+
+gateway --> client : 401 Unauthorized
+deactivate gateway
+
+== Rate Limiting ==
+
+client -> gateway : Excessive Requests
+activate gateway
+
+gateway -> limiter : Check Rate Limit
+activate limiter
+limiter --> gateway : Rate Limit Exceeded
+deactivate limiter
+
+gateway --> client : 429 Too Many Requests
+deactivate gateway
+
+@enduml

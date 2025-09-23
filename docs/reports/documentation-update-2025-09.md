@@ -15,7 +15,7 @@
 - **創建中文版 ADR**:
   - `ADR-001-ddd-hexagonal-architecture.md` - DDD + 六角形架構基礎
   - `ADR-002-bounded-context-design.md` - 限界上下文設計策略
-  - `ADR-SUMMARY.md` - 架構決策記錄總結
+  - `reports-summaries/architecture-design/ADR-SUMMARY.md` - 架構決策記錄總結
   - `README.md` - ADR 使用指南
 
 #### 📊 ADR 統計
@@ -65,7 +65,7 @@
 
 #### ✅ 專案總結報告更新
 
-- **`docs/reports/project-summary-2025.md`**: 新增最新成就部分
+- **`docs/reports/reports-summaries/project-management/project-summary-2025.md`**: 新增最新成就部分
 - 記錄生產就緒可觀測性系統成果
 
 ## 📈 文檔體系改進

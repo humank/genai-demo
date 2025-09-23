@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 六角形架構 (Hexagonal Architecture)
+# Hexagonal Architecture (Hexagonal Architecture)
 
-本文檔展示系統的六角形架構實現，清晰分離業務邏輯與技術實現。
+This document展示系統的Hexagonal Architecture實現，清晰分離業務邏輯與技術實現。
 
-## 六角形架構圖
+## Hexagonal Architecture圖
 
 ```mermaid
 graph TB
@@ -19,14 +17,14 @@ graph TB
         CACHE[⚡ Cache<br/>Redis]
     end
     
-    subgraph "🟡 適配器層 (Adapters)"
-        subgraph "⬅️ 入站適配器 (Inbound Adapters)"
+    subgraph "🟡 Adapter層 (Adapters)"
+        subgraph "⬅️ 入站Adapter (Inbound Adapters)"
             REST_CTRL[🔌 REST Controllers]
             CLI_ADAPTER[💻 CLI Adapter]
             TEST_ADAPTER[🧪 Test Adapter]
         end
         
-        subgraph "➡️ 出站適配器 (Outbound Adapters)"
+        subgraph "➡️ 出站Adapter (Outbound Adapters)"
             JPA_ADAPTER[🗃️ JPA Repository Adapter]
             QUEUE_ADAPTER[📨 Message Queue Adapter]
             API_ADAPTER[🔗 External API Adapter]
@@ -34,14 +32,14 @@ graph TB
         end
     end
     
-    subgraph "🟢 端口層 (Ports)"
-        subgraph "⬅️ 入站端口 (Inbound Ports)"
+    subgraph "🟢 Port層 (Ports)"
+        subgraph "⬅️ 入站Port (Inbound Ports)"
             ORDER_USE_CASE[📦 Order Use Cases]
             CUSTOMER_USE_CASE[👥 Customer Use Cases]
             PRODUCT_USE_CASE[🏷️ Product Use Cases]
         end
         
-        subgraph "➡️ 出站端口 (Outbound Ports)"
+        subgraph "➡️ 出站Port (Outbound Ports)"
             ORDER_REPO[📋 Order Repository]
             CUSTOMER_REPO[👤 Customer Repository]
             PRODUCT_REPO[📦 Product Repository]
@@ -58,32 +56,32 @@ graph TB
             PAYMENT_AGG[💳 Payment Aggregate]
         end
         
-        subgraph "⚙️ 領域服務 (Domain Services)"
+        subgraph "⚙️ Domain Service (Domain Services)"
             PRICING_SERVICE[💰 Pricing Service]
             INVENTORY_SERVICE[📊 Inventory Service]
             LOYALTY_SERVICE[🎁 Loyalty Service]
         end
         
-        subgraph "📊 領域事件 (Domain Events)"
+        subgraph "📊 Domain Event (Domain Events)"
             ORDER_EVENTS[📦 Order Events]
             CUSTOMER_EVENTS[👥 Customer Events]
             PAYMENT_EVENTS[💳 Payment Events]
         end
     end
     
-    %% 外部世界到入站適配器
+    %% 外部世界到入站Adapter
     WEB --> REST_CTRL
     CLI --> CLI_ADAPTER
     TESTS --> TEST_ADAPTER
     
-    %% 入站適配器到入站端口
+    %% 入站Adapter到入站Port
     REST_CTRL --> ORDER_USE_CASE
     REST_CTRL --> CUSTOMER_USE_CASE
     REST_CTRL --> PRODUCT_USE_CASE
     CLI_ADAPTER --> ORDER_USE_CASE
     TEST_ADAPTER --> ORDER_USE_CASE
     
-    %% 入站端口到核心業務邏輯
+    %% 入站Port到核心業務邏輯
     ORDER_USE_CASE --> ORDER_AGG
     CUSTOMER_USE_CASE --> CUSTOMER_AGG
     PRODUCT_USE_CASE --> PRODUCT_AGG
@@ -92,7 +90,7 @@ graph TB
     ORDER_USE_CASE --> INVENTORY_SERVICE
     CUSTOMER_USE_CASE --> LOYALTY_SERVICE
     
-    %% 核心業務邏輯到出站端口
+    %% 核心業務邏輯到出站Port
     ORDER_AGG --> ORDER_REPO
     CUSTOMER_AGG --> CUSTOMER_REPO
     PRODUCT_AGG --> PRODUCT_REPO
@@ -103,14 +101,14 @@ graph TB
     
     PRICING_SERVICE --> NOTIFICATION
     
-    %% 出站端口到出站適配器
+    %% 出站Port到出站Adapter
     ORDER_REPO --> JPA_ADAPTER
     CUSTOMER_REPO --> JPA_ADAPTER
     PRODUCT_REPO --> JPA_ADAPTER
     EVENT_PUBLISHER --> QUEUE_ADAPTER
     NOTIFICATION --> API_ADAPTER
     
-    %% 出站適配器到外部世界
+    %% 出站Adapter到外部世界
     JPA_ADAPTER --> DB
     QUEUE_ADAPTER --> QUEUE
     API_ADAPTER --> EXTERNAL_API
@@ -134,25 +132,25 @@ graph TB
 
 ## 架構優勢
 
-### 🎯 關注點分離
+### 🎯 Concern分離
 
 - **核心業務邏輯**: 獨立於技術實現
-- **適配器**: 處理技術細節和外部整合
-- **端口**: 定義清晰的契約界面
+- **Adapter**: 處理技術細節和外部整合
+- **Port**: 定義清晰的契約界面
 
 ### 🔄 依賴反轉
 
 - 核心業務邏輯不依賴外部技術
-- 適配器實現端口定義的介面
+- Adapter實現Port定義的介面
 - 便於測試和技術替換
 
-### 🧪 可測試性
+### Testing
 
 - 核心邏輯可獨立測試
-- 適配器可模擬替換
-- 支援各種測試策略
+- Adapter可模擬替換
+- 支援各種測試Policy
 
-### 🔧 可維護性
+### Maintenance
 
 - 技術變更不影響業務邏輯
 - 新功能易於添加
@@ -160,7 +158,7 @@ graph TB
 
 ## 實現細節
 
-### 入站端口 (Use Cases)
+### 入站Port (Use Cases)
 
 ```java
 // 訂單管理用例
@@ -171,7 +169,7 @@ public interface OrderManagementUseCase {
 }
 ```
 
-### 出站端口 (Repository)
+### 出站Port (Repository)
 
 ```java
 // 訂單儲存庫介面
@@ -182,16 +180,16 @@ public interface OrderRepository {
 }
 ```
 
-### 適配器實現
+### Adapter實現
 
 ```java
-// JPA 適配器實現
+// JPA Adapter實現
 @Repository
 public class JpaOrderRepositoryAdapter implements OrderRepository {
     // 實現儲存庫介面
 }
 
-// REST 控制器適配器
+// REST 控制器Adapter
 @RestController
 public class OrderController {
     private final OrderManagementUseCase orderUseCase;
@@ -202,5 +200,5 @@ public class OrderController {
 ## 相關文檔
 
 - [架構概覽](architecture-overview.md) - 整體系統架構
-- [DDD 分層架構](ddd-layered-architecture.md) - DDD 實現
+- [DDD Layered Architecture](ddd-layered-architecture.md) - DDD 實現
 - [API 交互圖](api-interactions.md) - API 設計

@@ -1,8 +1,42 @@
-@startuml 訂單系統類別圖
+@startuml 訂單系統類別圖 - UML 2.5 標準化版本
+!theme plain
 skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
 
-package "domain.order.model.aggregate" {
-  class Order {
+' UML 2.5 標準配色
+skinparam class {
+    BackgroundColor<<AggregateRoot>> #LightSalmon
+    BorderColor<<AggregateRoot>> #DC143C
+    FontColor<<AggregateRoot>> #000000
+    
+    BackgroundColor<<Entity>> #LightBlue
+    BorderColor<<Entity>> #4682B4
+    FontColor<<Entity>> #000000
+    
+    BackgroundColor<<ValueObject>> #LightGreen
+    BorderColor<<ValueObject>> #228B22
+    FontColor<<ValueObject>> #000000
+    
+    BackgroundColor<<DomainEvent>> #LightYellow
+    BorderColor<<DomainEvent>> #FFD700
+    FontColor<<DomainEvent>> #000000
+    
+    BackgroundColor<<Service>> #LightGray
+    BorderColor<<Service>> #696969
+    FontColor<<Service>> #000000
+    
+    BackgroundColor<<Repository>> #LightCyan
+    BorderColor<<Repository>> #008B8B
+    FontColor<<Repository>> #000000
+    
+    BackgroundColor<<Factory>> #LightPink
+    BorderColor<<Factory>> #FF1493
+    FontColor<<Factory>> #000000
+}
+
+package "domain.order.model.aggregate" <<Rectangle>> {
+  class Order <<AggregateRoot>> {
     -OrderId id
     -List<OrderItem> items
     -OrderStatus status
@@ -11,42 +45,54 @@ package "domain.order.model.aggregate" {
     -String shippingAddress
     -LocalDateTime createdAt
     -LocalDateTime updatedAt
-    +addItem(OrderItem item)
-    +removeItem(String itemId)
-    +updateStatus(OrderStatus status)
-    +calculateTotal()
-    +applyDiscount(Money amount)
-    +submit()
-    +cancel()
+    --
+    +addItem(item: OrderItem): void
+    +removeItem(itemId: String): void
+    +updateStatus(status: OrderStatus): void
+    +calculateTotal(): Money
+    +applyDiscount(amount: Money): void
+    +submit(): void
+    +cancel(): void
+    +getUncommittedEvents(): List<DomainEvent>
+    +markEventsAsCommitted(): void
   }
 }
 
-package "domain.common.valueobject" {
-  class OrderItem {
+package "domain.common.valueobject" <<Rectangle>> {
+  class OrderItem <<Entity>> {
     -String itemId
     -String productId
     -String productName
     -int quantity
     -Money unitPrice
-    +calculateSubtotal()
+    --
+    +calculateSubtotal(): Money
+    +updateQuantity(quantity: int): void
+    +equals(other: Object): boolean
+    +hashCode(): int
   }
 
-  class Money {
+  class Money <<ValueObject>> {
     -BigDecimal amount
     -Currency currency
-    +add(Money other)
-    +subtract(Money other)
-    +multiply(int quantity)
-    +multiply(double multiplier)
-    +divide(int divisor)
-    +isGreaterThan(Money other)
-    +{static} of(BigDecimal amount, String currencyCode)
-    +{static} of(double amount, String currencyCode)
-    +{static} twd(double amount)
-    +{static} zero()
+    --
+    +add(other: Money): Money
+    +subtract(other: Money): Money
+    +multiply(quantity: int): Money
+    +multiply(multiplier: double): Money
+    +divide(divisor: int): Money
+    +isGreaterThan(other: Money): boolean
+    +isLessThan(other: Money): boolean
+    +equals(other: Object): boolean
+    +hashCode(): int
+    --
+    +{static} of(amount: BigDecimal, currencyCode: String): Money
+    +{static} of(amount: double, currencyCode: String): Money
+    +{static} twd(amount: double): Money
+    +{static} zero(): Money
   }
 
-  enum OrderStatus {
+  enum OrderStatus <<ValueObject>> {
     CREATED
     PENDING
     CONFIRMED
@@ -55,62 +101,104 @@ package "domain.common.valueobject" {
     DELIVERED
     COMPLETED
     CANCELLED
+    --
+    +canTransitionTo(newStatus: OrderStatus): boolean
+    +isTerminalState(): boolean
   }
 
-  class OrderId {
+  class OrderId <<ValueObject>> {
     -UUID id
-    +toString()
+    --
+    +toString(): String
+    +equals(other: Object): boolean
+    +hashCode(): int
+    --
+    +{static} generate(): OrderId
+    +{static} of(uuid: UUID): OrderId
   }
 }
 
-package "application.order.service" {
-  class OrderApplicationService {
+package "application.order.service" <<Rectangle>> {
+  class OrderApplicationService <<Service>> {
     -OrderFactory orderFactory
     -OrderRepository orderRepository
     -PaymentServicePort paymentService
     -LogisticsServicePort logisticsService
     -OrderMapper orderMapper
-    +createOrder(CreateOrderCommand cmd)
-    +addOrderItem(AddOrderItemCommand cmd)
-    +processOrder(OrderId orderId)
+    -DomainEventPublisher eventPublisher
+    --
+    +createOrder(cmd: CreateOrderCommand): OrderResponse
+    +addOrderItem(cmd: AddOrderItemCommand): OrderResponse
+    +processOrder(orderId: OrderId): void
+    +confirmOrder(orderId: OrderId): OrderResponse
+    +cancelOrder(orderId: OrderId): OrderResponse
+    +getOrderById(orderId: OrderId): OrderResponse
   }
 }
 
-package "application.order.mapper" {
-  class OrderMapper {
-    +toDto(Order order)
-    +fromCommand(CreateOrderCommand cmd)
+package "application.order.mapper" <<Rectangle>> {
+  class OrderMapper <<Service>> {
+    --
+    +toDto(order: Order): OrderDto
+    +toResponse(order: Order): OrderResponse
+    +fromCommand(cmd: CreateOrderCommand): Order
+    +toSummaryDto(order: Order): OrderSummaryDto
   }
 }
 
-package "domain.order.model.factory" {
-  class OrderFactory {
-    +createOrder(String customerId, String shippingAddress)
-    +createOrderItem(String productId, String productName, int quantity, Money unitPrice)
+package "domain.order.model.factory" <<Rectangle>> {
+  class OrderFactory <<Factory>> {
+    --
+    +createOrder(customerId: String, shippingAddress: String): Order
+    +createOrderItem(productId: String, productName: String, quantity: int, unitPrice: Money): OrderItem
+    +createOrderFromCommand(cmd: CreateOrderCommand): Order
+    --
+    -validateOrderCreation(customerId: String, shippingAddress: String): void
+    -generateOrderId(): OrderId
   }
 }
 
-package "domain.common.event" {
-  interface DomainEvent {
-    +getEventId()
-    +getTimestamp()
+package "domain.common.event" <<Rectangle>> {
+  interface DomainEvent <<DomainEvent>> {
+    +getEventId(): UUID
+    +getOccurredOn(): LocalDateTime
+    +getEventType(): String
+    +getAggregateId(): String
+    +getAggregateType(): String
   }
 }
 
-package "domain.order.model.events" {
-  class OrderCreatedEvent {
+package "domain.order.model.events" <<Rectangle>> {
+  class OrderCreatedEvent <<DomainEvent>> {
+    -UUID eventId
     -OrderId orderId
     -String customerId
-    -LocalDateTime createdAt
+    -String shippingAddress
+    -LocalDateTime occurredOn
+    --
+    +getEventId(): UUID
+    +getOccurredOn(): LocalDateTime
+    +getEventType(): String
+    +getAggregateId(): String
+    --
+    +{static} create(orderId: OrderId, customerId: String, shippingAddress: String): OrderCreatedEvent
   }
 
-  class OrderItemAddedEvent {
+  class OrderItemAddedEvent <<DomainEvent>> {
+    -UUID eventId
     -OrderId orderId
     -String itemId
     -String productId
     -int quantity
     -Money unitPrice
-    -LocalDateTime addedAt
+    -LocalDateTime occurredOn
+    --
+    +getEventId(): UUID
+    +getOccurredOn(): LocalDateTime
+    +getEventType(): String
+    +getAggregateId(): String
+    --
+    +{static} create(orderId: OrderId, itemId: String, productId: String, quantity: int, unitPrice: Money): OrderItemAddedEvent
   }
 }
 
@@ -222,47 +310,125 @@ package "domain.common.valueobject" {
   }
 }
 
-package "domain.pricing.model.entity" {
-  class CommissionRate {
+package "domain.pricing.model.entity" <<Rectangle>> {
+  class CommissionRate <<Entity>> {
     -ProductCategory category
     -int normalRate
     -int eventRate
-    +getNormalRate()
-    +getEventRate()
-    +setNormalRate(int rate)
-    +setEventRate(int rate)
+    --
+    +getNormalRate(): int
+    +getEventRate(): int
+    +setNormalRate(rate: int): void
+    +setEventRate(rate: int): void
+    +calculateCommission(amount: Money, isEvent: boolean): Money
   }
 }
 
-Order "1" *--> "*" OrderItem : contains
-Order --> OrderStatus
-Order --> Money : totalAmount
-Order --> Money : discountAmount
-Order --> OrderId
-OrderItem --> Money : unitPrice
-OrderApplicationService --> OrderFactory
-OrderApplicationService --> Order
-OrderApplicationService --> OrderMapper
+package "domain.order.repository" <<Rectangle>> {
+  interface OrderRepository <<Repository>> {
+    +save(order: Order): Order
+    +findById(orderId: OrderId): Optional<Order>
+    +findByCustomerId(customerId: String): List<Order>
+    +findByStatus(status: OrderStatus): List<Order>
+    +delete(orderId: OrderId): void
+    +existsById(orderId: OrderId): boolean
+  }
+}
+
+' 聚合關係 (Composition)
+Order "1" *-- "*" OrderItem : contains
+Order "1" *-- "1" OrderId : identified by
+Order "1" *-- "1" OrderStatus : has status
+Order "1" *-- "1" Money : totalAmount
+Order "1" *-- "1" Money : discountAmount
+
+' 值對象關係
+OrderItem "1" *-- "1" Money : unitPrice
+
+' 應用服務依賴 (Dependency)
+OrderApplicationService ..> OrderFactory : uses
+OrderApplicationService ..> OrderRepository : uses
+OrderApplicationService ..> OrderMapper : uses
+OrderApplicationService ..> Order : manages
+
+' 事件發布關係 (Dependency)
 Order ..> OrderCreatedEvent : publishes
 Order ..> OrderItemAddedEvent : publishes
-OrderCreatedEvent ..|> DomainEvent
-OrderItemAddedEvent ..|> DomainEvent
-Payment --> PaymentStatus
-Payment --> PaymentMethod
-Payment --> Money : amount
-Payment --> OrderId : references
-PricingRule "1" *--> "*" CommissionRate : contains
-PricingRule --> ProductCategory
-PricingRule --> Money : finalPrice
-PricingRule --> Money : discountAmount
-Delivery --> DeliveryStatus
-Delivery --> OrderId : references
 
-note right of Order : "訂單聚合根"
-note right of OrderStatus : "訂單狀態"
-note right of DomainEvent : "領域事件介面"
-note right of Payment : "支付聚合根"
-note right of PricingRule : "定價規則聚合根"
-note right of Delivery : "配送聚合根"
+' 介面實現 (Realization)
+OrderCreatedEvent ..|> DomainEvent : implements
+OrderItemAddedEvent ..|> DomainEvent : implements
+
+' 支付聚合關係
+Payment "1" *-- "1" PaymentStatus : has status
+Payment "1" *-- "1" PaymentMethod : uses method
+Payment "1" *-- "1" Money : amount
+Payment "1" --> "1" OrderId : references
+
+' 定價聚合關係
+PricingRule "1" *-- "*" CommissionRate : contains
+PricingRule "1" *-- "1" ProductCategory : categorized by
+PricingRule "1" *-- "1" Money : finalPrice
+PricingRule "1" *-- "1" Money : discountAmount
+
+' 配送聚合關係
+Delivery "1" *-- "1" DeliveryStatus : has status
+Delivery "1" --> "1" OrderId : references
+
+' UML 註解
+note right of Order
+  <b>訂單聚合根</b>
+  - 維護訂單一致性
+  - 發布領域事件
+  - 實現業務規則
+end note
+
+note right of OrderStatus
+  <b>訂單狀態值對象</b>
+  - 不可變狀態
+  - 狀態轉換規則
+end note
+
+note right of DomainEvent
+  <b>領域事件介面</b>
+  - 事件溯源支援
+  - 跨聚合通信
+end note
+
+note right of Payment
+  <b>支付聚合根</b>
+  - 支付流程管理
+  - 風險控制
+end note
+
+note right of PricingRule
+  <b>定價規則聚合根</b>
+  - 動態定價
+  - 佣金計算
+end note
+
+note right of Delivery
+  <b>配送聚合根</b>
+  - 配送狀態管理
+  - 物流追蹤
+end note
+
+' 圖例
+legend right
+  |= 元素類型 |= 顏色 |= 說明 |
+  | <back:#LightSalmon>   </back> | 聚合根 | DDD 聚合根實體 |
+  | <back:#LightBlue>   </back> | 實體 | 具有唯一標識的對象 |
+  | <back:#LightGreen>   </back> | 值對象 | 不可變的值對象 |
+  | <back:#LightYellow>   </back> | 領域事件 | 業務事件 |
+  | <back:#LightGray>   </back> | 服務 | 應用服務和領域服務 |
+  | <back:#LightCyan>   </back> | 儲存庫 | 資料存取介面 |
+  | <back:#LightPink>   </back> | 工廠 | 對象創建工廠 |
+  |= 關係類型 |= 符號 |= 說明 |
+  | 組合 | *-- | 強擁有關係 |
+  | 聚合 | o-- | 弱擁有關係 |
+  | 關聯 | --> | 引用關係 |
+  | 依賴 | ..> | 使用關係 |
+  | 實現 | ..\|> | 介面實現 |
+endlegend
 
 @enduml

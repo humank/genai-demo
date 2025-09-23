@@ -1,0 +1,80 @@
+@startuml BDD Features Overview
+!theme plain
+skinparam packageStyle rectangle
+
+title BDD Features Overview\nGenerated: 2025-09-21 19:48:57\n\n
+
+package "Promotion Features" {
+  rectangle "Add-on Purchase Offers\n(9 scenarios)" as Addon_Purchase_Offers
+  rectangle "Flash Sale and Limited Quantity Promotions\n(4 scenarios)" as Flash_Sale_and_Limited_Quantity_Promotions
+  rectangle "Coupon System\n(3 scenarios)" as Coupon_System
+  rectangle "Promotion Management\n(8 scenarios)" as Promotion_Management
+  rectangle "Convenience Store Vouchers\n(3 scenarios)" as Convenience_Store_Vouchers
+  rectangle "Gift with Purchase\n(18 scenarios)" as Gift_with_Purchase
+}
+
+package "Order Features" {
+  rectangle "Order Aggregate Root\n(7 scenarios)" as Order_Aggregate_Root
+}
+
+package "Notification Features" {
+  rectangle "Notification Management System\n(8 scenarios)" as Notification_Management_System
+  rectangle "Notification Service\n(8 scenarios)" as Notification_Service
+}
+
+package "Payment Features" {
+  rectangle "Payment Method Discounts\n(10 scenarios)" as Payment_Method_Discounts
+  rectangle "Payment Aggregate Root\n(9 scenarios)" as Payment_Aggregate_Root
+}
+
+package "Product Features" {
+  rectangle "Product Bundle Pricing\n(3 scenarios)" as Product_Bundle_Pricing
+  rectangle "Advanced Product Bundle Sales\n(10 scenarios)" as Advanced_Product_Bundle_Sales
+  rectangle "Product Search\n(16 scenarios)" as Product_Search
+}
+
+package "Inventory Features" {
+  rectangle "Inventory Management\n(7 scenarios)" as Inventory_Management
+}
+
+package "Workflow Features" {
+  rectangle "Order Workflow\n(4 scenarios)" as Order_Workflow
+}
+
+package "Consumer Features" {
+  rectangle "Shopping Cart Management\n(10 scenarios)" as Shopping_Cart_Management
+}
+
+package "None Features" {
+  rectangle "Load Testing and Performance Validation\n(12 scenarios)" as Load_Testing_and_Performance_Validation
+  note right of Load_Testing_and_Performance_Validation
+    Tags: @performance, @load-testing, @baseline
+  end note
+  rectangle "CI/CD Pipeline Integration Testing\n(12 scenarios)" as CICD_Pipeline_Integration_Testing
+  note right of CICD_Pipeline_Integration_Testing
+    Tags: @cicd, @github-actions, @build
+  end note
+  rectangle "Disaster Recovery Integration Testing\n(12 scenarios)" as Disaster_Recovery_Integration_Testing
+  note right of Disaster_Recovery_Integration_Testing
+    Tags: @disaster-recovery, @failover, @database
+  end note
+  rectangle "Enhanced Domain Event Publishing Strategy\n(7 scenarios)" as Enhanced_Domain_Event_Publishing_Strategy
+}
+
+package "Pricing Features" {
+  rectangle "Platform Commission Rates\n(2 scenarios)" as Platform_Commission_Rates
+}
+
+package "Logistics Features" {
+  rectangle "Logistics Delivery System\n(17 scenarios)" as Logistics_Delivery_System
+  rectangle "Delivery Management\n(7 scenarios)" as Delivery_Management
+}
+
+package "Customer Features" {
+  rectangle "Customer Reward Points\n(3 scenarios)" as Customer_Reward_Points
+  rectangle "Member Discounts\n(3 scenarios)" as Member_Discounts
+  rectangle "Membership System Management\n(13 scenarios)" as Membership_System_Management
+}
+
+
+@enduml

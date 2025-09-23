@@ -26,9 +26,9 @@
 
 ### 移動到 `docs/reports/`
 
-- `CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/CI_CD_IMPLEMENTATION_SUMMARY.md`
+- `reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md` → `docs/reports/reports-summaries/general/CI_CD_IMPLEMENTATION_SUMMARY.md`
 - `FINAL_TEST_ANALYSIS.md` → `docs/reports/FINAL_TEST_ANALYSIS.md`
-- `TESTING_OPTIMIZATION_SUMMARY.md` → `docs/reports/TESTING_OPTIMIZATION_SUMMARY.md`
+- `reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md` → `docs/reports/reports-summaries/testing/TESTING_OPTIMIZATION_SUMMARY_1.md`
 
 ### 移動到 `scripts/`
 
@@ -81,7 +81,7 @@ genai-demo/
 │   └── ...                    # 其他文檔分類
 ├── infrastructure/             # AWS CDK 基礎設施
 ├── scripts/                    # 開發和部署腳本
-├── tools/                      # 開發工具
+├── tools-and-environment/                      # 開發工具
 ├── CHANGELOG.md               # 版本更新記錄
 ├── README.md                  # 專案說明（中文）
 ├── docker-compose.yml         # Docker Compose 配置

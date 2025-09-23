@@ -410,7 +410,7 @@ kubectl argo rollouts retry genai-demo-backend -n genai-demo
 kubectl describe analysisrun <analysis-run-name> -n genai-demo
 
 # Check Prometheus connectivity
-kubectl exec -it <prometheus-pod> -n monitoring -- wget -qO- http://localhost:9090/api/v1/query?query=up
+kubectl exec -it <prometheus-pod> -n monitoring -- wget -qO- http://localhost:9090/../api/v1/query?query=up
 ```
 
 ### Logs

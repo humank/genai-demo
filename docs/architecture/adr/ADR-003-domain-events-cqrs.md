@@ -548,7 +548,7 @@ public record PaymentProcessedEvent(
 
 - [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
 - [ADR-002: Bounded Context Design Strategy](./ADR-002-bounded-context-design.md)
-- [ADR-009: MSK vs EventBridge for Event Streaming](./ADR-009-event-streaming-platform.md)
+- \1
 
 ## References
 

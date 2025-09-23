@@ -140,3 +140,27 @@ app/build/reports/allure-report/
 # Temporary files
 *.tmp
 *.temp
+
+# Prevent accidental user home directory simulation
+~/
+~/*
+
+# New directories from recent changes
+excalidraw-mcp-full/
+storage/
+*.log
+
+# Test performance reports
+app/build/reports/test-performance/
+
+# CDK outputs
+infrastructure/cdk.out/
+infrastructure/node_modules/
+infrastructure/.env
+
+# MCP server logs
+excalidraw.log
+
+# Package lock files (keep only one version)
+package-lock.json
+!infrastructure/package-lock.json

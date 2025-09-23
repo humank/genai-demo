@@ -69,6 +69,13 @@ export interface Product {
   warrantyMonths?: number;
   manufacturer?: string;
   countryOfOrigin?: string;
+  // Extended properties for UI
+  originalPrice?: number;
+  isNew?: boolean;
+  isHot?: boolean;
+  onSale?: boolean;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export interface ProductSearchParams {

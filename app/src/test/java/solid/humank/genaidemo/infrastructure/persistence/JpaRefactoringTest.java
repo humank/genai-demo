@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,15 +30,36 @@ public class JpaRefactoringTest extends BaseTest {
     @Autowired
     private CustomerApplicationService customerApplicationService;
 
-    // 統計服務測試暫時跳過，需要更多數據準備
-    // @Test
-    // public void testStatsServiceWithJpa() {
-    // // 測試基本統計功能
-    // StatsDto stats = statsApplicationService.getOverallStatistics();
-    // assertNotNull(stats);
-    // assertEquals("success", stats.status());
-    // assertNotNull(stats.stats());
-    // }
+    @Test
+    public void testStatsServiceWithJpa() {
+        // 測試基本統計功能 - 即使沒有數據也應該返回有效結構
+        var stats = statsApplicationService.getOverallStatistics();
+        assertNotNull(stats);
+        assertEquals("success", stats.status());
+        assertNotNull(stats.stats());
+
+        // 驗證統計數據結構正確，即使數值為0也是有效的
+        Map<String, Object> statsMap = stats.stats();
+        assertNotNull(statsMap);
+
+        // 驗證統計數據包含預期的鍵，數值應該 >= 0
+        if (statsMap.containsKey("totalCustomers")) {
+            Object totalCustomers = statsMap.get("totalCustomers");
+            assertTrue(totalCustomers instanceof Number);
+            assertTrue(((Number) totalCustomers).longValue() >= 0);
+        }
+
+        if (statsMap.containsKey("totalOrders")) {
+            Object totalOrders = statsMap.get("totalOrders");
+            assertTrue(totalOrders instanceof Number);
+            assertTrue(((Number) totalOrders).longValue() >= 0);
+        }
+
+        if (statsMap.containsKey("totalRevenue")) {
+            Object totalRevenue = statsMap.get("totalRevenue");
+            assertTrue(totalRevenue instanceof Number || totalRevenue instanceof java.math.BigDecimal);
+        }
+    }
 
     @Test
     public void testOrderStatusStatsWithJpa() {

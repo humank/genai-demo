@@ -1,0 +1,30 @@
+{
+  "enabled": true,
+  "name": "Smart Diagram Sync Hook",
+  "description": "Intelligently handles diagram generation and documentation synchronization based on file type changes",
+  "version": "2.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "docs/diagrams/**/*.puml",
+      "docs/diagrams/**/*.mmd", 
+      "docs/diagrams/**/*.excalidraw.json",
+      "docs/viewpoints/**/*.md",
+      "docs/perspectives/**/*.md",
+      "docs/diagrams/viewpoints/development/**/*",
+      "app/src/main/java/**/*.java",
+      "app/src/test/resources/features/**/*.feature"
+    ],
+    "exclude": [
+      "docs/diagrams/generated/**",
+      "**/*.png",
+      "**/*.svg",
+      "**/.git/**",
+      "**/.kiro/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "## Smart Diagram Synchronization with Development Viewpoint Support\n\n**Detect change type and execute appropriate action:**\n\n### 1. If PlantUML files (.puml) changed:\n```bash\n# Generate PNG (primary) and SVG (secondary) for changed PlantUML files only\n./scripts/generate-diagrams.sh --format=png --changed-only\n./scripts/generate-diagrams.sh --format=svg --changed-only\n```\n\n### 2. If Mermaid files (.mmd) changed:\n```bash\n# Generate SVG for changed Mermaid files only\n./scripts/generate-mermaid-diagrams.sh --changed-only\n```\n\n### 3. If Excalidraw files (.excalidraw.json) changed:\n```bash\n# Generate PNG for changed Excalidraw files only\n./scripts/generate-excalidraw-diagrams.sh --changed-only\n```\n\n### 4. If documentation files (.md) changed:\n```bash\n# Validate and fix diagram references\npython3 scripts/validate-diagram-links.py --fix-broken\n```\n\n### 5. If Java code changed (DDD annotations):\n```bash\n# Check if DDD-related documentation needs updates\npython3 scripts/detect-outdated-content.py --viewpoint=development --threshold=7\n```\n\n### 6. If BDD Feature files changed:\n```bash\n# Update BDD process documentation if needed\npython3 scripts/assess-documentation-quality.py --viewpoint=development\n```\n\n### 7. Always validate after any change:\n```bash\n# Final validation to ensure all links work\npython3 scripts/validate-diagram-links.py\n```\n\n**Rules:**\n- **PlantUML**: Always reference PNG files in documentation (better GitHub display)\n- **Mermaid**: Reference SVG files or use inline code blocks\n- **Excalidraw**: Reference PNG files\n- **Development Viewpoint**: Monitor Java code changes for documentation updates\n- **BDD Integration**: Keep BDD documentation synchronized with feature files\n- **Fix placeholders**: Replace any `\\1` or broken references with correct paths\n- **Only generate what changed**: Don't regenerate all diagrams unnecessarily\n\n**Expected outcome**: All diagram references work correctly with minimal regeneration, and Development Viewpoint documentation stays synchronized with code changes."
+  }
+}

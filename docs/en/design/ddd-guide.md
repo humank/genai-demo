@@ -1,25 +1,18 @@
-<!-- 
-此文件需要手動翻譯
-原文件: docs/design/ddd-guide.md
-翻譯日期: Thu Aug 21 22:44:39 CST 2025
 
-請將以下中文內容翻譯為英文，保持 Markdown 格式不變
--->
-
-# DDD Entity 設計指南
+# Design
 
 ## 概述
 
-本指南提供了在專案中設計和實作 DDD Entity 的最佳實踐，基於重構專案的經驗總結。
+本指南提供了在專案中設計和實作 DDD Entity 的Best Practice，基於Refactoring專案的經驗summary。
 
-## Entity 設計原則
+## Design
 
-### 1. 業務導向設計
+### Design
 
 Entity 應該專注於領域邏輯而非技術抽象：
 
 ```java
-@Entity(name = "SellerRating", description = "賣家評級實體")
+@Entity(name = "SellerRating", description = "賣家評級Entity")
 public class SellerRating {
     // 業務邏輯方法
     public boolean isPositive() {
@@ -85,7 +78,7 @@ public enum RatingStatus {
 ### 1. 基本結構
 
 ```java
-@Entity(name = "EntityName", description = "實體描述")
+@Entity(name = "EntityName", description = "Entity描述")
 public class EntityName {
     private final EntityNameId id;
     private String businessField;
@@ -200,12 +193,12 @@ public class StockReservation {
 }
 ```
 
-## 聚合內 Entity 關係
+## Aggregate內 Entity 關係
 
 ### 1. 一對多關係
 
 ```java
-@AggregateRoot(name = "Seller", description = "賣家聚合根")
+@AggregateRoot(name = "Seller", description = "賣家Aggregate Root")
 public class Seller implements AggregateRootInterface {
     private final SellerId sellerId;
     private final List<SellerRating> ratings;
@@ -219,7 +212,7 @@ public class Seller implements AggregateRootInterface {
         );
         this.ratings.add(newRating);
         
-        // 收集領域事件
+        // 收集Domain Event
         collectEvent(SellerRatingAddedEvent.create(sellerId, newRating.getId(), rating));
     }
     
@@ -236,7 +229,7 @@ public class Seller implements AggregateRootInterface {
 ### 2. 一對一關係
 
 ```java
-@AggregateRoot(name = "Seller", description = "賣家聚合根")
+@AggregateRoot(name = "Seller", description = "賣家Aggregate Root")
 public class Seller implements AggregateRootInterface {
     private SellerProfile profile;
     private ContactInfo contactInfo;
@@ -305,9 +298,9 @@ public class SellerVerification {
 }
 ```
 
-## 測試策略
+## Testing
 
-### 1. BDD 測試覆蓋
+### Testing
 
 所有 Entity 的業務邏輯都應該由 BDD 測試覆蓋：
 
@@ -319,7 +312,7 @@ Scenario: 賣家評級狀態管理
   And 評級不應該在公開列表中顯示
 ```
 
-### 2. 架構測試
+### Testing
 
 使用 ArchUnit 確保 Entity 設計合規：
 
@@ -335,9 +328,9 @@ void entitiesShouldBeProperlyAnnotatedAndLocated() {
 }
 ```
 
-## 常見模式和最佳實踐
+## Best Practices
 
-### 1. 工廠方法
+### 1. Factory方法
 
 ```java
 public class ReviewImage {
@@ -380,7 +373,7 @@ public class Seller {
 }
 ```
 
-### 3. 聚合操作
+### 3. Aggregate操作
 
 ```java
 public class ProductReview {
@@ -423,7 +416,7 @@ public class Seller {
 }
 ```
 
-### 2. 快取友好設計
+### Design
 
 ```java
 public class SellerProfile {
@@ -446,7 +439,7 @@ public class SellerProfile {
 }
 ```
 
-## 總結
+## summary
 
 良好的 Entity 設計應該：
 
@@ -457,6 +450,3 @@ public class SellerProfile {
 5. **效能考量**: 避免不必要的資料載入和計算
 
 遵循這些原則可以創建出可維護、可測試且符合 DDD 原則的 Entity 設計。
-
-
-<!-- 翻譯完成後請刪除此註釋 -->

@@ -30,8 +30,8 @@
 ### 重複的重構文件 (4個)
 
 - `docs/shared-kernel-refactoring.md` - 過時的共享核心重構文件
-- `docs/JPA_REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
-- `docs/DDD_ENTITY_REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
+- `docs/JPA_reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與 JPA_REFACTORING_COMPLETED.md 重複
+- `docs/DDD_ENTITY_reports-summaries/project-management/REFACTORING_SUMMARY.md` - 與其他 DDD 文件重複
 
 ### 英文文檔清理 (4個)
 
@@ -46,7 +46,7 @@
 
 - 保持現有連結正確性
 
-### docs/api/README.md
+### docs/../api/README.md
 
 - 修復 `../README.md` → `../../README.md`
 - 修復 `../aws-eks-architecture.md` → `../DOCKER_GUIDE.md`

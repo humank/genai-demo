@@ -75,7 +75,7 @@ genai-demo/
 │   ├── generate-diagrams.sh         # 圖表生成腳本
 │   ├── sync-docs.sh                 # 文檔同步腳本
 │   └── validate-translations.sh     # 翻譯驗證腳本
-├── tools/                            # 開發工具
+├── tools-and-environment/                            # 開發工具
 │   └── plantuml.jar                 # PlantUML 工具
 ├── docs/                             # 中文文檔
 │   ├── README.md                    # 文檔索引
@@ -85,7 +85,7 @@ genai-demo/
 │   │   ├── hexagonal-architecture.md
 │   │   ├── ddd-implementation.md
 │   │   └── improvements-2025.md
-│   ├── api/                         # API 文檔
+│   ├── ../api/                         # API 文檔
 │   │   ├── README.md
 │   │   ├── versioning-strategy.md
 │   │   └── openapi-spec.md
@@ -118,7 +118,7 @@ genai-demo/
 │   │   └── 2025/
 │   └── reports/                     # 報告文檔
 │       ├── README.md
-│       ├── project-summary-2025.md
+│       ├── reports-summaries/project-management/project-summary-2025.md
 │       ├── architecture-excellence-2025.md
 │       └── technology-stack-2025.md
 └── docs/en/                         # 英文文檔（鏡像結構）
@@ -493,7 +493,7 @@ class DiagramErrorHandler {
 
 ### 圖表工具配置
 
-1. 安裝 PlantUML JAR 文件到 `tools/` 目錄
+1. 安裝 PlantUML JAR 文件到 `tools-and-environment/` 目錄
 2. 配置圖表生成腳本
 3. 設置輸出目錄權限
 4. 驗證圖表渲染效果

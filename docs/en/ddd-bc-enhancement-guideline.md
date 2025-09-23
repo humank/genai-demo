@@ -1,25 +1,22 @@
-# DDD + Hexagonal Architecture: From Problem Domain to Solution Domain (genai-demo Reference)
 
-> This document clearly illustrates "**Subdomain** ➜ **Bounded Context** ➜ **Hexagonal Architecture (Ports & Adapters)**" in one go:
->
-> 1) Event Storming Big Picture, 2) Subdomain ➜ Context Mapping, 3) Context Map, 4) Representative Sequence Diagrams, 5) Aggregates & Invariants, 6) Event Contracts (Published Language), 7) Hex Diagrams & Port/Adapter, 8) Modularization & Test Governance (ArchUnit).
+# Reference
 
----
-
-## 0. Scope and Personas
-
-- **Business Goals**: Support ordering, payment authorization, inventory reservation, shipping fulfillment, settlement & reconciliation, returns.
-- **Personas**: Customer, Customer Service, Warehouse, Finance, Risk Control.
-- **External Systems**: Payment Service Providers (PSP), Carriers, Tax/Accounting, KYC/AML.
+> 本文件將「**子領域（Subdomain）** ➜ **Bounded Context（Bounded Context）** ➜ **Hexagonal Architecture（Ports & Adapters）**」一次畫清楚：
+> 1) Event Storming Big Picture、2) 子領域 ➜ 上下文對映、3) 上下文地圖（Context Map）、4) 代表性序列圖、5) Aggregate與不變式、6) 事件契約（Published Language）、7) Hex 圖與 Port/Adapter、8) 模組化與測試守規（ArchUnit）。
 
 ---
 
-## 1. Event Storming (Big Picture)
+## 0. 范疇與人物
+- **商業目標**：支援下單、金流授權、庫存扣保、出貨配送、結算與對賬、退貨。
+- **人物**：顧客、客服、倉務、財務、風控。
+- **External System**：金流（PSP）、物流（Carriers）、稅務/會計、KYC/AML。
 
-> Scenario-based illustration following "Order ➜ Authorization ➜ Reservation ➜ Fulfillment ➜ Shipping ➜ Settlement" main flow. Color semantics indicated by text: `Command`, `Aggregate`, `Event`, `Policy`, `External`.
+---
 
-### 1.1 Ordering & Payment Authorization
+## 1. Event Storming（Big Picture）
+> 以「下單 ➜ 授權 ➜ 扣保 ➜ 配貨 ➜ 出貨 ➜ 結算」為主線分場景繪製。色彩語意以文字標示：`Command`、`Aggregate`、`Event`、`Policy`、`External`。
 
+### 1.1 下單 & 付款授權（Ordering + Payment Authorization）
 ```mermaid
 flowchart LR
   subgraph Ordering
@@ -60,8 +57,7 @@ flowchart LR
   class P1,P2,P3,P4 policy
 ```
 
-### 1.2 Fulfillment, Shipping, Notification
-
+### 1.2 配貨、出貨、通知（Fulfillment）
 ```mermaid
 flowchart LR
   subgraph Fulfillment
@@ -80,8 +76,7 @@ flowchart LR
   end
 ```
 
-### 1.3 Settlement, Reconciliation & Refunds
-
+### 1.3 結算、對賬與退款（Settlement & Reconciliation & Refunds）
 ```mermaid
 flowchart LR
   subgraph Settlement
@@ -101,23 +96,22 @@ flowchart LR
 
 ---
 
-## 2. Subdomain ➜ Bounded Context (When One-to-Many)
+## 2. 子領域 ➜ Bounded Context（何時一對多）
 
-| Subdomain | Typical Upstream/Downstream Capabilities | Suggested Bounded Contexts | Why Split (One-to-Many Signals) |
+| 子領域 (Subdomain) | 典型上游/下游能力 | recommendations Bounded Contexts | 為何要拆（一對多信號） |
 |---|---|---|---|
-| Ordering | Create/manage orders, cancel, modify | **Order Management** | Different semantics and consistency with Fulfillment/Payment; order state machine separated from shipping/payment flows |
-| Payments | Authorization, capture, reconciliation, refunds, disputes | **Auth & Risk**, **Settlement & Reconciliation**, **Dispute/Chargeback**, **Tokenization** | Different consistency and timing (seconds vs. next-day batch), compliance zones (PCI CDE), process/external protocol differences |
-| Inventory | Inventory view, reservation, replenishment | **Reservation**, **StockLedger** | Different transaction boundaries and read/write models, reservation and ledger evolve at different rates |
-| Fulfillment | Allocation, shipping, reverse logistics | **Fulfillment Orchestration**, **Carrier Integration** | Multiple Carrier integration (protocol/SLA differences) and different internal operation models |
-| Customer | Identity, consent/preferences | **Identity/Profile**, **Consent/Privacy** | Different regulatory/data levels, semantic conflicts |
+| Ordering | 建立/管理訂單、取消、變更 | **Order Management** | 與 Fulfillment/Payment 有不同語義與一致性；訂單狀態機與出貨/金流分離 |
+| Payments | 授權、捕提、對賬、退款、爭議 | **Auth & Risk**、**Settlement & Reconciliation**、**Dispute/Chargeback**、**Tokenization** | 一致性與時效不同（秒回 vs. 隔日批次）、合規分區（PCI CDE）、流程/外部協定差異 |
+| Inventory | 庫存視圖、扣保、補貨 | **Reservation**、**StockLedger** | 交易邊界與讀寫模型不同，扣保與總帳演化速率不同 |
+| Fulfillment | 配貨、出貨、逆物流 | **Fulfillment Orchestration**、**Carrier Integration** | 對接多 Carrier（協定/SLA 差異）與內部作業模型不同 |
+| Customer | 身分、同意/偏好 | **Identity/Profile**、**Consent/Privacy** | 法規/資料等級不同、語義衝突 |
 
-> Decision criteria: Consistency rule differences, language dialects, read/write separation, compliance boundaries, external integration, evolution rates, organizational boundaries, regional regulations, event storming clustering.
+> 判斷依據：一致性規則差異、語言方言、讀寫剖分、合規邊界、外部整合、演化速率、組織邊界、地域法規、Event Storming聚類。
 
 ---
 
-## 3. Context Map
-
-> Annotate relationship types: `PL`=Published Language, `ACL`=Anti-Corruption Layer, `OH`=Open Host Service, `C/S`=Customer/Supplier, `CF`=Conformist.
+## 3. 上下文地圖（Context Map）
+> 標注關係型態：`PL`=Published Language、`ACL`=Anti-Corruption Layer、`OH`=Open Host Service、`C/S`=Customer/Supplier、`CF`=Conformist。
 
 ```mermaid
 graph LR
@@ -140,10 +134,9 @@ graph LR
 
 ---
 
-## 4. Representative Sequence Diagrams
+## 4. 代表性序列圖
 
-### 4.1 Place Order (with Authorization & Reservation)
-
+### 4.1 Place Order（含授權與扣保）
 ```mermaid
 sequenceDiagram
   autonumber
@@ -163,8 +156,7 @@ sequenceDiagram
   API-->>C: 201 Created {orderId}
 ```
 
-### 4.2 Ship & Capture (Shipping & Settlement)
-
+### 4.2 Ship & Capture（出貨與結算）
 ```mermaid
 sequenceDiagram
   autonumber
@@ -180,45 +172,39 @@ sequenceDiagram
 
 ---
 
-## 5. Aggregates & Invariants
+## 5. Aggregate（Aggregates）與不變式（Invariants）
 
 ### 5.1 Order Management
-
 - **Order**(Aggregate Root)
-  - Invariants:
-    1) `Order` cannot ship before `PENDING` status;
-    2) `CANCELLED` cannot be modified;
-    3) Must have `PaymentAuthorized` & `InventoryReserved` to enter `READY_TO_SHIP`.
+  - 不變式：
+    1) `Order` 在 `PENDING` 前不可出貨；
+    2) `CANCELLED` 不可變更；
+    3) `PaymentAuthorized` & `InventoryReserved` 才能進入 `READY_TO_SHIP`。
 
 ### 5.2 Payments - Auth & Risk
-
 - **Payment**(AR)
-  - Invariants:
-    1) Authorization cannot be duplicated;
-    2) After `CAPTURED`, no state reversal except refunds;
-    3) Card numbers never stored (only tokens).
+  - 不變式：
+    1) 授權不可重覆；
+    2) `CAPTURED` 後不可退款以外的狀態逆轉；
+    3) 卡號絕不儲存（僅 Token）。
 
 ### 5.3 Inventory - Reservation
-
 - **Reservation**(AR)
-  - Invariants:
-    1) Reservation for same `orderId` cannot be duplicated;
-    2) Reservation must be less than or equal to available stock;
-    3) Automatic release on timeout.
+  - 不變式：
+    1) 同一 `orderId` 的扣保不可重覆；
+    2) 扣保小於等於可用存量；
+    3) 逾時自動釋放。
 
 ### 5.4 Fulfillment Orchestration
-
 - **FulfillmentOrder**(AR)
-  - Invariants: Must be `Allocated` to `Ship`; must be `Shipped` to trigger `Capture`.
+  - 不變式：`Allocated` 才能 `Ship`；`Shipped` 才能觸發 `Capture`。
 
 ---
 
-## 6. Event Contracts (Published Language)
+## 6. 事件契約（Published Language）
+> 用 JSON Schema/範例表示。實務上recommendations以 **schema registry** 管控版本。
 
-> Represented using JSON Schema/examples. In practice, recommend using **schema registry** for version control.
-
-### 6.1 `OrderPlaced` (Published by OM)
-
+### 6.1 `OrderPlaced`（由 OM 發佈）
 ```json
 {
   "event": "OrderPlaced",
@@ -227,12 +213,11 @@ sequenceDiagram
   "customerId": "CUST-1001",
   "lines": [{"sku": "SKU-1", "qty": 2, "unitPrice": 100.0}],
   "total": 200.0,
-  "occurredAt": "2025-01-28T10:02:00Z"
+  "occurredAt": "2025-08-28T10:02:00Z"
 }
 ```
 
-### 6.2 `PaymentAuthorized` (Published by Payments.Auth)
-
+### 6.2 `PaymentAuthorized`（由 Payments.Auth 發佈）
 ```json
 {
   "event": "PaymentAuthorized",
@@ -241,28 +226,26 @@ sequenceDiagram
   "paymentId": "PAY-8899",
   "authCode": "A1B2C3",
   "amount": 200.0,
-  "occurredAt": "2025-01-28T10:02:03Z"
+  "occurredAt": "2025-08-28T10:02:03Z"
 }
 ```
 
-### 6.3 `InventoryReserved` (Published by Inventory.Reservation)
-
+### 6.3 `InventoryReserved`（由 Inventory.Reservation 發佈）
 ```json
 {
   "event": "InventoryReserved",
   "version": 1,
   "orderId": "ORD-2025-0001",
   "reservations": [{"sku": "SKU-1", "qty": 2}],
-  "expireAt": "2025-01-28T10:32:03Z"
+  "expireAt": "2025-08-28T10:32:03Z"
 }
 ```
 
 ---
 
-## 7. Hexagonal Architecture Views (Ports & Adapters)
+## 7. Hexagonal Architecture視圖（Ports & Adapters）
 
-### 7.1 Order Management (Example)
-
+### Examples
 ```mermaid
 flowchart TB
   subgraph Application
@@ -292,8 +275,7 @@ flowchart TB
   PDO --> AOUT3
 ```
 
-### 7.2 Payments.Auth (with ACL & Tokenization)
-
+### 7.2 Payments.Auth（保有 ACL 與 Tokenization）
 ```mermaid
 flowchart TB
   subgraph Application
@@ -325,9 +307,8 @@ flowchart TB
 
 ---
 
-## 8. Modularization Recommendations (Gradle Multi-Module)
-
-```text
+## 8. 模組化recommendations（Gradle Multi-Module）
+```
 app/
   ├─ order-management
   │   ├─ domain
@@ -340,93 +321,89 @@ app/
   ├─ payments-settlement
   ├─ inventory-reservation
   ├─ fulfillment-orchestration
-  └─ shared-kernel (only truly cross-domain common Domain Primitives/Events/Id)
+  └─ shared-kernel (只放真正跨域的通用型 Domain Primitive/Events/Id)
 ```
-
-> **Shared Kernel** strictly controlled: only place cross-context stable and common **Domain Primitives** (like Money, Quantity, Id). Avoid putting business models to prevent coupling.
+> **Shared Kernel** 嚴格節制：僅放跨上下文穩定且通用的 **Domain Primitive**（如 Money、Quantity、Id）。避免把業務模型塞進來造成耦合。
 
 ---
 
-## 9. ArchUnit Governance (Extended Version)
-
-> Place in each module's `src/test/java/.../architecture`, with JUnit5.
+## 9. ArchUnit 守規（擴充版）
+> 於各模組 `src/test/java/.../architecture` 放置，配合 JUnit5。
 
 ```java
-// 9.1 Prohibit Application depending on Infrastructure
+// 9.1 禁止 Application 依賴 Infrastructure
 ArchRuleDefinition.noClasses()
   .that().resideInAPackage("solid.humank.genaidemo" + ".application..")
   .should().dependOnClassesThat().resideInAnyPackage("solid.humank.genaidemo" + ".infrastructure..");
 
-// 9.2 Domain must not depend on Application/Infrastructure
+// 9.2 Domain 不得依賴 Application/Infrastructure
 ArchRuleDefinition.noClasses()
   .that().resideInAPackage("solid.humank.genaidemo" + ".domain..")
   .should().dependOnClassesThat()
   .resideInAnyPackage("solid.humank.genaidemo" + ".application..", "solid.humank.genaidemo" + ".infrastructure..");
 
-// 9.3 Controllers must not directly touch Repository or EntityManager
+// 9.3 Controller 不得直接觸碰 Repository 或 EntityManager
 ArchRuleDefinition.noClasses()
   .that().resideInAnyPackage("solid.humank.genaidemo" + ".infrastructure.adapter.in..")
   .or().haveSimpleNameEndingWith("Controller")
   .should().accessClassesThat().haveSimpleNameEndingWith("Repository")
   .orShould().accessClassesThat().haveName("javax.persistence.EntityManager");
 
-// 9.4 Only Application can be annotated with @Transactional (or whitelist approach)
+// 9.4 僅 Application 可標 @Transactional（或以白名單方式限制）
 ArchRuleDefinition.noClasses()
   .that().resideInAPackage("solid.humank.genaidemo" + ".domain..")
   .or().resideInAPackage("solid.humank.genaidemo" + ".infrastructure..")
   .should().beAnnotatedWith("org.springframework.transaction.annotation.Transactional");
 
-// 9.5 Prohibit field injection
+// 9.5 禁止欄位注入（field injection）
 ArchRuleDefinition.noFields()
   .should().beAnnotatedWith("org.springframework.beans.factory.annotation.Autowired");
 ```
 
 ---
 
-## 10. Splitting & Evolution Strategy
-
-1. **First run single context main flow** (Order + Auth + Reservation + Fulfillment).
-2. **Observe pressure points** (consistency/language/compliance/vendors), correspondingly split out `payments-settlement`, `carrier-integration` etc. contexts.
-3. **Use events as contracts** (PL), use ACL across contexts to avoid semantic leakage.
-4. **Team alignment**: one stream-aligned team owns one context; set platform/enabling teams at high architectural threshold points for support.
-
----
-
-## 11. Q CLI Agent Context Links
-
-- Place this document at `docs/en/ddd-hex-rules.md`, add ArchUnit tests from `architecture-tests/**`.
-- Point custom Agent's `resources` to this file, so Q references specifications and event contracts when answering.
-
-> The above visual draft can be directly used as workshop material (Event Storming ➜ Context Map ➜ Hex/Ports ➜ Test Governance). If you want me to auto-generate ArchUnit test filenames and Gradle module skeleton based on your actual package base, tell me the base package and I'll replace and output a ready-to-run version.
+## 10. 拆分與演進Policy
+1) **先單上下文跑通主線**（Order + Auth + Reservation + Fulfillment）。
+2) **觀察壓力點**（一致性/語言/合規/供應商），對應拆出 `payments-settlement`、`carrier-integration` 等上下文。
+3) **以事件為合約**（PL），跨上下文使用 ACL 避免語意滲透。
+4) **團隊對齊**：一個 stream-aligned 團隊擁一個上下文；在架構門檻高處設 platform/enabling team 支援。
 
 ---
 
-## 12. Aggregate & Business Strict Rules (Actionable Checklist + Test Templates)
+## 11. 對應 Q CLI Agent 的 Context 連結
+- 將本文件放在 `docs/ddd-hex-rules.md`，把 `architecture-tests/**` 的 ArchUnit 測試加入。
+- 於自訂 Agent 的 `resources` 指向本檔，讓 Q 回答時引用規範與事件契約。
 
-> This section converts the specifications that need strict implementation in aggregate/business logic layers into checkable rules and ArchUnit test skeletons, already replaced with your base package: `solid.humank.genaidemo`.
+> 以上視覺稿可直接當作工作坊素材（Event Storming ➜ Context Map ➜ Hex/Ports ➜ 測試守規）。若要我依你實際 package base 自動生成 ArchUnit 測試檔名與 Gradle 模組骨架，告訴我 base package，我會替換並輸出可貼上即跑的版本。
 
-### 12.1 Specification Summary (Essential)
 
-1. **Aggregate root single entry point**, state only changes through AR public behaviors.
-2. **Invariant constraints** must be maintained "atomically" within AR, prohibited from scattering in application layer.
-3. **Specification** expresses composable boolean rules for can/cannot; **Policy** decides how to do.
-4. **State machine whitelist**: illegal transitions throw domain exceptions.
-5. **Cross-aggregate only by ID reference**; no external calls within AR.
-6. **Single transaction only changes single aggregate**; default optimistic locking (`@Version`).
-7. **Domain events** only recorded after invariants hold and state established; sent via Outbox after commit.
-8. **Application service vs Domain service**: process coordination in application layer; core rules in AR/domain service.
-9. **Validation layering**: interface/application does input format checking; business rules in AR/VO/specification.
-10. **Repository only for AR**; returns sufficient aggregate slices to maintain invariants.
-11. **Prohibit field injection**; use constructor injection to enhance testability.
-12. **@Transactional whitelist**: only allow application service/adapter-in boundaries (adjustable per project).
-13. **Domain independent of Spring** (avoid technical framework pollution of model).
 
 ---
 
-### 12.2 ArchUnit Tests (Additional)
+## Testing
 
-> Suggested path: `app/src/test/java/solid/humank/genaidemo/architecture/`  
-> New file: `ExtendedArchitectureRulesTest.java`
+> 這一節把Aggregate／業務邏輯層需要嚴格落實的規範，轉成可檢查的守則與 ArchUnit 測試骨架，已替換為你的 base package：`solid.humank.genaidemo`。
+
+### 12.1 規範總表（精要）
+1. **Aggregate Root唯一出入口**，狀態只透過 AR 公開行為改變。
+2. **Invariant constraints** 必須在 AR 內「一次性」維護，禁止分散在Application Layer。
+3. **Specification** 以可組合布林規則表達可/不可；**Policy** 決策應當如何做。
+4. **狀態機白名單**：非法轉移拋出領域例外。
+5. **跨Aggregate只以 ID 參照**；不在 AR 內做外部呼叫。
+6. **單交易只改單一Aggregate**；預設樂觀鎖（`@Version`）。
+7. **Domain Event** 僅在不變式成立、狀態確立後記錄；以 Outbox 於提交後送出。
+8. **應用服務 vs Domain Service**：流程協調在Application Layer；核心規則在 AR/Domain Service。
+9. **Validation 分層**：介面/應用做輸入格式檢查；業務規則在 AR/VO/規格。
+10. **Repository 只針對 AR**；返回足夠維護不變式的Aggregate切片。
+11. **禁止欄位注入**；以建構子注入強化Testability。
+12. **@Transactional 白名單**：僅允許應用服務/adapter-in 邊界（可依專案調整）。
+13. **Domain 不依賴 Spring**（避免技術框架污染模型）。
+
+---
+
+### Testing
+> recommendations路徑：`app/src/test/java/solid/humank/genaidemo/architecture/`  
+> 新增檔案：`ExtendedArchitectureRulesTest.java`
 
 ```java
 package solid.humank.genaidemo.architecture;
@@ -449,7 +426,7 @@ class ExtendedArchitectureRulesTest {
     ArchRuleDefinition.noClasses()
         .that().resideInAnyPackage(BASE + ".domain..", BASE + ".infrastructure..")
         .should().beAnnotatedWith("org.springframework.transaction.annotation.Transactional")
-        .because("@Transactional should be controlled by application layer/adapter-in, avoid polluting domain/infrastructure")
+        .because("@Transactional 應由Application Layer/adapter-in 控制，避免污染 domain/infrastructure")
         .check(classes);
   }
 
@@ -458,7 +435,7 @@ class ExtendedArchitectureRulesTest {
     JavaClasses classes = new ClassFileImporter().importPackages(BASE);
     ArchRuleDefinition.noFields()
         .should().beAnnotatedWith("org.springframework.beans.factory.annotation.Autowired")
-        .because("Prohibit field injection, please use constructor injection")
+        .because("禁止欄位注入，請使用建構子注入")
         .check(classes);
   }
 
@@ -468,7 +445,7 @@ class ExtendedArchitectureRulesTest {
     ArchRuleDefinition.noClasses()
         .that().resideInAPackage(BASE + ".domain..")
         .should().dependOnClassesThat().resideInAnyPackage("org.springframework..")
-        .because("Domain model should be framework-agnostic, keep pure")
+        .because("Domain 模型應與框架無關，保持純淨")
         .check(classes);
   }
 
@@ -500,20 +477,18 @@ class ExtendedArchitectureRulesTest {
         .should().accessClassesThat().haveSimpleNameEndingWith("Repository")
         .orShould().accessClassesThat().haveName("jakarta.persistence.EntityManager")
         .orShould().accessClassesThat().haveName("javax.persistence.EntityManager")
-        .because("Adapter-in should interact with data access through application ports")
+        .because("Adapter-in 應透過 application ports 與資料存取互動")
         .check(classes);
   }
 }
 ```
 
-> If you already have `LayerDependencyTest / AdaptersAndControllersTest / ValueObjectImmutabilityTest` from Chapter 2, this file serves as **extended rules**; combining all four can form a more complete governance network.
+> 若你已有第 2 章中的 `LayerDependencyTest / AdaptersAndControllersTest / ValueObjectImmutabilityTest`，本檔視為**擴充規則**；四者合併可形成較完整的守規網。
 
 ---
 
-### 12.3 Gradle Dependencies (Reminder)
-
-Add ArchUnit and JUnit5 dependencies to `app/build.gradle`:
-
+### 12.3 Gradle 依賴（提醒）
+將 ArchUnit 與 JUnit5 依賴加入 `app/build.gradle`：
 ```gradle
 dependencies {
   testImplementation platform("org.junit:junit-bom:5.10.2")
@@ -526,13 +501,11 @@ test { useJUnitPlatform() }
 
 ---
 
-### 12.4 Q CLI Agent (Resource Enhancement)
-
-Please ensure your Agent JSON (`java-ddd-hex-genaidemo.json`) includes in `resources`:
-
-```text
-file://app/src/test/java/solid/humank/genaidemo/architecture/**/*.java
-file://docs/en/ddd-hex-rules.md
+### Resources
+請在你的 Agent JSON（`java-ddd-hex-genaidemo.json`）的 `resources` 中確保包含：
 ```
+file://app/src/test/java/solid/humank/genaidemo/architecture/**/*.java
+file://docs/ddd-hex-rules.md
+```
+如此 Q 在回答時會引用規範與測試檔。
 
-This way Q will reference specifications and test files when answering.

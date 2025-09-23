@@ -26,10 +26,10 @@ genai-demo/
 │   ├── test-api.sh        # API 測試腳本
 │   ├── verify-swagger-ui.sh # Swagger UI 驗證
 │   └── generate_data.py   # 測試資料生成
-├── tools/                  # 開發工具
+├── tools-and-environment/                  # 開發工具
 │   └── plantuml.jar       # UML 圖表生成工具
 └── docs/                   # 專案文檔 (擴充)
-    ├── api/               # API 相關文檔
+    ├── ../api/               # API 相關文檔
     ├── releases/          # 版本發布記錄
     └── ...
 ```
@@ -39,7 +39,7 @@ genai-demo/
 - **Docker 相關**: `docker-build.sh`, `verify-deployment.sh` → `docker/`
 - **部署相關**: `deploy-to-eks.sh`, `k8s/`, `aws-eks-architecture.md` → `deployment/`
 - **腳本檔案**: `start-fullstack.sh`, `stop-fullstack.sh`, `test-api.sh`, `verify-swagger-ui.sh`, `generate_data.py` → `scripts/`
-- **工具檔案**: `plantuml.jar` → `tools/`
+- **工具檔案**: `plantuml.jar` → `tools-and-environment/`
 - **文檔檔案**: 各種 `.md` 檔案 → `docs/`
 
 ### 2. API 分組策略重新設計
@@ -65,7 +65,7 @@ genai-demo/
 **目標使用者**: 終端客戶 (Customer)
 **包含路徑**:
 
-- `/api/products/**` - 商品瀏覽
+- `/../api/products/**` - 商品瀏覽
 - `/api/orders/**` - 個人訂單查詢
 - `/api/payments/**` - 支付處理
 - `/api/consumer/**` - 消費者功能
@@ -82,10 +82,10 @@ genai-demo/
 **目標使用者**: 平台運營者 (Operator/Admin)
 **包含路徑**:
 
-- `/api/customers/**` - 客戶管理
+- `/../api/customers/**` - 客戶管理
 - `/api/orders/**` - 全平台訂單管理
 - `/api/products/**` - 商品管理 (CRUD)
-- `/api/inventory/**` - 庫存管理
+- `/../api/inventory/**` - 庫存管理
 - `/api/pricing/**` - 定價策略
 - `/api/payments/**` - 支付管理
 - `/api/activities/**` - 系統活動記錄
@@ -97,7 +97,7 @@ genai-demo/
 **目標使用者**: 系統管理員、DevOps
 **包含路徑**:
 
-- `/api/internal/**` - 內部系統整合
+- `/../api/internal/**` - 內部系統整合
 - `/api/management/**` - 系統管理功能
 - `/actuator/**` - Spring Boot Actuator
 
@@ -176,7 +176,7 @@ python3 scripts/generate_data.py
 ./deployment/deploy-to-eks.sh
 
 # 工具
-java -jar tools/plantuml.jar docs/uml/*.puml
+java -jar tools-and-environment/plantuml.jar docs/uml/*.puml
 ```
 
 ### API 文檔訪問
@@ -229,10 +229,10 @@ http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-confi
 
 ## 📚 相關文檔
 
-- [Docker 部署指南](../DOCKER_GUIDE.md)
-- [API 版本管理策略](../api/API_VERSIONING_STRATEGY.md)
+- \1
+- API 版本管理策略
 - [專案目錄結構說明](../../README.md#專案目錄結構)
-- [SpringDoc 分組配置指南](../api/SPRINGDOC_GROUPING_GUIDE.md)
+- \1
 
 ---
 

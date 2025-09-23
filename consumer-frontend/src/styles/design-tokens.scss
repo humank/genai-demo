@@ -1,0 +1,277 @@
+// Design Tokens - 2024 Modern E-commerce Design System
+// 基於 UI/UX 設計建議文檔的現代化設計系統
+
+:root {
+    // ===== 色彩系統 =====
+    // 主要品牌色 - 現代藍綠漸變
+    --color-primary-50: #f0fdfa; // 極淺青色
+    --color-primary-100: #ccfbf1; // 淺青色
+    --color-primary-200: #99f6e4; // 淺青色
+    --color-primary-300: #5eead4; // 中淺青色
+    --color-primary-400: #2dd4bf; // 中青色
+    --color-primary-500: #14b8a6; // 主青色 (Teal)
+    --color-primary-600: #0d9488; // 深青色
+    --color-primary-700: #0f766e; // 更深青色
+    --color-primary-800: #115e59; // 極深青色
+    --color-primary-900: #134e4a; // 最深青色
+
+    // 輔助色
+    --color-secondary-50: #fffbeb;
+    --color-secondary-100: #fef3c7;
+    --color-secondary-200: #fde68a;
+    --color-secondary-300: #fcd34d;
+    --color-secondary-400: #fbbf24;
+    --color-secondary-500: #f59e0b; // 琥珀色 (用於 CTA 按鈕)
+    --color-secondary-600: #d97706;
+    --color-secondary-700: #b45309;
+    --color-secondary-800: #92400e;
+    --color-secondary-900: #78350f;
+
+    // 強調色
+    --color-accent-50: #fdf2f8;
+    --color-accent-100: #fce7f3;
+    --color-accent-200: #fbcfe8;
+    --color-accent-300: #f9a8d4;
+    --color-accent-400: #f472b6;
+    --color-accent-500: #ec4899; // 粉紅色 (用於促銷標籤)
+    --color-accent-600: #db2777;
+    --color-accent-700: #be185d;
+    --color-accent-800: #9d174d;
+    --color-accent-900: #831843;
+
+    // 中性色系
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-400: #9ca3af;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    --color-gray-900: #111827;
+
+    // 語義化色彩
+    --color-success-50: #f0fdf4;
+    --color-success-500: #22c55e;
+    --color-success-600: #16a34a;
+    --color-success-900: #14532d;
+
+    --color-warning-50: #fffbeb;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-900: #78350f;
+
+    --color-error-50: #fef2f2;
+    --color-error-500: #ef4444;
+    --color-error-600: #dc2626;
+    --color-error-900: #7f1d1d;
+
+    --color-info-50: #eff6ff;
+    --color-info-500: #3b82f6;
+    --color-info-600: #2563eb;
+    --color-info-900: #1e3a8a;
+
+    // ===== 字體系統 =====
+    --font-family-primary: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family-display: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+    // 字體大小
+    --font-size-xs: 0.75rem; // 12px
+    --font-size-sm: 0.875rem; // 14px
+    --font-size-base: 1rem; // 16px
+    --font-size-lg: 1.125rem; // 18px
+    --font-size-xl: 1.25rem; // 20px
+    --font-size-2xl: 1.5rem; // 24px
+    --font-size-3xl: 1.875rem; // 30px
+    --font-size-4xl: 2.25rem; // 36px
+    --font-size-5xl: 3rem; // 48px
+    --font-size-6xl: 3.75rem; // 60px
+
+    // 字重
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    // 行高
+    --line-height-tight: 1.25;
+    --line-height-snug: 1.375;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.625;
+    --line-height-loose: 2;
+
+    // ===== 間距系統 =====
+    --spacing-0: 0;
+    --spacing-px: 1px;
+    --spacing-0-5: 0.125rem; // 2px
+    --spacing-1: 0.25rem; // 4px
+    --spacing-1-5: 0.375rem; // 6px
+    --spacing-2: 0.5rem; // 8px
+    --spacing-2-5: 0.625rem; // 10px
+    --spacing-3: 0.75rem; // 12px
+    --spacing-3-5: 0.875rem; // 14px
+    --spacing-4: 1rem; // 16px
+    --spacing-5: 1.25rem; // 20px
+    --spacing-6: 1.5rem; // 24px
+    --spacing-7: 1.75rem; // 28px
+    --spacing-8: 2rem; // 32px
+    --spacing-9: 2.25rem; // 36px
+    --spacing-10: 2.5rem; // 40px
+    --spacing-11: 2.75rem; // 44px
+    --spacing-12: 3rem; // 48px
+    --spacing-14: 3.5rem; // 56px
+    --spacing-16: 4rem; // 64px
+    --spacing-20: 5rem; // 80px
+    --spacing-24: 6rem; // 96px
+    --spacing-28: 7rem; // 112px
+    --spacing-32: 8rem; // 128px
+
+    // ===== 圓角系統 =====
+    --radius-none: 0;
+    --radius-sm: 0.125rem; // 2px
+    --radius-base: 0.25rem; // 4px
+    --radius-md: 0.375rem; // 6px
+    --radius-lg: 0.5rem; // 8px
+    --radius-xl: 0.75rem; // 12px
+    --radius-2xl: 1rem; // 16px
+    --radius-3xl: 1.5rem; // 24px
+    --radius-full: 9999px;
+
+    // ===== 陰影系統 =====
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+    // 彩色陰影
+    --shadow-primary: 0 10px 15px -3px rgb(20 184 166 / 0.1), 0 4px 6px -4px rgb(20 184 166 / 0.1);
+    --shadow-secondary: 0 10px 15px -3px rgb(245 158 11 / 0.1), 0 4px 6px -4px rgb(245 158 11 / 0.1);
+    --shadow-accent: 0 10px 15px -3px rgb(236 72 153 / 0.1), 0 4px 6px -4px rgb(236 72 153 / 0.1);
+
+    // ===== 動畫系統 =====
+    // 持續時間
+    --duration-75: 75ms;
+    --duration-100: 100ms;
+    --duration-150: 150ms;
+    --duration-200: 200ms;
+    --duration-300: 300ms;
+    --duration-500: 500ms;
+    --duration-700: 700ms;
+    --duration-1000: 1000ms;
+
+    // 緩動函數
+    --easing-linear: linear;
+    --easing-ease: ease;
+    --easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    // 預設過渡
+    --transition-fast: var(--duration-150) var(--easing-ease-in-out);
+    --transition-normal: var(--duration-300) var(--easing-ease-in-out);
+    --transition-slow: var(--duration-500) var(--easing-ease-in-out);
+
+    // ===== Z-Index 系統 =====
+    --z-index-hide: -1;
+    --z-index-auto: auto;
+    --z-index-base: 0;
+    --z-index-docked: 10;
+    --z-index-dropdown: 1000;
+    --z-index-sticky: 1100;
+    --z-index-banner: 1200;
+    --z-index-overlay: 1300;
+    --z-index-modal: 1400;
+    --z-index-popover: 1500;
+    --z-index-skipLink: 1600;
+    --z-index-toast: 1700;
+    --z-index-tooltip: 1800;
+
+    // ===== 斷點系統 =====
+    --breakpoint-xs: 0px;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-2xl: 1400px;
+
+    // ===== 容器寬度 =====
+    --container-xs: 100%;
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1140px;
+    --container-2xl: 1320px;
+
+    // ===== 漸變系統 =====
+    --gradient-primary: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+    --gradient-secondary: linear-gradient(135deg, var(--color-secondary-500), var(--color-secondary-600));
+    --gradient-accent: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+    --gradient-rainbow: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500), var(--color-accent-500));
+    --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+
+    // ===== 模糊效果 =====
+    --blur-none: 0;
+    --blur-sm: 4px;
+    --blur-base: 8px;
+    --blur-md: 12px;
+    --blur-lg: 16px;
+    --blur-xl: 24px;
+    --blur-2xl: 40px;
+    --blur-3xl: 64px;
+
+    // ===== 背景模糊 =====
+    --backdrop-blur-sm: blur(4px);
+    --backdrop-blur-base: blur(8px);
+    --backdrop-blur-md: blur(12px);
+    --backdrop-blur-lg: blur(16px);
+    --backdrop-blur-xl: blur(24px);
+}
+
+// ===== 暗色主題支援 =====
+@media (prefers-color-scheme: dark) {
+    :root {
+        // 重新定義暗色主題的色彩
+        --color-gray-50: #1f2937;
+        --color-gray-100: #374151;
+        --color-gray-200: #4b5563;
+        --color-gray-300: #6b7280;
+        --color-gray-400: #9ca3af;
+        --color-gray-500: #d1d5db;
+        --color-gray-600: #e5e7eb;
+        --color-gray-700: #f3f4f6;
+        --color-gray-800: #f9fafb;
+        --color-gray-900: #ffffff;
+    }
+}
+
+// ===== 減少動畫偏好設定 =====
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-75: 0ms;
+        --duration-100: 0ms;
+        --duration-150: 0ms;
+        --duration-200: 0ms;
+        --duration-300: 0ms;
+        --duration-500: 0ms;
+        --duration-700: 0ms;
+        --duration-1000: 0ms;
+    }
+}
+
+// ===== 高對比度偏好設定 =====
+@media (prefers-contrast: high) {
+    :root {
+        --color-primary-500: #0891b2;
+        --color-secondary-500: #ea580c;
+        --color-accent-500: #db2777;
+    }
+}

@@ -499,9 +499,9 @@ rollback:
 
 ## Related Decisions
 
-- [ADR-014: ArgoCD vs Flux for GitOps](./ADR-014-gitops-platform.md)
-- [ADR-015: Automated Rollback Strategy](./ADR-015-automated-rollback.md)
-- [ADR-007: EKS vs ECS vs Lambda](./ADR-007-container-orchestration.md)
+- \1
+- \1
+- \1
 
 ## References
 

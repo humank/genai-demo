@@ -96,7 +96,7 @@ echo
 
 echo -e "${PURPLE}📚 相關文檔${NC}"
 echo "=================================="
-echo "• 測試優化指南: docs/testing/test-optimization-guidelines.md"
+echo "• 測試優化指南: docs/viewpoints/development/testing/test-optimization.md"
 echo "• 測試報告: app/build/reports/tests/test/index.html"
 echo "• 開發標準: .kiro/steering/development-standards.md"
 echo

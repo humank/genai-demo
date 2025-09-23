@@ -13,7 +13,7 @@
 ## 檔案說明
 
 - `docker-build.sh` - ARM64 優化的 Docker 映像構建腳本
-- `verify-deployment.sh` - 部署驗證腳本
+- `verify-deployment.sh` - Deployment驗證腳本
 - `postgres/` - PostgreSQL 初始化腳本 (備用)
 
 ## 使用方式
@@ -25,11 +25,11 @@
 # 啟動服務
 docker-compose up -d
 
-# 驗證部署
+# Deployment
 ./docker/verify-deployment.sh
 ```
 
-詳細說明請參考：[Docker 部署指南](../docs/DOCKER_GUIDE.md)
+詳細說明請參考：\1
 
 
 <!-- 翻譯完成後請刪除此註釋 -->

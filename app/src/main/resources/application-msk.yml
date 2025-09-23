@@ -120,16 +120,24 @@ spring:
 
 # Domain Events Configuration
 genai-demo:
+  events:
+    publisher: kafka     # MSK 事件處理
+    async: true         # 非同步處理
   domain-events:
     # Topic configuration
     topic:
-      prefix: genai-demo.${spring.profiles.active:development}
+      prefix: genai-demo.${spring.profiles.active}
       partitions: 6
       replication-factor: 3
       retention-ms: 604800000  # 7 days
       cleanup-policy: delete
       compression-type: snappy
       min-insync-replicas: 2
+      # 可觀測性專用 topics
+      observability:
+        user-behavior: genai-demo.${spring.profiles.active}.observability.user.behavior
+        performance-metrics: genai-demo.${spring.profiles.active}.observability.performance.metrics
+        business-analytics: genai-demo.${spring.profiles.active}.observability.business.analytics
     
     # Event publishing configuration
     publishing:
@@ -141,7 +149,7 @@ genai-demo:
       
       # Dead letter queue configuration
       dlq:
-        enabled: true
+        enabled: true    # 死信佇列處理
         topic-suffix: .dlq
         max-retries: 3
     
@@ -180,6 +188,46 @@ genai-demo:
       tracing:
         enabled: true
         sample-rate: 0.1
+  
+  # 可觀測性配置 (生產環境)
+  observability:
+    analytics:
+      enabled: true
+      storage: kafka      # 使用 Kafka 持久化
+      retention-days: 30
+      batch-processing:
+        enabled: true
+        batch-size: 100
+        flush-interval-seconds: 30
+        max-wait-time-ms: 5000
+    tracing:
+      enabled: true
+      exporter: otlp      # 生產環境使用 OTLP
+      sampling-rate: 0.1  # 生產環境降低採樣率
+      correlation-id-header: "X-Trace-Id"
+      session-id-header: "X-Session-Id"
+    metrics:
+      enabled: true
+      export-interval: 60s
+      business-metrics:
+        enabled: true
+        retention-days: 90
+        aggregation-interval: 300s
+      performance-metrics:
+        enabled: true
+        web-vitals-collection: true
+        percentiles: [0.5, 0.95, 0.99]
+    logging:
+      structured: true
+      correlation-enabled: true
+      mdc-integration: true
+      log-level: INFO
+    websocket:
+      enabled: true
+      endpoint: "/ws/analytics"
+      allowed-origins: "${FRONTEND_ORIGINS:http://localhost:4200}"
+      heartbeat-interval: 60000
+      connection-timeout: 30000
 
 # Logging configuration for Kafka
 logging:

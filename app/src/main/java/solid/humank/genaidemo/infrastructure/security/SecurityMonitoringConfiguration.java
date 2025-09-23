@@ -12,8 +12,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.micrometer.core.instrument.Counter;
@@ -27,7 +25,7 @@ import io.micrometer.core.instrument.Timer;
  */
 @Configuration
 @ConfigurationProperties(prefix = "genai-demo.security.monitoring")
-@EnableScheduling
+// @EnableScheduling // 禁用定時任務以避免記憶體問題
 public class SecurityMonitoringConfiguration {
 
     private boolean enabled = true;
@@ -277,8 +275,7 @@ class SecurityMetricsCollector {
         return attempts != null ? attempts.get() : 0;
     }
 
-    // Scheduled cleanup of old entries
-    @Scheduled(fixedRate = 300000) // Every 5 minutes
+    // Manual cleanup of old entries (原定期任務已移除)
     public void cleanupOldEntries() {
         LocalDateTime cutoff = LocalDateTime.now().minusHours(1);
 

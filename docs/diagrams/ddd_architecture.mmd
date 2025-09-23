@@ -1,81 +1,25 @@
 graph TB
-    subgraph 表現層 ["表現層"]
-        CTRL[OrderController<br>處理HTTP請求和響應]
-        DTO[DTO<br>數據傳輸對象]
-        HEALTH[Health Endpoints<br>Actuator健康檢查]
-        METRICS[Metrics Endpoints<br>Prometheus指標]
+    subgraph "Domain Layer"
+        Aggregates[Aggregate Roots]
+        Entities[Entities]
+        ValueObjects[Value Objects]
+        DomainEvents[Domain Events]
     end
     
-    subgraph 應用層 ["應用層"]
-        APP_SVC[應用服務<br>OrderApplicationService]
-        USE_CASE[用例接口<br>OrderManagementUseCase]
-        EVENT_PUB[事件發布服務<br>DomainEventPublisher]
-        TRACE_SVC[追蹤服務<br>OpenTelemetry]
+    subgraph "Application Layer"
+        ApplicationServices[Application Services]
+        CommandHandlers[Command Handlers]
+        EventHandlers[Event Handlers]
     end
     
-    subgraph 領域層 ["領域層"]
-        AGG_ROOT[聚合根<br>Order]
-        ENTITY[實體<br>OrderItem]
-        VAL_OBJ[值對象<br>Money, OrderId]
-        DOMAIN_EVT[領域事件<br>OrderCreatedEvent]
-        DOMAIN_SVC[領域服務<br>OrderProcessingService]
-        POLICY[領域政策<br>OrderDiscountPolicy]
-        SPEC[規格<br>OrderDiscountSpecification]
-        EVENT_COLLECTOR[事件收集器<br>DomainEventCollector]
+    subgraph "Infrastructure Layer"
+        Repositories[Repositories]
+        ExternalServices[External Services]
+        EventStore[Event Store]
     end
     
-    subgraph 基礎設施層 ["基礎設施層"]
-        REPO_IMPL[倉庫實現<br>JpaOrderRepository]
-        EXT_ITGR[外部系統整合<br>ExternalPaymentAdapter]
-        ACL[防腐層<br>LogisticsAntiCorruptionLayer]
-        LOG_ADAPTER[日誌適配器<br>StructuredLogging]
-        METRICS_ADAPTER[指標適配器<br>MicrometerRegistry]
-        EVENT_ADAPTER[事件適配器<br>MSK/EventBridge]
-    end
-    
-    subgraph 可觀測性層 ["可觀測性層"]
-        LOGGING[日誌系統<br>CloudWatch Logs]
-        MONITORING[監控系統<br>Prometheus/Grafana]
-        TRACING[追蹤系統<br>AWS X-Ray]
-        ALERTING[告警系統<br>SNS/CloudWatch]
-        ANALYTICS[分析系統<br>QuickSight]
-    end
-    
-    CTRL -->|使用| DTO
-    CTRL -->|調用| USE_CASE
-    CTRL -->|暴露| HEALTH
-    CTRL -->|暴露| METRICS
-    USE_CASE <---->|實現| APP_SVC
-    APP_SVC -->|操作| AGG_ROOT
-    APP_SVC -->|使用| REPO_IMPL
-    APP_SVC -->|使用| EXT_ITGR
-    APP_SVC -->|發布事件| EVENT_PUB
-    APP_SVC -->|追蹤| TRACE_SVC
-    AGG_ROOT -->|包含| ENTITY
-    AGG_ROOT -->|使用| VAL_OBJ
-    AGG_ROOT -->|產生| DOMAIN_EVT
-    AGG_ROOT -->|收集事件| EVENT_COLLECTOR
-    DOMAIN_SVC -->|操作| AGG_ROOT
-    POLICY -->|運用| SPEC
-    POLICY -->|影響| AGG_ROOT
-    REPO_IMPL -->|持久化| AGG_ROOT
-    EXT_ITGR -->|整合外部系統| DOMAIN_SVC
-    ACL -->|轉換外部模型| EXT_ITGR
-    EVENT_PUB -->|使用| EVENT_ADAPTER
-    TRACE_SVC -->|使用| TRACING
-    LOG_ADAPTER -->|輸出到| LOGGING
-    METRICS_ADAPTER -->|輸出到| MONITORING
-    EVENT_ADAPTER -->|發送到| ANALYTICS
-    MONITORING -->|觸發| ALERTING
-    
-    classDef presentation fill:#ffcccc,stroke:#333,stroke-width:2px
-    classDef application fill:#f9f,stroke:#333,stroke-width:2px
-    classDef domain fill:#bbf,stroke:#333,stroke-width:2px
-    classDef infrastructure fill:#ccffcc,stroke:#333,stroke-width:2px
-    classDef observability fill:#fff3cd,stroke:#856404,stroke-width:2px
-    
-    class CTRL,DTO,HEALTH,METRICS presentation
-    class APP_SVC,USE_CASE,EVENT_PUB,TRACE_SVC application
-    class AGG_ROOT,ENTITY,VAL_OBJ,DOMAIN_EVT,DOMAIN_SVC,POLICY,SPEC,EVENT_COLLECTOR domain
-    class REPO_IMPL,EXT_ITGR,ACL,LOG_ADAPTER,METRICS_ADAPTER,EVENT_ADAPTER infrastructure
-    class LOGGING,MONITORING,TRACING,ALERTING,ANALYTICS observability
+    ApplicationServices --> Aggregates
+    CommandHandlers --> Aggregates
+    EventHandlers --> DomainEvents
+    Repositories --> Entities
+    ExternalServices --> ApplicationServices

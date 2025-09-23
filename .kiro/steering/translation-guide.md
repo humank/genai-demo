@@ -73,25 +73,25 @@ Automatic translation will be triggered in the following situations:
 
 ```markdown
 <!-- Chinese version -->
-[Architecture Overview](docs/architecture-overview.md)
-[Design Guidelines](./DesignGuideline.MD)
-[Release Notes](releases/README.md)
+Architecture Overview
+Design Guidelines
+Release Notes
 
 <!-- Convert to English version -->
-[Architecture Overview](docs/en/architecture-overview.md)
-[Design Guidelines](./DesignGuideline.MD)
-[Release Notes](releases/README.md)
+Architecture Overview
+Design Guidelines
+Release Notes
 ```
 
 ### 2. Anchor Link Conversion
 
 ```markdown
 <!-- Chinese version -->
-[Tell, Don't Ask Principle](DesignGuideline.MD#tell-dont-ask-原則)
+Tell, Don't Ask Principle
 [Project Architecture](#專案架構)
 
 <!-- Convert to English version -->
-[Tell, Don't Ask Principle](DesignGuideline.MD#tell-dont-ask-principle)
+Tell, Don't Ask Principle
 [Project Architecture](#project-architecture)
 ```
 
@@ -99,12 +99,12 @@ Automatic translation will be triggered in the following situations:
 
 ```markdown
 <!-- Chinese version -->
-![Class Diagram](./class-diagram.svg)
-![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
+!Class Diagram
+!Hexagonal Architecture Diagram
 
 <!-- English version (path unchanged, only translate alt text) -->
-![Class Diagram](./class-diagram.svg)
-![Hexagonal Architecture Diagram](../images/hexagonal-architecture.png)
+!Class Diagram
+!Hexagonal Architecture Diagram
 ```
 
 ## Translation Quality Requirements

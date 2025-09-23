@@ -7,8 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Configuration
 @ConfigurationProperties(prefix = "genai-demo.data-retention")
-@EnableScheduling
+// @EnableScheduling // 禁用定時任務以避免記憶體問題
 public class DataRetentionConfiguration {
 
     private Map<String, RetentionPolicy> policies = new ConcurrentHashMap<>();
@@ -204,10 +202,10 @@ class DataRetentionService {
     }
 
     /**
-     * Scheduled cleanup task - runs daily at 2 AM
+     * Manual cleanup task (原定期任務已移除)
+     * 可通過 API 手動觸發所有啟用自動清理的數據類型
      */
-    @Scheduled(cron = "0 0 2 * * ?")
-    public void performScheduledCleanup() {
+    public void performManualCleanupAll() {
         retentionConfig.getPolicies().forEach((dataType, policy) -> {
             if (policy.isAutoCleanupEnabled()) {
                 performCleanup(dataType, policy);

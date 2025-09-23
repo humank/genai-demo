@@ -29,7 +29,7 @@ public class WebSecurityConfiguration {
          * environments
          */
         @Bean
-        @Profile({ "development", "test", "test-minimal" })
+        @Profile({ "development", "dev", "test", "test-minimal" })
         @Order(1)
         public SecurityFilterChain developmentSecurityFilterChain(HttpSecurity http) throws Exception {
                 return http
@@ -60,7 +60,9 @@ public class WebSecurityConfiguration {
                                                 // Require authentication for all other requests
                                                 .anyRequest().authenticated())
                                 .csrf(AbstractHttpConfigurer::disable)
-                                .headers(headers -> headers.frameOptions().sameOrigin()) // For H2 console
+                                .headers(headers -> headers
+                                                .frameOptions(frameOptions -> frameOptions.sameOrigin())) // For H2
+                                                                                                          // console
                                 .build();
         }
 

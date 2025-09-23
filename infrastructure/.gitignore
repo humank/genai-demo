@@ -1,8 +1,69 @@
-*.js
-!jest.config.js
-*.d.ts
-node_modules
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# CDK asset staging directory
-.cdk.staging
-cdk.out
+# CDK
+*.js
+*.d.ts
+cdk.out/
+cdk.context.json
+.cdk.staging/
+
+# Build outputs
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Test results
+test-results/
+junit.xml
+
+# Cache
+.cache/
+.jest-cache/
+.eslintcache
+tsconfig.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+tmp/
+temp/
+
+# AWS
+.aws/
+
+# Terraform (if mixed with CDK)
+*.tfstate
+*.tfstate.*
+.terraform/

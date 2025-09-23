@@ -1,0 +1,128 @@
+flowchart TD
+    %% Development Workflow Process
+    %% Shows the complete development lifecycle from feature request to production
+    
+    START([Feature Request]) --> ANALYSIS{Requirements Analysis}
+    
+    %% Requirements and Planning Phase
+    ANALYSIS --> BDD_SCENARIOS[Write BDD Scenarios<br/>Gherkin Features]
+    BDD_SCENARIOS --> DOMAIN_MODEL[Domain Modeling<br/>DDD Design]
+    DOMAIN_MODEL --> ARCH_DESIGN[Architecture Design<br/>ADR Documentation]
+    
+    %% Development Phase
+    ARCH_DESIGN --> DEV_SETUP[Development Setup<br/>Branch Creation]
+    DEV_SETUP --> TDD_RED[TDD Red Phase<br/>Write Failing Test]
+    
+    TDD_RED --> TDD_GREEN[TDD Green Phase<br/>Implement Minimum Code]
+    TDD_GREEN --> TDD_REFACTOR[TDD Refactor Phase<br/>Improve Code Quality]
+    
+    TDD_REFACTOR --> UNIT_TESTS{Unit Tests Pass?}
+    UNIT_TESTS -->|No| TDD_RED
+    UNIT_TESTS -->|Yes| INTEGRATION_TESTS[Integration Tests<br/>Component Testing]
+    
+    INTEGRATION_TESTS --> INT_PASS{Integration Tests Pass?}
+    INT_PASS -->|No| TDD_GREEN
+    INT_PASS -->|Yes| ARCH_TESTS[Architecture Tests<br/>ArchUnit Validation]
+    
+    ARCH_TESTS --> ARCH_PASS{Architecture Compliance?}
+    ARCH_PASS -->|No| DOMAIN_MODEL
+    ARCH_PASS -->|Yes| CODE_REVIEW[Code Review<br/>Pull Request]
+    
+    %% Code Review Phase
+    CODE_REVIEW --> REVIEW_FEEDBACK{Review Feedback}
+    REVIEW_FEEDBACK -->|Changes Required| TDD_GREEN
+    REVIEW_FEEDBACK -->|Approved| E2E_TESTS[End-to-End Tests<br/>Full Journey Testing]
+    
+    %% Testing and Quality Assurance
+    E2E_TESTS --> E2E_PASS{E2E Tests Pass?}
+    E2E_PASS -->|No| TDD_GREEN
+    E2E_PASS -->|Yes| PERFORMANCE_TESTS[Performance Tests<br/>Load & Stress Testing]
+    
+    PERFORMANCE_TESTS --> PERF_PASS{Performance Acceptable?}
+    PERF_PASS -->|No| TDD_REFACTOR
+    PERF_PASS -->|Yes| SECURITY_SCAN[Security Scanning<br/>SAST & DAST]
+    
+    SECURITY_SCAN --> SEC_PASS{Security Issues?}
+    SEC_PASS -->|Yes| TDD_GREEN
+    SEC_PASS -->|No| STAGING_DEPLOY[Deploy to Staging<br/>Pre-production Testing]
+    
+    %% Deployment Phase
+    STAGING_DEPLOY --> STAGING_TESTS[Staging Validation<br/>Smoke Tests]
+    STAGING_TESTS --> STAGING_PASS{Staging Tests Pass?}
+    STAGING_PASS -->|No| TDD_GREEN
+    STAGING_PASS -->|Yes| PROD_DEPLOY[Production Deployment<br/>Blue-Green/Canary]
+    
+    PROD_DEPLOY --> MONITORING[Production Monitoring<br/>Health Checks & Metrics]
+    MONITORING --> PROD_VALIDATION[Production Validation<br/>Business Metrics]
+    
+    PROD_VALIDATION --> SUCCESS{Deployment Successful?}
+    SUCCESS -->|No| ROLLBACK[Rollback<br/>Previous Version]
+    SUCCESS -->|Yes| COMPLETE([Feature Complete])
+    
+    ROLLBACK --> ANALYSIS
+    
+    %% Parallel Processes
+    DEV_SETUP --> DOCUMENTATION[Update Documentation<br/>API Docs & Guides]
+    DOCUMENTATION --> MERGE_DOCS[Merge Documentation<br/>With Code Changes]
+    MERGE_DOCS --> CODE_REVIEW
+    
+    %% Continuous Processes
+    subgraph "Continuous Integration"
+        CI_BUILD[Automated Build]
+        CI_TEST[Automated Testing]
+        CI_QUALITY[Quality Gates]
+        CI_SECURITY[Security Checks]
+    end
+    
+    subgraph "Continuous Deployment"
+        CD_STAGING[Staging Deployment]
+        CD_PROD[Production Deployment]
+        CD_MONITOR[Deployment Monitoring]
+    end
+    
+    %% CI/CD Integration
+    CODE_REVIEW --> CI_BUILD
+    CI_BUILD --> CI_TEST
+    CI_TEST --> CI_QUALITY
+    CI_QUALITY --> CI_SECURITY
+    CI_SECURITY --> CD_STAGING
+    CD_STAGING --> CD_PROD
+    CD_PROD --> CD_MONITOR
+    
+    %% Quality Gates
+    subgraph "Quality Gates"
+        QG_COVERAGE[Code Coverage > 80%]
+        QG_COMPLEXITY[Cyclomatic Complexity < 10]
+        QG_DUPLICATION[Code Duplication < 3%]
+        QG_MAINTAINABILITY[Maintainability Index > 70]
+        QG_SECURITY[Security Rating A]
+        QG_RELIABILITY[Reliability Rating A]
+    end
+    
+    CI_QUALITY --> QG_COVERAGE
+    QG_COVERAGE --> QG_COMPLEXITY
+    QG_COMPLEXITY --> QG_DUPLICATION
+    QG_DUPLICATION --> QG_MAINTAINABILITY
+    QG_MAINTAINABILITY --> QG_SECURITY
+    QG_SECURITY --> QG_RELIABILITY
+    
+    %% Feedback Loops
+    MONITORING -.->|Issues Found| ANALYSIS
+    PROD_VALIDATION -.->|Performance Issues| PERFORMANCE_TESTS
+    CODE_REVIEW -.->|Architecture Issues| ARCH_DESIGN
+    
+    %% Styling
+    classDef startEnd fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px
+    classDef process fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef testing fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef deployment fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef quality fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef feedback stroke-dasharray: 5 5,stroke:#ff5722,stroke-width:2px
+    
+    class START,COMPLETE startEnd
+    class BDD_SCENARIOS,DOMAIN_MODEL,ARCH_DESIGN,DEV_SETUP,TDD_RED,TDD_GREEN,TDD_REFACTOR,DOCUMENTATION,MERGE_DOCS process
+    class ANALYSIS,UNIT_TESTS,INT_PASS,ARCH_PASS,REVIEW_FEEDBACK,E2E_PASS,PERF_PASS,SEC_PASS,STAGING_PASS,SUCCESS decision
+    class INTEGRATION_TESTS,ARCH_TESTS,E2E_TESTS,PERFORMANCE_TESTS,SECURITY_SCAN,STAGING_TESTS testing
+    class STAGING_DEPLOY,PROD_DEPLOY,ROLLBACK,CD_STAGING,CD_PROD deployment
+    class QG_COVERAGE,QG_COMPLEXITY,QG_DUPLICATION,QG_MAINTAINABILITY,QG_SECURITY,QG_RELIABILITY quality

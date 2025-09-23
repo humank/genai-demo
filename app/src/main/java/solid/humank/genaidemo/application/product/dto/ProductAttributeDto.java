@@ -7,37 +7,21 @@ import jakarta.validation.constraints.Size;
 /** 產品屬性資料傳輸物件 */
 @Schema(description = "產品屬性資訊")
 public record ProductAttributeDto(
-        @Schema(description = "屬性名稱", example = "顏色", required = true, maxLength = 50)
-                @NotBlank(message = "屬性名稱不能為空")
-                @Size(max = 50, message = "屬性名稱不能超過50個字元")
-                String name,
-        @Schema(description = "屬性值", example = "太空黑", required = true, maxLength = 100)
-                @NotBlank(message = "屬性值不能為空")
-                @Size(max = 100, message = "屬性值不能超過100個字元")
-                String value,
-        @Schema(
-                        description = "屬性類型",
-                        allowableValues = {
-                            "TEXT",
-                            "NUMBER",
-                            "BOOLEAN",
-                            "COLOR",
-                            "SIZE",
-                            "MATERIAL"
-                        },
-                        example = "COLOR",
-                        required = true)
-                @NotBlank(message = "屬性類型不能為空")
-                String type,
-        @Schema(description = "屬性單位", example = "公分", maxLength = 20)
-                @Size(max = 20, message = "屬性單位不能超過20個字元")
-                String unit,
+        @Schema(description = "屬性名稱", example = "顏色", requiredMode = Schema.RequiredMode.REQUIRED, maxLength = 50) @NotBlank(message = "屬性名稱不能為空") @Size(max = 50, message = "屬性名稱不能超過50個字元") String name,
+        @Schema(description = "屬性值", example = "太空黑", requiredMode = Schema.RequiredMode.REQUIRED, maxLength = 100) @NotBlank(message = "屬性值不能為空") @Size(max = 100, message = "屬性值不能超過100個字元") String value,
+        @Schema(description = "屬性類型", allowableValues = {
+                "TEXT",
+                "NUMBER",
+                "BOOLEAN",
+                "COLOR",
+                "SIZE",
+                "MATERIAL"
+        }, example = "COLOR", requiredMode = Schema.RequiredMode.REQUIRED) @NotBlank(message = "屬性類型不能為空") String type,
+        @Schema(description = "屬性單位", example = "公分", maxLength = 20) @Size(max = 20, message = "屬性單位不能超過20個字元") String unit,
         @Schema(description = "屬性顯示順序", example = "1", minimum = "0") int displayOrder,
         @Schema(description = "是否為關鍵屬性", example = "true") boolean isKey,
         @Schema(description = "是否可搜尋", example = "true") boolean searchable,
-        @Schema(description = "屬性描述", example = "產品的主要顏色", maxLength = 200)
-                @Size(max = 200, message = "屬性描述不能超過200個字元")
-                String description) {
+        @Schema(description = "屬性描述", example = "產品的主要顏色", maxLength = 200) @Size(max = 200, message = "屬性描述不能超過200個字元") String description){
 
     /** 屬性類型列舉 */
     @Schema(description = "產品屬性類型", enumAsRef = true)

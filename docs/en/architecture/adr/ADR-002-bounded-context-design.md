@@ -1,486 +1,441 @@
-# ADR-002: Bounded Context Design Strategy
 
-## Status
+# Design
 
-**Accepted** - 2024-01-15
+## 狀態
 
-## Context
+**已接受** - 2024-01-20
 
-The GenAI Demo e-commerce platform requires clear domain boundaries to manage complexity and enable team collaboration. Based on user story analysis and business requirements, we need to identify and design appropriate bounded contexts that reflect the business domain structure.
+## 背景
 
-### Business Requirements Analysis
+GenAI Demo 電商平台需要清晰的領域邊界來管理複雜性並促進團隊協作。基於用戶故事分析和業務需求，我們需要識別和設計適當的限界上下文，以反映業務領域結構。
 
-From the BDD feature files and user stories, we identified the following key business capabilities:
+### Requirements
 
-#### Customer Management
+從 BDD 功能文件和用戶故事中，我們識別出以下關鍵業務能力：
 
-- **User Story**: "As a customer, I want to manage my profile and membership levels, so that I can receive personalized benefits"
-- **Key Scenarios**: Registration, profile updates, membership upgrades, loyalty points management
+#### Customer管理 (Customer Management)
 
-#### Order Processing  
+- **用戶故事**: "作為Customer，我想管理我的個人資料和會員等級，以便獲得個人化的優惠"
+- **關鍵場景**: 註冊、個人資料更新、會員升級、紅利點數管理
 
-- **User Story**: "As a customer, I want to place and track orders, so that I can purchase products efficiently"
-- **Key Scenarios**: Order creation, item management, status tracking, cancellation
+#### 訂單處理 (Order Processing)
 
-#### Product Catalog
+- **用戶故事**: "作為Customer，我想下訂單並Tracing訂單，以便高效地購買產品"
+- **關鍵場景**: 訂單創建、項目管理、狀態Tracing、取消訂單
 
-- **User Story**: "As a customer, I want to browse products and see detailed information, so that I can make informed purchase decisions"
-- **Key Scenarios**: Product browsing, search, filtering, member-exclusive products
+#### 產品目錄 (Product Catalog)
 
-#### Inventory Management
+- **用戶故事**: "作為Customer，我想瀏覽產品並查看detailed information，以便做出明智的購買決策"
+- **關鍵場景**: 產品瀏覽、搜尋、篩選、會員專屬產品
 
-- **User Story**: "As a system, I need to manage stock levels and reservations, so that overselling is prevented"
-- **Key Scenarios**: Stock checking, reservation, release, replenishment
+#### 庫存管理 (Inventory Management)
 
-### Technical Constraints
+- **用戶故事**: "作為商家，我想管理產品庫存，以便確保產品Availability"
+- **關鍵場景**: 庫存Tracing、補貨、預留、釋放
 
-- Monolithic deployment initially with microservices evolution path
-- Event-driven communication between contexts
-- Shared kernel for common value objects
-- Anti-corruption layers for external system integration
+#### 支付處理 (Payment Processing)
 
-## Decision
+- **用戶故事**: "作為Customer，我想安全地支付訂單，以便完成購買"
+- **關鍵場景**: 支付處理、退款、支付方式管理
 
-We establish **10 Bounded Contexts** based on business capability analysis and domain expert interviews.
+#### 物流配送 (Delivery Management)
 
-### Core Business Contexts
+- **用戶故事**: "作為Customer，我想Tracing我的配送狀態，以便了解訂單進度"
+- **關鍵場景**: 配送安排、狀態更新、配送Tracing
 
-#### 1. Customer Context
+#### 促銷活動 (Promotion Management)
 
-**Responsibility**: Customer lifecycle management, membership system, loyalty programs
+- **用戶故事**: "作為Customer，我想使用優惠券和參與促銷活動，以便獲得折扣"
+- **關鍵場景**: 優惠券管理、促銷規則、折扣計算
 
-**Aggregate Roots**:
+#### 定價管理 (Pricing Management)
 
-- `Customer`: Manages customer profile, membership level, spending history
-- `CustomerPreferences`: Notification preferences, delivery preferences
-- `RewardAccount`: Loyalty points, redemption history
+- **用戶故事**: "作為商家，我想設定靈活的定價Policy，以便優化收益"
+- **關鍵場景**: 價格計算、佣金管理、動態定價
 
-**Key Domain Events**:
+#### 通知服務 (Notification Service)
 
-```java
-CustomerCreatedEvent              // New customer registration
-MembershipLevelUpgradedEvent     // Automatic level upgrade
-RewardPointsEarnedEvent          // Points accumulation
-CustomerSpendingUpdatedEvent     // Spending threshold tracking
+- **用戶故事**: "作為Customer，我想收到重要的訂單和促銷通知，以便及時了解資訊"
+- **關鍵場景**: 通知發送、模板管理、通知偏好
+
+#### 工作流管理 (Workflow Management)
+
+- **用戶故事**: "作為系統，我需要協調複雜的業務流程，以便確保操作的一致性"
+- **關鍵場景**: 流程編排、狀態管理、異常處理
+
+## 決策
+
+我們決定建立 **10 個限界上下文**，基於業務能力和團隊結構進行劃分。
+
+### Context MappingPolicy
+
+#### 核心上下文 (Core Contexts)
+
+這些上下文包含核心業務邏輯，是系統的競爭優勢所在：
+
+1. **Customer Context** - CustomerAggregate
+   - Customer資料管理
+   - 會員等級和紅利點數
+   - Customer偏好設定
+
+2. **Order Context** - 訂單Aggregate
+   - 訂單生命週期管理
+   - 訂單項目管理
+   - 訂單狀態Tracing
+
+3. **Product Context** - 產品Aggregate
+   - 產品目錄管理
+   - 產品資訊維護
+   - 產品分類和標籤
+
+4. **Inventory Context** - 庫存Aggregate
+   - 庫存水準Tracing
+   - 庫存預留和釋放
+   - 庫存補充管理
+
+#### 支援上下文 (Supporting Contexts)
+
+這些上下文支援核心業務流程：
+
+5. **Payment Context** - 支付Aggregate
+   - 支付處理
+   - 支付方式管理
+   - 退款處理
+
+6. **Delivery Context** - 配送Aggregate
+   - 配送安排
+   - 配送狀態Tracing
+   - 配送商管理
+
+7. **Promotion Context** - 促銷Aggregate
+   - 優惠券管理
+   - 促銷規則引擎
+   - 折扣計算
+
+8. **Pricing Context** - 定價Aggregate
+   - 價格計算引擎
+   - 佣金管理
+   - 定價Policy
+
+#### 通用上下文 (Generic Contexts)
+
+這些上下文提供通用服務：
+
+9. **Notification Context** - 通知Aggregate
+   - 通知發送
+   - 通知模板管理
+   - 通知偏好
+
+10. **Workflow Context** - 工作流Aggregate
+    - 業務流程編排
+    - 狀態機管理
+    - 流程Monitoring
+
+### 上下文關係映射
+
+#### 1. 夥伴關係 (Partnership)
+
+- **Customer ↔ Order**: Customer和訂單緊密協作
+- **Order ↔ Inventory**: 訂單和庫存需要同步協調
+
+#### 2. Customer-供應商 (Customer-Supplier)
+
+- **Order → Payment**: 訂單驅動支付處理
+- **Order → Delivery**: 訂單觸發配送安排
+- **Customer → Notification**: Customer事件觸發通知
+
+#### 3. Conformist (Conformist)
+
+- **Promotion → Pricing**: 促銷遵循定價規則
+- **All Contexts → Workflow**: 所有上下文遵循工作流規範
+
+#### 4. Anti-Corruption Layer (Anti-Corruption Layer)
+
+- **Payment Context**: 與外部支付系統整合時使用Anti-Corruption Layer
+- **Delivery Context**: 與第三方物流系統整合時使用Anti-Corruption Layer
+
+### 實現Policy
+
+#### Design
+
+```
+solid.humank.genaidemo/
+├── domain/
+│   ├── customer/          # Customer上下文
+│   ├── order/             # 訂單上下文
+│   ├── product/           # 產品上下文
+│   ├── inventory/         # 庫存上下文
+│   ├── payment/           # 支付上下文
+│   ├── delivery/          # 配送上下文
+│   ├── promotion/         # 促銷上下文
+│   ├── pricing/           # 定價上下文
+│   ├── notification/      # 通知上下文
+│   └── workflow/          # 工作流上下文
+├── application/
+│   ├── customer/          # Customer用例
+│   ├── order/             # 訂單用例
+│   └── ...                # 其他用例
+└── ../../../../../../infrastructure/
+    ├── persistence/       # 持久化實現
+    └── messaging/         # 訊息處理
 ```
 
-**Business Rules**:
+#### Design
 
-- Membership level based on 12-month spending history
-- Automatic level upgrades when thresholds reached
-- Points expiration after 24 months of inactivity
-- Birthday month special discounts
+每個限界上下文包含一個或多個Aggregate：
 
-#### 2. Order Context
+- **小Aggregate**: 每個Aggregate專注於單一業務概念
+- **一致性邊界**: Aggregate內部保持強一致性
+- **事件驅動**: Aggregate間通過Domain Event通信
 
-**Responsibility**: Order lifecycle management, order processing workflow
+#### 3. 資料一致性Policy
 
-**Aggregate Roots**:
+- **Aggregate內**: 強一致性（ACID 事務）
+- **Aggregate間**: 最終一致性（Domain Event）
+- **上下文間**: 最終一致性（集成事件）
 
-- `Order`: Order state, items, pricing, status transitions
-- `OrderWorkflow`: Process orchestration, state machine
+## 結果
 
-**Key Domain Events**:
+### 正面影響
 
-```java
-OrderCreatedEvent                        // Order initialization
-OrderSubmittedEvent                      // Order confirmation
-OrderPaymentRequestedEvent               // Payment processing trigger
-OrderInventoryReservationRequestedEvent // Inventory allocation trigger
-OrderConfirmedEvent                      // Final confirmation
-```
+#### 1. **清晰的業務邊界**
 
-**Business Rules**:
+- 每個上下文對應明確的業務能力
+- 減少跨團隊的溝通複雜度
+- 支援獨立的業務決策
 
-- Order total calculation including discounts and taxes
-- Status transition validation (CREATED → PENDING → CONFIRMED → SHIPPED)
-- Maximum order value limits
-- Cancellation rules based on order status
+#### 2. **技術自主性**
 
-#### 3. Product Context
+- 每個上下文可以選擇適合的技術棧
+- 支援獨立Deployment和擴展
+- 降低Technical Debt的傳播
 
-**Responsibility**: Product catalog management, product information
+#### 3. **團隊組織對齊**
 
-**Aggregate Roots**:
+- 上下文邊界與團隊邊界對齊
+- 支援 Conway's Law 的正面應用
+- 提高團隊自主性和責任感
 
-- `Product`: Product details, pricing, availability
-- `ProductCategory`: Category hierarchy, attributes
-- `ProductBundle`: Product combinations, bundle pricing
+#### Testing
 
-**Key Domain Events**:
+- 每個上下文可以獨立測試
+- 減少測試間的相互依賴
+- 提高測試執行速度
 
-```java
-ProductCreatedEvent              // New product addition
-ProductPriceUpdatedEvent         // Price changes
-ProductAvailabilityChangedEvent  // Stock status updates
-```
+### 量化Metrics
 
-**Business Rules**:
+- **上下文數量**: 10 個
+- **Aggregate數量**: 15 個
+- **跨上下文依賴**: 12 個（通過事件）
+- **直接依賴**: 0 個
+- **測試隔離度**: 95%
 
-- Member-exclusive product access control
-- Product lifecycle management (active, discontinued)
-- Category-based attribute validation
+### 負面影響與緩解措施
 
-#### 4. Inventory Context
+#### 1. **複雜性增加**
 
-**Responsibility**: Stock management, reservation system
+- **問題**: 多個上下文增加系統複雜性
+- **緩解**: 提供清晰的Context Mapping文檔和工具
 
-**Aggregate Roots**:
+#### 2. **資料一致性挑戰**
 
-- `Inventory`: Stock levels, reservations, movements
-- `InventoryReservation`: Temporary stock allocation
+- **問題**: 最終一致性可能導致暫時的資料不一致
+- **緩解**: 實現補償機制和Monitoring工具
 
-**Key Domain Events**:
+#### 3. **跨上下文查詢困難**
 
-```java
-InventoryReservedEvent           // Stock reservation
-InventoryReleasedEvent           // Reservation cancellation
-InventoryReplenishedEvent        // Stock replenishment
-LowStockAlertEvent              // Reorder notifications
-```
+- **問題**: 需要跨多個上下文的查詢變得複雜
+- **緩解**: 實現 Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 讀取模型和資料投影
 
-**Business Rules**:
+## 實現細節
 
-- Reservation timeout (30 minutes for unpaid orders)
-- Minimum stock level alerts
-- FIFO reservation processing
-
-### Supporting Contexts
-
-#### 5. Payment Context
-
-**Responsibility**: Payment processing, payment method management
-
-**Aggregate Roots**:
-
-- `Payment`: Payment transactions, status tracking
-- `PaymentMethod`: Customer payment preferences
-
-**Key Domain Events**:
+### 1. 上下文介面定義
 
 ```java
-PaymentProcessedEvent            // Successful payment
-PaymentFailedEvent              // Payment failure
-RefundProcessedEvent            // Refund completion
-```
+// Customer上下文的公開介面
+public interface CustomerService {
+    Customer findById(CustomerId id);
+    void upgradeToVip(CustomerId id);
+    LoyaltyPoints getLoyaltyPoints(CustomerId id);
+}
 
-#### 6. Delivery Context
-
-**Responsibility**: Shipping and logistics management
-
-**Aggregate Roots**:
-
-- `Delivery`: Shipment tracking, delivery status
-- `DeliveryRoute`: Logistics optimization
-
-**Key Domain Events**:
-
-```java
-DeliveryScheduledEvent           // Shipment creation
-DeliveryInTransitEvent          // Status updates
-DeliveryCompletedEvent          // Delivery confirmation
-```
-
-#### 7. Promotion Context
-
-**Responsibility**: Marketing campaigns, discount management
-
-**Aggregate Roots**:
-
-- `Promotion`: Campaign rules, validity periods
-- `Voucher`: Individual discount codes
-
-**Key Domain Events**:
-
-```java
-PromotionActivatedEvent          // Campaign launch
-VoucherUsedEvent                // Discount application
-PromotionExpiredEvent           // Campaign end
-```
-
-#### 8. Pricing Context
-
-**Responsibility**: Dynamic pricing, discount calculation
-
-**Aggregate Roots**:
-
-- `PricingRule`: Pricing strategies, discount rules
-- `PriceCalculation`: Final price computation
-
-**Key Domain Events**:
-
-```java
-PriceCalculatedEvent             // Price computation
-DiscountAppliedEvent            // Discount processing
-```
-
-### Generic Contexts
-
-#### 9. Notification Context
-
-**Responsibility**: Multi-channel communication management
-
-**Aggregate Roots**:
-
-- `Notification`: Message content, delivery status
-- `NotificationTemplate`: Message templates
-
-**Key Domain Events**:
-
-```java
-NotificationSentEvent            // Message delivery
-NotificationFailedEvent         // Delivery failure
-```
-
-#### 10. Workflow Context
-
-**Responsibility**: Cross-context process orchestration
-
-**Aggregate Roots**:
-
-- `WorkflowInstance`: Process state, step tracking
-- `WorkflowDefinition`: Process templates
-
-**Key Domain Events**:
-
-```java
-WorkflowStartedEvent             // Process initiation
-WorkflowCompletedEvent          // Process completion
-WorkflowFailedEvent             // Process failure
-```
-
-## Context Relationships
-
-### Relationship Mapping
-
-```java
-// Core relationships from BoundedContextMap.java
-public class BoundedContextMap {
-    private void initializeContextMap() {
-        // Product provides catalog to Order
-        addRelation("Product", "Order", UPSTREAM_DOWNSTREAM,
-            "Product provides catalog information to Order");
-            
-        // Customer provides profile to Order  
-        addRelation("Customer", "Order", UPSTREAM_DOWNSTREAM,
-            "Customer provides customer information to Order");
-            
-        // Order requests services from supporting contexts
-        addRelation("Order", "Payment", CUSTOMER_SUPPLIER,
-            "Order requests payment processing from Payment");
-        addRelation("Order", "Inventory", CUSTOMER_SUPPLIER,
-            "Order requests inventory allocation from Inventory");
-        addRelation("Order", "Delivery", CUSTOMER_SUPPLIER,
-            "Order requests delivery from Delivery");
-            
-        // Promotion influences Pricing
-        addRelation("Promotion", "Pricing", UPSTREAM_DOWNSTREAM,
-            "Promotion provides discount rules to Pricing");
-            
-        // Workflow orchestrates other contexts
-        addRelation("Workflow", "Order", CONFORMIST,
-            "Workflow conforms to Order's domain model");
-            
-        // Notification uses ACL for integration
-        addRelation("Notification", "Order", ANTI_CORRUPTION_LAYER,
-            "Notification uses ACL to integrate with Order");
-    }
+// 訂單上下文的公開介面
+public interface OrderService {
+    Order createOrder(CreateOrderCommand command);
+    void cancelOrder(OrderId orderId);
+    OrderStatus getOrderStatus(OrderId orderId);
 }
 ```
 
-### Integration Patterns
-
-#### Event-Driven Integration
+### 2. Domain Event定義
 
 ```java
-// Order submission triggers cross-context collaboration
-@EventHandler
-public class OrderSubmittedEventHandler {
-    
-    @TransactionalEventListener
-    public void handle(OrderSubmittedEvent event) {
-        // Trigger payment processing
-        paymentService.processPayment(
-            PaymentRequest.from(event.orderId(), event.totalAmount())
-        );
-        
-        // Reserve inventory
-        inventoryService.reserveItems(
-            ReservationRequest.from(event.orderId(), event.items())
-        );
-        
-        // Send confirmation notification
-        notificationService.sendOrderConfirmation(
-            NotificationRequest.from(event.customerId(), event.orderId())
-        );
-    }
-}
+// Customer上下文發布的事件
+public record CustomerUpgradedToVipEvent(
+    CustomerId customerId,
+    MembershipLevel newLevel,
+    UUID eventId,
+    LocalDateTime occurredOn
+) implements DomainEvent {}
+
+// 訂單上下文發布的事件
+public record OrderCreatedEvent(
+    OrderId orderId,
+    CustomerId customerId,
+    List<OrderItem> items,
+    UUID eventId,
+    LocalDateTime occurredOn
+) implements DomainEvent {}
 ```
 
-#### Anti-Corruption Layer Example
+### 3. 事件處理器
 
 ```java
-// Notification Context ACL for Order integration
+// 促銷上下文處理Customer升級事件
 @Component
-public class OrderNotificationACL {
+public class CustomerUpgradedEventHandler {
     
-    public NotificationRequest adaptOrderEvent(OrderSubmittedEvent orderEvent) {
-        return NotificationRequest.builder()
-            .recipientId(orderEvent.customerId().value())
-            .templateType(NotificationTemplate.ORDER_CONFIRMATION)
-            .parameters(Map.of(
-                "orderId", orderEvent.orderId().value(),
-                "totalAmount", orderEvent.totalAmount().toString()
-            ))
-            .build();
+    @EventHandler
+    public void handle(CustomerUpgradedToVipEvent event) {
+        // 為新 VIP Customer創建專屬優惠券
+        promotionService.createVipWelcomeCoupon(event.customerId());
     }
 }
 ```
 
-## Consequences
+### 4. Anti-Corruption Layer實現
 
-### Positive Outcomes
+```java
+// 支付上下文的Anti-Corruption Layer
+@Component
+public class PaymentGatewayAdapter {
+    
+    public PaymentResult processPayment(PaymentRequest request) {
+        // 將內部支付請求轉換為外部 API 格式
+        ExternalPaymentRequest externalRequest = mapToExternal(request);
+        
+        // 調用外部支付 API
+        ExternalPaymentResponse response = externalPaymentApi.process(externalRequest);
+        
+        // 將外部響應轉換為內部格式
+        return mapToInternal(response);
+    }
+}
+```
 
-#### Business Benefits
+## Testing
 
-- **Clear Ownership**: Each context has well-defined business responsibilities
-- **Domain Expertise**: Teams can develop deep knowledge in specific business areas
-- **Business Alignment**: Context boundaries reflect actual business processes
-- **Scalability**: Independent scaling based on business demand
+### Testing
 
-#### Technical Benefits
+```java
+@ArchTest
+static final ArchRule contexts_should_not_have_cyclic_dependencies =
+    slices()
+        .matching("..domain.(*)..")
+        .should().beFreeOfCycles();
 
-- **Loose Coupling**: Contexts communicate through well-defined interfaces
-- **Independent Development**: Teams can work on different contexts simultaneously
-- **Technology Diversity**: Each context can choose optimal technology stack
-- **Testing Isolation**: Context boundaries enable focused testing strategies
+@ArchTest
+static final ArchRule contexts_should_only_communicate_through_events =
+    noClasses()
+        .that().resideInAPackage("..domain.customer..")
+        .should().dependOnClassesThat()
+        .resideInAPackage("..domain.order..");
+```
 
-#### Organizational Benefits
+### Testing
 
-- **Team Structure**: Context boundaries align with team responsibilities
-- **Conway's Law**: Architecture reflects desired organizational structure
-- **Knowledge Management**: Domain expertise concentrated in context teams
-- **Career Development**: Clear specialization paths for team members
+```java
+@SpringBootTest
+class CustomerOrderIntegrationTest {
+    
+    @Test
+    void shouldCreateOrderWhenCustomerExists() {
+        // Given: Customer存在
+        CustomerId customerId = createTestCustomer();
+        
+        // When: 創建訂單
+        OrderId orderId = orderService.createOrder(
+            new CreateOrderCommand(customerId, orderItems)
+        );
+        
+        // Then: 驗證訂單創建成功
+        assertThat(orderService.getOrderStatus(orderId))
+            .isEqualTo(OrderStatus.PENDING);
+    }
+}
+```
 
-### Negative Outcomes
+### Testing
 
-#### Complexity Challenges
+```java
+@Test
+void shouldTriggerPromotionWhenCustomerUpgraded() {
+    // Given: Customer和事件處理器
+    CustomerId customerId = createTestCustomer();
+    
+    // When: Customer升級為 VIP
+    customerService.upgradeToVip(customerId);
+    
+    // Then: 應該收到 VIP 歡迎優惠券
+    await().atMost(5, SECONDS).untilAsserted(() -> {
+        List<Coupon> coupons = promotionService.getCouponsForCustomer(customerId);
+        assertThat(coupons).anyMatch(c -> c.getType() == CouponType.VIP_WELCOME);
+    });
+}
+```
 
-- **Integration Overhead**: Cross-context communication requires careful design
-- **Data Consistency**: Eventual consistency across contexts
-- **Transaction Management**: Distributed transaction complexity
-- **Debugging Difficulty**: Cross-context issue diagnosis
+## 演進Policy
 
-#### Development Challenges
+### 1. 微服務Evolution Path
 
-- **Context Boundaries**: Requires ongoing refinement and validation
-- **Shared Concepts**: Managing shared value objects and concepts
-- **Event Design**: Complex event choreography across contexts
-- **Performance Impact**: Network calls between contexts
+當系統需要拆分為微服務時，限界上下文提供了自然的拆分邊界：
 
-### Mitigation Strategies
+```
+階段 1: 單體應用 (當前)
+├── 所有上下文在同一個Deployment單元中
+└── 通過Domain Event進行內部通信
 
-#### Technical Mitigations
+階段 2: 模組化單體
+├── 每個上下文作為獨立模組
+└── 保持在同一個Deployment單元中
 
-- **Saga Pattern**: Manage distributed transactions across contexts
-- **Event Sourcing**: Maintain audit trail and enable replay
-- **Circuit Breakers**: Prevent cascade failures between contexts
-- **Monitoring**: Comprehensive observability across context boundaries
+階段 3: 微服務
+├── 核心上下文優先拆分
+├── 支援上下文按需拆分
+└── 通用上下文最後拆分
+```
 
-#### Organizational Mitigations
+### 2. Repository拆分Policy
 
-- **Context Maps**: Regular review and update of context relationships
-- **Domain Experts**: Involve business stakeholders in boundary decisions
-- **Architecture Reviews**: Regular validation of context design
-- **Team Rotation**: Cross-context knowledge sharing
+```
+階段 1: 共享Repository
+├── 所有上下文共享同一個Repository
+└── 通過 schema 或 table prefix 進行邏輯分離
 
-## Validation Criteria
+階段 2: Repository分離
+├── 每個上下文擁有獨立的Repository schema
+└── 跨上下文查詢通過 API 或事件
 
-### Business Validation
+階段 3: 完全獨立
+├── 每個微服務擁有獨立的Repository實例
+└── 完全的資料自主性
+```
 
-- **User Story Mapping**: Each user story maps to single context
-- **Business Process Flow**: Processes flow naturally across context boundaries
-- **Domain Expert Approval**: Business stakeholders validate context responsibilities
-- **Change Impact Analysis**: Business changes affect minimal contexts
+## 相關決策
 
-### Technical Validation
+- [ADR-001: DDD + Hexagonal Architecture基礎](./ADR-001-ddd-hexagonal-architecture.md)
+- [ADR-003: Domain Event和 Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS)) 實現](./ADR-003-domain-events-cqrs.md)
+- \1
 
-- **Data Flow Analysis**: Minimal cross-context data dependencies
-- **Event Flow Mapping**: Clear event choreography patterns
-- **Performance Testing**: Acceptable latency across context boundaries
-- **Failure Mode Analysis**: Graceful degradation when contexts unavailable
+## Reference
 
-### Organizational Validation
+- [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
+- [Implementing Domain-Driven Design](https://www.amazon.com/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577)
+- [Bounded Context Canvas](https://github.com/ddd-crew/bounded-context-canvas)
+- [Context Mapping](https://www.infoq.com/articles/ddd-contextmapping/)
 
-- **Team Mapping**: Context boundaries align with team structure
-- **Skill Distribution**: Teams have necessary domain expertise
-- **Communication Patterns**: Minimal cross-team coordination required
-- **Delivery Independence**: Teams can deliver features independently
+---
 
-## Evolution Strategy
-
-### Phase 1: Modular Monolith (Current)
-
-- All contexts in single deployable unit
-- Clear module boundaries with dependency rules
-- Event-driven communication within process
-- Shared database with context-specific schemas
-
-### Phase 2: Service Extraction
-
-- Extract high-value contexts as microservices
-- Implement distributed event bus (MSK)
-- Separate databases per context
-- API gateways for external access
-
-### Phase 3: Full Microservices
-
-- All contexts as independent services
-- Service mesh for communication
-- Distributed tracing and monitoring
-- Independent deployment pipelines
-
-## Well-Architected Framework Assessment
-
-### Operational Excellence
-
-- **Monitoring**: Context boundaries provide natural monitoring boundaries
-- **Automation**: Independent deployment pipelines per context
-- **Documentation**: Self-documenting through ubiquitous language
-
-### Security
-
-- **Access Control**: Context-based security boundaries
-- **Data Protection**: Sensitive data isolated in appropriate contexts
-- **Audit Trail**: Cross-context event flows provide audit capabilities
-
-### Reliability
-
-- **Fault Isolation**: Context failures don't cascade
-- **Recovery**: Independent recovery procedures per context
-- **Backup**: Context-specific backup strategies
-
-### Performance Efficiency
-
-- **Caching**: Context-specific caching strategies
-- **Scaling**: Independent scaling based on context demand
-- **Resource Optimization**: Right-sized resources per context
-
-### Cost Optimization
-
-- **Resource Allocation**: Pay only for resources each context needs
-- **Development Efficiency**: Reduced coordination overhead
-- **Operational Costs**: Simplified operations within context boundaries
-
-## Related Decisions
-
-- [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
-- [ADR-003: Domain Events and CQRS Implementation](./ADR-003-domain-events-cqrs.md)
-- [ADR-009: MSK vs EventBridge for Event Streaming](./ADR-009-event-streaming-platform.md)
-
-## References
-
-- [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.domainlanguage.com/ddd/)
-- [Implementing Domain-Driven Design](https://www.informit.com/store/implementing-domain-driven-design-9780321834577)
-- [Microservices Patterns](https://microservices.io/patterns/)
-- [Building Microservices](https://samnewman.io/books/building_microservices/)
+**最後更新**: 2024-01-20  
+**審核者**: 架構團隊、領域專家  
+**下次審查**: 2024-07-20

@@ -1,0 +1,269 @@
+graph TB
+    subgraph "應用層監控" ["應用層監控 (Application Monitoring)"]
+        subgraph "微服務" ["Microservices"]
+            CUSTOMER_SVC[客戶服務<br/>Customer Service]
+            ORDER_SVC[訂單服務<br/>Order Service]
+            PRODUCT_SVC[產品服務<br/>Product Service]
+            PAYMENT_SVC[支付服務<br/>Payment Service]
+            INVENTORY_SVC[庫存服務<br/>Inventory Service]
+            NOTIFICATION_SVC[通知服務<br/>Notification Service]
+        end
+        
+        subgraph "應用指標" ["Application Metrics"]
+            BUSINESS_METRICS[業務指標<br/>Business Metrics]
+            PERFORMANCE_METRICS[性能指標<br/>Performance Metrics]
+            ERROR_METRICS[錯誤指標<br/>Error Metrics]
+            CUSTOM_METRICS[自定義指標<br/>Custom Metrics]
+        end
+        
+        subgraph "健康檢查" ["Health Checks"]
+            LIVENESS_PROBE[存活探針<br/>Liveness Probe]
+            READINESS_PROBE[就緒探針<br/>Readiness Probe]
+            STARTUP_PROBE[啟動探針<br/>Startup Probe]
+            DEPENDENCY_CHECK[依賴檢查<br/>Dependency Check]
+        end
+    end
+    
+    subgraph "指標收集層" ["指標收集層 (Metrics Collection)"]
+        subgraph "指標暴露" ["Metrics Exposure"]
+            ACTUATOR[Spring Actuator<br/>指標端點]
+            MICROMETER[Micrometer<br/>指標庫]
+            PROMETHEUS_ENDPOINT[Prometheus 端點<br/>/actuator/prometheus]
+        end
+        
+        subgraph "指標收集器" ["Metrics Collectors"]
+            PROMETHEUS[Prometheus<br/>指標收集器]
+            CLOUDWATCH_AGENT[CloudWatch Agent<br/>AWS 指標收集]
+            OTEL_COLLECTOR[OpenTelemetry Collector<br/>統一收集器]
+        end
+        
+        subgraph "指標聚合" ["Metrics Aggregation"]
+            PROMETHEUS_FEDERATION[Prometheus Federation<br/>聯邦集群]
+            THANOS[Thanos<br/>長期存儲]
+            CORTEX[Cortex<br/>多租戶指標]
+        end
+    end
+    
+    subgraph "日誌管理層" ["日誌管理層 (Log Management)"]
+        subgraph "日誌生成" ["Log Generation"]
+            STRUCTURED_LOGS[結構化日誌<br/>Structured Logs]
+            APPLICATION_LOGS[應用日誌<br/>Application Logs]
+            ACCESS_LOGS[存取日誌<br/>Access Logs]
+            AUDIT_LOGS[審計日誌<br/>Audit Logs]
+        end
+        
+        subgraph "日誌收集" ["Log Collection"]
+            FLUENTD[Fluentd<br/>日誌收集器]
+            FLUENT_BIT[Fluent Bit<br/>輕量級收集器]
+            FILEBEAT[Filebeat<br/>檔案日誌收集]
+            CLOUDWATCH_LOGS_AGENT[CloudWatch Logs Agent<br/>AWS 日誌代理]
+        end
+        
+        subgraph "日誌處理" ["Log Processing"]
+            LOGSTASH[Logstash<br/>日誌處理器]
+            LAMBDA_PROCESSOR[Lambda 處理器<br/>無伺服器處理]
+            KINESIS_ANALYTICS[Kinesis Analytics<br/>流處理]
+        end
+    end
+    
+    subgraph "追蹤系統層" ["追蹤系統層 (Tracing System)"]
+        subgraph "追蹤生成" ["Trace Generation"]
+            SPRING_SLEUTH[Spring Sleuth<br/>自動追蹤]
+            OTEL_JAVA[OpenTelemetry Java<br/>追蹤 SDK]
+            CUSTOM_SPANS[自定義 Span<br/>Custom Spans]
+        end
+        
+        subgraph "追蹤收集" ["Trace Collection"]
+            JAEGER_AGENT[Jaeger Agent<br/>追蹤代理]
+            XRAY_DAEMON[X-Ray Daemon<br/>AWS 追蹤守護程序]
+            OTEL_COLLECTOR_TRACE[OpenTelemetry Collector<br/>追蹤收集器]
+        end
+        
+        subgraph "追蹤存儲" ["Trace Storage"]
+            JAEGER_BACKEND[Jaeger Backend<br/>追蹤後端]
+            XRAY_SERVICE[AWS X-Ray<br/>追蹤服務]
+            ELASTICSEARCH_TRACE[Elasticsearch<br/>追蹤存儲]
+        end
+    end
+    
+    subgraph "存儲層" ["存儲層 (Storage Layer)"]
+        subgraph "時序資料庫" ["Time Series Database"]
+            PROMETHEUS_TSDB[Prometheus TSDB<br/>本地時序資料庫]
+            CLOUDWATCH_METRICS[CloudWatch Metrics<br/>AWS 指標存儲]
+            INFLUXDB[InfluxDB<br/>時序資料庫]
+        end
+        
+        subgraph "日誌存儲" ["Log Storage"]
+            CLOUDWATCH_LOGS[CloudWatch Logs<br/>AWS 日誌存儲]
+            OPENSEARCH[OpenSearch<br/>搜尋和分析]
+            S3_LOGS[S3<br/>長期日誌存儲]
+        end
+        
+        subgraph "追蹤存儲" ["Trace Storage"]
+            XRAY_TRACES[X-Ray Traces<br/>AWS 追蹤存儲]
+            JAEGER_STORAGE[Jaeger Storage<br/>追蹤資料庫]
+            ELASTICSEARCH_TRACES[Elasticsearch<br/>追蹤索引]
+        end
+    end
+    
+    subgraph "視覺化層" ["視覺化層 (Visualization Layer)"]
+        subgraph "儀表板" ["Dashboards"]
+            GRAFANA[Grafana<br/>統一儀表板]
+            CLOUDWATCH_DASHBOARD[CloudWatch Dashboard<br/>AWS 原生儀表板]
+            KIBANA[Kibana<br/>日誌視覺化]
+            JAEGER_UI[Jaeger UI<br/>追蹤視覺化]
+        end
+        
+        subgraph "業務儀表板" ["Business Dashboards"]
+            EXECUTIVE_DASHBOARD[高管儀表板<br/>Executive Dashboard]
+            OPERATIONAL_DASHBOARD[運營儀表板<br/>Operational Dashboard]
+            TECHNICAL_DASHBOARD[技術儀表板<br/>Technical Dashboard]
+            SLA_DASHBOARD[SLA 儀表板<br/>SLA Dashboard]
+        end
+    end
+    
+    subgraph "告警系統" ["告警系統 (Alerting System)"]
+        subgraph "告警規則" ["Alert Rules"]
+            PROMETHEUS_ALERTS[Prometheus 告警<br/>Prometheus Alerts]
+            CLOUDWATCH_ALARMS[CloudWatch 告警<br/>CloudWatch Alarms]
+            CUSTOM_ALERTS[自定義告警<br/>Custom Alerts]
+        end
+        
+        subgraph "告警管理" ["Alert Management"]
+            ALERTMANAGER[AlertManager<br/>告警管理器]
+            SNS[SNS<br/>通知服務]
+            PAGERDUTY[PagerDuty<br/>事件管理]
+        end
+        
+        subgraph "通知渠道" ["Notification Channels"]
+            EMAIL[電子郵件<br/>Email]
+            SLACK[Slack<br/>團隊通訊]
+            SMS[簡訊<br/>SMS]
+            WEBHOOK[Webhook<br/>自定義通知]
+        end
+    end
+    
+    subgraph "分析和智能" ["分析和智能 (Analytics & Intelligence)"]
+        subgraph "異常檢測" ["Anomaly Detection"]
+            CLOUDWATCH_ANOMALY[CloudWatch 異常檢測<br/>CloudWatch Anomaly Detection]
+            ML_MODELS[機器學習模型<br/>ML Models]
+            STATISTICAL_ANALYSIS[統計分析<br/>Statistical Analysis]
+        end
+        
+        subgraph "根因分析" ["Root Cause Analysis"]
+            CORRELATION_ENGINE[關聯引擎<br/>Correlation Engine]
+            DEPENDENCY_MAP[依賴映射<br/>Dependency Map]
+            IMPACT_ANALYSIS[影響分析<br/>Impact Analysis]
+        end
+        
+        subgraph "預測分析" ["Predictive Analytics"]
+            CAPACITY_PLANNING[容量規劃<br/>Capacity Planning]
+            TREND_ANALYSIS[趨勢分析<br/>Trend Analysis]
+            FORECASTING[預測<br/>Forecasting]
+        end
+    end
+    
+    %% 應用層到指標收集
+    CUSTOMER_SVC -->|暴露指標| ACTUATOR
+    ORDER_SVC -->|暴露指標| ACTUATOR
+    PRODUCT_SVC -->|暴露指標| ACTUATOR
+    PAYMENT_SVC -->|暴露指標| ACTUATOR
+    INVENTORY_SVC -->|暴露指標| ACTUATOR
+    NOTIFICATION_SVC -->|暴露指標| ACTUATOR
+    
+    ACTUATOR -->|使用| MICROMETER
+    MICROMETER -->|暴露| PROMETHEUS_ENDPOINT
+    
+    %% 健康檢查
+    CUSTOMER_SVC -->|健康檢查| LIVENESS_PROBE
+    ORDER_SVC -->|就緒檢查| READINESS_PROBE
+    PAYMENT_SVC -->|啟動檢查| STARTUP_PROBE
+    
+    %% 指標收集
+    PROMETHEUS_ENDPOINT -->|抓取| PROMETHEUS
+    PROMETHEUS_ENDPOINT -->|收集| CLOUDWATCH_AGENT
+    PROMETHEUS_ENDPOINT -->|收集| OTEL_COLLECTOR
+    
+    %% 指標聚合
+    PROMETHEUS -->|聯邦| PROMETHEUS_FEDERATION
+    PROMETHEUS -->|長期存儲| THANOS
+    
+    %% 日誌流程
+    CUSTOMER_SVC -->|生成| STRUCTURED_LOGS
+    ORDER_SVC -->|生成| APPLICATION_LOGS
+    PAYMENT_SVC -->|生成| AUDIT_LOGS
+    
+    STRUCTURED_LOGS -->|收集| FLUENTD
+    APPLICATION_LOGS -->|收集| FLUENT_BIT
+    AUDIT_LOGS -->|收集| CLOUDWATCH_LOGS_AGENT
+    
+    FLUENTD -->|處理| LOGSTASH
+    FLUENT_BIT -->|處理| LAMBDA_PROCESSOR
+    
+    %% 追蹤流程
+    CUSTOMER_SVC -->|生成追蹤| SPRING_SLEUTH
+    ORDER_SVC -->|生成追蹤| OTEL_JAVA
+    PAYMENT_SVC -->|自定義 Span| CUSTOM_SPANS
+    
+    SPRING_SLEUTH -->|發送| JAEGER_AGENT
+    OTEL_JAVA -->|發送| XRAY_DAEMON
+    CUSTOM_SPANS -->|發送| OTEL_COLLECTOR_TRACE
+    
+    JAEGER_AGENT -->|存儲| JAEGER_BACKEND
+    XRAY_DAEMON -->|存儲| XRAY_SERVICE
+    
+    %% 存儲
+    PROMETHEUS -->|存儲| PROMETHEUS_TSDB
+    CLOUDWATCH_AGENT -->|存儲| CLOUDWATCH_METRICS
+    LOGSTASH -->|存儲| OPENSEARCH
+    LAMBDA_PROCESSOR -->|存儲| CLOUDWATCH_LOGS
+    JAEGER_BACKEND -->|存儲| JAEGER_STORAGE
+    
+    %% 視覺化
+    PROMETHEUS_TSDB -->|查詢| GRAFANA
+    CLOUDWATCH_METRICS -->|視覺化| CLOUDWATCH_DASHBOARD
+    OPENSEARCH -->|視覺化| KIBANA
+    JAEGER_STORAGE -->|視覺化| JAEGER_UI
+    
+    %% 業務儀表板
+    GRAFANA -->|展示| EXECUTIVE_DASHBOARD
+    GRAFANA -->|展示| OPERATIONAL_DASHBOARD
+    GRAFANA -->|展示| TECHNICAL_DASHBOARD
+    CLOUDWATCH_DASHBOARD -->|展示| SLA_DASHBOARD
+    
+    %% 告警
+    PROMETHEUS -->|告警規則| PROMETHEUS_ALERTS
+    CLOUDWATCH_METRICS -->|告警| CLOUDWATCH_ALARMS
+    
+    PROMETHEUS_ALERTS -->|管理| ALERTMANAGER
+    CLOUDWATCH_ALARMS -->|通知| SNS
+    ALERTMANAGER -->|路由| PAGERDUTY
+    
+    SNS -->|發送| EMAIL
+    PAGERDUTY -->|通知| SLACK
+    ALERTMANAGER -->|發送| SMS
+    
+    %% 分析和智能
+    CLOUDWATCH_METRICS -->|異常檢測| CLOUDWATCH_ANOMALY
+    PROMETHEUS_TSDB -->|分析| ML_MODELS
+    OPENSEARCH -->|關聯分析| CORRELATION_ENGINE
+    
+    CORRELATION_ENGINE -->|依賴映射| DEPENDENCY_MAP
+    ML_MODELS -->|容量規劃| CAPACITY_PLANNING
+    CLOUDWATCH_ANOMALY -->|趨勢分析| TREND_ANALYSIS
+    
+    classDef application fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef collection fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef processing fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef storage fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef visualization fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+    classDef alerting fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef intelligence fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class CUSTOMER_SVC,ORDER_SVC,PRODUCT_SVC,PAYMENT_SVC,INVENTORY_SVC,NOTIFICATION_SVC,BUSINESS_METRICS,PERFORMANCE_METRICS,ERROR_METRICS,CUSTOM_METRICS,LIVENESS_PROBE,READINESS_PROBE,STARTUP_PROBE,DEPENDENCY_CHECK application
+    class ACTUATOR,MICROMETER,PROMETHEUS_ENDPOINT,PROMETHEUS,CLOUDWATCH_AGENT,OTEL_COLLECTOR,PROMETHEUS_FEDERATION,THANOS,CORTEX collection
+    class STRUCTURED_LOGS,APPLICATION_LOGS,ACCESS_LOGS,AUDIT_LOGS,FLUENTD,FLUENT_BIT,FILEBEAT,CLOUDWATCH_LOGS_AGENT,LOGSTASH,LAMBDA_PROCESSOR,KINESIS_ANALYTICS,SPRING_SLEUTH,OTEL_JAVA,CUSTOM_SPANS,JAEGER_AGENT,XRAY_DAEMON,OTEL_COLLECTOR_TRACE processing
+    class PROMETHEUS_TSDB,CLOUDWATCH_METRICS,INFLUXDB,CLOUDWATCH_LOGS,OPENSEARCH,S3_LOGS,XRAY_TRACES,JAEGER_STORAGE,ELASTICSEARCH_TRACES,JAEGER_BACKEND,XRAY_SERVICE,ELASTICSEARCH_TRACE storage
+    class GRAFANA,CLOUDWATCH_DASHBOARD,KIBANA,JAEGER_UI,EXECUTIVE_DASHBOARD,OPERATIONAL_DASHBOARD,TECHNICAL_DASHBOARD,SLA_DASHBOARD visualization
+    class PROMETHEUS_ALERTS,CLOUDWATCH_ALARMS,CUSTOM_ALERTS,ALERTMANAGER,SNS,PAGERDUTY,EMAIL,SLACK,SMS,WEBHOOK alerting
+    class CLOUDWATCH_ANOMALY,ML_MODELS,STATISTICAL_ANALYSIS,CORRELATION_ENGINE,DEPENDENCY_MAP,IMPACT_ANALYSIS,CAPACITY_PLANNING,TREND_ANALYSIS,FORECASTING intelligence

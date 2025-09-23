@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # 前端 API 整合說明
 
-本文檔說明了前端應用程式從使用寫死資料改為向後端發送 HTTP 請求的修改內容。
+This document說明了前端應用程式從使用寫死資料改為向後端發送 HTTP 請求的修改內容。
 
-## 修改概覽
+## Overview
 
 ### 1. API 服務層擴展 (`src/services/api.ts`)
 
@@ -45,9 +43,9 @@
 - ✅ 錯誤處理和載入狀態
 - ✅ 動態統計計算
 
-#### 客戶頁面 (`src/app/customers/page.tsx`)
+#### Customer頁面 (`src/app/customers/page.tsx`)
 
-- ✅ 移除模擬客戶數據
+- ✅ 移除模擬Customer數據
 - ✅ 使用 `useCustomers()` 和 `useStats()` hooks
 - ✅ 支持分頁、搜尋和篩選
 - ✅ 錯誤處理和載入狀態
@@ -63,17 +61,17 @@
 
 #### 產品控制器 (`ProductController.java`)
 
-- `GET /api/products` - 獲取產品列表（支持分頁）
+- `GET /../api/products` - 獲取產品列表（支持分頁）
 - `GET /api/products/{id}` - 獲取單個產品
 
-#### 客戶控制器 (`CustomerController.java`)
+#### Customer控制器 (`CustomerController.java`)
 
-- `GET /api/customers` - 獲取客戶列表（支持分頁）
-- `GET /api/customers/{id}` - 獲取單個客戶
+- `GET /../api/customers` - 獲取Customer列表（支持分頁）
+- `GET /api/customers/{id}` - 獲取單個Customer
 
 #### 活動記錄控制器 (`ActivityController.java`)
 
-- `GET /api/activities` - 獲取系統活動記錄
+- `GET /../api/activities` - 獲取系統活動記錄
 
 #### 統計控制器擴展 (`StatsController.java`)
 
@@ -84,7 +82,7 @@
 ### 統計相關
 
 ```
-GET /api/stats                    # 系統總體統計
+GET /../api/stats                    # 系統總體統計
 GET /api/stats/order-status       # 訂單狀態分布
 GET /api/stats/payment-methods    # 支付方式分布
 ```
@@ -96,11 +94,11 @@ GET /api/products                 # 產品列表（支持分頁）
 GET /api/products/{id}            # 單個產品詳情
 ```
 
-### 客戶相關
+### Customer相關
 
 ```
-GET /api/customers                # 客戶列表（支持分頁）
-GET /api/customers/{id}           # 單個客戶詳情
+GET /api/customers                # Customer列表（支持分頁）
+GET /api/customers/{id}           # 單個Customer詳情
 ```
 
 ### 活動記錄
@@ -146,7 +144,7 @@ POST /api/orders/{id}/cancel      # 取消訂單
 - 實時數據更新
 - 響應式設計
 
-## 測試
+## Testing
 
 使用提供的測試腳本驗證 API 整合：
 
@@ -174,13 +172,13 @@ cd cmc-frontend && npm run dev
 ./start-fullstack.sh
 ```
 
-## 注意事項
+## notes
 
 1. **CORS 設定**：所有新的控制器都已配置 `@CrossOrigin(origins = "*")`
 2. **數據生成**：後端控制器使用演算法生成模擬數據，確保一致性
 3. **分頁支持**：所有列表 API 都支持分頁參數
 4. **錯誤處理**：統一的錯誤響應格式
-5. **快取策略**：React Query 配置了適當的快取時間
+5. **快取Policy**：React Query 配置了適當的快取時間
 
 ## 未來改進
 

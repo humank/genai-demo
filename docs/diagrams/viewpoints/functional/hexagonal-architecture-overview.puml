@@ -1,0 +1,169 @@
+@startuml Hexagonal Architecture Overview
+!theme plain
+skinparam packageStyle rectangle
+skinparam backgroundColor #FFFEF7
+
+title Hexagonal Architecture Overview\\nE-commerce Platform Architecture
+
+' External Actors
+actor "Customer" as Customer
+actor "Admin" as Admin
+actor "Delivery Person" as DeliveryPerson
+
+' External Systems
+cloud "Stripe Payment" as StripePayment
+cloud "Email Service" as EmailService
+cloud "SMS Service" as SmsService
+database "PostgreSQL" as PostgreSQL
+database "Redis Cache" as RedisCache
+queue "MSK/Kafka" as MSKKafka
+
+package "Interface Layer (Adapters)" {
+  ' Primary Adapters (Driving)
+  [REST Controllers] as RestControllers
+  [Web UI] as WebUI
+  [Admin Dashboard] as AdminDashboard
+  
+  ' Secondary Adapters (Driven)
+  [JPA Repositories] as JpaRepositories
+  [Payment Adapters] as PaymentAdapters
+  [Notification Adapters] as NotificationAdapters
+  [Event Publishers] as EventPublishers
+  [Cache Adapters] as CacheAdapters
+}
+
+package "Application Layer" {
+  [CustomerApplicationService] as CustomerAppSvc
+  [OrderApplicationService] as OrderAppSvc
+  [ProductApplicationService] as ProductAppSvc
+  [PaymentApplicationService] as PaymentAppSvc
+  [ShoppingCartApplicationService] as CartAppSvc
+  [InventoryApplicationService] as InventoryAppSvc
+  [PricingApplicationService] as PricingAppSvc
+  [PromotionApplicationService] as PromotionAppSvc
+  [NotificationApplicationService] as NotificationAppSvc
+  [ObservabilityApplicationService] as ObservabilityAppSvc
+  [StatsApplicationService] as StatsAppSvc
+  [MonitoringApplicationService] as MonitoringAppSvc
+}
+
+package "Domain Core (Hexagon)" {
+  package "Aggregates" {
+    [Customer Aggregate] as CustomerAgg
+    [Order Aggregate] as OrderAgg
+    [Product Aggregate] as ProductAgg
+    [Payment Aggregate] as PaymentAgg
+    [ShoppingCart Aggregate] as CartAgg
+    [Inventory Aggregate] as InventoryAgg
+    [Promotion Aggregate] as PromotionAgg
+    [Delivery Aggregate] as DeliveryAgg
+    [Notification Aggregate] as NotificationAgg
+    [Review Aggregate] as ReviewAgg
+    [Seller Aggregate] as SellerAgg
+    [Observability Aggregate] as ObservabilityAgg
+  }
+  
+  package "Domain Services" {
+    [OrderDomainService] as OrderDomainSvc
+    [PricingDomainService] as PricingDomainSvc
+    [PromotionDomainService] as PromotionDomainSvc
+  }
+  
+  package "Repository Interfaces" {
+    interface "CustomerRepository" as CustomerRepo
+    interface "OrderRepository" as OrderRepo
+    interface "ProductRepository" as ProductRepo
+    interface "PaymentRepository" as PaymentRepo
+    interface "InventoryRepository" as InventoryRepo
+    interface "PromotionRepository" as PromotionRepo
+  }
+  
+  package "Port Interfaces" {
+    interface "PaymentPort" as PaymentPort
+    interface "NotificationPort" as NotificationPort
+    interface "EventPublisherPort" as EventPublisherPort
+    interface "CachePort" as CachePort
+  }
+}
+
+' Primary Port Connections (Inbound)
+Customer --> WebUI
+Admin --> AdminDashboard
+DeliveryPerson --> RestControllers
+
+WebUI --> RestControllers
+AdminDashboard --> RestControllers
+
+RestControllers --> CustomerAppSvc
+RestControllers --> OrderAppSvc
+RestControllers --> ProductAppSvc
+RestControllers --> PaymentAppSvc
+RestControllers --> CartAppSvc
+RestControllers --> InventoryAppSvc
+RestControllers --> PricingAppSvc
+RestControllers --> PromotionAppSvc
+RestControllers --> NotificationAppSvc
+RestControllers --> ObservabilityAppSvc
+RestControllers --> StatsAppSvc
+RestControllers --> MonitoringAppSvc
+
+' Application to Domain Connections
+CustomerAppSvc --> CustomerAgg
+OrderAppSvc --> OrderAgg
+OrderAppSvc --> OrderDomainSvc
+ProductAppSvc --> ProductAgg
+PaymentAppSvc --> PaymentAgg
+CartAppSvc --> CartAgg
+InventoryAppSvc --> InventoryAgg
+PricingAppSvc --> PricingDomainSvc
+PromotionAppSvc --> PromotionAgg
+PromotionAppSvc --> PromotionDomainSvc
+NotificationAppSvc --> NotificationAgg
+ObservabilityAppSvc --> ObservabilityAgg
+
+' Domain to Repository Connections
+CustomerAppSvc --> CustomerRepo
+OrderAppSvc --> OrderRepo
+ProductAppSvc --> ProductRepo
+PaymentAppSvc --> PaymentRepo
+InventoryAppSvc --> InventoryRepo
+PromotionAppSvc --> PromotionRepo
+
+' Domain to Port Connections
+PaymentAppSvc --> PaymentPort
+NotificationAppSvc --> NotificationPort
+OrderAppSvc --> EventPublisherPort
+ProductAppSvc --> CachePort
+
+' Secondary Port Connections (Outbound)
+CustomerRepo --> JpaRepositories
+OrderRepo --> JpaRepositories
+ProductRepo --> JpaRepositories
+PaymentRepo --> JpaRepositories
+InventoryRepo --> JpaRepositories
+PromotionRepo --> JpaRepositories
+
+PaymentPort --> PaymentAdapters
+NotificationPort --> NotificationAdapters
+EventPublisherPort --> EventPublishers
+CachePort --> CacheAdapters
+
+' External System Connections
+JpaRepositories --> PostgreSQL
+PaymentAdapters --> StripePayment
+NotificationAdapters --> EmailService
+NotificationAdapters --> SmsService
+EventPublishers --> MSKKafka
+CacheAdapters --> RedisCache
+
+' Styling
+skinparam package {
+  BackgroundColor<<domain>> #E8F5E8
+  BorderColor<<domain>> #2E7D32
+  BackgroundColor<<application>> #F3E5F5
+  BorderColor<<application>> #7B1FA2
+  BackgroundColor<<interface>> #E1F5FE
+  BorderColor<<interface>> #0277BD
+}
+
+@enduml
