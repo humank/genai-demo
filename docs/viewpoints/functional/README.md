@@ -952,3 +952,8 @@ graph TB
 !!!!!![Infrastructure Layer Overview](../../diagrams/generated/functional/infrastructure-layer-overview.png)
 !!!!!![BDD Features Overview](../../diagrams/generated/functional/bdd-features-overview.png)
 !!!!!![Hexagonal Architecture Overview](../../diagrams/generated/functional/hexagonal-architecture-overview.png)
+
+![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.mmd)
+![Functional Overview](../../diagrams/viewpoints/functional/functional-overview.svg)
+![System Overview](../../diagrams/viewpoints/functional/system-overview.mmd)
+![System Overview](../../diagrams/viewpoints/functional/system-overview.svg)

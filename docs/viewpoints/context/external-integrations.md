@@ -6,7 +6,12 @@
 
 ## 支付系統整合
 
-### Stripe 整合
+### 實施狀態說明
+- ✅ **已實現**: 功能已開發完成並在生產環境運行
+- 🚧 **開發中**: 正在積極開發，部分功能可用
+- 📋 **計劃中**: 需求已確認，尚未開始開發
+
+### Stripe 整合 📋 **計劃中**
 
 #### 整合架構
 ```mermaid
@@ -93,7 +98,7 @@ public class StripeErrorHandler {
 }
 ```
 
-### PayPal 整合
+### PayPal 整合 📋 **計劃中**
 
 #### OAuth 2.0 認證流程
 ```mermaid
@@ -141,7 +146,7 @@ paypal_integration:
 
 ## 通訊服務整合
 
-### Amazon SES 整合
+### Amazon SES 整合 ✅ **已實現**
 
 #### Email 發送架構
 ```mermaid
@@ -199,7 +204,7 @@ public class EmailTemplateService {
 }
 ```
 
-### SMS 服務整合
+### SMS 服務整合 📋 **計劃中**
 
 #### 多供應商支援
 ```java
@@ -230,7 +235,7 @@ public class SmsServiceRouter {
 
 ## 物流服務整合
 
-### 第三方物流 API
+### 第三方物流 API 📋 **計劃中**
 
 #### 統一物流介面
 ```java
@@ -285,7 +290,7 @@ sequenceDiagram
 
 ## 雲端服務整合
 
-### Amazon MSK (Kafka) 整合
+### Amazon MSK (Kafka) 整合 📋 **計劃中**
 
 #### 事件發布配置
 ```yaml
@@ -348,7 +353,7 @@ public class OrderEventHandler {
 }
 ```
 
-### AWS S3 整合
+### AWS S3 整合 ✅ **已實現**
 
 #### 檔案上傳服務
 ```java
@@ -478,4 +483,6 @@ alerting_rules:
 
 **最後更新**: 2025年1月22日  
 **維護者**: 架構團隊  
-**審核者**: 安全團隊
+**審核者**: 安全團隊  
+**變更記錄**: 
+- 2025-01-22: 加入外部系統整合實施狀態標註

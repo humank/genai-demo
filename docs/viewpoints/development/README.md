@@ -136,6 +136,8 @@ Development Viewpoint 提供了完整的開發指南和最佳實踐，整合了�
 - [🔵 六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)
 - [🏛️ DDD 分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)
 - [🌐 微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
+![Microservices Overview](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
+![Microservices Overview](../../diagrams/viewpoints/development/microservices-overview.puml)
 - [🎭 Saga 編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)
 
 ### 流程圖表

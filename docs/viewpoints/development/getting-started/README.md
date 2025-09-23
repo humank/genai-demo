@@ -193,3 +193,5 @@ A: 開發環境預設使用 H2，可在 `http://localhost:8080/h2-console` 查�
 **版本**: 1.0
 
 > 🎉 **歡迎加入團隊！** 如果你在設置過程中遇到任何問題，請隨時尋求幫助。我們致力於為每位開發者提供良好的入職體驗。
+![Microservices Overview](../../../diagrams/viewpoints/development/microservices-overview.puml)
+![Microservices Overview](../../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)

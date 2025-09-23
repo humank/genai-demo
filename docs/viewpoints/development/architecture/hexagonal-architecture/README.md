@@ -33,3 +33,5 @@ interfaces/ → application/ → domain/ ← infrastructure/
 
 **維護者**: 開發團隊  
 **最後更新**: 2025年1月21日
+![Microservices Overview](../../../../diagrams/viewpoints/development/microservices-overview.puml)
+![Microservices Overview](../../../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
