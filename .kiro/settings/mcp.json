@@ -1,5 +1,20 @@
 {
   "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-time"
+      ],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [
+        "get_current_time",
+        "get_timezone",
+        "convert_time",
+        "format_time",
+        "calculate_time_difference"
+      ]
+    },
     "aws-docs": {
       "command": "uvx",
       "args": [
@@ -46,38 +61,28 @@
         "generate_cost_report"
       ]
     },
-    "aws-iam": {
-      "command": "uvx",
+    "excalidraw": {
+      "command": "node",
       "args": [
-        "awslabs.iam-mcp-server@latest",
-        "--readonly"
+        "/Users/yikaikao/git/genai-demo/node_modules/mcp-excalidraw-server/src/index.js"
       ],
       "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR",
-        "AWS_PROFILE": "kim-sso",
-        "AWS_REGION": "ap-northeast-1"
+        "ENABLE_CANVAS_SYNC": "false"
       },
       "disabled": false,
       "autoApprove": [
-        "list_users",
-        "list_roles",
-        "get_user_policies",
-        "get_role_policies",
-        "analyze_policy"
-      ]
-    },
-    "aws-core": {
-      "command": "uvx",
-      "args": [
-        "awslabs.core-mcp-server@latest"
-      ],
-      "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      },
-      "disabled": false,
-      "autoApprove": [
-        "prompt_understanding",
-        "well_architected_review"
+        "create_element",
+        "update_element",
+        "delete_element",
+        "query_elements",
+        "get_resource",
+        "group_elements",
+        "ungroup_elements",
+        "align_elements",
+        "distribute_elements",
+        "lock_elements",
+        "unlock_elements",
+        "batch_create_elements"
       ]
     }
   }

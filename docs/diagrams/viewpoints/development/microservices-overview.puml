@@ -1,0 +1,92 @@
+@startuml microservices-overview
+!theme plain
+title Microservices Architecture Overview
+
+!define RECTANGLE class
+
+package "Client Layer" {
+  [Web App] as web
+  [Mobile App] as mobile
+  [Third Party] as thirdparty
+}
+
+package "API Gateway Layer" {
+  [API Gateway] as gateway
+}
+
+package "Microservices Layer" {
+  [Customer Service] as customer
+  [Order Service] as order
+  [Payment Service] as payment
+  [Inventory Service] as inventory
+  [Notification Service] as notification
+}
+
+package "Data Layer" {
+  database "Customer DB" as customerdb
+  database "Order DB" as orderdb
+  database "Payment DB" as paymentdb
+  database "Inventory DB" as inventorydb
+}
+
+package "Infrastructure Layer" {
+  [Service Discovery] as discovery
+  [Load Balancer] as lb
+  [Circuit Breaker] as cb
+  [Monitoring] as monitor
+}
+
+' Client connections
+web --> gateway
+mobile --> gateway
+thirdparty --> gateway
+
+' Gateway routing
+gateway --> customer
+gateway --> order
+gateway --> payment
+gateway --> inventory
+
+' Service dependencies
+order --> customer : "Validate Customer"
+order --> payment : "Process Payment"
+order --> inventory : "Reserve Items"
+order --> notification : "Send Confirmation"
+
+' Database connections
+customer --> customerdb
+order --> orderdb
+payment --> paymentdb
+inventory --> inventorydb
+
+' Infrastructure connections
+gateway --> discovery : "Service Lookup"
+gateway --> lb : "Load Balance"
+gateway --> cb : "Circuit Breaking"
+customer --> discovery : "Register"
+order --> discovery : "Register"
+payment --> discovery : "Register"
+inventory --> discovery : "Register"
+
+' Monitoring
+monitor --> customer
+monitor --> order
+monitor --> payment
+monitor --> inventory
+monitor --> gateway
+
+note right of gateway
+  - Request Routing
+  - Authentication
+  - Rate Limiting
+  - Request/Response Transform
+end note
+
+note right of discovery
+  - Service Registration
+  - Health Checking
+  - Load Balancing
+  - Failover
+end note
+
+@enduml

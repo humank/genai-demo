@@ -1,0 +1,44 @@
+{
+  "name": "genai-demo",
+  "version": "1.0.0",
+  "description": "Enterprise-grade e-commerce platform with DDD + Hexagonal Architecture, observability, and cloud-native deployment",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "infrastructure": "infrastructure",
+    "app": "app"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd app && ./gradlew build",
+    "test:backend": "cd app && ./gradlew test",
+    "test:infrastructure": "cd infrastructure && npm test",
+    "deploy:dev": "cd infrastructure && ./deploy-consolidated.sh development us-east-1 false",
+    "deploy:prod": "cd infrastructure && ./deploy-consolidated.sh production us-east-1 true",
+    "docs:quality": "bash scripts/check-documentation-quality.sh",
+    "docs:links": "node scripts/check-links-advanced.js",
+    "docs:links:external": "node scripts/check-links-advanced.js --external",
+    "docs:diagrams": "python3 scripts/validate-diagrams.py",
+    "docs:metadata": "python3 scripts/validate-metadata.py",
+    "docs:translation": "bash scripts/check-translation-quality.sh",
+    "docs:validate": "npm run docs:quality && npm run docs:links && npm run docs:diagrams && npm run docs:metadata"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humank/genai-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/humank/genai-demo/issues"
+  },
+  "homepage": "https://github.com/humank/genai-demo#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.1",
+    "mcp-excalidraw-server": "^1.0.5"
+  },
+  "devDependencies": {
+    "markdownlint-cli": "^0.37.0"
+  }
+}

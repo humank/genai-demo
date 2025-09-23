@@ -1,7 +1,5 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-根據 product-pricing-promotion-rules.md 文件中的需求，我建議創建以下新的 Bounded Context：
+根據 product-pricing-promotion-rules.md 文件中的需求，我recommendations創建以下新的 Bounded Context：
 
 Promotion Bounded Context
 
@@ -67,7 +65,7 @@ Customer/Member Context 應該與 Promotion Context 協作，提供會員資格�
 
 沒有看到專門處理產品目錄和產品資訊的上下文
 
-建議的 Product/Catalog Bounded Context 應該：
+recommendations的 Product/Catalog Bounded Context 應該：
 
 作為產品資訊的權威來源
 
@@ -77,6 +75,6 @@ Customer/Member Context 應該與 Promotion Context 協作，提供會員資格�
 
 與 Inventory Context 協作，關聯產品庫存狀態
 
-與 Order Context 協作，提供訂單中產品的詳細資訊
+與 Order Context 協作，提供訂單中產品的detailed information
 
 這個上下文將是其他多個上下文的上游，為它們提供產品相關的基礎資訊，使得促銷規則、價格計算等功能能夠正確運作。

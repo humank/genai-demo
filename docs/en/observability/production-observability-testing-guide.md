@@ -214,7 +214,7 @@ void shouldTraceAcrossMultipleServices() {
     headers.set("X-Trace-ID", traceId);
     
     ResponseEntity<OrderResponse> response = restTemplate.exchange(
-        "/api/orders", HttpMethod.POST, 
+        "/../api/orders", HttpMethod.POST, 
         new HttpEntity<>(createOrderRequest(), headers),
         OrderResponse.class
     );
@@ -386,7 +386,7 @@ void shouldRespectSamplingConfiguration() {
     // When: Generate large number of requests
     int totalRequests = 10000;
     for (int i = 0; i < totalRequests; i++) {
-        makeRequest("/api/test");
+        makeRequest("/../api/test");
     }
     
     // Then: Verify sampling rate
@@ -1159,7 +1159,7 @@ Solutions:
 curl -s http://localhost:8080/actuator/loggers | jq .
 
 # Test MDC functionality
-curl -H "X-Correlation-ID: test-123" http://localhost:8080/api/test
+curl -H "X-Correlation-ID: test-123" http://localhost:8080/../api/test
 
 # View CloudWatch logs
 aws logs describe-log-groups --log-group-name-prefix "/aws/ecs/genai-demo"
@@ -1332,7 +1332,7 @@ chaos_experiments:
         - name: "check-observability-metrics"
           type: "httpProbe"
           httpProbe/inputs:
-            url: "http://prometheus:9090/api/v1/query"
+            url: "http://prometheus:9090/../api/v1/query"
             method:
               get:
                 criteria: "=="
@@ -1352,14 +1352,14 @@ check_prometheus_metrics() {
     echo "Checking Prometheus metrics..."
     
     # Check application metrics
-    APP_METRICS=$(curl -s "http://prometheus:9090/api/v1/query?query=up{job=\"app\"}" | jq -r '.data.result[0].value[1]')
+    APP_METRICS=$(curl -s "http://prometheus:9090/../api/v1/query?query=up{job=\"app\"}" | jq -r '.data.result[0].value[1]')
     if [ "$APP_METRICS" != "1" ]; then
         echo "❌ Application metrics not available"
         exit 1
     fi
     
     # Check error rate
-    ERROR_RATE=$(curl -s "http://prometheus:9090/api/v1/query?query=rate(http_requests_total{status=~\"5..\"}[5m])" | jq -r '.data.result[0].value[1]')
+    ERROR_RATE=$(curl -s "http://prometheus:9090/../api/v1/query?query=rate(http_requests_total{status=~\"5..\"}[5m])" | jq -r '.data.result[0].value[1]')
     if (( $(echo "$ERROR_RATE > 0.01" | bc -l) )); then
         echo "❌ Error rate too high: $ERROR_RATE"
         exit 1
@@ -1389,7 +1389,7 @@ check_tracing_data() {
     echo "Checking tracing data..."
     
     # Check traces in Jaeger
-    TRACE_COUNT=$(curl -s "http://jaeger:16686/api/traces?service=app&lookback=5m" | jq '.data | length')
+    TRACE_COUNT=$(curl -s "http://jaeger:16686/../api/traces?service=app&lookback=5m" | jq '.data | length')
     
     if [ "$TRACE_COUNT" -lt 10 ]; then
         echo "❌ Insufficient traces: $TRACE_COUNT"
@@ -1493,7 +1493,7 @@ class ObservabilityValidator:
         print("🔍 Validating alerting rules...")
         
         # Check Prometheus alerting rules
-        response = requests.get(f"{self.prometheus_url}/api/v1/rules")
+        response = requests.get(f"{self.prometheus_url}/../api/v1/rules")
         rules = response.json()['data']['groups']
         
         required_alerts = [
@@ -1518,7 +1518,7 @@ class ObservabilityValidator:
     def _query_prometheus(self, query):
         """Query Prometheus metrics"""
         response = requests.get(
-            f"{self.prometheus_url}/api/v1/query",
+            f"{self.prometheus_url}/../api/v1/query",
             params={'query': query}
         )
         result = response.json()['data']['result']
@@ -1528,7 +1528,7 @@ class ObservabilityValidator:
         """Generate test logs"""
         # Call application API to generate logs
         requests.get(
-            "http://app:8080/api/test/logs",
+            "http://app:8080/../api/test/logs",
             headers={"X-Correlation-ID": correlation_id}
         )
 
@@ -1683,7 +1683,7 @@ export default function () {
   // Test main business API
   const startTime = Date.now();
   
-  const response = http.get('http://app:8080/api/orders', {
+  const response = http.get('http://app:8080/../api/orders', {
     headers: {
       'X-Correlation-ID': `k6-test-${__VU}-${__ITER}`,
       'X-Load-Test': 'true',

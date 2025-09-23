@@ -1,0 +1,149 @@
+{
+  "version": "1.0",
+  "description": "Diagram-Documentation synchronization rules and mappings",
+  "last_updated": "2024-12-19",
+  
+  "reference_rules": {
+    "docs/viewpoints/functional/domain-model.md": {
+      "required_diagrams": [
+        "docs/diagrams/viewpoints/functional/domain-model-overview.puml",
+        "docs/diagrams/viewpoints/functional/bounded-contexts-overview.puml",
+        "docs/diagrams/hexagonal_architecture.mmd",
+        "docs/diagrams/viewpoints/functional/application-services-overview.puml"
+      ],
+      "optional_diagrams": [
+        "docs/diagrams/ddd_architecture.mmd",
+        "docs/diagrams/viewpoints/functional/hexagonal-architecture-overview.puml"
+      ],
+      "section": "相關圖表"
+    },
+    
+    "docs/viewpoints/functional/bounded-contexts.md": {
+      "required_diagrams": [
+        "docs/diagrams/viewpoints/functional/bounded-contexts-overview.puml",
+        "docs/diagrams/viewpoints/functional/event-storming-big-picture.puml",
+        "docs/diagrams/viewpoints/functional/event-storming-process-level.puml",
+        "docs/diagrams/viewpoints/functional/business-process-flows.puml"
+      ],
+      "optional_diagrams": [
+        "docs/diagrams/viewpoints/functional/user-journey-overview.puml"
+      ],
+      "section": "相關圖表"
+    },
+    
+    "docs/viewpoints/functional/aggregates.md": {
+      "required_diagrams": [
+        "docs/diagrams/viewpoints/functional/customer-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/order-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/product-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/seller-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/domain-model-overview.puml"
+      ],
+      "optional_diagrams": [
+        "docs/diagrams/viewpoints/functional/payment-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/inventory-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/review-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/shoppingcart-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/promotion-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/pricing-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/notification-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/delivery-aggregate-details.puml",
+        "docs/diagrams/viewpoints/functional/observability-aggregate-details.puml"
+      ],
+      "section": "相關圖表"
+    },
+    
+    "docs/viewpoints/information/domain-events.md": {
+      "required_diagrams": [
+        "docs/diagrams/viewpoints/functional/event-storming-big-picture.puml",
+        "docs/diagrams/viewpoints/functional/event-storming-process-level.puml",
+        "docs/diagrams/viewpoints/functional/domain-events-flow.puml",
+        "docs/diagrams/event_driven_architecture.mmd",
+        "docs/diagrams/viewpoints/functional/application-services-overview.puml"
+      ],
+      "optional_diagrams": [
+        "docs/diagrams/observability_architecture.mmd"
+      ],
+      "section": "相關圖表"
+    },
+    
+    "docs/viewpoints/information/README.md": {
+      "required_diagrams": [
+        "docs/diagrams/viewpoints/functional/event-storming-big-picture.puml",
+        "docs/diagrams/viewpoints/functional/event-storming-process-level.puml",
+        "docs/diagrams/viewpoints/functional/domain-events-flow.puml",
+        "docs/diagrams/event_driven_architecture.mmd"
+      ],
+      "section": "相關圖表"
+    },
+    
+    "docs/viewpoints/deployment/infrastructure-as-code.md": {
+      "required_diagrams": [
+        "docs/diagrams/aws_infrastructure.mmd",
+        "docs/diagrams/multi_environment.mmd"
+      ],
+      "optional_diagrams": [
+        "docs/diagrams/viewpoints/deployment/cdk-architecture.mmd",
+        "docs/diagrams/viewpoints/deployment/deployment-flow.puml",
+        "docs/diagrams/viewpoints/deployment/resource-dependencies.mmd"
+      ],
+      "section": "相關圖表"
+    }
+  },
+  
+  "diagram_categories": {
+    "viewpoint": {
+      "path_pattern": "docs/diagrams/viewpoints/**/*.puml",
+      "auto_reference": true,
+      "reference_in": ["docs/viewpoints/**/*.md"]
+    },
+    "perspective": {
+      "path_pattern": "docs/diagrams/perspectives/**/*.puml",
+      "auto_reference": true,
+      "reference_in": ["docs/perspectives/**/*.md"]
+    },
+    "root_architecture": {
+      "path_pattern": "docs/diagrams/*.mmd",
+      "auto_reference": false,
+      "reference_in": ["docs/viewpoints/**/*.md", "docs/perspectives/**/*.md"]
+    },
+    "legacy": {
+      "path_pattern": "docs/diagrams/legacy/**/*",
+      "auto_reference": false,
+      "reference_in": []
+    }
+  },
+  
+  "naming_conventions": {
+    "aggregate_details": "{aggregate-name}-aggregate-details.puml",
+    "overview_diagrams": "{concept}-overview.puml",
+    "process_flows": "{process-name}-flow.puml",
+    "event_storming": "event-storming-{level}.puml"
+  },
+  
+  "validation_rules": {
+    "max_references_per_doc": 10,
+    "required_sections": ["相關圖表", "Related Diagrams"],
+    "allowed_extensions": [".puml", ".mmd", ".excalidraw"],
+    "path_validation": {
+      "relative_paths_only": true,
+      "max_depth": 5
+    }
+  },
+  
+  "sync_behavior": {
+    "auto_add_missing": true,
+    "auto_remove_broken": false,
+    "auto_fix_paths": true,
+    "preserve_order": true,
+    "group_by_category": true
+  },
+  
+  "english_translations": {
+    "docs/en/viewpoints/functional/domain-model.md": "docs/viewpoints/functional/domain-model.md",
+    "docs/en/viewpoints/functional/bounded-contexts.md": "docs/viewpoints/functional/bounded-contexts.md",
+    "docs/en/viewpoints/functional/aggregates.md": "docs/viewpoints/functional/aggregates.md",
+    "docs/en/viewpoints/information/domain-events.md": "docs/viewpoints/information/domain-events.md",
+    "docs/en/viewpoints/information/README.md": "docs/viewpoints/information/README.md"
+  }
+}

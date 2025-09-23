@@ -1,0 +1,164 @@
+flowchart TD
+    %% Code Review Process Workflow
+    %% Shows the complete code review lifecycle from PR creation to merge
+    
+    START([Feature Development Complete]) --> SELF_REVIEW[Self Review<br/>Author reviews own code]
+    
+    %% Pre-Review Phase
+    SELF_REVIEW --> PR_CREATION[Create Pull Request<br/>Title, description, links]
+    PR_CREATION --> AUTO_CHECKS[Automated Checks<br/>CI/CD pipeline]
+    
+    AUTO_CHECKS --> CHECKS_PASS{All Checks Pass?}
+    CHECKS_PASS -->|No| FIX_ISSUES[Fix Issues<br/>Address failures]
+    FIX_ISSUES --> AUTO_CHECKS
+    CHECKS_PASS -->|Yes| ASSIGN_REVIEWERS[Assign Reviewers<br/>Min 2 reviewers required]
+    
+    %% Review Assignment
+    ASSIGN_REVIEWERS --> REVIEWER_TYPES[Reviewer Types<br/>Senior Dev + Domain Expert]
+    REVIEWER_TYPES --> REVIEW_START[Review Process Starts<br/>24-hour SLA]
+    
+    %% Review Process
+    REVIEW_START --> FUNCTIONAL_REVIEW[Functional Review<br/>Business logic correctness]
+    FUNCTIONAL_REVIEW --> CODE_QUALITY[Code Quality Review<br/>Standards compliance]
+    CODE_QUALITY --> ARCHITECTURE_REVIEW[Architecture Review<br/>Design patterns, SOLID]
+    ARCHITECTURE_REVIEW --> SECURITY_REVIEW[Security Review<br/>Vulnerabilities, best practices]
+    SECURITY_REVIEW --> PERFORMANCE_REVIEW[Performance Review<br/>Efficiency, scalability]
+    PERFORMANCE_REVIEW --> TEST_REVIEW[Test Review<br/>Coverage, quality]
+    TEST_REVIEW --> DOC_REVIEW[Documentation Review<br/>API docs, comments]
+    
+    %% Review Feedback
+    DOC_REVIEW --> FEEDBACK_GIVEN[Provide Feedback<br/>Categorized comments]
+    FEEDBACK_GIVEN --> FEEDBACK_TYPE{Feedback Type}
+    
+    FEEDBACK_TYPE -->|Must Fix| MUST_FIX[Must Fix Issues<br/>Blocking merge]
+    FEEDBACK_TYPE -->|Should Fix| SHOULD_FIX[Should Fix Issues<br/>Important improvements]
+    FEEDBACK_TYPE -->|Consider| CONSIDER[Consider Suggestions<br/>Optional improvements]
+    FEEDBACK_TYPE -->|Nitpick| NITPICK[Nitpick Comments<br/>Style preferences]
+    FEEDBACK_TYPE -->|Praise| PRAISE[Praise Comments<br/>Good practices]
+    
+    %% Author Response
+    MUST_FIX --> AUTHOR_RESPONSE[Author Responds<br/>Address feedback]
+    SHOULD_FIX --> AUTHOR_RESPONSE
+    CONSIDER --> AUTHOR_RESPONSE
+    NITPICK --> AUTHOR_RESPONSE
+    PRAISE --> AUTHOR_RESPONSE
+    
+    AUTHOR_RESPONSE --> CHANGES_MADE{Changes Made?}
+    CHANGES_MADE -->|Yes| UPDATE_PR[Update Pull Request<br/>New commits]
+    CHANGES_MADE -->|No| EXPLAIN_DECISION[Explain Decision<br/>Justify no changes]
+    
+    UPDATE_PR --> AUTO_CHECKS
+    EXPLAIN_DECISION --> RE_REVIEW[Re-review Process<br/>Evaluate explanations]
+    
+    RE_REVIEW --> ACCEPTABLE{Explanation Acceptable?}
+    ACCEPTABLE -->|No| MUST_FIX
+    ACCEPTABLE -->|Yes| APPROVAL_CHECK[Check for Approval<br/>All reviewers satisfied]
+    
+    %% Approval Process
+    APPROVAL_CHECK --> ALL_APPROVED{All Reviewers Approved?}
+    ALL_APPROVED -->|No| REVIEW_START
+    ALL_APPROVED -->|Yes| FINAL_CHECKS[Final Automated Checks<br/>Latest code validation]
+    
+    FINAL_CHECKS --> FINAL_PASS{Final Checks Pass?}
+    FINAL_PASS -->|No| FIX_ISSUES
+    FINAL_PASS -->|Yes| MERGE_READY[Ready for Merge<br/>All requirements met]
+    
+    MERGE_READY --> MERGE_STRATEGY{Merge Strategy}
+    MERGE_STRATEGY -->|Squash| SQUASH_MERGE[Squash and Merge<br/>Clean history]
+    MERGE_STRATEGY -->|Merge| MERGE_COMMIT[Create Merge Commit<br/>Preserve branch history]
+    MERGE_STRATEGY -->|Rebase| REBASE_MERGE[Rebase and Merge<br/>Linear history]
+    
+    SQUASH_MERGE --> POST_MERGE[Post-Merge Actions<br/>Cleanup and notifications]
+    MERGE_COMMIT --> POST_MERGE
+    REBASE_MERGE --> POST_MERGE
+    
+    POST_MERGE --> COMPLETE([Code Review Complete])
+    
+    %% Review Checklist Details
+    subgraph "Functional Review Checklist"
+        FUNC_LOGIC[✓ Business logic correctness<br/>✓ Requirements implementation<br/>✓ Edge case handling<br/>✓ Error handling<br/>✓ Input validation]
+    end
+    
+    subgraph "Code Quality Checklist"
+        QUALITY_ITEMS[✓ Naming conventions<br/>✓ Method/class size<br/>✓ Code complexity<br/>✓ DRY principle<br/>✓ SOLID principles<br/>✓ Design patterns usage]
+    end
+    
+    subgraph "Architecture Review Checklist"
+        ARCH_ITEMS[✓ Layer separation<br/>✓ Dependency direction<br/>✓ DDD compliance<br/>✓ Hexagonal architecture<br/>✓ Event-driven patterns<br/>✓ Microservices patterns]
+    end
+    
+    subgraph "Security Review Checklist"
+        SEC_ITEMS[✓ Input sanitization<br/>✓ SQL injection prevention<br/>✓ XSS prevention<br/>✓ Authentication/authorization<br/>✓ Sensitive data handling<br/>✓ Encryption usage]
+    end
+    
+    subgraph "Performance Review Checklist"
+        PERF_ITEMS[✓ Database query efficiency<br/>✓ N+1 query prevention<br/>✓ Caching strategy<br/>✓ Memory usage<br/>✓ Algorithm efficiency<br/>✓ Async processing]
+    end
+    
+    subgraph "Test Review Checklist"
+        TEST_ITEMS[✓ Test coverage > 80%<br/>✓ Unit test quality<br/>✓ Integration test coverage<br/>✓ Test naming<br/>✓ Test structure<br/>✓ Mock usage<br/>✓ Edge case testing]
+    end
+    
+    %% Automated Checks Details
+    subgraph "Automated Checks"
+        BUILD_CHECK[✓ Build Success<br/>Compilation without errors]
+        UNIT_TESTS[✓ Unit Tests<br/>All tests passing]
+        INTEGRATION_TESTS[✓ Integration Tests<br/>Component interaction]
+        COVERAGE_CHECK[✓ Code Coverage<br/>Minimum 80% coverage]
+        QUALITY_GATES[✓ Quality Gates<br/>SonarQube analysis]
+        SECURITY_SCAN[✓ Security Scan<br/>Vulnerability detection]
+        PERFORMANCE_TEST[✓ Performance Tests<br/>No regression]
+    end
+    
+    %% Review Metrics and Quality
+    subgraph "Review Metrics"
+        METRICS[Review Metrics:<br/>• Review time: < 24 hours<br/>• Feedback quality: Issues found<br/>• Rework rate: % requiring changes<br/>• Approval rate: First-time approvals<br/>• Defect escape rate: Post-merge bugs]
+    end
+    
+    %% Review Tools
+    subgraph "Review Tools"
+        GITHUB_PR[GitHub Pull Requests<br/>• Code diff visualization<br/>• Inline comments<br/>• Review status tracking<br/>• Integration with CI/CD]
+        
+        SONARQUBE[SonarQube<br/>• Code quality analysis<br/>• Security vulnerability detection<br/>• Technical debt measurement<br/>• Quality gate enforcement]
+        
+        AUTOMATED_REVIEW[Automated Review Tools<br/>• CodeClimate<br/>• DeepCode<br/>• Codacy<br/>• ESLint/Checkstyle]
+    end
+    
+    %% Best Practices
+    subgraph "Review Best Practices"
+        REVIEWER_PRACTICES[Reviewer Best Practices:<br/>• Be constructive and specific<br/>• Focus on code, not person<br/>• Explain the why behind feedback<br/>• Acknowledge good practices<br/>• Provide examples when possible<br/>• Prioritize feedback by importance]
+        
+        AUTHOR_PRACTICES[Author Best Practices:<br/>• Self-review before submission<br/>• Write clear PR descriptions<br/>• Respond to all feedback<br/>• Ask questions when unclear<br/>• Be open to suggestions<br/>• Update documentation]
+    end
+    
+    %% Common Issues and Solutions
+    subgraph "Common Review Issues"
+        LARGE_PRS[Large Pull Requests<br/>Solution: Break into smaller PRs<br/>Max 400 lines of code changes]
+        
+        UNCLEAR_CHANGES[Unclear Changes<br/>Solution: Better PR descriptions<br/>Link to requirements/issues]
+        
+        INCONSISTENT_FEEDBACK[Inconsistent Feedback<br/>Solution: Review guidelines<br/>Team alignment on standards]
+        
+        SLOW_REVIEWS[Slow Review Process<br/>Solution: Review SLA enforcement<br/>Reviewer rotation system]
+    end
+    
+    %% Styling
+    classDef startEnd fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px
+    classDef process fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef review fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef feedback fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef merge fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef checklist fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef tool fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef practice fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class START,COMPLETE startEnd
+    class SELF_REVIEW,PR_CREATION,AUTO_CHECKS,FIX_ISSUES,ASSIGN_REVIEWERS,REVIEWER_TYPES,REVIEW_START,UPDATE_PR,EXPLAIN_DECISION,POST_MERGE process
+    class CHECKS_PASS,FEEDBACK_TYPE,CHANGES_MADE,ACCEPTABLE,ALL_APPROVED,FINAL_PASS,MERGE_STRATEGY decision
+    class FUNCTIONAL_REVIEW,CODE_QUALITY,ARCHITECTURE_REVIEW,SECURITY_REVIEW,PERFORMANCE_REVIEW,TEST_REVIEW,DOC_REVIEW,FEEDBACK_GIVEN,RE_REVIEW,APPROVAL_CHECK review
+    class MUST_FIX,SHOULD_FIX,CONSIDER,NITPICK,PRAISE,AUTHOR_RESPONSE feedback
+    class SQUASH_MERGE,MERGE_COMMIT,REBASE_MERGE,MERGE_READY,FINAL_CHECKS merge
+    class FUNC_LOGIC,QUALITY_ITEMS,ARCH_ITEMS,SEC_ITEMS,PERF_ITEMS,TEST_ITEMS,BUILD_CHECK,UNIT_TESTS,INTEGRATION_TESTS,COVERAGE_CHECK,QUALITY_GATES,SECURITY_SCAN,PERFORMANCE_TEST checklist
+    class GITHUB_PR,SONARQUBE,AUTOMATED_REVIEW tool
+    class REVIEWER_PRACTICES,AUTHOR_PRACTICES,LARGE_PRS,UNCLEAR_CHANGES,INCONSISTENT_FEEDBACK,SLOW_REVIEWS practice

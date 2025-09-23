@@ -1,0 +1,271 @@
+@startuml Event Storming Big Picture
+!theme plain
+skinparam backgroundColor #FFFEF7
+skinparam defaultFontName "Microsoft JhengHei"
+
+title Event Storming Big Picture\\nE-commerce Platform Domain Events
+
+' Event Storming 標準配色
+!define DOMAIN_EVENT_COLOR #FF8C00
+!define COMMAND_COLOR #87CEEB
+!define AGGREGATE_COLOR #FFFF99
+!define POLICY_COLOR #DDA0DD
+!define READ_MODEL_COLOR #90EE90
+!define EXTERNAL_SYSTEM_COLOR #FFB6C1
+!define USER_COLOR #F0E68C
+!define HOTSPOT_COLOR #FF6347
+
+' 用戶角色
+actor "顧客" as Customer <<USER_COLOR>>
+actor "賣家" as Seller <<USER_COLOR>>
+actor "管理員" as Admin <<USER_COLOR>>
+actor "配送員" as DeliveryPerson <<USER_COLOR>>
+
+' 外部系統
+cloud "Stripe 支付" as StripePayment <<EXTERNAL_SYSTEM_COLOR>>
+cloud "物流系統" as LogisticsSystem <<EXTERNAL_SYSTEM_COLOR>>
+cloud "郵件服務" as EmailService <<EXTERNAL_SYSTEM_COLOR>>
+cloud "簡訊服務" as SmsService <<EXTERNAL_SYSTEM_COLOR>>
+
+package "Customer Journey - 客戶購物旅程" {
+    ' 客戶註冊流程
+    rectangle "客戶註冊" as CustomerRegistration <<COMMAND_COLOR>>
+    rectangle "CustomerRegisteredEvent" as CustomerRegistered <<DOMAIN_EVENT_COLOR>>
+    rectangle "Customer" as CustomerAggregate <<AGGREGATE_COLOR>>
+    rectangle "發送歡迎郵件" as SendWelcomeEmail <<POLICY_COLOR>>
+    
+    ' 商品瀏覽
+    rectangle "瀏覽商品" as BrowseProducts <<COMMAND_COLOR>>
+    rectangle "ProductViewedEvent" as ProductViewed <<DOMAIN_EVENT_COLOR>>
+    rectangle "Product" as ProductAggregate <<AGGREGATE_COLOR>>
+    rectangle "更新瀏覽統計" as UpdateViewStats <<POLICY_COLOR>>
+    
+    ' 購物車管理
+    rectangle "加入購物車" as AddToCart <<COMMAND_COLOR>>
+    rectangle "CartItemAddedEvent" as CartItemAdded <<DOMAIN_EVENT_COLOR>>
+    rectangle "ShoppingCart" as CartAggregate <<AGGREGATE_COLOR>>
+    rectangle "重新計算價格" as RecalculatePrice <<POLICY_COLOR>>
+    
+    ' 優惠券使用
+    rectangle "使用優惠券" as ApplyVoucher <<COMMAND_COLOR>>
+    rectangle "VoucherAppliedEvent" as VoucherApplied <<DOMAIN_EVENT_COLOR>>
+    rectangle "Promotion" as PromotionAggregate <<AGGREGATE_COLOR>>
+    rectangle "驗證優惠券" as ValidateVoucher <<POLICY_COLOR>>
+}
+
+package "Order Processing - 訂單處理流程" {
+    ' 訂單創建
+    rectangle "提交訂單" as SubmitOrder <<COMMAND_COLOR>>
+    rectangle "OrderCreatedEvent" as OrderCreated <<DOMAIN_EVENT_COLOR>>
+    rectangle "Order" as OrderAggregate <<AGGREGATE_COLOR>>
+    rectangle "庫存預留" as ReserveInventory <<POLICY_COLOR>>
+    
+    ' 庫存管理
+    rectangle "InventoryReservedEvent" as InventoryReserved <<DOMAIN_EVENT_COLOR>>
+    rectangle "Inventory" as InventoryAggregate <<AGGREGATE_COLOR>>
+    rectangle "檢查庫存" as CheckInventory <<POLICY_COLOR>>
+    
+    ' 支付處理
+    rectangle "OrderSubmittedEvent" as OrderSubmitted <<DOMAIN_EVENT_COLOR>>
+    rectangle "處理支付" as ProcessPayment <<COMMAND_COLOR>>
+    rectangle "PaymentProcessedEvent" as PaymentProcessed <<DOMAIN_EVENT_COLOR>>
+    rectangle "Payment" as PaymentAggregate <<AGGREGATE_COLOR>>
+    rectangle "支付驗證" as ValidatePayment <<POLICY_COLOR>>
+    
+    ' 訂單確認
+    rectangle "OrderConfirmedEvent" as OrderConfirmed <<DOMAIN_EVENT_COLOR>>
+    rectangle "發送確認通知" as SendConfirmation <<POLICY_COLOR>>
+}
+
+package "Fulfillment - 履約流程" {
+    ' 配送安排
+    rectangle "安排配送" as ArrangeDelivery <<COMMAND_COLOR>>
+    rectangle "DeliveryArrangedEvent" as DeliveryArranged <<DOMAIN_EVENT_COLOR>>
+    rectangle "Delivery" as DeliveryAggregate <<AGGREGATE_COLOR>>
+    rectangle "分配配送員" as AssignDeliveryPerson <<POLICY_COLOR>>
+    
+    ' 配送狀態更新
+    rectangle "DeliveryStatusUpdatedEvent" as DeliveryStatusUpdated <<DOMAIN_EVENT_COLOR>>
+    rectangle "更新訂單狀態" as UpdateOrderStatus <<POLICY_COLOR>>
+    
+    ' 配送完成
+    rectangle "DeliveryCompletedEvent" as DeliveryCompleted <<DOMAIN_EVENT_COLOR>>
+    rectangle "觸發評價" as TriggerReview <<POLICY_COLOR>>
+}
+
+package "Review & Feedback - 評價反饋" {
+    ' 商品評價
+    rectangle "提交評價" as SubmitReview <<COMMAND_COLOR>>
+    rectangle "ReviewSubmittedEvent" as ReviewSubmitted <<DOMAIN_EVENT_COLOR>>
+    rectangle "Review" as ReviewAggregate <<AGGREGATE_COLOR>>
+    rectangle "更新商品評分" as UpdateProductRating <<POLICY_COLOR>>
+    
+    ' 評價審核
+    rectangle "ReviewModeratedEvent" as ReviewModerated <<DOMAIN_EVENT_COLOR>>
+    rectangle "發布評價" as PublishReview <<POLICY_COLOR>>
+}
+
+package "Seller Management - 賣家管理" {
+    ' 賣家註冊
+    rectangle "賣家註冊" as SellerRegistration <<COMMAND_COLOR>>
+    rectangle "SellerRegisteredEvent" as SellerRegistered <<DOMAIN_EVENT_COLOR>>
+    rectangle "Seller" as SellerAggregate <<AGGREGATE_COLOR>>
+    rectangle "審核賣家資格" as ReviewSellerQualification <<POLICY_COLOR>>
+    
+    ' 商品上架
+    rectangle "上架商品" as ListProduct <<COMMAND_COLOR>>
+    rectangle "ProductListedEvent" as ProductListed <<DOMAIN_EVENT_COLOR>>
+    rectangle "審核商品" as ReviewProduct <<POLICY_COLOR>>
+}
+
+package "Notification System - 通知系統" {
+    ' 通知發送
+    rectangle "NotificationSentEvent" as NotificationSent <<DOMAIN_EVENT_COLOR>>
+    rectangle "Notification" as NotificationAggregate <<AGGREGATE_COLOR>>
+    rectangle "選擇通知渠道" as SelectNotificationChannel <<POLICY_COLOR>>
+    
+    ' 通知狀態
+    rectangle "NotificationDeliveredEvent" as NotificationDelivered <<DOMAIN_EVENT_COLOR>>
+    rectangle "更新通知狀態" as UpdateNotificationStatus <<POLICY_COLOR>>
+}
+
+package "Analytics & Observability - 分析與可觀測性" {
+    ' 用戶行為分析
+    rectangle "UserBehaviorAnalyticsEvent" as UserBehaviorAnalytics <<DOMAIN_EVENT_COLOR>>
+    rectangle "Observability" as ObservabilityAggregate <<AGGREGATE_COLOR>>
+    rectangle "生成分析報告" as GenerateAnalyticsReport <<POLICY_COLOR>>
+    
+    ' 性能監控
+    rectangle "PerformanceMetricReceivedEvent" as PerformanceMetricReceived <<DOMAIN_EVENT_COLOR>>
+    rectangle "監控系統健康" as MonitorSystemHealth <<POLICY_COLOR>>
+}
+
+' 讀模型
+rectangle "客戶檔案視圖" as CustomerProfileView <<READ_MODEL_COLOR>>
+rectangle "訂單歷史視圖" as OrderHistoryView <<READ_MODEL_COLOR>>
+rectangle "商品目錄視圖" as ProductCatalogView <<READ_MODEL_COLOR>>
+rectangle "庫存狀態視圖" as InventoryStatusView <<READ_MODEL_COLOR>>
+rectangle "銷售報表視圖" as SalesReportView <<READ_MODEL_COLOR>>
+rectangle "配送追蹤視圖" as DeliveryTrackingView <<READ_MODEL_COLOR>>
+
+' 熱點問題
+note as HotSpot1 <<HOTSPOT_COLOR>>
+  熱點問題：
+  - 高併發下的庫存一致性
+  - 支付失敗的補償機制
+  - 配送異常的處理流程
+end note
+
+note as HotSpot2 <<HOTSPOT_COLOR>>
+  技術挑戰：
+  - 分布式事務處理
+  - 事件順序保證
+  - 系統間數據同步
+end note
+
+' 流程連接 - 客戶註冊流程
+Customer --> CustomerRegistration
+CustomerRegistration --> CustomerRegistered
+CustomerRegistered --> CustomerAggregate
+CustomerRegistered --> SendWelcomeEmail
+SendWelcomeEmail --> EmailService
+
+' 商品瀏覽流程
+Customer --> BrowseProducts
+BrowseProducts --> ProductViewed
+ProductViewed --> ProductAggregate
+ProductViewed --> UpdateViewStats
+
+' 購物車流程
+Customer --> AddToCart
+AddToCart --> CartItemAdded
+CartItemAdded --> CartAggregate
+CartItemAdded --> RecalculatePrice
+
+' 優惠券流程
+Customer --> ApplyVoucher
+ApplyVoucher --> VoucherApplied
+VoucherApplied --> PromotionAggregate
+VoucherApplied --> ValidateVoucher
+
+' 訂單處理流程
+Customer --> SubmitOrder
+SubmitOrder --> OrderCreated
+OrderCreated --> OrderAggregate
+OrderCreated --> ReserveInventory
+ReserveInventory --> InventoryReserved
+InventoryReserved --> InventoryAggregate
+InventoryReserved --> CheckInventory
+
+' 支付流程
+OrderCreated --> OrderSubmitted
+OrderSubmitted --> ProcessPayment
+ProcessPayment --> PaymentProcessed
+PaymentProcessed --> PaymentAggregate
+PaymentProcessed --> ValidatePayment
+ValidatePayment --> StripePayment
+PaymentProcessed --> OrderConfirmed
+OrderConfirmed --> SendConfirmation
+
+' 配送流程
+OrderConfirmed --> ArrangeDelivery
+ArrangeDelivery --> DeliveryArranged
+DeliveryArranged --> DeliveryAggregate
+DeliveryArranged --> AssignDeliveryPerson
+AssignDeliveryPerson --> DeliveryPerson
+DeliveryArranged --> DeliveryStatusUpdated
+DeliveryStatusUpdated --> UpdateOrderStatus
+DeliveryStatusUpdated --> DeliveryCompleted
+DeliveryCompleted --> TriggerReview
+
+' 評價流程
+Customer --> SubmitReview
+SubmitReview --> ReviewSubmitted
+ReviewSubmitted --> ReviewAggregate
+ReviewSubmitted --> UpdateProductRating
+ReviewSubmitted --> ReviewModerated
+ReviewModerated --> PublishReview
+
+' 賣家流程
+Seller --> SellerRegistration
+SellerRegistration --> SellerRegistered
+SellerRegistered --> SellerAggregate
+SellerRegistered --> ReviewSellerQualification
+Seller --> ListProduct
+ListProduct --> ProductListed
+ProductListed --> ReviewProduct
+
+' 通知流程
+SendWelcomeEmail --> NotificationSent
+SendConfirmation --> NotificationSent
+NotificationSent --> NotificationAggregate
+NotificationSent --> SelectNotificationChannel
+SelectNotificationChannel --> EmailService
+SelectNotificationChannel --> SmsService
+NotificationSent --> NotificationDelivered
+NotificationDelivered --> UpdateNotificationStatus
+
+' 分析流程
+ProductViewed --> UserBehaviorAnalytics
+CartItemAdded --> UserBehaviorAnalytics
+OrderCreated --> UserBehaviorAnalytics
+UserBehaviorAnalytics --> ObservabilityAggregate
+UserBehaviorAnalytics --> GenerateAnalyticsReport
+PerformanceMetricReceived --> ObservabilityAggregate
+PerformanceMetricReceived --> MonitorSystemHealth
+
+' 讀模型更新
+CustomerRegistered --> CustomerProfileView
+OrderCreated --> OrderHistoryView
+ProductListed --> ProductCatalogView
+InventoryReserved --> InventoryStatusView
+PaymentProcessed --> SalesReportView
+DeliveryStatusUpdated --> DeliveryTrackingView
+
+' 外部系統集成
+ValidatePayment --> StripePayment
+AssignDeliveryPerson --> LogisticsSystem
+SelectNotificationChannel --> EmailService
+SelectNotificationChannel --> SmsService
+
+@enduml

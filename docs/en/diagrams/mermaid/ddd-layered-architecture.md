@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# DDD 分層架構
+# DDD Layered Architecture
 
-本文檔展示領域驅動設計 (DDD) 的分層架構實現。
+This document展示Domain-Driven Design (DDD) 的Layered Architecture實現。
 
-## DDD 分層架構圖
+## DDD Layered Architecture圖
 
 ```mermaid
 graph TB
@@ -22,7 +20,7 @@ graph TB
         end
     end
     
-    subgraph "⚙️ 應用層 (Application Layer)"
+    subgraph "⚙️ Application Layer (Application Layer)"
         subgraph "📋 應用服務"
             ORDER_APP_SVC[📦 OrderApplicationService]
             CUSTOMER_APP_SVC[👥 CustomerApplicationService]
@@ -30,7 +28,7 @@ graph TB
             PAYMENT_APP_SVC[💳 PaymentApplicationService]
         end
         
-        subgraph "📨 命令處理"
+        subgraph "📨 Command處理"
             COMMANDS[📝 Commands & Handlers]
             QUERIES[🔍 Queries & Handlers]
         end
@@ -41,7 +39,7 @@ graph TB
         end
     end
     
-    subgraph "🏛️ 領域層 (Domain Layer)"
+    subgraph "🏛️ Domain Layer (Domain Layer)"
         subgraph "📦 Order 有界上下文"
             ORDER_AGG[📋 Order Aggregate]
             ORDER_ENTITIES[📄 Order Entities]
@@ -73,14 +71,14 @@ graph TB
             PAYMENT_EVENTS[📡 Payment Domain Events]
         end
         
-        subgraph "🔗 共享核心"
+        subgraph "🔗 Shared Kernel"
             SHARED_VOS[💎 Shared Value Objects]
             DOMAIN_SERVICES[⚙️ Domain Services]
             DOMAIN_INTERFACES[🔌 Domain Interfaces]
         end
     end
     
-    subgraph "🔧 基礎設施層 (Infrastructure Layer)"
+    subgraph "🔧 Infrastructure Layer (Infrastructure Layer)"
         subgraph "💾 持久化"
             JPA_REPOS[🗃️ JPA Repositories]
             H2_DB[(🗄️ H2 Database)]
@@ -130,7 +128,7 @@ graph TB
     QUERIES --> ORDER_ENTITIES
     SAGA --> DOMAIN_SERVICES
     
-    %% 領域層內部關係
+    %% Domain Layer內部關係
     ORDER_AGG --> ORDER_ENTITIES
     ORDER_AGG --> ORDER_VOS
     ORDER_AGG --> ORDER_EVENTS
@@ -150,7 +148,7 @@ graph TB
     PAYMENT_AGG --> PAYMENT_VOS
     PAYMENT_AGG --> PAYMENT_EVENTS
     
-    %% 共享核心
+    %% Shared Kernel
     ORDER_AGG --> SHARED_VOS
     CUSTOMER_AGG --> SHARED_VOS
     PRODUCT_AGG --> SHARED_VOS
@@ -193,17 +191,17 @@ graph TB
 
 ## DDD 戰術模式
 
-### 🏛️ 聚合根 (Aggregate Root)
+### 🏛️ Aggregate Root (Aggregate Root)
 
-- **Order**: 訂單聚合根，管理訂單生命週期
-- **Customer**: 客戶聚合根，管理客戶資訊和忠誠度
-- **Product**: 產品聚合根，管理產品資訊和庫存
-- **Payment**: 支付聚合根，管理支付流程
+- **Order**: 訂單Aggregate Root，管理訂單生命週期
+- **Customer**: CustomerAggregate Root，管理Customer資訊和忠誠度
+- **Product**: 產品Aggregate Root，管理產品資訊和庫存
+- **Payment**: 支付Aggregate Root，管理支付流程
 
-### 💎 值對象 (Value Objects)
+### 💎 Value Object (Value Objects)
 
 ```java
-// 金額值對象
+// 金額Value Object
 @ValueObject
 public record Money(BigDecimal amount, Currency currency) {
     public Money add(Money other) {
@@ -212,7 +210,7 @@ public record Money(BigDecimal amount, Currency currency) {
     }
 }
 
-// 客戶 ID 值對象
+// Customer ID Value Object
 @ValueObject
 public record CustomerId(String value) {
     public static CustomerId generate() {
@@ -221,7 +219,7 @@ public record CustomerId(String value) {
 }
 ```
 
-### 📡 領域事件 (Domain Events)
+### 📡 Domain Event (Domain Events)
 
 ```java
 // 訂單創建事件
@@ -236,7 +234,7 @@ public record OrderCreatedEvent(
 }
 ```
 
-### 📏 規格模式 (Specifications)
+### 📏 Specification Pattern (Specifications)
 
 ```java
 // 訂單折扣規格
@@ -250,7 +248,7 @@ public class OrderDiscountSpecification implements Specification<Order> {
 }
 ```
 
-### 📜 政策模式 (Policies)
+### 📜 Policy Pattern (Policies)
 
 ```java
 // 忠誠度政策
@@ -271,16 +269,16 @@ public class LoyaltyPointsPolicy implements DomainPolicy<Order, Integer> {
 - 管理訂單項目和定價
 - 協調庫存預留
 
-### 👥 客戶上下文 (Customer Context)
+### 👥 Customer上下文 (Customer Context)
 
-- 管理客戶資訊和偏好
+- 管理Customer資訊和偏好
 - 處理忠誠度積分
-- 客戶分群和行銷
+- Customer分群和行銷
 
 ### 🏷️ 產品上下文 (Product Context)
 
 - 產品目錄管理
-- 庫存追蹤和預留
+- 庫存Tracing和預留
 - 價格管理
 
 ### 💳 支付上下文 (Payment Context)
@@ -293,17 +291,17 @@ public class LoyaltyPointsPolicy implements DomainPolicy<Order, Integer> {
 
 ### ⬇️ 依賴方向
 
-1. **表現層** → **應用層** → **領域層**
-2. **基礎設施層** → **領域層** (反向依賴)
+1. **表現層** → **Application Layer** → **Domain Layer**
+2. **Infrastructure Layer** → **Domain Layer** (反向依賴)
 
 ### 🚫 禁止依賴
 
-- 領域層不能依賴基礎設施層
-- 應用層不能依賴表現層
+- Domain Layer不能依賴Infrastructure Layer
+- Application Layer不能依賴表現層
 - 有界上下文之間通過事件通信
 
 ## 相關文檔
 
 - [架構概覽](architecture-overview.md) - 整體系統架構
-- [六角形架構](hexagonal-architecture.md) - 端口與適配器
-- [事件驅動架構](event-driven-architecture.md) - 事件處理機制
+- [Hexagonal Architecture](hexagonal-architecture.md) - Port與Adapter
+- [Event-Driven Architecture](event-driven-architecture.md) - 事件處理機制

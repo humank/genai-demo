@@ -1,13 +1,11 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # 促銷模組實作與架構優化 - 2025-05-21
 
-## 業務需求概述
+## Requirements
 
 本次更新主要實現了電子商務平台的促銷功能模組，包括以下核心業務需求：
 
-1. **超商優惠券系統**：實現線上購買、兌換實體商品的優惠券功能，支援單次購買和多張優惠券組合。
+1. **超商優惠券系統**：實現線上購買、兌換Entity商品的優惠券功能，支援單次購買和多張優惠券組合。
 2. **限時特價**：在特定時間段內提供商品折扣。
 3. **限量特價**：針對特定數量的商品提供折扣價格。
 4. **加價購**：購買主要商品時可以優惠價格購買附加商品。
@@ -16,17 +14,17 @@
 
 ## 技術實現
 
-### 領域模型設計
+### Design
 
-採用領域驅動設計(DDD)方法，將促銷模組設計為獨立的子領域：
+採用Domain-Driven Design(DDD)方法，將促銷模組設計為獨立的子領域：
 
-1. **聚合根**：
-   - `Promotion`：促銷活動的核心聚合根，包含促銷規則和條件。
+1. **Aggregate Root**：
+   - `Promotion`：促銷活動的核心Aggregate Root，包含促銷規則和條件。
 
-2. **實體**：
-   - `Voucher`：優惠券實體，具有唯一標識、有效期和使用狀態。
+2. **Entity**：
+   - `Voucher`：優惠券Entity，具有唯一標識、有效期和使用狀態。
 
-3. **值對象**：
+3. **Value Object**：
    - `PromotionId`：促銷活動唯一標識。
    - `PromotionType`：促銷類型（限時特價、加價購等）。
    - 各種促銷規則：`AddOnPurchaseRule`、`FlashSaleRule`、`LimitedQuantityRule`、`GiftWithPurchaseRule`、`ConvenienceStoreVoucherRule`。
@@ -37,7 +35,7 @@
    - `PromotionContext`：促銷上下文，包含評估促銷條件所需的信息。
 
 5. **服務**：
-   - `PromotionService`：處理促銷規則應用和優惠券創建的領域服務。
+   - `PromotionService`：處理促銷規則應用和優惠券創建的Domain Service。
 
 6. **倉儲**：
    - `PromotionRepository`：促銷活動的倉儲接口。
@@ -45,13 +43,13 @@
 
 ### 架構優化
 
-1. **架構測試**：
+1. **Architecture Test**：
    - 新增 `PromotionArchitectureTest` 確保促銷模組遵循架構規範。
    - 測試確保規格實現 `Specification` 接口。
-   - 測試確保實體、值對象和聚合根位於正確的包結構中。
+   - 測試確保Entity、Value Object和Aggregate Root位於正確的包結構中。
 
 2. **架構問題修復**：
-   - 將 `Voucher` 從值對象重新分類為實體，並從 `valueobject` 包移動到 `entity` 包。
+   - 將 `Voucher` 從Value Object重新分類為Entity，並從 `valueobject` 包移動到 `entity` 包。
    - 修改 `Voucher` 的註解從 `@ValueObject` 改為 `@Entity`，更符合其本質特性。
    - 實現 `PromotionContext` 類的 `Specification` 接口，添加 `isSatisfiedBy` 方法。
 
@@ -61,9 +59,9 @@
 
 ## 技術細節
 
-### Voucher 實體重構
+### Voucher EntityRefactoring
 
-`Voucher` 類從值對象重構為實體，主要考慮以下因素：
+`Voucher` 類從Value ObjectRefactoring為Entity，主要考慮以下因素：
 
 1. 具有唯一標識符 (ID)
 2. 有可變狀態 (`isUsed`, `isInvalidated`)
@@ -105,12 +103,12 @@ public class PromotionContext implements Specification<Object> {
 }
 ```
 
-## 測試覆蓋
+## Testing
 
-1. **架構測試**：確保促銷模組遵循DDD戰術模式和架構規範。
+1. **Architecture Test**：確保促銷模組遵循DDD戰術模式和架構規範。
 2. **BDD測試**：通過Cucumber特性文件和步驟定義，驗證業務需求的實現。
-3. **單元測試**：針對各個促銷規則和條件的單元測試。
+3. **Unit Test**：針對各個促銷規則和條件的Unit Test。
 
-## 結論
+## conclusion
 
-本次更新成功實現了電子商務平台的促銷功能模組，並通過架構優化確保代碼結構符合領域驅動設計的原則。所有測試都能順利通過，系統架構更加清晰，類的分類更加準確，有助於系統的維護和擴展。
+本次更新成功實現了電子商務平台的促銷功能模組，並通過架構優化確保代碼結構符合Domain-Driven Design的原則。所有測試都能順利通過，系統架構更加清晰，類的分類更加準確，有助於系統的維護和擴展。

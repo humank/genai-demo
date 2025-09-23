@@ -1,0 +1,119 @@
+---
+title: "系統架構概覽圖"
+type: "mermaid"
+format: "mmd"
+viewpoint: "functional"
+perspective: ["security", "performance"]
+diagram_level: "overview"
+target_audience: ["architect", "stakeholder"]
+description: "展示系統的整體架構和主要組件之間的關係"
+mermaid_type: "graph"
+direction: "TD"
+theme: "default"
+related_documents: ["../../viewpoints/functional/system-overview.md"]
+source_file: "system-overview.mmd"
+generated_files: ["system-overview.svg"]
+last_updated: "2025-01-21"
+version: "1.2"
+author: "Architecture Team"
+auto_generated: false
+generation_source: "manual"
+update_frequency: "monthly"
+complexity: "medium"
+maintenance_priority: "high"
+github_integration: true
+tags: ["architecture", "overview", "system"]
+---
+
+graph TD
+    %% 前端層
+    subgraph "前端層"
+        CMC[CMC 管理介面<br/>Next.js 14]
+        Consumer[消費者介面<br/>Angular 18]
+    end
+    
+    %% API 閘道
+    Gateway[API Gateway<br/>Spring Cloud Gateway]
+    
+    %% 應用服務層
+    subgraph "應用服務層"
+        CustomerSvc[客戶服務<br/>Customer Service]
+        OrderSvc[訂單服務<br/>Order Service]
+        ProductSvc[產品服務<br/>Product Service]
+        PaymentSvc[付款服務<br/>Payment Service]
+        InventorySvc[庫存服務<br/>Inventory Service]
+    end
+    
+    %% 資料層
+    subgraph "資料層"
+        CustomerDB[(客戶資料庫<br/>PostgreSQL)]
+        OrderDB[(訂單資料庫<br/>PostgreSQL)]
+        ProductDB[(產品資料庫<br/>PostgreSQL)]
+        Cache[(快取<br/>Redis)]
+    end
+    
+    %% 外部服務
+    subgraph "外部服務"
+        PaymentGW[付款閘道<br/>Payment Gateway]
+        EmailSvc[郵件服務<br/>Email Service]
+        SMSSvc[簡訊服務<br/>SMS Service]
+    end
+    
+    %% 基礎設施
+    subgraph "基礎設施"
+        Monitoring[監控<br/>Prometheus + Grafana]
+        Logging[日誌<br/>ELK Stack]
+        MessageQueue[訊息佇列<br/>Apache Kafka]
+    end
+    
+    %% 連接關係
+    CMC --> Gateway
+    Consumer --> Gateway
+    
+    Gateway --> CustomerSvc
+    Gateway --> OrderSvc
+    Gateway --> ProductSvc
+    Gateway --> PaymentSvc
+    Gateway --> InventorySvc
+    
+    CustomerSvc --> CustomerDB
+    OrderSvc --> OrderDB
+    ProductSvc --> ProductDB
+    
+    CustomerSvc --> Cache
+    OrderSvc --> Cache
+    ProductSvc --> Cache
+    
+    PaymentSvc --> PaymentGW
+    CustomerSvc --> EmailSvc
+    OrderSvc --> SMSSvc
+    
+    CustomerSvc --> MessageQueue
+    OrderSvc --> MessageQueue
+    PaymentSvc --> MessageQueue
+    
+    %% 監控連接
+    CustomerSvc -.-> Monitoring
+    OrderSvc -.-> Monitoring
+    ProductSvc -.-> Monitoring
+    PaymentSvc -.-> Monitoring
+    InventorySvc -.-> Monitoring
+    
+    CustomerSvc -.-> Logging
+    OrderSvc -.-> Logging
+    ProductSvc -.-> Logging
+    PaymentSvc -.-> Logging
+    InventorySvc -.-> Logging
+    
+    %% 樣式定義
+    classDef frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef service fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef database fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef external fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef infrastructure fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    
+    class CMC,Consumer frontend
+    class CustomerSvc,OrderSvc,ProductSvc,PaymentSvc,InventorySvc service
+    class CustomerDB,OrderDB,ProductDB,Cache database
+    class PaymentGW,EmailSvc,SMSSvc external
+    class Monitoring,Logging,MessageQueue infrastructure

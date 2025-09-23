@@ -5,19 +5,15 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 
 /**
  * Configuration for comprehensive health checks including database
@@ -29,6 +25,7 @@ import org.springframework.kafka.core.ProducerFactory;
  * availability
  */
 @Configuration
+@Profile("!test") // Exclude this configuration when test profile is active
 public class HealthCheckConfig {
 
     /**
@@ -36,19 +33,9 @@ public class HealthCheckConfig {
      * Checks if the database connection is available and responsive
      */
     @Bean
+    @ConditionalOnMissingBean(name = "databaseHealthIndicator")
     public HealthIndicator databaseHealthIndicator(DataSource dataSource) {
         return new DatabaseHealthIndicator(dataSource);
-    }
-
-    /**
-     * Kafka connectivity health indicator for production profile
-     * Checks if Kafka cluster is available and responsive
-     */
-    @Bean
-    @Profile("production")
-    @ConditionalOnProperty(name = "spring.kafka.enabled", havingValue = "true", matchIfMissing = true)
-    public HealthIndicator kafkaHealthIndicator(KafkaTemplate<String, Object> kafkaTemplate) {
-        return new KafkaHealthIndicator(kafkaTemplate);
     }
 
     /**
@@ -56,6 +43,7 @@ public class HealthCheckConfig {
      * Checks if the application is ready to serve traffic
      */
     @Bean
+    @ConditionalOnMissingBean(name = "applicationReadinessIndicator")
     public HealthIndicator applicationReadinessIndicator() {
         return new ApplicationReadinessIndicator();
     }
@@ -65,6 +53,7 @@ public class HealthCheckConfig {
      * Monitors memory usage, disk space, and other system resources
      */
     @Bean
+    @ConditionalOnMissingBean(name = "systemResourcesIndicator")
     public HealthIndicator systemResourcesIndicator() {
         return new SystemResourcesIndicator();
     }
@@ -116,69 +105,6 @@ public class HealthCheckConfig {
                             .withDetail("timestamp", Instant.now())
                             .build();
                 }
-            }
-        }
-    }
-
-    /**
-     * Custom Kafka health indicator implementation
-     */
-    public static class KafkaHealthIndicator implements HealthIndicator {
-        private final KafkaTemplate<String, Object> kafkaTemplate;
-        private static final Duration TIMEOUT = Duration.ofSeconds(10);
-
-        public KafkaHealthIndicator(KafkaTemplate<String, Object> kafkaTemplate) {
-            this.kafkaTemplate = kafkaTemplate;
-        }
-
-        @Override
-        public Health health() {
-            try {
-                return checkKafkaConnection();
-            } catch (Exception e) {
-                return Health.down()
-                        .withDetail("kafka", "Connection failed")
-                        .withDetail("error", e.getMessage())
-                        .withDetail("timestamp", Instant.now())
-                        .build();
-            }
-        }
-
-        private Health checkKafkaConnection() {
-            Instant start = Instant.now();
-
-            try {
-                // Check if producer factory is available and can create producers
-                ProducerFactory<String, Object> producerFactory = kafkaTemplate.getProducerFactory();
-
-                // Test connection by getting metadata (non-blocking operation)
-                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                    try {
-                        producerFactory.createProducer().partitionsFor("health-check-topic");
-                    } catch (Exception e) {
-                        throw new RuntimeException("Kafka connection test failed", e);
-                    }
-                });
-
-                future.get(TIMEOUT.toSeconds(), TimeUnit.SECONDS);
-
-                Duration responseTime = Duration.between(start, Instant.now());
-
-                return Health.up()
-                        .withDetail("kafka", "Available")
-                        .withDetail("responseTime", responseTime.toMillis() + "ms")
-                        .withDetail("timestamp", Instant.now())
-                        .build();
-
-            } catch (Exception e) {
-                Duration responseTime = Duration.between(start, Instant.now());
-
-                return Health.down()
-                        .withDetail("kafka", "Connection failed")
-                        .withDetail("error", e.getMessage())
-                        .withDetail("responseTime", responseTime.toMillis() + "ms")
-                        .withDetail("timestamp", Instant.now())
-                        .build();
             }
         }
     }

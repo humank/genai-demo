@@ -1,20 +1,18 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 重構指南：基於《重構：改善既有代碼的設計》
+# Design
 
-本文檔整理自 Martin Fowler 的經典著作《重構：改善既有代碼的設計》(Refactoring: Improving the Design of Existing Code)，提供了代碼壞味道、重構技術以及相關設計原則的概述，幫助開發者提升代碼質量。
+This document整理自 Martin Fowler 的經典著作《Refactoring：改善既有代碼的設計》(Refactoring: Improving the Design of Existing Code)，提供了代碼壞味道、Refactoring技術以及相關Design Principle的概述，幫助Developer提升代碼質量。
 
 ## 目錄
 
 - [代碼壞味道 (Code Smells)](#代碼壞味道-code-smells)
-- [重構技術 (Refactoring Techniques)](#重構技術-refactoring-techniques)
-- [設計原則 (Design Principles)](#設計原則-design-principles)
-- [重構流程與最佳實踐](#重構流程與最佳實踐)
+- [Refactoring技術 (Refactoring Techniques)](#Refactoring技術-refactoring-techniques)
+- [Design Principle (Design Principles)](#Design Principle-design-principles)
+- [Refactoring流程與Best Practice](#Refactoring流程與Best Practice)
 
 ## 代碼壞味道 (Code Smells)
 
-代碼壞味道是代碼中可能存在問題的跡象，它們通常表明代碼需要重構。
+代碼壞味道是代碼中可能存在問題的跡象，它們通常表明代碼需要Refactoring。
 
 ### 代碼的大方向問題
 
@@ -78,7 +76,7 @@
   - 解決方法：Extract Class, Introduce Special Case
 
 - **過度耦合的消息鏈 (Message Chains)**
-  - 客戶端請求一個對象，再請求另一個對象，如此形成一連串的關聯
+  - Customer端請求一個對象，再請求另一個對象，如此形成一連串的關聯
   - 解決方法：Hide Delegate, Extract Method, Move Method
 
 - **中間人 (Middle Man)**
@@ -109,9 +107,9 @@
   - 過多註釋可能暗示代碼設計不足夠清晰
   - 解決方法：Extract Method, Rename Method, Introduce Assertion
 
-## 重構技術 (Refactoring Techniques)
+## Refactoring技術 (Refactoring Techniques)
 
-### 組合重構
+### 組合Refactoring
 
 - **提煉函數 (Extract Method)**
   - 將代碼片段提取為可復用的函數
@@ -147,7 +145,7 @@
 
 - **替換算法 (Substitute Algorithm)**
   - 用更清晰的算法替換現有實現
-  - 改善可讀性和性能
+  - 改善可讀性和Performance
 
 ### 移動特性
 
@@ -169,14 +167,14 @@
 
 - **隱藏委託關係 (Hide Delegate)**
   - 在委託類中創建方法
-  - 減少客戶對委託關係的了解
+  - 減少Customer對委託關係的了解
 
 - **移除中間人 (Remove Middle Man)**
   - 直接與真正的對象交互
   - 當委託關係過度簡單時
 
 - **引入外加函數 (Introduce Foreign Method)**
-  - 在客戶類中新增函數並傳入服務類實例
+  - 在Customer類中新增函數並傳入服務類實例
   - 當無法修改服務類時
 
 - **引入本地擴展 (Introduce Local Extension)**
@@ -193,12 +191,12 @@
   - 將簡單數據轉化為對象
   - 添加行為或更多結構
 
-- **將值對象改為引用對象 (Change Value to Reference)**
+- **將Value Object改為引用對象 (Change Value to Reference)**
   - 將多個相同對象的副本轉化為引用
   - 確保一致性
 
-- **將引用對象改為值對象 (Change Reference to Value)**
-  - 將引用對象轉化為不可變的值對象
+- **將引用對象改為Value Object (Change Reference to Value)**
+  - 將引用對象轉化為不可變的Value Object
   - 簡化代碼並避免副作用
 
 - **以對象取代陣列 (Replace Array with Object)**
@@ -207,7 +205,7 @@
 
 - **複製被監視數據 (Duplicate Observed Data)**
   - 將領域數據從UI對象中分離出來
-  - 改善代碼結構和可測試性
+  - 改善代碼結構和Testability
 
 - **將單向關聯改為雙向關聯 (Change Unidirectional Association to Bidirectional)**
   - 添加反向引用
@@ -219,7 +217,7 @@
 
 - **以符號常量取代魔法數字 (Replace Magic Number with Symbolic Constant)**
   - 將硬編碼數值替換為命名常量
-  - 提高可讀性和可維護性
+  - 提高可讀性和Maintainability
 
 - **封裝字段 (Encapsulate Field)**
   - 將公共字段設為私有並提供訪問器
@@ -231,14 +229,14 @@
 
 - **以類取代類型代碼 (Replace Type Code with Class)**
   - 用類替代枚舉或常量
-  - 增加類型安全和可擴展性
+  - 增加類型安全和Scalability
 
 - **以子類取代類型代碼 (Replace Type Code with Subclasses)**
   - 為每種類型創建子類
   - 利用多態性
 
-- **以狀態/策略取代類型代碼 (Replace Type Code with State/Strategy)**
-  - 將類型相關行為移至狀態或策略類
+- **以狀態/Policy取代類型代碼 (Replace Type Code with State/Strategy)**
+  - 將類型相關行為移至狀態或Policy類
   - 更靈活地改變行為
 
 - **以字段取代子類 (Replace Subclass with Fields)**
@@ -276,8 +274,8 @@
   - 避免 null 檢查的擴散
 
 - **引入斷言 (Introduce Assertion)**
-  - 添加斷言說明假設
-  - 明確表達代碼假設
+  - 添加斷言說明Assumption
+  - 明確表達代碼Assumption
 
 ### 簡化方法調用
 
@@ -295,7 +293,7 @@
 
 - **將查詢函數和修改函數分離 (Separate Query from Modifier)**
   - 分離讀取和修改操作
-  - 提高安全性
+  - 提高Security
 
 - **參數化方法 (Parameterize Method)**
   - 將多個類似方法合併為帶參數的單一方法
@@ -311,7 +309,7 @@
 
 - **以明確函數取代參數 (Replace Parameter with Explicit Methods)**
   - 為不同行為創建獨立方法
-  - 簡化客戶端代碼
+  - 簡化Customer端代碼
 
 - **引入命名參數 (Introduce Named Parameter)**
   - 使參數的意義更明確
@@ -321,8 +319,8 @@
   - 將不需要被外部調用的方法設為私有
   - 減少公共接口
 
-- **以工廠函數取代構造函數 (Replace Constructor with Factory Method)**
-  - 使用工廠方法創建對象
+- **以Factory函數取代Construct函數 (Replace Constructor with Factory Method)**
+  - 使用Factory方法創建對象
   - 提供更多靈活性
 
 - **封裝向下轉型 (Encapsulate Downcast)**
@@ -335,7 +333,7 @@
 
 - **以測試取代異常 (Replace Exception with Test)**
   - 在可能的情況下用條件測試替代異常
-  - 避免異常處理的性能開銷
+  - 避免異常處理的Performance開銷
 
 ### 處理概括關係
 
@@ -347,8 +345,8 @@
   - 將相同方法移至父類
   - 消除重複
 
-- **構造函數本體上移 (Pull Up Constructor Body)**
-  - 將子類構造函數共同部分移至父類
+- **Construct函數本體上移 (Pull Up Constructor Body)**
+  - 將子類Construct函數共同部分移至父類
   - 重用初始化代碼
 
 - **方法下移 (Push Down Method)**
@@ -387,7 +385,7 @@
   - 當一個類完全委託給另一個類時使用繼承
   - 簡化代碼
 
-## 設計原則 (Design Principles)
+## Design
 
 ### SOLID 原則
 
@@ -404,7 +402,7 @@
   - 確保繼承正確使用
 
 - **介面隔離原則 (Interface Segregation Principle, ISP)**
-  - 客戶端不應被迫依賴於它們不使用的方法
+  - Customer端不應被迫依賴於它們不使用的方法
   - 接口應該小而專注
 
 - **依賴倒置原則 (Dependency Inversion Principle, DIP)**
@@ -437,27 +435,27 @@
   - 不同功能和責任應該被分離
   - 一個組件應只關注其主要職責
 
-## 重構流程與最佳實踐
+## Best Practices
 
-### 重構流程
+### Refactoring流程
 
 - **確保測試覆蓋**
-  - 重構前確保有充分的測試
-  - 每次小步重構後運行測試
+  - Refactoring前確保有充分的測試
+  - 每次小步Refactoring後運行測試
 
 - **小步前進**
   - 進行小而安全的變更
   - 頻繁測試，確保不引入錯誤
 
 - **一次只解決一個問題**
-  - 避免同時進行多項重構
+  - 避免同時進行多項Refactoring
   - 保持變更的可管理性
 
-- **重構與新功能開發分離**
-  - 不要在添加新功能的同時重構
+- **Refactoring與新功能開發分離**
+  - 不要在添加新功能的同時Refactoring
   - 清晰區分這兩種活動
 
-### 重構的時機
+### Refactoring的時機
 
 - **添加功能時**
   - 使代碼更容易理解和修改
@@ -472,29 +470,29 @@
   - 統一代碼風格和結構
 
 - **定期的維護活動**
-  - 專門的重構時段
-  - 處理技術債務
+  - 專門的Refactoring時段
+  - 處理Technical Debt
 
-### 實施注意事項
+### Implementation
 
 - **團隊合作**
-  - 與團隊成員討論重要重構
-  - 分享重構策略和學習
+  - 與團隊成員討論重要Refactoring
+  - 分享RefactoringPolicy和學習
 
 - **文檔與溝通**
-  - 記錄重大重構的原因和方法
+  - 記錄重大Refactoring的原因和方法
   - 告知相關團隊成員
 
 - **版本控制**
   - 頻繁提交小的變更
   - 使用有意義的提交信息
 
-- **監控性能與資源使用**
-  - 確保重構不會引入性能問題
+- **MonitoringPerformance與Resource使用**
+  - 確保Refactoring不會引入Performance問題
   - 測試不同場景下的效能
 
-## 總結
+## summary
 
-重構是軟體開發的重要實踐，它幫助我們持續改進代碼質量，使系統更容易理解、更容易維護和更能應對變化。通過識別代碼壞味道，應用適當的重構技術，並遵循良好的設計原則，我們可以創建健壯、靈活且可持續發展的軟體系統。
+Refactoring是軟體開發的重要實踐，它幫助我們持續改進代碼質量，使系統更容易理解、更容易維護和更能應對變化。通過識別代碼壞味道，應用適當的Refactoring技術，並遵循良好的Design Principle，我們可以創建健壯、靈活且可持續發展的軟體系統。
 
-重構不是一次性活動，而是開發過程中的持續實踐。合理的重構可以降低技術債務，提高團隊效率，並為業務需求的快速實現奠定基礎。
+Refactoring不是一次性活動，而是開發過程中的持續實踐。合理的Refactoring可以降低Technical Debt，提高團隊效率，並為業務需求的快速實現奠定基礎。

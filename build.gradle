@@ -1,0 +1,156 @@
+// 根目錄 build.gradle - 多模組項目配置
+// 這個項目包含：
+// - app: Spring Boot Java 後端應用
+// - cmc-frontend: Next.js 管理前端 (CMC = Content Management Console)
+// - consumer-frontend: Angular 消費者前端
+// - infrastructure: AWS CDK 基礎設施即代碼
+
+plugins {
+    id 'org.springframework.boot' version '3.3.5' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
+}
+
+// 全局配置
+allprojects {
+    group = 'solid.humank'
+    version = '1.0.0'
+    
+    repositories {
+        mavenCentral()
+    }
+}
+
+// 只對 Java 子項目應用配置
+subprojects {
+    // 只對 app 模組應用 Java 相關配置
+    if (name == 'app') {
+        apply plugin: 'java'
+        apply plugin: 'org.springframework.boot'
+        apply plugin: 'io.spring.dependency-management'
+        
+        java {
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
+        }
+        
+        // Spring Boot 應用的主類配置
+        springBoot {
+            mainClass = 'solid.humank.genaidemo.GenAiDemoApplication'
+        }
+        
+        // 通用的 bootRun 配置
+        bootRun {
+            systemProperty 'spring.profiles.active', System.getProperty('spring.profiles.active', 'dev')
+        }
+    }
+}
+
+// 根級別的任務定義
+tasks.register('buildAll') {
+    description = '構建所有模組'
+    group = 'build'
+    
+    dependsOn ':app:build'
+    
+    doLast {
+        println "✅ 所有模組構建完成"
+        println "  - Java 後端: app"
+        println "  - 前端模組需要單獨使用 npm/yarn 構建"
+        println "    - CMC Frontend: cd cmc-frontend && npm run build"
+        println "    - Consumer Frontend: cd consumer-frontend && npm run build"
+        println "  - 基礎設施: cd infrastructure && npm run build"
+    }
+}
+
+tasks.register('testAll') {
+    description = '運行所有模組的測試'
+    group = 'verification'
+    
+    dependsOn ':app:test'
+    
+    doLast {
+        println "✅ 所有 Java 測試完成"
+        println "  前端測試需要單獨運行："
+        println "    - CMC Frontend: cd cmc-frontend && npm test"
+        println "    - Consumer Frontend: cd consumer-frontend && npm test"
+        println "    - Infrastructure: cd infrastructure && npm test"
+    }
+}
+
+tasks.register('cleanAll') {
+    description = '清理所有模組'
+    group = 'build'
+    
+    dependsOn ':app:clean'
+    
+    doLast {
+        println "✅ Java 模組清理完成"
+        println "  前端清理需要單獨運行："
+        println "    - rm -rf cmc-frontend/node_modules cmc-frontend/.next"
+        println "    - rm -rf consumer-frontend/node_modules consumer-frontend/dist"
+        println "    - rm -rf infrastructure/node_modules infrastructure/cdk.out"
+    }
+}
+
+// 開發環境快速啟動任務
+tasks.register('devStart') {
+    description = '啟動開發環境 (僅後端)'
+    group = 'application'
+    
+    dependsOn ':app:bootRun'
+    
+    doFirst {
+        println "🚀 啟動開發環境..."
+        println "  後端將在 http://localhost:8080 啟動"
+        println "  前端需要單獨啟動："
+        println "    - CMC Frontend: cd cmc-frontend && npm run dev (http://localhost:3000)"
+        println "    - Consumer Frontend: cd consumer-frontend && npm start (http://localhost:4200)"
+    }
+}
+
+// 項目信息任務
+tasks.register('projectInfo') {
+    description = '顯示項目結構信息'
+    group = 'help'
+    
+    doLast {
+        println """
+        📋 GenAI Demo 項目結構:
+        
+        🏗️  架構概覽:
+        ├── app/                    # Spring Boot 後端應用 (Java 21)
+        │   ├── src/main/java/      # 主要源碼 (DDD + 六邊形架構)
+        │   ├── src/test/java/      # 測試代碼 (單元測試 + 集成測試)
+        │   └── build.gradle        # Java 構建配置
+        │
+        ├── cmc-frontend/           # 管理前端 (Next.js + TypeScript)
+        │   ├── src/                # React 組件和頁面
+        │   ├── package.json        # Node.js 依賴
+        │   └── next.config.js      # Next.js 配置
+        │
+        ├── consumer-frontend/      # 消費者前端 (Angular + TypeScript)
+        │   ├── src/                # Angular 組件和服務
+        │   ├── package.json        # Node.js 依賴
+        │   └── angular.json        # Angular 配置
+        │
+        ├── infrastructure/         # AWS CDK 基礎設施 (TypeScript)
+        │   ├── lib/                # CDK 堆疊定義
+        │   ├── package.json        # Node.js 依賴
+        │   └── cdk.json            # CDK 配置
+        │
+        └── deployment/             # 部署腳本和配置
+        
+        🛠️  開發命令:
+        - ./gradlew :app:bootRun           # 啟動後端
+        - ./gradlew :app:test              # 運行後端測試
+        - cd cmc-frontend && npm run dev   # 啟動管理前端
+        - cd consumer-frontend && npm start # 啟動消費者前端
+        - cd infrastructure && cdk deploy  # 部署基礎設施
+        
+        📚 更多信息請查看各模組的 README.md 文件
+        """
+    }
+}
+
+// 默認任務
+defaultTasks 'projectInfo'

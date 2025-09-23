@@ -1,0 +1,191 @@
+flowchart TD
+    %% CI/CD Pipeline Architecture
+    %% Shows the complete continuous integration and deployment process
+    
+    START([Developer Push]) --> TRIGGER[Pipeline Trigger<br/>GitHub Actions]
+    
+    %% Source Control and Triggering
+    TRIGGER --> CHECKOUT[Checkout Code<br/>actions/checkout@v3]
+    CHECKOUT --> SETUP_ENV[Setup Environment<br/>Java 21, Node.js, Docker]
+    
+    %% Continuous Integration Phase
+    subgraph "Continuous Integration"
+        SETUP_ENV --> COMPILE[Compile Code<br/>./gradlew compileJava]
+        COMPILE --> UNIT_TESTS[Unit Tests<br/>./gradlew unitTest]
+        UNIT_TESTS --> INTEGRATION_TESTS[Integration Tests<br/>./gradlew integrationTest]
+        INTEGRATION_TESTS --> E2E_TESTS[E2E Tests<br/>./gradlew e2eTest]
+        
+        E2E_TESTS --> CODE_QUALITY[Code Quality Analysis<br/>SonarQube Scan]
+        CODE_QUALITY --> SECURITY_SCAN[Security Scan<br/>SAST/DAST Analysis]
+        SECURITY_SCAN --> PERFORMANCE_TEST[Performance Tests<br/>Load Testing]
+        
+        PERFORMANCE_TEST --> BUILD_ARTIFACTS[Build Artifacts<br/>JAR, Docker Images]
+        BUILD_ARTIFACTS --> PUBLISH_ARTIFACTS[Publish Artifacts<br/>Registry/Repository]
+    end
+    
+    %% Quality Gates
+    subgraph "Quality Gates"
+        QG_TESTS{All Tests Pass?}
+        QG_COVERAGE{Coverage > 80%?}
+        QG_QUALITY{Quality Gate Pass?}
+        QG_SECURITY{No Security Issues?}
+        QG_PERFORMANCE{Performance OK?}
+    end
+    
+    UNIT_TESTS --> QG_TESTS
+    QG_TESTS -->|No| FAIL_PIPELINE[❌ Pipeline Failed<br/>Notify Developer]
+    QG_TESTS -->|Yes| QG_COVERAGE
+    
+    CODE_QUALITY --> QG_COVERAGE
+    QG_COVERAGE -->|No| FAIL_PIPELINE
+    QG_COVERAGE -->|Yes| QG_QUALITY
+    
+    QG_QUALITY -->|No| FAIL_PIPELINE
+    QG_QUALITY -->|Yes| QG_SECURITY
+    
+    SECURITY_SCAN --> QG_SECURITY
+    QG_SECURITY -->|No| FAIL_PIPELINE
+    QG_SECURITY -->|Yes| QG_PERFORMANCE
+    
+    PERFORMANCE_TEST --> QG_PERFORMANCE
+    QG_PERFORMANCE -->|No| FAIL_PIPELINE
+    QG_PERFORMANCE -->|Yes| PUBLISH_ARTIFACTS
+    
+    %% Continuous Deployment Phase
+    subgraph "Continuous Deployment"
+        PUBLISH_ARTIFACTS --> DEPLOY_DEV[Deploy to Development<br/>Automatic Deployment]
+        DEPLOY_DEV --> DEV_SMOKE_TESTS[Development Smoke Tests<br/>Health Checks]
+        
+        DEV_SMOKE_TESTS --> DEV_SUCCESS{Dev Tests Pass?}
+        DEV_SUCCESS -->|No| ROLLBACK_DEV[Rollback Development<br/>Previous Version]
+        DEV_SUCCESS -->|Yes| DEPLOY_STAGING[Deploy to Staging<br/>Manual Approval]
+        
+        DEPLOY_STAGING --> STAGING_TESTS[Staging Integration Tests<br/>Full Test Suite]
+        STAGING_TESTS --> UAT[User Acceptance Testing<br/>Business Validation]
+        
+        UAT --> STAGING_SUCCESS{Staging Tests Pass?}
+        STAGING_SUCCESS -->|No| ROLLBACK_STAGING[Rollback Staging<br/>Previous Version]
+        STAGING_SUCCESS -->|Yes| PROD_APPROVAL[Production Approval<br/>Manual Gate]
+        
+        PROD_APPROVAL --> DEPLOY_PROD[Deploy to Production<br/>Blue-Green/Canary]
+        DEPLOY_PROD --> PROD_MONITORING[Production Monitoring<br/>Health & Metrics]
+        
+        PROD_MONITORING --> PROD_SUCCESS{Production Healthy?}
+        PROD_SUCCESS -->|No| ROLLBACK_PROD[Rollback Production<br/>Automatic/Manual]
+        PROD_SUCCESS -->|Yes| COMPLETE([✅ Deployment Complete])
+    end
+    
+    %% Deployment Strategies
+    subgraph "Deployment Strategies"
+        BLUE_GREEN[Blue-Green Deployment<br/>• Zero downtime<br/>• Instant rollback<br/>• Full environment switch<br/>• Resource intensive]
+        
+        CANARY[Canary Deployment<br/>• Gradual rollout<br/>• Risk mitigation<br/>• A/B testing capability<br/>• Traffic splitting]
+        
+        ROLLING[Rolling Deployment<br/>• Instance-by-instance<br/>• Resource efficient<br/>• Gradual replacement<br/>• Partial rollback complexity]
+    end
+    
+    %% Infrastructure as Code
+    subgraph "Infrastructure as Code"
+        CDK_DEPLOY[AWS CDK Deployment<br/>• Infrastructure provisioning<br/>• Environment consistency<br/>• Version controlled<br/>• Automated rollback]
+        
+        TERRAFORM[Terraform Alternative<br/>• Multi-cloud support<br/>• State management<br/>• Resource planning<br/>• Dependency handling]
+        
+        K8S_MANIFESTS[Kubernetes Manifests<br/>• Container orchestration<br/>• Service discovery<br/>• Auto-scaling<br/>• Health checks]
+    end
+    
+    %% Monitoring and Observability
+    subgraph "Monitoring Integration"
+        METRICS[Metrics Collection<br/>• Application metrics<br/>• Infrastructure metrics<br/>• Business metrics<br/>• Custom dashboards]
+        
+        LOGGING[Centralized Logging<br/>• Structured logs<br/>• Log aggregation<br/>• Search and analysis<br/>• Alert correlation]
+        
+        TRACING[Distributed Tracing<br/>• Request flow tracking<br/>• Performance analysis<br/>• Error correlation<br/>• Service dependencies]
+        
+        ALERTING[Alerting System<br/>• Threshold-based alerts<br/>• Anomaly detection<br/>• Escalation procedures<br/>• Notification channels]
+    end
+    
+    %% Security Integration
+    subgraph "Security Pipeline"
+        SAST[Static Analysis SAST<br/>• Code vulnerability scan<br/>• Dependency check<br/>• License compliance<br/>• Code quality rules]
+        
+        DAST[Dynamic Analysis DAST<br/>• Runtime vulnerability scan<br/>• Penetration testing<br/>• API security testing<br/>• Configuration analysis]
+        
+        CONTAINER_SCAN[Container Security<br/>• Image vulnerability scan<br/>• Base image updates<br/>• Runtime protection<br/>• Compliance checks]
+        
+        SECRET_MGMT[Secret Management<br/>• Credential rotation<br/>• Secure storage<br/>• Access control<br/>• Audit logging]
+    end
+    
+    %% Pipeline Configuration
+    subgraph "GitHub Actions Configuration"
+        WORKFLOW_FILE[.github/workflows/ci-cd.yml<br/>• Trigger configuration<br/>• Job dependencies<br/>• Environment variables<br/>• Secret management]
+        
+        MATRIX_STRATEGY[Matrix Strategy<br/>• Multi-environment testing<br/>• Parallel execution<br/>• Version compatibility<br/>• Platform testing]
+        
+        CACHING[Build Caching<br/>• Dependency caching<br/>• Build artifact caching<br/>• Docker layer caching<br/>• Performance optimization]
+    end
+    
+    %% Environment Management
+    subgraph "Environment Configuration"
+        DEV_ENV[Development Environment<br/>• Feature branch deployment<br/>• Rapid iteration<br/>• Developer testing<br/>• Integration validation]
+        
+        STAGING_ENV[Staging Environment<br/>• Production-like setup<br/>• User acceptance testing<br/>• Performance validation<br/>• Final integration testing]
+        
+        PROD_ENV[Production Environment<br/>• High availability<br/>• Performance optimized<br/>• Security hardened<br/>• Monitoring enabled]
+    end
+    
+    %% Rollback Strategies
+    subgraph "Rollback Mechanisms"
+        AUTO_ROLLBACK[Automatic Rollback<br/>• Health check failures<br/>• Error rate thresholds<br/>• Performance degradation<br/>• Immediate response]
+        
+        MANUAL_ROLLBACK[Manual Rollback<br/>• Business decision<br/>• Complex issues<br/>• Coordinated response<br/>• Stakeholder approval]
+        
+        ROLLBACK_TESTING[Rollback Testing<br/>• Regular rollback drills<br/>• Process validation<br/>• Time measurement<br/>• Documentation updates]
+    end
+    
+    %% Performance Optimization
+    subgraph "Pipeline Optimization"
+        PARALLEL_JOBS[Parallel Job Execution<br/>• Independent test suites<br/>• Resource utilization<br/>• Faster feedback<br/>• Dependency management]
+        
+        INCREMENTAL_BUILD[Incremental Builds<br/>• Change detection<br/>• Selective testing<br/>• Artifact reuse<br/>• Time optimization]
+        
+        RESOURCE_MGMT[Resource Management<br/>• Runner optimization<br/>• Memory allocation<br/>• CPU utilization<br/>• Cost optimization]
+    end
+    
+    %% Notification and Reporting
+    subgraph "Notification System"
+        SLACK_INTEGRATION[Slack Integration<br/>• Build status updates<br/>• Deployment notifications<br/>• Alert forwarding<br/>• Team communication]
+        
+        EMAIL_ALERTS[Email Alerts<br/>• Failure notifications<br/>• Success confirmations<br/>• Weekly summaries<br/>• Stakeholder updates]
+        
+        DASHBOARD[Pipeline Dashboard<br/>• Build history<br/>• Success rates<br/>• Performance trends<br/>• Resource usage]
+    end
+    
+    %% Failure Handling
+    FAIL_PIPELINE --> NOTIFY_TEAM[Notify Development Team<br/>Slack, Email, Dashboard]
+    ROLLBACK_DEV --> NOTIFY_TEAM
+    ROLLBACK_STAGING --> NOTIFY_TEAM
+    ROLLBACK_PROD --> INCIDENT_RESPONSE[Incident Response<br/>Escalation Procedures]
+    
+    %% Success Path
+    COMPLETE --> SUCCESS_METRICS[Update Success Metrics<br/>Deployment Frequency, Lead Time]
+    
+    %% Styling
+    classDef startEnd fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px
+    classDef ciProcess fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef cdProcess fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef qualityGate fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef deployment fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    classDef security fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef monitoring fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    
+    class START,COMPLETE startEnd
+    class CHECKOUT,SETUP_ENV,COMPILE,UNIT_TESTS,INTEGRATION_TESTS,E2E_TESTS,CODE_QUALITY,BUILD_ARTIFACTS,PUBLISH_ARTIFACTS ciProcess
+    class DEPLOY_DEV,DEPLOY_STAGING,DEPLOY_PROD,DEV_SMOKE_TESTS,STAGING_TESTS,UAT,PROD_MONITORING cdProcess
+    class QG_TESTS,QG_COVERAGE,QG_QUALITY,QG_SECURITY,QG_PERFORMANCE,DEV_SUCCESS,STAGING_SUCCESS,PROD_SUCCESS qualityGate
+    class BLUE_GREEN,CANARY,ROLLING,CDK_DEPLOY,TERRAFORM,K8S_MANIFESTS deployment
+    class SAST,DAST,CONTAINER_SCAN,SECRET_MGMT,SECURITY_SCAN security
+    class METRICS,LOGGING,TRACING,ALERTING monitoring
+    class FAIL_PIPELINE,ROLLBACK_DEV,ROLLBACK_STAGING,ROLLBACK_PROD,INCIDENT_RESPONSE failure
+    class SUCCESS_METRICS success

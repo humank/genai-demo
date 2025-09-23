@@ -8,7 +8,7 @@
   - _需求: 1.1, 13.1, 13.2, 13.3_
 
 - [x] 1.1 創建核心目錄結構
-  - 創建 `docs/architecture/`, `docs/api/`, `docs/diagrams/`, `docs/development/`, `docs/deployment/`, `docs/design/`, `docs/releases/`, `docs/reports/` 目錄
+  - 創建 `docs/architecture/`, `docs/../api/`, `docs/diagrams/`, `docs/development/`, `docs/deployment/`, `docs/design/`, `docs/releases/`, `docs/reports/` 目錄
   - 創建對應的英文目錄結構 `docs/en/architecture/` 等
   - 為每個目錄創建 README.md 索引文件
   - _需求: 1.1, 1.2, 13.1_

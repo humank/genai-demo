@@ -1,23 +1,24 @@
 package solid.humank.genaidemo.application.common.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /** 標準錯誤回應 提供統一的錯誤回應格式，包含錯誤代碼、訊息、時間戳記和詳細資訊 */
 @Schema(description = "標準錯誤回應")
 public class StandardErrorResponse {
 
-    @Schema(description = "錯誤代碼", example = "VALIDATION_ERROR", required = true)
+    @Schema(description = "錯誤代碼", example = "VALIDATION_ERROR", requiredMode = Schema.RequiredMode.REQUIRED)
     private String code;
 
-    @Schema(description = "錯誤訊息", example = "請求參數驗證失敗", required = true)
+    @Schema(description = "錯誤訊息", example = "請求參數驗證失敗", requiredMode = Schema.RequiredMode.REQUIRED)
     private String message;
 
-    @Schema(description = "錯誤發生時間", example = "2024-01-15T10:30:00", required = true)
+    @Schema(description = "錯誤發生時間", example = "2024-01-15T10:30:00", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime timestamp;
 
-    @Schema(description = "請求路徑", example = "/api/orders", required = true)
+    @Schema(description = "請求路徑", example = "/api/orders", requiredMode = Schema.RequiredMode.REQUIRED)
     private String path;
 
     @Schema(description = "詳細錯誤資訊", nullable = true)
@@ -121,10 +122,10 @@ public class StandardErrorResponse {
     @Schema(description = "欄位錯誤詳情")
     public static class FieldError {
 
-        @Schema(description = "欄位名稱", example = "customerId", required = true)
+        @Schema(description = "欄位名稱", example = "customerId", requiredMode = Schema.RequiredMode.REQUIRED)
         private String field;
 
-        @Schema(description = "錯誤訊息", example = "客戶ID不能為空", required = true)
+        @Schema(description = "錯誤訊息", example = "客戶ID不能為空", requiredMode = Schema.RequiredMode.REQUIRED)
         private String message;
 
         @Schema(description = "拒絕的值", example = "null", nullable = true)
@@ -134,7 +135,8 @@ public class StandardErrorResponse {
         private String code;
 
         // 預設建構子
-        public FieldError() {}
+        public FieldError() {
+        }
 
         // 建構子
         public FieldError(String field, String message) {

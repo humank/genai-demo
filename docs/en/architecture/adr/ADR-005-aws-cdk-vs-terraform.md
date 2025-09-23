@@ -43,7 +43,7 @@ We choose **AWS CDK (Cloud Development Kit) with TypeScript** as our primary Inf
 #### Project Structure
 
 ```typescript
-infrastructure/
+../../../../../../infrastructure/
 ├── bin/
 │   ├── infrastructure.ts          // Main deployment entry
 │   ├── multi-region-deployment.ts // Multi-region orchestration
@@ -407,14 +407,14 @@ export class EksCluster extends Construct {
 
 ## Related Decisions
 
-- [ADR-006: Multi-Region Architecture Strategy](./ADR-006-multi-region-architecture.md)
-- [ADR-007: EKS vs ECS vs Lambda](./ADR-007-container-orchestration.md)
-- [ADR-008: Aurora Global Database vs RDS](./ADR-008-database-strategy.md)
+- \1
+- \1
+- \1
 - [ADR-016: Well-Architected Framework Compliance](./ADR-016-well-architected-compliance.md)
 
 ## References
 
 - [AWS CDK Developer Guide](https://docs.aws.amazon.com/cdk/v2/guide/)
-- [AWS CDK API Reference](https://docs.aws.amazon.com/cdk/api/v2/)
+- [AWS CDK API Reference](https://docs.aws.amazon.com/cdk/../api/v2/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
 - [Infrastructure as Code Best Practices](https://aws.amazon.com/blogs/devops/best-practices-for-developing-cloud-applications-with-aws-cdk/)

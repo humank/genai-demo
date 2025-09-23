@@ -1,0 +1,235 @@
+---
+title: "客戶聚合根領域模型"
+type: "plantuml"
+format: "puml"
+viewpoint: "functional"
+perspective: ["evolution", "security"]
+diagram_level: "detailed"
+target_audience: ["developer"]
+description: "展示客戶聚合根的詳細設計，包括實體關係和業務方法"
+plantuml_type: "class"
+style_theme: "plain"
+include_files: ["../styles/ddd-colors.puml"]
+related_documents: ["../../viewpoints/functional/customer-management.md"]
+source_file: "domain-model.puml"
+generated_files: ["domain-model.svg"]
+last_updated: "2025-01-21"
+version: "2.3"
+author: "Development Team"
+auto_generated: true
+generation_source: "code"
+generation_trigger: "code-change"
+update_frequency: "on-demand"
+complexity: "high"
+maintenance_priority: "high"
+tags: ["customer", "aggregate", "ddd", "domain-model"]
+---
+
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+' 聚合根
+class Customer <<AggregateRoot>> {
+    -customerId: CustomerId
+    -customerName: CustomerName
+    -email: Email
+    -phone: Phone
+    -addresses: List<DeliveryAddress>
+    -paymentMethods: List<PaymentMethod>
+    -preferences: CustomerPreferences
+    -rewardPoints: RewardPoints
+    -membershipLevel: MembershipLevel
+    -registrationDate: LocalDateTime
+    -lastLoginDate: LocalDateTime
+    -status: CustomerStatus
+    --
+    +updateProfile(name, email, phone): void
+    +addDeliveryAddress(address): void
+    +removeDeliveryAddress(addressId): void
+    +addPaymentMethod(method): void
+    +removePaymentMethod(methodId): void
+    +updatePreferences(preferences): void
+    +earnRewardPoints(points): void
+    +redeemRewardPoints(points): boolean
+    +upgradeMembership(): void
+    +deactivate(): void
+    +reactivate(): void
+    --
+    +getUncommittedEvents(): List<DomainEvent>
+    +markEventsAsCommitted(): void
+}
+
+' 值對象
+class CustomerId <<ValueObject>> {
+    +value: String
+    --
+    +generate(): CustomerId
+    +of(value): CustomerId
+}
+
+class CustomerName <<ValueObject>> {
+    +firstName: String
+    +lastName: String
+    --
+    +fullName(): String
+    +initials(): String
+}
+
+class Email <<ValueObject>> {
+    +value: String
+    --
+    +domain(): String
+    +localPart(): String
+    +isValid(): boolean
+}
+
+class Phone <<ValueObject>> {
+    +countryCode: String
+    +number: String
+    --
+    +formatted(): String
+    +isValid(): boolean
+}
+
+' 實體
+class DeliveryAddress <<Entity>> {
+    -addressId: DeliveryAddressId
+    -address: Address
+    -isDefault: boolean
+    -label: String
+    --
+    +setAsDefault(): void
+    +updateAddress(address): void
+}
+
+class PaymentMethod <<Entity>> {
+    -methodId: PaymentMethodId
+    -type: PaymentType
+    -details: PaymentDetails
+    -isDefault: boolean
+    -expiryDate: LocalDate
+    --
+    +setAsDefault(): void
+    +isExpired(): boolean
+    +updateDetails(details): void
+}
+
+' 值對象 - 地址
+class Address <<ValueObject>> {
+    +street: String
+    +city: String
+    +state: String
+    +postalCode: String
+    +country: String
+    --
+    +formatted(): String
+    +isComplete(): boolean
+}
+
+' 值對象 - 偏好設定
+class CustomerPreferences <<ValueObject>> {
+    +language: Language
+    +currency: Currency
+    +timezone: TimeZone
+    +notifications: NotificationSettings
+    --
+    +withLanguage(language): CustomerPreferences
+    +withCurrency(currency): CustomerPreferences
+}
+
+' 值對象 - 獎勵點數
+class RewardPoints <<ValueObject>> {
+    +points: Integer
+    --
+    +add(points): RewardPoints
+    +subtract(points): RewardPoints
+    +canRedeem(points): boolean
+}
+
+' 枚舉
+enum MembershipLevel {
+    STANDARD
+    PREMIUM
+    VIP
+    --
+    +getDiscountRate(): BigDecimal
+    +getRewardMultiplier(): Integer
+}
+
+enum CustomerStatus {
+    ACTIVE
+    INACTIVE
+    SUSPENDED
+    CLOSED
+}
+
+enum PaymentType {
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER
+    DIGITAL_WALLET
+}
+
+' 領域事件
+class CustomerCreatedEvent <<DomainEvent>> {
+    +customerId: CustomerId
+    +customerName: CustomerName
+    +email: Email
+    +membershipLevel: MembershipLevel
+    +eventId: UUID
+    +occurredOn: LocalDateTime
+}
+
+class CustomerProfileUpdatedEvent <<DomainEvent>> {
+    +customerId: CustomerId
+    +oldName: CustomerName
+    +newName: CustomerName
+    +oldEmail: Email
+    +newEmail: Email
+    +eventId: UUID
+    +occurredOn: LocalDateTime
+}
+
+class CustomerMembershipUpgradedEvent <<DomainEvent>> {
+    +customerId: CustomerId
+    +oldLevel: MembershipLevel
+    +newLevel: MembershipLevel
+    +eventId: UUID
+    +occurredOn: LocalDateTime
+}
+
+' 關係
+Customer ||--|| CustomerId : "identified by"
+Customer ||--|| CustomerName : "has"
+Customer ||--|| Email : "has"
+Customer ||--|| Phone : "has"
+Customer ||--|| CustomerPreferences : "has"
+Customer ||--|| RewardPoints : "has"
+Customer ||--|| MembershipLevel : "has"
+Customer ||--|| CustomerStatus : "has"
+
+Customer ||--o{ DeliveryAddress : "has"
+Customer ||--o{ PaymentMethod : "has"
+
+DeliveryAddress ||--|| Address : "contains"
+PaymentMethod ||--|| PaymentType : "of type"
+
+Customer ..> CustomerCreatedEvent : "publishes"
+Customer ..> CustomerProfileUpdatedEvent : "publishes"
+Customer ..> CustomerMembershipUpgradedEvent : "publishes"
+
+' 樣式
+skinparam class {
+    BackgroundColor<<AggregateRoot>> #FFE6CC
+    BorderColor<<AggregateRoot>> #D79B00
+    BackgroundColor<<Entity>> #E6F3FF
+    BorderColor<<Entity>> #0066CC
+    BackgroundColor<<ValueObject>> #E6FFE6
+    BorderColor<<ValueObject>> #00AA00
+    BackgroundColor<<DomainEvent>> #FFE6F3
+    BorderColor<<DomainEvent>> #CC0066
+}
+
+@enduml

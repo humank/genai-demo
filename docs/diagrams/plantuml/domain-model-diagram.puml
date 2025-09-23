@@ -1,17 +1,48 @@
-@startuml 領域模型圖
+@startuml 領域模型圖 - UML 2.5 標準化版本
+!theme plain
 
-' 樣式設定
+' UML 2.5 標準樣式設定
 skinparam class {
-    BackgroundColor<<AggregateRoot>> LightSalmon
-    BackgroundColor<<Entity>> LightBlue
-    BackgroundColor<<ValueObject>> LightGreen
-    BackgroundColor<<DomainEvent>> LightYellow
-    BackgroundColor<<DomainService>> LightGray
-    BackgroundColor<<Repository>> LightCyan
-    BackgroundColor<<Factory>> LightPink
-    BackgroundColor<<Policy>> LightGoldenRodYellow
-    BackgroundColor<<Specification>> LightSkyBlue
+    BackgroundColor<<AggregateRoot>> #LightSalmon
+    BorderColor<<AggregateRoot>> #DC143C
+    FontColor<<AggregateRoot>> #000000
+    
+    BackgroundColor<<Entity>> #LightBlue
+    BorderColor<<Entity>> #4682B4
+    FontColor<<Entity>> #000000
+    
+    BackgroundColor<<ValueObject>> #LightGreen
+    BorderColor<<ValueObject>> #228B22
+    FontColor<<ValueObject>> #000000
+    
+    BackgroundColor<<DomainEvent>> #LightYellow
+    BorderColor<<DomainEvent>> #FFD700
+    FontColor<<DomainEvent>> #000000
+    
+    BackgroundColor<<DomainService>> #LightGray
+    BorderColor<<DomainService>> #696969
+    FontColor<<DomainService>> #000000
+    
+    BackgroundColor<<Repository>> #LightCyan
+    BorderColor<<Repository>> #008B8B
+    FontColor<<Repository>> #000000
+    
+    BackgroundColor<<Factory>> #LightPink
+    BorderColor<<Factory>> #FF1493
+    FontColor<<Factory>> #000000
+    
+    BackgroundColor<<Policy>> #LightGoldenRodYellow
+    BorderColor<<Policy>> #DAA520
+    FontColor<<Policy>> #000000
+    
+    BackgroundColor<<Specification>> #LightSkyBlue
+    BorderColor<<Specification>> #87CEEB
+    FontColor<<Specification>> #000000
 }
+
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
 
 ' 註解
 note as N1

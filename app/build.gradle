@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.5'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.springframework.boot' version '3.3.13'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
 
@@ -38,6 +38,8 @@ def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // WebSocket support removed for simplicity
+    // implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -47,12 +49,17 @@ dependencies {
     // PostgreSQL driver for production profile
     runtimeOnly 'org.postgresql:postgresql'
     
-    // Kafka support for production event publishing
-    implementation 'org.springframework.kafka:spring-kafka'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    // Kafka support removed for simplicity
+    // implementation 'org.springframework.kafka:spring-kafka'
+    // testImplementation 'org.springframework.kafka:spring-kafka-test'
     
     // AOP support for logging aspects
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+    
+    // Resilience4j for circuit breaker pattern
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.1.0'
     
     // Micrometer for metrics collection
     implementation 'io.micrometer:micrometer-core'
@@ -61,18 +68,20 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
     
     // OpenTelemetry for distributed tracing
-    implementation 'io.opentelemetry:opentelemetry-api:1.54.0'
-    implementation 'io.opentelemetry:opentelemetry-sdk:1.54.0'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.54.0'
+    implementation 'io.opentelemetry:opentelemetry-api:1.54.1'
+    implementation 'io.opentelemetry:opentelemetry-sdk:1.54.1'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.54.1'
     // Note: jaeger exporter is deprecated, use OTLP exporter instead
     implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.21.0-alpha'
     
     // AWS X-Ray support for production
-    implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.15.1') {
+    implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.19.0') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
-    implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.15.1') {
+    implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.19.0') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+        exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
     
     // AWS SDK v2 for analytics and security
@@ -82,35 +91,33 @@ dependencies {
     implementation 'software.amazon.awssdk:cloudwatch'
     
     // Security dependencies
-    implementation('org.springframework.boot:spring-boot-starter-security') {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     
-    // Apache HttpComponents Client 5.x - 完整依賴集合 (統一版本)
+    // Unified HttpComponents5 dependencies with consistent versions
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
     implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
     implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
-    implementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
     
-    // 測試環境專用的 HTTP 客戶端依賴 - 重新啟用以修復 NoClassDefFoundError (統一版本)
+    // Test-specific HTTP client dependencies
     testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
     testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
-    testImplementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
     testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
     
-    // OpenAPI 3 (Swagger) 支援 - 升級版本以相容 Spring Boot 3.5.5
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    // Logback encoder for structured logging
+    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
     
-    // Kotlin reflection for SpringDoc (required by SpringDoc 2.x)
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.22'
+    // OpenAPI 3 (Swagger) 支援 - 使用與 Spring Boot 3.4.9 兼容的版本
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    
+    // Kotlin reflection for SpringDoc (required by SpringDoc 2.x) - 更新版本
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.25'
     
 
     
     // Cucumber for BDD testing
-    testImplementation 'io.cucumber:cucumber-java:7.15.0'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
-    testImplementation 'io.cucumber:cucumber-spring:7.15.0'
+    testImplementation 'io.cucumber:cucumber-java:7.29.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.29.0'
+    testImplementation 'io.cucumber:cucumber-spring:7.29.0'
     
     // JUnit 5
     testImplementation(platform('org.junit:junit-bom:5.10.2'))
@@ -139,16 +146,18 @@ dependencies {
     // ArchUnit for architecture testing
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
     
-    compileOnly 'org.projectlombok:lombok:1.18.40'
-    annotationProcessor 'org.projectlombok:lombok:1.18.40'
-    testCompileOnly 'org.projectlombok:lombok:1.18.40'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
+    testCompileOnly 'org.projectlombok:lombok:1.18.42'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
 }
 
 // 配置 Java 編譯和執行任務啟用預覽功能
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
     options.compilerArgs += '-Xlint:unchecked'
+    // 暫時關閉棄用警告，避免過多輸出
+    // options.compilerArgs += '-Xlint:deprecation'
     options.release = 21
     
     // 增加編譯器記憶體
@@ -163,58 +172,30 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(Test).configureEach {
     jvmArgs += '--enable-preview'
-    // 禁用 AspectJ weaver 以避免織入問題
-    jvmArgs += '-Dallure.aspectj.enabled=false'
     
-    // 大幅增加記憶體配置以避免 OutOfMemoryError
+    // 基本記憶體配置
     maxHeapSize = '4g'
     minHeapSize = '1g'
     
-    // JVM 優化參數 - 移除 JVMCI 編譯器以避免相容性問題
+    // 基本JVM參數
     jvmArgs += [
         '-XX:MaxMetaspaceSize=1g',
         '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
-        '-XX:+UnlockExperimentalVMOptions',
-        '-XX:G1NewSizePercent=20',
-        '-XX:G1MaxNewSizePercent=30',
-        '-Xshare:off'  // 禁用類共享以避免 bootstrap classpath 警告
+        '-Xshare:off'
     ]
     
-    // 測試執行配置 - 優化記憶體使用
-    maxParallelForks = 1  // 單線程執行避免記憶體競爭
-    forkEvery = 3         // 更頻繁重啟 JVM 以釋放記憶體
+    // 測試執行配置
+    maxParallelForks = 1
+    forkEvery = 5
     
-    // 合理的測試 JVM 記憶體配置
-    minHeapSize = "2g"
-    maxHeapSize = "6g"    // 減少到 6g，應該足夠了
+    // 測試執行超時配置
+    timeout = Duration.ofMinutes(15)
     
-    // Set system properties for test environment
+    // 基本系統屬性
     systemProperty 'spring.profiles.active', 'test'
-    systemProperty 'management.health.defaults.enabled', 'false'
-    systemProperty 'management.endpoint.health.show-details', 'never'
-    
-    // 減少日誌輸出 - 只顯示錯誤
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.springframework', 'ERROR'
-    systemProperty 'logging.level.org.hibernate', 'ERROR'
-    systemProperty 'logging.level.solid.humank.genaidemo', 'ERROR'
-    
-    // 禁用不必要的功能以節省記憶體
     systemProperty 'spring.jmx.enabled', 'false'
     systemProperty 'spring.main.lazy-initialization', 'true'
-    
-    // AspectJ 優化 - 完全禁用 Load-Time Weaving 以節省記憶體和減少日誌
-    systemProperty 'aj.weaving.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
-    systemProperty 'org.aspectj.weaver.Dump.exception', 'false'
-    systemProperty 'org.aspectj.weaver.loadtime.debug', 'false'
-    systemProperty 'org.aspectj.weaver.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.debug', 'false'
-    systemProperty 'org.aspectj.weaver.messages', 'false'
-    systemProperty 'org.aspectj.ltw.enabled', 'false'  // 完全禁用 Load-Time Weaving
-    systemProperty 'spring.aop.auto', 'false'          // 禁用 Spring AOP 自動配置
 }
 
 tasks.withType(JavaExec).configureEach {
@@ -227,7 +208,7 @@ tasks.withType(JavaExec).configureEach {
 
 // 快速單元測試任務 - 日常開發使用
 tasks.register('unitTest', Test) {
-    description = '運行快速單元測試 (~5MB, ~50ms 每個)'
+    description = '運行快速單元測試'
     group = 'verification'
     
     useJUnitPlatform {
@@ -235,38 +216,22 @@ tasks.register('unitTest', Test) {
         includeTags 'unit'
     }
     
-    // 輕量級配置
     maxHeapSize = '2g'
     minHeapSize = '512m'
-    maxParallelForks = Runtime.runtime.availableProcessors()
-    forkEvery = 0  // 不重啟 JVM，提高速度
     
-    // 快速反饋配置
     testLogging {
         events "passed", "failed", "skipped"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
     
-    // 基本系統屬性 - 使用最小化配置
-    systemProperty 'spring.profiles.active', 'test-minimal'
+    systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.aspectj', 'OFF'
-    systemProperty 'logging.level.io.qameta.allure', 'OFF'
-    systemProperty 'spring.main.lazy-initialization', 'true'
-    systemProperty 'spring.jmx.enabled', 'false'
-    
-    // AspectJ 日誌抑制
-    systemProperty 'aj.weaving.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.showWeaveInfo', 'false'
-    systemProperty 'org.aspectj.weaver.verbose', 'false'
-    systemProperty 'org.aspectj.weaver.debug', 'false'
-    systemProperty 'org.aspectj.ltw.enabled', 'false'
 }
 
 // 集成測試任務 - 提交前使用
 tasks.register('integrationTest', Test) {
-    description = '運行集成測試 (~50MB, ~500ms 每個)'
+    description = '運行集成測試'
     group = 'verification'
     
     useJUnitPlatform {
@@ -274,87 +239,65 @@ tasks.register('integrationTest', Test) {
         excludeTags 'end-to-end', 'slow'
     }
     
-    // 中等配置
-    maxHeapSize = '4g'
-    minHeapSize = '1g'
-    maxParallelForks = 2
-    forkEvery = 10  // 每10個測試重啟JVM
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
+    maxParallelForks = 1
+    forkEvery = 3
+    
+    timeout = Duration.ofMinutes(30)
     
     testLogging {
         events "failed", "skipped"
         showStandardStreams = false
-        exceptionFormat = 'full'
+        exceptionFormat = 'short'
     }
     
-    systemProperties = [
-        'junit.jupiter.execution.parallel.enabled': 'true',
-        'junit.jupiter.execution.parallel.mode.default': 'concurrent',
-        'spring.profiles.active': 'test-minimal',
-        'logging.level.root': 'ERROR',
-        'logging.level.org.aspectj': 'OFF',
-        'logging.level.io.qameta.allure': 'OFF',
-        'spring.main.lazy-initialization': 'true'
-        // Removed WebMVC exclusion as Actuator endpoints need it for JSON serialization
-    ]
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'ERROR'
 }
+
 
 // 端到端測試任務 - 發布前使用
 tasks.register('e2eTest', Test) {
-    description = '運行端到端測試 (~500MB, ~3s 每個)'
+    description = '運行端到端測試'
     group = 'verification'
     
     useJUnitPlatform {
         includeTags 'end-to-end'
     }
     
-    // 完整配置
     maxHeapSize = '6g'
     minHeapSize = '2g'
     maxParallelForks = 1
-    forkEvery = 3  // 每3個測試重啟JVM
+    forkEvery = 2
+    
+    timeout = Duration.ofMinutes(60)
     
     testLogging {
         events "failed", "skipped", "passed"
-        showStandardStreams = true
-        exceptionFormat = 'full'
+        showStandardStreams = false
+        exceptionFormat = 'short'
     }
     
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'INFO'
 }
 
-// 標準測試任務 - 保持向後兼容，但優化配置
+// 標準測試任務 - 保持向後兼容
 tasks.named('test') {
-    description = '運行所有測試（向後兼容）'
+    description = '運行所有測試'
     
-    useJUnitPlatform {
-        // 包含所有測試
-    }
+    useJUnitPlatform()
     
-    // 優化後的配置
     maxHeapSize = '4g'
     minHeapSize = '1g'
-    maxParallelForks = 2
-    forkEvery = 5
     
-    // Allure 配置
-    systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
-    systemProperty 'allure.epic', 'DDD架構測試'
-    systemProperty 'allure.feature', 'JUnit測試'
-    
-    // 簡化測試日誌輸出
     testLogging {
         events "failed"
         showStandardStreams = false
         exceptionFormat = 'short'
-        showExceptions = true
-        showCauses = true
-        showStackTraces = false
     }
     
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
-    systemProperty 'junit.platform.output.capture.stdout', 'false'
-    systemProperty 'junit.platform.output.capture.stderr', 'true'
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
 }
@@ -365,37 +308,18 @@ tasks.register('cucumber', JavaExec) {
     getMainClass().set("io.cucumber.core.cli.Main")
     classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
     
-    // 增加記憶體配置
     maxHeapSize = '4g'
-    jvmArgs += [
-        '--enable-preview',
-        '-XX:MaxMetaspaceSize=1g',
-        '-XX:+UseG1GC',
-        '-XX:+UseStringDeduplication',
-        '-XX:G1HeapRegionSize=32m',
-        '-Xshare:off'  // 禁用類共享以避免 bootstrap classpath 警告
-    ]
+    jvmArgs += ['--enable-preview', '-Xshare:off']
     
     args = [
-        '--plugin', 'progress',  // 使用簡潔的 progress 輸出而非 pretty
+        '--plugin', 'progress',
         '--plugin', 'html:build/reports/cucumber/cucumber-report.html',
         '--plugin', 'json:build/reports/cucumber/cucumber-report.json',
-        '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
         '--glue', 'solid.humank.genaidemo.bdd',
         'src/test/resources/features'
     ]
     
-    systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
-    systemProperty 'allure.epic', 'BDD功能測試'
-    systemProperty 'allure.feature', 'Cucumber測試'
-    
-    // 減少日誌輸出
     systemProperty 'logging.level.root', 'ERROR'
-    systemProperty 'logging.level.org.springframework', 'ERROR'
-    systemProperty 'logging.level.solid.humank.genaidemo', 'ERROR'
-    
-    // 確保 Cucumber 測試結果被正確處理
-    finalizedBy 'prepareAllureResults'
 }
 
 
@@ -447,7 +371,26 @@ tasks.register('runAllTests') {
         println "所有測試已完成，包括單元測試和 Cucumber 測試"
     }
     
-    finalizedBy 'allureReport'
+    finalizedBy 'allureReport', 'generatePerformanceReport'
+}
+
+// 生成測試性能報告
+tasks.register('generatePerformanceReport', JavaExec) {
+    description = '生成測試性能報告'
+    group = 'reporting'
+    
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'solid.humank.genaidemo.testutils.TestPerformanceReportGenerator'
+    
+    // 確保報告目錄存在
+    doFirst {
+        mkdir "${buildDir}/reports/test-performance"
+    }
+    
+    doLast {
+        println "測試性能報告已生成: ${buildDir}/reports/test-performance/"
+    }
 }
 
 // 運行所有測試
@@ -479,8 +422,24 @@ tasks.register('cleanAllureResults', Delete) {
     group = 'build'
 }
 
+// 創建堆轉儲目錄
+tasks.register('createHeapDumpDir') {
+    description = '創建堆轉儲目錄'
+    group = 'build'
+    
+    doLast {
+        mkdir "${buildDir}/reports/heap-dumps"
+        println "堆轉儲目錄已創建: ${buildDir}/reports/heap-dumps"
+    }
+}
+
 tasks.named('clean') {
     dependsOn 'cleanAllureResults'
+}
+
+// 確保測試任務前創建必要目錄
+tasks.withType(Test) {
+    dependsOn 'createHeapDumpDir'
 }
 
 // 手動處理 Allure 報告生成，避免使用內建任務

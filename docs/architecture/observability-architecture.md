@@ -282,8 +282,117 @@ graph TB
 
 ## Related Documentation
 
-- [AWS Infrastructure Architecture](aws_infrastructure.mmd)
-- [Multi-Environment Configuration](multi_environment.mmd)
-- [Event Storming Documentation](mermaid/event-storming/)
-- [DDD Architecture](ddd_architecture.mmd)
-- [Hexagonal Architecture](hexagonal_architecture.mmd)
+- ## AWS Infrastructure Architecture
+
+```mermaid
+graph TB
+    subgraph "AWS Infrastructure"
+        EKS[EKS Cluster]
+        RDS[RDS Database]
+        S3[S3 Storage]
+        CloudWatch[CloudWatch]
+        ALB[Application Load Balancer]
+    end
+    
+    ALB --> EKS
+    EKS --> RDS
+    EKS --> S3
+    EKS --> CloudWatch
+```
+- ## Multi-Environment Configuration
+
+```mermaid
+graph TB
+    subgraph DEV ["Development Environment"]
+        DEV_APP[Spring Boot App<br/>Profile: dev]
+        H2_DB[(H2 Database)]
+        MEMORY_EVENTS[In-Memory Events]
+    end
+    
+    subgraph PROD ["Production Environment"]
+        PROD_APP[Spring Boot App<br/>Profile: production]
+        RDS_DB[(RDS PostgreSQL)]
+        MSK_EVENTS[MSK Events]
+    end
+    
+    subgraph CONFIG ["Configuration"]
+        BASE_CONFIG[application.yml]
+        DEV_CONFIG[application-dev.yml]
+        PROD_CONFIG[application-production.yml]
+    end
+    
+    BASE_CONFIG --> DEV_CONFIG
+    BASE_CONFIG --> PROD_CONFIG
+    
+    DEV_CONFIG --> DEV_APP
+    PROD_CONFIG --> PROD_APP
+    
+    DEV_APP --> H2_DB
+    DEV_APP --> MEMORY_EVENTS
+    
+    PROD_APP --> RDS_DB
+    PROD_APP --> MSK_EVENTS
+    
+    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class DEV_APP,H2_DB,MEMORY_EVENTS dev
+    class PROD_APP,RDS_DB,MSK_EVENTS prod
+    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
+```
+- \1
+- ## DDD Architecture
+
+```mermaid
+graph TB
+    subgraph "Domain Layer"
+        Aggregates[Aggregate Roots]
+        Entities[Entities]
+        ValueObjects[Value Objects]
+        DomainEvents[Domain Events]
+    end
+    
+    subgraph "Application Layer"
+        ApplicationServices[Application Services]
+        CommandHandlers[Command Handlers]
+        EventHandlers[Event Handlers]
+    end
+    
+    subgraph "Infrastructure Layer"
+        Repositories[Repositories]
+        ExternalServices[External Services]
+        EventStore[Event Store]
+    end
+    
+    ApplicationServices --> Aggregates
+    CommandHandlers --> Aggregates
+    EventHandlers --> DomainEvents
+    Repositories --> Entities
+    ExternalServices --> ApplicationServices
+```
+- ## Hexagonal Architecture
+
+```mermaid
+graph TB
+    subgraph "Core Domain"
+        Domain[Domain Logic]
+        Ports[Ports/Interfaces]
+    end
+    
+    subgraph "Adapters"
+        WebAdapter[Web Adapter]
+        DatabaseAdapter[Database Adapter]
+        MessageAdapter[Message Adapter]
+        ExternalAdapter[External Service Adapter]
+    end
+    
+    WebAdapter --> Ports
+    Ports --> Domain
+    Domain --> Ports
+    Ports --> DatabaseAdapter
+    Ports --> MessageAdapter
+    Ports --> ExternalAdapter
+```
+
+> **Note**: The AWS infrastructure diagram has been simplified to show core components (EKS, RDS, S3, CloudWatch, ALB). For detailed infrastructure including CDK stacks, networking, observability services, and complete multi-service architecture, refer to the infrastructure documentation and deployment guides.

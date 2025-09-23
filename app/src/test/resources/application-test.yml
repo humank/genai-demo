@@ -1,159 +1,122 @@
 # Test Profile Configuration
-# This configuration ensures tests run in isolation with minimal dependencies
+# Optimized for integration tests with reliable HTTP client setup
 
 spring:
-  # Application Configuration
-  application:
-    name: genai-demo
   
-# Main configuration for tests - 優化記憶體使用
+  # Application configuration
   main:
-    allow-bean-definition-overriding: true
-    lazy-initialization: true
-    banner-mode: "off"  # 關閉啟動橫幅以減少輸出
+    lazy-initialization: true  # Faster test startup
+    banner-mode: off          # Reduce test output
   
-  # Database Configuration - Use H2 in-memory for all tests
+  # JMX disabled for tests
+  jmx:
+    enabled: false
+  
+  # Configuration import - include OpenAPI configuration for tests
+  config:
+    import: "optional:classpath:application-openapi.yml"
+  
+  # Database configuration for tests
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
-    password: ""
+    password: 
   
-# JPA Configuration for Tests - 優化記憶體使用
+  # JPA configuration for tests
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
     show-sql: false
     properties:
       hibernate:
-        cache:
-          use_second_level_cache: false
         format_sql: false
-        generate_statistics: false
         use_sql_comments: false
-        jdbc:
-          batch_size: 20
-          batch_versioned_data: true
-        order_inserts: true
-        order_updates: true
   
-  # Disable Flyway for tests
+  # Flyway configuration for tests - disabled since we use ddl-auto: create-drop
   flyway:
     enabled: false
   
-  # H2 Console - Disabled for security in tests
+  # H2 Console (for debugging if needed)
   h2:
     console:
-      enabled: false
+      enabled: true
+      path: /h2-console
   
-  # Kafka Configuration - Disabled for tests
-  kafka:
-    enabled: false
-    bootstrap-servers: localhost:9092
-    consumer:
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  # HTTP client configuration for tests
+  http:
+    client:
+      factory: simple  # Use SimpleClientHttpRequestFactory
+      connection-timeout: 5s
+      read-timeout: 10s
   
-  # Exclude unnecessary auto-configurations
+  # Security configuration for tests - disable security completely
   autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
-      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-  
-  # Disable scheduling for tests to prevent HealthMetricsCollector issues
-  task:
-    scheduling:
-      enabled: false
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 
-# Logging Configuration for Tests - 只輸出錯誤級別日誌
-logging:
-  level:
-    root: ERROR
-    org.springframework: ERROR
-    org.hibernate: ERROR
-    solid.humank.genaidemo: ERROR
-    org.springframework.web: ERROR
-    org.springframework.boot.autoconfigure: ERROR
-    org.h2: ERROR
-    io.cucumber: ERROR
-    org.junit: ERROR
-    org.mockito: ERROR
-    com.tngtech.archunit: ERROR
-    io.qameta.allure: ERROR
-
-# Management Endpoints - Minimal configuration for tests
+# Management endpoints configuration for tests
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,prometheus
+        include: "*"  # Expose all endpoints for testing
+      base-path: /actuator
   endpoint:
     health:
       show-details: always
       show-components: always
-      probes:
-        enabled: false  # Disable Kubernetes probes in tests
+    metrics:
+      enabled: true
     prometheus:
       enabled: true
-    metrics:
-      enabled: true
-  health:
-    livenessstate:
-      enabled: false  # Disable liveness state in tests
-    readinessstate:
-      enabled: false  # Disable readiness state in tests
-    defaults:
-      enabled: false  # Disable default health indicators that might cause issues
-    db:
-      enabled: true   # Keep database health check
-    diskspace:
-      enabled: false  # Disable disk space check for tests
+  security:
+    enabled: false  # Disable security for actuator endpoints in tests
   metrics:
-    enable:
-      all: true
-      jvm: true
-      system: true
-      process: true
-  prometheus:
-    metrics:
-      export:
+    export:
+      prometheus:
         enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+      slo:
+        http.server.requests: 100ms, 500ms, 1s
 
-# Profile Configuration Properties
-app:
-  profile:
-    name: test
-    description: Test environment with isolated configuration
-    features:
-      h2-console: false
-      debug-logging: false
-      in-memory-events: true
-      kafka-events: false
-    validation:
-      strict: false  # Disable strict validation in tests
+# Logging configuration for tests
+logging:
+  level:
+    root: ERROR
+    solid.humank.genaidemo: INFO
+    org.springframework.web: DEBUG
+    org.springframework.boot.test: INFO
+    org.springframework.test: INFO
+    # Suppress noisy test logs
+    org.springframework.boot.autoconfigure: ERROR
+    org.hibernate: ERROR
+    org.springframework.security: ERROR
+    org.springframework.kafka: ERROR
+    org.apache.kafka: ERROR
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
-genai-demo:
-  events:
-    publisher: in-memory
-    async: false
-
-# Additional test configuration
-info:
-  app:
-    version: 2.0.0
-
-# OpenAPI Configuration
-springdoc:
-  api-docs:
-    enabled: true
-    path: /v3/api-docs
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-
-# Tracing Configuration - Use noop for tests to avoid global state issues
-tracing:
-  enabled: true  # Enable but use noop implementation
+# Test-specific feature flags
+test:
+  features:
+    observability:
+      enabled: true
+      detailed-metrics: true
+    security:
+      enabled: true
+      mock-authentication: true
+    database:
+      cleanup-after-test: true
+    http-client:
+      type: simple
+      timeout:
+        connect: 5s
+        read: 10s
+      retry:
+        enabled: false  # Disable retries in tests for faster feedback

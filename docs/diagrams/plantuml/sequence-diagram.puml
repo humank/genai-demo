@@ -1,5 +1,29 @@
-@startuml 訂單處理時序圖
+@startuml 訂單處理時序圖 - UML 2.5 標準化版本
+!theme plain
+
+' UML 2.5 標準樣式設定
 skinparam responseMessageBelowArrow true
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+' 參與者樣式
+skinparam participant {
+    BackgroundColor #E6F3FF
+    BorderColor #4682B4
+    FontStyle bold
+}
+
+skinparam actor {
+    BackgroundColor #FFE6E6
+    BorderColor #DC143C
+    FontStyle bold
+}
+
+' 激活樣式
+skinparam sequenceLifeLineBorderColor #4682B4
+skinparam sequenceLifeLineBackgroundColor #F0F8FF
 
 actor "Client" as C
 participant "OrderController" as OC

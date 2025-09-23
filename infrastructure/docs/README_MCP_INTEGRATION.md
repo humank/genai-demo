@@ -64,7 +64,7 @@ The Well-Architected assessment covers:
 - [Complete MCP Integration Guide](MCP_INTEGRATION_GUIDE.md)
 - [Well-Architected Framework Assessment](well-architected-assessment.md)
 - [Architecture Assessment Report](automated-architecture-assessment.md)
-- [Continuous Improvement Monitoring](continuous-improvement-report.md)
+- \1
 
 ### 🔍 Troubleshooting
 

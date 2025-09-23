@@ -1,0 +1,58 @@
+@startuml circuit-breaker-flow
+!theme plain
+title Circuit Breaker Pattern - Request Flow
+
+participant "Client Service" as client
+participant "Circuit Breaker" as breaker
+participant "Target Service" as target
+participant "Fallback Handler" as fallback
+
+== Normal Operation (Closed State) ==
+
+client -> breaker : Service Call
+activate breaker
+breaker -> target : Forward Request
+activate target
+target --> breaker : Success Response
+deactivate target
+breaker --> client : Return Response
+deactivate breaker
+
+== Failure Detection ==
+
+client -> breaker : Service Call
+activate breaker
+breaker -> target : Forward Request
+activate target
+target --> breaker : Error Response
+deactivate target
+breaker -> breaker : Increment Failure Count
+breaker --> client : Return Error
+deactivate breaker
+
+== Circuit Open (Fast Fail) ==
+
+client -> breaker : Service Call
+activate breaker
+breaker -> breaker : Check State = OPEN
+breaker -> fallback : Execute Fallback
+activate fallback
+fallback --> breaker : Fallback Response
+deactivate fallback
+breaker --> client : Return Fallback
+deactivate breaker
+
+== Half-Open Testing ==
+
+client -> breaker : Service Call
+activate breaker
+breaker -> breaker : Check State = HALF_OPEN
+breaker -> target : Test Request
+activate target
+target --> breaker : Success Response
+deactivate target
+breaker -> breaker : Increment Success Count
+breaker --> client : Return Response
+deactivate breaker
+
+@enduml

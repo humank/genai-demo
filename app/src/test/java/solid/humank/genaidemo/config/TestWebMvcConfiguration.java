@@ -2,25 +2,25 @@ package solid.humank.genaidemo.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Test Web MVC Configuration
- * 
- * Provides necessary beans for SpringDoc integration in test environment.
+ * Test configuration for Web MVC components
  */
 @TestConfiguration
-public class TestWebMvcConfiguration implements WebMvcConfigurer {
+public class TestWebMvcConfiguration {
 
-    /**
-     * Provides the mvcConversionService bean that SpringDoc requires
-     */
-    @Bean(name = "mvcConversionService")
-    @Primary
-    public ConversionService mvcConversionService() {
-        return new DefaultFormattingConversionService();
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Configures H2 in-memory database for development and test environments
  */
 @Component
-@Profile({ "dev", "test", "test-minimal" })
+@Profile({ "dev", "test", "test-minimal", "simple-test" })
 public class DevelopmentDatabaseConfiguration implements DatabaseConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(DevelopmentDatabaseConfiguration.class);

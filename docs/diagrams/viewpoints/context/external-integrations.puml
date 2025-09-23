@@ -1,0 +1,95 @@
+@startuml external-integrations
+
+title 外部整合架構圖
+
+package "GenAI Demo 系統" as MainSystem {
+    component "API Gateway" as APIGateway
+    component "認證服務" as AuthService
+    component "支付服務" as PaymentService
+    component "通知服務" as NotificationService
+    component "配送服務" as DeliveryService
+    component "資料分析服務" as AnalyticsService
+}
+
+cloud "外部支付服務" as PaymentProviders {
+    component "信用卡閘道" as CreditCardGateway
+    component "電子錢包" as EWallet
+    component "銀行轉帳" as BankTransfer
+}
+
+cloud "物流服務提供商" as LogisticsProviders {
+    component "宅配通" as HomeDelivery
+    component "7-11 超商" as ConvenienceStore
+    component "郵局" as PostOffice
+}
+
+cloud "通訊服務" as CommunicationServices {
+    component "簡訊服務商" as SMSProvider
+    component "電子郵件服務" as EmailProvider
+    component "推播通知" as PushNotification
+}
+
+cloud "第三方服務" as ThirdPartyServices {
+    component "Google Analytics" as GoogleAnalytics
+    component "Facebook Login" as FacebookAuth
+    component "Google Login" as GoogleAuth
+    component "Line Login" as LineAuth
+}
+
+cloud "監控與日誌" as MonitoringServices {
+    component "AWS CloudWatch" as CloudWatch
+    component "Sentry" as ErrorTracking
+    component "New Relic" as APM
+}
+
+' API Gateway 作為統一入口
+APIGateway --> AuthService
+APIGateway --> PaymentService
+APIGateway --> NotificationService
+APIGateway --> DeliveryService
+
+' 支付整合
+PaymentService --> CreditCardGateway : HTTPS/REST
+PaymentService --> EWallet : HTTPS/REST
+PaymentService --> BankTransfer : HTTPS/REST
+
+' 物流整合
+DeliveryService --> HomeDelivery : API/Webhook
+DeliveryService --> ConvenienceStore : API/Webhook
+DeliveryService --> PostOffice : API/Webhook
+
+' 通訊整合
+NotificationService --> SMSProvider : HTTP API
+NotificationService --> EmailProvider : SMTP/API
+NotificationService --> PushNotification : FCM/APNS
+
+' 認證整合
+AuthService --> FacebookAuth : OAuth 2.0
+AuthService --> GoogleAuth : OAuth 2.0
+AuthService --> LineAuth : OAuth 2.0
+
+' 分析整合
+AnalyticsService --> GoogleAnalytics : Measurement Protocol
+
+' 監控整合
+MainSystem --> CloudWatch : Metrics/Logs
+MainSystem --> ErrorTracking : Error Reports
+MainSystem --> APM : Performance Data
+
+note right of PaymentProviders
+  支付整合特點:
+  - 多元支付方式
+  - 安全加密傳輸
+  - 即時交易確認
+  - 退款處理機制
+end note
+
+note right of LogisticsProviders
+  物流整合特點:
+  - 多通路配送
+  - 即時狀態追蹤
+  - 自動化通知
+  - 異常處理機制
+end note
+
+@enduml

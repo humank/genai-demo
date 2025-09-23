@@ -1,67 +1,73 @@
-# Observability System Documentation
+# Observability Guide
 
 ## Overview
 
-This project implements a complete enterprise-grade observability system, including distributed tracing, structured logging, business metrics collection, and cost optimization analysis.
+This document provides a comprehensive observability implementation guide, including configuration and best practices for monitoring, logging, tracing, and alerting.
 
-## Core Components
+## Monitoring Architecture
 
-### 🔍 Distributed Tracing
+### Core Components
+- **Prometheus**: Metrics collection and storage
+- **Grafana**: Visualization dashboards
+- **AWS X-Ray**: Distributed tracing
+- **CloudWatch**: AWS native monitoring
 
-- **AWS X-Ray**: Cross-service request tracing
-- **Jaeger**: Local development environment tracing
-- **Correlation ID**: Unified request tracking identifier
+### Application Monitoring
+- **Health Check**: `/actuator/health`
+- **Metrics Endpoint**: `/actuator/metrics`
+- **Prometheus Endpoint**: `/actuator/prometheus`
 
-### 📝 Structured Logging
+## Log Management
 
-- **Logback**: Unified log format
-- **PII Masking**: Sensitive data protection
-- **CloudWatch**: Log aggregation and analysis
+### Structured Logging
+- **Format**: JSON structured logging
+- **Levels**: ERROR, WARN, INFO, DEBUG, TRACE
+- **Context**: Trace ID, User ID, Request ID
 
-### 📊 Business Metrics
+### Log Aggregation
+- **Local Development**: Console output
+- **Test Environment**: CloudWatch Logs
+- **Production Environment**: ELK Stack or CloudWatch Insights
 
-- **Micrometer**: Metrics collection framework
-- **CloudWatch**: Custom business metrics
-- **Prometheus**: Metrics exposure endpoint
+## Distributed Tracing
 
-### 💰 Cost Optimization
+### AWS X-Ray Integration
+- **Automatic Tracing**: HTTP requests, database queries
+- **Custom Tracing**: Business logic trace points
+- **Performance Analysis**: Request latency and bottleneck identification
 
-- **Resource Right-sizing**: Automated resource analysis
-- **Cost Tracking**: Real-time cost monitoring
-- **Optimization Recommendations**: Intelligent cost suggestions
+## Alert Configuration
 
-## Quick Start
+### Critical Metrics Alerts
+- **Response Time**: 95th percentile > 2s
+- **Error Rate**: > 1%
+- **Availability**: < 99.9%
+- **Resource Usage**: CPU > 80%, Memory > 85%
 
-### Enable Observability Features
+### Alert Channels
+- **Real-time Notifications**: Slack/Teams
+- **Incident Management**: PagerDuty
+- **Email Notifications**: Non-critical alerts
 
-```bash
-# Start application (automatically enables observability)
-./gradlew bootRun
+## Dashboards
 
-# Check health status
-curl http://localhost:8080/actuator/health
+### Technical Dashboard
+- **Application Performance**: Response time, throughput, error rate
+- **Infrastructure**: CPU, memory, network, disk
+- **Database**: Connection pool, query performance, lock waits
 
-# View application metrics
-curl http://localhost:8080/actuator/metrics
+### Business Dashboard
+- **Key Metrics**: Order volume, user activity, conversion rate
+- **Business Processes**: Registration funnel, purchase flow, customer service metrics
 
-# Get cost optimization recommendations
-curl http://localhost:8080/api/cost-optimization/recommendations
-```
+## Related Documentation
 
-### Configure Environment Variables
+- [Deployment Guide](../deployment/README.md)
+- [Monitoring Configuration](../../viewpoints/development/tools-and-environment/technology-stack.md)
+- [Alert Setup](../infrastructure/README.md)
 
-```bash
-# AWS X-Ray configuration
-export AWS_XRAY_TRACING_NAME=genai-demo
-export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR
+---
 
-# CloudWatch configuration
-export CLOUDWATCH_NAMESPACE=GenAI/Demo
-export CLOUDWATCH_REGION=us-east-1
-```
-
-## Detailed Documentation
-
-- [Distributed Tracing Implementation](../../app/docs/DISTRIBUTED_TRACING_IMPLEMENTATION.md)
-- [Structured Logging Implementation](../../app/docs/STRUCTURED_LOGGING_IMPLEMENTATION.md)
-- [Metrics Implementation](../../app/docs/METRICS_IMPLEMENTATION.md)
+**Maintainer**: DevOps Team  
+**Last Updated**: 2025-09-23  
+**Version**: 1.0

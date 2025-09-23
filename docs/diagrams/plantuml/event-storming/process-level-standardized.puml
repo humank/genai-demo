@@ -1,0 +1,239 @@
+@startuml Process Level Event Storming - 標準化版本
+!theme plain
+title GenAI Demo - Process Level Event Storming (標準化配色)
+
+' Event Storming Process Level 標準配色定義
+skinparam rectangle {
+    ' 事件 - 橙色系 (#FFA500)
+    BackgroundColor<<Event>> #FFA500
+    BorderColor<<Event>> #FF8C00
+    FontColor<<Event>> #000000
+    
+    ' 命令 - 藍色系 (#1E90FF)
+    BackgroundColor<<Command>> #1E90FF
+    BorderColor<<Command>> #0000FF
+    FontColor<<Command>> #FFFFFF
+    
+    ' 聚合 - 黃色系 (#FFFF00)
+    BackgroundColor<<Aggregate>> #FFFF00
+    BorderColor<<Aggregate>> #FFD700
+    FontColor<<Aggregate>> #000000
+    
+    ' 讀模型 - 綠色系 (#32CD32)
+    BackgroundColor<<ReadModel>> #32CD32
+    BorderColor<<ReadModel>> #228B22
+    FontColor<<ReadModel>> #000000
+    
+    ' 策略 - 紫色系 (#800080)
+    BackgroundColor<<Policy>> #800080
+    BorderColor<<Policy>> #4B0082
+    FontColor<<Policy>> #FFFFFF
+    
+    ' 參與者 - 黃色系 (#FFD700)
+    BackgroundColor<<Actor>> #FFD700
+    BorderColor<<Actor>> #DAA520
+    FontColor<<Actor>> #000000
+    
+    ' 外部系統 - 粉色系 (#FF69B4)
+    BackgroundColor<<ExternalSystem>> #FF69B4
+    BorderColor<<ExternalSystem>> #FF1493
+    FontColor<<ExternalSystem>> #000000
+    
+    ' 熱點 - 紅色系 (#FF0000)
+    BackgroundColor<<Hotspot>> #FF0000
+    BorderColor<<Hotspot>> #DC143C
+    FontColor<<Hotspot>> #FFFFFF
+}
+
+' 參與者
+rectangle "消費者" as Customer <<Actor>>
+rectangle "管理員" as Admin <<Actor>>
+rectangle "客服人員" as Support <<Actor>>
+
+' 外部系統
+rectangle "支付閘道" as PaymentGateway <<ExternalSystem>>
+rectangle "物流系統" as LogisticsSystem <<ExternalSystem>>
+rectangle "郵件服務" as EmailService <<ExternalSystem>>
+
+' 訂單處理流程
+rectangle "瀏覽產品目錄" as BrowseProducts <<Command>>
+rectangle "產品已瀏覽" as ProductViewed <<Event>>
+rectangle "產品目錄" as ProductCatalog <<ReadModel>>
+
+rectangle "添加到購物車" as AddToCart <<Command>>
+rectangle "商品已添加到購物車" as ItemAddedToCart <<Event>>
+rectangle "購物車" as ShoppingCart <<Aggregate>>
+rectangle "購物車視圖" as CartView <<ReadModel>>
+
+rectangle "創建訂單" as CreateOrder <<Command>>
+rectangle "訂單已創建" as OrderCreated <<Event>>
+rectangle "訂單" as Order <<Aggregate>>
+rectangle "訂單摘要" as OrderSummary <<ReadModel>>
+
+rectangle "檢查庫存" as CheckInventory <<Command>>
+rectangle "庫存已檢查" as InventoryChecked <<Event>>
+rectangle "庫存" as Inventory <<Aggregate>>
+rectangle "庫存狀態" as InventoryStatus <<ReadModel>>
+
+rectangle "庫存預留策略" as InventoryReservationPolicy <<Policy>>
+rectangle "預留庫存" as ReserveInventory <<Command>>
+rectangle "庫存已預留" as InventoryReserved <<Event>>
+
+rectangle "提交訂單" as SubmitOrder <<Command>>
+rectangle "訂單已提交" as OrderSubmitted <<Event>>
+
+rectangle "處理支付" as ProcessPayment <<Command>>
+rectangle "支付已處理" as PaymentProcessed <<Event>>
+rectangle "支付" as Payment <<Aggregate>>
+rectangle "支付狀態" as PaymentStatus <<ReadModel>>
+
+rectangle "支付重試策略" as PaymentRetryPolicy <<Policy>>
+rectangle "重試支付" as RetryPayment <<Command>>
+rectangle "支付已失敗" as PaymentFailed <<Event>>
+
+rectangle "確認訂單" as ConfirmOrder <<Command>>
+rectangle "訂單已確認" as OrderConfirmed <<Event>>
+
+rectangle "安排配送" as ArrangeShipping <<Command>>
+rectangle "配送已安排" as ShippingArranged <<Event>>
+rectangle "配送" as Delivery <<Aggregate>>
+rectangle "配送追蹤" as DeliveryTracking <<ReadModel>>
+
+rectangle "配送策略" as DeliveryPolicy <<Policy>>
+rectangle "更新配送狀態" as UpdateDeliveryStatus <<Command>>
+rectangle "配送狀態已更新" as DeliveryStatusUpdated <<Event>>
+
+rectangle "完成配送" as CompleteDelivery <<Command>>
+rectangle "訂單已送達" as OrderDelivered <<Event>>
+
+rectangle "通知策略" as NotificationPolicy <<Policy>>
+rectangle "發送通知" as SendNotification <<Command>>
+rectangle "通知已發送" as NotificationSent <<Event>>
+
+' 客戶服務流程
+rectangle "創建客服工單" as CreateSupportTicket <<Command>>
+rectangle "客服工單已創建" as SupportTicketCreated <<Event>>
+rectangle "客服工單" as SupportTicket <<Aggregate>>
+rectangle "客服工單視圖" as SupportTicketView <<ReadModel>>
+
+' 熱點問題
+rectangle "庫存不足處理" as InventoryShortageHandling <<Hotspot>>
+rectangle "支付安全驗證" as PaymentSecurityValidation <<Hotspot>>
+rectangle "配送地址驗證" as DeliveryAddressValidation <<Hotspot>>
+
+' 主要流程連接
+Customer --> BrowseProducts
+BrowseProducts --> ProductViewed
+ProductViewed --> ProductCatalog
+
+Customer --> AddToCart
+AddToCart --> ItemAddedToCart
+ItemAddedToCart --> ShoppingCart
+ItemAddedToCart --> CartView
+
+Customer --> CreateOrder
+CreateOrder --> OrderCreated
+OrderCreated --> Order
+OrderCreated --> OrderSummary
+
+' 庫存檢查流程
+OrderCreated --> CheckInventory
+CheckInventory --> InventoryChecked
+InventoryChecked --> Inventory
+InventoryChecked --> InventoryStatus
+
+' 庫存預留策略觸發
+InventoryChecked --> InventoryReservationPolicy
+InventoryReservationPolicy --> ReserveInventory
+ReserveInventory --> InventoryReserved
+InventoryReserved --> Inventory
+
+' 訂單提交
+InventoryReserved --> SubmitOrder
+SubmitOrder --> OrderSubmitted
+OrderSubmitted --> Order
+
+' 支付處理
+OrderSubmitted --> ProcessPayment
+ProcessPayment --> PaymentProcessed
+ProcessPayment --> PaymentFailed
+PaymentProcessed --> Payment
+PaymentFailed --> Payment
+PaymentProcessed --> PaymentStatus
+PaymentFailed --> PaymentStatus
+
+' 支付重試策略
+PaymentFailed --> PaymentRetryPolicy
+PaymentRetryPolicy --> RetryPayment
+RetryPayment --> ProcessPayment
+
+' 訂單確認
+PaymentProcessed --> ConfirmOrder
+ConfirmOrder --> OrderConfirmed
+OrderConfirmed --> Order
+
+' 配送安排
+OrderConfirmed --> ArrangeShipping
+ArrangeShipping --> ShippingArranged
+ShippingArranged --> Delivery
+ShippingArranged --> DeliveryTracking
+
+' 配送策略和狀態更新
+ShippingArranged --> DeliveryPolicy
+DeliveryPolicy --> UpdateDeliveryStatus
+UpdateDeliveryStatus --> DeliveryStatusUpdated
+DeliveryStatusUpdated --> Delivery
+
+' 完成配送
+DeliveryStatusUpdated --> CompleteDelivery
+CompleteDelivery --> OrderDelivered
+OrderDelivered --> Order
+
+' 通知策略
+OrderConfirmed --> NotificationPolicy
+ShippingArranged --> NotificationPolicy
+OrderDelivered --> NotificationPolicy
+NotificationPolicy --> SendNotification
+SendNotification --> NotificationSent
+
+' 客服流程
+Customer --> CreateSupportTicket
+CreateSupportTicket --> SupportTicketCreated
+SupportTicketCreated --> SupportTicket
+SupportTicketCreated --> SupportTicketView
+
+' 外部系統整合
+ProcessPayment --> PaymentGateway
+ArrangeShipping --> LogisticsSystem
+SendNotification --> EmailService
+
+' 熱點問題關聯
+CheckInventory -.-> InventoryShortageHandling
+ProcessPayment -.-> PaymentSecurityValidation
+ArrangeShipping -.-> DeliveryAddressValidation
+
+' 圖例
+legend right
+  |= 元素類型 |= 顏色 |= 說明 |
+  | <back:#FFD700>   </back> | 參與者 | 執行命令的人或角色 |
+  | <back:#1E90FF>   </back> | 命令 | 觸發業務行為的意圖 |
+  | <back:#FFFF00>   </back> | 聚合 | 維護業務規則的實體 |
+  | <back:#FFA500>   </back> | 事件 | 業務狀態變化的結果 |
+  | <back:#32CD32>   </back> | 讀模型 | 用戶查詢的資訊視圖 |
+  | <back:#800080>   </back> | 策略 | 事件觸發的業務規則 |
+  | <back:#FF69B4>   </back> | 外部系統 | 整合的外部服務 |
+  | <back:#FF0000>   </back> | 熱點 | 需要特別關注的問題 |
+  |= 連線類型 |= 說明 |
+  | 實線箭頭 | 直接的命令執行或事件觸發 |
+  | 虛線箭頭 | 潛在問題或風險點 |
+endlegend
+
+note top of Customer
+  Process Level 階段重點：
+  - 詳細的命令和事件流程
+  - 聚合邊界和職責
+  - 業務策略和規則
+  - 讀模型設計
+end note
+
+@enduml

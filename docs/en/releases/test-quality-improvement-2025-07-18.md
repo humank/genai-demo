@@ -1,25 +1,23 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 測試程式碼品質改善與重構 - 2025-07-18
+# Testing
 
-## 業務需求概述
+## Requirements
 
-本次更新專注於大幅改善測試程式碼的品質，解決測試中的架構問題和可維護性問題。主要解決以下問題：
+本次更新專注於大幅改善測試程式碼的品質，解決測試中的架構問題和Maintainability問題。主要解決以下問題：
 
-1. **BDD步驟定義包含複雜條件邏輯**：違反了測試最佳實踐，測試中不應包含if-else語句
-2. **整合測試違反3A原則**：測試方法包含多個Act-Assert循環，難以理解和維護
+1. **BDD步驟定義包含複雜條件邏輯**：違反了測試Best Practice，測試中不應包含if-else語句
+2. **Integration Test違反3A原則**：測試方法包含多個Act-Assert循環，難以理解和維護
 3. **測試程式碼重複和缺乏統一性**：缺乏統一的測試輔助工具和資料建構器
 4. **測試可讀性和維護性不佳**：缺乏清晰的測試命名和文檔
 
 ## 技術實現
 
-### 1. 建立完整的測試輔助工具基礎設施
+### Testing
 
-#### 測試資料建構器 (Test Data Builders)
+#### Testing
 
 - **OrderTestDataBuilder**: 使用Builder模式簡化訂單測試資料創建
-- **CustomerTestDataBuilder**: 支援不同客戶類型（新會員、VIP、生日月份等）
+- **CustomerTestDataBuilder**: 支援不同Customer類型（新會員、VIP、生日月份等）
 - **ProductTestDataBuilder**: 支援不同產品類型和價格設定
 
 ```java
@@ -35,9 +33,9 @@ Order order = OrderTestDataBuilder.anOrder()
 
 - **TestScenarioHandler**: 處理複雜的測試場景邏輯
 - 支援折扣場景、支付場景、庫存場景等不同業務場景
-- 使用策略模式處理不同的測試情境
+- 使用Policy模式處理不同的測試情境
 
-#### 測試輔助工具
+#### Testing
 
 - **TestContext**: 管理測試狀態和異常處理
 - **TestExceptionHandler**: 統一的異常捕獲和驗證機制
@@ -50,11 +48,11 @@ Order order = OrderTestDataBuilder.anOrder()
 - **MoneyMatchers**: 提供金額相關的匹配器
 - **EnhancedAssertions**: 提供更清晰錯誤訊息的斷言方法
 
-### 2. 重構BDD步驟定義，消除條件邏輯
+### 2. RefactoringBDD步驟定義，消除條件邏輯
 
-#### OrderStepDefinitions重構
+#### OrderStepDefinitionsRefactoring
 
-**重構前**：
+**Refactoring前**：
 
 ```java
 @When("添加產品 {string} 到訂單，數量為 {int}，單價為 {int}")
@@ -71,7 +69,7 @@ public void addItemToOrder(String productName, int quantity, int price) {
 }
 ```
 
-**重構後**：
+**Refactoring後**：
 
 ```java
 @When("添加產品 {string} 到訂單，數量為 {int}，單價為 {int}")
@@ -81,7 +79,7 @@ public void addItemToOrder(String productName, int quantity, int price) {
 }
 ```
 
-#### CustomerStepDefinitions重構
+#### CustomerStepDefinitionsRefactoring
 
 移除了複雜的折扣計算條件邏輯，使用場景處理器統一處理：
 
@@ -94,26 +92,26 @@ public void the_customer_makes_a_purchase() {
 }
 ```
 
-#### InventoryStepDefinitions重構
+#### InventoryStepDefinitionsRefactoring
 
-重構了庫存管理中的多層條件嵌套，使用輔助方法簡化邏輯：
+Refactoring了庫存管理中的多層條件嵌套，使用輔助方法簡化邏輯：
 
 ```java
-// 重構前：複雜的條件邏輯
+// Refactoring前：複雜的條件邏輯
 if (currentProductId != null && inventories.containsKey(currentProductId)) {
     // 複雜的條件處理...
 }
 
-// 重構後：使用輔助方法
+// Refactoring後：使用輔助方法
 ensureInventoryAndReservationExist();
 releaseCurrentReservation();
 ```
 
-### 3. 改善整合測試的3A結構
+### Testing
 
-#### BusinessFlowEventIntegrationTest重構
+#### BusinessFlowEventIntegrationTestRefactoring
 
-**重構前**：違反3A原則的複雜測試
+**Refactoring前**：違反3A原則的複雜測試
 
 ```java
 @Test
@@ -134,7 +132,7 @@ public void testOrderCreationEventFlow() {
 }
 ```
 
-**重構後**：拆分為多個遵循3A原則的獨立測試
+**Refactoring後**：拆分為多個遵循3A原則的獨立測試
 
 ```java
 @Test
@@ -155,14 +153,14 @@ public void shouldPublishOrderCreatedEventWhenOrderIsCreated() {
 }
 ```
 
-### 4. 建立測試分類和標籤系統
+### Testing
 
-#### 測試標籤註解
+#### Testing
 
-- **@UnitTest**: 標記快速執行的單元測試
-- **@IntegrationTest**: 標記需要外部依賴的整合測試
+- **@UnitTest**: 標記快速執行的Unit Test
+- **@IntegrationTest**: 標記需要外部依賴的Integration Test
 - **@SlowTest**: 標記執行時間較長的測試
-- **@BddTest**: 標記行為驅動開發測試
+- **@BddTest**: 標記Behavior-Driven Development (BDD)測試
 
 ```java
 @BddTest
@@ -172,24 +170,24 @@ public class OrderStepDefinitions {
 
 @IntegrationTest
 public class BusinessFlowEventIntegrationTest {
-    // 整合測試
+    // Integration Test
 }
 ```
 
 ## 架構變更
 
-### 新增的測試輔助工具包結構
+### Testing
 
 ```text
 app/src/test/java/solid/humank/genaidemo/testutils/
-├── builders/                    # 測試資料建構器
+├── builders/                    # Testing
 │   ├── OrderTestDataBuilder.java
 │   ├── CustomerTestDataBuilder.java
 │   └── ProductTestDataBuilder.java
 ├── handlers/                    # 場景處理器
 │   ├── TestScenarioHandler.java
 │   └── TestExceptionHandler.java
-├── fixtures/                    # 測試固定資料
+├── fixtures/                    # Testing
 │   ├── TestFixtures.java
 │   └── TestConstants.java
 ├── matchers/                    # 自定義匹配器
@@ -197,24 +195,24 @@ app/src/test/java/solid/humank/genaidemo/testutils/
 │   └── MoneyMatchers.java
 ├── assertions/                  # 增強斷言
 │   └── EnhancedAssertions.java
-├── annotations/                 # 測試標籤註解
+├── annotations/                 # Testing
 │   ├── UnitTest.java
 │   ├── IntegrationTest.java
 │   ├── SlowTest.java
 │   └── BddTest.java
-└── context/                     # 測試上下文
+└── context/                     # Testing
     ├── TestContext.java
     └── ScenarioState.java
 ```
 
-### 重構的測試檔案
+### Testing
 
 1. **BDD步驟定義**：
    - `OrderStepDefinitions.java` - 移除條件邏輯，使用場景處理器
    - `CustomerStepDefinitions.java` - 簡化複雜的折扣邏輯
-   - `InventoryStepDefinitions.java` - 重構庫存管理邏輯
+   - `InventoryStepDefinitions.java` - Refactoring庫存管理邏輯
 
-2. **整合測試**：
+2. **Integration Test**：
    - `BusinessFlowEventIntegrationTest.java` - 改善3A結構
    - `DomainEventPublishingIntegrationTest.java` - 使用測試輔助工具
 
@@ -222,7 +220,7 @@ app/src/test/java/solid/humank/genaidemo/testutils/
 
 ### 場景處理器模式
 
-使用策略模式處理不同的測試場景：
+使用Policy模式處理不同的測試場景：
 
 ```java
 public class TestScenarioHandler {
@@ -244,7 +242,7 @@ public class TestScenarioHandler {
 }
 ```
 
-### 測試資料建構器模式
+### Testing
 
 使用Builder模式簡化測試資料創建：
 
@@ -298,22 +296,22 @@ public class OrderMatchers {
 assertThat(order, hasStatus(OrderStatus.CREATED));
 ```
 
-## 測試覆蓋
+## Testing
 
-### 重構驗證
+### Refactoring驗證
 
-1. **架構測試通過**：確保重構後的測試結構符合架構規範
-2. **功能測試通過**：確保重構沒有破壞原有功能
+1. **Architecture Test通過**：確保Refactoring後的測試結構符合架構規範
+2. **功能測試通過**：確保Refactoring沒有破壞原有功能
 3. **BDD測試通過**：確保業務場景測試正常運行
 
-### 品質指標改善
+### 品質Metrics改善
 
 1. **可讀性提升**：使用描述性的測試方法名稱和@DisplayName
 2. **維護性改善**：消除重複程式碼，使用共享的測試輔助工具
-3. **可靠性增強**：移除條件邏輯，減少測試中的錯誤可能性
+3. **Reliability增強**：移除條件邏輯，減少測試中的錯誤可能性
 4. **一致性保證**：統一的測試結構和命名規範
 
-### 測試最佳實踐遵循
+### Testing
 
 - ✅ **3A原則**：每個測試都有清晰的Arrange-Act-Assert結構
 - ✅ **單一職責**：每個測試方法只測試一個特定場景
@@ -322,16 +320,16 @@ assertThat(order, hasStatus(OrderStatus.CREATED));
 - ✅ **測試獨立性**：每個測試都是獨立且可重複的
 - ✅ **DRY原則**：使用測試輔助工具避免重複程式碼
 
-## 結論
+## conclusion
 
-本次測試程式碼品質改善是一次全面的重構，大幅提升了測試程式碼的品質和可維護性。主要成果包括：
+本次測試Code Quality改善是一次全面的Refactoring，大幅提升了測試程式碼的品質和Maintainability。主要成果包括：
 
 1. **建立了完整的測試輔助工具生態系統**：包括資料建構器、場景處理器、自定義匹配器等
 2. **消除了測試中的條件邏輯**：所有BDD步驟定義不再包含if-else語句
-3. **改善了整合測試結構**：所有測試都遵循清晰的3A原則
+3. **改善了Integration Test結構**：所有測試都遵循清晰的3A原則
 4. **提升了測試可讀性**：使用描述性命名和清晰的測試結構
 5. **建立了測試分類系統**：支援按類型執行不同的測試
 
 這些改善為未來的測試開發建立了良好的基礎，使測試更容易編寫、理解和維護。同時，統一的測試輔助工具也提高了開發效率，減少了重複工作。
 
-所有測試都能正常通過，證明重構沒有破壞原有功能，同時大幅提升了程式碼品質。這次改善為專案的長期維護和擴展奠定了堅實的基礎。
+所有測試都能正常通過，證明Refactoring沒有破壞原有功能，同時大幅提升了Code Quality。這次改善為專案的長期維護和擴展奠定了堅實的基礎。

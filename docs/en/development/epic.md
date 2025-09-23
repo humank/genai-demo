@@ -1,11 +1,9 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 # E-Commerce Platform Epic
 
 ## 概述
 
-本 Epic 描述了一個完整的電子商務平台系統，涵蓋從客戶瀏覽商品到訂單完成的整個業務流程。系統採用領域驅動設計 (DDD) 和六角形架構，提供高度可擴展和可維護的解決方案。
+本 Epic 描述了一個完整的電子商務平台系統，涵蓋從Customer瀏覽商品到訂單完成的整個業務流程。系統採用Domain-Driven Design (DDD) 和Hexagonal Architecture，提供高度可擴展和可維護的解決方案。
 
 ## 實現狀態
 
@@ -14,13 +12,13 @@
 - **68 個場景** 全部通過測試
 - **452 個步驟** 全部實現並驗證
 - **15 個 Feature** 完整覆蓋所有業務需求
-- **100% BDD 測試覆蓋率**
+- **100% BDD Test Coverage**
 
 ### 已實現的功能模組
 
 | 模組 | Feature 數量 | 場景數量 | 狀態 |
 |------|-------------|----------|------|
-| 客戶管理 | 2 | 6 | ✅ 完成 |
+| Customer管理 | 2 | 6 | ✅ 完成 |
 | 訂單管理 | 1 | 6 | ✅ 完成 |
 | 支付處理 | 2 | 11 | ✅ 完成 |
 | 庫存管理 | 1 | 7 | ✅ 完成 |
@@ -33,37 +31,37 @@
 
 ### 技術實現亮點
 
-- **DDD 領域驅動設計**: 清晰的聚合根、實體、值對象設計
-- **六邊形架構**: 完整的端口適配器模式實現
+- **DDD Domain-Driven Design**: 清晰的Aggregate Root、Entity、Value Object設計
+- **六邊形架構**: 完整的PortAdapter模式實現
 - **BDD 測試驅動**: Cucumber + Gherkin 完整業務場景覆蓋
-- **架構合規性**: ArchUnit 確保架構設計一致性
+- **架構合規性**: ArchUnit 確保Architecture Design一致性
 - **代碼品質**: Spotless 自動格式化，100% 編譯通過
 
 ## 系統功能場景
 
-### 1. 客戶購物體驗場景
+### 1. Customer購物體驗場景
 
-客戶可以在平台上瀏覽商品、享受各種優惠、完成購買並追蹤訂單狀態。系統提供個人化的購物體驗，包括會員優惠、紅利點數、生日折扣等多元化的優惠機制。
+Customer可以在平台上瀏覽商品、享受各種優惠、完成購買並Tracing訂單狀態。系統提供個人化的購物體驗，包括會員優惠、紅利點數、生日折扣等多元化的優惠機制。
 
 ### 2. 訂單管理場景
 
-系統支持完整的訂單生命週期管理，從訂單創建、驗證、支付處理到配送完成。包含訂單狀態追蹤、取消機制、異常處理等功能。
+系統支持完整的訂單生命週期管理，從訂單創建、驗證、支付處理到配送完成。包含訂單狀態Tracing、取消機制、異常處理等功能。
 
 ### 3. 庫存管理場景
 
-實時庫存管理系統確保商品可用性，支持庫存預留、釋放、同步等功能。當庫存不足時，系統會自動通知相關人員並提供替代方案。
+實時庫存管理系統確保商品Availability，支持庫存預留、釋放、同步等功能。當庫存不足時，系統會自動通知相關人員並提供替代方案。
 
 ### 4. 支付處理場景
 
-多元化的支付方式支持，包括信用卡、行動錢包等。提供支付優惠、現金回饋、分期付款等功能，確保支付安全性和便利性。
+多元化的支付方式支持，包括信用卡、行動錢包等。提供支付優惠、現金回饋、分期付款等功能，確保支付Security和便利性。
 
 ### 5. 物流配送場景
 
-完整的配送管理系統，從配送安排到最終送達。支持配送狀態追蹤、地址變更、配送失敗處理等功能。
+完整的配送管理系統，從配送安排到最終送達。支持配送狀態Tracing、地址變更、配送失敗處理等功能。
 
 ### 6. 促銷活動場景
 
-豐富的促銷活動支持，包括限時特價、限量優惠、滿額贈禮、加價購、組合優惠等多種促銷方式，提升客戶購買意願。
+豐富的促銷活動支持，包括限時特價、限量優惠、滿額贈禮、加價購、組合優惠等多種促銷方式，提升Customer購買意願。
 
 ### 7. 通知服務場景
 
@@ -75,11 +73,11 @@
 
 ## Features (User Stories)
 
-### 客戶管理 (Customer Management)
+### Customer管理 (Customer Management)
 
 #### F001: 會員優惠系統 (Member Discounts)
 
-**User Story**: 作為電子商務平台，我希望為會員提供特殊優惠，以激勵客戶加入會員計劃
+**User Story**: 作為電子商務平台，我希望為會員提供特殊優惠，以激勵Customer加入會員計劃
 
 **Acceptance Criteria**:
 
@@ -89,11 +87,11 @@
 
 #### F002: 紅利點數系統 (Reward Points)
 
-**User Story**: 作為電子商務平台，我希望提供紅利點數系統，以激勵客戶重複購買
+**User Story**: 作為電子商務平台，我希望提供紅利點數系統，以激勵Customer重複購買
 
 **Acceptance Criteria**:
 
-- 客戶可使用紅利點數折抵購物金額（10 點 = $1）
+- Customer可使用紅利點數折抵購物金額（10 點 = $1）
 - 支持部分點數兌換
 - 防止超額兌換點數
 
@@ -117,23 +115,23 @@
 
 #### F004: 配送管理系統 (Delivery Management)
 
-**User Story**: 作為客戶，我希望能夠追蹤訂單的配送狀態，以便知道何時能收到商品
+**User Story**: 作為Customer，我希望能夠Tracing訂單的配送狀態，以便知道何時能收到商品
 
 **Acceptance Criteria**:
 
 - 自動安排配送並建立配送單
-- 配送資源分配和配送員指派
-- 配送狀態實時追蹤
+- 配送Resource分配和配送員指派
+- 配送狀態實時Tracing
 - 配送地址變更功能
 - 配送延遲處理和通知
 - 配送失敗和重新配送機制
-- 客戶拒收處理流程
+- Customer拒收處理流程
 
 ### 通知服務 (Notification Service)
 
 #### F005: 全方位通知系統 (Comprehensive Notification System)
 
-**User Story**: 作為訂單系統，我需要向客戶發送各種通知，讓客戶了解訂單的最新狀態
+**User Story**: 作為訂單系統，我需要向Customer發送各種通知，讓Customer了解訂單的最新狀態
 
 **Acceptance Criteria**:
 
@@ -147,9 +145,9 @@
 
 ### 訂單管理 (Order Management)
 
-#### F006: 訂單聚合根功能 (Order Aggregate Root)
+#### F006: 訂單Aggregate Root功能 (Order Aggregate Root)
 
-**User Story**: 作為開發者，我希望測試訂單聚合根功能，確保領域模型正確運作
+**User Story**: 作為Developer，我希望測試訂單Aggregate Root功能，確保領域模型正確運作
 
 **Acceptance Criteria**:
 
@@ -162,9 +160,9 @@
 
 ### 支付處理 (Payment Processing)
 
-#### F007: 支付聚合根功能 (Payment Aggregate Root)
+#### F007: 支付Aggregate Root功能 (Payment Aggregate Root)
 
-**User Story**: 作為開發者，我希望測試支付聚合根功能，確保領域模型正確運作
+**User Story**: 作為Developer，我希望測試支付Aggregate Root功能，確保領域模型正確運作
 
 **Acceptance Criteria**:
 
@@ -177,7 +175,7 @@
 
 #### F008: 支付方式優惠 (Payment Method Discounts)
 
-**User Story**: 作為電子商務平台，我希望為特定支付方式提供折扣和現金回饋，激勵客戶使用偏好的支付選項
+**User Story**: 作為電子商務平台，我希望為特定支付方式提供折扣和現金回饋，激勵Customer使用偏好的支付選項
 
 **Acceptance Criteria**:
 
@@ -201,7 +199,7 @@
 
 #### F010: 商品組合定價 (Product Bundle Pricing)
 
-**User Story**: 作為電子商務平台，我希望提供各種商品組合定價選項，讓客戶購買相關商品時能夠省錢
+**User Story**: 作為電子商務平台，我希望提供各種商品組合定價選項，讓Customer購買相關商品時能夠省錢
 
 **Acceptance Criteria**:
 
@@ -213,7 +211,7 @@
 
 #### F011: 加價購優惠 (Add-on Purchase Promotions)
 
-**User Story**: 作為電子商務平台，我希望提供加價購選項，讓客戶能以特殊價格購買相關商品
+**User Story**: 作為電子商務平台，我希望提供加價購選項，讓Customer能以特殊價格購買相關商品
 
 **Acceptance Criteria**:
 
@@ -222,7 +220,7 @@
 
 #### F012: 超商優惠券 (Convenience Store Vouchers)
 
-**User Story**: 作為電子商務平台，我希望提供超商優惠券和組合，讓客戶能購買實體商品在超商兌換
+**User Story**: 作為電子商務平台，我希望提供超商優惠券和組合，讓Customer能購買Entity商品在超商兌換
 
 **Acceptance Criteria**:
 
@@ -232,7 +230,7 @@
 
 #### F013: 限時限量特價 (Flash Sale and Limited Quantity)
 
-**User Story**: 作為電子商務平台，我希望提供限時和限量促銷，激勵客戶快速做出購買決定
+**User Story**: 作為電子商務平台，我希望提供限時和限量促銷，激勵Customer快速做出購買決定
 
 **Acceptance Criteria**:
 
@@ -242,7 +240,7 @@
 
 #### F014: 滿額贈禮 (Gift with Purchase)
 
-**User Story**: 作為電子商務平台，我希望提供滿額贈禮，激勵客戶增加消費
+**User Story**: 作為電子商務平台，我希望提供滿額贈禮，激勵Customer增加消費
 
 **Acceptance Criteria**:
 
@@ -260,16 +258,16 @@
 - 完整訂單流程：創建 → 驗證 → 庫存檢查 → 支付 → 確認 → 配送 → 完成
 - 庫存不足導致的訂單取消流程
 - 支付失敗導致的訂單取消流程
-- 客戶主動取消訂單流程
+- Customer主動取消訂單流程
 
 ## 技術架構
 
 ### 後端架構
 
-- **領域驅動設計 (DDD)**: 清晰的領域邊界和業務邏輯封裝
-- **六角形架構**: 端口與適配器模式，確保系統可測試性和可擴展性
-- **事件驅動**: 領域事件處理跨聚合的業務流程
-- **CQRS**: 命令查詢責任分離，優化讀寫性能
+- **Domain-Driven Design (DDD)**: 清晰的領域邊界和業務邏輯封裝
+- **Hexagonal Architecture**: Port與Adapter模式，確保系統Testability和Scalability
+- **事件驅動**: Domain Event處理跨Aggregate的業務流程
+- **Command Query Responsibility Segregation (Command Query Responsibility Segregation (CQRS))**: Command查詢責任分離，優化讀寫Performance
 
 ### 前端架構
 
@@ -285,7 +283,7 @@
 - **JPA/Hibernate**: ORM 映射和持久化
 - **事務管理**: Spring 聲明式事務處理
 
-### 開發工具鏈
+### Tools
 
 - **構建工具**: Gradle 7.x (多模組構建)
 - **Java 版本**: OpenJDK 21 (啟用預覽功能)
@@ -293,53 +291,53 @@
 - **測試框架**: Cucumber 7.x + JUnit 5 + Mockito
 - **代碼品質**: Spotless + ArchUnit + Allure 報告
 
-### 測試策略
+### Testing
 
-- **BDD 測試**: Cucumber 行為驅動開發 (68 場景, 452 步驟)
-- **單元測試**: JUnit 5 + Mockito (完整覆蓋領域邏輯)
-- **架構測試**: ArchUnit 確保架構合規性 (DDD + 六邊形架構)
-- **整合測試**: 端到端業務流程驗證 (15 個完整工作流程)
-- **代碼品質**: Spotless 自動格式化 + 靜態分析
+- **BDD 測試**: Cucumber Behavior-Driven Development (BDD) (68 場景, 452 步驟)
+- **Unit Test**: JUnit 5 + Mockito (完整覆蓋領域邏輯)
+- **Architecture Test**: ArchUnit 確保架構合規性 (DDD + 六邊形架構)
+- **Integration Test**: 端到端業務流程驗證 (15 個完整工作流程)
+- **代碼品質**: Spotless 自動格式化 + Static Analysis
 
-## 品質保證
+## Quality Assurance
 
 ### 代碼品質
 
 - **靜態代碼分析**: 確保代碼品質和一致性
-- **測試覆蓋率**: 高覆蓋率的自動化測試
-- **持續整合**: 自動化構建和測試流程
+- **Test Coverage**: 高覆蓋率的Automated Testing
+- **Continuous Integration (CI)**: 自動化構建和測試流程
 
-### 性能要求
+### Performance要求
 
 - **響應時間**: API 響應時間 < 200ms
 - **併發處理**: 支持高併發訂單處理
 - **數據一致性**: 確保庫存和訂單數據一致性
 
-### 安全性
+### Security
 
 - **支付安全**: PCI DSS 合規的支付處理
-- **數據保護**: 客戶個人資料加密存儲
+- **數據保護**: Customer個人資料加密存儲
 - **API 安全**: 認證和授權機制
 
-## 成功指標
+## 成功Metrics
 
-### 業務指標
+### 業務Metrics
 
-- **轉換率**: 提升客戶購買轉換率
-- **客戶滿意度**: 提升客戶購物體驗滿意度
+- **轉換率**: 提升Customer購買轉換率
+- **Customer滿意度**: 提升Customer購物體驗滿意度
 - **平均訂單價值**: 通過促銷活動提升 AOV
-- **客戶留存率**: 通過會員制度提升客戶黏性
+- **Customer留存率**: 通過會員制度提升Customer黏性
 
-### 技術指標
+### 技術Metrics
 
-- **系統可用性**: 99.9% 系統正常運行時間
+- **系統Availability**: 99.9% 系統正常運行時間
 - **錯誤率**: < 0.1% 的系統錯誤率
-- **性能指標**: 滿足響應時間和吞吐量要求
-- **代碼品質**: 維持高測試覆蓋率和低技術債務
+- **PerformanceMetrics**: 滿足響應時間和吞吐量要求
+- **代碼品質**: 維持高Test Coverage和低Technical Debt
 
 ---
 
-## 實現總結
+## 實現summary
 
 ### 🎯 **業務價值實現**
 
@@ -349,22 +347,22 @@
 2. **豐富的促銷機制**: 會員優惠、限時特價、滿額贈禮、加價購等多元化促銷
 3. **可靠的支付系統**: 多種支付方式、退款處理、異常處理
 4. **智能的庫存管理**: 實時庫存檢查、預留機制、同步處理
-5. **完善的物流配送**: 配送安排、狀態追蹤、異常處理
+5. **完善的物流配送**: 配送安排、狀態Tracing、異常處理
 6. **全方位的通知服務**: 多渠道通知、個人化偏好設定
 
 ### 🏗️ **技術架構成就**
 
-- **領域驅動設計 (DDD)**: 15 個聚合根，清晰的業務邊界
-- **六邊形架構**: 完整的端口適配器實現，高度可測試性
-- **事件驅動架構**: 領域事件處理跨聚合業務流程
-- **BDD 測試策略**: 68 個業務場景，452 個測試步驟
-- **代碼品質保證**: 自動化格式化、架構合規性檢查
+- **Domain-Driven Design (DDD)**: 15 個Aggregate Root，清晰的業務邊界
+- **六邊形架構**: 完整的PortAdapter實現，高度Testability
+- **Event-Driven Architecture**: Domain Event處理跨Aggregate業務流程
+- **BDD 測試Policy**: 68 個業務場景，452 個測試步驟
+- **代碼Quality Assurance**: 自動化格式化、架構合規性檢查
 
-### 📊 **品質指標達成**
+### 📊 **品質Metrics達成**
 
-| 指標類別 | 目標 | 實際達成 | 狀態 |
+| Metrics類別 | 目標 | 實際達成 | 狀態 |
 |----------|------|----------|------|
-| 測試覆蓋率 | 100% | 100% | ✅ |
+| Test Coverage | 100% | 100% | ✅ |
 | 場景通過率 | 100% | 100% (68/68) | ✅ |
 | 步驟實現率 | 100% | 100% (452/452) | ✅ |
 | 編譯成功率 | 100% | 100% | ✅ |
@@ -372,7 +370,7 @@
 
 ### 🚀 **後續發展方向**
 
-1. **性能優化**:
+1. **Performance優化**:
    - 實現真實的數據庫持久化
    - 添加緩存機制提升響應速度
    - 實現分散式架構支持高併發
@@ -388,8 +386,8 @@
    - 實現 A/B 測試框架
 
 4. **技術升級**:
-   - 微服務架構遷移
-   - 容器化部署 (Docker + Kubernetes)
+   - Microservices Architecture遷移
+   - ContainerizationDeployment (Docker + Kubernetes)
    - 實現 CI/CD 流水線
 
 ---
@@ -683,7 +681,7 @@ Feature: Notification Service
     And notifications should only be sent via SMS
 ```
 
-### F006: 訂單聚合根功能 (Order Aggregate)
+### F006: 訂單Aggregate Root功能 (Order Aggregate)
 
 ```gherkin
 Feature: Order Aggregate Root
@@ -692,50 +690,50 @@ Feature: Order Aggregate Root
   So that I can ensure the domain model works correctly
 
   Scenario: Create a new order
-    When 創建一個新訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    When 創建一個新訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     Then 訂單應該被成功創建
     And 訂單狀態應為 "CREATED"
     And 訂單總金額應為 0
 
   Scenario: Add items to an order
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     When 添加產品 "iPhone 15" 到訂單，數量為 2，單價為 35000
     And 添加產品 "AirPods Pro" 到訂單，數量為 1，單價為 7500
     Then 訂單總金額應為 77500
     And 訂單項目數量應為 2
 
   Scenario: Submit an order
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     And 添加產品 "iPhone 15" 到訂單，數量為 1，單價為 35000
     When 提交訂單
     Then 訂單狀態應為 "PENDING"
 
   Scenario: Cancel an order
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     And 添加產品 "iPhone 15" 到訂單，數量為 1，單價為 35000
     When 取消訂單
     Then 訂單狀態應為 "CANCELLED"
 
   Scenario: Apply discount to an order
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     And 添加產品 "MacBook Pro" 到訂單，數量為 1，單價為 58000
     When 應用固定金額折扣 5000 到訂單
     Then 訂單總金額應為 53000
     And 訂單折扣金額應為 5000
 
   Scenario: Validate order with no items
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     When 提交訂單
     Then 應拋出異常，錯誤信息為 "Cannot submit an order with no items"
 
   Scenario: Validate order with excessive total amount
-    Given 已創建一個訂單，客戶ID為 "customer-123"，配送地址為 "台北市信義區"
+    Given 已創建一個訂單，CustomerID為 "customer-123"，配送地址為 "台北市信義區"
     When 添加產品 "超貴產品" 到訂單，數量為 1，單價為 1000000
     And 提交訂單
     Then 應拋出異常，錯誤信息為 "訂單總金額超過允許的最大值"
 ```
 
-### F007: 支付聚合根功能 (Payment Aggregate)
+### F007: 支付Aggregate Root功能 (Payment Aggregate)
 
 ```gherkin
 Feature: Payment Aggregate Root

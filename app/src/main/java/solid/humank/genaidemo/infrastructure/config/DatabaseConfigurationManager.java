@@ -66,7 +66,7 @@ public class DatabaseConfigurationManager {
 
         // Check for test profile
         for (String profile : activeProfiles) {
-            if ("test".equals(profile) || "test-minimal".equals(profile)) {
+            if ("test".equals(profile) || "test-minimal".equals(profile) || "simple-test".equals(profile)) {
                 log.info("Test profile detected ({}), using H2 database configuration", profile);
                 return findConfigurationByType("h2");
             }

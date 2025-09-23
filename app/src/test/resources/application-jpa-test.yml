@@ -1,0 +1,51 @@
+# JPA Test Configuration
+# Minimal configuration for JPA repository tests
+
+spring:
+  application:
+    name: genai-demo-jpa-test
+  
+  main:
+    allow-bean-definition-overriding: true
+    lazy-initialization: true
+    banner-mode: "off"
+  
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+    schema: classpath:schema-h2.sql
+  
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        generate_statistics: false
+  
+  # Disable unnecessary features
+  flyway:
+    enabled: false
+  
+  h2:
+    console:
+      enabled: false
+
+# Minimal logging
+logging:
+  level:
+    root: ERROR
+    org.springframework: ERROR
+    org.hibernate: ERROR
+    solid.humank.genaidemo: ERROR
+
+# Disable management endpoints
+management:
+  endpoints:
+    enabled-by-default: false

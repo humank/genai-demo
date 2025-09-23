@@ -1,39 +1,37 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
-# 事件處理錯誤處理和監控機制
+# 事件處理錯誤處理和Monitoring機制
 
-本模組實現了完整的事件處理錯誤處理和監控機制，滿足需求 9.1 到 9.5 的所有要求。
+本模組實現了完整的事件處理錯誤處理和Monitoring機制，滿足需求 9.1 到 9.5 的所有要求。
 
 ## 功能概述
 
-### 需求 9.1: 事件處理失敗的錯誤記錄和重試機制
+### Requirements
 
 - **EventRetryManager**: 管理事件重試邏輯
-- **RetryPolicy**: 配置重試策略（最大嘗試次數、延遲時間、退避策略）
+- **RetryPolicy**: 配置重試Policy（最大嘗試次數、延遲時間、退避Policy）
 - **EventProcessingException**: 事件處理異常，支持重試標記
 
-### 需求 9.2: 系統異常的適當錯誤回應和日誌記錄
+### Requirements
 
 - **GlobalExceptionHandler**: 擴展了全局異常處理器，支持事件處理異常
-- **EventProcessingMonitor**: 監控事件處理過程，記錄詳細日誌
+- **EventProcessingMonitor**: Monitoring事件處理過程，記錄詳細Logging
 - **StandardErrorResponse**: 統一的錯誤回應格式
 
-### 需求 9.3: 事件處理超時的檢測和處理機制
+### Requirements
 
 - **EventProcessingTimeoutException**: 超時異常
-- **EventProcessingContext**: 追蹤事件處理時間
+- **EventProcessingContext**: Tracing事件處理時間
 - **ResilientEventHandler**: 整合超時檢測和處理
 
-### 需求 9.4: 系統負載過高時的背壓機制
+### Requirements
 
 - **BackpressureManager**: 管理系統負載和背壓
 - **BackpressureLevel**: 定義負載等級（NORMAL, MODERATE, HIGH, CRITICAL）
 - **BackpressureDecision**: 背壓決策（PROCEED, DELAY, REJECT）
 
-### 需求 9.5: 事件順序錯亂的檢測和處理機制
+### Requirements
 
-- **EventSequenceTracker**: 追蹤事件順序
+- **EventSequenceTracker**: Tracing事件順序
 - **EventSequenceException**: 順序錯亂異常
 - **EventSequenceRecord**: 序列驗證記錄
 
@@ -41,7 +39,7 @@
 
 ### ResilientEventHandler
 
-統一的事件處理入口，整合所有錯誤處理和監控機制：
+統一的事件處理入口，整合所有錯誤處理和Monitoring機制：
 
 ```java
 @Autowired
@@ -57,16 +55,16 @@ CompletableFuture<Void> result = resilientEventHandler.handleEvent(
     Duration.ofSeconds(60), RetryPolicy.fastRetryPolicy());
 ```
 
-### 重試策略配置
+### 重試Policy配置
 
 ```java
-// 默認重試策略：最多3次，指數退避
+// 默認重試Policy：最多3次，指數退避
 RetryPolicy defaultPolicy = RetryPolicy.defaultPolicy();
 
-// 快速重試策略：最多5次，較短延遲
+// 快速重試Policy：最多5次，較短延遲
 RetryPolicy fastPolicy = RetryPolicy.fastRetryPolicy();
 
-// 自定義重試策略
+// 自定義重試Policy
 RetryPolicy customPolicy = new RetryPolicy.Builder()
     .maxAttempts(5)
     .initialDelay(Duration.ofMillis(500))
@@ -99,7 +97,7 @@ switch (decision) {
 }
 ```
 
-### 監控和統計
+### Monitoring和統計
 
 ```java
 @Autowired
@@ -112,15 +110,15 @@ System.out.println("失敗率: " + stats.getFailureRate() * 100 + "%");
 System.out.println("超時率: " + stats.getTimeoutRate() * 100 + "%");
 ```
 
-## 監控端點
+## Monitoring端點
 
-系統提供了 REST API 端點用於監控：
+系統提供了 REST API 端點用於Monitoring：
 
-- `GET /api/monitoring/events/health` - 系統健康狀態
+- `GET /../api/monitoring/events/health` - 系統健康狀態
 - `GET /api/monitoring/events/statistics/processing` - 事件處理統計
 - `GET /api/monitoring/events/statistics/retry` - 重試統計
 - `GET /api/monitoring/events/backpressure/status` - 背壓狀態
-- `GET /api/monitoring/events/statistics/sequence` - 序列追蹤統計
+- `GET /api/monitoring/events/statistics/sequence` - 序列Tracing統計
 - `POST /api/monitoring/events/statistics/processing/reset` - 重置統計
 - `POST /api/monitoring/events/sequence/{aggregateId}/reset` - 重置序列
 
@@ -157,7 +155,7 @@ BackpressureManager customManager = new BackpressureManager(
 );
 ```
 
-## 維護任務
+## Maintenance
 
 系統自動執行以下維護任務：
 
@@ -202,7 +200,7 @@ public class OrderEventHandler {
 }
 ```
 
-### 自定義重試策略
+### 自定義重試Policy
 
 ```java
 @Component
@@ -212,7 +210,7 @@ public class PaymentEventHandler {
     private ResilientEventHandler resilientEventHandler;
     
     public void handlePaymentProcessing(PaymentEvent event) {
-        // 支付處理使用更積極的重試策略
+        // 支付處理使用更積極的重試Policy
         RetryPolicy paymentRetryPolicy = new RetryPolicy.Builder()
             .maxAttempts(5)
             .initialDelay(Duration.ofSeconds(2))
@@ -232,15 +230,15 @@ public class PaymentEventHandler {
 }
 ```
 
-## 性能考量
+## Performance考量
 
 1. **線程池大小**: 根據系統負載調整事件處理線程池大小
-2. **重試策略**: 避免過於激進的重試策略，防止系統過載
+2. **重試Policy**: 避免過於激進的重試Policy，防止系統過載
 3. **背壓閾值**: 根據系統容量設置合適的背壓閾值
-4. **監控開銷**: 監控功能會增加一定的性能開銷，可根據需要調整監控級別
+4. **Monitoring開銷**: Monitoring功能會增加一定的Performance開銷，可根據需要調整Monitoring級別
 5. **清理頻率**: 定期清理過期數據，避免內存洩漏
 
-## 故障排除
+## Troubleshooting
 
 ### 常見問題
 
@@ -250,7 +248,7 @@ public class PaymentEventHandler {
    - 檢查線程池是否飽和
 
 2. **重試次數過多**
-   - 檢查重試策略配置
+   - 檢查重試Policy配置
    - 分析失敗原因，是否需要調整重試條件
    - 考慮使用死信隊列處理持續失敗的事件
 
@@ -261,12 +259,12 @@ public class PaymentEventHandler {
 
 4. **事件順序錯亂**
    - 檢查事件發布順序
-   - 驗證聚合根狀態管理
+   - 驗證Aggregate Root狀態管理
    - 考慮使用事件版本號
 
-### 日誌分析
+### Logging分析
 
-系統會記錄詳細的日誌信息，包括：
+系統會記錄詳細的Logging信息，包括：
 
 - 事件處理開始和結束時間
 - 重試嘗試和失敗原因
@@ -274,4 +272,4 @@ public class PaymentEventHandler {
 - 序列驗證結果
 - 系統統計信息
 
-通過分析這些日誌，可以快速定位和解決問題。
+通過分析這些Logging，可以快速定位和解決問題。

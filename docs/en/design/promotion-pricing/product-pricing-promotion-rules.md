@@ -1,5 +1,3 @@
-<!-- This document needs manual translation from Chinese to English -->
-<!-- 此文檔需要從中文手動翻譯為英文 -->
 
 ```gherkin
 Feature: E-commerce Product Pricing and Promotion Rules
@@ -111,7 +109,7 @@ Feature: E-commerce Product Pricing and Promotion Rules
     Then the system should display an error message
     And no points should be deducted
 
-  # 明確定義「新會員」的標準
+  # Standards
   Scenario: New member receives a first purchase discount
     Given the customer registered within the last 30 days
     And has not made any previous purchases
@@ -209,6 +207,6 @@ Feature: E-commerce Product Pricing and Promotion Rules
     Then $50 is deducted from the total price
     And the customer receives $42 cashback (6% of $700) credited within 30 days
 ```
-這份更新後的 Gherkin feature file 以 BDD 方式涵蓋了台灣電商常見的價格組合與促銷規則，並明確定義了各種場景的具體參數和邊界條件，方便用於自動化測試或需求溝通。
+這份更新後的 Gherkin feature file 以 BDD 方式涵蓋了台灣電商常見的價格組合與促銷規則，並明確定義了各種場景的具體參數和邊界條件，方便用於Automated Testing或需求溝通。
 
 Sources

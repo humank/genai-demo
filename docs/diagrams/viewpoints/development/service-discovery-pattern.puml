@@ -1,0 +1,81 @@
+@startuml service-discovery-pattern
+!theme plain
+title Service Discovery Pattern
+
+package "Service Registry" {
+  [Service Registry] as registry
+  database "Service Database" as servicedb
+}
+
+package "Service Instances" {
+  [Customer Service A] as customer1
+  [Customer Service B] as customer2
+  [Order Service A] as order1
+  [Order Service B] as order2
+  [Payment Service] as payment
+}
+
+package "Client Services" {
+  [API Gateway] as gateway
+  [Order Service] as orderclient
+}
+
+package "Health Monitoring" {
+  [Health Checker] as health
+}
+
+' Service Registration Flow
+customer1 -> registry : Register Service
+customer2 -> registry : Register Service  
+order1 -> registry : Register Service
+order2 -> registry : Register Service
+payment -> registry : Register Service
+
+registry -> servicedb : Store Service Info
+
+' Health Monitoring Flow
+health -> customer1 : Health Check
+customer1 --> health : Healthy
+health -> customer2 : Health Check
+customer2 --> health : Healthy
+health -> order1 : Health Check
+order1 --> health : Unhealthy
+health -> registry : Update Service Status
+
+' Service Discovery Flow
+gateway -> registry : Discover Customer Services
+registry -> servicedb : Query Available Services
+servicedb --> registry : Healthy Services List
+registry --> gateway : Service List
+
+orderclient -> registry : Discover Payment Service
+registry --> orderclient : Payment Service Instance
+
+' Load Balancing Flow
+gateway -> gateway : Select Instance
+gateway -> customer1 : Service Request
+
+orderclient -> payment : Service Request
+
+' Service Deregistration Flow
+order1 -> registry : Deregister Service
+registry -> servicedb : Remove Service
+
+note right of registry
+  **Service Registry Features:**
+  - Service Registration/Deregistration
+  - Health Status Monitoring
+  - Load Balancing Strategies
+  - Service Metadata Storage
+  - Failure Detection & Recovery
+end note
+
+note right of health
+  **Health Check Types:**
+  - HTTP Endpoint Check
+  - TCP Port Check
+  - Custom Health Logic
+  - Periodic Monitoring
+end note
+
+@enduml

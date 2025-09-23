@@ -560,8 +560,8 @@ export class WellArchitectedDashboard {
 
 - [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
 - [ADR-005: AWS CDK vs Terraform](./ADR-005-aws-cdk-vs-terraform.md)
-- [ADR-006: Multi-Region Architecture Strategy](./ADR-006-multi-region-architecture.md)
-- [ADR-010: Three Pillars Observability Integration](./ADR-010-observability-integration.md)
+- \1
+- \1
 
 ## References
 

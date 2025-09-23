@@ -1,8 +1,6 @@
 package solid.humank.genaidemo.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 /**
@@ -18,41 +16,9 @@ public class ProfileConfiguration {
         this.environment = environment;
     }
 
-    /**
-     * Test profile configuration properties
-     */
-    @Bean
-    @Profile("test")
-    public ProfileConfigurationProperties testProfileConfigurationProperties() {
-        return ProfileConfigurationProperties.testDefaults();
-    }
-
-    /**
-     * Development profile configuration properties
-     */
-    @Bean
-    @Profile({ "dev", "development" })
-    public ProfileConfigurationProperties developmentProfileConfigurationProperties() {
-        return ProfileConfigurationProperties.developmentDefaults();
-    }
-
-    /**
-     * Production profile configuration properties
-     */
-    @Bean
-    @Profile({ "prod", "production" })
-    public ProfileConfigurationProperties productionProfileConfigurationProperties() {
-        return ProfileConfigurationProperties.productionDefaults();
-    }
-
-    /**
-     * Default profile configuration properties (fallback)
-     */
-    @Bean
-    @Profile("default")
-    public ProfileConfigurationProperties defaultProfileConfigurationProperties() {
-        return ProfileConfigurationProperties.developmentDefaults();
-    }
+    // Profile configuration properties are now handled by
+    // ProfileConfigurationResolver
+    // to avoid bean conflicts and provide better conflict resolution
 
     /**
      * Profile validation configuration methods

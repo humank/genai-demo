@@ -35,10 +35,12 @@
 7. **定價處理時序圖 (pricing-sequence-diagram.puml)**
    - 描述定價處理的主要流程
    - 包括創建定價規則、更新佣金費率、獲取產品類別的定價規則和計算佣金
+   - !\1
 
 8. **配送處理時序圖 (delivery-sequence-diagram.puml)**
    - 描述配送處理的主要流程
    - 包括創建配送、安排配送、分配配送資源、更新配送地址、標記為已送達等操作
+   - !\1
 
 9. **狀態圖 (state-diagram.puml)**
    - 展示訂單在不同狀態之間的轉換
@@ -164,7 +166,7 @@
 
 ### 組件圖
 
-![組件圖](./電子商務系統組件圖.svg)
+![組件圖](../generated/legacy/.png)
 
 ### 部署圖
 
@@ -172,87 +174,87 @@
 
 ### 套件圖
 
-![套件圖](./訂單系統套件圖.svg)
+![套件圖](../generated/legacy/.png)
 
 ### 時序圖
 
-![時序圖](./訂單處理時序圖.svg)
+![時序圖](../generated/legacy/.png)
 
 ### 定價處理時序圖
 
-![定價處理時序圖](./定價處理時序圖.svg)
+![定價處理時序圖](../generated/legacy/.png)
 
 ### 配送處理時序圖
 
-![配送處理時序圖](./配送處理時序圖.svg)
+![配送處理時序圖](../generated/legacy/.png)
 
 ### 狀態圖
 
-![狀態圖](./訂單狀態圖.svg)
+![狀態圖](../generated/legacy/.png)
 
 ### 活動圖概覽
 
-![活動圖概覽](./訂單系統活動圖概覽.svg)
+![活動圖概覽](../generated/legacy/.png)
 
 ### 活動圖詳細
 
-![活動圖詳細](./訂單處理詳細活動圖.svg)
+![活動圖詳細](../generated/legacy/.png)
 
 ### 使用案例圖
 
-![使用案例圖](./訂單系統使用案例圖.svg)
+![使用案例圖](../generated/legacy/.png)
 
 ### 領域模型圖
 
-![領域模型圖](./領域模型圖.svg)
+![領域模型圖](../generated/legacy/.png)
 
 ### 六角形架構圖
 
-![六角形架構圖](./六角形架構圖.svg)
+![六角形架構圖](../generated/legacy/.png)
 
 ### DDD分層架構圖
 
-![DDD分層架構圖](./DDD分層架構圖.svg)
+![DDD分層架構圖](../generated/legacy/DDD.png)
 
 ### Saga模式圖
 
-![Saga模式圖](./訂單處理Saga模式圖.svg)
+![Saga模式圖](../generated/legacy/saga.png)
 
 ### 限界上下文圖
 
-![限界上下文圖](./限界上下文圖.svg)
+![限界上下文圖](../generated/legacy/.png)
 
 ### 事件風暴圖-Big Picture Exploration
 
-![事件風暴圖- Big Picture Exploration](./big-picture-exploration.svg)
+![事件風暴圖- Big Picture Exploration](../generated/legacy/big-picture-exploration.png)
 
 ### 事件風暴圖-Process Modeling
 
-![事件風暴圖- Process Modeling](./process-modeling.svg)
+![事件風暴圖- Process Modeling](../generated/legacy/process-modeling.png)
 
 ### 事件風暴圖-Design Level
 
-![事件風暴圖- design-level](./design-level.svg)
+![事件風暴圖- design-level](../generated/legacy/design-level.png)
 
 ### CQRS模式圖
 
-![CQRS模式圖](./cqrs-pattern-diagram.svg)
+![CQRS模式圖](../generated/legacy/cqrs pattern diagram.png)
 
 ### 事件溯源圖
 
-![事件溯源圖](./event-sourcing-diagram.svg)
+![事件溯源圖](../generated/legacy/event sourcing diagram.png)
 
 ### API接口圖
 
-![API接口圖](./api-interface-diagram.svg)
+![API接口圖](../generated/legacy/api interface diagram.png)
 
 ### 數據模型圖
 
-![數據模型圖](./data-model-diagram.svg)
+![數據模型圖](../generated/legacy/data model diagram.png)
 
 ### 安全架構圖
 
-![安全架構圖](./security-architecture-diagram.svg)
+![安全架構圖](../generated/legacy/security architecture diagram.png)
 
 ### 可觀測性架構圖
 
