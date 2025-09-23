@@ -1,33 +1,47 @@
 # Steering Rules Index
 
-## Core Development Guidelines
+## 📋 **核心開發指南** (主要標準)
 
-- **[development-standards.md](development-standards.md)** - Development standards and guidelines
-- **[rozanski-woods-architecture-methodology.md](rozanski-woods-architecture-methodology.md)** - Architecture methodology and viewpoint checks
-- **[code-review-standards.md](code-review-standards.md)** - Code review process and quality standards
+- **[development-standards.md](development-standards.md)** - 🎯 **主要開發標準** (包含測試、程式碼品質、架構約束)
+- **[rozanski-woods-architecture-methodology.md](rozanski-woods-architecture-methodology.md)** - 🏗️ **架構方法論** (視點檢查和品質屬性場景)
+- **[code-review-standards.md](code-review-standards.md)** - 🔍 **程式碼審查流程** (詳細檢查清單和範例)
 
-## Security and Performance
+## 🛡️ **安全和效能** (專門標準)
 
-- **[security-standards.md](security-standards.md)** - Security implementation and testing standards
-- **[performance-standards.md](performance-standards.md)** - Performance optimization and monitoring guidelines
-- **[test-performance-standards.md](test-performance-standards.md)** - Test performance monitoring and optimization
+- **[security-standards.md](security-standards.md)** - 🔒 **安全實作標準** (認證、授權、資料保護)
+- **[performance-standards.md](performance-standards.md)** - ⚡ **效能優化指南** (監控、快取、資料庫優化)
+- **[test-performance-standards.md](test-performance-standards.md)** - 🧪 **測試效能參考** (深度技術指南)
 
-## Specialized Guidelines
+## 🎨 **專門指南** (特定領域)
 
-- **[domain-events.md](domain-events.md)** - Domain event implementation guide
-- **[translation-guide.md](translation-guide.md)** - Documentation translation rules
-- **[reports-organization-standards.md](reports-organization-standards.md)** - Report and summary file organization standards
+- **[domain-events.md](domain-events.md)** - 📡 **領域事件實作** (DDD 事件架構)
+- **[diagram-generation-standards.md](diagram-generation-standards.md)** - 📊 **圖表生成標準** (PlantUML/Mermaid)
+- **[bdd-tdd-principles.md](bdd-tdd-principles.md)** - 🧪 **BDD/TDD 原則** (行為驅動開發)
 
-## Usage Guidelines
+## 📚 **組織和流程** (支援標準)
 
-1. **Daily Development** → Reference `development-standards.md` and `code-review-standards.md`
-2. **Architecture Design** → Reference `rozanski-woods-architecture-methodology.md`
-3. **Security Implementation** → Reference `security-standards.md`
-4. **Performance Optimization** → Reference `performance-standards.md`
-5. **Domain Events** → Reference `domain-events.md`
-6. **Code Reviews** → Reference `code-review-standards.md`
-7. **Documentation Translation** → Reference `translation-guide.md`
-8. **Report Organization** → Reference `reports-organization-standards.md`
+- **[reports-organization-standards.md](reports-organization-standards.md)** - 📁 **報告組織標準** (文件分類和命名)
+- **[datetime-accuracy-standards.md](datetime-accuracy-standards.md)** - 🕐 **日期時間準確性** (時間戳記標準)
+- **[translation-guide.md](translation-guide.md)** - 🌐 **文檔翻譯規則** (多語言支援)
+
+## 🚀 **使用指南** (按開發階段)
+
+### **日常開發** 
+- 🎯 **主要**: [development-standards.md](development-standards.md) (技術棧、測試、程式碼標準)
+- 🔍 **審查**: [code-review-standards.md](code-review-standards.md) (審查檢查清單)
+
+### **架構設計**
+- 🏗️ **方法論**: [rozanski-woods-architecture-methodology.md](rozanski-woods-architecture-methodology.md) (視點檢查)
+- 📡 **事件設計**: [domain-events.md](domain-events.md) (DDD 事件架構)
+
+### **安全和效能**
+- 🔒 **安全**: [security-standards.md](security-standards.md) (安全實作)
+- ⚡ **效能**: [performance-standards.md](performance-standards.md) (效能優化)
+
+### **文檔和圖表**
+- 📊 **圖表**: [diagram-generation-standards.md](diagram-generation-standards.md) (PlantUML/Mermaid)
+- 📁 **報告**: [reports-organization-standards.md](reports-organization-standards.md) (文件組織)
+- 🌐 **翻譯**: [translation-guide.md](translation-guide.md) (多語言支援)
 
 ## Quick Reference by Development Phase
 

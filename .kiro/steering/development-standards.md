@@ -24,33 +24,13 @@
 
 ### Documentation and Diagrams
 
-#### Diagram Format Standards
+> **📊 圖表標準**: 完整的圖表生成和管理標準請參考 [Diagram Generation Standards](diagram-generation-standards.md)
 
-**PlantUML Diagrams:**
-- **Primary Format**: PNG (recommended for GitHub documentation)
-  - Better readability and text clarity in GitHub
-  - Consistent rendering across different browsers
-  - Optimal file size for documentation
-- **Secondary Format**: SVG (for high-resolution needs)
-  - Use for printing or scalable displays
-  - Vector format for infinite zoom capability
-- **Generation Command**: `./scripts/generate-diagrams.sh --format=png`
-- **Documentation Links**: Always reference PNG files in Markdown
-
-**Mermaid Diagrams:**
-- **Native GitHub Support**: Use `.mmd` files or inline code blocks
-- **Direct Rendering**: GitHub renders Mermaid diagrams automatically
-- **Preferred for**: Process flows, simple architecture diagrams
-- **File Extension**: `.mmd` for standalone files
-
-**Diagram Organization:**
-```
-docs/diagrams/
-├── generated/          # Generated PNG/SVG files from PlantUML
-├── viewpoints/         # PlantUML source files organized by viewpoint
-├── mermaid/           # Mermaid diagram files (.mmd)
-└── legacy/            # Legacy diagram files
-```
+**快速參考**:
+- **主要格式**: PNG (GitHub 文檔推薦)
+- **生成命令**: `./scripts/generate-diagrams.sh --format=png`
+- **PlantUML**: 複雜 UML 圖表和詳細系統架構
+- **Mermaid**: 簡單流程圖和基本架構圖表
 
 ## Error Handling Standards
 
@@ -719,6 +699,374 @@ open build/reports/test-performance/overall-performance-summary.txt
 - **HTML Reports**: Interactive charts and visual performance analysis
 - **CSV Data**: Raw performance data for custom analysis
 - **Slow Test Analysis**: Top 5 slowest tests and performance regression detection
+
+## Advanced Test Performance Framework
+
+### Core Performance Monitoring Components
+
+#### TestPerformanceExtension Usage
+
+Annotation-based performance monitoring for automatic test performance tracking:
+
+```java
+// For integration tests with moderate performance requirements
+@TestPerformanceExtension(maxExecutionTimeMs = 10000, maxMemoryIncreaseMB = 100)
+@IntegrationTest
+public class StandardIntegrationTest extends BaseIntegrationTest {
+    // Automatic performance monitoring enabled
+}
+
+// For complex end-to-end tests with higher thresholds
+@TestPerformanceExtension(maxExecutionTimeMs = 30000, maxMemoryIncreaseMB = 200)
+public class ComplexE2ETest extends BaseIntegrationTest {
+    // Performance monitoring with higher limits
+}
+```
+
+**Configuration Options:**
+
+- `maxExecutionTimeMs`: Maximum allowed execution time (default: 5000ms)
+- `maxMemoryIncreaseMB`: Maximum allowed memory increase (default: 50MB)
+- `generateReports`: Whether to generate detailed reports (default: true)
+- `checkRegressions`: Whether to check for performance regressions (default: true)
+
+#### TestPerformanceMonitor Implementation
+
+JUnit 5 extension that provides comprehensive test performance monitoring:
+
+```java
+// Automatic monitoring with TestPerformanceMonitor
+public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallback,
+        BeforeEachCallback, AfterEachCallback, TestWatcher {
+    
+    // Automatically tracks:
+    // - Test execution times with millisecond precision
+    // - Memory usage during tests (heap memory before/after each test)
+    // - Performance regressions with configurable thresholds
+    // - Resource cleanup and memory management
+}
+```
+
+**Performance Thresholds:**
+
+- Slow Test Warning: > 5 seconds
+- Very Slow Test Error: > 30 seconds  
+- Memory Usage Warning: > 50MB increase
+- Memory Usage Critical: > 80% of available heap
+
+#### TestPerformanceResourceManager
+
+Component for monitoring and managing test resources:
+
+```java
+@TestComponent
+public class TestPerformanceResourceManager {
+    
+    public ResourceUsageStats getResourceUsageStats() {
+        // Returns current resource usage statistics including:
+        // - Current memory usage and maximum available
+        // - Memory usage percentage
+        // - Active test resources count
+        // - Total memory allocated during test execution
+    }
+    
+    public void forceCleanup() {
+        // Forces cleanup of all test resources
+        // Triggers System.gc() to free memory
+        // Logs cleanup completion
+    }
+}
+```
+
+#### TestPerformanceConfiguration
+
+Spring Test configuration for performance monitoring setup:
+
+```java
+@TestConfiguration
+@Profile("test")
+public class TestPerformanceConfiguration {
+    
+    @Bean
+    public TestPerformanceListener testPerformanceListener() {
+        return new TestPerformanceListener();
+    }
+}
+```
+
+**TestPerformanceListener provides:**
+
+- Automatic cleanup before and after each test method
+- Database cleanup with proper foreign key constraint handling
+- Cache clearing between tests
+- Mock reset functionality
+- Application state reset
+- Temporary resource cleanup
+- Final cleanup after test class completion
+
+### Advanced Test Task Configuration
+
+#### Optimized Gradle Test Tasks
+
+```gradle
+// Unit tests - fast feedback for daily development
+tasks.register('unitTest', Test) {
+    description = 'Fast unit tests (~5MB, ~50ms each)'
+    useJUnitPlatform {
+        excludeTags 'integration', 'end-to-end', 'slow'
+        includeTags 'unit'
+    }
+    maxHeapSize = '2g'
+    maxParallelForks = Runtime.runtime.availableProcessors()
+    forkEvery = 0  // No JVM restart for speed
+}
+
+// Integration tests - pre-commit verification
+tasks.register('integrationTest', Test) {
+    description = 'Integration tests (~50MB, ~500ms each)'
+    useJUnitPlatform {
+        includeTags 'integration'
+        excludeTags 'end-to-end', 'slow'
+    }
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
+    maxParallelForks = 1
+    forkEvery = 5
+    timeout = Duration.ofMinutes(30)
+    
+    // HttpComponents optimization and JVM tuning
+    jvmArgs += [
+        '--enable-preview',
+        '-XX:MaxMetaspaceSize=1g',
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        '-Xshare:off',
+        // HttpComponents specific JVM parameters
+        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
+        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
+        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG',
+        '-Dorg.apache.http.wire=DEBUG',
+        // Network timeout configuration
+        '-Dsun.net.useExclusiveBind=false',
+        '-Djava.net.preferIPv4Stack=true'
+    ]
+    
+    // Enhanced system properties for integration tests
+    systemProperties = [
+        'junit.jupiter.execution.timeout.default': '2m',
+        'spring.profiles.active': 'test',
+        'http.client.connection.timeout': '10000',
+        'http.client.socket.timeout': '30000',
+        'test.resource.cleanup.enabled': 'true',
+        'test.memory.monitoring.enabled': 'true'
+    ]
+}
+
+// End-to-end tests - pre-release verification
+tasks.register('e2eTest', Test) {
+    description = 'End-to-end tests (~500MB, ~3s each)'
+    useJUnitPlatform {
+        includeTags 'end-to-end'
+    }
+    maxHeapSize = '8g'
+    minHeapSize = '3g'
+    maxParallelForks = 1
+    forkEvery = 2
+    timeout = Duration.ofHours(1)
+    
+    // E2E test specific JVM parameters
+    jvmArgs += [
+        '--enable-preview',
+        '-XX:MaxMetaspaceSize=2g',
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        '-Xshare:off',
+        '-Djava.security.egd=file:/dev/./urandom'
+    ]
+    
+    // E2E test system properties
+    systemProperties = [
+        'junit.jupiter.execution.timeout.default': '5m',
+        'spring.profiles.active': 'test',
+        'spring.main.lazy-initialization': 'false',
+        'http.client.connection.timeout': '30000',
+        'http.client.socket.timeout': '60000',
+        'test.performance.monitoring.enabled': 'true'
+    ]
+}
+```
+
+**Test Task Configuration Features:**
+
+- **Memory Optimization**: Graduated memory allocation (2g → 6g → 8g)
+- **JVM Tuning**: G1GC, string deduplication, optimized heap regions
+- **HttpComponents Optimization**: Specialized JVM parameters for HTTP client tests
+- **Timeout Management**: Progressive timeout configuration (2m → 30m → 1h)
+- **Resource Management**: Automatic cleanup and memory monitoring
+- **Performance Monitoring**: Integrated with TestPerformanceExtension
+
+### Test Performance Report Generation
+
+#### TestPerformanceReportGenerator
+
+Standalone utility for generating comprehensive HTML and CSV performance reports:
+
+```bash
+# Generate performance reports
+./gradlew generatePerformanceReport
+```
+
+**Generated Reports:**
+
+- **HTML Report**: Interactive charts and detailed performance analysis
+- **CSV Report**: Raw performance data for further analysis
+- **Trend Analysis**: Performance regression detection over time
+- **Resource Usage**: Memory and execution time correlations
+
+**Report Structure:**
+
+```
+build/reports/test-performance/
+├── performance-report.html          # Interactive HTML report with charts
+├── performance-data.csv             # Raw performance data
+├── overall-performance-summary.txt  # Summary statistics
+└── {TestClass}-performance-report.txt # Individual class reports
+```
+
+### Memory Management and Resource Optimization
+
+#### JVM Configuration for Tests
+
+```gradle
+// Optimized JVM parameters for test execution
+jvmArgs += [
+    '--enable-preview',
+    '-XX:MaxMetaspaceSize=1g',
+    '-XX:+UseG1GC',
+    '-XX:+UseStringDeduplication',
+    '-XX:G1HeapRegionSize=32m',
+    '-XX:+UnlockExperimentalVMOptions',
+    '-XX:G1NewSizePercent=20',
+    '-XX:G1MaxNewSizePercent=30',
+    '-Xshare:off'
+]
+```
+
+#### Memory Monitoring Implementation
+
+```java
+// BaseIntegrationTest provides resource management utilities
+public abstract class BaseIntegrationTest {
+    
+    protected void forceResourceCleanup() {
+        // Force cleanup of test resources
+        // Triggers System.gc() and logs cleanup completion
+    }
+    
+    protected boolean isMemoryUsageAcceptable() {
+        // Check if memory usage is within acceptable limits
+        // Returns: memory usage %, current/max memory, active resources
+    }
+    
+    protected void waitForCondition(BooleanSupplier condition, Duration timeout, String description) {
+        // Wait for asynchronous operations to complete with timeout
+    }
+}
+```
+
+**Memory Management Features:**
+
+- Real-time memory usage monitoring with percentage calculations
+- Automatic resource cleanup between tests
+- Database cleanup with foreign key constraint handling
+- Cache clearing and mock reset functionality
+- Temporary resource cleanup and application state reset
+
+### Integration with Existing Tools
+
+#### Allure Integration
+
+```gradle
+// Allure reporting with performance data
+systemProperty 'allure.results.directory', layout.buildDirectory.dir("allure-results").get().asFile.absolutePath
+systemProperty 'allure.epic', 'Performance Testing'
+systemProperty 'allure.feature', 'Test Performance Monitoring'
+```
+
+#### Cucumber Integration
+
+```gradle
+// Cucumber with performance monitoring
+tasks.register('cucumber', JavaExec) {
+    maxHeapSize = '4g'
+    args = [
+        '--plugin', 'io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm',
+        '--glue', 'solid.humank.genaidemo.bdd',
+        'src/test/resources/features'
+    ]
+}
+```
+
+### Performance Testing Best Practices
+
+#### Test Performance Optimization Guidelines
+
+1. **Use Appropriate Test Types**:
+   - Unit tests for business logic (fast, isolated)
+   - Integration tests for component interaction (moderate)
+   - E2E tests for complete workflows (slow, comprehensive)
+
+2. **Resource Management**:
+   - Enable performance monitoring with `@TestPerformanceExtension`
+   - Use `BaseIntegrationTest` for consistent setup
+   - Implement proper cleanup in test methods
+
+3. **Memory Optimization**:
+   - Monitor memory usage during tests
+   - Force cleanup when memory usage is high
+   - Use appropriate heap sizes for different test types
+
+4. **Performance Regression Detection**:
+   - Automatic detection of slow tests
+   - Performance trend analysis
+   - Threshold-based alerting
+
+### Test Execution Strategy
+
+#### Development Phase
+
+```bash
+./gradlew quickTest    # Fast feedback during development
+```
+
+#### Pre-Commit Phase
+
+```bash
+./gradlew preCommitTest    # Comprehensive verification before commit
+```
+
+#### Pre-Release Phase
+
+```bash
+./gradlew fullTest    # Complete test suite including performance validation
+```
+
+**Performance Monitoring and Reporting:**
+
+- **Test Execution Time**: Per test and per class
+- **Memory Usage**: Before/after each test
+- **Resource Utilization**: CPU, memory, database connections
+- **Failure Rates**: Success/failure statistics
+
+This comprehensive test performance framework ensures consistent, monitored, and optimized test performance across the entire application.
 
 ## BDD Development Process
 

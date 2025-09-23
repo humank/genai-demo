@@ -58,7 +58,8 @@
       "autoApprove": [
         "analyze_cdk_project",
         "get_pricing",
-        "generate_cost_report"
+        "generate_cost_report",
+        "get_pricing_service_codes"
       ]
     },
     "excalidraw": {

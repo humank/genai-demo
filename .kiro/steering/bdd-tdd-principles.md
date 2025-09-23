@@ -47,9 +47,11 @@ Feature: Customer Registration
 - Maintain test independence
 
 ## Related Documentation
-- [Development Standards](development-standards.md)
-- [Test Performance Standards](test-performance-standards.md)
-- [Code Review Standards](code-review-standards.md)
+
+> **🔗 相關標準**:
+> - [Development Standards](development-standards.md#testing-standards) - 測試分類和效能標準
+> - [Code Review Standards](code-review-standards.md#testing-review-standards) - 測試程式碼審查
+> - [Domain Events](domain-events.md#testing-guidelines) - 領域事件測試指南
 
 ## Tools and Frameworks
 - JUnit 5 for unit testing

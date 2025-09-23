@@ -613,57 +613,15 @@ groups:
 - **System Capacity**: Current load vs. capacity limits
 - **Resource Utilization**: CPU, memory, disk usage trends
 
-## Test Performance Monitoring Framework
+## Test Performance Integration
 
-### Performance Monitoring Tools
+> **🧪 測試效能**: 詳細的測試效能監控標準請參考 [Development Standards - Test Performance Framework](development-standards.md#advanced-test-performance-framework)
 
-#### TestPerformanceExtension Usage
-
-```java
-// For integration tests with moderate performance requirements
-@TestPerformanceExtension(maxExecutionTimeMs = 10000, maxMemoryIncreaseMB = 100)
-@IntegrationTest
-public class StandardIntegrationTest extends BaseIntegrationTest {
-    // Automatic performance monitoring enabled
-}
-
-// For complex end-to-end tests with higher thresholds
-@TestPerformanceExtension(maxExecutionTimeMs = 30000, maxMemoryIncreaseMB = 200)
-public class ComplexE2ETest extends BaseIntegrationTest {
-    // Performance monitoring with higher limits
-}
-```
-
-#### Test Performance Reports
-
-```bash
-# Generate detailed performance reports
-./gradlew generatePerformanceReport
-
-# View reports at:
-# - build/reports/test-performance/performance-report.html
-# - build/reports/test-performance/performance-data.csv
-```
-
-#### Gradle Test Task Optimization
-
-```gradle
-// Optimized test tasks with proper resource allocation
-tasks.register('integrationTest', Test) {
-    maxHeapSize = '6g'  // Increased for integration tests
-    minHeapSize = '2g'
-    maxParallelForks = 1
-    forkEvery = 5
-    timeout = Duration.ofMinutes(30)
-    
-    // HttpComponents optimization
-    jvmArgs += [
-        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
-        '-Dsun.net.useExclusiveBind=false',
-        '-Djava.net.preferIPv4Stack=true'
-    ]
-}
-```
+**快速參考**:
+- 使用 `@TestPerformanceExtension` 進行自動效能監控
+- 整合測試: < 500ms, < 50MB
+- 端到端測試: < 3s, < 500MB
+- 效能報告生成: `./gradlew generatePerformanceReport`
 
 ## Performance Testing Checklist
 

@@ -1,0 +1,230 @@
+# Matomo 用戶行為追蹤系統 EKS 部署配置
+# 創建日期: 2025年9月23日 下午4:13 (台北時間)
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: matomo
+  labels:
+    name: matomo
+    app.kubernetes.io/name: matomo
+    app.kubernetes.io/component: analytics
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: matomo-config
+  namespace: matomo
+data:
+  # Matomo 基本配置
+  MATOMO_DATABASE_HOST: "genai-demo-aurora-writer.cluster-xxx.ap-east-2.rds.amazonaws.com"
+  MATOMO_DATABASE_ADAPTER: "mysql"
+  MATOMO_DATABASE_TABLES_PREFIX: "matomo_"
+  MATOMO_DATABASE_USERNAME: "matomo_user"
+  MATOMO_DATABASE_DBNAME: "matomo"
+  
+  # Redis 快取配置 (使用現有 ElastiCache)
+  MATOMO_REDIS_HOST: "genai-demo-redis.xxx.cache.amazonaws.com"
+  MATOMO_REDIS_PORT: "6379"
+  MATOMO_REDIS_TIMEOUT: "0.0"
+  MATOMO_REDIS_DATABASE: "2"
+  
+  # Matomo 應用配置
+  MATOMO_GENERAL_SALT: "random_salt_here"
+  MATOMO_GENERAL_TRUSTED_HOSTS: "matomo.genai-demo.com,*.genai-demo.com"
+  MATOMO_GENERAL_ASSUME_SECURE_PROTOCOL: "1"
+  MATOMO_GENERAL_FORCE_SSL: "1"
+  
+  # 效能優化配置
+  MATOMO_GENERAL_ENABLE_BROWSER_ARCHIVING_TRIGGERING: "0"
+  MATOMO_GENERAL_ARCHIVING_RANGE_FORCE_ON_BROWSER_REQUEST: "0"
+  MATOMO_GENERAL_TIME_BEFORE_TODAY_ARCHIVE_CONSIDERED_OUTDATED: "900"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: matomo-secrets
+  namespace: matomo
+type: Opaque
+data:
+  # Base64 編碼的密碼 (需要替換為實際值)
+  database-password: bWF0b21vX3Bhc3N3b3Jk  # matomo_password
+  redis-password: ""  # Redis 密碼 (如果需要)
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: matomo-data
+  namespace: matomo
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matomo
+  namespace: matomo
+  labels:
+    app: matomo
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: matomo
+  template:
+    metadata:
+      labels:
+        app: matomo
+        version: v1
+    spec:
+      containers:
+      - name: matomo
+        image: matomo:5.1.0-apache
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: MATOMO_DATABASE_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: matomo-config
+              key: MATOMO_DATABASE_HOST
+        - name: MATOMO_DATABASE_ADAPTER
+          valueFrom:
+            configMapKeyRef:
+              name: matomo-config
+              key: MATOMO_DATABASE_ADAPTER
+        - name: MATOMO_DATABASE_TABLES_PREFIX
+          valueFrom:
+            configMapKeyRef:
+              name: matomo-config
+              key: MATOMO_DATABASE_TABLES_PREFIX
+        - name: MATOMO_DATABASE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: matomo-config
+              key: MATOMO_DATABASE_USERNAME
+        - name: MATOMO_DATABASE_DBNAME
+          valueFrom:
+            configMapKeyRef:
+              name: matomo-config
+              key: MATOMO_DATABASE_DBNAME
+        - name: MATOMO_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: matomo-secrets
+              key: database-password
+        volumeMounts:
+        - name: matomo-data
+          mountPath: /var/www/html
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: matomo-data
+        persistentVolumeClaim:
+          claimName: matomo-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matomo-service
+  namespace: matomo
+  labels:
+    app: matomo
+spec:
+  selector:
+    app: matomo
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: matomo-ingress
+  namespace: matomo
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-east-2:ACCOUNT:certificate/CERT-ID
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
+spec:
+  rules:
+  - host: matomo.genai-demo.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: matomo-service
+            port:
+              number: 80
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: matomo-hpa
+  namespace: matomo
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: matomo
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

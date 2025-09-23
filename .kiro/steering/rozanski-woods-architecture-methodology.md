@@ -6,6 +6,12 @@ inclusion: always
 
 ## Mandatory Architectural Viewpoint Checks
 
+> **🔗 相關標準**: 
+> - [Development Standards](development-standards.md) - 基本開發和架構約束
+> - [Domain Events](domain-events.md) - DDD 事件架構實作
+> - [Security Standards](security-standards.md) - 安全架構要求
+> - [Performance Standards](performance-standards.md) - 效能架構要求
+
 ### Each new feature must complete the following viewpoint checks
 
 #### Functional Viewpoint
