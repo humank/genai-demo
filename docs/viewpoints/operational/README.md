@@ -1,211 +1,211 @@
-# 運營視點
+# Operational Viewpoint
 
-## 概覽
+## Overview
 
-運營視點關注系統的日常運營和維護，包括監控、日誌管理、故障排除和 SRE 實踐。
+The Operational Viewpoint focuses on daily system operations and maintenance, including monitoring, log management, troubleshooting, and SRE practices.
 
-## 利害關係人
+## Stakeholders
 
-- **主要關注者**: SRE 工程師、運維人員、監控工程師
-- **次要關注者**: 開發者、技術主管、事件響應團隊
+- **Primary Stakeholders**: SRE engineers, operations personnel, monitoring engineers
+- **Secondary Stakeholders**: Developers, technical leads, incident response teams
 
-## 關注點
+## Concerns
 
-1. **監控和可觀測性**: 系統健康狀態和性能監控
-2. **日誌管理**: 日誌收集、分析和保留
-3. **故障排除**: 問題診斷和根因分析
-4. **事件響應**: 告警處理和事件管理
-5. **維護和優化**: 系統維護和性能優化
+1. **Monitoring and Observability**: System health status and performance monitoring
+2. **Log Management**: Log collection, analysis, and retention
+3. **Troubleshooting**: Problem diagnosis and root cause analysis
+4. **Incident Response**: Alert handling and incident management
+5. **Maintenance and Optimization**: System maintenance and performance optimization
 
-## 架構元素
+## Architecture Elements
 
-### 可觀測性系統
+### Observability System
 
-- **分散式追蹤**: AWS X-Ray、Jaeger
-- **指標收集**: Micrometer、Prometheus、CloudWatch
-- **日誌管理**: Logback、CloudWatch Logs、ELK Stack
-- **健康檢查**: Spring Boot Actuator、Kubernetes 探針
+- **Distributed Tracing**: AWS X-Ray, Jaeger
+- **Metrics Collection**: Micrometer, Prometheus, CloudWatch
+- **Log Management**: Logback, CloudWatch Logs, ELK Stack
+- **Health Checks**: Spring Boot Actuator, Kubernetes probes
 
-#### 可觀測性架構圖
+#### Observability Architecture Diagram
 
-![可觀測性架構](../../diagrams/observability_architecture.svg)
+![Observability Architecture](../../diagrams/observability_architecture.svg)
 
-*完整的可觀測性架構，包括指標收集、日誌聚合、分散式追蹤、視覺化儀表板、警報系統和自動化修復機制*
+*Complete observability architecture including metrics collection, log aggregation, distributed tracing, visualization dashboards, alerting systems, and automated remediation mechanisms*
 
-### 監控基礎設施
+### Monitoring Infrastructure
 
-- **指標存儲**: CloudWatch、Prometheus
-- **日誌聚合**: CloudWatch Logs、Elasticsearch
-- **可視化**: CloudWatch Dashboard、Grafana
-- **告警**: CloudWatch Alarms、PagerDuty
+- **Metrics Storage**: CloudWatch, Prometheus
+- **Log Aggregation**: CloudWatch Logs, Elasticsearch
+- **Visualization**: CloudWatch Dashboard, Grafana
+- **Alerting**: CloudWatch Alarms, PagerDuty
 
-### 運營工具
+### Operations Tools
 
-- **自動化**: Ansible、Terraform
-- **配置管理**: AWS Systems Manager、Consul
-- **備份**: AWS Backup、Velero
-- **災難恢復**: 多區域部署、自動故障轉移
+- **Automation**: Ansible, Terraform
+- **Configuration Management**: AWS Systems Manager, Consul
+- **Backup**: AWS Backup, Velero
+- **Disaster Recovery**: Multi-region deployment, automatic failover
 
-## 品質屬性考量
+## Quality Attribute Considerations
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
+> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis of all perspectives
 
-### 🔴 高影響觀點
+### 🔴 High Impact Perspectives
 
-#### [安全性觀點](../../perspectives/security/README.md)
-- **安全監控**: 安全事件的實時監控和告警機制
-- **事件響應**: 安全事件的快速響應和處理流程
-- **存取管理**: 運營人員的存取控制和權限管理
-- **稽核軌跡**: 所有運營活動的完整記錄和稽核
-- **相關實現**: \1 | \1
+#### [Security Perspective](../../perspectives/security/README.md)
+- **Security Monitoring**: Real-time monitoring and alerting mechanisms for security events
+- **Incident Response**: Rapid response and handling processes for security incidents
+- **Access Management**: Access control and permission management for operations personnel
+- **Audit Trail**: Complete recording and auditing of all operational activities
+- **Related Implementation**: Security Monitoring | Incident Response Systems
 
-#### [性能觀點](../../perspectives/performance/README.md)
-- **性能監控**: 系統性能的持續監控和基準測試
-- **容量規劃**: 資源容量的預測和規劃
-- **性能調優**: 運行時性能的調整和優化
-- **監控開銷**: 監控系統本身的性能影響控制 (< 5%)
-- **相關實現**: \1 | \1
+#### [Performance Perspective](../../perspectives/performance/README.md)
+- **Performance Monitoring**: Continuous monitoring and benchmarking of system performance
+- **Capacity Planning**: Resource capacity forecasting and planning
+- **Performance Tuning**: Runtime performance adjustment and optimization
+- **Monitoring Overhead**: Control performance impact of monitoring systems (< 5%)
+- **Related Implementation**: Performance Architecture | Capacity Management
 
-#### [可用性觀點](../../perspectives/availability/README.md)
-- **可用性監控**: 系統可用性的實時監控 (目標 99.9%+)
-- **故障處理**: 故障檢測、診斷和自動恢復機制
-- **維護計畫**: 計畫性維護和系統更新策略
-- **業務連續性**: 災難恢復和業務連續性保障
-- **相關實現**: \1 | \1
+#### [Availability Perspective](../../perspectives/availability/README.md)
+- **Availability Monitoring**: Real-time monitoring of system availability (target 99.9%+)
+- **Fault Handling**: Fault detection, diagnosis, and automatic recovery mechanisms
+- **Maintenance Planning**: Planned maintenance and system update strategies
+- **Business Continuity**: Disaster recovery and business continuity assurance
+- **Related Implementation**: Availability Architecture | Disaster Recovery
 
-#### [法規觀點](../../perspectives/regulation/README.md)
-- **合規監控**: 合規狀態的持續監控和報告
-- **稽核支援**: 內外部稽核活動的支援和配合
-- **記錄管理**: 運營記錄的管理、保存和檢索
-- **合規報告**: 自動化合規報告和儀表板
-- **相關實現**: \1 | \1
+#### [Regulation Perspective](../../perspectives/regulation/README.md)
+- **Compliance Monitoring**: Continuous monitoring and reporting of compliance status
+- **Audit Support**: Support and cooperation for internal and external audit activities
+- **Record Management**: Management, preservation, and retrieval of operational records
+- **Compliance Reporting**: Automated compliance reports and dashboards
+- **Related Implementation**: Compliance Architecture | Audit Systems
 
-#### [成本觀點](../../perspectives/cost/README.md)
-- **成本監控**: 運營成本的實時監控和分析
-- **資源優化**: 運營資源的使用效率優化
-- **預算管理**: 運營預算的管理和控制
-- **成本告警**: 成本異常的告警和通知機制
-- **相關實現**: \1 | \1
+#### [Cost Perspective](../../perspectives/cost/README.md)
+- **Cost Monitoring**: Real-time monitoring and analysis of operational costs
+- **Resource Optimization**: Optimization of operational resource usage efficiency
+- **Budget Management**: Management and control of operational budgets
+- **Cost Alerting**: Alert and notification mechanisms for cost anomalies
+- **Related Implementation**: Cost Architecture | Resource Optimization
 
-### 🟡 中影響觀點
+### 🟡 Medium Impact Perspectives
 
-#### [演進性觀點](../../perspectives/evolution/README.md)
-- **運營流程改進**: 運營流程的持續改進和優化
-- **工具升級**: 監控和運營工具的升級和更新
-- **知識管理**: 運營知識和經驗的管理和傳承
-- **相關實現**: \1 | \1
+#### [Evolution Perspective](../../perspectives/evolution/README.md)
+- **Operational Process Improvement**: Continuous improvement and optimization of operational processes
+- **Tool Upgrades**: Upgrades and updates of monitoring and operational tools
+- **Knowledge Management**: Management and transfer of operational knowledge and experience
+- **Related Implementation**: Process Evolution | Tool Management
 
-#### [使用性觀點](../../perspectives/usability/README.md)
-- **運營介面**: 監控儀表板和運營工具的易用性
-- **告警設計**: 告警訊息的清晰度和可操作性
-- **運營文檔**: 運營手冊和程序的可讀性
-- **相關實現**: \1 | \1
+#### [Usability Perspective](../../perspectives/usability/README.md)
+- **Operations Interface**: Usability of monitoring dashboards and operational tools
+- **Alert Design**: Clarity and actionability of alert messages
+- **Operations Documentation**: Readability of operational manuals and procedures
+- **Related Implementation**: Interface Design | Documentation Standards
 
-#### [位置觀點](../../perspectives/location/README.md)
-- **分散式運營**: 多地區運營中心的協調和管理
-- **本地化運營**: 不同地區的運營需求和標準
-- **時區管理**: 跨時區運營和值班安排
-- **相關實現**: \1 | \1
+#### [Location Perspective](../../perspectives/location/README.md)
+- **Distributed Operations**: Coordination and management of multi-region operation centers
+- **Localized Operations**: Regional operational requirements and standards
+- **Timezone Management**: Cross-timezone operations and on-call scheduling
+- **Related Implementation**: Global Operations | Regional Management
 
-## 相關圖表
+## Related Diagrams
 
-- \1
-- \1
-- \1
+- Observability Architecture Overview - Complete monitoring and observability system
+- Incident Response Flow - Automated incident detection and response processes
+- SRE Practices Implementation - Site reliability engineering operational procedures
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[情境視點](../context/README.md)**: 外部系統監控和整合狀態
-- **[功能視點](../functional/README.md)**: 業務功能的監控和指標
-- **[資訊視點](../information/README.md)**: 資料流和事件監控
-- **[並發視點](../concurrency/README.md)**: 並發系統的監控和調優
-- **[開發視點](../development/README.md)**: 開發階段的監控整合
-- **[部署視點](../deployment/README.md)**: 部署監控和基礎設施管理
+- **[Context Viewpoint](../context/README.md)**: External system monitoring and integration status
+- **[Functional Viewpoint](../functional/README.md)**: Business function monitoring and metrics
+- **[Information Viewpoint](../information/README.md)**: Data flow and event monitoring
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Concurrent system monitoring and tuning
+- **[Development Viewpoint](../development/README.md)**: Development-stage monitoring integration
+- **[Deployment Viewpoint](../deployment/README.md)**: Deployment monitoring and infrastructure management
 
-## 實現指南
+## Implementation Guidelines
 
-### 可觀測性三大支柱
+### Three Pillars of Observability
 
-1. **指標 (Metrics)**
-   - 業務指標: 訂單數量、收入、轉換率
-   - 系統指標: CPU、記憶體、網路、磁碟
-   - 應用指標: 響應時間、錯誤率、吞吐量
+1. **Metrics**
+   - Business Metrics: Order count, revenue, conversion rate
+   - System Metrics: CPU, memory, network, disk
+   - Application Metrics: Response time, error rate, throughput
 
-2. **日誌 (Logs)**
-   - 結構化日誌: JSON 格式、統一標準
-   - 關聯 ID: 請求追蹤和問題定位
-   - 敏感資料遮罩: PII 和機密資訊保護
+2. **Logs**
+   - Structured Logging: JSON format, unified standards
+   - Correlation ID: Request tracing and problem localization
+   - Sensitive Data Masking: PII and confidential information protection
 
-3. **追蹤 (Traces)**
-   - 分散式追蹤: 跨服務請求追蹤
-   - 性能分析: 瓶頸識別和優化
-   - 錯誤分析: 異常傳播和根因分析
+3. **Traces**
+   - Distributed Tracing: Cross-service request tracing
+   - Performance Analysis: Bottleneck identification and optimization
+   - Error Analysis: Exception propagation and root cause analysis
 
-### 監控策略
+### Monitoring Strategy
 
-1. **分層監控**
-   - 基礎設施層: 硬體、網路、作業系統
-   - 平台層: Kubernetes、資料庫、中介軟體
-   - 應用層: 業務邏輯、API、使用者體驗
+1. **Layered Monitoring**
+   - Infrastructure Layer: Hardware, network, operating system
+   - Platform Layer: Kubernetes, databases, middleware
+   - Application Layer: Business logic, APIs, user experience
 
-2. **SLI/SLO 管理**
-   - 服務等級指標 (SLI): 可測量的服務品質指標
-   - 服務等級目標 (SLO): 可靠性目標和預算
-   - 錯誤預算: 可接受的故障時間和影響
+2. **SLI/SLO Management**
+   - Service Level Indicators (SLI): Measurable service quality metrics
+   - Service Level Objectives (SLO): Reliability targets and budgets
+   - Error Budget: Acceptable failure time and impact
 
-3. **告警管理**
-   - 智能告警: 基於趨勢和異常檢測
-   - 告警分級: 緊急、高、中、低優先級
-   - 告警疲勞: 減少無意義告警和噪音
+3. **Alert Management**
+   - Intelligent Alerting: Based on trends and anomaly detection
+   - Alert Classification: Critical, high, medium, low priority
+   - Alert Fatigue: Reduce meaningless alerts and noise
 
-## 驗證標準
+## Validation Standards
 
-- 系統可用性 > 99.9%
-- 平均故障恢復時間 (MTTR) < 30 分鐘
-- 監控覆蓋率 > 95%
-- 告警準確率 > 90%
-- 可觀測性開銷 < 5%
+- System availability > 99.9%
+- Mean Time To Recovery (MTTR) < 30 minutes
+- Monitoring coverage > 95%
+- Alert accuracy > 90%
+- Observability overhead < 5%
 
-## 文件列表
+## Document List
 
-- [可觀測性系統概覽](observability-overview.md) - 完整的可觀測性系統介紹
-- [配置指南](configuration-guide.md) - 環境配置和 MSK 主題設定
-- [生產環境測試指南](production-observability-testing-guide.md) - 生產環境測試策略
-- \1 - 監控實施和最佳實踐
-- \1 - 日誌收集和分析
-- \1 - 常見問題診斷和解決
-- \1 - 站點可靠性工程實踐
-- \1 - 系統維護和優化
+- [Observability System Overview](observability-overview.md) - Complete observability system introduction
+- [Configuration Guide](configuration-guide.md) - Environment configuration and MSK topic setup
+- [Production Observability Testing Guide](production-observability-testing-guide.md) - Production environment testing strategy
+- Monitoring Implementation and Best Practices - Monitoring setup and optimization
+- Log Collection and Analysis - Log management and analysis procedures
+- Common Issue Diagnosis and Resolution - Troubleshooting guides and runbooks
+- Site Reliability Engineering Practices - SRE methodologies and procedures
+- System Maintenance and Optimization - Maintenance schedules and optimization strategies
 
-## 核心組件
+## Core Components
 
-### 🔍 分散式追蹤
+### 🔍 Distributed Tracing
 
-- **AWS X-Ray**: 跨服務請求追蹤
-- **Jaeger**: 本地開發環境追蹤
-- **關聯 ID**: 統一的請求追蹤標識
+- **AWS X-Ray**: Cross-service request tracing
+- **Jaeger**: Local development environment tracing
+- **Correlation ID**: Unified request tracing identifier
 
-### 📝 結構化日誌
+### 📝 Structured Logging
 
-- **Logback**: 統一日誌格式
-- **PII 遮罩**: 敏感資料保護
-- **CloudWatch**: 日誌聚合和分析
+- **Logback**: Unified log format
+- **PII Masking**: Sensitive data protection
+- **CloudWatch**: Log aggregation and analysis
 
-### 📊 業務指標
+### 📊 Business Metrics
 
-- **Micrometer**: 指標收集框架
-- **CloudWatch**: 自定義業務指標
-- **Prometheus**: 指標暴露端點
+- **Micrometer**: Metrics collection framework
+- **CloudWatch**: Custom business metrics
+- **Prometheus**: Metrics exposure endpoints
 
-### 💰 成本優化
+### 💰 Cost Optimization
 
-- **資源右調**: 自動化資源分析
-- **成本追蹤**: 即時成本監控
-- **優化建議**: 智能成本建議
+- **Resource Right-sizing**: Automated resource analysis
+- **Cost Tracking**: Real-time cost monitoring
+- **Optimization Recommendations**: Intelligent cost suggestions
 
-## 適用對象
+## Target Audience
 
-- SRE 工程師和運維人員
-- 監控工程師和平台工程師
-- 事件響應團隊和值班人員
-- 開發團隊和技術主管
+- SRE engineers and operations personnel
+- Monitoring engineers and platform engineers
+- Incident response teams and on-call personnel
+- Development teams and technical leads

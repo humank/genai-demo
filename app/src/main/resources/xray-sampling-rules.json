@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "default": {
+    "fixed_target": 1,
+    "rate": 0.1
+  },
+  "rules": [
+    {
+      "description": "GenAI Demo Application - Production",
+      "service_name": "genai-demo",
+      "http_method": "*",
+      "url_path": "*",
+      "fixed_target": 2,
+      "rate": 0.05
+    },
+    {
+      "description": "GenAI Demo Application - Staging",
+      "service_name": "genai-demo-staging",
+      "http_method": "*",
+      "url_path": "*",
+      "fixed_target": 1,
+      "rate": 0.1
+    },
+    {
+      "description": "Health Check Endpoints - No Tracing",
+      "service_name": "*",
+      "http_method": "GET",
+      "url_path": "/actuator/health*",
+      "fixed_target": 0,
+      "rate": 0.0
+    },
+    {
+      "description": "Metrics Endpoints - No Tracing",
+      "service_name": "*",
+      "http_method": "GET",
+      "url_path": "/actuator/metrics*",
+      "fixed_target": 0,
+      "rate": 0.0
+    },
+    {
+      "description": "Prometheus Metrics - No Tracing",
+      "service_name": "*",
+      "http_method": "GET",
+      "url_path": "/actuator/prometheus*",
+      "fixed_target": 0,
+      "rate": 0.0
+    },
+    {
+      "description": "API Endpoints - High Priority",
+      "service_name": "*",
+      "http_method": "*",
+      "url_path": "/api/*",
+      "fixed_target": 2,
+      "rate": 0.1
+    },
+    {
+      "description": "Error Responses - Always Trace",
+      "service_name": "*",
+      "http_method": "*",
+      "url_path": "*",
+      "fixed_target": 1,
+      "rate": 1.0
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 skinparam classAttributeIconSize 0
 skinparam classFontStyle bold
 
-title Order Bounded Context - Aggregate Details\nGenerated: 2025-09-21 19:48:57\n\n
+title Order Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:44\n\n
 
 class Order <<AggregateRoot>> {
   -id: OrderId

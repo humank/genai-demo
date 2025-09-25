@@ -1,0 +1,274 @@
+package solid.humank.genaidemo.infrastructure.common.lock;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.DisplayName;
+
+import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.*;
+
+/**
+ * Unit tests for InMemoryDistributedLockManager.
+ */
+@Tag("unit")
+@DisplayName("InMemoryDistributedLockManager Tests")
+class InMemoryDistributedLockManagerTest {
+    
+    private InMemoryDistributedLockManager lockManager;
+    
+    @BeforeEach
+    void setUp() {
+        lockManager = new InMemoryDistributedLockManager();
+        lockManager.clearAllLocks(); // Ensure clean state
+    }
+    
+    @Test
+    @DisplayName("Should acquire lock successfully with valid parameters")
+    void should_acquire_lock_successfully() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        // When
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockManager.isLocked(lockKey)).isTrue();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(1);
+    }
+    
+    @Test
+    @DisplayName("Should fail to acquire lock when already held")
+    void should_fail_to_acquire_lock_when_already_held() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofMillis(100);
+        
+        // First acquisition
+        boolean firstAcquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // When - Second acquisition attempt
+        boolean secondAcquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // Then
+        assertThat(firstAcquired).isTrue();
+        assertThat(secondAcquired).isFalse();
+        assertThat(lockManager.isLocked(lockKey)).isTrue();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(1);
+    }
+    
+    @Test
+    @DisplayName("Should release lock successfully")
+    void should_release_lock_successfully() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        String lockValue = lockInfo != null ? lockInfo.lockValue() : "unknown";
+        
+        // When
+        lockManager.unlock(lockKey, lockValue);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockManager.isLocked(lockKey)).isFalse();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(0);
+    }
+    
+    @Test
+    @DisplayName("Should handle lock expiration correctly")
+    void should_handle_lock_expiration() throws InterruptedException {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofMillis(100);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        // When
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // Wait for lock to expire
+        Thread.sleep(150);
+        
+        // Try to acquire again
+        boolean reacquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(reacquired).isTrue();
+    }
+    
+    @Test
+    @DisplayName("Should force unlock successfully")
+    void should_force_unlock_successfully() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // When
+        lockManager.forceUnlock(lockKey);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockManager.isLocked(lockKey)).isFalse();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(0);
+    }
+    
+    @Test
+    @DisplayName("Should renew lock successfully")
+    void should_renew_lock_successfully() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(1);
+        Duration waitTime = Duration.ofSeconds(1);
+        Duration newExpireTime = Duration.ofSeconds(10);
+        
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        
+        // When
+        boolean renewed = lockManager.renewLock(lockKey, lockInfo.lockValue(), newExpireTime);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(renewed).isTrue();
+        assertThat(lockManager.isLocked(lockKey)).isTrue();
+        
+        LockInfo renewedLockInfo = lockManager.getLockInfo(lockKey);
+        assertThat(renewedLockInfo.getRemainingTimeMillis()).isGreaterThan(5000);
+    }
+    
+    @Test
+    @DisplayName("Should get lock info correctly")
+    void should_get_lock_info_correctly() {
+        // Given
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // When
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockInfo).isNotNull();
+        assertThat(lockInfo.lockKey()).isEqualTo(lockKey);
+        assertThat(lockInfo.isValid()).isTrue();
+        assertThat(lockInfo.getRemainingTimeMillis()).isGreaterThan(0);
+    }
+    
+    @Test
+    @DisplayName("Should return null for non-existent lock info")
+    void should_return_null_for_non_existent_lock_info() {
+        // Given
+        String lockKey = "non-existent-lock";
+        
+        // When
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        
+        // Then
+        assertThat(lockInfo).isNull();
+    }
+    
+    @Test
+    @DisplayName("Should handle concurrent lock attempts correctly")
+    void should_handle_concurrent_lock_attempts() throws InterruptedException {
+        // Given
+        String lockKey = "concurrent-test-lock";
+        Duration expireTime = Duration.ofSeconds(2);
+        Duration waitTime = Duration.ofMillis(500);
+        int threadCount = 10;
+        
+        ExecutorService executor = Executors.newFixedThreadPool(threadCount);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+        AtomicInteger successCount = new AtomicInteger(0);
+        
+        // When
+        for (int i = 0; i < threadCount; i++) {
+            executor.submit(() -> {
+                try {
+                    boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+                    if (acquired) {
+                        successCount.incrementAndGet();
+                        // Hold the lock briefly
+                        Thread.sleep(100);
+                        lockManager.forceUnlock(lockKey);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+        
+        latch.await(10, TimeUnit.SECONDS);
+        executor.shutdown();
+        
+        // Then
+        // Only one thread should have successfully acquired the lock initially
+        // Others might acquire it after the first one releases it
+        assertThat(successCount.get()).isGreaterThan(0);
+        assertThat(successCount.get()).isLessThanOrEqualTo(threadCount);
+    }
+    
+    @Test
+    @DisplayName("Should handle TimeUnit parameters correctly")
+    void should_handle_time_unit_parameters() {
+        // Given
+        String lockKey = "timeunit-test-lock";
+        long expireTime = 10;
+        long waitTime = 1;
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        
+        // When
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime, timeUnit);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockManager.isLocked(lockKey)).isTrue();
+        
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        assertThat(lockInfo.getRemainingTimeMillis()).isGreaterThan(5000);
+    }
+    
+    @Test
+    @DisplayName("Should clear all locks successfully")
+    void should_clear_all_locks_successfully() {
+        // Given
+        String lockKey1 = "test-lock-1";
+        String lockKey2 = "test-lock-2";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        lockManager.tryLock(lockKey1, expireTime, waitTime);
+        lockManager.tryLock(lockKey2, expireTime, waitTime);
+        
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(2);
+        
+        // When
+        lockManager.clearAllLocks();
+        
+        // Then
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(0);
+        assertThat(lockManager.isLocked(lockKey1)).isFalse();
+        assertThat(lockManager.isLocked(lockKey2)).isFalse();
+    }
+}

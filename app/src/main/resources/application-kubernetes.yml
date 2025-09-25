@@ -1,0 +1,69 @@
+spring:
+  profiles:
+    active: kubernetes
+  
+  # Kubernetes-specific configuration
+  cloud:
+    kubernetes:
+      config:
+        enabled: true
+        sources:
+          - name: genai-demo-config
+            namespace: default
+      reload:
+        enabled: true
+        mode: event
+        strategy: refresh
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        step: 10s
+    tags:
+      application: genai-demo
+      environment: ${SPRING_PROFILES_ACTIVE:kubernetes}
+  server:
+    port: 8081
+
+# Thread pool configuration for KEDA scaling
+app:
+  thread-pool:
+    event-processing-core-size: ${THREAD_POOL_EVENT_CORE_SIZE:10}
+    event-processing-max-size: ${THREAD_POOL_EVENT_MAX_SIZE:50}
+    event-processing-queue-capacity: ${THREAD_POOL_EVENT_QUEUE_CAPACITY:200}
+    retry-core-size: ${THREAD_POOL_RETRY_CORE_SIZE:5}
+    retry-max-size: ${THREAD_POOL_RETRY_MAX_SIZE:20}
+    retry-queue-capacity: ${THREAD_POOL_RETRY_QUEUE_CAPACITY:100}
+
+# Logging configuration
+logging:
+  level:
+    solid.humank.genaidemo: INFO
+    org.springframework.scheduling: DEBUG
+    io.micrometer: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+
+# Server configuration
+server:
+  port: 8080
+  shutdown: graceful
+  
+# Graceful shutdown
+spring.lifecycle.timeout-per-shutdown-phase: 30s

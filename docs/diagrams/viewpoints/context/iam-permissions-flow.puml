@@ -1,0 +1,216 @@
+@startuml IAM Permissions Flow
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v18.0/dist
+!includeurl AWSPUML/AWSCommon.puml
+!includeurl AWSPUML/AWSSimplified.puml
+!includeurl AWSPUML/SecurityIdentityCompliance/all.puml
+!includeurl AWSPUML/Compute/all.puml
+
+title IRSA (IAM Roles for Service Accounts) Authentication Flow
+
+skinparam backgroundColor #FFFFFF
+skinparam sequenceMessageAlign center
+skinparam participant {
+    BackgroundColor lightblue
+    BorderColor blue
+}
+
+participant "Application Pod" as pod
+participant "Service Account\n(genai-demo-app)" as sa
+participant "Kubernetes\nAPI Server" as k8s_api
+participant "EKS OIDC\nProvider" as oidc
+participant "AWS STS" as sts
+participant "IAM Role\n(genai-demo-app-role)" as iam_role
+participant "AWS Service\n(CloudWatch)" as aws_service
+
+== Pod Startup and Token Mounting ==
+
+pod -> sa : 1. Pod starts with Service Account
+activate pod
+activate sa
+
+note over pod, sa
+  **Automatic Token Mounting:**
+  - Token path: /var/run/secrets/eks.amazonaws.com/serviceaccount/token
+  - Token contains: Service Account name, namespace, audience
+  - Token is automatically refreshed by kubelet
+end note
+
+sa -> k8s_api : 2. Request Service Account details
+activate k8s_api
+k8s_api -> sa : 3. Return SA info with IAM Role ARN annotation
+deactivate k8s_api
+
+note over sa
+  **Service Account Annotation:**
+  eks.amazonaws.com/role-arn: 
+  arn:aws:iam::ACCOUNT:role/genai-demo-production-app-role
+end note
+
+== JWT Token Generation ==
+
+sa -> oidc : 4. Request JWT Token using SA Token
+activate oidc
+
+note over oidc
+  **JWT Token Claims:**
+  - iss: https://oidc.eks.region.amazonaws.com/id/cluster-id
+  - sub: system:serviceaccount:default:genai-demo-app
+  - aud: sts.amazonaws.com
+  - exp: Token expiration time
+  - iat: Issued at time
+end note
+
+oidc -> oidc : 5. Validate SA Token & Sign JWT
+oidc -> sa : 6. Return Signed JWT Token
+deactivate oidc
+
+== AWS Credential Exchange ==
+
+sa -> sts : 7. AssumeRoleWithWebIdentity
+activate sts
+
+note over sa, sts
+  **STS Request Parameters:**
+  - RoleArn: arn:aws:iam::ACCOUNT:role/genai-demo-production-app-role
+  - WebIdentityToken: JWT Token from OIDC
+  - RoleSessionName: genai-demo-app-{pod-name}
+  - DurationSeconds: 3600 (1 hour)
+end note
+
+sts -> sts : 8. Validate JWT Token
+note over sts
+  **JWT Validation:**
+  - Verify signature using OIDC public key
+  - Check issuer matches EKS OIDC Provider
+  - Verify audience is "sts.amazonaws.com"
+  - Ensure token is not expired
+  - Validate subject format
+end note
+
+sts -> iam_role : 9. Check Trust Policy
+activate iam_role
+
+note over iam_role
+  **Trust Policy Conditions:**
+  StringEquals:
+    "oidc-provider:sub": "system:serviceaccount:default:genai-demo-app"
+    "oidc-provider:aud": "sts.amazonaws.com"
+  
+  **Additional Conditions (Optional):**
+  StringLike:
+    "oidc-provider:sub": "system:serviceaccount:default:genai-demo-*"
+  IpAddress:
+    "aws:SourceIp": "10.0.0.0/16"
+end note
+
+iam_role -> sts : 10. Trust relationship validated
+deactivate iam_role
+
+sts -> sa : 11. Return Temporary AWS Credentials
+deactivate sts
+
+note over sa
+  **Temporary Credentials:**
+  - AccessKeyId: ASIA...
+  - SecretAccessKey: ...
+  - SessionToken: ...
+  - Expiration: 1 hour from now
+end note
+
+== AWS Service Access ==
+
+sa -> aws_service : 12. Call AWS API with credentials
+activate aws_service
+
+note over sa, aws_service
+  **API Request Headers:**
+  - Authorization: AWS4-HMAC-SHA256 Credential=...
+  - X-Amz-Security-Token: Session Token
+  - X-Amz-Date: Request timestamp
+end note
+
+aws_service -> aws_service : 13. Validate credentials & permissions
+
+note over aws_service
+  **Permission Validation:**
+  1. Verify credentials are valid and not expired
+  2. Check IAM policies attached to the role
+  3. Evaluate resource-based policies (if any)
+  4. Check service-specific permissions
+  5. Evaluate condition blocks in policies
+end note
+
+aws_service -> sa : 14. Return API response
+deactivate aws_service
+
+sa -> pod : 15. Return result to application
+deactivate sa
+deactivate pod
+
+== Permission Policy Example ==
+
+note over iam_role
+  **CloudWatch Metrics Policy:**
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "CloudWatchMetricsAccess",
+        "Effect": "Allow",
+        "Action": [
+          "cloudwatch:PutMetricData",
+          "cloudwatch:GetMetricStatistics"
+        ],
+        "Resource": "*",
+        "Condition": {
+          "StringEquals": {
+            "aws:RequestedRegion": ["ap-east-2", "ap-northeast-1"]
+          }
+        }
+      }
+    ]
+  }
+end note
+
+== Automatic Token Refresh ==
+
+group Token Refresh (Every Hour)
+    note over pod, sts
+      **Automatic Refresh Process:**
+      - AWS SDK automatically detects token expiration
+      - Repeats steps 7-11 to get new credentials
+      - Application code remains unchanged
+      - No service interruption during refresh
+    end note
+    
+    sa -> sts : AssumeRoleWithWebIdentity (refresh)
+    activate sts
+    sts -> sa : New temporary credentials
+    deactivate sts
+end
+
+== Error Scenarios ==
+
+group Common Error Cases
+    alt JWT Token Invalid
+        sa -> sts : AssumeRoleWithWebIdentity
+        activate sts
+        sts -> sa : InvalidIdentityToken
+        deactivate sts
+        note over sa : Check OIDC Provider configuration
+    else Trust Policy Mismatch
+        sa -> sts : AssumeRoleWithWebIdentity
+        activate sts
+        sts -> sa : AccessDenied
+        deactivate sts
+        note over sa : Verify Service Account annotation and trust policy
+    else Insufficient Permissions
+        sa -> aws_service : API Call
+        activate aws_service
+        aws_service -> sa : AccessDenied
+        deactivate aws_service
+        note over sa : Check IAM policy permissions
+    end
+end
+
+@enduml

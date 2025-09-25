@@ -2,9 +2,16 @@
 !theme plain
 skinparam classAttributeIconSize 0
 
-title Application Services Overview\nGenerated: 2025-09-21 19:48:57\n\n
+title Application Services Overview\nGenerated: 2025-09-24 22:16:44\n\n
 
 package "Customer Application Services" {
+  class OptimisticLockingCustomerService <<ApplicationService>> {
+    +upgradeCustomerMembership(): boolean
+    +addRewardPointsWithRetry(): boolean
+    +updateCustomerSpendingWithRetry(): boolean
+    +batchUpdateCustomers(): int
+  }
+
   class CustomerApplicationService <<ApplicationService>> {
     +upgradeCustomerMembershipBasedOnSpending(): void
     +addRewardPoints(): void

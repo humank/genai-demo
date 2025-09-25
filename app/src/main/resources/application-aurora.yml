@@ -1,0 +1,119 @@
+# Aurora 樂觀鎖和讀寫分離配置範例
+# 建立日期: 2025年9月24日 上午10:18 (台北時間)
+# 需求: 1.1 - 並發控制機制全面重構
+
+# Aurora 配置
+aurora:
+  # 樂觀鎖配置
+  optimistic-locking:
+    enabled: true
+    default-max-retries: 3
+    enable-conflict-detection: true
+    enable-performance-monitoring: true
+    retry-delay-base-ms: 100
+    max-retry-delay-ms: 5000
+
+  # 讀寫分離配置
+  read-write-separation:
+    enabled: true
+    read-data-source-weight: 1
+    force-write-in-transaction: true
+    read-connection-timeout-ms: 5000
+    write-connection-timeout-ms: 10000
+
+  # 數據源配置
+  datasource:
+    # 寫入數據源（主要端點）
+    write:
+      url: jdbc:postgresql://aurora-cluster-writer.cluster-xxx.ap-northeast-1.rds.amazonaws.com:5432/genaidemo
+      username: ${DB_USERNAME:genaidemo}
+      password: ${DB_PASSWORD:password}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 20
+        minimum-idle: 5
+        idle-timeout: 300000
+        max-lifetime: 1200000
+        connection-timeout: 20000
+        validation-timeout: 5000
+        leak-detection-threshold: 60000
+        pool-name: AuroraWritePool
+        connection-test-query: SELECT 1
+
+    # 讀取數據源（只讀副本端點）
+    read:
+      url: jdbc:postgresql://aurora-cluster-reader.cluster-xxx.ap-northeast-1.rds.amazonaws.com:5432/genaidemo
+      username: ${DB_USERNAME:genaidemo}
+      password: ${DB_PASSWORD:password}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 15
+        minimum-idle: 3
+        idle-timeout: 300000
+        max-lifetime: 1200000
+        connection-timeout: 10000
+        validation-timeout: 3000
+        leak-detection-threshold: 60000
+        pool-name: AuroraReadPool
+        connection-test-query: SELECT 1
+        read-only: true
+
+# JPA 配置
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        # 啟用樂觀鎖異常轉換
+        jdbc:
+          batch_size: 20
+          batch_versioned_data: true
+        # 啟用統計信息收集
+        generate_statistics: true
+        # 配置樂觀鎖處理
+        optimistic_lock:
+          type: VERSION
+        # 配置連接池
+        connection:
+          provider_disables_autocommit: true
+        # 配置查詢超時
+        query:
+          timeout: 30000
+
+# 日誌配置
+logging:
+  level:
+    solid.humank.genaidemo.infrastructure.common.persistence: DEBUG
+    org.springframework.transaction: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.zaxxer.hikari: DEBUG
+
+# 監控配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: genai-demo
+      environment: aurora
+
+# 自定義監控指標
+custom:
+  metrics:
+    optimistic-locking:
+      enabled: true
+      conflict-rate-threshold: 0.1
+      retry-success-rate-threshold: 0.8
+    read-write-separation:
+      enabled: true
+      read-ratio-threshold: 0.7

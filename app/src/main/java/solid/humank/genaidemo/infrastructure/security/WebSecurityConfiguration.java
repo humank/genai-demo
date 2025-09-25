@@ -29,7 +29,7 @@ public class WebSecurityConfiguration {
          * environments
          */
         @Bean
-        @Profile({ "development", "dev", "test", "test-minimal" })
+        @Profile({ "local", "test" })
         @Order(1)
         public SecurityFilterChain developmentSecurityFilterChain(HttpSecurity http) throws Exception {
                 return http

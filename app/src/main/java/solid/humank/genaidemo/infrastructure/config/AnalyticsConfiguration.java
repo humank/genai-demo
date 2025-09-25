@@ -25,7 +25,7 @@ public class AnalyticsConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(AnalyticsEventPublisher.class)
-    @Profile({ "dev", "development", "test", "default" })
+    @Profile({ "local", "test" })
     public AnalyticsEventPublisher noOpAnalyticsEventPublisher() {
         return new NoOpAnalyticsEventPublisher();
     }

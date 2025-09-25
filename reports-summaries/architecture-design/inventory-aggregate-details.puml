@@ -1,0 +1,30 @@
+@startuml Inventory Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Inventory Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:28\n\n
+
+class Inventory <<AggregateRoot>> {
+  -id: InventoryId
+  -productId: String
+  -productName: String
+  -totalQuantity: int
+  -availableQuantity: int
+  -... (7 more fields)
+  --
+  +isSufficient(): boolean
+  +reserve(): ReservationId
+  +reserve(): ReservationId
+  +... (31 more methods)
+}
+
+note right of Inventory
+  庫存聚合根，管理產品庫存和預留
+  Version: 1.0
+end note
+
+
+' Relationships
+
+@enduml

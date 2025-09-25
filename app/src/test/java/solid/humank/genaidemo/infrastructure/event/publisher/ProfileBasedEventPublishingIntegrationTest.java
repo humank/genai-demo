@@ -25,7 +25,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 @SpringBootTest(classes = {
     solid.humank.genaidemo.infrastructure.config.DomainEventConfiguration.class
 })
-@ActiveProfiles("dev")
+@ActiveProfiles("local")
 @DisplayName("Profile-Based Event Publishing Integration Tests")
 class ProfileBasedEventPublishingIntegrationTest {
 

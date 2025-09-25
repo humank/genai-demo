@@ -1,169 +1,180 @@
 @startuml Hexagonal Architecture Overview
 !theme plain
 skinparam packageStyle rectangle
-skinparam backgroundColor #FFFEF7
 
-title Hexagonal Architecture Overview\\nE-commerce Platform Architecture
+title Hexagonal Architecture Overview\nGenerated: 2025-09-24 22:16:44\n\n
 
-' External Actors
-actor "Customer" as Customer
-actor "Admin" as Admin
-actor "Delivery Person" as DeliveryPerson
-
-' External Systems
-cloud "Stripe Payment" as StripePayment
-cloud "Email Service" as EmailService
-cloud "SMS Service" as SmsService
-database "PostgreSQL" as PostgreSQL
-database "Redis Cache" as RedisCache
-queue "MSK/Kafka" as MSKKafka
-
-package "Interface Layer (Adapters)" {
-  ' Primary Adapters (Driving)
-  [REST Controllers] as RestControllers
-  [Web UI] as WebUI
-  [Admin Dashboard] as AdminDashboard
-  
-  ' Secondary Adapters (Driven)
-  [JPA Repositories] as JpaRepositories
-  [Payment Adapters] as PaymentAdapters
-  [Notification Adapters] as NotificationAdapters
-  [Event Publishers] as EventPublishers
-  [Cache Adapters] as CacheAdapters
+package "Domain Core" {
+  package "Customer" {
+    [<b>Customer</b>] as Customer
+    [<b>Customer</b>] as Customer_1
+    [... 2 more] as CustomerMore
+  }
+  package "Delivery" {
+    [<b>Delivery</b>] as Delivery
+  }
+  package "Inventory" {
+    [<b>Inventory</b>] as Inventory
+  }
+  package "Notification" {
+    [<b>Notification</b>] as Notification
+    [<b>NotificationTemplate</b>] as NotificationTemplate
+  }
+  package "Observability" {
+    [<b>AnalyticsSession</b>] as AnalyticsSession
+    [<b>ObservabilitySession</b>] as ObservabilitySession
+  }
+  package "Order" {
+    [<b>Order</b>] as Order
+    [<b>OrderWorkflow</b>] as OrderWorkflow
+  }
+  package "Payment" {
+    [<b>Payment</b>] as Payment
+    [<b>PaymentMethod</b>] as PaymentMethod
+  }
+  package "Pricing" {
+    [<b>PricingRule</b>] as PricingRule
+  }
+  package "Product" {
+    [<b>Product</b>] as Product
+  }
+  package "Promotion" {
+    [<b>Promotion</b>] as Promotion
+    [<b>Voucher</b>] as Voucher
+  }
+  package "Review" {
+    [<b>ProductReview</b>] as ProductReview
+  }
+  package "Seller" {
+    [<b>Seller</b>] as Seller
+  }
+  package "ShoppingCart" {
+    [<b>ShoppingCart</b>] as ShoppingCart
+  }
 }
 
 package "Application Layer" {
-  [CustomerApplicationService] as CustomerAppSvc
-  [OrderApplicationService] as OrderAppSvc
-  [ProductApplicationService] as ProductAppSvc
-  [PaymentApplicationService] as PaymentAppSvc
-  [ShoppingCartApplicationService] as CartAppSvc
-  [InventoryApplicationService] as InventoryAppSvc
-  [PricingApplicationService] as PricingAppSvc
-  [PromotionApplicationService] as PromotionAppSvc
-  [NotificationApplicationService] as NotificationAppSvc
-  [ObservabilityApplicationService] as ObservabilityAppSvc
-  [StatsApplicationService] as StatsAppSvc
-  [MonitoringApplicationService] as MonitoringAppSvc
-}
-
-package "Domain Core (Hexagon)" {
-  package "Aggregates" {
-    [Customer Aggregate] as CustomerAgg
-    [Order Aggregate] as OrderAgg
-    [Product Aggregate] as ProductAgg
-    [Payment Aggregate] as PaymentAgg
-    [ShoppingCart Aggregate] as CartAgg
-    [Inventory Aggregate] as InventoryAgg
-    [Promotion Aggregate] as PromotionAgg
-    [Delivery Aggregate] as DeliveryAgg
-    [Notification Aggregate] as NotificationAgg
-    [Review Aggregate] as ReviewAgg
-    [Seller Aggregate] as SellerAgg
-    [Observability Aggregate] as ObservabilityAgg
+  package "Customer Application" {
+    [<b>OptimisticLockingCustomerService</b>] as OptimisticLockingCustomerService
+    [<b>CustomerApplicationService</b>] as CustomerApplicationService
   }
-  
-  package "Domain Services" {
-    [OrderDomainService] as OrderDomainSvc
-    [PricingDomainService] as PricingDomainSvc
-    [PromotionDomainService] as PromotionDomainSvc
+  package "Shoppingcart Application" {
+    [<b>ShoppingCartApplicationService</b>] as ShoppingCartApplicationService
   }
-  
-  package "Repository Interfaces" {
-    interface "CustomerRepository" as CustomerRepo
-    interface "OrderRepository" as OrderRepo
-    interface "ProductRepository" as ProductRepo
-    interface "PaymentRepository" as PaymentRepo
-    interface "InventoryRepository" as InventoryRepo
-    interface "PromotionRepository" as PromotionRepo
+  package "Inventory Application" {
+    [<b>InventoryApplicationService</b>] as InventoryApplicationService
   }
-  
-  package "Port Interfaces" {
-    interface "PaymentPort" as PaymentPort
-    interface "NotificationPort" as NotificationPort
-    interface "EventPublisherPort" as EventPublisherPort
-    interface "CachePort" as CachePort
+  package "Common Application" {
+    [<b>DomainEventApplicationService</b>] as DomainEventApplicationService
+  }
+  package "Product Application" {
+    [<b>ProductApplicationService</b>] as ProductApplicationService
+  }
+  package "Observability Application" {
+    [<b>ObservabilityEventService</b>] as ObservabilityEventService
+    [<b>AnalyticsQueryService</b>] as AnalyticsQueryService
+    [<b>DataRetentionService</b>] as DataRetentionService
+    [... 1 more] as ObservabilityAppMore
+  }
+  package "Payment Application" {
+    [<b>PaymentApplicationService</b>] as PaymentApplicationService
+  }
+  package "Notification Application" {
+    [<b>NotificationApplicationService</b>] as NotificationApplicationService
+  }
+  package "Order Application" {
+    [<b>OrderApplicationService</b>] as OrderApplicationService
+  }
+  package "Promotion Application" {
+    [<b>PromotionApplicationService</b>] as PromotionApplicationService
   }
 }
 
-' Primary Port Connections (Inbound)
-Customer --> WebUI
-Admin --> AdminDashboard
-DeliveryPerson --> RestControllers
-
-WebUI --> RestControllers
-AdminDashboard --> RestControllers
-
-RestControllers --> CustomerAppSvc
-RestControllers --> OrderAppSvc
-RestControllers --> ProductAppSvc
-RestControllers --> PaymentAppSvc
-RestControllers --> CartAppSvc
-RestControllers --> InventoryAppSvc
-RestControllers --> PricingAppSvc
-RestControllers --> PromotionAppSvc
-RestControllers --> NotificationAppSvc
-RestControllers --> ObservabilityAppSvc
-RestControllers --> StatsAppSvc
-RestControllers --> MonitoringAppSvc
-
-' Application to Domain Connections
-CustomerAppSvc --> CustomerAgg
-OrderAppSvc --> OrderAgg
-OrderAppSvc --> OrderDomainSvc
-ProductAppSvc --> ProductAgg
-PaymentAppSvc --> PaymentAgg
-CartAppSvc --> CartAgg
-InventoryAppSvc --> InventoryAgg
-PricingAppSvc --> PricingDomainSvc
-PromotionAppSvc --> PromotionAgg
-PromotionAppSvc --> PromotionDomainSvc
-NotificationAppSvc --> NotificationAgg
-ObservabilityAppSvc --> ObservabilityAgg
-
-' Domain to Repository Connections
-CustomerAppSvc --> CustomerRepo
-OrderAppSvc --> OrderRepo
-ProductAppSvc --> ProductRepo
-PaymentAppSvc --> PaymentRepo
-InventoryAppSvc --> InventoryRepo
-PromotionAppSvc --> PromotionRepo
-
-' Domain to Port Connections
-PaymentAppSvc --> PaymentPort
-NotificationAppSvc --> NotificationPort
-OrderAppSvc --> EventPublisherPort
-ProductAppSvc --> CachePort
-
-' Secondary Port Connections (Outbound)
-CustomerRepo --> JpaRepositories
-OrderRepo --> JpaRepositories
-ProductRepo --> JpaRepositories
-PaymentRepo --> JpaRepositories
-InventoryRepo --> JpaRepositories
-PromotionRepo --> JpaRepositories
-
-PaymentPort --> PaymentAdapters
-NotificationPort --> NotificationAdapters
-EventPublisherPort --> EventPublishers
-CachePort --> CacheAdapters
-
-' External System Connections
-JpaRepositories --> PostgreSQL
-PaymentAdapters --> StripePayment
-NotificationAdapters --> EmailService
-NotificationAdapters --> SmsService
-EventPublishers --> MSKKafka
-CacheAdapters --> RedisCache
-
-' Styling
-skinparam package {
-  BackgroundColor<<domain>> #E8F5E8
-  BorderColor<<domain>> #2E7D32
-  BackgroundColor<<application>> #F3E5F5
-  BorderColor<<application>> #7B1FA2
-  BackgroundColor<<interface>> #E1F5FE
-  BorderColor<<interface>> #0277BD
+package "Infrastructure Layer" {
+  package "Customer Infrastructure" {
+    [<b>CustomerRepository</b>] as CustomerRepository
+    [<b>JpaCustomerRepository</b>] as JpaCustomerRepository
+    [... 3 more] as CustomerInfraMore
+  }
+  package "Pricing Infrastructure" {
+    [<b>PricingRuleRepository</b>] as PricingRuleRepository
+    [<b>CommissionService</b>] as CommissionService
+    [... 3 more] as PricingInfraMore
+  }
+  package "Delivery Infrastructure" {
+    [<b>DeliveryRepository</b>] as DeliveryRepository
+    [<b>DeliveryManagementService</b>] as DeliveryManagementService
+    [... 3 more] as DeliveryInfraMore
+  }
+  package "Shoppingcart Infrastructure" {
+    [<b>ShoppingCartRepository</b>] as ShoppingCartRepository
+    [<b>ShoppingCartDomainService</b>] as ShoppingCartDomainService
+    [... 3 more] as ShoppingcartInfraMore
+  }
+  package "Inventory Infrastructure" {
+    [<b>InventoryRepository</b>] as InventoryRepository
+    [<b>InventoryDomainService</b>] as InventoryDomainService
+    [... 5 more] as InventoryInfraMore
+  }
+  package "Review Infrastructure" {
+    [<b>ProductReviewRepository</b>] as ProductReviewRepository
+    [<b>JpaProductReviewRepository</b>] as JpaProductReviewRepository
+    [... 1 more] as ReviewInfraMore
+  }
+  package "Common Infrastructure" {
+    [<b>BaseRepository</b>] as BaseRepository
+    [<b>Repository</b>] as Repository
+    [... 7 more] as CommonInfraMore
+  }
+  package "Product Infrastructure" {
+    [<b>ProductRepository</b>] as ProductRepository
+    [<b>ProductJpaConfig</b>] as ProductJpaConfig
+    [... 3 more] as ProductInfraMore
+  }
+  package "Observability Infrastructure" {
+    [<b>AnalyticsDataRepository</b>] as AnalyticsDataRepository
+    [<b>TracingAspect</b>] as TracingAspect
+    [... 10 more] as ObservabilityInfraMore
+  }
+  package "Payment Infrastructure" {
+    [<b>PaymentMethodRepository</b>] as PaymentMethodRepository
+    [<b>PaymentRepository</b>] as PaymentRepository
+    [... 8 more] as PaymentInfraMore
+  }
+  package "Notification Infrastructure" {
+    [<b>NotificationRepository</b>] as NotificationRepository
+    [<b>NotificationTemplateRepository</b>] as NotificationTemplateRepository
+    [... 8 more] as NotificationInfraMore
+  }
+  package "Order Infrastructure" {
+    [<b>OrderRepository</b>] as OrderRepository
+    [<b>OrderWorkflowRepository</b>] as OrderWorkflowRepository
+    [... 8 more] as OrderInfraMore
+  }
+  package "Promotion Infrastructure" {
+    [<b>VoucherRepository</b>] as VoucherRepository
+    [<b>PromotionRepository</b>] as PromotionRepository
+    [... 7 more] as PromotionInfraMore
+  }
+  package "Seller Infrastructure" {
+    [<b>SellerRepository</b>] as SellerRepository
+    [<b>SellerProfileService</b>] as SellerProfileService
+    [... 2 more] as SellerInfraMore
+  }
 }
+
+package "Interface Layer" {
+  [<b>GlobalExceptionHandler</b>] as GlobalExceptionHandler
+  [<b>ProfileInfoController</b>] as ProfileInfoController
+  [<b>DatabaseHealthController</b>] as DatabaseHealthController
+  [<b>AnalyticsQueryController</b>] as AnalyticsQueryController
+  [<b>OrderController</b>] as OrderController
+  [... 12 more] as MoreControllers
+}
+
+' Layer Dependencies
+GlobalExceptionHandler --> OptimisticLockingCustomerService
+OptimisticLockingCustomerService --> Customer
+CustomerRepository --> Customer
 
 @enduml

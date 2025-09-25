@@ -1,0 +1,46 @@
+@startuml Customer Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Customer Bounded Context - Aggregate Details\nGenerated: 2025-09-24 12:16:34\n\n
+
+class Customer <<AggregateRoot>> {
+  -id: CustomerId
+  -name: CustomerName
+  -email: Email
+  -phone: Phone
+  -address: Address
+  -... (10 more fields)
+  --
+  +getId(): CustomerId
+  +getName(): CustomerName
+  +getEmail(): Email
+  +... (64 more methods)
+}
+
+note right of Customer
+  增強的客戶聚合根，支援完整的消費者功能
+  Version: 2.0
+end note
+
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+  +collectEvent(): void
+  +getUncommittedEvents(): List<DomainEvent>
+  +... (2 more methods)
+}
+
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+  +getId(): Object
+}
+
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+}
+
+
+' Relationships
+
+@enduml

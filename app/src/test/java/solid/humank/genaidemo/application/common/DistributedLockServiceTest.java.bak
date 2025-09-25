@@ -1,0 +1,275 @@
+package solid.humank.genaidemo.application.common;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import solid.humank.genaidemo.domain.common.lock.DistributedLockManager;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
+/**
+ * Unit tests for DistributedLockService.
+ */
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+@DisplayName("DistributedLockService Tests")
+class DistributedLockServiceTest {
+    
+    @Mock
+    private DistributedLockManager lockManager;
+    
+    private DistributedLockService lockService;
+    
+    @BeforeEach
+    void setUp() {
+        lockService = new DistributedLockService(lockManager);
+    }
+    
+    @Test
+    @DisplayName("Should execute task successfully with lock")
+    void should_execute_task_successfully_with_lock() {
+        // Given
+        String lockKey = "test-lock";
+        String expectedResult = "task-result";
+        
+        when(lockManager.tryLock(eq(lockKey), any(Duration.class), any(Duration.class)))
+            .thenReturn(true);
+        
+        // When
+        String result = lockService.executeWithLock(lockKey, () -> expectedResult);
+        
+        // Then
+        assertThat(result).isEqualTo(expectedResult);
+        verify(lockManager).tryLock(eq(lockKey), any(Duration.class), any(Duration.class));
+        verify(lockManager).unlock(eq(lockKey), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should throw exception when lock cannot be acquired")
+    void should_throw_exception_when_lock_cannot_be_acquired() {
+        // Given
+        String lockKey = "test-lock";
+        
+        when(lockManager.tryLock(eq(lockKey), any(Duration.class), any(Duration.class)))
+            .thenReturn(false);
+        
+        // When & Then
+        assertThatThrownBy(() -> lockService.executeWithLock(lockKey, () -> "result"))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("Failed to acquire lock");
+        
+        verify(lockManager).tryLock(eq(lockKey), any(Duration.class), any(Duration.class));
+        verify(lockManager, never()).unlock(anyString(), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should release lock even when task throws exception")
+    void should_release_lock_when_task_throws_exception() {
+        // Given
+        String lockKey = "test-lock";
+        RuntimeException taskException = new RuntimeException("Task failed");
+        
+        when(lockManager.tryLock(eq(lockKey), any(Duration.class), any(Duration.class)))
+            .thenReturn(true);
+        
+        // When & Then
+        assertThatThrownBy(() -> lockService.executeWithLock(lockKey, () -> {
+            throw taskException;
+        })).isEqualTo(taskException);
+        
+        verify(lockManager).tryLock(eq(lockKey), any(Duration.class), any(Duration.class));
+        verify(lockManager).unlock(eq(lockKey), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should execute task with custom timeouts")
+    void should_execute_task_with_custom_timeouts() {
+        // Given
+        String lockKey = "test-lock";
+        Duration waitTime = Duration.ofSeconds(2);
+        Duration leaseTime = Duration.ofSeconds(60);
+        String expectedResult = "custom-result";
+        
+        when(lockManager.tryLock(eq(lockKey), eq(leaseTime), eq(waitTime)))
+            .thenReturn(true);
+        
+        // When
+        String result = lockService.executeWithLock(lockKey, () -> expectedResult, waitTime, leaseTime);
+        
+        // Then
+        assertThat(result).isEqualTo(expectedResult);
+        verify(lockManager).tryLock(eq(lockKey), eq(leaseTime), eq(waitTime));
+        verify(lockManager).unlock(eq(lockKey), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should return null when tryExecuteWithLock cannot acquire lock")
+    void should_return_null_when_try_execute_cannot_acquire_lock() {
+        // Given
+        String lockKey = "test-lock";
+        Duration waitTime = Duration.ofMillis(100);
+        Duration leaseTime = Duration.ofSeconds(30);
+        
+        when(lockManager.tryLock(eq(lockKey), eq(leaseTime), eq(waitTime)))
+            .thenReturn(false);
+        
+        // When
+        String result = lockService.tryExecuteWithLock(lockKey, () -> "result", waitTime, leaseTime);
+        
+        // Then
+        assertThat(result).isNull();
+        verify(lockManager).tryLock(eq(lockKey), eq(leaseTime), eq(waitTime));
+        verify(lockManager, never()).unlock(anyString(), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should return result when tryExecuteWithLock acquires lock successfully")
+    void should_return_result_when_try_execute_acquires_lock() {
+        // Given
+        String lockKey = "test-lock";
+        Duration waitTime = Duration.ofMillis(100);
+        Duration leaseTime = Duration.ofSeconds(30);
+        String expectedResult = "success-result";
+        
+        when(lockManager.tryLock(eq(lockKey), eq(leaseTime), eq(waitTime)))
+            .thenReturn(true);
+        
+        // When
+        String result = lockService.tryExecuteWithLock(lockKey, () -> expectedResult, waitTime, leaseTime);
+        
+        // Then
+        assertThat(result).isEqualTo(expectedResult);
+        verify(lockManager).tryLock(eq(lockKey), eq(leaseTime), eq(waitTime));
+        verify(lockManager).unlock(eq(lockKey), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should check if lock is held")
+    void should_check_if_lock_is_held() {
+        // Given
+        String lockKey = "test-lock";
+        
+        when(lockManager.isLocked(lockKey)).thenReturn(true);
+        
+        // When
+        boolean isLocked = lockService.isLocked(lockKey);
+        
+        // Then
+        assertThat(isLocked).isTrue();
+        verify(lockManager).isLocked(lockKey);
+    }
+    
+    @Test
+    @DisplayName("Should get lock info")
+    void should_get_lock_info() {
+        // Given
+        String lockKey = "test-lock";
+        String expectedLockInfo = "Lock[key=test-lock, locked=true, remaining=30000ms, owner=test-thread]";
+        
+        when(lockManager.getLockInfo(lockKey)).thenReturn(expectedLockInfo);
+        
+        // When
+        String lockInfo = lockService.getLockInfo(lockKey);
+        
+        // Then
+        assertThat(lockInfo).isEqualTo(expectedLockInfo);
+        verify(lockManager).getLockInfo(lockKey);
+    }
+    
+    @Test
+    @DisplayName("Should force unlock")
+    void should_force_unlock() {
+        // Given
+        String lockKey = "test-lock";
+        
+        // When
+        lockService.forceUnlock(lockKey);
+        
+        // Then
+        verify(lockManager).forceUnlock(lockKey);
+    }
+    
+    @Test
+    @DisplayName("Should handle unlock failure gracefully")
+    void should_handle_unlock_failure_gracefully() {
+        // Given
+        String lockKey = "test-lock";
+        String expectedResult = "task-result";
+        
+        when(lockManager.tryLock(eq(lockKey), any(Duration.class), any(Duration.class)))
+            .thenReturn(true);
+        doThrow(new RuntimeException("Unlock failed"))
+            .when(lockManager).unlock(eq(lockKey), anyString());
+        
+        // When
+        String result = lockService.executeWithLock(lockKey, () -> expectedResult);
+        
+        // Then
+        assertThat(result).isEqualTo(expectedResult);
+        verify(lockManager).tryLock(eq(lockKey), any(Duration.class), any(Duration.class));
+        verify(lockManager).unlock(eq(lockKey), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should execute multiple tasks concurrently with different locks")
+    void should_execute_multiple_tasks_concurrently_with_different_locks() {
+        // Given
+        String lockKey1 = "lock-1";
+        String lockKey2 = "lock-2";
+        AtomicInteger counter = new AtomicInteger(0);
+        
+        when(lockManager.tryLock(anyString(), any(Duration.class), any(Duration.class)))
+            .thenReturn(true);
+        
+        // When
+        String result1 = lockService.executeWithLock(lockKey1, () -> {
+            counter.incrementAndGet();
+            return "result-1";
+        });
+        
+        String result2 = lockService.executeWithLock(lockKey2, () -> {
+            counter.incrementAndGet();
+            return "result-2";
+        });
+        
+        // Then
+        assertThat(result1).isEqualTo("result-1");
+        assertThat(result2).isEqualTo("result-2");
+        assertThat(counter.get()).isEqualTo(2);
+        
+        verify(lockManager).tryLock(eq(lockKey1), any(Duration.class), any(Duration.class));
+        verify(lockManager).tryLock(eq(lockKey2), any(Duration.class), any(Duration.class));
+        verify(lockManager).unlock(eq(lockKey1), anyString());
+        verify(lockManager).unlock(eq(lockKey2), anyString());
+    }
+    
+    @Test
+    @DisplayName("Should generate correct lock keys for business operations")
+    void should_generate_correct_lock_keys() {
+        // When & Then
+        assertThat(DistributedLockService.LockKeys.customerOperation("CUST-123"))
+            .isEqualTo("business-lock:customer:CUST-123");
+        
+        assertThat(DistributedLockService.LockKeys.orderOperation("ORDER-456"))
+            .isEqualTo("business-lock:order:ORDER-456");
+        
+        assertThat(DistributedLockService.LockKeys.inventoryOperation("PROD-789"))
+            .isEqualTo("business-lock:inventory:PROD-789");
+        
+        assertThat(DistributedLockService.LockKeys.paymentOperation("PAY-101"))
+            .isEqualTo("business-lock:payment:PAY-101");
+        
+        assertThat(DistributedLockService.LockKeys.globalOperation("system-maintenance"))
+            .isEqualTo("business-lock:global:system-maintenance");
+    }
+}

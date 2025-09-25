@@ -1,122 +1,52 @@
-# Test Profile Configuration
-# Optimized for integration tests with reliable HTTP client setup
+# Test Profile Configuration (Minimal for CI/CD)
+# This configuration is used specifically for automated testing
 
 spring:
-  
-  # Application configuration
+  # Main Configuration
   main:
-    lazy-initialization: true  # Faster test startup
-    banner-mode: off          # Reduce test output
-  
-  # JMX disabled for tests
-  jmx:
-    enabled: false
-  
-  # Configuration import - include OpenAPI configuration for tests
-  config:
-    import: "optional:classpath:application-openapi.yml"
-  
-  # Database configuration for tests
+    lazy-initialization: true
+
+  # Database Configuration for Tests
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password: 
-  
-  # JPA configuration for tests
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+
+  # JPA Configuration for Tests
   jpa:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
     properties:
       hibernate:
-        format_sql: false
-        use_sql_comments: false
-  
-  # Flyway configuration for tests - disabled since we use ddl-auto: create-drop
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # Flyway Configuration for Tests
   flyway:
-    enabled: false
-  
-  # H2 Console (for debugging if needed)
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  
-  # HTTP client configuration for tests
-  http:
-    client:
-      factory: simple  # Use SimpleClientHttpRequestFactory
-      connection-timeout: 5s
-      read-timeout: 10s
-  
-  # Security configuration for tests - disable security completely
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-      - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+    enabled: false  # Disable for faster test startup
 
-# Management endpoints configuration for tests
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"  # Expose all endpoints for testing
-      base-path: /actuator
-  endpoint:
-    health:
-      show-details: always
-      show-components: always
-    metrics:
-      enabled: true
-    prometheus:
-      enabled: true
-  security:
-    enabled: false  # Disable security for actuator endpoints in tests
-  metrics:
-    export:
-      prometheus:
-        enabled: true
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-      percentiles:
-        http.server.requests: 0.5, 0.95, 0.99
-      slo:
-        http.server.requests: 100ms, 500ms, 1s
-
-# Logging configuration for tests
+# Minimal Logging for Tests
 logging:
   level:
-    root: ERROR
+    root: WARN
     solid.humank.genaidemo: INFO
-    org.springframework.web: DEBUG
-    org.springframework.boot.test: INFO
-    org.springframework.test: INFO
-    # Suppress noisy test logs
-    org.springframework.boot.autoconfigure: ERROR
-    org.hibernate: ERROR
-    org.springframework.security: ERROR
-    org.springframework.kafka: ERROR
-    org.apache.kafka: ERROR
-  pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
 
-# Test-specific feature flags
-test:
-  features:
-    observability:
-      enabled: true
-      detailed-metrics: true
-    security:
-      enabled: true
-      mock-authentication: true
-    database:
-      cleanup-after-test: true
-    http-client:
-      type: simple
-      timeout:
-        connect: 5s
-        read: 10s
-      retry:
-        enabled: false  # Disable retries in tests for faster feedback
+# Disable all external integrations for tests
+app:
+  redis:
+    enabled: false
+  
+genai-demo:
+  events:
+    publisher: in-memory
+    async: false
+  observability:
+    enabled: false
+
+# Disable tracing in tests
+tracing:
+  enabled: false

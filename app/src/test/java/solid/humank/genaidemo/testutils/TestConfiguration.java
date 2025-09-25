@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
  * 排除不必要的自動配置以提高測試性能
  */
 @Configuration
-@Profile("test-minimal")
+@Profile("test")
 @EnableAutoConfiguration(exclude = {
         KafkaAutoConfiguration.class,
         SecurityAutoConfiguration.class,

@@ -1,22 +1,22 @@
-# 架構文檔
+# Architecture Documentation
 
-本目錄包含系統架構相關的文檔。
+This directory contains system architecture-related documentation.
 
-## 文檔列表
+## Documentation List
 
-- [架構概覽](overview.md) - 系統整體架構介紹
-- 六角形架構 - 六角形架構實現詳解
-- [分層架構設計](layered-architecture-design.md) - 分層架構設計指南
-- [2025年架構改進](improvements-2025.md) - 最新架構改進記錄
+- [Architecture Overview](overview.md) - Overall system architecture introduction
+- [Hexagonal Architecture](hexagonal-architecture.md) - Detailed hexagonal architecture implementation
+- [Layered Architecture Design](layered-architecture-design.md) - Layered architecture design guide
+- [2025 Architecture Improvements](improvements-2025.md) - Latest architecture improvement records
 
-## 適用對象
+## Target Audience
 
-- 系統架構師
-- 高級開發者
-- 技術負責人
+- System Architects
+- Senior Developers
+- Technical Leads
 
-## 相關連結
+## Related Links
 
-- [設計文檔](../design/) - 詳細設計文檔
-- [圖表文檔](../diagrams/) - 架構圖表
-- [API 文檔](../api/) - API 設計文檔
+- [Design Documentation](../design/) - Detailed design documentation
+- [Diagram Documentation](../diagrams/) - Architecture diagrams
+- [API Documentation](../api/) - API design documentation

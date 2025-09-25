@@ -1,123 +1,46 @@
 @startuml Customer Aggregate Details
 !theme plain
-skinparam dpi 300
-skinparam backgroundColor white
 skinparam classAttributeIconSize 0
 skinparam classFontStyle bold
-skinparam class {
-    BackgroundColor lightblue
-    BorderColor darkblue
-    FontSize 11
-}
 
-title Customer Bounded Context - Aggregate Details\nGenerated: 2025-09-22\n\n
+title Customer Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:44\n\n
 
 class Customer <<AggregateRoot>> {
-  ' 核心屬性
   -id: CustomerId
   -name: CustomerName
   -email: Email
   -phone: Phone
   -address: Address
-  -membershipLevel: MembershipLevel
-  -registrationDate: LocalDateTime
-  -lastLoginDate: LocalDateTime
-  -status: CustomerStatus
-  -preferences: CustomerPreferences
+  -... (10 more fields)
   --
-  ' 查詢方法
   +getId(): CustomerId
   +getName(): CustomerName
   +getEmail(): Email
-  +getPhone(): Phone
-  +getAddress(): Address
-  +getMembershipLevel(): MembershipLevel
-  +getStatus(): CustomerStatus
-  --
-  ' 業務方法
-  +updateProfile(name, email, phone): void
-  +changeAddress(newAddress): void
-  +upgradeMembership(level): void
-  +deactivate(): void
-  +reactivate(): void
-  --
-  ' 事件處理
-  +collectEvent(event): void
-  +getUncommittedEvents(): List<DomainEvent>
-  +markEventsAsCommitted(): void
+  +... (64 more methods)
 }
-
-class CustomerId <<ValueObject>> {
-  -value: String
-  --
-  +getValue(): String
-  +equals(other): boolean
-  +hashCode(): int
-}
-
-class CustomerName <<ValueObject>> {
-  -firstName: String
-  -lastName: String
-  --
-  +getFirstName(): String
-  +getLastName(): String
-  +getFullName(): String
-}
-
-class Email <<ValueObject>> {
-  -value: String
-  --
-  +getValue(): String
-  +isValid(): boolean
-}
-
-class Phone <<ValueObject>> {
-  -countryCode: String
-  -number: String
-  --
-  +getFormattedNumber(): String
-}
-
-class Address <<ValueObject>> {
-  -street: String
-  -city: String
-  -postalCode: String
-  -country: String
-  --
-  +getFullAddress(): String
-}
-
-enum MembershipLevel {
-  STANDARD
-  PREMIUM
-  VIP
-}
-
-enum CustomerStatus {
-  ACTIVE
-  INACTIVE
-  SUSPENDED
-}
-
-' 關係
-Customer *-- CustomerId : contains
-Customer *-- CustomerName : contains
-Customer *-- Email : contains
-Customer *-- Phone : contains
-Customer *-- Address : contains
-Customer --> MembershipLevel : has
-Customer --> CustomerStatus : has
 
 note right of Customer
   增強的客戶聚合根，支援完整的消費者功能
-  - 實現 AggregateRootInterface
-  - 支援領域事件收集
-  - 版本: 2.0
+  Version: 2.0
 end note
 
-note bottom of CustomerId
-  客戶唯一識別符
-  格式: CUST-{UUID}
-end note
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+  +collectEvent(): void
+  +getUncommittedEvents(): List<DomainEvent>
+  +... (2 more methods)
+}
+
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+  +getId(): Object
+}
+
+class Customer <<AggregateRoot>> {
+  +updateProfile(): void
+}
+
+
+' Relationships
 
 @enduml

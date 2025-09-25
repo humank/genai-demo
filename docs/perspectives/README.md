@@ -1,111 +1,111 @@
-# Rozanski & Woods 八大架構觀點 (Architectural Perspectives)
+# Rozanski & Woods Eight Architectural Perspectives
 
-> **跨視點的品質屬性和非功能需求**
+> **Cross-Viewpoint Quality Attributes and Non-Functional Requirements**
 
-## 概覽
+## Overview
 
-架構觀點 (Perspectives) 是跨越所有架構視點的品質屬性考量，每個觀點關注特定的非功能需求，並說明如何在各個視點中體現這些品質屬性。
+Architectural Perspectives are quality attribute considerations that span across all architectural viewpoints. Each perspective focuses on specific non-functional requirements and explains how to embody these quality attributes in various viewpoints.
 
-## 八大架構觀點
+## Eight Architectural Perspectives
 
-### 1. [安全性觀點 (Security Perspective)](security/README.md)
-- **關注點**: 認證、授權、資料保護、合規性
-- **影響視點**: 所有視點都需要考慮安全性
-- **關鍵指標**: 漏洞數量、安全事件響應時間、合規達成率
+### 1. [Security Perspective](security/README.md)
+- **Concerns**: Authentication, authorization, data protection, compliance
+- **Affected Viewpoints**: All viewpoints need to consider security
+- **Key Metrics**: Number of vulnerabilities, security incident response time, compliance achievement rate
 
-### 2. [性能與可擴展性觀點 (Performance & Scalability Perspective)](performance/README.md)
-- **關注點**: 響應時間、吞吐量、資源使用、擴展能力
-- **影響視點**: 功能、資訊、並發、部署視點
-- **關鍵指標**: 響應時間 < 2s、吞吐量 > 1000 req/s
+### 2. [Performance & Scalability Perspective](performance/README.md)
+- **Concerns**: Response time, throughput, resource usage, scalability
+- **Affected Viewpoints**: Functional, information, concurrency, deployment viewpoints
+- **Key Metrics**: Response time < 2s, throughput > 1000 req/s
 
-### 3. [可用性與韌性觀點 (Availability & Resilience Perspective)](availability/README.md)
-- **關注點**: 系統可用性、容錯能力、災難恢復
-- **影響視點**: 並發、部署、運營視點
-- **關鍵指標**: 可用性 ≥ 99.9%、RTO ≤ 5分鐘
+### 3. [Availability & Resilience Perspective](availability/README.md)
+- **Concerns**: System availability, fault tolerance, disaster recovery
+- **Affected Viewpoints**: Concurrency, deployment, operational viewpoints
+- **Key Metrics**: Availability ≥ 99.9%, RTO ≤ 5 minutes
 
-### 4. [演進性觀點 (Evolution Perspective)](evolution/README.md)
-- **關注點**: 可維護性、可擴展性、技術演進
-- **影響視點**: 開發、功能視點
-- **關鍵指標**: 程式碼品質、技術債務、變更成本
+### 4. [Evolution Perspective](evolution/README.md)
+- **Concerns**: Maintainability, extensibility, technology evolution
+- **Affected Viewpoints**: Development, functional viewpoints
+- **Key Metrics**: Code quality, technical debt, change cost
 
-### 5. [可用性觀點 (Usability Perspective)](usability/README.md)
-- **關注點**: 使用者體驗、介面設計、無障礙性
-- **影響視點**: 功能視點
-- **關鍵指標**: 使用者滿意度、任務完成率、學習曲線
+### 5. [Usability Perspective](usability/README.md)
+- **Concerns**: User experience, interface design, accessibility
+- **Affected Viewpoints**: Functional viewpoint
+- **Key Metrics**: User satisfaction, task completion rate, learning curve
 
-### 6. [法規觀點 (Regulation Perspective)](regulation/README.md)
-- **關注點**: 法規合規、資料治理、稽核軌跡
-- **影響視點**: 資訊、安全、運營視點
-- **關鍵指標**: 合規檢查通過率、稽核完整性
+### 6. [Regulation Perspective](regulation/README.md)
+- **Concerns**: Regulatory compliance, data governance, audit trails
+- **Affected Viewpoints**: Information, security, operational viewpoints
+- **Key Metrics**: Compliance check pass rate, audit completeness
 
-### 7. [位置觀點 (Location Perspective)](location/README.md)
-- **關注點**: 地理分佈、資料本地化、網路拓撲
-- **影響視點**: 部署、資訊視點
-- **關鍵指標**: 延遲時間、資料本地化率
+### 7. [Location Perspective](location/README.md)
+- **Concerns**: Geographic distribution, data localization, network topology
+- **Affected Viewpoints**: Deployment, information viewpoints
+- **Key Metrics**: Latency time, data localization rate
 
-### 8. [成本觀點 (Cost Perspective)](cost/README.md)
-- **關注點**: 成本優化、資源效率、預算管理
-- **影響視點**: 部署、運營視點
-- **關鍵指標**: 總擁有成本、資源使用率、成本效益
+### 8. [Cost Perspective](cost/README.md)
+- **Concerns**: Cost optimization, resource efficiency, budget management
+- **Affected Viewpoints**: Deployment, operational viewpoints
+- **Key Metrics**: Total cost of ownership, resource utilization rate, cost-effectiveness
 
-## 觀點與視點的關係矩陣
+## Perspective-Viewpoint Relationship Matrix
 
-| 觀點 \ 視點 | 功能 | 資訊 | 並發 | 開發 | 部署 | 運營 |
-|-------------|------|------|------|------|------|------|
-| **安全性** | 🔴 | 🔴 | 🟡 | 🟡 | 🔴 | 🔴 |
-| **性能** | 🔴 | 🔴 | 🔴 | 🟡 | 🔴 | 🔴 |
-| **可用性** | 🟡 | 🟡 | 🔴 | 🟡 | 🔴 | 🔴 |
-| **演進性** | 🔴 | 🟡 | 🟡 | 🔴 | 🟡 | 🟡 |
-| **使用性** | 🔴 | 🟡 | ⚪ | 🟡 | ⚪ | ⚪ |
-| **法規** | 🟡 | 🔴 | ⚪ | 🟡 | 🟡 | 🔴 |
-| **位置** | ⚪ | 🔴 | 🟡 | ⚪ | 🔴 | 🟡 |
-| **成本** | 🟡 | 🟡 | 🟡 | 🟡 | 🔴 | 🔴 |
+| Perspective \ Viewpoint | Functional | Information | Concurrency | Development | Deployment | Operational |
+|-------------------------|------------|-------------|-------------|-------------|------------|-------------|
+| **Security** | 🔴 | 🔴 | 🟡 | 🟡 | 🔴 | 🔴 |
+| **Performance** | 🔴 | 🔴 | 🔴 | 🟡 | 🔴 | 🔴 |
+| **Availability** | 🟡 | 🟡 | 🔴 | 🟡 | 🔴 | 🔴 |
+| **Evolution** | 🔴 | 🟡 | 🟡 | 🔴 | 🟡 | 🟡 |
+| **Usability** | 🔴 | 🟡 | ⚪ | 🟡 | ⚪ | ⚪ |
+| **Regulation** | 🟡 | 🔴 | ⚪ | 🟡 | 🟡 | 🔴 |
+| **Location** | ⚪ | 🔴 | 🟡 | ⚪ | 🔴 | 🟡 |
+| **Cost** | 🟡 | 🟡 | 🟡 | 🟡 | 🔴 | 🔴 |
 
-**圖例**: 🔴 高度相關 | 🟡 中度相關 | ⚪ 低度相關
+**Legend**: 🔴 Highly Related | 🟡 Moderately Related | ⚪ Lowly Related
 
-## 品質屬性場景 (Quality Attribute Scenarios)
+## Quality Attribute Scenarios
 
-每個觀點都應該定義具體的品質屬性場景，格式為：
+Each perspective should define specific quality attribute scenarios in the format:
 
-**來源 → 刺激 → 環境 → 產物 → 響應 → 響應度量**
+**Source → Stimulus → Environment → Artifact → Response → Response Measure**
 
-### 範例場景
+### Example Scenarios
 
-#### 性能場景
-- **來源**: 網頁使用者
-- **刺激**: 提交包含3個商品的訂單
-- **環境**: 正常運營，1000個並發使用者
-- **產物**: 訂單處理服務
-- **響應**: 處理訂單並返回確認
-- **響應度量**: 響應時間 ≤ 2000ms，成功率 ≥ 99.5%
+#### Performance Scenario
+- **Source**: Web user
+- **Stimulus**: Submit order containing 3 products
+- **Environment**: Normal operation with 1000 concurrent users
+- **Artifact**: Order processing service
+- **Response**: Process order and return confirmation
+- **Response Measure**: Response time ≤ 2000ms, success rate ≥ 99.5%
 
-#### 安全場景
-- **來源**: 惡意使用者
-- **刺激**: 嘗試 SQL 注入攻擊
-- **環境**: 生產系統正常負載
-- **產物**: 客戶 API 服務
-- **響應**: 系統檢測並阻擋攻擊，記錄事件
-- **響應度量**: 100ms內阻擋，事件記錄完整，無資料洩露
+#### Security Scenario
+- **Source**: Malicious user
+- **Stimulus**: Attempt SQL injection attack
+- **Environment**: Production system under normal load
+- **Artifact**: Customer API service
+- **Response**: System detects and blocks attack, logs incident
+- **Response Measure**: Block within 100ms, complete incident logging, no data exposure
 
-## 使用指南
+## Usage Guide
 
-### 設計階段
-1. **識別關鍵觀點**: 確定對系統最重要的品質屬性
-2. **定義場景**: 為每個關鍵觀點定義具體場景
-3. **跨視點檢查**: 確保每個視點都考慮了相關觀點
-4. **權衡分析**: 分析不同觀點間的權衡關係
+### Design Phase
+1. **Identify Key Perspectives**: Determine the most important quality attributes for the system
+2. **Define Scenarios**: Define specific scenarios for each key perspective
+3. **Cross-Viewpoint Checks**: Ensure each viewpoint considers relevant perspectives
+4. **Trade-off Analysis**: Analyze trade-off relationships between different perspectives
 
-### 實現階段
-1. **觀點實現**: 在相關視點中實現觀點要求
-2. **度量定義**: 定義可測量的品質指標
-3. **驗證測試**: 設計測試驗證觀點要求
-4. **持續監控**: 建立持續監控機制
+### Implementation Phase
+1. **Perspective Implementation**: Implement perspective requirements in relevant viewpoints
+2. **Metrics Definition**: Define measurable quality indicators
+3. **Validation Testing**: Design tests to verify perspective requirements
+4. **Continuous Monitoring**: Establish continuous monitoring mechanisms
 
-### 評估階段
-1. **場景驗證**: 驗證品質屬性場景是否滿足
-2. **指標評估**: 評估品質指標達成情況
-3. **改進識別**: 識別需要改進的領域
-4. **權衡調整**: 調整不同觀點間的權衡
+### Evaluation Phase
+1. **Scenario Validation**: Verify whether quality attribute scenarios are satisfied
+2. **Metrics Assessment**: Evaluate quality indicator achievement
+3. **Improvement Identification**: Identify areas needing improvement
+4. **Trade-off Adjustment**: Adjust trade-offs between different perspectives
 
 ## 跨視點和觀點整合
 

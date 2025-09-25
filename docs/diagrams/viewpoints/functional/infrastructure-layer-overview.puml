@@ -2,7 +2,7 @@
 !theme plain
 skinparam classAttributeIconSize 0
 
-title Infrastructure Layer Overview\nGenerated: 2025-09-21 19:48:57\n\n
+title Infrastructure Layer Overview\nGenerated: 2025-09-24 22:16:44\n\n
 
 package "Customer Infrastructure" {
   interface CustomerRepository <<Repository>> {
@@ -30,6 +30,9 @@ package "Customer Infrastructure" {
     +findByBirthMonth(): List<Customer>
     +findNewMembers(): List<Customer>
     +... (4 more methods)
+  }
+
+  interface OptimisticLockingCustomerService <<Repository>> {
   }
 
   interface CustomerApplicationService <<Repository>> {
@@ -226,6 +229,9 @@ package "Common Infrastructure" {
   }
 
   interface RepositoryConfig <<Repository>> {
+  }
+
+  interface XRayTracingConfig <<Repository>> {
   }
 
   interface DeliveryServiceAdapter <<Repository>> {

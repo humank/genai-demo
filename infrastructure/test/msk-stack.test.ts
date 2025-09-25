@@ -1,403 +1,344 @@
 import * as cdk from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as kms from 'aws-cdk-lib/aws-kms';
 import * as sns from 'aws-cdk-lib/aws-sns';
+import { Template } from 'aws-cdk-lib/assertions';
 import { MSKStack } from '../src/stacks/msk-stack';
 
 describe('MSKStack', () => {
     let app: cdk.App;
     let vpc: ec2.Vpc;
-    let mskSecurityGroup: ec2.SecurityGroup;
     let kmsKey: kms.Key;
-    let alertingTopic: sns.Topic;
+    let alertTopic: sns.Topic;
 
     beforeEach(() => {
-        app = new cdk.App({
-            context: {
-                'genai-demo:environments': {
-                    'test': {
-                        'msk': {
-                            'broker-instance-type': 'kafka.t3.small',
-                            'number-of-brokers': 1,
-                            'storage-size': 20
-                        }
-                    }
-                }
-            }
-        });
-
-        // Create a test VPC
+        app = new cdk.App();
+        
+        // Create test VPC
         const vpcStack = new cdk.Stack(app, 'TestVpcStack');
         vpc = new ec2.Vpc(vpcStack, 'TestVpc', {
-            maxAzs: 2,
-            ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16')
-        });
-
-        // Create test security group
-        mskSecurityGroup = new ec2.SecurityGroup(vpcStack, 'TestMskSecurityGroup', {
-            vpc,
-            description: 'Test MSK security group'
+            maxAzs: 3,
+            natGateways: 1,
         });
 
         // Create test KMS key
-        kmsKey = new kms.Key(vpcStack, 'TestKmsKey', {
-            description: 'Test KMS key for MSK'
+        const kmsStack = new cdk.Stack(app, 'TestKmsStack');
+        kmsKey = new kms.Key(kmsStack, 'TestKey', {
+            description: 'Test KMS key for MSK',
         });
 
         // Create test SNS topic
-        alertingTopic = new sns.Topic(vpcStack, 'TestAlertingTopic', {
-            topicName: 'test-alerting-topic'
+        const snsStack = new cdk.Stack(app, 'TestSnsStack');
+        alertTopic = new sns.Topic(snsStack, 'TestTopic', {
+            displayName: 'Test Alert Topic',
         });
     });
 
-    test('should create MSK cluster with correct configuration', () => {
-        // Given
+    test('MSK Stack creates successfully', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
+            region: 'ap-east-2',
+            isPrimaryRegion: true,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
+        
+        // Verify MSK cluster is created
         template.hasResourceProperties('AWS::MSK::Cluster', {
-            ClusterName: 'genai-demo-test-msk',
+            ClusterName: 'TestMSKStack-msk-cluster',
             KafkaVersion: '2.8.1',
-            NumberOfBrokerNodes: 1,
+            NumberOfBrokerNodes: 3,
+        });
+    });
+
+    test('MSK Cluster has correct broker configuration', () => {
+        // WHEN
+        const stack = new MSKStack(app, 'TestMSKStack', {
+            environment: 'test',
+            projectName: 'genai-demo',
+            vpc,
+            kmsKey,
+            alertTopic,
+        });
+
+        // THEN
+        const template = Template.fromStack(stack);
+        
+        template.hasResourceProperties('AWS::MSK::Cluster', {
             BrokerNodeGroupInfo: {
-                InstanceType: 'kafka.t3.small',
+                InstanceType: 'kafka.m5.xlarge',
                 StorageInfo: {
                     EBSStorageInfo: {
-                        VolumeSize: 20
-                    }
-                }
-            }
+                        VolumeSize: 1000,
+                    },
+                },
+            },
         });
     });
 
-    test('should create MSK configuration with domain events optimization', () => {
-        // Given
+    test('MSK Cluster has encryption enabled', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        template.hasResourceProperties('AWS::MSK::Configuration', {
-            Name: 'genai-demo-test-msk-config',
-            Description: 'MSK configuration for genai-demo test environment - optimized for domain events',
-            KafkaVersionsList: ['2.8.1']
-        });
-    });
-
-    test('should enable encryption at rest and in transit', () => {
-        // Given
-        const stack = new MSKStack(app, 'TestMSKStack', {
-            environment: 'test',
-            projectName: 'genai-demo',
-            vpc,
-            mskSecurityGroup,
-            kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
-        });
-
-        // When
-        const template = Template.fromStack(stack);
-
-        // Then
+        
         template.hasResourceProperties('AWS::MSK::Cluster', {
             EncryptionInfo: {
+                EncryptionAtRest: {
+                    DataVolumeKMSKeyId: {
+                        'Fn::GetAtt': [
+                            template.findResources('AWS::KMS::Key')[Object.keys(template.findResources('AWS::KMS::Key'))[0]],
+                            'KeyId'
+                        ]
+                    }
+                },
                 EncryptionInTransit: {
                     ClientBroker: 'TLS',
-                    InCluster: true
-                }
-            }
+                    InCluster: true,
+                },
+            },
         });
-
-        // Check that encryption at rest is configured (KMS key reference exists)
-        const mskCluster = template.findResources('AWS::MSK::Cluster');
-        const clusterKey = Object.keys(mskCluster)[0];
-        expect(mskCluster[clusterKey].Properties.EncryptionInfo.EncryptionAtRest).toBeDefined();
     });
 
-    test('should enable IAM authentication', () => {
-        // Given
+    test('MSK Cluster has authentication configured', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
+        
         template.hasResourceProperties('AWS::MSK::Cluster', {
             ClientAuthentication: {
                 Sasl: {
-                    Iam: {
-                        Enabled: true
-                    }
-                }
-            }
-        });
-    });
-
-    test('should create MSK cluster policy for secure access', () => {
-        // Given
-        const stack = new MSKStack(app, 'TestMSKStack', {
-            environment: 'test',
-            projectName: 'genai-demo',
-            vpc,
-            mskSecurityGroup,
-            kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
-        });
-
-        // When
-        const template = Template.fromStack(stack);
-
-        // Then
-        const clusterPolicies = template.findResources('AWS::MSK::ClusterPolicy');
-        expect(Object.keys(clusterPolicies).length).toBeGreaterThan(0);
-
-        const policyKey = Object.keys(clusterPolicies)[0];
-        expect(clusterPolicies[policyKey].Properties.ClusterArn).toBeDefined();
-        expect(clusterPolicies[policyKey].Properties.Policy).toBeDefined();
-    });
-
-    test('should create MSK Connect role with appropriate permissions', () => {
-        // Given
-        const stack = new MSKStack(app, 'TestMSKStack', {
-            environment: 'test',
-            projectName: 'genai-demo',
-            vpc,
-            mskSecurityGroup,
-            kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
-        });
-
-        // When
-        const template = Template.fromStack(stack);
-
-        // Then
-        template.hasResourceProperties('AWS::IAM::Role', {
-            RoleName: 'genai-demo-test-msk-connect-role',
-            AssumeRolePolicyDocument: {
-                Statement: [{
-                    Effect: 'Allow',
-                    Principal: {
-                        Service: 'kafkaconnect.amazonaws.com'
+                    Scram: {
+                        Enabled: true,
                     },
-                    Action: 'sts:AssumeRole'
-                }]
-            }
+                    Iam: {
+                        Enabled: true,
+                    },
+                },
+            },
         });
     });
 
-    test('should enable comprehensive monitoring', () => {
-        // Given
+    test('MSK Cluster has monitoring enabled', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
+        
         template.hasResourceProperties('AWS::MSK::Cluster', {
-            EnhancedMonitoring: 'PER_BROKER',
+            EnhancedMonitoring: 'PER_TOPIC_PER_PARTITION',
             OpenMonitoring: {
                 Prometheus: {
                     JmxExporter: {
-                        EnabledInBroker: true
+                        EnabledInBroker: true,
                     },
                     NodeExporter: {
-                        EnabledInBroker: true
-                    }
-                }
-            }
+                        EnabledInBroker: true,
+                    },
+                },
+            },
         });
     });
 
-    test('should create CloudWatch alarms for MSK monitoring', () => {
-        // Given
+    test('MSK Configuration is created with correct properties', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        const alarms = template.findResources('AWS::CloudWatch::Alarm');
-        const alarmNames = Object.keys(alarms);
-
-        expect(alarmNames.length).toBeGreaterThan(0);
-
-        // Check for specific alarms
-        const alarmTypes = ['MSKClusterCPUUtilization', 'MSKClusterMemoryUtilization', 'MSKClusterDiskUtilization'];
-        alarmTypes.forEach(alarmType => {
-            const foundAlarm = alarmNames.some(name =>
-                alarms[name].Properties.AlarmName.includes(alarmType)
-            );
-            expect(foundAlarm).toBe(true);
+        
+        template.hasResourceProperties('AWS::MSK::Configuration', {
+            Name: 'TestMSKStack-msk-config',
+            KafkaVersionsList: ['2.8.1'],
         });
     });
 
-    test('should create appropriate outputs for integration', () => {
-        // Given
+    test('Security Group has correct ingress rules', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        const outputs = template.findOutputs('*');
-        const outputNames = Object.keys(outputs);
-
-        // Check for essential outputs
-        const expectedOutputs = [
-            'MSKClusterArn',
-            'MSKClusterName',
-            'MSKBootstrapServersIAM',
-            'MSKBootstrapServersTLS',
-            'DomainEventsTopicPrefix',
-            'SpringBootKafkaConfig'
-        ];
-
-        expectedOutputs.forEach(expectedOutput => {
-            expect(outputNames).toContain(expectedOutput);
+        
+        // Check for MSK ports
+        template.hasResourceProperties('AWS::EC2::SecurityGroup', {
+            SecurityGroupIngress: [
+                {
+                    IpProtocol: 'tcp',
+                    FromPort: 9092,
+                    ToPort: 9092,
+                    CidrIp: '10.0.0.0/16', // VPC CIDR
+                },
+                {
+                    IpProtocol: 'tcp',
+                    FromPort: 9094,
+                    ToPort: 9094,
+                    CidrIp: '10.0.0.0/16',
+                },
+                {
+                    IpProtocol: 'tcp',
+                    FromPort: 9096,
+                    ToPort: 9096,
+                    CidrIp: '10.0.0.0/16',
+                },
+                {
+                    IpProtocol: 'tcp',
+                    FromPort: 2181,
+                    ToPort: 2181,
+                    CidrIp: '10.0.0.0/16',
+                },
+            ],
         });
     });
 
-    test('should configure logging to CloudWatch', () => {
-        // Given
+    test('IAM roles and policies are created', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        template.hasResourceProperties('AWS::MSK::Cluster', {
-            LoggingInfo: {
-                BrokerLogs: {
-                    CloudWatchLogs: {
-                        Enabled: true
-                    }
-                }
-            }
+        
+        // Check MSK Service Role
+        template.hasResourceProperties('AWS::IAM::Role', {
+            AssumeRolePolicyDocument: {
+                Statement: [
+                    {
+                        Effect: 'Allow',
+                        Principal: {
+                            Service: 'kafka.amazonaws.com',
+                        },
+                        Action: 'sts:AssumeRole',
+                    },
+                ],
+            },
         });
 
-        // Check for log group creation
+        // Check MSK Cluster Policy
+        template.hasResourceProperties('AWS::IAM::ManagedPolicy', {
+            PolicyDocument: {
+                Statement: [
+                    {
+                        Effect: 'Allow',
+                        Action: [
+                            'kafka-cluster:Connect',
+                            'kafka-cluster:AlterCluster',
+                            'kafka-cluster:DescribeCluster',
+                        ],
+                    },
+                ],
+            },
+        });
+    });
+
+    test('CloudWatch Log Group is created', () => {
+        // WHEN
+        const stack = new MSKStack(app, 'TestMSKStack', {
+            environment: 'test',
+            projectName: 'genai-demo',
+            vpc,
+            kmsKey,
+            alertTopic,
+        });
+
+        // THEN
+        const template = Template.fromStack(stack);
+        
         template.hasResourceProperties('AWS::Logs::LogGroup', {
-            LogGroupName: '/aws/msk/cluster/genai-demo-test'
+            LogGroupName: '/aws/msk/genai-demo-test',
+            RetentionInDays: 30,
         });
     });
 
-    test('should use private subnets for security', () => {
-        // Given
+    test('Stack outputs are created', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        const mskCluster = template.findResources('AWS::MSK::Cluster');
-        const clusterKey = Object.keys(mskCluster)[0];
-
-        // Check that cluster uses private subnets and security groups
-        expect(mskCluster[clusterKey].Properties.BrokerNodeGroupInfo.ClientSubnets).toBeDefined();
-        expect(mskCluster[clusterKey].Properties.BrokerNodeGroupInfo.SecurityGroups).toBeDefined();
-        expect(mskCluster[clusterKey].Properties.BrokerNodeGroupInfo.ClientSubnets.length).toBeGreaterThan(0);
-        expect(mskCluster[clusterKey].Properties.BrokerNodeGroupInfo.SecurityGroups.length).toBeGreaterThan(0);
+        
+        // Check for required outputs
+        template.hasOutput('MSKClusterArn', {});
+        template.hasOutput('MSKClusterName', {});
+        template.hasOutput('MSKBootstrapServers', {});
+        template.hasOutput('MSKBootstrapServersTls', {});
+        template.hasOutput('MSKZookeeperConnectString', {});
+        template.hasOutput('MSKSecurityGroupId', {});
+        template.hasOutput('MSKClusterPolicyArn', {});
     });
 
-    test('should apply proper tags to all resources', () => {
-        // Given
+    test('Stack has correct tags', () => {
+        // WHEN
         const stack = new MSKStack(app, 'TestMSKStack', {
             environment: 'test',
             projectName: 'genai-demo',
             vpc,
-            mskSecurityGroup,
             kmsKey,
-            alertingTopic,
-            region: 'us-east-1'
+            alertTopic,
+            region: 'ap-east-2',
+            isPrimaryRegion: true,
         });
 
-        // When
+        // THEN
         const template = Template.fromStack(stack);
-
-        // Then
-        const mskCluster = template.findResources('AWS::MSK::Cluster');
-        const clusterKey = Object.keys(mskCluster)[0];
-
-        expect(mskCluster[clusterKey].Properties.Tags).toEqual(
-            expect.objectContaining({
-                Project: 'genai-demo',
+        
+        template.hasResourceProperties('AWS::MSK::Cluster', {
+            Tags: {
                 Environment: 'test',
-                ManagedBy: 'AWS-CDK',
-                Component: 'MSK',
-                Service: 'Messaging'
-            })
-        );
+                Purpose: 'DataFlowTracking',
+                Region: 'Primary',
+            },
+        });
     });
 });

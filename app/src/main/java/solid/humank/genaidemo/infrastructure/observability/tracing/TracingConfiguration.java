@@ -24,7 +24,7 @@ public class TracingConfiguration {
          * Development profile tracing configuration using Jaeger
          */
         @Bean
-        @Profile({ "dev", "development" })
+        @Profile("local")
         @ConditionalOnProperty(name = "tracing.enabled", havingValue = "true", matchIfMissing = true)
         public OpenTelemetry developmentOpenTelemetry() {
                 log.info("Configuring OpenTelemetry for development environment");
@@ -42,7 +42,7 @@ public class TracingConfiguration {
          * Production profile tracing configuration using OTLP
          */
         @Bean
-        @Profile({ "production", "prod", "kubernetes" })
+        @Profile({ "production", "staging" })
         @ConditionalOnProperty(name = "tracing.enabled", havingValue = "true", matchIfMissing = true)
         public OpenTelemetry productionOpenTelemetry() {
                 log.info("Configuring OpenTelemetry for production environment");

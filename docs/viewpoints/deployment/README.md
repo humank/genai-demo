@@ -1,132 +1,132 @@
-# 部署視點
+# Deployment Viewpoint
 
-## 概覽
+## Overview
 
-部署視點關注系統的部署和環境配置，包括基礎設施、容器化、雲端架構和部署策略。
+The Deployment Viewpoint focuses on system deployment and environment configuration, including infrastructure, containerization, cloud architecture, and deployment strategies.
 
-## 利害關係人
+## Stakeholders
 
-- **主要關注者**: DevOps 工程師、運維人員、部署管理員
-- **次要關注者**: 開發者、架構師、專案經理
+- **Primary Stakeholders**: DevOps engineers, operations personnel, deployment administrators
+- **Secondary Stakeholders**: Developers, architects, project managers
 
-## 關注點
+## Concerns
 
-1. **基礎設施管理**: 雲端資源配置和管理
-2. **容器化策略**: Docker 和 Kubernetes 部署
-3. **環境配置**: 開發、測試、生產環境設定
-4. **部署自動化**: CI/CD 流程和自動化部署
-5. **監控和可觀測性**: 部署後的系統監控
+1. **Infrastructure Management**: Cloud resource configuration and management
+2. **Containerization Strategy**: Docker and Kubernetes deployment
+3. **Environment Configuration**: Development, testing, and production environment setup
+4. **Deployment Automation**: CI/CD processes and automated deployment
+5. **Monitoring and Observability**: Post-deployment system monitoring
 
-## 架構元素
+## Architecture Elements
 
-### 部署環境
+### Deployment Environments
 
-- **開發環境**: 本地 Docker Compose
-- **測試環境**: Kubernetes 集群
-- **生產環境**: AWS EKS + Graviton3
+- **Development Environment**: Local Docker Compose
+- **Testing Environment**: Kubernetes cluster
+- **Production Environment**: AWS EKS + Graviton3
 
-#### 多環境架構圖
+#### Multi-Environment Architecture Diagram
 
-![多環境架構](../../diagrams/multi_environment.svg)
+![Multi-Environment Architecture](../../diagrams/multi_environment.svg)
 
-*開發、測試、預生產和生產環境的完整配置，包括資源規格、成本優化和環境間的部署流程*
+*Complete configuration of development, testing, pre-production, and production environments, including resource specifications, cost optimization, and deployment processes between environments*
 
-### 基礎設施組件
+### Infrastructure Components
 
-- **容器平台**: Docker + Kubernetes
-- **雲端服務**: AWS (EKS, RDS, MSK, ElastiCache)
-- **負載均衡**: Application Load Balancer
-- **CDN**: CloudFront (前端資源)
+- **Container Platform**: Docker + Kubernetes
+- **Cloud Services**: AWS (EKS, RDS, MSK, ElastiCache)
+- **Load Balancing**: Application Load Balancer
+- **CDN**: CloudFront (frontend resources)
 
-#### AWS 基礎設施架構圖
+#### AWS Infrastructure Architecture Diagrams
 
-**簡化概覽**
+**Simplified Overview**
 
-![AWS 基礎設施架構](../../diagrams/aws_infrastructure.svg)
+![AWS Infrastructure Architecture](../../diagrams/aws_infrastructure.svg)
 
-*簡化的 AWS 基礎設施架構，展示核心組件：EKS 集群、RDS 資料庫、S3 儲存、CloudWatch 監控和應用程式負載均衡器*
+*Simplified AWS infrastructure architecture showing core components: EKS cluster, RDS database, S3 storage, CloudWatch monitoring, and Application Load Balancer*
 
-**詳細架構**
+**Detailed Architecture**
 
-![AWS 詳細基礎設施架構](../../diagrams/aws-infrastructure-detailed.svg)
+![AWS Detailed Infrastructure Architecture](../../diagrams/aws-infrastructure-detailed.svg)
 
-*完整的 AWS 基礎設施架構，包括 CDK 堆疊、網路安全、容器平台、資料服務、可觀測性組件和環境特定配置*
+*Complete AWS infrastructure architecture including CDK stacks, network security, container platform, data services, observability components, and environment-specific configurations*
 
-### 部署工具
+### Deployment Tools
 
-- **容器化**: Docker + Docker Compose
-- **編排**: Kubernetes + Helm
-- **基礎設施即程式碼**: AWS CDK
+- **Containerization**: Docker + Docker Compose
+- **Orchestration**: Kubernetes + Helm
+- **Infrastructure as Code**: AWS CDK
 - **CI/CD**: GitHub Actions + ArgoCD
 
-### 監控和可觀測性
+### Monitoring and Observability
 
-- **指標收集**: CloudWatch + Prometheus
-- **日誌管理**: CloudWatch Logs + ELK Stack
-- **追蹤**: AWS X-Ray + Jaeger
-- **警報**: CloudWatch Alarms + SNS
+- **Metrics Collection**: CloudWatch + Prometheus
+- **Log Management**: CloudWatch Logs + ELK Stack
+- **Tracing**: AWS X-Ray + Jaeger
+- **Alerting**: CloudWatch Alarms + SNS
 
-## 品質屬性考量
+## Quality Attribute Considerations
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
+> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis of all perspectives
 
-### 🔴 高影響觀點
+### 🔴 High Impact Perspectives
 
-#### [安全性觀點](../../perspectives/security/README.md)
-- **基礎設施安全**: 雲端資源的安全配置和存取控制
-- **容器安全**: Docker 映像的安全掃描和漏洞檢測
-- **網路安全**: VPC、安全群組和網路 ACL 的配置
-- **憑證管理**: SSL/TLS 憑證和密鑰的安全管理
-- **相關實現**: \1 | \1
+#### [Security Perspective](../../perspectives/security/README.md)
+- **Infrastructure Security**: Security configuration and access control for cloud resources
+- **Container Security**: Security scanning and vulnerability detection for Docker images
+- **Network Security**: Configuration of VPC, security groups, and network ACLs
+- **Certificate Management**: Secure management of SSL/TLS certificates and keys
+- **Related Implementation**: Security Architecture | Infrastructure Security Standards
 
-#### [性能觀點](../../perspectives/performance/README.md)
-- **資源配置**: CPU、記憶體和存儲資源的最佳化配置
-- **負載均衡**: 流量分散和負載均衡策略
-- **自動擴展**: 水平和垂直自動擴展機制
-- **網路優化**: CDN、快取和網路延遲優化
-- **相關實現**: \1 | \1
+#### [Performance Perspective](../../perspectives/performance/README.md)
+- **Resource Configuration**: Optimized configuration of CPU, memory, and storage resources
+- **Load Balancing**: Traffic distribution and load balancing strategies
+- **Auto Scaling**: Horizontal and vertical auto-scaling mechanisms
+- **Network Optimization**: CDN, caching, and network latency optimization
+- **Related Implementation**: Performance Architecture | Resource Optimization
 
-#### [可用性觀點](../../perspectives/availability/README.md)
-- **高可用性**: 多可用區和多地區部署策略
-- **災難恢復**: 備份、恢復和業務連續性計畫
-- **健康檢查**: 服務健康監控和自動故障轉移
-- **零停機部署**: 滾動更新和藍綠部署策略
-- **相關實現**: \1 | \1
+#### [Availability Perspective](../../perspectives/availability/README.md)
+- **High Availability**: Multi-AZ and multi-region deployment strategies
+- **Disaster Recovery**: Backup, recovery, and business continuity planning
+- **Health Checks**: Service health monitoring and automatic failover
+- **Zero-Downtime Deployment**: Rolling updates and blue-green deployment strategies
+- **Related Implementation**: Availability Architecture | Disaster Recovery Plans
 
-#### [位置觀點](../../perspectives/location/README.md)
-- **地理分佈**: 多地區部署和全球負載均衡
-- **邊緣運算**: CDN 和邊緣節點的部署策略
-- **資料本地化**: 資料存儲的地理位置和合規要求
-- **網路延遲**: 地理位置對性能的影響和優化
-- **相關實現**: \1 | \1
+#### [Location Perspective](../../perspectives/location/README.md)
+- **Geographic Distribution**: Multi-region deployment and global load balancing
+- **Edge Computing**: CDN and edge node deployment strategies
+- **Data Localization**: Geographic location and compliance requirements for data storage
+- **Network Latency**: Geographic impact on performance and optimization
+- **Related Implementation**: Global Architecture | Edge Deployment
 
-#### [成本觀點](../../perspectives/cost/README.md)
-- **資源成本**: 雲端資源的成本優化和預算控制
-- **運營成本**: 部署和維護的運營成本管理
-- **成本監控**: 實時成本監控和預算告警
-- **資源效率**: 資源使用率的監控和優化
-- **相關實現**: \1 | \1
+#### [Cost Perspective](../../perspectives/cost/README.md)
+- **Resource Costs**: Cloud resource cost optimization and budget control
+- **Operational Costs**: Deployment and maintenance operational cost management
+- **Cost Monitoring**: Real-time cost monitoring and budget alerts
+- **Resource Efficiency**: Monitoring and optimization of resource utilization
+- **Related Implementation**: Cost Architecture | Resource Efficiency
 
-### 🟡 中影響觀點
+### 🟡 Medium Impact Perspectives
 
-#### [演進性觀點](../../perspectives/evolution/README.md)
-- **部署策略演進**: 從藍綠部署到金絲雀部署的策略升級
-- **版本管理**: 應用和基礎設施版本的管理和回滾
-- **技術棧升級**: Kubernetes、Docker 等技術棧的升級路徑
-- **相關實現**: \1 | \1
+#### [Evolution Perspective](../../perspectives/evolution/README.md)
+- **Deployment Strategy Evolution**: Strategy upgrades from blue-green to canary deployment
+- **Version Management**: Application and infrastructure version management and rollback
+- **Technology Stack Upgrades**: Upgrade paths for Kubernetes, Docker, and other technology stacks
+- **Related Implementation**: Evolution Architecture | Technology Upgrade Plans
 
-#### [法規觀點](../../perspectives/regulation/README.md)
-- **合規部署**: 部署環境的法規合規要求
-- **資料主權**: 資料存儲和處理的法律管轄權
-- **稽核軌跡**: 部署活動的完整記錄和稽核
-- **相關實現**: \1 | \1
+#### [Regulation Perspective](../../perspectives/regulation/README.md)
+- **Compliance Deployment**: Regulatory compliance requirements for deployment environments
+- **Data Sovereignty**: Legal jurisdiction for data storage and processing
+- **Audit Trail**: Complete recording and auditing of deployment activities
+- **Related Implementation**: Compliance Architecture | Audit Systems
 
-### 🟢 低影響觀點
+### 🟢 Low Impact Perspectives
 
-#### [使用性觀點](../../perspectives/usability/README.md)
-- **部署介面**: 部署工具和儀表板的易用性
-- **監控可視化**: 部署狀態和指標的可視化展示
-- **相關實現**: \1
+#### [Usability Perspective](../../perspectives/usability/README.md)
+- **Deployment Interface**: Usability of deployment tools and dashboards
+- **Monitoring Visualization**: Visual display of deployment status and metrics
+- **Related Implementation**: User Interface Design
 
 ## 相關圖表
 
@@ -390,63 +390,63 @@ graph TB
 - \1
 - \1
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[情境視點](../context/README.md)**: 外部系統的部署整合
-- **[功能視點](../functional/README.md)**: 業務功能的部署需求
-- **[資訊視點](../information/README.md)**: 資料庫和存儲的部署
-- **[並發視點](../concurrency/README.md)**: 分散式部署和負載處理
-- **[開發視點](../development/README.md)**: 建置產物和 CI/CD 整合
-- **[運營視點](../operational/README.md)**: 監控、日誌和維護
+- **[Context Viewpoint](../context/README.md)**: External system deployment integration
+- **[Functional Viewpoint](../functional/README.md)**: Business function deployment requirements
+- **[Information Viewpoint](../information/README.md)**: Database and storage deployment
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Distributed deployment and load handling
+- **[Development Viewpoint](../development/README.md)**: Build artifacts and CI/CD integration
+- **[Operational Viewpoint](../operational/README.md)**: Monitoring, logging, and maintenance
 
-## 實現指南
+## Implementation Guidelines
 
-### 部署策略
+### Deployment Strategies
 
-1. **容器化優先**: 所有服務都採用容器化部署
-2. **基礎設施即程式碼**: 使用 CDK 管理雲端資源
-3. **自動化部署**: 完整的 CI/CD 流程
-4. **環境一致性**: 開發、測試、生產環境配置一致
-5. **監控整合**: 部署過程包含監控和警報配置
+1. **Container-First**: All services adopt containerized deployment
+2. **Infrastructure as Code**: Use CDK to manage cloud resources
+3. **Automated Deployment**: Complete CI/CD processes
+4. **Environment Consistency**: Consistent configuration across development, testing, and production environments
+5. **Monitoring Integration**: Deployment processes include monitoring and alerting configuration
 
-### 最佳實踐
+### Best Practices
 
-- 使用多階段 Docker 建置優化映像大小
-- 實施滾動更新和健康檢查
-- 配置適當的資源限制和請求
-- 實現自動擴展和負載均衡
-- 建立完整的災難恢復計劃
+- Use multi-stage Docker builds to optimize image size
+- Implement rolling updates and health checks
+- Configure appropriate resource limits and requests
+- Implement auto-scaling and load balancing
+- Establish comprehensive disaster recovery plans
 
-## 驗證標準
+## Validation Standards
 
-- 所有環境部署成功率 > 99%
-- 部署時間 < 15 分鐘
-- 零停機時間部署
-- 自動回滾機制正常運作
-- 監控和警報配置完整
+- All environment deployment success rate > 99%
+- Deployment time < 15 minutes
+- Zero-downtime deployment
+- Automatic rollback mechanisms function properly
+- Complete monitoring and alerting configuration
 
-## 文件列表
+## Document List
 
-- [Docker 部署指南](docker-guide.md) - 容器化部署詳細說明
-- [可觀測性部署](observability-deployment.md) - 監控系統部署指南
-- [生產部署檢查清單](production-deployment-checklist.md) - 生產環境部署檢查
-- [基礎設施即程式碼](infrastructure-as-code.md) - AWS CDK 實踐指南
-- \1 - 容器化最佳實踐
-- \1 - AWS 雲端架構設計
-- \1 - 多環境配置管理
-- \1 - 部署模式和策略
+- [Docker Deployment Guide](docker-guide.md) - Detailed containerized deployment instructions
+- [Observability Deployment](observability-deployment.md) - Monitoring system deployment guide
+- [Production Deployment Checklist](production-deployment-checklist.md) - Production environment deployment checks
+- [Infrastructure as Code](infrastructure-as-code.md) - AWS CDK practice guide
+- Containerization Best Practices - Container optimization and security
+- AWS Cloud Architecture Design - Cloud-native architecture patterns
+- Multi-Environment Configuration Management - Environment-specific configurations
+- Deployment Patterns and Strategies - Advanced deployment methodologies
 
-## 端口配置
+## Port Configuration
 
-- **後端**: 8080
-- **CMC 前端**: 3002
-- **Consumer 前端**: 3001
-- **監控**: 9090 (Prometheus), 3000 (Grafana)
+- **Backend**: 8080
+- **CMC Frontend**: 3002
+- **Consumer Frontend**: 3001
+- **Monitoring**: 9090 (Prometheus), 3000 (Grafana)
 
-## 適用對象
+## Target Audience
 
-- DevOps 工程師和運維人員
-- 部署管理員和發布經理
-- 雲端架構師和平台工程師
-- 開發團隊和技術主管
+- DevOps engineers and operations personnel
+- Deployment administrators and release managers
+- Cloud architects and platform engineers
+- Development teams and technical leads
 ![Infrastructure Overview](../../diagrams/viewpoints/deployment/infrastructure-overview.svg)

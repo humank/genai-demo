@@ -301,7 +301,7 @@ export JAVA_OPTS="-XX:TieredStopAtLevel=1 -noverify"
     
     def fix_deployment_guide_links(self):
         """修復 DEPLOYMENT_GUIDE.md 中的連結"""
-        file_path = self.project_root / "DEPLOYMENT_GUIDE.md"
+        file_path = self.project_root / "docs" / "DEPLOYMENT_GUIDE.md"
         
         if not file_path.exists():
             self.log_error(str(file_path), "文件不存在")
@@ -331,7 +331,7 @@ export JAVA_OPTS="-XX:TieredStopAtLevel=1 -noverify"
     
     def fix_developer_quickstart_links(self):
         """修復 DEVELOPER_QUICKSTART.md 中的連結"""
-        file_path = self.project_root / "DEVELOPER_QUICKSTART.md"
+        file_path = self.project_root / "docs" / "DEVELOPER_QUICKSTART.md"
         
         if not file_path.exists():
             self.log_error(str(file_path), "文件不存在")

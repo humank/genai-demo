@@ -2,7 +2,7 @@
 
 This directory contains automatically generated PlantUML diagrams based on the analysis of the project's DDD code structure and BDD feature files.
 
-## Generated on: 2025-09-21
+## Generated on: 2025-09-24
 
 ## DDD Code Analysis Results
 

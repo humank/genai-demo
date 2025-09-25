@@ -132,8 +132,7 @@ npm run docs:translation
 ```
 
 **Features:**
-- Validates Chinese-English document pairs
-- Checks terminology consistency using `.terminology.json`
+- Validates document structure and content
 - Validates Viewpoints & Perspectives structure
 - Supports new documentation organization
 
@@ -161,12 +160,7 @@ bash scripts/test-documentation-quality.sh
 - Ordered list style enforcement
 - Heading structure validation
 
-### Terminology Dictionary
-**`docs/.terminology.json`** - Translation terminology
-- Rozanski & Woods viewpoints and perspectives
-- DDD strategic and tactical patterns
-- Architecture and design terminology
-- Stakeholder and implementation terms
+
 
 ## NPM Scripts
 

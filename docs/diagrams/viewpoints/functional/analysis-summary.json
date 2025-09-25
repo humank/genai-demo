@@ -1,8 +1,8 @@
 {
-  "timestamp": "2025-09-21T19:48:57.520107",
+  "timestamp": "2025-09-24T22:16:44.507891",
   "domain_classes_count": 116,
-  "application_services_count": 13,
-  "repositories_count": 97,
+  "application_services_count": 14,
+  "repositories_count": 99,
   "controllers_count": 17,
   "events_count": 59,
   "bounded_contexts": [
@@ -720,6 +720,11 @@
   ],
   "application_services": [
     {
+      "name": "OptimisticLockingCustomerService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 4
+    },
+    {
       "name": "CustomerApplicationService",
       "package": "solid.humank.genaidemo.application.customer.service",
       "methods_count": 6
@@ -963,6 +968,11 @@
     },
     {
       "name": "RepositoryConfig",
+      "package": "solid.humank.genaidemo.infrastructure.config",
+      "methods_count": 0
+    },
+    {
+      "name": "XRayTracingConfig",
       "package": "solid.humank.genaidemo.infrastructure.config",
       "methods_count": 0
     },
@@ -1225,6 +1235,11 @@
       "name": "SellerRepositoryAdapter",
       "package": "solid.humank.genaidemo.infrastructure.seller.persistence.adapter",
       "methods_count": 8
+    },
+    {
+      "name": "OptimisticLockingCustomerService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 0
     },
     {
       "name": "CustomerApplicationService",

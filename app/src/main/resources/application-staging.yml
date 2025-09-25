@@ -1,0 +1,176 @@
+# Staging Environment Configuration
+# AWS Native Concurrency Monitoring System Configuration
+
+spring:
+  profiles:
+    active: staging
+
+# Management and Actuator Configuration for Staging
+management:
+  metrics:
+    export:
+      cloudwatch:
+        enabled: true
+        namespace: GenAIDemo/Staging
+        step: 1m
+        batch-size: 20
+    tags:
+      environment: staging
+      region: ${AWS_REGION:ap-east-2}
+
+# AWS X-Ray Configuration for Staging
+aws:
+  region: ${AWS_REGION:ap-east-2}
+  xray:
+    enabled: true
+    tracing-name: genai-demo-staging
+    daemon-address: ${XRAY_DAEMON_ADDRESS:127.0.0.1:2000}
+    sampling:
+      rate: 0.1  # Higher sampling rate for staging
+      reservoir: 1
+    context-missing: LOG_ERROR
+    plugins:
+      - EC2Plugin
+      - ECSPlugin
+      - EKSPlugin
+
+# Container Insights Configuration
+container-insights:
+  enabled: true
+  cluster-name: genai-demo-staging
+  log-group: /aws/containerinsights/genai-demo-staging/performance
+
+# Thread Pool Configuration for KEDA Integration
+genai-demo:
+  thread-pool:
+    core-size: 5
+    max-size: 20
+    queue-capacity: 100
+    keep-alive-seconds: 60
+    metrics:
+      enabled: true
+      export-interval: 30s
+
+  # Observability Configuration
+  observability:
+    enabled: true
+    distributed-tracing: true
+    
+    # CloudWatch Metrics Configuration
+    metrics:
+      cloudwatch:
+        enabled: true
+        namespace: GenAIDemo/Staging
+        dimensions:
+          Environment: staging
+          Service: genai-demo
+          Region: ${AWS_REGION:ap-east-2}
+      
+      # Custom Metrics Configuration
+      custom:
+        thread-pool:
+          enabled: true
+          prefix: "executor"
+        jvm:
+          enabled: true
+          prefix: "jvm"
+        http:
+          enabled: true
+          prefix: "http.server"
+    
+    # X-Ray Tracing Configuration
+    tracing:
+      enabled: true
+      service-name: genai-demo-staging
+      sampling-rate: 0.1  # Higher sampling for staging
+      annotations:
+        environment: staging
+        service: genai-demo
+        version: ${spring.application.version}
+    
+    # Grafana Integration
+    grafana:
+      enabled: true
+      workspace-id: ${GRAFANA_WORKSPACE_ID:}
+      dashboard-url: ${GRAFANA_DASHBOARD_URL:}
+
+# Logging Configuration for Staging
+logging:
+  level:
+    root: INFO
+    solid.humank.genaidemo: DEBUG
+    com.amazonaws.xray: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
+
+# Redis Configuration for Staging (ElastiCache)
+app:
+  redis:
+    enabled: true
+    mode: CLUSTER
+    cluster:
+      nodes: ${REDIS_CLUSTER_NODES}
+      max-redirections: 5
+      scan-interval: 5000
+      read-from-slaves: true
+    high-availability:
+      enable-failover: true
+      failover-timeout: 30000
+      max-failover-attempts: 3
+    health-check:
+      enabled: true
+      interval: 30000
+      timeout: 5000
+      failure-threshold: 3
+
+# MSK Configuration for Data Flow Tracking
+msk:
+  enabled: true
+  bootstrap-servers: ${MSK_BOOTSTRAP_SERVERS:genai-demo-staging-msk-cluster.abc123.c2.kafka.ap-east-2.amazonaws.com:9096}
+  security:
+    protocol: SASL_SSL
+  sasl:
+    mechanism: SCRAM-SHA-512
+    jaas:
+      config: ${MSK_SASL_JAAS_CONFIG}
+  consumer:
+    group-id: genai-demo-staging-consumer-group
+    auto-offset-reset: earliest
+    enable-auto-commit: false
+    session-timeout-ms: 30000
+    heartbeat-interval-ms: 10000
+    max-poll-records: 500
+    fetch-min-bytes: 1024
+    fetch-max-wait-ms: 500
+  producer:
+    acks: all
+    retries: 2147483647
+    batch-size: 32768
+    linger-ms: 10
+    compression-type: snappy
+    buffer-memory: 67108864
+    enable-idempotence: true
+    max-in-flight-requests-per-connection: 5
+  topics:
+    business-events: business-events
+    order-events: order-events
+    customer-events: customer-events
+    payment-events: payment-events
+    inventory-events: inventory-events
+    system-events: system-events
+    error-events: error-events
+    dead-letter-queue: dead-letter-queue
+
+# Event Publishing Configuration (Legacy - to be migrated to MSK)
+  events:
+    publisher: kafka
+    async: true
+    kafka:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      topic: genai-demo-events-staging
+      producer:
+        retries: 3
+        batch-size: 16384
+        linger-ms: 5
+        buffer-memory: 33554432
+        compression-type: lz4

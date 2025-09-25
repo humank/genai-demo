@@ -1,0 +1,101 @@
+# Redis Development Environment with Optional HA Testing
+# Usage:
+#   Single Redis: docker-compose -f docker-compose-redis-dev.yml up redis-single
+#   HA Testing:   docker-compose -f docker-compose-redis-dev.yml up
+
+version: '3.8'
+
+services:
+  # Single Redis for normal development
+  redis-single:
+    image: redis:7-alpine
+    container_name: redis-dev-single
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-dev-data:/data
+    networks:
+      - redis-dev-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Master for HA testing
+  redis-master:
+    image: redis:7-alpine
+    container_name: redis-dev-master
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-master-data:/data
+    networks:
+      - redis-dev-net
+    profiles: ["ha"]
+
+  # Redis Replica for HA testing
+  redis-replica:
+    image: redis:7-alpine
+    container_name: redis-dev-replica
+    ports:
+      - "6381:6379"
+    command: redis-server --appendonly yes --replicaof redis-master 6379 --maxmemory 128mb --maxmemory-policy allkeys-lru
+    depends_on:
+      - redis-master
+    networks:
+      - redis-dev-net
+    profiles: ["ha"]
+
+  # Redis Sentinel for HA testing
+  redis-sentinel-1:
+    image: redis:7-alpine
+    container_name: redis-dev-sentinel-1
+    ports:
+      - "26379:26379"
+    command: redis-sentinel /etc/redis/sentinel.conf
+    volumes:
+      - ./config/sentinel.conf:/etc/redis/sentinel.conf:ro
+    depends_on:
+      - redis-master
+    networks:
+      - redis-dev-net
+    profiles: ["ha"]
+
+  redis-sentinel-2:
+    image: redis:7-alpine
+    container_name: redis-dev-sentinel-2
+    ports:
+      - "26380:26379"
+    command: redis-sentinel /etc/redis/sentinel.conf
+    volumes:
+      - ./config/sentinel.conf:/etc/redis/sentinel.conf:ro
+    depends_on:
+      - redis-master
+    networks:
+      - redis-dev-net
+    profiles: ["ha"]
+
+  redis-sentinel-3:
+    image: redis:7-alpine
+    container_name: redis-dev-sentinel-3
+    ports:
+      - "26381:26379"
+    command: redis-sentinel /etc/redis/sentinel.conf
+    volumes:
+      - ./config/sentinel.conf:/etc/redis/sentinel.conf:ro
+    depends_on:
+      - redis-master
+    networks:
+      - redis-dev-net
+    profiles: ["ha"]
+
+volumes:
+  redis-dev-data:
+  redis-master-data:
+
+networks:
+  redis-dev-net:
+    driver: bridge

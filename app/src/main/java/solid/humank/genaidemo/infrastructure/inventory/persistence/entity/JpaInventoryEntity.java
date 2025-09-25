@@ -5,13 +5,18 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 庫存JPA實體 */
+/**
+ * 庫存 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "inventories")
-public class JpaInventoryEntity {
+public class JpaInventoryEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -42,13 +47,7 @@ public class JpaInventoryEntity {
     @OneToMany(mappedBy = "inventory", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JpaReservationEntity> reservations = new HashSet<>();
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    // createdAt 和 updatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認構造函數
     public JpaInventoryEntity() {}
@@ -126,21 +125,7 @@ public class JpaInventoryEntity {
         this.reservations = reservations;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // getCreatedAt, setCreatedAt, getUpdatedAt, setUpdatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 添加預留
     public void addReservation(JpaReservationEntity reservation) {

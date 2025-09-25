@@ -30,6 +30,15 @@
 - **成本追蹤**: 即時成本監控
 - **優化建議**: 智能成本建議
 
+### 🗄️ 資料治理監控
+
+- **AWS Glue Crawler**: 自動化 schema 發現監控
+- **資料目錄健康**: 跨 13 個 bounded contexts 的資料一致性監控
+- **Schema 變更追蹤**: 即時 schema 變更檢測和通知
+- **跨區域同步**: Aurora Global Database 資料同步監控
+
+詳細的資料目錄監控請參考 [Data Catalog Monitoring](data-catalog-monitoring.md)。
+
 ## 快速開始
 
 ### 啟用可觀測性功能

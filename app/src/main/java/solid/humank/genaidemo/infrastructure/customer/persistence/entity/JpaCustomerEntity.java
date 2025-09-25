@@ -9,16 +9,20 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
 /**
  * 客戶 JPA 實體 用於與數據庫交互的實體類
  *
  * <p>
  * 注意：這個類僅作為持久化的技術實現，不包含業務邏輯 所有業務邏輯都應該在Customer聚合根中實現
+ * 
+ * 更新日期: 2025年9月24日 上午10:18 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
  */
 @Entity
 @Table(name = "customers")
-public class JpaCustomerEntity {
+public class JpaCustomerEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -69,11 +73,7 @@ public class JpaCustomerEntity {
     @Column(name = "address_postal_code")
     private String addressPostalCode;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    // createdAt 和 updatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認建構子，JPA 需要
     public JpaCustomerEntity() {
@@ -208,27 +208,14 @@ public class JpaCustomerEntity {
         this.addressPostalCode = addressPostalCode;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // getCreatedAt, setCreatedAt, getUpdatedAt, setUpdatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     @PrePersist
     protected void onCreate() {
+        // 調用父類的 prePersist 方法處理 createdAt 和 updatedAt
+        super.prePersist();
+        
         LocalDateTime now = LocalDateTime.now();
-        createdAt = now;
-        updatedAt = now;
         if (registrationDate == null) {
             registrationDate = now.toLocalDate();
         }
@@ -245,6 +232,7 @@ public class JpaCustomerEntity {
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        // 調用父類的 preUpdate 方法處理 updatedAt
+        super.preUpdate();
     }
 }

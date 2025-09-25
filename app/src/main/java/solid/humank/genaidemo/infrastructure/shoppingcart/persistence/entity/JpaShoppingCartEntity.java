@@ -14,13 +14,18 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 購物車 JPA 實體 */
+/**
+ * 購物車 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "shopping_carts")
-public class JpaShoppingCartEntity {
+public class JpaShoppingCartEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -59,13 +64,7 @@ public class JpaShoppingCartEntity {
             fetch = FetchType.LAZY)
     private Set<JpaCartAppliedPromotionEntity> appliedPromotions = new HashSet<>();
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    // createdAt 和 updatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認建構子
     public JpaShoppingCartEntity() {}
@@ -143,21 +142,7 @@ public class JpaShoppingCartEntity {
         this.appliedPromotions = appliedPromotions;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // getCreatedAt, setCreatedAt, getUpdatedAt, setUpdatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 添加購物車項目
     public void addItem(JpaCartItemEntity item) {

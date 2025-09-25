@@ -5,11 +5,18 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 支付 JPA 實體 用於與數據庫交互的實體類 */
+/**
+ * 支付 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "payments")
-public class JpaPaymentEntity {
+public class JpaPaymentEntity extends BaseOptimisticLockingEntity {
 
     @Id private String id;
 
@@ -36,14 +43,10 @@ public class JpaPaymentEntity {
     @Column(name = "failure_reason")
     private String failureReason;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
     @Column(name = "can_retry")
     private boolean canRetry;
+
+    // createdAt 和 updatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認建構子，JPA 需要
     public JpaPaymentEntity() {}
@@ -113,21 +116,7 @@ public class JpaPaymentEntity {
         this.failureReason = failureReason;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // getCreatedAt, setCreatedAt, getUpdatedAt, setUpdatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     public boolean isCanRetry() {
         return canRetry;

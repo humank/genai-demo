@@ -3,12 +3,18 @@ package solid.humank.genaidemo.infrastructure.inventory.persistence.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 庫存預留JPA實體 */
+/**
+ * 庫存預留 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "inventory_reservations")
-public class JpaReservationEntity {
+public class JpaReservationEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -28,12 +34,10 @@ public class JpaReservationEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatusEnum status;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;
+
+    // createdAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認構造函數
     public JpaReservationEntity() {}
@@ -79,13 +83,7 @@ public class JpaReservationEntity {
         this.status = status;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    // getCreatedAt, setCreatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     public LocalDateTime getExpiresAt() {
         return expiresAt;

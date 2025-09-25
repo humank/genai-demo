@@ -1,70 +1,70 @@
-# 上下文視點 (Context Viewpoint)
+# Context Viewpoint
 
-## 概覽
+## Overview
 
-上下文視點描述系統與其環境之間的關係，包括外部系統、利害關係人、組織約束和法規要求。這個視點定義了系統邊界，並說明系統如何與外部世界互動。
+The Context Viewpoint describes the relationships between the system and its environment, including external systems, stakeholders, organizational constraints, and regulatory requirements. This viewpoint defines system boundaries and explains how the system interacts with the external world.
 
-## 利害關係人
+## Stakeholders
 
-- **主要關注者**: 系統架構師、業務分析師、專案經理、合規官員
-- **次要關注者**: 開發者、運維工程師、安全工程師、法務團隊
+- **Primary Stakeholders**: System architects, business analysts, project managers, compliance officers
+- **Secondary Stakeholders**: Developers, operations engineers, security engineers, legal teams
 
-## 關注點
+## Concerns
 
-1. **系統邊界定義**: 明確系統的範圍和邊界
-2. **外部依賴管理**: 識別和管理外部系統依賴
-3. **利害關係人互動**: 定義各類使用者和系統的互動模式
-4. **整合協議**: 規範與外部系統的整合方式
-5. **組織約束**: 考慮組織結構和政策對系統的影響
-6. **法規合規**: 確保系統符合相關法規要求
+1. **System Boundary Definition**: Clearly define the scope and boundaries of the system
+2. **External Dependency Management**: Identify and manage external system dependencies
+3. **Stakeholder Interactions**: Define interaction patterns between various users and systems
+4. **Integration Protocols**: Standardize integration methods with external systems
+5. **Organizational Constraints**: Consider the impact of organizational structure and policies on the system
+6. **Regulatory Compliance**: Ensure the system complies with relevant regulatory requirements
 
-## 系統邊界和外部依賴
+## System Boundaries and External Dependencies
 
-### 系統邊界圖
+### System Boundary Diagram
 
 ```mermaid
 graph TB
-    subgraph SYSTEM_BOUNDARY ["🏢 GenAI Demo 系統邊界"]
-        subgraph CORE_SYSTEM ["核心系統"]
+    subgraph SYSTEM_BOUNDARY ["🏢 GenAI Demo System Boundary"]
+        subgraph CORE_SYSTEM ["Core System"]
             API_GATEWAY[🚪 API Gateway]
-            MICROSERVICES[🔧 微服務群]
-            DATABASES[🗄️ 內部資料庫]
-            MESSAGE_QUEUE[📊 內部消息隊列]
+            MICROSERVICES[🔧 Microservices Cluster]
+            DATABASES[🗄️ Internal Databases]
+            MESSAGE_QUEUE[📊 Internal Message Queue]
         end
     end
     
-    subgraph EXTERNAL_USERS ["👥 外部使用者"]
-        CUSTOMERS[👤 顧客<br/>線上購物使用者]
-        SELLERS[🏪 賣家<br/>商品供應商]
-        ADMINS[👨‍💼 管理員<br/>系統管理人員]
-        DELIVERY_STAFF[🚚 配送員<br/>物流配送人員]
+    subgraph EXTERNAL_USERS ["👥 External Users"]
+        CUSTOMERS[👤 Customers<br/>Online Shopping Users]
+        SELLERS[🏪 Sellers<br/>Product Suppliers]
+        ADMINS[👨‍💼 Administrators<br/>System Management Personnel]
+        DELIVERY_STAFF[🚚 Delivery Staff<br/>Logistics Delivery Personnel]
     end
     
-    subgraph EXTERNAL_SYSTEMS ["🌐 外部系統"]
-        subgraph PAYMENT_PROVIDERS ["💳 支付服務商"]
-            STRIPE[Stripe<br/>信用卡支付]
-            PAYPAL[PayPal<br/>數位錢包]
+    subgraph EXTERNAL_SYSTEMS ["🌐 External Systems"]
+        subgraph PAYMENT_PROVIDERS ["💳 Payment Providers"]
+            STRIPE[Stripe<br/>Credit Card Payment]
+            PAYPAL[PayPal<br/>Digital Wallet]
         end
         
-        subgraph COMMUNICATION ["📞 通訊服務"]
+        subgraph COMMUNICATION ["📞 Communication Services"]
             EMAIL_SERVICE[Email Service<br/>SES/SMTP]
             SMS_SERVICE[SMS Service<br/>SNS/Twilio]
         end
         
-        subgraph LOGISTICS ["🚚 物流服務"]
-            LOGISTICS_API[第三方物流 API<br/>配送追蹤服務]
+        subgraph LOGISTICS ["🚚 Logistics Services"]
+            LOGISTICS_API[Third-party Logistics API<br/>Delivery Tracking Service]
         end
         
-        subgraph CLOUD_SERVICES ["☁️ 雲端服務"]
-            AWS_SERVICES[AWS 服務<br/>MSK, S3, CloudWatch]
-            MONITORING[監控服務<br/>Prometheus, Grafana]
+        subgraph CLOUD_SERVICES ["☁️ Cloud Services"]
+            AWS_SERVICES[AWS Services<br/>MSK, S3, CloudWatch]
+            MONITORING[Monitoring Services<br/>Prometheus, Grafana]
         end
     end
     
-    subgraph REGULATORY ["📋 法規環境"]
-        GDPR[GDPR<br/>歐盟資料保護法規]
-        PCI_DSS[PCI DSS<br/>支付卡產業標準]
-        LOCAL_LAWS[當地法規<br/>消費者保護法]
+    subgraph REGULATORY ["📋 Regulatory Environment"]
+        GDPR[GDPR<br/>EU Data Protection Regulation]
+        PCI_DSS[PCI DSS<br/>Payment Card Industry Standard]
+        LOCAL_LAWS[Local Regulations<br/>Consumer Protection Laws]
     end
     
     %% User Interactions

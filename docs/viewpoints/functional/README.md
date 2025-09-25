@@ -1,116 +1,116 @@
-# 功能視點 (Functional Viewpoint)
+# Functional Viewpoint
 
-## 概覽
+## Overview
 
-功能視點描述系統的功能元素、職責和介面，展示系統如何滿足功能需求。這個視點關注系統的業務邏輯、用例實現和系統邊界定義。
+The Functional Viewpoint describes the system's functional elements, responsibilities, and interfaces, showing how the system satisfies functional requirements. This viewpoint focuses on business logic, use case implementation, and system boundary definition.
 
-## 利害關係人
+## Stakeholders
 
-- **主要關注者**: 業務分析師、系統分析師、產品經理
-- **次要關注者**: 開發者、測試工程師、最終使用者
+- **Primary Stakeholders**: Business analysts, system analysts, product managers
+- **Secondary Stakeholders**: Developers, test engineers, end users
 
-## 關注點
+## Concerns
 
-1. **功能需求實現**: 系統如何實現業務需求
-2. **系統邊界定義**: 系統與外部環境的介面
-3. **業務流程支援**: 系統如何支援業務流程
-4. **用例實現**: 具體用例的實現方式
-5. **功能分解**: 複雜功能的分解和組織
+1. **Functional Requirements Implementation**: How the system implements business requirements
+2. **System Boundary Definition**: Interfaces between the system and external environment
+3. **Business Process Support**: How the system supports business processes
+4. **Use Case Implementation**: Specific use case implementation approaches
+5. **Functional Decomposition**: Decomposition and organization of complex functions
 
-## 架構元素
+## Architecture Elements
 
-### 領域模型
-- [領域模型設計](domain-model.md) - DDD 戰術模式實現
-- [界限上下文](bounded-contexts.md) - 13個界限上下文設計
-- [聚合根設計](aggregates.md) - 聚合根和實體設計
+### Domain Model
+- [Domain Model Design](domain-model.md) - DDD tactical patterns implementation
+- [Bounded Contexts](bounded-contexts.md) - 13 bounded contexts design
+- [Aggregate Root Design](aggregates.md) - Aggregate roots and entity design
 
-#### 功能架構概覽
+#### Functional Architecture Overview
 
-!!!!!![功能架構概覽](../../diagrams/generated/functional/functional-detailed.png)
+![Functional Architecture Overview](../../diagrams/generated/functional/functional-detailed.png)
 
-*系統功能架構的整體概覽，展示主要功能模組和它們之間的關係*
+*Overall overview of system functional architecture, showing main functional modules and their relationships*
 
-#### 領域模型概覽
+#### Domain Model Overview
 
-!!!!!![領域模型概覽](../../diagrams/generated/functional/domain-model-overview.png)
+![Domain Model Overview](../../diagrams/generated/functional/domain-model-overview.png)
 
-*完整的領域模型設計，包括所有聚合根、實體和值對象的關係*
+*Complete domain model design, including relationships between all aggregate roots, entities, and value objects*
 
-#### 界限上下文概覽
+#### Bounded Contexts Overview
 
-!!!!!![界限上下文概覽](../../diagrams/generated/functional/bounded-contexts-overview.png)
+![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
 
-*13個界限上下文的劃分和它們之間的集成關係*
+*Division of 13 bounded contexts and their integration relationships*
 
-### 用例分析
-- !!!!![業務流程概覽](../../diagrams/generated/functional/business-process-flows.png) - 系統用例和業務流程
-- !!!!![用戶旅程概覽](../../diagrams/generated/functional/user-journey-overview.png) - 用戶體驗流程設計
-- !!!!![應用服務概覽](../../diagrams/generated/functional/application-services-overview.png) - API 和系統介面設計
+### Use Case Analysis
+- ![Business Process Overview](../../diagrams/generated/functional/business-process-flows.png) - System use cases and business processes
+- ![User Journey Overview](../../diagrams/generated/functional/user-journey-overview.png) - User experience flow design
+- ![Application Services Overview](../../diagrams/generated/functional/application-services-overview.png) - API and system interface design
 
-## 品質屬性考量
+## Quality Attribute Considerations
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解所有觀點的詳細影響分析
+> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis of all viewpoints
 
-### 🔴 高影響觀點
+### 🔴 High Impact Perspectives
 
-#### [安全性觀點](../../perspectives/security/README.md)
-- **業務邏輯安全**: 所有業務規則都需要安全驗證和授權檢查
-- **存取控制**: 功能層面的權限控制，確保用戶只能存取授權功能
-- **輸入驗證**: API 和用戶輸入的全面安全驗證，防止注入攻擊
-- **輸出編碼**: 防止 XSS 攻擊的輸出處理和資料清理
-- **相關實現**: !!!!![安全架構圖](../../diagrams/generated/legacy/.png) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **安全標準文檔** (請參考專案內部文檔) --> --> --> --> -->
+#### [Security Perspective](../../perspectives/security/README.md)
+- **Business Logic Security**: All business rules require security validation and authorization checks
+- **Access Control**: Function-level permission control, ensuring users can only access authorized functions
+- **Input Validation**: Comprehensive security validation of API and user inputs, preventing injection attacks
+- **Output Encoding**: Output processing and data sanitization to prevent XSS attacks
+- **Related Implementation**: ![Security Architecture Diagram](../../diagrams/generated/legacy/.png) | **Security Standards Documentation** (Please refer to internal project documentation)
 
-#### [可用性觀點](../../perspectives/availability/README.md)
-- **關鍵功能保護**: 核心業務功能的容錯設計和冗餘機制
-- **功能降級**: 部分功能失效時的優雅降級策略
-- **業務連續性**: 關鍵業務流程的持續運行保障
-- **故障隔離**: 功能故障的隔離，避免級聯失效
-- **相關實現**: [可用性架構設計](../../perspectives/availability/README.md) | 容錯機制實現
+#### [Availability Perspective](../../perspectives/availability/README.md)
+- **Critical Function Protection**: Fault-tolerant design and redundancy mechanisms for core business functions
+- **Function Degradation**: Graceful degradation strategies when partial functions fail
+- **Business Continuity**: Continuous operation guarantee for critical business processes
+- **Failure Isolation**: Isolation of function failures to avoid cascading failures
+- **Related Implementation**: [Availability Architecture Design](../../perspectives/availability/README.md) | Fault tolerance mechanism implementation
 
-#### [使用性觀點](../../perspectives/usability/README.md)
-- **用戶體驗**: 功能設計符合用戶期望和使用習慣
-- **介面設計**: API 和 UI 的直觀性和易用性設計
-- **錯誤處理**: 用戶友好的錯誤訊息和處理流程
-- **工作流程**: 業務流程的簡化和優化
-- **相關實現**: !!!!![用戶旅程設計](../../diagrams/generated/functional/user-journey-overview.png) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **API 設計標準** (請參考專案內部文檔) --> --> --> --> -->
+#### [Usability Perspective](../../perspectives/usability/README.md)
+- **User Experience**: Function design that meets user expectations and usage habits
+- **Interface Design**: Intuitive and user-friendly design of APIs and UIs
+- **Error Handling**: User-friendly error messages and handling processes
+- **Workflow**: Simplification and optimization of business processes
+- **Related Implementation**: ![User Journey Design](../../diagrams/generated/functional/user-journey-overview.png) | **API Design Standards** (Please refer to internal project documentation)
 
-### 🟡 中影響觀點
+### 🟡 Medium Impact Perspectives
 
-#### [性能觀點](../../perspectives/performance/README.md)
-- **響應時間**: 核心功能的性能需求和 SLA 定義
-- **吞吐量**: 高頻使用功能的處理能力和擴展性
-- **資源使用**: 功能執行的資源消耗優化
-- **相關實現**: [性能監控架構](../../perspectives/performance/README.md) | <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **性能標準文檔** (請參考專案內部文檔) --> --> --> --> -->
+#### [Performance Perspective](../../perspectives/performance/README.md)
+- **Response Time**: Performance requirements and SLA definitions for core functions
+- **Throughput**: Processing capacity and scalability of frequently used functions
+- **Resource Usage**: Resource consumption optimization for function execution
+- **Related Implementation**: [Performance Monitoring Architecture](../../perspectives/performance/README.md) | **Performance Standards Documentation** (Please refer to internal project documentation)
 
-#### [演進性觀點](../../perspectives/evolution/README.md)
-- **功能擴展**: 新功能的添加能力和向後相容性
-- **業務規則靈活性**: 業務邏輯的可配置性和適應性
-- **模組化設計**: 功能模組的獨立性和可重用性
-- **相關實現**: !!!!![六角架構設計](../../diagrams/generated/functional/hexagonal-architecture-overview.png) | [模組化架構指南](bounded-contexts.md)
+#### [Evolution Perspective](../../perspectives/evolution/README.md)
+- **Function Extension**: Capability to add new functions and backward compatibility
+- **Business Rule Flexibility**: Configurability and adaptability of business logic
+- **Modular Design**: Independence and reusability of functional modules
+- **Related Implementation**: ![Hexagonal Architecture Design](../../diagrams/generated/functional/hexagonal-architecture-overview.png) | [Modular Architecture Guide](bounded-contexts.md)
 
-#### [法規觀點](../../perspectives/regulation/README.md)
-- **合規功能**: 法規要求的功能實現和驗證
-- **稽核軌跡**: 業務操作的完整記錄和追蹤
-- **資料治理**: 功能層面的資料管理和保護
-- **相關實現**: !!!!![審計服務設計](../../diagrams/generated/functional/observability-aggregate-details.png) | [合規標準文檔](../../perspectives/regulation/README.md)
+#### [Regulation Perspective](../../perspectives/regulation/README.md)
+- **Compliance Functions**: Implementation and validation of regulatory required functions
+- **Audit Trail**: Complete recording and tracking of business operations
+- **Data Governance**: Function-level data management and protection
+- **Related Implementation**: ![Audit Service Design](../../diagrams/generated/functional/observability-aggregate-details.png) | [Compliance Standards Documentation](../../perspectives/regulation/README.md)
 
-#### [成本觀點](../../perspectives/cost/README.md)
-- **功能成本**: 功能實現和維護的成本效益分析
-- **資源效率**: 功能執行的資源使用效率
-- **開發成本**: 功能開發的時間和人力成本
-- **相關實現**: [成本優化架構](../../perspectives/cost/README.md) | !!!!![資源效率監控](../../diagrams/generated/functional/infrastructure-layer-overview.png)
+#### [Cost Perspective](../../perspectives/cost/README.md)
+- **Function Cost**: Cost-benefit analysis of function implementation and maintenance
+- **Resource Efficiency**: Resource usage efficiency of function execution
+- **Development Cost**: Time and human resource costs for function development
+- **Related Implementation**: [Cost Optimization Architecture](../../perspectives/cost/README.md) | ![Resource Efficiency Monitoring](../../diagrams/generated/functional/infrastructure-layer-overview.png)
 
-### 🟢 低影響觀點
+### 🟢 Low Impact Perspectives
 
-#### [位置觀點](../../perspectives/location/README.md)
-- **地理分佈**: 功能在不同地區的可用性和本地化
-- **資料主權**: 功能相關資料的地理位置要求
-- **相關實現**: [多環境部署架構](../../diagrams/multi_environment.svg)
+#### [Location Perspective](../../perspectives/location/README.md)
+- **Geographic Distribution**: Function availability and localization in different regions
+- **Data Sovereignty**: Geographic location requirements for function-related data
+- **Related Implementation**: [Multi-Environment Deployment Architecture](../../diagrams/multi_environment.svg)
 
-## 相關圖表
+## Related Diagrams
 
-### 系統架構概覽
-- ## 系統概覽圖
+### System Architecture Overview
+- ## System Overview Diagram
 
 ```mermaid
 graph TB

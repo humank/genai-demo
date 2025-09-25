@@ -3,7 +3,7 @@
 skinparam classAttributeIconSize 0
 skinparam classFontStyle bold
 
-title Pricing Bounded Context - Aggregate Details\nGenerated: 2025-09-21 19:48:57\n\n
+title Pricing Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:44\n\n
 
 class PricingRule <<AggregateRoot>> {
   -priceId: PriceId

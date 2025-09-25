@@ -1,0 +1,49 @@
+@startuml Observability Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Observability Bounded Context - Aggregate Details\nGenerated: 2025-09-24 15:28:53\n\n
+
+class AnalyticsSession <<AggregateRoot>> {
+  -sessionId: SessionId
+  -userId: Optional<UserId>
+  -traceId: String
+  -startTime: LocalDateTime
+  -lastActivityAt: LocalDateTime
+  -... (7 more fields)
+  --
+  +create(): AnalyticsSession
+  +createWithMetadata(): AnalyticsSession
+  +recordPageView(): void
+  +... (34 more methods)
+}
+
+note right of AnalyticsSession
+  分析會話聚合根
+  Version: 1.0
+end note
+
+class ObservabilitySession <<AggregateRoot>> {
+  -sessionId: SessionId
+  -userId: Optional<UserId>
+  -startTime: LocalDateTime
+  -lastActivity: LocalDateTime
+  -behaviorEvents: List<UserBehaviorEvent>
+  -... (18 more fields)
+  --
+  +recordUserBehavior(): void
+  +recordPerformanceMetric(): void
+  +endSession(): void
+  +... (21 more methods)
+}
+
+note right of ObservabilitySession
+  可觀測性會話聚合根
+  Version: 1.0
+end note
+
+
+' Relationships
+
+@enduml

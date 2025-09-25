@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.13'
+    id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
 }
@@ -93,6 +93,13 @@ dependencies {
     // Security dependencies
     implementation 'org.springframework.boot:spring-boot-starter-security'
     
+    // Redis and Redisson for distributed locking
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.24.3'
+    
+    // Apache Commons Pool for Redis connection pooling
+    implementation 'org.apache.commons:commons-pool2:2.12.0'
+    
     // Unified HttpComponents5 dependencies with consistent versions
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
     implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
@@ -114,21 +121,22 @@ dependencies {
     
 
     
-    // Cucumber for BDD testing
-    testImplementation 'io.cucumber:cucumber-java:7.29.0'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.29.0'
-    testImplementation 'io.cucumber:cucumber-spring:7.29.0'
+    // Cucumber for BDD testing - 使用最新穩定版本
+    testImplementation 'io.cucumber:cucumber-java:7.20.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.20.1'
+    testImplementation 'io.cucumber:cucumber-spring:7.20.1'
     
-    // JUnit 5
+    // JUnit 5 - 與 Cucumber 7.20.1 兼容的版本
     testImplementation(platform('org.junit:junit-bom:5.10.2'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.platform:junit-platform-suite')
     
-    // 確保 JUnit Platform 相關依賴版本一致
-    constraints {
-        testImplementation('org.junit.platform:junit-platform-commons:1.13.4')
-        testImplementation('org.junit.platform:junit-platform-engine:1.13.4')
-    }
+    // 確保 JUnit Platform 相關依賴版本一致 (與 Cucumber 7.20.1 匹配)
+    testImplementation('org.junit.platform:junit-platform-commons:1.10.2')
+    testImplementation('org.junit.platform:junit-platform-engine:1.10.2')
+    
+    // 添加缺失的 JUnit Platform 支援類別
+    testImplementation('org.junit.platform:junit-platform-launcher:1.10.2')
     
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.8.0'

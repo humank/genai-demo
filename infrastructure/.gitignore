@@ -67,3 +67,35 @@ temp/
 *.tfstate
 *.tfstate.*
 .terraform/
+
+# 測試相關 (補充)
+test-results/
+*.junit.xml
+allure-results/
+allure-report/
+
+# 性能和分析報告
+performance-report.json
+cost-estimation-report.json
+architecture-assessment-summary.json
+well-architected-summary.json
+
+# CDK 相關 (補充)
+*.asset.json
+*.assets.json
+
+# AWS 相關 (補充)
+.aws-sam/
+samconfig.toml
+
+# IDE 和編輯器 (補充)
+.vscode/settings.json
+.vscode/launch.json
+*.code-workspace
+
+# 臨時檔案 (補充)
+*.tmp
+*.temp
+.DS_Store?
+ehthumbs.db
+Icon?

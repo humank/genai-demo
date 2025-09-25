@@ -10,13 +10,18 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 購物車項目 JPA 實體 */
+/**
+ * 購物車項目 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "cart_items")
-public class JpaCartItemEntity {
+public class JpaCartItemEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -44,13 +49,10 @@ public class JpaCartItemEntity {
     @Column(name = "currency", nullable = false)
     private String currency;
 
-    @CreationTimestamp
     @Column(name = "added_at", nullable = false, updatable = false)
     private LocalDateTime addedAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    // updatedAt 已在 BaseOptimisticLockingEntity 中定義
 
     // 默認建構子
     public JpaCartItemEntity() {}
@@ -128,11 +130,5 @@ public class JpaCartItemEntity {
         this.addedAt = addedAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // getUpdatedAt, setUpdatedAt 已在 BaseOptimisticLockingEntity 中定義
 }

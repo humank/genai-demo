@@ -1,0 +1,50 @@
+@startuml Notification Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Notification Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:28\n\n
+
+class Notification <<AggregateRoot>> {
+  -id: NotificationId
+  -customerId: String
+  -type: NotificationType
+  -subject: String
+  -content: String
+  -... (10 more fields)
+  --
+  +send(): void
+  +markAsDelivered(): void
+  +markAsRead(): void
+  +... (18 more methods)
+}
+
+note right of Notification
+  通知聚合根，管理系統通知的發送和狀態
+  Version: 1.0
+end note
+
+class NotificationTemplate <<AggregateRoot>> {
+  -templateId: String
+  -type: NotificationType
+  -channel: NotificationChannel
+  -name: String
+  -subject: String
+  -... (7 more fields)
+  --
+  +updateContent(): void
+  +updateVariables(): void
+  +activate(): void
+  +... (13 more methods)
+}
+
+note right of NotificationTemplate
+  通知模板聚合根，管理通知模板的內容和格式
+  Version: 1.0
+end note
+
+
+' Relationships
+NotificationTemplate --> Notification
+
+@enduml

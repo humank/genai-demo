@@ -1,5 +1,37 @@
 # 資料模型設計
 
+## 自動化資料發現與治理
+
+### AWS Glue Data Catalog 整合
+
+GenAI Demo 應用程式採用 AWS Glue Data Catalog 進行自動化 schema 發現和資料治理，確保跨 13 個 bounded contexts 的資料模型一致性和可追溯性。
+
+#### 自動發現機制
+- **每日排程掃描**: 每天凌晨 2 點自動掃描 Aurora 資料庫
+- **即時變更檢測**: RDS 事件觸發即時 schema 發現
+- **智能排除**: 自動排除系統表和管理表
+- **跨區域一致性**: 支援 Aurora Global Database 的多區域部署
+
+#### 資料目錄結構
+```
+genai_demo_catalog/
+├── customer_tables/     # 客戶 bounded context
+├── order_tables/        # 訂單 bounded context  
+├── product_tables/      # 產品 bounded context
+├── inventory_tables/    # 庫存 bounded context
+├── payment_tables/      # 支付 bounded context
+├── delivery_tables/     # 配送 bounded context
+├── shoppingcart_tables/ # 購物車 bounded context
+├── pricing_tables/      # 定價 bounded context
+├── promotion_tables/    # 促銷 bounded context
+├── seller_tables/       # 賣家 bounded context
+├── review_tables/       # 評價 bounded context
+├── notification_tables/ # 通知 bounded context
+└── observability_tables/# 可觀測性 bounded context
+```
+
+詳細的資料治理架構請參考 [Data Governance Architecture](data-governance-architecture.md)。
+
 ## 領域模型
 
 ### 聚合根設計

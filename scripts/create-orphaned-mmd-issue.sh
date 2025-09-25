@@ -26,18 +26,18 @@ echo "🏷️  使用可用標籤創建 Issue..."
 
 gh issue create \
     --title "處理孤立的 .mmd 文件 - Mermaid 遷移後續清理" \
-    --body-file github-issue-orphaned-mmd.md \
+    --body-file reports-summaries/task-execution/github-issue-orphaned-mmd.md \
     --label "documentation,enhancement" \
     --assignee "@me"
 
 if [ $? -eq 0 ]; then
     echo "✅ Issue 創建成功！"
-    echo "📄 Issue 內容來源: github-issue-orphaned-mmd.md"
+    echo "📄 Issue 內容來源: reports-summaries/task-execution/github-issue-orphaned-mmd.md"
     echo "📋 詳細報告: reports-summaries/diagrams/orphaned-mmd-files-report.md"
 else
     echo "❌ Issue 創建失敗"
     echo "💡 你可以手動創建 Issue，使用以下內容:"
     echo "   標題: 處理孤立的 .mmd 文件 - Mermaid 遷移後續清理"
-    echo "   內容: 參考 github-issue-orphaned-mmd.md"
+    echo "   內容: 參考 reports-summaries/task-execution/github-issue-orphaned-mmd.md"
     echo "   標籤: documentation, cleanup, enhancement, low-priority"
 fi

@@ -1,0 +1,1669 @@
+{
+  "timestamp": "2025-09-24T12:16:34.341093",
+  "domain_classes_count": 116,
+  "application_services_count": 14,
+  "repositories_count": 98,
+  "controllers_count": 17,
+  "events_count": 59,
+  "bounded_contexts": [
+    "Customer",
+    "Delivery",
+    "Inventory",
+    "Notification",
+    "Observability",
+    "Order",
+    "Payment",
+    "Pricing",
+    "Product",
+    "Promotion",
+    "Review",
+    "Seller",
+    "ShoppingCart"
+  ],
+  "domain_classes": [
+    {
+      "name": "Phone",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "NotificationPreferences",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "Email",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "PaymentMethodId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "DeliveryAddressId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "Address",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "CustomerPreferencesId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "RewardPoints",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "CustomerName",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.valueobject"
+    },
+    {
+      "name": "DeliveryAddress",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.entity"
+    },
+    {
+      "name": "CustomerPreferences",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.entity"
+    },
+    {
+      "name": "PaymentMethod",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.customer.model.entity"
+    },
+    {
+      "name": "Customer",
+      "type": "AggregateRoot",
+      "bounded_context": "Customer",
+      "package": "solid.humank.genaidemo.domain.customer.model.aggregate"
+    },
+    {
+      "name": "PriceId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.pricing.model.valueobject"
+    },
+    {
+      "name": "CommissionRate",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.pricing.model.entity"
+    },
+    {
+      "name": "PricingRule",
+      "type": "AggregateRoot",
+      "bounded_context": "Pricing",
+      "package": "solid.humank.genaidemo.domain.pricing.model.aggregate"
+    },
+    {
+      "name": "DeliveryStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.delivery.model.valueobject"
+    },
+    {
+      "name": "DeliveryId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.delivery.model.valueobject"
+    },
+    {
+      "name": "Delivery",
+      "type": "AggregateRoot",
+      "bounded_context": "Delivery",
+      "package": "solid.humank.genaidemo.domain.delivery.model.aggregate"
+    },
+    {
+      "name": "CartPromotionId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.valueobject"
+    },
+    {
+      "name": "CartItem",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.valueobject"
+    },
+    {
+      "name": "ShoppingCartId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.valueobject"
+    },
+    {
+      "name": "CartPromotion",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.entity"
+    },
+    {
+      "name": "ShoppingCart",
+      "type": "AggregateRoot",
+      "bounded_context": "ShoppingCart",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.aggregate"
+    },
+    {
+      "name": "InventoryId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "StockMovementId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "InventoryStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "StockReservationId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "InventoryThresholdId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "ReservationId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.valueobject"
+    },
+    {
+      "name": "InventoryThreshold",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.entity"
+    },
+    {
+      "name": "StockMovement",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.entity"
+    },
+    {
+      "name": "StockReservation",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.inventory.model.entity"
+    },
+    {
+      "name": "Inventory",
+      "type": "AggregateRoot",
+      "bounded_context": "Inventory",
+      "package": "solid.humank.genaidemo.domain.inventory.model.aggregate"
+    },
+    {
+      "name": "ReviewImageId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ModerationStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ReviewId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ResponseStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ModerationRecordId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ReviewRating",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ImageStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ModerationAction",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ReviewResponseId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.valueobject"
+    },
+    {
+      "name": "ReviewResponse",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.entity"
+    },
+    {
+      "name": "ReviewImage",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.entity"
+    },
+    {
+      "name": "ModerationRecord",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.review.model.entity"
+    },
+    {
+      "name": "ProductReview",
+      "type": "AggregateRoot",
+      "bounded_context": "Review",
+      "package": "solid.humank.genaidemo.domain.review.model.aggregate"
+    },
+    {
+      "name": "OrderId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "OrderItem",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "PaymentId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "PaymentResult",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "Money",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "Currency",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "DeliveryOrder",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.common.valueobject"
+    },
+    {
+      "name": "Customer",
+      "type": "AggregateRoot",
+      "bounded_context": "Customer",
+      "package": "solid.humank.genaidemo.domain.common.aggregate"
+    },
+    {
+      "name": "Customer",
+      "type": "AggregateRoot",
+      "bounded_context": "Customer",
+      "package": "solid.humank.genaidemo.domain.common.aggregate"
+    },
+    {
+      "name": "Customer",
+      "type": "AggregateRoot",
+      "bounded_context": "Customer",
+      "package": "solid.humank.genaidemo.domain.common.annotations"
+    },
+    {
+      "name": "ProductName",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "StockQuantity",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "BundleDiscount",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "ProductId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "ProductCategory",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "ProductDescription",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.valueobject"
+    },
+    {
+      "name": "Bundle",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.product.model.entity"
+    },
+    {
+      "name": "Product",
+      "type": "AggregateRoot",
+      "bounded_context": "Product",
+      "package": "solid.humank.genaidemo.domain.product.model.aggregate"
+    },
+    {
+      "name": "SessionId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.observability.valueobject"
+    },
+    {
+      "name": "UserId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.observability.valueobject"
+    },
+    {
+      "name": "AnalyticsSession",
+      "type": "AggregateRoot",
+      "bounded_context": "Observability",
+      "package": "solid.humank.genaidemo.domain.observability.model.aggregate"
+    },
+    {
+      "name": "ObservabilitySession",
+      "type": "AggregateRoot",
+      "bounded_context": "Observability",
+      "package": "solid.humank.genaidemo.domain.observability.model.aggregate"
+    },
+    {
+      "name": "CustomerId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shared.valueobject"
+    },
+    {
+      "name": "ProductId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.shared.valueobject"
+    },
+    {
+      "name": "PaymentMethod",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.payment.model.valueobject"
+    },
+    {
+      "name": "Payment",
+      "type": "AggregateRoot",
+      "bounded_context": "Payment",
+      "package": "solid.humank.genaidemo.domain.payment.model.aggregate"
+    },
+    {
+      "name": "PaymentMethod",
+      "type": "AggregateRoot",
+      "bounded_context": "Payment",
+      "package": "solid.humank.genaidemo.domain.payment.model.aggregate"
+    },
+    {
+      "name": "CustomerNotificationPreference",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "NotificationStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "NotificationChannel",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "NotificationType",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "TemplateVariableId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "NotificationId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "TemplateVersionId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "TemplateUsageStatisticsId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.valueobject"
+    },
+    {
+      "name": "TemplateUsageStatistics",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.notification.model.entity"
+    },
+    {
+      "name": "Notification",
+      "type": "AggregateRoot",
+      "bounded_context": "Notification",
+      "package": "solid.humank.genaidemo.domain.notification.model.aggregate"
+    },
+    {
+      "name": "NotificationTemplate",
+      "type": "AggregateRoot",
+      "bounded_context": "Notification",
+      "package": "solid.humank.genaidemo.domain.notification.model.aggregate"
+    },
+    {
+      "name": "WorkflowStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.order.model.valueobject"
+    },
+    {
+      "name": "WorkflowId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.order.model.valueobject"
+    },
+    {
+      "name": "Order",
+      "type": "AggregateRoot",
+      "bounded_context": "Order",
+      "package": "solid.humank.genaidemo.domain.order.model.aggregate"
+    },
+    {
+      "name": "OrderWorkflow",
+      "type": "AggregateRoot",
+      "bounded_context": "Order",
+      "package": "solid.humank.genaidemo.domain.order.model.aggregate"
+    },
+    {
+      "name": "FlashSaleRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "PromotionId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "CartSummary",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "DateRange",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "BuyOneGetOneRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "LimitedQuantityRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "VoucherCode",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "GiftWithPurchaseRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "VoucherId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "FixedAmountDiscountRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "ConvenienceStoreVoucherRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "AddOnPurchaseRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "PercentageDiscountRule",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.promotion.model.valueobject"
+    },
+    {
+      "name": "Promotion",
+      "type": "AggregateRoot",
+      "bounded_context": "Promotion",
+      "package": "solid.humank.genaidemo.domain.promotion.model.aggregate"
+    },
+    {
+      "name": "Voucher",
+      "type": "AggregateRoot",
+      "bounded_context": "Promotion",
+      "package": "solid.humank.genaidemo.domain.promotion.model.aggregate"
+    },
+    {
+      "name": "SellerProfileId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "SellerId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "ContactInfoId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "RatingStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "SellerRatingId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "SellerVerificationId",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "VerificationStatus",
+      "type": "ValueObject",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.valueobject"
+    },
+    {
+      "name": "SellerVerification",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.entity"
+    },
+    {
+      "name": "SellerRating",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.entity"
+    },
+    {
+      "name": "ContactInfo",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.entity"
+    },
+    {
+      "name": "SellerProfile",
+      "type": "Entity",
+      "bounded_context": "",
+      "package": "solid.humank.genaidemo.domain.seller.model.entity"
+    },
+    {
+      "name": "Seller",
+      "type": "AggregateRoot",
+      "bounded_context": "Seller",
+      "package": "solid.humank.genaidemo.domain.seller.model.aggregate"
+    }
+  ],
+  "application_services": [
+    {
+      "name": "OptimisticLockingCustomerService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 4
+    },
+    {
+      "name": "CustomerApplicationService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 6
+    },
+    {
+      "name": "ShoppingCartApplicationService",
+      "package": "solid.humank.genaidemo.application.shoppingcart.service",
+      "methods_count": 7
+    },
+    {
+      "name": "InventoryApplicationService",
+      "package": "solid.humank.genaidemo.application.inventory.service",
+      "methods_count": 3
+    },
+    {
+      "name": "DomainEventApplicationService",
+      "package": "solid.humank.genaidemo.application.common.service",
+      "methods_count": 10
+    },
+    {
+      "name": "ProductApplicationService",
+      "package": "solid.humank.genaidemo.application.product.service",
+      "methods_count": 5
+    },
+    {
+      "name": "ObservabilityEventService",
+      "package": "solid.humank.genaidemo.application.observability.service",
+      "methods_count": 4
+    },
+    {
+      "name": "AnalyticsQueryService",
+      "package": "solid.humank.genaidemo.application.observability.service",
+      "methods_count": 9
+    },
+    {
+      "name": "DataRetentionService",
+      "package": "solid.humank.genaidemo.application.observability.service",
+      "methods_count": 6
+    },
+    {
+      "name": "AnalyticsQueryService",
+      "package": "solid.humank.genaidemo.application.observability.query",
+      "methods_count": 15
+    },
+    {
+      "name": "PaymentApplicationService",
+      "package": "solid.humank.genaidemo.application.payment.service",
+      "methods_count": 11
+    },
+    {
+      "name": "NotificationApplicationService",
+      "package": "solid.humank.genaidemo.application.notification.service",
+      "methods_count": 3
+    },
+    {
+      "name": "OrderApplicationService",
+      "package": "solid.humank.genaidemo.application.order.service",
+      "methods_count": 7
+    },
+    {
+      "name": "PromotionApplicationService",
+      "package": "solid.humank.genaidemo.application.promotion.service",
+      "methods_count": 8
+    }
+  ],
+  "repositories": [
+    {
+      "name": "CustomerRepository",
+      "package": "solid.humank.genaidemo.domain.customer.repository",
+      "methods_count": 9
+    },
+    {
+      "name": "PricingRuleRepository",
+      "package": "solid.humank.genaidemo.domain.pricing.repository",
+      "methods_count": 7
+    },
+    {
+      "name": "CommissionService",
+      "package": "solid.humank.genaidemo.domain.pricing.service",
+      "methods_count": 0
+    },
+    {
+      "name": "DeliveryRepository",
+      "package": "solid.humank.genaidemo.domain.delivery.repository",
+      "methods_count": 8
+    },
+    {
+      "name": "DeliveryManagementService",
+      "package": "solid.humank.genaidemo.domain.delivery.service",
+      "methods_count": 0
+    },
+    {
+      "name": "DeliveryServiceImpl",
+      "package": "solid.humank.genaidemo.domain.delivery.service.impl",
+      "methods_count": 0
+    },
+    {
+      "name": "ShoppingCartRepository",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.repository",
+      "methods_count": 1
+    },
+    {
+      "name": "ShoppingCartDomainService",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.service",
+      "methods_count": 0
+    },
+    {
+      "name": "InventoryRepository",
+      "package": "solid.humank.genaidemo.domain.inventory.repository",
+      "methods_count": 6
+    },
+    {
+      "name": "InventoryDomainService",
+      "package": "solid.humank.genaidemo.domain.inventory.service",
+      "methods_count": 0
+    },
+    {
+      "name": "ProductReviewRepository",
+      "package": "solid.humank.genaidemo.domain.review.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "BaseRepository",
+      "package": "solid.humank.genaidemo.domain.common.repository",
+      "methods_count": 0
+    },
+    {
+      "name": "Repository",
+      "package": "solid.humank.genaidemo.domain.common.repository",
+      "methods_count": 7
+    },
+    {
+      "name": "ProductRepository",
+      "package": "solid.humank.genaidemo.domain.product.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "AnalyticsDataRepository",
+      "package": "solid.humank.genaidemo.domain.observability.repository",
+      "methods_count": 4
+    },
+    {
+      "name": "PaymentMethodRepository",
+      "package": "solid.humank.genaidemo.domain.payment.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "PaymentRepository",
+      "package": "solid.humank.genaidemo.domain.payment.repository",
+      "methods_count": 4
+    },
+    {
+      "name": "PaymentDomainService",
+      "package": "solid.humank.genaidemo.domain.payment.service",
+      "methods_count": 0
+    },
+    {
+      "name": "Payment",
+      "package": "solid.humank.genaidemo.domain.payment.model.aggregate",
+      "methods_count": 0
+    },
+    {
+      "name": "NotificationRepository",
+      "package": "solid.humank.genaidemo.domain.notification.repository",
+      "methods_count": 8
+    },
+    {
+      "name": "NotificationTemplateRepository",
+      "package": "solid.humank.genaidemo.domain.notification.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "CustomerNotificationPreferenceRepository",
+      "package": "solid.humank.genaidemo.domain.notification.repository",
+      "methods_count": 2
+    },
+    {
+      "name": "CustomerNotificationPreferenceService",
+      "package": "solid.humank.genaidemo.domain.notification.service",
+      "methods_count": 0
+    },
+    {
+      "name": "NotificationScheduler",
+      "package": "solid.humank.genaidemo.domain.notification.service",
+      "methods_count": 0
+    },
+    {
+      "name": "NotificationService",
+      "package": "solid.humank.genaidemo.domain.notification.service",
+      "methods_count": 0
+    },
+    {
+      "name": "OrderRepository",
+      "package": "solid.humank.genaidemo.domain.order.repository",
+      "methods_count": 4
+    },
+    {
+      "name": "OrderWorkflowRepository",
+      "package": "solid.humank.genaidemo.domain.order.repository",
+      "methods_count": 7
+    },
+    {
+      "name": "OrderWorkflowService",
+      "package": "solid.humank.genaidemo.domain.order.service",
+      "methods_count": 0
+    },
+    {
+      "name": "Order",
+      "package": "solid.humank.genaidemo.domain.order.model.aggregate",
+      "methods_count": 0
+    },
+    {
+      "name": "VoucherRepository",
+      "package": "solid.humank.genaidemo.domain.promotion.repository",
+      "methods_count": 6
+    },
+    {
+      "name": "PromotionRepository",
+      "package": "solid.humank.genaidemo.domain.promotion.repository",
+      "methods_count": 6
+    },
+    {
+      "name": "VoucherDomainService",
+      "package": "solid.humank.genaidemo.domain.promotion.service",
+      "methods_count": 1
+    },
+    {
+      "name": "PromotionService",
+      "package": "solid.humank.genaidemo.domain.promotion.service",
+      "methods_count": 0
+    },
+    {
+      "name": "SellerRepository",
+      "package": "solid.humank.genaidemo.domain.seller.repository",
+      "methods_count": 8
+    },
+    {
+      "name": "SellerProfileService",
+      "package": "solid.humank.genaidemo.domain.seller.service",
+      "methods_count": 4
+    },
+    {
+      "name": "RepositoryConfig",
+      "package": "solid.humank.genaidemo.infrastructure.config",
+      "methods_count": 0
+    },
+    {
+      "name": "JpaCustomerRepository",
+      "package": "solid.humank.genaidemo.infrastructure.customer.persistence.repository",
+      "methods_count": 8
+    },
+    {
+      "name": "CustomerRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.customer.persistence.adapter",
+      "methods_count": 9
+    },
+    {
+      "name": "JpaPricingRuleRepository",
+      "package": "solid.humank.genaidemo.infrastructure.pricing.persistence.repository",
+      "methods_count": 6
+    },
+    {
+      "name": "PricingRuleRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.pricing.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "DeliveryServiceAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.external.adapter",
+      "methods_count": 0
+    },
+    {
+      "name": "JpaDeliveryRepository",
+      "package": "solid.humank.genaidemo.infrastructure.delivery.persistence.repository",
+      "methods_count": 6
+    },
+    {
+      "name": "DeliveryRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.delivery.persistence.adapter",
+      "methods_count": 6
+    },
+    {
+      "name": "JpaShoppingCartRepository",
+      "package": "solid.humank.genaidemo.infrastructure.shoppingcart.persistence.repository",
+      "methods_count": 4
+    },
+    {
+      "name": "ShoppingCartRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.shoppingcart.persistence.adapter",
+      "methods_count": 1
+    },
+    {
+      "name": "InventoryJpaConfig",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.config",
+      "methods_count": 0
+    },
+    {
+      "name": "JpaReservationRepository",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "JpaInventoryRepository",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.persistence.repository",
+      "methods_count": 7
+    },
+    {
+      "name": "InventoryRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.persistence.adapter",
+      "methods_count": 6
+    },
+    {
+      "name": "InventoryPersistenceAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.persistence.adapter",
+      "methods_count": 9
+    },
+    {
+      "name": "JpaProductReviewRepository",
+      "package": "solid.humank.genaidemo.infrastructure.review.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "ProductReviewRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.review.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "JacksonJsonConverter",
+      "package": "solid.humank.genaidemo.infrastructure.common.persistence.converter",
+      "methods_count": 0
+    },
+    {
+      "name": "JsonConverter",
+      "package": "solid.humank.genaidemo.infrastructure.common.persistence.converter",
+      "methods_count": 0
+    },
+    {
+      "name": "JsonConversionException",
+      "package": "solid.humank.genaidemo.infrastructure.common.persistence.converter",
+      "methods_count": 0
+    },
+    {
+      "name": "ProductJpaConfig",
+      "package": "solid.humank.genaidemo.infrastructure.product.config",
+      "methods_count": 0
+    },
+    {
+      "name": "ProductJpaRepository",
+      "package": "solid.humank.genaidemo.infrastructure.product.persistence.repository",
+      "methods_count": 7
+    },
+    {
+      "name": "ProductRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.product.persistence.adapter",
+      "methods_count": 10
+    },
+    {
+      "name": "TracingAspect",
+      "package": "solid.humank.genaidemo.infrastructure.observability.tracing",
+      "methods_count": 0
+    },
+    {
+      "name": "InMemoryAnalyticsEventRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence",
+      "methods_count": 7
+    },
+    {
+      "name": "AnalyticsEventRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence",
+      "methods_count": 7
+    },
+    {
+      "name": "AnalyticsSessionRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence",
+      "methods_count": 1
+    },
+    {
+      "name": "InMemoryAnalyticsSessionRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence",
+      "methods_count": 1
+    },
+    {
+      "name": "JpaAnalyticsSessionRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence.repository",
+      "methods_count": 21
+    },
+    {
+      "name": "JpaAnalyticsEventRepository",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence.repository",
+      "methods_count": 34
+    },
+    {
+      "name": "AnalyticsDataRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.observability.persistence.adapter",
+      "methods_count": 4
+    },
+    {
+      "name": "PaymentJpaConfig",
+      "package": "solid.humank.genaidemo.infrastructure.payment.config",
+      "methods_count": 0
+    },
+    {
+      "name": "JpaPaymentMethodRepository",
+      "package": "solid.humank.genaidemo.infrastructure.payment.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "JpaPaymentRepository",
+      "package": "solid.humank.genaidemo.infrastructure.payment.persistence.repository",
+      "methods_count": 3
+    },
+    {
+      "name": "PaymentMethodRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.payment.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "PaymentPersistenceAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.payment.persistence.adapter",
+      "methods_count": 6
+    },
+    {
+      "name": "PaymentRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.payment.persistence.adapter",
+      "methods_count": 3
+    },
+    {
+      "name": "JpaNotificationTemplateRepository",
+      "package": "solid.humank.genaidemo.infrastructure.notification.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "JpaNotificationRepository",
+      "package": "solid.humank.genaidemo.infrastructure.notification.persistence.repository",
+      "methods_count": 9
+    },
+    {
+      "name": "NotificationTemplateRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.notification.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "NotificationRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.notification.persistence.adapter",
+      "methods_count": 6
+    },
+    {
+      "name": "OrderJpaConfig",
+      "package": "solid.humank.genaidemo.infrastructure.order.config",
+      "methods_count": 0
+    },
+    {
+      "name": "JpaOrderWorkflowRepository",
+      "package": "solid.humank.genaidemo.infrastructure.order.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "JpaOrderRepository",
+      "package": "solid.humank.genaidemo.infrastructure.order.persistence.repository",
+      "methods_count": 9
+    },
+    {
+      "name": "OrderRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.order.persistence.adapter",
+      "methods_count": 3
+    },
+    {
+      "name": "OrderWorkflowRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.order.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "OrderPersistenceAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.order.persistence.adapter",
+      "methods_count": 8
+    },
+    {
+      "name": "JpaVoucherRepository",
+      "package": "solid.humank.genaidemo.infrastructure.promotion.persistence.repository",
+      "methods_count": 3
+    },
+    {
+      "name": "JpaPromotionRepository",
+      "package": "solid.humank.genaidemo.infrastructure.promotion.persistence.repository",
+      "methods_count": 5
+    },
+    {
+      "name": "VoucherRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.promotion.persistence.adapter",
+      "methods_count": 4
+    },
+    {
+      "name": "PromotionRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.promotion.persistence.adapter",
+      "methods_count": 5
+    },
+    {
+      "name": "JpaSellerRepository",
+      "package": "solid.humank.genaidemo.infrastructure.seller.persistence.repository",
+      "methods_count": 8
+    },
+    {
+      "name": "SellerRepositoryAdapter",
+      "package": "solid.humank.genaidemo.infrastructure.seller.persistence.adapter",
+      "methods_count": 8
+    },
+    {
+      "name": "OptimisticLockingCustomerService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 0
+    },
+    {
+      "name": "CustomerApplicationService",
+      "package": "solid.humank.genaidemo.application.customer.service",
+      "methods_count": 0
+    },
+    {
+      "name": "StatisticsApplicationService",
+      "package": "solid.humank.genaidemo.application.stats.service",
+      "methods_count": 0
+    },
+    {
+      "name": "PricingApplicationService",
+      "package": "solid.humank.genaidemo.application.pricing.service",
+      "methods_count": 0
+    },
+    {
+      "name": "ShoppingCartApplicationService",
+      "package": "solid.humank.genaidemo.application.shoppingcart.service",
+      "methods_count": 0
+    },
+    {
+      "name": "ProductApplicationService",
+      "package": "solid.humank.genaidemo.application.product.service",
+      "methods_count": 1
+    },
+    {
+      "name": "AnalyticsQueryService",
+      "package": "solid.humank.genaidemo.application.observability.service",
+      "methods_count": 0
+    },
+    {
+      "name": "DataRetentionService",
+      "package": "solid.humank.genaidemo.application.observability.service",
+      "methods_count": 0
+    },
+    {
+      "name": "AnalyticsQueryService",
+      "package": "solid.humank.genaidemo.application.observability.query",
+      "methods_count": 0
+    },
+    {
+      "name": "PromotionApplicationService",
+      "package": "solid.humank.genaidemo.application.promotion.service",
+      "methods_count": 0
+    }
+  ],
+  "controllers": [
+    {
+      "name": "GlobalExceptionHandler",
+      "package": "solid.humank.genaidemo.exceptions",
+      "endpoints_count": 0
+    },
+    {
+      "name": "ProfileInfoController",
+      "package": "solid.humank.genaidemo.interfaces.web",
+      "endpoints_count": 0
+    },
+    {
+      "name": "DatabaseHealthController",
+      "package": "solid.humank.genaidemo.interfaces.web",
+      "endpoints_count": 0
+    },
+    {
+      "name": "AnalyticsQueryController",
+      "package": "solid.humank.genaidemo.interfaces.observability",
+      "endpoints_count": 0
+    },
+    {
+      "name": "OrderController",
+      "package": "solid.humank.genaidemo.interfaces.web.order",
+      "endpoints_count": 0
+    },
+    {
+      "name": "ActivityController",
+      "package": "solid.humank.genaidemo.interfaces.web.activity",
+      "endpoints_count": 0
+    },
+    {
+      "name": "PaymentController",
+      "package": "solid.humank.genaidemo.interfaces.web.payment",
+      "endpoints_count": 0
+    },
+    {
+      "name": "AnalyticsController",
+      "package": "solid.humank.genaidemo.interfaces.web.observability",
+      "endpoints_count": 0
+    },
+    {
+      "name": "ProductController",
+      "package": "solid.humank.genaidemo.interfaces.web.product",
+      "endpoints_count": 0
+    },
+    {
+      "name": "InventoryController",
+      "package": "solid.humank.genaidemo.interfaces.web.inventory",
+      "endpoints_count": 0
+    },
+    {
+      "name": "ShoppingCartController",
+      "package": "solid.humank.genaidemo.interfaces.web.shoppingcart",
+      "endpoints_count": 0
+    },
+    {
+      "name": "ConsumerProductController",
+      "package": "solid.humank.genaidemo.interfaces.web.consumer",
+      "endpoints_count": 0
+    },
+    {
+      "name": "EventMonitoringController",
+      "package": "solid.humank.genaidemo.interfaces.web.monitoring",
+      "endpoints_count": 0
+    },
+    {
+      "name": "PricingController",
+      "package": "solid.humank.genaidemo.interfaces.web.pricing",
+      "endpoints_count": 0
+    },
+    {
+      "name": "StatsController",
+      "package": "solid.humank.genaidemo.interfaces.web.stats",
+      "endpoints_count": 0
+    },
+    {
+      "name": "CustomerController",
+      "package": "solid.humank.genaidemo.interfaces.web.customer",
+      "endpoints_count": 0
+    },
+    {
+      "name": "InventoryExceptionHandler",
+      "package": "solid.humank.genaidemo.infrastructure.inventory.exception",
+      "endpoints_count": 0
+    }
+  ],
+  "events": [
+    {
+      "name": "CustomerSpendingUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CustomerProfileUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "DeliveryAddressRemovedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "RewardPointsEarnedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "MembershipLevelUpgradedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "NotificationPreferencesUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CustomerVipUpgradedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CustomerStatusChangedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "RewardPointsRedeemedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "DeliveryAddressAddedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CustomerCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.customer.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CartItemRemovedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CartClearedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CartCheckedOutEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "consumerId"
+    },
+    {
+      "name": "CartStatusChangedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "consumerId"
+    },
+    {
+      "name": "CartItemAddedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CartCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "CartItemQuantityUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.shoppingcart.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "StockAddedEvent",
+      "package": "solid.humank.genaidemo.domain.inventory.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "InventoryCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.inventory.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "StockReservedEvent",
+      "package": "solid.humank.genaidemo.domain.inventory.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ReviewCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.review.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ReviewRejectedEvent",
+      "package": "solid.humank.genaidemo.domain.review.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ReviewReportedEvent",
+      "package": "solid.humank.genaidemo.domain.review.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ReviewApprovedEvent",
+      "package": "solid.humank.genaidemo.domain.review.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ReviewModifiedEvent",
+      "package": "solid.humank.genaidemo.domain.review.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "CustomerCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.common.event",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "ProductActivatedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ProductStockUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ProductDescriptionUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ProductCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ProductPriceChangedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "ProductDiscontinuedEvent",
+      "package": "solid.humank.genaidemo.domain.product.model.events",
+      "aggregate_id_field": "productId"
+    },
+    {
+      "name": "UserBehaviorAnalyticsEvent",
+      "package": "solid.humank.genaidemo.domain.observability.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "PerformanceMetricReceivedEvent",
+      "package": "solid.humank.genaidemo.domain.observability.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "PaymentRequestedEvent",
+      "package": "solid.humank.genaidemo.domain.payment.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "PaymentCompletedEvent",
+      "package": "solid.humank.genaidemo.domain.payment.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "PaymentFailedEvent",
+      "package": "solid.humank.genaidemo.domain.payment.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "PaymentCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.payment.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "NotificationCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.notification.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "NotificationStatusChangedEvent",
+      "package": "solid.humank.genaidemo.domain.notification.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "OrderItemAddedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "OrderSubmittedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "OrderPaymentRequestedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "OrderConfirmedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "OrderCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "OrderInventoryReservationRequestedEvent",
+      "package": "solid.humank.genaidemo.domain.order.model.events",
+      "aggregate_id_field": "orderId"
+    },
+    {
+      "name": "VoucherUsedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": "ownerId"
+    },
+    {
+      "name": "PromotionUsedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": "customerId"
+    },
+    {
+      "name": "PromotionInfoUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "PromotionStatusChangedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "VoucherLostReportedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": "ownerId"
+    },
+    {
+      "name": "PromotionActivatedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "PromotionCreatedEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "VoucherCancelledEvent",
+      "package": "solid.humank.genaidemo.domain.promotion.model.events",
+      "aggregate_id_field": "ownerId"
+    },
+    {
+      "name": "SellerProfileUpdatedEvent",
+      "package": "solid.humank.genaidemo.domain.seller.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "SellerRegisteredEvent",
+      "package": "solid.humank.genaidemo.domain.seller.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "SellerVerificationApprovedEvent",
+      "package": "solid.humank.genaidemo.domain.seller.model.events",
+      "aggregate_id_field": ""
+    },
+    {
+      "name": "SellerRatingAddedEvent",
+      "package": "solid.humank.genaidemo.domain.seller.model.events",
+      "aggregate_id_field": "customerId"
+    }
+  ]
+}

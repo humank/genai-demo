@@ -10,12 +10,11 @@ spring:
     name: genai-demo
     version: 2.0.0
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE:local}
     group:
-      dev: "dev,openapi"
-      prod: "prod,openapi"
-      k8s: "k8s,openapi"
-      test: "test,openapi"
+      local: "local,openapi"
+      staging: "staging,openapi,msk"
+      production: "production,openapi,msk"
   
   # Configuration import - conditional based on profile
   config:
@@ -59,9 +58,10 @@ management:
   metrics:
     export:
       cloudwatch:
-        enabled: false  # Will be enabled in production profile
+        enabled: false  # Will be enabled in staging/production profiles
         namespace: GenAIDemo
         step: 1m
+        batch-size: 20
     distribution:
       percentiles-histogram:
         http.server.requests: true
@@ -91,7 +91,23 @@ info:
     profiles:
       active: ${spring.profiles.active}
       
-# Distributed Tracing Configuration (DISABLED)
+# AWS X-Ray Distributed Tracing Configuration
+aws:
+  region: ${AWS_REGION:ap-east-2}
+  xray:
+    enabled: false  # Will be enabled in staging/production profiles
+    tracing-name: ${spring.application.name}
+    daemon-address: ${XRAY_DAEMON_ADDRESS:127.0.0.1:2000}
+    sampling:
+      rate: 0.1
+      reservoir: 1
+    context-missing: LOG_ERROR
+    plugins:
+      - EC2Plugin
+      - ECSPlugin
+      - EKSPlugin
+
+# Legacy Tracing Configuration (DISABLED)
 tracing:
   enabled: false
   sampling:
@@ -103,7 +119,7 @@ tracing:
   correlation:
     enabled: false
 
-# OpenTelemetry Configuration (DISABLED)
+# OpenTelemetry Configuration (DISABLED - Using X-Ray instead)
 otel:
   service:
     name: ${spring.application.name}
@@ -112,20 +128,77 @@ otel:
     attributes:
       deployment.environment: ${spring.profiles.active}
   traces:
-    exporter: none  # Disable tracing
+    exporter: none  # Disable tracing - using X-Ray
   metrics:
     exporter: none    # Disable OTEL metrics, use Micrometer instead
 
 # Profile Configuration Validation
 app:
   profile:
-    name: ${spring.profiles.active:dev}
+    name: ${spring.profiles.active:local}
     description: "Base configuration - profile-specific settings will override"
     features:
       h2-console: false
       debug-logging: false
       in-memory-events: false
       kafka-events: false
+  
+  # Redis Configuration for Distributed Locking with High Availability
+  redis:
+    enabled: true
+    mode: ${REDIS_MODE:SINGLE}  # SINGLE, CLUSTER, SENTINEL
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    database: ${REDIS_DATABASE:0}
+    password: ${REDIS_PASSWORD:}
+    connect-timeout: 10000
+    timeout: 3000
+    connection-minimum-idle-size: 10
+    connection-pool-size: 64
+    retry-attempts: 3
+    retry-interval: 1500
+    lock-watchdog-timeout: 30000
+    default-lock-wait-time: 5000
+    default-lock-lease-time: 30000
+    
+    # Cluster Configuration
+    cluster:
+      nodes: ${REDIS_CLUSTER_NODES:}  # Comma-separated list: host1:port1,host2:port2
+      max-redirections: 5
+      scan-interval: 5000
+      read-from-slaves: true
+      slave-connection-pool-size: 32
+      master-connection-pool-size: 32
+    
+    # Sentinel Configuration
+    sentinel:
+      master-name: ${REDIS_SENTINEL_MASTER:mymaster}
+      nodes: ${REDIS_SENTINEL_NODES:}  # Comma-separated list: host1:port1,host2:port2
+      password: ${REDIS_SENTINEL_PASSWORD:}
+      check-sentinels-list: true
+      scan-interval: 2000
+      read-from-slaves: true
+    
+    # High Availability Configuration
+    high-availability:
+      enable-failover: ${REDIS_ENABLE_FAILOVER:true}
+      failover-timeout: 30000
+      max-failover-attempts: 3
+      failover-retry-interval: 5000
+      enable-connection-recovery: true
+      connection-recovery-interval: 10000
+      keep-alive-interval: 30000
+      tcp-keep-alive: true
+    
+    # Health Check Configuration
+    health-check:
+      enabled: true
+      interval: 30000
+      timeout: 5000
+      failure-threshold: 3
+      success-threshold: 1
+      ping-enabled: true
+      info-enabled: true
 
 genai-demo:
   # 事件發布配置 (預設值，會被 profile 覆蓋)

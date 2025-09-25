@@ -20,7 +20,7 @@ import solid.humank.genaidemo.infrastructure.observability.tracing.TraceContextM
  * - 使用 NoOp 實現避免複雜依賴
  */
 @TestConfiguration
-@Profile("test-tracing")
+@Profile("test")
 public class SimplifiedTracingConfiguration {
 
     /**

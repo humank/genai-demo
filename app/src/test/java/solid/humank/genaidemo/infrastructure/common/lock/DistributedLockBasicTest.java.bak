@@ -1,0 +1,98 @@
+package solid.humank.genaidemo.infrastructure.common.lock;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.DisplayName;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.*;
+
+/**
+ * Basic test to verify distributed lock functionality without Spring context.
+ */
+@Tag("unit")
+@DisplayName("Distributed Lock Basic Tests")
+class DistributedLockBasicTest {
+    
+    @Test
+    @DisplayName("Should create InMemoryDistributedLockManager successfully")
+    void should_create_in_memory_lock_manager() {
+        // When
+        InMemoryDistributedLockManager lockManager = new InMemoryDistributedLockManager();
+        
+        // Then
+        assertThat(lockManager).isNotNull();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(0);
+    }
+    
+    @Test
+    @DisplayName("Should perform basic lock operations")
+    void should_perform_basic_lock_operations() {
+        // Given
+        InMemoryDistributedLockManager lockManager = new InMemoryDistributedLockManager();
+        String lockKey = "test-lock";
+        Duration expireTime = Duration.ofSeconds(10);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        // When
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        boolean isLocked = lockManager.isLocked(lockKey);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(isLocked).isTrue();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(1);
+        
+        // Cleanup
+        lockManager.forceUnlock(lockKey);
+        assertThat(lockManager.isLocked(lockKey)).isFalse();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(0);
+    }
+    
+    @Test
+    @DisplayName("Should handle concurrent lock attempts")
+    void should_handle_concurrent_lock_attempts() {
+        // Given
+        InMemoryDistributedLockManager lockManager = new InMemoryDistributedLockManager();
+        String lockKey = "concurrent-lock";
+        Duration expireTime = Duration.ofSeconds(5);
+        Duration waitTime = Duration.ofMillis(100);
+        
+        // When
+        boolean firstAcquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        boolean secondAcquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        
+        // Then
+        assertThat(firstAcquired).isTrue();
+        assertThat(secondAcquired).isFalse();
+        assertThat(lockManager.getActiveLockCount()).isEqualTo(1);
+        
+        // Cleanup
+        lockManager.clearAllLocks();
+    }
+    
+    @Test
+    @DisplayName("Should get lock info correctly")
+    void should_get_lock_info() {
+        // Given
+        InMemoryDistributedLockManager lockManager = new InMemoryDistributedLockManager();
+        String lockKey = "info-test-lock";
+        Duration expireTime = Duration.ofSeconds(30);
+        Duration waitTime = Duration.ofSeconds(1);
+        
+        // When
+        boolean acquired = lockManager.tryLock(lockKey, expireTime, waitTime);
+        LockInfo lockInfo = lockManager.getLockInfo(lockKey);
+        
+        // Then
+        assertThat(acquired).isTrue();
+        assertThat(lockInfo).isNotNull();
+        assertThat(lockInfo.lockKey()).isEqualTo(lockKey);
+        assertThat(lockInfo.isValid()).isTrue();
+        assertThat(lockInfo.getRemainingTimeMillis()).isGreaterThan(0);
+        
+        // Cleanup
+        lockManager.clearAllLocks();
+    }
+}

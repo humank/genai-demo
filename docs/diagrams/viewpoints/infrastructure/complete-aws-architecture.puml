@@ -1,0 +1,171 @@
+@startuml GenAI Demo Complete AWS Architecture
+
+title GenAI Demo - Complete AWS Architecture\n**Multi-Region Active-Active Architecture**
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+' User Layer
+actor "Users" as users
+cloud "Internet" as internet
+
+' Global Services
+package "Global AWS Services" as global {
+    rectangle "Route 53" as route53 #orange
+    note bottom of route53 : DNS Management\nHealth Checks\nFailover Routing
+    
+    rectangle "CloudFront" as cloudfront #orange
+    note bottom of cloudfront : Global CDN\nEdge Locations\nSSL Termination
+    
+    rectangle "IAM" as iam #red
+    note bottom of iam : Global Identity\nRoles & Policies\nOIDC Provider
+    
+    rectangle "KMS" as kms #red
+    note bottom of kms : Encryption Keys\nKey Rotation\nCross-Region
+}
+
+' Primary Region - Taipei (ap-east-2)
+package "ap-east-2 (Taipei) - Primary Region" as primary {
+    
+    ' Network Layer
+    package "Network Infrastructure" as network1 {
+        rectangle "VPC" as vpc1 #lightblue
+        note bottom of vpc1 : 10.0.0.0/16\n2 AZs\nPublic/Private Subnets
+        
+        rectangle "Application LB" as alb1 #lightblue
+        note bottom of alb1 : HTTPS Termination\nHealth Checks\nTarget Groups
+    }
+    
+    ' Compute Layer
+    package "Compute Platform" as compute1 {
+        rectangle "EKS Cluster" as eks1 #lightgreen
+        note bottom of eks1 : Kubernetes 1.28\nManaged Control Plane\nPrivate Endpoints
+        
+        rectangle "Worker Nodes" as nodes1 #lightgreen
+        note bottom of nodes1 : t3.medium/large\nAuto Scaling Group\n2-10 Instances
+        
+        package "Application Pods" as pods1 {
+            rectangle "genai-demo-app\n(3 replicas)" as app1 #lightyellow
+            rectangle "KEDA Operator" as keda1 #lightcyan
+            rectangle "Cluster Autoscaler" as ca1 #lightcyan
+        }
+    }
+    
+    ' Data Layer
+    package "Data Services" as data1 {
+        rectangle "Aurora Global" as aurora1 #yellow
+        note bottom of aurora1 : PostgreSQL 15.4\nWriter Instance\ndb.r6g.large
+        
+        rectangle "ElastiCache" as redis1 #yellow
+        note bottom of redis1 : Redis 7.0\nPrimary + 2 Replicas\ncache.r6g.large
+        
+        rectangle "MSK Kafka" as msk1 #yellow
+        note bottom of msk1 : 3 Brokers\nkafka.m5.large\nMulti-AZ
+    }
+    
+    ' Monitoring
+    package "Observability" as monitoring1 {
+        rectangle "CloudWatch" as cw1 #plum
+        note bottom of cw1 : Metrics & Logs\nContainer Insights\nAlarms
+        
+        rectangle "X-Ray" as xray1 #plum
+        note bottom of xray1 : Distributed Tracing\n5% Sampling\nService Map
+    }
+}
+
+' Secondary Region - Tokyo (ap-northeast-1)
+package "ap-northeast-1 (Tokyo) - Secondary Region" as secondary {
+    
+    ' Network Layer
+    package "Network Infrastructure DR" as network2 {
+        rectangle "VPC" as vpc2 #lightblue
+        note bottom of vpc2 : 10.1.0.0/16\n2 AZs\nPublic/Private Subnets
+        
+        rectangle "Application LB" as alb2 #lightblue
+        note bottom of alb2 : HTTPS Termination\nHealth Checks\nStandby Mode
+    }
+    
+    ' Compute Layer
+    package "Compute Platform DR" as compute2 {
+        rectangle "EKS Cluster" as eks2 #lightgreen
+        note bottom of eks2 : Kubernetes 1.28\nManaged Control Plane\nDR Configuration
+        
+        rectangle "Worker Nodes" as nodes2 #lightgreen
+        note bottom of nodes2 : t3.medium\nAuto Scaling Group\n1-5 Instances
+        
+        package "Application Pods DR" as pods2 {
+            rectangle "genai-demo-app\n(2 replicas)" as app2 #wheat
+        }
+    }
+    
+    ' Data Layer DR
+    package "Data Services DR" as data2 {
+        rectangle "Aurora Global" as aurora2 #yellow
+        note bottom of aurora2 : PostgreSQL 15.4\nReader Instance\ndb.r6g.medium
+        
+        rectangle "ElastiCache" as redis2 #yellow
+        note bottom of redis2 : Redis 7.0\nReplica Cluster\ncache.r6g.medium
+    }
+}
+
+' Connections - User Flow
+users --> internet
+internet --> route53 : "DNS Query\ngenai-demo.kimkao.io"
+route53 --> cloudfront : "Health Check\nRouting Decision"
+cloudfront --> alb1 : "Primary Route\n(Normal Operation)"
+cloudfront -.-> alb2 : "Failover Route\n(Disaster Recovery)"
+
+' Primary Region Connections
+alb1 --> eks1
+eks1 --> nodes1
+nodes1 --> app1
+app1 --> aurora1 : "Database\nQueries"
+app1 --> redis1 : "Cache\nOperations"
+app1 --> msk1 : "Event\nPublishing"
+app1 --> cw1 : "Metrics\n& Logs"
+app1 --> xray1 : "Distributed\nTracing"
+
+' Secondary Region Connections
+alb2 --> eks2
+eks2 --> nodes2
+nodes2 --> app2
+app2 --> aurora2 : "Read-Only\nQueries"
+app2 --> redis2 : "Cache\nOperations"
+
+' Cross-Region Replication
+aurora1 -.-> aurora2 : "Global Database\nReplication"
+redis1 -.-> redis2 : "Cross-Region\nBackup"
+
+' IAM and Security
+iam --> app1 : "IRSA\nService Account"
+iam --> app2 : "IRSA\nService Account"
+kms --> aurora1 : "Encryption\nAt Rest"
+kms --> aurora2 : "Encryption\nAt Rest"
+kms --> redis1 : "Encryption\nAt Rest"
+kms --> redis2 : "Encryption\nAt Rest"
+
+' Auto Scaling Relationships
+keda1 --> app1 : "Event-Driven\nScaling"
+ca1 --> nodes1 : "Node-Level\nScaling"
+
+' Health Checks
+route53 -.-> alb1 : "Health Check\n/actuator/health"
+route53 -.-> alb2 : "Health Check\n/actuator/health"
+
+' Annotations
+note top of primary : **Primary Region**\nActive traffic handling\nFull read/write operations\nComplete monitoring stack
+note top of secondary : **Secondary Region**\nStandby for disaster recovery\nRead-only operations\nReduced resource allocation
+note bottom of global : **Global Services**\nCross-region coordination\nDNS-based failover\nCentralized identity management
+
+' Legend
+legend bottom
+|= Component |= Description |= Purpose |
+| <color:#1E88E5>Primary Application</color> | Main application pods in primary region | Handle production traffic |
+| <color:#FFA726>Secondary Application</color> | Standby application pods in secondary region | Disaster recovery |
+| <color:#66BB6A>Active Services</color> | Services actively handling requests | Primary region operations |
+| <color:#EF5350>Standby Services</color> | Services in standby mode | Secondary region operations |
+| <color:#AB47BC>Management Services</color> | Auto-scaling and management components | Operational automation |
+endlegend
+
+@enduml@enduml

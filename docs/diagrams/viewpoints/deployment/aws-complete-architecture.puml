@@ -1,0 +1,172 @@
+@startuml AWS Complete Architecture
+
+title GenAI Demo - Complete AWS Architecture
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName "Arial"
+skinparam defaultFontSize 12
+
+' Define colors
+!define PRIMARY_COLOR #1976D2
+!define SECONDARY_COLOR #388E3C
+!define ACCENT_COLOR #F57C00
+!define ERROR_COLOR #D32F2F
+
+' Users and External
+actor "Users" as users #lightblue
+cloud "Internet" as internet
+
+' Global Services
+rectangle "Global Services" as global #lightgray {
+    component "Route 53" as route53
+    component "CloudFront" as cloudfront
+    component "AWS WAF" as waf
+    component "AWS Shield" as shield
+}
+
+' Primary Region (ap-east-2)
+rectangle "ap-east-2 (Taipei) - Primary Region" as primary_region #lightgreen {
+    ' Network Layer
+    rectangle "Network Layer" as primary_network {
+        component "VPC\n10.0.0.0/16" as vpc1
+        component "ALB\nPrimary Load Balancer" as alb1
+        component "NAT Gateway\nInternet Access" as nat1
+        component "Internet Gateway\nPublic Access" as igw1
+    }
+    
+    ' Compute Layer
+    rectangle "Compute Layer" as primary_compute {
+        component "EKS Cluster\nKubernetes v1.28" as eks1
+        component "Worker Node 1\nt3.medium" as node1
+        component "Worker Node 2\nt3.medium" as node2
+        component "Worker Node 3\nt3.large" as node3
+    }
+    
+    ' Data Layer
+    rectangle "Data Layer" as primary_data {
+        database "Aurora PostgreSQL\nWriter Instance" as aurora1
+        database "Aurora PostgreSQL\nReader Instance" as aurora_reader1
+        database "ElastiCache Redis\nPrimary Node" as redis1
+        queue "MSK Kafka\n3 Brokers" as msk1
+    }
+    
+    ' Monitoring
+    rectangle "Monitoring" as primary_monitoring {
+        component "CloudWatch\nMetrics & Logs" as cw1
+        component "X-Ray\nDistributed Tracing" as xray1
+    }
+}
+
+' Secondary Region (ap-northeast-1)
+rectangle "ap-northeast-1 (Tokyo) - Secondary Region" as secondary_region #lightyellow {
+    ' Network Layer
+    rectangle "Network Layer DR" as secondary_network {
+        component "VPC\n10.1.0.0/16" as vpc2
+        component "ALB\nSecondary Load Balancer" as alb2
+    }
+    
+    ' Compute Layer
+    rectangle "Compute Layer DR" as secondary_compute {
+        component "EKS Cluster\nKubernetes v1.28" as eks2
+        component "Worker Nodes\nStandby" as node4
+    }
+    
+    ' Data Layer
+    rectangle "Data Layer DR" as secondary_data {
+        database "Aurora Global\nReader Instance" as aurora2
+        database "ElastiCache Redis\nStandby" as redis2
+        queue "MSK Cross-Region\nReplication" as msk2
+    }
+}
+
+' Security Services
+rectangle "Security & Identity" as security #lightcoral {
+    component "AWS IAM\nIdentity & Access Management" as iam
+    component "AWS KMS\nKey Management Service" as kms
+    component "Secrets Manager\nSensitive Data" as secrets
+    component "Systems Manager\nParameter Store" as ssm
+}
+
+' Container Registry
+rectangle "Container Services" as containers {
+    component "ECR\nContainer Registry" as ecr
+}
+
+' User Flow
+users --> internet
+internet --> route53
+route53 --> cloudfront
+cloudfront --> waf
+waf --> shield
+shield --> alb1
+shield -.-> alb2 : "Failover"
+
+' Primary Region Flow
+alb1 --> eks1
+eks1 --> node1
+eks1 --> node2
+eks1 --> node3
+
+node1 --> aurora1
+node2 --> aurora_reader1
+node3 --> redis1
+node1 --> msk1
+
+' Cross-Region Replication
+aurora1 -.-> aurora2 : "Global Database"
+redis1 -.-> redis2 : "Cross-Region Backup"
+msk1 -.-> msk2 : "Cross-Region Replication"
+
+' Security Integration
+eks1 --> iam
+eks1 --> kms
+eks1 --> secrets
+eks1 --> ssm
+
+' Container Registry
+node1 --> ecr
+node2 --> ecr
+node3 --> ecr
+
+' Monitoring
+node1 --> cw1
+node2 --> xray1
+node3 --> cw1
+
+' Network Components
+vpc1 --> igw1
+vpc1 --> nat1
+alb1 --> vpc1
+eks1 --> vpc1
+
+vpc2 --> alb2
+eks2 --> vpc2
+
+note right of primary_region
+  **Primary Region Features:**
+  - Active-Active Architecture
+  - Auto-scaling EKS Cluster
+  - Aurora Global Database Writer
+  - Real-time Monitoring
+  - Full Service Stack
+end note
+
+note right of secondary_region
+  **Secondary Region Features:**
+  - Disaster Recovery
+  - Aurora Global Database Reader
+  - Standby EKS Cluster
+  - Cross-Region Data Replication
+  - Automated Failover
+end note
+
+note bottom of security
+  **Security Features:**
+  - IRSA (IAM Roles for Service Accounts)
+  - Least Privilege Access
+  - Encryption at Rest and in Transit
+  - Secrets Management
+  - Configuration Management
+end note
+
+@enduml

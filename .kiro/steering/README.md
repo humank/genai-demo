@@ -20,9 +20,9 @@
 
 ## 📚 **組織和流程** (支援標準)
 
+- **[english-documentation-standards.md](english-documentation-standards.md)** - 🌐 **英文文檔標準** (強制英文撰寫要求)
 - **[reports-organization-standards.md](reports-organization-standards.md)** - 📁 **報告組織標準** (文件分類和命名)
 - **[datetime-accuracy-standards.md](datetime-accuracy-standards.md)** - 🕐 **日期時間準確性** (時間戳記標準)
-- **[translation-guide.md](translation-guide.md)** - 🌐 **文檔翻譯規則** (多語言支援)
 
 ## 🚀 **使用指南** (按開發階段)
 
@@ -39,9 +39,9 @@
 - ⚡ **效能**: [performance-standards.md](performance-standards.md) (效能優化)
 
 ### **文檔和圖表**
+- 🌐 **語言**: [english-documentation-standards.md](english-documentation-standards.md) (英文撰寫要求)
 - 📊 **圖表**: [diagram-generation-standards.md](diagram-generation-standards.md) (PlantUML/Mermaid)
 - 📁 **報告**: [reports-organization-standards.md](reports-organization-standards.md) (文件組織)
-- 🌐 **翻譯**: [translation-guide.md](translation-guide.md) (多語言支援)
 
 ## Quick Reference by Development Phase
 
@@ -71,7 +71,7 @@
 
 ### Documentation Phase
 
-- Translation guide (translation-guide.md)
+- English documentation standards (english-documentation-standards.md)
 - Architecture documentation (rozanski-woods-architecture-methodology.md)
 - Report organization (reports-organization-standards.md)
 

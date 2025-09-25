@@ -46,7 +46,7 @@ public class TlsConfiguration {
      * Development RestTemplate without strict TLS requirements
      */
     @Bean
-    @Profile({ "dev", "test" })
+    @Profile({ "local", "test" })
     public RestTemplate developmentRestTemplate() {
         return new RestTemplate();
     }

@@ -33,7 +33,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
 @Component
-@Profile("dev")
+@Profile("local")
 public class InMemoryDomainEventPublisher implements DomainEventPublisher {
 
     private static final Logger logger = LoggerFactory.getLogger(InMemoryDomainEventPublisher.class);

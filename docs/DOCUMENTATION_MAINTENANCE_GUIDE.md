@@ -162,32 +162,30 @@ python3 scripts/validate-diagrams.py
 python3 scripts/sync-diagram-references.py
 ```
 
-## 翻譯維護
+## 內容維護
 
 ### 1. 術語一致性
 
-#### 專業術語字典維護
-位置：`docs/.terminology.json`
-
-重要類別：
-- **rozanski_woods_viewpoints**: Rozanski & Woods 視點術語
-- **rozanski_woods_perspectives**: Rozanski & Woods 觀點術語
-- **ddd_strategic_patterns**: DDD 戰略模式術語
-- **ddd_tactical_patterns**: DDD 戰術模式術語
-- **stakeholder_terminology**: 利害關係人術語
-- **design_strategies**: 設計策略術語
+#### 專業術語管理
+確保文檔中使用一致的專業術語：
+- **Rozanski & Woods 視點術語**: 功能視點、資訊視點等
+- **Rozanski & Woods 觀點術語**: 安全性觀點、效能觀點等
+- **DDD 戰略模式術語**: 界限上下文、聚合根等
+- **DDD 戰術模式術語**: 實體、值對象等
+- **利害關係人術語**: 架構師、開發者等
+- **設計策略術語**: 設計模式、架構模式等
 
 #### 術語更新流程
 1. **識別新術語**: 在文件中發現新的專業術語
-2. **研究標準翻譯**: 查找業界標準翻譯
-3. **更新字典**: 在 `.terminology.json` 中添加新術語
-4. **驗證一致性**: 執行翻譯品質檢查
+2. **研究標準翻譯**: 查找業界標準用法
+3. **建立標準**: 確立專案內統一用法
+4. **驗證一致性**: 執行內容品質檢查
 5. **應用修正**: 使用修正腳本更新所有文件
 
-### 2. 翻譯品質保證
+### 2. 內容品質保證
 
-#### 自動翻譯觸發
-- **Kiro Hook**: 文件變更時自動觸發翻譯
+#### 自動品質檢查
+- **Kiro Hook**: 文件變更時自動觸發品質檢查
 - **手動觸發**: 使用翻譯腳本進行批量翻譯
 - **品質修正**: 使用品質修正腳本改善翻譯
 

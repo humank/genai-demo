@@ -28,7 +28,7 @@ import solid.humank.genaidemo.config.SimplifiedTracingConfiguration;
         SimplifiedTracingConfiguration.class,
         TraceContextManager.class
 })
-@ActiveProfiles("test-tracing")
+@ActiveProfiles("test")
 @TestPropertySource(properties = {
         "spring.main.lazy-initialization=true",
         "spring.jmx.enabled=false",

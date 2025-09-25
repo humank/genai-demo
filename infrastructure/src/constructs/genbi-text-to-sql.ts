@@ -79,28 +79,31 @@ export class GenBITextToSQLConstruct extends Construct {
         ? cdk.RemovalPolicy.RETAIN 
         : cdk.RemovalPolicy.DESTROY,
       
-      // GSI for user queries
-      globalSecondaryIndexes: [{
-        indexName: 'UserQueryIndex',
-        partitionKey: {
-          name: 'userId',
-          type: dynamodb.AttributeType.STRING
-        },
-        sortKey: {
-          name: 'timestamp',
-          type: dynamodb.AttributeType.NUMBER
-        }
-      }, {
-        indexName: 'QueryPatternIndex',
-        partitionKey: {
-          name: 'queryPattern',
-          type: dynamodb.AttributeType.STRING
-        },
-        sortKey: {
-          name: 'successRate',
-          type: dynamodb.AttributeType.NUMBER
-        }
-      }]
+    });
+
+    // Add GSI for user queries
+    this.queryHistoryTable.addGlobalSecondaryIndex({
+      indexName: 'UserQueryIndex',
+      partitionKey: {
+        name: 'userId',
+        type: dynamodb.AttributeType.STRING
+      },
+      sortKey: {
+        name: 'timestamp',
+        type: dynamodb.AttributeType.NUMBER
+      }
+    });
+
+    this.queryHistoryTable.addGlobalSecondaryIndex({
+      indexName: 'QueryPatternIndex',
+      partitionKey: {
+        name: 'queryPattern',
+        type: dynamodb.AttributeType.STRING
+      },
+      sortKey: {
+        name: 'successRate',
+        type: dynamodb.AttributeType.NUMBER
+      }
     });
   }
 

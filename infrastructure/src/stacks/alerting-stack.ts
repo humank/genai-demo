@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
+import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as snsSubscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import { Construct } from 'constructs';
@@ -38,6 +39,9 @@ export class AlertingStack extends cdk.Stack {
 
     // Create CloudWatch Alarms for infrastructure metrics
     this.createInfrastructureAlarms(environment, applicationName);
+
+    // Create CloudWatch Alarms for Aurora PostgreSQL deadlock monitoring
+    this.createAuroraDeadlockAlarms(environment, applicationName);
 
     // Create CloudWatch Dashboard
     this.createHealthCheckDashboard(environment, applicationName);
@@ -247,6 +251,105 @@ export class AlertingStack extends cdk.Stack {
       datapointsToAlarm: 1,
       treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
     });
+  }
+
+  /**
+   * Create CloudWatch alarms for Aurora PostgreSQL deadlock monitoring
+   */
+  private createAuroraDeadlockAlarms(environment: string, applicationName: string): void {
+    const dbInstanceIdentifier = `${applicationName}-${environment}-primary-aurora`;
+
+    // Aurora PostgreSQL Deadlock Alarm
+    const deadlockAlarm = new cloudwatch.Alarm(this, 'AuroraDeadlockAlarm', {
+      alarmName: `${applicationName}-${environment}-aurora-deadlocks`,
+      alarmDescription: 'Aurora PostgreSQL deadlocks detected',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/RDS',
+        metricName: 'Deadlocks',
+        dimensionsMap: {
+          DBInstanceIdentifier: dbInstanceIdentifier,
+        },
+        statistic: 'Sum',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 1,
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+      evaluationPeriods: 1,
+      datapointsToAlarm: 1,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // Add alarm action to critical alerts topic
+    deadlockAlarm.addAlarmAction(new cloudwatchActions.SnsAction(this.criticalAlertsTopic));
+
+    // Blocked Sessions Alarm
+    const blockedSessionsAlarm = new cloudwatch.Alarm(this, 'AuroraBlockedSessionsAlarm', {
+      alarmName: `${applicationName}-${environment}-aurora-blocked-sessions`,
+      alarmDescription: 'Too many blocked sessions in Aurora PostgreSQL',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/RDS',
+        metricName: 'DatabaseConnections',
+        dimensionsMap: {
+          DBInstanceIdentifier: dbInstanceIdentifier,
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 80, // 80% of max connections indicates potential blocking
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      evaluationPeriods: 2,
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // Add alarm action to warning alerts topic
+    blockedSessionsAlarm.addAlarmAction(new cloudwatchActions.SnsAction(this.warningAlertsTopic));
+
+    // High Lock Wait Time Alarm (using ReadLatency as proxy)
+    const lockWaitAlarm = new cloudwatch.Alarm(this, 'AuroraLockWaitTimeAlarm', {
+      alarmName: `${applicationName}-${environment}-aurora-lock-wait-time`,
+      alarmDescription: 'High lock wait time detected in Aurora PostgreSQL',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/RDS',
+        metricName: 'ReadLatency',
+        dimensionsMap: {
+          DBInstanceIdentifier: dbInstanceIdentifier,
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 0.2, // 200ms average read latency
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      evaluationPeriods: 3,
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // Add alarm action to warning alerts topic
+    lockWaitAlarm.addAlarmAction(new cloudwatchActions.SnsAction(this.warningAlertsTopic));
+
+    // Database CPU Utilization (high CPU can indicate lock contention)
+    const cpuAlarm = new cloudwatch.Alarm(this, 'AuroraCPUUtilizationAlarm', {
+      alarmName: `${applicationName}-${environment}-aurora-cpu-utilization`,
+      alarmDescription: 'High CPU utilization in Aurora PostgreSQL (potential lock contention)',
+      metric: new cloudwatch.Metric({
+        namespace: 'AWS/RDS',
+        metricName: 'CPUUtilization',
+        dimensionsMap: {
+          DBInstanceIdentifier: dbInstanceIdentifier,
+        },
+        statistic: 'Average',
+        period: cdk.Duration.minutes(5),
+      }),
+      threshold: 80, // 80% CPU utilization
+      comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+      evaluationPeriods: 3,
+      datapointsToAlarm: 2,
+      treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+    });
+
+    // Add alarm action to warning alerts topic
+    cpuAlarm.addAlarmAction(new cloudwatchActions.SnsAction(this.warningAlertsTopic));
   }
 
   /**

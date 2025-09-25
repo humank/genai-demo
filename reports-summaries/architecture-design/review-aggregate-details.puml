@@ -1,0 +1,30 @@
+@startuml Review Aggregate Details
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+title Review Bounded Context - Aggregate Details\nGenerated: 2025-09-24 22:16:28\n\n
+
+class ProductReview <<AggregateRoot>> {
+  -id: ReviewId
+  -productId: ProductId
+  -reviewerId: CustomerId
+  -rating: ReviewRating
+  -status: ReviewStatus
+  -... (8 more fields)
+  --
+  +getId(): ReviewId
+  +getProductId(): ProductId
+  +getReviewerId(): CustomerId
+  +... (31 more methods)
+}
+
+note right of ProductReview
+  商品評價聚合根，管理消費者的商品評價和評分
+  Version: 2.0
+end note
+
+
+' Relationships
+
+@enduml

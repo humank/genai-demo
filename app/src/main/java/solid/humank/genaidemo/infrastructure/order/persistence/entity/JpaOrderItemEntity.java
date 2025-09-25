@@ -2,11 +2,18 @@ package solid.humank.genaidemo.infrastructure.order.persistence.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;
 
-/** 訂單項 JPA 實體 用於與數據庫交互的實體類 */
+/**
+ * 訂單項 JPA 實體 - 支援 Aurora 樂觀鎖機制
+ * 
+ * 更新日期: 2025年9月24日 下午2:34 (台北時間)
+ * 更新內容: 繼承 BaseOptimisticLockingEntity 以支援 Aurora 樂觀鎖機制
+ * 需求: 1.1 - 並發控制機制全面重構
+ */
 @Entity
 @Table(name = "order_items")
-public class JpaOrderItemEntity {
+public class JpaOrderItemEntity extends BaseOptimisticLockingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
