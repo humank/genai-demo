@@ -1,186 +1,186 @@
-# 性能與可擴展性觀點 (Performance & Scalability Perspective)
+# Performance & Scalability Perspective
 
-## 概覽
+## Overview
 
-性能與可擴展性觀點關注系統的響應時間、吞吐量、資源使用效率和擴展能力，確保系統能夠滿足性能需求並支援業務增長。
+The Performance & Scalability Perspective focuses on the system's response time, throughput, resource usage efficiency, and scaling capabilities, ensuring the system can meet performance requirements and support business growth.
 
-## 品質屬性
+## Quality Attributes
 
-### 主要品質屬性
-- **響應時間 (Response Time)**: 系統處理請求的時間
-- **吞吐量 (Throughput)**: 系統單位時間內處理的請求數量
-- **可擴展性 (Scalability)**: 系統處理增長負載的能力
-- **資源使用率 (Resource Utilization)**: CPU、記憶體、網路等資源的使用效率
+### Primary Quality Attributes
+- **Response Time**: Time taken by the system to process requests
+- **Throughput**: Number of requests the system processes per unit time
+- **Scalability**: System's ability to handle growing load
+- **Resource Utilization**: Efficiency of CPU, memory, network, and other resource usage
 
-### 次要品質屬性
-- **延遲 (Latency)**: 請求開始到響應開始的時間
-- **容量 (Capacity)**: 系統能夠處理的最大負載
+### Secondary Quality Attributes
+- **Latency**: Time from request start to response start
+- **Capacity**: Maximum load the system can handle
 
-## 跨視點應用
+## Cross-Viewpoint Application
 
-> 📋 **完整交叉引用**: 查看 [Viewpoint-Perspective 交叉引用矩陣](../../viewpoint-perspective-matrix.md) 了解性能觀點對所有視點的詳細影響分析
+> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis of the Performance Perspective on all viewpoints
 
-### 🔴 高影響視點
+### 🔴 High Impact Viewpoints
 
-#### [資訊視點](../../viewpoints/information/README.md) - 資料性能
-- **資料庫優化**: 查詢優化、索引策略和執行計畫優化
-- **快取層**: 多層快取架構 (L1: 應用快取, L2: Redis, L3: CDN)
-- **資料分片**: 水平和垂直分割策略，支援大規模資料處理
-- **連接池**: 資料庫連接池的配置和監控優化
-- **相關實現**: \1 | \1
+#### [Information Viewpoint](../../viewpoints/information/README.md) - Data Performance
+- **Database Optimization**: Query optimization, indexing strategies, and execution plan optimization
+- **Caching Layers**: Multi-tier caching architecture (L1: Application cache, L2: Redis, L3: CDN)
+- **Data Sharding**: Horizontal and vertical partitioning strategies supporting large-scale data processing
+- **Connection Pooling**: Database connection pool configuration and monitoring optimization
+- **Related Implementation**: Database Performance Tuning | Caching Strategy Implementation
 
-#### [並發視點](../../viewpoints/concurrency/README.md) - 並發性能
-- **並發處理能力**: 多執行緒和並發請求的處理效率
-- **執行緒池優化**: 核心執行緒數、最大執行緒數和佇列容量的配置
-- **非同步處理**: 非阻塞 I/O 和非同步操作的性能優化
-- **資源競爭**: 共享資源的競爭處理和鎖定策略
-- **相關實現**: \1 | \1
+#### [Concurrency Viewpoint](../../viewpoints/concurrency/README.md) - Concurrent Performance
+- **Concurrent Processing Capability**: Processing efficiency for multi-threading and concurrent requests
+- **Thread Pool Optimization**: Configuration of core threads, maximum threads, and queue capacity
+- **Asynchronous Processing**: Performance optimization for non-blocking I/O and asynchronous operations
+- **Resource Contention**: Shared resource contention handling and locking strategies
+- **Related Implementation**: Concurrent Processing Patterns | Thread Pool Configuration
 
-#### [部署視點](../../viewpoints/deployment/README.md) - 部署性能
-- **資源配置**: CPU、記憶體和存儲資源的最佳化配置
-- **負載均衡**: 流量分散和負載均衡策略
-- **自動擴展**: 水平和垂直自動擴展機制
-- **CDN 配置**: 內容分發網路的配置和優化
-- **相關實現**: \1 | \1
+#### [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Deployment Performance
+- **Resource Configuration**: Optimal configuration of CPU, memory, and storage resources
+- **Load Balancing**: Traffic distribution and load balancing strategies
+- **Auto Scaling**: Horizontal and vertical auto-scaling mechanisms
+- **CDN Configuration**: Content delivery network configuration and optimization
+- **Related Implementation**: Infrastructure Scaling | Load Balancer Configuration
 
-#### [運營視點](../../viewpoints/operational/README.md) - 運營性能
-- **性能監控**: 系統性能的持續監控和基準測試
-- **容量規劃**: 資源容量的預測和規劃
-- **性能調優**: 運行時性能的調整和優化
-- **瓶頸分析**: 性能瓶頸的識別和解決
-- **相關實現**: \1 | \1
+#### [Operational Viewpoint](../../viewpoints/operational/README.md) - Operational Performance
+- **Performance Monitoring**: Continuous monitoring and benchmarking of system performance
+- **Capacity Planning**: Resource capacity prediction and planning
+- **Performance Tuning**: Runtime performance adjustment and optimization
+- **Bottleneck Analysis**: Performance bottleneck identification and resolution
+- **Related Implementation**: Performance Monitoring System | Capacity Planning Tools
 
-### 🟡 中影響視點
+### 🟡 Medium Impact Viewpoints
 
-#### [功能視點](../../viewpoints/functional/README.md) - 功能性能
-- **演算法效率**: 業務邏輯的演算法優化和複雜度分析
-- **資料結構**: 高效資料結構的選擇和使用
-- **批次處理**: 批次操作的性能優化和分批策略
-- **快取策略**: 功能層面的快取實現和失效策略
-- **相關實現**: \1 | \1
+#### [Functional Viewpoint](../../viewpoints/functional/README.md) - Functional Performance
+- **Algorithm Efficiency**: Algorithm optimization and complexity analysis for business logic
+- **Data Structures**: Selection and use of efficient data structures
+- **Batch Processing**: Performance optimization and batching strategies for batch operations
+- **Caching Strategy**: Function-level cache implementation and invalidation strategies
+- **Related Implementation**: Algorithm Optimization | Functional Caching Patterns
 
-#### [開發視點](../../viewpoints/development/README.md) - 開發性能
-- **程式碼優化**: 性能關鍵路徑的程式碼優化技術
-- **建置優化**: 建置和部署流程的性能優化
-- **性能測試**: 開發階段的性能測試和基準測試
-- **性能分析**: 程式碼性能分析工具和技術
-- **相關實現**: \1 | \1
+#### [Development Viewpoint](../../viewpoints/development/README.md) - Development Performance
+- **Code Optimization**: Code optimization techniques for performance-critical paths
+- **Build Optimization**: Performance optimization of build and deployment processes
+- **Performance Testing**: Performance testing and benchmarking during development
+- **Performance Profiling**: Code performance analysis tools and techniques
+- **Related Implementation**: Code Optimization Guidelines | Performance Testing Framework
 
-## 設計策略
+## Design Strategies
 
-### 性能優化策略
-1. **快取優先**: 多層快取架構
-2. **非同步處理**: 長時間操作的非同步化
-3. **資料庫優化**: 查詢和索引優化
-4. **資源池化**: 連接池和物件池
+### Performance Optimization Strategies
+1. **Cache First**: Multi-tier caching architecture
+2. **Asynchronous Processing**: Asynchronous handling of long-running operations
+3. **Database Optimization**: Query and index optimization
+4. **Resource Pooling**: Connection pools and object pools
 
-### 可擴展性策略
-1. **水平擴展**: 增加更多實例
-2. **垂直擴展**: 增加單實例資源
-3. **微服務架構**: 服務獨立擴展
-4. **資料分片**: 資料水平分割
+### Scalability Strategies
+1. **Horizontal Scaling**: Adding more instances
+2. **Vertical Scaling**: Adding resources to single instance
+3. **Microservices Architecture**: Independent service scaling
+4. **Data Sharding**: Horizontal data partitioning
 
-### 負載管理策略
-1. **負載平衡**: 請求分散處理
-2. **限流機制**: 保護系統過載
-3. **熔斷器**: 防止級聯故障
-4. **背壓處理**: 流量控制機制
+### Load Management Strategies
+1. **Load Balancing**: Distributed request processing
+2. **Rate Limiting**: System overload protection
+3. **Circuit Breaker**: Cascading failure prevention
+4. **Backpressure Handling**: Traffic control mechanisms
 
-## 實現技術
+## Implementation Technologies
 
-### 快取技術
-- **應用快取**: Spring Cache、Caffeine
-- **分散式快取**: Redis、Hazelcast
-- **HTTP 快取**: 瀏覽器和 CDN 快取
-- **資料庫快取**: 查詢結果快取
+### Caching Technologies
+- **Application Cache**: Spring Cache, Caffeine
+- **Distributed Cache**: Redis, Hazelcast
+- **HTTP Cache**: Browser and CDN caching
+- **Database Cache**: Query result caching
 
-### 非同步處理
-- **@Async**: Spring 非同步方法
-- **CompletableFuture**: 非同步程式設計
-- **訊息佇列**: RabbitMQ、Apache Kafka
-- **事件驅動**: 領域事件非同步處理
+### Asynchronous Processing
+- **@Async**: Spring asynchronous methods
+- **CompletableFuture**: Asynchronous programming
+- **Message Queues**: RabbitMQ, Apache Kafka
+- **Event-Driven**: Asynchronous domain event processing
 
-### 資料庫優化
-- **索引策略**: B-tree、Hash 索引
-- **查詢優化**: SQL 查詢調優
-- **連接池**: HikariCP 連接池
-- **讀寫分離**: 主從資料庫架構
+### Database Optimization
+- **Indexing Strategy**: B-tree, Hash indexes
+- **Query Optimization**: SQL query tuning
+- **Connection Pooling**: HikariCP connection pool
+- **Read-Write Separation**: Master-slave database architecture
 
-### 監控工具
-- **APM 工具**: New Relic、AppDynamics
-- **指標收集**: Micrometer、Prometheus
-- **分散式追蹤**: Zipkin、Jaeger
-- **性能分析**: JProfiler、VisualVM
+### Monitoring Tools
+- **APM Tools**: New Relic, AppDynamics
+- **Metrics Collection**: Micrometer, Prometheus
+- **Distributed Tracing**: Zipkin, Jaeger
+- **Performance Profiling**: JProfiler, VisualVM
 
-## 測試和驗證
+## Testing and Validation
 
-### 性能測試類型
-1. **負載測試**: 正常負載下的性能
-2. **壓力測試**: 超負載情況的行為
-3. **容量測試**: 最大處理能力測試
-4. **耐久測試**: 長時間運行的穩定性
+### Performance Testing Types
+1. **Load Testing**: Performance under normal load
+2. **Stress Testing**: Behavior under overload conditions
+3. **Volume Testing**: Maximum processing capacity testing
+4. **Endurance Testing**: Long-term stability testing
 
-### 測試工具
-- **JMeter**: HTTP 負載測試
-- **Gatling**: 高性能負載測試
-- **K6**: 現代負載測試工具
-- **Artillery**: Node.js 負載測試
+### Testing Tools
+- **JMeter**: HTTP load testing
+- **Gatling**: High-performance load testing
+- **K6**: Modern load testing tool
+- **Artillery**: Node.js load testing
 
-### 性能指標
-- **響應時間**: 平均、95th、99th 百分位
-- **吞吐量**: 每秒請求數 (RPS)
-- **錯誤率**: 錯誤請求百分比
-- **資源使用**: CPU、記憶體、網路使用率
+### Performance Metrics
+- **Response Time**: Average, 95th, 99th percentile
+- **Throughput**: Requests per second (RPS)
+- **Error Rate**: Percentage of failed requests
+- **Resource Usage**: CPU, memory, network utilization
 
-## 監控和度量
+## Monitoring and Measurement
 
-### 關鍵性能指標 (KPI)
-- **API 響應時間**: < 2s (95th percentile)
-- **系統吞吐量**: > 1000 req/s
-- **資源使用率**: CPU < 70%, Memory < 80%
-- **錯誤率**: < 0.1%
+### Key Performance Indicators (KPIs)
+- **API Response Time**: < 2s (95th percentile)
+- **System Throughput**: > 1000 req/s
+- **Resource Utilization**: CPU < 70%, Memory < 80%
+- **Error Rate**: < 0.1%
 
-### 監控儀表板
-1. **應用性能**: 響應時間、吞吐量趨勢
-2. **系統資源**: CPU、記憶體、磁碟使用
-3. **資料庫性能**: 查詢時間、連接數
-4. **快取效能**: 命中率、驅逐率
+### Monitoring Dashboards
+1. **Application Performance**: Response time, throughput trends
+2. **System Resources**: CPU, memory, disk usage
+3. **Database Performance**: Query time, connection count
+4. **Cache Performance**: Hit rate, eviction rate
 
-### 告警設定
-- **響應時間告警**: > 3s 持續 2 分鐘
-- **吞吐量告警**: < 500 req/s 持續 5 分鐘
-- **資源使用告警**: CPU > 80% 持續 5 分鐘
-- **錯誤率告警**: > 1% 持續 1 分鐘
+### Alert Configuration
+- **Response Time Alert**: > 3s for 2 minutes
+- **Throughput Alert**: < 500 req/s for 5 minutes
+- **Resource Usage Alert**: CPU > 80% for 5 minutes
+- **Error Rate Alert**: > 1% for 1 minute
 
-## 品質屬性場景
+## Quality Attribute Scenarios
 
-### 場景 1: 高負載處理
-- **來源**: 大量並發使用者
-- **刺激**: 1000 個並發使用者同時存取系統
-- **環境**: 正常業務高峰期
-- **產物**: Web 應用服務
-- **響應**: 系統處理所有請求
-- **響應度量**: 響應時間 < 2s, 成功率 > 99%
+### Scenario 1: High Load Handling
+- **Source**: Large number of concurrent users
+- **Stimulus**: 1000 concurrent users accessing the system simultaneously
+- **Environment**: Normal business peak hours
+- **Artifact**: Web application service
+- **Response**: System processes all requests
+- **Response Measure**: Response time < 2s, success rate > 99%
 
-### 場景 2: 資料庫查詢優化
-- **來源**: 應用程式
-- **刺激**: 執行複雜的資料查詢
-- **環境**: 包含 100 萬筆記錄的資料庫
-- **產物**: 資料存取層
-- **響應**: 返回查詢結果
-- **響應度量**: 查詢時間 < 100ms
+### Scenario 2: Database Query Optimization
+- **Source**: Application
+- **Stimulus**: Execute complex data query
+- **Environment**: Database containing 1 million records
+- **Artifact**: Data access layer
+- **Response**: Return query results
+- **Response Measure**: Query time < 100ms
 
-### 場景 3: 系統自動擴展
-- **來源**: 負載監控系統
-- **刺激**: 檢測到 CPU 使用率 > 70%
-- **環境**: 雲端部署環境
-- **產物**: 自動擴展服務
-- **響應**: 啟動新的應用實例
-- **響應度量**: 5 分鐘內完成擴展
+### Scenario 3: System Auto-scaling
+- **Source**: Load monitoring system
+- **Stimulus**: Detect CPU usage > 70%
+- **Environment**: Cloud deployment environment
+- **Artifact**: Auto-scaling service
+- **Response**: Launch new application instances
+- **Response Measure**: Complete scaling within 5 minutes
 
 ---
 
-**相關文件**:
-- \1
-- \1
-- \1
+**Related Documents**:
+- Performance Optimization Guidelines
+- Scalability Architecture Patterns
+- Performance Testing Standards

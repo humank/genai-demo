@@ -1,8 +1,15 @@
-# 事件溯源實作
+# Event Sourcing Implementation
 
-## 事件設計
+## Architecture Overview
 
-### 領域事件
+![Event Sourcing Architecture](../../diagrams/plantuml/Event%20Sourcing%20Diagram.png)
+
+The Event Sourcing pattern provides a complete audit trail of all changes to application state by storing events rather than current state. This approach enables temporal queries, event replay, and multiple specialized read models.
+
+## Event Design
+
+### Domain Events
+
 ```java
 public record CustomerCreatedEvent(
     CustomerId customerId,
@@ -12,35 +19,39 @@ public record CustomerCreatedEvent(
 ) implements DomainEvent {}
 ```
 
-### 事件儲存
-- 事件流設計
-- 快照機制
-- 事件版本管理
+### Event Storage
 
-## 事件處理
+- Event stream design
+- Snapshot mechanism
+- Event version management
 
-### 事件處理器
+## Event Processing
+
+### Event Handlers
+
 ```java
 @EventHandler
 public class CustomerEventHandler {
     
     @TransactionalEventListener
     public void handle(CustomerCreatedEvent event) {
-        // 處理客戶創建事件
+        // Handle customer creation event
         updateReadModel(event);
         sendWelcomeEmail(event);
     }
 }
 ```
 
-### 讀取模型更新
-- CQRS 模式實作
-- 投影更新策略
-- 最終一致性處理
+### Read Model Updates
 
-## 事件重播
+- CQRS pattern implementation
+- Projection update strategy
+- Eventual consistency handling
 
-### 重建投影
-- 事件重播機制
-- 增量更新策略
-- 錯誤恢復處理
+## Event Replay
+
+### Projection Reconstruction
+
+- Event replay mechanism
+- Incremental update strategy
+- Error recovery handling

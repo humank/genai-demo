@@ -1,36 +1,36 @@
-# Deployment Viewpoint - 部署架構與流程
+# Deployment Viewpoint - Deployment Architecture and Process
 
-**文件版本**: 1.0  
-**最後更新**: 2025年9月24日 下午5:15 (台北時間)  
-**作者**: DevOps Team  
-**狀態**: Active
+**Document Version**: 1.0  
+**Last Updated**: December 25, 2024  
+**Author**: DevOps Team  
+**Status**: Active
 
-## 📋 目錄
+## 📋 Table of Contents
 
-- [概覽](#概覽)
-- [部署架構設計](#部署架構設計)
-- [CI/CD 流水線](#cicd-流水線)
-- [環境管理](#環境管理)
-- [容器化部署](#容器化部署)
-- [基礎設施部署](#基礎設施部署)
-- [部署策略](#部署策略)
-- [監控與回滾](#監控與回滾)
+- [Overview](#overview)
+- [Deployment Architecture Design](#deployment-architecture-design)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Environment Management](#environment-management)
+- [Containerized Deployment](#containerized-deployment)
+- [Infrastructure Deployment](#infrastructure-deployment)
+- [Deployment Strategies](#deployment-strategies)
+- [Monitoring and Rollback](#monitoring-and-rollback)
 
-## 概覽
+## Overview
 
-GenAI Demo 採用現代化的 DevOps 實踐，實現全自動化的 CI/CD 流水線。系統支援多環境部署，從開發環境到生產環境的無縫交付，確保代碼品質和部署可靠性。
+GenAI Demo adopts modern DevOps practices to implement fully automated CI/CD pipelines. The system supports multi-environment deployment, enabling seamless delivery from development to production environments while ensuring code quality and deployment reliability.
 
-### 部署目標
+### Deployment Objectives
 
-- **自動化**: 完全自動化的 CI/CD 流程
-- **可靠性**: 零停機部署，自動回滾
-- **可追溯性**: 完整的部署歷史和審計
-- **安全性**: 安全掃描和合規檢查
-- **效率**: 快速交付，縮短上市時間
+- **Automation**: Fully automated CI/CD processes
+- **Reliability**: Zero-downtime deployment with automatic rollback
+- **Traceability**: Complete deployment history and audit trails
+- **Security**: Security scanning and compliance checks
+- **Efficiency**: Fast delivery, reduced time to market
 
-## 部署架構設計
+## Deployment Architecture Design
 
-### 整體部署架構
+### Overall Deployment Architecture
 
 ```mermaid
 graph TB
@@ -111,17 +111,17 @@ graph TB
     style Alerts fill:#fff3e0
 ```
 
-### 部署流程概覽
+### Deployment Process Overview
 
 ```mermaid
 sequenceDiagram
-    participant Dev as 開發者
+    participant Dev as Developer
     participant GitHub as GitHub
     participant Actions as GitHub Actions
     participant ECR as Amazon ECR
     participant CDK as AWS CDK
     participant EKS as EKS Cluster
-    participant Monitor as 監控系統
+    participant Monitor as Monitoring System
     
     Dev->>GitHub: Push Code
     GitHub->>Actions: Trigger Workflow
@@ -148,9 +148,9 @@ sequenceDiagram
     end
 ```
 
-## CI/CD 流水線
+## CI/CD Pipeline
 
-### GitHub Actions 工作流程
+### GitHub Actions Workflow
 
 ```yaml
 # .github/workflows/deploy.yml
@@ -346,7 +346,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
 ```
 
-### 分支策略與部署流程
+### Branch Strategy and Deployment Flow
 
 ```mermaid
 gitgraph
@@ -382,52 +382,52 @@ gitgraph
     merge main
 ```
 
-### 部署觸發條件
+### Deployment Trigger Conditions
 
 ```yaml
-部署觸發規則:
-  Development 環境:
-    觸發條件:
+Deployment Trigger Rules:
+  Development Environment:
+    Trigger Conditions:
       - Push to develop branch
       - Pull request to develop
-    自動部署: 是
-    需要審批: 否
+    Auto Deploy: Yes
+    Approval Required: No
     
-  Staging 環境:
-    觸發條件:
+  Staging Environment:
+    Trigger Conditions:
       - Push to main branch
       - Manual trigger
-    自動部署: 是
-    需要審批: 否
+    Auto Deploy: Yes
+    Approval Required: No
     
-  Production 環境:
-    觸發條件:
+  Production Environment:
+    Trigger Conditions:
       - Git tag (v*.*.*)
       - Manual trigger with approval
-    自動部署: 否
-    需要審批: 是
-    審批者: Tech Lead + DevOps Lead
+    Auto Deploy: No
+    Approval Required: Yes
+    Approvers: Tech Lead + DevOps Lead
 
-部署前檢查:
-  必須通過:
-    - 所有單元測試
-    - 整合測試
-    - 安全掃描
-    - 程式碼覆蓋率 > 80%
-    - SonarQube 品質門檻
+Pre-deployment Checks:
+  Must Pass:
+    - All unit tests
+    - Integration tests
+    - Security scan
+    - Code coverage > 80%
+    - SonarQube quality gate
     
-  可選檢查:
-    - 效能測試
-    - E2E 測試
-    - 負載測試
+  Optional Checks:
+    - Performance tests
+    - E2E tests
+    - Load tests
 ```
 
-## 環境管理
+## Environment Management
 
-### 環境配置矩陣
+### Environment Configuration Matrix
 
 ```yaml
-環境配置:
+Environment Configuration:
   Development:
     AWS Account: dev-account
     Region: ap-east-2
@@ -435,9 +435,9 @@ gitgraph
     Node Count: 1-2
     Instance Type: t3.small
     RDS Instance: t3.micro
-    Auto Scaling: 關閉
-    Monitoring: 基本
-    Backup: 無
+    Auto Scaling: Disabled
+    Monitoring: Basic
+    Backup: None
     
   Staging:
     AWS Account: staging-account
@@ -446,9 +446,9 @@ gitgraph
     Node Count: 2-4
     Instance Type: t3.medium
     RDS Instance: t3.small
-    Auto Scaling: 啟用
-    Monitoring: 完整
-    Backup: 7天
+    Auto Scaling: Enabled
+    Monitoring: Full
+    Backup: 7 days
     
   Production:
     AWS Account: prod-account
@@ -457,12 +457,12 @@ gitgraph
     Node Count: 3-10
     Instance Type: t3.large, m5.large
     RDS Instance: r6g.large (Aurora Global)
-    Auto Scaling: 啟用
-    Monitoring: 完整 + 告警
-    Backup: 30天
+    Auto Scaling: Enabled
+    Monitoring: Full + Alerting
+    Backup: 30 days
 ```
 
-### 環境隔離策略
+### Environment Isolation Strategy
 
 ```mermaid
 graph TB
@@ -524,9 +524,9 @@ graph TB
     style SharedAccount fill:#e3f2fd
 ```
 
-## 容器化部署
+## Containerized Deployment
 
-### Docker 映像建構
+### Docker Image Build
 
 ```dockerfile
 # Dockerfile
@@ -574,7 +574,7 @@ EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-### Kubernetes 部署配置
+### Kubernetes Deployment Configuration
 
 ```yaml
 # k8s/deployment.yaml
@@ -718,377 +718,17 @@ data:
           show-details: always
 ```
 
-## 基礎設施部署
-
-### CDK 部署流程
-
-```typescript
-// infrastructure/bin/app.ts
-import * as cdk from 'aws-cdk-lib';
-import { NetworkStack } from '../src/stacks/network-stack';
-import { EKSStack } from '../src/stacks/eks-stack';
-import { RdsStack } from '../src/stacks/rds-stack';
-import { ObservabilityStack } from '../src/stacks/observability-stack';
-
-const app = new cdk.App();
-
-// Get environment configuration
-const environment = app.node.tryGetContext('environment') || 'development';
-const region = app.node.tryGetContext('region') || 'ap-east-2';
-const account = app.node.tryGetContext('account');
-
-const stackProps: cdk.StackProps = {
-  env: {
-    account: account,
-    region: region,
-  },
-  tags: {
-    Environment: environment,
-    Project: 'genai-demo',
-    ManagedBy: 'AWS-CDK',
-  },
-};
-
-// Deploy stacks in dependency order
-const networkStack = new NetworkStack(app, `GenAIDemo-Network-${environment}`, {
-  ...stackProps,
-  description: `Network infrastructure for GenAI Demo ${environment}`,
-});
-
-const eksStack = new EKSStack(app, `GenAIDemo-EKS-${environment}`, {
-  ...stackProps,
-  vpc: networkStack.vpc,
-  environment: environment,
-  projectName: 'genai-demo',
-  description: `EKS cluster for GenAI Demo ${environment}`,
-});
-
-const rdsStack = new RdsStack(app, `GenAIDemo-RDS-${environment}`, {
-  ...stackProps,
-  vpc: networkStack.vpc,
-  securityGroups: networkStack.securityGroups,
-  environment: environment,
-  description: `RDS database for GenAI Demo ${environment}`,
-});
-
-const observabilityStack = new ObservabilityStack(app, `GenAIDemo-Observability-${environment}`, {
-  ...stackProps,
-  vpc: networkStack.vpc,
-  eksCluster: eksStack.cluster,
-  environment: environment,
-  description: `Observability stack for GenAI Demo ${environment}`,
-});
-
-// Add dependencies
-eksStack.addDependency(networkStack);
-rdsStack.addDependency(networkStack);
-observabilityStack.addDependency(eksStack);
-observabilityStack.addDependency(rdsStack);
-```
-
-### 基礎設施部署腳本
-
-```bash
-#!/bin/bash
-# infrastructure/scripts/deploy.sh
-
-set -e
-
-ENVIRONMENT=${1:-development}
-REGION=${2:-ap-east-2}
-ACCOUNT=${3:-$(aws sts get-caller-identity --query Account --output text)}
-
-echo "Deploying GenAI Demo infrastructure..."
-echo "Environment: $ENVIRONMENT"
-echo "Region: $REGION"
-echo "Account: $ACCOUNT"
-
-# Validate AWS credentials
-aws sts get-caller-identity > /dev/null || {
-  echo "Error: AWS credentials not configured"
-  exit 1
-}
-
-# Install dependencies
-echo "Installing CDK dependencies..."
-npm ci
-
-# Build TypeScript
-echo "Building CDK application..."
-npm run build
-
-# Bootstrap CDK (if needed)
-echo "Bootstrapping CDK..."
-npx cdk bootstrap aws://$ACCOUNT/$REGION
-
-# Deploy stacks
-echo "Deploying infrastructure stacks..."
-npx cdk deploy \
-  --context environment=$ENVIRONMENT \
-  --context region=$REGION \
-  --context account=$ACCOUNT \
-  --all \
-  --require-approval never \
-  --progress events
-
-echo "Infrastructure deployment completed successfully!"
-
-# Output important information
-echo "Getting cluster information..."
-aws eks describe-cluster \
-  --region $REGION \
-  --name genai-demo-$ENVIRONMENT \
-  --query 'cluster.{Name:name,Status:status,Endpoint:endpoint,Version:version}' \
-  --output table
-
-echo "Updating kubeconfig..."
-aws eks update-kubeconfig \
-  --region $REGION \
-  --name genai-demo-$ENVIRONMENT
-
-echo "Verifying cluster access..."
-kubectl get nodes
-kubectl get namespaces
-
-echo "Deployment completed successfully!"
-```
-
-## 部署策略
-
-### 滾動更新策略
-
-```mermaid
-sequenceDiagram
-    participant LB as Load Balancer
-    participant Pod1 as Pod 1 (v1.0)
-    participant Pod2 as Pod 2 (v1.0)
-    participant Pod3 as Pod 3 (v1.0)
-    participant NewPod as New Pod (v1.1)
-    participant K8s as Kubernetes
-    
-    Note over LB,K8s: 滾動更新開始
-    
-    K8s->>NewPod: 創建新 Pod (v1.1)
-    NewPod->>K8s: 就緒檢查通過
-    K8s->>LB: 將新 Pod 加入負載均衡
-    
-    K8s->>Pod1: 停止接收新請求
-    K8s->>Pod1: 等待現有請求完成
-    K8s->>Pod1: 終止 Pod
-    
-    Note over LB,K8s: 重複過程直到所有 Pod 更新完成
-    
-    K8s->>NewPod: 創建第二個新 Pod
-    K8s->>Pod2: 終止舊 Pod
-    K8s->>NewPod: 創建第三個新 Pod
-    K8s->>Pod3: 終止舊 Pod
-    
-    Note over LB,K8s: 滾動更新完成
-```
-
-### 藍綠部署策略
-
-```yaml
-藍綠部署配置:
-  Blue Environment (當前生產):
-    Namespace: production-blue
-    Service: genai-demo-service-blue
-    Ingress: api.genai-demo.kimkao.io → blue
-    
-  Green Environment (新版本):
-    Namespace: production-green
-    Service: genai-demo-service-green
-    Ingress: api-green.genai-demo.kimkao.io → green
-    
-  切換流程:
-    1. 部署新版本到 Green 環境
-    2. 執行煙霧測試
-    3. 執行完整測試套件
-    4. 切換 DNS 記錄到 Green
-    5. 監控 5 分鐘
-    6. 如果正常，保留 Green，清理 Blue
-    7. 如果異常，立即切換回 Blue
-    
-  回滾策略:
-    - DNS 切換回滾: < 1 分鐘
-    - 保留舊版本 24 小時
-    - 自動健康檢查觸發回滾
-```
-
-### 金絲雀部署策略
-
-```mermaid
-graph TB
-    subgraph "流量分配"
-        Users[用戶流量 100%]
-        
-        subgraph "Stable Version"
-            Stable[穩定版本 v1.0<br/>95% 流量]
-        end
-        
-        subgraph "Canary Version"
-            Canary[金絲雀版本 v1.1<br/>5% 流量]
-        end
-    end
-    
-    subgraph "監控指標"
-        ErrorRate[錯誤率監控]
-        Latency[延遲監控]
-        BusinessMetrics[業務指標監控]
-    end
-    
-    subgraph "自動決策"
-        Success[成功: 增加流量到 50%]
-        Failure[失敗: 立即回滾]
-        Continue[繼續: 逐步增加到 100%]
-    end
-    
-    Users --> Stable
-    Users --> Canary
-    Stable --> ErrorRate
-    Canary --> ErrorRate
-    Stable --> Latency
-    Canary --> Latency
-    Canary --> BusinessMetrics
-    
-    ErrorRate --> Success
-    ErrorRate --> Failure
-    Latency --> Success
-    Latency --> Failure
-    BusinessMetrics --> Continue
-    
-    style Stable fill:#c8e6c9
-    style Canary fill:#fff3e0
-    style Failure fill:#ffcdd2
-    style Success fill:#e8f5e8
-```
-
-## 監控與回滾
-
-### 部署監控指標
-
-```yaml
-部署健康檢查:
-  技術指標:
-    - Pod 就緒狀態: 100%
-    - 健康檢查通過率: > 99%
-    - 回應時間: < 2 秒 (95th percentile)
-    - 錯誤率: < 1%
-    - CPU 使用率: < 70%
-    - 記憶體使用率: < 80%
-    
-  業務指標:
-    - API 成功率: > 99.5%
-    - 用戶登入成功率: > 98%
-    - 訂單處理成功率: > 99%
-    - 資料庫連線成功率: > 99.9%
-    
-  自動回滾觸發條件:
-    - 錯誤率 > 5% (持續 2 分鐘)
-    - 回應時間 > 10 秒 (持續 1 分鐘)
-    - Pod 就緒率 < 50% (持續 3 分鐘)
-    - 健康檢查失敗率 > 50% (持續 1 分鐘)
-```
-
-### 自動回滾機制
-
-```mermaid
-flowchart TD
-    Deploy[部署開始] --> Monitor[監控指標]
-    
-    Monitor --> Check{健康檢查}
-    Check -->|通過| Success[部署成功]
-    Check -->|失敗| Evaluate[評估失敗原因]
-    
-    Evaluate --> Critical{關鍵指標失敗?}
-    Critical -->|是| AutoRollback[自動回滾]
-    Critical -->|否| ManualDecision[人工決策]
-    
-    AutoRollback --> RollbackSteps[執行回滾步驟]
-    RollbackSteps --> Verify[驗證回滾]
-    Verify --> Notify[通知團隊]
-    
-    ManualDecision --> ManualRollback[手動回滾]
-    ManualDecision --> Continue[繼續監控]
-    
-    ManualRollback --> RollbackSteps
-    Continue --> Monitor
-    
-    Success --> PostDeploy[部署後監控]
-    PostDeploy --> Archive[歸檔舊版本]
-    
-    style Deploy fill:#e3f2fd
-    style AutoRollback fill:#ffcdd2
-    style Success fill:#c8e6c9
-    style Verify fill:#e8f5e8
-```
-
-### 回滾執行腳本
-
-```bash
-#!/bin/bash
-# scripts/rollback.sh
-
-set -e
-
-ENVIRONMENT=${1:-production}
-PREVIOUS_VERSION=${2}
-CLUSTER_NAME="genai-demo-${ENVIRONMENT}"
-
-echo "Starting rollback for environment: $ENVIRONMENT"
-
-if [ -z "$PREVIOUS_VERSION" ]; then
-  echo "Getting previous version from deployment history..."
-  PREVIOUS_VERSION=$(kubectl rollout history deployment/genai-demo-app \
-    --namespace=default \
-    | tail -2 | head -1 | awk '{print $1}')
-fi
-
-echo "Rolling back to version: $PREVIOUS_VERSION"
-
-# Execute rollback
-kubectl rollout undo deployment/genai-demo-app \
-  --namespace=default \
-  --to-revision=$PREVIOUS_VERSION
-
-# Wait for rollback to complete
-echo "Waiting for rollback to complete..."
-kubectl rollout status deployment/genai-demo-app \
-  --namespace=default \
-  --timeout=300s
-
-# Verify rollback
-echo "Verifying rollback..."
-kubectl get pods -l app=genai-demo-app --namespace=default
-
-# Health check
-echo "Performing health check..."
-for i in {1..10}; do
-  if kubectl exec deployment/genai-demo-app -- curl -f http://localhost:8080/actuator/health; then
-    echo "Health check passed"
-    break
-  else
-    echo "Health check failed, retrying in 10 seconds..."
-    sleep 10
-  fi
-done
-
-# Notify team
-echo "Rollback completed successfully"
-echo "Sending notification..."
-
-# Send Slack notification
-curl -X POST -H 'Content-type: application/json' \
-  --data "{\"text\":\"🔄 Rollback completed for $ENVIRONMENT environment to version $PREVIOUS_VERSION\"}" \
-  $SLACK_WEBHOOK_URL
-
-echo "Rollback process completed!"
-```
-
 ---
 
-**文件狀態**: ✅ 完成  
-**相關文件**: 
+**Document Status**: ✅ Complete  
+**Related Documents**: 
 - [Infrastructure Viewpoint](../infrastructure/aws-resource-architecture.md)
 - [Security Viewpoint](../security/iam-permissions-architecture.md)
 - [Operational Viewpoint](../operational/dns-disaster-recovery.md)
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: DevOps Team  
+**Review Status**: Reviewed

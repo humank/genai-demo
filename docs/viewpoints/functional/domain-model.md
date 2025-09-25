@@ -1,15 +1,15 @@
-# 領域模型設計指南
+# Domain Model Design Guide
 
-## 概述
+## Overview
 
-本指南提供了在專案中設計和實作 DDD 領域模型的最佳實踐，基於當前專案的實際實現經驗總結。專案採用完整的 DDD 戰術模式，包含 15 個聚合根分佈在 13 個界限上下文中，實現了現代化的領域驅動設計架構。
+This guide provides best practices for designing and implementing DDD domain models in the project, based on actual implementation experience. The project adopts complete DDD tactical patterns, including 15 aggregate roots distributed across 13 bounded contexts, implementing a modern domain-driven design architecture.
 
-## 當前專案聚合根概覽
+## Current Project Aggregate Root Overview
 
-### 聚合根分佈統計
+### Aggregate Root Distribution Statistics
 
-| 界限上下文 | 聚合根數量 | 主要聚合根 | 版本 |
-|-----------|-----------|-----------|------|
+| Bounded Context | Aggregate Count | Main Aggregates | Version |
+|-----------------|----------------|-----------------|---------|
 | Customer | 1 | Customer | 2.0 |
 | Order | 2 | Order, OrderWorkflow | 1.0 |
 | Product | 1 | Product | 1.0 |
@@ -24,58 +24,58 @@
 | Notification | 2 | Notification, NotificationTemplate | 1.0 |
 | Observability | 2 | ObservabilitySession, AnalyticsSession | 1.0 |
 
-**總計**: 15 個聚合根，13 個界限上下文
+**Total**: 15 aggregate roots across 13 bounded contexts
 
-## 聚合根設計模式
+## Aggregate Root Design Patterns
 
-### 1. 混合實現模式
+### 1. Hybrid Implementation Pattern
 
-專案採用兩種聚合根實現模式：
+The project adopts two aggregate root implementation patterns:
 
-#### 模式 A: 註解 + 介面模式 (推薦)
+#### Pattern A: Annotation + Interface Pattern (Recommended)
 ```java
-@AggregateRoot(name = "Customer", description = "增強的客戶聚合根，支援完整的消費者功能", 
+@AggregateRoot(name = "Customer", description = "Enhanced customer aggregate root with complete consumer functionality", 
                boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
-    // 零 override 實現，所有方法都有 default 實作
-    // 自動事件收集和聚合根元數據管理
+    // Zero override implementation, all methods have default implementations
+    // Automatic event collection and aggregate root metadata management
 }
 ```
 
-#### 模式 B: 繼承基類模式
+#### Pattern B: Base Class Inheritance Pattern
 ```java
-@AggregateRoot(name = "Product", description = "產品聚合根，管理產品信息和庫存", 
+@AggregateRoot(name = "Product", description = "Product aggregate root managing product information and inventory", 
                boundedContext = "Product", version = "1.0")
 public class Product extends solid.humank.genaidemo.domain.common.aggregate.AggregateRoot {
-    // 繼承基類實現
+    // Base class inheritance implementation
 }
 ```
 
-### 2. 聚合根註解標準
+### 2. Aggregate Root Annotation Standards
 
-所有聚合根必須使用 `@AggregateRoot` 註解：
+All aggregate roots must use the `@AggregateRoot` annotation:
 
 ```java
 @AggregateRoot(
-    name = "聚合根名稱",           // 必填：聚合根識別名稱
-    description = "聚合根描述",     // 必填：業務描述
-    boundedContext = "上下文名稱", // 必填：所屬界限上下文
-    version = "版本號"            // 必填：聚合根版本
+    name = "Aggregate Root Name",        // Required: Aggregate root identifier
+    description = "Aggregate Description", // Required: Business description
+    boundedContext = "Context Name",     // Required: Bounded context
+    version = "Version Number"           // Required: Aggregate root version
 )
 ```
 
-## Entity 設計原則
+## Entity Design Principles
 
-### 1. 業務導向設計
+### 1. Business-Oriented Design
 
-Entity 應該專注於領域邏輯而非技術抽象：
+Entities should focus on domain logic rather than technical abstractions:
 
 ```java
-@Entity(name = "SellerRating", description = "賣家評級實體")
+@Entity(name = "SellerRating", description = "Seller rating entity")
 public class SellerRating {
-    // 業務邏輯方法
+    // Business logic methods
     public boolean isPositive() {
-        return rating >= 4; // 4分以上視為正面評價
+        return rating >= 4; // 4 or above considered positive
     }
     
     public boolean isRecent() {
@@ -88,12 +88,12 @@ public class SellerRating {
 }
 ```
 
-### 2. 強型別 ID
+### 2. Strongly Typed IDs
 
-每個 Entity 都應該有強型別的 ID Value Object：
+Each Entity should have a strongly typed ID Value Object:
 
 ```java
-@ValueObject(name = "SellerRatingId", description = "賣家評級ID")
+@ValueObject(name = "SellerRatingId", description = "Seller rating ID")
 public record SellerRatingId(UUID value) {
     public SellerRatingId {
         Objects.requireNonNull(value, "SellerRating ID cannot be null");
@@ -109,16 +109,16 @@ public record SellerRatingId(UUID value) {
 }
 ```
 
-### 3. 狀態管理
+### 3. State Management
 
-使用 Enum Value Object 管理 Entity 狀態：
+Use Enum Value Objects to manage Entity states:
 
 ```java
-@ValueObject(name = "RatingStatus", description = "評級狀態")
+@ValueObject(name = "RatingStatus", description = "Rating status")
 public enum RatingStatus {
-    ACTIVE("活躍"),
-    HIDDEN("隱藏"),
-    DELETED("已刪除");
+    ACTIVE("Active"),
+    HIDDEN("Hidden"),
+    DELETED("Deleted");
     
     private final String description;
     
@@ -132,12 +132,12 @@ public enum RatingStatus {
 }
 ```
 
-## Entity 實作模式
+## Entity Implementation Patterns
 
-### 1. 基本結構
+### 1. Basic Structure
 
 ```java
-@Entity(name = "EntityName", description = "實體描述")
+@Entity(name = "EntityName", description = "Entity description")
 public class EntityName {
     private final EntityNameId id;
     private String businessField;
@@ -145,7 +145,7 @@ public class EntityName {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
-    // 建構子
+    // Constructor
     public EntityName(EntityNameId id, String businessField) {
         this.id = Objects.requireNonNull(id);
         this.businessField = Objects.requireNonNull(businessField);
@@ -154,7 +154,7 @@ public class EntityName {
         this.updatedAt = LocalDateTime.now();
     }
     
-    // 業務邏輯方法
+    // Business logic methods
     public void updateBusinessField(String newValue) {
         this.businessField = newValue;
         this.updatedAt = LocalDateTime.now();
@@ -169,7 +169,7 @@ public class EntityName {
     public String getBusinessField() { return businessField; }
     public EntityStatus getStatus() { return status; }
     
-    // equals 和 hashCode 基於 ID
+    // equals and hashCode based on ID
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -185,7 +185,7 @@ public class EntityName {
 }
 ```
 
-### 2. 生命週期管理
+### 2. Lifecycle Management
 
 ```java
 public class ContactInfo {
@@ -211,14 +211,14 @@ public class ContactInfo {
         this.email = email;
         this.phone = phone;
         this.lastUpdated = LocalDateTime.now();
-        // 重新驗證
+        // Re-verification required
         this.emailVerified = false;
         this.phoneVerified = false;
     }
 }
 ```
 
-### 3. 狀態轉換
+### 3. State Transitions
 
 ```java
 public class StockReservation {
@@ -227,14 +227,14 @@ public class StockReservation {
     
     public void confirm() {
         if (status != ReservationStatus.ACTIVE) {
-            throw new IllegalStateException("只有活躍的預留可以確認");
+            throw new IllegalStateException("Only active reservations can be confirmed");
         }
         this.status = ReservationStatus.CONFIRMED;
     }
     
     public void release() {
         if (status == ReservationStatus.RELEASED) {
-            throw new IllegalStateException("預留已經被釋放");
+            throw new IllegalStateException("Reservation already released");
         }
         this.status = ReservationStatus.RELEASED;
     }
@@ -245,19 +245,19 @@ public class StockReservation {
     
     public void extend(Duration duration) {
         if (status != ReservationStatus.ACTIVE) {
-            throw new IllegalStateException("只有活躍的預留可以延期");
+            throw new IllegalStateException("Only active reservations can be extended");
         }
         this.expiresAt = this.expiresAt.plus(duration);
     }
 }
 ```
 
-## 聚合內 Entity 關係
+## Entity Relationships Within Aggregates
 
-### 1. 一對多關係
+### 1. One-to-Many Relationships
 
 ```java
-@AggregateRoot(name = "Seller", description = "賣家聚合根")
+@AggregateRoot(name = "Seller", description = "Seller aggregate root")
 public class Seller implements AggregateRootInterface {
     private final SellerId sellerId;
     private final List<SellerRating> ratings;
@@ -271,7 +271,7 @@ public class Seller implements AggregateRootInterface {
         );
         this.ratings.add(newRating);
         
-        // 收集領域事件
+        // Collect domain event
         collectEvent(SellerRatingAddedEvent.create(sellerId, newRating.getId(), rating));
     }
     
@@ -285,10 +285,10 @@ public class Seller implements AggregateRootInterface {
 }
 ```
 
-### 2. 一對一關係
+### 2. One-to-One Relationships
 
 ```java
-@AggregateRoot(name = "Seller", description = "賣家聚合根")
+@AggregateRoot(name = "Seller", description = "Seller aggregate root")
 public class Seller implements AggregateRootInterface {
     private SellerProfile profile;
     private ContactInfo contactInfo;
@@ -308,9 +308,9 @@ public class Seller implements AggregateRootInterface {
 }
 ```
 
-## 驗證和業務規則
+## Validation and Business Rules
 
-### 1. 輸入驗證
+### 1. Input Validation
 
 ```java
 public class SellerRating {
@@ -325,14 +325,14 @@ public class SellerRating {
     
     private int validateRating(int rating) {
         if (rating < 1 || rating > 5) {
-            throw new IllegalArgumentException("評級必須在1-5之間");
+            throw new IllegalArgumentException("Rating must be between 1-5");
         }
         return rating;
     }
 }
 ```
 
-### 2. 業務規則檢查
+### 2. Business Rule Validation
 
 ```java
 public class SellerVerification {
@@ -342,7 +342,7 @@ public class SellerVerification {
     
     public void approve(String verifierUserId, LocalDateTime expiresAt) {
         if (!hasAllRequiredDocuments()) {
-            throw new IllegalStateException("必須提交所有必要文件才能通過驗證");
+            throw new IllegalStateException("All required documents must be submitted for verification approval");
         }
         
         this.status = VerificationStatus.APPROVED;
@@ -357,23 +357,23 @@ public class SellerVerification {
 }
 ```
 
-## 測試策略
+## Testing Strategy
 
-### 1. BDD 測試覆蓋
+### 1. BDD Test Coverage
 
-所有 Entity 的業務邏輯都應該由 BDD 測試覆蓋：
+All Entity business logic should be covered by BDD tests:
 
 ```gherkin
-Scenario: 賣家評級狀態管理
-  Given 一個活躍的賣家評級
-  When 管理員隱藏該評級
-  Then 評級狀態應該變為隱藏
-  And 評級不應該在公開列表中顯示
+Scenario: Seller rating status management
+  Given an active seller rating
+  When admin hides the rating
+  Then rating status should become hidden
+  And rating should not appear in public listings
 ```
 
-### 2. 架構測試
+### 2. Architecture Testing
 
-使用 ArchUnit 確保 Entity 設計合規：
+Use ArchUnit to ensure Entity design compliance:
 
 ```java
 @Test
@@ -381,15 +381,15 @@ void entitiesShouldBeProperlyAnnotatedAndLocated() {
     ArchRule rule = classes()
         .that().areAnnotatedWith(Entity.class)
         .should().resideInAPackage("..domain.*.model.entity..")
-        .because("Entity 必須位於 entity 套件中");
+        .because("Entities must be located in entity packages");
     
     rule.check(classes);
 }
 ```
 
-## 常見模式和最佳實踐
+## Common Patterns and Best Practices
 
-### 1. 工廠方法
+### 1. Factory Methods
 
 ```java
 public class ReviewImage {
@@ -402,7 +402,7 @@ public class ReviewImage {
         );
         
         if (!image.isValidImage()) {
-            throw new IllegalArgumentException("無效的圖片格式");
+            throw new IllegalArgumentException("Invalid image format");
         }
         
         return image;
@@ -410,7 +410,7 @@ public class ReviewImage {
 }
 ```
 
-### 2. 查詢方法
+### 2. Query Methods
 
 ```java
 public class Seller {
@@ -432,7 +432,7 @@ public class Seller {
 }
 ```
 
-### 3. 聚合操作
+### 3. Aggregate Operations
 
 ```java
 public class ProductReview {
@@ -446,7 +446,7 @@ public class ProductReview {
         
         this.moderations.add(record);
         
-        // 根據審核結果更新評價狀態
+        // Update review status based on moderation result
         if (action == ModerationAction.APPROVE) {
             this.status = ReviewStatus.APPROVED;
         } else if (action == ModerationAction.REJECT) {
@@ -458,13 +458,13 @@ public class ProductReview {
 }
 ```
 
-## 效能考量
+## Performance Considerations
 
-### 1. 延遲載入
+### 1. Lazy Loading
 
 ```java
 public class Seller {
-    // 避免一次載入所有評級
+    // Avoid loading all ratings at once
     public List<SellerRating> getTopRatings(int limit) {
         return ratings.stream()
             .filter(SellerRating::isVisible)
@@ -475,11 +475,11 @@ public class Seller {
 }
 ```
 
-### 2. 快取友好設計
+### 2. Cache-Friendly Design
 
 ```java
 public class SellerProfile {
-    private String businessInfoSummary; // 快取計算結果
+    private String businessInfoSummary; // Cache calculated result
     
     public String getBusinessInfoSummary() {
         if (businessInfoSummary == null) {
@@ -492,19 +492,20 @@ public class SellerProfile {
         this.businessName = name;
         this.businessAddress = address;
         this.description = description;
-        this.businessInfoSummary = null; // 清除快取
+        this.businessInfoSummary = null; // Clear cache
         this.lastProfileUpdate = LocalDateTime.now();
     }
 }
 ```
 
-## 相關圖表
+## Related Diagrams
 
-- !!!!![領域模型概覽圖](../../diagrams/generated/functional/domain-model-overview.png)
-- !!!!![界限上下文概覽圖](../../diagrams/generated/functional/bounded-contexts-overview.png)
-- !!!!![六角形架構概覽圖](../../diagrams/generated/functional/hexagonal-architecture-overview.png)
-- !!!!![應用服務概覽圖](../../diagrams/generated/functional/application-services-overview.png)
-- ## 六角形架構圖
+- ![Domain Model Overview](../../diagrams/generated/functional/domain-model-overview.png)
+- ![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
+- ![Hexagonal Architecture Overview](../../diagrams/generated/functional/hexagonal-architecture-overview.png)
+- ![Application Services Overview](../../diagrams/generated/functional/application-services-overview.png)
+
+## Hexagonal Architecture Diagram
 
 ```mermaid
 graph TB
@@ -528,20 +529,20 @@ graph TB
     Ports --> ExternalAdapter
 ```
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[資訊視點](../information/README.md)**: 領域事件設計和資料一致性策略
-- **[開發視點](../development/README.md)**: 測試策略和程式碼組織
-- **[並發視點](../concurrency/README.md)**: 聚合根的交易邊界設計
+- **[Information Viewpoint](../information/README.md)**: Domain event design and data consistency strategies
+- **[Development Viewpoint](../development/README.md)**: Testing strategies and code organization
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Aggregate root transaction boundary design
 
-## 總結
+## Summary
 
-良好的 Entity 設計應該：
+Good Entity design should:
 
-1. **業務導向**: 專注於領域邏輯而非技術實作
-2. **類型安全**: 使用強型別 ID 和狀態 Enum
-3. **封裝良好**: 透過方法而非直接屬性存取來維護不變性
-4. **測試友好**: 設計易於測試的介面和行為
-5. **效能考量**: 避免不必要的資料載入和計算
+1. **Business-Oriented**: Focus on domain logic rather than technical implementation
+2. **Type-Safe**: Use strongly typed IDs and state Enums
+3. **Well-Encapsulated**: Maintain invariants through methods rather than direct property access
+4. **Test-Friendly**: Design interfaces and behaviors that are easy to test
+5. **Performance-Conscious**: Avoid unnecessary data loading and computation
 
-遵循這些原則可以創建出可維護、可測試且符合 DDD 原則的 Entity 設計。
+Following these principles creates maintainable, testable Entity designs that comply with DDD principles.

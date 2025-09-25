@@ -1,174 +1,215 @@
-# 成本觀點 (Cost Perspective)
+# Cost Perspective
 
-## 概覽
+## Overview
 
-成本觀點關注系統的總擁有成本、資源效率和成本優化，確保系統能夠在滿足業務需求的同時實現成本效益最大化。
+The Cost Perspective focuses on optimizing the total cost of ownership (TCO) of the system, including development costs, operational costs, infrastructure costs, and maintenance costs. This perspective ensures cost-effective solutions while maintaining quality and performance.
 
-## 品質屬性
+## Quality Attributes
 
-### 主要品質屬性
-- **成本效益 (Cost Effectiveness)**: 系統投資回報率和成本效益
-- **資源效率 (Resource Efficiency)**: 計算、儲存、網路資源的使用效率
-- **可預測性 (Predictability)**: 成本的可預測性和可控性
-- **可擴展性成本 (Scalability Cost)**: 系統擴展的成本效率
+### Primary Quality Attributes
 
-### 次要品質屬性
-- **運營成本 (Operational Cost)**: 系統運營和維護的持續成本
-- **機會成本 (Opportunity Cost)**: 技術選擇的機會成本
+- **Cost Efficiency**: Optimal resource utilization for given budget
+- **Resource Optimization**: Efficient use of computational and storage resources
+- **Operational Cost**: Ongoing costs for running and maintaining the system
+- **Development Cost**: Costs associated with building and enhancing the system
 
-## 跨視點應用
+### Secondary Quality Attributes
 
-### 功能視點中的考量
-- **功能價值**: 功能實現的成本效益分析
-- **複雜度成本**: 功能複雜度對開發和維護成本的影響
-- **業務價值**: 功能對業務價值的貢獻度
-- **優先級排序**: 基於成本效益的功能優先級
+- **Cost Predictability**: Ability to forecast and control costs
+- **Cost Transparency**: Clear visibility into cost drivers
+- **Cost Scalability**: Cost behavior as system scales
 
-### 資訊視點中的考量
-- **儲存成本**: 資料儲存的成本優化
-- **傳輸成本**: 資料傳輸的成本控制
-- **處理成本**: 資料處理的計算成本
-- **備份成本**: 資料備份和恢復的成本
+## Cross-Viewpoint Application
 
-### 並發視點中的考量
-- **計算資源成本**: 並發處理的計算資源成本
-- **授權成本**: 並發使用者的軟體授權成本
-- **擴展成本**: 並發能力擴展的成本
-- **效率優化**: 並發處理效率的成本優化
+### Deployment Viewpoint Considerations
 
-### 開發視點中的考量
-- **開發成本**: 開發團隊和工具的成本
-- **維護成本**: 程式碼維護和技術債務的成本
-- **工具授權**: 開發工具和平台的授權成本
-- **培訓成本**: 團隊技能培訓的投資成本
+- **Right-Sizing**: Optimal instance sizes for workloads
+- **Auto-Scaling**: Dynamic resource allocation based on demand
+- **Reserved Instances**: Long-term commitments for cost savings
+- **Spot Instances**: Use of spot instances for non-critical workloads
 
-### 部署視點中的考量
-- **基礎設施成本**: 雲端和硬體基礎設施成本
-- **自動化投資**: 部署自動化的投資回報
-- **多環境成本**: 開發、測試、生產環境的成本
-- **監控成本**: 監控和管理工具的成本
+### Operational Viewpoint Considerations
 
-### 運營視點中的考量
-- **運營人力成本**: 運營團隊的人力成本
-- **監控工具成本**: 監控和管理平台的成本
-- **事件響應成本**: 故障處理和事件響應的成本
-- **合規成本**: 法規合規的實施和維護成本
+- **Monitoring Costs**: Cost monitoring and alerting
+- **Resource Cleanup**: Automated cleanup of unused resources
+- **Cost Allocation**: Proper cost allocation across teams and projects
+- **Optimization Recommendations**: Automated cost optimization suggestions
 
-## 設計策略
+### Information Viewpoint Considerations
 
-### 成本優化策略
-1. **右尺寸調整**: 根據實際需求調整資源配置
-2. **預留實例**: 使用預留實例降低長期成本
-3. **自動擴展**: 基於需求的自動資源調整
-4. **成本監控**: 即時成本監控和告警
+- **Storage Tiering**: Appropriate storage classes for different data types
+- **Data Lifecycle**: Automated data archival and deletion
+- **Compression**: Data compression to reduce storage costs
+- **Query Optimization**: Efficient queries to reduce compute costs
 
-### 資源效率策略
-1. **資源共享**: 多應用共享基礎設施資源
-2. **容器化**: 提高資源使用密度
-3. **無伺服器**: 按需付費的無伺服器架構
-4. **快取優化**: 減少重複計算和資料傳輸
+### Functional Viewpoint Considerations
 
-### 架構成本策略
-1. **微服務**: 獨立擴展和成本控制
-2. **事件驅動**: 減少同步通信的資源消耗
-3. **CQRS**: 讀寫分離的成本優化
-4. **資料分層**: 基於存取頻率的資料分層儲存
+- **Feature Cost Analysis**: Cost-benefit analysis of new features
+- **Algorithm Efficiency**: Cost-effective algorithms and data structures
+- **Batch Processing**: Batch operations to reduce per-transaction costs
+- **Caching**: Reduce repeated computations and API calls
 
-## 實現技術
+## Cost Optimization Strategies
 
-### 雲端成本管理
-- **AWS Cost Explorer**: AWS 成本分析和優化
-- **Azure Cost Management**: Azure 成本監控和控制
-- **GCP Cost Management**: Google Cloud 成本管理
-- **多雲成本管理**: 跨雲端平台的成本管理
+### Infrastructure Cost Optimization
 
-### 資源優化工具
-- **Auto Scaling**: 自動擴展和縮減
-- **Spot Instances**: 使用競價實例降低成本
-- **Reserved Instances**: 預留實例的成本節省
-- **Savings Plans**: 靈活的節省計畫
+- **Instance Right-Sizing**: Match instance types to workload requirements
+- **Reserved Capacity**: Use reserved instances for predictable workloads
+- **Spot Instances**: Leverage spot instances for fault-tolerant workloads
+- **Auto-Scaling**: Scale resources based on actual demand
 
-### 監控和分析
-- **成本分析工具**: 詳細的成本分解和分析
-- **使用率監控**: 資源使用率的即時監控
-- **預算管理**: 成本預算的設定和監控
-- **成本告警**: 成本異常的自動告警
+### Storage Cost Optimization
 
-### FinOps 實踐
-- **成本分攤**: 基於業務單位的成本分攤
-- **標籤策略**: 資源標籤的成本追蹤
-- **成本報告**: 定期的成本分析報告
-- **優化建議**: 自動化的成本優化建議
+- **Storage Classes**: Use appropriate storage classes (Standard, IA, Glacier)
+- **Lifecycle Policies**: Automated data lifecycle management
+- **Compression**: Compress data to reduce storage requirements
+- **Deduplication**: Remove duplicate data to save storage
 
-## 測試和驗證
+### Network Cost Optimization
 
-### 成本效益測試
-1. **負載成本測試**: 不同負載下的成本分析
-2. **擴展成本測試**: 系統擴展的成本效率測試
-3. **資源使用測試**: 資源使用效率的測試
-4. **成本回歸測試**: 變更對成本影響的測試
+- **CDN Usage**: Use CDN to reduce data transfer costs
+- **Regional Optimization**: Deploy resources closer to users
+- **Data Transfer Optimization**: Minimize cross-region data transfer
+- **Compression**: Compress data in transit
 
-### 成本分析工具
-- **成本建模**: 成本預測和建模工具
-- **ROI 計算**: 投資回報率計算工具
-- **TCO 分析**: 總擁有成本分析工具
-- **成本比較**: 不同方案的成本比較
+### Development Cost Optimization
 
-### 成本指標
-- **每使用者成本**: 平均每使用者的系統成本
-- **每交易成本**: 平均每筆交易的處理成本
-- **資源使用率**: CPU、記憶體、儲存的使用率
-- **成本趨勢**: 成本隨時間的變化趨勢
+- **Automation**: Automate repetitive tasks to reduce manual effort
+- **Reusable Components**: Build reusable components and libraries
+- **Open Source**: Leverage open source solutions where appropriate
+- **Developer Productivity**: Tools and practices to improve productivity
 
-## 監控和度量
+## Cost Monitoring and Management
 
-### 成本監控指標
-- **月度成本**: 每月的總系統成本
-- **成本分解**: 按服務和資源類型的成本分解
-- **成本趨勢**: 成本隨時間的變化趨勢
-- **預算偏差**: 實際成本與預算的偏差
+### Cost Tracking
 
-### 效率指標
-- **資源使用率**: 各類資源的平均使用率
-- **成本效率**: 單位業務價值的成本
-- **浪費識別**: 未使用或低使用率資源的識別
-- **優化機會**: 成本優化機會的識別
+- **Cost Allocation Tags**: Tag resources for cost tracking
+- **Cost Centers**: Allocate costs to appropriate business units
+- **Budget Alerts**: Set up alerts for budget overruns
+- **Cost Reports**: Regular cost analysis and reporting
 
-### 成本治理
-1. **成本預算**: 各部門和專案的成本預算
-2. **成本分攤**: 基於使用量的成本分攤機制
-3. **成本審查**: 定期的成本審查和優化
-4. **成本政策**: 成本控制的政策和流程
+### Cost Optimization Tools
 
-## 品質屬性場景
+- **AWS Cost Explorer**: Analyze spending patterns
+- **AWS Trusted Advisor**: Get cost optimization recommendations
+- **Third-party Tools**: Use specialized cost management tools
+- **Custom Dashboards**: Build custom cost monitoring dashboards
 
-### 場景 1: 流量激增
-- **來源**: 市場推廣活動
-- **刺激**: 系統流量增加 10 倍
-- **環境**: 促銷活動期間
-- **產物**: 整個系統基礎設施
-- **響應**: 自動擴展資源以應對流量
-- **響應度量**: 成本增加 < 5 倍，性能保持穩定
+### Cost Governance
 
-### 場景 2: 成本優化需求
-- **來源**: 財務部門
-- **刺激**: 要求降低 20% 的 IT 成本
-- **環境**: 業務需求不變的情況下
-- **產物**: 整個系統架構
-- **響應**: 實施成本優化措施
-- **響應度量**: 成本降低 20%，服務品質不受影響
+- **Budget Controls**: Set and enforce budget limits
+- **Approval Processes**: Require approval for expensive resources
+- **Cost Reviews**: Regular cost review meetings
+- **Cost Policies**: Establish cost management policies
 
-### 場景 3: 新功能投資決策
-- **來源**: 產品經理
-- **刺激**: 提議開發新的 AI 功能
-- **環境**: 有限的 IT 預算
-- **產物**: 產品規劃系統
-- **響應**: 進行成本效益分析
-- **響應度量**: ROI > 150%，回收期 < 18 個月
+## Quality Attribute Scenarios
+
+### Cost Scenario Examples
+
+#### Budget Overrun Scenario
+
+- **Source**: Finance team
+- **Stimulus**: Monthly cloud costs exceed budget by 20%
+- **Environment**: Production environment with growing user base
+- **Artifact**: Cost management system
+- **Response**: Automated cost optimization recommendations generated
+- **Response Measure**: Costs reduced to within budget within 1 week
+
+#### Scaling Cost Scenario
+
+- **Source**: Marketing campaign
+- **Stimulus**: Traffic increases 5x due to successful campaign
+- **Environment**: Auto-scaling enabled production system
+- **Artifact**: Infrastructure scaling system
+- **Response**: System scales to handle load while optimizing costs
+- **Response Measure**: Cost per transaction remains within 10% of baseline
+
+#### Feature Cost Analysis Scenario
+
+- **Source**: Product manager
+- **Stimulus**: Request to implement new AI-powered recommendation feature
+- **Environment**: Existing e-commerce platform
+- **Artifact**: Cost analysis system
+- **Response**: Detailed cost-benefit analysis provided
+- **Response Measure**: ROI analysis shows positive return within 6 months
+
+## Cost Optimization Patterns
+
+### Resource Optimization Patterns
+
+- **Right-Sizing**: Continuously optimize instance sizes
+- **Scheduled Scaling**: Scale resources based on predictable patterns
+- **Resource Pooling**: Share resources across multiple applications
+- **Serverless**: Use serverless computing for variable workloads
+
+### Data Cost Patterns
+
+- **Hot-Warm-Cold**: Tier data based on access patterns
+- **Compression**: Compress data to reduce storage and transfer costs
+- **Caching**: Cache frequently accessed data
+- **Data Archival**: Archive old data to cheaper storage
+
+### Development Cost Patterns
+
+- **Infrastructure as Code**: Automate infrastructure provisioning
+- **CI/CD Automation**: Automate build, test, and deployment
+- **Monitoring and Alerting**: Proactive monitoring to prevent issues
+- **Documentation**: Reduce onboarding and maintenance costs
+
+## Implementation Guidelines
+
+### Cost-Aware Architecture
+
+- **Design for Cost**: Consider cost implications in architectural decisions
+- **Cost Modeling**: Model costs for different architectural options
+- **Trade-off Analysis**: Balance cost against other quality attributes
+- **Cost Reviews**: Include cost considerations in architecture reviews
+
+### Cost Optimization Process
+
+- **Regular Reviews**: Monthly cost optimization reviews
+- **Automated Optimization**: Implement automated cost optimization
+- **Cost Awareness**: Train teams on cost optimization practices
+- **Continuous Improvement**: Continuously improve cost optimization
+
+### Cost Metrics and KPIs
+
+- **Cost per Transaction**: Track cost efficiency
+- **Cost per User**: Monitor cost scalability
+- **Infrastructure Utilization**: Measure resource efficiency
+- **Cost Trends**: Track cost trends over time
+
+## Cost Analysis Framework
+
+### Total Cost of Ownership (TCO)
+
+- **Development Costs**: Initial development and ongoing enhancements
+- **Infrastructure Costs**: Compute, storage, network, and other resources
+- **Operational Costs**: Monitoring, support, and maintenance
+- **Licensing Costs**: Software licenses and subscriptions
+
+### Cost-Benefit Analysis
+
+- **Business Value**: Quantify business value of features and improvements
+- **Cost Savings**: Identify and quantify cost savings opportunities
+- **ROI Calculation**: Calculate return on investment for initiatives
+- **Payback Period**: Determine payback period for investments
+
+### Cost Allocation
+
+- **Direct Costs**: Costs directly attributable to specific services
+- **Shared Costs**: Costs shared across multiple services
+- **Overhead Costs**: General overhead and administrative costs
+- **Cost Centers**: Allocate costs to appropriate business units
+
+## Related Documentation
+
+- [Deployment Viewpoint](../../viewpoints/deployment/README.zh-TW.md) - Infrastructure cost optimization
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Operational cost management
+- [Performance Perspective](../performance/README.md) - Performance vs. cost trade-offs
+- [Evolution Perspective](../evolution/README.md) - Long-term cost considerations
 
 ---
 
-**相關文件**:
-- \1
-- \1
-- \1
+**Last Updated**: September 25, 2025  
+**Maintainer**: FinOps Team

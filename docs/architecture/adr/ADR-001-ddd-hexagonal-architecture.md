@@ -1,159 +1,159 @@
-# ADR-001: DDD + 六角形架構基礎
+# ADR-001: DDD + Hexagonal Architecture Foundation
 
-## 狀態
+## Status
 
-**已接受** - 2024-01-15
+**Accepted** - January 15, 2024
 
-## 背景
+## Context
 
-GenAI Demo 專案需要一個強健的軟體架構，能夠：
+The GenAI Demo project requires a robust software architecture that can:
 
-- 處理複雜的電商業務邏輯，具有清晰的領域邊界
-- 支援多種介面（REST API、CMC 前端、消費者前端）
-- 實現業務邏輯的獨立測試和部署
-- 促進團隊協作和程式碼可維護性
-- 支援未來的微服務演進
+- Handle complex e-commerce business logic with clear domain boundaries
+- Support multiple interfaces (REST API, CMC frontend, consumer frontend)
+- Enable independent testing and deployment of business logic
+- Facilitate team collaboration and code maintainability
+- Support future microservices evolution
 
-### 業務目標
+### Business Objectives
 
-- 實現全面的電商平台，包含客戶管理、訂單處理、庫存和支付系統
-- 支援複雜的業務規則，如會員等級、促銷活動和定價策略
+- Implement a comprehensive e-commerce platform including customer management, order processing, inventory, and payment systems
+- Support complex business rules such as membership levels, promotional activities, and pricing strategies
 
-### 技術挑戰
+### Technical Challenges
 
-- **複雜性管理**: 電商領域包含多個相互關聯的子領域
-- **可測試性**: 需要能夠獨立測試業務邏輯
-- **可擴展性**: 架構必須支援未來的功能擴展
-- **團隊協作**: 多個開發者需要能夠並行工作而不互相干擾
+- **Complexity Management**: E-commerce domain contains multiple interrelated sub-domains
+- **Testability**: Need to independently test business logic
+- **Scalability**: Architecture must support future feature expansion
+- **Team Collaboration**: Multiple developers need to work in parallel without interfering with each other
 
-## 決策
+## Decision
 
-我們決定採用 **領域驅動設計 (DDD) + 六角形架構** 作為專案的核心架構模式。
+We have decided to adopt **Domain-Driven Design (DDD) + Hexagonal Architecture** as the core architectural pattern for the project.
 
-### 核心架構原則
+### Core Architectural Principles
 
-#### 1. 六角形架構（端口與適配器）
-
-```
-外部世界 → 適配器 → 端口 → 應用核心 ← 端口 ← 適配器 ← 外部世界
-```
-
-- **應用核心**: 包含業務邏輯和領域模型
-- **端口**: 定義應用核心與外部世界的介面
-- **適配器**: 實現端口，處理外部系統的具體技術細節
-
-#### 2. DDD 戰術模式
-
-- **聚合根 (Aggregate Root)**: 管理一致性邊界
-- **值對象 (Value Object)**: 不可變的領域概念
-- **領域事件 (Domain Event)**: 表示領域中發生的重要事件
-- **規格模式 (Specification)**: 封裝複雜的業務規則
-- **政策模式 (Policy)**: 處理業務決策邏輯
-
-#### 3. 分層架構
+#### 1. Hexagonal Architecture (Ports and Adapters)
 
 ```
-interfaces/     → 介面層（REST 控制器、Web UI）
-application/    → 應用層（用例協調、事件發布）
-domain/         → 領域層（業務邏輯、領域模型）
-infrastructure/ → 基礎設施層（持久化、外部服務）
+External World → Adapter → Port → Application Core ← Port ← Adapter ← External World
 ```
 
-### 實現策略
+- **Application Core**: Contains business logic and domain model
+- **Ports**: Define interfaces between application core and external world
+- **Adapters**: Implement ports, handling specific technical details of external systems
 
-#### 1. 包結構設計
+#### 2. DDD Tactical Patterns
+
+- **Aggregate Root**: Manages consistency boundaries
+- **Value Object**: Immutable domain concepts
+- **Domain Event**: Represents important events occurring in the domain
+- **Specification Pattern**: Encapsulates complex business rules
+- **Policy Pattern**: Handles business decision logic
+
+#### 3. Layered Architecture
+
+```
+interfaces/     → Interface Layer (REST controllers, Web UI)
+application/    → Application Layer (Use case coordination, event publishing)
+domain/         → Domain Layer (Business logic, domain model)
+infrastructure/ → Infrastructure Layer (Persistence, external services)
+```
+
+### Implementation Strategy
+
+#### 1. Package Structure Design
 
 ```
 solid.humank.genaidemo/
 ├── interfaces/
-│   └── web/           # REST 控制器
+│   └── web/           # REST controllers
 ├── application/
-│   ├── customer/      # 客戶用例
-│   ├── order/         # 訂單用例
-│   └── inventory/     # 庫存用例
+│   ├── customer/      # Customer use cases
+│   ├── order/         # Order use cases
+│   └── inventory/     # Inventory use cases
 ├── domain/
-│   ├── customer/      # 客戶聚合
-│   ├── order/         # 訂單聚合
-│   └── inventory/     # 庫存聚合
+│   ├── customer/      # Customer aggregate
+│   ├── order/         # Order aggregate
+│   └── inventory/     # Inventory aggregate
 └── infrastructure/
-    ├── persistence/   # 資料持久化
-    └── messaging/     # 訊息處理
+    ├── persistence/   # Data persistence
+    └── messaging/     # Message handling
 ```
 
-#### 2. 依賴規則
+#### 2. Dependency Rules
 
-- **領域層**: 不依賴任何其他層
-- **應用層**: 只依賴領域層
-- **基礎設施層**: 可以依賴所有層
-- **介面層**: 依賴應用層和基礎設施層
+- **Domain Layer**: Does not depend on any other layer
+- **Application Layer**: Only depends on domain layer
+- **Infrastructure Layer**: Can depend on all layers
+- **Interface Layer**: Depends on application and infrastructure layers
 
-#### 3. 聚合設計原則
+#### 3. Aggregate Design Principles
 
-- **小聚合**: 每個聚合專注於單一業務概念
-- **一致性邊界**: 聚合內部保持強一致性
-- **最終一致性**: 聚合間通過領域事件實現最終一致性
+- **Small Aggregates**: Each aggregate focuses on a single business concept
+- **Consistency Boundaries**: Strong consistency within aggregates
+- **Eventual Consistency**: Eventual consistency between aggregates through domain events
 
-## 結果
+## Consequences
 
-### 正面影響
+### Positive Impacts
 
-#### 1. **可測試性提升**
+#### 1. **Improved Testability**
 
-- 業務邏輯與技術細節分離，單元測試覆蓋率達到 85%+
-- 可以獨立測試領域邏輯，不需要外部依賴
+- Business logic separated from technical details, unit test coverage reaches 85%+
+- Can independently test domain logic without external dependencies
 
-#### 2. **可維護性改善**
+#### 2. **Enhanced Maintainability**
 
-- 清晰的分層結構，程式碼職責明確
-- 新功能開發時，影響範圍可控
+- Clear layered structure with well-defined code responsibilities
+- Controllable impact scope when developing new features
 
-#### 3. **團隊協作效率**
+#### 3. **Team Collaboration Efficiency**
 
-- 不同團隊可以並行開發不同的聚合
-- 介面定義清晰，減少溝通成本
+- Different teams can develop different aggregates in parallel
+- Clear interface definitions reduce communication costs
 
-#### 4. **技術債務控制**
+#### 4. **Technical Debt Control**
 
-- 架構約束防止不當的依賴關係
-- 定期的架構合規性檢查（ArchUnit）
+- Architectural constraints prevent improper dependency relationships
+- Regular architectural compliance checks (ArchUnit)
 
-### 量化指標
+### Quantitative Metrics
 
-- **架構合規性**: 9.5/10（ArchUnit 測試結果）
-- **程式碼重複率**: < 5%
-- **循環依賴**: 0 個
-- **測試覆蓋率**: 85%+
+- **Architectural Compliance**: 9.5/10 (ArchUnit test results)
+- **Code Duplication Rate**: < 5%
+- **Circular Dependencies**: 0
+- **Test Coverage**: 85%+
 
-### 負面影響與緩解措施
+### Negative Impacts and Mitigation Measures
 
-#### 1. **學習曲線**
+#### 1. **Learning Curve**
 
-- **問題**: 團隊需要學習 DDD 概念
-- **緩解**: 提供培訓文檔和程式碼範例
+- **Issue**: Team needs to learn DDD concepts
+- **Mitigation**: Provide training documentation and code examples
 
-#### 2. **初期開發速度**
+#### 2. **Initial Development Speed**
 
-- **問題**: 架構設置需要額外時間
-- **緩解**: 建立程式碼模板和生成工具
+- **Issue**: Architecture setup requires additional time
+- **Mitigation**: Establish code templates and generation tools
 
-#### 3. **過度設計風險**
+#### 3. **Over-engineering Risk**
 
-- **問題**: 可能為簡單功能創建過於複雜的結構
-- **緩解**: 定期架構審查，保持 YAGNI 原則
+- **Issue**: May create overly complex structures for simple features
+- **Mitigation**: Regular architecture reviews, maintain YAGNI principle
 
-## 實現細節
+## Implementation Details
 
-### 1. 聚合根實現
+### 1. Aggregate Root Implementation
 
 ```java
-@AggregateRoot(name = "Customer", description = "客戶聚合根")
+@AggregateRoot(name = "Customer", description = "Customer aggregate root")
 public class Customer implements AggregateRootInterface {
     private final CustomerId id;
     private CustomerName name;
     private Email email;
     private MembershipLevel membershipLevel;
     
-    // 業務方法
+    // Business methods
     public void upgradeToVip() {
         if (canUpgradeToVip()) {
             this.membershipLevel = MembershipLevel.VIP;
@@ -163,14 +163,14 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### 2. 值對象實現
+### 2. Value Object Implementation
 
 ```java
 @ValueObject
 public record CustomerId(String value) {
     public CustomerId {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("客戶 ID 不能為空");
+            throw new IllegalArgumentException("Customer ID cannot be empty");
         }
     }
     
@@ -180,7 +180,7 @@ public record CustomerId(String value) {
 }
 ```
 
-### 3. 領域事件實現
+### 3. Domain Event Implementation
 
 ```java
 public record CustomerUpgradedToVipEvent(
@@ -199,7 +199,7 @@ public record CustomerUpgradedToVipEvent(
 }
 ```
 
-### 4. 應用服務實現
+### 4. Application Service Implementation
 
 ```java
 @Service
@@ -213,15 +213,15 @@ public class CustomerApplicationService {
         customer.upgradeToVip();
         customerRepository.save(customer);
         
-        // 發布領域事件
+        // Publish domain events
         domainEventPublisher.publishEventsFromAggregate(customer);
     }
 }
 ```
 
-## 合規性與驗證
+## Compliance and Validation
 
-### 1. ArchUnit 規則
+### 1. ArchUnit Rules
 
 ```java
 @ArchTest
@@ -238,33 +238,32 @@ static final ArchRule aggregates_should_be_annotated =
         .should().beAnnotatedWith(AggregateRoot.class);
 ```
 
-### 2. 測試策略
+### 2. Testing Strategy
 
-- **單元測試**: 測試領域邏輯，不涉及外部依賴
-- **集成測試**: 測試適配器與外部系統的整合
-- **架構測試**: 驗證架構規則的遵循
+- **Unit Tests**: Test domain logic without external dependencies
+- **Integration Tests**: Test adapter integration with external systems
+- **Architecture Tests**: Verify compliance with architectural rules
 
-### 3. 文檔維護
+### 3. Documentation Maintenance
 
-- **領域模型圖**: 使用 PlantUML 維護最新的領域模型
-- **架構決策記錄**: 記錄重要的架構變更
-- **程式碼範例**: 提供標準的實現模式
+- **Domain Model Diagrams**: Maintain up-to-date domain models using PlantUML
+- **Architecture Decision Records**: Document important architectural changes
+- **Code Examples**: Provide standard implementation patterns
 
-## 相關決策
+## Related Decisions
 
-- [ADR-002: 限界上下文設計策略](./ADR-002-bounded-context-design.md)
-- [ADR-003: 領域事件和 CQRS 實現](./ADR-003-domain-events-cqrs.md)
-- \1
+- [ADR-002: Bounded Context Design Strategy](./ADR-002-bounded-context-design.md)
+- [ADR-003: Domain Events and CQRS Implementation](./ADR-003-domain-events-cqrs.md)
 
-## 參考資料
+## References
 
 - [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Spring Boot DDD 最佳實踐](https://spring.io/guides/gs/spring-boot/)
+- [Spring Boot DDD Best Practices](https://spring.io/guides/gs/spring-boot/)
 
 ---
 
-**最後更新**: 2024-01-15  
-**審核者**: 架構團隊  
-**下次審查**: 2024-07-15
+**Last Updated**: January 15, 2024  
+**Reviewers**: Architecture Team  
+**Next Review**: July 15, 2024

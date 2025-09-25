@@ -1,86 +1,86 @@
-# 📍 開發文檔已遷移
+# 📍 Development Documentation Migrated
 
-> **重要通知**: 開發相關文檔已遷移到新的 Development Viewpoint 結構中
+> **Important Notice**: Development-related documentation has been migrated to the new Development Viewpoint structure
 
-## 🚀 新位置
+## 🚀 New Location
 
-所有開發相關文檔現在統一整合在 **[Development Viewpoint](../viewpoints/development/)** 中，提供更完整和系統化的開發指南。
+All development-related documentation is now unified and integrated in **[Development Viewpoint](../viewpoints/development/)**, providing more complete and systematic development guidelines.
 
-**主要入口**: [開發視點總覽](../viewpoints/development/README.md)
+**Main Entry**: [Development Viewpoint Overview](../viewpoints/development/README.md)
 
-## 📋 文檔遷移對照表
+## 📋 Documentation Migration Mapping
 
-| 原始文檔 | 新位置 | 說明 |
-|----------|--------|------|
-| [getting-started.md](getting-started.md) | **入門指南** | 開發環境設置和快速開始 |
-| [coding-standards.md](coding-standards.md) | **編碼標準** | 程式碼風格和品質標準 |
-| [testing-guide.md](testing-guide.md) | **測試策略** | 測試策略和最佳實踐 |
-| [documentation-guide.md](documentation-guide.md) | **文檔標準** | 文檔撰寫和維護標準 |
-| [instructions.md](instructions.md) | **開發工作流程** | 詳細的開發流程和工具使用 |
-| [epic.md](epic.md) | **Epic 實現指南** | 大型功能開發指南 |
+| Original Document | New Location | Description |
+|-------------------|--------------|-------------|
+| [getting-started.md](getting-started.md) | **Getting Started Guide** | Development environment setup and quick start |
+| [coding-standards.md](coding-standards.md) | **Coding Standards** | Code style and quality standards |
+| [testing-guide.md](testing-guide.md) | **Testing Strategy** | Testing strategy and best practices |
+| [documentation-guide.md](documentation-guide.md) | **Documentation Standards** | Documentation writing and maintenance standards |
+| [instructions.md](instructions.md) | **Development Workflow** | Detailed development process and tool usage |
+| [epic.md](epic.md) | **Epic Implementation Guide** | Large feature development guide |
 
-## 📚 新的開發文檔結構
+## 📚 New Development Documentation Structure
 
-```
+```text
 docs/viewpoints/development/
-├── README.md                           # 開發視點總覽
-├── getting-started/                    # 快速入門
-│   ├── README.md                      # 快速入門指南
-│   ├── environment-setup.md           # 環境配置指南
-│   ├── prerequisites.md               # 前置需求檢查清單
-│   └── first-contribution.md          # 首次貢獻指南
-├── architecture/                      # 架構設計
-│   ├── ddd-patterns/                  # DDD 模式
-│   ├── hexagonal-architecture/        # 六角架構
-│   ├── microservices/                 # 微服務架構
-│   └── saga-patterns/                 # Saga 模式
-├── coding-standards/                  # 編碼標準
-│   ├── README.md                      # 編碼標準總覽
-│   ├── java-standards.md              # Java 編碼規範
-│   ├── frontend-standards.md          # 前端編碼規範
-│   └── api-design.md                  # API 設計規範
-├── testing/                           # 測試策略
-│   ├── README.md                      # 測試策略總覽
-│   ├── tdd-practices/                 # TDD 實踐
-│   ├── bdd-practices/                 # BDD 實踐
-│   └── performance-monitoring/        # 效能監控
-├── workflows/                         # 工作流程
-│   ├── README.md                      # 工作流程總覽
-│   ├── development-workflow.md        # 開發流程標準
-│   └── release-process.md             # 發布流程管理
-└── tools-and-environment/             # 工具鏈
-    ├── README.md                      # 工具鏈總覽
-    └── technology-stack/              # 技術棧
+├── README.md                           # Development viewpoint overview
+├── getting-started/                    # Quick start
+│   ├── README.md                      # Quick start guide
+│   ├── environment-setup.md           # Environment configuration guide
+│   ├── prerequisites.md               # Prerequisites checklist
+│   └── first-contribution.md          # First contribution guide
+├── architecture/                      # Architecture design
+│   ├── ddd-patterns/                  # DDD patterns
+│   ├── hexagonal-architecture/        # Hexagonal architecture
+│   ├── microservices/                 # Microservices architecture
+│   └── saga-patterns/                 # Saga patterns
+├── coding-standards/                  # Coding standards
+│   ├── README.md                      # Coding standards overview
+│   ├── java-standards.md              # Java coding specifications
+│   ├── frontend-standards.md          # Frontend coding specifications
+│   └── api-design.md                  # API design specifications
+├── testing/                           # Testing strategy
+│   ├── README.md                      # Testing strategy overview
+│   ├── tdd-practices/                 # TDD practices
+│   ├── bdd-practices/                 # BDD practices
+│   └── performance-monitoring/        # Performance monitoring
+├── workflows/                         # Workflows
+│   ├── README.md                      # Workflow overview
+│   ├── development-workflow.md        # Development process standards
+│   └── release-process.md             # Release process management
+└── tools-and-environment/             # Tool chain
+    ├── README.md                      # Tool chain overview
+    └── technology-stack/              # Technology stack
 ```
 
-## 🚀 快速開始
+## 🚀 Quick Start
 
-### 開發環境
+### Development Environment
 
 - **Java**: 21
 - **Spring Boot**: 3.4.5
 - **Gradle**: 8.x
-- **Node.js**: 18+ (前端)
+- **Node.js**: 18+ (frontend)
 
-### 基本命令
+### Basic Commands
 
 ```bash
-# 建置專案
+# Build project
 ./gradlew build
 
-# 執行測試
+# Run tests
 ./gradlew test
 
-# 啟動應用
+# Start application
 ./gradlew bootRun
 ```
 
-## 📅 遷移資訊
+## 📅 Migration Information
 
-- **遷移日期**: 2025年1月21日
-- **原因**: 統一開發文檔到 Development Viewpoint 結構
-- **狀態**: 已完成，內容已整合並增強
+- **Migration Date**: January 21, 2025
+- **Reason**: Unify development documentation into Development Viewpoint structure
+- **Status**: Completed, content has been integrated and enhanced
 
 ---
 
-*此目錄將在下一個版本中重構。請更新您的書籤和引用到新的位置。*
+*This directory will be restructured in the next version. Please update your bookmarks and references to the new location.*

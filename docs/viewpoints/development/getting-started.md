@@ -1,242 +1,242 @@
-# 快速入門指南
+# Getting Started Guide
 
-## 概覽
+## Overview
 
-歡迎加入我們的開發團隊！本指南將幫助你快速設置開發環境，了解專案結構，並完成你的第一次貢獻。無論你是經驗豐富的開發者還是剛開始接觸我們的技術棧，這份指南都會為你提供所需的一切資訊。
+Welcome to our development team! This guide will help you quickly set up your development environment, understand the project structure, and complete your first contribution. Whether you're an experienced developer or just starting with our tech stack, this guide provides everything you need.
 
-## 📋 前置需求檢查清單
+## 📋 Prerequisites Checklist
 
-在開始之前，請確保你已經具備以下條件：
+Before starting, please ensure you have the following:
 
-### 必要工具
+### Essential Tools
 
-#### Java 開發環境
-- [ ] **Java 21** - OpenJDK 或 Oracle JDK
+#### Java Development Environment
+- [ ] **Java 21** - OpenJDK or Oracle JDK
   ```bash
-  # 檢查 Java 版本
+  # Check Java version
   java -version
-  # 應該顯示 Java 21.x.x
+  # Should display Java 21.x.x
   ```
 
-#### 前端開發環境
-- [ ] **Node.js 18+** - 前端開發和工具鏈
+#### Frontend Development Environment
+- [ ] **Node.js 18+** - Frontend development and toolchain
   ```bash
-  # 檢查 Node.js 版本
+  # Check Node.js version
   node --version
-  # 應該顯示 v18.x.x 或更高
+  # Should display v18.x.x or higher
   ```
 
-#### 版本控制和容器化
-- [ ] **Git** - 版本控制系統
+#### Version Control and Containerization
+- [ ] **Git** - Version control system
   ```bash
-  # 檢查 Git 版本
+  # Check Git version
   git --version
   ```
-- [ ] **Docker** - 容器化開發環境
+- [ ] **Docker** - Containerized development environment
   ```bash
-  # 檢查 Docker 版本
+  # Check Docker version
   docker --version
   ```
 
-#### 雲端工具
-- [ ] **AWS CLI** - 雲端資源管理
+#### Cloud Tools
+- [ ] **AWS CLI** - Cloud resource management
   ```bash
-  # 安裝 AWS CLI
+  # Install AWS CLI
   curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
   unzip awscliv2.zip
   sudo ./aws/install
   
-  # 驗證安裝
+  # Verify installation
   aws --version
   ```
 
-### 推薦工具
+### Recommended Tools
 
-#### 開發環境
-- [ ] **IntelliJ IDEA Ultimate** - Java 開發 IDE（推薦）
-  - 支援 Spring Boot、JPA、Cucumber
-  - 內建 Git 整合和資料庫工具
-- [ ] **VS Code** - 輕量級編輯器
-  - 適合前端開發和文檔編輯
-  - 豐富的擴充套件生態系統
+#### Development Environment
+- [ ] **IntelliJ IDEA Ultimate** - Java development IDE (recommended)
+  - Supports Spring Boot, JPA, Cucumber
+  - Built-in Git integration and database tools
+- [ ] **VS Code** - Lightweight editor
+  - Suitable for frontend development and documentation editing
+  - Rich extension ecosystem
 
-#### API 和資料庫工具
-- [ ] **Postman** 或 **Insomnia** - API 測試工具
-- [ ] **DBeaver** - 資料庫管理工具
-- [ ] **Kiro IDE** - AI 輔助開發工具
+#### API and Database Tools
+- [ ] **Postman** or **Insomnia** - API testing tools
+- [ ] **DBeaver** - Database management tool
+- [ ] **Kiro IDE** - AI-assisted development tool
 
-### 軟體安裝指南
+### Software Installation Guide
 
-#### 使用 SDKMAN 安裝 Java
+#### Install Java using SDKMAN
 ```bash
-# 安裝 SDKMAN
+# Install SDKMAN
 curl -s "https://get.sdkman.io" | bash
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# 安裝 Java 21
+# Install Java 21
 sdk install java 21.0.1-tem
 sdk use java 21.0.1-tem
 
-# 設為預設版本
+# Set as default version
 sdk default java 21.0.1-tem
 
-# 驗證安裝
+# Verify installation
 java -version
 javac -version
 ```
 
-#### 使用 NVM 安裝 Node.js
+#### Install Node.js using NVM
 ```bash
-# 安裝 NVM
+# Install NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 source ~/.bashrc
 
-# 安裝 Node.js 18
+# Install Node.js 18
 nvm install 18
 nvm use 18
 nvm alias default 18
 
-# 驗證安裝
+# Verify installation
 node --version
 npm --version
 ```
 
-#### Docker 安裝
+#### Docker Installation
 ```bash
 # Ubuntu/Debian
 sudo apt-get update
 sudo apt-get install docker.io docker-compose
 
-# macOS (使用 Homebrew)
+# macOS (using Homebrew)
 brew install docker docker-compose
 
-# 啟動 Docker 服務
+# Start Docker service
 sudo systemctl start docker
 sudo systemctl enable docker
 
-# 驗證安裝
+# Verify installation
 docker --version
 docker-compose --version
 ```
 
-## ⚙️ 環境設置
+## ⚙️ Environment Setup
 
-### 1. 專案克隆和初始設置
+### 1. Project Clone and Initial Setup
 
 ```bash
-# 克隆專案
+# Clone project
 git clone https://github.com/your-org/genai-demo.git
 cd genai-demo
 
-# 檢查專案結構
+# Check project structure
 ls -la
 
-# 設置 Git 配置
+# Set Git configuration
 git config user.name "Your Name"
 git config user.email "your.email@company.com"
 
-# 安裝 Git hooks
+# Install Git hooks
 cp scripts/pre-commit .git/hooks/
 chmod +x .git/hooks/pre-commit
 ```
 
-### 2. 後端環境設置
+### 2. Backend Environment Setup
 
-#### Gradle 建置和測試
+#### Gradle Build and Testing
 ```bash
-# 檢查 Gradle 版本
+# Check Gradle version
 ./gradlew --version
 
-# 清理並建置專案
+# Clean and build project
 ./gradlew clean build
 
-# 執行所有測試
+# Run all tests
 ./gradlew test
 
-# 執行特定類型的測試
-./gradlew unitTest           # 單元測試
-./gradlew integrationTest    # 整合測試
-./gradlew cucumber          # BDD 測試
+# Run specific test types
+./gradlew unitTest           # Unit tests
+./gradlew integrationTest    # Integration tests
+./gradlew cucumber          # BDD tests
 
-# 生成測試報告
+# Generate test reports
 ./gradlew jacocoTestReport
 
-# 檢查程式碼品質
+# Check code quality
 ./gradlew checkstyleMain spotbugsMain
 ```
 
-#### 應用啟動
+#### Application Startup
 ```bash
-# 使用預設 profile 啟動 (開發環境)
+# Start with default profile (development environment)
 ./gradlew bootRun
 
-# 使用特定 profile 啟動
+# Start with specific profile
 ./gradlew bootRun --args='--spring.profiles.active=dev'
 
-# 檢查應用是否正常啟動
+# Check if application started successfully
 curl http://localhost:8080/actuator/health
 ```
 
-### 3. 前端環境設置
+### 3. Frontend Environment Setup
 
-#### CMC 管理前端 (Next.js)
+#### CMC Management Frontend (Next.js)
 ```bash
 cd cmc-frontend
 
-# 安裝依賴
+# Install dependencies
 npm install
 
-# 啟動開發伺服器
+# Start development server
 npm run dev
 
-# 建置生產版本
+# Build production version
 npm run build
 
-# 執行測試
+# Run tests
 npm test
 
-# 檢查程式碼品質
+# Check code quality
 npm run lint
 npm run type-check
 ```
 
-#### 消費者前端 (Angular)
+#### Consumer Frontend (Angular)
 ```bash
 cd consumer-frontend
 
-# 安裝依賴
+# Install dependencies
 npm install
 
-# 啟動開發伺服器
+# Start development server
 npm start
 
-# 建置生產版本
+# Build production version
 npm run build
 
-# 執行測試
+# Run tests
 npm test
 
-# 執行 E2E 測試
+# Run E2E tests
 npm run e2e
 ```
 
-### 4. 資料庫設置
+### 4. Database Setup
 
-#### 開發環境 (H2 內嵌資料庫)
+#### Development Environment (H2 Embedded Database)
 ```bash
-# H2 資料庫會自動啟動，無需額外設置
-# 可以通過以下 URL 訪問 H2 控制台
+# H2 database starts automatically, no additional setup needed
+# Access H2 console via the following URL
 # http://localhost:8080/h2-console
 
-# 連接資訊：
+# Connection information:
 # JDBC URL: jdbc:h2:file:./data/devdb
 # User Name: sa
-# Password: (留空)
+# Password: (leave empty)
 ```
 
-#### 本地 PostgreSQL (使用 Docker)
+#### Local PostgreSQL (using Docker)
 ```bash
-# 啟動 PostgreSQL 容器
+# Start PostgreSQL container
 docker run --name postgres-dev \
   -e POSTGRES_DB=genaidemo \
   -e POSTGRES_USER=dev \
@@ -244,147 +244,147 @@ docker run --name postgres-dev \
   -p 5432:5432 \
   -d postgres:15
 
-# 執行資料庫遷移
+# Run database migrations
 ./gradlew flywayMigrate
 
-# 檢查資料庫連接
+# Check database connection
 ./gradlew flywayInfo
 ```
 
-#### 使用 Docker Compose 啟動完整環境
+#### Start Complete Environment using Docker Compose
 ```bash
-# 啟動所有服務
+# Start all services
 docker-compose up -d
 
-# 查看服務狀態
+# Check service status
 docker-compose ps
 
-# 查看日誌
+# View logs
 docker-compose logs -f
 
-# 停止服務
+# Stop services
 docker-compose down
 ```
 
-## 🏗️ 專案結構深度解析
+## 🏗️ Project Structure Deep Dive
 
-### 整體架構
+### Overall Architecture
 ```
 genai-demo/
-├── app/                        # Spring Boot 主應用
-│   ├── src/main/java/         # Java 源碼
+├── app/                        # Spring Boot main application
+│   ├── src/main/java/         # Java source code
 │   │   └── solid/humank/genaidemo/
-│   │       ├── domain/        # 領域層 (DDD 核心)
-│   │       │   ├── customer/  # 客戶聚合
-│   │       │   ├── order/     # 訂單聚合
-│   │       │   └── shared/    # 共享核心
-│   │       ├── application/   # 應用層 (用例實現)
-│   │       │   ├── customer/  # 客戶用例
-│   │       │   └── order/     # 訂單用例
-│   │       └── infrastructure/ # 基礎設施層
-│   │           ├── persistence/ # 資料持久化
-│   │           ├── web/       # Web 控制器
-│   │           └── messaging/ # 訊息處理
-│   ├── src/test/              # 測試代碼
-│   │   ├── java/             # Java 測試
-│   │   └── resources/        # 測試資源
-│   │       └── features/     # BDD 特性檔案
-│   └── src/main/resources/   # 應用資源
-│       ├── application.yml   # 應用配置
-│       └── db/migration/     # 資料庫遷移腳本
-├── cmc-frontend/              # CMC 管理前端
-│   ├── src/                  # 源碼目錄
-│   │   ├── app/             # Next.js 應用
-│   │   ├── components/      # React 元件
-│   │   ├── pages/           # 頁面路由
-│   │   └── styles/          # 樣式檔案
-│   ├── public/              # 靜態資源
-│   └── tests/               # 前端測試
-├── consumer-frontend/         # 消費者前端
-│   ├── src/                 # Angular 源碼
-│   │   ├── app/            # Angular 應用
-│   │   ├── assets/         # 靜態資源
-│   │   └── environments/   # 環境配置
-│   └── e2e/                # E2E 測試
-├── infrastructure/           # AWS CDK 基礎設施
-│   ├── lib/                # CDK 構造
-│   ├── bin/                # CDK 應用入口
-│   └── test/               # 基礎設施測試
-├── docs/                    # 專案文檔
-│   ├── viewpoints/         # 架構視點文檔
-│   │   ├── functional/     # 功能視點
-│   │   ├── information/    # 資訊視點
-│   │   ├── deployment/     # 部署視點
-│   │   └── development/    # 開發視點
-│   └── diagrams/           # 架構圖表
-├── scripts/                # 自動化腳本
-│   ├── build/             # 建置腳本
-│   ├── deploy/            # 部署腳本
-│   └── test/              # 測試腳本
-└── .kiro/                 # Kiro IDE 配置
+│   │       ├── domain/        # Domain layer (DDD core)
+│   │       │   ├── customer/  # Customer aggregate
+│   │       │   ├── order/     # Order aggregate
+│   │       │   └── shared/    # Shared kernel
+│   │       ├── application/   # Application layer (use case implementation)
+│   │       │   ├── customer/  # Customer use cases
+│   │       │   └── order/     # Order use cases
+│   │       └── infrastructure/ # Infrastructure layer
+│   │           ├── persistence/ # Data persistence
+│   │           ├── web/       # Web controllers
+│   │           └── messaging/ # Message handling
+│   ├── src/test/              # Test code
+│   │   ├── java/             # Java tests
+│   │   └── resources/        # Test resources
+│   │       └── features/     # BDD feature files
+│   └── src/main/resources/   # Application resources
+│       ├── application.yml   # Application configuration
+│       └── db/migration/     # Database migration scripts
+├── cmc-frontend/              # CMC management frontend
+│   ├── src/                  # Source directory
+│   │   ├── app/             # Next.js application
+│   │   ├── components/      # React components
+│   │   ├── pages/           # Page routes
+│   │   └── styles/          # Style files
+│   ├── public/              # Static assets
+│   └── tests/               # Frontend tests
+├── consumer-frontend/         # Consumer frontend
+│   ├── src/                 # Angular source code
+│   │   ├── app/            # Angular application
+│   │   ├── assets/         # Static assets
+│   │   └── environments/   # Environment configuration
+│   └── e2e/                # E2E tests
+├── infrastructure/           # AWS CDK infrastructure
+│   ├── lib/                # CDK constructs
+│   ├── bin/                # CDK application entry
+│   └── test/               # Infrastructure tests
+├── docs/                    # Project documentation
+│   ├── viewpoints/         # Architecture viewpoint documentation
+│   │   ├── functional/     # Functional viewpoint
+│   │   ├── information/    # Information viewpoint
+│   │   ├── deployment/     # Deployment viewpoint
+│   │   └── development/    # Development viewpoint
+│   └── diagrams/           # Architecture diagrams
+├── scripts/                # Automation scripts
+│   ├── build/             # Build scripts
+│   ├── deploy/            # Deployment scripts
+│   └── test/              # Test scripts
+└── .kiro/                 # Kiro IDE configuration
     ├── hooks/             # Git hooks
-    └── steering/          # 開發指導原則
+    └── steering/          # Development guidelines
 ```
 
-### 核心模組說明
+### Core Module Descriptions
 
-#### 領域層 (Domain Layer)
-- **聚合根 (Aggregate Roots)**: 業務實體的根，如 `Customer`, `Order`
-- **值物件 (Value Objects)**: 不可變的業務概念，如 `Email`, `Money`
-- **領域服務 (Domain Services)**: 跨聚合的業務邏輯
-- **領域事件 (Domain Events)**: 業務事件的表示
+#### Domain Layer
+- **Aggregate Roots**: Business entity roots, such as `Customer`, `Order`
+- **Value Objects**: Immutable business concepts, such as `Email`, `Money`
+- **Domain Services**: Business logic across aggregates
+- **Domain Events**: Representation of business events
 
-#### 應用層 (Application Layer)
-- **應用服務 (Application Services)**: 用例的協調者
-- **命令和查詢 (Commands & Queries)**: CQRS 模式實現
-- **事件處理器 (Event Handlers)**: 領域事件的處理
+#### Application Layer
+- **Application Services**: Use case coordinators
+- **Commands & Queries**: CQRS pattern implementation
+- **Event Handlers**: Domain event processing
 
-#### 基礎設施層 (Infrastructure Layer)
-- **資料庫適配器**: JPA 實體和儲存庫實現
-- **Web 適配器**: REST 控制器和 DTO
-- **訊息適配器**: 事件發布和訂閱
+#### Infrastructure Layer
+- **Database Adapters**: JPA entities and repository implementations
+- **Web Adapters**: REST controllers and DTOs
+- **Message Adapters**: Event publishing and subscription
 
-## 🎯 第一次貢獻步驟指南
+## 🎯 First Contribution Step-by-Step Guide
 
-### 1. 選擇合適的任務
+### 1. Choose Appropriate Tasks
 
-#### 新手友善的任務類型
-- **文檔改進**: 修正錯字、更新過時資訊、增加範例
-- **測試增強**: 增加測試覆蓋率、修正測試案例
-- **程式碼重構**: 改善程式碼可讀性、提取重複邏輯
-- **小功能實現**: 簡單的 CRUD 操作、驗證邏輯
+#### Beginner-Friendly Task Types
+- **Documentation Improvements**: Fix typos, update outdated information, add examples
+- **Test Enhancements**: Increase test coverage, fix test cases
+- **Code Refactoring**: Improve code readability, extract duplicate logic
+- **Small Feature Implementation**: Simple CRUD operations, validation logic
 
-#### 尋找任務的方式
+#### Ways to Find Tasks
 ```bash
-# 查看 GitHub Issues
-# 標籤篩選：good-first-issue, documentation, testing, refactoring
+# Check GitHub Issues
+# Filter by labels: good-first-issue, documentation, testing, refactoring
 
-# 或者從程式碼品質改進開始
-./gradlew checkstyleMain  # 查看程式碼風格問題
-./gradlew spotbugsMain    # 查看潛在錯誤
-./gradlew jacocoTestReport # 查看測試覆蓋率
+# Or start with code quality improvements
+./gradlew checkstyleMain  # Check code style issues
+./gradlew spotbugsMain    # Check potential bugs
+./gradlew jacocoTestReport # Check test coverage
 ```
 
-### 2. 建立開發分支
+### 2. Create Development Branch
 
 ```bash
-# 確保在最新的 main 分支
+# Ensure on latest main branch
 git checkout main
 git pull origin main
 
-# 建立功能分支 (使用描述性名稱)
+# Create feature branch (use descriptive names)
 git checkout -b feature/add-customer-validation
-# 或
+# or
 git checkout -b fix/order-calculation-bug
-# 或
+# or
 git checkout -b docs/update-api-documentation
 ```
 
-### 3. 遵循開發標準和最佳實踐
+### 3. Follow Development Standards and Best Practices
 
-#### Java 編碼標準
+#### Java Coding Standards
 ```java
-// ✅ 正確：清楚的類別和方法命名
+// ✅ Correct: Clear class and method naming
 @Service
 @Transactional
 public class CustomerRegistrationService {
@@ -410,20 +410,20 @@ public class CustomerRegistrationService {
     }
 }
 
-// ❌ 錯誤：不清楚的命名和結構
+// ❌ Wrong: Unclear naming and structure
 @Service
 public class CustSvc {
     public Cust reg(CustReq req) {
-        // 不清楚的實現
+        // Unclear implementation
     }
 }
 ```
 
-#### API 設計規範
+#### API Design Guidelines
 ```java
-// ✅ 正確：RESTful API 設計
+// ✅ Correct: RESTful API design
 @RestController
-@RequestMapping("/../api/v1/customers")
+@RequestMapping("/api/v1/customers")
 public class CustomerController {
     
     @PostMapping
@@ -446,9 +446,9 @@ public class CustomerController {
 }
 ```
 
-#### 前端編碼標準 (React/TypeScript)
+#### Frontend Coding Standards (React/TypeScript)
 ```typescript
-// ✅ 正確：型別安全的 React 元件
+// ✅ Correct: Type-safe React component
 interface CustomerListProps {
   customers: Customer[];
   onCustomerSelect: (customer: Customer) => void;
@@ -482,9 +482,9 @@ export const CustomerList: React.FC<CustomerListProps> = ({
 };
 ```
 
-### 4. 測試驅動開發 (TDD) 實踐
+### 4. Test-Driven Development (TDD) Practice
 
-#### BDD 場景編寫
+#### BDD Scenario Writing
 ```gherkin
 # src/test/resources/features/customer-registration.feature
 Feature: Customer Registration
@@ -509,7 +509,7 @@ Feature: Customer Registration
     And my account should not be created
 ```
 
-#### 單元測試實現
+#### Unit Test Implementation
 ```java
 @ExtendWith(MockitoExtension.class)
 class CustomerRegistrationServiceTest {
@@ -575,7 +575,7 @@ class CustomerRegistrationServiceTest {
 }
 ```
 
-#### 整合測試
+#### Integration Testing
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -599,7 +599,7 @@ class CustomerRegistrationIntegrationTest {
         
         // When
         ResponseEntity<CustomerResponse> response = restTemplate.postForEntity(
-            "/../api/v1/customers",
+            "/api/v1/customers",
             request,
             CustomerResponse.class
         );
@@ -609,7 +609,7 @@ class CustomerRegistrationIntegrationTest {
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().getName()).isEqualTo("John Doe");
         
-        // 驗證資料庫中的資料
+        // Verify data in database
         Optional<Customer> savedCustomer = customerRepository.findByEmail("john@example.com");
         assertThat(savedCustomer).isPresent();
         assertThat(savedCustomer.get().getName()).isEqualTo("John Doe");
@@ -617,401 +617,401 @@ class CustomerRegistrationIntegrationTest {
 }
 ```
 
-### 5. 程式碼提交和推送
+### 5. Code Commit and Push
 
-#### 提交訊息規範
+#### Commit Message Guidelines
 ```bash
-# 使用 Conventional Commits 格式
+# Use Conventional Commits format
 git add .
 
-# 功能新增
+# Feature addition
 git commit -m "feat(customer): add customer registration validation"
 
-# 錯誤修正
+# Bug fix
 git commit -m "fix(order): correct order total calculation logic"
 
-# 文檔更新
+# Documentation update
 git commit -m "docs(api): update customer API documentation"
 
-# 測試增加
+# Test addition
 git commit -m "test(customer): add unit tests for customer service"
 
-# 重構
+# Refactoring
 git commit -m "refactor(order): extract order calculation logic"
 
-# 推送到遠端分支
+# Push to remote branch
 git push origin feature/add-customer-validation
 ```
 
-### 6. 建立 Pull Request
+### 6. Create Pull Request
 
-#### PR 標題和描述範本
+#### PR Title and Description Template
 ```markdown
-## 📋 Pull Request 標題
+## 📋 Pull Request Title
 [FEAT] Add customer registration validation
 
-## 📝 描述
-### 變更內容
-- 新增客戶註冊時的電子郵件驗證
-- 實作密碼強度檢查
-- 增加重複電子郵件檢查
+## 📝 Description
+### Changes Made
+- Added email validation for customer registration
+- Implemented password strength checking
+- Added duplicate email checking
 
-### 變更原因
-- 提升系統安全性
-- 防止無效資料進入系統
-- 改善使用者體驗
+### Reason for Changes
+- Improve system security
+- Prevent invalid data from entering system
+- Enhance user experience
 
-### 測試
-- [x] 單元測試已通過
-- [x] 整合測試已通過
-- [x] BDD 場景已驗證
-- [x] 手動測試已完成
+### Testing
+- [x] Unit tests passed
+- [x] Integration tests passed
+- [x] BDD scenarios verified
+- [x] Manual testing completed
 
-### 檢查清單
-- [x] 程式碼遵循編碼標準
-- [x] 所有測試都通過
-- [x] 文檔已更新
-- [x] 無破壞性變更
-- [x] 已自我審查程式碼
+### Checklist
+- [x] Code follows coding standards
+- [x] All tests pass
+- [x] Documentation updated
+- [x] No breaking changes
+- [x] Self-reviewed code
 
-### 相關 Issues
+### Related Issues
 Closes #123
 Related to #456
 
-### 截圖 (如適用)
-[包含 UI 變更的前後對比截圖]
+### Screenshots (if applicable)
+[Include before/after screenshots for UI changes]
 ```
 
-#### PR 檢查清單
-- [ ] **程式碼品質**: 通過所有靜態分析檢查
-- [ ] **測試覆蓋**: 新程式碼有適當的測試覆蓋
-- [ ] **文檔更新**: 相關文檔已更新
-- [ ] **向後相容**: 沒有破壞現有功能
-- [ ] **效能影響**: 評估對系統效能的影響
-- [ ] **安全考量**: 檢查潛在的安全問題
+#### PR Checklist
+- [ ] **Code Quality**: Passes all static analysis checks
+- [ ] **Test Coverage**: New code has appropriate test coverage
+- [ ] **Documentation Updated**: Relevant documentation updated
+- [ ] **Backward Compatible**: No breaking of existing functionality
+- [ ] **Performance Impact**: Assessed impact on system performance
+- [ ] **Security Considerations**: Checked for potential security issues
 
-## 🧪 測試執行指南
+## 🧪 Test Execution Guide
 
-### 測試分層策略
+### Test Layer Strategy
 
-#### 單元測試 (80% 覆蓋目標)
+#### Unit Tests (80% coverage target)
 ```bash
-# 執行所有單元測試
+# Run all unit tests
 ./gradlew unitTest
 
-# 執行特定類別的測試
+# Run specific class tests
 ./gradlew test --tests "CustomerServiceTest"
 
-# 執行特定方法的測試
+# Run specific method tests
 ./gradlew test --tests "CustomerServiceTest.should_create_customer_successfully"
 
-# 生成測試報告
+# Generate test reports
 ./gradlew jacocoTestReport
 open build/reports/jacoco/test/html/index.html
 ```
 
-#### 整合測試 (15% 覆蓋目標)
+#### Integration Tests (15% coverage target)
 ```bash
-# 執行整合測試
+# Run integration tests
 ./gradlew integrationTest
 
-# 執行資料庫整合測試
+# Run database integration tests
 ./gradlew test --tests "*IntegrationTest"
 
-# 執行 Web 層整合測試
+# Run web layer integration tests
 ./gradlew test --tests "*ControllerTest"
 ```
 
-#### BDD 測試 (5% 覆蓋目標)
+#### BDD Tests (5% coverage target)
 ```bash
-# 執行所有 BDD 測試
+# Run all BDD tests
 ./gradlew cucumber
 
-# 執行特定功能的 BDD 測試
+# Run specific feature BDD tests
 ./gradlew cucumber --tests "*CustomerRegistration*"
 
-# 生成 BDD 報告
+# Generate BDD reports
 open build/reports/cucumber/index.html
 ```
 
-#### 效能測試
+#### Performance Tests
 ```bash
-# 執行效能測試
+# Run performance tests
 ./gradlew performanceTest
 
-# 生成效能報告
+# Generate performance reports
 ./gradlew generatePerformanceReport
 open build/reports/performance/index.html
 ```
 
-### 前端測試
+### Frontend Testing
 
-#### React 測試 (Jest + Testing Library)
+#### React Testing (Jest + Testing Library)
 ```bash
 cd cmc-frontend
 
-# 執行所有測試
+# Run all tests
 npm test
 
-# 執行特定測試檔案
+# Run specific test file
 npm test CustomerList.test.tsx
 
-# 執行測試並生成覆蓋率報告
+# Run tests and generate coverage report
 npm test -- --coverage
 
-# 執行 E2E 測試
+# Run E2E tests
 npm run e2e
 ```
 
-#### Angular 測試 (Jasmine + Karma)
+#### Angular Testing (Jasmine + Karma)
 ```bash
 cd consumer-frontend
 
-# 執行單元測試
+# Run unit tests
 npm test
 
-# 執行 E2E 測試
+# Run E2E tests
 npm run e2e
 
-# 生成測試覆蓋率報告
+# Generate test coverage report
 npm run test:coverage
 ```
 
-## 🔍 常見問題和故障排除
+## 🔍 Common Issues and Troubleshooting
 
-### 建置問題
+### Build Issues
 
-#### Java 版本不符
+#### Java Version Mismatch
 ```bash
-# 問題：Java 版本不是 21
-# 解決方案：
+# Problem: Java version is not 21
+# Solution:
 sdk list java
 sdk use java 21.0.1-tem
 
-# 驗證
+# Verify
 java -version
 ./gradlew --version
 ```
 
-#### Gradle 建置失敗
+#### Gradle Build Failure
 ```bash
-# 清理建置快取
+# Clean build cache
 ./gradlew clean
 
-# 重新整理依賴
+# Refresh dependencies
 ./gradlew --refresh-dependencies
 
-# 檢查依賴衝突
+# Check dependency conflicts
 ./gradlew dependencies
 
-# 完整重建
+# Complete rebuild
 ./gradlew clean build
 ```
 
-#### 記憶體不足問題
+#### Out of Memory Issues
 ```bash
-# 增加 Gradle 記憶體
+# Increase Gradle memory
 export GRADLE_OPTS="-Xmx4g -XX:+UseG1GC"
 
-# 或在 gradle.properties 中設置
+# Or set in gradle.properties
 echo "org.gradle.jvmargs=-Xmx4g -XX:+UseG1GC" >> gradle.properties
 ```
 
-### 測試問題
+### Test Issues
 
-#### 測試資料庫連接失敗
+#### Test Database Connection Failure
 ```bash
-# 檢查 H2 資料庫檔案
+# Check H2 database files
 ls -la data/
 
-# 重置測試資料庫
+# Reset test database
 rm -rf data/testdb*
 ./gradlew test
 ```
 
-#### 測試間相互影響
+#### Test Interference
 ```java
-// 確保測試隔離
+// Ensure test isolation
 @Transactional
 @Rollback
 class CustomerServiceTest {
     
     @BeforeEach
     void setUp() {
-        // 清理測試資料
+        // Clean test data
         customerRepository.deleteAll();
     }
 }
 ```
 
-### 前端問題
+### Frontend Issues
 
-#### Node.js 依賴衝突
+#### Node.js Dependency Conflicts
 ```bash
-# 清理 node_modules
+# Clean node_modules
 rm -rf node_modules package-lock.json
 npm install
 
-# 或使用 npm ci 進行乾淨安裝
+# Or use npm ci for clean install
 npm ci
 ```
 
-#### 連接埠衝突
+#### Port Conflicts
 ```bash
-# 檢查連接埠使用情況
-lsof -i :8080  # 後端
+# Check port usage
+lsof -i :8080  # Backend
 lsof -i :3000  # React
 lsof -i :4200  # Angular
 
-# 終止佔用連接埠的程序
+# Kill process using port
 kill -9 <PID>
 
-# 或使用不同連接埠啟動
+# Or start with different port
 npm start -- --port 3001
 ```
 
-### Docker 問題
+### Docker Issues
 
-#### 容器啟動失敗
+#### Container Startup Failure
 ```bash
-# 檢查 Docker 服務狀態
+# Check Docker service status
 sudo systemctl status docker
 
-# 重啟 Docker 服務
+# Restart Docker service
 sudo systemctl restart docker
 
-# 清理 Docker 資源
+# Clean Docker resources
 docker system prune -a
 ```
 
-#### 資料庫容器連接問題
+#### Database Container Connection Issues
 ```bash
-# 檢查容器狀態
+# Check container status
 docker ps -a
 
-# 查看容器日誌
+# View container logs
 docker logs postgres-dev
 
-# 重新啟動容器
+# Restart container
 docker restart postgres-dev
 ```
 
-## 📚 學習資源和進階指南
+## 📚 Learning Resources and Advanced Guides
 
-### 必讀文檔
+### Must-Read Documentation
 
-#### 架構和設計
-- DDD 領域驅動設計
-- 六角架構實作
-- SOLID 設計原則
+#### Architecture and Design
+- DDD Domain-Driven Design
+- Hexagonal Architecture Implementation
+- SOLID Design Principles
 
-#### 測試策略
-- TDD 和 BDD 實踐
-- 測試金字塔策略
-- 效能測試指南
+#### Testing Strategy
+- TDD and BDD Practices
+- Test Pyramid Strategy
+- Performance Testing Guide
 
-#### 技術棧
-- Spring Boot 最佳實踐
-- React 開發指南
-- Angular 開發指南
+#### Technology Stack
+- Spring Boot Best Practices
+- React Development Guide
+- Angular Development Guide
 
-### 推薦學習路徑
+### Recommended Learning Path
 
-#### 第一週：基礎概念和環境熟悉
-- [ ] 完成環境設置
-- [ ] 熟悉專案結構
-- [ ] 閱讀核心架構文檔
-- [ ] 執行第一個測試
-- [ ] 完成簡單的文檔修正
+#### Week 1: Basic Concepts and Environment Familiarity
+- [ ] Complete environment setup
+- [ ] Familiarize with project structure
+- [ ] Read core architecture documentation
+- [ ] Run first test
+- [ ] Complete simple documentation fix
 
-#### 第二週：領域驅動設計和架構模式
-- [ ] 學習 DDD 戰術模式
-- [ ] 理解六角架構原則
-- [ ] 實作簡單的聚合根
-- [ ] 編寫領域事件
-- [ ] 完成小功能開發
+#### Week 2: Domain-Driven Design and Architecture Patterns
+- [ ] Learn DDD tactical patterns
+- [ ] Understand hexagonal architecture principles
+- [ ] Implement simple aggregate root
+- [ ] Write domain events
+- [ ] Complete small feature development
 
-#### 第三週：測試驅動開發
-- [ ] 掌握 TDD 紅綠重構循環
-- [ ] 編寫 BDD 場景
-- [ ] 實作整合測試
-- [ ] 學習測試替身使用
-- [ ] 提升測試覆蓋率
+#### Week 3: Test-Driven Development
+- [ ] Master TDD red-green-refactor cycle
+- [ ] Write BDD scenarios
+- [ ] Implement integration tests
+- [ ] Learn test double usage
+- [ ] Improve test coverage
 
-#### 第四週：進階主題
-- [ ] 了解微服務架構
-- [ ] 學習 Saga 模式
-- [ ] 實作 CQRS 模式
-- [ ] 掌握事件溯源
-- [ ] 參與程式碼審查
+#### Week 4: Advanced Topics
+- [ ] Understand microservices architecture
+- [ ] Learn Saga pattern
+- [ ] Implement CQRS pattern
+- [ ] Master event sourcing
+- [ ] Participate in code reviews
 
-### 外部學習資源
+### External Learning Resources
 
-#### 書籍推薦
+#### Recommended Books
 - **Domain-Driven Design** by Eric Evans
 - **Clean Architecture** by Robert C. Martin
 - **Microservices Patterns** by Chris Richardson
 - **Test Driven Development** by Kent Beck
 - **Refactoring** by Martin Fowler
 
-#### 線上課程
-- [Spring Boot 官方指南](https://spring.io/guides)
-- [React 官方教學](https://reactjs.org/tutorial/tutorial.html)
-- [Angular 官方教學](https://angular.io/tutorial)
-- [AWS 開發者指南](https://docs.aws.amazon.com/)
+#### Online Courses
+- [Spring Boot Official Guides](https://spring.io/guides)
+- [React Official Tutorial](https://reactjs.org/tutorial/tutorial.html)
+- [Angular Official Tutorial](https://angular.io/tutorial)
+- [AWS Developer Guide](https://docs.aws.amazon.com/)
 
-#### 社群資源
+#### Community Resources
 - [DDD Community](https://github.com/ddd-crew)
 - [Spring Boot GitHub](https://github.com/spring-projects/spring-boot)
 - [React GitHub](https://github.com/facebook/react)
 - [Angular GitHub](https://github.com/angular/angular)
 
-### 團隊協作和溝通
+### Team Collaboration and Communication
 
-#### 溝通管道
-- **Slack/Teams**: 日常溝通和快速問題
-- **GitHub Issues**: 功能需求和錯誤報告
-- **Pull Request**: 程式碼審查和討論
-- **定期會議**: Sprint 規劃和回顧
+#### Communication Channels
+- **Slack/Teams**: Daily communication and quick questions
+- **GitHub Issues**: Feature requests and bug reports
+- **Pull Requests**: Code review and discussion
+- **Regular Meetings**: Sprint planning and retrospectives
 
-#### 尋求幫助的最佳實踐
-1. **先自己嘗試解決**: 查閱文檔、搜尋相關資源
-2. **準備具體問題**: 包含錯誤訊息、重現步驟、預期結果
-3. **選擇合適管道**: 緊急問題用即時通訊，複雜問題建立 Issue
-4. **分享解決方案**: 將學到的知識回饋給團隊
+#### Best Practices for Seeking Help
+1. **Try to solve first**: Check documentation, search relevant resources
+2. **Prepare specific questions**: Include error messages, reproduction steps, expected results
+3. **Choose appropriate channel**: Use instant messaging for urgent issues, create Issues for complex problems
+4. **Share solutions**: Give back knowledge learned to the team
 
-#### 知識分享
-- **技術分享會**: 定期分享新技術和最佳實踐
-- **程式碼審查**: 透過審查學習和教學
-- **文檔貢獻**: 改進和更新專案文檔
-- **導師制度**: 資深開發者指導新成員
+#### Knowledge Sharing
+- **Tech Talks**: Regular sharing of new technologies and best practices
+- **Code Reviews**: Learning and teaching through reviews
+- **Documentation Contributions**: Improve and update project documentation
+- **Mentorship**: Senior developers guide new members
 
-## 🎉 完成第一次貢獻後的下一步
+## 🎉 Next Steps After First Contribution
 
-### 慶祝成就
-恭喜你完成了第一次貢獻！這是一個重要的里程碑。
+### Celebrate Achievement
+Congratulations on completing your first contribution! This is an important milestone.
 
-### 持續改進
-- **反思學習**: 回顧開發過程中的挑戰和收穫
-- **收集回饋**: 從程式碼審查中學習改進點
-- **設定目標**: 為下一個貢獻設定更具挑戰性的目標
+### Continuous Improvement
+- **Reflect on Learning**: Review challenges and gains from the development process
+- **Collect Feedback**: Learn improvement points from code reviews
+- **Set Goals**: Set more challenging goals for next contribution
 
-### 進階貢獻機會
-- **功能開發**: 參與更複雜的功能實作
-- **架構改進**: 提出和實作架構優化
-- **效能優化**: 識別和解決效能瓶頸
-- **導師角色**: 幫助其他新成員入門
+### Advanced Contribution Opportunities
+- **Feature Development**: Participate in more complex feature implementation
+- **Architecture Improvements**: Propose and implement architecture optimizations
+- **Performance Optimization**: Identify and resolve performance bottlenecks
+- **Mentorship Role**: Help other new members get started
 
-### 專業發展
-- **技能提升**: 深入學習特定技術領域
-- **認證考試**: 考慮相關的技術認證
-- **會議參與**: 參加技術會議和研討會
-- **開源貢獻**: 參與其他開源專案
+### Professional Development
+- **Skill Enhancement**: Deep dive into specific technical areas
+- **Certification Exams**: Consider relevant technical certifications
+- **Conference Participation**: Attend technical conferences and seminars
+- **Open Source Contribution**: Participate in other open source projects
 
 ---
 
-**下一步**: [編碼標準與規範](coding-standards.md) →
+**Next Step**: [Coding Standards and Guidelines](coding-standards.md) →
 
-> 💡 **提示**: 記住，每個專家都曾經是初學者。不要害怕提問，團隊很樂意幫助你成長。持續學習和實踐是成為優秀開發者的關鍵！
+> 💡 **Tip**: Remember, every expert was once a beginner. Don't be afraid to ask questions - the team is happy to help you grow. Continuous learning and practice are key to becoming an excellent developer!
 
-> 🎯 **目標**: 通過這份指南，你應該能夠獨立設置開發環境、理解專案結構、遵循開發標準，並成功完成你的第一次程式碼貢獻。
+> 🎯 **Goal**: Through this guide, you should be able to independently set up the development environment, understand the project structure, follow development standards, and successfully complete your first code contribution.

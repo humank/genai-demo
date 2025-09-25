@@ -1,96 +1,96 @@
 # MSK Operations Runbook
 
-**文檔版本**: 2.0  
-**最後更新**: 2025年9月24日 下午10:20 (台北時間)  
-**負責團隊**: 運營團隊 + SRE 團隊
+**Document Version**: 2.0  
+**Last Updated**: September 24, 2025 10:20 PM (Taipei Time)  
+**Responsible Team**: Operations Team + SRE Team
 
-## 📋 概述
+## 📋 Overview
 
-本運營手冊提供 MSK (Amazon Managed Streaming for Apache Kafka) 集群的完整運營指南，包括事件響應程序、升級路徑、監控程序、容量規劃和故障排除指南。
+This operations runbook provides a complete operational guide for MSK (Amazon Managed Streaming for Apache Kafka) clusters, including incident response procedures, escalation paths, monitoring procedures, capacity planning, and troubleshooting guides.
 
-## 🚨 事件響應程序
+## 🚨 Incident Response Procedures
 
-### 緊急事件分級
+### Emergency Incident Classification
 
-#### P0 - 緊急 (Emergency) 🔴
-**影響**: 服務完全不可用，影響所有用戶  
-**響應時間**: 立即 (< 5 分鐘)  
-**通知方式**: 電話 + SMS + PagerDuty
+#### P0 - Emergency 🔴
+**Impact**: Complete service unavailability, affecting all users  
+**Response Time**: Immediate (< 5 minutes)  
+**Notification Method**: Phone + SMS + PagerDuty
 
-**觸發條件**:
-- MSK 集群完全離線
-- 所有分區離線 (OfflinePartitionsCount > 0)
-- 無活躍控制器 (ActiveControllerCount = 0)
-- 資料遺失事件
+**Trigger Conditions**:
+- MSK cluster completely offline
+- All partitions offline (OfflinePartitionsCount > 0)
+- No active controller (ActiveControllerCount = 0)
+- Data loss events
 
-**響應程序**:
+**Response Procedure**:
 ```bash
-# 1. 立即評估影響範圍
+# 1. Immediately assess impact scope
 kubectl get pods -n kafka-system
 aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN
 
-# 2. 檢查集群狀態
+# 2. Check cluster status
 aws kafka list-clusters --query 'ClusterInfoList[0].State'
 
-# 3. 如果集群狀態異常，啟動災難恢復
+# 3. If cluster status is abnormal, initiate disaster recovery
 ./scripts/disaster-recovery/initiate-failover.sh
 
-# 4. 通知利害關係人
+# 4. Notify stakeholders
 ./scripts/notifications/send-emergency-alert.sh "MSK P0 Event"
 ```
 
-#### P1 - 嚴重 (Critical) 🟠
-**影響**: 服務功能受限，部分用戶受影響  
-**響應時間**: 15 分鐘內  
-**通知方式**: PagerDuty + Slack
+#### P1 - Critical 🟠
+**Impact**: Limited service functionality, some users affected  
+**Response Time**: Within 15 minutes  
+**Notification Method**: PagerDuty + Slack
 
-**觸發條件**:
-- 消費者延遲 > 5 分鐘 (EstimatedMaxTimeLag > 300000ms)
-- 未複製分區 > 0 (UnderReplicatedPartitions > 0)
-- 生產者錯誤率 > 1%
+**Trigger Conditions**:
+- Consumer lag > 5 minutes (EstimatedMaxTimeLag > 300000ms)
+- Under-replicated partitions > 0 (UnderReplicatedPartitions > 0)
+- Producer error rate > 1%
 - Broker CPU > 90%
 
-**響應程序**:
+**Response Procedure**:
 ```bash
-# 1. 檢查消費者延遲
+# 1. Check consumer lag
 aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN \
   --query 'ClusterInfo.CurrentBrokerSoftwareInfo'
 
-# 2. 分析消費者群組狀態
+# 2. Analyze consumer group status
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --all-groups
 
-# 3. 檢查分區分佈
+# 3. Check partition distribution
 kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --under-replicated-partitions
 
-# 4. 如需要，觸發自動擴展
+# 4. If needed, trigger auto-scaling
 ./scripts/scaling/auto-scale-consumers.sh
 ```
 
-#### P2 - 警告 (Warning) 🟡
-**影響**: 效能下降，無用戶影響  
-**響應時間**: 1 小時內  
-**通知方式**: Slack + Email
+#### P2 - Warning 🟡
+**Impact**: Performance degradation, no user impact  
+**Response Time**: Within 1 hour  
+**Notification Method**: Slack + Email
 
-**觸發條件**:
-- 消費者延遲 > 1 分鐘
+**Trigger Conditions**:
+- Consumer lag > 1 minute
 - Broker CPU > 70%
-- 磁碟使用率 > 80%
-- 生產者錯誤率 > 0.1%
+- Disk usage > 80%
+- Producer error rate > 0.1%
 
-### 升級路徑和程序
+### Escalation Paths and Procedures
 
-#### 事件升級矩陣
+#### Incident Escalation Matrix
 ```
-時間經過    P0 → P1 → P2
-15 分鐘     自動升級到 P1
-30 分鐘     自動升級到 P0
-1 小時      升級到管理層
-2 小時      CEO/CTO 通知
+Time Elapsed    P0 → P1 → P2
+15 minutes      Auto-escalate to P1
+30 minutes      Auto-escalate to P0
+1 hour          Escalate to management
+2 hours         CEO/CTO notification
 ```
 
-#### 升級聯絡人
+#### Escalation Contacts
 ```yaml
 Primary On-Call:
   - SRE Team Lead: +886-xxx-xxx-xxx
@@ -105,13 +105,13 @@ Executive Escalation:
   - CTO: +886-xxx-xxx-xxx
 ```
 
-## 📊 監控程序
+## 📊 Monitoring Procedures
 
-### 監控儀表板檢查清單
+### Monitoring Dashboard Checklist
 
-#### 每日檢查 (Daily Health Check)
-**執行時間**: 每日上午 9:00  
-**負責人**: 值班 SRE
+#### Daily Checks (Daily Health Check)
+**Execution Time**: Daily at 9:00 AM  
+**Responsible**: On-duty SRE
 
 ```bash
 #!/bin/bash
@@ -119,38 +119,38 @@ Executive Escalation:
 
 echo "=== MSK Daily Health Check $(date) ==="
 
-# 1. 集群整體健康
+# 1. Overall cluster health
 echo "1. Cluster Health:"
 aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN \
   --query 'ClusterInfo.State'
 
-# 2. Broker 狀態
+# 2. Broker status
 echo "2. Broker Status:"
 aws kafka list-nodes --cluster-arn $MSK_CLUSTER_ARN \
   --query 'NodeInfoList[*].[NodeARN,BrokerNodeInfo.BrokerId,BrokerNodeInfo.ClientSubnet]'
 
-# 3. 主題健康檢查
+# 3. Topic health check
 echo "3. Topic Health:"
 kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS --list | wc -l
 echo "Total topics count"
 
-# 4. 消費者群組狀態
+# 4. Consumer group status
 echo "4. Consumer Groups:"
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --list | wc -l
 echo "Active consumer groups"
 
-# 5. 效能指標檢查
+# 5. Performance metrics check
 echo "5. Performance Metrics:"
 curl -s "http://localhost:8080/actuator/msk-health" | jq '.overall_healthy'
 
-# 6. 生成報告
+# 6. Generate report
 echo "Daily health check completed at $(date)" >> /var/log/msk-health.log
 ```
 
-#### 每週檢查 (Weekly Review)
-**執行時間**: 每週一上午 10:00  
-**負責人**: 平台團隊
+#### Weekly Checks (Weekly Review)
+**Execution Time**: Weekly Monday at 10:00 AM  
+**Responsible**: Platform Team
 
 ```bash
 #!/bin/bash
@@ -158,7 +158,7 @@ echo "Daily health check completed at $(date)" >> /var/log/msk-health.log
 
 echo "=== MSK Weekly Review $(date) ==="
 
-# 1. 容量趨勢分析
+# 1. Capacity trend analysis
 echo "1. Capacity Trends:"
 aws cloudwatch get-metric-statistics \
   --namespace AWS/Kafka \
@@ -168,7 +168,7 @@ aws cloudwatch get-metric-statistics \
   --period 86400 \
   --statistics Average
 
-# 2. 效能趨勢
+# 2. Performance trends
 echo "2. Performance Trends:"
 aws cloudwatch get-metric-statistics \
   --namespace AWS/Kafka \
@@ -178,7 +178,7 @@ aws cloudwatch get-metric-statistics \
   --period 3600 \
   --statistics Maximum
 
-# 3. 錯誤率分析
+# 3. Error rate analysis
 echo "3. Error Rate Analysis:"
 aws cloudwatch get-metric-statistics \
   --namespace AWS/Kafka \
@@ -188,7 +188,7 @@ aws cloudwatch get-metric-statistics \
   --period 3600 \
   --statistics Sum
 
-# 4. 成本分析
+# 4. Cost analysis
 echo "4. Cost Analysis:"
 aws ce get-cost-and-usage \
   --time-period Start=$(date -d '7 days ago' +%Y-%m-%d),End=$(date +%Y-%m-%d) \
@@ -198,28 +198,28 @@ aws ce get-cost-and-usage \
   --filter file://msk-cost-filter.json
 ```
 
-### 警報閾值配置
+### Alert Threshold Configuration
 
-#### 關鍵指標閾值
+#### Critical Metric Thresholds
 ```yaml
 Critical Thresholds:
-  offline_partitions: 0          # 任何離線分區都是緊急事件
-  under_replicated_partitions: 0 # 任何未複製分區都是嚴重事件
-  consumer_lag_ms: 300000        # 5 分鐘延遲為嚴重事件
-  broker_cpu_percent: 90         # CPU 90% 為嚴重事件
-  broker_memory_percent: 90      # 記憶體 90% 為嚴重事件
-  disk_usage_percent: 85         # 磁碟 85% 為嚴重事件
+  offline_partitions: 0          # Any offline partition is an emergency
+  under_replicated_partitions: 0 # Any under-replicated partition is critical
+  consumer_lag_ms: 300000        # 5-minute lag is critical
+  broker_cpu_percent: 90         # 90% CPU is critical
+  broker_memory_percent: 90      # 90% memory is critical
+  disk_usage_percent: 85         # 85% disk is critical
 
 Warning Thresholds:
-  consumer_lag_ms: 60000         # 1 分鐘延遲為警告
-  broker_cpu_percent: 70         # CPU 70% 為警告
-  broker_memory_percent: 80      # 記憶體 80% 為警告
-  disk_usage_percent: 80         # 磁碟 80% 為警告
-  producer_error_rate: 0.001     # 0.1% 錯誤率為警告
-  network_io_percent: 60         # 網路 I/O 60% 為警告
+  consumer_lag_ms: 60000         # 1-minute lag is warning
+  broker_cpu_percent: 70         # 70% CPU is warning
+  broker_memory_percent: 80      # 80% memory is warning
+  disk_usage_percent: 80         # 80% disk is warning
+  producer_error_rate: 0.001     # 0.1% error rate is warning
+  network_io_percent: 60         # 60% network I/O is warning
 ```
 
-#### 警報響應動作
+#### Alert Response Actions
 ```yaml
 Alert Actions:
   Critical:
@@ -235,16 +235,16 @@ Alert Actions:
     - Auto-remediation: Enabled
 ```
 
-## 📈 容量規劃指南
+## 📈 Capacity Planning Guide
 
-### 容量監控指標
+### Capacity Monitoring Metrics
 
-#### 1. 儲存容量規劃
+#### 1. Storage Capacity Planning
 ```bash
 #!/bin/bash
 # storage-capacity-planning.sh
 
-# 當前儲存使用率
+# Current storage usage
 CURRENT_USAGE=$(aws cloudwatch get-metric-statistics \
   --namespace AWS/Kafka \
   --metric-name KafkaDataLogsDiskUsed \
@@ -256,11 +256,11 @@ CURRENT_USAGE=$(aws cloudwatch get-metric-statistics \
 
 echo "Current storage usage: ${CURRENT_USAGE}%"
 
-# 預測未來 30 天使用量
+# Predict future 30-day usage
 if (( $(echo "$CURRENT_USAGE > 70" | bc -l) )); then
   echo "WARNING: Storage usage > 70%, consider scaling up"
   
-  # 計算預計滿載時間
+  # Calculate estimated time to full capacity
   GROWTH_RATE=$(calculate_growth_rate.py --days 30)
   DAYS_TO_FULL=$(echo "scale=0; (100 - $CURRENT_USAGE) / $GROWTH_RATE" | bc)
   
@@ -273,7 +273,7 @@ if (( $(echo "$CURRENT_USAGE > 70" | bc -l) )); then
 fi
 ```
 
-#### 2. 計算容量規劃
+#### 2. Capacity Planning Calculations
 ```python
 #!/usr/bin/env python3
 # capacity-planning.py
@@ -285,7 +285,7 @@ import numpy as np
 def calculate_capacity_requirements():
     cloudwatch = boto3.client('cloudwatch')
     
-    # 獲取過去 30 天的指標
+    # Get metrics for the past 30 days
     end_time = datetime.utcnow()
     start_time = end_time - timedelta(days=30)
     
@@ -296,7 +296,7 @@ def calculate_capacity_requirements():
         'memory': get_metric_data('MemoryUsed', start_time, end_time)
     }
     
-    # 計算趨勢和預測
+    # Calculate trends and predictions
     predictions = {}
     for metric_name, data in metrics.items():
         trend = calculate_trend(data)
@@ -307,7 +307,7 @@ def calculate_capacity_requirements():
             'predicted_90_days': prediction
         }
     
-    # 生成容量建議
+    # Generate capacity recommendations
     recommendations = generate_capacity_recommendations(predictions)
     
     return {
@@ -319,7 +319,7 @@ def calculate_capacity_requirements():
 def generate_capacity_recommendations(predictions):
     recommendations = []
     
-    # 儲存建議
+    # Storage recommendations
     if predictions['storage']['predicted_90_days'] > 80:
         recommendations.append({
             'type': 'storage_scaling',
@@ -328,7 +328,7 @@ def generate_capacity_recommendations(predictions):
             'timeline': '30 days'
         })
     
-    # CPU 建議
+    # CPU recommendations
     if predictions['cpu']['predicted_90_days'] > 70:
         recommendations.append({
             'type': 'compute_scaling',
@@ -337,8 +337,8 @@ def generate_capacity_recommendations(predictions):
             'timeline': '60 days'
         })
     
-    # 吞吐量建議
-    if predictions['throughput']['trend'] > 0.1:  # 10% 增長
+    # Throughput recommendations
+    if predictions['throughput']['trend'] > 0.1:  # 10% growth
         recommendations.append({
             'type': 'partition_scaling',
             'priority': 'medium',
@@ -353,9 +353,9 @@ if __name__ == "__main__":
     print(json.dumps(results, indent=2))
 ```
 
-### 擴展觸發器
+### Scaling Triggers
 
-#### 自動擴展配置
+#### Auto-scaling Configuration
 ```yaml
 Auto Scaling Triggers:
   Broker Scaling:
@@ -375,7 +375,7 @@ Auto Scaling Triggers:
     partition_increment: 4
 ```
 
-#### 手動擴展程序
+#### Manual Scaling Procedures
 ```bash
 #!/bin/bash
 # manual-scaling-procedure.sh
@@ -385,19 +385,19 @@ function scale_brokers() {
   
   echo "Scaling MSK cluster to $target_count brokers..."
   
-  # 1. 更新 CDK 配置
+  # 1. Update CDK configuration
   sed -i "s/numberOfBrokerNodes: [0-9]*/numberOfBrokerNodes: $target_count/" \
     infrastructure/src/stacks/msk-stack.ts
   
-  # 2. 部署更新
+  # 2. Deploy update
   cd infrastructure
   cdk deploy MSKStack --require-approval never
   
-  # 3. 等待擴展完成
+  # 3. Wait for scaling completion
   aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN \
     --query 'ClusterInfo.NumberOfBrokerNodes'
   
-  # 4. 驗證集群健康
+  # 4. Verify cluster health
   ./scripts/health-check/verify-cluster-health.sh
   
   echo "Broker scaling completed"
@@ -408,12 +408,12 @@ function scale_storage() {
   
   echo "Scaling storage to ${new_size_gb}GB per broker..."
   
-  # 1. 創建擴展請求
+  # 1. Create scaling request
   aws kafka update-broker-storage \
     --cluster-arn $MSK_CLUSTER_ARN \
     --target-broker-ebs-volume-info VolumeSize=$new_size_gb
   
-  # 2. 監控擴展進度
+  # 2. Monitor scaling progress
   while true; do
     status=$(aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN \
       --query 'ClusterInfo.State' --output text)
@@ -429,45 +429,45 @@ function scale_storage() {
 }
 ```
 
-## 🔧 故障排除指南
+## 🔧 Troubleshooting Guide
 
-### 常見問題診斷
+### Common Issue Diagnosis
 
-#### 1. 消費者延遲問題
+#### 1. Consumer Lag Issues
 ```bash
 #!/bin/bash
 # diagnose-consumer-lag.sh
 
 echo "=== Consumer Lag Diagnosis ==="
 
-# 檢查所有消費者群組
+# Check all consumer groups
 echo "1. Consumer Groups Overview:"
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --all-groups | grep -E "(GROUP|LAG)"
 
-# 識別延遲最嚴重的群組
+# Identify most lagging groups
 echo "2. Top Lagging Consumer Groups:"
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --all-groups | sort -k5 -nr | head -10
 
-# 檢查特定群組詳細資訊
+# Check specific group details
 read -p "Enter consumer group to analyze: " GROUP_ID
 echo "3. Detailed Analysis for $GROUP_ID:"
 
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --group $GROUP_ID
 
-# 檢查消費者實例
+# Check consumer instances
 echo "4. Consumer Instances:"
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --group $GROUP_ID --members
 
-# 分析分區分佈
+# Analyze partition distribution
 echo "5. Partition Distribution:"
 kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --group $GROUP_ID --members --verbose
 
-# 建議解決方案
+# Suggest solutions
 echo "6. Recommendations:"
 LAG=$(kafka-consumer-groups.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --group $GROUP_ID | awk '{sum += $5} END {print sum}')
@@ -479,36 +479,36 @@ if (( LAG > 10000 )); then
 fi
 ```
 
-#### 2. 生產者效能問題
+#### 2. Producer Performance Issues
 ```bash
 #!/bin/bash
 # diagnose-producer-performance.sh
 
 echo "=== Producer Performance Diagnosis ==="
 
-# 檢查生產者指標
+# Check producer metrics
 echo "1. Producer Metrics:"
 curl -s "http://localhost:8080/actuator/msk-metrics" | \
   jq '.throughput'
 
-# 檢查批次配置
+# Check batch configuration
 echo "2. Producer Configuration:"
 curl -s "http://localhost:8080/actuator/configprops" | \
   jq '.kafka.producer'
 
-# 分析錯誤模式
+# Analyze error patterns
 echo "3. Error Analysis:"
 curl -s "http://localhost:8080/actuator/msk-errors" | \
   jq '.error_stats'
 
-# 檢查網路延遲
+# Check network latency
 echo "4. Network Latency Test:"
 for broker in $(echo $BOOTSTRAP_SERVERS | tr ',' ' '); do
   echo "Testing $broker:"
   nc -zv ${broker%:*} ${broker#*:}
 done
 
-# 建議優化
+# Suggest optimizations
 echo "5. Optimization Recommendations:"
 echo "- Check batch.size and linger.ms configuration"
 echo "- Verify compression.type setting"
@@ -516,25 +516,25 @@ echo "- Monitor buffer.memory usage"
 echo "- Check for DNS resolution issues"
 ```
 
-#### 3. 分區不平衡問題
+#### 3. Partition Imbalance Issues
 ```bash
 #!/bin/bash
 # diagnose-partition-imbalance.sh
 
 echo "=== Partition Imbalance Diagnosis ==="
 
-# 檢查主題分區分佈
+# Check topic partition distribution
 echo "1. Topic Partition Distribution:"
 kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe | grep -E "(Topic:|Leader:)" | \
   awk '/Leader:/ {print $2, $4}' | sort | uniq -c
 
-# 檢查 Broker 負載分佈
+# Check broker load distribution
 echo "2. Broker Load Distribution:"
 kafka-log-dirs.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --describe --json | jq -r '.brokers[].logDirs[].partitions | length'
 
-# 分析分區大小
+# Analyze partition sizes
 echo "3. Partition Size Analysis:"
 for topic in $(kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS --list); do
   echo "Topic: $topic"
@@ -543,23 +543,23 @@ for topic in $(kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS --list); do
     jq -r '.brokers[].logDirs[].partitions[] | "\(.partition): \(.size) bytes"'
 done
 
-# 重新平衡建議
+# Rebalancing recommendations
 echo "4. Rebalancing Recommendations:"
 echo "- Use kafka-reassign-partitions.sh for manual rebalancing"
 echo "- Consider using Cruise Control for automated rebalancing"
 echo "- Monitor rebalancing impact on performance"
 ```
 
-### 效能調優指南
+### Performance Tuning Guide
 
-#### 1. Broker 調優
+#### 1. Broker Tuning
 ```bash
 #!/bin/bash
 # broker-tuning.sh
 
 echo "=== Broker Performance Tuning ==="
 
-# JVM 調優建議
+# JVM tuning recommendations
 echo "1. JVM Tuning Recommendations:"
 cat << EOF
 # Kafka Broker JVM Settings
@@ -567,7 +567,7 @@ export KAFKA_HEAP_OPTS="-Xmx6g -Xms6g"
 export KAFKA_JVM_PERFORMANCE_OPTS="-server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -Djava.awt.headless=true"
 EOF
 
-# OS 調優建議
+# OS tuning recommendations
 echo "2. OS Tuning Recommendations:"
 cat << EOF
 # File descriptor limits
@@ -581,7 +581,7 @@ echo "vm.dirty_ratio=60" >> /etc/sysctl.conf
 echo "vm.dirty_expire_centisecs=12000" >> /etc/sysctl.conf
 EOF
 
-# 網路調優
+# Network tuning
 echo "3. Network Tuning:"
 cat << EOF
 # TCP settings
@@ -592,7 +592,7 @@ echo "net.core.wmem_max = 16777216" >> /etc/sysctl.conf
 EOF
 ```
 
-#### 2. 主題配置調優
+#### 2. Topic Configuration Tuning
 ```bash
 #!/bin/bash
 # topic-tuning.sh
@@ -603,18 +603,18 @@ function optimize_topic() {
   
   echo "Optimizing topic: $topic for $throughput_requirement msgs/sec"
   
-  # 計算建議分區數
+  # Calculate recommended partition count
   local partitions=$(( throughput_requirement / 1000 + 1 ))
   if (( partitions < 3 )); then
     partitions=3
   fi
   
-  # 更新主題配置
+  # Update topic configuration
   kafka-configs.sh --bootstrap-server $BOOTSTRAP_SERVERS \
     --entity-type topics --entity-name $topic --alter \
     --add-config "segment.ms=604800000,retention.ms=604800000,compression.type=gzip"
   
-  # 增加分區（如果需要）
+  # Increase partitions (if needed)
   current_partitions=$(kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS \
     --describe --topic $topic | grep "PartitionCount" | awk '{print $4}')
   
@@ -625,18 +625,18 @@ function optimize_topic() {
   fi
 }
 
-# 批次優化所有業務主題
+# Batch optimize all business topics
 for topic in $(kafka-topics.sh --bootstrap-server $BOOTSTRAP_SERVERS \
   --list | grep "business-events"); do
   optimize_topic $topic 5000
 done
 ```
 
-## 🔄 備份和災難恢復
+## 🔄 Backup and Disaster Recovery
 
-### 備份策略
+### Backup Strategy
 
-#### 1. 自動備份配置
+#### 1. Automated Backup Configuration
 ```yaml
 Backup Configuration:
   type: "cross_region_replication"
@@ -654,20 +654,20 @@ Backup Configuration:
     disaster_recovery: "continuous"
 ```
 
-#### 2. 備份驗證程序
+#### 2. Backup Verification Procedures
 ```bash
 #!/bin/bash
 # backup-verification.sh
 
 echo "=== Backup Verification $(date) ==="
 
-# 1. 檢查跨區域複製狀態
+# 1. Check cross-region replication status
 echo "1. Cross-Region Replication Status:"
 aws kafka describe-replication \
   --replication-arn $REPLICATION_ARN \
   --query 'ReplicationInfo.ReplicationState'
 
-# 2. 驗證主題同步
+# 2. Verify topic synchronization
 echo "2. Topic Synchronization:"
 PRIMARY_TOPICS=$(kafka-topics.sh --bootstrap-server $PRIMARY_BOOTSTRAP \
   --list | sort)
@@ -676,7 +676,7 @@ BACKUP_TOPICS=$(kafka-topics.sh --bootstrap-server $BACKUP_BOOTSTRAP \
 
 diff <(echo "$PRIMARY_TOPICS") <(echo "$BACKUP_TOPICS")
 
-# 3. 檢查消費者群組偏移量
+# 3. Check consumer group offsets
 echo "3. Consumer Group Offsets:"
 for group in $(kafka-consumer-groups.sh --bootstrap-server $PRIMARY_BOOTSTRAP \
   --list); do
@@ -698,9 +698,9 @@ for group in $(kafka-consumer-groups.sh --bootstrap-server $PRIMARY_BOOTSTRAP \
 done
 ```
 
-### 災難恢復程序
+### Disaster Recovery Procedures
 
-#### RTO/RPO 目標
+#### RTO/RPO Targets
 ```yaml
 Recovery Objectives:
   RTO: "< 5 minutes"    # Recovery Time Objective
@@ -712,7 +712,7 @@ Service Level Targets:
   max_downtime_per_month: "43.2 minutes"
 ```
 
-#### 災難恢復執行程序
+#### Disaster Recovery Execution Procedures
 ```bash
 #!/bin/bash
 # disaster-recovery-execution.sh
@@ -742,22 +742,22 @@ function execute_disaster_recovery() {
 function execute_primary_cluster_failover() {
   echo "1. Stopping primary cluster traffic..."
   
-  # 更新 DNS 記錄指向備用集群
+  # Update DNS records to point to backup cluster
   aws route53 change-resource-record-sets \
     --hosted-zone-id $HOSTED_ZONE_ID \
     --change-batch file://failover-dns-change.json
   
-  # 更新應用程式配置
+  # Update application configuration
   kubectl patch configmap kafka-config \
     --patch '{"data":{"bootstrap.servers":"'$BACKUP_BOOTSTRAP_SERVERS'"}}'
   
-  # 重啟應用程式 Pod
+  # Restart application pods
   kubectl rollout restart deployment/genai-demo-app
   
   echo "2. Verifying failover..."
   sleep 30
   
-  # 驗證應用程式連接到備用集群
+  # Verify application connected to backup cluster
   kubectl logs -l app=genai-demo-app | grep "Connected to backup cluster"
   
   echo "Primary cluster failover completed"
@@ -766,18 +766,18 @@ function execute_primary_cluster_failover() {
 function execute_cross_region_failover() {
   echo "1. Activating backup region..."
   
-  # 在備用區域部署完整基礎設施
+  # Deploy complete infrastructure in backup region
   cd infrastructure
   AWS_REGION=$BACKUP_REGION cdk deploy --all
   
-  # 更新全域負載平衡器
+  # Update global load balancer
   aws globalaccelerator update-listener \
     --listener-arn $LISTENER_ARN \
     --port-ranges FromPort=443,ToPort=443,Protocol=TCP
   
   echo "2. Migrating traffic..."
   
-  # 逐步將流量切換到備用區域
+  # Gradually shift traffic to backup region
   for weight in 25 50 75 100; do
     aws route53 change-resource-record-sets \
       --hosted-zone-id $HOSTED_ZONE_ID \
@@ -786,7 +786,7 @@ function execute_cross_region_failover() {
     echo "Traffic shifted to ${weight}% backup region"
     sleep 60
     
-    # 監控錯誤率
+    # Monitor error rate
     error_rate=$(get_error_rate.sh)
     if (( $(echo "$error_rate > 0.01" | bc -l) )); then
       echo "High error rate detected, rolling back..."
@@ -799,88 +799,88 @@ function execute_cross_region_failover() {
 }
 ```
 
-## 📋 維護程序
+## 📋 Maintenance Procedures
 
-### 定期維護任務
+### Regular Maintenance Tasks
 
-#### 每日維護 (Daily Maintenance)
+#### Daily Maintenance
 ```bash
 #!/bin/bash
 # daily-maintenance.sh
 
 echo "=== Daily MSK Maintenance $(date) ==="
 
-# 1. 健康檢查
+# 1. Health check
 ./scripts/health-check/daily-health-check.sh
 
-# 2. 日誌輪轉
+# 2. Log rotation
 find /var/log/kafka -name "*.log" -mtime +7 -delete
 
-# 3. 指標收集
+# 3. Metrics collection
 ./scripts/monitoring/collect-daily-metrics.sh
 
-# 4. 備份驗證
+# 4. Backup verification
 ./scripts/backup/verify-backup-status.sh
 
-# 5. 容量檢查
+# 5. Capacity check
 ./scripts/capacity/check-capacity-usage.sh
 
 echo "Daily maintenance completed"
 ```
 
-#### 每週維護 (Weekly Maintenance)
+#### Weekly Maintenance
 ```bash
 #!/bin/bash
 # weekly-maintenance.sh
 
 echo "=== Weekly MSK Maintenance $(date) ==="
 
-# 1. 效能分析
+# 1. Performance analysis
 ./scripts/performance/weekly-performance-analysis.sh
 
-# 2. 容量規劃
+# 2. Capacity planning
 ./scripts/capacity/weekly-capacity-planning.sh
 
-# 3. 安全掃描
+# 3. Security scan
 ./scripts/security/weekly-security-scan.sh
 
-# 4. 配置審核
+# 4. Configuration audit
 ./scripts/audit/weekly-config-audit.sh
 
-# 5. 文檔更新
+# 5. Documentation update
 ./scripts/documentation/update-runbook.sh
 
 echo "Weekly maintenance completed"
 ```
 
-#### 每月維護 (Monthly Maintenance)
+#### Monthly Maintenance
 ```bash
 #!/bin/bash
 # monthly-maintenance.sh
 
 echo "=== Monthly MSK Maintenance $(date) ==="
 
-# 1. 災難恢復測試
+# 1. Disaster recovery test
 ./scripts/dr/monthly-dr-test.sh
 
-# 2. 效能基準測試
+# 2. Performance benchmark
 ./scripts/performance/monthly-benchmark.sh
 
-# 3. 成本優化分析
+# 3. Cost optimization analysis
 ./scripts/cost/monthly-cost-analysis.sh
 
-# 4. 安全合規檢查
+# 4. Security compliance check
 ./scripts/compliance/monthly-compliance-check.sh
 
-# 5. 架構審核
+# 5. Architecture review
 ./scripts/architecture/monthly-architecture-review.sh
 
 echo "Monthly maintenance completed"
 ```
 
-### 維護窗口管理
+### Maintenance Window Management
 
-#### 維護窗口排程
+#### Maintenance Window Schedule
 ```yaml
 Maintenance Windows:
   daily:
@@ -904,7 +904,7 @@ Maintenance Windows:
     impact: "high"
 ```
 
-#### 維護通知程序
+#### Maintenance Notification Procedures
 ```bash
 #!/bin/bash
 # maintenance-notification.sh
@@ -915,7 +915,7 @@ function send_maintenance_notification() {
   local duration=$3
   local impact=$4
   
-  # 準備通知內容
+  # Prepare notification content
   cat << EOF > maintenance-notice.json
 {
   "type": "$type",
@@ -927,17 +927,17 @@ function send_maintenance_notification() {
 }
 EOF
 
-  # 發送通知
+  # Send notifications
   case $type in
     "scheduled")
-      # 提前 24 小時通知
+      # Notify 24 hours in advance
       aws sns publish \
         --topic-arn $MAINTENANCE_TOPIC_ARN \
         --message file://maintenance-notice.json \
         --subject "Scheduled MSK Maintenance - $start_time"
       ;;
     "emergency")
-      # 立即通知
+      # Immediate notification
       aws sns publish \
         --topic-arn $EMERGENCY_TOPIC_ARN \
         --message file://maintenance-notice.json \
@@ -947,47 +947,47 @@ EOF
 }
 ```
 
-## 📞 聯絡資訊和升級路徑
+## 📞 Contact Information and Escalation Paths
 
-### 團隊聯絡資訊
+### Team Contact Information
 ```yaml
 Primary Contacts:
   SRE Team Lead:
-    name: "張小明"
+    name: "John Smith"
     phone: "+886-912-345-678"
     email: "sre-lead@company.com"
     slack: "@sre-lead"
     
   Platform Engineer:
-    name: "李小華"
+    name: "Jane Doe"
     phone: "+886-987-654-321"
     email: "platform-eng@company.com"
     slack: "@platform-eng"
 
 Secondary Contacts:
   Engineering Manager:
-    name: "王大明"
+    name: "Mike Johnson"
     phone: "+886-955-123-456"
     email: "eng-manager@company.com"
     
   Architecture Lead:
-    name: "陳小美"
+    name: "Sarah Wilson"
     phone: "+886-933-789-012"
     email: "arch-lead@company.com"
 
 Executive Escalation:
   VP Engineering:
-    name: "林總監"
+    name: "Director Lin"
     phone: "+886-911-111-111"
     email: "vp-eng@company.com"
     
   CTO:
-    name: "黃技術長"
+    name: "CTO Huang"
     phone: "+886-922-222-222"
     email: "cto@company.com"
 ```
 
-### 外部供應商聯絡
+### External Vendor Contacts
 ```yaml
 AWS Support:
   support_level: "Enterprise"
@@ -1008,6 +1008,6 @@ Monitoring Vendor:
 
 ---
 
-**文檔維護**: 本運營手冊每月更新一次  
-**下次審核**: 2025年10月24日  
-**緊急聯絡**: ops-team@company.com | +886-911-MSK-OPS (911-675-677)
+**Document Maintenance**: This operations runbook is updated monthly  
+**Next Review**: October 24, 2025  
+**Emergency Contact**: ops-team@company.com | +886-911-MSK-OPS (911-675-677)

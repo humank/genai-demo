@@ -1,136 +1,136 @@
-# API 版本管理策略
+# API Versioning Strategy
 
-## 概述
+## Overview
 
-本文檔定義了 GenAI Demo 專案的 API 版本管理策略，確保 API 的向後相容性和平滑升級。
+This document defines the API versioning strategy for the GenAI Demo project, ensuring backward compatibility and smooth API upgrades.
 
-## 版本控制方案
+## Version Control Scheme
 
-### 1. 版本號格式
+### 1. Version Number Format
 
-採用語義化版本控制 (Semantic Versioning)：`MAJOR.MINOR.PATCH`
+Adopts Semantic Versioning: `MAJOR.MINOR.PATCH`
 
-- **MAJOR**: 不相容的 API 變更
-- **MINOR**: 向後相容的功能新增
-- **PATCH**: 向後相容的問題修正
+- **MAJOR**: Incompatible API changes
+- **MINOR**: Backward-compatible functionality additions
+- **PATCH**: Backward-compatible bug fixes
 
-### 2. 版本控制方式
+### 2. Version Control Methods
 
-#### URL 路徑版本控制 (主要方式)
+#### URL Path Versioning (Primary Method)
 
 ```
-/../api/v1/products
+/api/v1/products
 /api/v2/products
 ```
 
-#### HTTP Header 版本控制 (備用方式)
+#### HTTP Header Versioning (Alternative Method)
 
 ```http
 Accept: application/vnd.genaidemo.v1+json
 API-Version: v1
 ```
 
-## API 分組和版本
+## API Grouping and Versioning
 
-### 消費者 API (Consumer API)
+### Consumer API
 
-- **基礎路徑**: `/../api/consumer/v1/`
-- **目標用戶**: 終端消費者
-- **版本策略**: 嚴格向後相容，長期支援
-
-```
-/api/consumer/v1/products          # 商品瀏覽
-/api/consumer/v1/shopping-cart     # 購物車
-/api/consumer/v1/promotions        # 促銷活動
-/api/consumer/v1/member            # 會員功能
-/api/consumer/v1/reviews           # 商品評價
-/api/consumer/v1/recommendations   # 推薦系統
-/api/consumer/v1/notifications     # 通知系統
-/api/consumer/v1/delivery-tracking # 配送追蹤
-```
-
-### 商務 API (Business API)
-
-- **基礎路徑**: `/../api/business/v1/`
-- **目標用戶**: 商務管理人員
-- **版本策略**: 快速迭代，定期升級
+- **Base Path**: `/api/consumer/v1/`
+- **Target Users**: End consumers
+- **Version Strategy**: Strict backward compatibility, long-term support
 
 ```
-/api/business/v1/orders      # 訂單管理
-/api/business/v1/products    # 商品管理
-/api/business/v1/customers   # 客戶管理
-/api/business/v1/inventory   # 庫存管理
-/api/business/v1/pricing     # 定價管理
-/api/business/v1/stats       # 統計分析
+/api/consumer/v1/products          # Product browsing
+/api/consumer/v1/shopping-cart     # Shopping cart
+/api/consumer/v1/promotions        # Promotional activities
+/api/consumer/v1/member            # Member functions
+/api/consumer/v1/reviews           # Product reviews
+/api/consumer/v1/recommendations   # Recommendation system
+/api/consumer/v1/notifications     # Notification system
+/api/consumer/v1/delivery-tracking # Delivery tracking
 ```
 
-### 內部 API (Internal API)
+### Business API
 
-- **基礎路徑**: `/../api/internal/v1/`
-- **目標用戶**: 內部系統整合
-- **版本策略**: 靈活變更，內部協調
+- **Base Path**: `/api/business/v1/`
+- **Target Users**: Business management personnel
+- **Version Strategy**: Rapid iteration, regular upgrades
 
-## 版本生命週期
+```
+/api/business/v1/orders      # Order management
+/api/business/v1/products    # Product management
+/api/business/v1/customers   # Customer management
+/api/business/v1/inventory   # Inventory management
+/api/business/v1/pricing     # Pricing management
+/api/business/v1/stats       # Statistical analysis
+```
 
-### 1. 版本支援期
+### Internal API
 
-| 版本類型 | 支援期 | 棄用通知期 |
-|---------|--------|-----------|
-| 消費者 API | 24 個月 | 6 個月 |
-| 商務 API | 12 個月 | 3 個月 |
-| 內部 API | 6 個月 | 1 個月 |
+- **Base Path**: `/api/internal/v1/`
+- **Target Users**: Internal system integration
+- **Version Strategy**: Flexible changes, internal coordination
 
-### 2. 版本狀態
+## Version Lifecycle
 
-- **CURRENT**: 目前版本，積極開發和維護
-- **SUPPORTED**: 支援版本，僅修復重大問題
-- **DEPRECATED**: 棄用版本，計劃移除
-- **RETIRED**: 已退役版本，不再支援
+### 1. Version Support Period
 
-## 變更管理
+| Version Type | Support Period | Deprecation Notice Period |
+|-------------|----------------|---------------------------|
+| Consumer API | 24 months | 6 months |
+| Business API | 12 months | 3 months |
+| Internal API | 6 months | 1 month |
 
-### 1. 向後相容的變更 (MINOR/PATCH)
+### 2. Version Status
 
-✅ **允許的變更**：
+- **CURRENT**: Current version, actively developed and maintained
+- **SUPPORTED**: Supported version, only critical issues fixed
+- **DEPRECATED**: Deprecated version, planned for removal
+- **RETIRED**: Retired version, no longer supported
 
-- 新增 API 端點
-- 新增可選參數
-- 新增回應欄位
-- 修復錯誤
-- 效能改善
+## Change Management
 
-### 2. 不相容的變更 (MAJOR)
+### 1. Backward Compatible Changes (MINOR/PATCH)
 
-❌ **需要新版本的變更**：
+✅ **Allowed Changes**:
 
-- 移除 API 端點
-- 移除請求/回應欄位
-- 變更欄位類型
-- 變更錯誤碼
-- 變更認證方式
+- Add new API endpoints
+- Add optional parameters
+- Add response fields
+- Bug fixes
+- Performance improvements
 
-### 3. 變更通知流程
+### 2. Incompatible Changes (MAJOR)
 
-1. **提案階段**: 在 GitHub Issues 中提出變更提案
-2. **評估階段**: 技術團隊評估影響範圍
-3. **通知階段**: 提前通知 API 使用者
-4. **實施階段**: 發布新版本
-5. **監控階段**: 監控使用情況和問題
+❌ **Changes Requiring New Version**:
 
-## 實作細節
+- Remove API endpoints
+- Remove request/response fields
+- Change field types
+- Change error codes
+- Change authentication methods
 
-### 1. Spring Boot 配置
+### 3. Change Notification Process
+
+1. **Proposal Stage**: Submit change proposal in GitHub Issues
+2. **Assessment Stage**: Technical team assesses impact scope
+3. **Notification Stage**: Notify API users in advance
+4. **Implementation Stage**: Release new version
+5. **Monitoring Stage**: Monitor usage and issues
+
+## Implementation Details
+
+### 1. Spring Boot Configuration
 
 ```java
 @RestController
-@RequestMapping("/../api/consumer/v1")
-@Tag(name = "Consumer API v1", description = "消費者 API 第一版")
+@RequestMapping("/api/consumer/v1")
+@Tag(name = "Consumer API v1", description = "Consumer API Version 1")
 public class ConsumerProductController {
-    // 實作內容
+    // Implementation content
 }
 ```
 
-### 2. OpenAPI 文檔配置
+### 2. OpenAPI Documentation Configuration
 
 ```yaml
 openapi: 3.0.3
@@ -138,15 +138,15 @@ info:
   title: GenAI Demo API
   version: 2.0.0
   description: |
-    GenAI Demo 電商平台 API
+    GenAI Demo E-commerce Platform API
     
-    ## 版本資訊
-    - Consumer API: v1 (穩定版)
-    - Business API: v1 (穩定版)
-    - Internal API: v1 (開發版)
+    ## Version Information
+    - Consumer API: v1 (Stable)
+    - Business API: v1 (Stable)
+    - Internal API: v1 (Development)
 ```
 
-### 3. 版本檢測中介軟體
+### 3. Version Detection Middleware
 
 ```java
 @Component
@@ -155,58 +155,58 @@ public class ApiVersionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, 
                            HttpServletResponse response, 
                            Object handler) {
-        // 版本檢測和路由邏輯
+        // Version detection and routing logic
         return true;
     }
 }
 ```
 
-## 監控和指標
+## Monitoring and Metrics
 
-### 1. 版本使用統計
+### 1. Version Usage Statistics
 
-- 各版本 API 調用次數
-- 版本分布統計
-- 棄用 API 使用情況
+- API call counts per version
+- Version distribution statistics
+- Deprecated API usage
 
-### 2. 效能監控
+### 2. Performance Monitoring
 
-- 各版本回應時間
-- 錯誤率統計
-- 使用者滿意度
+- Response times per version
+- Error rate statistics
+- User satisfaction
 
-### 3. 告警設定
+### 3. Alert Configuration
 
-- 棄用 API 使用量異常
-- 新版本錯誤率過高
-- 版本遷移進度緩慢
+- Abnormal deprecated API usage
+- High error rates in new versions
+- Slow version migration progress
 
-## 最佳實踐
+## Best Practices
 
-### 1. API 設計原則
+### 1. API Design Principles
 
-- **一致性**: 保持 API 設計風格一致
-- **可預測性**: API 行為應該可預測
-- **文檔完整**: 提供完整的 API 文檔
-- **測試覆蓋**: 確保充分的測試覆蓋
+- **Consistency**: Maintain consistent API design style
+- **Predictability**: API behavior should be predictable
+- **Complete Documentation**: Provide comprehensive API documentation
+- **Test Coverage**: Ensure adequate test coverage
 
-### 2. 版本遷移指南
+### 2. Version Migration Guide
 
-- 提供詳細的遷移文檔
-- 提供程式碼範例
-- 提供遷移工具
-- 提供技術支援
+- Provide detailed migration documentation
+- Provide code examples
+- Provide migration tools
+- Provide technical support
 
-### 3. 溝通策略
+### 3. Communication Strategy
 
-- 定期發布版本更新通知
-- 維護變更日誌
-- 提供開發者論壇
-- 舉辦技術分享會
+- Regularly publish version update notifications
+- Maintain change logs
+- Provide developer forums
+- Host technical sharing sessions
 
-## 相關文檔
+## Related Documentation
 
-- [API 文檔](./README.md)
-- [變更日誌](../releases/)
-- \1
-- \1
+- [API Documentation](./README.md)
+- [Change Log](../releases/)
+- [Frontend Integration Guide](./frontend-integration.md)
+- [Observability API Guide](./observability-api.md)

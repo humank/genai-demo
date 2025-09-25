@@ -1,76 +1,76 @@
-# Docker 容器化部署指南
+# Docker Containerized Deployment Guide
 
-## 概述
+## Overview
 
-本指南說明如何使用 Docker 部署 GenAI Demo 應用程式。我們提供了針對 ARM64 架構優化的輕量化 Docker 映像。
+This guide explains how to deploy the GenAI Demo application using Docker. We provide lightweight Docker images optimized for ARM64 architecture.
 
-## 系統需求
+## System Requirements
 
-### 硬體需求
+### Hardware Requirements
 
-- **CPU**: ARM64 架構 (Apple Silicon M1/M2/M3 或 ARM64 伺服器)
-- **記憶體**: 最少 1GB RAM (建議 2GB+)
-- **儲存空間**: 最少 2GB 可用空間
+- **CPU**: ARM64 architecture (Apple Silicon M1/M2/M3 or ARM64 servers)
+- **Memory**: Minimum 1GB RAM (2GB+ recommended)
+- **Storage**: Minimum 2GB available space
 
-### 軟體需求
+### Software Requirements
 
 - **Docker**: 20.10+
 - **Docker Compose**: 2.0+
-- **作業系統**: macOS (Apple Silicon)、Linux ARM64
+- **Operating System**: macOS (Apple Silicon), Linux ARM64
 
-## 快速開始
+## Quick Start
 
-### 1. 構建映像
+### 1. Build Image
 
 ```bash
-# 使用提供的構建腳本 (推薦)
+# Use the provided build script (recommended)
 ./docker/docker-build.sh
 
-# 或手動構建
+# Or build manually
 docker build --platform linux/arm64 -t genai-demo:latest .
 ```
 
-### 2. 啟動服務
+### 2. Start Services
 
 ```bash
-# 啟動所有服務
+# Start all services
 docker-compose up -d
 
-# 查看服務狀態
+# Check service status
 docker-compose ps
 
-# 查看日誌
+# View logs
 docker-compose logs -f genai-demo
 ```
 
-### 3. 訪問應用
+### 3. Access Application
 
-- **API 文檔**: <http://localhost:8080/swagger-ui/index.html>
-- **健康檢查**: <http://localhost:8080/actuator/health>
-- **H2 資料庫控制台**: <http://localhost:8080/h2-console>
+- **API Documentation**: <http://localhost:8080/swagger-ui/index.html>
+- **Health Check**: <http://localhost:8080/actuator/health>
+- **H2 Database Console**: <http://localhost:8080/h2-console>
 
-## 映像優化特色
+## Image Optimization Features
 
-### 1. ARM64 原生支援
+### 1. ARM64 Native Support
 
-- 使用 ARM64 原生基礎映像
-- 針對 Apple Silicon 和 ARM64 伺服器優化
-- 避免 x86 模擬帶來的效能損失
+- Uses ARM64 native base images
+- Optimized for Apple Silicon and ARM64 servers
+- Avoids performance loss from x86 emulation
 
-### 2. 多階段構建
+### 2. Multi-stage Build
 
 ```dockerfile
-# 構建階段 - 包含完整的 Gradle 和 JDK
+# Build stage - includes complete Gradle and JDK
 FROM gradle:8.5-jdk21-alpine AS builder
 
-# 運行階段 - 僅包含 JRE 和應用程式
+# Runtime stage - includes only JRE and application
 FROM eclipse-temurin:21-jre-alpine
 ```
 
-### 3. JVM 優化
+### 3. JVM Optimization
 
 ```bash
-# 針對容器環境優化的 JVM 參數
+# JVM parameters optimized for container environment
 JAVA_OPTS="-Xms256m -Xmx512m \
     -XX:+UseSerialGC \
     -XX:+TieredCompilation \
@@ -79,31 +79,31 @@ JAVA_OPTS="-Xms256m -Xmx512m \
     -XX:MaxRAMPercentage=75.0"
 ```
 
-### 4. 安全性增強
+### 4. Security Enhancements
 
-- 使用非 root 用戶執行應用程式
-- 最小化基礎映像 (Alpine Linux)
-- 移除不必要的套件和工具
+- Run application with non-root user
+- Minimal base image (Alpine Linux)
+- Remove unnecessary packages and tools
 
-## 配置說明
+## Configuration
 
-### 環境變數
+### Environment Variables
 
-| 變數名稱 | 預設值 | 說明 |
-|---------|--------|------|
-| `SPRING_PROFILES_ACTIVE` | `docker` | Spring Boot 設定檔 |
-| `JAVA_OPTS` | 見上方 | JVM 啟動參數 |
-| `SPRING_DATASOURCE_URL` | `jdbc:h2:mem:genaidemo` | 資料庫連接 URL |
+| Variable Name | Default Value | Description |
+|---------------|---------------|-------------|
+| `SPRING_PROFILES_ACTIVE` | `docker` | Spring Boot profile |
+| `JAVA_OPTS` | See above | JVM startup parameters |
+| `SPRING_DATASOURCE_URL` | `jdbc:h2:mem:genaidemo` | Database connection URL |
 
-### 資料持久化
+### Data Persistence
 
 ```yaml
-# docker-compose.yml 中的 volume 配置
+# Volume configuration in docker-compose.yml
 volumes:
-  - ./logs:/app/logs  # 日誌持久化
+  - ./logs:/app/logs  # Log persistence
 ```
 
-### 健康檢查
+### Health Check
 
 ```yaml
 healthcheck:
@@ -114,102 +114,102 @@ healthcheck:
   start_period: 60s
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 1. 映像構建失敗
+### 1. Image Build Failure
 
-**問題**: 構建過程中出現架構不匹配錯誤
+**Issue**: Architecture mismatch errors during build
 
 ```bash
-# 解決方案：明確指定平台
+# Solution: Explicitly specify platform
 docker build --platform linux/arm64 -t genai-demo:latest .
 ```
 
-### 2. 容器啟動失敗
+### 2. Container Startup Failure
 
-**問題**: 記憶體不足
+**Issue**: Out of memory
 
 ```bash
-# 解決方案：調整 JVM 記憶體參數
+# Solution: Adjust JVM memory parameters
 export JAVA_OPTS="-Xms128m -Xmx256m"
 docker-compose up -d
 ```
 
-### 3. 健康檢查失敗
+### 3. Health Check Failure
 
-**問題**: 應用程式啟動時間過長
+**Issue**: Application takes too long to start
 
 ```bash
-# 解決方案：增加啟動等待時間
-# 在 docker-compose.yml 中調整 start_period
+# Solution: Increase startup wait time
+# Adjust start_period in docker-compose.yml
 healthcheck:
-  start_period: 120s  # 增加到 2 分鐘
+  start_period: 120s  # Increase to 2 minutes
 ```
 
-### 4. 日誌查看
+### 4. Log Viewing
 
 ```bash
-# 查看應用程式日誌
+# View application logs
 docker-compose logs -f genai-demo
 
-# 查看特定時間範圍的日誌
+# View logs for specific time range
 docker-compose logs --since="2024-01-01T00:00:00" genai-demo
 
-# 查看最後 100 行日誌
+# View last 100 lines of logs
 docker-compose logs --tail=100 genai-demo
 ```
 
-## 效能調優
+## Performance Tuning
 
-### 1. JVM 記憶體調整
+### 1. JVM Memory Adjustment
 
-根據可用記憶體調整 JVM 參數：
+Adjust JVM parameters based on available memory:
 
 ```bash
-# 1GB RAM 系統
+# 1GB RAM system
 export JAVA_OPTS="-Xms128m -Xmx256m"
 
-# 2GB RAM 系統
+# 2GB RAM system
 export JAVA_OPTS="-Xms256m -Xmx512m"
 
-# 4GB+ RAM 系統
+# 4GB+ RAM system
 export JAVA_OPTS="-Xms512m -Xmx1024m"
 ```
 
-### 2. 垃圾收集器選擇
+### 2. Garbage Collector Selection
 
 ```bash
-# 低記憶體環境 (< 1GB)
+# Low memory environment (< 1GB)
 -XX:+UseSerialGC
 
-# 中等記憶體環境 (1-4GB)
+# Medium memory environment (1-4GB)
 -XX:+UseG1GC
 
-# 高記憶體環境 (4GB+)
+# High memory environment (4GB+)
 -XX:+UseZGC  # Java 17+
 ```
 
-### 3. 啟動時間優化
+### 3. Startup Time Optimization
 
 ```bash
-# 快速啟動參數
+# Fast startup parameters
 -XX:+TieredCompilation \
 -XX:TieredStopAtLevel=1 \
 -Dspring.main.lazy-initialization=true \
 -Dspring.jmx.enabled=false
 ```
 
-## 生產環境部署
+## Production Deployment
 
-### 1. 安全性檢查清單
+### 1. Security Checklist
 
-- [ ] 使用非 root 用戶執行
-- [ ] 移除開發工具和除錯端點
-- [ ] 設定適當的資源限制
-- [ ] 啟用日誌輪轉
-- [ ] 配置監控和告警
+- [ ] Run with non-root user
+- [ ] Remove development tools and debug endpoints
+- [ ] Set appropriate resource limits
+- [ ] Enable log rotation
+- [ ] Configure monitoring and alerting
 
-### 2. 資源限制
+### 2. Resource Limits
 
 ```yaml
 # docker-compose.yml
@@ -225,10 +225,10 @@ services:
           memory: 512M
 ```
 
-### 3. 日誌管理
+### 3. Log Management
 
 ```yaml
-# 日誌輪轉配置
+# Log rotation configuration
 logging:
   driver: "json-file"
   options:
@@ -236,9 +236,9 @@ logging:
     max-file: "3"
 ```
 
-## 多環境配置
+## Multi-Environment Configuration
 
-### 開發環境
+### Development Environment
 
 ```yaml
 # docker-compose.dev.yml
@@ -257,7 +257,7 @@ services:
       - ./logs:/app/logs
 ```
 
-### 測試環境
+### Test Environment
 
 ```yaml
 # docker-compose.test.yml
@@ -273,7 +273,7 @@ services:
       - redis
 ```
 
-### 生產環境
+### Production Environment
 
 ```yaml
 # docker-compose.prod.yml
@@ -293,42 +293,42 @@ services:
           memory: 512M
 ```
 
-## 容器監控
+## Container Monitoring
 
-### 健康檢查配置
+### Health Check Configuration
 
 ```dockerfile
-# Dockerfile 中的健康檢查
+# Health check in Dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 ```
 
-### 監控指標
+### Monitoring Metrics
 
 ```bash
-# 查看容器資源使用情況
+# View container resource usage
 docker stats genai-demo
 
-# 查看容器詳細資訊
+# View container details
 docker inspect genai-demo
 
-# 查看容器日誌
+# View container logs
 docker logs -f genai-demo
 ```
 
-## 相關圖表
+## Related Diagrams
 
-- \1
-- \1
+- [Container Architecture Diagram](../../diagrams/deployment/container-architecture.puml)
+- [Docker Deployment Flow](../../diagrams/deployment/docker-deployment-flow.puml)
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[開發視點](../development/README.md)**: 建置流程和 CI/CD 整合
-- **[運營視點](../operational/README.md)**: 容器監控和日誌管理
-- **[安全性觀點](../../perspectives/security/README.md)**: 容器安全和映像掃描
+- **[Development Viewpoint](../development/README.md)**: Build process and CI/CD integration
+- **[Operational Viewpoint](../operational/README.md)**: Container monitoring and log management
+- **[Security Perspective](../../perspectives/security/README.md)**: Container security and image scanning
 
-## 相關文檔
+## Related Documentation
 
-- [README.md](../../../README.md) - 專案概述
-- [可觀測性部署](observability-deployment.md) - 監控系統部署
-- [生產部署檢查清單](production-deployment-checklist.md) - 生產環境檢查
+- [README.md](../../../README.md) - Project overview
+- [Observability Deployment](observability-deployment.md) - Monitoring system deployment
+- [Production Deployment Checklist](production-deployment-checklist.md) - Production environment checklist

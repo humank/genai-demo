@@ -1,184 +1,184 @@
-# 架構決策記錄 (Architecture Decision Records)
+# Architecture Decision Records (ADRs)
 
-## 概述
+## Overview
 
-本目錄包含 GenAI Demo 專案的所有架構決策記錄 (ADR)。ADR 是記錄重要架構決策的輕量級文檔，幫助團隊理解為什麼做出特定的技術選擇。
+This directory contains all Architecture Decision Records (ADRs) for the GenAI Demo project. ADRs are lightweight documents that record important architectural decisions, helping teams understand why specific technical choices were made.
 
-## ADR 格式
+## ADR Format
 
-每個 ADR 遵循以下標準格式：
+Each ADR follows this standard format:
 
 ```markdown
-# ADR-XXX: 決策標題
+# ADR-XXX: Decision Title
 
-## 狀態
-[提案中 | 已接受 | 已棄用 | 已取代]
+## Status
+[Proposed | Accepted | Deprecated | Superseded]
 
-## 背景
-描述促使此決策的情況和問題
+## Context
+Describe the situation and problem that prompted this decision
 
-## 決策
-我們將要做什麼以及為什麼
+## Decision
+What we will do and why
 
-## 結果
-決策的預期結果和影響
+## Consequences
+Expected outcomes and impacts of the decision
 ```
 
-## 當前 ADR 列表
+## Current ADR List
 
-### 軟體架構
+### Software Architecture
 
-| ADR | 標題 | 狀態 | 日期 |
-|-----|------|------|------|
-| [ADR-001](./ADR-001-ddd-hexagonal-architecture.md) | DDD + 六角形架構基礎 | 已接受 | 2024-01-15 |
-| [ADR-002](./ADR-002-bounded-context-design.md) | 限界上下文設計策略 | 已接受 | 2024-01-20 |
-| [ADR-003](./ADR-003-domain-events-cqrs.md) | 領域事件和 CQRS 實現 | 已接受 | 2024-01-25 |
+| ADR | Title | Status | Date |
+|-----|-------|--------|------|
+| [ADR-001](./ADR-001-ddd-hexagonal-architecture.md) | DDD + Hexagonal Architecture Foundation | Accepted | 2024-01-15 |
+| [ADR-002](./ADR-002-bounded-context-design.md) | Bounded Context Design Strategy | Accepted | 2024-01-20 |
+| [ADR-003](./ADR-003-domain-events-cqrs.md) | Domain Events and CQRS Implementation | Accepted | 2024-01-25 |
 
-### 基礎設施架構
+### Infrastructure Architecture
 
-| ADR | 標題 | 狀態 | 日期 |
-|-----|------|------|------|
-| [ADR-005](./ADR-005-aws-cdk-vs-terraform.md) | AWS CDK vs Terraform | 已接受 | 2024-02-01 |
-| [ADR-013](./ADR-013-deployment-strategies.md) | 部署策略 | 已接受 | 2024-03-01 |
-| [ADR-016](./ADR-016-well-architected-compliance.md) | Well-Architected Framework 合規性 | 已接受 | 2024-03-15 |
+| ADR | Title | Status | Date |
+|-----|-------|--------|------|
+| [ADR-005](./ADR-005-aws-cdk-vs-terraform.md) | AWS CDK vs Terraform | Accepted | 2024-02-01 |
+| [ADR-013](./ADR-013-deployment-strategies.md) | Deployment Strategies | Accepted | 2024-03-01 |
+| [ADR-016](./ADR-016-well-architected-compliance.md) | Well-Architected Framework Compliance | Accepted | 2024-03-15 |
 
-## 如何使用 ADR
+## How to Use ADRs
 
-### 1. 閱讀現有 ADR
+### 1. Reading Existing ADRs
 
-- 新團隊成員應該閱讀所有相關 ADR 以理解架構決策
-- 在做出新決策前，檢查是否有相關的現有 ADR
+- New team members should read all relevant ADRs to understand architectural decisions
+- Before making new decisions, check if there are related existing ADRs
 
-### 2. 創建新 ADR
+### 2. Creating New ADRs
 
-當需要做出重要架構決策時：
+When making important architectural decisions:
 
-1. 複製 ADR 模板
-2. 分配下一個 ADR 編號
-3. 填寫所有必要部分
-4. 與團隊討論
-5. 獲得批准後更新狀態為「已接受」
+1. Copy the ADR template
+2. Assign the next ADR number
+3. Fill in all necessary sections
+4. Discuss with the team
+5. Update status to "Accepted" after approval
 
-### 3. 更新現有 ADR
+### 3. Updating Existing ADRs
 
-- 如果決策需要修改，更新相應的 ADR
-- 如果決策被取代，將狀態更改為「已取代」並連結到新的 ADR
+- If a decision needs modification, update the corresponding ADR
+- If a decision is superseded, change status to "Superseded" and link to the new ADR
 
-## ADR 編號規則
+## ADR Numbering Rules
 
-- ADR-001 到 ADR-099: 軟體架構決策
-- ADR-100 到 ADR-199: 基礎設施架構決策
-- ADR-200 到 ADR-299: 安全性決策
-- ADR-300 到 ADR-399: 效能決策
-- ADR-400 到 ADR-499: 成本優化決策
+- ADR-001 to ADR-099: Software architecture decisions
+- ADR-100 to ADR-199: Infrastructure architecture decisions
+- ADR-200 to ADR-299: Security decisions
+- ADR-300 to ADR-399: Performance decisions
+- ADR-400 to ADR-499: Cost optimization decisions
 
-## 決策標準
+## Decision Criteria
 
-### 必須記錄的決策
+### Decisions That Must Be Recorded
 
-- 影響系統結構的決策
-- 難以逆轉的決策
-- 昂貴的決策
-- 影響非功能需求的決策
+- Decisions that affect system structure
+- Decisions that are difficult to reverse
+- Expensive decisions
+- Decisions that affect non-functional requirements
 
-### 評估標準
+### Evaluation Criteria
 
-每個 ADR 應該考慮：
+Each ADR should consider:
 
-1. **業務影響**: 對業務目標的影響
-2. **技術影響**: 對系統架構的影響
-3. **團隊影響**: 對開發團隊的影響
-4. **成本影響**: 對開發和營運成本的影響
-5. **風險評估**: 潛在風險和緩解措施
+1. **Business Impact**: Impact on business objectives
+2. **Technical Impact**: Impact on system architecture
+3. **Team Impact**: Impact on development team
+4. **Cost Impact**: Impact on development and operational costs
+5. **Risk Assessment**: Potential risks and mitigation measures
 
-## Well-Architected Framework 對齊
+## Well-Architected Framework Alignment
 
-每個 ADR 都應該與 AWS Well-Architected Framework 的五大支柱對齊：
+Each ADR should align with the five pillars of the AWS Well-Architected Framework:
 
-### 1. 營運卓越 (Operational Excellence)
+### 1. Operational Excellence
 
-- 自動化和監控
-- 持續改進
-- 故障準備
+- Automation and monitoring
+- Continuous improvement
+- Failure preparation
 
-### 2. 安全性 (Security)
+### 2. Security
 
-- 身份和存取管理
-- 資料保護
-- 基礎設施保護
+- Identity and access management
+- Data protection
+- Infrastructure protection
 
-### 3. 可靠性 (Reliability)
+### 3. Reliability
 
-- 故障恢復
-- 容量規劃
-- 變更管理
+- Failure recovery
+- Capacity planning
+- Change management
 
-### 4. 效能效率 (Performance Efficiency)
+### 4. Performance Efficiency
 
-- 資源選擇
-- 監控和分析
-- 權衡考量
+- Resource selection
+- Monitoring and analysis
+- Trade-off considerations
 
-### 5. 成本優化 (Cost Optimization)
+### 5. Cost Optimization
 
-- 成本意識
-- 資源優化
-- 持續監控
+- Cost awareness
+- Resource optimization
+- Continuous monitoring
 
-## 工具和自動化
+## Tools and Automation
 
-### MCP 整合
+### MCP Integration
 
-我們使用 Model Context Protocol (MCP) 工具來：
+We use Model Context Protocol (MCP) tools to:
 
-- 自動驗證 ADR 與 Well-Architected Framework 的對齊
-- 生成 ADR 摘要報告
-- 檢查 ADR 的完整性和一致性
+- Automatically validate ADR alignment with Well-Architected Framework
+- Generate ADR summary reports
+- Check ADR completeness and consistency
 
-### 文檔生成
+### Documentation Generation
 
-- 自動生成 [ADR 總結](../../../reports-summaries/architecture-design/ADR-SUMMARY.md)
-- 更新 ADR 索引和交叉引用
-- 生成架構決策影響分析
+- Automatically generate [ADR Summary](../../../reports-summaries/architecture-design/ADR-SUMMARY.md)
+- Update ADR index and cross-references
+- Generate architectural decision impact analysis
 
-## 審查流程
+## Review Process
 
-### 定期審查
+### Regular Reviews
 
-- **每季度**: 審查所有 ADR 的相關性
-- **每半年**: 評估 ADR 的實施效果
-- **每年**: 全面審查架構決策策略
+- **Quarterly**: Review relevance of all ADRs
+- **Semi-annually**: Evaluate implementation effectiveness of ADRs
+- **Annually**: Comprehensive review of architectural decision strategy
 
-### 審查檢查清單
+### Review Checklist
 
-- [ ] ADR 是否仍然相關？
-- [ ] 決策是否已正確實施？
-- [ ] 是否有新的資訊影響決策？
-- [ ] 是否需要更新或取代？
+- [ ] Is the ADR still relevant?
+- [ ] Has the decision been correctly implemented?
+- [ ] Is there new information affecting the decision?
+- [ ] Does it need updating or superseding?
 
-## 相關資源
+## Related Resources
 
-### 內部資源
+### Internal Resources
 
-- [架構概覽](../overview.md)
-- \1
-- [技術棧文檔](../../reports/technology-stack-2025.md)
+- [Architecture Overview](../overview.md)
+- [Hexagonal Architecture](../hexagonal-architecture.md)
+- [Technology Stack Documentation](../../reports/technology-stack-2025.md)
 
-### 外部資源
+### External Resources
 
-- [ADR 最佳實踐](https://adr.github.io/)
+- [ADR Best Practices](https://adr.github.io/)
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [領域驅動設計](https://domainlanguage.com/ddd/)
+- [Domain-Driven Design](https://domainlanguage.com/ddd/)
 
-## 聯絡資訊
+## Contact Information
 
-如有關於 ADR 的問題或建議，請聯絡：
+For questions or suggestions about ADRs, please contact:
 
-- **架構團隊**: <architecture@genai-demo.com>
-- **技術負責人**: <tech-lead@genai-demo.com>
+- **Architecture Team**: <architecture@genai-demo.com>
+- **Technical Lead**: <tech-lead@genai-demo.com>
 
 ---
 
-**維護者**: 架構團隊  
-**最後更新**: 2025年9月  
-**版本**: 1.0
+**Maintainer**: Architecture Team  
+**Last Updated**: September 2025  
+**Version**: 1.0

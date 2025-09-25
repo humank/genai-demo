@@ -560,8 +560,8 @@ export class WellArchitectedDashboard {
 
 - [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
 - [ADR-005: AWS CDK vs Terraform](./ADR-005-aws-cdk-vs-terraform.md)
-- \1
-- \1
+- [ADR-013: Blue-Green vs Canary Deployment Strategies](./ADR-013-deployment-strategies.md)
+- [ADR-003: Domain Events and CQRS Implementation](./ADR-003-domain-events-cqrs.md)
 
 ## References
 

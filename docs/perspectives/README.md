@@ -107,42 +107,42 @@ Each perspective should define specific quality attribute scenarios in the forma
 3. **Improvement Identification**: Identify areas needing improvement
 4. **Trade-off Adjustment**: Adjust trade-offs between different perspectives
 
-## 跨視點和觀點整合
+## Cross-Viewpoint and Perspective Integration
 
-### 📊 交叉引用資源
-- **[Viewpoint-Perspective 交叉引用矩陣](../viewpoint-perspective-matrix.md)** - 完整的觀點-視點影響程度矩陣和詳細分析
-- **[跨視點和觀點文件交叉引用連結](../cross-reference-links.md)** - 所有相關文件的連結索引和導航指南
+### 📊 Cross-Reference Resources
+- **[Viewpoint-Perspective Cross-Reference Matrix](../viewpoint-perspective-matrix.md)** - Complete perspective-viewpoint impact matrix and detailed analysis
+- **[Cross-Viewpoint and Perspective Document Cross-Reference Links](../cross-reference-links.md)** - Link index and navigation guide for all related documents
 
-### 🏗️ 架構視點整合
-- **[架構視點 (Viewpoints)](../viewpoints/README.md)** - 系統架構的六大視角
-- **[功能視點](../viewpoints/functional/README.md)** - 受多個觀點高度影響的核心視點
-- **[資訊視點](../viewpoints/information/README.md)** - 安全性、性能、法規觀點的重點影響區域
-- **[部署視點](../viewpoints/deployment/README.md)** - 成本、位置、可用性觀點的關鍵實現區域
+### 🏗️ Architectural Viewpoint Integration
+- **[Architectural Viewpoints](../viewpoints/README.md)** - Six major perspectives of system architecture
+- **[Functional Viewpoint](../viewpoints/functional/README.md)** - Core viewpoint highly influenced by multiple perspectives
+- **[Information Viewpoint](../viewpoints/information/README.md)** - Key impact area for security, performance, and regulation perspectives
+- **[Deployment Viewpoint](../viewpoints/deployment/README.md)** - Critical implementation area for cost, location, and availability perspectives
 
-### 📈 視覺化和評估
-- **[架構圖表](../diagrams/perspectives/README.md)** - 觀點相關的視覺化表示
-- **\1** - QAS 定義和驗證模板
+### 📈 Visualization and Assessment
+- **[Architecture Diagrams](../diagrams/perspectives/README.md)** - Visual representations related to perspectives
+- **Quality Attribute Scenario Templates** - QAS definition and validation templates
 
-## 使用交叉引用的建議
+## Cross-Reference Usage Recommendations
 
-### 🎯 觀點驅動的架構設計
-1. **觀點優先級**: 根據業務需求確定關鍵觀點的優先級
-2. **影響分析**: 使用 [交叉引用矩陣](../viewpoint-perspective-matrix.md) 識別每個觀點的高影響視點
-3. **設計整合**: 確保高影響視點充分體現觀點要求
-4. **權衡決策**: 在衝突的觀點要求間做出明智的權衡決策
+### 🎯 Perspective-Driven Architecture Design
+1. **Perspective Prioritization**: Determine priority of key perspectives based on business requirements
+2. **Impact Analysis**: Use [Cross-Reference Matrix](../viewpoint-perspective-matrix.md) to identify high-impact viewpoints for each perspective
+3. **Design Integration**: Ensure high-impact viewpoints fully embody perspective requirements
+4. **Trade-off Decisions**: Make informed trade-off decisions between conflicting perspective requirements
 
-### 📋 品質屬性驗證工作流程
-1. **場景定義**: 為每個關鍵觀點定義具體的品質屬性場景
-2. **跨視點檢查**: 使用 [交叉引用連結](../cross-reference-links.md) 檢查所有相關視點的實現
-3. **測試設計**: 設計測試用例驗證品質屬性場景
-4. **持續監控**: 建立監控機制持續驗證品質屬性的達成
+### 📋 Quality Attribute Validation Workflow
+1. **Scenario Definition**: Define specific quality attribute scenarios for each key perspective
+2. **Cross-Viewpoint Checks**: Use [Cross-Reference Links](../cross-reference-links.md) to check implementation across all related viewpoints
+3. **Test Design**: Design test cases to verify quality attribute scenarios
+4. **Continuous Monitoring**: Establish monitoring mechanisms to continuously verify quality attribute achievement
 
-### 🔄 觀點演進管理
-- **影響評估**: 當觀點要求變化時，評估對所有相關視點的影響
-- **變更協調**: 協調跨視點的變更，確保觀點要求的一致實現
-- **版本管理**: 管理觀點要求和視點實現的版本一致性
+### 🔄 Perspective Evolution Management
+- **Impact Assessment**: When perspective requirements change, assess impact on all related viewpoints
+- **Change Coordination**: Coordinate cross-viewpoint changes to ensure consistent implementation of perspective requirements
+- **Version Management**: Manage version consistency between perspective requirements and viewpoint implementations
 
 ---
 
-**最後更新**: 2025年1月21日  
-**維護者**: 架構團隊
+**Last Updated**: January 21, 2025  
+**Maintainer**: Architecture Team

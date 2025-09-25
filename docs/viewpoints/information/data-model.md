@@ -1,45 +1,45 @@
-# 資料模型設計
+# Data Model Design
 
-## 自動化資料發現與治理
+## Automated Data Discovery and Governance
 
-### AWS Glue Data Catalog 整合
+### AWS Glue Data Catalog Integration
 
-GenAI Demo 應用程式採用 AWS Glue Data Catalog 進行自動化 schema 發現和資料治理，確保跨 13 個 bounded contexts 的資料模型一致性和可追溯性。
+The GenAI Demo application adopts AWS Glue Data Catalog for automated schema discovery and data governance, ensuring data model consistency and traceability across 13 bounded contexts.
 
-#### 自動發現機制
-- **每日排程掃描**: 每天凌晨 2 點自動掃描 Aurora 資料庫
-- **即時變更檢測**: RDS 事件觸發即時 schema 發現
-- **智能排除**: 自動排除系統表和管理表
-- **跨區域一致性**: 支援 Aurora Global Database 的多區域部署
+#### Automated Discovery Mechanism
+- **Daily Scheduled Scanning**: Automatically scans Aurora database at 2 AM daily
+- **Real-time Change Detection**: RDS events trigger immediate schema discovery
+- **Intelligent Exclusion**: Automatically excludes system tables and management tables
+- **Cross-Region Consistency**: Supports multi-region deployment of Aurora Global Database
 
-#### 資料目錄結構
+#### Data Catalog Structure
 ```
 genai_demo_catalog/
-├── customer_tables/     # 客戶 bounded context
-├── order_tables/        # 訂單 bounded context  
-├── product_tables/      # 產品 bounded context
-├── inventory_tables/    # 庫存 bounded context
-├── payment_tables/      # 支付 bounded context
-├── delivery_tables/     # 配送 bounded context
-├── shoppingcart_tables/ # 購物車 bounded context
-├── pricing_tables/      # 定價 bounded context
-├── promotion_tables/    # 促銷 bounded context
-├── seller_tables/       # 賣家 bounded context
-├── review_tables/       # 評價 bounded context
-├── notification_tables/ # 通知 bounded context
-└── observability_tables/# 可觀測性 bounded context
+├── customer_tables/     # Customer bounded context
+├── order_tables/        # Order bounded context  
+├── product_tables/      # Product bounded context
+├── inventory_tables/    # Inventory bounded context
+├── payment_tables/      # Payment bounded context
+├── delivery_tables/     # Delivery bounded context
+├── shoppingcart_tables/ # Shopping cart bounded context
+├── pricing_tables/      # Pricing bounded context
+├── promotion_tables/    # Promotion bounded context
+├── seller_tables/       # Seller bounded context
+├── review_tables/       # Review bounded context
+├── notification_tables/ # Notification bounded context
+└── observability_tables/# Observability bounded context
 ```
 
-詳細的資料治理架構請參考 [Data Governance Architecture](data-governance-architecture.md)。
+For detailed data governance architecture, please refer to [Data Governance Architecture](data-governance-architecture.md).
 
-## 領域模型
+## Domain Model
 
-### 聚合根設計
-- 客戶聚合 (Customer Aggregate)
-- 訂單聚合 (Order Aggregate)
-- 產品聚合 (Product Aggregate)
+### Aggregate Root Design
+- Customer Aggregate
+- Order Aggregate
+- Product Aggregate
 
-### 值物件設計
+### Value Object Design
 ```java
 public record CustomerId(String value) {
     public CustomerId {
@@ -50,9 +50,9 @@ public record CustomerId(String value) {
 }
 ```
 
-## 資料持久化
+## Data Persistence
 
-### JPA 實體映射
+### JPA Entity Mapping
 ```java
 @Entity
 @Table(name = "customers")
@@ -68,14 +68,14 @@ public class Customer {
 }
 ```
 
-### 資料庫設計
-- 正規化設計原則
-- 索引策略規劃
-- 資料完整性約束
+### Database Design
+- Normalization design principles
+- Index strategy planning
+- Data integrity constraints
 
-## 資料遷移
+## Data Migration
 
-### Flyway 腳本
+### Flyway Scripts
 ```sql
 -- V1__Create_customer_table.sql
 CREATE TABLE customers (

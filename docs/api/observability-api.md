@@ -1,27 +1,27 @@
-# 可觀測性 API 文檔
+# Observability API Documentation
 
-## 概述
+## Overview
 
-本文檔描述了前端後端可觀測性整合系統的 API 端點，包括用戶行為追蹤、效能監控和業務分析功能。
+This document describes the API endpoints for the frontend-backend observability integration system, including user behavior tracking, performance monitoring, and business analytics functionality.
 
-## 新增 API 端點
+## New API Endpoints
 
-### 分析事件 API
+### Analytics Events API
 
-#### POST /../api/analytics/events
+#### POST /api/analytics/events
 
-接收前端發送的用戶行為分析事件。
+Receives user behavior analytics events sent from the frontend.
 
-**請求標頭**
+**Request Headers**
 
 ```
 Content-Type: application/json
-X-Trace-Id: string (必需) - 追蹤 ID，用於端到端追蹤
-X-Session-Id: string (必需) - 會話 ID
-X-Correlation-Id: string (可選) - 關聯 ID
+X-Trace-Id: string (required) - Trace ID for end-to-end tracking
+X-Session-Id: string (required) - Session ID
+X-Correlation-Id: string (optional) - Correlation ID
 ```
 
-**請求體**
+**Request Body**
 
 ```json
 [
@@ -29,7 +29,7 @@ X-Correlation-Id: string (可選) - 關聯 ID
     "eventId": "string",
     "eventType": "page_view|user_action|business_event",
     "sessionId": "string",
-    "userId": "string (可選)",
+    "userId": "string (optional)",
     "traceId": "string",
     "timestamp": 1640995200000,
     "data": {
@@ -43,16 +43,16 @@ X-Correlation-Id: string (可選) - 關聯 ID
 ]
 ```
 
-**響應**
+**Response**
 
-- **200 OK**: 事件成功接收
-- **400 Bad Request**: 請求格式錯誤
-- **500 Internal Server Error**: 服務器內部錯誤
+- **200 OK**: Events successfully received
+- **400 Bad Request**: Invalid request format
+- **500 Internal Server Error**: Internal server error
 
-**範例請求**
+**Example Request**
 
 ```bash
-curl -X POST http://localhost:8080/../api/analytics/events \
+curl -X POST http://localhost:8080/api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: trace-1640995200000-abc123" \
   -H "X-Session-Id: session-xyz789" \
@@ -74,17 +74,17 @@ curl -X POST http://localhost:8080/../api/analytics/events \
 
 #### POST /api/analytics/performance
 
-接收前端發送的效能指標數據。
+Receives performance metrics data sent from the frontend.
 
-**請求標頭**
+**Request Headers**
 
 ```
 Content-Type: application/json
-X-Trace-Id: string (必需) - 追蹤 ID
-X-Session-Id: string (必需) - 會話 ID
+X-Trace-Id: string (required) - Trace ID
+X-Session-Id: string (required) - Session ID
 ```
 
-**請求體**
+**Request Body**
 
 ```json
 [
@@ -105,16 +105,16 @@ X-Session-Id: string (必需) - 會話 ID
 ]
 ```
 
-**響應**
+**Response**
 
-- **200 OK**: 指標成功接收
-- **400 Bad Request**: 請求格式錯誤
-- **500 Internal Server Error**: 服務器內部錯誤
+- **200 OK**: Metrics successfully received
+- **400 Bad Request**: Invalid request format
+- **500 Internal Server Error**: Internal server error
 
-**範例請求**
+**Example Request**
 
 ```bash
-curl -X POST http://localhost:8080/../api/analytics/performance \
+curl -X POST http://localhost:8080/api/analytics/performance \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: trace-1640995200000-abc123" \
   -H "X-Session-Id: session-xyz789" \
@@ -133,22 +133,22 @@ curl -X POST http://localhost:8080/../api/analytics/performance \
 
 #### GET /api/analytics/stats
 
-查詢分析統計數據。
+Query analytics statistics data.
 
-**請求參數**
+**Request Parameters**
 
-- `timeRange` (必需): 時間範圍 (1h, 24h, 7d, 30d)
-- `filter` (可選): 篩選條件
-- `page` (可選): 頁碼，預設 0
-- `size` (可選): 頁面大小，預設 20
+- `timeRange` (required): Time range (1h, 24h, 7d, 30d)
+- `filter` (optional): Filter conditions
+- `page` (optional): Page number, default 0
+- `size` (optional): Page size, default 20
 
-**請求標頭**
+**Request Headers**
 
 ```
-X-Trace-Id: string (可選) - 追蹤 ID
+X-Trace-Id: string (optional) - Trace ID
 ```
 
-**響應**
+**Response**
 
 ```json
 {
@@ -173,21 +173,21 @@ X-Trace-Id: string (可選) - 追蹤 ID
 }
 ```
 
-### 監控事件 API (現有端點擴展)
+### Monitoring Events API (Existing Endpoint Extension)
 
-#### POST /../api/monitoring/events
+#### POST /api/monitoring/events
 
-接收前端 JavaScript 錯誤和監控事件。
+Receives frontend JavaScript errors and monitoring events.
 
-**請求體**
+**Request Body**
 
 ```json
 {
   "eventType": "javascript_error|api_error|network_error",
   "message": "string",
-  "stack": "string (可選)",
-  "url": "string (可選)",
-  "userAgent": "string (可選)",
+  "stack": "string (optional)",
+  "url": "string (optional)",
+  "userAgent": "string (optional)",
   "timestamp": 1640995200000,
   "sessionId": "string",
   "traceId": "string",
@@ -199,18 +199,18 @@ X-Trace-Id: string (可選) - 追蹤 ID
 }
 ```
 
-### WebSocket 即時分析 API
+### WebSocket Real-time Analytics API
 
 #### WS /ws/analytics
 
-建立 WebSocket 連接以接收即時分析更新。
+Establish WebSocket connection to receive real-time analytics updates.
 
-**連接參數**
+**Connection Parameters**
 
-- `sessionId`: 會話 ID
-- `channels`: 訂閱頻道列表 (user-behavior, performance, business-metrics)
+- `sessionId`: Session ID
+- `channels`: List of subscribed channels (user-behavior, performance, business-metrics)
 
-**訊息格式**
+**Message Format**
 
 ```json
 {
@@ -228,7 +228,7 @@ X-Trace-Id: string (可選) - 追蹤 ID
 }
 ```
 
-**範例 JavaScript 客戶端**
+**Example JavaScript Client**
 
 ```javascript
 const socket = new WebSocket('ws://localhost:8080/ws/analytics?sessionId=session-xyz789&channels=user-behavior,performance');
@@ -239,7 +239,7 @@ socket.onmessage = function(event) {
 };
 ```
 
-## 數據模型
+## Data Models
 
 ### AnalyticsEventDto
 
@@ -285,9 +285,9 @@ public record AnalyticsStatsDto(
 ) {}
 ```
 
-## 錯誤處理
+## Error Handling
 
-### 錯誤響應格式
+### Error Response Format
 
 ```json
 {
@@ -303,83 +303,83 @@ public record AnalyticsStatsDto(
 }
 ```
 
-### 常見錯誤碼
+### Common Error Codes
 
-- `ANALYTICS_VALIDATION_ERROR`: 數據驗證失敗
-- `ANALYTICS_PROCESSING_ERROR`: 事件處理失敗
-- `ANALYTICS_RATE_LIMIT_EXCEEDED`: 請求頻率超限
-- `ANALYTICS_TRACE_ID_MISSING`: 缺少追蹤 ID
-- `ANALYTICS_SESSION_INVALID`: 無效會話 ID
+- `ANALYTICS_VALIDATION_ERROR`: Data validation failed
+- `ANALYTICS_PROCESSING_ERROR`: Event processing failed
+- `ANALYTICS_RATE_LIMIT_EXCEEDED`: Request rate limit exceeded
+- `ANALYTICS_TRACE_ID_MISSING`: Missing trace ID
+- `ANALYTICS_SESSION_INVALID`: Invalid session ID
 
-## 安全考量
+## Security Considerations
 
-### 認證和授權
+### Authentication and Authorization
 
-- 所有 API 端點都需要有效的會話
-- 追蹤 ID 用於請求關聯，不包含敏感資訊
-- 用戶數據在傳輸和存儲時都會加密
+- All API endpoints require valid sessions
+- Trace IDs are used for request correlation and contain no sensitive information
+- User data is encrypted during transmission and storage
 
-### 數據隱私
+### Data Privacy
 
-- PII 數據會自動遮罩
-- 用戶行為數據匿名化處理
-- 符合 GDPR 和其他隱私法規要求
+- PII data is automatically masked
+- User behavior data is anonymized
+- Complies with GDPR and other privacy regulations
 
-### 速率限制
+### Rate Limiting
 
-- 每個會話每分鐘最多 1000 個事件
-- 批次請求最多包含 100 個事件
-- WebSocket 連接每個會話限制 5 個
+- Maximum 1000 events per session per minute
+- Batch requests can contain up to 100 events
+- WebSocket connections limited to 5 per session
 
-## 效能考量
+## Performance Considerations
 
-### 批次處理
+### Batch Processing
 
-- 前端建議每 30 秒或累積 50 個事件後發送
-- 後端支援批次處理以提高效能
-- 關鍵事件（如購買）可立即發送
+- Frontend recommended to send every 30 seconds or after accumulating 50 events
+- Backend supports batch processing for improved performance
+- Critical events (like purchases) can be sent immediately
 
-### 快取策略
+### Caching Strategy
 
-- 統計查詢結果快取 5 分鐘
-- 即時指標快取 30 秒
-- 使用 Redis 進行分散式快取
+- Statistics query results cached for 5 minutes
+- Real-time metrics cached for 30 seconds
+- Uses Redis for distributed caching
 
-### 監控指標
+### Monitoring Metrics
 
-- API 響應時間 < 200ms (95th percentile)
-- 事件處理延遲 < 100ms
-- WebSocket 連接穩定性 > 99.9%
+- API response time < 200ms (95th percentile)
+- Event processing latency < 100ms
+- WebSocket connection stability > 99.9%
 
-## 測試
+## Testing
 
-### 單元測試
+### Unit Tests
 
 ```bash
-# 執行 API 控制器測試
+# Run API controller tests
 ./gradlew test --tests "*AnalyticsController*"
 
-# 執行服務層測試
+# Run service layer tests
 ./gradlew test --tests "*ObservabilityEventService*"
 ```
 
-### 整合測試
+### Integration Tests
 
 ```bash
-# 執行完整的可觀測性整合測試
+# Run complete observability integration tests
 ./gradlew test --tests "*ObservabilityIntegration*"
 ```
 
-### 負載測試
+### Load Testing
 
 ```bash
-# 使用 K6 進行負載測試
+# Use K6 for load testing
 k6 run scripts/load-test-analytics.js
 ```
 
-## 部署配置
+## Deployment Configuration
 
-### 開發環境
+### Development Environment
 
 ```yaml
 genai-demo:
@@ -392,7 +392,7 @@ genai-demo:
       flush-interval: 10s
 ```
 
-### 生產環境
+### Production Environment
 
 ```yaml
 genai-demo:
@@ -406,38 +406,38 @@ genai-demo:
       retention-days: 90
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 常見問題
+### Common Issues
 
-1. **事件未被處理**
-   - 檢查追蹤 ID 格式
-   - 驗證會話 ID 有效性
-   - 查看應用程式日誌
+1. **Events not being processed**
+   - Check trace ID format
+   - Verify session ID validity
+   - Review application logs
 
-2. **WebSocket 連接失敗**
-   - 檢查網路連接
-   - 驗證會話參數
-   - 查看瀏覽器控制台錯誤
+2. **WebSocket connection failures**
+   - Check network connectivity
+   - Verify session parameters
+   - Review browser console errors
 
-3. **效能指標異常**
-   - 檢查指標類型拼寫
-   - 驗證數值範圍
-   - 確認頁面 URL 格式
+3. **Performance metrics anomalies**
+   - Check metric type spelling
+   - Verify value ranges
+   - Confirm page URL format
 
-### 日誌查詢
+### Log Queries
 
 ```bash
-# 查看分析事件處理日誌
+# View analytics event processing logs
 kubectl logs -f deployment/genai-demo-backend | grep "analytics"
 
-# 查看錯誤日誌
+# View error logs
 kubectl logs -f deployment/genai-demo-backend | grep "ERROR.*observability"
 ```
 
-## 相關文檔
+## Related Documentation
 
-- [可觀測性配置指南](../observability/configuration-guide.md)
-- \1
-- [故障排除指南](../troubleshooting/observability-troubleshooting.md)
-- [部署指南](../deployment/observability-deployment.md)
+- [Observability Configuration Guide](../observability/configuration-guide.md)
+- [Observability Overview](../viewpoints/operational/observability-overview.md)
+- [Troubleshooting Guide](../troubleshooting/observability-troubleshooting.md)
+- [Deployment Guide](../deployment/observability-deployment.md)

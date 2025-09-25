@@ -1,52 +1,57 @@
-# 架構優化與DDD分層實現 - 2025-06-08
+# Architecture Optimization and DDD Layered Implementation - 2025-06-08
 
-## 業務需求概述
+## Business Requirements Overview
 
-本次更新主要針對系統架構進行優化，解決架構測試中發現的問題，確保系統符合領域驅動設計(DDD)的分層架構原則。主要解決以下問題：
+This update focuses on system architecture optimization, addressing issues discovered in architecture testing to ensure 
+the system complies with Domain-Driven Design (DDD) layered architecture principles. The main issues addressed include:
 
-1. **介面層直接依賴領域層**：違反了DDD分層架構原則，介面層不應直接依賴領域層。
-2. **聚合根內部類可見性問題**：聚合根中的內部類未正確處理。
-3. **基礎設施層適配器包結構不正確**：適配器類未放在正確的包結構中。
+1. **Interface Layer Direct Dependency on Domain Layer**: Violates DDD layered architecture principles - 
+   the interface layer should not directly depend on the domain layer.
+2. **Aggregate Root Inner Class Visibility Issues**: Inner classes within aggregate roots were not properly handled.
+3. **Infrastructure Layer Adapter Package Structure Issues**: Adapter classes were not placed in the correct package structure.
 
-## 技術實現
+## Technical Implementation
 
-### 分層架構優化
+### Layered Architecture Optimization
 
-1. **介面層與領域層解耦**：
-   - 創建介面層和應用層的DTO類，避免介面層直接依賴領域層的模型。
-   - 實現映射器(Mapper)類，負責在不同層之間轉換數據。
+1. **Decoupling Interface Layer from Domain Layer**:
+   - Created DTO classes for interface and application layers to avoid direct dependency of interface layer on 
+     domain layer models.
+   - Implemented Mapper classes responsible for data transformation between different layers.
 
-2. **適配器包結構調整**：
-   - 將適配器類從`infrastructure.adapter`包移動到正確的包結構：
-     - `infrastructure.persistence.adapter`：持久化相關的適配器
-     - `infrastructure.external.adapter`：外部系統相關的適配器
+2. **Adapter Package Structure Adjustment**:
+   - Moved adapter classes from `infrastructure.adapter` package to correct package structure:
+     - `infrastructure.persistence.adapter`: Persistence-related adapters
+     - `infrastructure.external.adapter`: External system-related adapters
 
-3. **聚合根內部類處理**：
-   - 修改架構測試規則，排除內部類和匿名類的檢查。
-   - 使用Java的switch表達式語法，避免生成匿名內部類。
+3. **Aggregate Root Inner Class Handling**:
+   - Modified architecture test rules to exclude inner classes and anonymous classes from checks.
+   - Used Java switch expression syntax to avoid generating anonymous inner classes.
 
-### 新增的主要組件
+### Major New Components
 
-1. **DTO類**：
-   - 介面層：`interfaces.web.pricing.dto.ProductCategoryDto`
-   - 應用層：`application.pricing.dto.ProductCategoryDto`
+1. **DTO Classes**:
+   - Interface Layer: `interfaces.web.pricing.dto.ProductCategoryDto`
+   - Application Layer: `application.pricing.dto.ProductCategoryDto`
 
-2. **映射器類**：
-   - `application.pricing.mapper.ProductCategoryMapper`：負責在應用層DTO和領域模型之間轉換
+2. **Mapper Classes**:
+   - `application.pricing.mapper.ProductCategoryMapper`: Responsible for transformation between application layer DTOs 
+     and domain models
 
-3. **適配器類**：
+3. **Adapter Classes**:
    - `infrastructure.persistence.adapter.DeliveryRepositoryAdapter`
    - `infrastructure.external.adapter.DeliveryServiceAdapter`
 
-## 技術細節
+## Technical Details
 
-### 分層數據轉換
+### Layered Data Transformation
 
-為了解決介面層直接依賴領域層的問題，實現了多層次的數據轉換：
+To resolve the issue of interface layer directly depending on domain layer, implemented multi-level data transformation:
 
-1. **介面層 → 應用層**：
+1. **Interface Layer → Application Layer**:
+
 ```java
-// 介面層控制器中的轉換方法
+// Conversion method in interface layer controller
 private ProductCategoryDto convertToAppProductCategory(solid.humank.genaidemo.interfaces.web.pricing.dto.ProductCategoryDto dto) {
     if (dto == null) {
         return ProductCategoryDto.GENERAL;
@@ -55,15 +60,16 @@ private ProductCategoryDto convertToAppProductCategory(solid.humank.genaidemo.in
     return switch (dto) {
         case ELECTRONICS -> ProductCategoryDto.ELECTRONICS;
         case FASHION -> ProductCategoryDto.FASHION;
-        // 其他枚舉值...
+        // Other enum values...
         case GENERAL -> ProductCategoryDto.GENERAL;
     };
 }
 ```
 
-2. **應用層 → 領域層**：
+2. **Application Layer → Domain Layer**:
+
 ```java
-// 應用層映射器
+// Application layer mapper
 public static ProductCategory toDomain(ProductCategoryDto dto) {
     if (dto == null) {
         return ProductCategory.GENERAL;
@@ -72,17 +78,17 @@ public static ProductCategory toDomain(ProductCategoryDto dto) {
     return switch (dto) {
         case ELECTRONICS -> ProductCategory.ELECTRONICS;
         case FASHION -> ProductCategory.FASHION;
-        // 其他枚舉值...
+        // Other enum values...
         case GENERAL -> ProductCategory.GENERAL;
     };
 }
 ```
 
-### 適配器包結構調整
+### Adapter Package Structure Adjustment
 
-將適配器類移動到符合DDD架構規範的包結構中：
+Moved adapter classes to package structure compliant with DDD architecture specifications:
 
-```
+```text
 infrastructure/
 ├── external/
 │   └── adapter/
@@ -92,9 +98,10 @@ infrastructure/
         └── DeliveryRepositoryAdapter.java
 ```
 
-### 聚合根內部類處理
+### Aggregate Root Inner Class Handling
 
-修改`PricingRule`類中的switch語句，使用Java的switch表達式語法，避免生成匿名內部類：
+Modified switch statements in `PricingRule` class to use Java switch expression syntax, avoiding generation of 
+anonymous inner classes:
 
 ```java
 private int getDefaultNormalRate(ProductCategory category) {
@@ -107,18 +114,22 @@ private int getDefaultNormalRate(ProductCategory category) {
 }
 ```
 
-## 測試覆蓋
+## Test Coverage
 
-1. **架構測試**：
-   - 確保介面層不直接依賴領域層和基礎設施層
-   - 確保適配器類位於正確的包結構中
-   - 確保聚合根、實體和值對象符合DDD戰術模式規範
+1. **Architecture Tests**:
+   - Ensure interface layer does not directly depend on domain layer and infrastructure layer
+   - Ensure adapter classes are located in correct package structure
+   - Ensure aggregate roots, entities, and value objects comply with DDD tactical pattern specifications
 
-2. **功能測試**：
-   - 確保架構優化後系統功能正常運行
+2. **Functional Tests**:
+   - Ensure system functions normally after architecture optimization
 
-## 結論
+## Conclusion
 
-本次更新成功解決了系統架構中的問題，使系統更加符合領域驅動設計的分層架構原則。通過引入DTO和映射器，實現了各層之間的解耦，提高了系統的可維護性和可擴展性。同時，通過調整適配器的包結構，使系統架構更加清晰，更容易理解和維護。
+This update successfully resolved issues in the system architecture, making the system more compliant with 
+Domain-Driven Design layered architecture principles. Through the introduction of DTOs and mappers, decoupling between 
+layers was achieved, improving system maintainability and extensibility. Additionally, by adjusting the adapter package 
+structure, the system architecture became clearer and easier to understand and maintain.
 
-所有架構測試都能順利通過，證明系統架構符合預期的設計規範。這些改進為未來的功能開發和系統擴展奠定了良好的基礎。
+All architecture tests pass successfully, proving that the system architecture meets expected design specifications. 
+These improvements lay a solid foundation for future feature development and system expansion.

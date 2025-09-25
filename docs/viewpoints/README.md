@@ -56,17 +56,17 @@ The viewpoints are closely interconnected and together form a complete system ar
 
 ```mermaid
 graph TD
-    Ctx[情境視點] --> F[功能視點]
-    Ctx --> I[資訊視點]
+    Ctx[Context Viewpoint] --> F[Functional Viewpoint]
+    Ctx --> I[Information Viewpoint]
     F --> I
-    F --> C[並發視點]
+    F --> C[Concurrency Viewpoint]
     I --> C
-    F --> Dev[開發視點]
+    F --> Dev[Development Viewpoint]
     I --> Dev
     C --> Dev
-    Ctx --> Dep[部署視點]
+    Ctx --> Dep[Deployment Viewpoint]
     Dev --> Dep
-    Dep --> O[運營視點]
+    Dep --> O[Operational Viewpoint]
     C --> O
     Ctx --> O
     
@@ -123,5 +123,5 @@ graph TD
 
 ---
 
-**Last Updated**: September 24, 2025 11:28 PM (Taipei Time)  
+**Last Updated**: September 25, 2025  
 **Maintainer**: Architecture Team

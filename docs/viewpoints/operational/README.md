@@ -171,11 +171,9 @@ The Operational Viewpoint focuses on daily system operations and maintenance, in
 - [Observability System Overview](observability-overview.md) - Complete observability system introduction
 - [Configuration Guide](configuration-guide.md) - Environment configuration and MSK topic setup
 - [Production Observability Testing Guide](production-observability-testing-guide.md) - Production environment testing strategy
-- Monitoring Implementation and Best Practices - Monitoring setup and optimization
-- Log Collection and Analysis - Log management and analysis procedures
-- Common Issue Diagnosis and Resolution - Troubleshooting guides and runbooks
-- Site Reliability Engineering Practices - SRE methodologies and procedures
-- System Maintenance and Optimization - Maintenance schedules and optimization strategies
+- [Data Catalog Monitoring](data-catalog-monitoring.md) - Data catalog monitoring and management
+- [DNS Disaster Recovery](dns-disaster-recovery.md) - DNS failover and disaster recovery
+- [MSK Operations Runbook](msk-operations-runbook.md) - MSK cluster operations and maintenance
 
 ## Core Components
 
@@ -209,3 +207,10 @@ The Operational Viewpoint focuses on daily system operations and maintenance, in
 - Monitoring engineers and platform engineers
 - Incident response teams and on-call personnel
 - Development teams and technical leads
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: Operations Team  
+**Review Status**: Reviewed

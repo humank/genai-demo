@@ -1,837 +1,183 @@
-# 跨視點和觀點文件交叉引用連結
+# Cross-Viewpoint and Perspective Document Cross-Reference Links
 
-## 概覽
+## Overview
 
-本文件提供所有架構文檔之間的智能交叉引用連結，幫助讀者快速導航到相關文檔，理解不同視點和觀點之間的關聯。
+This document provides intelligent cross-reference links between all architectural documents, helping readers quickly navigate to related documents and understand the relationships between different viewpoints and perspectives.
 
-## 🔗 核心導航連結
+## 🔗 Core Navigation Links
 
-### 主要入口點
+### Main Entry Points
 
-- **[文檔中心首頁](README.md)** - 完整的導航和搜尋系統
-- **[Viewpoint-Perspective 交叉引用矩陣](viewpoint-perspective-matrix.md)** - 視點與觀點的影響程度分析
-- **[架構決策記錄 (ADR)](architecture/adr/)** - 所有重要架構決策的記錄
+- **[Documentation Center Home](README.md)** - Complete navigation and search system
+- **[Viewpoint-Perspective Cross-Reference Matrix](viewpoint-perspective-matrix.md)** - Impact analysis between viewpoints and perspectives
+- **[Architecture Decision Records (ADR)](architecture/adr/)** - Record of all important architectural decisions
 
-### 快速導航
+### Quick Navigation
 
-| 導航類型 | 入口文檔 | 說明 |
+| Navigation Type | Entry Document | Description |
 |----------|----------|------|
-| **按角色導航** | [文檔中心 - 按角色導航](README.md#👨‍💼-按角色導航) | 架構師、開發者、DevOps、安全工程師等 |
-| **按關注點導航** | [文檔中心 - 按關注點導航](README.md#🔍-按關注點導航) | 系統架構、DDD、資料架構、安全等 |
-| **視覺化導航** | [文檔中心 - 視覺化導航](README.md#📊-視覺化導航) | 圖表總覽和視覺化架構 |
-| **智能搜尋** | [文檔中心 - 智能搜尋](README.md#🔍-智能搜尋和導航) | 關鍵字搜尋和主題導航 |
-
-## 📊 視點間交叉引用
-
-### 功能視點 (Functional Viewpoint)
-
-**主文檔**: [功能視點總覽](viewpoints/functional/README.md)
-
-#### 強關聯視點
-- **[資訊視點](viewpoints/information/README.md)** - 領域事件和資料流設計
-- **[開發視點](viewpoints/development/README.md)** - DDD 戰術模式實現
-- **[部署視點](viewpoints/deployment/README.md)** - 功能模組的部署策略
-
-#### 相關文檔
-- **[領域模型設計](viewpoints/functional/domain-model.md)** ↔ **[領域事件設計](viewpoints/information/domain-events.md)**
-- **[聚合根設計](viewpoints/functional/aggregates.md)** ↔ **六角形架構實現**
-- **[界限上下文](viewpoints/functional/bounded-contexts.md)** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
-
-#### 相關圖表
-- **[領域模型圖](diagrams/plantuml/domain-model-diagram.svg)** - 完整領域模型視覺化
-- **[界限上下文圖](diagrams/plantuml/bounded-context-diagram.svg)** - 上下文劃分
-- **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 業務流程分析
-
-### 情境視點 (Context Viewpoint)
-
-**主文檔**: [情境視點總覽](viewpoints/context/README.md)
-
-#### 強關聯視點
-- **[功能視點](viewpoints/functional/README.md)** - 外部系統整合的功能需求
-- **[部署視點](viewpoints/deployment/README.md)** - 外部系統的部署整合
-- **[運營視點](viewpoints/operational/README.md)** - 外部系統監控和整合狀態
-
-#### 相關文檔
-- **[系統邊界定義](viewpoints/context/README.md#系統邊界和外部依賴)** ↔ **[功能邊界設計](viewpoints/functional/bounded-contexts.md)**
-- **[外部系統整合](viewpoints/context/README.md#外部系統整合)** ↔ **[基礎設施部署](viewpoints/deployment/README.md)**
-- **[利害關係人分析](viewpoints/context/README.md#利害關係人分析)** ↔ **[運營監控需求](viewpoints/operational/README.md)**
-
-#### 相關圖表
-- **[系統上下文圖](diagrams/generated/context/system-context-overview.png)** - 完整系統邊界和外部依賴
-- **[外部整合架構圖](diagrams/generated/context/external-integrations.png)** - 外部系統整合設計
-- **[利害關係人互動圖](diagrams/generated/context/stakeholder-interactions.png)** - 利害關係人關係分析
-
-### 資訊視點 (Information Viewpoint)
-
-**主文檔**: [資訊視點總覽](viewpoints/information/README.md)
-
-#### 強關聯視點
-- **[功能視點](viewpoints/functional/README.md)** - 業務邏輯和資料模型的對應
-- **[並發視點](viewpoints/concurrency/README.md)** - 事件驅動和非同步處理
-- **[運營視點](viewpoints/operational/README.md)** - 資料監控和可觀測性
-
-#### 相關文檔
-- **[領域事件設計](viewpoints/information/domain-events.md)** ↔ **[聚合根設計](viewpoints/functional/aggregates.md)**
-- **[架構元素](viewpoints/information/architecture-elements.md)** ↔ **[並發視點總覽](viewpoints/concurrency/README.md)**
-
-#### 相關圖表
-- **## 事件驅動架構圖
-
-```mermaid
-graph LR
-    subgraph 領域事件 ["領域事件"]
-        OCE[OrderCreatedEvent]
-        OIAE[OrderItemAddedEvent]
-        PRE[PaymentRequestedEvent]
-        PFE[PaymentFailedEvent]
-    end
-    
-    subgraph 事件處理 ["事件處理"]
-        EP[DomainEventPublisherService]
-        EB[DomainEventBus]
-        OS[OrderProcessingSaga]
-    end
-    
-    subgraph 事件監聽器 ["事件監聽器"]
-        PS[PaymentService]
-        LS[LogisticsService]
-    end
-    
-    AGG[Order<br>聚合根] -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
-    
-    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
-    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
-    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
-    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
-    
-    class OCE,OIAE,PRE,PFE event
-    class EP,EB publisher
-    class OS,PS,LS handler
-    class AGG aggregateRoot
-```** - 事件驅動模式
-- **[CQRS 模式圖](diagrams/plantuml/cqrs-pattern-diagram.svg)** - 命令查詢責任分離
-- **[Event Storming 詳細分析](diagrams/plantuml/event-storming/)** - Big Picture、Process Level、Design Level
-
-### 並發視點 (Concurrency Viewpoint)
-
-**主文檔**: [並發視點總覽](viewpoints/concurrency/README.md)
-
-#### 強關聯視點
-- **[資訊視點](viewpoints/information/README.md)** - 事件驅動架構和資料一致性
-- **[運營視點](viewpoints/operational/README.md)** - 並發監控和性能調優
-
-#### 相關文檔
-- **並發處理策略** ↔ **[領域事件設計](viewpoints/information/domain-events.md)**
-- **非同步處理** ↔ **[可觀測性概覽](viewpoints/operational/observability-overview.md)**
-
-#### 相關圖表
-- **## 事件驅動架構圖
-
-```mermaid
-graph LR
-    subgraph 領域事件 ["領域事件"]
-        OCE[OrderCreatedEvent]
-        OIAE[OrderItemAddedEvent]
-        PRE[PaymentRequestedEvent]
-        PFE[PaymentFailedEvent]
-    end
-    
-    subgraph 事件處理 ["事件處理"]
-        EP[DomainEventPublisherService]
-        EB[DomainEventBus]
-        OS[OrderProcessingSaga]
-    end
-    
-    subgraph 事件監聽器 ["事件監聽器"]
-        PS[PaymentService]
-        LS[LogisticsService]
-    end
-    
-    AGG[Order<br>聚合根] -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
-    
-    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
-    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
-    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
-    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
-    
-    class OCE,OIAE,PRE,PFE event
-    class EP,EB publisher
-    class OS,PS,LS handler
-    class AGG aggregateRoot
-```** - 並發事件處理
-- **[系統架構概覽圖](diagrams/mermaid/architecture-overview.md)** - 並發處理層
-
-### 開發視點 (Development Viewpoint)
-
-**主文檔**: [開發視點總覽](viewpoints/development/README.md)
-
-#### 強關聯視點
-- **[功能視點](viewpoints/functional/README.md)** - DDD 戰術模式的實現
-- **[部署視點](viewpoints/deployment/README.md)** - 開發環境和 CI/CD 流程
-
-#### 相關文檔
-- **六角形架構實現** ↔ **[領域模型設計](viewpoints/functional/domain-model.md)**
-- **開發工作流程** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
-- **Epic 實現指南** ↔ **[聚合根設計](viewpoints/functional/aggregates.md)**
-
-#### 相關圖表
-- **[六角形架構圖](diagrams/mermaid/hexagonal-architecture.md)** - 端口和適配器實現
-- **[DDD 分層架構圖](diagrams/mermaid/ddd-layered-architecture.md)** - 完整的開發架構
-
-### 部署視點 (Deployment Viewpoint)
-
-**主文檔**: [部署視點總覽](viewpoints/deployment/README.md)
-
-#### 強關聯視點
-- **[開發視點](viewpoints/development/README.md)** - CI/CD 流程和建置策略
-- **[運營視點](viewpoints/operational/README.md)** - 部署後的監控和維護
-
-#### 相關文檔
-- **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)** ↔ **開發工作流程**
-- **[生產部署檢查清單](viewpoints/deployment/production-deployment-checklist.md)** ↔ **[可觀測性概覽](viewpoints/operational/observability-overview.md)**
-- **[可觀測性部署](viewpoints/deployment/observability-deployment.md)** ↔ **[生產環境測試指南](viewpoints/operational/production-observability-testing-guide.md)**
-
-#### 相關圖表
-- **[部署架構圖](diagrams/plantuml/deployment-diagram.svg)** - 完整部署架構
-- **## AWS 基礎設施圖
-
-```mermaid
-graph TB
-    subgraph "AWS Infrastructure"
-        EKS[EKS Cluster]
-        RDS[RDS Database]
-        S3[S3 Storage]
-        CloudWatch[CloudWatch]
-        ALB[Application Load Balancer]
-    end
-    
-    ALB --> EKS
-    EKS --> RDS
-    EKS --> S3
-    EKS --> CloudWatch
-```** - 雲端基礎設施
-- **## 多環境架構圖
-
-```mermaid
-graph TB
-    subgraph DEV ["Development Environment"]
-        DEV_APP[Spring Boot App<br/>Profile: dev]
-        H2_DB[(H2 Database)]
-        MEMORY_EVENTS[In-Memory Events]
-    end
-    
-    subgraph PROD ["Production Environment"]
-        PROD_APP[Spring Boot App<br/>Profile: production]
-        RDS_DB[(RDS PostgreSQL)]
-        MSK_EVENTS[MSK Events]
-    end
-    
-    subgraph CONFIG ["Configuration"]
-        BASE_CONFIG[application.yml]
-        DEV_CONFIG[application-dev.yml]
-        PROD_CONFIG[application-production.yml]
-    end
-    
-    BASE_CONFIG --> DEV_CONFIG
-    BASE_CONFIG --> PROD_CONFIG
-    
-    DEV_CONFIG --> DEV_APP
-    PROD_CONFIG --> PROD_APP
-    
-    DEV_APP --> H2_DB
-    DEV_APP --> MEMORY_EVENTS
-    
-    PROD_APP --> RDS_DB
-    PROD_APP --> MSK_EVENTS
-    
-    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class DEV_APP,H2_DB,MEMORY_EVENTS dev
-    class PROD_APP,RDS_DB,MSK_EVENTS prod
-    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
-```** - 環境管理策略
-
-### 運營視點 (Operational Viewpoint)
-
-**主文檔**: [運營視點總覽](viewpoints/operational/README.md)
-
-#### 強關聯視點
-- **[部署視點](viewpoints/deployment/README.md)** - 部署策略和運營準備
-- **[並發視點](viewpoints/concurrency/README.md)** - 並發監控和性能調優
-- **[資訊視點](viewpoints/information/README.md)** - 資料監控和事件追蹤
-
-#### 相關文檔
-- **[可觀測性概覽](viewpoints/operational/observability-overview.md)** ↔ **[可觀測性部署](viewpoints/deployment/observability-deployment.md)**
-- **[生產環境測試指南](viewpoints/operational/production-observability-testing-guide.md)** ↔ **[生產部署檢查清單](viewpoints/deployment/production-deployment-checklist.md)**
-- **[配置指南](viewpoints/operational/configuration-guide.md)** ↔ **[基礎設施即程式碼](viewpoints/deployment/infrastructure-as-code.md)**
-
-#### 相關圖表
-- **## 可觀測性架構圖
-
-```mermaid
-graph TB
-    subgraph APP ["Spring Boot Application"]
-        ACTUATOR[Spring Boot Actuator]
-        OTEL[OpenTelemetry Agent]
-        LOGBACK[Logback JSON Logging]
-        MICROMETER[Micrometer Metrics]
-    end
-    
-    subgraph K8S ["Kubernetes Cluster"]
-        FLUENT[Fluent Bit DaemonSet]
-        PROMETHEUS[Prometheus]
-        GRAFANA[Grafana]
-    end
-    
-    subgraph AWS ["AWS Services"]
-        CW_LOGS[CloudWatch Logs]
-        CW_METRICS[CloudWatch Metrics]
-        XRAY[AWS X-Ray]
-        OPENSEARCH[OpenSearch Service]
-    end
-    
-    ACTUATOR --> PROMETHEUS
-    LOGBACK --> FLUENT
-    OTEL --> XRAY
-    MICROMETER --> PROMETHEUS
-    
-    FLUENT --> CW_LOGS
-    PROMETHEUS --> CW_METRICS
-    GRAFANA --> PROMETHEUS
-    
-    CW_LOGS --> OPENSEARCH
-    
-    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
-    class FLUENT,PROMETHEUS,GRAFANA kubernetes
-    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
-```** - 監控系統架構
-- **[可觀測性詳細圖](diagrams/plantuml/observability-diagram.svg)** - 監控組件詳細設計
-
-## 🎯 觀點間交叉引用
-
-### 安全性觀點 (Security Perspective)
-
-**主文檔**: [安全性觀點總覽](perspectives/security/README.md)
-
-#### 跨視點應用
-- **[功能視點安全考量](viewpoints/functional/quality-considerations.md)** - 業務邏輯安全
-- **[資訊視點安全考量](viewpoints/information/README.md)** - 資料安全和隱私
-- **[開發視點安全考量](viewpoints/development/README.md)** - 安全編碼實踐
-- **[部署視點安全考量](viewpoints/deployment/README.md)** - 基礎設施安全
-- **[運營視點安全考量](viewpoints/operational/README.md)** - 安全監控和事件響應
-
-#### 相關文檔
-- **[跨視點安全應用](perspectives/security/cross-viewpoint-application.md)** - 安全在各視點的具體實現
-
-#### 相關圖表
-- **[安全架構圖](diagrams/plantuml/security-architecture-diagram.svg)** - 完整安全架構設計
-
-### 性能觀點 (Performance Perspective)
-
-**主文檔**: [性能觀點總覽](perspectives/performance/README.md)
-
-#### 跨視點應用
-- **[資訊視點性能考量](viewpoints/information/README.md)** - 資料存取和查詢優化
-- **[並發視點性能考量](viewpoints/concurrency/README.md)** - 並發處理和負載均衡
-- **[部署視點性能考量](viewpoints/deployment/README.md)** - 基礎設施性能配置
-- **[運營視點性能考量](viewpoints/operational/README.md)** - 性能監控和調優
-
-#### 相關圖表
-- **[系統性能架構](diagrams/mermaid/architecture-overview.md)** - 性能關鍵路徑
-- **## 事件驅動性能
-
-```mermaid
-graph LR
-    subgraph 領域事件 ["領域事件"]
-        OCE[OrderCreatedEvent]
-        OIAE[OrderItemAddedEvent]
-        PRE[PaymentRequestedEvent]
-        PFE[PaymentFailedEvent]
-    end
-    
-    subgraph 事件處理 ["事件處理"]
-        EP[DomainEventPublisherService]
-        EB[DomainEventBus]
-        OS[OrderProcessingSaga]
-    end
-    
-    subgraph 事件監聽器 ["事件監聽器"]
-        PS[PaymentService]
-        LS[LogisticsService]
-    end
-    
-    AGG[Order<br>聚合根] -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
-    
-    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
-    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
-    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
-    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
-    
-    class OCE,OIAE,PRE,PFE event
-    class EP,EB publisher
-    class OS,PS,LS handler
-    class AGG aggregateRoot
-```** - 高性能事件處理
-
-### 可用性觀點 (Availability Perspective)
-
-**主文檔**: [可用性觀點總覽](perspectives/availability/README.md)
-
-#### 跨視點應用
-- **[功能視點可用性考量](viewpoints/functional/README.md)** - 關鍵功能的容錯設計
-- **[並發視點可用性考量](viewpoints/concurrency/README.md)** - 並發故障隔離
-- **[部署視點可用性考量](viewpoints/deployment/README.md)** - 高可用部署策略
-- **[運營視點可用性考量](viewpoints/operational/README.md)** - 故障檢測和自動恢復
-
-#### 相關圖表
-- **## 高可用架構
-
-```mermaid
-graph TB
-    subgraph DEV ["Development Environment"]
-        DEV_APP[Spring Boot App<br/>Profile: dev]
-        H2_DB[(H2 Database)]
-        MEMORY_EVENTS[In-Memory Events]
-    end
-    
-    subgraph PROD ["Production Environment"]
-        PROD_APP[Spring Boot App<br/>Profile: production]
-        RDS_DB[(RDS PostgreSQL)]
-        MSK_EVENTS[MSK Events]
-    end
-    
-    subgraph CONFIG ["Configuration"]
-        BASE_CONFIG[application.yml]
-        DEV_CONFIG[application-dev.yml]
-        PROD_CONFIG[application-production.yml]
-    end
-    
-    BASE_CONFIG --> DEV_CONFIG
-    BASE_CONFIG --> PROD_CONFIG
-    
-    DEV_CONFIG --> DEV_APP
-    PROD_CONFIG --> PROD_APP
-    
-    DEV_APP --> H2_DB
-    DEV_APP --> MEMORY_EVENTS
-    
-    PROD_APP --> RDS_DB
-    PROD_APP --> MSK_EVENTS
-    
-    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class DEV_APP,H2_DB,MEMORY_EVENTS dev
-    class PROD_APP,RDS_DB,MSK_EVENTS prod
-    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
-```** - 多環境高可用設計
-- **## 災難恢復架構
-
-```mermaid
-graph TB
-    subgraph "AWS Infrastructure"
-        EKS[EKS Cluster]
-        RDS[RDS Database]
-        S3[S3 Storage]
-        CloudWatch[CloudWatch]
-        ALB[Application Load Balancer]
-    end
-    
-    ALB --> EKS
-    EKS --> RDS
-    EKS --> S3
-    EKS --> CloudWatch
-```** - 災難恢復策略
-
-### 演進性觀點 (Evolution Perspective)
-
-**主文檔**: [演進性觀點總覽](perspectives/evolution/README.md)
-
-#### 跨視點應用
-- **[功能視點演進考量](viewpoints/functional/README.md)** - 功能擴展和業務規則靈活性
-- **[開發視點演進考量](viewpoints/development/README.md)** - 程式碼品質和技術債務管理
-
-#### 相關圖表
-- **[演進架構圖](diagrams/mermaid/ddd-layered-architecture.md)** - 可演進的分層架構
-
-### 使用性觀點 (Usability Perspective)
-
-**主文檔**: [使用性觀點總覽](perspectives/usability/README.md)
-
-#### 跨視點應用
-- **[功能視點使用性考量](viewpoints/functional/README.md)** - 用戶體驗和介面設計
-
-#### 相關圖表
-- **[API 交互圖](diagrams/mermaid/api-interactions.md)** - 用戶介面和 API 交互
-
-### 法規觀點 (Regulation Perspective)
-
-**主文檔**: [法規觀點總覽](perspectives/regulation/README.md)
-
-#### 跨視點應用
-- **[資訊視點法規考量](viewpoints/information/README.md)** - 資料治理和隱私保護
-- **[運營視點法規考量](viewpoints/operational/README.md)** - 合規監控和稽核支援
-
-#### 相關圖表
-- **[合規架構圖](diagrams/plantuml/observability-diagram.svg)** - 合規監控和稽核
-
-### 位置觀點 (Location Perspective)
-
-**主文檔**: [位置觀點總覽](perspectives/location/README.md)
-
-#### 跨視點應用
-- **[部署視點位置考量](viewpoints/deployment/README.md)** - 地理分佈部署策略
-
-#### 相關圖表
-- **## 地理分佈圖
-
-```mermaid
-graph TB
-    subgraph "AWS Infrastructure"
-        EKS[EKS Cluster]
-        RDS[RDS Database]
-        S3[S3 Storage]
-        CloudWatch[CloudWatch]
-        ALB[Application Load Balancer]
-    end
-    
-    ALB --> EKS
-    EKS --> RDS
-    EKS --> S3
-    EKS --> CloudWatch
-```** - 多區域部署架構
-
-### 成本觀點 (Cost Perspective)
-
-**主文檔**: [成本觀點總覽](perspectives/cost/README.md)
-
-#### 跨視點應用
-- **[開發視點成本考量](viewpoints/development/README.md)** - 開發效率和維護成本
-- **[部署視點成本考量](viewpoints/deployment/README.md)** - 基礎設施成本優化
-- **[運營視點成本考量](viewpoints/operational/README.md)** - 運營成本監控
-
-#### 相關圖表
-- **## 成本優化圖
-
-```mermaid
-graph TB
-    subgraph DEV ["Development Environment"]
-        DEV_APP[Spring Boot App<br/>Profile: dev]
-        H2_DB[(H2 Database)]
-        MEMORY_EVENTS[In-Memory Events]
-    end
-    
-    subgraph PROD ["Production Environment"]
-        PROD_APP[Spring Boot App<br/>Profile: production]
-        RDS_DB[(RDS PostgreSQL)]
-        MSK_EVENTS[MSK Events]
-    end
-    
-    subgraph CONFIG ["Configuration"]
-        BASE_CONFIG[application.yml]
-        DEV_CONFIG[application-dev.yml]
-        PROD_CONFIG[application-production.yml]
-    end
-    
-    BASE_CONFIG --> DEV_CONFIG
-    BASE_CONFIG --> PROD_CONFIG
-    
-    DEV_CONFIG --> DEV_APP
-    PROD_CONFIG --> PROD_APP
-    
-    DEV_APP --> H2_DB
-    DEV_APP --> MEMORY_EVENTS
-    
-    PROD_APP --> RDS_DB
-    PROD_APP --> MSK_EVENTS
-    
-    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class DEV_APP,H2_DB,MEMORY_EVENTS dev
-    class PROD_APP,RDS_DB,MSK_EVENTS prod
-    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
-```** - 成本效益架構設計
-
-## 🔧 專業領域交叉引用
-
-### API 設計和整合
-
-#### 核心文檔
-- **API 版本策略** ↔ **[演進性觀點](perspectives/evolution/README.md)**
-- **前端整合指南** ↔ **[使用性觀點](perspectives/usability/README.md)**
-- **可觀測性 API** ↔ **[運營視點](viewpoints/operational/README.md)**
-
-#### 相關圖表
-- **[API 交互圖](diagrams/mermaid/api-interactions.md)** - API 設計和交互關係
-
-### MCP (Model Context Protocol) 整合
-
-#### 核心文檔
-- **[MCP 整合指南](mcp/README.md)** ↔ **[開發視點](viewpoints/development/README.md)**
-- **[Excalidraw MCP 使用](mcp/excalidraw-mcp-usage-guide.md)** ↔ **[圖表工具指南](diagrams/diagram-tools-guide.md)**
-
-### 測試和品質保證
-
-#### 核心文檔
-- **[測試性能監控](testing/test-performance-monitoring.md)** ↔ **[性能觀點](perspectives/performance/README.md)**
-- **[測試配置範例](testing/test-configuration-examples.md)** ↔ **[開發視點](viewpoints/development/README.md)**
-
-## 📊 圖表交叉引用
-
-### 按圖表類型分類
-
-#### Mermaid 圖表 (GitHub 直接顯示)
-- **[系統架構概覽](diagrams/mermaid/architecture-overview.md)** - 連結到所有視點
-- **[DDD 分層架構](diagrams/mermaid/ddd-layered-architecture.md)** - 連結到功能視點和開發視點
-- **[六角形架構](diagrams/mermaid/hexagonal-architecture.md)** - 連結到開發視點
-- **[事件驅動架構](diagrams/mermaid/event-driven-architecture.md)** - 連結到資訊視點和並發視點
-- **[API 交互圖](diagrams/mermaid/api-interactions.md)** - 連結到使用性觀點
-
-#### PlantUML 圖表 (詳細 UML)
-- **[領域模型圖](diagrams/plantuml/domain-model-diagram.svg)** - 連結到功能視點
-- **[界限上下文圖](diagrams/plantuml/bounded-context-diagram.svg)** - 連結到功能視點
-- **[Event Storming 系列](diagrams/plantuml/event-storming/)** - 連結到資訊視點
-- **[安全架構圖](diagrams/plantuml/security-architecture-diagram.svg)** - 連結到安全性觀點
-- **[部署架構圖](diagrams/plantuml/deployment-diagram.svg)** - 連結到部署視點
-- **[可觀測性圖](diagrams/plantuml/observability-diagram.svg)** - 連結到運營視點
-
-### 按視點分類的圖表
-
-#### 功能視點相關圖表
-- **[領域模型圖](diagrams/plantuml/domain-model-diagram.svg)**
-- **[界限上下文圖](diagrams/plantuml/bounded-context-diagram.svg)**
-- **[用例圖](diagrams/plantuml/use-case-diagram.svg)**
-
-#### 資訊視點相關圖表
-- **[Event Storming 系列](diagrams/plantuml/event-storming/)**
-- **[CQRS 模式圖](diagrams/plantuml/cqrs-pattern-diagram.svg)**
-- **[事件溯源圖](diagrams/plantuml/event-sourcing-diagram.svg)**
-
-#### 並發視點相關圖表
-- **## 事件驅動架構圖
-
-```mermaid
-graph LR
-    subgraph 領域事件 ["領域事件"]
-        OCE[OrderCreatedEvent]
-        OIAE[OrderItemAddedEvent]
-        PRE[PaymentRequestedEvent]
-        PFE[PaymentFailedEvent]
-    end
-    
-    subgraph 事件處理 ["事件處理"]
-        EP[DomainEventPublisherService]
-        EB[DomainEventBus]
-        OS[OrderProcessingSaga]
-    end
-    
-    subgraph 事件監聽器 ["事件監聽器"]
-        PS[PaymentService]
-        LS[LogisticsService]
-    end
-    
-    AGG[Order<br>聚合根] -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
-    
-    classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
-    classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
-    classDef handler fill:#cc99ff,stroke:#333,stroke-width:2px
-    classDef aggregateRoot fill:#bbf,stroke:#333,stroke-width:2px
-    
-    class OCE,OIAE,PRE,PFE event
-    class EP,EB publisher
-    class OS,PS,LS handler
-    class AGG aggregateRoot
-```**
-- **[並發處理圖](diagrams/mermaid/architecture-overview.md)**
-
-#### 開發視點相關圖表
-- **[六角形架構圖](diagrams/mermaid/hexagonal-architecture.md)**
-- **[DDD 分層架構圖](diagrams/mermaid/ddd-layered-architecture.md)**
-
-#### 部署視點相關圖表
-- **[部署架構圖](diagrams/plantuml/deployment-diagram.svg)**
-- **## AWS 基礎設施圖
-
-```mermaid
-graph TB
-    subgraph "AWS Infrastructure"
-        EKS[EKS Cluster]
-        RDS[RDS Database]
-        S3[S3 Storage]
-        CloudWatch[CloudWatch]
-        ALB[Application Load Balancer]
-    end
-    
-    ALB --> EKS
-    EKS --> RDS
-    EKS --> S3
-    EKS --> CloudWatch
-```**
-- **## 多環境架構圖
-
-```mermaid
-graph TB
-    subgraph DEV ["Development Environment"]
-        DEV_APP[Spring Boot App<br/>Profile: dev]
-        H2_DB[(H2 Database)]
-        MEMORY_EVENTS[In-Memory Events]
-    end
-    
-    subgraph PROD ["Production Environment"]
-        PROD_APP[Spring Boot App<br/>Profile: production]
-        RDS_DB[(RDS PostgreSQL)]
-        MSK_EVENTS[MSK Events]
-    end
-    
-    subgraph CONFIG ["Configuration"]
-        BASE_CONFIG[application.yml]
-        DEV_CONFIG[application-dev.yml]
-        PROD_CONFIG[application-production.yml]
-    end
-    
-    BASE_CONFIG --> DEV_CONFIG
-    BASE_CONFIG --> PROD_CONFIG
-    
-    DEV_CONFIG --> DEV_APP
-    PROD_CONFIG --> PROD_APP
-    
-    DEV_APP --> H2_DB
-    DEV_APP --> MEMORY_EVENTS
-    
-    PROD_APP --> RDS_DB
-    PROD_APP --> MSK_EVENTS
-    
-    classDef dev fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    classDef prod fill:#ffebee,stroke:#c62828,stroke-width:2px
-    classDef config fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class DEV_APP,H2_DB,MEMORY_EVENTS dev
-    class PROD_APP,RDS_DB,MSK_EVENTS prod
-    class BASE_CONFIG,DEV_CONFIG,PROD_CONFIG config
-```**
-
-#### 運營視點相關圖表
-- **## 可觀測性架構圖
-
-```mermaid
-graph TB
-    subgraph APP ["Spring Boot Application"]
-        ACTUATOR[Spring Boot Actuator]
-        OTEL[OpenTelemetry Agent]
-        LOGBACK[Logback JSON Logging]
-        MICROMETER[Micrometer Metrics]
-    end
-    
-    subgraph K8S ["Kubernetes Cluster"]
-        FLUENT[Fluent Bit DaemonSet]
-        PROMETHEUS[Prometheus]
-        GRAFANA[Grafana]
-    end
-    
-    subgraph AWS ["AWS Services"]
-        CW_LOGS[CloudWatch Logs]
-        CW_METRICS[CloudWatch Metrics]
-        XRAY[AWS X-Ray]
-        OPENSEARCH[OpenSearch Service]
-    end
-    
-    ACTUATOR --> PROMETHEUS
-    LOGBACK --> FLUENT
-    OTEL --> XRAY
-    MICROMETER --> PROMETHEUS
-    
-    FLUENT --> CW_LOGS
-    PROMETHEUS --> CW_METRICS
-    GRAFANA --> PROMETHEUS
-    
-    CW_LOGS --> OPENSEARCH
-    
-    classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef kubernetes fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef aws fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class ACTUATOR,OTEL,LOGBACK,MICROMETER application
-    class FLUENT,PROMETHEUS,GRAFANA kubernetes
-    class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
-```**
-- **[可觀測性詳細圖](diagrams/plantuml/observability-diagram.svg)**
-
-## 🎯 使用建議
-
-### 導航策略
-
-1. **新手入門**: 從 [文檔中心首頁](README.md) 開始，使用角色導航找到適合的入口點
-2. **深度學習**: 使用 [Viewpoint-Perspective 矩陣](viewpoint-perspective-matrix.md) 理解關聯關係
-3. **實踐應用**: 根據具體需求使用關注點導航快速定位相關文檔
-4. **問題解決**: 使用智能搜尋功能和交叉引用快速找到解決方案
-
-### 文檔維護
-
-- **自動化同步**: 使用 `python scripts/sync-diagram-references.py` 維護圖表引用
-- **連結檢查**: 定期運行 `./scripts/validate-docs.sh` 檢查連結有效性
-- **交叉引用更新**: 新增文檔時更新本文件的交叉引用關係
+| **By Role Navigation** | [Documentation Center - By Role](README.md#👨‍💼-by-role-navigation) | Architects, developers, DevOps, security engineers, etc. |
+| **By Concern Navigation** | [Documentation Center - By Concern](README.md#🔍-by-concern-navigation) | System architecture, DDD, data architecture, security, etc. |
+| **Visual Navigation** | [Documentation Center - Visual Navigation](README.md#📊-visual-navigation) | Diagram overview and visual architecture |
+| **Smart Search** | [Documentation Center - Smart Search](README.md#🔍-smart-search-and-navigation) | Keyword search and topic navigation |
+
+## 📊 Inter-Viewpoint Cross-References
+
+### Functional Viewpoint
+
+**Main Document**: [Functional Viewpoint Overview](viewpoints/functional/README.md)
+
+#### Strongly Related Viewpoints
+- **[Information Viewpoint](viewpoints/information/README.md)** - Domain events and data flow design
+- **[Development Viewpoint](viewpoints/development/README.md)** - DDD tactical pattern implementation
+- **[Deployment Viewpoint](viewpoints/deployment/README.md)** - Functional module deployment strategies
+
+#### Related Documents
+- **[Domain Model Design](viewpoints/functional/domain-model.md)** ↔ **[Domain Events Design](viewpoints/information/domain-events.md)**
+- **[Aggregate Root Design](viewpoints/functional/aggregates.md)** ↔ **Hexagonal Architecture Implementation**
+- **[Bounded Contexts](viewpoints/functional/bounded-contexts.md)** ↔ **[Infrastructure as Code](viewpoints/deployment/infrastructure-as-code.md)**
+
+#### Related Diagrams
+- **[Domain Model Diagram](diagrams/plantuml/domain-model-diagram.svg)** - Complete domain model visualization
+- **[Bounded Context Diagram](diagrams/plantuml/bounded-context-diagram.svg)** - Context division
+- **[Event Storming Series](diagrams/plantuml/event-storming/)** - Business process analysis
+
+### Context Viewpoint
+
+**Main Document**: [Context Viewpoint Overview](viewpoints/context/README.md)
+
+#### Strongly Related Viewpoints
+- **[Functional Viewpoint](viewpoints/functional/README.md)** - Functional requirements for external system integration
+- **[Information Viewpoint](viewpoints/information/README.md)** - External data exchange and integration protocols
+- **[Deployment Viewpoint](viewpoints/deployment/README.md)** - External system deployment and network configuration
+
+#### Related Documents
+- **[Stakeholder Analysis](viewpoints/context/stakeholder-analysis.md)** ↔ **[Business Requirements](viewpoints/functional/business-requirements.md)**
+- **[External Integrations](viewpoints/context/external-integrations.md)** ↔ **[API Design](viewpoints/functional/api-design.md)**
+- **[System Boundaries](viewpoints/context/system-boundaries.md)** ↔ **[Security Boundaries](perspectives/security/security-boundaries.md)**
+
+## 🎯 Perspective Cross-References
+
+### Security Perspective
+
+**Main Document**: [Security Perspective Overview](perspectives/security/README.md)
+
+#### High Impact Viewpoints
+- **[Functional Viewpoint](viewpoints/functional/README.md)** - Business function security
+- **[Information Viewpoint](viewpoints/information/README.md)** - Data security
+- **[Development Viewpoint](viewpoints/development/README.md)** - Secure development
+- **[Deployment Viewpoint](viewpoints/deployment/README.md)** - Infrastructure security
+- **[Operational Viewpoint](viewpoints/operational/README.md)** - Operational security
+
+#### Related Implementation Documents
+- **Security Standards** ↔ **[Development Standards](development/coding-standards.md)**
+- **Data Protection** ↔ **[Information Security](viewpoints/information/data-protection.md)**
+- **Infrastructure Security** ↔ **[Deployment Security](viewpoints/deployment/security-configuration.md)**
+
+### Performance Perspective
+
+**Main Document**: [Performance Perspective Overview](perspectives/performance/README.md)
+
+#### High Impact Viewpoints
+- **[Information Viewpoint](viewpoints/information/README.md)** - Data performance
+- **[Concurrency Viewpoint](viewpoints/concurrency/README.md)** - Concurrency performance
+- **[Deployment Viewpoint](viewpoints/deployment/README.md)** - Deployment performance
+- **[Operational Viewpoint](viewpoints/operational/README.md)** - Operational performance
+
+#### Related Implementation Documents
+- **Database Optimization** ↔ **[Information Architecture](viewpoints/information/database-architecture.md)**
+- **Caching Strategy** ↔ **[Performance Implementation](viewpoints/deployment/performance-configuration.md)**
+- **Monitoring Setup** ↔ **[Operational Monitoring](viewpoints/operational/monitoring-setup.md)**
+
+## 🔄 Bidirectional Relationships
+
+### Viewpoint ↔ Perspective Integration
+
+#### Security Integration Points
+- **Functional ↔ Security**: Business logic security validation
+- **Information ↔ Security**: Data encryption and access control
+- **Development ↔ Security**: Secure coding practices and security testing
+- **Deployment ↔ Security**: Infrastructure security configuration
+- **Operational ↔ Security**: Security monitoring and incident response
+
+#### Performance Integration Points
+- **Information ↔ Performance**: Database query optimization and caching
+- **Concurrency ↔ Performance**: Multi-threading and concurrent processing
+- **Deployment ↔ Performance**: Resource configuration and auto-scaling
+- **Operational ↔ Performance**: Performance monitoring and capacity planning
+
+#### Availability Integration Points
+- **Information ↔ Availability**: Data backup and disaster recovery
+- **Concurrency ↔ Availability**: Fault isolation and resource protection
+- **Deployment ↔ Availability**: High availability deployment and load balancing
+- **Operational ↔ Availability**: Health monitoring and incident response
+
+## 📈 Quality Attribute Scenarios Cross-References
+
+### Security Scenarios
+- **Authentication Scenario** → [Functional Viewpoint Security](viewpoints/functional/README.md#security-considerations)
+- **Data Protection Scenario** → [Information Viewpoint Security](viewpoints/information/README.md#security-considerations)
+- **Infrastructure Security Scenario** → [Deployment Viewpoint Security](viewpoints/deployment/README.md#security-considerations)
+
+### Performance Scenarios
+- **Response Time Scenario** → [Functional Viewpoint Performance](viewpoints/functional/README.md#performance-considerations)
+- **Scalability Scenario** → [Deployment Viewpoint Performance](viewpoints/deployment/README.md#performance-considerations)
+- **Database Performance Scenario** → [Information Viewpoint Performance](viewpoints/information/README.md#performance-considerations)
+
+### Availability Scenarios
+- **System Failure Scenario** → [Operational Viewpoint Availability](viewpoints/operational/README.md#availability-considerations)
+- **Load Spike Scenario** → [Deployment Viewpoint Availability](viewpoints/deployment/README.md#availability-considerations)
+- **Data Recovery Scenario** → [Information Viewpoint Availability](viewpoints/information/README.md#availability-considerations)
+
+## 🛠️ Implementation Cross-References
+
+### Architecture Pattern Implementation
+- **Domain-Driven Design** → [Functional Viewpoint](viewpoints/functional/README.md) + [Information Viewpoint](viewpoints/information/README.md)
+- **Hexagonal Architecture** → [Development Viewpoint](viewpoints/development/README.md) + [Functional Viewpoint](viewpoints/functional/README.md)
+- **Event-Driven Architecture** → [Information Viewpoint](viewpoints/information/README.md) + [Concurrency Viewpoint](viewpoints/concurrency/README.md)
+- **Microservices Architecture** → [Deployment Viewpoint](viewpoints/deployment/README.md) + [Operational Viewpoint](viewpoints/operational/README.md)
+
+### Technology Stack Cross-References
+- **Spring Boot + Java 21** → [Development Viewpoint](viewpoints/development/README.md)
+- **AWS Infrastructure** → [Deployment Viewpoint](viewpoints/deployment/README.md)
+- **Database Technologies** → [Information Viewpoint](viewpoints/information/README.md)
+- **Monitoring Stack** → [Operational Viewpoint](viewpoints/operational/README.md)
+
+## 📋 Document Maintenance Cross-References
+
+### Documentation Standards
+- **[English Documentation Standards](english-documentation-standards.md)** - Language requirements for all documentation
+- **[Diagram Generation Standards](diagram-generation-standards.md)** - Standards for PlantUML and Mermaid diagrams
+- **[Reports Organization Standards](reports-organization-standards.md)** - File organization and categorization
+
+### Quality Assurance
+- **[Architecture Assessment](architecture/rozanski-woods-architecture-assessment.md)** - Architecture maturity evaluation
+- **[Documentation Quality](reports-summaries/quality-ux/)** - Documentation quality reports
+- **[Link Integrity](scripts/validate-diagram-links.py)** - Automated link validation
+
+## 🔍 Navigation Recommendations
+
+### For New Team Members
+1. **Start Here**: Begin with [Documentation Center Home](README.md)
+2. **Understand Relationships**: Use [Cross-Reference Matrix](viewpoint-perspective-matrix.md) to understand connections
+3. **Role-Based Entry**: Use role navigation to find appropriate entry points
+4. **Practical Application**: Use concern navigation to quickly locate relevant documents
+
+### For Architecture Design
+1. **Requirements Analysis**: Start with functional viewpoint to identify core requirements
+2. **Perspective Checks**: Check related high-impact perspective requirements for each viewpoint
+3. **Design Integration**: Ensure perspective requirements are reflected in viewpoint design
+4. **Compliance Verification**: Use cross-references to verify completeness of architectural decisions
+
+### For Implementation
+1. **Implementation Planning**: Use viewpoint documents for detailed implementation guidance
+2. **Quality Assurance**: Use perspective documents to ensure quality attribute requirements
+3. **Testing Strategy**: Cross-reference testing requirements across viewpoints and perspectives
+4. **Deployment Planning**: Integrate deployment considerations from multiple viewpoints
 
 ---
 
-**維護說明**: 本文件隨著架構文檔的演進自動更新，確保交叉引用的準確性和完整性。
+**Maintenance Note**: This cross-reference system should be updated whenever new documents are added or relationships change, ensuring accurate navigation and complete coverage of architectural concerns.
+
+**Last Updated**: September 25, 2025  
+**Maintainer**: Architecture Team

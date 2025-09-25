@@ -1,19 +1,19 @@
-# 資訊視點架構元素
+# Information Viewpoint Architecture Elements
 
-## 概覽
+## Overview
 
-資訊視點關注系統中資料的結構、流動和管理，包括資料模型、領域事件、資訊流和資料一致性策略等核心架構元素。
+The Information Viewpoint focuses on the structure, flow, and management of data within the system, including core architectural elements such as data models, domain events, information flow, and data consistency strategies.
 
-## 核心架構元素
+## Core Architecture Elements
 
-### 1. 資料模型 (Data Models)
+### 1. Data Models
 
-#### 領域資料模型
+#### Domain Data Models
 
-系統採用領域驅動設計，資料模型直接反映業務概念和關係。
+The system adopts Domain-Driven Design, where data models directly reflect business concepts and relationships.
 
 ```java
-// 客戶資料模型
+// Customer Data Model
 @Entity
 @Table(name = "customers")
 public class CustomerEntity {
@@ -45,7 +45,7 @@ public class CustomerEntity {
     private LocalDateTime updatedAt;
 }
 
-// 訂單資料模型
+// Order Data Model
 @Entity
 @Table(name = "orders")
 public class OrderEntity {
@@ -78,24 +78,24 @@ public class OrderEntity {
 }
 ```
 
-#### 資料關係設計
+#### Data Relationship Design
 
-| 實體 | 關係類型 | 目標實體 | 說明 |
-|------|----------|----------|------|
-| Customer | OneToMany | DeliveryAddress | 客戶可有多個配送地址 |
-| Customer | OneToMany | PaymentMethod | 客戶可有多個支付方式 |
-| Customer | OneToMany | Order | 客戶可有多個訂單 |
-| Order | OneToMany | OrderItem | 訂單包含多個商品項目 |
-| Order | ManyToOne | Customer | 訂單屬於一個客戶 |
-| Product | OneToMany | OrderItem | 產品可在多個訂單項目中 |
-| Category | OneToMany | Product | 分類包含多個產品 |
+| Entity | Relationship Type | Target Entity | Description |
+|--------|-------------------|---------------|-------------|
+| Customer | OneToMany | DeliveryAddress | Customer can have multiple delivery addresses |
+| Customer | OneToMany | PaymentMethod | Customer can have multiple payment methods |
+| Customer | OneToMany | Order | Customer can have multiple orders |
+| Order | OneToMany | OrderItem | Order contains multiple product items |
+| Order | ManyToOne | Customer | Order belongs to one customer |
+| Product | OneToMany | OrderItem | Product can be in multiple order items |
+| Category | OneToMany | Product | Category contains multiple products |
 
-### 2. 領域事件 (Domain Events)
+### 2. Domain Events
 
-#### 事件分類體系
+#### Event Classification System
 
 ```java
-// 客戶相關事件
+// Customer-related Events
 public record CustomerRegisteredEvent(
     CustomerId customerId,
     CustomerName customerName,
@@ -115,7 +115,7 @@ public record CustomerProfileUpdatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent {}
 
-// 訂單相關事件
+// Order-related Events
 public record OrderCreatedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -134,7 +134,7 @@ public record OrderStatusChangedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent {}
 
-// 支付相關事件
+// Payment-related Events
 public record PaymentProcessedEvent(
     PaymentId paymentId,
     OrderId orderId,
@@ -146,10 +146,10 @@ public record PaymentProcessedEvent(
 ) implements DomainEvent {}
 ```
 
-#### 事件存儲結構
+#### Event Storage Structure
 
 ```sql
--- 事件存儲表結構
+-- Event Store Table Structure
 CREATE TABLE event_store (
     event_id UUID PRIMARY KEY,
     event_type VARCHAR(255) NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE event_store (
     INDEX idx_occurred_on (occurred_on)
 );
 
--- 事件處理記錄表
+-- Event Processing Record Table
 CREATE TABLE processed_events (
     id UUID PRIMARY KEY,
     event_id UUID NOT NULL,
@@ -179,85 +179,85 @@ CREATE TABLE processed_events (
 );
 ```
 
-### 3. 資訊流設計 (Information Flow)
+### 3. Information Flow Design
 
-#### 同步資訊流
+#### Synchronous Information Flow
 
 ```mermaid
 sequenceDiagram
-    participant Client as 客戶端
-    participant API as API 服務
-    participant App as 應用服務
-    participant Domain as 領域層
-    participant Repo as 儲存庫
-    participant DB as 資料庫
+    participant Client as Client
+    participant API as API Service
+    participant App as Application Service
+    participant Domain as Domain Layer
+    participant Repo as Repository
+    participant DB as Database
     
-    Client->>API: 創建訂單請求
+    Client->>API: Create Order Request
     API->>App: CreateOrderCommand
-    App->>Domain: 載入客戶聚合
+    App->>Domain: Load Customer Aggregate
     Domain->>Repo: findById(customerId)
     Repo->>DB: SELECT * FROM customers
-    DB-->>Repo: 客戶資料
-    Repo-->>Domain: Customer 聚合
-    App->>Domain: 創建訂單
-    Domain->>Domain: 驗證業務規則
-    Domain->>Domain: 收集領域事件
-    App->>Repo: 保存訂單
+    DB-->>Repo: Customer Data
+    Repo-->>Domain: Customer Aggregate
+    App->>Domain: Create Order
+    Domain->>Domain: Validate Business Rules
+    Domain->>Domain: Collect Domain Events
+    App->>Repo: Save Order
     Repo->>DB: INSERT INTO orders
-    App->>App: 發布領域事件
-    App-->>API: 訂單創建結果
+    App->>App: Publish Domain Events
+    App-->>API: Order Creation Result
     API-->>Client: HTTP 201 Created
 ```
 
-#### 非同步資訊流
+#### Asynchronous Information Flow
 
 ```mermaid
 sequenceDiagram
-    participant Domain as 領域層
-    participant EventBus as 事件匯流排
-    participant Handler1 as 庫存處理器
-    participant Handler2 as 通知處理器
-    participant Handler3 as 統計處理器
-    participant ExtSys as 外部系統
+    participant Domain as Domain Layer
+    participant EventBus as Event Bus
+    participant Handler1 as Inventory Handler
+    participant Handler2 as Notification Handler
+    participant Handler3 as Statistics Handler
+    participant ExtSys as External System
     
     Domain->>EventBus: OrderCreatedEvent
-    EventBus->>Handler1: 處理庫存預留
-    EventBus->>Handler2: 發送確認通知
-    EventBus->>Handler3: 更新統計資料
+    EventBus->>Handler1: Process Inventory Reservation
+    EventBus->>Handler2: Send Confirmation Notification
+    EventBus->>Handler3: Update Statistics
     
-    Handler1->>ExtSys: 調用庫存服務
-    Handler2->>ExtSys: 發送電子郵件
-    Handler3->>Handler3: 更新本地統計
+    Handler1->>ExtSys: Call Inventory Service
+    Handler2->>ExtSys: Send Email
+    Handler3->>Handler3: Update Local Statistics
     
-    ExtSys-->>Handler1: 庫存預留結果
-    ExtSys-->>Handler2: 郵件發送結果
+    ExtSys-->>Handler1: Inventory Reservation Result
+    ExtSys-->>Handler2: Email Send Result
 ```
 
-### 4. 資料一致性策略
+### 4. Data Consistency Strategy
 
-#### 強一致性場景
+#### Strong Consistency Scenarios
 
 ```java
 @Service
 @Transactional
 public class OrderApplicationService {
     
-    // 強一致性：訂單創建和庫存扣減在同一事務中
+    // Strong Consistency: Order creation and inventory deduction in same transaction
     public Order createOrderWithInventoryReservation(CreateOrderCommand command) {
-        // 1. 驗證庫存可用性
+        // 1. Verify inventory availability
         InventoryCheckResult checkResult = inventoryService.checkAvailability(command.getItems());
         if (!checkResult.isAvailable()) {
             throw new InsufficientInventoryException(checkResult.getUnavailableItems());
         }
         
-        // 2. 創建訂單
+        // 2. Create order
         Order order = Order.create(command.getCustomerId(), command.getItems());
         Order savedOrder = orderRepository.save(order);
         
-        // 3. 預留庫存（同一事務）
+        // 3. Reserve inventory (same transaction)
         inventoryService.reserveItems(command.getItems());
         
-        // 4. 發布事件
+        // 4. Publish events
         domainEventService.publishEventsFromAggregate(savedOrder);
         
         return savedOrder;
@@ -265,28 +265,28 @@ public class OrderApplicationService {
 }
 ```
 
-#### 最終一致性場景
+#### Eventual Consistency Scenarios
 
 ```java
 @Component
 public class OrderEventHandler {
     
-    // 最終一致性：通過事件處理實現跨聚合一致性
+    // Eventual Consistency: Cross-aggregate consistency through event processing
     @EventListener
     @Transactional
     public void handleOrderCreated(OrderCreatedEvent event) {
         try {
-            // 異步更新客戶統計
+            // Asynchronously update customer statistics
             updateCustomerOrderStatistics(event.getCustomerId(), event.getTotalAmount());
             
-            // 異步更新產品銷售統計
+            // Asynchronously update product sales statistics
             updateProductSalesStatistics(event.getOrderItems());
             
-            // 記錄處理成功
+            // Record successful processing
             markEventAsProcessed(event.getEventId());
             
         } catch (Exception e) {
-            // 記錄處理失敗，稍後重試
+            // Record processing failure for later retry
             recordEventProcessingFailure(event.getEventId(), e);
             throw e;
         }
@@ -303,12 +303,12 @@ public class OrderEventHandler {
 }
 ```
 
-### 5. 查詢模型設計 (Query Models)
+### 5. Query Model Design
 
-#### CQRS 讀模型
+#### CQRS Read Models
 
 ```java
-// 客戶摘要查詢模型
+// Customer Summary Query Model
 @Entity
 @Table(name = "customer_summaries")
 public class CustomerSummaryView {
@@ -325,15 +325,15 @@ public class CustomerSummaryView {
     private LocalDateTime lastOrderDate;
     private LocalDateTime registrationDate;
     
-    // 用於快速查詢的索引欄位
+    // Index fields for fast queries
     @Column(name = "search_text")
-    private String searchText; // 包含姓名、電子郵件的搜尋文字
+    private String searchText; // Search text containing name and email
     
     @Column(name = "segment")
-    private String customerSegment; // 客戶分群
+    private String customerSegment; // Customer segmentation
 }
 
-// 訂單摘要查詢模型
+// Order Summary Query Model
 @Entity
 @Table(name = "order_summaries")
 public class OrderSummaryView {
@@ -349,13 +349,13 @@ public class OrderSummaryView {
     private LocalDateTime orderDate;
     private LocalDateTime estimatedDeliveryDate;
     
-    // 聚合資料
-    private String productCategories; // JSON 格式的產品分類列表
-    private String deliveryAddress;   // 格式化的配送地址
+    // Aggregated data
+    private String productCategories; // JSON format product category list
+    private String deliveryAddress;   // Formatted delivery address
 }
 ```
 
-#### 查詢服務實現
+#### Query Service Implementation
 
 ```java
 @Service
@@ -401,9 +401,9 @@ public class CustomerQueryService {
 }
 ```
 
-### 6. 資料同步機制
+### 6. Data Synchronization Mechanism
 
-#### 讀模型更新
+#### Read Model Updates
 
 ```java
 @Component
@@ -439,22 +439,22 @@ public class ReadModelUpdater {
         summary.setItemCount(event.getOrderItems().size());
         summary.setOrderDate(event.getOccurredOn());
         
-        // 載入客戶資訊
+        // Load customer information
         Customer customer = customerRepository.findById(event.getCustomerId())
             .orElseThrow(() -> new CustomerNotFoundException(event.getCustomerId()));
         summary.setCustomerName(customer.getName().value());
         
         orderSummaryRepository.save(summary);
         
-        // 更新客戶統計
+        // Update customer statistics
         updateCustomerStatistics(event.getCustomerId(), event.getTotalAmount());
     }
 }
 ```
 
-## 資料架構模式
+## Data Architecture Patterns
 
-### 1. Event Sourcing 模式
+### 1. Event Sourcing Pattern
 
 ```java
 @Component
@@ -465,7 +465,7 @@ public class EventSourcedOrderRepository implements OrderRepository {
     
     @Override
     public Optional<Order> findById(OrderId orderId) {
-        // 1. 嘗試從快照載入
+        // 1. Try to load from snapshot
         Optional<OrderSnapshot> snapshot = snapshotRepository.findLatest(orderId);
         
         Order order;
@@ -478,7 +478,7 @@ public class EventSourcedOrderRepository implements OrderRepository {
             order = null;
         }
         
-        // 2. 載入快照之後的事件
+        // 2. Load events after snapshot
         List<DomainEvent> events = eventStore.getEventsForAggregate(
             orderId.value(), fromVersion);
         
@@ -486,9 +486,9 @@ public class EventSourcedOrderRepository implements OrderRepository {
             return Optional.empty();
         }
         
-        // 3. 重播事件重建聚合狀態
+        // 3. Replay events to rebuild aggregate state
         if (order == null) {
-            order = new Order(); // 空聚合
+            order = new Order(); // Empty aggregate
         }
         
         for (DomainEvent event : events) {
@@ -502,15 +502,15 @@ public class EventSourcedOrderRepository implements OrderRepository {
     public Order save(Order order) {
         List<DomainEvent> uncommittedEvents = order.getUncommittedEvents();
         
-        // 保存事件到事件存儲
+        // Save events to event store
         for (DomainEvent event : uncommittedEvents) {
             eventStore.store(event);
         }
         
-        // 標記事件為已提交
+        // Mark events as committed
         order.markEventsAsCommitted();
         
-        // 定期創建快照
+        // Create snapshot periodically
         if (shouldCreateSnapshot(order)) {
             createSnapshot(order);
         }
@@ -520,28 +520,28 @@ public class EventSourcedOrderRepository implements OrderRepository {
 }
 ```
 
-### 2. CQRS 模式
+### 2. CQRS Pattern
 
 ```java
-// 命令端 - 寫模型
+// Command Side - Write Model
 @Service
 @Transactional
 public class OrderCommandService {
     
     public Order createOrder(CreateOrderCommand command) {
-        // 寫模型專注於業務邏輯和資料一致性
+        // Write model focuses on business logic and data consistency
         Order order = Order.create(command.getCustomerId(), command.getItems());
         return orderRepository.save(order);
     }
 }
 
-// 查詢端 - 讀模型
+// Query Side - Read Model
 @Service
 @Transactional(readOnly = true)
 public class OrderQueryService {
     
     public Page<OrderSummaryView> getOrdersByCustomer(String customerId, Pageable pageable) {
-        // 讀模型專注於查詢性能和使用者體驗
+        // Read model focuses on query performance and user experience
         return orderSummaryRepository.findByCustomerIdOrderByOrderDateDesc(customerId, pageable);
     }
     
@@ -552,9 +552,9 @@ public class OrderQueryService {
 }
 ```
 
-## 資料品質保證
+## Data Quality Assurance
 
-### 1. 資料驗證
+### 1. Data Validation
 
 ```java
 @Component
@@ -563,18 +563,18 @@ public class DataValidationService {
     public ValidationResult validateCustomerData(CustomerEntity customer) {
         ValidationResult result = new ValidationResult();
         
-        // 基本欄位驗證
+        // Basic field validation
         if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            result.addError("name", "客戶姓名不能為空");
+            result.addError("name", "Customer name cannot be empty");
         }
         
         if (customer.getEmail() == null || !isValidEmail(customer.getEmail())) {
-            result.addError("email", "電子郵件格式無效");
+            result.addError("email", "Invalid email format");
         }
         
-        // 業務規則驗證
+        // Business rule validation
         if (customerRepository.existsByEmailAndIdNot(customer.getEmail(), customer.getId())) {
-            result.addError("email", "電子郵件已被其他客戶使用");
+            result.addError("email", "Email is already used by another customer");
         }
         
         return result;
@@ -582,10 +582,10 @@ public class DataValidationService {
 }
 ```
 
-### 2. 資料完整性約束
+### 2. Data Integrity Constraints
 
 ```sql
--- 資料庫層面的完整性約束
+-- Database-level integrity constraints
 ALTER TABLE customers 
 ADD CONSTRAINT chk_email_format 
 CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
@@ -598,7 +598,7 @@ ALTER TABLE order_items
 ADD CONSTRAINT chk_quantity_positive 
 CHECK (quantity > 0);
 
--- 外鍵約束
+-- Foreign key constraints
 ALTER TABLE orders 
 ADD CONSTRAINT fk_orders_customer 
 FOREIGN KEY (customer_id) REFERENCES customers(id);
@@ -608,38 +608,38 @@ ADD CONSTRAINT fk_order_items_order
 FOREIGN KEY (order_id) REFERENCES orders(id);
 ```
 
-## 監控和度量
+## Monitoring and Metrics
 
-### 1. 資料品質監控
+### 1. Data Quality Monitoring
 
 ```java
 @Component
-@Scheduled(fixedRate = 300000) // 每5分鐘執行
+@Scheduled(fixedRate = 300000) // Execute every 5 minutes
 public class DataQualityMonitor {
     
     public void checkDataQuality() {
-        // 檢查資料完整性
+        // Check data integrity
         long orphanedOrderItems = orderItemRepository.countOrphanedItems();
         if (orphanedOrderItems > 0) {
-            alertService.sendAlert("發現 " + orphanedOrderItems + " 個孤立的訂單項目");
+            alertService.sendAlert("Found " + orphanedOrderItems + " orphaned order items");
         }
         
-        // 檢查資料一致性
+        // Check data consistency
         long inconsistentOrderTotals = orderRepository.countInconsistentTotals();
         if (inconsistentOrderTotals > 0) {
-            alertService.sendAlert("發現 " + inconsistentOrderTotals + " 個訂單總額不一致");
+            alertService.sendAlert("Found " + inconsistentOrderTotals + " orders with inconsistent totals");
         }
         
-        // 檢查事件處理延遲
+        // Check event processing delay
         Duration maxEventAge = eventProcessingService.getMaxUnprocessedEventAge();
         if (maxEventAge.toMinutes() > 30) {
-            alertService.sendAlert("事件處理延遲超過30分鐘");
+            alertService.sendAlert("Event processing delay exceeds 30 minutes");
         }
     }
 }
 ```
 
-### 2. 性能監控
+### 2. Performance Monitoring
 
 ```java
 @Component
@@ -667,8 +667,8 @@ public class DataAccessMetrics {
 
 ---
 
-**相關文件**:
-- [領域事件設計](domain-events.md)
-- \1
-- \1
-- \1
+**Related Documents**:
+- [Domain Events Design](domain-events.md)
+- [Data Model Design](data-model.md)
+- [Event Sourcing Implementation](event-sourcing.md)
+- [Data Governance Architecture](data-governance-architecture.md)

@@ -1,74 +1,74 @@
-# 技術文檔索引
+# Technical Documentation Index
 
-## 概覽
+## Overview
 
-本技術文檔索引提供了開發視點中所有技術文檔的快速導航和參考。文檔按照功能領域組織，方便開發者快速找到所需的技術資訊和實作指南。
+This technical documentation index provides quick navigation and reference for all technical documents in the development viewpoint. Documents are organized by functional areas to help developers quickly find the technical information and implementation guides they need.
 
-## 使用說明
+## Usage Instructions
 
-### 如何使用本索引
-1. **按主題瀏覽**: 根據你的需求選擇相應的技術領域
-2. **快速搜尋**: 使用瀏覽器的搜尋功能（Ctrl+F）查找特定主題
-3. **循序漸進**: 新手建議從「快速入門」開始，逐步深入其他主題
-4. **實作參考**: 每個主題都包含實際的程式碼範例和配置
+### How to Use This Index
+1. **Browse by Topic**: Select the appropriate technical area based on your needs
+2. **Quick Search**: Use browser search function (Ctrl+F) to find specific topics
+3. **Progressive Learning**: Beginners are recommended to start with "Getting Started" and gradually explore other topics
+4. **Implementation Reference**: Each topic includes actual code examples and configurations
 
-### 文檔狀態說明
-- ✅ **完整** - 文檔內容完整，可直接使用
-- 🚧 **進行中** - 文檔正在編寫或更新中
-- 📋 **規劃中** - 已規劃但尚未開始編寫
+### Document Status Legend
+- ✅ **Complete** - Documentation is complete and ready for use
+- 🚧 **In Progress** - Documentation is being written or updated
+- 📋 **Planned** - Planned but not yet started
 
-## 開發指南
+## Development Guides
 
-### 核心架構
-- 六角架構
-- 領域驅動設計
-- 微服務架構
+### Core Architecture
+- Hexagonal Architecture
+- Domain-Driven Design
+- Microservices Architecture
 
-### 測試策略
-- TDD/BDD 測試
-- 效能測試
-- 整合測試
+### Testing Strategy
+- TDD/BDD Testing
+- Performance Testing
+- Integration Testing
 
-### 技術棧
-- Spring Boot 框架
-- React 框架
-- Angular 框架
+### Technology Stack
+- Spring Boot Framework
+- React Framework
+- Angular Framework
 
-### API 設計
-- REST API 設計
+### API Design
+- REST API Design
 - GraphQL API
-- API 版本管理
+- API Version Management
 
-### 安全性
-- 安全實作指南
-- 認證與授權
-- 資料保護
+### Security
+- Security Implementation Guide
+- Authentication and Authorization
+- Data Protection
 
-### 效能優化
-- 效能優化指南
-- 快取策略
-- 資料庫優化
+### Performance Optimization
+- Performance Optimization Guide
+- Caching Strategy
+- Database Optimization
 
-## 品質保證
+## Quality Assurance
 
-### 程式碼品質
-- [程式碼審查](quality-assurance/code-review.md)
-- 靜態分析
-- [程式碼標準](coding-standards.md)
+### Code Quality
+- [Code Review](quality-assurance/code-review.md)
+- Static Analysis
+- [Coding Standards](coding-standards.md)
 
-### 持續整合
-- [CI/CD 流程](build-system/build-deployment.md)
-- 自動化測試
-- 部署策略
+### Continuous Integration
+- [CI/CD Process](build-system/build-deployment.md)
+- Automated Testing
+- Deployment Strategy
 
-## 工具與環境
+## Tools and Environment
 
-### 開發工具
-- IDE 配置
-- 版本控制
-- 容器化
+### Development Tools
+- IDE Configuration
+- Version Control
+- Containerization
 
-### 監控與維運
-- 應用監控
-- 日誌管理
-- 效能監控
+### Monitoring and Operations
+- Application Monitoring
+- Log Management
+- Performance Monitoring

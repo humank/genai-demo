@@ -1,14 +1,14 @@
-# 可觀測性配置指南
+# Observability Configuration Guide
 
-## 概述
+## Overview
 
-本指南詳細說明如何配置前端後端可觀測性整合系統，包括環境差異化配置、MSK 主題設定和監控配置。
+This guide provides detailed instructions on how to configure the frontend-backend observability integration system, including environment-specific configurations, MSK topic settings, and monitoring configurations.
 
-## 環境配置
+## Environment Configuration
 
-### 開發環境配置
+### Development Environment Configuration
 
-#### 後端配置 (application-dev.yml)
+#### Backend Configuration (application-dev.yml)
 
 ```yaml
 spring:
@@ -24,26 +24,26 @@ spring:
       ddl-auto: update
     show-sql: true
 
-# 可觀測性配置
+# Observability configuration
 genai-demo:
   events:
-    publisher: in-memory  # 使用記憶體事件處理
-    async: false         # 同步處理便於除錯
+    publisher: in-memory  # Use in-memory event processing
+    async: false         # Synchronous processing for debugging
   observability:
     analytics:
       enabled: true
-      storage: in-memory  # 指標存在記憶體中
+      storage: in-memory  # Store metrics in memory
       retention-minutes: 60
-      batch-size: 10      # 小批次便於測試
-      flush-interval: 10s # 快速刷新便於除錯
+      batch-size: 10      # Small batches for testing
+      flush-interval: 10s # Fast refresh for debugging
     tracing:
       enabled: true
-      sample-rate: 1.0    # 100% 採樣率用於開發
+      sample-rate: 1.0    # 100% sampling rate for development
     metrics:
       enabled: true
       export-interval: 30s
 
-# 日誌配置
+# Logging configuration
 logging:
   level:
     solid.humank.genaidemo.infrastructure.observability: DEBUG
@@ -53,7 +53,7 @@ logging:
     console: "%d{HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId:-},%X{traceId:-},%X{sessionId:-}] %logger{36} - %msg%n"
 ```
 
-#### 前端配置 (environments/environment.ts)
+#### Frontend Configuration (environments/environment.ts)
 
 ```typescript
 export const environment = {
@@ -67,7 +67,7 @@ export const environment = {
     enableDebugLogs: true,
     sampleRate: 1.0, // 100% sampling for development
     endpoints: {
-      analytics: '/../api/analytics/events',
+      analytics: '/api/analytics/events',
       performance: '/api/analytics/performance',
       errors: '/api/monitoring/events'
     },
@@ -80,9 +80,9 @@ export const environment = {
 };
 ```
 
-### 測試環境配置
+### Test Environment Configuration
 
-#### 後端配置 (application-test.yml)
+#### Backend Configuration (application-test.yml)
 
 ```yaml
 spring:
@@ -95,7 +95,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-# 可觀測性配置
+# Observability configuration
 genai-demo:
   events:
     publisher: in-memory
@@ -104,13 +104,13 @@ genai-demo:
     analytics:
       enabled: true
       storage: in-memory
-      retention-minutes: 10  # 短期保留用於測試
+      retention-minutes: 10  # Short retention for testing
       batch-size: 5
       flush-interval: 5s
     tracing:
-      enabled: false  # 測試時關閉追蹤以提高速度
+      enabled: false  # Disable tracing in tests for speed
     metrics:
-      enabled: false  # 測試時關閉指標收集
+      enabled: false  # Disable metrics collection in tests
 
 logging:
   level:
@@ -118,9 +118,9 @@ logging:
     org.springframework.kafka: ERROR
 ```
 
-### 生產環境配置
+### Production Environment Configuration
 
-#### 後端配置 (application-msk.yml)
+#### Backend Configuration (application-msk.yml)
 
 ```yaml
 spring:
@@ -149,17 +149,17 @@ spring:
       properties:
         spring.json.trusted.packages: "solid.humank.genaidemo.domain.events"
 
-# 可觀測性配置
+# Observability configuration
 genai-demo:
   events:
-    publisher: kafka     # 使用 MSK 事件處理
-    async: true         # 非同步處理
+    publisher: kafka     # Use MSK event processing
+    async: true         # Asynchronous processing
   domain-events:
     topic:
       prefix: genai-demo.${spring.profiles.active}
       partitions: 6
       replication-factor: 3
-      # 可觀測性專用 topics
+      # Observability-specific topics
       observability:
         user-behavior: genai-demo.${spring.profiles.active}.observability.user.behavior
         performance-metrics: genai-demo.${spring.profiles.active}.observability.performance.metrics
@@ -168,29 +168,29 @@ genai-demo:
       enabled: true
       async: true
       dlq:
-        enabled: true    # 死信佇列處理
+        enabled: true    # Dead letter queue handling
         topic-suffix: .dlq
   observability:
     analytics:
       enabled: true
-      storage: kafka      # 使用 Kafka 存儲
-      retention-days: 90  # 90 天保留期
-      batch-size: 100     # 大批次提高效能
-      flush-interval: 30s # 30 秒刷新間隔
+      storage: kafka      # Use Kafka storage
+      retention-days: 90  # 90-day retention period
+      batch-size: 100     # Large batches for performance
+      flush-interval: 30s # 30-second flush interval
     tracing:
       enabled: true
-      sample-rate: 0.1    # 10% 採樣率
+      sample-rate: 0.1    # 10% sampling rate
     metrics:
       enabled: true
       export-interval: 60s
 
-# AWS X-Ray 配置
+# AWS X-Ray configuration
 aws:
   xray:
     tracing-name: genai-demo-${spring.profiles.active}
     context-missing: LOG_ERROR
 
-# CloudWatch 配置
+# CloudWatch configuration
 management:
   metrics:
     export:
@@ -200,7 +200,7 @@ management:
         step: 60s
         enabled: true
 
-# 日誌配置
+# Logging configuration
 logging:
   level:
     solid.humank.genaidemo: INFO
@@ -209,64 +209,64 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{correlationId:-}] %logger{36} - %msg%n"
 ```
 
-## MSK 主題配置
+## MSK Topic Configuration
 
-### 主題命名規範
+### Topic Naming Convention
 
 ```
-格式: ${projectName}.${environment}.${domain}.${event}
-範例: genai-demo.production.observability.user.behavior
+Format: ${projectName}.${environment}.${domain}.${event}
+Example: genai-demo.production.observability.user.behavior
 ```
 
-### 可觀測性主題列表
+### Observability Topic List
 
-#### 用戶行為分析主題
+#### User Behavior Analytics Topics
 
 ```
 genai-demo.${environment}.observability.user.behavior
 genai-demo.${environment}.observability.user.behavior.dlq
 ```
 
-**配置參數:**
+**Configuration Parameters:**
 
 - Partitions: 6
 - Replication Factor: 3
-- Retention: 7 天 (開發), 30 天 (生產)
+- Retention: 7 days (development), 30 days (production)
 - Compression: gzip
 
-#### 效能指標主題
+#### Performance Metrics Topics
 
 ```
 genai-demo.${environment}.observability.performance.metrics
 genai-demo.${environment}.observability.performance.metrics.dlq
 ```
 
-**配置參數:**
+**Configuration Parameters:**
 
 - Partitions: 3
 - Replication Factor: 3
-- Retention: 3 天 (開發), 14 天 (生產)
+- Retention: 3 days (development), 14 days (production)
 - Compression: lz4
 
-#### 業務分析主題
+#### Business Analytics Topics
 
 ```
 genai-demo.${environment}.observability.business.analytics
 genai-demo.${environment}.observability.business.analytics.dlq
 ```
 
-**配置參數:**
+**Configuration Parameters:**
 
 - Partitions: 6
 - Replication Factor: 3
-- Retention: 30 天 (開發), 90 天 (生產)
+- Retention: 30 days (development), 90 days (production)
 - Compression: gzip
 
-## 監控和警報配置
+## Monitoring and Alerting Configuration
 
-### CloudWatch 指標
+### CloudWatch Metrics
 
-#### 自定義業務指標
+#### Custom Business Metrics
 
 ```yaml
 # application-msk.yml
@@ -291,47 +291,47 @@ management:
             description: "Event processing latency in milliseconds"
 ```
 
-### CloudWatch 警報
+### CloudWatch Alarms
 
-#### 關鍵警報
+#### Critical Alarms
 
 ```yaml
-# 事件處理失敗率過高
+# High event processing failure rate
 EventProcessingFailureRate:
   MetricName: observability.events.failed
-  Threshold: 5  # 每分鐘超過 5 個失敗事件
+  Threshold: 5  # More than 5 failed events per minute
   ComparisonOperator: GreaterThanThreshold
   EvaluationPeriods: 2
   Period: 60
 
-# API 響應時間過長
+# High API response time
 AnalyticsAPILatency:
   MetricName: http.server.requests
   Dimensions:
-    uri: /../api/analytics/events
-  Threshold: 1000  # 1 秒
+    uri: /api/analytics/events
+  Threshold: 1000  # 1 second
   ComparisonOperator: GreaterThanThreshold
   Statistic: Average
   EvaluationPeriods: 3
   Period: 300
 
-# Kafka 消費者延遲
+# Kafka consumer lag
 KafkaConsumerLag:
   MetricName: kafka.consumer.lag
-  Threshold: 1000  # 1000 條訊息延遲
+  Threshold: 1000  # 1000 message lag
   ComparisonOperator: GreaterThanThreshold
   EvaluationPeriods: 2
   Period: 300
 ```
 
-## 安全配置
+## Security Configuration
 
-### 數據加密
+### Data Encryption
 
-#### 傳輸中加密
+#### Encryption in Transit
 
 ```yaml
-# TLS 配置
+# TLS configuration
 server:
   ssl:
     enabled: true
@@ -339,7 +339,7 @@ server:
     key-store-password: ${SSL_KEYSTORE_PASSWORD}
     key-store-type: PKCS12
 
-# Kafka TLS 配置
+# Kafka TLS configuration
 spring:
   kafka:
     security:
@@ -349,10 +349,10 @@ spring:
       trust-store-password: ${KAFKA_TRUSTSTORE_PASSWORD}
 ```
 
-#### 靜態數據加密
+#### Encryption at Rest
 
 ```yaml
-# 資料庫加密
+# Database encryption
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}?sslmode=require
@@ -361,19 +361,19 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         
-# KMS 配置
+# KMS configuration
 aws:
   kms:
     key-id: ${KMS_KEY_ID}
     region: ${AWS_REGION}
 ```
 
-## 效能調優
+## Performance Tuning
 
-### JVM 配置
+### JVM Configuration
 
 ```bash
-# 生產環境 JVM 參數
+# Production environment JVM parameters
 JAVA_OPTS="-Xms2g -Xmx4g \
   -XX:+UseG1GC \
   -XX:MaxGCPauseMillis=200 \
@@ -382,152 +382,152 @@ JAVA_OPTS="-Xms2g -Xmx4g \
   -Dspring.profiles.active=msk"
 ```
 
-### Kafka 配置優化
+### Kafka Configuration Optimization
 
 ```yaml
 spring:
   kafka:
     producer:
-      batch-size: 16384      # 16KB 批次大小
-      linger-ms: 5           # 5ms 延遲以增加批次效率
-      buffer-memory: 33554432 # 32MB 緩衝區
-      compression-type: gzip  # 壓縮以減少網路傳輸
-      acks: all              # 等待所有副本確認
-      retries: 3             # 重試次數
-      enable-idempotence: true # 啟用冪等性
+      batch-size: 16384      # 16KB batch size
+      linger-ms: 5           # 5ms delay to increase batch efficiency
+      buffer-memory: 33554432 # 32MB buffer
+      compression-type: gzip  # Compression to reduce network transfer
+      acks: all              # Wait for all replicas to acknowledge
+      retries: 3             # Number of retries
+      enable-idempotence: true # Enable idempotence
     consumer:
-      fetch-min-size: 1024   # 最小獲取大小 1KB
-      fetch-max-wait: 500    # 最大等待時間 500ms
-      max-poll-records: 500  # 每次輪詢最大記錄數
-      session-timeout-ms: 30000 # 會話超時 30 秒
-      heartbeat-interval-ms: 3000 # 心跳間隔 3 秒
+      fetch-min-size: 1024   # Minimum fetch size 1KB
+      fetch-max-wait: 500    # Maximum wait time 500ms
+      max-poll-records: 500  # Maximum records per poll
+      session-timeout-ms: 30000 # Session timeout 30 seconds
+      heartbeat-interval-ms: 3000 # Heartbeat interval 3 seconds
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 常見配置問題
+### Common Configuration Issues
 
-#### 1. MSK 連接失敗
+#### 1. MSK Connection Failure
 
-**症狀**: 無法連接到 MSK 叢集
+**Symptoms**: Unable to connect to MSK cluster
 
-**解決方案**:
+**Solutions**:
 
 ```bash
-# 檢查網路連接
+# Check network connectivity
 telnet ${MSK_BOOTSTRAP_SERVERS} 9098
 
-# 檢查 IAM 權限
+# Check IAM permissions
 aws sts get-caller-identity
 
-# 檢查安全群組規則
+# Check security group rules
 aws ec2 describe-security-groups --group-ids ${MSK_SECURITY_GROUP_ID}
 ```
 
-#### 2. 事件未被處理
+#### 2. Events Not Being Processed
 
-**症狀**: 前端發送事件但後端未收到
+**Symptoms**: Frontend sends events but backend doesn't receive them
 
-**檢查清單**:
+**Checklist**:
 
-- [ ] 確認 API 端點 URL 正確
-- [ ] 檢查 CORS 配置
-- [ ] 驗證請求標頭格式
-- [ ] 查看網路錯誤日誌
+- [ ] Confirm API endpoint URL is correct
+- [ ] Check CORS configuration
+- [ ] Verify request header format
+- [ ] Review network error logs
 
-#### 3. 效能問題
+#### 3. Performance Issues
 
-**症狀**: 事件處理延遲過高
+**Symptoms**: High event processing latency
 
-**優化建議**:
+**Optimization Suggestions**:
 
-- 增加 Kafka 分區數
-- 調整批次大小
-- 優化 JVM 參數
-- 檢查資料庫查詢效能
+- Increase Kafka partition count
+- Adjust batch size
+- Optimize JVM parameters
+- Check database query performance
 
-### 日誌分析
+### Log Analysis
 
-#### 關鍵日誌模式
+#### Key Log Patterns
 
 ```bash
-# 事件接收日誌
+# Event reception logs
 grep "Received.*analytics events" /var/log/genai-demo/application.log
 
-# 事件處理失敗日誌
+# Event processing failure logs
 grep "Failed to process.*event" /var/log/genai-demo/application.log
 
-# Kafka 連接問題
+# Kafka connection issues
 grep "kafka.*connection" /var/log/genai-demo/application.log
 
-# 效能警告
+# Performance warnings
 grep "processing.*took.*ms" /var/log/genai-demo/application.log
 ```
 
-## 配置驗證
+## Configuration Validation
 
-### 自動化驗證腳本
+### Automated Validation Script
 
 ```bash
 #!/bin/bash
 # validate-observability-config.sh
 
-echo "驗證可觀測性配置..."
+echo "Validating observability configuration..."
 
-# 檢查後端健康狀態
+# Check backend health status
 curl -f http://localhost:8080/actuator/health || exit 1
 
-# 檢查 Kafka 連接
+# Check Kafka connectivity
 curl -f http://localhost:8080/actuator/health/kafka || exit 1
 
-# 測試分析 API
+# Test analytics API
 curl -X POST http://localhost:8080/api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: test-trace-123" \
   -H "X-Session-Id: test-session-456" \
   -d '[{"eventId":"test","eventType":"page_view","sessionId":"test-session-456","traceId":"test-trace-123","timestamp":1640995200000,"data":{"page":"/test"}}]' || exit 1
 
-echo "配置驗證完成！"
+echo "Configuration validation completed!"
 ```
 
-### 配置檢查清單
+### Configuration Checklist
 
-#### 開發環境
+#### Development Environment
 
-- [ ] H2 資料庫可訪問
-- [ ] 記憶體事件處理器啟用
-- [ ] 除錯日誌啟用
-- [ ] 本地 WebSocket 連接正常
+- [ ] H2 database accessible
+- [ ] In-memory event processor enabled
+- [ ] Debug logging enabled
+- [ ] Local WebSocket connection working
 
-#### 測試環境
+#### Test Environment
 
-- [ ] 測試資料庫隔離
-- [ ] 可觀測性功能可選擇性啟用
-- [ ] 快速事件處理配置
-- [ ] 測試數據自動清理
+- [ ] Test database isolated
+- [ ] Observability features selectively enabled
+- [ ] Fast event processing configured
+- [ ] Test data auto-cleanup enabled
 
-#### 生產環境
+#### Production Environment
 
-- [ ] MSK 叢集連接正常
-- [ ] SSL/TLS 加密啟用
-- [ ] IAM 權限正確配置
-- [ ] CloudWatch 指標正常上報
-- [ ] 警報規則已設定
-- [ ] 數據保留政策已配置
+- [ ] MSK cluster connection working
+- [ ] SSL/TLS encryption enabled
+- [ ] IAM permissions correctly configured
+- [ ] CloudWatch metrics reporting normally
+- [ ] Alert rules configured
+- [ ] Data retention policies configured
 
-## 相關圖表
+## Related Diagrams
 
-- \1
-- \1
+- [Observability Architecture Overview](../../diagrams/generated/operational/observability-architecture-overview.png)
+- [MSK Integration Flow](../../diagrams/generated/operational/msk-integration-flow.png)
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[部署視點](../deployment/README.md)**: 部署環境的配置管理
-- **[開發視點](../development/README.md)**: 開發環境的配置設定
-- **[安全性觀點](../../perspectives/security/README.md)**: 安全配置和加密設定
+- **[Deployment Viewpoint](../deployment/README.md)**: Configuration management for deployment environments
+- **[Development Viewpoint](../development/README.md)**: Configuration settings for development environment
+- **[Security Perspective](../../perspectives/security/README.md)**: Security configuration and encryption settings
 
-## 相關文檔
+## Related Documentation
 
-- [可觀測性系統概覽](observability-overview.md)
-- [生產環境測試指南](production-observability-testing-guide.md)
-- [故障排除指南](../../troubleshooting/observability-troubleshooting.md)
+- [Observability System Overview](observability-overview.md)
+- [Production Observability Testing Guide](production-observability-testing-guide.md)
+- [Troubleshooting Guide](../../troubleshooting/observability-troubleshooting.md)

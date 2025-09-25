@@ -1,228 +1,228 @@
-# MCP 整合快速參考卡片
+# MCP Integration Quick Reference Card
 
-## 🚀 快速開始
+## 🚀 Quick Start
 
-### 一鍵命令
+### One-Click Commands
 
 ```bash
-# 完整評估 (推薦)
+# Complete assessment (recommended)
 npm run assessment:complete
 
-# 個別測試
-npm run mcp:test                    # MCP 整合測試
-npm run well-architected:assessment # WA 框架評估
-npm run architecture:assess         # 架構分析
-npm run monitoring:continuous       # 持續監控
+# Individual tests
+npm run mcp:test                    # MCP integration test
+npm run well-architected:assessment # WA framework assessment
+npm run architecture:assess         # Architecture analysis
+npm run monitoring:continuous       # Continuous monitoring
 ```
 
-## 📊 當前狀態儀表板
+## 📊 Current Status Dashboard
 
-### 整體健康度
-
-```
-🎯 Well-Architected 總分: 90/100 (優秀)
-🧪 MCP 整合狀態: 100% 通過
-💰 月度成本: $999 (已優化)
-🔒 安全評分: 100/100 (完美)
-```
-
-### 六大支柱快速檢視
+### Overall Health
 
 ```
-運營卓越: 75/100  🟡 需改進
-安全性:   100/100 🟢 優秀
-可靠性:   100/100 🟢 優秀  
-性能效率: 100/100 🟢 優秀
-成本優化: 85/100  🟢 良好
-可持續性: 100/100 🟢 優秀
+🎯 Well-Architected Total Score: 90/100 (Excellent)
+🧪 MCP Integration Status: 100% Pass
+💰 Monthly Cost: $999 (Optimized)
+🔒 Security Score: 100/100 (Perfect)
 ```
 
-## 🔧 MCP 工具速查
-
-### 已配置的 MCP 服務器
-
-| 服務器 | 用途 | 狀態 | 主要功能 |
-|--------|------|------|----------|
-| `aws-docs` | 文檔查詢 | ✅ | 搜索 AWS 官方文檔 |
-| `aws-cdk` | CDK 指導 | ✅ | CDK 最佳實踐檢查 |
-| `aws-pricing` | 成本分析 | ✅ | 實時成本估算 |
-| `aws-iam` | 安全審查 | ✅ | IAM 政策分析 |
-| `aws-core` | WA 審查 | ✅ | 架構框架評估 |
-
-### 在 Kiro IDE 中使用
+### Six Pillars Quick View
 
 ```
-詢問 Kiro:
-"搜索 EKS 最佳實踐的 AWS 文檔"
-"分析我的 CDK 項目成本"
-"檢查 IAM 政策的安全性"
-"解釋 CDK Nag 規則 AwsSolutions-IAM4"
+Operational Excellence: 75/100  🟡 Needs Improvement
+Security:              100/100 🟢 Excellent
+Reliability:           100/100 🟢 Excellent  
+Performance Efficiency: 100/100 🟢 Excellent
+Cost Optimization:     85/100  🟢 Good
+Sustainability:        100/100 🟢 Excellent
 ```
 
-## 📄 重要報告位置
+## 🔧 MCP Tools Quick Reference
 
-### 主要報告文件
+### Configured MCP Servers
+
+| Server | Purpose | Status | Key Features |
+|--------|---------|--------|--------------|
+| `aws-docs` | Documentation Query | ✅ | Search AWS official docs |
+| `aws-cdk` | CDK Guidance | ✅ | CDK best practice checks |
+| `aws-pricing` | Cost Analysis | ✅ | Real-time cost estimation |
+| `aws-iam` | Security Review | ✅ | IAM policy analysis |
+| `aws-core` | WA Review | ✅ | Architecture framework assessment |
+
+### Using in Kiro IDE
+
+```
+Ask Kiro:
+"Search AWS documentation for EKS best practices"
+"Analyze my CDK project costs"
+"Check IAM policy security"
+"Explain CDK Nag rule AwsSolutions-IAM4"
+```
+
+## 📄 Important Report Locations
+
+### Main Report Files
 
 ```
 infrastructure/docs/
-├── 📊 well-architected-assessment.md      # 詳細 WA 審查
-├── 🤖 automated-architecture-assessment.md # 自動架構分析  
-├── 📈 continuous-improvement-report.md     # 持續改進監控
-├── 👔 ../../reports-summaries/infrastructure/executive-summary.md                 # 高層執行摘要
-├── 🧪 reports-summaries/infrastructure/mcp-integration-test-report.md      # MCP 測試結果
-└── 📋 assessment-summary/                  # 綜合評估摘要
+├── 📊 well-architected-assessment.md      # Detailed WA review
+├── 🤖 automated-architecture-assessment.md # Automated architecture analysis  
+├── 📈 continuous-improvement-report.md     # Continuous improvement monitoring
+├── 👔 ../../reports-summaries/infrastructure/executive-summary.md                 # Executive summary
+├── 🧪 reports-summaries/infrastructure/mcp-integration-test-report.md      # MCP test results
+└── 📋 assessment-summary/                  # Comprehensive assessment summary
 ```
 
-### 快速查看命令
+### Quick View Commands
 
 ```bash
-# 查看最新評估結果
+# View latest assessment results
 cat infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md
 
-# 檢查 MCP 測試狀態  
+# Check MCP test status  
 cat infrastructure/docs/reports-summaries/infrastructure/mcp-integration-test-report.md
 
-# 查看成本分析
+# View cost analysis
 jq '.costAnalysis' infrastructure/docs/architecture-assessment-summary.json
 ```
 
-## 🚨 告警與閾值
+## 🚨 Alerts and Thresholds
 
-### 關鍵指標閾值
-
-```
-🔴 緊急 (立即處理):
-- 安全評分 < 80%
-- 可用性 < 99.9%
-- 高嚴重性漏洞 > 0
-
-🟡 警告 (24小時內):
-- 成本增加 > 20%
-- 性能下降 > 15%
-- WA 總分 < 85%
-
-🟢 正常:
-- 所有指標在目標範圍內
-```
-
-### 告警處理流程
+### Key Metric Thresholds
 
 ```
-1. 檢查告警詳情
-2. 查看相關報告
-3. 執行建議的修復措施
-4. 重新運行評估驗證
-5. 更新文檔和流程
+🔴 Critical (Immediate Action):
+- Security Score < 80%
+- Availability < 99.9%
+- High Severity Vulnerabilities > 0
+
+🟡 Warning (Within 24 hours):
+- Cost Increase > 20%
+- Performance Degradation > 15%
+- WA Total Score < 85%
+
+🟢 Normal:
+- All metrics within target range
 ```
 
-## 🔄 定期維護計劃
+### Alert Handling Process
 
-### 每日任務 (5 分鐘)
+```
+1. Check alert details
+2. Review related reports
+3. Execute recommended remediation
+4. Re-run assessment for verification
+5. Update documentation and processes
+```
+
+## 🔄 Regular Maintenance Schedule
+
+### Daily Tasks (5 minutes)
 
 ```bash
-# 檢查 MCP 狀態
+# Check MCP status
 npm run mcp:test
 
-# 查看關鍵指標
+# View key metrics
 cat infrastructure/docs/../../reports-summaries/infrastructure/executive-summary.md | head -20
 ```
 
-### 每週任務 (30 分鐘)
+### Weekly Tasks (30 minutes)
 
 ```bash
-# 完整 WA 評估
+# Complete WA assessment
 npm run well-architected:assessment
 
-# 檢查趨勢變化
+# Check trend changes
 npm run monitoring:continuous
 ```
 
-### 每月任務 (2 小時)
+### Monthly Tasks (2 hours)
 
 ```bash
-# 完整評估套件
+# Complete assessment suite
 npm run assessment:complete
 
-# 審查和實施建議
-# 更新文檔和流程
-# 團隊培訓和知識分享
+# Review and implement recommendations
+# Update documentation and processes
+# Team training and knowledge sharing
 ```
 
-## 🎯 優化建議快速實施
+## 🎯 Quick Implementation of Optimization Recommendations
 
-### 立即可實施 (< 1 天)
+### Immediate Implementation (< 1 day)
 
-- [ ] 設置成本告警
-- [ ] 啟用詳細監控
-- [ ] 更新資源標籤
+- [ ] Set up cost alerts
+- [ ] Enable detailed monitoring
+- [ ] Update resource tags
 
-### 短期實施 (< 1 週)  
+### Short-term Implementation (< 1 week)  
 
-- [ ] 優化 IAM 政策
-- [ ] 實施快取策略
-- [ ] 加強健康檢查
+- [ ] Optimize IAM policies
+- [ ] Implement caching strategies
+- [ ] Enhance health checks
 
-### 中期實施 (< 1 月)
+### Medium-term Implementation (< 1 month)
 
-- [ ] 多 AZ 部署優化
-- [ ] 自動擴展調優
-- [ ] 災難恢復測試
+- [ ] Multi-AZ deployment optimization
+- [ ] Auto-scaling tuning
+- [ ] Disaster recovery testing
 
-## 🆘 故障排除快速指南
+## 🆘 Troubleshooting Quick Guide
 
-### 常見問題
+### Common Issues
 
 ```
-❌ MCP 服務器連接失敗
-→ 檢查: uv --version && aws sts get-caller-identity
+❌ MCP server connection failed
+→ Check: uv --version && aws sts get-caller-identity
 
-❌ 評估報告生成失敗  
-→ 檢查: npm run mcp:test && 查看錯誤日誌
+❌ Assessment report generation failed  
+→ Check: npm run mcp:test && review error logs
 
-❌ 成本數據不準確
-→ 檢查: AWS 憑證和區域設置
+❌ Inaccurate cost data
+→ Check: AWS credentials and region settings
 
-❌ 權限被拒絕
-→ 檢查: IAM 政策和 AWS_PROFILE 環境變數
+❌ Permission denied
+→ Check: IAM policies and AWS_PROFILE environment variable
 ```
 
-### 緊急聯繫
+### Emergency Contacts
 
-- **技術支援**: DevOps 團隊
-- **架構諮詢**: 架構團隊  
-- **安全問題**: 安全團隊
+- **Technical Support**: DevOps Team
+- **Architecture Consultation**: Architecture Team  
+- **Security Issues**: Security Team
 
-## 📚 學習資源
+## 📚 Learning Resources
 
-### 必讀文檔
+### Essential Documentation
 
-1. [MCP 整合重要性說明](mcp-integration-importance.md)
-2. [任務 22 執行摘要](../../reports-summaries/infrastructure/executive-summary.md)
-3. [完整 MCP 整合指南](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+1. [MCP Integration Importance Guide](mcp-integration-importance.md)
+2. [Task 22 Executive Summary](../../reports-summaries/infrastructure/executive-summary.md)
+3. [Complete MCP Integration Guide](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
 
-### 外部資源
+### External Resources
 
 - [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [MCP 協議規範](https://modelcontextprotocol.io/)
-- [AWS CDK 最佳實踐](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
+- [MCP Protocol Specification](https://modelcontextprotocol.io/)
+- [AWS CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
 
 ---
 
-## 🏆 成功指標追蹤
+## 🏆 Success Metrics Tracking
 
 ```
-當前狀態 vs 目標:
-✅ WA 總分: 90% (目標: ≥85%)
-✅ 安全評分: 100% (目標: ≥90%)  
-✅ 成本優化: 85% (目標: ≥80%)
-✅ 自動化率: 95% (目標: ≥90%)
-✅ 可用性: 99.95% (目標: ≥99.9%)
+Current Status vs Target:
+✅ WA Total Score: 90% (Target: ≥85%)
+✅ Security Score: 100% (Target: ≥90%)  
+✅ Cost Optimization: 85% (Target: ≥80%)
+✅ Automation Rate: 95% (Target: ≥90%)
+✅ Availability: 99.95% (Target: ≥99.9%)
 ```
 
-**🎉 所有關鍵指標均已達到或超越目標！**
+**🎉 All key metrics have met or exceeded targets!**
 
 ---
 
-*📅 最後更新: 2025-09-11*  
-*🔄 下次更新: 每週自動更新*  
-*📞 支援: DevOps 團隊*
+*📅 Last Updated: September 11, 2025*  
+*🔄 Next Update: Weekly automatic update*  
+*📞 Support: DevOps Team*

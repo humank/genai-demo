@@ -1,188 +1,188 @@
-# 前端 API 整合說明
+# Frontend API Integration Guide
 
-本文檔說明了前端應用程式從使用寫死資料改為向後端發送 HTTP 請求的修改內容。
+This document explains the modifications made to frontend applications to transition from using hardcoded data to sending HTTP requests to the backend.
 
-## 修改概覽
+## Modification Overview
 
-### 1. API 服務層擴展 (`src/services/api.ts`)
+### 1. API Service Layer Extension (`src/services/api.ts`)
 
-新增了以下 API 服務：
+Added the following API services:
 
-- **統計服務** (`statsService`)
-  - `getStats()` - 獲取系統總體統計
-  - `getOrderStatusStats()` - 獲取訂單狀態分布
-  - `getPaymentMethodStats()` - 獲取支付方式分布
+- **Statistics Service** (`statsService`)
+  - `getStats()` - Get overall system statistics
+  - `getOrderStatusStats()` - Get order status distribution
+  - `getPaymentMethodStats()` - Get payment method distribution
 
-- **活動記錄服務** (`activityService`)
-  - `list(params)` - 獲取系統活動記錄
+- **Activity Log Service** (`activityService`)
+  - `list(params)` - Get system activity logs
 
-### 2. React Hooks 擴展 (`src/hooks/useApi.ts`)
+### 2. React Hooks Extension (`src/hooks/useApi.ts`)
 
-新增了以下自定義 hooks：
+Added the following custom hooks:
 
-- `useStats()` - 獲取系統統計數據
-- `useOrderStatusStats()` - 獲取訂單狀態統計
-- `usePaymentMethodStats()` - 獲取支付方式統計
-- `useActivities(params)` - 獲取活動記錄
+- `useStats()` - Get system statistics data
+- `useOrderStatusStats()` - Get order status statistics
+- `usePaymentMethodStats()` - Get payment method statistics
+- `useActivities(params)` - Get activity logs
 
-### 3. 頁面組件修改
+### 3. Page Component Modifications
 
-#### 主頁面 (`src/app/page.tsx`)
+#### Main Page (`src/app/page.tsx`)
 
-- ✅ 移除寫死的統計數據
-- ✅ 使用 `useStats()` 和 `useActivities()` hooks
-- ✅ 根據 API 數據動態計算統計卡片內容
-- ✅ 支持載入狀態顯示
+- ✅ Removed hardcoded statistics data
+- ✅ Uses `useStats()` and `useActivities()` hooks
+- ✅ Dynamically calculates statistics card content based on API data
+- ✅ Supports loading state display
 
-#### 產品頁面 (`src/app/products/page.tsx`)
+#### Products Page (`src/app/products/page.tsx`)
 
-- ✅ 移除模擬產品數據
-- ✅ 使用 `useProducts()` hook 獲取真實數據
-- ✅ 支持分頁、搜尋和篩選
-- ✅ 錯誤處理和載入狀態
-- ✅ 動態統計計算
+- ✅ Removed mock product data
+- ✅ Uses `useProducts()` hook to fetch real data
+- ✅ Supports pagination, search, and filtering
+- ✅ Error handling and loading states
+- ✅ Dynamic statistics calculation
 
-#### 客戶頁面 (`src/app/customers/page.tsx`)
+#### Customers Page (`src/app/customers/page.tsx`)
 
-- ✅ 移除模擬客戶數據
-- ✅ 使用 `useCustomers()` 和 `useStats()` hooks
-- ✅ 支持分頁、搜尋和篩選
-- ✅ 錯誤處理和載入狀態
-- ✅ 動態統計計算
+- ✅ Removed mock customer data
+- ✅ Uses `useCustomers()` and `useStats()` hooks
+- ✅ Supports pagination, search, and filtering
+- ✅ Error handling and loading states
+- ✅ Dynamic statistics calculation
 
-#### 活動時間軸組件 (`src/components/dashboard/ActivityTimeline.tsx`)
+#### Activity Timeline Component (`src/components/dashboard/ActivityTimeline.tsx`)
 
-- ✅ 移除寫死的活動數據
-- ✅ 支持從 props 接收活動數據
-- ✅ 改善空狀態處理
+- ✅ Removed hardcoded activity data
+- ✅ Supports receiving activity data from props
+- ✅ Improved empty state handling
 
-### 4. 後端 API 控制器新增
+### 4. Backend API Controller Additions
 
-#### 產品控制器 (`ProductController.java`)
+#### Product Controller (`ProductController.java`)
 
-- `GET /../api/products` - 獲取產品列表（支持分頁）
-- `GET /api/products/{id}` - 獲取單個產品
+- `GET /api/products` - Get product list (with pagination support)
+- `GET /api/products/{id}` - Get single product
 
-#### 客戶控制器 (`CustomerController.java`)
+#### Customer Controller (`CustomerController.java`)
 
-- `GET /../api/customers` - 獲取客戶列表（支持分頁）
-- `GET /api/customers/{id}` - 獲取單個客戶
+- `GET /api/customers` - Get customer list (with pagination support)
+- `GET /api/customers/{id}` - Get single customer
 
-#### 活動記錄控制器 (`ActivityController.java`)
+#### Activity Log Controller (`ActivityController.java`)
 
-- `GET /../api/activities` - 獲取系統活動記錄
+- `GET /api/activities` - Get system activity logs
 
-#### 統計控制器擴展 (`StatsController.java`)
+#### Statistics Controller Extension (`StatsController.java`)
 
-- 已存在的統計 API 端點保持不變
+- Existing statistics API endpoints remain unchanged
 
-## API 端點總覽
+## API Endpoints Overview
 
-### 統計相關
-
-```
-GET /../api/stats                    # 系統總體統計
-GET /api/stats/order-status       # 訂單狀態分布
-GET /api/stats/payment-methods    # 支付方式分布
-```
-
-### 產品相關
+### Statistics Related
 
 ```
-GET /api/products                 # 產品列表（支持分頁）
-GET /api/products/{id}            # 單個產品詳情
+GET /api/stats                    # Overall system statistics
+GET /api/stats/order-status       # Order status distribution
+GET /api/stats/payment-methods    # Payment method distribution
 ```
 
-### 客戶相關
+### Product Related
 
 ```
-GET /api/customers                # 客戶列表（支持分頁）
-GET /api/customers/{id}           # 單個客戶詳情
+GET /api/products                 # Product list (with pagination support)
+GET /api/products/{id}            # Single product details
 ```
 
-### 活動記錄
+### Customer Related
 
 ```
-GET /api/activities               # 系統活動記錄
+GET /api/customers                # Customer list (with pagination support)
+GET /api/customers/{id}           # Single customer details
 ```
 
-### 訂單相關（已存在）
+### Activity Logs
 
 ```
-GET /api/orders                   # 訂單列表
-GET /api/orders/{id}              # 單個訂單詳情
-POST /api/orders                  # 創建訂單
-POST /api/orders/{id}/cancel      # 取消訂單
+GET /api/activities               # System activity logs
 ```
 
-## 數據流程
+### Order Related (Existing)
 
-1. **前端組件** 使用自定義 hooks
-2. **自定義 hooks** 使用 React Query 管理狀態和快取
-3. **API 服務層** 發送 HTTP 請求到後端
-4. **後端控制器** 處理請求並返回數據
-5. **數據庫** 提供真實的業務數據
+```
+GET /api/orders                   # Order list
+GET /api/orders/{id}              # Single order details
+POST /api/orders                  # Create order
+POST /api/orders/{id}/cancel      # Cancel order
+```
 
-## 特性改進
+## Data Flow
 
-### 1. 錯誤處理
+1. **Frontend Components** use custom hooks
+2. **Custom Hooks** use React Query to manage state and caching
+3. **API Service Layer** sends HTTP requests to backend
+4. **Backend Controllers** process requests and return data
+5. **Database** provides real business data
 
-- 網路錯誤自動重試
-- 用戶友好的錯誤訊息
-- 載入狀態指示器
+## Feature Improvements
 
-### 2. 效能優化
+### 1. Error Handling
 
-- React Query 自動快取
-- 分頁載入減少數據量
-- 防抖搜尋避免頻繁請求
+- Automatic retry for network errors
+- User-friendly error messages
+- Loading state indicators
 
-### 3. 用戶體驗
+### 2. Performance Optimization
 
-- 載入骨架屏
-- 實時數據更新
-- 響應式設計
+- React Query automatic caching
+- Paginated loading reduces data volume
+- Debounced search avoids frequent requests
 
-## 測試
+### 3. User Experience
 
-使用提供的測試腳本驗證 API 整合：
+- Loading skeleton screens
+- Real-time data updates
+- Responsive design
+
+## Testing
+
+Use the provided test script to verify API integration:
 
 ```bash
 ./test-api.sh
 ```
 
-## 啟動說明
+## Startup Instructions
 
-1. 啟動後端服務：
+1. Start backend service:
 
 ```bash
 ./gradlew bootRun
 ```
 
-2. 啟動前端服務：
+2. Start frontend service:
 
 ```bash
 cd cmc-frontend && npm run dev
 ```
 
-3. 或使用全棧啟動腳本：
+3. Or use full-stack startup script:
 
 ```bash
 ./start-fullstack.sh
 ```
 
-## 注意事項
+## Important Notes
 
-1. **CORS 設定**：所有新的控制器都已配置 `@CrossOrigin(origins = "*")`
-2. **數據生成**：後端控制器使用演算法生成模擬數據，確保一致性
-3. **分頁支持**：所有列表 API 都支持分頁參數
-4. **錯誤處理**：統一的錯誤響應格式
-5. **快取策略**：React Query 配置了適當的快取時間
+1. **CORS Configuration**: All new controllers are configured with `@CrossOrigin(origins = "*")`
+2. **Data Generation**: Backend controllers use algorithms to generate mock data, ensuring consistency
+3. **Pagination Support**: All list APIs support pagination parameters
+4. **Error Handling**: Unified error response format
+5. **Caching Strategy**: React Query configured with appropriate cache times
 
-## 未來改進
+## Future Improvements
 
-1. 添加更多篩選選項
-2. 實現即時通知功能
-3. 添加數據匯出功能
-4. 改善搜尋功能（全文搜尋）
-5. 添加批量操作功能
+1. Add more filtering options
+2. Implement real-time notification functionality
+3. Add data export functionality
+4. Improve search functionality (full-text search)
+5. Add batch operation functionality

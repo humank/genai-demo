@@ -1,22 +1,22 @@
-# 基礎設施即程式碼 (Infrastructure as Code)
+# Infrastructure as Code
 
-## 概述
+## Overview
 
-本專案使用 AWS CDK (Cloud Development Kit) 實現基礎設施即程式碼，提供可重複、可版本控制的基礎設施部署。
+This project uses AWS CDK (Cloud Development Kit) to implement Infrastructure as Code, providing repeatable, version-controlled infrastructure deployment.
 
-## 架構概覽
+## Architecture Overview
 
-### 多堆疊架構
+### Multi-Stack Architecture
 
 ```mermaid
 graph TB
-    subgraph "基礎設施堆疊"
-        A[NetworkStack<br/>VPC, 子網路, 路由]
-        B[SecurityStack<br/>IAM, KMS, 安全群組]
-        C[AlertingStack<br/>SNS 主題和通知]
-        D[CoreInfrastructureStack<br/>ALB, 計算資源]
-        E[ObservabilityStack<br/>監控和日誌]
-        F[AnalyticsStack<br/>數據湖和分析]
+    subgraph "Infrastructure Stacks"
+        A[NetworkStack<br/>VPC, Subnets, Routing]
+        B[SecurityStack<br/>IAM, KMS, Security Groups]
+        C[AlertingStack<br/>SNS Topics and Notifications]
+        D[CoreInfrastructureStack<br/>ALB, Compute Resources]
+        E[ObservabilityStack<br/>Monitoring and Logging]
+        F[AnalyticsStack<br/>Data Lake and Analytics]
     end
     
     A --> D
@@ -29,27 +29,27 @@ graph TB
     A --> F
 ```
 
-### 技術棧
+### Technology Stack
 
-- **CDK 版本**: 2.208.0+
-- **語言**: TypeScript 5.6+
-- **目標平台**: AWS
-- **部署工具**: CDK CLI
-- **版本控制**: Git
-- **測試框架**: Jest (103 個測試)
+- **CDK Version**: 2.208.0+
+- **Language**: TypeScript 5.6+
+- **Target Platform**: AWS
+- **Deployment Tool**: CDK CLI
+- **Version Control**: Git
+- **Testing Framework**: Jest (103 tests)
 
-## 堆疊詳細說明
+## Stack Details
 
-### 1. NetworkStack - 網路基礎設施
+### 1. NetworkStack - Network Infrastructure
 
-**功能**:
-- VPC 和子網路配置
-- 路由表和 NAT 閘道器
-- 網路 ACL 和安全群組
+**Features**:
+- VPC and subnet configuration
+- Route tables and NAT gateways
+- Network ACLs and security groups
 
-**資源**:
+**Resources**:
 ```typescript
-// 主要 VPC 配置
+// Main VPC configuration
 const vpc = new ec2.Vpc(this, 'GenAIDemoVPC', {
   maxAzs: 3,
   natGateways: 1,
@@ -73,22 +73,22 @@ const vpc = new ec2.Vpc(this, 'GenAIDemoVPC', {
 });
 ```
 
-### 2. SecurityStack - 安全配置
+### 2. SecurityStack - Security Configuration
 
-**功能**:
-- IAM 角色和政策
-- KMS 金鑰管理
-- 安全群組規則
+**Features**:
+- IAM roles and policies
+- KMS key management
+- Security group rules
 
-**關鍵安全配置**:
+**Key Security Configuration**:
 ```typescript
-// KMS 金鑰用於加密
+// KMS key for encryption
 const kmsKey = new kms.Key(this, 'GenAIDemoKMSKey', {
   description: 'KMS key for GenAI Demo encryption',
   enableKeyRotation: true,
 });
 
-// 應用程式服務角色
+// Application service role
 const applicationRole = new iam.Role(this, 'ApplicationRole', {
   assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
   managedPolicies: [
@@ -97,39 +97,39 @@ const applicationRole = new iam.Role(this, 'ApplicationRole', {
 });
 ```
 
-### 3. AlertingStack - 告警基礎設施
+### 3. AlertingStack - Alerting Infrastructure
 
-**功能**:
-- SNS 主題配置
-- 多層級告警系統
-- 電子郵件和 Slack 整合
+**Features**:
+- SNS topic configuration
+- Multi-level alerting system
+- Email and Slack integration
 
-**告警配置**:
+**Alerting Configuration**:
 ```typescript
-// 關鍵告警主題
+// Critical alerts topic
 const criticalAlerts = new sns.Topic(this, 'CriticalAlerts', {
   displayName: 'GenAI Demo Critical Alerts',
 });
 
-// 警告告警主題
+// Warning alerts topic
 const warningAlerts = new sns.Topic(this, 'WarningAlerts', {
   displayName: 'GenAI Demo Warning Alerts',
 });
 
-// 資訊告警主題
+// Info alerts topic
 const infoAlerts = new sns.Topic(this, 'InfoAlerts', {
   displayName: 'GenAI Demo Info Alerts',
 });
 ```
 
-### 4. CoreInfrastructureStack - 核心基礎設施
+### 4. CoreInfrastructureStack - Core Infrastructure
 
-**功能**:
+**Features**:
 - Application Load Balancer
-- 目標群組配置
-- HTTP/HTTPS 監聽器
+- Target group configuration
+- HTTP/HTTPS listeners
 
-**ALB 配置**:
+**ALB Configuration**:
 ```typescript
 const alb = new elbv2.ApplicationLoadBalancer(this, 'ApplicationLoadBalancer', {
   vpc: vpc,
@@ -152,28 +152,28 @@ const targetGroup = new elbv2.ApplicationTargetGroup(this, 'TargetGroup', {
 });
 ```
 
-### 5. ObservabilityStack - 監控和可觀測性
+### 5. ObservabilityStack - Monitoring and Observability
 
-**功能**:
-- CloudWatch 儀表板
-- 日誌群組配置
-- 監控指標設定
+**Features**:
+- CloudWatch dashboards
+- Log group configuration
+- Monitoring metrics setup
 
-**監控配置**:
+**Monitoring Configuration**:
 ```typescript
-// CloudWatch 日誌群組
+// CloudWatch log group
 const logGroup = new logs.LogGroup(this, 'ApplicationLogGroup', {
   logGroupName: '/aws/genai-demo/application',
   retention: logs.RetentionDays.ONE_WEEK,
   encryptionKey: kmsKey,
 });
 
-// CloudWatch 儀表板
+// CloudWatch dashboard
 const dashboard = new cloudwatch.Dashboard(this, 'GenAIDemoDashboard', {
   dashboardName: `GenAI-Demo-${environment}`,
   widgets: [
     [new cloudwatch.GraphWidget({
-      title: 'API 請求指標',
+      title: 'API Request Metrics',
       left: [
         new cloudwatch.Metric({
           namespace: 'AWS/ApplicationELB',
@@ -188,17 +188,17 @@ const dashboard = new cloudwatch.Dashboard(this, 'GenAIDemoDashboard', {
 });
 ```
 
-### 6. AnalyticsStack - 分析平台 (可選)
+### 6. AnalyticsStack - Analytics Platform (Optional)
 
-**功能**:
-- S3 數據湖
+**Features**:
+- S3 data lake
 - Kinesis Data Firehose
-- AWS Glue 數據目錄
-- QuickSight 整合
+- AWS Glue data catalog
+- QuickSight integration
 
-**分析配置**:
+**Analytics Configuration**:
 ```typescript
-// S3 數據湖
+// S3 data lake
 const dataLakeBucket = new s3.Bucket(this, 'DataLakeBucket', {
   bucketName: `genai-demo-${environment}-data-lake-${this.account}`,
   encryption: s3.BucketEncryption.KMS,
@@ -225,26 +225,26 @@ const firehose = new kinesisfirehose.DeliveryStream(this, 'DomainEventsFirehose'
 });
 ```
 
-## 部署流程
+## Deployment Process
 
-### 1. 環境準備
+### 1. Environment Setup
 
 ```bash
-# 安裝 CDK CLI
+# Install CDK CLI
 npm install -g aws-cdk
 
-# 安裝專案依賴
+# Install project dependencies
 cd infrastructure
 npm install
 
-# 配置 AWS 憑證
+# Configure AWS credentials
 aws configure
 
-# Bootstrap CDK (首次部署)
+# Bootstrap CDK (first-time deployment)
 cdk bootstrap aws://ACCOUNT-NUMBER/REGION
 ```
 
-### 2. 統一部署腳本
+### 2. Unified Deployment Script
 
 ```bash
 #!/bin/bash
@@ -257,13 +257,13 @@ REGION=${2:-us-east-1}
 ENABLE_ANALYTICS=${3:-true}
 ENABLE_CDK_NAG=${4:-false}
 
-echo "部署 ${ENVIRONMENT} 環境基礎設施到 ${REGION}..."
+echo "Deploying ${ENVIRONMENT} environment infrastructure to ${REGION}..."
 
-# 設定環境變數
+# Set environment variables
 export CDK_DEFAULT_REGION=$REGION
 export CDK_DEFAULT_ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 
-# 統一部署所有堆疊
+# Deploy all stacks unified
 cdk deploy --all \
   --context environment=$ENVIRONMENT \
   --context region=$REGION \
@@ -271,23 +271,23 @@ cdk deploy --all \
   --context enableCdkNag=$ENABLE_CDK_NAG \
   --require-approval never
 
-echo "✅ 基礎設施部署完成"
+echo "✅ Infrastructure deployment completed"
 ```
 
-### 3. 部署選項
+### 3. Deployment Options
 
 ```bash
-# 開發環境 (基本配置)
+# Development environment (basic configuration)
 ./deploy-consolidated.sh development us-east-1 false false
 
-# 預生產環境 (包含分析和合規檢查)
+# Pre-production environment (includes analytics and compliance checks)
 ./deploy-consolidated.sh staging us-east-1 true true
 
-# 生產環境 (完整配置)
+# Production environment (full configuration)
 ./deploy-consolidated.sh production us-east-1 true true
 ```
 
-### 4. 驗證部署
+### 4. Deployment Verification
 
 ```bash
 #!/bin/bash
@@ -295,37 +295,37 @@ echo "✅ 基礎設施部署完成"
 
 ENVIRONMENT=${1:-development}
 
-echo "驗證 ${ENVIRONMENT} 環境基礎設施..."
+echo "Verifying ${ENVIRONMENT} environment infrastructure..."
 
-# 檢查所有堆疊狀態
+# Check all stack statuses
 aws cloudformation list-stacks \
   --stack-status-filter CREATE_COMPLETE UPDATE_COMPLETE \
   --query 'StackSummaries[?contains(StackName, `genai-demo-'${ENVIRONMENT}'`)].{Name:StackName,Status:StackStatus}' \
   --output table
 
-# 檢查 ALB 健康狀態
+# Check ALB health status
 ALB_DNS=$(aws elbv2 describe-load-balancers \
   --names "genai-demo-${ENVIRONMENT}-alb" \
   --query 'LoadBalancers[0].DNSName' --output text 2>/dev/null || echo "None")
 
 if [ "$ALB_DNS" != "None" ]; then
   echo "✅ ALB DNS: $ALB_DNS"
-  # 測試健康檢查端點
+  # Test health check endpoint
   if curl -f "http://$ALB_DNS/health" > /dev/null 2>&1; then
-    echo "✅ ALB 健康檢查通過"
+    echo "✅ ALB health check passed"
   else
-    echo "⚠️  ALB 健康檢查失敗 (應用程式可能尚未部署)"
+    echo "⚠️  ALB health check failed (application may not be deployed yet)"
   fi
 else
-  echo "❌ ALB 未找到"
+  echo "❌ ALB not found"
 fi
 
-echo "✅ 基礎設施驗證完成"
+echo "✅ Infrastructure verification completed"
 ```
 
-## 配置管理
+## Configuration Management
 
-### 環境特定配置
+### Environment-Specific Configuration
 
 ```typescript
 // cdk.json
@@ -361,58 +361,58 @@ echo "✅ 基礎設施驗證完成"
 }
 ```
 
-### 參數化配置
+### Parameterized Configuration
 
 ```typescript
-// 從 context 讀取配置
+// Read configuration from context
 const environment = this.node.tryGetContext('environment') || 'development';
 const config = this.node.tryGetContext('environments')[environment];
 
-// 使用配置創建資源
+// Use configuration to create resources
 const vpc = new ec2.Vpc(this, 'VPC', {
   maxAzs: 3,
   natGateways: config.natGateways,
   subnetConfiguration: [
-    // 子網路配置
+    // Subnet configuration
   ],
 });
 ```
 
-## 測試策略
+## Testing Strategy
 
-### 測試分類
+### Test Categories
 
-| 測試類型 | 數量 | 描述 |
-|---------|------|------|
-| 單元測試 | 26 | 個別組件測試 |
-| 整合測試 | 8 | 跨堆疊驗證 |
-| 統一測試 | 18 | 主要測試套件 |
-| 合規測試 | 4 | CDK Nag 驗證 |
-| 堆疊測試 | 47 | 個別堆疊驗證 |
-| **總計** | **103** | **完整測試覆蓋** |
+| Test Type | Count | Description |
+|-----------|-------|-------------|
+| Unit Tests | 26 | Individual component tests |
+| Integration Tests | 8 | Cross-stack validation |
+| Consolidated Tests | 18 | Main test suite |
+| Compliance Tests | 4 | CDK Nag validation |
+| Stack Tests | 47 | Individual stack validation |
+| **Total** | **103** | **Complete test coverage** |
 
-### 測試執行
+### Test Execution
 
 ```bash
-# 執行所有測試
+# Run all tests
 npm test
 
-# 執行特定測試類型
-npm run test:unit          # 單元測試
-npm run test:integration   # 整合測試
-npm run test:consolidated  # 統一測試
-npm run test:compliance    # 合規測試
+# Run specific test types
+npm run test:unit          # Unit tests
+npm run test:integration   # Integration tests
+npm run test:consolidated  # Consolidated tests
+npm run test:compliance    # Compliance tests
 
-# 快速測試 (開發用)
+# Quick test (for development)
 npm run test:quick
 ```
 
-## 成本優化
+## Cost Optimization
 
-### 資源標記
+### Resource Tagging
 
 ```typescript
-// 統一資源標記
+// Unified resource tagging
 const commonTags = {
   Project: 'GenAI-Demo',
   Environment: environment,
@@ -421,23 +421,23 @@ const commonTags = {
   Owner: 'Platform-Team',
 };
 
-// 應用標記到所有資源
+// Apply tags to all resources
 cdk.Tags.of(this).add('Project', commonTags.Project);
 cdk.Tags.of(this).add('Environment', commonTags.Environment);
 ```
 
-### 成本估算
+### Cost Estimation
 
-| 環境 | 月成本估算 | 主要成本項目 |
-|------|-----------|-------------|
-| Development | ~$60 | NAT Gateway ($45), 存儲 ($5), 監控 ($10) |
-| Staging | ~$90 | NAT Gateway ($90), 存儲 ($10), 監控 ($15) |
-| Production | ~$150 | NAT Gateway ($90), 存儲 ($30), 監控 ($30) |
+| Environment | Monthly Cost Estimate | Main Cost Items |
+|-------------|----------------------|-----------------|
+| Development | ~$60 | NAT Gateway ($45), Storage ($5), Monitoring ($10) |
+| Staging | ~$90 | NAT Gateway ($90), Storage ($10), Monitoring ($15) |
+| Production | ~$150 | NAT Gateway ($90), Storage ($30), Monitoring ($30) |
 
-### 成本監控
+### Cost Monitoring
 
 ```typescript
-// 預算警報
+// Budget alerts
 const budget = new budgets.CfnBudget(this, 'ProjectBudget', {
   budget: {
     budgetName: `genai-demo-${environment}-budget`,
@@ -466,12 +466,12 @@ const budget = new budgets.CfnBudget(this, 'ProjectBudget', {
 });
 ```
 
-## 安全最佳實踐
+## Security Best Practices
 
-### 1. 最小權限原則
+### 1. Principle of Least Privilege
 
 ```typescript
-// 服務特定 IAM 角色
+// Service-specific IAM role
 const appServiceRole = new iam.Role(this, 'AppServiceRole', {
   assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
   inlinePolicies: {
@@ -491,17 +491,17 @@ const appServiceRole = new iam.Role(this, 'AppServiceRole', {
 });
 ```
 
-### 2. 網路安全
+### 2. Network Security
 
 ```typescript
-// 限制性安全群組
+// Restrictive security group
 const appSecurityGroup = new ec2.SecurityGroup(this, 'AppSecurityGroup', {
   vpc: vpc,
   description: 'Security group for application',
   allowAllOutbound: false,
 });
 
-// 只允許 ALB 存取
+// Only allow ALB access
 appSecurityGroup.addIngressRule(
   albSecurityGroup,
   ec2.Port.tcp(8080),
@@ -509,28 +509,28 @@ appSecurityGroup.addIngressRule(
 );
 ```
 
-### 3. 加密配置
+### 3. Encryption Configuration
 
 ```typescript
-// 全面加密配置
+// Comprehensive encryption configuration
 const encryptionConfig = {
-  // S3 加密
+  // S3 encryption
   encryption: s3.BucketEncryption.KMS,
   encryptionKey: kmsKey,
-  // CloudWatch Logs 加密
+  // CloudWatch Logs encryption
   encryptionKey: kmsKey,
-  // RDS 加密 (如果使用)
+  // RDS encryption (if used)
   storageEncrypted: true,
   kmsKey: kmsKey,
 };
 ```
 
-## 災難恢復
+## Disaster Recovery
 
-### 備份策略
+### Backup Strategy
 
 ```typescript
-// S3 跨區域複製
+// S3 cross-region replication
 const replicationBucket = new s3.Bucket(this, 'ReplicationBucket', {
   bucketName: `genai-demo-${environment}-backup-${this.account}`,
   versioned: true,
@@ -543,15 +543,15 @@ dataLakeBucket.addCorsRule({
 });
 ```
 
-### 多區域部署
+### Multi-Region Deployment
 
 ```typescript
-// 生產環境多區域配置
+// Production multi-region configuration
 if (environment === 'production') {
   const drStack = new DisasterRecoveryStack(app, 'GenAIDemoDRStack', {
     env: {
       account: config.account,
-      region: 'us-west-2', // DR 區域
+      region: 'us-west-2', // DR region
     },
     primaryRegion: 'us-east-1',
     environment: environment,
@@ -559,12 +559,12 @@ if (environment === 'production') {
 }
 ```
 
-## 監控和告警
+## Monitoring and Alerting
 
-### 基礎設施監控
+### Infrastructure Monitoring
 
 ```typescript
-// 資源使用率監控
+// Resource utilization monitoring
 const cpuAlarm = new cloudwatch.Alarm(this, 'HighCPUAlarm', {
   metric: new cloudwatch.Metric({
     namespace: 'AWS/ApplicationELB',
@@ -573,11 +573,11 @@ const cpuAlarm = new cloudwatch.Alarm(this, 'HighCPUAlarm', {
       LoadBalancer: alb.loadBalancerFullName,
     },
   }),
-  threshold: 2, // 2 秒
+  threshold: 2, // 2 seconds
   evaluationPeriods: 2,
 });
 
-// 成本異常檢測
+// Cost anomaly detection
 const costAnomaly = new ce.CfnAnomalyDetector(this, 'CostAnomalyDetector', {
   monitorType: 'DIMENSIONAL',
   monitorSpecification: JSON.stringify({
@@ -588,78 +588,78 @@ const costAnomaly = new ce.CfnAnomalyDetector(this, 'CostAnomalyDetector', {
 });
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 常見問題
+### Common Issues
 
-#### 1. 部署失敗
+#### 1. Deployment Failures
 
 ```bash
-# 檢查 CDK 版本
+# Check CDK version
 cdk --version
 
-# 檢查 AWS 憑證
+# Check AWS credentials
 aws sts get-caller-identity
 
-# 檢查 CDK bootstrap
+# Check CDK bootstrap
 cdk ls
 
-# 查看詳細錯誤
+# View detailed errors
 cdk deploy --verbose
 ```
 
-#### 2. 資源依賴問題
+#### 2. Resource Dependency Issues
 
 ```bash
-# 檢查堆疊依賴
+# Check stack dependencies
 cdk list
 
-# 查看堆疊輸出
+# View stack outputs
 cdk outputs NetworkStack
 
-# 強制重新部署
+# Force redeploy
 cdk deploy --force
 ```
 
-#### 3. 權限問題
+#### 3. Permission Issues
 
 ```bash
-# 檢查 IAM 權限
+# Check IAM permissions
 aws iam get-user
 
-# 檢查 CDK 執行角色
+# Check CDK execution role
 aws sts assume-role --role-arn arn:aws:iam::ACCOUNT:role/cdk-exec-role
 ```
 
-## 開發工作流程
+## Development Workflow
 
-### 日常開發
+### Daily Development
 
 ```bash
-# 1. 修改基礎設施程式碼
-# 2. 執行測試驗證變更
+# 1. Modify infrastructure code
+# 2. Run tests to verify changes
 npm run test:quick
 
-# 3. 合成 CloudFormation 模板檢查
+# 3. Synthesize CloudFormation templates for review
 npm run synth
 
-# 4. 部署到開發環境
+# 4. Deploy to development environment
 npm run deploy:dev
 ```
 
-### 預提交檢查清單
+### Pre-commit Checklist
 
-- [ ] 所有測試通過 (`npm test`)
-- [ ] CDK 合成成功 (`npm run synth`)
-- [ ] 程式碼符合 TypeScript 標準
-- [ ] 文件已更新 (如需要)
-- [ ] 安全配置已檢查
+- [ ] All tests pass (`npm test`)
+- [ ] CDK synthesis successful (`npm run synth`)
+- [ ] Code follows TypeScript standards
+- [ ] Documentation updated (if needed)
+- [ ] Security configuration reviewed
 
-## 相關圖表
+## Related Diagrams
 
-### AWS 基礎設施概覽
-- **[AWS 基礎設施架構](../../diagrams/aws-infrastructure.md)** - 完整的 AWS CDK 基礎設施架構文檔
-- **## AWS 基礎設施圖表
+### AWS Infrastructure Overview
+- **[AWS Infrastructure Architecture](../../diagrams/aws-infrastructure.md)** - Complete AWS CDK infrastructure architecture documentation
+- **AWS Infrastructure Diagram
 
 ```mermaid
 graph TB
@@ -675,22 +675,29 @@ graph TB
     EKS --> RDS
     EKS --> S3
     EKS --> CloudWatch
-```** - 詳細的 AWS 服務架構圖
+```** - Detailed AWS services architecture diagram
 
-### CDK 實現細節
-- \1
-- \1
-- \1
+### CDK Implementation Details
+- [Network Stack Configuration](network-stack-details.md)
+- [Security Stack Implementation](security-stack-details.md)
+- [Observability Stack Setup](observability-stack-details.md)
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[運營視點](../operational/README.md)**: 監控和可觀測性基礎設施
-- **[安全性觀點](../../perspectives/security/README.md)**: 安全配置和合規性
-- **[成本觀點](../../perspectives/cost/README.md)**: 成本優化和預算管理
+- **[Operational Viewpoint](../operational/README.md)**: Monitoring and observability infrastructure
+- **[Security Perspective](../../perspectives/security/README.md)**: Security configuration and compliance
+- **[Cost Perspective](../../perspectives/cost/README.md)**: Cost optimization and budget management
 
-## 相關文檔
+## Related Documentation
 
-- [部署指南](../deployment/README.md)
-- [可觀測性部署](observability-deployment.md)
-- [生產部署檢查清單](production-deployment-checklist.md)
-- [Docker 部署指南](docker-guide.md)
+- [Deployment Guide](../deployment/README.md)
+- [Observability Deployment](observability-deployment.md)
+- [Production Deployment Checklist](production-deployment-checklist.md)
+- [Docker Deployment Guide](docker-guide.md)
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: Platform Team  
+**Review Status**: Reviewed

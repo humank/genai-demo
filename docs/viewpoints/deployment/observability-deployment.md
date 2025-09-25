@@ -1,28 +1,28 @@
-# 可觀測性部署指南
+# Observability Deployment Guide
 
-## 概述
+## Overview
 
-本指南詳細說明如何在不同環境中部署前端後端可觀測性整合系統，包括開發、測試和生產環境的部署步驟和配置。
+This guide provides detailed instructions for deploying the frontend-backend observability integration system across different environments, including deployment steps and configurations for development, testing, and production environments.
 
-## 部署架構
+## Deployment Architecture
 
-### 系統組件
+### System Components
 
 ```mermaid
 graph TB
-    subgraph "前端部署"
-        A[Angular 應用]
-        B[可觀測性 SDK]
-        C[Nginx 反向代理]
+    subgraph "Frontend Deployment"
+        A[Angular Application]
+        B[Observability SDK]
+        C[Nginx Reverse Proxy]
     end
     
-    subgraph "後端部署"
-        D[Spring Boot 應用]
-        E[分析控制器]
-        F[事件處理服務]
+    subgraph "Backend Deployment"
+        D[Spring Boot Application]
+        E[Analytics Controller]
+        F[Event Processing Service]
     end
     
-    subgraph "基礎設施"
+    subgraph "Infrastructure"
         G[Amazon MSK]
         H[RDS PostgreSQL]
         I[ElastiCache Redis]
@@ -41,43 +41,43 @@ graph TB
     D --> K
 ```
 
-## 環境準備
+## Environment Setup
 
-### 開發環境部署
+### Development Environment Deployment
 
-#### 1. 本地開發環境設置
+#### 1. Local Development Environment Setup
 
-**前置條件**:
+**Prerequisites**:
 
 - Node.js 18+
 - Java 21
 - Docker & Docker Compose
 - Git
 
-**部署步驟**:
+**Deployment Steps**:
 
 ```bash
-# 1. 克隆專案
+# 1. Clone the project
 git clone https://github.com/your-org/genai-demo.git
 cd genai-demo
 
-# 2. 啟動基礎設施服務
+# 2. Start infrastructure services
 docker-compose up -d redis postgresql
 
-# 3. 啟動後端服務
+# 3. Start backend service
 ./gradlew bootRun --args='--spring.profiles.active=dev'
 
-# 4. 啟動前端服務
+# 4. Start frontend service
 cd consumer-frontend
 npm install
 npm run start
 
-# 5. 驗證部署
+# 5. Verify deployment
 curl http://localhost:8080/actuator/health
 curl http://localhost:4200
 ```
 
-**Docker Compose 配置**:
+**Docker Compose Configuration**:
 
 ```yaml
 # docker-compose.dev.yml
@@ -127,46 +127,46 @@ volumes:
   postgres-data:
 ```
 
-#### 2. 開發環境配置驗證
+#### 2. Development Environment Configuration Verification
 
 ```bash
 #!/bin/bash
 # verify-dev-deployment.sh
 
-echo "=== 驗證開發環境部署 ==="
+echo "=== Verifying Development Environment Deployment ==="
 
-# 檢查後端健康狀態
-echo "1. 檢查後端服務..."
+# Check backend health status
+echo "1. Checking backend service..."
 curl -f http://localhost:8080/actuator/health || exit 1
 
-# 檢查前端服務
-echo "2. 檢查前端服務..."
+# Check frontend service
+echo "2. Checking frontend service..."
 curl -f http://localhost:4200 || exit 1
 
-# 檢查資料庫連接
-echo "3. 檢查資料庫連接..."
+# Check database connection
+echo "3. Checking database connection..."
 curl -f http://localhost:8080/actuator/health/db || exit 1
 
-# 檢查 Redis 連接
-echo "4. 檢查 Redis 連接..."
+# Check Redis connection
+echo "4. Checking Redis connection..."
 curl -f http://localhost:8080/actuator/health/redis || exit 1
 
-# 測試可觀測性 API
-echo "5. 測試可觀測性 API..."
-curl -X POST http://localhost:8080/../api/analytics/events \
+# Test observability API
+echo "5. Testing observability API..."
+curl -X POST http://localhost:8080/api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: dev-test-$(date +%s)" \
   -H "X-Session-Id: dev-session" \
   -d '[{"eventId":"dev-test","eventType":"page_view","sessionId":"dev-session","traceId":"dev-test-'$(date +%s)'","timestamp":'$(date +%s000)',"data":{"page":"/test"}}]' || exit 1
 
-echo "✅ 開發環境部署驗證完成"
+echo "✅ Development environment deployment verification completed"
 ```
 
-### 測試環境部署
+### Test Environment Deployment
 
-#### 1. CI/CD 管道配置
+#### 1. CI/CD Pipeline Configuration
 
-**GitHub Actions 工作流程**:
+**GitHub Actions Workflow**:
 
 ```yaml
 # .github/workflows/test-deployment.yml
@@ -264,13 +264,13 @@ jobs:
     - name: Deploy to test environment
       if: github.ref == 'refs/heads/develop'
       run: |
-        # 部署到測試環境的腳本
+        # Script to deploy to test environment
         ./scripts/deploy-test.sh
 ```
 
-#### 2. 測試環境基礎設施
+#### 2. Test Environment Infrastructure
 
-**Kubernetes 配置**:
+**Kubernetes Configuration**:
 
 ```yaml
 # k8s/test/namespace.yaml
@@ -361,11 +361,11 @@ spec:
           name: genai-demo-config
 ```
 
-### 生產環境部署
+### Production Environment Deployment
 
-#### 1. AWS 基礎設施部署
+#### 1. AWS Infrastructure Deployment
 
-**CDK 部署腳本**:
+**CDK Deployment Script**:
 
 ```bash
 #!/bin/bash
@@ -377,62 +377,62 @@ ENVIRONMENT="production"
 PROJECT_NAME="genai-demo"
 AWS_REGION="us-east-1"
 
-echo "=== 部署生產環境基礎設施 ==="
+echo "=== Deploying Production Environment Infrastructure ==="
 
-# 1. 部署網路基礎設施
-echo "1. 部署 VPC 和網路組件..."
+# 1. Deploy network infrastructure
+echo "1. Deploying VPC and network components..."
 cd infrastructure
 npm install
 npx cdk deploy NetworkStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-# 2. 部署安全組件
-echo "2. 部署安全和 KMS..."
+# 2. Deploy security components
+echo "2. Deploying security and KMS..."
 npx cdk deploy SecurityStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-# 3. 部署 MSK 叢集
-echo "3. 部署 MSK 叢集..."
+# 3. Deploy MSK cluster
+echo "3. Deploying MSK cluster..."
 npx cdk deploy MSKStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-# 4. 部署 RDS 資料庫
-echo "4. 部署 RDS 資料庫..."
+# 4. Deploy RDS database
+echo "4. Deploying RDS database..."
 npx cdk deploy RDSStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-# 5. 部署 EKS 叢集
-echo "5. 部署 EKS 叢集..."
+# 5. Deploy EKS cluster
+echo "5. Deploying EKS cluster..."
 npx cdk deploy EKSStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-# 6. 部署可觀測性基礎設施
-echo "6. 部署可觀測性組件..."
+# 6. Deploy observability infrastructure
+echo "6. Deploying observability components..."
 npx cdk deploy ObservabilityStack --require-approval never \
   --context environment=$ENVIRONMENT \
   --context projectName=$PROJECT_NAME
 
-echo "✅ 基礎設施部署完成"
+echo "✅ Infrastructure deployment completed"
 
-# 7. 創建 Kafka 主題
-echo "7. 創建 Kafka 主題..."
+# 7. Create Kafka topics
+echo "7. Creating Kafka topics..."
 ./scripts/create-kafka-topics.sh $ENVIRONMENT
 
-# 8. 部署應用程式
-echo "8. 部署應用程式..."
+# 8. Deploy application
+echo "8. Deploying application..."
 ./scripts/deploy-application.sh $ENVIRONMENT
 
-echo "✅ 生產環境部署完成"
+echo "✅ Production environment deployment completed"
 ```
 
-## 部署驗證
+## Deployment Verification
 
-### 自動化部署驗證
+### Automated Deployment Verification
 
 ```bash
 #!/bin/bash
@@ -442,12 +442,12 @@ ENVIRONMENT="production"
 API_BASE_URL="https://api.genai-demo.com"
 FRONTEND_URL="https://genai-demo.com"
 
-echo "=== 驗證生產環境部署 ==="
+echo "=== Verifying Production Environment Deployment ==="
 
-# 1. 檢查基礎設施健康狀態
-echo "1. 檢查基礎設施..."
+# 1. Check infrastructure health status
+echo "1. Checking infrastructure..."
 
-# 檢查 MSK 叢集
+# Check MSK cluster
 MSK_CLUSTER_ARN=$(aws cloudformation describe-stacks \
     --stack-name genai-demo-${ENVIRONMENT}-msk \
     --query 'Stacks[0].Outputs[?OutputKey==`MSKClusterArn`].OutputValue' \
@@ -457,47 +457,47 @@ MSK_STATUS=$(aws kafka describe-cluster --cluster-arn $MSK_CLUSTER_ARN \
     --query 'ClusterInfo.State' --output text)
 
 if [ "$MSK_STATUS" != "ACTIVE" ]; then
-    echo "❌ MSK 叢集狀態異常: $MSK_STATUS"
+    echo "❌ MSK cluster status abnormal: $MSK_STATUS"
     exit 1
 fi
-echo "✅ MSK 叢集狀態正常"
+echo "✅ MSK cluster status normal"
 
-# 2. 檢查應用程式健康狀態
-echo "2. 檢查應用程式..."
+# 2. Check application health status
+echo "2. Checking application..."
 
-# 檢查後端健康狀態
+# Check backend health status
 BACKEND_HEALTH=$(curl -s -w "%{http_code}" -o /dev/null ${API_BASE_URL}/actuator/health)
 if [ "$BACKEND_HEALTH" != "200" ]; then
-    echo "❌ 後端健康檢查失敗: HTTP $BACKEND_HEALTH"
+    echo "❌ Backend health check failed: HTTP $BACKEND_HEALTH"
     exit 1
 fi
-echo "✅ 後端健康狀態正常"
+echo "✅ Backend health status normal"
 
-# 3. 檢查可觀測性功能
-echo "3. 檢查可觀測性功能..."
+# 3. Check observability functionality
+echo "3. Checking observability functionality..."
 
-# 測試分析 API
+# Test analytics API
 TRACE_ID="prod-verify-$(date +%s)"
 SESSION_ID="prod-verify-session"
 
-ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/../api/analytics/events \
+ANALYTICS_RESPONSE=$(curl -s -w "%{http_code}" -X POST ${API_BASE_URL}/api/analytics/events \
   -H "Content-Type: application/json" \
   -H "X-Trace-Id: $TRACE_ID" \
   -H "X-Session-Id: $SESSION_ID" \
   -d '[{"eventId":"prod-verify","eventType":"page_view","sessionId":"'$SESSION_ID'","traceId":"'$TRACE_ID'","timestamp":'$(date +%s000)',"data":{"page":"/verify"}}]')
 
 if [[ "${ANALYTICS_RESPONSE: -3}" != "200" ]]; then
-    echo "❌ 分析 API 測試失敗: HTTP ${ANALYTICS_RESPONSE: -3}"
+    echo "❌ Analytics API test failed: HTTP ${ANALYTICS_RESPONSE: -3}"
     exit 1
 fi
-echo "✅ 分析 API 功能正常"
+echo "✅ Analytics API functionality normal"
 
-echo "=== 生產環境部署驗證完成 ==="
+echo "=== Production environment deployment verification completed ==="
 ```
 
-## 監控和警報
+## Monitoring and Alerting
 
-### CloudWatch 儀表板設置
+### CloudWatch Dashboard Setup
 
 ```json
 {
@@ -513,7 +513,7 @@ echo "=== 生產環境部署驗證完成 ==="
         "period": 300,
         "stat": "Sum",
         "region": "us-east-1",
-        "title": "可觀測性事件處理"
+        "title": "Observability Event Processing"
       }
     },
     {
@@ -527,16 +527,16 @@ echo "=== 生產環境部署驗證完成 ==="
         "period": 300,
         "stat": "Average",
         "region": "us-east-1",
-        "title": "應用程式負載均衡器指標"
+        "title": "Application Load Balancer Metrics"
       }
     }
   ]
 }
 ```
 
-## 回滾策略
+## Rollback Strategy
 
-### 自動回滾觸發條件
+### Automatic Rollback Trigger Conditions
 
 ```yaml
 # k8s/production/rollback-policy.yaml
@@ -565,11 +565,11 @@ spec:
           value: genai-demo-backend-service
 ```
 
-## 相關圖表
+## Related Diagrams
 
-### AWS 基礎設施架構
-- **[AWS 基礎設施架構](../../diagrams/aws-infrastructure.md)** - 包含完整可觀測性服務的 AWS 架構
-- **## AWS 可觀測性架構
+### AWS Infrastructure Architecture
+- **[AWS Infrastructure Architecture](../../diagrams/aws-infrastructure.md)** - Complete AWS architecture including observability services
+- **AWS Observability Architecture
 
 ```mermaid
 graph TB
@@ -611,20 +611,27 @@ graph TB
     class ACTUATOR,OTEL,LOGBACK,MICROMETER application
     class FLUENT,PROMETHEUS,GRAFANA kubernetes
     class CW_LOGS,CW_METRICS,XRAY,OPENSEARCH aws
-```** - 可觀測性服務架構圖
+```** - Observability services architecture diagram
 
-### 部署細節
-- \1
-- \1
+### Deployment Details
+- [Production Deployment Checklist](production-deployment-checklist.md)
+- [Infrastructure as Code](infrastructure-as-code.md)
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[運營視點](../operational/README.md)**: 監控和維護策略
-- **[開發視點](../development/README.md)**: CI/CD 整合和測試
-- **[並發視點](../concurrency/README.md)**: 事件處理和非同步架構
+- **[Operational Viewpoint](../operational/README.md)**: Monitoring and maintenance strategies
+- **[Development Viewpoint](../development/README.md)**: CI/CD integration and testing
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Event processing and asynchronous architecture
 
-## 相關文檔
+## Related Documentation
 
-- [生產部署檢查清單](production-deployment-checklist.md)
-- [基礎設施即程式碼](infrastructure-as-code.md)
-- [Docker 部署指南](docker-guide.md)
+- [Production Deployment Checklist](production-deployment-checklist.md)
+- [Infrastructure as Code](infrastructure-as-code.md)
+- [Docker Deployment Guide](docker-guide.md)
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: DevOps Team  
+**Review Status**: Reviewed

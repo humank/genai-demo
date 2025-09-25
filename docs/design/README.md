@@ -1,73 +1,73 @@
-# 📍 設計文檔已遷移
+# 📍 Design Documentation Migration Notice
 
-> **重要通知**: 設計相關文檔已遷移到新的 Development Viewpoint 架構模式中
+> **Important Notice**: Design-related documentation has been migrated to the new Development Viewpoint architecture pattern
 
-## 🚀 新位置
+## 🚀 New Location
 
-所有設計模式和架構指南現在整合在 **[Development Viewpoint 架構模式](../viewpoints/development/architecture/)** 中，提供更系統化的架構設計指南。
+All design patterns and architecture guides are now integrated in **[Development Viewpoint Architecture Patterns](../viewpoints/development/architecture/)**, providing more systematic architecture design guidance.
 
-## 📋 文檔遷移對照表
+## 📋 Document Migration Reference Table
 
-| 原始文檔 | 新位置 | 說明 |
-|----------|--------|------|
-| [ddd-guide.md](ddd-guide.md) | **DDD 戰術模式** | @AggregateRoot、@ValueObject、@DomainService 實作指南 |
-| [design-principles.md](design-principles.md) | **SOLID 原則** | SOLID 原則和設計模式應用 |
-| [refactoring-guide.md](refactoring-guide.md) | **重構策略** | 程式碼重構指南和最佳實踐 |
+| Original Document | New Location | Description |
+|-------------------|--------------|-------------|
+| [ddd-guide.md](ddd-guide.md) | **DDD Tactical Patterns** | @AggregateRoot, @ValueObject, @DomainService implementation guide |
+| [design-principles.md](design-principles.md) | **SOLID Principles** | SOLID principles and design pattern applications |
+| [refactoring-guide.md](refactoring-guide.md) | **Refactoring Strategies** | Code refactoring guide and best practices |
 
-## 🏗️ 新的架構模式結構
+## 🏗️ New Architecture Pattern Structure
 
-### DDD 模式
-- **戰術模式** - @AggregateRoot、@ValueObject、@Entity、@DomainService
-- **領域事件** - Record 實作、事件收集與發布
-- **聚合設計** - 聚合根設計原則
+### DDD Patterns
+- **Tactical Patterns** - @AggregateRoot, @ValueObject, @Entity, @DomainService
+- **Domain Events** - Record implementation, event collection and publishing
+- **Aggregate Design** - Aggregate root design principles
 
-### 六角架構
-- **Port-Adapter 模式** - 端口與適配器實作
-- **依賴反轉** - 依賴反轉原則應用
-- **分層設計** - 分層設計和邊界定義
+### Hexagonal Architecture
+- **Port-Adapter Pattern** - Port and adapter implementation
+- **Dependency Inversion** - Dependency inversion principle application
+- **Layered Design** - Layer design and boundary definition
 
-### 微服務模式
-- **API Gateway** - 路由、認證、限流配置
-- **服務發現** - EKS 服務發現機制
-- **斷路器模式** - 故障隔離和自動恢復
+### Microservices Patterns
+- **API Gateway** - Routing, authentication, rate limiting configuration
+- **Service Discovery** - EKS service discovery mechanisms
+- **Circuit Breaker Pattern** - Fault isolation and automatic recovery
 
-### Saga 模式
-- **編排式 Saga** - 中央協調器模式
-- **編舞式 Saga** - 事件驅動協調
-- **訂單處理 Saga** - 實際業務流程範例
+### Saga Pattern
+- **Orchestration Saga** - Central coordinator pattern
+- **Choreography Saga** - Event-driven coordination
+- **Order Processing Saga** - Real business process examples
 
-## 🎯 設計原則整合
+## 🎯 Design Principles Integration
 
-### SOLID 原則
-- **單一職責原則** - 實際程式碼範例
-- **開放封閉原則** - 擴展性設計模式
-- **依賴反轉原則** - 在六角架構中的應用
+### SOLID Principles
+- **Single Responsibility Principle** - Real code examples
+- **Open-Closed Principle** - Extensibility design patterns
+- **Dependency Inversion Principle** - Application in hexagonal architecture
 
-### 設計模式應用
-- **Factory 和 Builder 模式** - 複雜物件創建
-- **Strategy 和 Observer 模式** - 行為模式實現
-- **Show Don't Ask 原則** - 物件行為封裝
+### Design Pattern Applications
+- **Factory and Builder Patterns** - Complex object creation
+- **Strategy and Observer Patterns** - Behavioral pattern implementation
+- **Tell Don't Ask Principle** - Object behavior encapsulation
 
-## 🔗 快速導航
+## 🔗 Quick Navigation
 
-- **🏗️ 架構模式總覽** - 所有架構模式入口
-- **📐 DDD 實踐** - 領域驅動設計
-- **🔧 六角架構** - Port-Adapter 模式
-- **🌐 微服務架構** - 分散式系統設計
+- **🏗️ Architecture Patterns Overview** - Entry point for all architecture patterns
+- **📐 DDD Practices** - Domain-driven design
+- **🔧 Hexagonal Architecture** - Port-Adapter pattern
+- **🌐 Microservices Architecture** - Distributed system design
 
-## 📅 遷移資訊
+## 📅 Migration Information
 
-- **遷移日期**: 2025年1月21日
-- **過渡期**: 2025年2月底前
-- **舊文檔移除**: 2025年3月1日
+- **Migration Date**: January 21, 2025
+- **Transition Period**: Until end of February 2025
+- **Legacy Document Removal**: March 1, 2025
 
-## 💡 為什麼遷移？
+## 💡 Why Migrate?
 
-1. **更完整的架構指南**: 整合了實際程式碼實作和最佳實踐
-2. **實作導向**: 從理論轉向實際可執行的程式碼範例
-3. **系統化組織**: 按照架構模式類型進行邏輯分組
-4. **更好的維護性**: 減少內容重複，提高文檔品質
+1. **More Complete Architecture Guide**: Integrates actual code implementation and best practices
+2. **Implementation-Oriented**: Shift from theory to actual executable code examples
+3. **Systematic Organization**: Logical grouping by architecture pattern types
+4. **Better Maintainability**: Reduces content duplication, improves documentation quality
 
 ---
 
-**需要幫助？** 請參考 Development Viewpoint 架構指南 或查看 [專案文檔中心](../README.md)
+**Need Help?** Please refer to the Development Viewpoint Architecture Guide or check the [Project Documentation Center](../README.md)

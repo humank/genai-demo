@@ -1,82 +1,82 @@
-# 功能視點實現指南
+# Functional Viewpoint Implementation Guide
 
-## 概覽
+## Overview
 
-本指南提供功能視點實現的詳細步驟、最佳實踐和具體範例，幫助開發團隊正確實現領域驅動設計和功能需求。
+This guide provides detailed steps, best practices, and concrete examples for implementing the functional viewpoint, helping development teams correctly implement domain-driven design and functional requirements.
 
-## 實現流程
+## Implementation Process
 
-### 階段一：領域分析和建模
+### Phase 1: Domain Analysis and Modeling
 
-#### 1. 業務需求分析
-
-```markdown
-## 業務需求範例：客戶註冊流程
-
-### 功能需求
-- 客戶可以使用電子郵件註冊帳戶
-- 系統驗證電子郵件唯一性
-- 註冊成功後發送歡迎郵件
-- 客戶獲得預設會員等級
-
-### 業務規則
-- 電子郵件必須唯一
-- 密碼必須符合安全要求
-- 新客戶預設為一般會員
-- 註冊後24小時內必須驗證電子郵件
-```
-
-#### 2. 領域建模工作坊
+#### 1. Business Requirements Analysis
 
 ```markdown
-## Event Storming 工作坊結果
+## Business Requirements Example: Customer Registration Process
 
-### 領域事件
-- CustomerRegistered (客戶已註冊)
-- EmailVerificationSent (電子郵件驗證已發送)
-- EmailVerified (電子郵件已驗證)
-- WelcomeEmailSent (歡迎郵件已發送)
+### Functional Requirements
+- Customers can register accounts using email
+- System validates email uniqueness
+- Send welcome email after successful registration
+- Customers receive default membership level
 
-### 命令
-- RegisterCustomer (註冊客戶)
-- VerifyEmail (驗證電子郵件)
-- ResendVerificationEmail (重新發送驗證郵件)
-
-### 聚合根
-- Customer (客戶)
-
-### 外部系統
-- EmailService (郵件服務)
-- IdentityProvider (身份提供者)
+### Business Rules
+- Email must be unique
+- Password must meet security requirements
+- New customers default to standard membership
+- Email must be verified within 24 hours of registration
 ```
 
-#### 3. 界限上下文識別
+#### 2. Domain Modeling Workshop
+
+```markdown
+## Event Storming Workshop Results
+
+### Domain Events
+- CustomerRegistered
+- EmailVerificationSent
+- EmailVerified
+- WelcomeEmailSent
+
+### Commands
+- RegisterCustomer
+- VerifyEmail
+- ResendVerificationEmail
+
+### Aggregate Roots
+- Customer
+
+### External Systems
+- EmailService
+- IdentityProvider
+```
+
+#### 3. Bounded Context Identification
 
 ```java
-// 界限上下文對應表
+// Bounded context mapping
 public enum BoundedContext {
-    CUSTOMER_MANAGEMENT("客戶管理", "管理客戶生命週期和基本資訊"),
-    IDENTITY_ACCESS("身份存取", "處理認證和授權"),
-    NOTIFICATION("通知服務", "處理各種通知和郵件"),
-    MEMBERSHIP("會員管理", "管理會員等級和權益");
+    CUSTOMER_MANAGEMENT("Customer Management", "Manages customer lifecycle and basic information"),
+    IDENTITY_ACCESS("Identity & Access", "Handles authentication and authorization"),
+    NOTIFICATION("Notification Service", "Handles various notifications and emails"),
+    MEMBERSHIP("Membership Management", "Manages membership levels and benefits");
 }
 ```
 
-### 階段二：聚合根設計和實現
+### Phase 2: Aggregate Root Design and Implementation
 
-#### 1. 聚合根識別原則
+#### 1. Aggregate Root Identification Principles
 
 ```java
-// 聚合根識別檢查清單
+// Aggregate root identification checklist
 public class AggregateRootIdentificationGuide {
     
     /**
-     * 聚合根識別標準：
-     * 1. 具有全域唯一標識
-     * 2. 有獨立的生命週期
-     * 3. 維護業務不變性
-     * 4. 是業務概念的根實體
-     * 5. 控制對聚合內其他實體的存取
+     * Aggregate root identification criteria:
+     * 1. Has global unique identity
+     * 2. Has independent lifecycle
+     * 3. Maintains business invariants
+     * 4. Is the root entity of business concept
+     * 5. Controls access to other entities within aggregate
      */
     
     public boolean isAggregateRoot(DomainEntity entity) {
@@ -89,16 +89,16 @@ public class AggregateRootIdentificationGuide {
 }
 ```
 
-#### 2. 聚合根實現模板
+#### 2. Aggregate Root Implementation Template
 
 ```java
-@AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "CustomerManagement", version = "1.0")
+@AggregateRoot(name = "Customer", description = "Customer aggregate root", boundedContext = "CustomerManagement", version = "1.0")
 public class Customer implements AggregateRootInterface {
     
-    // === 聚合根標識 ===
+    // === Aggregate root identity ===
     private final CustomerId id;
     
-    // === 核心業務屬性 ===
+    // === Core business attributes ===
     private CustomerName name;
     private Email email;
     private MembershipLevel membershipLevel;
@@ -106,37 +106,37 @@ public class Customer implements AggregateRootInterface {
     private LocalDateTime registrationDate;
     private LocalDateTime lastLoginDate;
     
-    // === 聚合內實體集合 ===
+    // === Aggregate internal entity collections ===
     private final List<DeliveryAddress> addresses = new ArrayList<>();
     private final List<PaymentMethod> paymentMethods = new ArrayList<>();
     private CustomerPreferences preferences;
     
-    // === 建構子 ===
+    // === Constructor ===
     private Customer(CustomerId id, CustomerName name, Email email) {
-        this.id = requireNonNull(id, "客戶ID不能為空");
-        this.name = requireNonNull(name, "客戶姓名不能為空");
-        this.email = requireNonNull(email, "電子郵件不能為空");
+        this.id = requireNonNull(id, "Customer ID cannot be null");
+        this.name = requireNonNull(name, "Customer name cannot be null");
+        this.email = requireNonNull(email, "Email cannot be null");
         this.membershipLevel = MembershipLevel.STANDARD;
         this.status = CustomerStatus.PENDING_VERIFICATION;
         this.registrationDate = LocalDateTime.now();
         this.preferences = CustomerPreferences.defaultPreferences();
     }
     
-    // === 工廠方法 ===
+    // === Factory methods ===
     public static Customer register(CustomerName name, Email email) {
         CustomerId id = CustomerId.generate();
         Customer customer = new Customer(id, name, email);
         
-        // 收集領域事件
+        // Collect domain event
         customer.collectEvent(CustomerRegisteredEvent.create(id, name, email));
         
         return customer;
     }
     
-    // === 業務方法 ===
+    // === Business methods ===
     public void verifyEmail() {
         if (this.status != CustomerStatus.PENDING_VERIFICATION) {
-            throw new InvalidCustomerStatusException("客戶狀態不允許驗證電子郵件");
+            throw new InvalidCustomerStatusException("Customer status does not allow email verification");
         }
         
         this.status = CustomerStatus.ACTIVE;
@@ -161,7 +161,7 @@ public class Customer implements AggregateRootInterface {
         DeliveryAddressId addressId = DeliveryAddressId.generate();
         DeliveryAddress deliveryAddress = new DeliveryAddress(addressId, address, type);
         
-        // 如果是第一個地址，設為預設
+        // If this is the first address, mark as default
         if (addresses.isEmpty()) {
             deliveryAddress.markAsDefault();
         }
@@ -172,7 +172,7 @@ public class Customer implements AggregateRootInterface {
     
     public void promoteToMembership(MembershipLevel newLevel) {
         if (newLevel.ordinal() <= this.membershipLevel.ordinal()) {
-            throw new InvalidMembershipPromotionException("不能降級或平級調整會員等級");
+            throw new InvalidMembershipPromotionException("Cannot downgrade or maintain same membership level");
         }
         
         MembershipLevel oldLevel = this.membershipLevel;
@@ -181,28 +181,28 @@ public class Customer implements AggregateRootInterface {
         collectEvent(CustomerMembershipPromotedEvent.create(this.id, oldLevel, newLevel));
     }
     
-    // === 業務規則驗證 ===
+    // === Business rule validation ===
     private void validateProfileUpdate(CustomerName newName, Email newEmail) {
         if (newName == null || newEmail == null) {
-            throw new InvalidProfileDataException("姓名和電子郵件不能為空");
+            throw new InvalidProfileDataException("Name and email cannot be null");
         }
         
         if (this.status == CustomerStatus.SUSPENDED) {
-            throw new InvalidCustomerStatusException("已暫停的客戶無法更新資料");
+            throw new InvalidCustomerStatusException("Suspended customers cannot update profile");
         }
     }
     
     private void validateAddress(Address address) {
         if (address == null || !address.isValid()) {
-            throw new InvalidAddressException("地址資訊無效");
+            throw new InvalidAddressException("Invalid address information");
         }
         
         if (addresses.size() >= 5) {
-            throw new TooManyAddressesException("客戶最多只能有5個配送地址");
+            throw new TooManyAddressesException("Customer can have maximum 5 delivery addresses");
         }
     }
     
-    // === 查詢方法 ===
+    // === Query methods ===
     public boolean isActive() {
         return this.status == CustomerStatus.ACTIVE;
     }
@@ -232,7 +232,7 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-#### 3. 值對象實現模板
+#### 3. Value Object Implementation Template
 
 ```java
 @ValueObject
@@ -243,11 +243,11 @@ public record CustomerId(String value) {
     
     public CustomerId {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("客戶ID不能為空");
+            throw new IllegalArgumentException("Customer ID cannot be null or empty");
         }
         
         if (!PATTERN.matcher(value).matches()) {
-            throw new IllegalArgumentException("客戶ID格式無效，應為：CUST-xxxxxxxx");
+            throw new IllegalArgumentException("Invalid customer ID format, should be: CUST-xxxxxxxx");
         }
     }
     
@@ -275,16 +275,16 @@ public record Email(String value) {
     
     public Email {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("電子郵件不能為空");
+            throw new IllegalArgumentException("Email cannot be null or empty");
         }
         
         String normalizedValue = value.trim().toLowerCase();
         
         if (!EMAIL_PATTERN.matcher(normalizedValue).matches()) {
-            throw new IllegalArgumentException("電子郵件格式無效");
+            throw new IllegalArgumentException("Invalid email format");
         }
         
-        // 重新賦值為標準化後的值
+        // Reassign to normalized value
         value = normalizedValue;
     }
     
@@ -302,9 +302,9 @@ public record Email(String value) {
 }
 ```
 
-### 階段三：應用服務實現
+### Phase 3: Application Service Implementation
 
-#### 1. 應用服務模板
+#### 1. Application Service Template
 
 ```java
 @Service
@@ -324,62 +324,62 @@ public class CustomerApplicationService {
         this.emailService = emailService;
     }
     
-    // === 命令處理方法 ===
+    // === Command handling methods ===
     
     public Customer registerCustomer(RegisterCustomerCommand command) {
-        // 1. 驗證命令
+        // 1. Validate command
         validateCommand(command);
         
-        // 2. 檢查業務規則
+        // 2. Check business rules
         if (customerRepository.existsByEmail(command.email())) {
             throw new EmailAlreadyExistsException(command.email());
         }
         
-        // 3. 創建聚合根
+        // 3. Create aggregate root
         Customer customer = Customer.register(command.name(), command.email());
         
-        // 4. 保存聚合根
+        // 4. Save aggregate root
         Customer savedCustomer = customerRepository.save(customer);
         
-        // 5. 發布領域事件
+        // 5. Publish domain events
         domainEventService.publishEventsFromAggregate(savedCustomer);
         
         return savedCustomer;
     }
     
     public void verifyCustomerEmail(VerifyEmailCommand command) {
-        // 1. 載入聚合根
+        // 1. Load aggregate root
         Customer customer = customerRepository.findById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(command.customerId()));
         
-        // 2. 執行業務操作
+        // 2. Execute business operation
         customer.verifyEmail();
         
-        // 3. 保存變更
+        // 3. Save changes
         customerRepository.save(customer);
         
-        // 4. 發布事件
+        // 4. Publish events
         domainEventService.publishEventsFromAggregate(customer);
     }
     
     public Customer updateCustomerProfile(UpdateProfileCommand command) {
-        // 1. 載入聚合根
+        // 1. Load aggregate root
         Customer customer = customerRepository.findById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(command.customerId()));
         
-        // 2. 執行業務操作
+        // 2. Execute business operation
         customer.updateProfile(command.name(), command.email());
         
-        // 3. 保存變更
+        // 3. Save changes
         Customer updatedCustomer = customerRepository.save(customer);
         
-        // 4. 發布事件
+        // 4. Publish events
         domainEventService.publishEventsFromAggregate(updatedCustomer);
         
         return updatedCustomer;
     }
     
-    // === 查詢方法 ===
+    // === Query methods ===
     
     @Transactional(readOnly = true)
     public Customer getCustomer(CustomerId customerId) {
@@ -392,31 +392,31 @@ public class CustomerApplicationService {
         return customerRepository.findByCriteria(criteria, pageable);
     }
     
-    // === 私有輔助方法 ===
+    // === Private helper methods ===
     
     private void validateCommand(RegisterCustomerCommand command) {
         if (command == null) {
-            throw new IllegalArgumentException("註冊命令不能為空");
+            throw new IllegalArgumentException("Register command cannot be null");
         }
         
         if (command.name() == null || command.email() == null) {
-            throw new IllegalArgumentException("客戶姓名和電子郵件不能為空");
+            throw new IllegalArgumentException("Customer name and email cannot be null");
         }
     }
 }
 ```
 
-#### 2. 命令對象設計
+#### 2. Command Object Design
 
 ```java
-// 命令基礎介面
+// Command base interface
 public interface Command {
     UUID getCommandId();
     LocalDateTime getTimestamp();
     String getInitiatedBy();
 }
 
-// 抽象命令基類
+// Abstract command base class
 public abstract class AbstractCommand implements Command {
     private final UUID commandId;
     private final LocalDateTime timestamp;
@@ -438,7 +438,7 @@ public abstract class AbstractCommand implements Command {
     public String getInitiatedBy() { return initiatedBy; }
 }
 
-// 具體命令實現
+// Concrete command implementation
 public record RegisterCustomerCommand(
     CustomerName name,
     Email email,
@@ -450,10 +450,10 @@ public record RegisterCustomerCommand(
     
     public RegisterCustomerCommand {
         if (name == null || email == null) {
-            throw new IllegalArgumentException("客戶姓名和電子郵件不能為空");
+            throw new IllegalArgumentException("Customer name and email cannot be null");
         }
         if (initiatedBy == null || initiatedBy.trim().isEmpty()) {
-            throw new IllegalArgumentException("命令發起者不能為空");
+            throw new IllegalArgumentException("Command initiator cannot be null or empty");
         }
     }
     
@@ -468,9 +468,9 @@ public record RegisterCustomerCommand(
 }
 ```
 
-### 階段四：領域事件實現
+### Phase 4: Domain Event Implementation
 
-#### 1. 領域事件設計
+#### 1. Domain Event Design
 
 ```java
 public record CustomerRegisteredEvent(
@@ -514,7 +514,7 @@ public record CustomerRegisteredEvent(
 }
 ```
 
-#### 2. 事件處理器實現
+#### 2. Event Handler Implementation
 
 ```java
 @Component
@@ -528,21 +528,21 @@ public class CustomerRegisteredEventHandler extends AbstractDomainEventHandler<C
     @Transactional
     public void handle(CustomerRegisteredEvent event) {
         try {
-            // 1. 發送歡迎郵件
+            // 1. Send welcome email
             sendWelcomeEmail(event);
             
-            // 2. 更新統計資料
+            // 2. Update statistics
             updateCustomerStatistics(event);
             
-            // 3. 準備歡迎禮包
+            // 3. Prepare welcome package
             prepareWelcomePackage(event);
             
-            // 4. 記錄處理成功
+            // 4. Mark event as processed
             markEventAsProcessed(event.getEventId());
             
         } catch (Exception e) {
-            logger.error("處理客戶註冊事件失敗", e);
-            throw new DomainEventProcessingException("客戶註冊後續處理失敗", e);
+            logger.error("Failed to process customer registration event", e);
+            throw new DomainEventProcessingException("Customer registration follow-up processing failed", e);
         }
     }
     
@@ -577,9 +577,9 @@ public class CustomerRegisteredEventHandler extends AbstractDomainEventHandler<C
 }
 ```
 
-### 階段五：基礎設施層實現
+### Phase 5: Infrastructure Layer Implementation
 
-#### 1. 儲存庫實現
+#### 1. Repository Implementation
 
 ```java
 @Repository
@@ -604,7 +604,7 @@ public class JpaCustomerRepository implements CustomerRepository {
         CustomerEntity entity = mapper.toEntity(customer);
         CustomerEntity savedEntity = jpaRepository.save(entity);
         
-        // 標記事件為已提交
+        // Mark events as committed
         customer.markEventsAsCommitted();
         
         return mapper.toDomain(savedEntity);
@@ -625,7 +625,7 @@ public class JpaCustomerRepository implements CustomerRepository {
 }
 ```
 
-#### 2. 實體映射器
+#### 2. Entity Mapper
 
 ```java
 @Component
@@ -634,7 +634,7 @@ public class CustomerMapper {
     public Customer toDomain(CustomerEntity entity) {
         if (entity == null) return null;
         
-        // 使用反射或建構子創建領域對象
+        // Use reflection or constructor to create domain object
         Customer customer = Customer.reconstitute(
             CustomerId.of(entity.getId()),
             new CustomerName(entity.getName()),
@@ -645,7 +645,7 @@ public class CustomerMapper {
             entity.getLastLoginDate()
         );
         
-        // 映射聚合內實體
+        // Map aggregate internal entities
         List<DeliveryAddress> addresses = entity.getAddresses().stream()
             .map(this::toDeliveryAddress)
             .toList();
@@ -666,7 +666,7 @@ public class CustomerMapper {
         entity.setRegistrationDate(customer.getRegistrationDate());
         entity.setLastLoginDate(customer.getLastLoginDate());
         
-        // 映射聚合內實體
+        // Map aggregate internal entities
         List<DeliveryAddressEntity> addressEntities = customer.getAddresses().stream()
             .map(this::toAddressEntity)
             .toList();
@@ -703,9 +703,9 @@ public class CustomerMapper {
 }
 ```
 
-## 測試實現指南
+## Testing Implementation Guide
 
-### 1. 聚合根測試
+### 1. Aggregate Root Testing
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -714,8 +714,8 @@ class CustomerTest {
     @Test
     void should_create_customer_with_correct_initial_state() {
         // Given
-        CustomerName name = new CustomerName("張三");
-        Email email = new Email("zhang.san@example.com");
+        CustomerName name = new CustomerName("John Doe");
+        Email email = new Email("john.doe@example.com");
         
         // When
         Customer customer = Customer.register(name, email);
@@ -727,7 +727,7 @@ class CustomerTest {
         assertThat(customer.getMembershipLevel()).isEqualTo(MembershipLevel.STANDARD);
         assertThat(customer.getStatus()).isEqualTo(CustomerStatus.PENDING_VERIFICATION);
         
-        // 驗證領域事件
+        // Verify domain events
         assertThat(customer.hasUncommittedEvents()).isTrue();
         List<DomainEvent> events = customer.getUncommittedEvents();
         assertThat(events).hasSize(1);
@@ -760,12 +760,12 @@ class CustomerTest {
         // When & Then
         assertThatThrownBy(() -> customer.verifyEmail())
             .isInstanceOf(InvalidCustomerStatusException.class)
-            .hasMessage("客戶狀態不允許驗證電子郵件");
+            .hasMessage("Customer status does not allow email verification");
     }
 }
 ```
 
-### 2. 應用服務測試
+### 2. Application Service Testing
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -784,8 +784,8 @@ class CustomerApplicationServiceTest {
     void should_register_customer_successfully() {
         // Given
         RegisterCustomerCommand command = new RegisterCustomerCommand(
-            new CustomerName("李四"),
-            new Email("li.si@example.com"),
+            new CustomerName("Jane Smith"),
+            new Email("jane.smith@example.com"),
             "system"
         );
         
@@ -809,7 +809,7 @@ class CustomerApplicationServiceTest {
     void should_throw_exception_when_email_already_exists() {
         // Given
         RegisterCustomerCommand command = new RegisterCustomerCommand(
-            new CustomerName("王五"),
+            new CustomerName("Bob Wilson"),
             new Email("existing@example.com"),
             "system"
         );
@@ -827,7 +827,7 @@ class CustomerApplicationServiceTest {
 }
 ```
 
-### 3. 整合測試
+### 3. Integration Testing
 
 ```java
 @SpringBootTest
@@ -845,70 +845,70 @@ class CustomerIntegrationTest extends BaseIntegrationTest {
     void should_complete_customer_registration_flow() {
         // Given
         RegisterCustomerCommand registerCommand = new RegisterCustomerCommand(
-            new CustomerName("整合測試客戶"),
+            new CustomerName("Integration Test Customer"),
             new Email("integration.test@example.com"),
             "test-system"
         );
         
-        // When - 註冊客戶
+        // When - Register customer
         Customer registeredCustomer = customerApplicationService.registerCustomer(registerCommand);
         
-        // Then - 驗證註冊結果
+        // Then - Verify registration result
         assertThat(registeredCustomer).isNotNull();
         assertThat(registeredCustomer.getStatus()).isEqualTo(CustomerStatus.PENDING_VERIFICATION);
         
-        // When - 驗證電子郵件
+        // When - Verify email
         VerifyEmailCommand verifyCommand = new VerifyEmailCommand(
             registeredCustomer.getId(),
             "test-system"
         );
         customerApplicationService.verifyCustomerEmail(verifyCommand);
         
-        // Then - 驗證最終狀態
+        // Then - Verify final state
         Customer verifiedCustomer = customerRepository.findById(registeredCustomer.getId()).orElseThrow();
         assertThat(verifiedCustomer.getStatus()).isEqualTo(CustomerStatus.ACTIVE);
     }
 }
 ```
 
-## 最佳實踐檢查清單
+## Best Practices Checklist
 
-### 設計階段
+### Design Phase
 
-- [ ] 完成 Event Storming 工作坊
-- [ ] 識別核心聚合根和界限上下文
-- [ ] 定義清晰的業務規則和不變性
-- [ ] 設計適當的值對象和實體
-- [ ] 規劃領域事件和命令
+- [ ] Complete Event Storming workshop
+- [ ] Identify core aggregate roots and bounded contexts
+- [ ] Define clear business rules and invariants
+- [ ] Design appropriate value objects and entities
+- [ ] Plan domain events and commands
 
-### 實現階段
+### Implementation Phase
 
-- [ ] 聚合根實現 AggregateRootInterface
-- [ ] 值對象使用不可變 Record
-- [ ] 應用服務只協調，不包含業務邏輯
-- [ ] 正確實現領域事件收集和發布
-- [ ] 儲存庫介面在領域層定義
+- [ ] Aggregate roots implement AggregateRootInterface
+- [ ] Value objects use immutable Records
+- [ ] Application services only coordinate, no business logic
+- [ ] Correctly implement domain event collection and publishing
+- [ ] Repository interfaces defined in domain layer
 
-### 測試階段
+### Testing Phase
 
-- [ ] 聚合根單元測試覆蓋所有業務方法
-- [ ] 應用服務測試驗證協調邏輯
-- [ ] 整合測試驗證完整業務流程
-- [ ] 事件處理器測試確保正確處理
-- [ ] 性能測試滿足響應時間要求
+- [ ] Aggregate root unit tests cover all business methods
+- [ ] Application service tests verify coordination logic
+- [ ] Integration tests verify complete business processes
+- [ ] Event handler tests ensure correct processing
+- [ ] Performance tests meet response time requirements
 
-### 品質保證
+### Quality Assurance
 
-- [ ] 所有業務規則在領域層實現
-- [ ] 聚合邊界設計合理
-- [ ] 事務邊界與聚合邊界一致
-- [ ] 領域事件正確建模業務概念
-- [ ] 錯誤處理完整且使用者友好
+- [ ] All business rules implemented in domain layer
+- [ ] Aggregate boundaries designed reasonably
+- [ ] Transaction boundaries align with aggregate boundaries
+- [ ] Domain events correctly model business concepts
+- [ ] Error handling is complete and user-friendly
 
 ---
 
-**相關文件**:
-- [架構元素詳解](architecture-elements.md)
-- [品質考量指南](quality-considerations.md)
-- [領域事件實現](../information/domain-events.md)
-- \1
+**Related Documents**:
+- [Architecture Elements Details](architecture-elements.md)
+- [Quality Considerations Guide](quality-considerations.md)
+- [Domain Events Implementation](../information/domain-events.md)
+- [Development Standards](../../development/README.md)

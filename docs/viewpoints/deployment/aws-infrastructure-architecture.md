@@ -1,38 +1,38 @@
-# AWS 基礎設施架構 - Deployment Viewpoint
+# AWS Infrastructure Architecture - Deployment Viewpoint
 
-**文件版本**: 1.0  
-**最後更新**: 2025年9月24日 下午6:02 (台北時間)  
-**作者**: Architecture Team  
-**狀態**: Active
+**Document Version**: 1.0  
+**Last Updated**: September 24, 2025 6:02 PM (Taipei Time)  
+**Author**: Architecture Team  
+**Status**: Active
 
-## 📋 目錄
+## 📋 Table of Contents
 
-- [概覽](#概覽)
-- [CDK 架構設計](#cdk-架構設計)
-- [AWS 資源配置](#aws-資源配置)
-- [Multi-Region 部署架構](#multi-region-部署架構)
-- [網路架構](#網路架構)
-- [計算資源](#計算資源)
-- [資料儲存](#資料儲存)
-- [IAM 權限架構](#iam-權限架構)
-- [部署流程](#部署流程)
-- [成本優化](#成本優化)
+- [Overview](#overview)
+- [CDK Architecture Design](#cdk-architecture-design)
+- [AWS Resource Configuration](#aws-resource-configuration)
+- [Multi-Region Deployment Architecture](#multi-region-deployment-architecture)
+- [Network Architecture](#network-architecture)
+- [Compute Resources](#compute-resources)
+- [Data Storage](#data-storage)
+- [IAM Permission Architecture](#iam-permission-architecture)
+- [Deployment Process](#deployment-process)
+- [Cost Optimization](#cost-optimization)
 
-## 概覽
+## Overview
 
-GenAI Demo 採用 AWS CDK (Cloud Development Kit) 實現基礎設施即程式碼 (Infrastructure as Code)，部署在 Multi-Region Active-Active 架構上。主要區域為台北 (ap-east-2)，次要區域為東京 (ap-northeast-1)，確保高可用性和災難恢復能力。
+GenAI Demo adopts AWS CDK (Cloud Development Kit) to implement Infrastructure as Code, deployed on a Multi-Region Active-Active architecture. The primary region is Taipei (ap-east-2), and the secondary region is Tokyo (ap-northeast-1), ensuring high availability and disaster recovery capabilities.
 
-### 部署目標
+### Deployment Objectives
 
-- **基礎設施即程式碼**: 使用 AWS CDK TypeScript 管理所有資源
-- **Multi-Region 架構**: 主要區域 (台北) + 次要區域 (東京)
-- **自動化部署**: CI/CD 整合，支援多環境部署
-- **成本優化**: 按需擴展，資源標籤管理
-- **安全合規**: IAM 最小權限原則，加密傳輸和靜態資料
+- **Infrastructure as Code**: Manage all resources using AWS CDK TypeScript
+- **Multi-Region Architecture**: Primary region (Taipei) + Secondary region (Tokyo)
+- **Automated Deployment**: CI/CD integration supporting multi-environment deployment
+- **Cost Optimization**: On-demand scaling with resource tag management
+- **Security Compliance**: IAM least privilege principle, encrypted data in transit and at rest
 
-## CDK 架構設計
+## CDK Architecture Design
 
-### CDK Stack 組織架構
+### CDK Stack Organization Architecture
 
 ```mermaid
 graph TB
@@ -94,10 +94,10 @@ graph TB
     style Observability fill:#f3e5f5
 ```
 
-### CDK Stack 依賴關係
+### CDK Stack Dependencies
 
 ```typescript
-// Stack 部署順序和依賴關係
+// Stack deployment order and dependencies
 const deploymentOrder = {
   phase1: ['NetworkStack', 'SecurityStack', 'CertificateStack'],
   phase2: ['RdsStack', 'ElastiCacheStack', 'MSKStack'],
@@ -108,14 +108,14 @@ const deploymentOrder = {
 };
 ```
 
-## AWS 資源配置
+## AWS Resource Configuration
 
-### 完整系統架構圖
+### Complete System Architecture Diagram
 
 ```mermaid
 graph TB
     subgraph "Internet"
-        User[用戶]
+        User[Users]
         DNS[Route 53<br/>genai-demo.kimkao.io]
     end
     
@@ -125,7 +125,7 @@ graph TB
         Shield[AWS Shield]
     end
     
-    subgraph "ap-east-2 (台北) - Primary Region"
+    subgraph "ap-east-2 (Taipei) - Primary Region"
         subgraph "Network Layer - Primary"
             VPC1[VPC 10.0.0.0/16]
             ALB1[Application Load Balancer]
@@ -162,7 +162,7 @@ graph TB
         end
     end
     
-    subgraph "ap-northeast-1 (東京) - Secondary Region"
+    subgraph "ap-northeast-1 (Tokyo) - Secondary Region"
         subgraph "Network Layer - Secondary"
             VPC2[VPC 10.1.0.0/16]
             ALB2[Application Load Balancer]
@@ -223,9 +223,9 @@ graph TB
     style EKS2 fill:#fff3e0
 ```
 
-### 資源配置詳情
+### Resource Configuration Details
 
-#### 網路資源 (NetworkStack)
+#### Network Resources (NetworkStack)
 
 ```yaml
 VPC Configuration:
@@ -236,34 +236,34 @@ Subnet Configuration:
   Public Subnets:
     - 10.0.0.0/24 (AZ-1a)
     - 10.0.1.0/24 (AZ-1b)
-    用途: ALB, NAT Gateway, Bastion Host
+    Purpose: ALB, NAT Gateway, Bastion Host
     
   Private Subnets:
     - 10.0.2.0/24 (AZ-1a)
     - 10.0.3.0/24 (AZ-1b)
-    用途: EKS Worker Nodes, Application Pods
+    Purpose: EKS Worker Nodes, Application Pods
     
   Database Subnets:
     - 10.0.4.0/28 (AZ-1a)
     - 10.0.5.0/28 (AZ-1b)
-    用途: RDS Aurora, ElastiCache
+    Purpose: RDS Aurora, ElastiCache
 
 Security Groups:
   ALB Security Group:
-    入站: Port 80/443 from 0.0.0.0/0
-    出站: Port 8080 to App Security Group
+    Inbound: Port 80/443 from 0.0.0.0/0
+    Outbound: Port 8080 to App Security Group
     
   App Security Group:
-    入站: Port 8080 from ALB Security Group
-    出站: Port 443 to 0.0.0.0/0, Port 5432/6379 to DB Security Group
+    Inbound: Port 8080 from ALB Security Group
+    Outbound: Port 443 to 0.0.0.0/0, Port 5432/6379 to DB Security Group
     
   Database Security Group:
-    入站: Port 5432 from App Security Group (PostgreSQL)
-    入站: Port 6379 from App Security Group (Redis)
-    出站: None
+    Inbound: Port 5432 from App Security Group (PostgreSQL)
+    Inbound: Port 6379 from App Security Group (Redis)
+    Outbound: None
 ```
 
-#### 計算資源 (EKSStack)
+#### Compute Resources (EKSStack)
 
 ```yaml
 EKS Cluster:
@@ -298,9 +298,9 @@ Auto Scaling:
     Scale Down Delay: 10 minutes
 ```
 
-## Multi-Region 部署架構
+## Multi-Region Deployment Architecture
 
-### 區域配置策略
+### Regional Configuration Strategy
 
 ```mermaid
 graph LR
@@ -339,18 +339,18 @@ graph LR
     style DRRDS fill:#ffcdd2
 ```
 
-### 環境配置矩陣
+### Environment Configuration Matrix
 
-| 環境 | 區域 | EKS 節點 | RDS 配置 | Redis 配置 | 用途 |
-|------|------|----------|----------|------------|------|
-| Production | ap-east-2 | 3 x t3.large | Aurora Writer + Reader | Primary + 2 Replicas | 生產服務 |
-| Staging | ap-east-2 | 2 x t3.medium | Aurora Reader | Single Node | 測試驗證 |
-| DR | ap-northeast-1 | 2 x t3.medium (Standby) | Aurora Global Reader | Replica Cluster | 災難恢復 |
-| Development | ap-northeast-1 | 1 x t3.small | Aurora Serverless | Single Node | 開發測試 |
+| Environment | Region | EKS Nodes | RDS Configuration | Redis Configuration | Purpose |
+|-------------|--------|-----------|-------------------|-------------------|---------|
+| Production | ap-east-2 | 3 x t3.large | Aurora Writer + Reader | Primary + 2 Replicas | Production Service |
+| Staging | ap-east-2 | 2 x t3.medium | Aurora Reader | Single Node | Testing Validation |
+| DR | ap-northeast-1 | 2 x t3.medium (Standby) | Aurora Global Reader | Replica Cluster | Disaster Recovery |
+| Development | ap-northeast-1 | 1 x t3.small | Aurora Serverless | Single Node | Development Testing |
 
-## 網路架構
+## Network Architecture
 
-### VPC 網路設計
+### VPC Network Design
 
 ```mermaid
 graph TB
@@ -420,7 +420,7 @@ graph TB
     style DBSubnetB fill:#fff3e0
 ```
 
-### 流量路由設計
+### Traffic Routing Design
 
 ```yaml
 Route Tables:
@@ -438,21 +438,21 @@ Route Tables:
 
 Network ACLs:
   Public NACL:
-    入站: HTTP/HTTPS (80, 443), SSH (22), Ephemeral Ports
-    出站: All Traffic
+    Inbound: HTTP/HTTPS (80, 443), SSH (22), Ephemeral Ports
+    Outbound: All Traffic
     
   Private NACL:
-    入站: From Public Subnets, Database Ports
-    出站: HTTPS (443), Database Ports
+    Inbound: From Public Subnets, Database Ports
+    Outbound: HTTPS (443), Database Ports
     
   Database NACL:
-    入站: PostgreSQL (5432), Redis (6379) from Private Subnets
-    出站: Response Traffic Only
+    Inbound: PostgreSQL (5432), Redis (6379) from Private Subnets
+    Outbound: Response Traffic Only
 ```
 
-## 計算資源
+## Compute Resources
 
-### EKS 集群架構
+### EKS Cluster Architecture
 
 ```mermaid
 graph TB
@@ -558,7 +558,7 @@ graph TB
     style App3 fill:#fff3e0
 ```
 
-### Pod 資源配置
+### Pod Resource Configuration
 
 ```yaml
 Application Pod Specification:
@@ -597,9 +597,9 @@ Application Pod Specification:
     Allow Privilege Escalation: false
 ```
 
-## 資料儲存
+## Data Storage
 
-### Aurora PostgreSQL 架構
+### Aurora PostgreSQL Architecture
 
 ```mermaid
 graph TB
@@ -663,7 +663,7 @@ graph TB
     style Storage2 fill:#ffcdd2
 ```
 
-### ElastiCache Redis 架構
+### ElastiCache Redis Architecture
 
 ```mermaid
 graph TB
@@ -724,7 +724,7 @@ graph TB
     style DistLock fill:#fff3e0
 ```
 
-### 資料庫配置詳情
+### Database Configuration Details
 
 ```yaml
 Aurora PostgreSQL Configuration:
@@ -776,9 +776,9 @@ ElastiCache Redis Configuration:
     Max Memory Policy: 80% of available memory
 ```
 
-## IAM 權限架構
+## IAM Permission Architecture
 
-### IRSA (IAM Roles for Service Accounts) 架構
+### IRSA (IAM Roles for Service Accounts) Architecture
 
 ```mermaid
 sequenceDiagram
@@ -790,29 +790,29 @@ sequenceDiagram
     
     Note over Pod,AWS: IRSA Authentication Flow
     
-    Pod->>SA: 使用 Service Account
-    SA->>OIDC: 請求 JWT Token
+    Pod->>SA: Use Service Account
+    SA->>OIDC: Request JWT Token
     Note over SA,OIDC: JWT includes:<br/>- Service Account name<br/>- Namespace<br/>- Audience (sts.amazonaws.com)
     
-    OIDC->>SA: 返回 Signed JWT Token
+    OIDC->>SA: Return Signed JWT Token
     SA->>STS: AssumeRoleWithWebIdentity
     Note over SA,STS: Request includes:<br/>- JWT Token<br/>- IAM Role ARN<br/>- Session Name
     
     STS->>STS: Validate JWT Token
     Note over STS: Verify:<br/>- Token signature<br/>- Issuer (EKS OIDC)<br/>- Audience<br/>- Expiration
     
-    STS->>SA: 返回臨時 AWS 憑證
+    STS->>SA: Return Temporary AWS Credentials
     Note over STS,SA: Credentials include:<br/>- Access Key ID<br/>- Secret Access Key<br/>- Session Token<br/>- Expiration (1 hour)
     
-    SA->>AWS: 使用臨時憑證存取 AWS 服務
-    AWS->>AWS: 驗證憑證和權限
-    AWS->>SA: 返回服務回應
-    SA->>Pod: 返回結果給應用程式
+    SA->>AWS: Access AWS Services with Temporary Credentials
+    AWS->>AWS: Validate Credentials and Permissions
+    AWS->>SA: Return Service Response
+    SA->>Pod: Return Result to Application
     
-    Note over Pod,AWS: 憑證自動輪換 (每小時)
+    Note over Pod,AWS: Credentials Auto-rotate (Every Hour)
 ```
 
-### IAM 角色和政策架構
+### IAM Roles and Policies Architecture
 
 ```mermaid
 graph TB
@@ -892,9 +892,9 @@ graph TB
     style AppCustomPolicy fill:#e3f2fd
 ```
 
-### 詳細權限配置
+### Detailed Permission Configuration
 
-#### Application Service Role 權限
+#### Application Service Role Permissions
 
 ```yaml
 Application Service Role (genai-demo-{environment}-app-role):
@@ -956,7 +956,7 @@ Application Service Role (genai-demo-{environment}-app-role):
             - "logs.{region}.amazonaws.com"
 ```
 
-#### Cluster Autoscaler Role 權限
+#### Cluster Autoscaler Role Permissions
 
 ```yaml
 Cluster Autoscaler Role (genai-demo-{environment}-autoscaler-role):
@@ -989,9 +989,9 @@ Cluster Autoscaler Role (genai-demo-{environment}-autoscaler-role):
       Resource: "arn:aws:eks:{region}:{account}:cluster/{cluster-name}"
 ```
 
-## 部署流程
+## Deployment Process
 
-### CI/CD 部署管道
+### CI/CD Deployment Pipeline
 
 ```mermaid
 graph LR
@@ -1040,36 +1040,36 @@ graph LR
     style Rollback fill:#ffcdd2
 ```
 
-### 部署命令和配置
+### Deployment Commands and Configuration
 
 ```bash
-# 開發環境部署 (ap-northeast-1)
+# Development environment deployment (ap-northeast-1)
 npm run deploy:dev
-# 等同於: cdk deploy --context environment=development --context region=ap-northeast-1
+# Equivalent to: cdk deploy --context environment=development --context region=ap-northeast-1
 
-# 測試環境部署 (ap-east-2)
+# Staging environment deployment (ap-east-2)
 npm run deploy:staging
-# 等同於: cdk deploy --context environment=staging --context region=ap-east-2
+# Equivalent to: cdk deploy --context environment=staging --context region=ap-east-2
 
-# 生產環境部署 (Multi-Region)
+# Production environment deployment (Multi-Region)
 npm run deploy:prod
-# 等同於: 
+# Equivalent to: 
 # cdk deploy --context environment=production --context region=ap-east-2
 # cdk deploy --context environment=production --context region=ap-northeast-1
 
-# 特定 Stack 部署
+# Specific Stack deployment
 cdk deploy NetworkStack --context environment=production
 cdk deploy EKSStack --context environment=production --require-approval never
 
-# 部署驗證
+# Deployment validation
 npm run validate:deployment
-# 包含: Health checks, Service discovery, Database connectivity
+# Includes: Health checks, Service discovery, Database connectivity
 ```
 
-### 環境配置管理
+### Environment Configuration Management
 
 ```typescript
-// deploy.config.ts - 環境配置
+// deploy.config.ts - Environment configuration
 export const deploymentConfig = {
   development: {
     region: 'ap-northeast-1',
@@ -1101,12 +1101,12 @@ export const deploymentConfig = {
 };
 ```
 
-## 成本優化
+## Cost Optimization
 
-### 成本結構分析
+### Cost Structure Analysis
 
 ```mermaid
-pie title 月度成本分佈 (Production Environment)
+pie title Monthly Cost Distribution (Production Environment)
     "EKS + EC2 Instances" : 35
     "RDS Aurora Global" : 25
     "ElastiCache Redis" : 15
@@ -1114,75 +1114,95 @@ pie title 月度成本分佈 (Production Environment)
     "Data Transfer" : 8
     "CloudWatch + Monitoring" : 4
     "Route 53 + DNS" : 2
-    "其他服務 (KMS, Secrets)" : 1
+    "Other Services (KMS, Secrets)" : 1
 ```
 
-### 成本優化策略
+### Cost Optimization Strategies
 
 ```yaml
-計算資源優化:
+Compute Resource Optimization:
   EKS Node Groups:
-    Spot Instances: 30% 節點使用 Spot (非生產環境)
-    Mixed Instance Types: [t3.medium, t3.large] 提供彈性
-    Cluster Autoscaler: 基於實際負載自動調整
+    Spot Instances: 30% nodes use Spot (non-production environments)
+    Mixed Instance Types: [t3.medium, t3.large, m5.large]
+    Auto Scaling: Scale down to 1 node during off-hours
+    Reserved Instances: 1-year term for production workloads
     
-  Pod 資源優化:
-    Resource Requests: 避免過度配置
-    Resource Limits: 防止資源浪費
-    Vertical Pod Autoscaler: 自動調整資源配置
+  Resource Right-sizing:
+    CPU Utilization Target: 70-80%
+    Memory Utilization Target: 75-85%
+    Regular Review: Monthly resource usage analysis
     
-儲存成本優化:
-  RDS Aurora:
-    Reserved Instances: 1年期可節省 40%
-    Aurora Serverless v2: 開發環境使用
-    Storage Auto Scaling: 避免過度配置
+Data Storage Optimization:
+  Aurora PostgreSQL:
+    Aurora Serverless v2: For development environments
+    Storage Auto-scaling: Automatic storage scaling
+    Backup Optimization: 7 days for dev, 30 days for prod
     
-  ElastiCache:
-    Reserved Nodes: 生產環境使用 Reserved Instances
-    Memory Optimization: 基於實際使用調整節點大小
+  ElastiCache Redis:
+    Reserved Nodes: 1-year term for production
+    Memory Optimization: Use appropriate node sizes
+    Multi-AZ: Only for production environments
     
-網路成本優化:
-  Data Transfer:
-    CloudFront: 減少跨區域傳輸成本
-    VPC Endpoints: 避免 NAT Gateway 費用
-    Regional Optimization: 最小化跨區域流量
-    
-監控成本優化:
-  CloudWatch:
-    Log Retention: 適當的日誌保留期
-    Metric Filters: 僅收集必要指標
-    Dashboard Optimization: 合併相關儀表板
+Network Cost Optimization:
+  VPC Endpoints: For S3, ECR, CloudWatch to reduce NAT costs
+  CloudFront: Cache static content to reduce data transfer
+  Regional Optimization: Keep traffic within regions when possible
+  
+Monitoring Cost Control:
+  CloudWatch Logs: 7-day retention for non-critical logs
+  Custom Metrics: Only essential business metrics
+  X-Ray Sampling: 10% sampling rate for cost control
 ```
 
-### 成本監控和告警
+### Monthly Cost Estimates
+
+| Environment | Monthly Cost | Primary Cost Drivers |
+|-------------|--------------|---------------------|
+| Development | ~$150 | EKS ($80), RDS Serverless ($30), Monitoring ($20), Network ($20) |
+| Staging | ~$300 | EKS ($120), RDS ($80), ElastiCache ($40), Monitoring ($30), Network ($30) |
+| Production | ~$800 | EKS ($280), RDS Aurora Global ($200), ElastiCache ($120), MSK ($80), Monitoring ($60), Network ($60) |
+
+### Cost Monitoring and Alerts
 
 ```yaml
 Budget Configuration:
-  Monthly Budget: $500 USD (Production)
-  Alert Thresholds:
-    - 50% of budget: Email notification
-    - 80% of budget: Slack alert + Email
-    - 100% of budget: Auto-scaling restrictions
+  Development Budget:
+    Limit: $200/month
+    Alert Thresholds: [80%, 90%, 100%]
     
-Cost Allocation Tags:
-  Environment: [development, staging, production]
-  Project: genai-demo
-  Owner: architecture-team
-  CostCenter: engineering
-  Application: genai-demo-app
+  Staging Budget:
+    Limit: $400/month
+    Alert Thresholds: [80%, 90%, 100%]
+    
+  Production Budget:
+    Limit: $1000/month
+    Alert Thresholds: [80%, 90%, 100%]
+    
+Cost Anomaly Detection:
+  Enabled: true
+  Threshold: 20% increase from baseline
+  Notification: SNS topic for cost alerts
   
-Cost Optimization Actions:
-  Daily: Review cost anomalies
-  Weekly: Analyze resource utilization
-  Monthly: Review Reserved Instance opportunities
-  Quarterly: Comprehensive cost optimization review
+Resource Tagging:
+  Required Tags:
+    - Environment: [development, staging, production]
+    - Project: genai-demo
+    - Owner: platform-team
+    - CostCenter: engineering
+    - ManagedBy: cdk
 ```
 
 ---
 
-**文件狀態**: ✅ 完成  
-**下一步**: 查看 [Operational Viewpoint](../operational/dns-resolution-disaster-recovery.md) 了解 DNS 解析和災難恢復  
-**相關文件**: 
-- [Operational Viewpoint - DNS 解析與災難恢復](../operational/dns-resolution-disaster-recovery.md)
-- [Context Viewpoint - IAM 權限關係](../context/iam-permissions-relationships.md)
-- [Security Perspective](../../perspectives/security/aws-security-implementation.md)
+**Document Status**: ✅ Complete  
+**Related Documents**: 
+- [Infrastructure as Code](infrastructure-as-code.md)
+- [Deployment Architecture](deployment-architecture.md)
+- [Operational Viewpoint](../operational/README.md)
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: September 2025  
+**Responsible Team**: Platform Team  
+**Review Status**: Reviewed

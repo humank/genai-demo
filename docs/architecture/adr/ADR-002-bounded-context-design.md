@@ -1,264 +1,264 @@
-# ADR-002: 限界上下文設計策略
+# ADR-002: Bounded Context Design Strategy
 
-## 狀態
+## Status
 
-**已接受** - 2024-01-20
+**Accepted** - January 20, 2024
 
-## 背景
+## Context
 
-GenAI Demo 電商平台需要清晰的領域邊界來管理複雜性並促進團隊協作。基於用戶故事分析和業務需求，我們需要識別和設計適當的限界上下文，以反映業務領域結構。
+The GenAI Demo e-commerce platform requires clear domain boundaries to manage complexity and facilitate team collaboration. Based on user story analysis and business requirements, we need to identify and design appropriate bounded contexts that reflect the business domain structure.
 
-### 業務需求分析
+### Business Requirements Analysis
 
-從 BDD 功能文件和用戶故事中，我們識別出以下關鍵業務能力：
+From BDD feature files and user stories, we have identified the following key business capabilities:
 
-#### 客戶管理 (Customer Management)
+#### Customer Management
 
-- **用戶故事**: "作為客戶，我想管理我的個人資料和會員等級，以便獲得個人化的優惠"
-- **關鍵場景**: 註冊、個人資料更新、會員升級、紅利點數管理
+- **User Story**: "As a customer, I want to manage my profile and membership level to receive personalized offers"
+- **Key Scenarios**: Registration, profile updates, membership upgrades, loyalty points management
 
-#### 訂單處理 (Order Processing)
+#### Order Processing
 
-- **用戶故事**: "作為客戶，我想下訂單並追蹤訂單，以便高效地購買產品"
-- **關鍵場景**: 訂單創建、項目管理、狀態追蹤、取消訂單
+- **User Story**: "As a customer, I want to place orders and track them to efficiently purchase products"
+- **Key Scenarios**: Order creation, item management, status tracking, order cancellation
 
-#### 產品目錄 (Product Catalog)
+#### Product Catalog
 
-- **用戶故事**: "作為客戶，我想瀏覽產品並查看詳細資訊，以便做出明智的購買決策"
-- **關鍵場景**: 產品瀏覽、搜尋、篩選、會員專屬產品
+- **User Story**: "As a customer, I want to browse products and view detailed information to make informed purchase decisions"
+- **Key Scenarios**: Product browsing, search, filtering, member-exclusive products
 
-#### 庫存管理 (Inventory Management)
+#### Inventory Management
 
-- **用戶故事**: "作為商家，我想管理產品庫存，以便確保產品可用性"
-- **關鍵場景**: 庫存追蹤、補貨、預留、釋放
+- **User Story**: "As a merchant, I want to manage product inventory to ensure product availability"
+- **Key Scenarios**: Inventory tracking, restocking, reservation, release
 
-#### 支付處理 (Payment Processing)
+#### Payment Processing
 
-- **用戶故事**: "作為客戶，我想安全地支付訂單，以便完成購買"
-- **關鍵場景**: 支付處理、退款、支付方式管理
+- **User Story**: "As a customer, I want to securely pay for orders to complete purchases"
+- **Key Scenarios**: Payment processing, refunds, payment method management
 
-#### 物流配送 (Delivery Management)
+#### Delivery Management
 
-- **用戶故事**: "作為客戶，我想追蹤我的配送狀態，以便了解訂單進度"
-- **關鍵場景**: 配送安排、狀態更新、配送追蹤
+- **User Story**: "As a customer, I want to track my delivery status to understand order progress"
+- **Key Scenarios**: Delivery scheduling, status updates, delivery tracking
 
-#### 促銷活動 (Promotion Management)
+#### Promotion Management
 
-- **用戶故事**: "作為客戶，我想使用優惠券和參與促銷活動，以便獲得折扣"
-- **關鍵場景**: 優惠券管理、促銷規則、折扣計算
+- **User Story**: "As a customer, I want to use coupons and participate in promotional activities to get discounts"
+- **Key Scenarios**: Coupon management, promotion rules, discount calculation
 
-#### 定價管理 (Pricing Management)
+#### Pricing Management
 
-- **用戶故事**: "作為商家，我想設定靈活的定價策略，以便優化收益"
-- **關鍵場景**: 價格計算、佣金管理、動態定價
+- **User Story**: "As a merchant, I want to set flexible pricing strategies to optimize revenue"
+- **Key Scenarios**: Price calculation, commission management, dynamic pricing
 
-#### 通知服務 (Notification Service)
+#### Notification Service
 
-- **用戶故事**: "作為客戶，我想收到重要的訂單和促銷通知，以便及時了解資訊"
-- **關鍵場景**: 通知發送、模板管理、通知偏好
+- **User Story**: "As a customer, I want to receive important order and promotional notifications to stay informed"
+- **Key Scenarios**: Notification sending, template management, notification preferences
 
-#### 工作流管理 (Workflow Management)
+#### Workflow Management
 
-- **用戶故事**: "作為系統，我需要協調複雜的業務流程，以便確保操作的一致性"
-- **關鍵場景**: 流程編排、狀態管理、異常處理
+- **User Story**: "As a system, I need to coordinate complex business processes to ensure operational consistency"
+- **Key Scenarios**: Process orchestration, state management, exception handling
 
-## 決策
+## Decision
 
-我們決定建立 **10 個限界上下文**，基於業務能力和團隊結構進行劃分。
+We have decided to establish **10 bounded contexts**, divided based on business capabilities and team structure.
 
-### 上下文映射策略
+### Context Mapping Strategy
 
-#### 核心上下文 (Core Contexts)
+#### Core Contexts
 
-這些上下文包含核心業務邏輯，是系統的競爭優勢所在：
+These contexts contain core business logic and represent the system's competitive advantage:
 
-1. **Customer Context** - 客戶聚合
-   - 客戶資料管理
-   - 會員等級和紅利點數
-   - 客戶偏好設定
+1. **Customer Context** - Customer Aggregate
+   - Customer data management
+   - Membership levels and loyalty points
+   - Customer preference settings
 
-2. **Order Context** - 訂單聚合
-   - 訂單生命週期管理
-   - 訂單項目管理
-   - 訂單狀態追蹤
+2. **Order Context** - Order Aggregate
+   - Order lifecycle management
+   - Order item management
+   - Order status tracking
 
-3. **Product Context** - 產品聚合
-   - 產品目錄管理
-   - 產品資訊維護
-   - 產品分類和標籤
+3. **Product Context** - Product Aggregate
+   - Product catalog management
+   - Product information maintenance
+   - Product categorization and tagging
 
-4. **Inventory Context** - 庫存聚合
-   - 庫存水準追蹤
-   - 庫存預留和釋放
-   - 庫存補充管理
+4. **Inventory Context** - Inventory Aggregate
+   - Inventory level tracking
+   - Inventory reservation and release
+   - Inventory replenishment management
 
-#### 支援上下文 (Supporting Contexts)
+#### Supporting Contexts
 
-這些上下文支援核心業務流程：
+These contexts support core business processes:
 
-5. **Payment Context** - 支付聚合
-   - 支付處理
-   - 支付方式管理
-   - 退款處理
+5. **Payment Context** - Payment Aggregate
+   - Payment processing
+   - Payment method management
+   - Refund processing
 
-6. **Delivery Context** - 配送聚合
-   - 配送安排
-   - 配送狀態追蹤
-   - 配送商管理
+6. **Delivery Context** - Delivery Aggregate
+   - Delivery scheduling
+   - Delivery status tracking
+   - Delivery provider management
 
-7. **Promotion Context** - 促銷聚合
-   - 優惠券管理
-   - 促銷規則引擎
-   - 折扣計算
+7. **Promotion Context** - Promotion Aggregate
+   - Coupon management
+   - Promotion rules engine
+   - Discount calculation
 
-8. **Pricing Context** - 定價聚合
-   - 價格計算引擎
-   - 佣金管理
-   - 定價策略
+8. **Pricing Context** - Pricing Aggregate
+   - Price calculation engine
+   - Commission management
+   - Pricing strategies
 
-#### 通用上下文 (Generic Contexts)
+#### Generic Contexts
 
-這些上下文提供通用服務：
+These contexts provide generic services:
 
-9. **Notification Context** - 通知聚合
-   - 通知發送
-   - 通知模板管理
-   - 通知偏好
+9. **Notification Context** - Notification Aggregate
+   - Notification sending
+   - Notification template management
+   - Notification preferences
 
-10. **Workflow Context** - 工作流聚合
-    - 業務流程編排
-    - 狀態機管理
-    - 流程監控
+10. **Workflow Context** - Workflow Aggregate
+    - Business process orchestration
+    - State machine management
+    - Process monitoring
 
-### 上下文關係映射
+### Context Relationship Mapping
 
-#### 1. 夥伴關係 (Partnership)
+#### 1. Partnership
 
-- **Customer ↔ Order**: 客戶和訂單緊密協作
-- **Order ↔ Inventory**: 訂單和庫存需要同步協調
+- **Customer ↔ Order**: Customer and Order work closely together
+- **Order ↔ Inventory**: Order and Inventory need synchronized coordination
 
-#### 2. 客戶-供應商 (Customer-Supplier)
+#### 2. Customer-Supplier
 
-- **Order → Payment**: 訂單驅動支付處理
-- **Order → Delivery**: 訂單觸發配送安排
-- **Customer → Notification**: 客戶事件觸發通知
+- **Order → Payment**: Order drives payment processing
+- **Order → Delivery**: Order triggers delivery scheduling
+- **Customer → Notification**: Customer events trigger notifications
 
-#### 3. 遵循者 (Conformist)
+#### 3. Conformist
 
-- **Promotion → Pricing**: 促銷遵循定價規則
-- **All Contexts → Workflow**: 所有上下文遵循工作流規範
+- **Promotion → Pricing**: Promotion conforms to pricing rules
+- **All Contexts → Workflow**: All contexts conform to workflow specifications
 
-#### 4. 防腐層 (Anti-Corruption Layer)
+#### 4. Anti-Corruption Layer
 
-- **Payment Context**: 與外部支付系統整合時使用防腐層
-- **Delivery Context**: 與第三方物流系統整合時使用防腐層
+- **Payment Context**: Uses anti-corruption layer when integrating with external payment systems
+- **Delivery Context**: Uses anti-corruption layer when integrating with third-party logistics systems
 
-### 實現策略
+### Implementation Strategy
 
-#### 1. 包結構設計
+#### 1. Package Structure Design
 
 ```
 solid.humank.genaidemo/
 ├── domain/
-│   ├── customer/          # 客戶上下文
-│   ├── order/             # 訂單上下文
-│   ├── product/           # 產品上下文
-│   ├── inventory/         # 庫存上下文
-│   ├── payment/           # 支付上下文
-│   ├── delivery/          # 配送上下文
-│   ├── promotion/         # 促銷上下文
-│   ├── pricing/           # 定價上下文
-│   ├── notification/      # 通知上下文
-│   └── workflow/          # 工作流上下文
+│   ├── customer/          # Customer context
+│   ├── order/             # Order context
+│   ├── product/           # Product context
+│   ├── inventory/         # Inventory context
+│   ├── payment/           # Payment context
+│   ├── delivery/          # Delivery context
+│   ├── promotion/         # Promotion context
+│   ├── pricing/           # Pricing context
+│   ├── notification/      # Notification context
+│   └── workflow/          # Workflow context
 ├── application/
-│   ├── customer/          # 客戶用例
-│   ├── order/             # 訂單用例
-│   └── ...                # 其他用例
+│   ├── customer/          # Customer use cases
+│   ├── order/             # Order use cases
+│   └── ...                # Other use cases
 └── infrastructure/
-    ├── persistence/       # 持久化實現
-    └── messaging/         # 訊息處理
+    ├── persistence/       # Persistence implementation
+    └── messaging/         # Message handling
 ```
 
-#### 2. 聚合設計原則
+#### 2. Aggregate Design Principles
 
-每個限界上下文包含一個或多個聚合：
+Each bounded context contains one or more aggregates:
 
-- **小聚合**: 每個聚合專注於單一業務概念
-- **一致性邊界**: 聚合內部保持強一致性
-- **事件驅動**: 聚合間通過領域事件通信
+- **Small Aggregates**: Each aggregate focuses on a single business concept
+- **Consistency Boundaries**: Strong consistency within aggregates
+- **Event-Driven**: Communication between aggregates through domain events
 
-#### 3. 資料一致性策略
+#### 3. Data Consistency Strategy
 
-- **聚合內**: 強一致性（ACID 事務）
-- **聚合間**: 最終一致性（領域事件）
-- **上下文間**: 最終一致性（集成事件）
+- **Within Aggregates**: Strong consistency (ACID transactions)
+- **Between Aggregates**: Eventual consistency (domain events)
+- **Between Contexts**: Eventual consistency (integration events)
 
-## 結果
+## Consequences
 
-### 正面影響
+### Positive Impacts
 
-#### 1. **清晰的業務邊界**
+#### 1. **Clear Business Boundaries**
 
-- 每個上下文對應明確的業務能力
-- 減少跨團隊的溝通複雜度
-- 支援獨立的業務決策
+- Each context corresponds to clear business capabilities
+- Reduces cross-team communication complexity
+- Supports independent business decisions
 
-#### 2. **技術自主性**
+#### 2. **Technical Autonomy**
 
-- 每個上下文可以選擇適合的技術棧
-- 支援獨立部署和擴展
-- 降低技術債務的傳播
+- Each context can choose appropriate technology stack
+- Supports independent deployment and scaling
+- Reduces technical debt propagation
 
-#### 3. **團隊組織對齊**
+#### 3. **Team Organization Alignment**
 
-- 上下文邊界與團隊邊界對齊
-- 支援 Conway's Law 的正面應用
-- 提高團隊自主性和責任感
+- Context boundaries align with team boundaries
+- Supports positive application of Conway's Law
+- Improves team autonomy and accountability
 
-#### 4. **可測試性提升**
+#### 4. **Improved Testability**
 
-- 每個上下文可以獨立測試
-- 減少測試間的相互依賴
-- 提高測試執行速度
+- Each context can be tested independently
+- Reduces interdependencies between tests
+- Improves test execution speed
 
-### 量化指標
+### Quantitative Metrics
 
-- **上下文數量**: 10 個
-- **聚合數量**: 15 個
-- **跨上下文依賴**: 12 個（通過事件）
-- **直接依賴**: 0 個
-- **測試隔離度**: 95%
+- **Number of Contexts**: 10
+- **Number of Aggregates**: 15
+- **Cross-Context Dependencies**: 12 (through events)
+- **Direct Dependencies**: 0
+- **Test Isolation**: 95%
 
-### 負面影響與緩解措施
+### Negative Impacts and Mitigation Measures
 
-#### 1. **複雜性增加**
+#### 1. **Increased Complexity**
 
-- **問題**: 多個上下文增加系統複雜性
-- **緩解**: 提供清晰的上下文映射文檔和工具
+- **Issue**: Multiple contexts increase system complexity
+- **Mitigation**: Provide clear context mapping documentation and tools
 
-#### 2. **資料一致性挑戰**
+#### 2. **Data Consistency Challenges**
 
-- **問題**: 最終一致性可能導致暫時的資料不一致
-- **緩解**: 實現補償機制和監控工具
+- **Issue**: Eventual consistency may lead to temporary data inconsistency
+- **Mitigation**: Implement compensation mechanisms and monitoring tools
 
-#### 3. **跨上下文查詢困難**
+#### 3. **Cross-Context Query Difficulties**
 
-- **問題**: 需要跨多個上下文的查詢變得複雜
-- **緩解**: 實現 CQRS 讀取模型和資料投影
+- **Issue**: Queries spanning multiple contexts become complex
+- **Mitigation**: Implement CQRS read models and data projections
 
-## 實現細節
+## Implementation Details
 
-### 1. 上下文介面定義
+### 1. Context Interface Definition
 
 ```java
-// 客戶上下文的公開介面
+// Public interface of Customer context
 public interface CustomerService {
     Customer findById(CustomerId id);
     void upgradeToVip(CustomerId id);
     LoyaltyPoints getLoyaltyPoints(CustomerId id);
 }
 
-// 訂單上下文的公開介面
+// Public interface of Order context
 public interface OrderService {
     Order createOrder(CreateOrderCommand command);
     void cancelOrder(OrderId orderId);
@@ -266,10 +266,10 @@ public interface OrderService {
 }
 ```
 
-### 2. 領域事件定義
+### 2. Domain Event Definition
 
 ```java
-// 客戶上下文發布的事件
+// Events published by Customer context
 public record CustomerUpgradedToVipEvent(
     CustomerId customerId,
     MembershipLevel newLevel,
@@ -277,7 +277,7 @@ public record CustomerUpgradedToVipEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent {}
 
-// 訂單上下文發布的事件
+// Events published by Order context
 public record OrderCreatedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -287,44 +287,44 @@ public record OrderCreatedEvent(
 ) implements DomainEvent {}
 ```
 
-### 3. 事件處理器
+### 3. Event Handlers
 
 ```java
-// 促銷上下文處理客戶升級事件
+// Promotion context handles customer upgrade events
 @Component
 public class CustomerUpgradedEventHandler {
     
     @EventHandler
     public void handle(CustomerUpgradedToVipEvent event) {
-        // 為新 VIP 客戶創建專屬優惠券
+        // Create exclusive coupon for new VIP customer
         promotionService.createVipWelcomeCoupon(event.customerId());
     }
 }
 ```
 
-### 4. 防腐層實現
+### 4. Anti-Corruption Layer Implementation
 
 ```java
-// 支付上下文的防腐層
+// Anti-corruption layer for Payment context
 @Component
 public class PaymentGatewayAdapter {
     
     public PaymentResult processPayment(PaymentRequest request) {
-        // 將內部支付請求轉換為外部 API 格式
+        // Convert internal payment request to external API format
         ExternalPaymentRequest externalRequest = mapToExternal(request);
         
-        // 調用外部支付 API
+        // Call external payment API
         ExternalPaymentResponse response = externalPaymentApi.process(externalRequest);
         
-        // 將外部響應轉換為內部格式
+        // Convert external response to internal format
         return mapToInternal(response);
     }
 }
 ```
 
-## 驗證與測試
+## Validation and Testing
 
-### 1. 上下文邊界測試
+### 1. Context Boundary Testing
 
 ```java
 @ArchTest
@@ -341,7 +341,7 @@ static final ArchRule contexts_should_only_communicate_through_events =
         .resideInAPackage("..domain.order..");
 ```
 
-### 2. 集成測試策略
+### 2. Integration Testing Strategy
 
 ```java
 @SpringBootTest
@@ -349,33 +349,33 @@ class CustomerOrderIntegrationTest {
     
     @Test
     void shouldCreateOrderWhenCustomerExists() {
-        // Given: 客戶存在
+        // Given: Customer exists
         CustomerId customerId = createTestCustomer();
         
-        // When: 創建訂單
+        // When: Create order
         OrderId orderId = orderService.createOrder(
             new CreateOrderCommand(customerId, orderItems)
         );
         
-        // Then: 驗證訂單創建成功
+        // Then: Verify order creation success
         assertThat(orderService.getOrderStatus(orderId))
             .isEqualTo(OrderStatus.PENDING);
     }
 }
 ```
 
-### 3. 事件流測試
+### 3. Event Flow Testing
 
 ```java
 @Test
 void shouldTriggerPromotionWhenCustomerUpgraded() {
-    // Given: 客戶和事件處理器
+    // Given: Customer and event handler
     CustomerId customerId = createTestCustomer();
     
-    // When: 客戶升級為 VIP
+    // When: Customer upgraded to VIP
     customerService.upgradeToVip(customerId);
     
-    // Then: 應該收到 VIP 歡迎優惠券
+    // Then: Should receive VIP welcome coupon
     await().atMost(5, SECONDS).untilAsserted(() -> {
         List<Coupon> coupons = promotionService.getCouponsForCustomer(customerId);
         assertThat(coupons).anyMatch(c -> c.getType() == CouponType.VIP_WELCOME);
@@ -383,50 +383,49 @@ void shouldTriggerPromotionWhenCustomerUpgraded() {
 }
 ```
 
-## 演進策略
+## Evolution Strategy
 
-### 1. 微服務演進路徑
+### 1. Microservices Evolution Path
 
-當系統需要拆分為微服務時，限界上下文提供了自然的拆分邊界：
-
-```
-階段 1: 單體應用 (當前)
-├── 所有上下文在同一個部署單元中
-└── 通過領域事件進行內部通信
-
-階段 2: 模組化單體
-├── 每個上下文作為獨立模組
-└── 保持在同一個部署單元中
-
-階段 3: 微服務
-├── 核心上下文優先拆分
-├── 支援上下文按需拆分
-└── 通用上下文最後拆分
-```
-
-### 2. 資料庫拆分策略
+When the system needs to be split into microservices, bounded contexts provide natural splitting boundaries:
 
 ```
-階段 1: 共享資料庫
-├── 所有上下文共享同一個資料庫
-└── 通過 schema 或 table prefix 進行邏輯分離
+Stage 1: Monolithic Application (Current)
+├── All contexts in the same deployment unit
+└── Internal communication through domain events
 
-階段 2: 資料庫分離
-├── 每個上下文擁有獨立的資料庫 schema
-└── 跨上下文查詢通過 API 或事件
+Stage 2: Modular Monolith
+├── Each context as independent module
+└── Remain in the same deployment unit
 
-階段 3: 完全獨立
-├── 每個微服務擁有獨立的資料庫實例
-└── 完全的資料自主性
+Stage 3: Microservices
+├── Core contexts split first
+├── Supporting contexts split as needed
+└── Generic contexts split last
 ```
 
-## 相關決策
+### 2. Database Splitting Strategy
 
-- [ADR-001: DDD + 六角形架構基礎](./ADR-001-ddd-hexagonal-architecture.md)
-- [ADR-003: 領域事件和 CQRS 實現](./ADR-003-domain-events-cqrs.md)
-- \1
+```
+Stage 1: Shared Database
+├── All contexts share the same database
+└── Logical separation through schema or table prefix
 
-## 參考資料
+Stage 2: Database Separation
+├── Each context owns independent database schema
+└── Cross-context queries through API or events
+
+Stage 3: Complete Independence
+├── Each microservice owns independent database instance
+└── Complete data autonomy
+```
+
+## Related Decisions
+
+- [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
+- [ADR-003: Domain Events and CQRS Implementation](./ADR-003-domain-events-cqrs.md)
+
+## References
 
 - [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
 - [Implementing Domain-Driven Design](https://www.amazon.com/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577)
@@ -435,6 +434,6 @@ void shouldTriggerPromotionWhenCustomerUpgraded() {
 
 ---
 
-**最後更新**: 2024-01-20  
-**審核者**: 架構團隊、領域專家  
-**下次審查**: 2024-07-20
+**Last Updated**: January 20, 2024  
+**Reviewers**: Architecture Team, Domain Experts  
+**Next Review**: July 20, 2024

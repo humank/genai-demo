@@ -1,26 +1,24 @@
-# DDD 設計指南 - 已遷移
+# DDD Design Guide - Migrated
 
-## 📍 重要通知
+## 📍 Important Notice
 
-此文檔已遷移到新的開發視點結構中。請使用以下連結存取最新內容：
+This document has been migrated to the new Development Viewpoint structure. Please use the following link to access the latest content:
 
-**新位置**: DDD 戰術模式實作指南
+**New Location**: DDD Tactical Patterns Implementation Guide
 
-## 🔗 相關文檔
+## 🔗 Related Documentation
 
-- 聚合根設計指南
-- 值對象設計指南
-- 領域事件設計指南
-- [開發視點總覽](../viewpoints/development/README.md)
+- Aggregate Root Design Guide
+- Value Object Design Guide
+- Domain Events Design Guide
+- [Development Viewpoint Overview](../viewpoints/development/README.md)
 
-## 📅 遷移資訊
+## 📅 Migration Information
 
-- **遷移日期**: 2025-01-21
-- **原因**: 統一開發文檔到 Development Viewpoint 結構
-- **狀態**: 已完成，內容已整合並增強
+- **Migration Date**: 2025-01-21
+- **Reason**: Unify development documentation under Development Viewpoint structure
+- **Status**: Completed, content has been integrated and enhanced
 
 ---
 
-*此文檔將在下一個版本中移除。請更新您的書籤和引用。*
-
-
+*This document will be removed in the next version. Please update your bookmarks and references.*

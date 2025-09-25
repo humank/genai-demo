@@ -1,328 +1,130 @@
-# Viewpoint-Perspective 交叉引用矩陣
+# Viewpoint-Perspective Cross-Reference Matrix
 
-## 概覽
+## Overview
 
-本文件提供 Rozanski & Woods 七大架構視點與八大架構觀點之間的完整交叉引用矩陣，展示每個觀點如何影響各個視點，以及每個視點需要考慮的觀點要素。
+This document provides a complete cross-reference matrix between the Rozanski & Woods seven architectural viewpoints and eight architectural perspectives, showing how each perspective impacts each viewpoint and what perspective elements each viewpoint needs to consider.
 
-## 交叉引用矩陣
+## Cross-Reference Matrix
 
-| 視點 \ 觀點 | [安全性](perspectives/security/README.md) | [性能](perspectives/performance/README.md) | [可用性](perspectives/availability/README.md) | [演進性](perspectives/evolution/README.md) | [使用性](perspectives/usability/README.md) | [法規](perspectives/regulation/README.md) | [位置](perspectives/location/README.md) | [成本](perspectives/cost/README.md) |
+| Viewpoint \ Perspective | [Security](perspectives/security/README.md) | [Performance](perspectives/performance/README.md) | [Availability](perspectives/availability/README.md) | [Evolution](perspectives/evolution/README.md) | [Usability](perspectives/usability/README.md) | [Regulation](perspectives/regulation/README.md) | [Location](perspectives/location/README.md) | [Cost](perspectives/cost/README.md) |
 |-------------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **[功能視點](viewpoints/functional/README.md)** | 🔴 高 | 🟡 中 | 🔴 高 | 🟡 中 | 🔴 高 | 🟡 中 | 🟢 低 | 🟡 中 |
-| **[資訊視點](viewpoints/information/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🟡 中 |
-| **[並發視點](viewpoints/concurrency/README.md)** | 🟡 中 | 🔴 高 | 🔴 高 | 🟡 中 | 🟡 中 | 🟢 低 | 🟢 低 | 🟡 中 |
-| **[開發視點](viewpoints/development/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🟡 中 | 🟢 低 | 🔴 高 |
-| **[部署視點](viewpoints/deployment/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟢 低 | 🟡 中 | 🔴 高 | 🔴 高 |
-| **[運營視點](viewpoints/operational/README.md)** | 🔴 高 | 🔴 高 | 🔴 高 | 🟡 中 | 🟡 中 | 🔴 高 | 🟡 中 | 🔴 高 |
-| **[情境視點](viewpoints/context/README.md)** | 🔴 高 | 🟡 中 | 🟡 中 | 🟡 中 | 🟡 中 | 🔴 高 | 🔴 高 | 🟡 中 |
-
-**影響程度說明**:
-- 🔴 **高**: 該觀點對此視點有重大影響，需要深度整合考慮
-- 🟡 **中**: 該觀點對此視點有中等影響，需要適度考慮
-- 🟢 **低**: 該觀點對此視點影響較小，需要基本考慮
-
-## 詳細交叉影響分析
-
-### 功能視點 (Functional Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **業務邏輯安全**: 所有業務規則都需要安全驗證
-- **存取控制**: 功能層面的權限控制和授權機制
-- **輸入驗證**: API 和用戶輸入的安全驗證
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **關鍵功能保護**: 核心業務功能的容錯設計
-- **功能降級**: 部分功能失效時的降級策略
-- **業務連續性**: 關鍵業務流程的持續運行
-- **相關文件**: \1
-
-**[使用性觀點](perspectives/usability/README.md)**
-- **用戶體驗**: 功能設計符合用戶期望和習慣
-- **介面設計**: API 和 UI 的易用性設計
-- **錯誤處理**: 用戶友好的錯誤訊息和處理
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[性能觀點](perspectives/performance/README.md)**
-- **響應時間**: 核心功能的性能需求
-- **吞吐量**: 高頻使用功能的處理能力
-- **相關文件**: \1
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **功能擴展**: 新功能的添加能力
-- **業務規則靈活性**: 業務邏輯的可配置性
-- **相關文件**: \1
-
-**[法規觀點](perspectives/regulation/README.md)**
-- **合規功能**: 法規要求的功能實現
-- **稽核軌跡**: 業務操作的記錄和追蹤
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **功能成本**: 功能實現和維護的成本考量
-- **資源使用**: 功能執行的資源消耗
-- **相關文件**: \1
-
-#### 🟢 低影響觀點
-
-**[位置觀點](perspectives/location/README.md)**
-- **地理分佈**: 功能在不同地區的可用性
-- **相關文件**: \1
-
-### 資訊視點 (Information Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **資料加密**: 敏感資料的加密保護
-- **存取控制**: 資料層面的權限管理
-- **資料遮罩**: 敏感資料的遮罩處理
-- **相關文件**: \1
-
-**[性能觀點](perspectives/performance/README.md)**
-- **查詢優化**: 資料庫查詢性能優化
-- **快取策略**: 資料快取和存取優化
-- **資料分割**: 大數據的分割和分佈策略
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **資料備份**: 資料的備份和恢復策略
-- **資料一致性**: 分散式資料的一致性保證
-- **災難恢復**: 資料災難恢復計畫
-- **相關文件**: \1
-
-**[法規觀點](perspectives/regulation/README.md)**
-- **資料治理**: 資料管理和治理政策
-- **隱私保護**: 個人資料保護合規
-- **資料保留**: 資料保留和刪除政策
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **資料模型演進**: 資料結構的版本管理
-- **遷移策略**: 資料遷移和轉換策略
-- **相關文件**: \1
-
-**[使用性觀點](perspectives/usability/README.md)**
-- **資料呈現**: 資料的可視化和呈現
-- **搜尋體驗**: 資料搜尋和過濾功能
-- **相關文件**: \1
-
-**[位置觀點](perspectives/location/README.md)**
-- **資料本地化**: 資料的地理分佈和本地化
-- **資料主權**: 資料存儲的法律管轄權
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **存儲成本**: 資料存儲的成本優化
-- **傳輸成本**: 資料傳輸的成本控制
-- **相關文件**: \1
-
-### 並發視點 (Concurrency Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[性能觀點](perspectives/performance/README.md)**
-- **並發處理**: 多執行緒和並發處理能力
-- **資源競爭**: 共享資源的競爭處理
-- **負載均衡**: 並發請求的負載分散
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **死鎖預防**: 死鎖檢測和預防機制
-- **資源隔離**: 並發資源的隔離保護
-- **故障隔離**: 並發故障的隔離處理
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **執行緒安全**: 並發存取的安全控制
-- **競態條件**: 安全相關的競態條件預防
-- **相關文件**: \1
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **並發模型**: 並發模型的演進和升級
-- **擴展性**: 並發處理能力的擴展
-- **相關文件**: \1
-
-**[使用性觀點](perspectives/usability/README.md)**
-- **響應性**: 並發處理對用戶體驗的影響
-- **進度反饋**: 長時間並發操作的進度顯示
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **資源使用**: 並發處理的資源消耗
-- **效率優化**: 並發處理的效率和成本
-- **相關文件**: \1
-
-### 開發視點 (Development Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **安全編碼**: 安全編碼標準和實踐
-- **程式碼掃描**: 靜態和動態安全掃描
-- **依賴管理**: 第三方依賴的安全檢查
-- **相關文件**: \1
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **程式碼品質**: 可維護和可擴展的程式碼
-- **架構設計**: 模組化和鬆耦合設計
-- **技術債務**: 技術債務的管理和償還
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **開發效率**: 開發工具和流程的效率
-- **維護成本**: 程式碼維護的長期成本
-- **技術選型**: 技術選擇對成本的影響
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[性能觀點](perspectives/performance/README.md)**
-- **程式碼優化**: 性能關鍵程式碼的優化
-- **建置優化**: 建置和部署流程的優化
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **錯誤處理**: 健壯的錯誤處理機制
-- **測試策略**: 全面的測試覆蓋
-- **相關文件**: \1
-
-**[使用性觀點](perspectives/usability/README.md)**
-- **開發者體驗**: 開發工具和 API 的易用性
-- **文件品質**: 技術文件的完整性和清晰度
-- **相關文件**: \1
-
-**[法規觀點](perspectives/regulation/README.md)**
-- **合規開發**: 開發流程的合規要求
-- **程式碼稽核**: 程式碼的合規性檢查
-- **相關文件**: \1
-
-### 部署視點 (Deployment Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **基礎設施安全**: 部署環境的安全配置
-- **網路安全**: 網路層面的安全防護
-- **容器安全**: 容器映像的安全掃描
-- **相關文件**: \1
-
-**[性能觀點](perspectives/performance/README.md)**
-- **資源配置**: 計算和存儲資源的配置
-- **負載均衡**: 流量分散和負載均衡
-- **自動擴展**: 自動擴展和縮減機制
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **高可用性**: 多區域和多可用區部署
-- **災難恢復**: 災難恢復和業務連續性
-- **健康檢查**: 服務健康監控和自動恢復
-- **相關文件**: \1
-
-**[位置觀點](perspectives/location/README.md)**
-- **地理分佈**: 多地區部署策略
-- **邊緣運算**: 邊緣節點的部署
-- **網路延遲**: 地理位置對性能的影響
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **資源成本**: 雲端資源的成本優化
-- **運營成本**: 部署和維護的運營成本
-- **成本監控**: 成本監控和預算控制
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **部署策略**: 藍綠部署、滾動更新等策略
-- **版本管理**: 應用版本的管理和回滾
-- **相關文件**: \1
-
-**[法規觀點](perspectives/regulation/README.md)**
-- **合規部署**: 部署環境的合規要求
-- **資料主權**: 資料存儲的法律管轄權
-- **相關文件**: \1
-
-### 運營視點 (Operational Viewpoint)
-
-#### 🔴 高影響觀點
-
-**[安全性觀點](perspectives/security/README.md)**
-- **安全監控**: 安全事件的監控和告警
-- **事件響應**: 安全事件的響應流程
-- **存取管理**: 運營人員的存取控制
-- **相關文件**: \1
-
-**[性能觀點](perspectives/performance/README.md)**
-- **性能監控**: 系統性能的持續監控
-- **容量規劃**: 資源容量的規劃和預測
-- **性能調優**: 運行時性能的調整優化
-- **相關文件**: \1
-
-**[可用性觀點](perspectives/availability/README.md)**
-- **監控告警**: 系統可用性的監控和告警
-- **故障處理**: 故障檢測和自動恢復
-- **維護計畫**: 計畫性維護和更新
-- **相關文件**: \1
-
-**[法規觀點](perspectives/regulation/README.md)**
-- **合規監控**: 合規狀態的持續監控
-- **稽核支援**: 稽核活動的支援和配合
-- **記錄管理**: 運營記錄的管理和保存
-- **相關文件**: \1
-
-**[成本觀點](perspectives/cost/README.md)**
-- **成本監控**: 運營成本的監控和分析
-- **資源優化**: 運營資源的優化使用
-- **預算管理**: 運營預算的管理和控制
-- **相關文件**: \1
-
-#### 🟡 中影響觀點
-
-**[演進性觀點](perspectives/evolution/README.md)**
-- **運營流程**: 運營流程的持續改進
-- **工具升級**: 運營工具的升級和更新
-- **相關文件**: \1
-
-**[使用性觀點](perspectives/usability/README.md)**
-- **運營介面**: 運營工具的易用性
-- **告警設計**: 告警訊息的清晰度和可操作性
-- **相關文件**: \1
-
-**[位置觀點](perspectives/location/README.md)**
-- **分散式運營**: 多地區運營的協調
-- **本地化運營**: 不同地區的運營需求
-- **相關文件**: \1
-
-## 使用指南
-
-### 如何使用此矩陣
-
-1. **架構設計階段**: 根據矩陣識別需要重點考慮的觀點
-2. **需求分析階段**: 確保高影響觀點的需求得到充分分析
-3. **實現階段**: 按照影響程度優先實現相關功能
-4. **評審階段**: 使用矩陣檢查是否遺漏重要的觀點考量
-
-### 優先級建議
-
-- **🔴 高影響**: 必須深度整合，需要專門的設計和實現
-- **🟡 中影響**: 需要適度考慮，可以通過配置或策略解決
-- **🟢 低影響**: 基本考慮即可，通常通過標準實踐解決
-
-### 相關工具和方法
-
-- **架構決策記錄 (ADR)**: 記錄跨觀點的架構決策
-- **品質屬性場景**: 驗證觀點需求的實現
-- **架構評估**: 定期評估觀點實現的有效性
+| **[Functional Viewpoint](viewpoints/functional/README.md)** | 🔴 High | 🟡 Medium | 🔴 High | 🟡 Medium | 🔴 High | 🟡 Medium | 🟢 Low | 🟡 Medium |
+| **[Information Viewpoint](viewpoints/information/README.md)** | 🔴 High | 🔴 High | 🔴 High | 🟡 Medium | 🟡 Medium | 🔴 High | 🟡 Medium | 🟡 Medium |
+| **[Concurrency Viewpoint](viewpoints/concurrency/README.md)** | 🟡 Medium | 🔴 High | 🔴 High | 🟡 Medium | 🟡 Medium | 🟢 Low | 🟢 Low | 🟡 Medium |
+| **[Development Viewpoint](viewpoints/development/README.md)** | 🔴 High | 🟡 Medium | 🟡 Medium | 🔴 High | 🟡 Medium | 🟡 Medium | 🟢 Low | 🔴 High |
+| **[Deployment Viewpoint](viewpoints/deployment/README.md)** | 🔴 High | 🔴 High | 🔴 High | 🟡 Medium | 🟢 Low | 🟡 Medium | 🔴 High | 🔴 High |
+| **[Operational Viewpoint](viewpoints/operational/README.md)** | 🔴 High | 🔴 High | 🔴 High | 🟡 Medium | 🟡 Medium | 🔴 High | 🟡 Medium | 🔴 High |
+| **[Context Viewpoint](viewpoints/context/README.md)** | 🔴 High | 🟡 Medium | 🟡 Medium | 🟡 Medium | 🟡 Medium | 🔴 High | 🔴 High | 🟡 Medium |
+
+**Impact Level Legend**:
+- 🔴 **High**: This perspective has significant impact on this viewpoint, requiring deep integration consideration
+- 🟡 **Medium**: This perspective has moderate impact on this viewpoint, requiring appropriate consideration
+- 🟢 **Low**: This perspective has minimal impact on this viewpoint, requiring basic consideration
+
+## Detailed Cross-Impact Analysis
+
+### Functional Viewpoint
+
+#### 🔴 High Impact Perspectives
+
+**[Security Perspective](perspectives/security/README.md)**
+- **Business Logic Security**: All business rules require security validation
+- **Access Control**: Function-level permission control and authorization mechanisms
+- **Input Validation**: Security validation of API and user inputs
+- **Related Documents**: Security Architecture Implementation
+
+**[Availability Perspective](perspectives/availability/README.md)**
+- **Critical Function Protection**: Fault-tolerant design for core business functions
+- **Function Degradation**: Degradation strategies when partial functions fail
+- **Business Continuity**: Continuous operation guarantee for critical business processes
+- **Related Documents**: Availability Architecture Implementation
+
+**[Usability Perspective](perspectives/usability/README.md)**
+- **User Experience**: Function design that meets user expectations and habits
+- **Interface Design**: Easy-to-use API and UI design
+- **Error Handling**: User-friendly error messages and handling processes
+- **Related Documents**: User Experience Implementation
+
+#### 🟡 Medium Impact Perspectives
+
+**[Performance Perspective](perspectives/performance/README.md)**
+- **Response Time**: Performance requirements for core functions
+- **Throughput**: Processing capacity for frequently used functions
+- **Related Documents**: Performance Standards Documentation
+
+**[Evolution Perspective](perspectives/evolution/README.md)**
+- **Function Extension**: Capability to add new functions
+- **Business Rule Flexibility**: Configurability of business logic
+- **Related Documents**: Evolution Implementation
+
+**[Regulation Perspective](perspectives/regulation/README.md)**
+- **Compliance Functions**: Implementation of regulatory required functions
+- **Audit Trail**: Complete recording of business operations
+- **Related Documents**: Compliance Standards Documentation
+
+**[Cost Perspective](perspectives/cost/README.md)**
+- **Function Cost**: Cost-benefit analysis of function implementation
+- **Resource Efficiency**: Resource usage efficiency of function execution
+- **Related Documents**: Cost Optimization Implementation
+
+#### 🟢 Low Impact Perspectives
+
+**[Location Perspective](perspectives/location/README.md)**
+- **Geographic Distribution**: Function availability in different regions
+- **Related Documents**: Multi-Region Implementation
+
+### Information Viewpoint
+
+#### 🔴 High Impact Perspectives
+
+**[Security Perspective](perspectives/security/README.md)**
+- **Data Encryption**: Encryption protection for sensitive data
+- **Access Control**: Data layer permission management
+- **Data Masking**: Sensitive data masking processing
+- **Related Documents**: Data Security Implementation
+
+**[Performance Perspective](perspectives/performance/README.md)**
+- **Query Optimization**: Database query performance optimization
+- **Caching Strategy**: Data caching and access optimization
+- **Data Partitioning**: Large data partitioning and distribution strategies
+- **Related Documents**: Performance Optimization Implementation
+
+**[Availability Perspective](perspectives/availability/README.md)**
+- **Data Backup**: Data backup and recovery strategies
+- **Data Consistency**: Distributed data consistency guarantees
+- **Disaster Recovery**: Data disaster recovery plans
+- **Related Documents**: Availability Implementation
+
+**[Regulation Perspective](perspectives/regulation/README.md)**
+- **Data Governance**: Data management and governance policies
+- **Privacy Protection**: Personal data protection compliance
+- **Data Retention**: Data retention and deletion policies
+- **Related Documents**: Compliance Implementation
+
+## Usage Guide
+
+### How to Use This Matrix
+
+1. **Architecture Design Phase**: Use matrix to identify key perspectives to consider
+2. **Requirements Analysis Phase**: Ensure high-impact perspective requirements are fully analyzed
+3. **Implementation Phase**: Prioritize implementation of related functionality by impact level
+4. **Review Phase**: Use matrix to check for missing perspective considerations
+
+### Priority Recommendations
+
+- **🔴 High Impact**: Must be deeply integrated, requires specialized design and implementation
+- **🟡 Medium Impact**: Requires appropriate consideration, can be solved through configuration or strategies
+- **🟢 Low Impact**: Basic consideration sufficient, usually solved through standard practices
+
+### Related Tools and Methods
+
+- **Architecture Decision Records (ADR)**: Record cross-perspective architectural decisions
+- **Quality Attribute Scenarios**: Validate implementation of perspective requirements
+- **Architecture Assessment**: Regularly assess effectiveness of perspective implementation
 
 ---
 
-**維護說明**: 此矩陣應隨著系統演進和需求變化定期更新，確保反映最新的架構狀態和業務需求。
+**Maintenance Note**: This matrix should be regularly updated as the system evolves and requirements change, ensuring it reflects the latest architectural state and business needs.
+
+**Last Updated**: September 25, 2025  
+**Maintainer**: Architecture Team

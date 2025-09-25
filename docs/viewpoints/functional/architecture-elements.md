@@ -1,46 +1,46 @@
-# 功能視點架構元素
+# Functional Viewpoint Architecture Elements
 
-## 概覽
+## Overview
 
-本文件詳細描述功能視點中的核心架構元素，包括領域模型、聚合根、實體、值對象、領域服務和應用服務等關鍵組件。
+This document provides detailed descriptions of core architecture elements in the functional viewpoint, including domain models, aggregate roots, entities, value objects, domain services, and application services.
 
-## 核心架構元素
+## Core Architecture Elements
 
-### 1. 聚合根 (Aggregate Roots)
+### 1. Aggregate Roots
 
-聚合根是領域模型的核心元素，負責維護業務不變性和協調聚合內的操作。
+Aggregate roots are core elements of the domain model, responsible for maintaining business invariants and coordinating operations within aggregates.
 
-#### 主要聚合根
+#### Main Aggregate Roots
 
-| 聚合根 | 界限上下文 | 職責 | 關鍵業務規則 |
-|--------|------------|------|--------------|
-| Customer | Customer Management | 客戶生命週期管理 | 唯一電子郵件、會員等級規則 |
-| Order | Order Management | 訂單處理和狀態管理 | 訂單狀態轉換、金額計算 |
-| Product | Product Catalog | 產品資訊和庫存管理 | 庫存數量、價格有效性 |
-| Payment | Payment Processing | 支付處理和記錄 | 支付狀態、退款規則 |
-| Inventory | Inventory Management | 庫存控制和預留 | 庫存扣減、預留機制 |
-| Promotion | Promotion Engine | 促銷規則和折扣 | 促銷條件、折扣計算 |
-| Shipping | Shipping Management | 配送管理和追蹤 | 配送狀態、地址驗證 |
+| Aggregate Root | Bounded Context | Responsibility | Key Business Rules |
+|----------------|-----------------|----------------|-------------------|
+| Customer | Customer Management | Customer lifecycle management | Unique email, membership level rules |
+| Order | Order Management | Order processing and state management | Order state transitions, amount calculations |
+| Product | Product Catalog | Product information and inventory management | Stock quantities, price validity |
+| Payment | Payment Processing | Payment processing and recording | Payment status, refund rules |
+| Inventory | Inventory Management | Inventory control and reservation | Stock deduction, reservation mechanism |
+| Promotion | Promotion Engine | Promotion rules and discounts | Promotion conditions, discount calculations |
+| Shipping | Shipping Management | Delivery management and tracking | Delivery status, address validation |
 
-#### 聚合根設計原則
+#### Aggregate Root Design Principles
 
 ```java
-@AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
+@AggregateRoot(name = "Customer", description = "Customer aggregate root", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     
-    // 聚合根標識
+    // Aggregate root identity
     private final CustomerId id;
     
-    // 業務屬性
+    // Business attributes
     private CustomerName name;
     private Email email;
     private MembershipLevel membershipLevel;
     
-    // 聚合內實體
+    // Aggregate internal entities
     private List<DeliveryAddress> addresses;
     private List<PaymentMethod> paymentMethods;
     
-    // 業務方法
+    // Business methods
     public void updateProfile(CustomerName newName, Email newEmail) {
         validateProfileUpdate(newName, newEmail);
         this.name = newName;
@@ -48,20 +48,20 @@ public class Customer implements AggregateRootInterface {
         collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail));
     }
     
-    // 業務規則驗證
+    // Business rule validation
     private void validateProfileUpdate(CustomerName newName, Email newEmail) {
         if (newName == null || newEmail == null) {
-            throw new InvalidProfileDataException("姓名和電子郵件不能為空");
+            throw new InvalidProfileDataException("Name and email cannot be null");
         }
     }
 }
 ```
 
-### 2. 實體 (Entities)
+### 2. Entities
 
-實體是具有唯一標識和生命週期的領域對象。
+Entities are domain objects with unique identity and lifecycle.
 
-#### 實體設計模式
+#### Entity Design Pattern
 
 ```java
 @Entity
@@ -74,7 +74,7 @@ public class DeliveryAddress {
     
     public void markAsDefault() {
         this.isDefault = true;
-        // 業務邏輯：確保只有一個預設地址
+        // Business logic: ensure only one default address
     }
     
     public boolean isValidForDelivery() {
@@ -83,11 +83,11 @@ public class DeliveryAddress {
 }
 ```
 
-### 3. 值對象 (Value Objects)
+### 3. Value Objects
 
-值對象是不可變的領域概念，通過屬性值定義相等性。
+Value objects are immutable domain concepts defined by their attribute values for equality.
 
-#### 值對象實現
+#### Value Object Implementation
 
 ```java
 @ValueObject
@@ -95,10 +95,10 @@ public record CustomerId(String value) {
     
     public CustomerId {
         if (value == null || value.trim().isEmpty()) {
-            throw new IllegalArgumentException("客戶ID不能為空");
+            throw new IllegalArgumentException("Customer ID cannot be null or empty");
         }
         if (!value.matches("CUST-\\d{6}")) {
-            throw new IllegalArgumentException("客戶ID格式無效");
+            throw new IllegalArgumentException("Invalid customer ID format");
         }
     }
     
@@ -116,16 +116,16 @@ public record Money(BigDecimal amount, Currency currency) {
     
     public Money {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("金額不能為負數");
+            throw new IllegalArgumentException("Amount cannot be negative");
         }
         if (currency == null) {
-            throw new IllegalArgumentException("貨幣不能為空");
+            throw new IllegalArgumentException("Currency cannot be null");
         }
     }
     
     public Money add(Money other) {
         if (!this.currency.equals(other.currency)) {
-            throw new IllegalArgumentException("不同貨幣無法相加");
+            throw new IllegalArgumentException("Cannot add different currencies");
         }
         return new Money(this.amount.add(other.amount), this.currency);
     }
@@ -136,11 +136,11 @@ public record Money(BigDecimal amount, Currency currency) {
 }
 ```
 
-### 4. 領域服務 (Domain Services)
+### 4. Domain Services
 
-領域服務封裝跨聚合的業務邏輯。
+Domain services encapsulate business logic that spans across aggregates.
 
-#### 領域服務實現
+#### Domain Service Implementation
 
 ```java
 @DomainService
@@ -180,11 +180,11 @@ public class InventoryAllocationService {
 }
 ```
 
-### 5. 應用服務 (Application Services)
+### 5. Application Services
 
-應用服務協調用例執行，不包含業務邏輯。
+Application services coordinate use case execution without containing business logic.
 
-#### 應用服務模式
+#### Application Service Pattern
 
 ```java
 @Service
@@ -195,25 +195,25 @@ public class CustomerApplicationService {
     private final DomainEventApplicationService domainEventService;
     
     public Customer createCustomer(CreateCustomerCommand command) {
-        // 1. 驗證命令
+        // 1. Validate command
         validateCommand(command);
         
-        // 2. 檢查業務規則
+        // 2. Check business rules
         if (customerRepository.existsByEmail(command.email())) {
             throw new EmailAlreadyExistsException(command.email());
         }
         
-        // 3. 創建聚合根
+        // 3. Create aggregate root
         Customer customer = Customer.create(
             command.name(),
             command.email(),
             command.membershipLevel()
         );
         
-        // 4. 保存聚合根
+        // 4. Save aggregate root
         Customer savedCustomer = customerRepository.save(customer);
         
-        // 5. 發布領域事件
+        // 5. Publish domain events
         domainEventService.publishEventsFromAggregate(savedCustomer);
         
         return savedCustomer;
@@ -221,103 +221,103 @@ public class CustomerApplicationService {
 }
 ```
 
-## 架構元素關係圖
+## Architecture Element Relationship Diagram
 
-### 元素層次結構
+### Element Hierarchy
 
 ```
-應用服務層
+Application Service Layer
     ├── CustomerApplicationService
     ├── OrderApplicationService
     └── ProductApplicationService
         │
-        ▼ 協調
-領域層
-    ├── 聚合根
+        ▼ Coordinates
+Domain Layer
+    ├── Aggregate Roots
     │   ├── Customer
     │   ├── Order
     │   └── Product
-    ├── 實體
+    ├── Entities
     │   ├── DeliveryAddress
     │   ├── OrderItem
     │   └── ProductVariant
-    ├── 值對象
+    ├── Value Objects
     │   ├── CustomerId
     │   ├── Money
     │   └── Address
-    └── 領域服務
+    └── Domain Services
         ├── PricingService
         └── InventoryAllocationService
 ```
 
-### 依賴關係
+### Dependency Relationships
 
-- **應用服務** → **聚合根** (協調業務操作)
-- **聚合根** → **實體** (包含和管理)
-- **聚合根** → **值對象** (使用和組合)
-- **聚合根** → **領域服務** (委託複雜邏輯)
-- **領域服務** → **多個聚合根** (跨聚合操作)
+- **Application Services** → **Aggregate Roots** (coordinate business operations)
+- **Aggregate Roots** → **Entities** (contain and manage)
+- **Aggregate Roots** → **Value Objects** (use and compose)
+- **Aggregate Roots** → **Domain Services** (delegate complex logic)
+- **Domain Services** → **Multiple Aggregate Roots** (cross-aggregate operations)
 
-## 設計約束
+## Design Constraints
 
-### 聚合設計約束
+### Aggregate Design Constraints
 
-1. **聚合邊界**: 基於業務不變性和事務一致性
-2. **聚合大小**: 避免過大的聚合，影響性能
-3. **聚合引用**: 通過ID引用其他聚合，避免直接引用
-4. **事務邊界**: 一個事務只能修改一個聚合
+1. **Aggregate Boundaries**: Based on business invariants and transactional consistency
+2. **Aggregate Size**: Avoid overly large aggregates that impact performance
+3. **Aggregate References**: Reference other aggregates by ID, avoid direct references
+4. **Transaction Boundaries**: One transaction can only modify one aggregate
 
-### 實體設計約束
+### Entity Design Constraints
 
-1. **唯一標識**: 每個實體必須有唯一標識
-2. **生命週期**: 實體的創建、修改和刪除規則
-3. **業務方法**: 實體應包含相關的業務方法
-4. **狀態一致性**: 實體狀態變更必須保持一致性
+1. **Unique Identity**: Each entity must have a unique identifier
+2. **Lifecycle**: Rules for entity creation, modification, and deletion
+3. **Business Methods**: Entities should contain related business methods
+4. **State Consistency**: Entity state changes must maintain consistency
 
-### 值對象設計約束
+### Value Object Design Constraints
 
-1. **不可變性**: 值對象創建後不能修改
-2. **相等性**: 基於屬性值判斷相等性
-3. **驗證**: 創建時進行完整性驗證
-4. **業務方法**: 包含相關的業務計算方法
+1. **Immutability**: Value objects cannot be modified after creation
+2. **Equality**: Equality determined by attribute values
+3. **Validation**: Complete integrity validation during creation
+4. **Business Methods**: Include related business calculation methods
 
-## 實現檢查清單
+## Implementation Checklist
 
-### 聚合根檢查
+### Aggregate Root Checklist
 
-- [ ] 實現 AggregateRootInterface
-- [ ] 使用 @AggregateRoot 註解
-- [ ] 包含業務方法和規則驗證
-- [ ] 正確收集和發布領域事件
-- [ ] 維護聚合內的業務不變性
+- [ ] Implements AggregateRootInterface
+- [ ] Uses @AggregateRoot annotation
+- [ ] Contains business methods and rule validation
+- [ ] Correctly collects and publishes domain events
+- [ ] Maintains business invariants within aggregate
 
-### 實體檢查
+### Entity Checklist
 
-- [ ] 使用 @Entity 註解
-- [ ] 具有唯一標識
-- [ ] 包含相關業務方法
-- [ ] 正確處理狀態轉換
-- [ ] 與聚合根的關係清晰
+- [ ] Uses @Entity annotation
+- [ ] Has unique identifier
+- [ ] Contains related business methods
+- [ ] Correctly handles state transitions
+- [ ] Clear relationship with aggregate root
 
-### 值對象檢查
+### Value Object Checklist
 
-- [ ] 使用 @ValueObject 註解
-- [ ] 實現為不可變 Record
-- [ ] 包含驗證邏輯
-- [ ] 實現業務計算方法
-- [ ] 正確處理相等性比較
+- [ ] Uses @ValueObject annotation
+- [ ] Implemented as immutable Record
+- [ ] Contains validation logic
+- [ ] Implements business calculation methods
+- [ ] Correctly handles equality comparison
 
-### 服務檢查
+### Service Checklist
 
-- [ ] 領域服務使用 @DomainService 註解
-- [ ] 應用服務使用 @Service 註解
-- [ ] 職責分離清晰
-- [ ] 依賴注入正確
-- [ ] 事務邊界合理
+- [ ] Domain services use @DomainService annotation
+- [ ] Application services use @Service annotation
+- [ ] Clear separation of responsibilities
+- [ ] Correct dependency injection
+- [ ] Reasonable transaction boundaries
 
 ---
 
-**相關文件**:
-- [領域模型設計](domain-model.md)
-- [聚合根實現指南](aggregates.md)
-- [領域事件設計](../information/domain-events.md)
+**Related Documents**:
+- [Domain Model Design](domain-model.md)
+- [Aggregate Root Implementation Guide](aggregates.md)
+- [Domain Events Design](../information/domain-events.md)

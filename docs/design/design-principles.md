@@ -1,292 +1,267 @@
-# 系統開發與測試的設計遵循規範
-
-在本專案中請遵循 DDD 戰術設計模式與分層原則，如同 `../app/src/test/java/solid/humank/genaidemo/architecture` 底下的 3 個 ArchUnit 測試的要求，來完成本專案的程式碼開發工作。
-
-## 架構設計原則
-
-### 分層架構
-
-1. **領域層 (Domain Layer)**
-   - 包含業務核心邏輯和規則
-   - 不依賴於其他層
-   - 包含聚合根、實體、值對象、領域事件、領域服務和領域異常
-
-2. **應用層 (Application Layer)**
-   - 協調領域對象完成用戶用例
-   - 只依賴於領域層
-   - 包含應用服務、DTO、命令和查詢對象
-
-3. **基礎設施層 (Infrastructure Layer)**
-   - 提供技術實現
-   - 依賴於領域層，實現領域層定義的接口
-   - 包含儲存庫實現、外部系統適配器、ORM 映射等
-
-4. **介面層 (Interfaces Layer)**
-   - 處理用戶交互
-   - 只依賴於應用層
-   - 包含控制器、視圖模型、請求/響應對象等
-
-### DDD 戰術設計模式
-
-1. **聚合根 (Aggregate Root)**
-   - 必須位於 `domain.*.model.aggregate` 包中
-   - 使用 `@AggregateRoot` 註解標記
-   - 控制對內部實體的訪問
-   - 確保業務不變性
-
-2. **實體 (Entity)**
-   - 必須位於 `domain.*.model.entity` 包中
-   - 使用 `@Entity` 註解標記
-   - 具有唯一標識
-   - 可變但保持身份一致性
-
-3. **值對象 (Value Object)**
-   - 必須位於 `domain.*.model.valueobject` 包中
-   - 使用 `@ValueObject` 註解標記
-   - 不可變
-   - 沒有唯一標識，通過屬性值比較相等性
-
-4. **領域事件 (Domain Event)**
-   - 必須位於 `domain.*.events` 包中
-   - 實現 `DomainEvent` 接口
-   - 不可變，記錄已發生的業務事件
-
-5. **領域服務 (Domain Service)**
-   - 必須位於 `domain.*.service` 包中
-   - 無狀態，處理跨聚合的業務邏輯
-
-6. **儲存庫 (Repository)**
-   - 接口必須位於 `domain.*.repository` 包中
-   - 實現必須位於 `infrastructure.persistence` 包中
-   - 操作聚合根
-
-## 測試設計原則
-
-### 測試架構
-
-本專案建立了完整的測試輔助工具生態系統，位於 `app/src/test/java/solid/humank/genaidemo/testutils/` 目錄：
-
-1. **測試資料建構器 (Test Data Builders)**
-   - 使用Builder模式簡化測試資料創建
-   - 支援鏈式呼叫和預設值設定
-   - 提供領域特定的建構方法
-
-2. **場景處理器 (Scenario Handlers)**
-   - 處理複雜的測試場景邏輯
-   - 使用策略模式處理不同情境
-   - 避免在測試中使用條件邏輯
-
-3. **自定義匹配器 (Custom Matchers)**
-   - 提供更具表達性的測試斷言
-   - 改善測試失敗時的錯誤訊息
-   - 支援領域特定的驗證邏輯
-
-### 測試最佳實踐
-
-1. **3A原則 (Arrange-Act-Assert)**
-   - 每個測試方法都必須有清晰的三個區段
-   - Arrange: 準備測試資料和環境
-   - Act: 執行被測試的操作
-   - Assert: 驗證結果
-
-2. **無條件邏輯**
-   - 測試中不應包含if-else語句
-   - 使用場景處理器處理複雜邏輯
-   - 保持測試的簡潔性和可讀性
-
-3. **測試獨立性**
-   - 每個測試都應該是獨立且可重複的
-   - 不依賴其他測試的執行順序
-   - 使用適當的測試資料隔離機制
-
-4. **描述性命名**
-   - 使用清晰的測試方法名稱
-   - 使用@DisplayName提供詳細描述
-   - 測試名稱應該說明測試的目的和預期結果
+# System Development and Testing Design Compliance Standards
+
+In this project, please follow DDD tactical design patterns and layering principles, as required by the 3 ArchUnit tests under `../app/src/test/java/solid/humank/genaidemo/architecture`, to complete the code development work for this project.
+
+## Architecture Design Principles
+
+### Layered Architecture
+
+1. **Domain Layer**
+   - Contains core business logic and rules
+   - Does not depend on other layers
+   - Includes aggregate roots, entities, value objects, domain events, domain services, and domain exceptions
+
+2. **Application Layer**
+   - Coordinates domain objects to complete user use cases
+   - Only depends on the domain layer
+   - Includes application services, DTOs, command and query objects
+
+3. **Infrastructure Layer**
+   - Provides technical implementation
+   - Depends on the domain layer, implements interfaces defined by the domain layer
+   - Includes repository implementations, external system adapters, ORM mappings, etc.
+
+4. **Interfaces Layer**
+   - Handles user interactions
+   - Only depends on the application layer
+   - Includes controllers, view models, request/response objects, etc.
+
+### DDD Tactical Design Patterns
+
+1. **Aggregate Root**
+   - Must be located in `domain.*.model.aggregate` package
+   - Marked with `@AggregateRoot` annotation
+   - Controls access to internal entities
+   - Ensures business invariants
+
+2. **Entity**
+   - Must be located in `domain.*.model.entity` package
+   - Marked with `@Entity` annotation
+   - Has unique identity
+   - Mutable but maintains identity consistency
+
+3. **Value Object**
+   - Must be located in `domain.*.model.valueobject` package
+   - Marked with `@ValueObject` annotation
+   - Immutable
+   - No unique identity, equality compared through attribute values
 
-5. **測試分類**
-   - 使用測試標籤註解進行分類：
-     - `@UnitTest`: 快速執行的單元測試
-     - `@IntegrationTest`: 需要外部依賴的整合測試
-     - `@SlowTest`: 執行時間較長的測試
-     - `@BddTest`: 行為驅動開發測試
+4. **Domain Event**
+   - Must be located in `domain.*.events` package
+   - Implements `DomainEvent` interface
+   - Immutable, records business events that have occurred
 
-### BDD測試原則
+5. **Domain Service**
+   - Must be located in `domain.*.service` package
+   - Stateless, handles business logic across aggregates
+
+6. **Repository**
+   - Interface must be located in `domain.*.repository` package
+   - Implementation must be located in `infrastructure.persistence` package
+   - Operates on aggregate roots
 
-1. **步驟定義簡潔性**
-   - 每個步驟定義只負責一個明確的操作
-   - 不包含複雜的條件邏輯
-   - 使用場景處理器處理複雜場景
+## Testing Design Principles
 
-2. **測試資料管理**
-   - 使用測試建構器創建測試資料
-   - 使用TestFixtures提供常用資料
-   - 避免硬編碼的測試資料
+### Test Architecture
 
-3. **異常處理**
-   - 使用統一的異常處理機制
-   - 通過TestExceptionHandler捕獲和驗證異常
-   - 提供清晰的異常驗證方法
-   - 實現 `DomainEvent` 接口
-   - 不可變
-   - 記錄領域中發生的重要事件
+This project has established a complete test utility ecosystem located in the `app/src/test/java/solid/humank/genaidemo/testutils/` directory:
 
-5. **儲存庫 (Repository)**
-   - 接口必須位於 `domain.*.repository` 包中
-   - 實現必須位於 `infrastructure.*.persistence` 包中
-   - 操作聚合根
-   - 提供持久化和查詢功能
+1. **Test Data Builders**
+   - Use Builder pattern to simplify test data creation
+   - Support method chaining and default value settings
+   - Provide domain-specific construction methods
 
-6. **領域服務 (Domain Service)**
-   - 必須位於 `domain.*.service` 包中
-   - 使用 `@DomainService` 註解標記
-   - 無狀態
-   - 處理跨聚合的業務邏輯
+2. **Scenario Handlers**
+   - Handle complex test scenario logic
+   - Use Strategy pattern to handle different situations
+   - Avoid conditional logic in tests
 
-7. **規格 (Specification)**
-   - 必須位於 `domain.*.specification` 包中
-   - 實現 `Specification` 接口
-   - 封裝複雜的業務規則和查詢條件
+3. **Custom Matchers**
+   - Provide more expressive test assertions
+   - Improve error messages when tests fail
+   - Support domain-specific validation logic
 
-8. **防腐層 (Anti-Corruption Layer)**
-   - 必須位於 `infrastructure.*.acl` 包中
-   - 隔離外部系統
-   - 翻譯外部模型到內部模型
+### Testing Best Practices
 
-## 測試策略
+1. **3A Principle (Arrange-Act-Assert)**
+   - Each test method must have clear three sections
+   - Arrange: Prepare test data and environment
+   - Act: Execute the operation being tested
+   - Assert: Verify results
 
-### 1. 單元測試
+2. **No Conditional Logic**
+   - Tests should not contain if-else statements
+   - Use scenario handlers to handle complex logic
+   - Maintain test simplicity and readability
 
-基於 Cucumber-JVM 針對聚合根撰寫單元測試，不依賴 Spring Boot 框架。
+3. **Test Independence**
+   - Each test should be independent and repeatable
+   - Not dependent on execution order of other tests
+   - Use appropriate test data isolation mechanisms
 
-- **測試範圍**：聚合根、實體、值對象、領域服務
-- **測試工具**：Cucumber-JVM、JUnit 5
-- **測試目標**：驗證業務規則和不變性
+4. **Descriptive Naming**
+   - Use clear test method names
+   - Use @DisplayName to provide detailed descriptions
+   - Test names should explain the purpose and expected results
 
-#### Cucumber BDD 測試規範
+5. **Test Classification**
+   - Use test tag annotations for classification:
+     - `@UnitTest`: Fast-executing unit tests
+     - `@IntegrationTest`: Integration tests requiring external dependencies
+     - `@SlowTest`: Tests with longer execution times
+     - `@BddTest`: Behavior-driven development tests
 
-1. **Feature 文件**
-   - 使用 Gherkin 語法描述業務場景
-   - 位於 `src/test/resources/features` 目錄
-   - 按子領域組織，如 `inventory/inventory_management.feature`
+### BDD Testing Principles
 
-2. **步驟定義**
-   - 位於 `src/test/java/solid/humank/genaidemo/bdd` 目錄
-   - 按子領域組織，如 `inventory/InventoryStepDefinitions.java`
-   - 實現 Feature 文件中的步驟
+1. **Step Definition Simplicity**
+   - Each step definition is responsible for only one clear operation
+   - Does not contain complex conditional logic
+   - Use scenario handlers to handle complex scenarios
 
-3. **測試隔離**
-   - 每個測試場景應該是獨立的
-   - 使用適當的測試數據
-   - 在測試後進行清理
+2. **Test Data Management**
+   - Use test builders to create test data
+   - Use TestFixtures to provide common data
+   - Avoid hard-coded test data
 
-### 2. 整合測試
+3. **Exception Handling**
+   - Use unified exception handling mechanisms
+   - Capture and verify exceptions through TestExceptionHandler
+   - Provide clear exception verification methods
 
-對應用層、基礎設施層和介面層進行測試，可啟動 Spring Boot 進行測試。
+## Testing Strategy
 
-- **測試範圍**：應用服務、儲存庫實現、控制器
-- **測試工具**：Spring Boot Test、MockMvc、TestContainers
-- **測試目標**：驗證組件集成和端到端流程
+### 1. Unit Testing
 
-#### 應用服務測試
+Write unit tests for aggregate roots based on Cucumber-JVM, without depending on the Spring Boot framework.
 
-- 驗證用例協調邏輯
-- 確保正確調用領域對象
-- 檢查事務管理和事件發布
+- **Test Scope**: Aggregate roots, entities, value objects, domain services
+- **Test Tools**: Cucumber-JVM, JUnit 5
+- **Test Objectives**: Verify business rules and invariants
 
-#### 儲存庫測試
+#### Cucumber BDD Test Specifications
 
-- 驗證 CRUD 操作
-- 確保查詢條件正確
-- 檢查樂觀鎖定和並發控制
+1. **Feature Files**
+   - Use Gherkin syntax to describe business scenarios
+   - Located in `src/test/resources/features` directory
+   - Organized by subdomain, such as `inventory/inventory_management.feature`
 
-#### 控制器測試
+2. **Step Definitions**
+   - Located in `src/test/java/solid/humank/genaidemo/bdd` directory
+   - Organized by subdomain, such as `inventory/InventoryStepDefinitions.java`
+   - Implement steps from Feature files
 
-- 驗證 HTTP 請求處理
-- 確保正確的狀態碼和響應格式
-- 檢查輸入驗證和錯誤處理
+3. **Test Isolation**
+   - Each test scenario should be independent
+   - Use appropriate test data
+   - Clean up after tests
 
-## 實現指南
+### 2. Integration Testing
 
-### 1. 確保 Repository 適配器正確實現領域儲存庫接口
+Test application layer, infrastructure layer, and interface layer, can start Spring Boot for testing.
 
-- **完整實現所有方法**：Repository 適配器必須實現領域儲存庫接口中定義的所有方法，如 `save`、`findById`、`findAll` 等。
+- **Test Scope**: Application services, repository implementations, controllers
+- **Test Tools**: Spring Boot Test, MockMvc, TestContainers
+- **Test Objectives**: Verify component integration and end-to-end processes
 
-- **正確的轉換邏輯**：適配器需要正確地將領域模型轉換為持久化模型（JPA 實體），反之亦然。例如，在 `OrderRepositoryAdapter` 中，需要確保 `OrderMapper.toJpaEntity()` 和 `OrderMapper.toDomainEntity()` 方法被正確調用。
+#### Application Service Testing
 
-- **事務管理**：確保適配器正確處理事務，特別是在涉及多個實體的操作中。
+- Verify use case coordination logic
+- Ensure correct invocation of domain objects
+- Check transaction management and event publishing
 
-- **異常處理**：適當地捕獲和轉換基礎設施層的異常，避免將技術細節洩露到領域層。
+#### Repository Testing
 
-- **領域事件處理**：如果領域模型發布了事件，確保適配器能夠正確地處理這些事件，例如在保存聚合根後發布事件。
+- Verify CRUD operations
+- Ensure query conditions are correct
+- Check optimistic locking and concurrency control
 
-### 2. 檢查 Mapper 類是否正確處理領域模型和持久化模型之間的轉換
+#### Controller Testing
 
-- **雙向轉換**：確保 `toJpaEntity()` 和 `toDomainEntity()` 方法能夠正確地雙向轉換所有屬性。
+- Verify HTTP request handling
+- Ensure correct status codes and response formats
+- Check input validation and error handling
 
-- **值對象轉換**：特別注意值對象（如 Money、OrderId）的轉換，確保它們的語義和不變性在轉換過程中得到保留。
+## Implementation Guidelines
 
-- **集合轉換**：正確處理集合（如訂單項列表）的轉換，包括處理空集合的情況。
+### 1. Ensure Repository Adapters Correctly Implement Domain Repository Interfaces
 
-- **狀態轉換**：確保枚舉類型（如 OrderStatus）的轉換正確，特別是當 JPA 實體使用字符串存儲狀態時。
+- **Complete Implementation of All Methods**: Repository adapters must implement all methods defined in domain repository interfaces, such as `save`, `findById`, `findAll`, etc.
 
-- **關聯關係**：處理實體之間的關聯關係，確保它們在轉換過程中得到正確維護。
+- **Correct Conversion Logic**: Adapters need to correctly convert domain models to persistence models (JPA entities) and vice versa. For example, in `OrderRepositoryAdapter`, ensure that `OrderMapper.toJpaEntity()` and `OrderMapper.toDomainEntity()` methods are called correctly.
 
-- **聚合邊界**：確保轉換過程尊重聚合邊界，不會意外地跨越聚合邊界加載數據。
+- **Transaction Management**: Ensure adapters handle transactions correctly, especially in operations involving multiple entities.
 
-### 3. 確保 JPA 實體類與數據庫表結構匹配
+- **Exception Handling**: Appropriately catch and convert infrastructure layer exceptions, avoiding leaking technical details to the domain layer.
 
-- **表名和列名**：確保 `@Table` 和 `@Column` 註解中的名稱與數據庫表和列名匹配。
+- **Domain Event Handling**: If domain models publish events, ensure adapters can correctly handle these events, such as publishing events after saving aggregate roots.
 
-- **主鍵策略**：確保主鍵生成策略（如 `@Id` 和 `@GeneratedValue`）與數據庫設計一致。
+### 2. Check if Mapper Classes Correctly Handle Conversion Between Domain Models and Persistence Models
 
-- **關聯關係**：確保 `@OneToMany`、`@ManyToOne` 等關聯關係註解正確反映數據庫表之間的關係。
+- **Bidirectional Conversion**: Ensure `toJpaEntity()` and `toDomainEntity()` methods can correctly convert all properties bidirectionally.
 
-- **級聯操作**：檢查級聯操作設置（如 `cascade = CascadeType.ALL`）是否符合業務需求。
+- **Value Object Conversion**: Pay special attention to value object conversion (such as Money, OrderId), ensuring their semantics and invariants are preserved during conversion.
 
-- **數據類型**：確保 Java 類型與數據庫列類型兼容，特別是對於日期、時間和數字類型。
+- **Collection Conversion**: Correctly handle collection conversion (such as order item lists), including handling empty collections.
 
-- **約束條件**：確保 `nullable`、`unique` 等約束條件與數據庫設計一致。
+- **State Conversion**: Ensure enum type conversion (such as OrderStatus) is correct, especially when JPA entities use strings to store states.
 
-- **索引**：如果需要，添加 `@Index` 註解以優化查詢性能。
+- **Association Relationships**: Handle association relationships between entities, ensuring they are correctly maintained during conversion.
 
-### 4. 檢查 Cucumber 測試步驟定義是否覆蓋所有場景
+- **Aggregate Boundaries**: Ensure the conversion process respects aggregate boundaries and doesn't accidentally load data across aggregate boundaries.
 
-- **場景覆蓋**：確保所有 feature 文件中定義的場景都有對應的步驟定義。
+### 3. Ensure JPA Entity Classes Match Database Table Structure
 
-- **步驟實現**：確保每個步驟定義都有正確的實現，並且使用了適當的斷言來驗證結果。
+- **Table and Column Names**: Ensure names in `@Table` and `@Column` annotations match database table and column names.
 
-- **測試隔離**：確保每個測試場景都是獨立的，不會受到其他測試的影響。
+- **Primary Key Strategy**: Ensure primary key generation strategy (such as `@Id` and `@GeneratedValue`) is consistent with database design.
 
-- **測試數據**：確保測試使用了適當的測試數據，並且在測試後進行了清理。
+- **Association Relationships**: Ensure association relationship annotations like `@OneToMany`, `@ManyToOne` correctly reflect relationships between database tables.
 
-- **異常處理**：確保測試正確處理了異常情況，特別是對於應該拋出異常的場景。
+- **Cascade Operations**: Check cascade operation settings (such as `cascade = CascadeType.ALL`) meet business requirements.
 
-- **邊界條件**：確保測試覆蓋了邊界條件和極端情況。
+- **Data Types**: Ensure Java types are compatible with database column types, especially for date, time, and numeric types.
 
-## 常見問題與解決方案
+- **Constraints**: Ensure constraint conditions like `nullable`, `unique` are consistent with database design.
 
-### 1. 測試失敗的處理
+- **Indexes**: If needed, add `@Index` annotations to optimize query performance.
 
-當 Cucumber 測試失敗時，可能的原因和解決方案：
+### 4. Check if Cucumber Test Step Definitions Cover All Scenarios
 
-- **步驟定義不匹配**：確保步驟定義與 feature 文件中的步驟完全匹配，包括空格和標點符號。
-- **測試數據問題**：確保測試數據正確設置，特別是在多個步驟之間共享數據時。
-- **斷言失敗**：檢查預期值和實際值，可能需要調整業務邏輯或測試預期。
-- **狀態管理問題**：確保測試場景之間的狀態正確重置，避免測試相互干擾。
+- **Scenario Coverage**: Ensure all scenarios defined in feature files have corresponding step definitions.
 
-### 2. 領域模型與持久化模型轉換問題
+- **Step Implementation**: Ensure each step definition has correct implementation and uses appropriate assertions to verify results.
 
-- **數據丟失**：確保所有必要的屬性都在轉換過程中得到處理。
-- **類型不匹配**：處理不同類型之間的轉換，如字符串到枚舉、字符串到日期等。
-- **循環依賴**：處理實體之間的循環引用，可能需要使用延遲加載或分離轉換過程。
+- **Test Isolation**: Ensure each test scenario is independent and not affected by other tests.
 
-### 3. 聚合邊界問題
+- **Test Data**: Ensure tests use appropriate test data and clean up after testing.
 
-- **過大的聚合**：將過大的聚合拆分為多個較小的聚合，使用聚合間的引用。
-- **聚合間一致性**：使用領域事件或應用服務協調多個聚合之間的一致性。
-- **查詢性能**：對於複雜查詢，考慮使用專用的查詢模型或 CQRS 模式。
+- **Exception Handling**: Ensure tests correctly handle exceptional situations, especially for scenarios that should throw exceptions.
 
-## 結論
+- **Boundary Conditions**: Ensure tests cover boundary conditions and extreme cases.
 
-遵循這些設計原則和測試策略，可以幫助我們構建一個健壯、可維護和可測試的系統。DDD 戰術設計模式和分層架構提供了一個清晰的結構，使我們能夠專注於業務邏輯，同時保持技術實現的靈活性。Cucumber BDD 測試確保我們的代碼符合業務需求，而整合測試確保各個組件能夠正確地協同工作。
+## Common Issues and Solutions
+
+### 1. Handling Test Failures
+
+When Cucumber tests fail, possible causes and solutions:
+
+- **Step Definition Mismatch**: Ensure step definitions exactly match steps in feature files, including spaces and punctuation.
+- **Test Data Issues**: Ensure test data is correctly set up, especially when sharing data between multiple steps.
+- **Assertion Failures**: Check expected and actual values, may need to adjust business logic or test expectations.
+- **State Management Issues**: Ensure state is correctly reset between test scenarios, avoiding test interference.
+
+### 2. Domain Model and Persistence Model Conversion Issues
+
+- **Data Loss**: Ensure all necessary properties are handled during conversion.
+- **Type Mismatch**: Handle conversions between different types, such as string to enum, string to date, etc.
+- **Circular Dependencies**: Handle circular references between entities, may need to use lazy loading or separate conversion processes.
+
+### 3. Aggregate Boundary Issues
+
+- **Oversized Aggregates**: Split oversized aggregates into multiple smaller aggregates, using references between aggregates.
+- **Inter-Aggregate Consistency**: Use domain events or application services to coordinate consistency between multiple aggregates.
+- **Query Performance**: For complex queries, consider using dedicated query models or CQRS pattern.
+
+## Conclusion
+
+Following these design principles and testing strategies can help us build a robust, maintainable, and testable system. DDD tactical design patterns and layered architecture provide a clear structure that allows us to focus on business logic while maintaining flexibility in technical implementation. Cucumber BDD testing ensures our code meets business requirements, while integration testing ensures various components can work together correctly.

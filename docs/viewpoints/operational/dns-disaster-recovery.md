@@ -1,51 +1,51 @@
-# Operational Viewpoint - DNS 解析與災難恢復
+# Operational Viewpoint - DNS Resolution and Disaster Recovery
 
-**文件版本**: 1.0  
-**最後更新**: 2025年9月24日 下午5:15 (台北時間)  
-**作者**: Operations Team  
-**狀態**: Active
+**Document Version**: 1.0  
+**Last Updated**: September 24, 2025 5:15 PM (Taipei Time)  
+**Author**: Operations Team  
+**Status**: Active
 
-## 📋 目錄
+## 📋 Table of Contents
 
-- [概覽](#概覽)
-- [DNS 解析架構](#dns-解析架構)
-- [正常流量路由](#正常流量路由)
-- [災難恢復機制](#災難恢復機制)
-- [故障轉移流程](#故障轉移流程)
-- [監控和告警](#監控和告警)
-- [運維流程](#運維流程)
-- [效能優化](#效能優化)
+- [Overview](#overview)
+- [DNS Resolution Architecture](#dns-resolution-architecture)
+- [Normal Traffic Routing](#normal-traffic-routing)
+- [Disaster Recovery Mechanisms](#disaster-recovery-mechanisms)
+- [Failover Procedures](#failover-procedures)
+- [Monitoring and Alerting](#monitoring-and-alerting)
+- [Operations Procedures](#operations-procedures)
+- [Performance Optimization](#performance-optimization)
 
-## 概覽
+## Overview
 
-GenAI Demo 採用 Multi-Region Active-Active 架構，透過 Amazon Route 53 實現智能 DNS 解析和自動故障轉移。系統設計確保在主要區域 (ap-east-2) 發生故障時，能夠自動切換到次要區域 (ap-northeast-1)，提供持續的服務可用性。
+GenAI Demo adopts a Multi-Region Active-Active architecture, implementing intelligent DNS resolution and automatic failover through Amazon Route 53. The system design ensures that when the primary region (ap-east-2) fails, it can automatically switch to the secondary region (ap-northeast-1), providing continuous service availability.
 
-### 運維目標
+### Operational Objectives
 
-- **高可用性**: 99.9% 服務可用性
-- **快速恢復**: RTO < 5分鐘，RPO < 1分鐘
-- **自動故障轉移**: 無需人工干預
-- **透明切換**: 用戶無感知的區域切換
-- **全球效能**: 最佳化的全球存取體驗
+- **High Availability**: 99.9% service availability
+- **Fast Recovery**: RTO < 5 minutes, RPO < 1 minute
+- **Automatic Failover**: No manual intervention required
+- **Transparent Switching**: Seamless region switching for users
+- **Global Performance**: Optimized global access experience
 
-## DNS 解析架構
+## DNS Resolution Architecture
 
-### 整體 DNS 架構
+### Overall DNS Architecture
 
 ```mermaid
 graph TB
     subgraph "Global DNS Infrastructure"
-        subgraph "用戶端"
-            User[用戶瀏覽器]
-            Mobile[行動應用程式]
-            API[API 客戶端]
+        subgraph "Clients"
+            User[User Browser]
+            Mobile[Mobile Application]
+            API[API Client]
         end
         
-        subgraph "DNS 解析鏈"
-            LocalDNS[本地 DNS 解析器]
-            ISP_DNS[ISP DNS 伺服器]
-            Root[根 DNS 伺服器]
-            TLD[.io TLD 伺服器]
+        subgraph "DNS Resolution Chain"
+            LocalDNS[Local DNS Resolver]
+            ISP_DNS[ISP DNS Server]
+            Root[Root DNS Server]
+            TLD[.io TLD Server]
         end
         
         subgraph "Route 53"
@@ -72,13 +72,13 @@ graph TB
         CFOrigin[Origin Configuration]
     end
     
-    subgraph "ap-east-2 (台北) - Primary"
+    subgraph "ap-east-2 (Taipei) - Primary"
         ALB1[Application Load Balancer]
         EKS1[EKS Cluster]
         Health1[Health Check Endpoint]
     end
     
-    subgraph "ap-northeast-1 (東京) - Secondary"
+    subgraph "ap-northeast-1 (Tokyo) - Secondary"
         ALB2[Application Load Balancer]
         EKS2[EKS Cluster]
         Health2[Health Check Endpoint]
@@ -113,121 +113,121 @@ graph TB
     style ALB2 fill:#fff3e0
 ```
 
-### DNS 記錄配置
+### DNS Record Configuration
 
 ```yaml
 Route 53 Hosted Zone: kimkao.io
 DNS Records:
-  主要記錄:
+  Primary Records:
     - genai-demo.kimkao.io (A Record)
     - api.genai-demo.kimkao.io (CNAME)
     - www.genai-demo.kimkao.io (CNAME)
   
-  故障轉移記錄:
+  Failover Records:
     Primary:
-      - 記錄名稱: api.genai-demo.kimkao.io
-      - 類型: A (Alias)
-      - 目標: ALB ap-east-2
-      - 路由政策: Failover (Primary)
-      - 健康檢查: 啟用
-      - TTL: 60秒
+      - Record Name: api.genai-demo.kimkao.io
+      - Type: A (Alias)
+      - Target: ALB ap-east-2
+      - Routing Policy: Failover (Primary)
+      - Health Check: Enabled
+      - TTL: 60 seconds
     
     Secondary:
-      - 記錄名稱: api.genai-demo.kimkao.io
-      - 類型: A (Alias)
-      - 目標: ALB ap-northeast-1
-      - 路由政策: Failover (Secondary)
-      - 健康檢查: 啟用
-      - TTL: 60秒
+      - Record Name: api.genai-demo.kimkao.io
+      - Type: A (Alias)
+      - Target: ALB ap-northeast-1
+      - Routing Policy: Failover (Secondary)
+      - Health Check: Enabled
+      - TTL: 60 seconds
   
-  延遲路由記錄:
+  Latency Routing Records:
     Taipei:
-      - 記錄名稱: api-latency.genai-demo.kimkao.io
-      - 區域: ap-east-2
-      - 目標: ALB ap-east-2
-      - 健康檢查: 啟用
+      - Record Name: api-latency.genai-demo.kimkao.io
+      - Region: ap-east-2
+      - Target: ALB ap-east-2
+      - Health Check: Enabled
     
     Tokyo:
-      - 記錄名稱: api-latency.genai-demo.kimkao.io
-      - 區域: ap-northeast-1
-      - 目標: ALB ap-northeast-1
-      - 健康檢查: 啟用
+      - Record Name: api-latency.genai-demo.kimkao.io
+      - Region: ap-northeast-1
+      - Target: ALB ap-northeast-1
+      - Health Check: Enabled
 ```
 
-## 正常流量路由
+## Normal Traffic Routing
 
-### 用戶訪問 https://genai-demo.kimkao.io 的完整流程
+### Complete Flow for User Accessing https://genai-demo.kimkao.io
 
 ```mermaid
 sequenceDiagram
-    participant User as 用戶瀏覽器
-    participant LocalDNS as 本地 DNS
+    participant User as User Browser
+    participant LocalDNS as Local DNS
     participant Route53 as Route 53
     participant HealthCheck as Health Check
     participant CloudFront as CloudFront
-    participant ALB as ALB (台北)
+    participant ALB as ALB (Taipei)
     participant EKS as EKS Cluster
     participant App as Application Pod
     participant RDS as Aurora DB
     participant Redis as ElastiCache
     
-    Note over User,Redis: 正常情況下的完整請求流程
+    Note over User,Redis: Complete request flow under normal conditions
     
-    User->>LocalDNS: DNS 查詢 genai-demo.kimkao.io
-    LocalDNS->>Route53: 遞歸查詢
-    Route53->>HealthCheck: 檢查主要區域健康狀態
-    HealthCheck-->>Route53: 主要區域健康 ✅
-    Route53-->>LocalDNS: 返回 CloudFront IP
-    LocalDNS-->>User: 返回 IP 地址
+    User->>LocalDNS: DNS query genai-demo.kimkao.io
+    LocalDNS->>Route53: Recursive query
+    Route53->>HealthCheck: Check primary region health
+    HealthCheck-->>Route53: Primary region healthy ✅
+    Route53-->>LocalDNS: Return CloudFront IP
+    LocalDNS-->>User: Return IP address
     
-    User->>CloudFront: HTTPS 請求 (TLS 1.3)
-    CloudFront->>ALB: 轉發到台北 ALB
-    ALB->>EKS: 負載均衡到 Pod
-    EKS->>App: 路由到應用程式
+    User->>CloudFront: HTTPS request (TLS 1.3)
+    CloudFront->>ALB: Forward to Taipei ALB
+    ALB->>EKS: Load balance to Pod
+    EKS->>App: Route to application
     
-    App->>RDS: 資料庫查詢
-    RDS-->>App: 返回資料
-    App->>Redis: 快取操作
-    Redis-->>App: 返回快取資料
+    App->>RDS: Database query
+    RDS-->>App: Return data
+    App->>Redis: Cache operation
+    Redis-->>App: Return cached data
     
-    App-->>EKS: 處理完成
-    EKS-->>ALB: 返回回應
-    ALB-->>CloudFront: 返回回應
-    CloudFront-->>User: 返回最終回應
+    App-->>EKS: Processing complete
+    EKS-->>ALB: Return response
+    ALB-->>CloudFront: Return response
+    CloudFront-->>User: Return final response
     
-    Note over User,Redis: 整個流程通常在 200-500ms 內完成
+    Note over User,Redis: Entire flow typically completes within 200-500ms
 ```
 
-### DNS 解析詳細步驟
+### Detailed DNS Resolution Steps
 
 ```mermaid
 graph TD
-    subgraph "Step 1: 初始 DNS 查詢"
-        A1[用戶輸入 genai-demo.kimkao.io]
-        A2[瀏覽器檢查本地快取]
-        A3[查詢作業系統 DNS 快取]
-        A4[查詢本地 DNS 解析器]
+    subgraph "Step 1: Initial DNS Query"
+        A1[User enters genai-demo.kimkao.io]
+        A2[Browser checks local cache]
+        A3[Query OS DNS cache]
+        A4[Query local DNS resolver]
     end
     
-    subgraph "Step 2: 遞歸 DNS 解析"
-        B1[本地 DNS 查詢根伺服器]
-        B2[根伺服器返回 .io TLD 伺服器]
-        B3[查詢 .io TLD 伺服器]
-        B4[TLD 返回 kimkao.io 權威伺服器]
+    subgraph "Step 2: Recursive DNS Resolution"
+        B1[Local DNS queries root server]
+        B2[Root server returns .io TLD server]
+        B3[Query .io TLD server]
+        B4[TLD returns kimkao.io authoritative server]
     end
     
-    subgraph "Step 3: Route 53 權威解析"
-        C1[查詢 Route 53 權威伺服器]
-        C2[Route 53 執行健康檢查]
-        C3[選擇最佳路由政策]
-        C4[返回目標 IP 地址]
+    subgraph "Step 3: Route 53 Authoritative Resolution"
+        C1[Query Route 53 authoritative server]
+        C2[Route 53 executes health checks]
+        C3[Select optimal routing policy]
+        C4[Return target IP address]
     end
     
-    subgraph "Step 4: 連線建立"
-        D1[瀏覽器連線到 CloudFront]
-        D2[CloudFront 選擇最近邊緣節點]
-        D3[建立 TLS 連線]
-        D4[轉發請求到源站]
+    subgraph "Step 4: Connection Establishment"
+        D1[Browser connects to CloudFront]
+        D2[CloudFront selects nearest edge location]
+        D3[Establish TLS connection]
+        D4[Forward request to origin]
     end
     
     A1 --> A2
@@ -251,27 +251,27 @@ graph TD
     style D2 fill:#e3f2fd
 ```
 
-### 路由政策決策流程
+### Routing Policy Decision Flow
 
 ```mermaid
 flowchart TD
-    Start[DNS 查詢開始] --> HealthCheck{健康檢查}
+    Start[DNS Query Start] --> HealthCheck{Health Check}
     
-    HealthCheck -->|主要區域健康| PrimaryHealthy[主要區域可用]
-    HealthCheck -->|主要區域故障| PrimaryFailed[主要區域故障]
+    HealthCheck -->|Primary region healthy| PrimaryHealthy[Primary region available]
+    HealthCheck -->|Primary region failed| PrimaryFailed[Primary region failed]
     
-    PrimaryHealthy --> LatencyCheck{延遲路由檢查}
-    LatencyCheck -->|用戶在亞洲| AsiaRoute[路由到台北 ap-east-2]
-    LatencyCheck -->|用戶在其他地區| GlobalRoute[基於延遲路由]
+    PrimaryHealthy --> LatencyCheck{Latency routing check}
+    LatencyCheck -->|User in Asia| AsiaRoute[Route to Taipei ap-east-2]
+    LatencyCheck -->|User in other regions| GlobalRoute[Latency-based routing]
     
-    PrimaryFailed --> SecondaryCheck{次要區域檢查}
-    SecondaryCheck -->|次要區域健康| SecondaryRoute[故障轉移到東京 ap-northeast-1]
-    SecondaryCheck -->|次要區域也故障| ErrorPage[返回錯誤頁面]
+    PrimaryFailed --> SecondaryCheck{Secondary region check}
+    SecondaryCheck -->|Secondary region healthy| SecondaryRoute[Failover to Tokyo ap-northeast-1]
+    SecondaryCheck -->|Secondary region also failed| ErrorPage[Return error page]
     
-    AsiaRoute --> CloudFrontTaipei[CloudFront → 台北 ALB]
-    GlobalRoute --> CloudFrontOptimal[CloudFront → 最佳區域]
-    SecondaryRoute --> CloudFrontTokyo[CloudFront → 東京 ALB]
-    ErrorPage --> MaintenancePage[維護頁面]
+    AsiaRoute --> CloudFrontTaipei[CloudFront → Taipei ALB]
+    GlobalRoute --> CloudFrontOptimal[CloudFront → Optimal region]
+    SecondaryRoute --> CloudFrontTokyo[CloudFront → Tokyo ALB]
+    ErrorPage --> MaintenancePage[Maintenance page]
     
     style HealthCheck fill:#ffcdd2
     style LatencyCheck fill:#e8f5e8
@@ -280,34 +280,34 @@ flowchart TD
     style SecondaryRoute fill:#e3f2fd
 ```
 
-## 災難恢復機制
+## Disaster Recovery Mechanisms
 
-### 故障檢測與轉移架構
+### Failure Detection and Failover Architecture
 
 ```mermaid
 graph TB
-    subgraph "健康檢查系統"
+    subgraph "Health Check System"
         subgraph "Route 53 Health Checks"
-            HC1[主要區域健康檢查<br/>ap-east-2]
-            HC2[次要區域健康檢查<br/>ap-northeast-1]
+            HC1[Primary Region Health Check<br/>ap-east-2]
+            HC2[Secondary Region Health Check<br/>ap-northeast-1]
         end
         
-        subgraph "檢查配置"
-            Config1[檢查間隔: 30秒<br/>失敗閾值: 3次<br/>檢查路徑: /actuator/health]
-            Config2[檢查間隔: 30秒<br/>失敗閾值: 3次<br/>檢查路徑: /actuator/health]
+        subgraph "Check Configuration"
+            Config1[Check Interval: 30s<br/>Failure Threshold: 3 times<br/>Check Path: /actuator/health]
+            Config2[Check Interval: 30s<br/>Failure Threshold: 3 times<br/>Check Path: /actuator/health]
         end
     end
     
-    subgraph "監控與告警"
+    subgraph "Monitoring and Alerting"
         CW[CloudWatch Alarms]
         SNS[SNS Topics]
         Lambda[Lambda Functions]
-        Slack[Slack 通知]
-        Email[Email 通知]
-        PagerDuty[PagerDuty 告警]
+        Slack[Slack Notifications]
+        Email[Email Notifications]
+        PagerDuty[PagerDuty Alerts]
     end
     
-    subgraph "自動化回應"
+    subgraph "Automated Response"
         EventBridge[EventBridge Rules]
         AutoScale[Auto Scaling Actions]
         Runbooks[Systems Manager Runbooks]
@@ -334,169 +334,169 @@ graph TB
     style Recovery fill:#e3f2fd
 ```
 
-### 災難恢復場景
+### Disaster Recovery Scenarios
 
-#### 場景 1: 主要區域部分故障
+#### Scenario 1: Primary Region Partial Failure
 
 ```mermaid
 sequenceDiagram
-    participant User as 用戶
+    participant User as User
     participant Route53 as Route 53
     participant HC as Health Check
-    participant Primary as 台北區域 (故障)
-    participant Secondary as 東京區域
-    participant Ops as 運維團隊
+    participant Primary as Taipei Region (Failed)
+    participant Secondary as Tokyo Region
+    participant Ops as Operations Team
     
-    Note over User,Ops: 主要區域 ALB 故障，但 EKS 正常
+    Note over User,Ops: Primary region ALB failed, but EKS is normal
     
-    User->>Route53: DNS 查詢
-    Route53->>HC: 執行健康檢查
-    HC->>Primary: 檢查 /actuator/health
-    Primary--xHC: 連線失敗 ❌
-    HC->>HC: 失敗計數 +1 (1/3)
+    User->>Route53: DNS query
+    Route53->>HC: Execute health check
+    HC->>Primary: Check /actuator/health
+    Primary--xHC: Connection failed ❌
+    HC->>HC: Failure count +1 (1/3)
     
-    Note over HC: 等待 30 秒
+    Note over HC: Wait 30 seconds
     
-    HC->>Primary: 重新檢查
-    Primary--xHC: 連線失敗 ❌
-    HC->>HC: 失敗計數 +1 (2/3)
+    HC->>Primary: Recheck
+    Primary--xHC: Connection failed ❌
+    HC->>HC: Failure count +1 (2/3)
     
-    Note over HC: 等待 30 秒
+    Note over HC: Wait 30 seconds
     
-    HC->>Primary: 第三次檢查
-    Primary--xHC: 連線失敗 ❌
-    HC->>HC: 失敗計數 +1 (3/3)
-    HC->>Route53: 標記主要區域為不健康
+    HC->>Primary: Third check
+    Primary--xHC: Connection failed ❌
+    HC->>HC: Failure count +1 (3/3)
+    HC->>Route53: Mark primary region as unhealthy
     
-    Route53->>Secondary: 切換到次要區域
-    Route53-->>User: 返回東京區域 IP
-    User->>Secondary: 請求轉發到東京
-    Secondary-->>User: 正常回應 ✅
+    Route53->>Secondary: Switch to secondary region
+    Route53-->>User: Return Tokyo region IP
+    User->>Secondary: Request forwarded to Tokyo
+    Secondary-->>User: Normal response ✅
     
-    HC->>Ops: 發送告警通知
-    Ops->>Primary: 開始故障排除
+    HC->>Ops: Send alert notification
+    Ops->>Primary: Start troubleshooting
 ```
 
-#### 場景 2: 主要區域完全故障
+#### Scenario 2: Primary Region Complete Failure
 
 ```mermaid
 sequenceDiagram
-    participant User as 用戶
+    participant User as User
     participant Route53 as Route 53
-    participant Primary as 台北區域 (完全故障)
-    participant Secondary as 東京區域
+    participant Primary as Taipei Region (Complete Failure)
+    participant Secondary as Tokyo Region
     participant RDS as Aurora Global
-    participant Ops as 運維團隊
+    participant Ops as Operations Team
     
-    Note over User,Ops: 台北區域完全不可用 (網路/電力故障)
+    Note over User,Ops: Taipei region completely unavailable (network/power failure)
     
-    User->>Route53: DNS 查詢
-    Route53->>Primary: 健康檢查
-    Primary--xRoute53: 區域完全不可達 ❌
+    User->>Route53: DNS query
+    Route53->>Primary: Health check
+    Primary--xRoute53: Region completely unreachable ❌
     
-    Route53->>Route53: 立即標記為不健康
-    Route53->>Secondary: 自動故障轉移
-    Route53-->>User: 返回東京區域 IP
+    Route53->>Route53: Immediately mark as unhealthy
+    Route53->>Secondary: Automatic failover
+    Route53-->>User: Return Tokyo region IP
     
-    User->>Secondary: 請求轉發到東京
-    Secondary->>RDS: 查詢資料 (讀取副本)
-    RDS-->>Secondary: 返回資料
-    Secondary-->>User: 正常回應 ✅
+    User->>Secondary: Request forwarded to Tokyo
+    Secondary->>RDS: Query data (read replica)
+    RDS-->>Secondary: Return data
+    Secondary-->>User: Normal response ✅
     
-    Route53->>Ops: 發送緊急告警
-    Note over Ops: RTO: < 5 分鐘達成 ✅
+    Route53->>Ops: Send emergency alert
+    Note over Ops: RTO: < 5 minutes achieved ✅
     
-    Ops->>Ops: 評估故障範圍
-    Ops->>Secondary: 如需要，提升為主要區域
+    Ops->>Ops: Assess failure scope
+    Ops->>Secondary: If needed, promote to primary region
 ```
 
-## 故障轉移流程
+## Failover Procedures
 
-### 自動故障轉移時序圖
+### Automatic Failover Timeline
 
 ```mermaid
 gantt
-    title 故障轉移時間線 (RTO < 5分鐘)
+    title Failover Timeline (RTO < 5 minutes)
     dateFormat X
     axisFormat %M:%S
     
-    section 檢測階段
-    健康檢查失敗 (第1次)    :0, 30s
-    健康檢查失敗 (第2次)    :30s, 60s
-    健康檢查失敗 (第3次)    :60s, 90s
+    section Detection Phase
+    Health check failure (1st)    :0, 30s
+    Health check failure (2nd)    :30s, 60s
+    Health check failure (3rd)    :60s, 90s
     
-    section 切換階段
-    DNS 記錄更新           :90s, 95s
-    DNS 傳播              :95s, 155s
+    section Switching Phase
+    DNS record update             :90s, 95s
+    DNS propagation              :95s, 155s
     
-    section 恢復階段
-    用戶流量切換完成        :155s, 180s
-    告警通知發送           :90s, 120s
-    運維團隊響應           :120s, 300s
+    section Recovery Phase
+    User traffic switch complete  :155s, 180s
+    Alert notifications sent      :90s, 120s
+    Operations team response      :120s, 300s
 ```
 
-### 故障轉移決策矩陣
+### Failover Decision Matrix
 
 ```yaml
-故障轉移觸發條件:
-  自動觸發:
-    - 健康檢查連續失敗 3 次 (90秒)
-    - HTTP 5xx 錯誤率 > 50% (持續 2分鐘)
-    - 回應時間 > 10秒 (持續 1分鐘)
-    - 連線超時 > 30秒
+Failover Trigger Conditions:
+  Automatic Triggers:
+    - Health check fails 3 consecutive times (90 seconds)
+    - HTTP 5xx error rate > 50% (sustained for 2 minutes)
+    - Response time > 10 seconds (sustained for 1 minute)
+    - Connection timeout > 30 seconds
 
-  手動觸發:
-    - 計劃性維護
-    - 安全事件
-    - 效能問題
-    - 運維決策
+  Manual Triggers:
+    - Planned maintenance
+    - Security incidents
+    - Performance issues
+    - Operational decisions
 
-故障轉移動作:
-  DNS 層面:
-    - 更新 Route 53 記錄
-    - 調整 TTL 為 60秒
-    - 啟用次要區域路由
-    - 停用主要區域路由
+Failover Actions:
+  DNS Level:
+    - Update Route 53 records
+    - Adjust TTL to 60 seconds
+    - Enable secondary region routing
+    - Disable primary region routing
 
-  應用層面:
-    - 切換資料庫連線到讀取副本
-    - 更新快取配置
-    - 調整監控閾值
-    - 啟用降級模式
+  Application Level:
+    - Switch database connections to read replicas
+    - Update cache configuration
+    - Adjust monitoring thresholds
+    - Enable degraded mode
 
-  通知層面:
-    - 發送 Slack 通知
-    - 觸發 PagerDuty 告警
-    - 更新狀態頁面
-    - 通知相關團隊
+  Notification Level:
+    - Send Slack notifications
+    - Trigger PagerDuty alerts
+    - Update status page
+    - Notify relevant teams
 ```
 
-### 故障恢復流程
+### Failure Recovery Process
 
 ```mermaid
 flowchart TD
-    Start[故障檢測] --> Assess[評估故障範圍]
+    Start[Failure Detection] --> Assess[Assess failure scope]
     
-    Assess --> Minor{輕微故障?}
-    Minor -->|是| QuickFix[快速修復]
-    Minor -->|否| MajorFault[重大故障處理]
+    Assess --> Minor{Minor failure?}
+    Minor -->|Yes| QuickFix[Quick fix]
+    Minor -->|No| MajorFault[Major failure handling]
     
-    QuickFix --> TestPrimary[測試主要區域]
-    TestPrimary --> PrimaryOK{主要區域恢復?}
-    PrimaryOK -->|是| Failback[故障回切]
-    PrimaryOK -->|否| ExtendedDR[延長 DR 模式]
+    QuickFix --> TestPrimary[Test primary region]
+    TestPrimary --> PrimaryOK{Primary region recovered?}
+    PrimaryOK -->|Yes| Failback[Failback]
+    PrimaryOK -->|No| ExtendedDR[Extended DR mode]
     
-    MajorFault --> ActivateDR[啟動完整 DR]
-    ActivateDR --> PromoteSecondary[提升次要區域]
-    PromoteSecondary --> UpdateDNS[更新 DNS 配置]
-    UpdateDNS --> NotifyUsers[通知用戶]
+    MajorFault --> ActivateDR[Activate full DR]
+    ActivateDR --> PromoteSecondary[Promote secondary region]
+    PromoteSecondary --> UpdateDNS[Update DNS configuration]
+    UpdateDNS --> NotifyUsers[Notify users]
     
-    Failback --> GradualShift[漸進式切換]
-    GradualShift --> MonitorHealth[監控健康狀態]
-    MonitorHealth --> Complete[恢復完成]
+    Failback --> GradualShift[Gradual shift]
+    GradualShift --> MonitorHealth[Monitor health status]
+    MonitorHealth --> Complete[Recovery complete]
     
-    ExtendedDR --> PlanRecovery[制定恢復計劃]
-    PlanRecovery --> ExecuteRecovery[執行恢復]
+    ExtendedDR --> PlanRecovery[Plan recovery]
+    PlanRecovery --> ExecuteRecovery[Execute recovery]
     ExecuteRecovery --> TestPrimary
     
     NotifyUsers --> PlanRecovery
@@ -507,51 +507,51 @@ flowchart TD
     style Complete fill:#e8f5e8
 ```
 
-## 監控和告警
+## Monitoring and Alerting
 
-### 監控儀表板
+### Monitoring Dashboard
 
 ```mermaid
 graph TB
-    subgraph "Route 53 監控"
-        subgraph "健康檢查指標"
-            HC_Status[健康檢查狀態]
-            HC_Latency[健康檢查延遲]
-            HC_Success[成功率統計]
+    subgraph "Route 53 Monitoring"
+        subgraph "Health Check Metrics"
+            HC_Status[Health Check Status]
+            HC_Latency[Health Check Latency]
+            HC_Success[Success Rate Statistics]
         end
         
-        subgraph "DNS 查詢指標"
-            DNS_Queries[DNS 查詢數量]
-            DNS_Latency[DNS 解析延遲]
-            DNS_Errors[DNS 錯誤率]
+        subgraph "DNS Query Metrics"
+            DNS_Queries[DNS Query Count]
+            DNS_Latency[DNS Resolution Latency]
+            DNS_Errors[DNS Error Rate]
         end
     end
     
-    subgraph "應用程式監控"
-        subgraph "區域健康狀態"
-            Primary_Health[台北區域健康度]
-            Secondary_Health[東京區域健康度]
-            Cross_Region[跨區域延遲]
+    subgraph "Application Monitoring"
+        subgraph "Regional Health Status"
+            Primary_Health[Taipei Region Health]
+            Secondary_Health[Tokyo Region Health]
+            Cross_Region[Cross-region Latency]
         end
         
-        subgraph "業務指標"
-            Request_Rate[請求速率]
-            Error_Rate[錯誤率]
-            Response_Time[回應時間]
+        subgraph "Business Metrics"
+            Request_Rate[Request Rate]
+            Error_Rate[Error Rate]
+            Response_Time[Response Time]
         end
     end
     
-    subgraph "基礎設施監控"
-        subgraph "網路指標"
-            Network_Latency[網路延遲]
-            Bandwidth[頻寬使用]
-            Packet_Loss[封包遺失]
+    subgraph "Infrastructure Monitoring"
+        subgraph "Network Metrics"
+            Network_Latency[Network Latency]
+            Bandwidth[Bandwidth Usage]
+            Packet_Loss[Packet Loss]
         end
         
-        subgraph "資源使用"
-            CPU_Usage[CPU 使用率]
-            Memory_Usage[記憶體使用率]
-            Disk_Usage[磁碟使用率]
+        subgraph "Resource Usage"
+            CPU_Usage[CPU Usage]
+            Memory_Usage[Memory Usage]
+            Disk_Usage[Disk Usage]
         end
     end
     
@@ -567,242 +567,242 @@ graph TB
     style Request_Rate fill:#e8f5e8
 ```
 
-### 告警配置
+### Alert Configuration
 
 ```yaml
 CloudWatch Alarms:
-  健康檢查告警:
+  Health Check Alerts:
     PrimaryHealthCheckFailure:
-      指標: Route53 HealthCheckStatus
-      閾值: < 1 (不健康)
-      評估期間: 2 個數據點，共 2 分鐘
-      動作: SNS → PagerDuty (P1)
+      Metric: Route53 HealthCheckStatus
+      Threshold: < 1 (unhealthy)
+      Evaluation Period: 2 datapoints within 2 minutes
+      Action: SNS → PagerDuty (P1)
     
     SecondaryHealthCheckFailure:
-      指標: Route53 HealthCheckStatus
-      閾值: < 1 (不健康)
-      評估期間: 2 個數據點，共 2 分鐘
-      動作: SNS → PagerDuty (P0 - 兩個區域都故障)
+      Metric: Route53 HealthCheckStatus
+      Threshold: < 1 (unhealthy)
+      Evaluation Period: 2 datapoints within 2 minutes
+      Action: SNS → PagerDuty (P0 - both regions failed)
 
-  應用程式告警:
+  Application Alerts:
     HighErrorRate:
-      指標: ALB 5xx 錯誤率
-      閾值: > 5%
-      評估期間: 3 個數據點，共 3 分鐘
-      動作: SNS → Slack + Email
+      Metric: ALB 5xx error rate
+      Threshold: > 5%
+      Evaluation Period: 3 datapoints within 3 minutes
+      Action: SNS → Slack + Email
     
     HighLatency:
-      指標: ALB 回應時間
-      閾值: > 2 秒 (95th percentile)
-      評估期間: 2 個數據點，共 4 分鐘
-      動作: SNS → Slack
+      Metric: ALB response time
+      Threshold: > 2 seconds (95th percentile)
+      Evaluation Period: 2 datapoints within 4 minutes
+      Action: SNS → Slack
 
-  DNS 告警:
+  DNS Alerts:
     DNSResolutionFailure:
-      指標: Route53 查詢失敗率
-      閾值: > 1%
-      評估期間: 2 個數據點，共 2 分鐘
-      動作: SNS → PagerDuty (P1)
+      Metric: Route53 query failure rate
+      Threshold: > 1%
+      Evaluation Period: 2 datapoints within 2 minutes
+      Action: SNS → PagerDuty (P1)
 
 SNS Topics:
   genai-demo-critical-alerts:
-    訂閱者:
-      - PagerDuty 整合
-      - 運維團隊 Email
-      - Slack #alerts 頻道
+    Subscribers:
+      - PagerDuty integration
+      - Operations team email
+      - Slack #alerts channel
   
   genai-demo-warning-alerts:
-    訂閱者:
-      - Slack #monitoring 頻道
-      - 開發團隊 Email
+    Subscribers:
+      - Slack #monitoring channel
+      - Development team email
 ```
 
-## 運維流程
+## Operations Procedures
 
-### 日常運維檢查清單
+### Daily Operations Checklist
 
 ```yaml
-每日檢查 (自動化):
-  健康檢查狀態:
-    - ✅ 主要區域健康檢查正常
-    - ✅ 次要區域健康檢查正常
-    - ✅ DNS 解析正常
-    - ✅ SSL 憑證有效 (>30天)
+Daily Checks (Automated):
+  Health Check Status:
+    - ✅ Primary region health check normal
+    - ✅ Secondary region health check normal
+    - ✅ DNS resolution normal
+    - ✅ SSL certificate valid (>30 days)
 
-  效能指標:
-    - ✅ 平均回應時間 < 1秒
-    - ✅ 錯誤率 < 1%
-    - ✅ 可用性 > 99.9%
-    - ✅ DNS 解析時間 < 100ms
+  Performance Metrics:
+    - ✅ Average response time < 1 second
+    - ✅ Error rate < 1%
+    - ✅ Availability > 99.9%
+    - ✅ DNS resolution time < 100ms
 
-每週檢查 (手動):
-  故障轉移測試:
-    - 🔧 模擬主要區域故障
-    - 🔧 驗證自動切換功能
-    - 🔧 測試故障回切流程
-    - 🔧 檢查告警通知
+Weekly Checks (Manual):
+  Failover Testing:
+    - 🔧 Simulate primary region failure
+    - 🔧 Verify automatic switching functionality
+    - 🔧 Test failback process
+    - 🔧 Check alert notifications
 
-  容量規劃:
-    - 📊 分析流量趨勢
-    - 📊 評估資源使用率
-    - 📊 預測容量需求
-    - 📊 更新擴展計劃
+  Capacity Planning:
+    - 📊 Analyze traffic trends
+    - 📊 Evaluate resource utilization
+    - 📊 Predict capacity requirements
+    - 📊 Update scaling plans
 
-每月檢查 (深度):
-  災難恢復演練:
-    - 🎯 完整 DR 演練
-    - 🎯 RTO/RPO 驗證
-    - 🎯 流程文檔更新
-    - 🎯 團隊培訓
+Monthly Checks (Deep):
+  Disaster Recovery Drills:
+    - 🎯 Complete DR drill
+    - 🎯 RTO/RPO verification
+    - 🎯 Process documentation update
+    - 🎯 Team training
 
-  安全審查:
-    - 🔒 存取權限審查
-    - 🔒 SSL/TLS 配置檢查
-    - 🔒 安全群組規則審查
-    - 🔒 合規性檢查
+  Security Review:
+    - 🔒 Access permission review
+    - 🔒 SSL/TLS configuration check
+    - 🔒 Security group rules review
+    - 🔒 Compliance check
 ```
 
-### 故障排除手冊
+### Troubleshooting Manual
 
 ```yaml
-常見問題診斷:
-  DNS 解析問題:
-    症狀: 用戶無法存取網站
-    檢查步驟:
-      1. 驗證 Route 53 健康檢查狀態
-      2. 檢查 DNS 記錄配置
-      3. 測試從不同地點的 DNS 解析
-      4. 檢查 TTL 設定
-    解決方案:
-      - 更新 DNS 記錄
-      - 清除 DNS 快取
-      - 調整健康檢查配置
+Common Issue Diagnosis:
+  DNS Resolution Issues:
+    Symptoms: Users cannot access website
+    Check Steps:
+      1. Verify Route 53 health check status
+      2. Check DNS record configuration
+      3. Test DNS resolution from different locations
+      4. Check TTL settings
+    Solutions:
+      - Update DNS records
+      - Clear DNS cache
+      - Adjust health check configuration
 
-  健康檢查失敗:
-    症狀: Route 53 顯示區域不健康
-    檢查步驟:
-      1. 檢查 ALB 狀態
-      2. 驗證目標群組健康狀態
-      3. 檢查 /actuator/health 端點
-      4. 查看應用程式日誌
-    解決方案:
-      - 重啟不健康的實例
-      - 調整健康檢查參數
-      - 修復應用程式問題
+  Health Check Failures:
+    Symptoms: Route 53 shows region as unhealthy
+    Check Steps:
+      1. Check ALB status
+      2. Verify target group health status
+      3. Check /actuator/health endpoint
+      4. Review application logs
+    Solutions:
+      - Restart unhealthy instances
+      - Adjust health check parameters
+      - Fix application issues
 
-  跨區域延遲高:
-    症狀: 用戶回報存取速度慢
-    檢查步驟:
-      1. 檢查 CloudFront 快取命中率
-      2. 測量區域間網路延遲
-      3. 分析 ALB 存取日誌
-      4. 檢查資料庫查詢效能
-    解決方案:
-      - 優化 CloudFront 配置
-      - 調整快取策略
-      - 優化資料庫查詢
-      - 考慮增加邊緣節點
+  High Cross-region Latency:
+    Symptoms: Users report slow access
+    Check Steps:
+      1. Check CloudFront cache hit rate
+      2. Measure inter-region network latency
+      3. Analyze ALB access logs
+      4. Check database query performance
+    Solutions:
+      - Optimize CloudFront configuration
+      - Adjust caching strategy
+      - Optimize database queries
+      - Consider adding edge locations
 
-緊急聯絡資訊:
-  P0 事件 (服務完全中斷):
-    - PagerDuty: 自動呼叫值班工程師
+Emergency Contact Information:
+  P0 Incidents (Complete service outage):
+    - PagerDuty: Automatically calls on-call engineer
     - Slack: #incident-response
-    - 升級路徑: 值班工程師 → 技術主管 → CTO
+    - Escalation Path: On-call engineer → Tech lead → CTO
 
-  P1 事件 (部分功能影響):
+  P1 Incidents (Partial functionality impact):
     - Slack: #alerts
     - Email: ops-team@company.com
-    - 回應時間: 1小時內
+    - Response Time: Within 1 hour
 
-  P2 事件 (效能問題):
+  P2 Incidents (Performance issues):
     - Slack: #monitoring
-    - 回應時間: 4小時內
+    - Response Time: Within 4 hours
 ```
 
-## 效能優化
+## Performance Optimization
 
-### DNS 效能優化
+### DNS Performance Optimization
 
 ```yaml
-DNS 快取優化:
-  TTL 設定:
-    - A 記錄: 300秒 (正常情況)
-    - A 記錄: 60秒 (故障轉移期間)
-    - CNAME 記錄: 3600秒
-    - NS 記錄: 86400秒
+DNS Cache Optimization:
+  TTL Settings:
+    - A records: 300 seconds (normal conditions)
+    - A records: 60 seconds (during failover)
+    - CNAME records: 3600 seconds
+    - NS records: 86400 seconds
 
-  解析器優化:
-    - 使用 Route 53 Resolver
-    - 啟用 DNS64 支援
-    - 配置條件轉發規則
-    - 監控查詢模式
+  Resolver Optimization:
+    - Use Route 53 Resolver
+    - Enable DNS64 support
+    - Configure conditional forwarding rules
+    - Monitor query patterns
 
-CloudFront 優化:
-  快取策略:
-    - 靜態資源: 24小時
-    - API 回應: 5分鐘
-    - 動態內容: 不快取
-    - 錯誤頁面: 5分鐘
+CloudFront Optimization:
+  Cache Strategy:
+    - Static resources: 24 hours
+    - API responses: 5 minutes
+    - Dynamic content: No cache
+    - Error pages: 5 minutes
 
-  邊緣節點:
-    - 啟用所有邊緣節點
-    - 使用 HTTP/2 和 HTTP/3
-    - 啟用 Gzip 壓縮
-    - 配置自定義錯誤頁面
+  Edge Locations:
+    - Enable all edge locations
+    - Use HTTP/2 and HTTP/3
+    - Enable Gzip compression
+    - Configure custom error pages
 
-網路效能:
-  連線優化:
-    - 啟用 TCP Fast Open
-    - 使用 Keep-Alive 連線
-    - 優化 SSL/TLS 握手
-    - 實施 HTTP/2 Server Push
+Network Performance:
+  Connection Optimization:
+    - Enable TCP Fast Open
+    - Use Keep-Alive connections
+    - Optimize SSL/TLS handshake
+    - Implement HTTP/2 Server Push
 
-  頻寬管理:
-    - 監控頻寬使用
-    - 實施 QoS 政策
-    - 優化資料傳輸
-    - 使用 CDN 分流
+  Bandwidth Management:
+    - Monitor bandwidth usage
+    - Implement QoS policies
+    - Optimize data transfer
+    - Use CDN for traffic distribution
 ```
 
-### 全球效能監控
+### Global Performance Monitoring
 
 ```mermaid
 graph TB
-    subgraph "全球監控點"
-        subgraph "亞太地區"
-            AP1[台北監控點]
-            AP2[東京監控點]
-            AP3[新加坡監控點]
-            AP4[雪梨監控點]
+    subgraph "Global Monitoring Points"
+        subgraph "Asia Pacific"
+            AP1[Taipei Monitor]
+            AP2[Tokyo Monitor]
+            AP3[Singapore Monitor]
+            AP4[Sydney Monitor]
         end
         
-        subgraph "北美地區"
-            NA1[紐約監控點]
-            NA2[洛杉磯監控點]
-            NA3[多倫多監控點]
+        subgraph "North America"
+            NA1[New York Monitor]
+            NA2[Los Angeles Monitor]
+            NA3[Toronto Monitor]
         end
         
-        subgraph "歐洲地區"
-            EU1[倫敦監控點]
-            EU2[法蘭克福監控點]
-            EU3[巴黎監控點]
+        subgraph "Europe"
+            EU1[London Monitor]
+            EU2[Frankfurt Monitor]
+            EU3[Paris Monitor]
         end
     end
     
-    subgraph "效能指標"
-        DNS_Time[DNS 解析時間]
-        Connect_Time[連線建立時間]
-        SSL_Time[SSL 握手時間]
-        TTFB[首位元組時間]
-        Load_Time[頁面載入時間]
+    subgraph "Performance Metrics"
+        DNS_Time[DNS Resolution Time]
+        Connect_Time[Connection Establishment Time]
+        SSL_Time[SSL Handshake Time]
+        TTFB[Time to First Byte]
+        Load_Time[Page Load Time]
     end
     
-    subgraph "告警閾值"
+    subgraph "Alert Thresholds"
         DNS_Alert[DNS > 200ms]
-        Connect_Alert[連線 > 500ms]
+        Connect_Alert[Connection > 500ms]
         SSL_Alert[SSL > 300ms]
         TTFB_Alert[TTFB > 1s]
-        Load_Alert[載入 > 3s]
+        Load_Alert[Load > 3s]
     end
     
     AP1 --> DNS_Time
@@ -825,9 +825,9 @@ graph TB
 
 ---
 
-**文件狀態**: ✅ 完成  
-**下一步**: 查看 [Deployment Viewpoint](../deployment/deployment-architecture.md) 了解部署架構  
-**相關文件**: 
+**Document Status**: ✅ Complete  
+**Next Step**: Review [Deployment Viewpoint](../deployment/deployment-architecture.md) for deployment architecture  
+**Related Documents**: 
 - [Infrastructure Viewpoint](../infrastructure/aws-resource-architecture.md)
 - [Security Viewpoint](../security/iam-permissions-architecture.md)
 - [Deployment Viewpoint](../deployment/deployment-architecture.md)

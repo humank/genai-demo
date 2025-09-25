@@ -1,15 +1,15 @@
-# 資料目錄監控和運營指南
+# Data Catalog Monitoring and Operations Guide
 
-## 概述
+## Overview
 
-本文檔描述 AWS Glue Data Catalog 的監控、告警和日常運營程序，確保自動化 schema 發現系統的穩定運行和高可用性。
+This document describes the monitoring, alerting, and daily operational procedures for AWS Glue Data Catalog, ensuring stable operation and high availability of the automated schema discovery system.
 
-## 監控架構
+## Monitoring Architecture
 
-### 監控層級結構
+### Monitoring Hierarchy Structure
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    監控層級架構                                    │
+│                    Monitoring Hierarchy Architecture            │
 ├─────────────────────────────────────────────────────────────────┤
 │  Level 1: Infrastructure Monitoring                            │
 │  ├── AWS Glue Crawler Status                                   │
@@ -31,135 +31,135 @@
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 核心監控指標
+### Core Monitoring Metrics
 
-#### 基礎設施指標
+#### Infrastructure Metrics
 ```yaml
 infrastructure_metrics:
   glue_crawler:
     - name: "CrawlerState"
-      description: "Crawler 當前狀態 (READY, RUNNING, STOPPING)"
-      threshold: "非 READY 狀態超過 30 分鐘"
+      description: "Current Crawler state (READY, RUNNING, STOPPING)"
+      threshold: "Non-READY state for more than 30 minutes"
       severity: "WARNING"
     
     - name: "CrawlerRunDuration"
-      description: "Crawler 執行時間"
-      threshold: "> 60 分鐘"
+      description: "Crawler execution time"
+      threshold: "> 60 minutes"
       severity: "WARNING"
     
     - name: "CrawlerFailureCount"
-      description: "Crawler 失敗次數"
+      description: "Crawler failure count"
       threshold: "> 0 in 24 hours"
       severity: "CRITICAL"
   
   lambda_function:
     - name: "FunctionDuration"
-      description: "Lambda 函數執行時間"
-      threshold: "> 30 秒"
+      description: "Lambda function execution time"
+      threshold: "> 30 seconds"
       severity: "WARNING"
     
     - name: "FunctionErrors"
-      description: "Lambda 函數錯誤率"
+      description: "Lambda function error rate"
       threshold: "> 1%"
       severity: "CRITICAL"
     
     - name: "FunctionThrottles"
-      description: "Lambda 函數限流次數"
+      description: "Lambda function throttle count"
       threshold: "> 0"
       severity: "WARNING"
   
   eventbridge:
     - name: "RuleInvocations"
-      description: "EventBridge 規則觸發次數"
+      description: "EventBridge rule invocation count"
       threshold: "< 1 in 48 hours"
       severity: "WARNING"
     
     - name: "FailedInvocations"
-      description: "EventBridge 失敗觸發次數"
+      description: "EventBridge failed invocation count"
       threshold: "> 0"
       severity: "CRITICAL"
 ```
 
-#### 應用程式指標
+#### Application Metrics
 ```yaml
 application_metrics:
   schema_discovery:
     - name: "TablesDiscovered"
-      description: "發現的表格總數"
+      description: "Total number of tables discovered"
       expected_range: "50-100 tables"
       threshold: "< 40 or > 120"
       severity: "WARNING"
     
     - name: "SchemaChangesDetected"
-      description: "檢測到的 schema 變更"
+      description: "Schema changes detected"
       threshold: "> 10 per day"
       severity: "INFO"
     
     - name: "NewTablesAdded"
-      description: "新增的表格數量"
+      description: "Number of new tables added"
       threshold: "> 5 per day"
       severity: "INFO"
   
   data_quality:
     - name: "TableCompletenessScore"
-      description: "表格完整性分數"
+      description: "Table completeness score"
       threshold: "< 95%"
       severity: "WARNING"
     
     - name: "SchemaConsistencyScore"
-      description: "Schema 一致性分數"
+      description: "Schema consistency score"
       threshold: "< 98%"
       severity: "CRITICAL"
     
     - name: "DataFreshnessScore"
-      description: "資料新鮮度分數"
+      description: "Data freshness score"
       threshold: "< 90%"
       severity: "WARNING"
 ```
 
-#### 業務指標
+#### Business Metrics
 ```yaml
 business_metrics:
   coverage:
     - name: "BoundedContextCoverage"
-      description: "Bounded Context 覆蓋率"
+      description: "Bounded Context coverage rate"
       expected: "13 contexts"
       threshold: "< 13"
       severity: "CRITICAL"
     
     - name: "TableCoveragePerContext"
-      description: "每個 Context 的表格覆蓋率"
+      description: "Table coverage rate per Context"
       threshold: "< 80%"
       severity: "WARNING"
   
   compliance:
     - name: "GDPRComplianceScore"
-      description: "GDPR 合規分數"
+      description: "GDPR compliance score"
       threshold: "< 100%"
       severity: "CRITICAL"
     
     - name: "DataRetentionCompliance"
-      description: "資料保留政策合規性"
+      description: "Data retention policy compliance"
       threshold: "< 95%"
       severity: "WARNING"
   
   adoption:
     - name: "CatalogQueryCount"
-      description: "目錄查詢次數"
+      description: "Catalog query count"
       threshold: "< 100 per day"
       severity: "INFO"
     
     - name: "GenBIIntegrationUsage"
-      description: "GenBI 整合使用率"
+      description: "GenBI integration usage rate"
       threshold: "< 50 queries per day"
       severity: "INFO"
 ```
 
-## CloudWatch 儀表板配置
+## CloudWatch Dashboard Configuration
 
-### 主要儀表板: GenAI-Demo-Data-Catalog-Monitoring
+### Main Dashboard: GenAI-Demo-Data-Catalog-Monitoring
 
-#### Widget 1: Crawler 執行狀態
+#### Widget 1: Crawler Execution Status
 ```json
 {
   "type": "metric",
@@ -182,7 +182,7 @@ business_metrics:
 }
 ```
 
-#### Widget 2: 表格發現趨勢
+#### Widget 2: Table Discovery Trends
 ```json
 {
   "type": "metric",
@@ -201,7 +201,7 @@ business_metrics:
 }
 ```
 
-#### Widget 3: 資料品質指標
+#### Widget 3: Data Quality Metrics
 ```json
 {
   "type": "metric",
@@ -225,7 +225,7 @@ business_metrics:
 }
 ```
 
-#### Widget 4: 成本監控
+#### Widget 4: Cost Monitoring
 ```json
 {
   "type": "metric",
@@ -243,9 +243,9 @@ business_metrics:
 }
 ```
 
-### 次要儀表板: Data-Catalog-Operational-Details
+### Secondary Dashboard: Data-Catalog-Operational-Details
 
-#### Widget 1: Lambda 函數效能
+#### Widget 1: Lambda Function Performance
 ```json
 {
   "type": "metric",
@@ -264,7 +264,7 @@ business_metrics:
 }
 ```
 
-#### Widget 2: EventBridge 規則活動
+#### Widget 2: EventBridge Rule Activity
 ```json
 {
   "type": "metric",
@@ -282,14 +282,14 @@ business_metrics:
 }
 ```
 
-## 告警配置
+## Alert Configuration
 
-### 關鍵告警 (CRITICAL)
+### Critical Alerts (CRITICAL)
 
-#### 1. Crawler 執行失敗告警
+#### 1. Crawler Execution Failure Alert
 ```yaml
 alarm_name: "DataCatalog-CrawlerExecutionFailure"
-description: "Glue Crawler 執行失敗，需要立即處理"
+description: "Glue Crawler execution failed, requires immediate attention"
 metric_name: "glue.driver.aggregate.numFailedTasks"
 namespace: "AWS/Glue"
 dimensions:
@@ -304,10 +304,10 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogCriticalAlerts"
 ```
 
-#### 2. Schema 一致性嚴重下降告警
+#### 2. Schema Consistency Severely Degraded Alert
 ```yaml
 alarm_name: "DataCatalog-SchemaConsistencyDegraded"
-description: "Schema 一致性分數嚴重下降，可能影響資料品質"
+description: "Schema consistency score severely degraded, may affect data quality"
 metric_name: "ConsistencyScore"
 namespace: "Custom/DataGovernance"
 dimensions:
@@ -322,10 +322,10 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogCriticalAlerts"
 ```
 
-#### 3. Bounded Context 覆蓋不完整告警
+#### 3. Bounded Context Coverage Incomplete Alert
 ```yaml
 alarm_name: "DataCatalog-BoundedContextIncomplete"
-description: "Bounded Context 覆蓋不完整，可能有表格未被發現"
+description: "Bounded Context coverage incomplete, some tables may not be discovered"
 metric_name: "BoundedContextCoverage"
 namespace: "Custom/DataCatalog"
 dimensions:
@@ -340,12 +340,12 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogCriticalAlerts"
 ```
 
-### 警告告警 (WARNING)
+### Warning Alerts (WARNING)
 
-#### 1. Crawler 執行時間過長告警
+#### 1. Crawler Execution Slow Alert
 ```yaml
 alarm_name: "DataCatalog-CrawlerExecutionSlow"
-description: "Glue Crawler 執行時間超過預期，可能需要優化"
+description: "Glue Crawler execution time exceeds expected, may need optimization"
 metric_name: "glue.driver.aggregate.elapsedTime"
 namespace: "AWS/Glue"
 dimensions:
@@ -360,10 +360,10 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogWarningAlerts"
 ```
 
-#### 2. 資料完整性下降告警
+#### 2. Data Completeness Degraded Alert
 ```yaml
 alarm_name: "DataCatalog-DataCompletenessDegraded"
-description: "資料完整性分數下降，需要檢查資料品質"
+description: "Data completeness score degraded, need to check data quality"
 metric_name: "CompletenessScore"
 namespace: "Custom/DataGovernance"
 dimensions:
@@ -378,12 +378,12 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogWarningAlerts"
 ```
 
-### 資訊告警 (INFO)
+### Info Alerts (INFO)
 
-#### 1. 新表格發現告警
+#### 1. New Tables Discovered Alert
 ```yaml
 alarm_name: "DataCatalog-NewTablesDiscovered"
-description: "發現新表格，請檢查是否需要更新資料治理政策"
+description: "New tables discovered, please check if data governance policies need updates"
 metric_name: "NewTablesAdded"
 namespace: "Custom/DataCatalog"
 dimensions:
@@ -398,130 +398,130 @@ actions:
   - "arn:aws:sns:ap-northeast-1:ACCOUNT:DataCatalogInfoAlerts"
 ```
 
-## 運營程序
+## Operational Procedures
 
-### 日常運營檢查清單
+### Daily Operations Checklist
 
-#### 每日檢查 (自動化)
+#### Daily Checks (Automated)
 ```bash
 #!/bin/bash
 # daily-data-catalog-check.sh
 
-echo "=== 每日資料目錄健康檢查 ==="
-echo "執行時間: $(date)"
+echo "=== Daily Data Catalog Health Check ==="
+echo "Execution time: $(date)"
 
-# 1. 檢查 Crawler 狀態
-echo "1. 檢查 Glue Crawler 狀態..."
+# 1. Check Crawler status
+echo "1. Checking Glue Crawler status..."
 CRAWLER_STATE=$(aws glue get-crawler --name genai-demo-aurora-auto-discovery --query 'Crawler.State' --output text)
-echo "   Crawler 狀態: $CRAWLER_STATE"
+echo "   Crawler state: $CRAWLER_STATE"
 
 if [ "$CRAWLER_STATE" != "READY" ]; then
-    echo "   ⚠️  警告: Crawler 不在 READY 狀態"
+    echo "   ⚠️  Warning: Crawler is not in READY state"
 fi
 
-# 2. 檢查表格數量
-echo "2. 檢查發現的表格數量..."
+# 2. Check table count
+echo "2. Checking discovered table count..."
 TABLE_COUNT=$(aws glue get-tables --database-name genai_demo_catalog --query 'length(TableList)' --output text)
-echo "   發現的表格數量: $TABLE_COUNT"
+echo "   Discovered table count: $TABLE_COUNT"
 
 if [ "$TABLE_COUNT" -lt 40 ]; then
-    echo "   ⚠️  警告: 表格數量少於預期 (< 40)"
+    echo "   ⚠️  Warning: Table count is less than expected (< 40)"
 fi
 
-# 3. 檢查最近的 Crawler 執行
-echo "3. 檢查最近的 Crawler 執行..."
+# 3. Check recent Crawler execution
+echo "3. Checking recent Crawler execution..."
 LAST_RUN=$(aws glue get-crawler-metrics --crawler-name-list genai-demo-aurora-auto-discovery --query 'CrawlerMetricsList[0].LastRuntimeSeconds' --output text)
-echo "   最後執行時間: ${LAST_RUN} 秒"
+echo "   Last execution time: ${LAST_RUN} seconds"
 
 if [ "$LAST_RUN" -gt 3600 ]; then
-    echo "   ⚠️  警告: 最後執行時間超過 1 小時"
+    echo "   ⚠️  Warning: Last execution time exceeds 1 hour"
 fi
 
-# 4. 檢查 Lambda 函數錯誤
-echo "4. 檢查 Lambda 函數錯誤..."
+# 4. Check Lambda function errors
+echo "4. Checking Lambda function errors..."
 LAMBDA_ERRORS=$(aws logs filter-log-events \
     --log-group-name /aws/lambda/DataCatalogStack-TriggerCrawlerFunction \
     --start-time $(date -d '24 hours ago' +%s)000 \
     --filter-pattern "ERROR" \
     --query 'length(events)' --output text)
-echo "   24小時內 Lambda 錯誤數: $LAMBDA_ERRORS"
+echo "   Lambda errors in 24 hours: $LAMBDA_ERRORS"
 
 if [ "$LAMBDA_ERRORS" -gt 0 ]; then
-    echo "   ⚠️  警告: Lambda 函數有錯誤發生"
+    echo "   ⚠️  Warning: Lambda function has errors"
 fi
 
-echo "=== 每日檢查完成 ==="
+echo "=== Daily check completed ==="
 ```
 
-#### 每週檢查 (手動)
-- [ ] 檢查所有 13 個 bounded context 的表格覆蓋率
-- [ ] 驗證資料品質指標趨勢
-- [ ] 檢查成本使用情況和預算
-- [ ] 檢查告警配置是否需要調整
-- [ ] 檢查 IAM 權限和安全設定
+#### Weekly Checks (Manual)
+- [ ] Check table coverage rate for all 13 bounded contexts
+- [ ] Verify data quality metrics trends
+- [ ] Check cost usage and budget
+- [ ] Check if alert configurations need adjustment
+- [ ] Check IAM permissions and security settings
 
-#### 每月檢查 (手動)
-- [ ] 檢查 Glue Catalog 資料準確性
-- [ ] 更新資料治理政策和標籤
-- [ ] 檢查合規性報告
-- [ ] 檢查災難恢復程序
-- [ ] 檢查效能優化機會
+#### Monthly Checks (Manual)
+- [ ] Check Glue Catalog data accuracy
+- [ ] Update data governance policies and tags
+- [ ] Check compliance reports
+- [ ] Check disaster recovery procedures
+- [ ] Check performance optimization opportunities
 
-### 故障排除程序
+### Troubleshooting Procedures
 
-#### Crawler 執行失敗處理
+#### Crawler Execution Failure Handling
 ```bash
 #!/bin/bash
 # troubleshoot-crawler-failure.sh
 
-echo "=== Crawler 故障排除程序 ==="
+echo "=== Crawler Troubleshooting Procedure ==="
 
-# 1. 獲取 Crawler 詳細狀態
-echo "1. 獲取 Crawler 詳細資訊..."
+# 1. Get Crawler detailed status
+echo "1. Getting Crawler detailed information..."
 aws glue get-crawler --name genai-demo-aurora-auto-discovery
 
-# 2. 檢查最近的執行日誌
-echo "2. 檢查 Crawler 執行日誌..."
+# 2. Check recent execution logs
+echo "2. Checking Crawler execution logs..."
 aws logs filter-log-events \
     --log-group-name /aws-glue/crawlers \
     --start-time $(date -d '2 hours ago' +%s)000 \
     --filter-pattern "genai-demo-aurora-auto-discovery"
 
-# 3. 檢查資料庫連線
-echo "3. 測試資料庫連線..."
+# 3. Check database connection
+echo "3. Testing database connection..."
 aws glue get-connection --name genai-demo-aurora-connection
 
-# 4. 檢查 IAM 權限
-echo "4. 檢查 IAM 角色權限..."
+# 4. Check IAM permissions
+echo "4. Checking IAM role permissions..."
 aws iam get-role --role-name DataCatalogStack-GlueCrawlerRole
 
-# 5. 嘗試手動啟動 Crawler
-echo "5. 嘗試手動啟動 Crawler..."
+# 5. Try manual Crawler start
+echo "5. Attempting manual Crawler start..."
 aws glue start-crawler --name genai-demo-aurora-auto-discovery
 
-echo "=== 故障排除完成 ==="
+echo "=== Troubleshooting completed ==="
 ```
 
-#### Lambda 函數錯誤處理
+#### Lambda Function Error Handling
 ```bash
 #!/bin/bash
 # troubleshoot-lambda-errors.sh
 
-echo "=== Lambda 函數故障排除程序 ==="
+echo "=== Lambda Function Troubleshooting Procedure ==="
 
-# 1. 檢查函數配置
-echo "1. 檢查 Lambda 函數配置..."
+# 1. Check function configuration
+echo "1. Checking Lambda function configuration..."
 aws lambda get-function --function-name DataCatalogStack-TriggerCrawlerFunction
 
-# 2. 檢查最近的錯誤日誌
-echo "2. 檢查 Lambda 錯誤日誌..."
+# 2. Check recent error logs
+echo "2. Checking Lambda error logs..."
 aws logs filter-log-events \
     --log-group-name /aws/lambda/DataCatalogStack-TriggerCrawlerFunction \
     --start-time $(date -d '1 hour ago' +%s)000 \
     --filter-pattern "ERROR"
 
-# 3. 檢查函數指標
-echo "3. 檢查 Lambda 函數指標..."
+# 3. Check function metrics
+echo "3. Checking Lambda function metrics..."
 aws cloudwatch get-metric-statistics \
     --namespace AWS/Lambda \
     --metric-name Errors \
@@ -531,19 +531,19 @@ aws cloudwatch get-metric-statistics \
     --period 300 \
     --statistics Sum
 
-# 4. 測試函數執行
-echo "4. 測試 Lambda 函數..."
+# 4. Test function execution
+echo "4. Testing Lambda function..."
 aws lambda invoke \
     --function-name DataCatalogStack-TriggerCrawlerFunction \
     --payload '{"source":"manual-test","detail":{"EventCategories":["configuration change"]}}' \
     response.json
 
-echo "=== Lambda 故障排除完成 ==="
+echo "=== Lambda troubleshooting completed ==="
 ```
 
-### 效能優化程序
+### Performance Optimization Procedures
 
-#### Crawler 效能調優
+#### Crawler Performance Tuning
 ```yaml
 # crawler-performance-tuning.yml
 optimization_strategies:
@@ -569,35 +569,35 @@ optimization_strategies:
       - "flyway_schema_history"
   
   schedule_optimization:
-    primary_schedule: "cron(0 2 * * ? *)"  # 每日 2 AM
-    incremental_schedule: "cron(0 */6 * * ? *)"  # 每 6 小時增量掃描
+    primary_schedule: "cron(0 2 * * ? *)"  # Daily at 2 AM
+    incremental_schedule: "cron(0 */6 * * ? *)"  # Every 6 hours incremental scan
 ```
 
-#### 成本優化策略
+#### Cost Optimization Strategy
 ```yaml
 # cost-optimization.yml
 cost_control_measures:
   crawler_optimization:
-    - "使用增量掃描減少執行時間"
-    - "優化排除規則避免掃描不必要的表格"
-    - "調整取樣大小平衡準確性和成本"
+    - "Use incremental scanning to reduce execution time"
+    - "Optimize exclusion rules to avoid scanning unnecessary tables"
+    - "Adjust sampling size to balance accuracy and cost"
   
   logging_optimization:
-    - "設定合理的日誌保留期限 (7 天)"
-    - "使用日誌過濾減少儲存成本"
-    - "啟用日誌壓縮"
+    - "Set reasonable log retention period (7 days)"
+    - "Use log filtering to reduce storage costs"
+    - "Enable log compression"
   
   monitoring_optimization:
-    - "使用標準解析度指標"
-    - "合併相似的告警規則"
-    - "優化儀表板查詢頻率"
+    - "Use standard resolution metrics"
+    - "Consolidate similar alert rules"
+    - "Optimize dashboard query frequency"
   
   estimated_monthly_savings: "$1.20"
 ```
 
-## 災難恢復
+## Disaster Recovery
 
-### 備份策略
+### Backup Strategy
 ```yaml
 backup_strategy:
   glue_catalog_metadata:
@@ -619,46 +619,46 @@ backup_strategy:
     storage: "S3 with cross-region replication"
 ```
 
-### 恢復程序
+### Recovery Procedures
 ```bash
 #!/bin/bash
 # disaster-recovery-procedure.sh
 
-echo "=== 資料目錄災難恢復程序 ==="
+echo "=== Data Catalog Disaster Recovery Procedure ==="
 
-# 1. 檢查備份可用性
-echo "1. 檢查最新備份..."
+# 1. Check backup availability
+echo "1. Checking latest backup..."
 aws s3 ls s3://genai-demo-backup/glue-catalog/ --recursive | tail -5
 
-# 2. 恢復 Glue Database
-echo "2. 恢復 Glue Database..."
+# 2. Restore Glue Database
+echo "2. Restoring Glue Database..."
 aws glue create-database --database-input file://backup/glue-database.json
 
-# 3. 恢復表格定義
-echo "3. 恢復表格定義..."
+# 3. Restore table definitions
+echo "3. Restoring table definitions..."
 for table_file in backup/tables/*.json; do
     aws glue create-table --database-name genai_demo_catalog --table-input file://$table_file
 done
 
-# 4. 重新部署 Crawler
-echo "4. 重新部署 Crawler..."
+# 4. Redeploy Crawler
+echo "4. Redeploying Crawler..."
 cd infrastructure
 npx cdk deploy DataCatalogStack --require-approval never
 
-# 5. 驗證恢復結果
-echo "5. 驗證恢復結果..."
+# 5. Verify recovery results
+echo "5. Verifying recovery results..."
 TABLE_COUNT=$(aws glue get-tables --database-name genai_demo_catalog --query 'length(TableList)' --output text)
-echo "   恢復的表格數量: $TABLE_COUNT"
+echo "   Recovered table count: $TABLE_COUNT"
 
-echo "=== 災難恢復完成 ==="
+echo "=== Disaster recovery completed ==="
 ```
 
-## 合規性監控
+## Compliance Monitoring
 
-### GDPR 合規檢查
+### GDPR Compliance Check
 ```sql
 -- gdpr-compliance-check.sql
--- 檢查 PII 資料的標籤和分類
+-- Check PII data tagging and classification
 
 SELECT 
     table_name,
@@ -673,7 +673,7 @@ SELECT
              column_name ILIKE '%account%' THEN 'Financial'
         ELSE 'Non-sensitive'
     END as data_classification,
-    -- 檢查是否有適當的標籤
+    -- Check for appropriate tags
     CASE 
         WHEN table_comment ILIKE '%gdpr%' THEN 'Tagged'
         ELSE 'Missing GDPR Tag'
@@ -683,10 +683,10 @@ WHERE table_schema = 'public'
 ORDER BY data_classification, table_name;
 ```
 
-### 資料保留政策檢查
+### Data Retention Policy Check
 ```sql
 -- data-retention-check.sql
--- 檢查資料保留政策合規性
+-- Check data retention policy compliance
 
 WITH table_age AS (
     SELECT 
@@ -712,55 +712,55 @@ FROM table_age
 ORDER BY days_old DESC;
 ```
 
-## 整合測試
+## Integration Testing
 
-### 端到端測試腳本
+### End-to-End Test Script
 ```bash
 #!/bin/bash
 # end-to-end-test.sh
 
-echo "=== 資料目錄端到端測試 ==="
+echo "=== Data Catalog End-to-End Test ==="
 
-# 1. 測試 Crawler 手動觸發
-echo "1. 測試 Crawler 手動觸發..."
+# 1. Test manual Crawler trigger
+echo "1. Testing manual Crawler trigger..."
 aws glue start-crawler --name genai-demo-aurora-auto-discovery
 sleep 10
 
-# 2. 測試 Lambda 函數觸發
-echo "2. 測試 Lambda 函數觸發..."
+# 2. Test Lambda function trigger
+echo "2. Testing Lambda function trigger..."
 aws lambda invoke \
     --function-name DataCatalogStack-TriggerCrawlerFunction \
     --payload '{"source":"aws.rds","detail-type":"RDS DB Instance Event","detail":{"EventCategories":["configuration change"],"SourceId":"genai-demo-cluster"}}' \
     response.json
 
-# 3. 測試資料目錄查詢
-echo "3. 測試資料目錄查詢..."
+# 3. Test data catalog query
+echo "3. Testing data catalog query..."
 aws glue get-tables --database-name genai_demo_catalog --max-items 5
 
-# 4. 測試 GenBI 整合
-echo "4. 測試 GenBI 整合..."
+# 4. Test GenBI integration
+echo "4. Testing GenBI integration..."
 python3 << EOF
 import boto3
 glue = boto3.client('glue')
 tables = glue.get_tables(DatabaseName='genai_demo_catalog')
-print(f"GenBI 可用表格數量: {len(tables['TableList'])}")
+print(f"GenBI available table count: {len(tables['TableList'])}")
 for table in tables['TableList'][:3]:
     print(f"  - {table['Name']}: {len(table['StorageDescriptor']['Columns'])} columns")
 EOF
 
-# 5. 測試監控指標
-echo "5. 測試監控指標..."
+# 5. Test monitoring metrics
+echo "5. Testing monitoring metrics..."
 aws cloudwatch put-metric-data \
     --namespace Custom/DataCatalog \
     --metric-data MetricName=TestMetric,Value=1,Unit=Count
 
-echo "=== 端到端測試完成 ==="
+echo "=== End-to-end test completed ==="
 ```
 
 ---
 
-**文檔版本**: 1.0  
-**建立日期**: 2025年9月24日 下午3:35 (台北時間)  
-**負責團隊**: DevOps 和 SRE 團隊  
-**審核者**: 運營主管  
-**下次審核**: 2025年12月24日
+**Document Version**: 1.0  
+**Created Date**: September 24, 2025 3:35 PM (Taipei Time)  
+**Responsible Team**: DevOps and SRE Team  
+**Reviewer**: Operations Manager  
+**Next Review**: December 24, 2025

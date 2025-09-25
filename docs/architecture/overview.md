@@ -1,74 +1,74 @@
-# 系統架構概覽
+# System Architecture Overview
 
-本文檔提供了對系統架構的高層次視圖，包括主要組件及其交互方式。
+This document provides a high-level view of the system architecture, including major components and their interactions.
 
-## 六角形架構（Hexagonal Architecture）
+## Hexagonal Architecture
 
 ```mermaid
 graph TB
-    subgraph 外部系統 ["🌐 外部系統"]
-        UI[📱 Web 界面<br/>Next.js Frontend]
-        DB[(🗄️ 數據庫<br/>H2 Database)]
-        PS[💳 支付服務<br/>Payment Gateway]
-        LS[🚚 物流服務<br/>Logistics API]
+    subgraph 外部系統 ["🌐 External Systems"]
+        UI[📱 Web Interface<br/>Next.js Frontend]
+        DB[(🗄️ Database<br/>H2 Database)]
+        PS[💳 Payment Service<br/>Payment Gateway]
+        LS[🚚 Logistics Service<br/>Logistics API]
     end
     
-    subgraph 應用層 ["🎯 應用層 (Application Layer)"]
-        APPS[📋 OrderApplicationService<br/>協調業務流程]
+    subgraph 應用層 ["🎯 Application Layer"]
+        APPS[📋 OrderApplicationService<br/>Coordinates Business Processes]
     end
     
-    subgraph 領域層 ["💎 領域層 (Domain Layer)"]
-        AGG[🏛️ Order<br/>聚合根]
-        VO[💰 值對象<br/>Money, OrderId]
-        ENT[📦 實體<br/>OrderItem]
-        DOM_EVT[📢 領域事件<br/>OrderCreatedEvent]
-        DOM_SVC[⚙️ 領域服務<br/>OrderProcessingService]
-        SPEC[📏 規格模式<br/>OrderDiscountSpecification]
-        POLICY[📋 政策模式<br/>OrderDiscountPolicy]
+    subgraph 領域層 ["💎 Domain Layer"]
+        AGG[🏛️ Order<br/>Aggregate Root]
+        VO[💰 Value Objects<br/>Money, OrderId]
+        ENT[📦 Entity<br/>OrderItem]
+        DOM_EVT[📢 Domain Events<br/>OrderCreatedEvent]
+        DOM_SVC[⚙️ Domain Service<br/>OrderProcessingService]
+        SPEC[📏 Specification Pattern<br/>OrderDiscountSpecification]
+        POLICY[📋 Policy Pattern<br/>OrderDiscountPolicy]
     end
     
-    subgraph 入站端口 ["🔌 入站端口 (Primary Ports)"]
-        IP[🎯 OrderManagementUseCase<br/>業務用例接口]
+    subgraph 入站端口 ["🔌 Primary Ports"]
+        IP[🎯 OrderManagementUseCase<br/>Business Use Case Interface]
     end
     
-    subgraph 出站端口 ["🔌 出站端口 (Secondary Ports)"]
-        OP1[💾 OrderPersistencePort<br/>持久化接口]
-        OP2[💳 PaymentServicePort<br/>支付服務接口]
-        OP3[🚚 LogisticsServicePort<br/>物流服務接口]
+    subgraph 出站端口 ["🔌 Secondary Ports"]
+        OP1[💾 OrderPersistencePort<br/>Persistence Interface]
+        OP2[💳 PaymentServicePort<br/>Payment Service Interface]
+        OP3[🚚 LogisticsServicePort<br/>Logistics Service Interface]
     end
     
-    subgraph 入站適配器 ["🔧 入站適配器 (Primary Adapters)"]
-        IA[🌐 OrderController<br/>REST API 控制器]
+    subgraph 入站適配器 ["🔧 Primary Adapters"]
+        IA[🌐 OrderController<br/>REST API Controller]
     end
     
-    subgraph 出站適配器 ["🔧 出站適配器 (Secondary Adapters)"]
-        OA1[🗄️ JpaOrderRepository<br/>JPA 數據庫適配器]
-        OA2[💳 ExternalPaymentAdapter<br/>外部支付適配器]
-        OA3[🚚 ExternalLogisticsAdapter<br/>外部物流適配器]
+    subgraph 出站適配器 ["🔧 Secondary Adapters"]
+        OA1[🗄️ JpaOrderRepository<br/>JPA Database Adapter]
+        OA2[💳 ExternalPaymentAdapter<br/>External Payment Adapter]
+        OA3[🚚 ExternalLogisticsAdapter<br/>External Logistics Adapter]
     end
     
-    UI -->|HTTP請求| IA
-    IA -->|實現| IP
-    IP <-->|使用| APPS
-    APPS -->|操作| AGG
-    AGG -->|包含| ENT
-    AGG -->|使用| VO
-    AGG -->|產生| DOM_EVT
-    DOM_SVC -->|處理| AGG
-    SPEC -->|驗證| AGG
-    POLICY -->|應用於| AGG
+    UI -->|HTTP Request| IA
+    IA -->|Implements| IP
+    IP <-->|Uses| APPS
+    APPS -->|Operates| AGG
+    AGG -->|Contains| ENT
+    AGG -->|Uses| VO
+    AGG -->|Generates| DOM_EVT
+    DOM_SVC -->|Processes| AGG
+    SPEC -->|Validates| AGG
+    POLICY -->|Applies to| AGG
     
-    APPS -->|使用| OP1
-    APPS -->|使用| OP2
-    APPS -->|使用| OP3
+    APPS -->|Uses| OP1
+    APPS -->|Uses| OP2
+    APPS -->|Uses| OP3
     
-    OP1 <-->|實現| OA1
-    OP2 <-->|實現| OA2
-    OP3 <-->|實現| OA3
+    OP1 <-->|Implements| OA1
+    OP2 <-->|Implements| OA2
+    OP3 <-->|Implements| OA3
     
-    OA1 -->|存取| DB
-    OA2 -->|整合| PS
-    OA3 -->|整合| LS
+    OA1 -->|Accesses| DB
+    OA2 -->|Integrates| PS
+    OA3 -->|Integrates| LS
     
     classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef domain fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
@@ -83,55 +83,55 @@ graph TB
     class UI,DB,PS,LS external
 ```
 
-## 領域驅動設計架構
+## Domain-Driven Design Architecture
 
 ```mermaid
 graph TB
-    subgraph 表現層 ["🌐 表現層 (Presentation Layer)"]
-        CTRL[🎮 OrderController<br/>處理HTTP請求和響應]
-        DTO[📄 DTO<br/>數據傳輸對象]
+    subgraph 表現層 ["🌐 Presentation Layer"]
+        CTRL[🎮 OrderController<br/>Handles HTTP Requests and Responses]
+        DTO[📄 DTO<br/>Data Transfer Objects]
     end
     
-    subgraph 應用層 ["🎯 應用層 (Application Layer)"]
-        APP_SVC[📋 應用服務<br/>OrderApplicationService]
-        USE_CASE[🎯 用例接口<br/>OrderManagementUseCase]
-        CMD[📝 命令對象<br/>CreateOrderCommand]
+    subgraph 應用層 ["🎯 Application Layer"]
+        APP_SVC[📋 Application Service<br/>OrderApplicationService]
+        USE_CASE[🎯 Use Case Interface<br/>OrderManagementUseCase]
+        CMD[📝 Command Objects<br/>CreateOrderCommand]
     end
     
-    subgraph 領域層 ["💎 領域層 (Domain Layer)"]
-        AGG_ROOT[🏛️ 聚合根<br/>Order @AggregateRoot]
-        ENTITY[📦 實體<br/>OrderItem @Entity]
-        VAL_OBJ[💰 值對象<br/>Money, OrderId @ValueObject]
-        DOMAIN_EVT[📢 領域事件<br/>OrderCreatedEvent @DomainEvent]
-        DOMAIN_SVC[⚙️ 領域服務<br/>OrderProcessingService @DomainService]
-        POLICY[📋 領域政策<br/>OrderDiscountPolicy @Policy]
-        SPEC[📏 規格<br/>OrderDiscountSpecification @Specification]
+    subgraph 領域層 ["💎 Domain Layer"]
+        AGG_ROOT[🏛️ Aggregate Root<br/>Order @AggregateRoot]
+        ENTITY[📦 Entity<br/>OrderItem @Entity]
+        VAL_OBJ[💰 Value Objects<br/>Money, OrderId @ValueObject]
+        DOMAIN_EVT[📢 Domain Events<br/>OrderCreatedEvent @DomainEvent]
+        DOMAIN_SVC[⚙️ Domain Service<br/>OrderProcessingService @DomainService]
+        POLICY[📋 Domain Policy<br/>OrderDiscountPolicy @Policy]
+        SPEC[📏 Specification<br/>OrderDiscountSpecification @Specification]
     end
     
-    subgraph 基礎設施層 ["🔧 基礎設施層 (Infrastructure Layer)"]
-        REPO_IMPL[🗄️ 倉庫實現<br/>JpaOrderRepository]
-        EXT_ITGR[🔗 外部系統整合<br/>ExternalPaymentAdapter]
-        ACL[🛡️ 防腐層<br/>LogisticsAntiCorruptionLayer]
-        EVENT_PUB[📡 事件發布器<br/>DomainEventPublisher]
+    subgraph 基礎設施層 ["🔧 Infrastructure Layer"]
+        REPO_IMPL[🗄️ Repository Implementation<br/>JpaOrderRepository]
+        EXT_ITGR[🔗 External System Integration<br/>ExternalPaymentAdapter]
+        ACL[🛡️ Anti-Corruption Layer<br/>LogisticsAntiCorruptionLayer]
+        EVENT_PUB[📡 Event Publisher<br/>DomainEventPublisher]
     end
     
-    CTRL -->|使用| DTO
-    CTRL -->|調用| USE_CASE
-    USE_CASE <-->|實現| APP_SVC
-    APP_SVC -->|使用| CMD
-    APP_SVC -->|操作| AGG_ROOT
-    APP_SVC -->|使用| REPO_IMPL
-    APP_SVC -->|使用| EXT_ITGR
-    AGG_ROOT -->|包含| ENTITY
-    AGG_ROOT -->|使用| VAL_OBJ
-    AGG_ROOT -->|產生| DOMAIN_EVT
-    DOMAIN_SVC -->|操作| AGG_ROOT
-    POLICY -->|運用| SPEC
-    POLICY -->|影響| AGG_ROOT
-    REPO_IMPL -->|持久化| AGG_ROOT
-    EXT_ITGR -->|整合外部系統| DOMAIN_SVC
-    ACL -->|轉換外部模型| EXT_ITGR
-    EVENT_PUB -->|發布| DOMAIN_EVT
+    CTRL -->|Uses| DTO
+    CTRL -->|Calls| USE_CASE
+    USE_CASE <-->|Implements| APP_SVC
+    APP_SVC -->|Uses| CMD
+    APP_SVC -->|Operates| AGG_ROOT
+    APP_SVC -->|Uses| REPO_IMPL
+    APP_SVC -->|Uses| EXT_ITGR
+    AGG_ROOT -->|Contains| ENTITY
+    AGG_ROOT -->|Uses| VAL_OBJ
+    AGG_ROOT -->|Generates| DOMAIN_EVT
+    DOMAIN_SVC -->|Operates| AGG_ROOT
+    POLICY -->|Applies| SPEC
+    POLICY -->|Affects| AGG_ROOT
+    REPO_IMPL -->|Persists| AGG_ROOT
+    EXT_ITGR -->|Integrates External Systems| DOMAIN_SVC
+    ACL -->|Transforms External Models| EXT_ITGR
+    EVENT_PUB -->|Publishes| DOMAIN_EVT
     
     classDef presentation fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef application fill:#e1f5fe,stroke:#01579b,stroke-width:2px
@@ -144,53 +144,53 @@ graph TB
     class REPO_IMPL,EXT_ITGR,ACL,EVENT_PUB infrastructure
 ```
 
-## 事件驅動架構
+## Event-Driven Architecture
 
 ```mermaid
 graph LR
-    subgraph 領域事件 ["📢 領域事件 (Domain Events)"]
-        OCE[🎉 OrderCreatedEvent<br/>訂單創建事件]
-        OIAE[➕ OrderItemAddedEvent<br/>訂單項添加事件]
-        PRE[💳 PaymentRequestedEvent<br/>支付請求事件]
-        PFE[❌ PaymentFailedEvent<br/>支付失敗事件]
-        PSE[✅ PaymentSucceededEvent<br/>支付成功事件]
+    subgraph 領域事件 ["📢 Domain Events"]
+        OCE[🎉 OrderCreatedEvent<br/>Order Created Event]
+        OIAE[➕ OrderItemAddedEvent<br/>Order Item Added Event]
+        PRE[💳 PaymentRequestedEvent<br/>Payment Requested Event]
+        PFE[❌ PaymentFailedEvent<br/>Payment Failed Event]
+        PSE[✅ PaymentSucceededEvent<br/>Payment Succeeded Event]
     end
     
-    subgraph 事件處理 ["⚙️ 事件處理 (Event Processing)"]
-        EP[📡 DomainEventPublisher<br/>領域事件發布器]
-        EB[🚌 DomainEventBus<br/>事件總線]
-        OS[🔄 OrderProcessingSaga<br/>訂單處理協調器]
+    subgraph 事件處理 ["⚙️ Event Processing"]
+        EP[📡 DomainEventPublisher<br/>Domain Event Publisher]
+        EB[🚌 DomainEventBus<br/>Event Bus]
+        OS[🔄 OrderProcessingSaga<br/>Order Processing Coordinator]
     end
     
-    subgraph 事件監聽器 ["👂 事件監聽器 (Event Handlers)"]
-        PS[💳 PaymentService<br/>支付服務]
-        LS[🚚 LogisticsService<br/>物流服務]
-        NS[📧 NotificationService<br/>通知服務]
-        IS[📦 InventoryService<br/>庫存服務]
+    subgraph 事件監聽器 ["👂 Event Handlers"]
+        PS[💳 PaymentService<br/>Payment Service]
+        LS[🚚 LogisticsService<br/>Logistics Service]
+        NS[📧 NotificationService<br/>Notification Service]
+        IS[📦 InventoryService<br/>Inventory Service]
     end
     
-    subgraph 聚合根 ["🏛️ 聚合根"]
-        AGG[📋 Order<br/>訂單聚合根]
+    subgraph 聚合根 ["🏛️ Aggregate Roots"]
+        AGG[📋 Order<br/>Order Aggregate Root]
     end
     
-    AGG -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    EB -->|分發| NS
-    EB -->|分發| IS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PS -->|產生| PSE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
-    PSE -->|發布至| EP
+    AGG -->|Generates| OCE
+    AGG -->|Generates| OIAE
+    OCE -->|Publishes to| EP
+    OIAE -->|Publishes to| EP
+    EP -->|Sends to| EB
+    EB -->|Distributes| OS
+    EB -->|Distributes| PS
+    EB -->|Distributes| LS
+    EB -->|Distributes| NS
+    EB -->|Distributes| IS
+    OS -->|Coordinates| PS
+    OS -->|Coordinates| LS
+    PS -->|Generates| PRE
+    PS -->|Generates| PFE
+    PS -->|Generates| PSE
+    PRE -->|Publishes to| EP
+    PFE -->|Publishes to| EP
+    PSE -->|Publishes to| EP
     
     classDef event fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef publisher fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
@@ -203,84 +203,84 @@ graph LR
     class AGG aggregateRoot
 ```
 
-## 架構特點
+## Architecture Characteristics
 
-### 六角形架構（端口和適配器）特點
+### Hexagonal Architecture (Ports and Adapters) Features
 
-1. **領域核心獨立性**：業務邏輯位於中心，不依賴於外部技術實現。
-2. **端口定義抽象接口**：
-   - 入站端口（Primary/Driving Ports）：定義系統對外提供的服務（如OrderManagementUseCase）。
-   - 出站端口（Secondary/Driven Ports）：定義系統需要的外部依賴（如OrderPersistencePort）。
-3. **適配器實現具體技術**：
-   - 入站適配器（Primary/Driving Adapters）：處理外部請求（如REST控制器）。
-   - 出站適配器（Secondary/Driven Adapters）：與外部系統交互（如數據庫存儲、外部服務）。
-4. **可測試性**：業務邏輯可以獨立測試，不依賴於外部技術實現。
-5. **技術替換簡單**：可以輕鬆替換技術實現，不影響核心業務邏輯。
+1. **Domain Core Independence**: Business logic is at the center, independent of external technical implementations.
+2. **Ports Define Abstract Interfaces**:
+   - Primary/Driving Ports: Define services the system provides externally (e.g., OrderManagementUseCase).
+   - Secondary/Driven Ports: Define external dependencies the system needs (e.g., OrderPersistencePort).
+3. **Adapters Implement Specific Technologies**:
+   - Primary/Driving Adapters: Handle external requests (e.g., REST controllers).
+   - Secondary/Driven Adapters: Interact with external systems (e.g., database storage, external services).
+4. **Testability**: Business logic can be tested independently without external technical implementations.
+5. **Easy Technology Replacement**: Technical implementations can be easily replaced without affecting core business logic.
 
-### 領域驅動設計（DDD）特點
+### Domain-Driven Design (DDD) Features
 
-1. **豐富的領域模型**：使用聚合根、實體、值對象等概念建立豐富的領域模型。
-2. **領域事件**：通過事件捕獲領域內發生的重要變化，實現模塊間鬆散耦合。
-3. **聚合邊界**：明確定義一致性邊界，保證業務規則的完整性。
-4. **領域服務**：處理不適合放在單一實體或值對象中的業務邏輯。
-5. **防腐層（ACL）**：通過轉換層隔離外部系統，防止外部概念滲透到領域模型中。
-6. **規格模式**：使用規格（Specification）封裝業務規則，提高可讀性和可維護性。
+1. **Rich Domain Model**: Uses aggregate roots, entities, value objects, and other concepts to build a rich domain model.
+2. **Domain Events**: Captures important changes in the domain through events, achieving loose coupling between modules.
+3. **Aggregate Boundaries**: Clearly defines consistency boundaries to ensure business rule integrity.
+4. **Domain Services**: Handles business logic that doesn't fit in a single entity or value object.
+5. **Anti-Corruption Layer (ACL)**: Isolates external systems through transformation layers, preventing external concepts from penetrating the domain model.
+6. **Specification Pattern**: Uses specifications to encapsulate business rules, improving readability and maintainability.
 
-### 分層架構特點
+### Layered Architecture Features
 
-1. **嚴格的依賴方向**：上層依賴下層，下層不依賴上層。
-2. **分層結構**：
-   - **介面層**：處理用戶交互，只依賴應用層。
-   - **應用層**：協調領域對象完成用例，只依賴領域層。
-   - **領域層**：包含業務核心邏輯和規則，不依賴其他層。
-   - **基礎設施層**：提供技術實現，依賴領域層，實現領域層定義的接口。
-3. **數據轉換**：
-   - 每一層使用自己的數據模型（DTO）。
-   - 層與層之間通過映射器（Mapper）進行數據轉換。
-4. **關注點分離**：每一層有明確的職責，促進代碼組織和維護。
+1. **Strict Dependency Direction**: Upper layers depend on lower layers, lower layers don't depend on upper layers.
+2. **Layer Structure**:
+   - **Interface Layer**: Handles user interaction, only depends on application layer.
+   - **Application Layer**: Coordinates domain objects to complete use cases, only depends on domain layer.
+   - **Domain Layer**: Contains core business logic and rules, doesn't depend on other layers.
+   - **Infrastructure Layer**: Provides technical implementations, depends on domain layer, implements interfaces defined by domain layer.
+3. **Data Transformation**:
+   - Each layer uses its own data model (DTO).
+   - Data transformation between layers through mappers.
+4. **Separation of Concerns**: Each layer has clear responsibilities, promoting code organization and maintenance.
 
-### 事件驅動架構特點
+### Event-Driven Architecture Features
 
-1. **事件溯源**：通過事件記錄系統狀態變化，可以重建系統狀態。
-2. **鬆散耦合**：事件發布者不需要知道事件消費者，消費者訂閱感興趣的事件。
-3. **擴展性**：可以輕鬆添加新的事件監聽器，不影響現有功能。
-4. **SAGA模式**：通過事件協調跨聚合或跨系統的複雜業務流程。
+1. **Event Sourcing**: Records system state changes through events, can rebuild system state.
+2. **Loose Coupling**: Event publishers don't need to know event consumers, consumers subscribe to events of interest.
+3. **Scalability**: Can easily add new event listeners without affecting existing functionality.
+4. **SAGA Pattern**: Coordinates complex business processes across aggregates or systems through events.
 
-### 整體架構優勢
+### Overall Architecture Advantages
 
-1. **關注點分離**：每一層都有明確的職責，促進代碼組織和維護。
-2. **模塊化**：系統被分解為鬆散耦合的模塊，便於開發和維護。
-3. **適應複雜業務**：能夠處理複雜的業務邏輯和規則。
-4. **演進架構**：系統可以隨著業務需求的變化而演進，不需要大規模重構。
-5. **團隊協作**：不同的團隊可以專注於不同的模塊，減少衝突。
-6. **持續交付**：支持增量開發和部署，促進持續交付。
-7. **架構一致性**：通過架構測試確保系統符合預定的架構規則。
+1. **Separation of Concerns**: Each layer has clear responsibilities, promoting code organization and maintenance.
+2. **Modularity**: System is decomposed into loosely coupled modules, facilitating development and maintenance.
+3. **Complex Business Adaptation**: Can handle complex business logic and rules.
+4. **Evolutionary Architecture**: System can evolve with changing business requirements without large-scale refactoring.
+5. **Team Collaboration**: Different teams can focus on different modules, reducing conflicts.
+6. **Continuous Delivery**: Supports incremental development and deployment, promoting continuous delivery.
+7. **Architecture Consistency**: Ensures system compliance with predetermined architectural rules through architecture testing.
 
-## 🏆 架構實現成果 (2025年8月)
+## 🏆 Architecture Implementation Results (August 2025)
 
-### 架構評分總覽
+### Architecture Score Overview
 
-| 架構維度 | 評分 | 說明 |
-|----------|------|------|
-| 六角形架構合規性 | 9.5/10 | 嚴格的端口與適配器分離 |
-| DDD 實踐完整性 | 9.5/10 | 完整的戰術模式實現 |
-| 代碼品質 | 9.0/10 | Java Record 重構，減少樣板代碼 |
-| 測試覆蓋率 | 10.0/10 | 272 個測試，100% 通過率 |
-| 文檔完整性 | 9.0/10 | 30+ 個詳細文檔 |
-| **總體評分** | **9.4/10** | **優秀級別** |
+| Architecture Dimension | Score | Description |
+|------------------------|-------|-------------|
+| Hexagonal Architecture Compliance | 9.5/10 | Strict port and adapter separation |
+| DDD Practice Completeness | 9.5/10 | Complete tactical pattern implementation |
+| Code Quality | 9.0/10 | Java Record refactoring, reduced boilerplate code |
+| Test Coverage | 10.0/10 | 272 tests, 100% pass rate |
+| Documentation Completeness | 9.0/10 | 30+ detailed documents |
+| **Overall Score** | **9.4/10** | **Excellent Level** |
 
-### DDD 戰術模式完整實現
+### Complete DDD Tactical Pattern Implementation
 
 ```mermaid
 graph TB
-    subgraph "💎 DDD 戰術模式"
-        AR["🏛️ 聚合根<br/>@AggregateRoot<br/>11 個聚合根"]
-        VO["💰 值對象<br/>@ValueObject<br/>22 個 Java Record"]
-        EN["📦 實體<br/>@Entity<br/>業務實體"]
-        DE["📢 領域事件<br/>@DomainEvent<br/>15+ 個事件"]
-        DS["⚙️ 領域服務<br/>@DomainService<br/>跨聚合邏輯"]
-        SP["📏 規格模式<br/>@Specification<br/>業務規則封裝"]
-        PO["📋 政策模式<br/>@Policy<br/>業務決策抽象"]
+    subgraph "💎 DDD Tactical Patterns"
+        AR["🏛️ Aggregate Root<br/>@AggregateRoot<br/>11 Aggregate Roots"]
+        VO["💰 Value Object<br/>@ValueObject<br/>22 Java Records"]
+        EN["📦 Entity<br/>@Entity<br/>Business Entities"]
+        DE["📢 Domain Event<br/>@DomainEvent<br/>15+ Events"]
+        DS["⚙️ Domain Service<br/>@DomainService<br/>Cross-Aggregate Logic"]
+        SP["📏 Specification Pattern<br/>@Specification<br/>Business Rule Encapsulation"]
+        PO["📋 Policy Pattern<br/>@Policy<br/>Business Decision Abstraction"]
     end
     
     AR --> VO
@@ -305,22 +305,22 @@ graph TB
     class SP,PO pattern
 ```
 
-### Java Record 重構成果
+### Java Record Refactoring Results
 
-- **22 個主要類別**轉換為 Record 實現
-- **減少 30-40% 樣板代碼**，提升可讀性和維護性
-- **天然不可變性**，符合 DDD 值對象設計原則
-- **自動實現**核心方法 (equals, hashCode, toString)
+- **22 major classes** converted to Record implementation
+- **Reduced 30-40% boilerplate code**, improved readability and maintainability
+- **Natural immutability**, compliant with DDD value object design principles
+- **Automatic implementation** of core methods (equals, hashCode, toString)
 
-### 測試驅動開發成果
+### Test-Driven Development Results
 
 ```mermaid
 graph TB
-    subgraph "🧪 測試金字塔"
-        E2E["🌐 BDD 測試<br/>25+ Cucumber 場景<br/>完整業務流程"]
-        INT["🔗 整合測試<br/>60+ Spring Boot Test<br/>組件交互驗證"]
-        UNIT["⚡ 單元測試<br/>180+ JUnit 5<br/>領域邏輯驗證"]
-        ARCH["🏗️ 架構測試<br/>15+ ArchUnit<br/>架構合規性檢查"]
+    subgraph "🧪 Test Pyramid"
+        E2E["🌐 BDD Tests<br/>25+ Cucumber Scenarios<br/>Complete Business Processes"]
+        INT["🔗 Integration Tests<br/>60+ Spring Boot Tests<br/>Component Interaction Verification"]
+        UNIT["⚡ Unit Tests<br/>180+ JUnit 5<br/>Domain Logic Verification"]
+        ARCH["🏗️ Architecture Tests<br/>15+ ArchUnit<br/>Architecture Compliance Checks"]
     end
     
     E2E --> INT
@@ -338,11 +338,11 @@ graph TB
     class ARCH architecture
 ```
 
-**測試統計**: 272 個測試，100% 通過率，全面覆蓋業務邏輯、API 端點、架構合規性
+**Test Statistics**: 272 tests, 100% pass rate, comprehensive coverage of business logic, API endpoints, and architecture compliance
 
-## 📚 相關文檔
+## 📚 Related Documentation
 
-- \1 - 完整的專案成果總結
-- \1 - 詳細的架構評估和分析
-- [DDD Record 重構總結](../../reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record 重構的詳細過程
-- [測試修復完成報告](../en/reports/test-fixes-complete-2025.md) - 測試品質改善的完整記錄
+- [Project Excellence Report 2025](../reports/architecture-excellence-2025.md) - Complete project results summary
+- [Architecture Assessment Report](../reports/architecture-excellence-2025.md) - Detailed architecture evaluation and analysis
+- [DDD Record Refactoring Summary](../../reports-summaries/project-management/REFACTORING_SUMMARY.md) - Detailed Java Record refactoring process
+- [Test Fixes Complete Report](../en/reports/test-fixes-complete-2025.md) - Complete record of test quality improvements

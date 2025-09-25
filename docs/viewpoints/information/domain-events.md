@@ -1,34 +1,34 @@
-# 領域事件設計與實現
+# Domain Events Design and Implementation
 
-## 概覽
+## Overview
 
-本專案實現了完整的領域事件系統，包含 40+ 個領域事件，涵蓋所有 13 個界限上下文。領域事件採用 Record 實現，遵循不可變性原則，並通過事件驅動架構實現上下文間的解耦通信。
+This project implements a complete domain event system, including 40+ domain events covering all 13 bounded contexts. Domain events are implemented using Records, following immutability principles, and achieve decoupled communication between contexts through event-driven architecture.
 
-## 領域事件架構
+## Domain Event Architecture
 
-### 事件設計模式
+### Event Design Pattern
 
 ```mermaid
 graph TB
-    subgraph "事件定義層"
+    subgraph "Event Definition Layer"
         DE[DomainEvent Interface]
         ER[Event Records]
         EM[Event Metadata]
     end
     
-    subgraph "事件收集層"
+    subgraph "Event Collection Layer"
         AR[Aggregate Root]
         EC[Event Collector]
         UE[Uncommitted Events]
     end
     
-    subgraph "事件發布層"
+    subgraph "Event Publishing Layer"
         AS[Application Service]
         EP[Event Publisher]
         TEL[Transactional Event Listener]
     end
     
-    subgraph "事件處理層"
+    subgraph "Event Processing Layer"
         EH[Event Handler]
         DEH[Domain Event Handler]
         BL[Business Logic]
@@ -43,11 +43,11 @@ graph TB
     DEH --> BL
 ```
 
-## 事件實現標準
+## Event Implementation Standards
 
-### 1. 事件定義 (Record 模式)
+### 1. Event Definition (Record Pattern)
 
-所有領域事件都使用 Java Record 實現，確保不可變性：
+All domain events are implemented using Java Records to ensure immutability:
 
 ```java
 public record CustomerCreatedEvent(
@@ -60,7 +60,7 @@ public record CustomerCreatedEvent(
 ) implements DomainEvent {
     
     /**
-     * 工廠方法，自動生成 eventId 和 occurredOn
+     * Factory method with automatic eventId and occurredOn generation
      */
     public static CustomerCreatedEvent create(
         CustomerId customerId, 
@@ -87,32 +87,32 @@ public record CustomerCreatedEvent(
 }
 ```
 
-### 2. 事件收集機制
+### 2. Event Collection Mechanism
 
-聚合根通過 `AggregateRootInterface` 收集事件：
+Aggregate roots collect events through `AggregateRootInterface`:
 
 ```java
 @AggregateRoot(name = "Customer", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
-        // 1. 執行業務邏輯
+        // 1. Execute business logic
         validateProfileUpdate(newName, newEmail, newPhone);
         
-        // 2. 更新狀態
+        // 2. Update state
         this.name = newName;
         this.email = newEmail;
         this.phone = newPhone;
         
-        // 3. 收集領域事件
+        // 3. Collect domain event
         collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
     }
 }
 ```
 
-### 3. 事件發布流程
+### 3. Event Publishing Process
 
-應用服務負責發布聚合根收集的事件：
+Application services are responsible for publishing events collected by aggregate roots:
 
 ```java
 @Service
@@ -120,28 +120,28 @@ public class Customer implements AggregateRootInterface {
 public class CustomerApplicationService {
     
     public void updateCustomerProfile(UpdateProfileCommand command) {
-        // 1. 載入聚合根
+        // 1. Load aggregate root
         Customer customer = customerRepository.findById(command.customerId())
             .orElseThrow(() -> new CustomerNotFoundException(command.customerId()));
         
-        // 2. 執行業務操作 (事件被收集)
+        // 2. Execute business operation (events are collected)
         customer.updateProfile(command.name(), command.email(), command.phone());
         
-        // 3. 保存聚合根
+        // 3. Save aggregate root
         customerRepository.save(customer);
         
-        // 4. 發布收集的事件
+        // 4. Publish collected events
         domainEventService.publishEventsFromAggregate(customer);
     }
 }
 ```
 
-## 事件分類與統計
+## Event Classification and Statistics
 
-### 按界限上下文分類
+### Classification by Bounded Context
 
-| 界限上下文 | 事件數量 | 主要事件類型 |
-|-----------|---------|-------------|
+| Bounded Context | Event Count | Main Event Types |
+|-----------------|-------------|------------------|
 | Customer | 9 | CustomerCreated, CustomerProfileUpdated, MembershipLevelUpgraded |
 | Order | 5 | OrderCreated, OrderSubmitted, OrderConfirmed |
 | Product | 5 | ProductCreated, ProductPriceChanged, ProductActivated |
@@ -151,29 +151,29 @@ public class CustomerApplicationService {
 | ShoppingCart | 6 | CartCreated, CartItemAdded, CartItemRemoved |
 | Delivery | 3 | DeliveryCreated, DeliveryStatusChanged, DeliveryCompleted |
 | Notification | 2 | NotificationSent, NotificationDelivered |
-| 其他 | 5+ | 各種業務事件 |
+| Others | 5+ | Various business events |
 
-### 事件類型分類
+### Event Type Classification
 
-#### 1. 生命週期事件
-- **Created 事件**: 聚合根創建時發布
-- **Updated 事件**: 聚合根狀態變更時發布
-- **Deleted 事件**: 聚合根刪除時發布
+#### 1. Lifecycle Events
+- **Created Events**: Published when aggregate roots are created
+- **Updated Events**: Published when aggregate root state changes
+- **Deleted Events**: Published when aggregate roots are deleted
 
-#### 2. 狀態轉換事件
-- **Status Changed 事件**: 狀態機轉換時發布
-- **Workflow 事件**: 工作流步驟完成時發布
+#### 2. State Transition Events
+- **Status Changed Events**: Published during state machine transitions
+- **Workflow Events**: Published when workflow steps complete
 
-#### 3. 業務規則事件
-- **Validation 事件**: 業務規則驗證時發布
-- **Calculation 事件**: 計算完成時發布
+#### 3. Business Rule Events
+- **Validation Events**: Published during business rule validation
+- **Calculation Events**: Published when calculations complete
 
-## 主要領域事件詳解
+## Major Domain Events Details
 
-### Customer Context 事件
+### Customer Context Events
 
 ```java
-// 客戶創建事件
+// Customer creation event
 public record CustomerCreatedEvent(
     CustomerId customerId,
     CustomerName customerName,
@@ -183,7 +183,7 @@ public record CustomerCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 客戶資料更新事件
+// Customer profile update event
 public record CustomerProfileUpdatedEvent(
     CustomerId customerId,
     CustomerName newName,
@@ -193,7 +193,7 @@ public record CustomerProfileUpdatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 會員等級升級事件
+// Membership level upgrade event
 public record MembershipLevelUpgradedEvent(
     CustomerId customerId,
     MembershipLevel oldLevel,
@@ -202,7 +202,7 @@ public record MembershipLevelUpgradedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 紅利點數相關事件
+// Reward points related events
 public record RewardPointsEarnedEvent(
     CustomerId customerId,
     int pointsEarned,
@@ -220,10 +220,10 @@ public record RewardPointsRedeemedEvent(
 ) implements DomainEvent { }
 ```
 
-### Order Context 事件
+### Order Context Events
 
 ```java
-// 訂單創建事件
+// Order creation event
 public record OrderCreatedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -232,7 +232,7 @@ public record OrderCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 訂單提交事件
+// Order submission event
 public record OrderSubmittedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -242,7 +242,7 @@ public record OrderSubmittedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 訂單確認事件
+// Order confirmation event
 public record OrderConfirmedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -252,7 +252,7 @@ public record OrderConfirmedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 庫存預留請求事件
+// Inventory reservation request event
 public record OrderInventoryReservationRequestedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -261,7 +261,7 @@ public record OrderInventoryReservationRequestedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 支付請求事件
+// Payment request event
 public record OrderPaymentRequestedEvent(
     OrderId orderId,
     CustomerId customerId,
@@ -272,10 +272,10 @@ public record OrderPaymentRequestedEvent(
 ) implements DomainEvent { }
 ```
 
-### Product Context 事件
+### Product Context Events
 
 ```java
-// 產品創建事件
+// Product creation event
 public record ProductCreatedEvent(
     ProductId productId,
     ProductName productName,
@@ -285,7 +285,7 @@ public record ProductCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 產品價格變更事件
+// Product price change event
 public record ProductPriceChangedEvent(
     ProductId productId,
     Money oldPrice,
@@ -294,7 +294,7 @@ public record ProductPriceChangedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 產品庫存更新事件
+// Product stock update event
 public record ProductStockUpdatedEvent(
     ProductId productId,
     int oldQuantity,
@@ -304,10 +304,10 @@ public record ProductStockUpdatedEvent(
 ) implements DomainEvent { }
 ```
 
-### Inventory Context 事件
+### Inventory Context Events
 
 ```java
-// 庫存創建事件
+// Inventory creation event
 public record InventoryCreatedEvent(
     ProductId productId,
     int initialQuantity,
@@ -315,7 +315,7 @@ public record InventoryCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 庫存預留事件
+// Stock reservation event
 public record StockReservedEvent(
     ProductId productId,
     OrderId orderId,
@@ -325,7 +325,7 @@ public record StockReservedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 庫存補充事件
+// Stock addition event
 public record StockAddedEvent(
     ProductId productId,
     int addedQuantity,
@@ -335,10 +335,10 @@ public record StockAddedEvent(
 ) implements DomainEvent { }
 ```
 
-### Review Context 事件
+### Review Context Events
 
 ```java
-// 評價創建事件
+// Review creation event
 public record ReviewCreatedEvent(
     ReviewId reviewId,
     ProductId productId,
@@ -348,7 +348,7 @@ public record ReviewCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 評價審核通過事件
+// Review approval event
 public record ReviewApprovedEvent(
     ReviewId reviewId,
     ProductId productId,
@@ -357,7 +357,7 @@ public record ReviewApprovedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 評價審核拒絕事件
+// Review rejection event
 public record ReviewRejectedEvent(
     ReviewId reviewId,
     ProductId productId,
@@ -368,10 +368,10 @@ public record ReviewRejectedEvent(
 ) implements DomainEvent { }
 ```
 
-### ShoppingCart Context 事件
+### ShoppingCart Context Events
 
 ```java
-// 購物車創建事件
+// Cart creation event
 public record CartCreatedEvent(
     CartId cartId,
     CustomerId customerId,
@@ -379,7 +379,7 @@ public record CartCreatedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 購物車項目添加事件
+// Cart item addition event
 public record CartItemAddedEvent(
     CartId cartId,
     CustomerId customerId,
@@ -390,7 +390,7 @@ public record CartItemAddedEvent(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// 購物車項目數量更新事件
+// Cart item quantity update event
 public record CartItemQuantityUpdatedEvent(
     CartId cartId,
     CustomerId customerId,
@@ -403,9 +403,9 @@ public record CartItemQuantityUpdatedEvent(
 ) implements DomainEvent { }
 ```
 
-## 事件處理機制
+## Event Processing Mechanism
 
-### 1. 事件處理器基類
+### 1. Event Handler Base Class
 
 ```java
 @Component
@@ -415,21 +415,21 @@ public abstract class AbstractDomainEventHandler<T extends DomainEvent>
     @Override
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(T event) {
-        // 實現冪等性檢查
+        // Implement idempotency check
         if (isEventAlreadyProcessed(event.getEventId())) {
             return;
         }
         
         try {
-            // 執行業務邏輯
+            // Execute business logic
             handleEvent(event);
             
-            // 標記事件已處理
+            // Mark event as processed
             markEventAsProcessed(event.getEventId());
             
         } catch (Exception e) {
-            logger.error("處理事件失敗: {}", event, e);
-            throw new DomainEventProcessingException("事件處理失敗", e);
+            logger.error("Event processing failed: {}", event, e);
+            throw new DomainEventProcessingException("Event processing failed", e);
         }
     }
     
@@ -438,7 +438,7 @@ public abstract class AbstractDomainEventHandler<T extends DomainEvent>
 }
 ```
 
-### 2. 具體事件處理器範例
+### 2. Concrete Event Handler Example
 
 ```java
 @Component
@@ -449,13 +449,13 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
     
     @Override
     protected void handleEvent(CustomerCreatedEvent event) {
-        // 發送歡迎郵件
+        // Send welcome email
         emailService.sendWelcomeEmail(event.email(), event.customerName());
         
-        // 創建客戶統計記錄
+        // Create customer statistics record
         customerStatsService.createStatsRecord(event.customerId());
         
-        // 初始化客戶偏好設定
+        // Initialize customer preferences
         customerPreferencesService.initializeDefaultPreferences(event.customerId());
     }
     
@@ -466,7 +466,7 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
 }
 ```
 
-### 3. 跨上下文事件處理
+### 3. Cross-Context Event Processing
 
 ```java
 @Component
@@ -474,21 +474,21 @@ public class OrderCreatedEventHandler extends AbstractDomainEventHandler<OrderCr
     
     @Override
     protected void handleEvent(OrderCreatedEvent event) {
-        // 預留庫存
+        // Reserve inventory
         inventoryService.reserveStock(event.orderId(), event.items());
         
-        // 更新客戶統計
+        // Update customer statistics
         customerStatsService.updateOrderCount(event.customerId());
         
-        // 發送訂單確認通知
+        // Send order confirmation notification
         notificationService.sendOrderConfirmation(event);
     }
 }
 ```
 
-## 事件發布策略
+## Event Publishing Strategies
 
-### 1. 事務性事件發布
+### 1. Transactional Event Publishing
 
 ```java
 @Component
@@ -497,7 +497,7 @@ public class TransactionalDomainEventPublisher implements DomainEventPublisher {
     @Override
     @Transactional
     public void publish(DomainEvent event) {
-        // 在事務內發布事件
+        // Publish event within transaction
         applicationEventPublisher.publishEvent(
             new DomainEventWrapper(event)
         );
@@ -511,7 +511,7 @@ public class TransactionalDomainEventPublisher implements DomainEventPublisher {
 }
 ```
 
-### 2. 事件發布適配器
+### 2. Event Publishing Adapter
 
 ```java
 @Component
@@ -521,7 +521,7 @@ public class DomainEventPublisherAdapter implements DomainEventPublisher {
     
     @Override
     public void publish(DomainEvent event) {
-        // 包裝領域事件為 Spring 應用事件
+        // Wrap domain event as Spring application event
         DomainEventWrapper wrapper = new DomainEventWrapper(event);
         eventPublisher.publishEvent(wrapper);
     }
@@ -540,9 +540,9 @@ public class DomainEventPublisherAdapter implements DomainEventPublisher {
 }
 ```
 
-## 事件監控與可觀測性
+## Event Monitoring and Observability
 
-### 1. 事件指標收集
+### 1. Event Metrics Collection
 
 ```java
 @Component
@@ -572,7 +572,7 @@ public class DomainEventMetrics {
 }
 ```
 
-### 2. 事件追蹤
+### 2. Event Tracing
 
 ```java
 @Component
@@ -590,7 +590,7 @@ public class EventTracingHandler {
             .start();
             
         try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
-            // 事件處理被追蹤
+            // Event processing is traced
         } finally {
             span.end();
         }
@@ -598,12 +598,12 @@ public class EventTracingHandler {
 }
 ```
 
-## 事件版本管理
+## Event Version Management
 
-### 1. 事件版本演進
+### 1. Event Version Evolution
 
 ```java
-// V1 版本事件
+// V1 version event
 public record CustomerCreatedEventV1(
     CustomerId customerId,
     CustomerName customerName,
@@ -612,25 +612,25 @@ public record CustomerCreatedEventV1(
     LocalDateTime occurredOn
 ) implements DomainEvent { }
 
-// V2 版本事件 - 向後相容
+// V2 version event - backward compatible
 public record CustomerCreatedEvent(
     CustomerId customerId,
     CustomerName customerName,
     Email email,
-    MembershipLevel membershipLevel, // 新增欄位
-    Optional<LocalDate> birthDate,   // 可選欄位
+    MembershipLevel membershipLevel, // New field
+    Optional<LocalDate> birthDate,   // Optional field
     UUID eventId,
     LocalDateTime occurredOn
 ) implements DomainEvent {
     
-    // 向後相容的工廠方法
+    // Backward compatible factory method
     public static CustomerCreatedEvent fromV1(CustomerCreatedEventV1 v1Event) {
         return new CustomerCreatedEvent(
             v1Event.customerId(),
             v1Event.customerName(),
             v1Event.email(),
-            MembershipLevel.STANDARD, // 預設值
-            Optional.empty(),         // 預設值
+            MembershipLevel.STANDARD, // Default value
+            Optional.empty(),         // Default value
             v1Event.eventId(),
             v1Event.occurredOn()
         );
@@ -638,7 +638,7 @@ public record CustomerCreatedEvent(
 }
 ```
 
-### 2. 事件升級處理
+### 2. Event Upgrade Processing
 
 ```java
 @Component
@@ -652,11 +652,11 @@ public class EventUpcaster {
     }
     
     private CustomerCreatedEvent upcastCustomerCreatedEvent(StoredEvent storedEvent) {
-        // 處理版本升級邏輯
+        // Handle version upgrade logic
         JsonNode eventData = parseJson(storedEvent.eventData());
         
         if (!eventData.has("membershipLevel")) {
-            // V1 事件升級為 V2
+            // Upgrade V1 event to V2
             return CustomerCreatedEvent.fromV1(
                 deserializeAsV1(storedEvent)
             );
@@ -667,9 +667,9 @@ public class EventUpcaster {
 }
 ```
 
-## 錯誤處理與重試
+## Error Handling and Retry
 
-### 1. 重試機制
+### 1. Retry Mechanism
 
 ```java
 @Component
@@ -682,18 +682,18 @@ public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCr
     )
     @Override
     protected void handleEvent(CustomerCreatedEvent event) {
-        // 事件處理邏輯，支援重試
+        // Event processing logic with retry support
     }
     
     @Recover
     public void recover(TransientException ex, CustomerCreatedEvent event) {
-        // 重試失敗後的處理
+        // Handle final failure after all retries
         deadLetterService.send(event, ex);
     }
 }
 ```
 
-### 2. 死信佇列
+### 2. Dead Letter Queue
 
 ```java
 @Component
@@ -710,15 +710,15 @@ public class DeadLetterService {
         
         deadLetterRepository.save(deadLetter);
         
-        // 可選：發送到外部死信佇列
+        // Optional: send to external dead letter queue
         messageQueue.send("dead-letter-queue", deadLetter);
     }
 }
 ```
 
-## 測試策略
+## Testing Strategy
 
-### 1. 事件收集測試
+### 1. Event Collection Testing
 
 ```java
 @Test
@@ -744,7 +744,7 @@ void should_collect_customer_created_event_when_customer_is_created() {
 }
 ```
 
-### 2. 事件處理測試
+### 2. Event Processing Testing
 
 ```java
 @Test
@@ -766,47 +766,48 @@ void should_send_welcome_email_when_customer_created() {
 }
 ```
 
-## 相關圖表
+## Related Diagrams
 
 - [Event Storming Big Picture](../../diagrams/viewpoints/functional/event-storming-big-picture.puml)
 - [Event Storming Process Level](../../diagrams/viewpoints/functional/event-storming-process-level.puml)
-- [領域事件流程圖](../../diagrams/viewpoints/functional/domain-events-flow.puml)
-- ## 事件驅動架構圖
+- [Domain Events Flow](../../diagrams/viewpoints/functional/domain-events-flow.puml)
+
+## Event-Driven Architecture Diagram
 
 ```mermaid
 graph LR
-    subgraph 領域事件 ["領域事件"]
+    subgraph 領域事件 ["Domain Events"]
         OCE[OrderCreatedEvent]
         OIAE[OrderItemAddedEvent]
         PRE[PaymentRequestedEvent]
         PFE[PaymentFailedEvent]
     end
     
-    subgraph 事件處理 ["事件處理"]
+    subgraph 事件處理 ["Event Processing"]
         EP[DomainEventPublisherService]
         EB[DomainEventBus]
         OS[OrderProcessingSaga]
     end
     
-    subgraph 事件監聽器 ["事件監聽器"]
+    subgraph 事件監聽器 ["Event Handlers"]
         PS[PaymentService]
         LS[LogisticsService]
     end
     
-    AGG[Order<br>聚合根] -->|產生| OCE
-    AGG -->|產生| OIAE
-    OCE -->|發布至| EP
-    OIAE -->|發布至| EP
-    EP -->|發送至| EB
-    EB -->|分發| OS
-    EB -->|分發| PS
-    EB -->|分發| LS
-    OS -->|協調| PS
-    OS -->|協調| LS
-    PS -->|產生| PRE
-    PS -->|產生| PFE
-    PRE -->|發布至| EP
-    PFE -->|發布至| EP
+    AGG[Order<br>Aggregate Root] -->|Generates| OCE
+    AGG -->|Generates| OIAE
+    OCE -->|Publishes to| EP
+    OIAE -->|Publishes to| EP
+    EP -->|Sends to| EB
+    EB -->|Distributes| OS
+    EB -->|Distributes| PS
+    EB -->|Distributes| LS
+    OS -->|Coordinates| PS
+    OS -->|Coordinates| LS
+    PS -->|Generates| PRE
+    PS -->|Generates| PFE
+    PRE -->|Publishes to| EP
+    PFE -->|Publishes to| EP
     
     classDef event fill:#ffcc99,stroke:#333,stroke-width:2px
     classDef publisher fill:#99ccff,stroke:#333,stroke-width:2px
@@ -818,23 +819,24 @@ graph LR
     class OS,PS,LS handler
     class AGG aggregateRoot
 ```
-- [應用服務概覽圖](../../diagrams/viewpoints/functional/application-services-overview.puml)
 
-## 與其他視點的關聯
+- [Application Services Overview](../../diagrams/viewpoints/functional/application-services-overview.puml)
 
-- **[功能視點](../functional/README.md)**: 聚合根設計和業務邏輯
-- **[並發視點](../concurrency/README.md)**: 異步事件處理和交易邊界
-- **[運營視點](../operational/README.md)**: 事件監控和可觀測性
+## Relationships with Other Viewpoints
 
-## 最佳實踐總結
+- **[Functional Viewpoint](../functional/README.md)**: Aggregate root design and business logic
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Asynchronous event processing and transaction boundaries
+- **[Operational Viewpoint](../operational/README.md)**: Event monitoring and observability
 
-1. **不可變性**: 使用 Record 確保事件不可變
-2. **語義化**: 事件名稱使用過去式，清楚表達已發生的業務事實
-3. **完整性**: 事件包含處理所需的所有資訊
-4. **冪等性**: 事件處理器必須支援重複處理
-5. **可追蹤**: 每個事件都有唯一 ID 和時間戳
-6. **版本管理**: 支援事件結構的向後相容演進
-7. **監控**: 完整的事件發布和處理監控
-8. **錯誤處理**: 完善的重試和死信機制
+## Best Practices Summary
 
-這套領域事件系統為專案提供了強大的解耦能力和擴展性，支援複雜的業務流程和跨上下文協作。
+1. **Immutability**: Use Records to ensure event immutability
+2. **Semantic Naming**: Event names use past tense, clearly expressing business facts that have occurred
+3. **Completeness**: Events contain all information needed for processing
+4. **Idempotency**: Event handlers must support repeated processing
+5. **Traceability**: Each event has unique ID and timestamp
+6. **Version Management**: Support backward-compatible evolution of event structures
+7. **Monitoring**: Complete event publishing and processing monitoring
+8. **Error Handling**: Comprehensive retry and dead letter mechanisms
+
+This domain event system provides powerful decoupling capabilities and scalability for the project, supporting complex business processes and cross-context collaboration.

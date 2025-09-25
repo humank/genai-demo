@@ -1,50 +1,50 @@
-# 災難恢復架構設計文件
+# Disaster Recovery Architecture Design Document
 
-## 概述
+## Overview
 
-本文件詳細描述了 GenAI Demo 項目的災難恢復(DR)架構設計，採用 **Active-Active 多區域部署模式**，確保業務連續性和零數據丟失。
+This document provides a detailed description of the disaster recovery (DR) architecture design for the GenAI Demo project, adopting an **Active-Active multi-region deployment model** to ensure business continuity and zero data loss.
 
-## 設計原則
+## Design Principles
 
-### 核心目標
+### Core Objectives
 
-- **RTO (Recovery Time Objective)**: < 60 秒
-- **RPO (Recovery Point Objective)**: 0 秒 (零數據丟失)
-- **可用性目標**: 99.99% (年停機時間 < 53 分鐘)
-- **自動化程度**: 完全自動化故障轉移
+- **RTO (Recovery Time Objective)**: < 60 seconds
+- **RPO (Recovery Point Objective)**: 0 seconds (zero data loss)
+- **Availability Target**: 99.99% (annual downtime < 53 minutes)
+- **Automation Level**: Fully automated failover
 
-### 架構原則
+### Architecture Principles
 
-1. **Active-Active 模式**: 兩個區域同時提供服務
-2. **自動故障轉移**: 無需人工干預的自動切換
-3. **數據一致性**: 確保跨區域數據同步
-4. **監控驅動**: 基於健康檢查的智能路由
+1. **Active-Active Mode**: Both regions provide services simultaneously
+2. **Automatic Failover**: Automatic switching without manual intervention
+3. **Data Consistency**: Ensure cross-region data synchronization
+4. **Monitoring-Driven**: Intelligent routing based on health checks
 
-## Active-Active 架構設計
+## Active-Active Architecture Design
 
-### 區域配置
+### Regional Configuration
 
-#### 主區域 (Primary Region)
+#### Primary Region
 
-- **區域**: Taiwan (ap-east-2)
-- **角色**: 主要服務區域，處理大部分流量
-- **優先級**: 高優先級，延遲優化路由
+- **Region**: Taiwan (ap-east-2)
+- **Role**: Primary service region, handles most traffic
+- **Priority**: High priority, latency-optimized routing
 
-#### 次區域 (Secondary Region)  
+#### Secondary Region  
 
-- **區域**: Tokyo (ap-northeast-1)
-- **角色**: 備用服務區域，同時提供服務
-- **優先級**: 次優先級，故障轉移目標
+- **Region**: Tokyo (ap-northeast-1)
+- **Role**: Backup service region, provides simultaneous service
+- **Priority**: Secondary priority, failover target
 
-### 流量分配策略
+### Traffic Distribution Strategy
 
 ```mermaid
 graph TB
-    A[用戶請求] --> B[Route 53 DNS]
-    B --> C{健康檢查}
-    C -->|兩區域健康| D[延遲路由]
-    C -->|主區域故障| E[故障轉移路由]
-    C -->|次區域故障| F[主區域路由]
+    A[User Requests] --> B[Route 53 DNS]
+    B --> C{Health Check}
+    C -->|Both Regions Healthy| D[Latency Routing]
+    C -->|Primary Region Failed| E[Failover Routing]
+    C -->|Secondary Region Failed| F[Primary Region Routing]
     
     D --> G[Taiwan 70%]
     D --> H[Tokyo 30%]
@@ -58,37 +58,37 @@ graph TB
     J --> K
 ```
 
-#### 正常情況下的流量分配
+#### Normal Traffic Distribution
 
-- **Taiwan (主區域)**: 70% 流量
-- **Tokyo (次區域)**: 30% 流量
-- **路由策略**: 基於延遲的智能路由
+- **Taiwan (Primary Region)**: 70% traffic
+- **Tokyo (Secondary Region)**: 30% traffic
+- **Routing Strategy**: Latency-based intelligent routing
 
-#### 故障情況下的流量分配
+#### Failure Traffic Distribution
 
-- **主區域故障**: 100% 流量路由到 Tokyo
-- **次區域故障**: 100% 流量路由到Taiwan
-- **切換時間**: < 60 秒 (DNS TTL + 健康檢查間隔)
+- **Primary Region Failure**: 100% traffic routed to Tokyo
+- **Secondary Region Failure**: 100% traffic routed to Taiwan
+- **Switch Time**: < 60 seconds (DNS TTL + health check interval)
 
-## 基礎設施組件
+## Infrastructure Components
 
-### 1. DNS 和流量管理
+### 1. DNS and Traffic Management
 
-#### Route 53 配置
+#### Route 53 Configuration
 
 ```typescript
-// 主區域故障轉移記錄
+// Primary region failover record
 const primaryFailoverRecord = new route53.ARecord(this, 'PrimaryFailoverRecord', {
     zone: hostedZone,
     recordName: 'api.kimkao.io',
     target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(primaryLoadBalancer)),
-    ttl: cdk.Duration.seconds(60), // 短 TTL 確保快速切換
+    ttl: cdk.Duration.seconds(60), // Short TTL ensures fast switching
     setIdentifier: 'primary-failover',
     failover: route53.FailoverType.PRIMARY,
     healthCheckId: primaryHealthCheck.attrHealthCheckId
 });
 
-// 延遲路由記錄 (正常情況)
+// Latency-based routing record (normal situation)
 const latencyBasedRecord = new route53.ARecord(this, 'LatencyBasedRecord', {
     zone: hostedZone,
     recordName: 'api-latency.kimkao.io',
@@ -99,43 +99,43 @@ const latencyBasedRecord = new route53.ARecord(this, 'LatencyBasedRecord', {
 });
 ```
 
-#### 健康檢查配置
+#### Health Check Configuration
 
-- **檢查間隔**: 30 秒
-- **失敗閾值**: 3 次連續失敗
-- **檢查端點**: `/actuator/health`
-- **協議**: HTTPS
-- **超時**: 10 秒
+- **Check Interval**: 30 seconds
+- **Failure Threshold**: 3 consecutive failures
+- **Check Endpoint**: `/actuator/health`
+- **Protocol**: HTTPS
+- **Timeout**: 10 seconds
 
-### 2. 數據庫架構 - Aurora Global Database
+### 2. Database Architecture - Aurora Global Database
 
-#### Active-Active 數據同步
+#### Active-Active Data Synchronization
 
 ```mermaid
 graph LR
-    A[Taiwan Aurora Cluster] <-->|雙向同步| B[Tokyo Aurora Cluster]
+    A[Taiwan Aurora Cluster] <-->|Bidirectional Sync| B[Tokyo Aurora Cluster]
     A --> C[Taiwan Read Replicas]
     B --> D[Tokyo Read Replicas]
     
-    E[應用寫入 Taiwan] --> A
-    F[應用寫入 Tokyo] --> B
+    E[Application Writes Taiwan] --> A
+    F[Application Writes Tokyo] --> B
     
     G[Global Database] --> A
     G --> B
 ```
 
-#### 數據庫配置
+#### Database Configuration
 
-- **引擎**: Aurora PostgreSQL 15.4
-- **模式**: Global Database with Cross-Region Replication
-- **同步延遲**: < 1 秒 (通常 < 100ms)
-- **備份策略**: 跨區域自動備份
-- **加密**: 靜態和傳輸中加密
+- **Engine**: Aurora PostgreSQL 15.4
+- **Mode**: Global Database with Cross-Region Replication
+- **Sync Latency**: < 1 second (typically < 100ms)
+- **Backup Strategy**: Cross-region automatic backup
+- **Encryption**: Encryption at rest and in transit
 
-#### 衝突解決策略
+#### Conflict Resolution Strategy
 
 ```sql
--- 使用時間戳和區域標識解決寫入衝突
+-- Use timestamp and region identifier to resolve write conflicts
 CREATE TABLE conflict_resolution (
     id UUID PRIMARY KEY,
     data JSONB,
@@ -145,26 +145,26 @@ CREATE TABLE conflict_resolution (
     version INTEGER DEFAULT 1
 );
 
--- 衝突解決觸發器
+-- Conflict resolution trigger
 CREATE OR REPLACE FUNCTION resolve_conflicts()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER AS $
 BEGIN
-    -- 基於時間戳的最後寫入獲勝策略
+    -- Last-write-wins strategy based on timestamp
     IF NEW.updated_at > OLD.updated_at THEN
         RETURN NEW;
     ELSE
         RETURN OLD;
     END IF;
 END;
-$$ LANGUAGE plpgsql;
+$ LANGUAGE plpgsql;
 ```
 
-### 3. 應用層架構
+### 3. Application Layer Architecture
 
-#### EKS 集群配置
+#### EKS Cluster Configuration
 
 ```yaml
-# Taiwan EKS 配置
+# Taiwan EKS Configuration
 taiwan_cluster:
   region: ap-east-2
   node_groups:
@@ -174,7 +174,7 @@ taiwan_cluster:
       max_size: 20
       desired_size: 6
   
-# Tokyo EKS 配置  
+# Tokyo EKS Configuration  
 tokyo_cluster:
   region: ap-northeast-1
   node_groups:
@@ -185,16 +185,16 @@ tokyo_cluster:
       desired_size: 4
 ```
 
-#### 應用部署策略
+#### Application Deployment Strategy
 
-- **部署模式**: Blue-Green 部署
-- **服務網格**: Istio (跨區域流量管理)
-- **配置管理**: ConfigMap + Secrets 跨區域同步
-- **鏡像倉庫**: ECR 跨區域複製
+- **Deployment Mode**: Blue-Green deployment
+- **Service Mesh**: Istio (cross-region traffic management)
+- **Configuration Management**: ConfigMap + Secrets cross-region sync
+- **Image Registry**: ECR cross-region replication
 
-### 4. 消息隊列 - MSK 跨區域複製
+### 4. Message Queue - MSK Cross-Region Replication
 
-#### MSK 配置
+#### MSK Configuration
 
 ```mermaid
 graph TB
@@ -208,18 +208,18 @@ graph TB
     E --> B
 ```
 
-#### 事件複製策略
+#### Event Replication Strategy
 
-- **工具**: Kafka MirrorMaker 2.0
-- **模式**: 雙向複製
-- **延遲**: < 500ms
-- **主題策略**: 自動主題創建和同步
+- **Tool**: Kafka MirrorMaker 2.0
+- **Mode**: Bidirectional replication
+- **Latency**: < 500ms
+- **Topic Strategy**: Automatic topic creation and synchronization
 
-## 自動化故障轉移機制
+## Automated Failover Mechanism
 
-### 1. 故障檢測
+### 1. Failure Detection
 
-#### 健康檢查層級
+#### Health Check Levels
 
 ```mermaid
 graph TD
@@ -231,24 +231,24 @@ graph TD
     F --> G[Database Connectivity]
     F --> H[MSK Connectivity]
     
-    A --> I[自動故障轉移觸發]
+    A --> I[Automatic Failover Trigger]
     E --> I
 ```
 
-#### 故障檢測指標
+#### Failure Detection Metrics
 
-1. **HTTP 健康檢查**: `/actuator/health` 端點
-2. **數據庫連接**: Aurora 連接池狀態
-3. **消息隊列**: MSK 生產者/消費者狀態
-4. **應用指標**: 錯誤率、響應時間、吞吐量
+1. **HTTP Health Check**: `/actuator/health` endpoint
+2. **Database Connection**: Aurora connection pool status
+3. **Message Queue**: MSK producer/consumer status
+4. **Application Metrics**: Error rate, response time, throughput
 
-### 2. 自動故障轉移流程
+### 2. Automatic Failover Process
 
-#### Step Functions 工作流
+#### Step Functions Workflow
 
 ```json
 {
-  "Comment": "自動災難恢復故障轉移工作流",
+  "Comment": "Automatic disaster recovery failover workflow",
   "StartAt": "ValidateHealthStatus",
   "States": {
     "ValidateHealthStatus": {
@@ -275,30 +275,30 @@ graph TD
 }
 ```
 
-#### 故障轉移步驟
+#### Failover Steps
 
-1. **故障檢測** (0-30秒)
-   - Route 53 健康檢查失敗
-   - CloudWatch 告警觸發
-   - EventBridge 規則激活
+1. **Failure Detection** (0-30 seconds)
+   - Route 53 health check failure
+   - CloudWatch alarm trigger
+   - EventBridge rule activation
 
-2. **自動切換** (30-45秒)
-   - Aurora Global Database 提升
-   - DNS 記錄更新 (TTL=60秒)
-   - 流量重新路由
+2. **Automatic Switch** (30-45 seconds)
+   - Aurora Global Database promotion
+   - DNS record update (TTL=60 seconds)
+   - Traffic rerouting
 
-3. **驗證和通知** (45-60秒)
-   - 新區域健康檢查
-   - 服務可用性驗證
-   - 運維團隊通知
+3. **Validation and Notification** (45-60 seconds)
+   - New region health check
+   - Service availability verification
+   - Operations team notification
 
-### 3. 故障恢復流程
+### 3. Failure Recovery Process
 
-#### 自動恢復檢測
+#### Automatic Recovery Detection
 
 ```python
 def check_primary_region_recovery():
-    """檢查主區域恢復狀態"""
+    """Check primary region recovery status"""
     health_checks = [
         check_alb_health(),
         check_database_connectivity(), 
@@ -312,24 +312,24 @@ def check_primary_region_recovery():
     return False
 ```
 
-#### 故障恢復步驟
+#### Failure Recovery Steps
 
-1. **持續監控**: 每5分鐘檢查主區域狀態
-2. **恢復驗證**: 連續3次健康檢查通過
-3. **數據同步**: 確保數據一致性
-4. **流量切回**: 逐步將流量切回主區域
+1. **Continuous Monitoring**: Check primary region status every 5 minutes
+2. **Recovery Validation**: 3 consecutive health checks pass
+3. **Data Synchronization**: Ensure data consistency
+4. **Traffic Failback**: Gradually switch traffic back to primary region
 
-## 混沌工程測試
+## Chaos Engineering Testing
 
-### 1. 自動化測試場景
+### 1. Automated Test Scenarios
 
-#### 月度 DR 測試
+#### Monthly DR Testing
 
 ```bash
-# 每月第一個週日凌晨2點執行
+# Execute on first Sunday of each month at 2 AM
 cron: "0 2 ? * SUN#1 *"
 
-# 測試場景
+# Test scenarios
 test_scenarios:
   - health_check_failure_simulation
   - network_partition_test  
@@ -338,45 +338,45 @@ test_scenarios:
   - end_to_end_failover_test
 ```
 
-#### 測試類型
+#### Test Types
 
-1. **健康檢查失敗模擬**
-   - 模擬 ALB 健康檢查失敗
-   - 驗證自動故障轉移
-   - 測量 RTO 合規性
+1. **Health Check Failure Simulation**
+   - Simulate ALB health check failure
+   - Verify automatic failover
+   - Measure RTO compliance
 
-2. **網絡分區測試**
-   - 模擬區域間網絡中斷
-   - 測試應用獨立運行能力
-   - 驗證數據一致性
+2. **Network Partition Testing**
+   - Simulate inter-region network interruption
+   - Test application independent operation capability
+   - Verify data consistency
 
-3. **數據庫故障轉移測試**
-   - Aurora 集群故障模擬
-   - 自動提升測試
-   - 數據完整性驗證
+3. **Database Failover Testing**
+   - Aurora cluster failure simulation
+   - Automatic promotion testing
+   - Data integrity verification
 
-### 2. 測試自動化腳本
+### 2. Test Automation Scripts
 
-#### 故障轉移測試
+#### Failover Testing
 
 ```javascript
-// 執行完整故障轉移測試
+// Execute complete failover test
 async function runFailoverTest() {
     const testResults = {
         timestamp: new Date().toISOString(),
         tests: []
     };
     
-    // 1. 健康檢查驗證
+    // 1. Health check validation
     const healthTest = await validateHealthChecks();
     testResults.tests.push({
         name: 'health_check_validation',
         success: healthTest.success,
         duration: healthTest.duration,
-        rto_compliance: healthTest.duration < 60000 // < 60秒
+        rto_compliance: healthTest.duration < 60000 // < 60 seconds
     });
     
-    // 2. DNS 故障轉移速度測試
+    // 2. DNS failover speed test
     const dnsTest = await testDNSFailoverSpeed();
     testResults.tests.push({
         name: 'dns_failover_speed',
@@ -385,116 +385,116 @@ async function runFailoverTest() {
         rto_compliance: dnsTest.propagationTime < 60000
     });
     
-    // 3. Aurora 複製延遲測試
+    // 3. Aurora replication lag test
     const auroraTest = await testAuroraReplicationLag();
     testResults.tests.push({
         name: 'aurora_replication_lag',
         success: auroraTest.success,
         replication_lag: auroraTest.lag,
-        rpo_compliance: auroraTest.lag < 1000 // < 1秒
+        rpo_compliance: auroraTest.lag < 1000 // < 1 second
     });
     
     return testResults;
 }
 ```
 
-## 監控和告警
+## Monitoring and Alerting
 
-### 1. 關鍵指標監控
+### 1. Key Metrics Monitoring
 
-#### RTO/RPO 合規性指標
+#### RTO/RPO Compliance Metrics
 
 ```yaml
 metrics:
   rto_compliance:
-    description: "故障轉移時間合規性"
-    threshold: 60 # 秒
-    alarm_threshold: 80 # 秒
+    description: "Failover time compliance"
+    threshold: 60 # seconds
+    alarm_threshold: 80 # seconds
     
   rpo_compliance:
-    description: "數據丟失合規性" 
-    threshold: 0 # 秒
-    alarm_threshold: 1 # 秒
+    description: "Data loss compliance" 
+    threshold: 0 # seconds
+    alarm_threshold: 1 # seconds
     
   availability:
-    description: "服務可用性"
-    threshold: 99.99 # 百分比
-    alarm_threshold: 99.9 # 百分比
+    description: "Service availability"
+    threshold: 99.99 # percentage
+    alarm_threshold: 99.9 # percentage
 ```
 
-#### CloudWatch 儀表板
+#### CloudWatch Dashboard
 
 ```mermaid
 graph TB
-    A[DR 監控儀表板] --> B[健康檢查狀態]
-    A --> C[Aurora 複製延遲]
-    A --> D[DNS 故障轉移狀態]
-    A --> E[跨區域流量分布]
-    A --> F[RTO/RPO 合規性]
-    A --> G[自動化測試結果]
+    A[DR Monitoring Dashboard] --> B[Health Check Status]
+    A --> C[Aurora Replication Lag]
+    A --> D[DNS Failover Status]
+    A --> E[Cross-Region Traffic Distribution]
+    A --> F[RTO/RPO Compliance]
+    A --> G[Automated Test Results]
 ```
 
-### 2. 告警配置
+### 2. Alert Configuration
 
-#### 關鍵告警
+#### Critical Alerts
 
-1. **主區域健康檢查失敗**
-   - 閾值: 連續3次失敗
-   - 動作: 觸發自動故障轉移
-   - 通知: 即時 SNS 通知
+1. **Primary Region Health Check Failure**
+   - Threshold: 3 consecutive failures
+   - Action: Trigger automatic failover
+   - Notification: Immediate SNS notification
 
-2. **Aurora 複製延遲過高**
-   - 閾值: > 1 秒
-   - 動作: 調查數據庫性能
-   - 通知: 運維團隊告警
+2. **Aurora Replication Lag Too High**
+   - Threshold: > 1 second
+   - Action: Investigate database performance
+   - Notification: Operations team alert
 
-3. **DNS 故障轉移失敗**
-   - 閾值: 故障轉移超時
-   - 動作: 手動干預程序
-   - 通知: 緊急告警
+3. **DNS Failover Failure**
+   - Threshold: Failover timeout
+   - Action: Manual intervention procedure
+   - Notification: Emergency alert
 
-## 成本優化
+## Cost Optimization
 
-### 1. 資源配置策略
+### 1. Resource Configuration Strategy
 
-#### 區域資源分配
+#### Regional Resource Allocation
 
 ```yaml
 taiwan_region:
-  eks_nodes: 6 # 主要負載
+  eks_nodes: 6 # Primary load
   aurora_instances: 2 # writer + reader
-  msk_brokers: 3 # 高可用配置
+  msk_brokers: 3 # High availability configuration
   
 tokyo_region:
-  eks_nodes: 4 # 備用負載  
+  eks_nodes: 4 # Backup load  
   aurora_instances: 2 # writer + reader
-  msk_brokers: 3 # 高可用配置
+  msk_brokers: 3 # High availability configuration
 ```
 
-#### 成本優化措施
+#### Cost Optimization Measures
 
-1. **Spot 實例**: 非關鍵工作負載使用 Spot 實例
-2. **自動擴縮**: 基於流量的動態擴縮容
-3. **預留實例**: 基礎容量使用預留實例
-4. **數據生命週期**: 自動數據歸檔和清理
+1. **Spot Instances**: Use Spot instances for non-critical workloads
+2. **Auto Scaling**: Dynamic scaling based on traffic
+3. **Reserved Instances**: Use Reserved Instances for base capacity
+4. **Data Lifecycle**: Automatic data archiving and cleanup
 
-### 2. 成本監控
+### 2. Cost Monitoring
 
-- **月度成本報告**: 自動生成成本分析
-- **成本告警**: 超出預算自動告警
-- **資源利用率**: 持續監控資源使用效率
+- **Monthly Cost Reports**: Automatic cost analysis generation
+- **Cost Alerts**: Automatic alerts when exceeding budget
+- **Resource Utilization**: Continuous monitoring of resource usage efficiency
 
-## 安全考量
+## Security Considerations
 
-### 1. 數據安全
+### 1. Data Security
 
-#### 加密策略
+#### Encryption Strategy
 
-- **傳輸中加密**: TLS 1.3 for all communications
-- **靜態加密**: Aurora, MSK, EBS 全面加密
-- **密鑰管理**: AWS KMS 跨區域密鑰複製
+- **Encryption in Transit**: TLS 1.3 for all communications
+- **Encryption at Rest**: Comprehensive encryption for Aurora, MSK, EBS
+- **Key Management**: AWS KMS cross-region key replication
 
-#### 訪問控制
+#### Access Control
 
 ```json
 {
@@ -521,66 +521,66 @@ tokyo_region:
 }
 ```
 
-### 2. 合規性
+### 2. Compliance
 
-#### 審計日誌
+#### Audit Logs
 
-- **CloudTrail**: 所有 API 調用記錄
-- **VPC Flow Logs**: 網絡流量監控
-- **應用日誌**: 跨區域日誌聚合
+- **CloudTrail**: All API call records
+- **VPC Flow Logs**: Network traffic monitoring
+- **Application Logs**: Cross-region log aggregation
 
-#### 數據主權
+#### Data Sovereignty
 
-- **數據本地化**: 確保數據符合當地法規
-- **跨境數據傳輸**: 符合 GDPR 和其他法規要求
+- **Data Localization**: Ensure data complies with local regulations
+- **Cross-Border Data Transfer**: Comply with GDPR and other regulatory requirements
 
-## 運維手冊
+## Operations Manual
 
-### 1. 日常運維檢查清單
+### 1. Daily Operations Checklist
 
-#### 每日檢查
+#### Daily Checks
 
-- [ ] 健康檢查狀態正常
-- [ ] Aurora 複製延遲 < 1秒
-- [ ] 跨區域流量分布正常
-- [ ] 無關鍵告警
+- [ ] Health check status normal
+- [ ] Aurora replication lag < 1 second
+- [ ] Cross-region traffic distribution normal
+- [ ] No critical alerts
 
-#### 每週檢查  
+#### Weekly Checks  
 
-- [ ] DR 測試結果回顧
-- [ ] 成本使用情況分析
-- [ ] 安全掃描結果
-- [ ] 性能指標趨勢
+- [ ] DR test results review
+- [ ] Cost usage analysis
+- [ ] Security scan results
+- [ ] Performance metrics trends
 
-#### 每月檢查
+#### Monthly Checks
 
-- [ ] 完整 DR 演練
-- [ ] 容量規劃評估
-- [ ] 文檔更新
-- [ ] 團隊培訓
+- [ ] Complete DR drill
+- [ ] Capacity planning assessment
+- [ ] Documentation updates
+- [ ] Team training
 
-### 2. 故障處理程序
+### 2. Failure Handling Procedures
 
-#### 自動故障轉移失敗
+#### Automatic Failover Failure
 
 ```bash
-# 1. 檢查故障轉移狀態
+# 1. Check failover status
 aws stepfunctions describe-execution --execution-arn <execution-arn>
 
-# 2. 手動觸發故障轉移
+# 2. Manually trigger failover
 aws rds failover-global-cluster --global-cluster-identifier <cluster-id>
 
-# 3. 更新 DNS 記錄
+# 3. Update DNS records
 aws route53 change-resource-record-sets --hosted-zone-id <zone-id> --change-batch file://failover-dns.json
 
-# 4. 驗證服務狀態
+# 4. Verify service status
 curl -f https://api.kimkao.io/actuator/health
 ```
 
-#### 數據不一致處理
+#### Data Inconsistency Handling
 
 ```sql
--- 檢查數據一致性
+-- Check data consistency
 SELECT 
     region,
     COUNT(*) as record_count,
@@ -588,80 +588,80 @@ SELECT
 FROM distributed_table 
 GROUP BY region;
 
--- 手動數據同步
+-- Manual data synchronization
 CALL sync_cross_region_data('taiwan', 'tokyo');
 ```
 
-## 災難恢復測試計劃
+## Disaster Recovery Testing Plan
 
-### 1. 測試類型和頻率
+### 1. Test Types and Frequency
 
-| 測試類型 | 頻率 | 範圍 | RTO 目標 | RPO 目標 |
-|---------|------|------|----------|----------|
-| 健康檢查測試 | 每日 | 自動化 | < 30秒 | 0秒 |
-| DNS 故障轉移測試 | 每週 | 自動化 | < 60秒 | 0秒 |
-| 數據庫故障轉移測試 | 每月 | 半自動 | < 60秒 | 0秒 |
-| 完整 DR 演練 | 每季 | 手動 | < 60秒 | 0秒 |
-| 年度 DR 審查 | 每年 | 全面 | < 60秒 | 0秒 |
+| Test Type | Frequency | Scope | RTO Target | RPO Target |
+|-----------|-----------|-------|------------|------------|
+| Health Check Test | Daily | Automated | < 30s | 0s |
+| DNS Failover Test | Weekly | Automated | < 60s | 0s |
+| Database Failover Test | Monthly | Semi-automated | < 60s | 0s |
+| Complete DR Drill | Quarterly | Manual | < 60s | 0s |
+| Annual DR Review | Yearly | Comprehensive | < 60s | 0s |
 
-### 2. 測試成功標準
+### 2. Test Success Criteria
 
-#### 技術指標
+#### Technical Metrics
 
-- **RTO 合規性**: 故障轉移時間 < 60秒
-- **RPO 合規性**: 數據丟失 = 0
-- **服務可用性**: 故障轉移期間可用性 > 99.9%
-- **數據一致性**: 跨區域數據100%一致
+- **RTO Compliance**: Failover time < 60 seconds
+- **RPO Compliance**: Data loss = 0
+- **Service Availability**: Availability > 99.9% during failover
+- **Data Consistency**: 100% cross-region data consistency
 
-#### 業務指標  
+#### Business Metrics  
 
-- **用戶體驗**: 故障轉移期間用戶無感知
-- **交易完整性**: 所有進行中交易正確處理
-- **系統性能**: 故障轉移後性能無明顯下降
+- **User Experience**: Users unaware of failover
+- **Transaction Integrity**: All in-progress transactions handled correctly
+- **System Performance**: No significant performance degradation after failover
 
-## 未來改進計劃
+## Future Improvement Plan
 
-### 2025 年路線圖
+### 2025 Roadmap
 
-#### Q1 2025: 增強監控
+#### Q1 2025: Enhanced Monitoring
 
-- [ ] 實時用戶體驗監控
-- [ ] AI 驅動的異常檢測
-- [ ] 預測性故障分析
+- [ ] Real-time user experience monitoring
+- [ ] AI-driven anomaly detection
+- [ ] Predictive failure analysis
 
-#### Q2 2025: 多雲支持
+#### Q2 2025: Multi-Cloud Support
 
-- [ ] Azure 區域集成
-- [ ] 混合雲故障轉移
-- [ ] 多雲成本優化
+- [ ] Azure region integration
+- [ ] Hybrid cloud failover
+- [ ] Multi-cloud cost optimization
 
-#### Q3 2025: 智能化運維
+#### Q3 2025: Intelligent Operations
 
-- [ ] 自動容量規劃
-- [ ] 智能故障根因分析
-- [ ] 自動化修復建議
+- [ ] Automated capacity planning
+- [ ] Intelligent failure root cause analysis
+- [ ] Automated repair recommendations
 
-#### Q4 2025: 全球化部署
+#### Q4 2025: Global Deployment
 
-- [ ] 更多區域支持
-- [ ] 邊緣計算集成
-- [ ] 全球負載均衡
+- [ ] More region support
+- [ ] Edge computing integration
+- [ ] Global load balancing
 
-## 結論
+## Conclusion
 
-本 Active-Active 災難恢復架構設計提供了：
+This Active-Active disaster recovery architecture design provides:
 
-1. **高可用性**: 99.99% 服務可用性保證
-2. **快速恢復**: RTO < 60秒，RPO = 0秒
-3. **自動化**: 完全自動化的故障檢測和恢復
-4. **成本效益**: 優化的資源配置和成本控制
-5. **安全合規**: 全面的安全措施和合規性保證
+1. **High Availability**: 99.99% service availability guarantee
+2. **Fast Recovery**: RTO < 60 seconds, RPO = 0 seconds
+3. **Automation**: Fully automated failure detection and recovery
+4. **Cost Effectiveness**: Optimized resource configuration and cost control
+5. **Security Compliance**: Comprehensive security measures and compliance guarantees
 
-這個設計確保了 GenAI Demo 項目能夠在任何災難情況下維持業務連續性，為用戶提供不間斷的服務體驗。
+This design ensures that the GenAI Demo project can maintain business continuity in any disaster situation, providing uninterrupted service experience for users.
 
 ---
 
-**文檔版本**: v1.0  
-**最後更新**: 2024年12月  
-**負責團隊**: DevOps & SRE Team  
-**審核狀態**: 已審核
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: DevOps & SRE Team  
+**Review Status**: Reviewed

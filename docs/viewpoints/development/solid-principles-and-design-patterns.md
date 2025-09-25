@@ -1,28 +1,28 @@
-# SOLID 原則與設計模式
+# SOLID Principles and Design Patterns
 
-## 概覽
+## Overview
 
-本文檔涵蓋了軟體開發中的核心設計原則和模式，包括 SOLID 原則和常用設計模式。這些原則和模式是構建可維護、可擴展和高品質軟體的基礎。
+This document covers core design principles and patterns in software development, including SOLID principles and commonly used design patterns. These principles and patterns are the foundation for building maintainable, scalable, and high-quality software.
 
-## 🎯 SOLID 原則
+## 🎯 SOLID Principles
 
-SOLID 原則是物件導向設計的五個基本原則，由 Robert C. Martin 提出，旨在使軟體設計更加理解、靈活和可維護。
+SOLID principles are five fundamental principles of object-oriented design proposed by Robert C. Martin, aimed at making software design more understandable, flexible, and maintainable.
 
-### 📏 單一職責原則 (Single Responsibility Principle, SRP)
+### 📏 Single Responsibility Principle (SRP)
 
-**定義**: 一個類別應該只有一個引起它變化的原因，即一個類別應該只有一個職責。
+**Definition**: A class should have only one reason to change, meaning a class should have only one responsibility.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：每個類別都有單一職責
+// ✅ Good design: Each class has a single responsibility
 @Entity
 public class Customer {
     private String id;
     private String name;
     private String email;
     
-    // 只負責客戶資料的管理
+    // Only responsible for customer data management
     public void updateProfile(String name, String email) {
         validateName(name);
         validateEmail(email);
@@ -47,7 +47,7 @@ public class Customer {
 public class CustomerService {
     private final CustomerRepository customerRepository;
     
-    // 只負責客戶業務邏輯
+    // Only responsible for customer business logic
     public Customer createCustomer(CreateCustomerCommand command) {
         Customer customer = new Customer(command.getName(), command.getEmail());
         return customerRepository.save(customer);
@@ -58,7 +58,7 @@ public class CustomerService {
 public class CustomerNotificationService {
     private final EmailService emailService;
     
-    // 只負責客戶通知
+    // Only responsible for customer notifications
     public void sendWelcomeEmail(Customer customer) {
         String subject = "Welcome to our service!";
         String body = "Hello " + customer.getName() + ", welcome!";
@@ -67,46 +67,46 @@ public class CustomerNotificationService {
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：一個類別承擔多個職責
+// ❌ Bad design: One class handles multiple responsibilities
 @Service
 public class CustomerManager {
     
-    // 職責1：客戶資料管理
+    // Responsibility 1: Customer data management
     public Customer createCustomer(String name, String email) {
         Customer customer = new Customer(name, email);
         return saveToDatabase(customer);
     }
     
-    // 職責2：資料庫操作
+    // Responsibility 2: Database operations
     private Customer saveToDatabase(Customer customer) {
-        // 直接處理資料庫邏輯
+        // Direct database logic handling
         return customer;
     }
     
-    // 職責3：發送郵件
+    // Responsibility 3: Email sending
     public void sendWelcomeEmail(Customer customer) {
-        // 直接處理郵件發送邏輯
+        // Direct email sending logic handling
     }
     
-    // 職責4：生成報告
+    // Responsibility 4: Report generation
     public String generateCustomerReport(Customer customer) {
-        // 直接處理報告生成邏輯
+        // Direct report generation logic handling
         return "Report for " + customer.getName();
     }
 }
 ```
 
-### 🔓 開放封閉原則 (Open-Closed Principle, OCP)
+### 🔓 Open-Closed Principle (OCP)
 
-**定義**: 軟體實體（類別、模組、函數等）應該對擴展開放，對修改封閉。
+**Definition**: Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：使用策略模式實現 OCP
+// ✅ Good design: Using Strategy pattern to implement OCP
 public interface DiscountStrategy {
     BigDecimal calculateDiscount(Order order);
 }
@@ -115,7 +115,7 @@ public interface DiscountStrategy {
 public class RegularCustomerDiscount implements DiscountStrategy {
     @Override
     public BigDecimal calculateDiscount(Order order) {
-        return order.getTotal().multiply(new BigDecimal("0.05")); // 5% 折扣
+        return order.getTotal().multiply(new BigDecimal("0.05")); // 5% discount
     }
 }
 
@@ -123,7 +123,7 @@ public class RegularCustomerDiscount implements DiscountStrategy {
 public class PremiumCustomerDiscount implements DiscountStrategy {
     @Override
     public BigDecimal calculateDiscount(Order order) {
-        return order.getTotal().multiply(new BigDecimal("0.10")); // 10% 折扣
+        return order.getTotal().multiply(new BigDecimal("0.10")); // 10% discount
     }
 }
 
@@ -131,7 +131,7 @@ public class PremiumCustomerDiscount implements DiscountStrategy {
 public class VipCustomerDiscount implements DiscountStrategy {
     @Override
     public BigDecimal calculateDiscount(Order order) {
-        return order.getTotal().multiply(new BigDecimal("0.15")); // 15% 折扣
+        return order.getTotal().multiply(new BigDecimal("0.15")); // 15% discount
     }
 }
 
@@ -154,25 +154,25 @@ public class OrderService {
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：每次新增客戶類型都需要修改現有程式碼
+// ❌ Bad design: Need to modify existing code every time a new customer type is added
 @Service
 public class OrderService {
     
     public BigDecimal calculateOrderTotal(Order order, CustomerType customerType) {
         BigDecimal total = order.getTotal();
         
-        // 每次新增客戶類型都需要修改這個方法
+        // Need to modify this method every time a new customer type is added
         switch (customerType) {
             case REGULAR:
-                return total.multiply(new BigDecimal("0.95")); // 5% 折扣
+                return total.multiply(new BigDecimal("0.95")); // 5% discount
             case PREMIUM:
-                return total.multiply(new BigDecimal("0.90")); // 10% 折扣
+                return total.multiply(new BigDecimal("0.90")); // 10% discount
             case VIP:
-                return total.multiply(new BigDecimal("0.85")); // 15% 折扣
-            // 新增 DIAMOND 客戶時需要修改這裡
+                return total.multiply(new BigDecimal("0.85")); // 15% discount
+            // Need to modify here when adding DIAMOND customers
             default:
                 return total;
         }
@@ -180,14 +180,14 @@ public class OrderService {
 }
 ```
 
-### 🔄 里氏替換原則 (Liskov Substitution Principle, LSP)
+### 🔄 Liskov Substitution Principle (LSP)
 
-**定義**: 子類別必須能夠替換其基類別，而不會改變程式的正確性。
+**Definition**: Subtypes must be substitutable for their base types without altering the correctness of the program.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：子類別可以完全替換父類別
+// ✅ Good design: Subtypes can completely replace parent types
 public abstract class PaymentProcessor {
     
     public final PaymentResult processPayment(PaymentRequest request) {
@@ -209,7 +209,7 @@ public class CreditCardProcessor extends PaymentProcessor {
     
     @Override
     protected PaymentResult doProcessPayment(PaymentRequest request) {
-        // 信用卡處理邏輯
+        // Credit card processing logic
         return PaymentResult.success(request.getAmount());
     }
 }
@@ -219,7 +219,7 @@ public class PayPalProcessor extends PaymentProcessor {
     
     @Override
     protected PaymentResult doProcessPayment(PaymentRequest request) {
-        // PayPal 處理邏輯
+        // PayPal processing logic
         return PaymentResult.success(request.getAmount());
     }
 }
@@ -227,17 +227,17 @@ public class PayPalProcessor extends PaymentProcessor {
 @Service
 public class PaymentService {
     
-    // 可以使用任何 PaymentProcessor 的子類別
+    // Can use any subclass of PaymentProcessor
     public PaymentResult processPayment(PaymentProcessor processor, PaymentRequest request) {
-        return processor.processPayment(request); // LSP 原則：子類別可以替換父類別
+        return processor.processPayment(request); // LSP principle: subtypes can replace parent types
     }
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：子類別改變了父類別的行為契約
+// ❌ Bad design: Subtype changes the behavioral contract of the parent type
 public abstract class PaymentProcessor {
     
     public PaymentResult processPayment(PaymentRequest request) {
@@ -255,8 +255,8 @@ public class CashProcessor extends PaymentProcessor {
     
     @Override
     public PaymentResult processPayment(PaymentRequest request) {
-        // 違反 LSP：現金支付不需要驗證金額？
-        // 跳過父類別的驗證邏輯
+        // Violates LSP: Cash payment doesn't need amount validation?
+        // Skips parent class validation logic
         return doProcessPayment(request);
     }
     
@@ -267,14 +267,14 @@ public class CashProcessor extends PaymentProcessor {
 }
 ```
 
-### 🔌 介面隔離原則 (Interface Segregation Principle, ISP)
+### 🔌 Interface Segregation Principle (ISP)
 
-**定義**: 客戶端不應該被迫依賴它們不使用的介面。
+**Definition**: Clients should not be forced to depend on interfaces they do not use.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：將大介面拆分為多個小介面
+// ✅ Good design: Split large interfaces into multiple small interfaces
 public interface Readable {
     String read();
 }
@@ -287,7 +287,7 @@ public interface Deletable {
     void delete();
 }
 
-// 只需要讀取功能的類別
+// Class that only needs read functionality
 @Component
 public class LogReader implements Readable {
     
@@ -297,7 +297,7 @@ public class LogReader implements Readable {
     }
 }
 
-// 需要讀寫功能的類別
+// Class that needs read and write functionality
 @Component
 public class ConfigurationManager implements Readable, Writable {
     
@@ -308,11 +308,11 @@ public class ConfigurationManager implements Readable, Writable {
     
     @Override
     public void write(String content) {
-        // 寫入配置
+        // Write configuration
     }
 }
 
-// 需要所有功能的類別
+// Class that needs all functionality
 @Component
 public class FileManager implements Readable, Writable, Deletable {
     
@@ -323,20 +323,20 @@ public class FileManager implements Readable, Writable, Deletable {
     
     @Override
     public void write(String content) {
-        // 寫入檔案
+        // Write file
     }
     
     @Override
     public void delete() {
-        // 刪除檔案
+        // Delete file
     }
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：強迫客戶端實現不需要的方法
+// ❌ Bad design: Forces clients to implement methods they don't need
 public interface FileOperations {
     String read();
     void write(String content);
@@ -345,7 +345,7 @@ public interface FileOperations {
     void encrypt();
 }
 
-// 只需要讀取功能，但被迫實現所有方法
+// Only needs read functionality, but forced to implement all methods
 @Component
 public class LogReader implements FileOperations {
     
@@ -354,7 +354,7 @@ public class LogReader implements FileOperations {
         return "Log content";
     }
     
-    // 被迫實現不需要的方法
+    // Forced to implement unneeded methods
     @Override
     public void write(String content) {
         throw new UnsupportedOperationException("Log reader cannot write");
@@ -377,14 +377,14 @@ public class LogReader implements FileOperations {
 }
 ```
 
-### 🔄 依賴反轉原則 (Dependency Inversion Principle, DIP)
+### 🔄 Dependency Inversion Principle (DIP)
 
-**定義**: 高層模組不應該依賴低層模組，兩者都應該依賴抽象。抽象不應該依賴細節，細節應該依賴抽象。
+**Definition**: High-level modules should not depend on low-level modules. Both should depend on abstractions. Abstractions should not depend on details. Details should depend on abstractions.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：依賴抽象而不是具體實現
+// ✅ Good design: Depend on abstractions rather than concrete implementations
 public interface NotificationService {
     void sendNotification(String recipient, String message);
 }
@@ -394,13 +394,13 @@ public interface CustomerRepository {
     Optional<Customer> findById(String id);
 }
 
-// 高層模組依賴抽象
+// High-level module depends on abstractions
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final NotificationService notificationService;
     
-    // 依賴注入抽象介面
+    // Dependency injection of abstract interfaces
     public CustomerService(CustomerRepository customerRepository, 
                           NotificationService notificationService) {
         this.customerRepository = customerRepository;
@@ -420,19 +420,19 @@ public class CustomerService {
     }
 }
 
-// 低層模組實現抽象
+// Low-level modules implement abstractions
 @Repository
 public class JpaCustomerRepository implements CustomerRepository {
     
     @Override
     public Customer save(Customer customer) {
-        // JPA 實現
+        // JPA implementation
         return customer;
     }
     
     @Override
     public Optional<Customer> findById(String id) {
-        // JPA 實現
+        // JPA implementation
         return Optional.empty();
     }
 }
@@ -442,30 +442,30 @@ public class EmailNotificationService implements NotificationService {
     
     @Override
     public void sendNotification(String recipient, String message) {
-        // 郵件發送實現
+        // Email sending implementation
     }
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：高層模組直接依賴低層模組的具體實現
+// ❌ Bad design: High-level module directly depends on concrete implementations of low-level modules
 @Service
 public class CustomerService {
-    private final JpaCustomerRepository customerRepository; // 直接依賴具體實現
-    private final EmailService emailService; // 直接依賴具體實現
+    private final JpaCustomerRepository customerRepository; // Direct dependency on concrete implementation
+    private final EmailService emailService; // Direct dependency on concrete implementation
     
     public CustomerService() {
-        this.customerRepository = new JpaCustomerRepository(); // 直接創建依賴
-        this.emailService = new EmailService(); // 直接創建依賴
+        this.customerRepository = new JpaCustomerRepository(); // Direct creation of dependency
+        this.emailService = new EmailService(); // Direct creation of dependency
     }
     
     public Customer createCustomer(CreateCustomerCommand command) {
         Customer customer = new Customer(command.getName(), command.getEmail());
         Customer savedCustomer = customerRepository.save(customer);
         
-        // 直接調用具體實現
+        // Direct call to concrete implementation
         emailService.sendEmail(savedCustomer.getEmail(), "Welcome!");
         
         return savedCustomer;
@@ -473,29 +473,29 @@ public class CustomerService {
 }
 ```
 
-## 🎨 設計模式
+## 🎨 Design Patterns
 
-設計模式是解決軟體設計中常見問題的可重用解決方案。以下是專案中常用的設計模式。
+Design patterns are reusable solutions to common problems in software design. The following are commonly used design patterns in the project.
 
-### 🏭 Factory 模式
+### 🏭 Factory Pattern
 
-**目的**: 創建對象而不指定其具體類別，將對象創建邏輯封裝在工廠類別中。
+**Purpose**: Create objects without specifying their concrete classes, encapsulating object creation logic in factory classes.
 
-#### ✅ 實現範例
+#### ✅ Implementation Example
 
 ```java
-// 產品介面
+// Product interface
 public interface PaymentProcessor {
     PaymentResult process(PaymentRequest request);
 }
 
-// 具體產品
+// Concrete products
 @Component
 public class CreditCardProcessor implements PaymentProcessor {
     
     @Override
     public PaymentResult process(PaymentRequest request) {
-        // 信用卡處理邏輯
+        // Credit card processing logic
         return PaymentResult.success("Credit card payment processed");
     }
 }
@@ -505,7 +505,7 @@ public class PayPalProcessor implements PaymentProcessor {
     
     @Override
     public PaymentResult process(PaymentRequest request) {
-        // PayPal 處理邏輯
+        // PayPal processing logic
         return PaymentResult.success("PayPal payment processed");
     }
 }
@@ -515,12 +515,12 @@ public class BankTransferProcessor implements PaymentProcessor {
     
     @Override
     public PaymentResult process(PaymentRequest request) {
-        // 銀行轉帳處理邏輯
+        // Bank transfer processing logic
         return PaymentResult.success("Bank transfer processed");
     }
 }
 
-// 工廠類別
+// Factory class
 @Component
 public class PaymentProcessorFactory {
     private final Map<PaymentType, PaymentProcessor> processors;
@@ -548,7 +548,7 @@ public class PaymentProcessorFactory {
     }
 }
 
-// 使用工廠
+// Using the factory
 @Service
 public class PaymentService {
     private final PaymentProcessorFactory processorFactory;
@@ -564,14 +564,14 @@ public class PaymentService {
 }
 ```
 
-### 🔨 Builder 模式
+### 🔨 Builder Pattern
 
-**目的**: 逐步構建複雜對象，允許創建不同表示的同一對象。
+**Purpose**: Construct complex objects step by step, allowing creation of different representations of the same object.
 
-#### ✅ 實現範例
+#### ✅ Implementation Example
 
 ```java
-// 複雜對象
+// Complex object
 public class Order {
     private final String id;
     private final String customerId;
@@ -583,7 +583,7 @@ public class Order {
     private final PaymentMethod paymentMethod;
     private final String notes;
     
-    // 私有建構子，只能通過 Builder 創建
+    // Private constructor, can only be created through Builder
     private Order(Builder builder) {
         this.id = builder.id;
         this.customerId = builder.customerId;
@@ -596,7 +596,7 @@ public class Order {
         this.notes = builder.notes;
     }
     
-    // Builder 類別
+    // Builder class
     public static class Builder {
         private String id;
         private String customerId;
@@ -676,7 +676,7 @@ public class Order {
         }
     }
     
-    // 靜態工廠方法
+    // Static factory method
     public static Builder builder() {
         return new Builder();
     }
@@ -693,7 +693,7 @@ public class Order {
     public String getNotes() { return notes; }
 }
 
-// 使用 Builder
+// Using Builder
 @Service
 public class OrderService {
     
@@ -713,20 +713,20 @@ public class OrderService {
 }
 ```
 
-### 📋 Strategy 模式
+### 📋 Strategy Pattern
 
-**目的**: 定義一系列算法，將每個算法封裝起來，並使它們可以互換。
+**Purpose**: Define a family of algorithms, encapsulate each one, and make them interchangeable.
 
-#### ✅ 實現範例
+#### ✅ Implementation Example
 
 ```java
-// 策略介面
+// Strategy interface
 public interface PricingStrategy {
     BigDecimal calculatePrice(Product product, int quantity);
     String getStrategyName();
 }
 
-// 具體策略
+// Concrete strategies
 @Component
 public class RegularPricingStrategy implements PricingStrategy {
     
@@ -749,11 +749,11 @@ public class BulkDiscountStrategy implements PricingStrategy {
         BigDecimal basePrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         
         if (quantity >= 100) {
-            return basePrice.multiply(new BigDecimal("0.8")); // 20% 折扣
+            return basePrice.multiply(new BigDecimal("0.8")); // 20% discount
         } else if (quantity >= 50) {
-            return basePrice.multiply(new BigDecimal("0.9")); // 10% 折扣
+            return basePrice.multiply(new BigDecimal("0.9")); // 10% discount
         } else if (quantity >= 10) {
-            return basePrice.multiply(new BigDecimal("0.95")); // 5% 折扣
+            return basePrice.multiply(new BigDecimal("0.95")); // 5% discount
         }
         
         return basePrice;
@@ -772,9 +772,9 @@ public class SeasonalDiscountStrategy implements PricingStrategy {
     public BigDecimal calculatePrice(Product product, int quantity) {
         BigDecimal basePrice = product.getPrice().multiply(BigDecimal.valueOf(quantity));
         
-        // 檢查是否為促銷季節
+        // Check if it's promotional season
         if (isPromotionalSeason()) {
-            return basePrice.multiply(new BigDecimal("0.85")); // 15% 季節性折扣
+            return basePrice.multiply(new BigDecimal("0.85")); // 15% seasonal discount
         }
         
         return basePrice;
@@ -791,7 +791,7 @@ public class SeasonalDiscountStrategy implements PricingStrategy {
     }
 }
 
-// 上下文類別
+// Context class
 @Service
 public class PricingService {
     private final Map<String, PricingStrategy> strategies;
@@ -819,14 +819,14 @@ public class PricingService {
 }
 ```
 
-### 👁️ Observer 模式
+### 👁️ Observer Pattern
 
-**目的**: 定義對象間的一對多依賴關係，當一個對象的狀態發生改變時，所有依賴於它的對象都會得到通知。
+**Purpose**: Define a one-to-many dependency between objects so that when one object changes state, all its dependents are notified automatically.
 
-#### ✅ 實現範例
+#### ✅ Implementation Example
 
 ```java
-// 事件（主題）
+// Event (Subject)
 public record OrderStatusChangedEvent(
     String orderId,
     OrderStatus oldStatus,
@@ -859,12 +859,12 @@ public record OrderStatusChangedEvent(
     }
 }
 
-// 觀察者介面
+// Observer interface
 public interface OrderStatusObserver {
     void onOrderStatusChanged(OrderStatusChangedEvent event);
 }
 
-// 具體觀察者
+// Concrete observers
 @Component
 public class EmailNotificationObserver implements OrderStatusObserver {
     private final EmailService emailService;
@@ -904,10 +904,10 @@ public class InventoryUpdateObserver implements OrderStatusObserver {
     @EventListener
     public void onOrderStatusChanged(OrderStatusChangedEvent event) {
         if (event.newStatus() == OrderStatus.CANCELLED) {
-            // 訂單取消時釋放庫存
+            // Release inventory when order is cancelled
             inventoryService.releaseReservedItems(event.orderId());
         } else if (event.newStatus() == OrderStatus.SHIPPED) {
-            // 訂單出貨時確認庫存扣除
+            // Confirm inventory deduction when order is shipped
             inventoryService.confirmItemsShipped(event.orderId());
         }
     }
@@ -937,7 +937,7 @@ public class AuditLogObserver implements OrderStatusObserver {
     }
 }
 
-// 主題（發布者）
+// Subject (Publisher)
 @Entity
 public class Order {
     private String id;
@@ -950,7 +950,7 @@ public class Order {
         OrderStatus oldStatus = this.status;
         this.status = newStatus;
         
-        // 發布事件通知所有觀察者
+        // Publish event to notify all observers
         if (eventPublisher != null) {
             OrderStatusChangedEvent event = OrderStatusChangedEvent.create(id, oldStatus, newStatus);
             eventPublisher.publishEvent(event);
@@ -966,21 +966,21 @@ public class Order {
 }
 ```
 
-### 🙈 Tell, Don't Ask 原則
+### 🙈 Tell, Don't Ask Principle
 
-**目的**: 不要詢問對象的狀態然後基於狀態做決定，而是直接告訴對象該做什麼。
+**Purpose**: Don't ask an object for its state and then make decisions based on that state; instead, tell the object what to do directly.
 
-#### ✅ 良好實踐
+#### ✅ Good Practice
 
 ```java
-// ✅ 好的設計：Tell, Don't Ask
+// ✅ Good design: Tell, Don't Ask
 @Entity
 public class BankAccount {
     private String accountNumber;
     private BigDecimal balance;
     private AccountStatus status;
     
-    // 告訴對象執行操作，而不是詢問狀態
+    // Tell the object to perform operations, don't ask for state
     public void withdraw(BigDecimal amount) {
         validateWithdrawal(amount);
         this.balance = this.balance.subtract(amount);
@@ -1003,7 +1003,7 @@ public class BankAccount {
         }
     }
     
-    // 內部驗證邏輯
+    // Internal validation logic
     private void validateWithdrawal(BigDecimal amount) {
         if (status != AccountStatus.ACTIVE) {
             throw new AccountNotActiveException("Account is not active");
@@ -1029,14 +1029,14 @@ public class BankAccount {
 @Service
 public class BankingService {
     
-    // 直接告訴對象執行操作
+    // Directly tell objects to perform operations
     public void transferMoney(String fromAccountId, String toAccountId, BigDecimal amount) {
         BankAccount fromAccount = accountRepository.findById(fromAccountId)
             .orElseThrow(() -> new AccountNotFoundException(fromAccountId));
         BankAccount toAccount = accountRepository.findById(toAccountId)
             .orElseThrow(() -> new AccountNotFoundException(toAccountId));
         
-        // Tell, Don't Ask：直接執行操作
+        // Tell, Don't Ask: directly perform operations
         fromAccount.withdraw(amount);
         toAccount.deposit(amount);
         
@@ -1046,21 +1046,21 @@ public class BankingService {
 }
 ```
 
-#### ❌ 不良實踐
+#### ❌ Bad Practice
 
 ```java
-// ❌ 壞的設計：Ask, Then Tell（詢問然後告訴）
+// ❌ Bad design: Ask, Then Tell (ask then tell)
 @Entity
 public class BankAccount {
     private String accountNumber;
     private BigDecimal balance;
     private AccountStatus status;
     
-    // 暴露內部狀態供外部查詢
+    // Expose internal state for external queries
     public BigDecimal getBalance() { return balance; }
     public AccountStatus getStatus() { return status; }
     
-    // 簡單的 setter，沒有業務邏輯
+    // Simple setters without business logic
     public void setBalance(BigDecimal balance) { this.balance = balance; }
     public void setStatus(AccountStatus status) { this.status = status; }
 }
@@ -1068,14 +1068,14 @@ public class BankAccount {
 @Service
 public class BankingService {
     
-    // 詢問對象狀態，然後基於狀態做決定
+    // Ask object state, then make decisions based on state
     public void transferMoney(String fromAccountId, String toAccountId, BigDecimal amount) {
         BankAccount fromAccount = accountRepository.findById(fromAccountId)
             .orElseThrow(() -> new AccountNotFoundException(fromAccountId));
         BankAccount toAccount = accountRepository.findById(toAccountId)
             .orElseThrow(() -> new AccountNotFoundException(toAccountId));
         
-        // Ask, Then Tell：詢問狀態然後做決定
+        // Ask, Then Tell: ask state then make decisions
         if (fromAccount.getStatus() != AccountStatus.ACTIVE) {
             throw new AccountNotActiveException("From account is not active");
         }
@@ -1088,7 +1088,7 @@ public class BankingService {
             throw new InsufficientFundsException("Insufficient funds");
         }
         
-        // 直接操作內部狀態
+        // Directly manipulate internal state
         fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
         
@@ -1098,49 +1098,43 @@ public class BankingService {
 }
 ```
 
-## 🎯 最佳實踐總結
+## 🎯 Best Practices Summary
 
-### SOLID 原則應用指南
+### SOLID Principles Application Guide
 
-1. **SRP**: 每個類別只負責一個業務概念
-2. **OCP**: 使用策略模式、工廠模式等支持擴展
-3. **LSP**: 確保子類別行為與父類別一致
-4. **ISP**: 創建小而專注的介面
-5. **DIP**: 依賴抽象，使用依賴注入
+1. **SRP**: Each class should be responsible for only one business concept
+2. **OCP**: Use strategy pattern, factory pattern, etc. to support extension
+3. **LSP**: Ensure subclass behavior is consistent with parent class
+4. **ISP**: Create small and focused interfaces
+5. **DIP**: Depend on abstractions, use dependency injection
 
-### 設計模式選擇指南
+### Design Pattern Selection Guide
 
-1. **Factory**: 當需要創建複雜對象或支持多種類型時
-2. **Builder**: 當對象有多個可選參數時
-3. **Strategy**: 當有多種算法或業務規則時
-4. **Observer**: 當需要解耦事件發布者和訂閱者時
-5. **Tell, Don't Ask**: 始終優先考慮的設計原則
+1. **Factory**: When you need to create complex objects or support multiple types
+2. **Builder**: When objects have multiple optional parameters
+3. **Strategy**: When there are multiple algorithms or business rules
+4. **Observer**: When you need to decouple event publishers and subscribers
+5. **Tell, Don't Ask**: A design principle that should always be prioritized
 
-### 程式碼品質檢查清單
+### Code Quality Checklist
 
-- [ ] 每個類別都遵循單一職責原則
-- [ ] 使用介面而不是具體實現
-- [ ] 避免過長的方法和類別
-- [ ] 使用有意義的命名
-- [ ] 適當使用設計模式
-- [ ] 遵循 Tell, Don't Ask 原則
-- [ ] 編寫單元測試驗證設計
+- [ ] Each class has a single, clear responsibility
+- [ ] Dependencies are injected through interfaces
+- [ ] Business logic is encapsulated within domain objects
+- [ ] Complex object creation uses Builder pattern
+- [ ] Multiple algorithms use Strategy pattern
+- [ ] Event handling uses Observer pattern
+- [ ] Follow Tell, Don't Ask principle
+- [ ] Code is easy to test and maintain
+- [ ] Design patterns are used appropriately, not over-engineered
 
-## 🔗 相關資源
+## 🔗 Related Documentation
 
-### 內部連結
-- [編碼標準](coding-standards.md)
-- [架構設計](architecture/)
-- [測試策略](testing/)
-
-### 外部資源
-- [Clean Code by Robert C. Martin](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350884)
-- [Design Patterns by Gang of Four](https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612)
-- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- [Development Standards](../../../.kiro/steering/development-standards.md) - Basic development and code standards
+- [Code Review Standards](../../../.kiro/steering/code-review-standards.md) - Code review process and quality standards
+- [Domain Events](../../../.kiro/steering/domain-events.md) - Domain event design and implementation
+- [Architecture Overview](../../architecture/overview.md) - Overall system architecture design
 
 ---
 
-**最後更新**: 2025年1月21日  
-**維護者**: Development Team  
-**版本**: 1.0  
-**狀態**: Active
+**Note**: This document provides detailed guidance on SOLID principles and design patterns. These principles and patterns should be applied consistently throughout the project to ensure code quality and maintainability.

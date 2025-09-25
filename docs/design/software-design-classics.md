@@ -1,465 +1,465 @@
-# 軟體設計經典書籍精要
-
-本文檔整理了軟體設計領域中的經典書籍及其核心概念，作為 DesignGuideline.MD 的補充資料。這些書籍涵蓋了從面向對象設計原則到架構模式的廣泛知識，為開發者提供了深入理解軟體設計的寶貴資源。
-
-## 目錄
-
-1. [面向對象設計原則](#面向對象設計原則)
-2. [領域驅動設計](#領域驅動設計)
-3. [代碼質量與重構](#代碼質量與重構)
-4. [架構設計](#架構設計)
-5. [特定設計原則深入探討](#特定設計原則深入探討)
-6. [實用技術實現](#實用技術實現)
-
-## 面向對象設計原則
-
-### 《設計模式：可復用面向對象軟件的基礎》(Design Patterns)
-**作者**: Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides (Gang of Four)
-
-#### 核心概念
-- **設計模式分類**：創建型、結構型和行為型模式
-- **組合優於繼承**：優先使用對象組合而非繼承來實現代碼復用
-- **針對接口編程**：依賴抽象而非具體實現
-- **最少知識原則**：一個對象應該對其他對象有最少的了解
-
-#### 關鍵模式
-1. **單一職責原則 (SRP)**
-   - 一個類應該只有一個變化的理由
-   - 實例：將訂單處理和訂單顯示分離為不同類
-
-2. **開放封閉原則 (OCP)**
-   - 軟件實體應該對擴展開放，對修改封閉
-   - 實例：使用策略模式實現不同的折扣計算方法
-
-3. **里氏替換原則 (LSP)**
-   - 子類型必須能夠替換其基類型
-   - 實例：所有支付方式實現相同的支付接口
-
-4. **接口隔離原則 (ISP)**
-   - 客戶端不應該依賴它不使用的接口
-   - 實例：將大型接口分解為多個特定用途的小接口
-
-5. **依賴倒置原則 (DIP)**
-   - 高層模塊不應該依賴低層模塊，兩者都應該依賴抽象
-   - 實例：業務邏輯依賴儲存庫接口而非具體實現
-
-### 《敏捷軟件開發：原則、模式與實踐》(Agile Software Development, Principles, Patterns, and Practices)
-**作者**: Robert C. Martin
-
-#### 核心概念
-- **SOLID 原則**：五個面向對象設計原則的縮寫
-- **包設計原則**：如何組織和設計包結構
-- **組件聚合**：如何將類組織成有凝聚力的組件
-- **設計圖**：使用 UML 和其他圖表來表達設計意圖
-
-#### 實踐要點
-1. **包設計原則**
-   - 發布等價原則 (REP)：重用的粒度就是發布的粒度
-   - 共同封閉原則 (CCP)：同一個原因修改的類應該在同一個包中
-   - 共同重用原則 (CRP)：不會一起重用的類不應該放在同一個包中
-
-2. **設計實踐**
-   - 迭代開發：小步前進，持續改進
-   - 測試驅動開發：先寫測試，再實現功能
-   - 重構：持續改進代碼結構
-
-## 領域驅動設計
-
-### 《領域驅動設計》(Domain-Driven Design)
-**作者**: Eric Evans
-
-#### 核心概念
-- **通用語言**：開發團隊和領域專家共享的語言
-- **界限上下文**：模型的應用邊界，在其中特定模型有明確定義
-- **領域模型**：對業務概念和規則的抽象表示
-- **戰略設計**：關注大局，如何劃分和集成不同的模型
-
-#### 關鍵模式
-1. **實體 (Entity)**
-   - 具有唯一標識的對象
-   - 特點：可變，有生命週期，需要被追蹤
-   - 實例：`Order`、`Customer`、`Product`
-
-2. **值對象 (Value Object)**
-   - 沒有概念上的標識，用屬性定義的對象
-   - 特點：不可變，可替換，無副作用
-   - 實例：`Money`、`Address`、`DateRange`
-
-3. **聚合 (Aggregate)**
-   - 一組相關對象的集合，視為一個單元
-   - 特點：有一個根實體，保證一致性邊界
-   - 實例：`Order`（根）及其 `OrderItems`
-
-4. **領域服務 (Domain Service)**
-   - 表示領域中的操作，而非事物
-   - 特點：無狀態，處理跨實體的業務邏輯
-   - 實例：`TransferService`、`PricingService`
-
-5. **領域事件 (Domain Event)**
-   - 表示領域中發生的事情
-   - 特點：不可變，表達過去發生的事實
-   - 實例：`OrderPlacedEvent`、`PaymentReceivedEvent`
-
-### 《實現領域驅動設計》(Implementing Domain-Driven Design)
-**作者**: Vaughn Vernon
-
-#### 核心概念
-- **戰術設計模式**：實體、值對象、聚合等的具體實現
-- **上下文映射**：不同界限上下文之間的關係
-- **事件驅動架構**：使用領域事件實現系統集成
-- **CQRS**：命令查詢職責分離模式
-
-#### 實踐要點
-1. **聚合設計原則**
-   - 根據不變條件設計聚合
-   - 盡量保持聚合小型化
-   - 通過標識引用其他聚合
-
-2. **上下文映射策略**
-   - 防腐層 (ACL)：隔離外部系統的影響
-   - 開放主機服務 (OHS)：提供 API 給其他上下文
-   - 發布語言 (PL)：多個上下文共享的通用語言
-
-3. **事件溯源**
-   - 存儲狀態變化而非最終狀態
-   - 通過重放事件重建聚合狀態
-   - 提供完整的審計和歷史記錄
-
-## 代碼質量與重構
-
-### 《重構：改善既有代碼的設計》(Refactoring)
-**作者**: Martin Fowler
-
-#### 核心概念
-- **重構定義**：在不改變代碼外部行為的前提下改善內部結構
-- **代碼氣味**：表明代碼可能存在問題的徵兆
-- **重構技術**：一系列小步驟的代碼轉換
-- **測試保障**：確保重構不破壞功能
-
-#### 常見重構手法
-1. **提取方法 (Extract Method)**
-   - 將代碼片段提取為獨立方法
-   - 目的：提高可讀性和復用性
-   - 時機：當方法過長或一段代碼有明確意圖
-
-2. **移動方法 (Move Method)**
-   - 將方法從一個類移到另一個類
-   - 目的：提高內聚性
-   - 時機：當方法與其他類的數據交互更多
-
-3. **替換條件表達式 (Replace Conditional with Polymorphism)**
-   - 用多態替代條件邏輯
-   - 目的：消除 switch/if 語句，增加擴展性
-   - 時機：當條件邏輯基於對象類型
-
-4. **提取類 (Extract Class)**
-   - 將相關功能移到新類中
-   - 目的：提高單一職責
-   - 時機：當一個類有多個職責
-
-### 《代碼整潔之道》(Clean Code)
-**作者**: Robert C. Martin
-
-#### 核心概念
-- **整潔代碼的特徵**：可讀、簡單、直接
-- **有意義的命名**：名稱應該揭示意圖
-- **函數設計**：小型、單一職責、抽象層級一致
-- **註釋使用**：好代碼勝過好註釋
-
-#### 實踐要點
-1. **命名原則**
-   - 使用描述性名稱
-   - 避免誤導性縮寫
-   - 使用可搜索的名稱
-   - 類名應為名詞，方法名應為動詞
-
-2. **函數設計**
-   - 函數應該短小（通常不超過20行）
-   - 只做一件事
-   - 參數越少越好（理想是0-2個）
-   - 避免副作用
-
-3. **錯誤處理**
-   - 使用異常而非返回碼
-   - 提供有意義的錯誤信息
-   - 定義異常類別
-   - 不返回或傳遞 null
-
-### 《程序員修煉之道》(The Pragmatic Programmer)
-**作者**: Andy Hunt & Dave Thomas
-
-#### 核心概念
-- **DRY 原則**：不要重複自己
-- **正交性**：消除不必要的依賴
-- **可逆性**：保持設計決策的可逆性
-- **曳光彈**：快速構建可工作的系統骨架
-
-#### 實踐要點
-1. **破窗理論**
-   - 不容忍"破窗"（低質量代碼）
-   - 持續維護代碼質量
-   - 定期重構和改進
-
-2. **原型與學習**
-   - 使用原型探索解決方案
-   - 持續學習新技術和方法
-   - 批判性思考和質疑假設
-
-3. **自動化**
-   - 自動化構建和測試
-   - 自動化部署流程
-   - 創建有用的工具
-
-## 架構設計
-
-### 《企業應用架構模式》(Patterns of Enterprise Application Architecture)
-**作者**: Martin Fowler
-
-#### 核心概念
-- **分層架構**：表現層、領域層、數據層
-- **領域邏輯模式**：事務腳本、領域模型、表模塊
-- **數據源架構**：活動記錄、數據映射器
-- **對象關係行為**：延遲加載、身份映射
-
-#### 關鍵模式
-1. **領域模型 (Domain Model)**
-   - 將業務邏輯組織為對象網絡
-   - 特點：反映業務概念，封裝業務規則
-   - 適用：複雜業務邏輯
-
-2. **數據映射器 (Data Mapper)**
-   - 將對象與數據庫表分離
-   - 特點：領域對象不知道持久化細節
-   - 適用：複雜領域模型
-
-3. **服務層 (Service Layer)**
-   - 定義應用的邊界和入口點
-   - 特點：協調多個領域對象，處理事務
-   - 適用：需要 API 的應用
-
-4. **單元工作 (Unit of Work)**
-   - 跟踪業務事務中的變更
-   - 特點：延遲更新，批量提交
-   - 適用：需要事務一致性的場景
-
-### 《整潔架構》(Clean Architecture)
-**作者**: Robert C. Martin
-
-#### 核心概念
-- **依賴規則**：依賴方向始終指向內層
-- **實體層**：核心業務規則
-- **用例層**：應用特定業務規則
-- **接口適配層**：轉換數據格式
-- **框架和驅動層**：外部細節
-
-#### 架構原則
-1. **獨立於框架**
-   - 架構不依賴於任何外部庫或框架
-   - 框架是工具，而非系統的約束
-
-2. **可測試性**
-   - 業務規則可以在沒有 UI、數據庫等的情況下測試
-   - 測試不依賴於外部元素
-
-3. **獨立於 UI**
-   - UI 可以輕易更改而不影響系統其他部分
-   - 業務邏輯不依賴於 UI
-
-4. **獨立於數據庫**
-   - 可以替換數據庫而不影響業務規則
-   - 業務實體不知道持久化細節
-
-### 《軟件架構的藝術》(The Art of Software Architecture)
-**作者**: Richard N. Taylor, Nenad Medvidović, Eric M. Dashofy
-
-#### 核心概念
-- **架構風格**：系統組織的基本模式
-- **架構描述語言**：正式描述架構的語言
-- **架構評估**：評估架構設計的方法
-- **架構演化**：如何管理架構的變化
-
-#### 架構風格
-1. **管道過濾器 (Pipe and Filter)**
-   - 數據流經一系列處理組件
-   - 適用：數據處理系統
-
-2. **分層系統 (Layered Systems)**
-   - 將系統組織為抽象層
-   - 適用：大多數企業應用
-
-3. **事件驅動系統 (Event-driven Systems)**
-   - 組件通過事件通信
-   - 適用：高度解耦的系統
-
-4. **微服務架構 (Microservices)**
-   - 將系統分解為獨立部署的服務
-   - 適用：大型、複雜系統
-
-## 特定設計原則深入探討
-
-### 《Tell, Don't Ask: Demeter's Law》
-**作者**: Brett L. Schuchert
-
-#### 核心概念
-- **迪米特法則**：一個對象應該對其他對象有最少的了解
-- **Tell, Don't Ask 原則**：告訴對象做什麼，而不是詢問其狀態後做決定
-- **行為封裝**：將行為放在數據所在的地方
-- **責任分配**：將責任分配給擁有必要信息的對象
-
-#### 實踐要點
-1. **方法鏈問題**
-   - 避免 `a.getB().getC().doSomething()`
-   - 替代方案：`a.doSomethingWithC()`
-
-2. **行為位置**
-   - 行為應該放在數據所在的地方
-   - 避免"數據類"和"操作類"的分離
-
-3. **消息傳遞**
-   - 面向對象編程是關於消息傳遞
-   - 對象應該通過消息協作，而非直接操作其他對象的內部
-
-### 《Object Thinking》
-**作者**: David West
-
-#### 核心概念
-- **對象思維**：從對象的角度思考問題
-- **行為優先**：先考慮對象的責任和行為，再考慮其屬性
-- **擬人化**：將對象視為有能力和責任的"人"
-- **協作**：系統是對象之間的協作網絡
-
-#### 實踐要點
-1. **CRC 卡片**
-   - 類-責任-協作者卡片
-   - 用於識別對象、其責任和協作者
-   - 促進團隊討論和設計
-
-2. **責任驅動設計**
-   - 從系統責任開始
-   - 將責任分配給適當的對象
-   - 識別協作關係
-
-3. **對象自治**
-   - 對象應該控制自己的狀態和行為
-   - 最小化對象間的依賴
-   - 通過明確定義的接口進行協作
-
-### 《Growing Object-Oriented Software, Guided by Tests》
-**作者**: Steve Freeman, Nat Pryce
-
-#### 核心概念
-- **測試驅動開發 (TDD)**：先寫測試，再實現功能
-- **對象導向設計**：通過測試驅動良好的對象設計
-- **模擬對象**：使用模擬對象測試對象間的交互
-- **演進式設計**：通過小步驟逐漸改進設計
-
-#### 實踐要點
-1. **外部質量與內部質量**
-   - 外部質量：系統的功能和性能
-   - 內部質量：代碼的可維護性和靈活性
-   - 兩者同等重要
-
-2. **聆聽測試**
-   - 測試難寫通常表明設計有問題
-   - 使用測試困難作為重構的信號
-
-3. **模擬與存根**
-   - 模擬對象：驗證交互
-   - 存根對象：提供測試數據
-   - 何時使用真實對象，何時使用測試替身
-
-## 實用技術實現
-
-### 《Effective Java》
-**作者**: Joshua Bloch
-
-#### 核心概念
-- **Java 最佳實踐**：在 Java 中實現設計原則的具體方法
-- **API 設計**：如何設計清晰、一致的 API
-- **性能優化**：如何在不犧牲設計質量的前提下優化性能
-- **並發編程**：如何安全地處理多線程
-
-#### 實踐要點
-1. **創建和銷毀對象**
-   - 考慮使用靜態工廠方法代替構造器
-   - 使用建造者模式處理多參數
-   - 通過私有構造器強化單例屬性
-
-2. **所有對象的通用方法**
-   - 正確覆寫 equals 和 hashCode
-   - 始終覆寫 toString
-   - 謹慎覆寫 clone
-
-3. **類和接口**
-   - 使類和成員的可訪問性最小化
-   - 優先使用組合而非繼承
-   - 接口優於抽象類
-
-4. **泛型**
-   - 不要使用原生態類型
-   - 消除未檢查警告
-   - 優先考慮泛型方法
-
-### 《Java 8 實戰》(Java 8 in Action)
-**作者**: Raoul-Gabriel Urma, Mario Fusco, Alan Mycroft
-
-#### 核心概念
-- **函數式編程**：在 Java 中應用函數式思想
-- **流處理**：使用 Stream API 處理集合
-- **默認方法**：在接口中提供默認實現
-- **Optional**：處理可能為空的值
-
-#### 實踐要點
-1. **Lambda 表達式**
-   - 用於簡化匿名類
-   - 提高代碼可讀性
-   - 促進函數式風格
+# Software Design Classics Essentials
+
+This document compiles classic books in the software design field and their core concepts, serving as supplementary material to DesignGuideline.MD. These books cover a wide range of knowledge from object-oriented design principles to architectural patterns, providing developers with valuable resources for deep understanding of software design.
+
+## Table of Contents
+
+1. [Object-Oriented Design Principles](#object-oriented-design-principles)
+2. [Domain-Driven Design](#domain-driven-design)
+3. [Code Quality and Refactoring](#code-quality-and-refactoring)
+4. [Architecture Design](#architecture-design)
+5. [In-Depth Exploration of Specific Design Principles](#in-depth-exploration-of-specific-design-principles)
+6. [Practical Technical Implementation](#practical-technical-implementation)
+
+## Object-Oriented Design Principles
+
+### "Design Patterns: Elements of Reusable Object-Oriented Software"
+**Authors**: Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides (Gang of Four)
+
+#### Core Concepts
+- **Design Pattern Classification**: Creational, structural, and behavioral patterns
+- **Composition Over Inheritance**: Prefer object composition over inheritance for code reuse
+- **Program to Interfaces**: Depend on abstractions rather than concrete implementations
+- **Principle of Least Knowledge**: An object should have minimal knowledge of other objects
+
+#### Key Patterns
+1. **Single Responsibility Principle (SRP)**
+   - A class should have only one reason to change
+   - Example: Separate order processing and order display into different classes
+
+2. **Open-Closed Principle (OCP)**
+   - Software entities should be open for extension, closed for modification
+   - Example: Use strategy pattern to implement different discount calculation methods
+
+3. **Liskov Substitution Principle (LSP)**
+   - Subtypes must be substitutable for their base types
+   - Example: All payment methods implement the same payment interface
+
+4. **Interface Segregation Principle (ISP)**
+   - Clients should not depend on interfaces they don't use
+   - Example: Break large interfaces into multiple specific-purpose small interfaces
+
+5. **Dependency Inversion Principle (DIP)**
+   - High-level modules should not depend on low-level modules; both should depend on abstractions
+   - Example: Business logic depends on repository interfaces rather than concrete implementations
+
+### "Agile Software Development, Principles, Patterns, and Practices"
+**Author**: Robert C. Martin
+
+#### Core Concepts
+- **SOLID Principles**: Acronym for five object-oriented design principles
+- **Package Design Principles**: How to organize and design package structure
+- **Component Cohesion**: How to organize classes into cohesive components
+- **Design Diagrams**: Using UML and other diagrams to express design intent
+
+#### Practice Points
+1. **Package Design Principles**
+   - Release Equivalence Principle (REP): The granule of reuse is the granule of release
+   - Common Closure Principle (CCP): Classes that change for the same reason should be in the same package
+   - Common Reuse Principle (CRP): Classes that are not reused together should not be in the same package
+
+2. **Design Practices**
+   - Iterative development: Small steps forward, continuous improvement
+   - Test-driven development: Write tests first, then implement functionality
+   - Refactoring: Continuously improve code structure
+
+## Domain-Driven Design
+
+### "Domain-Driven Design"
+**Author**: Eric Evans
+
+#### Core Concepts
+- **Ubiquitous Language**: Language shared by development team and domain experts
+- **Bounded Context**: Model application boundaries where specific models have clear definitions
+- **Domain Model**: Abstract representation of business concepts and rules
+- **Strategic Design**: Focus on the big picture, how to divide and integrate different models
+
+#### Key Patterns
+1. **Entity**
+   - Objects with unique identity
+   - Characteristics: Mutable, has lifecycle, needs to be tracked
+   - Examples: `Order`, `Customer`, `Product`
+
+2. **Value Object**
+   - Objects without conceptual identity, defined by attributes
+   - Characteristics: Immutable, replaceable, no side effects
+   - Examples: `Money`, `Address`, `DateRange`
+
+3. **Aggregate**
+   - Collection of related objects treated as a unit
+   - Characteristics: Has a root entity, ensures consistency boundaries
+   - Examples: `Order` (root) and its `OrderItems`
+
+4. **Domain Service**
+   - Represents operations in the domain, not things
+   - Characteristics: Stateless, handles business logic across entities
+   - Examples: `TransferService`, `PricingService`
+
+5. **Domain Event**
+   - Represents something that happened in the domain
+   - Characteristics: Immutable, expresses facts that occurred in the past
+   - Examples: `OrderPlacedEvent`, `PaymentReceivedEvent`
+
+### "Implementing Domain-Driven Design"
+**Author**: Vaughn Vernon
+
+#### Core Concepts
+- **Tactical Design Patterns**: Concrete implementation of entities, value objects, aggregates, etc.
+- **Context Mapping**: Relationships between different bounded contexts
+- **Event-Driven Architecture**: Using domain events for system integration
+- **CQRS**: Command Query Responsibility Segregation pattern
+
+#### Practice Points
+1. **Aggregate Design Principles**
+   - Design aggregates based on invariants
+   - Keep aggregates small
+   - Reference other aggregates by identity
+
+2. **Context Mapping Strategies**
+   - Anti-Corruption Layer (ACL): Isolate external system influence
+   - Open Host Service (OHS): Provide API to other contexts
+   - Published Language (PL): Common language shared by multiple contexts
+
+3. **Event Sourcing**
+   - Store state changes rather than final state
+   - Rebuild aggregate state by replaying events
+   - Provide complete audit and historical records
+
+## Code Quality and Refactoring
+
+### "Refactoring: Improving the Design of Existing Code"
+**Author**: Martin Fowler
+
+#### Core Concepts
+- **Refactoring Definition**: Improving internal structure without changing external behavior
+- **Code Smells**: Signs that code may have problems
+- **Refactoring Techniques**: Series of small-step code transformations
+- **Test Safety**: Ensure refactoring doesn't break functionality
+
+#### Common Refactoring Techniques
+1. **Extract Method**
+   - Extract code fragments into independent methods
+   - Purpose: Improve readability and reusability
+   - When: Method is too long or code segment has clear intent
+
+2. **Move Method**
+   - Move method from one class to another
+   - Purpose: Improve cohesion
+   - When: Method interacts more with data from other classes
+
+3. **Replace Conditional with Polymorphism**
+   - Replace conditional logic with polymorphism
+   - Purpose: Eliminate switch/if statements, increase extensibility
+   - When: Conditional logic is based on object type
+
+4. **Extract Class**
+   - Move related functionality to new class
+   - Purpose: Improve single responsibility
+   - When: One class has multiple responsibilities
+
+### "Clean Code"
+**Author**: Robert C. Martin
+
+#### Core Concepts
+- **Clean Code Characteristics**: Readable, simple, direct
+- **Meaningful Naming**: Names should reveal intent
+- **Function Design**: Small, single responsibility, consistent abstraction level
+- **Comment Usage**: Good code is better than good comments
+
+#### Practice Points
+1. **Naming Principles**
+   - Use descriptive names
+   - Avoid misleading abbreviations
+   - Use searchable names
+   - Class names should be nouns, method names should be verbs
+
+2. **Function Design**
+   - Functions should be small (usually no more than 20 lines)
+   - Do one thing only
+   - Fewer parameters are better (ideally 0-2)
+   - Avoid side effects
+
+3. **Error Handling**
+   - Use exceptions instead of return codes
+   - Provide meaningful error messages
+   - Define exception classes
+   - Don't return or pass null
+
+### "The Pragmatic Programmer"
+**Authors**: Andy Hunt & Dave Thomas
+
+#### Core Concepts
+- **DRY Principle**: Don't Repeat Yourself
+- **Orthogonality**: Eliminate unnecessary dependencies
+- **Reversibility**: Keep design decisions reversible
+- **Tracer Bullets**: Quickly build working system skeleton
+
+#### Practice Points
+1. **Broken Window Theory**
+   - Don't tolerate "broken windows" (low-quality code)
+   - Continuously maintain code quality
+   - Regular refactoring and improvement
+
+2. **Prototyping and Learning**
+   - Use prototypes to explore solutions
+   - Continuously learn new technologies and methods
+   - Critical thinking and questioning assumptions
+
+3. **Automation**
+   - Automate build and testing
+   - Automate deployment processes
+   - Create useful tools
+
+## Architecture Design
+
+### "Patterns of Enterprise Application Architecture"
+**Author**: Martin Fowler
+
+#### Core Concepts
+- **Layered Architecture**: Presentation layer, domain layer, data layer
+- **Domain Logic Patterns**: Transaction script, domain model, table module
+- **Data Source Architecture**: Active record, data mapper
+- **Object-Relational Behavioral**: Lazy loading, identity map
+
+#### Key Patterns
+1. **Domain Model**
+   - Organize business logic as object network
+   - Characteristics: Reflects business concepts, encapsulates business rules
+   - Suitable for: Complex business logic
+
+2. **Data Mapper**
+   - Separate objects from database tables
+   - Characteristics: Domain objects don't know persistence details
+   - Suitable for: Complex domain models
+
+3. **Service Layer**
+   - Define application boundaries and entry points
+   - Characteristics: Coordinate multiple domain objects, handle transactions
+   - Suitable for: Applications needing APIs
+
+4. **Unit of Work**
+   - Track changes in business transactions
+   - Characteristics: Delayed updates, batch commits
+   - Suitable for: Scenarios requiring transactional consistency
+
+### "Clean Architecture"
+**Author**: Robert C. Martin
+
+#### Core Concepts
+- **Dependency Rule**: Dependencies always point toward inner layers
+- **Entity Layer**: Core business rules
+- **Use Case Layer**: Application-specific business rules
+- **Interface Adapter Layer**: Convert data formats
+- **Framework and Driver Layer**: External details
+
+#### Architecture Principles
+1. **Independent of Frameworks**
+   - Architecture doesn't depend on any external libraries or frameworks
+   - Frameworks are tools, not system constraints
+
+2. **Testability**
+   - Business rules can be tested without UI, database, etc.
+   - Tests don't depend on external elements
+
+3. **Independent of UI**
+   - UI can be easily changed without affecting other parts of the system
+   - Business logic doesn't depend on UI
+
+4. **Independent of Database**
+   - Can replace database without affecting business rules
+   - Business entities don't know persistence details
+
+### "The Art of Software Architecture"
+**Authors**: Richard N. Taylor, Nenad Medvidović, Eric M. Dashofy
+
+#### Core Concepts
+- **Architectural Styles**: Basic patterns of system organization
+- **Architecture Description Languages**: Formal languages for describing architecture
+- **Architecture Evaluation**: Methods for evaluating architectural design
+- **Architecture Evolution**: How to manage architectural changes
+
+#### Architectural Styles
+1. **Pipe and Filter**
+   - Data flows through a series of processing components
+   - Suitable for: Data processing systems
+
+2. **Layered Systems**
+   - Organize system into abstraction layers
+   - Suitable for: Most enterprise applications
+
+3. **Event-driven Systems**
+   - Components communicate through events
+   - Suitable for: Highly decoupled systems
+
+4. **Microservices Architecture**
+   - Decompose system into independently deployable services
+   - Suitable for: Large, complex systems
+
+## In-Depth Exploration of Specific Design Principles
+
+### "Tell, Don't Ask: Demeter's Law"
+**Author**: Brett L. Schuchert
+
+#### Core Concepts
+- **Law of Demeter**: An object should have minimal knowledge of other objects
+- **Tell, Don't Ask Principle**: Tell objects what to do, don't ask their state and then make decisions
+- **Behavior Encapsulation**: Put behavior where the data is
+- **Responsibility Assignment**: Assign responsibilities to objects that have necessary information
+
+#### Practice Points
+1. **Method Chain Problems**
+   - Avoid `a.getB().getC().doSomething()`
+   - Alternative: `a.doSomethingWithC()`
+
+2. **Behavior Location**
+   - Behavior should be where the data is
+   - Avoid separation of "data classes" and "operation classes"
+
+3. **Message Passing**
+   - Object-oriented programming is about message passing
+   - Objects should collaborate through messages, not directly manipulate other objects' internals
+
+### "Object Thinking"
+**Author**: David West
+
+#### Core Concepts
+- **Object Thinking**: Think about problems from object perspective
+- **Behavior First**: Consider object responsibilities and behaviors first, then attributes
+- **Anthropomorphism**: View objects as "people" with capabilities and responsibilities
+- **Collaboration**: System is a network of collaboration between objects
+
+#### Practice Points
+1. **CRC Cards**
+   - Class-Responsibility-Collaborator cards
+   - Used to identify objects, their responsibilities, and collaborators
+   - Facilitate team discussion and design
+
+2. **Responsibility-Driven Design**
+   - Start with system responsibilities
+   - Assign responsibilities to appropriate objects
+   - Identify collaboration relationships
+
+3. **Object Autonomy**
+   - Objects should control their own state and behavior
+   - Minimize dependencies between objects
+   - Collaborate through well-defined interfaces
+
+### "Growing Object-Oriented Software, Guided by Tests"
+**Authors**: Steve Freeman, Nat Pryce
+
+#### Core Concepts
+- **Test-Driven Development (TDD)**: Write tests first, then implement functionality
+- **Object-Oriented Design**: Drive good object design through tests
+- **Mock Objects**: Use mock objects to test interactions between objects
+- **Evolutionary Design**: Gradually improve design through small steps
+
+#### Practice Points
+1. **External Quality vs Internal Quality**
+   - External quality: System functionality and performance
+   - Internal quality: Code maintainability and flexibility
+   - Both are equally important
+
+2. **Listen to Tests**
+   - Difficult tests usually indicate design problems
+   - Use test difficulty as refactoring signals
+
+3. **Mocks vs Stubs**
+   - Mock objects: Verify interactions
+   - Stub objects: Provide test data
+   - When to use real objects vs test doubles
+
+## Practical Technical Implementation
+
+### "Effective Java"
+**Author**: Joshua Bloch
+
+#### Core Concepts
+- **Java Best Practices**: Specific methods for implementing design principles in Java
+- **API Design**: How to design clear, consistent APIs
+- **Performance Optimization**: How to optimize performance without sacrificing design quality
+- **Concurrent Programming**: How to safely handle multithreading
+
+#### Practice Points
+1. **Creating and Destroying Objects**
+   - Consider static factory methods instead of constructors
+   - Use builder pattern for multiple parameters
+   - Enforce singleton property with private constructor
+
+2. **Methods Common to All Objects**
+   - Override equals and hashCode correctly
+   - Always override toString
+   - Override clone judiciously
+
+3. **Classes and Interfaces**
+   - Minimize accessibility of classes and members
+   - Favor composition over inheritance
+   - Prefer interfaces to abstract classes
+
+4. **Generics**
+   - Don't use raw types
+   - Eliminate unchecked warnings
+   - Favor generic methods
+
+### "Java 8 in Action"
+**Authors**: Raoul-Gabriel Urma, Mario Fusco, Alan Mycroft
+
+#### Core Concepts
+- **Functional Programming**: Applying functional thinking in Java
+- **Stream Processing**: Using Stream API to process collections
+- **Default Methods**: Providing default implementations in interfaces
+- **Optional**: Handling potentially null values
+
+#### Practice Points
+1. **Lambda Expressions**
+   - Used to simplify anonymous classes
+   - Improve code readability
+   - Promote functional style
 
 2. **Stream API**
-   - 聲明式數據處理
-   - 支持並行處理
-   - 提高代碼表達力
+   - Declarative data processing
+   - Support parallel processing
+   - Improve code expressiveness
 
-3. **Optional 類型**
-   - 明確表達可能缺失的值
-   - 避免 NullPointerException
-   - 強制客戶端處理空值情況
+3. **Optional Type**
+   - Explicitly express potentially missing values
+   - Avoid NullPointerException
+   - Force clients to handle null cases
 
-### 《函數式編程思想》(Functional Thinking)
-**作者**: Neal Ford
+### "Functional Thinking"
+**Author**: Neal Ford
 
-#### 核心概念
-- **函數式範式**：將計算視為函數評估
-- **不可變性**：避免狀態變化
-- **高階函數**：函數作為參數和返回值
-- **組合**：通過組合小函數構建複雜功能
+#### Core Concepts
+- **Functional Paradigm**: View computation as function evaluation
+- **Immutability**: Avoid state changes
+- **Higher-Order Functions**: Functions as parameters and return values
+- **Composition**: Build complex functionality by composing small functions
 
-#### 實踐要點
-1. **避免副作用**
-   - 函數不應修改外部狀態
-   - 相同輸入總是產生相同輸出
-   - 提高可測試性和可推理性
+#### Practice Points
+1. **Avoid Side Effects**
+   - Functions should not modify external state
+   - Same input always produces same output
+   - Improve testability and reasoning
 
-2. **函數組合**
-   - 通過組合小函數構建複雜功能
-   - 使用管道處理數據轉換
-   - 提高代碼復用性
+2. **Function Composition**
+   - Build complex functionality by composing small functions
+   - Use pipelines for data transformation
+   - Improve code reusability
 
-3. **惰性求值**
-   - 延遲計算直到需要結果
-   - 避免不必要的計算
-   - 支持無限數據結構
+3. **Lazy Evaluation**
+   - Delay computation until result is needed
+   - Avoid unnecessary calculations
+   - Support infinite data structures
 
-## 總結
+## Summary
 
-這些經典書籍提供了軟體設計的全面視角，從基本原則到具體實現。通過學習和應用這些知識，開發者可以創建更加健壯、可維護和靈活的軟體系統。
+These classic books provide a comprehensive perspective on software design, from basic principles to concrete implementations. By learning and applying this knowledge, developers can create more robust, maintainable, and flexible software systems.
 
-關鍵是理解這些原則背後的思想，而不僅僅是機械地應用模式和技術。好的設計來自於深入理解問題領域，並選擇適合特定情境的解決方案。
+The key is understanding the thinking behind these principles, not just mechanically applying patterns and techniques. Good design comes from deep understanding of the problem domain and choosing solutions appropriate for specific contexts.
 
-## 延伸閱讀
+## Further Reading
 
-1. 《修改代碼的藝術》(Working Effectively with Legacy Code) - Michael Feathers
-2. 《持續交付》(Continuous Delivery) - Jez Humble, David Farley
-3. 《架構整潔之道》(Clean Architecture) - Robert C. Martin
-4. 《測試驅動開發》(Test-Driven Development) - Kent Beck
-5. 《領域特定語言》(Domain-Specific Languages) - Martin Fowler
+1. "Working Effectively with Legacy Code" - Michael Feathers
+2. "Continuous Delivery" - Jez Humble, David Farley
+3. "Clean Architecture" - Robert C. Martin
+4. "Test-Driven Development" - Kent Beck
+5. "Domain-Specific Languages" - Martin Fowler

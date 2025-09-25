@@ -128,11 +128,11 @@ The Deployment Viewpoint focuses on system deployment and environment configurat
 - **Monitoring Visualization**: Visual display of deployment status and metrics
 - **Related Implementation**: User Interface Design
 
-## 相關圖表
+## Related Diagrams
 
-### AWS 基礎設施架構
-- **[AWS 基礎設施架構](../../diagrams/aws-infrastructure.md)** - 完整的 AWS CDK 基礎設施概覽
-- **## AWS 基礎設施圖表
+### AWS Infrastructure Architecture
+- **[AWS Infrastructure Architecture](../../diagrams/aws-infrastructure.md)** - Complete AWS CDK infrastructure overview
+- **AWS Infrastructure Diagram
 
 ```mermaid
 graph TB
@@ -148,230 +148,230 @@ graph TB
     EKS --> RDS
     EKS --> S3
     EKS --> CloudWatch
-```** - AWS 服務架構 Mermaid 圖表
+```** - AWS services architecture Mermaid diagram
 
-### 部署流程和網路
-- ## 基礎設施架構
+### Deployment Process and Network
+- **Infrastructure Architecture
 
 ```mermaid
 graph TB
-    subgraph "雲端基礎設施" ["雲端基礎設施 (Cloud Infrastructure)"]
-        subgraph "AWS 區域" ["AWS Region (us-east-1)"]
-            subgraph "可用區 A" ["Availability Zone A"]
-                EKS_A[EKS 節點群組 A<br/>Kubernetes Nodes]
-                RDS_PRIMARY[(RDS 主資料庫<br/>PostgreSQL Primary)]
-                REDIS_A[(Redis 主節點<br/>ElastiCache Primary)]
+    subgraph "Cloud Infrastructure"
+        subgraph "AWS Region (us-east-1)"
+            subgraph "Availability Zone A"
+                EKS_A[EKS Node Group A<br/>Kubernetes Nodes]
+                RDS_PRIMARY[(RDS Primary Database<br/>PostgreSQL Primary)]
+                REDIS_A[(Redis Primary Node<br/>ElastiCache Primary)]
             end
             
-            subgraph "可用區 B" ["Availability Zone B"]
-                EKS_B[EKS 節點群組 B<br/>Kubernetes Nodes]
-                RDS_STANDBY[(RDS 備用資料庫<br/>PostgreSQL Standby)]
-                REDIS_B[(Redis 副本節點<br/>ElastiCache Replica)]
+            subgraph "Availability Zone B"
+                EKS_B[EKS Node Group B<br/>Kubernetes Nodes]
+                RDS_STANDBY[(RDS Standby Database<br/>PostgreSQL Standby)]
+                REDIS_B[(Redis Replica Node<br/>ElastiCache Replica)]
             end
             
-            subgraph "可用區 C" ["Availability Zone C"]
-                EKS_C[EKS 節點群組 C<br/>Kubernetes Nodes]
-                OPENSEARCH[(OpenSearch 集群<br/>Search & Analytics)]
+            subgraph "Availability Zone C"
+                EKS_C[EKS Node Group C<br/>Kubernetes Nodes]
+                OPENSEARCH[(OpenSearch Cluster<br/>Search & Analytics)]
             end
         end
         
-        subgraph "全球服務" ["Global Services"]
-            CLOUDFRONT[CloudFront<br/>全球 CDN]
-            ROUTE53[Route 53<br/>DNS 服務]
-            WAF[AWS WAF<br/>Web 應用防火牆]
+        subgraph "Global Services"
+            CLOUDFRONT[CloudFront<br/>Global CDN]
+            ROUTE53[Route 53<br/>DNS Service]
+            WAF[AWS WAF<br/>Web Application Firewall]
         end
         
-        subgraph "區域服務" ["Regional Services"]
-            ALB[Application Load Balancer<br/>應用負載均衡器]
-            API_GW[API Gateway<br/>API 管理]
-            S3[(S3 存儲桶<br/>檔案存儲)]
-            MSK[MSK Kafka<br/>事件流]
-            EVENT_BRIDGE[EventBridge<br/>事件路由]
+        subgraph "Regional Services"
+            ALB[Application Load Balancer]
+            API_GW[API Gateway<br/>API Management]
+            S3[(S3 Bucket<br/>File Storage)]
+            MSK[MSK Kafka<br/>Event Streaming]
+            EVENT_BRIDGE[EventBridge<br/>Event Routing]
         end
     end
     
-    subgraph "容器化平台" ["容器化平台 (Container Platform)"]
-        subgraph "EKS 集群" ["EKS Cluster"]
-            subgraph "系統命名空間" ["System Namespaces"]
-                KUBE_SYSTEM[kube-system<br/>Kubernetes 系統組件]
-                AWS_LOAD_BALANCER[aws-load-balancer-controller<br/>負載均衡控制器]
-                CLUSTER_AUTOSCALER[cluster-autoscaler<br/>集群自動擴展]
-                METRICS_SERVER[metrics-server<br/>指標服務器]
-            end
-            
-            subgraph "應用命名空間" ["Application Namespaces"]
-                PROD_NS[production<br/>生產環境]
-                STAGING_NS[staging<br/>測試環境]
-                MONITORING_NS[monitoring<br/>監控系統]
+    subgraph "Container Platform"
+        subgraph "EKS Cluster"
+            subgraph "System Namespaces"
+                KUBE_SYSTEM[kube-system<br/>Kubernetes System Components]
+                AWS_LOAD_BALANCER[aws-load-balancer-controller<br/>Load Balancer Controller]
+                CLUSTER_AUTOSCALER[cluster-autoscaler<br/>Cluster Autoscaler]
+                METRICS_SERVER[metrics-server<br/>Metrics Server]
             end
             
-            subgraph "微服務部署" ["Microservices Deployment"]
-                CUSTOMER_SVC[customer-service<br/>客戶服務]
-                ORDER_SVC[order-service<br/>訂單服務]
-                PRODUCT_SVC[product-service<br/>產品服務]
-                PAYMENT_SVC[payment-service<br/>支付服務]
-                INVENTORY_SVC[inventory-service<br/>庫存服務]
-                NOTIFICATION_SVC[notification-service<br/>通知服務]
+            subgraph "Application Namespaces"
+                PROD_NS[production<br/>Production Environment]
+                STAGING_NS[staging<br/>Staging Environment]
+                MONITORING_NS[monitoring<br/>Monitoring System]
+            end
+            
+            subgraph "Microservices Deployment"
+                CUSTOMER_SVC[customer-service<br/>Customer Service]
+                ORDER_SVC[order-service<br/>Order Service]
+                PRODUCT_SVC[product-service<br/>Product Service]
+                PAYMENT_SVC[payment-service<br/>Payment Service]
+                INVENTORY_SVC[inventory-service<br/>Inventory Service]
+                NOTIFICATION_SVC[notification-service<br/>Notification Service]
             end
         end
         
-        subgraph "容器註冊表" ["Container Registry"]
-            ECR[AWS ECR<br/>容器映像註冊表]
-            IMAGE_SCANNING[映像安全掃描<br/>Image Security Scanning]
-            LIFECYCLE_POLICY[生命週期政策<br/>Lifecycle Policy]
+        subgraph "Container Registry"
+            ECR[AWS ECR<br/>Container Image Registry]
+            IMAGE_SCANNING[Image Security Scanning]
+            LIFECYCLE_POLICY[Lifecycle Policy]
         end
     end
     
-    subgraph "CI/CD 管道" ["CI/CD Pipeline"]
-        subgraph "源代碼管理" ["Source Code Management"]
-            GITHUB[GitHub<br/>源代碼倉庫]
-            GITHUB_ACTIONS[GitHub Actions<br/>CI/CD 工作流程]
+    subgraph "CI/CD Pipeline"
+        subgraph "Source Code Management"
+            GITHUB[GitHub<br/>Source Code Repository]
+            GITHUB_ACTIONS[GitHub Actions<br/>CI/CD Workflows]
         end
         
-        subgraph "建置和測試" ["Build & Test"]
-            BUILD_STAGE[建置階段<br/>Build Stage]
-            TEST_STAGE[測試階段<br/>Test Stage]
-            SECURITY_SCAN[安全掃描<br/>Security Scan]
-            QUALITY_GATE[品質閘道<br/>Quality Gate]
+        subgraph "Build & Test"
+            BUILD_STAGE[Build Stage]
+            TEST_STAGE[Test Stage]
+            SECURITY_SCAN[Security Scan]
+            QUALITY_GATE[Quality Gate]
         end
         
-        subgraph "部署自動化" ["Deployment Automation"]
-            CDK_DEPLOY[CDK 部署<br/>Infrastructure Deployment]
-            K8S_DEPLOY[Kubernetes 部署<br/>Application Deployment]
-            ROLLBACK[回滾機制<br/>Rollback Mechanism]
+        subgraph "Deployment Automation"
+            CDK_DEPLOY[CDK Deploy<br/>Infrastructure Deployment]
+            K8S_DEPLOY[Kubernetes Deploy<br/>Application Deployment]
+            ROLLBACK[Rollback Mechanism]
         end
     end
     
-    subgraph "基礎設施即代碼" ["基礎設施即代碼 (IaC)"]
-        subgraph "AWS CDK" ["AWS CDK"]
-            NETWORK_STACK[網路堆疊<br/>Network Stack]
-            SECURITY_STACK[安全堆疊<br/>Security Stack]
-            DATABASE_STACK[資料庫堆疊<br/>Database Stack]
-            APPLICATION_STACK[應用堆疊<br/>Application Stack]
-            MONITORING_STACK[監控堆疊<br/>Monitoring Stack]
+    subgraph "Infrastructure as Code (IaC)"
+        subgraph "AWS CDK"
+            NETWORK_STACK[Network Stack]
+            SECURITY_STACK[Security Stack]
+            DATABASE_STACK[Database Stack]
+            APPLICATION_STACK[Application Stack]
+            MONITORING_STACK[Monitoring Stack]
         end
         
-        subgraph "Kubernetes 配置" ["Kubernetes Configuration"]
-            HELM_CHARTS[Helm Charts<br/>應用程式包管理]
-            KUSTOMIZE[Kustomize<br/>配置管理]
-            ARGOCD[ArgoCD<br/>GitOps 部署]
+        subgraph "Kubernetes Configuration"
+            HELM_CHARTS[Helm Charts<br/>Application Package Management]
+            KUSTOMIZE[Kustomize<br/>Configuration Management]
+            ARGOCD[ArgoCD<br/>GitOps Deployment]
         end
     end
     
-    subgraph "監控和可觀測性" ["監控和可觀測性 (Observability)"]
-        subgraph "指標監控" ["Metrics Monitoring"]
-            PROMETHEUS[Prometheus<br/>指標收集]
-            GRAFANA[Grafana<br/>視覺化儀表板]
-            CLOUDWATCH[CloudWatch<br/>AWS 原生監控]
+    subgraph "Monitoring and Observability"
+        subgraph "Metrics Monitoring"
+            PROMETHEUS[Prometheus<br/>Metrics Collection]
+            GRAFANA[Grafana<br/>Visualization Dashboard]
+            CLOUDWATCH[CloudWatch<br/>AWS Native Monitoring]
         end
         
-        subgraph "日誌管理" ["Log Management"]
-            FLUENTD[Fluentd<br/>日誌收集器]
-            CLOUDWATCH_LOGS[CloudWatch Logs<br/>日誌存儲]
-            OPENSEARCH_LOGS[OpenSearch<br/>日誌搜尋分析]
+        subgraph "Log Management"
+            FLUENTD[Fluentd<br/>Log Collector]
+            CLOUDWATCH_LOGS[CloudWatch Logs<br/>Log Storage]
+            OPENSEARCH_LOGS[OpenSearch<br/>Log Search & Analysis]
         end
         
-        subgraph "分散式追蹤" ["Distributed Tracing"]
-            XRAY[AWS X-Ray<br/>分散式追蹤]
-            JAEGER[Jaeger<br/>追蹤收集器]
-            OTEL[OpenTelemetry<br/>可觀測性框架]
+        subgraph "Distributed Tracing"
+            XRAY[AWS X-Ray<br/>Distributed Tracing]
+            JAEGER[Jaeger<br/>Trace Collector]
+            OTEL[OpenTelemetry<br/>Observability Framework]
         end
         
-        subgraph "告警系統" ["Alerting System"]
-            SNS[SNS<br/>通知服務]
-            PAGERDUTY[PagerDuty<br/>事件管理]
-            SLACK[Slack<br/>團隊通知]
+        subgraph "Alerting System"
+            SNS[SNS<br/>Notification Service]
+            PAGERDUTY[PagerDuty<br/>Incident Management]
+            SLACK[Slack<br/>Team Notifications]
         end
     end
     
-    subgraph "安全和合規" ["安全和合規 (Security & Compliance)"]
-        subgraph "身份和存取管理" ["Identity & Access Management"]
-            IAM[AWS IAM<br/>身份管理]
-            RBAC[Kubernetes RBAC<br/>角色存取控制]
-            SERVICE_ACCOUNT[Service Account<br/>服務帳戶]
+    subgraph "Security & Compliance"
+        subgraph "Identity & Access Management"
+            IAM[AWS IAM<br/>Identity Management]
+            RBAC[Kubernetes RBAC<br/>Role-Based Access Control]
+            SERVICE_ACCOUNT[Service Account]
         end
         
-        subgraph "網路安全" ["Network Security"]
-            VPC[VPC<br/>虛擬私有雲]
-            SECURITY_GROUP[Security Groups<br/>安全群組]
-            NACL[Network ACLs<br/>網路存取控制清單]
-            NAT_GW[NAT Gateway<br/>網路位址轉換]
+        subgraph "Network Security"
+            VPC[VPC<br/>Virtual Private Cloud]
+            SECURITY_GROUP[Security Groups]
+            NACL[Network ACLs]
+            NAT_GW[NAT Gateway]
         end
         
-        subgraph "資料保護" ["Data Protection"]
-            KMS[AWS KMS<br/>金鑰管理服務]
-            SECRETS_MANAGER[Secrets Manager<br/>機密管理]
-            ENCRYPTION[資料加密<br/>Data Encryption]
+        subgraph "Data Protection"
+            KMS[AWS KMS<br/>Key Management Service]
+            SECRETS_MANAGER[Secrets Manager]
+            ENCRYPTION[Data Encryption]
         end
     end
     
-    %% 流量路由
-    ROUTE53 -->|DNS 解析| CLOUDFRONT
-    CLOUDFRONT -->|快取| WAF
-    WAF -->|過濾| ALB
-    ALB -->|負載均衡| API_GW
-    API_GW -->|路由| EKS_A
-    API_GW -->|路由| EKS_B
-    API_GW -->|路由| EKS_C
+    %% Traffic Routing
+    ROUTE53 -->|DNS Resolution| CLOUDFRONT
+    CLOUDFRONT -->|Caching| WAF
+    WAF -->|Filtering| ALB
+    ALB -->|Load Balancing| API_GW
+    API_GW -->|Routing| EKS_A
+    API_GW -->|Routing| EKS_B
+    API_GW -->|Routing| EKS_C
     
-    %% EKS 集群內部
-    EKS_A -->|運行| CUSTOMER_SVC
-    EKS_A -->|運行| ORDER_SVC
-    EKS_B -->|運行| PRODUCT_SVC
-    EKS_B -->|運行| PAYMENT_SVC
-    EKS_C -->|運行| INVENTORY_SVC
-    EKS_C -->|運行| NOTIFICATION_SVC
+    %% EKS Cluster Internal
+    EKS_A -->|Running| CUSTOMER_SVC
+    EKS_A -->|Running| ORDER_SVC
+    EKS_B -->|Running| PRODUCT_SVC
+    EKS_B -->|Running| PAYMENT_SVC
+    EKS_C -->|Running| INVENTORY_SVC
+    EKS_C -->|Running| NOTIFICATION_SVC
     
-    %% 資料庫連接
-    CUSTOMER_SVC -->|讀寫| RDS_PRIMARY
-    ORDER_SVC -->|讀寫| RDS_PRIMARY
-    PRODUCT_SVC -->|快取| REDIS_A
-    PAYMENT_SVC -->|搜尋| OPENSEARCH
+    %% Database Connections
+    CUSTOMER_SVC -->|Read/Write| RDS_PRIMARY
+    ORDER_SVC -->|Read/Write| RDS_PRIMARY
+    PRODUCT_SVC -->|Caching| REDIS_A
+    PAYMENT_SVC -->|Search| OPENSEARCH
     
-    %% 高可用性
-    RDS_PRIMARY -.->|複製| RDS_STANDBY
-    REDIS_A -.->|複製| REDIS_B
+    %% High Availability
+    RDS_PRIMARY -.->|Replication| RDS_STANDBY
+    REDIS_A -.->|Replication| REDIS_B
     
-    %% 事件處理
-    ORDER_SVC -->|發布事件| MSK
-    PAYMENT_SVC -->|發布事件| EVENT_BRIDGE
-    MSK -->|消費事件| NOTIFICATION_SVC
+    %% Event Processing
+    ORDER_SVC -->|Publish Events| MSK
+    PAYMENT_SVC -->|Publish Events| EVENT_BRIDGE
+    MSK -->|Consume Events| NOTIFICATION_SVC
     
-    %% CI/CD 流程
-    GITHUB -->|觸發| GITHUB_ACTIONS
-    GITHUB_ACTIONS -->|建置| BUILD_STAGE
-    BUILD_STAGE -->|測試| TEST_STAGE
-    TEST_STAGE -->|掃描| SECURITY_SCAN
-    SECURITY_SCAN -->|檢查| QUALITY_GATE
-    QUALITY_GATE -->|通過| CDK_DEPLOY
-    CDK_DEPLOY -->|部署基礎設施| NETWORK_STACK
-    QUALITY_GATE -->|通過| K8S_DEPLOY
-    K8S_DEPLOY -->|部署應用| HELM_CHARTS
+    %% CI/CD Flow
+    GITHUB -->|Trigger| GITHUB_ACTIONS
+    GITHUB_ACTIONS -->|Build| BUILD_STAGE
+    BUILD_STAGE -->|Test| TEST_STAGE
+    TEST_STAGE -->|Scan| SECURITY_SCAN
+    SECURITY_SCAN -->|Check| QUALITY_GATE
+    QUALITY_GATE -->|Pass| CDK_DEPLOY
+    CDK_DEPLOY -->|Deploy Infrastructure| NETWORK_STACK
+    QUALITY_GATE -->|Pass| K8S_DEPLOY
+    K8S_DEPLOY -->|Deploy Application| HELM_CHARTS
     
-    %% 容器映像管理
-    BUILD_STAGE -->|推送映像| ECR
-    ECR -->|掃描| IMAGE_SCANNING
-    ECR -->|拉取映像| EKS_A
+    %% Container Image Management
+    BUILD_STAGE -->|Push Images| ECR
+    ECR -->|Scan| IMAGE_SCANNING
+    ECR -->|Pull Images| EKS_A
     
-    %% 監控連接
-    CUSTOMER_SVC -->|指標| PROMETHEUS
-    ORDER_SVC -->|日誌| FLUENTD
-    PAYMENT_SVC -->|追蹤| XRAY
-    PROMETHEUS -->|視覺化| GRAFANA
-    FLUENTD -->|轉發| CLOUDWATCH_LOGS
-    XRAY -->|分析| JAEGER
+    %% Monitoring Connections
+    CUSTOMER_SVC -->|Metrics| PROMETHEUS
+    ORDER_SVC -->|Logs| FLUENTD
+    PAYMENT_SVC -->|Traces| XRAY
+    PROMETHEUS -->|Visualization| GRAFANA
+    FLUENTD -->|Forward| CLOUDWATCH_LOGS
+    XRAY -->|Analysis| JAEGER
     
-    %% 告警
-    PROMETHEUS -->|告警| SNS
-    CLOUDWATCH -->|告警| SNS
-    SNS -->|通知| PAGERDUTY
-    SNS -->|通知| SLACK
+    %% Alerting
+    PROMETHEUS -->|Alerts| SNS
+    CLOUDWATCH -->|Alerts| SNS
+    SNS -->|Notify| PAGERDUTY
+    SNS -->|Notify| SLACK
     
-    %% 安全
-    EKS_A -->|使用| IAM
+    %% Security
+    EKS_A -->|Use| IAM
     CUSTOMER_SVC -->|RBAC| SERVICE_ACCOUNT
-    RDS_PRIMARY -->|加密| KMS
-    PAYMENT_SVC -->|機密| SECRETS_MANAGER
+    RDS_PRIMARY -->|Encrypt| KMS
+    PAYMENT_SVC -->|Secrets| SECRETS_MANAGER
     
     classDef cloud fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     classDef container fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
@@ -387,8 +387,8 @@ graph TB
     class PROMETHEUS,GRAFANA,CLOUDWATCH,FLUENTD,CLOUDWATCH_LOGS,OPENSEARCH_LOGS,XRAY,JAEGER,OTEL,SNS,PAGERDUTY,SLACK observability
     class IAM,RBAC,SERVICE_ACCOUNT,VPC,SECURITY_GROUP,NACL,NAT_GW,KMS,SECRETS_MANAGER,ENCRYPTION security
 ```
-- \1
-- \1
+- [Deployment Process Flow](deployment-process-flow.md)
+- [Network Architecture Details](network-architecture-details.md)
 
 ## Relationships with Other Viewpoints
 
@@ -431,10 +431,8 @@ graph TB
 - [Observability Deployment](observability-deployment.md) - Monitoring system deployment guide
 - [Production Deployment Checklist](production-deployment-checklist.md) - Production environment deployment checks
 - [Infrastructure as Code](infrastructure-as-code.md) - AWS CDK practice guide
-- Containerization Best Practices - Container optimization and security
-- AWS Cloud Architecture Design - Cloud-native architecture patterns
-- Multi-Environment Configuration Management - Environment-specific configurations
-- Deployment Patterns and Strategies - Advanced deployment methodologies
+- [AWS Infrastructure Architecture](aws-infrastructure-architecture.md) - Complete AWS infrastructure design
+- [Deployment Architecture](deployment-architecture.md) - Deployment process and CI/CD pipeline
 
 ## Port Configuration
 
@@ -449,4 +447,10 @@ graph TB
 - Deployment administrators and release managers
 - Cloud architects and platform engineers
 - Development teams and technical leads
-![Infrastructure Overview](../../diagrams/viewpoints/deployment/infrastructure-overview.svg)
+
+---
+
+**Document Version**: v1.0  
+**Last Updated**: December 2024  
+**Responsible Team**: DevOps Team  
+**Review Status**: Reviewed

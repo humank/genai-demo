@@ -1,168 +1,98 @@
-# 法規觀點 (Regulation Perspective)
+# Regulation Perspective
 
-## 概覽
+## Overview
 
-法規觀點關注系統的法規合規性、資料治理和稽核要求，確保系統符合相關法律法規和行業標準的要求。
+The Regulation Perspective focuses on ensuring the system complies with relevant laws, regulations, and industry standards. This perspective addresses data governance, privacy protection, audit requirements, and regulatory compliance.
 
-## 品質屬性
+## Quality Attributes
 
-### 主要品質屬性
-- **合規性 (Compliance)**: 符合法律法規和行業標準
-- **可稽核性 (Auditability)**: 支援稽核和檢查的能力
-- **資料治理 (Data Governance)**: 資料管理的規範性
-- **隱私保護 (Privacy Protection)**: 個人資料的保護能力
+### Primary Quality Attributes
+- **Compliance**: Adherence to relevant regulations and standards
+- **Auditability**: Ability to provide audit trails and evidence
+- **Data Governance**: Proper management and protection of data
+- **Privacy Protection**: Protection of personal and sensitive data
 
-### 次要品質屬性
-- **透明度 (Transparency)**: 系統操作的透明性
-- **問責制 (Accountability)**: 操作責任的可追溯性
+### Secondary Quality Attributes
+- **Transparency**: Clear visibility into data processing activities
+- **Accountability**: Clear responsibility for compliance activities
+- **Data Sovereignty**: Compliance with data residency requirements
 
-## 跨視點應用
+## Cross-Viewpoint Application
 
-### 功能視點中的考量
-- **權限控制**: 基於法規要求的功能權限設計
-- **資料存取**: 符合法規的資料存取控制
-- **業務流程**: 合規的業務流程設計
-- **同意管理**: 使用者同意的管理機制
+### Information Viewpoint Considerations
+- **Data Classification**: Classify data based on sensitivity and regulatory requirements
+- **Data Retention**: Implement data retention and deletion policies
+- **Audit Trails**: Comprehensive logging of data access and modifications
+- **Privacy Controls**: Data anonymization and pseudonymization
 
-### 資訊視點中的考量
-- **資料分類**: 資料敏感性的分級管理
-- **資料保留**: 符合法規的資料保留政策
-- **資料刪除**: 資料刪除和匿名化機制
-- **資料傳輸**: 跨境資料傳輸的合規性
+### Functional Viewpoint Considerations
+- **Consent Management**: User consent collection and management
+- **Data Subject Rights**: Implementation of data subject rights (GDPR)
+- **Compliance Workflows**: Business processes that ensure compliance
+- **Regulatory Reporting**: Automated compliance reporting
 
-### 並發視點中的考量
-- **存取日誌**: 並發存取的完整記錄
-- **操作序列**: 操作順序的稽核軌跡
-- **衝突解決**: 並發操作衝突的記錄
-- **資源鎖定**: 資源存取的稽核記錄
+### Operational Viewpoint Considerations
+- **Compliance Monitoring**: Continuous monitoring of compliance status
+- **Incident Response**: Procedures for handling compliance violations
+- **Regular Audits**: Scheduled compliance audits and assessments
+- **Staff Training**: Regular compliance training for staff
 
-### 開發視點中的考量
-- **隱私設計**: 隱私保護的內建設計
-- **合規測試**: 法規合規性的測試驗證
-- **程式碼稽核**: 程式碼的合規性檢查
-- **文件要求**: 法規要求的文件維護
+## Regulatory Requirements
 
-### 部署視點中的考量
-- **資料本地化**: 資料儲存的地理位置要求
-- **加密要求**: 資料傳輸和儲存的加密標準
-- **存取控制**: 基礎設施的存取控制
-- **稽核日誌**: 部署和配置的稽核記錄
+### Data Protection Regulations
+- **GDPR**: European General Data Protection Regulation
+- **CCPA**: California Consumer Privacy Act
+- **PIPEDA**: Personal Information Protection and Electronic Documents Act
 
-### 運營視點中的考量
-- **稽核報告**: 定期的合規性稽核報告
-- **事件響應**: 合規事件的響應流程
-- **監控合規**: 持續的合規性監控
-- **培訓要求**: 員工的合規培訓
+### Industry Standards
+- **PCI DSS**: Payment Card Industry Data Security Standard
+- **SOX**: Sarbanes-Oxley Act
+- **HIPAA**: Health Insurance Portability and Accountability Act
 
-## 設計策略
+### Security Standards
+- **ISO 27001**: Information Security Management
+- **SOC 2**: Service Organization Control 2
+- **NIST**: National Institute of Standards and Technology Framework
 
-### 隱私保護設計
-1. **資料最小化**: 只收集必要的個人資料
-2. **目的限制**: 資料使用限於明確目的
-3. **同意管理**: 明確的使用者同意機制
-4. **權利實現**: 使用者權利的技術實現
+## Implementation Guidelines
 
-### 稽核軌跡設計
-1. **完整記錄**: 所有重要操作的完整記錄
-2. **不可篡改**: 稽核日誌的完整性保護
-3. **可搜尋性**: 稽核資料的查詢和分析
-4. **長期保存**: 符合法規的日誌保存期限
+### Compliance Framework
+- **Risk Assessment**: Regular compliance risk assessments
+- **Policy Development**: Develop and maintain compliance policies
+- **Process Documentation**: Document all compliance-related processes
+- **Regular Reviews**: Periodic review and update of compliance measures
 
-### 合規性管理
-1. **法規追蹤**: 相關法規變化的追蹤
-2. **風險評估**: 合規風險的定期評估
-3. **控制措施**: 合規控制措施的實施
-4. **持續監控**: 合規狀態的持續監控
+### Data Governance
+- **Data Inventory**: Maintain inventory of all data assets
+- **Data Lineage**: Track data flow and transformations
+- **Access Controls**: Implement role-based access controls
+- **Data Quality**: Ensure data accuracy and completeness
 
-## 實現技術
+### Audit and Reporting
+- **Audit Trails**: Comprehensive audit logging
+- **Compliance Reports**: Automated compliance reporting
+- **Evidence Collection**: Systematic collection of compliance evidence
+- **External Audits**: Regular third-party compliance audits
 
-### 隱私保護技術
-- **資料加密**: AES-256 資料加密
-- **資料遮罩**: 敏感資料的動態遮罩
-- **匿名化**: 個人資料的匿名化處理
-- **假名化**: 個人資料的假名化技術
+## Quality Attribute Scenarios
 
-### 稽核技術
-- **稽核日誌**: 結構化的稽核日誌記錄
-- **數位簽章**: 日誌完整性的數位簽章
-- **時間戳記**: 可信的時間戳記服務
-- **日誌分析**: 稽核日誌的分析工具
+### Regulation Scenario Example
 
-### 合規管理工具
-- **GRC 平台**: 治理、風險和合規管理平台
-- **政策引擎**: 自動化的政策執行引擎
-- **合規儀表板**: 合規狀態的視覺化監控
-- **報告生成**: 自動化的合規報告生成
+#### Data Subject Request Scenario
+- **Source**: EU citizen
+- **Stimulus**: Requests deletion of personal data (Right to be Forgotten)
+- **Environment**: Production system with distributed data
+- **Artifact**: Data management system
+- **Response**: System identifies and deletes all personal data
+- **Response Measure**: Complete data deletion within 30 days, Confirmation provided to user
 
-## 測試和驗證
+## Related Documentation
 
-### 合規性測試
-1. **隱私測試**: 個人資料保護的測試驗證
-2. **存取控制測試**: 權限控制的有效性測試
-3. **稽核測試**: 稽核軌跡的完整性測試
-4. **資料保留測試**: 資料保留政策的執行測試
-
-### 合規性評估
-- **GDPR 評估**: 歐盟一般資料保護規則合規性
-- **SOC 2 評估**: 服務組織控制合規性
-- **ISO 27001 評估**: 資訊安全管理系統合規性
-- **行業標準**: 特定行業標準的合規性
-
-### 合規指標
-- **合規檢查通過率**: 合規檢查的通過百分比
-- **稽核發現數量**: 稽核中發現的問題數量
-- **修復時間**: 合規問題的平均修復時間
-- **培訓完成率**: 員工合規培訓的完成率
-
-## 監控和度量
-
-### 合規性監控
-- **資料存取監控**: 敏感資料存取的即時監控
-- **權限變更監控**: 使用者權限變更的監控
-- **政策違規監控**: 合規政策違規的檢測
-- **異常行為監控**: 異常操作行為的識別
-
-### 稽核報告
-1. **月度合規報告**: 月度合規狀態總結
-2. **稽核發現報告**: 稽核中發現問題的詳細報告
-3. **風險評估報告**: 合規風險的評估報告
-4. **改進計畫報告**: 合規改進措施的執行報告
-
-### 持續改進
-1. **法規更新追蹤**: 相關法規變化的持續追蹤
-2. **最佳實踐更新**: 合規最佳實踐的更新
-3. **培訓計畫**: 定期的合規培訓計畫
-4. **技術升級**: 合規技術的升級和改進
-
-## 品質屬性場景
-
-### 場景 1: 個人資料存取請求
-- **來源**: 資料主體
-- **刺激**: 提交個人資料存取請求
-- **環境**: GDPR 適用的歐盟地區
-- **產物**: 資料管理系統
-- **響應**: 提供完整的個人資料副本
-- **響應度量**: 30 天內回應，資料完整準確
-
-### 場景 2: 資料刪除請求
-- **來源**: 資料主體
-- **刺激**: 要求刪除個人資料
-- **環境**: 符合刪除條件的情況
-- **產物**: 資料管理系統
-- **響應**: 完全刪除相關個人資料
-- **響應度量**: 30 天內完成，無資料殘留
-
-### 場景 3: 合規稽核
-- **來源**: 外部稽核員
-- **刺激**: 進行年度合規稽核
-- **環境**: 正常營運期間
-- **產物**: 整個系統
-- **響應**: 提供完整的稽核軌跡和證據
-- **響應度量**: 稽核軌跡完整，無重大發現
+- [Information Viewpoint](../../viewpoints/information/README.md) - Data governance and protection
+- [Security Perspective](../security/README.md) - Security compliance requirements
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Compliance monitoring and auditing
 
 ---
 
-**相關文件**:
-- \1
-- \1
-- \1
+**Last Updated**: September 25, 2025  
+**Maintainer**: Compliance Team

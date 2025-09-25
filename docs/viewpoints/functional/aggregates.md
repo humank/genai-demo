@@ -1,15 +1,15 @@
-# 聚合根設計指南
+# Aggregate Root Design Guide
 
-## 概覽
+## Overview
 
-本指南基於專案中 15 個聚合根的實際實現經驗，提供聚合根設計的最佳實踐和具體範例。專案採用混合實現模式，支援兩種聚合根實現方式，並通過註解驅動的方式提供統一的聚合根管理。
+This guide provides best practices and concrete examples for aggregate root design based on actual implementation experience with 15 aggregate roots in the project. The project adopts a hybrid implementation pattern, supporting two aggregate root implementation approaches and providing unified aggregate root management through annotation-driven design.
 
-## 當前專案聚合根概覽
+## Current Project Aggregate Root Overview
 
-### 聚合根分佈統計
+### Aggregate Root Distribution Statistics
 
-| 界限上下文 | 聚合根數量 | 主要聚合根 | 實現模式 | 版本 |
-|-----------|-----------|-----------|----------|------|
+| Bounded Context | Aggregate Count | Main Aggregates | Implementation Pattern | Version |
+|-----------------|----------------|-----------------|----------------------|---------|
 | Customer | 1 | Customer | Interface | 2.0 |
 | Order | 1 | Order | Interface | 1.0 |
 | Product | 1 | Product | Inheritance | 1.0 |
@@ -24,25 +24,25 @@
 | Notification | 1 | Notification | Interface | 1.0 |
 | Observability | 2 | ObservabilitySession, AnalyticsSession | Interface | 1.0 |
 
-**總計**: 15 個聚合根，13 個界限上下文
+**Total**: 15 aggregate roots across 13 bounded contexts
 
-## 聚合根實現模式
+## Aggregate Root Implementation Patterns
 
-### 模式選擇指南
+### Pattern Selection Guide
 
-| 實現模式 | 適用場景 | 優勢 | 劣勢 | 專案使用情況 |
-|---------|---------|------|------|-------------|
-| **介面模式** | 新開發的聚合根 | 零 override、類型安全、自動驗證 | 需要理解介面設計 | 7個聚合根 |
-| **繼承模式** | 遺留系統整合 | 傳統 OOP 模式、易於理解 | 需要 override 方法 | 8個聚合根 |
+| Implementation Pattern | Use Case | Advantages | Disadvantages | Project Usage |
+|----------------------|----------|------------|---------------|---------------|
+| **Interface Pattern** | New aggregate roots | Zero override, type safety, automatic validation | Requires understanding interface design | 7 aggregate roots |
+| **Inheritance Pattern** | Legacy system integration | Traditional OOP pattern, easy to understand | Requires method override | 8 aggregate roots |
 
-### 模式 A: 介面實現模式 (推薦)
+### Pattern A: Interface Implementation Pattern (Recommended)
 
-基於專案實際實現的 `Customer` 聚合根：
+Based on the actual `Customer` aggregate root implementation in the project:
 
 ```java
 @AggregateRoot(
     name = "Customer", 
-    description = "增強的客戶聚合根，支援完整的消費者功能", 
+    description = "Enhanced customer aggregate root with complete consumer functionality", 
     boundedContext = "Customer", 
     version = "2.0"
 )
@@ -61,12 +61,12 @@ public class Customer implements AggregateRootInterface {
     private CustomerStatus status;
     private Money totalSpending;
     
-    // Entity 集合
+    // Entity collections
     private final List<DeliveryAddress> deliveryAddresses;
     private CustomerPreferences preferences;
     private final List<PaymentMethod> paymentMethods;
     
-    // 主要建構子
+    // Main constructor
     public Customer(
             CustomerId id,
             CustomerName name,
@@ -91,39 +91,39 @@ public class Customer implements AggregateRootInterface {
         this.preferences = new CustomerPreferences(CustomerPreferencesId.generate());
         this.paymentMethods = new ArrayList<>();
 
-        // 發布客戶創建事件
+        // Publish customer created event
         collectEvent(CustomerCreatedEvent.create(id, name, email, membershipLevel));
     }
     
-    // 業務方法
+    // Business methods
     
-    /** 更新個人資料 */
+    /** Update profile */
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
-        // 驗證業務規則
+        // Validate business rules
         validateProfileUpdate(newName, newEmail, newPhone);
 
-        // 檢查是否有任何變化
+        // Check if there are any changes
         boolean hasChanges = !Objects.equals(this.name, newName) ||
                 !Objects.equals(this.email, newEmail) ||
                 !Objects.equals(this.phone, newPhone);
 
         if (hasChanges) {
-            // 使用狀態追蹤器追蹤變化（不產生事件）
+            // Use state tracker to track changes (without generating events)
             stateTracker.trackChange("name", this.name, newName);
             stateTracker.trackChange("email", this.email, newEmail);
             stateTracker.trackChange("phone", this.phone, newPhone);
 
-            // 更新值
+            // Update values
             this.name = newName;
             this.email = newEmail;
             this.phone = newPhone;
 
-            // 產生單一的個人資料更新事件
+            // Generate single profile update event
             collectEvent(CustomerProfileUpdatedEvent.create(this.id, newName, newEmail, newPhone));
         }
     }
     
-    /** 添加配送地址 */
+    /** Add delivery address */
     public DeliveryAddressId addDeliveryAddress(Address address, String label) {
         if (address == null) {
             throw new IllegalArgumentException("Address cannot be null");
@@ -132,7 +132,7 @@ public class Customer implements AggregateRootInterface {
             throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
         }
 
-        // 檢查是否已存在相同地址
+        // Check if same address already exists
         boolean addressExists = deliveryAddresses.stream()
                 .anyMatch(da -> da.isSameAddress(address));
         if (addressExists) {
@@ -142,54 +142,54 @@ public class Customer implements AggregateRootInterface {
         DeliveryAddress deliveryAddress = new DeliveryAddress(
                 DeliveryAddressId.generate(), address, label);
 
-        // 如果是第一個地址，自動設為預設
+        // If first address, automatically set as default
         if (deliveryAddresses.isEmpty()) {
             deliveryAddress.setAsDefault();
         }
 
         deliveryAddresses.add(deliveryAddress);
 
-        // 發布配送地址添加事件
+        // Publish delivery address added event
         collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
 
         return deliveryAddress.getId();
     }
     
-    /** 升級會員等級 */
+    /** Upgrade membership level */
     public void upgradeMembershipLevel(MembershipLevel newLevel) {
-        // 驗證業務規則
+        // Validate business rules
         validateMembershipUpgrade(newLevel);
 
-        // 使用狀態追蹤器追蹤變化並自動產生事件
+        // Use state tracker to track changes and automatically generate events
         stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
                 (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
 
         this.membershipLevel = newLevel;
 
-        // 跨聚合根操作：通知促銷系統更新客戶折扣資格
+        // Cross-aggregate operation: notify promotion system to update customer discount eligibility
         CrossAggregateOperation.publishEventIf(this,
                 newLevel == MembershipLevel.VIP,
                 () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
     }
     
-    /** 添加紅利點數 */
+    /** Add reward points */
     public void addRewardPoints(int points, String reason) {
         this.rewardPoints = this.rewardPoints.add(points);
 
-        // 發布紅利點數獲得事件
+        // Publish reward points earned event
         collectEvent(RewardPointsEarnedEvent.create(this.id, points, this.rewardPoints.balance(), reason));
     }
     
-    /** 兌換紅利點數 */
+    /** Redeem reward points */
     public void redeemPoints(int points, String reason) {
         this.rewardPoints = this.rewardPoints.redeem(points);
 
-        // 發布紅利點數兌換事件
+        // Publish reward points redeemed event
         collectEvent(RewardPointsRedeemedEvent.create(
                 this.id, points, this.rewardPoints.balance(), reason));
     }
     
-    // 查詢方法
+    // Query methods
     public boolean isVip() {
         return membershipLevel == MembershipLevel.VIP;
     }
@@ -204,11 +204,11 @@ public class Customer implements AggregateRootInterface {
             .findFirst();
     }
     
-    // 私有輔助方法
+    // Private helper methods
     private void validateProfileUpdate(CustomerName name, Email email, Phone phone) {
         Objects.requireNonNull(name, "Customer name cannot be null");
         Objects.requireNonNull(email, "Email cannot be null");
-        // phone 可以為 null
+        // phone can be null
     }
     
     private boolean canUpgradeTo(MembershipLevel newLevel) {
@@ -226,14 +226,14 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### 模式 B: 繼承基類模式
+### Pattern B: Base Class Inheritance Pattern
 
-基於專案實際實現的 `Product` 聚合根：
+Based on the actual `Product` aggregate root implementation in the project:
 
 ```java
 @AggregateRoot(
     name = "Product", 
-    description = "產品聚合根，管理產品信息和庫存", 
+    description = "Product aggregate root managing product information and inventory", 
     boundedContext = "Product", 
     version = "1.0"
 )
@@ -264,70 +264,70 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
         this.inStock = stockQuantity.getValue() > 0;
         this.isActive = true;
 
-        // 發布商品創建事件
+        // Publish product created event
         collectEvent(ProductCreatedEvent.create(id, name, price, category));
     }
     
-    /** 更新商品價格 */
+    /** Update product price */
     public void updatePrice(Money newPrice) {
         if (newPrice == null) {
-            throw new IllegalArgumentException("商品價格不能為空");
+            throw new IllegalArgumentException("Product price cannot be null");
         }
 
         Money oldPrice = this.price;
         this.price = newPrice;
 
-        // 發布商品價格變更事件
+        // Publish product price changed event
         collectEvent(new ProductPriceChangedEvent(this.id, oldPrice, newPrice));
     }
 
-    /** 更新庫存 */
+    /** Update stock */
     public void updateStock(StockQuantity newStock) {
         if (newStock == null) {
-            throw new IllegalArgumentException("庫存數量不能為空");
+            throw new IllegalArgumentException("Stock quantity cannot be null");
         }
 
         StockQuantity oldStock = this.stockQuantity;
         this.stockQuantity = newStock;
         this.inStock = newStock.getValue() > 0;
 
-        // 發布商品庫存更新事件
+        // Publish product stock updated event
         collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
     }
 
-    /** 下架商品 */
+    /** Discontinue product */
     public void discontinue(String reason) {
         if (!this.isActive) {
-            throw new IllegalStateException("商品已經下架");
+            throw new IllegalStateException("Product is already discontinued");
         }
 
         this.isActive = false;
 
-        // 發布商品下架事件
+        // Publish product discontinued event
         collectEvent(new ProductDiscontinuedEvent(this.id, reason));
     }
 
-    /** 重新上架商品 */
+    /** Reactivate product */
     public void activate() {
         if (this.isActive) {
-            throw new IllegalStateException("商品已經上架");
+            throw new IllegalStateException("Product is already active");
         }
 
         this.isActive = true;
 
-        // 發布商品重新上架事件
+        // Publish product activated event
         collectEvent(ProductActivatedEvent.create(this.id));
     }
     
     private void validatePrice(Money price) {
         if (price.isNegativeOrZero()) {
-            throw new IllegalArgumentException("產品價格必須大於 0");
+            throw new IllegalArgumentException("Product price must be greater than 0");
         }
     }
     
     private void validateCanActivate() {
         if (name == null || description == null || price == null) {
-            throw new IllegalStateException("產品資訊不完整，無法啟用");
+            throw new IllegalStateException("Product information incomplete, cannot activate");
         }
     }
     
@@ -339,53 +339,53 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 }
 ```
 
-## 核心架構特性
+## Core Architecture Features
 
-### 1. 註解驅動設計
+### 1. Annotation-Driven Design
 
-所有聚合根都必須使用 `@AggregateRoot` 註解，提供統一的元數據管理：
+All aggregate roots must use the `@AggregateRoot` annotation, providing unified metadata management:
 
 ```java
 @AggregateRoot(
-    name = "聚合根名稱",           // 必填：聚合根識別名稱
-    description = "聚合根描述",     // 必填：業務描述
-    boundedContext = "上下文名稱", // 必填：所屬界限上下文
-    version = "版本號",           // 必填：聚合根版本
-    enableEventCollection = true  // 可選：是否啟用事件收集（預設true）
+    name = "Aggregate Root Name",        // Required: Aggregate root identifier
+    description = "Aggregate Description", // Required: Business description
+    boundedContext = "Context Name",     // Required: Bounded context
+    version = "Version Number",          // Required: Aggregate root version
+    enableEventCollection = true        // Optional: Enable event collection (default true)
 )
 ```
 
-### 2. 零 Override 設計
+### 2. Zero Override Design
 
-介面模式聚合根無需重寫任何方法，所有事件管理功能都由 `AggregateRootInterface` 的 default 方法提供：
+Interface pattern aggregate roots require no method overrides, all event management functionality is provided by `AggregateRootInterface` default methods:
 
 ```java
 public interface AggregateRootInterface {
-    // 自動事件收集
+    // Automatic event collection
     default void collectEvent(DomainEvent event) { ... }
     
-    // 自動事件管理
+    // Automatic event management
     default List<DomainEvent> getUncommittedEvents() { ... }
     default void markEventsAsCommitted() { ... }
     default boolean hasUncommittedEvents() { ... }
     
-    // 自動元數據管理
+    // Automatic metadata management
     default String getAggregateRootName() { ... }
     default String getBoundedContext() { ... }
     default String getVersion() { ... }
 }
 ```
 
-### 3. 狀態追蹤器 (AggregateStateTracker)
+### 3. State Tracker (AggregateStateTracker)
 
-專案中的 `Customer` 聚合根使用了先進的狀態追蹤器模式：
+The `Customer` aggregate root in the project uses an advanced state tracker pattern:
 
 ```java
 public class Customer implements AggregateRootInterface {
     private final AggregateStateTracker<Customer> stateTracker = new AggregateStateTracker<>(this);
     
     public void upgradeMembershipLevel(MembershipLevel newLevel) {
-        // 使用狀態追蹤器追蹤變化並自動產生事件
+        // Use state tracker to track changes and automatically generate events
         stateTracker.trackChange("membershipLevel", this.membershipLevel, newLevel,
                 (oldValue, newValue) -> new MembershipLevelUpgradedEvent(this.id, oldValue, newValue));
         
@@ -394,44 +394,44 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### 4. 跨聚合根操作 (CrossAggregateOperation)
+### 4. Cross-Aggregate Operations (CrossAggregateOperation)
 
-支援條件式跨聚合根事件發布：
+Supports conditional cross-aggregate event publishing:
 
 ```java
-// 跨聚合根操作：通知促銷系統更新客戶折扣資格
+// Cross-aggregate operation: notify promotion system to update customer discount eligibility
 CrossAggregateOperation.publishEventIf(this,
         newLevel == MembershipLevel.VIP,
         () -> new CustomerVipUpgradedEvent(this.id, this.membershipLevel, newLevel));
 ```
 
-### 5. 聚合重建支援 (AggregateReconstruction)
+### 5. Aggregate Reconstruction Support (AggregateReconstruction)
 
-支援從持久化狀態重建聚合根，不產生領域事件：
+Supports rebuilding aggregate roots from persistent state without generating domain events:
 
 ```java
-@AggregateReconstruction.ReconstructionConstructor("從持久化狀態重建客戶聚合根")
+@AggregateReconstruction.ReconstructionConstructor("Rebuild customer aggregate root from persistent state")
 protected Customer(CustomerId id, CustomerName name, ...) {
-    // 重建邏輯，不發布事件
+    // Reconstruction logic, no events published
 }
 ```
 
-## 聚合根設計原則
+## Aggregate Root Design Principles
 
-### 1. 單一職責原則
+### 1. Single Responsibility Principle
 
-每個聚合根應該只負責一個業務概念的完整性：
+Each aggregate root should only be responsible for the integrity of one business concept:
 
 ```java
-// ✅ 好的設計：ShoppingCart 聚合根只管理購物車相關邏輯
-@AggregateRoot(name = "ShoppingCart", description = "購物車聚合根，管理消費者的購物車狀態和商品項目", 
+// ✅ Good design: ShoppingCart aggregate root only manages shopping cart related logic
+@AggregateRoot(name = "ShoppingCart", description = "Shopping cart aggregate root managing consumer cart state and items", 
                boundedContext = "ShoppingCart", version = "1.0")
 public class ShoppingCart extends AggregateRoot {
     
     public void addItem(ProductId productId, int quantity, Money unitPrice) {
-        // 購物車項目管理邏輯
+        // Shopping cart item management logic
         if (quantity <= 0) {
-            throw new InvalidQuantityException("商品數量必須大於 0");
+            throw new InvalidQuantityException("Product quantity must be greater than 0");
         }
         
         Optional<CartItem> existingItem = findItemOptional(productId);
@@ -447,9 +447,9 @@ public class ShoppingCart extends AggregateRoot {
     }
     
     public void checkout() {
-        // 購物車結帳邏輯
+        // Shopping cart checkout logic
         if (isEmpty()) {
-            throw new IllegalStateException("無法結帳空的購物車");
+            throw new IllegalStateException("Cannot checkout empty cart");
         }
         
         updateStatus(ShoppingCartStatus.CHECKED_OUT);
@@ -457,18 +457,18 @@ public class ShoppingCart extends AggregateRoot {
     }
 }
 
-// ❌ 不好的設計：混合多個業務概念
+// ❌ Bad design: mixing multiple business concepts
 public class OrderAndPaymentAndDelivery {
-    // 同時管理訂單、支付和配送 - 違反單一職責
+    // Managing order, payment, and delivery simultaneously - violates single responsibility
 }
 ```
 
-### 2. 一致性邊界
+### 2. Consistency Boundaries
 
-聚合根定義了強一致性的邊界，基於實際的 `Customer` 聚合根實現：
+Aggregate roots define strong consistency boundaries, based on the actual `Customer` aggregate root implementation:
 
 ```java
-@AggregateRoot(name = "Customer", description = "增強的客戶聚合根，支援完整的消費者功能", 
+@AggregateRoot(name = "Customer", description = "Enhanced customer aggregate root with complete consumer functionality", 
                boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
     
@@ -478,7 +478,7 @@ public class Customer implements AggregateRootInterface {
     private Money totalSpending;
     
     public DeliveryAddressId addDeliveryAddress(Address address, String label) {
-        // 業務規則驗證 - 保持一致性
+        // Business rule validation - maintain consistency
         if (deliveryAddresses.size() >= 10) {
             throw new IllegalArgumentException("Cannot have more than 10 delivery addresses");
         }
@@ -492,43 +492,43 @@ public class Customer implements AggregateRootInterface {
         DeliveryAddress deliveryAddress = new DeliveryAddress(
                 DeliveryAddressId.generate(), address, label);
 
-        // 如果是第一個地址，自動設為預設 - 維護一致性
+        // If first address, automatically set as default - maintain consistency
         if (deliveryAddresses.isEmpty()) {
             deliveryAddress.setAsDefault();
         }
 
         deliveryAddresses.add(deliveryAddress);
         
-        // 發布事件
+        // Publish event
         collectEvent(DeliveryAddressAddedEvent.create(this.id, address, deliveryAddresses.size()));
         
         return deliveryAddress.getId();
     }
     
     public void updateSpending(Money amount, String orderId, String spendingType) {
-        // 驗證業務規則
+        // Validate business rules
         validateSpendingUpdate(amount, orderId, spendingType);
 
         Money oldTotalSpending = this.totalSpending;
         this.totalSpending = this.totalSpending.add(amount);
 
-        // 使用狀態追蹤器維護一致性
+        // Use state tracker to maintain consistency
         stateTracker.trackChange("totalSpending", oldTotalSpending, this.totalSpending,
                 (oldValue, newValue) -> CustomerSpendingUpdatedEvent.create(
                         this.id, amount, newValue, orderId, spendingType));
 
-        // 檢查是否達到會員升級條件 - 跨屬性一致性
+        // Check membership upgrade eligibility - cross-property consistency
         checkMembershipUpgradeEligibility();
     }
 }
 ```
 
-### 3. 不變性維護
+### 3. Invariant Maintenance
 
-聚合根負責維護業務不變性，基於實際的 `Product` 聚合根實現：
+Aggregate roots are responsible for maintaining business invariants, based on the actual `Product` aggregate root implementation:
 
 ```java
-@AggregateRoot(name = "Product", description = "產品聚合根，管理產品信息和庫存", 
+@AggregateRoot(name = "Product", description = "Product aggregate root managing product information and inventory", 
                boundedContext = "Product", version = "1.0")
 public class Product extends AggregateRoot {
     
@@ -537,66 +537,66 @@ public class Product extends AggregateRoot {
     private boolean isActive;
     
     public void updateStock(StockQuantity newStock) {
-        // 業務不變性：庫存數量不能為空
+        // Business invariant: stock quantity cannot be null
         if (newStock == null) {
-            throw new IllegalArgumentException("庫存數量不能為空");
+            throw new IllegalArgumentException("Stock quantity cannot be null");
         }
 
         StockQuantity oldStock = this.stockQuantity;
         this.stockQuantity = newStock;
         
-        // 維護不變性：庫存狀態與數量一致
+        // Maintain invariant: stock status consistent with quantity
         this.inStock = newStock.getValue() > 0;
 
-        // 發布商品庫存更新事件
+        // Publish product stock updated event
         collectEvent(new ProductStockUpdatedEvent(this.id, oldStock, newStock));
     }
     
     public void discontinue(String reason) {
-        // 業務不變性：只有活躍商品可以下架
+        // Business invariant: only active products can be discontinued
         if (!this.isActive) {
-            throw new IllegalStateException("商品已經下架");
+            throw new IllegalStateException("Product is already discontinued");
         }
 
         this.isActive = false;
 
-        // 發布商品下架事件
+        // Publish product discontinued event
         collectEvent(new ProductDiscontinuedEvent(this.id, reason));
     }
     
     public boolean canBePurchased() {
-        // 業務不變性：可購買 = 活躍 + 有庫存
+        // Business invariant: purchasable = active + in stock
         return isActive && inStock;
     }
 }
 ```
 
-## 聚合根生命週期管理
+## Aggregate Root Lifecycle Management
 
-### 1. 創建階段
+### 1. Creation Phase
 
 ```java
 public class Customer implements AggregateRootInterface {
     
-    // 工廠方法
+    // Factory method
     public static Customer createNew(CustomerName name, Email email) {
         CustomerId id = CustomerId.generate();
         return new Customer(id, name, email, MembershipLevel.STANDARD);
     }
     
-    // 重建方法 (從持久化載入)
+    // Reconstruction method (loading from persistence)
     public static Customer reconstruct(CustomerId id, CustomerName name, Email email, 
                                      MembershipLevel membershipLevel, List<DeliveryAddress> addresses) {
         Customer customer = new Customer(id, name, email, membershipLevel);
         customer.addresses.addAll(addresses);
-        // 重建時不發布事件
+        // No events published during reconstruction
         customer.markEventsAsCommitted();
         return customer;
     }
 }
 ```
 
-### 2. 狀態轉換
+### 2. State Transitions
 
 ```java
 public class Order implements AggregateRootInterface {
@@ -614,7 +614,7 @@ public class Order implements AggregateRootInterface {
     
     public void confirm() {
         if (status != OrderStatus.SUBMITTED) {
-            throw new IllegalStateException("只有已提交的訂單可以確認");
+            throw new IllegalStateException("Only submitted orders can be confirmed");
         }
         
         this.status = OrderStatus.CONFIRMED;
@@ -624,7 +624,7 @@ public class Order implements AggregateRootInterface {
     
     public void cancel(String reason) {
         if (!canCancel()) {
-            throw new IllegalStateException("訂單無法取消");
+            throw new IllegalStateException("Order cannot be cancelled");
         }
         
         this.status = OrderStatus.CANCELLED;
@@ -640,7 +640,7 @@ public class Order implements AggregateRootInterface {
 }
 ```
 
-### 3. 聚合內實體管理
+### 3. Aggregate Internal Entity Management
 
 ```java
 public class Seller implements AggregateRootInterface {
@@ -650,9 +650,9 @@ public class Seller implements AggregateRootInterface {
     private ContactInfo contactInfo;
     
     public void addRating(CustomerId customerId, int rating, String comment) {
-        // 業務規則：同一客戶只能評價一次
+        // Business rule: same customer can only rate once
         if (hasRatingFromCustomer(customerId)) {
-            throw new DuplicateRatingException("客戶已經評價過此賣家");
+            throw new DuplicateRatingException("Customer has already rated this seller");
         }
         
         SellerRating newRating = new SellerRating(
@@ -688,41 +688,41 @@ public class Seller implements AggregateRootInterface {
 }
 ```
 
-## 聚合根間協作
+## Inter-Aggregate Collaboration
 
-### 1. 通過領域事件協作
+### 1. Collaboration Through Domain Events
 
 ```java
-// Order 聚合根發布事件
+// Order aggregate root publishes events
 public class Order implements AggregateRootInterface {
     
     public void submit() {
-        // ... 狀態變更邏輯
+        // ... state change logic
         
-        // 發布事件，觸發其他聚合根的處理
+        // Publish event to trigger processing by other aggregate roots
         collectEvent(OrderSubmittedEvent.create(getId(), getCustomerId(), getItems()));
     }
 }
 
-// 事件處理器協調其他聚合根
+// Event handler coordinates other aggregate roots
 @Component
 public class OrderSubmittedEventHandler extends AbstractDomainEventHandler<OrderSubmittedEvent> {
     
     @Override
     protected void handleEvent(OrderSubmittedEvent event) {
-        // 預留庫存
+        // Reserve inventory
         inventoryService.reserveStock(event.orderId(), event.items());
         
-        // 處理支付
+        // Process payment
         paymentService.processPayment(event.orderId(), event.totalAmount());
         
-        // 更新客戶統計
+        // Update customer statistics
         customerService.updateOrderStatistics(event.customerId());
     }
 }
 ```
 
-### 2. 通過領域服務協作
+### 2. Collaboration Through Domain Services
 
 ```java
 @DomainService(name = "OrderProcessingService", boundedContext = "Order")
@@ -734,32 +734,32 @@ public class OrderProcessingService {
     
     @Transactional
     public void processOrder(OrderId orderId) {
-        // 載入訂單聚合根
+        // Load order aggregate root
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException(orderId));
         
-        // 檢查庫存
+        // Check inventory
         boolean stockAvailable = inventoryService.checkAvailability(order.getItems());
         if (!stockAvailable) {
             order.markAsOutOfStock();
             return;
         }
         
-        // 預留庫存
+        // Reserve inventory
         inventoryService.reserveStock(orderId, order.getItems());
         
-        // 確認訂單
+        // Confirm order
         order.confirm();
         
-        // 保存變更
+        // Save changes
         orderRepository.save(order);
     }
 }
 ```
 
-## 聚合根測試策略
+## Aggregate Root Testing Strategy
 
-### 1. 單元測試
+### 1. Unit Testing
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -808,7 +808,7 @@ class CustomerTest {
 }
 ```
 
-### 2. 整合測試
+### 2. Integration Testing
 
 ```java
 @SpringBootTest
@@ -841,30 +841,30 @@ class CustomerIntegrationTest {
 }
 ```
 
-### 3. BDD 測試
+### 3. BDD Testing
 
 ```gherkin
-Feature: 客戶會員等級管理
+Feature: Customer membership level management
   
-  Scenario: 標準會員升級為高級會員
-    Given 一個標準會員客戶
-    When 客戶升級會員等級為高級會員
-    Then 客戶的會員等級應該是高級會員
-    And 應該發布會員等級升級事件
+  Scenario: Standard member upgrades to premium member
+    Given a standard member customer
+    When customer upgrades membership level to premium
+    Then customer's membership level should be premium
+    And membership level upgraded event should be published
   
-  Scenario: 嘗試降級會員等級
-    Given 一個高級會員客戶
-    When 客戶嘗試降級會員等級為標準會員
-    Then 應該拋出無效升級異常
-    And 客戶的會員等級應該保持不變
+  Scenario: Attempt to downgrade membership level
+    Given a premium member customer
+    When customer attempts to downgrade membership level to standard
+    Then invalid upgrade exception should be thrown
+    And customer's membership level should remain unchanged
 ```
 
-## 效能考量
+## Performance Considerations
 
-### 1. 聚合根大小控制
+### 1. Aggregate Root Size Control
 
 ```java
-// ✅ 好的設計：控制聚合根大小
+// ✅ Good design: control aggregate root size
 public class Order implements AggregateRootInterface {
     
     private static final int MAX_ITEMS = 100;
@@ -872,70 +872,69 @@ public class Order implements AggregateRootInterface {
     
     public void addItem(ProductId productId, int quantity, Money unitPrice) {
         if (items.size() >= MAX_ITEMS) {
-            throw new TooManyItemsException("訂單項目不能超過 " + MAX_ITEMS + " 個");
+            throw new TooManyItemsException("Order cannot have more than " + MAX_ITEMS + " items");
         }
         
-        // ... 添加邏輯
+        // ... add logic
     }
 }
 
-// ❌ 不好的設計：無限制的聚合根
+// ❌ Bad design: unlimited aggregate root
 public class Customer {
-    private final List<Order> allOrders; // 可能包含數千個訂單
+    private final List<Order> allOrders; // Could contain thousands of orders
 }
 ```
 
-### 2. 延遲載入
+### 2. Lazy Loading
 
 ```java
 public class Seller implements AggregateRootInterface {
     
-    // 避免一次載入所有評級
+    // Avoid loading all ratings at once
     public List<SellerRating> getRecentRatings(int days) {
         LocalDateTime cutoff = LocalDateTime.now().minusDays(days);
         return ratings.stream()
             .filter(rating -> rating.getRatedAt().isAfter(cutoff))
             .filter(SellerRating::isVisible)
             .sorted((r1, r2) -> r2.getRatedAt().compareTo(r1.getRatedAt()))
-            .limit(10) // 限制數量
+            .limit(10) // Limit quantity
             .toList();
     }
 }
 ```
 
-## 相關圖表
+## Related Diagrams
 
-- !!!!![客戶聚合根詳細圖](../../diagrams/generated/functional/customer-aggregate-details.png)
-- !!!!![訂單聚合根詳細圖](../../diagrams/generated/functional/order-aggregate-details.png)
-- !!!!![產品聚合根詳細圖](../../diagrams/generated/functional/product-aggregate-details.png)
-- !!!!![賣家聚合根詳細圖](../../diagrams/generated/functional/seller-aggregate-details.png)
-- !!!!![領域模型概覽圖](../../diagrams/generated/functional/domain-model-overview.png)
-- !!!!![支付聚合根詳細圖](../../diagrams/generated/functional/payment-aggregate-details.png)
-- !!!!![庫存聚合根詳細圖](../../diagrams/generated/functional/inventory-aggregate-details.png)
-- !!!!![評價聚合根詳細圖](../../diagrams/generated/functional/review-aggregate-details.png)
-- !!!!![購物車聚合根詳細圖](../../diagrams/generated/functional/shoppingcart-aggregate-details.png)
-- !!!!![促銷聚合根詳細圖](../../diagrams/generated/functional/promotion-aggregate-details.png)
-- !!!!![定價聚合根詳細圖](../../diagrams/generated/functional/pricing-aggregate-details.png)
-- !!!!![通知聚合根詳細圖](../../diagrams/generated/functional/notification-aggregate-details.png)
-- !!!!![配送聚合根詳細圖](../../diagrams/generated/functional/delivery-aggregate-details.png)
-- !!!!![可觀測性聚合根詳細圖](../../diagrams/generated/functional/observability-aggregate-details.png)
+- ![Customer Aggregate Root Details](../../diagrams/generated/functional/customer-aggregate-details.png)
+- ![Order Aggregate Root Details](../../diagrams/generated/functional/order-aggregate-details.png)
+- ![Product Aggregate Root Details](../../diagrams/generated/functional/product-aggregate-details.png)
+- ![Seller Aggregate Root Details](../../diagrams/generated/functional/seller-aggregate-details.png)
+- ![Domain Model Overview](../../diagrams/generated/functional/domain-model-overview.png)
+- ![Payment Aggregate Root Details](../../diagrams/generated/functional/payment-aggregate-details.png)
+- ![Inventory Aggregate Root Details](../../diagrams/generated/functional/inventory-aggregate-details.png)
+- ![Review Aggregate Root Details](../../diagrams/generated/functional/review-aggregate-details.png)
+- ![Shopping Cart Aggregate Root Details](../../diagrams/generated/functional/shoppingcart-aggregate-details.png)
+- ![Promotion Aggregate Root Details](../../diagrams/generated/functional/promotion-aggregate-details.png)
+- ![Pricing Aggregate Root Details](../../diagrams/generated/functional/pricing-aggregate-details.png)
+- ![Notification Aggregate Root Details](../../diagrams/generated/functional/notification-aggregate-details.png)
+- ![Delivery Aggregate Root Details](../../diagrams/generated/functional/delivery-aggregate-details.png)
+- ![Observability Aggregate Root Details](../../diagrams/generated/functional/observability-aggregate-details.png)
 
-## 與其他視點的關聯
+## Relationships with Other Viewpoints
 
-- **[資訊視點](../information/README.md)**: 領域事件設計和聚合根間通信
-- **[並發視點](../concurrency/README.md)**: 聚合根的交易邊界和並發控制
-- **[開發視點](../development/README.md)**: 聚合根的測試策略和程式碼組織
+- **[Information Viewpoint](../information/README.md)**: Domain event design and inter-aggregate communication
+- **[Concurrency Viewpoint](../concurrency/README.md)**: Aggregate root transaction boundaries and concurrency control
+- **[Development Viewpoint](../development/README.md)**: Aggregate root testing strategies and code organization
 
-## 最佳實踐總結
+## Best Practices Summary
 
-1. **明確邊界**: 每個聚合根有清晰的業務邊界和職責
-2. **保持小型**: 控制聚合根大小，避免性能問題
-3. **強一致性**: 聚合根內部保持強一致性
-4. **事件驅動**: 通過領域事件實現聚合根間協作
-5. **不變性維護**: 確保業務規則和不變性得到維護
-6. **測試覆蓋**: 完整的單元測試和整合測試
-7. **版本管理**: 支援聚合根結構的演進
-8. **效能優化**: 考慮載入策略和查詢優化
+1. **Clear Boundaries**: Each aggregate root has clear business boundaries and responsibilities
+2. **Keep Small**: Control aggregate root size to avoid performance issues
+3. **Strong Consistency**: Maintain strong consistency within aggregate roots
+4. **Event-Driven**: Achieve inter-aggregate collaboration through domain events
+5. **Invariant Maintenance**: Ensure business rules and invariants are maintained
+6. **Test Coverage**: Complete unit and integration testing
+7. **Version Management**: Support aggregate root structure evolution
+8. **Performance Optimization**: Consider loading strategies and query optimization
 
-這套聚合根設計指南確保了領域模型的正確性、可維護性和高效能。
-
+This aggregate root design guide ensures domain model correctness, maintainability, and high performance.
