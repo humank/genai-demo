@@ -2,11 +2,9 @@
 
 ## Business Requirements Overview
 
-This update focuses on system architecture optimization, addressing issues discovered in architecture testing to ensure 
-the system complies with Domain-Driven Design (DDD) layered architecture principles. The main issues addressed include:
+This update focuses on system architecture optimization, addressing issues identified in architecture testing to ensure the system complies with Domain-Driven Design (DDD) layered architecture principles. The main issues addressed include:
 
-1. **Interface Layer Direct Dependency on Domain Layer**: Violates DDD layered architecture principles - 
-   the interface layer should not directly depend on the domain layer.
+1. **Interface Layer Direct Dependency on Domain Layer**: Violates DDD layered architecture principles where the interface layer should not directly depend on the domain layer.
 2. **Aggregate Root Inner Class Visibility Issues**: Inner classes within aggregate roots were not properly handled.
 3. **Infrastructure Layer Adapter Package Structure Issues**: Adapter classes were not placed in the correct package structure.
 
@@ -14,9 +12,8 @@ the system complies with Domain-Driven Design (DDD) layered architecture princip
 
 ### Layered Architecture Optimization
 
-1. **Decoupling Interface Layer from Domain Layer**:
-   - Created DTO classes for interface and application layers to avoid direct dependency of interface layer on 
-     domain layer models.
+1. **Interface Layer and Domain Layer Decoupling**:
+   - Created DTO classes for interface and application layers to avoid direct dependency of interface layer on domain layer models.
    - Implemented Mapper classes responsible for data transformation between different layers.
 
 2. **Adapter Package Structure Adjustment**:
@@ -35,8 +32,7 @@ the system complies with Domain-Driven Design (DDD) layered architecture princip
    - Application Layer: `application.pricing.dto.ProductCategoryDto`
 
 2. **Mapper Classes**:
-   - `application.pricing.mapper.ProductCategoryMapper`: Responsible for transformation between application layer DTOs 
-     and domain models
+   - `application.pricing.mapper.ProductCategoryMapper`: Responsible for transformation between application layer DTOs and domain models
 
 3. **Adapter Classes**:
    - `infrastructure.persistence.adapter.DeliveryRepositoryAdapter`
@@ -49,7 +45,6 @@ the system complies with Domain-Driven Design (DDD) layered architecture princip
 To resolve the issue of interface layer directly depending on domain layer, implemented multi-level data transformation:
 
 1. **Interface Layer → Application Layer**:
-
 ```java
 // Conversion method in interface layer controller
 private ProductCategoryDto convertToAppProductCategory(solid.humank.genaidemo.interfaces.web.pricing.dto.ProductCategoryDto dto) {
@@ -67,7 +62,6 @@ private ProductCategoryDto convertToAppProductCategory(solid.humank.genaidemo.in
 ```
 
 2. **Application Layer → Domain Layer**:
-
 ```java
 // Application layer mapper
 public static ProductCategory toDomain(ProductCategoryDto dto) {
@@ -88,7 +82,7 @@ public static ProductCategory toDomain(ProductCategoryDto dto) {
 
 Moved adapter classes to package structure compliant with DDD architecture specifications:
 
-```text
+```
 infrastructure/
 ├── external/
 │   └── adapter/
@@ -100,8 +94,7 @@ infrastructure/
 
 ### Aggregate Root Inner Class Handling
 
-Modified switch statements in `PricingRule` class to use Java switch expression syntax, avoiding generation of 
-anonymous inner classes:
+Modified switch statements in `PricingRule` class to use Java switch expression syntax, avoiding generation of anonymous inner classes:
 
 ```java
 private int getDefaultNormalRate(ProductCategory category) {
@@ -126,10 +119,6 @@ private int getDefaultNormalRate(ProductCategory category) {
 
 ## Conclusion
 
-This update successfully resolved issues in the system architecture, making the system more compliant with 
-Domain-Driven Design layered architecture principles. Through the introduction of DTOs and mappers, decoupling between 
-layers was achieved, improving system maintainability and extensibility. Additionally, by adjusting the adapter package 
-structure, the system architecture became clearer and easier to understand and maintain.
+This update successfully resolved issues in the system architecture, making the system more compliant with Domain-Driven Design layered architecture principles. By introducing DTOs and mappers, achieved decoupling between layers, improving system maintainability and extensibility. Additionally, by adjusting adapter package structure, made the system architecture clearer and easier to understand and maintain.
 
-All architecture tests pass successfully, proving that the system architecture meets expected design specifications. 
-These improvements lay a solid foundation for future feature development and system expansion.
+All architecture tests pass successfully, proving that the system architecture meets expected design specifications. These improvements lay a solid foundation for future feature development and system expansion.

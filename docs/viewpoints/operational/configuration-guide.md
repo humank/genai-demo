@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides detailed instructions on how to configure the frontend-backend observability integration system, including environment-specific configurations, MSK topic settings, and monitoring configurations.
+This guide provides detailed instructions on configuring the frontend-backend observability integration system, including environment-specific configurations, MSK topic setup, and monitoring configurations.
 
 ## Environment Configuration
 
@@ -24,7 +24,7 @@ spring:
       ddl-auto: update
     show-sql: true
 
-# Observability configuration
+# Observability Configuration
 genai-demo:
   events:
     publisher: in-memory  # Use in-memory event processing
@@ -43,7 +43,7 @@ genai-demo:
       enabled: true
       export-interval: 30s
 
-# Logging configuration
+# Logging Configuration
 logging:
   level:
     solid.humank.genaidemo.infrastructure.observability: DEBUG
@@ -95,7 +95,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-# Observability configuration
+# Observability Configuration
 genai-demo:
   events:
     publisher: in-memory
@@ -149,7 +149,7 @@ spring:
       properties:
         spring.json.trusted.packages: "solid.humank.genaidemo.domain.events"
 
-# Observability configuration
+# Observability Configuration
 genai-demo:
   events:
     publisher: kafka     # Use MSK event processing
@@ -184,13 +184,13 @@ genai-demo:
       enabled: true
       export-interval: 60s
 
-# AWS X-Ray configuration
+# AWS X-Ray Configuration
 aws:
   xray:
     tracing-name: genai-demo-${spring.profiles.active}
     context-missing: LOG_ERROR
 
-# CloudWatch configuration
+# CloudWatch Configuration
 management:
   metrics:
     export:
@@ -200,7 +200,7 @@ management:
         step: 60s
         enabled: true
 
-# Logging configuration
+# Logging Configuration
 logging:
   level:
     solid.humank.genaidemo: INFO
@@ -331,7 +331,7 @@ KafkaConsumerLag:
 #### Encryption in Transit
 
 ```yaml
-# TLS configuration
+# TLS Configuration
 server:
   ssl:
     enabled: true
@@ -339,7 +339,7 @@ server:
     key-store-password: ${SSL_KEYSTORE_PASSWORD}
     key-store-type: PKCS12
 
-# Kafka TLS configuration
+# Kafka TLS Configuration
 spring:
   kafka:
     security:
@@ -361,7 +361,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         
-# KMS configuration
+# KMS Configuration
 aws:
   kms:
     key-id: ${KMS_KEY_ID}
@@ -373,7 +373,7 @@ aws:
 ### JVM Configuration
 
 ```bash
-# Production environment JVM parameters
+# Production JVM parameters
 JAVA_OPTS="-Xms2g -Xmx4g \
   -XX:+UseG1GC \
   -XX:MaxGCPauseMillis=200 \
@@ -392,7 +392,7 @@ spring:
       linger-ms: 5           # 5ms delay to increase batch efficiency
       buffer-memory: 33554432 # 32MB buffer
       compression-type: gzip  # Compression to reduce network transfer
-      acks: all              # Wait for all replicas to acknowledge
+      acks: all              # Wait for all replica acknowledgments
       retries: 3             # Number of retries
       enable-idempotence: true # Enable idempotence
     consumer:
@@ -504,7 +504,7 @@ echo "Configuration validation completed!"
 - [ ] Test database isolated
 - [ ] Observability features selectively enabled
 - [ ] Fast event processing configured
-- [ ] Test data auto-cleanup enabled
+- [ ] Test data auto-cleanup
 
 #### Production Environment
 
@@ -517,17 +517,125 @@ echo "Configuration validation completed!"
 
 ## Related Diagrams
 
-- [Observability Architecture Overview](../../diagrams/generated/operational/observability-architecture-overview.png)
-- [MSK Integration Flow](../../diagrams/generated/operational/msk-integration-flow.png)
+### Observability Architecture
+
+```mermaid
+graph TB
+    subgraph "Frontend Applications"
+        WEB[Web App<br/>Next.js]
+        MOBILE[Mobile App<br/>Angular]
+        ADMIN[Admin Panel<br/>React]
+    end
+    
+    subgraph "API Gateway"
+        GATEWAY[API Gateway<br/>Load Balancer]
+    end
+    
+    subgraph "Backend Services"
+        ANALYTICS_API[Analytics API<br/>Event Collection]
+        OBSERVABILITY_SVC[Observability Service<br/>Event Processing]
+        MONITORING_SVC[Monitoring Service<br/>Health Checks]
+    end
+    
+    subgraph "Event Processing"
+        KAFKA[MSK Kafka<br/>Event Streaming]
+        DLQ[Dead Letter Queue<br/>Failed Events]
+    end
+    
+    subgraph "Storage & Analytics"
+        POSTGRES[(PostgreSQL<br/>Structured Data)]
+        OPENSEARCH[(OpenSearch<br/>Log Analytics)]
+        S3[(S3<br/>Long-term Storage)]
+    end
+    
+    subgraph "Monitoring Stack"
+        PROMETHEUS[Prometheus<br/>Metrics Collection]
+        GRAFANA[Grafana<br/>Visualization]
+        XRAY[AWS X-Ray<br/>Distributed Tracing]
+        CLOUDWATCH[CloudWatch<br/>AWS Monitoring]
+    end
+    
+    WEB --> GATEWAY
+    MOBILE --> GATEWAY
+    ADMIN --> GATEWAY
+    
+    GATEWAY --> ANALYTICS_API
+    ANALYTICS_API --> KAFKA
+    KAFKA --> OBSERVABILITY_SVC
+    KAFKA --> DLQ
+    
+    OBSERVABILITY_SVC --> POSTGRES
+    OBSERVABILITY_SVC --> OPENSEARCH
+    OBSERVABILITY_SVC --> S3
+    
+    ANALYTICS_API --> PROMETHEUS
+    OBSERVABILITY_SVC --> XRAY
+    PROMETHEUS --> GRAFANA
+    CLOUDWATCH --> GRAFANA
+    
+    classDef frontend fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef backend fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef event fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef storage fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef monitoring fill:#ffebee,stroke:#d32f2f,stroke-width:2px
+    
+    class WEB,MOBILE,ADMIN frontend
+    class GATEWAY,ANALYTICS_API,OBSERVABILITY_SVC,MONITORING_SVC backend
+    class KAFKA,DLQ event
+    class POSTGRES,OPENSEARCH,S3 storage
+    class PROMETHEUS,GRAFANA,XRAY,CLOUDWATCH monitoring
+```
+
+### Configuration Flow
+
+```mermaid
+graph LR
+    subgraph "Environment Configs"
+        DEV[Development<br/>application-dev.yml]
+        TEST[Test<br/>application-test.yml]
+        PROD[Production<br/>application-msk.yml]
+    end
+    
+    subgraph "MSK Topics"
+        USER_BEHAVIOR[User Behavior<br/>Analytics]
+        PERFORMANCE[Performance<br/>Metrics]
+        BUSINESS[Business<br/>Analytics]
+    end
+    
+    subgraph "Monitoring"
+        CLOUDWATCH_METRICS[CloudWatch<br/>Metrics]
+        ALARMS[CloudWatch<br/>Alarms]
+        DASHBOARDS[Grafana<br/>Dashboards]
+    end
+    
+    DEV --> USER_BEHAVIOR
+    TEST --> PERFORMANCE
+    PROD --> BUSINESS
+    
+    USER_BEHAVIOR --> CLOUDWATCH_METRICS
+    PERFORMANCE --> CLOUDWATCH_METRICS
+    BUSINESS --> CLOUDWATCH_METRICS
+    
+    CLOUDWATCH_METRICS --> ALARMS
+    CLOUDWATCH_METRICS --> DASHBOARDS
+    
+    classDef config fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef topic fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef monitor fill:#fff8e1,stroke:#ff8f00,stroke-width:2px
+    
+    class DEV,TEST,PROD config
+    class USER_BEHAVIOR,PERFORMANCE,BUSINESS topic
+    class CLOUDWATCH_METRICS,ALARMS,DASHBOARDS monitor
+```
 
 ## Relationships with Other Viewpoints
 
 - **[Deployment Viewpoint](../deployment/README.md)**: Configuration management for deployment environments
-- **[Development Viewpoint](../development/README.md)**: Configuration settings for development environment
+- **[Development Viewpoint](../development/README.md)**: Development environment configuration settings
 - **[Security Perspective](../../perspectives/security/README.md)**: Security configuration and encryption settings
 
 ## Related Documentation
 
 - [Observability System Overview](observability-overview.md)
-- [Production Observability Testing Guide](production-observability-testing-guide.md)
+- [Production Environment Testing Guide](production-observability-testing-guide.md)
 - [Troubleshooting Guide](../../troubleshooting/observability-troubleshooting.md)

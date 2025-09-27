@@ -2,7 +2,7 @@
 
 ## 📋 Overview
 
-This document contains complete architecture diagrams for the GenAI Demo project. These diagrams are automatically generated based on CDK code, showcasing the system's AWS infrastructure and domain-driven design architecture.
+This document contains the complete architecture diagrams for the GenAI Demo project. These diagrams are automatically generated based on CDK code and showcase the system's AWS infrastructure and Domain-Driven Design architecture.
 
 ## 🎨 Architecture Diagram List
 
@@ -15,35 +15,35 @@ This document contains complete architecture diagrams for the GenAI Demo project
 | GenAI Demo - AWS CDK Architecture Diagram | `storage/1758272821927-c24lg7z.json` | Original CDK architecture diagram |
 | GenAI Demo - Domain Event Architecture Flow | `storage/1758272891082-z23qvhs.json` | Domain event processing flow |
 | **AWS CDK Unified Architecture Diagram** | `storage/aws-cdk-unified-architecture-diagram.json` | **Unified Complete Architecture Diagram** ⭐ |
-| Architecture Compliance Check - ArchUnit Rules | `storage/architecture-compliance-check-archunit-rules.json` | ArchUnit rules checking |
+| Architecture Compliance Check - ArchUnit Rules | `storage/architecture-compliance-check-archunit-rules.json` | ArchUnit rules validation |
 | Observability Requirements - Monitoring & Tracing | `storage/observability-requirements-monitoring-tracing.json` | Monitoring and tracing architecture |
 | Four Architecture Perspectives Checklist | `storage/four-architecture-perspectives-checklist.json` | Four perspectives checklist |
-| Concurrency Strategy & Resilience Patterns | `storage/concurrency-strategy-resilience-patterns.json` | Concurrency resilience patterns |
+| Concurrency Strategy & Resilience Patterns | `storage/concurrency-strategy-resilience-patterns.json` | Concurrency and resilience patterns |
 | Technology Evolution Standards & Version Management | `storage/technology-evolution-standards-version-management.json` | Technology evolution management |
 | Rozanski & Woods Seven Viewpoints & Stakeholder Mapping | `storage/rozanski-woods-seven-viewpoints-stakeholder-mapping.json` | Seven viewpoints stakeholder mapping |
 | Seven Architecture Viewpoints Detailed Focus Areas | `storage/seven-viewpoints-detailed-focus-areas.json` | Seven viewpoints focus areas |
 | GenAI Demo Project Maturity Assessment & Recommendations | `storage/genai-demo-maturity-assessment-recommendations.json` | Project maturity assessment |
 | GenAI Demo Architecture Improvement Action Plan | `storage/genai-demo-improvement-action-plan.json` | Improvement action plan |
-| GenAI Demo Seven Viewpoints Analysis & Roadmap | `storage/genai-demo-seven-viewpoints-analysis-roadmap.json` | In-depth analysis roadmap |
+| GenAI Demo Seven Viewpoints Analysis & Roadmap | `storage/genai-demo-seven-viewpoints-analysis-roadmap.json` | Deep analysis roadmap |
 | GenAI Demo Technical Implementation Plan | `storage/genai-demo-technical-implementation-plan.json` | Technical implementation plan |
 
 ### 🎯 Recommended Usage
 
 **Primary Architecture Diagram**: `AWS CDK Unified Architecture Diagram` (`aws-cdk-unified-architecture-diagram.json`)
 
-- This is the most complete architecture diagram, integrating all CDK stack components
-- Includes complete architecture of network layer, application layer, database layer, security layer, etc.
-- Shows connection relationships and data flow between components
+- This is the most comprehensive architecture diagram, integrating all CDK stack components
+- Includes complete architecture layers: network, application, database, and security
+- Shows component connections and data flow relationships
 
 ### 📋 Important Notes
 
-⚠️ **File Naming Limitations**: Due to Excalidraw MCP tool limitations, files must maintain original ID format naming (like `1758273710520-jghech8.json`), cannot use custom file names. Renaming files will cause "Failed to load Document" errors.
+⚠️ **File Naming Limitations**: Due to Excalidraw MCP tool limitations, files must maintain their original ID format naming (e.g., `1758273710520-jghech8.json`). Custom file names cannot be used as they will cause \"Failed to load Document\" errors.
 
 ## 🏗️ CDK Stack Architecture
 
 ### Core Infrastructure Stacks
 
-1. **NetworkStack** - VPC, subnets, security group configuration
+1. **NetworkStack** - VPC, subnets, security groups configuration
 2. **SecurityStack** - KMS encryption, IAM roles and policies
 3. **CoreInfrastructureStack** - Application Load Balancer, target groups
 
@@ -68,7 +68,7 @@ This document contains complete architecture diagrams for the GenAI Demo project
 ### Method 1: View in Excalidraw
 
 1. Open [Excalidraw.com](https://excalidraw.com)
-2. Click "File" > "Open"
+2. Click \"File\" > \"Open\"
 3. Copy and paste the JSON content below
 
 ### Method 2: Export Using MCP Tools
@@ -93,7 +93,7 @@ mcp_excalidraw_export_to_svg --id 1758272821927-c24lg7z
 ### 🔄 Domain-Driven Design Features
 
 - **Aggregate Root Pattern**: Responsible for collecting and managing domain events
-- **Event-Driven Architecture**: Using MSK (Apache Kafka) to publish domain events
+- **Event-Driven Architecture**: Uses MSK (Apache Kafka) to publish domain events
 - **CQRS Pattern**: Command Query Responsibility Segregation
 - **Event Sourcing**: Complete business history tracking
 - **Cross-Aggregate Communication**: Loose coupling through domain events
@@ -138,7 +138,7 @@ mcp_excalidraw_export_to_svg --id 1758272821927-c24lg7z
 
 These architecture diagrams are automatically generated based on the following CDK code:
 
-- Last Updated: 2025-09-19
+- Last Updated: September 19, 2025
 - CDK Version: AWS CDK v2
 - Based on actual TypeScript CDK code
 
@@ -148,19 +148,19 @@ To update architecture diagrams, please regenerate after CDK code changes.
 
 ### Rozanski & Woods Architecture Methodology Visualization
 
-Based on the `.kiro/steering/rozanski-woods-architecture-methodology.md` file, we created a complete methodology diagram set:
+Based on the `.kiro/steering/rozanski-woods-architecture-methodology.md` document, we have created a complete set of methodology diagrams:
 
-#### 📊 **New Methodology Diagram Detailed Description**
+#### 📊 **New Methodology Diagram Detailed Descriptions**
 
 5. **Architecture Compliance Check Process** (`1758275485504-dbwdpv7`)
-   - Shows four major check categories of ArchUnit rules
+   - Shows four major ArchUnit rule check categories
    - Domain layer dependency rules, aggregate root rules, event handler rules, value object rules
    - Compliance monitoring metrics: 100% coverage requirement
 
 6. **Observability Requirements Architecture** (`1758275565208-3velqgl`)
-   - Business metrics monitoring (mandatory for each aggregate root)
-   - Use case tracing (mandatory for each application service)
-   - Domain event metrics (mandatory for each event type)
+   - Business metrics monitoring (required for each aggregate root)
+   - Use case tracing (required for each application service)
+   - Domain event metrics (required for each event type)
    - Structured logging standards and alert configuration
 
 7. **Four Architecture Perspectives Checklist** (`1758275636927-mu9pbco`)
@@ -182,20 +182,20 @@ Based on the `.kiro/steering/rozanski-woods-architecture-methodology.md` file, w
    - Migration strategy and rollback plan: ≤ 15 minutes rollback time
 
 10. **Seven Viewpoints & Stakeholder Mapping** (`1758276726986-maiv8ad`)
-    - Shows main stakeholders corresponding to each architecture viewpoint
-    - Annotated with related roles from software development and business delivery perspectives
+    - Shows primary stakeholders corresponding to each architecture viewpoint
+    - Annotated with relevant roles from software development and business delivery perspectives
     - Includes complete seven viewpoints: Functional, Information, Concurrency, Development, Deployment, Operational, Context
     - Helps teams understand responsibility attribution for different viewpoints
 
 11. **Seven Architecture Viewpoints Detailed Focus Areas** (`1758276802309-2o9w387`)
-    - Detailed checklist based on current steering files
+    - Detailed checklist based on current steering documents
     - Specific focus areas and check items for each viewpoint
     - Includes corresponding tool and method recommendations
-    - Provides complete architecture design guidelines
+    - Provides complete architectural design guidelines
 
-#### 🔄 **Methodology Application Process**
+#### 🔄 **Methodology Application Flow**
 
-```text
+```
 New Feature Development → Architecture Compliance Check → Observability Design → Four Perspectives Validation → Concurrency Resilience Design → Technology Evolution Assessment
      ↑                                                                                    ↓
      ←←←←←←←←←←←←←←←←←←← Continuous Improvement and Feedback ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
@@ -206,7 +206,7 @@ New Feature Development → Architecture Compliance Check → Observability Desi
 - **Architecture Compliance Check**: Ensure code complies with DDD and hexagonal architecture principles
 - **Observability Design**: Establish complete monitoring, tracing, and alerting systems
 - **Four Perspectives Validation**: Evaluate architecture from security, performance, availability, and evolution dimensions
-- **Concurrency Resilience Design**: Implement resilience patterns like circuit breakers, retry, fallback
+- **Concurrency Resilience Design**: Implement circuit breaker, retry, fallback, and other resilience patterns
 - **Technology Evolution Management**: Standardized technology selection and version upgrade processes
 
 ## 🔗 Related Documentation
@@ -215,15 +215,15 @@ New Feature Development → Architecture Compliance Check → Observability Desi
 - [Multi-Region Architecture Documentation](../infrastructure/MULTI_REGION_ARCHITECTURE.md)
 - [Security Implementation Guide](../infrastructure/SECURITY_IMPLEMENTATION.md)
 - [Testing Guide](../infrastructure/TESTING_GUIDE.md)
-- **Rozanski & Woods Architecture Methodology** (See project internal documentation)
+- **Rozanski & Woods Architecture Methodology** (Please refer to internal project documentation)
 
 ## 🔍 **Latest Architecture Analysis Diagrams**
 
-### 📈 **Project In-Depth Assessment Series**
+### 📈 **Project Deep Assessment Series**
 
-14. **GenAI Demo Project Seven Viewpoints In-Depth Analysis & Improvement Roadmap** (`1758278799092-ft2juf7`)
-    - In-depth analysis based on actual project code (13 bounded contexts, 143 Java test files, 103 infrastructure tests)
-    - Detailed current status assessment and maturity scoring for seven viewpoints (overall 4.1/5.0)
+14. **GenAI Demo Project Seven Viewpoints Deep Analysis & Improvement Roadmap** (`1758278799092-ft2juf7`)
+    - Deep analysis based on actual project code (13 bounded contexts, 143 Java test files, 103 infrastructure tests)
+    - Detailed current state assessment and maturity scoring for seven viewpoints (overall 4.1/5.0)
     - 12-week detailed improvement roadmap, from 4.1 to 4.7 maturity
     - Priority classification: 🚨 Context (2.0→4.0), 🔥 Concurrency (3.0→4.5), ⚡ Information & Operational (4.0→4.5)
 
@@ -241,9 +241,9 @@ New Feature Development → Architecture Compliance Check → Observability Desi
 - **Development Viewpoint**: Hexagonal architecture, 143 test files, ArchUnit compliance
 - **Deployment Viewpoint**: AWS CDK v2, 6 coordinated stacks, 103 tests passing
 
-**Areas for Improvement** (Urgent):
+**Areas for Improvement** (Urgent Attention Needed):
 
 - **Context Viewpoint** (⭐⭐): System boundaries and external dependency mapping
-- **Concurrency Viewpoint** (⭐⭐⭐): Concurrency strategy and resilience patterns
+- **Concurrency Viewpoint** (⭐⭐⭐): Concurrency strategies and resilience patterns
 
 **Improvement Plan**: 12-week implementation plan, expected to improve overall maturity from 4.1 to 4.7 (excellent level)

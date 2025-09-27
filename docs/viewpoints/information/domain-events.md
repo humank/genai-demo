@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a complete domain event system, including 40+ domain events covering all 13 bounded contexts. Domain events are implemented using Records, following immutability principles, and achieve decoupled communication between contexts through event-driven architecture.
+This project implements a complete domain event system with 40+ domain events covering all 13 bounded contexts. Domain events are implemented using Records following immutability principles and enable decoupled communication between contexts through event-driven architecture.
 
 ## Domain Event Architecture
 
@@ -10,25 +10,25 @@ This project implements a complete domain event system, including 40+ domain eve
 
 ```mermaid
 graph TB
-    subgraph "Event Definition Layer"
+    subgraph \"Event Definition Layer\"
         DE[DomainEvent Interface]
         ER[Event Records]
         EM[Event Metadata]
     end
     
-    subgraph "Event Collection Layer"
+    subgraph \"Event Collection Layer\"
         AR[Aggregate Root]
         EC[Event Collector]
         UE[Uncommitted Events]
     end
     
-    subgraph "Event Publishing Layer"
+    subgraph \"Event Publishing Layer\"
         AS[Application Service]
         EP[Event Publisher]
         TEL[Transactional Event Listener]
     end
     
-    subgraph "Event Processing Layer"
+    subgraph \"Event Processing Layer\"
         EH[Event Handler]
         DEH[Domain Event Handler]
         BL[Business Logic]
@@ -92,7 +92,7 @@ public record CustomerCreatedEvent(
 Aggregate roots collect events through `AggregateRootInterface`:
 
 ```java
-@AggregateRoot(name = "Customer", boundedContext = "Customer", version = "2.0")
+@AggregateRoot(name = \"Customer\", boundedContext = \"Customer\", version = \"2.0\")
 public class Customer implements AggregateRootInterface {
     
     public void updateProfile(CustomerName newName, Email newEmail, Phone newPhone) {
@@ -110,7 +110,7 @@ public class Customer implements AggregateRootInterface {
 }
 ```
 
-### 3. Event Publishing Process
+### 3. Event Publishing Flow
 
 Application services are responsible for publishing events collected by aggregate roots:
 
@@ -141,7 +141,7 @@ public class CustomerApplicationService {
 ### Classification by Bounded Context
 
 | Bounded Context | Event Count | Main Event Types |
-|-----------------|-------------|------------------|
+|----------------|-------------|------------------|
 | Customer | 9 | CustomerCreated, CustomerProfileUpdated, MembershipLevelUpgraded |
 | Order | 5 | OrderCreated, OrderSubmitted, OrderConfirmed |
 | Product | 5 | ProductCreated, ProductPriceChanged, ProductActivated |
@@ -156,17 +156,17 @@ public class CustomerApplicationService {
 ### Event Type Classification
 
 #### 1. Lifecycle Events
-- **Created Events**: Published when aggregate roots are created
+- **Created Events**: Published when aggregate root is created
 - **Updated Events**: Published when aggregate root state changes
-- **Deleted Events**: Published when aggregate roots are deleted
+- **Deleted Events**: Published when aggregate root is deleted
 
 #### 2. State Transition Events
 - **Status Changed Events**: Published during state machine transitions
-- **Workflow Events**: Published when workflow steps complete
+- **Workflow Events**: Published when workflow steps are completed
 
 #### 3. Business Rule Events
 - **Validation Events**: Published during business rule validation
-- **Calculation Events**: Published when calculations complete
+- **Calculation Events**: Published when calculations are completed
 
 ## Major Domain Events Details
 
@@ -371,7 +371,7 @@ public record ReviewRejectedEvent(
 ### ShoppingCart Context Events
 
 ```java
-// Cart creation event
+// Shopping cart creation event
 public record CartCreatedEvent(
     CartId cartId,
     CustomerId customerId,
@@ -428,8 +428,8 @@ public abstract class AbstractDomainEventHandler<T extends DomainEvent>
             markEventAsProcessed(event.getEventId());
             
         } catch (Exception e) {
-            logger.error("Event processing failed: {}", event, e);
-            throw new DomainEventProcessingException("Event processing failed", e);
+            logger.error(\"Event processing failed: {}\", event, e);
+            throw new DomainEventProcessingException(\"Event processing failed\", e);
         }
     }
     
@@ -455,7 +455,7 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
         // Create customer statistics record
         customerStatsService.createStatsRecord(event.customerId());
         
-        // Initialize customer preferences
+        // Initialize customer preference settings
         customerPreferencesService.initializeDefaultPreferences(event.customerId());
     }
     
@@ -486,7 +486,7 @@ public class OrderCreatedEventHandler extends AbstractDomainEventHandler<OrderCr
 }
 ```
 
-## Event Publishing Strategies
+## Event Publishing Strategy
 
 ### 1. Transactional Event Publishing
 
@@ -554,18 +554,18 @@ public class DomainEventMetrics {
     public void recordEventPublished(DomainEventWrapper wrapper) {
         DomainEvent event = wrapper.getSource();
         
-        Counter.builder("domain.events.published")
-            .tag("event.type", event.getEventType())
-            .tag("aggregate.type", getAggregateType(event))
+        Counter.builder(\"domain.events.published\")
+            .tag(\"event.type\", event.getEventType())
+            .tag(\"aggregate.type\", getAggregateType(event))
             .register(meterRegistry)
             .increment();
     }
     
     @TransactionalEventListener
     public void recordEventProcessed(DomainEventProcessedEvent event) {
-        Timer.builder("domain.events.processing.time")
-            .tag("event.type", event.getEventType())
-            .tag("handler", event.getHandlerName())
+        Timer.builder(\"domain.events.processing.time\")
+            .tag(\"event.type\", event.getEventType())
+            .tag(\"handler\", event.getHandlerName())
             .register(meterRegistry)
             .record(event.getProcessingTime(), TimeUnit.MILLISECONDS);
     }
@@ -583,10 +583,10 @@ public class EventTracingHandler {
         DomainEvent event = wrapper.getSource();
         
         Span span = tracer.nextSpan()
-            .name("domain-event-processing")
-            .tag("event.type", event.getEventType())
-            .tag("event.id", event.getEventId().toString())
-            .tag("aggregate.id", event.getAggregateId())
+            .name(\"domain-event-processing\")
+            .tag(\"event.type\", event.getEventType())
+            .tag(\"event.id\", event.getEventId().toString())
+            .tag(\"aggregate.id\", event.getAggregateId())
             .start();
             
         try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
@@ -638,7 +638,7 @@ public record CustomerCreatedEvent(
 }
 ```
 
-### 2. Event Upgrade Processing
+### 2. Event Upcasting
 
 ```java
 @Component
@@ -646,7 +646,7 @@ public class EventUpcaster {
     
     public DomainEvent upcast(StoredEvent storedEvent) {
         return switch (storedEvent.eventType()) {
-            case "CustomerCreated" -> upcastCustomerCreatedEvent(storedEvent);
+            case \"CustomerCreated\" -> upcastCustomerCreatedEvent(storedEvent);
             default -> deserializeEvent(storedEvent);
         };
     }
@@ -655,7 +655,7 @@ public class EventUpcaster {
         // Handle version upgrade logic
         JsonNode eventData = parseJson(storedEvent.eventData());
         
-        if (!eventData.has("membershipLevel")) {
+        if (!eventData.has(\"membershipLevel\")) {
             // Upgrade V1 event to V2
             return CustomerCreatedEvent.fromV1(
                 deserializeAsV1(storedEvent)
@@ -710,8 +710,8 @@ public class DeadLetterService {
         
         deadLetterRepository.save(deadLetter);
         
-        // Optional: send to external dead letter queue
-        messageQueue.send("dead-letter-queue", deadLetter);
+        // Optional: Send to external dead letter queue
+        messageQueue.send(\"dead-letter-queue\", deadLetter);
     }
 }
 ```
@@ -725,8 +725,8 @@ public class DeadLetterService {
 void should_collect_customer_created_event_when_customer_is_created() {
     // Given
     CustomerId customerId = CustomerId.generate();
-    CustomerName name = new CustomerName("John Doe");
-    Email email = new Email("john@example.com");
+    CustomerName name = new CustomerName(\"John Doe\");
+    Email email = new Email(\"john@example.com\");
     
     // When
     Customer customer = new Customer(customerId, name, email, MembershipLevel.STANDARD);
@@ -751,9 +751,9 @@ void should_collect_customer_created_event_when_customer_is_created() {
 void should_send_welcome_email_when_customer_created() {
     // Given
     CustomerCreatedEvent event = CustomerCreatedEvent.create(
-        CustomerId.of("CUST-001"),
-        new CustomerName("John Doe"),
-        new Email("john@example.com"),
+        CustomerId.of(\"CUST-001\"),
+        new CustomerName(\"John Doe\"),
+        new Email(\"john@example.com\"),
         MembershipLevel.STANDARD
     );
     
@@ -770,26 +770,26 @@ void should_send_welcome_email_when_customer_created() {
 
 - [Event Storming Big Picture](../../diagrams/viewpoints/functional/event-storming-big-picture.puml)
 - [Event Storming Process Level](../../diagrams/viewpoints/functional/event-storming-process-level.puml)
-- [Domain Events Flow](../../diagrams/viewpoints/functional/domain-events-flow.puml)
+- [Domain Events Flow Diagram](../../diagrams/viewpoints/functional/domain-events-flow.puml)
 
 ## Event-Driven Architecture Diagram
 
 ```mermaid
 graph LR
-    subgraph 領域事件 ["Domain Events"]
+    subgraph Domain Events [\"Domain Events\"]
         OCE[OrderCreatedEvent]
         OIAE[OrderItemAddedEvent]
         PRE[PaymentRequestedEvent]
         PFE[PaymentFailedEvent]
     end
     
-    subgraph 事件處理 ["Event Processing"]
+    subgraph Event Processing [\"Event Processing\"]
         EP[DomainEventPublisherService]
         EB[DomainEventBus]
         OS[OrderProcessingSaga]
     end
     
-    subgraph 事件監聽器 ["Event Handlers"]
+    subgraph Event Listeners [\"Event Listeners\"]
         PS[PaymentService]
         LS[LogisticsService]
     end
@@ -820,7 +820,7 @@ graph LR
     class AGG aggregateRoot
 ```
 
-- [Application Services Overview](../../diagrams/viewpoints/functional/application-services-overview.puml)
+- [Application Services Overview Diagram](../../diagrams/viewpoints/functional/application-services-overview.puml)
 
 ## Relationships with Other Viewpoints
 
@@ -831,12 +831,12 @@ graph LR
 ## Best Practices Summary
 
 1. **Immutability**: Use Records to ensure event immutability
-2. **Semantic Naming**: Event names use past tense, clearly expressing business facts that have occurred
+2. **Semantics**: Event names use past tense, clearly expressing business facts that have occurred
 3. **Completeness**: Events contain all information needed for processing
 4. **Idempotency**: Event handlers must support repeated processing
-5. **Traceability**: Each event has unique ID and timestamp
+5. **Traceability**: Each event has a unique ID and timestamp
 6. **Version Management**: Support backward-compatible evolution of event structures
-7. **Monitoring**: Complete event publishing and processing monitoring
+7. **Monitoring**: Complete monitoring of event publishing and processing
 8. **Error Handling**: Comprehensive retry and dead letter mechanisms
 
-This domain event system provides powerful decoupling capabilities and scalability for the project, supporting complex business processes and cross-context collaboration.
+This domain event system provides the project with powerful decoupling capabilities and extensibility, supporting complex business processes and cross-context collaboration.

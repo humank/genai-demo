@@ -425,9 +425,9 @@ genai-demo:
 ## 🔗 **Related Resources**
 
 ### **Configuration Files**
-- [📊 Profile Dependencies Matrix](../../PROFILE_DEPENDENCIES_MATRIX.md)
-- [🗄️ Database Configuration Matrix](../../DATABASE_CONFIGURATION_MATRIX.md)
-- [🔧 Flyway Migration Guide](../../FLYWAY_MIGRATION_GUIDE.md)
+- [📊 Profile Dependencies Matrix](../../PROFILE_DEPENDENCIES_MATRIX.zh-TW.md)
+- [🗄️ Database Configuration Matrix](../../DATABASE_CONFIGURATION_MATRIX.zh-TW.md)
+- [🔧 Flyway Migration Guide](../../FLYWAY_MIGRATION_GUIDE.zh-TW.md)
 - [📋 Simplified Profile Guide](../../SIMPLIFIED_PROFILE_GUIDE.md)
 
 ### **Scripts and Tools**

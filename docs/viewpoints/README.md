@@ -123,5 +123,5 @@ graph TD
 
 ---
 
-**Last Updated**: September 25, 2025  
+**Last Updated**: September 24, 2025 11:28 PM (Taipei Time)  
 **Maintainer**: Architecture Team

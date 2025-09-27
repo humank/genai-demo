@@ -1,6 +1,7 @@
 # Kiro IDE Setup Configuration Guide
 
-This guide helps you quickly set up Kiro IDE with all necessary configurations for terminal integration, MCP servers, and development tools.
+This guide helps you quickly set up Kiro IDE with all necessary configurations for terminal integration, MCP servers, 
+and development tools.
 
 ## Prerequisites
 
@@ -507,4 +508,5 @@ chmod +x setup-kiro.sh
 - Enable/disable MCP servers based on your requirements
 - Some MCP servers may require additional setup or authentication
 
-This configuration provides a comprehensive Kiro IDE setup with terminal integration, AWS tools, and various development utilities through MCP servers.
+This configuration provides a comprehensive Kiro IDE setup with terminal integration, AWS tools, 
+and various development utilities through MCP servers.

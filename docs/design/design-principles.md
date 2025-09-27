@@ -1,6 +1,6 @@
 # System Development and Testing Design Compliance Standards
 
-In this project, please follow DDD tactical design patterns and layering principles, as required by the 3 ArchUnit tests under `../app/src/test/java/solid/humank/genaidemo/architecture`, to complete the code development work for this project.
+In this project, please follow DDD tactical design patterns and layered principles, as required by the 3 ArchUnit tests under `../app/src/test/java/solid/humank/genaidemo/architecture`, to complete the code development work for this project.
 
 ## Architecture Design Principles
 
@@ -22,7 +22,7 @@ In this project, please follow DDD tactical design patterns and layering princip
    - Includes repository implementations, external system adapters, ORM mappings, etc.
 
 4. **Interfaces Layer**
-   - Handles user interactions
+   - Handles user interaction
    - Only depends on the application layer
    - Includes controllers, view models, request/response objects, etc.
 
@@ -64,16 +64,16 @@ In this project, please follow DDD tactical design patterns and layering princip
 
 ### Test Architecture
 
-This project has established a complete test utility ecosystem located in the `app/src/test/java/solid/humank/genaidemo/testutils/` directory:
+This project has established a complete test support tool ecosystem, located in the `app/src/test/java/solid/humank/genaidemo/testutils/` directory:
 
 1. **Test Data Builders**
    - Use Builder pattern to simplify test data creation
-   - Support method chaining and default value settings
+   - Support method chaining and default value setting
    - Provide domain-specific construction methods
 
 2. **Scenario Handlers**
    - Handle complex test scenario logic
-   - Use Strategy pattern to handle different situations
+   - Use strategy pattern to handle different situations
    - Avoid conditional logic in tests
 
 3. **Custom Matchers**
@@ -108,7 +108,7 @@ This project has established a complete test utility ecosystem located in the `a
    - Use test tag annotations for classification:
      - `@UnitTest`: Fast-executing unit tests
      - `@IntegrationTest`: Integration tests requiring external dependencies
-     - `@SlowTest`: Tests with longer execution times
+     - `@SlowTest`: Tests with longer execution time
      - `@BddTest`: Behavior-driven development tests
 
 ### BDD Testing Principles
@@ -124,9 +124,36 @@ This project has established a complete test utility ecosystem located in the `a
    - Avoid hard-coded test data
 
 3. **Exception Handling**
-   - Use unified exception handling mechanisms
+   - Use unified exception handling mechanism
    - Capture and verify exceptions through TestExceptionHandler
    - Provide clear exception verification methods
+
+4. **Domain Event**
+   - Implements `DomainEvent` interface
+   - Immutable
+   - Records important events occurring in the domain
+
+5. **Repository**
+   - Interface must be located in `domain.*.repository` package
+   - Implementation must be located in `infrastructure.*.persistence` package
+   - Operates on aggregate roots
+   - Provides persistence and query functionality
+
+6. **Domain Service**
+   - Must be located in `domain.*.service` package
+   - Marked with `@DomainService` annotation
+   - Stateless
+   - Handles business logic across aggregates
+
+7. **Specification**
+   - Must be located in `domain.*.specification` package
+   - Implements `Specification` interface
+   - Encapsulates complex business rules and query conditions
+
+8. **Anti-Corruption Layer**
+   - Must be located in `infrastructure.*.acl` package
+   - Isolates external systems
+   - Translates external models to internal models
 
 ## Testing Strategy
 
@@ -138,7 +165,7 @@ Write unit tests for aggregate roots based on Cucumber-JVM, without depending on
 - **Test Tools**: Cucumber-JVM, JUnit 5
 - **Test Objectives**: Verify business rules and invariants
 
-#### Cucumber BDD Test Specifications
+#### Cucumber BDD Testing Specifications
 
 1. **Feature Files**
    - Use Gherkin syntax to describe business scenarios
@@ -172,7 +199,7 @@ Test application layer, infrastructure layer, and interface layer, can start Spr
 #### Repository Testing
 
 - Verify CRUD operations
-- Ensure query conditions are correct
+- Ensure correct query conditions
 - Check optimistic locking and concurrency control
 
 #### Controller Testing
@@ -197,13 +224,13 @@ Test application layer, infrastructure layer, and interface layer, can start Spr
 
 ### 2. Check if Mapper Classes Correctly Handle Conversion Between Domain Models and Persistence Models
 
-- **Bidirectional Conversion**: Ensure `toJpaEntity()` and `toDomainEntity()` methods can correctly convert all properties bidirectionally.
+- **Bidirectional Conversion**: Ensure `toJpaEntity()` and `toDomainEntity()` methods can correctly convert all attributes bidirectionally.
 
 - **Value Object Conversion**: Pay special attention to value object conversion (such as Money, OrderId), ensuring their semantics and invariants are preserved during conversion.
 
 - **Collection Conversion**: Correctly handle collection conversion (such as order item lists), including handling empty collections.
 
-- **State Conversion**: Ensure enum type conversion (such as OrderStatus) is correct, especially when JPA entities use strings to store states.
+- **State Conversion**: Ensure correct conversion of enum types (such as OrderStatus), especially when JPA entities use strings to store states.
 
 - **Association Relationships**: Handle association relationships between entities, ensuring they are correctly maintained during conversion.
 
@@ -252,8 +279,8 @@ When Cucumber tests fail, possible causes and solutions:
 
 ### 2. Domain Model and Persistence Model Conversion Issues
 
-- **Data Loss**: Ensure all necessary properties are handled during conversion.
-- **Type Mismatch**: Handle conversions between different types, such as string to enum, string to date, etc.
+- **Data Loss**: Ensure all necessary attributes are handled during conversion.
+- **Type Mismatch**: Handle conversion between different types, such as string to enum, string to date, etc.
 - **Circular Dependencies**: Handle circular references between entities, may need to use lazy loading or separate conversion processes.
 
 ### 3. Aggregate Boundary Issues
@@ -264,4 +291,4 @@ When Cucumber tests fail, possible causes and solutions:
 
 ## Conclusion
 
-Following these design principles and testing strategies can help us build a robust, maintainable, and testable system. DDD tactical design patterns and layered architecture provide a clear structure that allows us to focus on business logic while maintaining flexibility in technical implementation. Cucumber BDD testing ensures our code meets business requirements, while integration testing ensures various components can work together correctly.
+Following these design principles and testing strategies helps us build a robust, maintainable, and testable system. DDD tactical design patterns and layered architecture provide a clear structure that allows us to focus on business logic while maintaining flexibility in technical implementation. Cucumber BDD testing ensures our code meets business requirements, while integration testing ensures components work together correctly.

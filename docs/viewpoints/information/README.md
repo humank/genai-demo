@@ -21,12 +21,12 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 
 ### Data Model
 - [Data Model](data-model.md) - Entity relationships and data structures
-- [Event Sourcing](event-sourcing.md) - Consistency guarantee mechanisms
+- [Architecture Elements](architecture-elements.md) - Consistency guarantee mechanisms
 
 ### Event-Driven Architecture
 - [Domain Events](domain-events.md) - Event design and implementation
-- [Architecture Elements](architecture-elements.md) - Event storming modeling
-- [Event Sourcing](event-sourcing.md) - Data flow and transformation
+- [Event Sourcing](event-sourcing.md) - Event storming modeling
+- [MSK Data Flow Architecture](msk-data-flow-architecture.md) - Data flow and transformation
 
 #### Event-Driven Architecture Diagram
 
@@ -38,41 +38,41 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 
 ![Information Viewpoint Detailed Architecture](../../diagrams/generated/information/information-detailed.png)
 
-*Detailed architecture design of the information viewpoint, including complete implementation of data models, information flow, and event processing*
+*Detailed architecture design of the Information Viewpoint, including complete implementation of data models, information flow, and event processing*
 
 ## Quality Attribute Considerations
 
-> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis of all viewpoints
+> 📋 **Complete Cross-Reference**: See [Viewpoint-Perspective Cross-Reference Matrix](../../viewpoint-perspective-matrix.md) for detailed impact analysis across all perspectives
 
 ### 🔴 High Impact Perspectives
 
 #### [Security Perspective](../../perspectives/security/README.md)
 - **Data Encryption**: Static encryption (AES-256) and transmission encryption (TLS 1.3) for sensitive data
-- **Access Control**: Fine-grained permission management and role control at data layer
+- **Access Control**: Fine-grained permission management and role control at the data layer
 - **Data Masking**: Dynamic masking and anonymization of sensitive data
 - **Audit Trail**: Complete records of all data access and modifications
-- **Related Implementations**: [Security Standards](../../perspectives/security/README.md) | [Data Protection Guide](../../perspectives/security/data-protection.md)
+- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | [Security Implementation](../../perspectives/security/security-implementation.md)
 
 #### [Performance Perspective](../../perspectives/performance/README.md)
 - **Query Optimization**: Database query indexing strategies and execution plan optimization
-- **Caching Strategy**: Multi-layer caching architecture and cache invalidation strategies
+- **Caching Strategy**: Multi-tier caching architecture and cache invalidation strategies
 - **Data Partitioning**: Horizontal and vertical partitioning strategies supporting large-scale data processing
 - **Connection Pooling**: Database connection pool configuration and monitoring
-- **Related Implementations**: [Performance Standards](../../perspectives/performance/README.md) | [Database Optimization](../../perspectives/performance/database-optimization.md)
+- **Related Implementation**: [Performance Optimization](../../perspectives/performance/performance-optimization.md) | [Database Performance](../../perspectives/performance/database-performance.md)
 
 #### [Availability Perspective](../../perspectives/availability/README.md)
 - **Data Backup**: Automated backup strategies and multi-region backup
 - **Data Replication**: Master-slave and multi-master replication configuration
 - **Disaster Recovery**: Recovery objectives of RTO ≤ 5 minutes, RPO ≤ 1 minute
 - **Data Consistency**: Data consistency guarantees in distributed environments
-- **Related Implementations**: [Availability Standards](../../perspectives/availability/README.md) | [Disaster Recovery Plan](../../perspectives/availability/disaster-recovery.md)
+- **Related Implementation**: [Availability Architecture](../../perspectives/availability/availability-architecture.md) | [Disaster Recovery](../../perspectives/availability/disaster-recovery.md)
 
 #### [Regulation Perspective](../../perspectives/regulation/README.md)
 - **Data Governance**: Data classification, labeling, and lifecycle management
 - **Privacy Protection**: Compliance implementation for GDPR, CCPA, and other privacy regulations
 - **Data Retention**: Data retention and deletion policies required by regulations
-- **Compliance Audit**: Compliance auditing and reporting of data processing activities
-- **Related Implementations**: [Regulation Standards](../../perspectives/regulation/README.md) | [Privacy Compliance](../../perspectives/regulation/privacy-compliance.md)
+- **Compliance Auditing**: Compliance auditing and reporting of data processing activities
+- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | [Compliance Framework](../../perspectives/regulation/compliance-framework.md)
 
 ### 🟡 Medium Impact Perspectives
 
@@ -80,25 +80,25 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 - **Data Model Evolution**: Database schema version management and migration strategies
 - **Backward Compatibility**: Compatibility guarantees for data format changes
 - **Migration Strategy**: Zero-downtime data migration and transformation
-- **Related Implementations**: [Evolution Standards](../../perspectives/evolution/README.md) | [Migration Guide](../../perspectives/evolution/migration-guide.md)
+- **Related Implementation**: [Evolution Strategy](../../perspectives/evolution/evolution-strategy.md) | [Migration Planning](../../perspectives/evolution/migration-planning.md)
 
 #### [Usability Perspective](../../perspectives/usability/README.md)
 - **Data Presentation**: Data visualization and report display
-- **Search Experience**: Full-text search and intelligent filtering functionality
+- **Search Experience**: Full-text search and intelligent filtering capabilities
 - **Data Export**: User-friendly data export and download functionality
-- **Related Implementations**: [Usability Standards](../../perspectives/usability/README.md) | [User Experience Guide](../../perspectives/usability/user-experience.md)
+- **Related Implementation**: [Usability Design](../../perspectives/usability/usability-design.md) | [User Experience](../../perspectives/usability/user-experience.md)
 
 #### [Location Perspective](../../perspectives/location/README.md)
 - **Data Localization**: Geographic distribution and localized storage of data
 - **Data Sovereignty**: Legal jurisdiction and compliance requirements for data storage
 - **Cross-Region Synchronization**: Data synchronization strategies for multi-region data centers
-- **Related Implementations**: [Location Standards](../../perspectives/location/README.md) | [Geographic Distribution](../../perspectives/location/geographic-distribution.md)
+- **Related Implementation**: [Location Strategy](../../perspectives/location/location-strategy.md) | [Geographic Distribution](../../perspectives/location/geographic-distribution.md)
 
 #### [Cost Perspective](../../perspectives/cost/README.md)
 - **Storage Costs**: Cost optimization and tiered storage strategies for data storage
 - **Transfer Costs**: Cost control for data transfer and network bandwidth
-- **Query Costs**: Cost optimization for database queries and computing resources
-- **Related Implementations**: [Cost Standards](../../perspectives/cost/README.md) | [Cost Optimization](../../perspectives/cost/cost-optimization.md)
+- **Query Costs**: Cost optimization for database queries and computational resources
+- **Related Implementation**: [Cost Optimization](../../perspectives/cost/cost-optimization.md) | [Resource Management](../../perspectives/cost/resource-management.md)
 
 ## Related Diagrams
 
@@ -110,20 +110,20 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 
 ```mermaid
 graph LR
-    subgraph Domain Events ["Domain Events"]
+    subgraph Domain Events [\"Domain Events\"]
         OCE[OrderCreatedEvent]
         OIAE[OrderItemAddedEvent]
         PRE[PaymentRequestedEvent]
         PFE[PaymentFailedEvent]
     end
     
-    subgraph Event Processing ["Event Processing"]
+    subgraph Event Processing [\"Event Processing\"]
         EP[DomainEventPublisherService]
         EB[DomainEventBus]
         OS[OrderProcessingSaga]
     end
     
-    subgraph Event Listeners ["Event Listeners"]
+    subgraph Event Listeners [\"Event Listeners\"]
         PS[PaymentService]
         LS[LogisticsService]
     end
@@ -168,12 +168,12 @@ graph LR
 ## Implementation Guidelines
 
 ### Event-Driven Architecture Implementation
-1. **Domain Event Design**: Use Records to implement immutable events
+1. **Domain Event Design**: Use Record implementation for immutable events
 2. **Event Publishing**: Aggregate roots collect events, application services publish
 3. **Event Processing**: Use @TransactionalEventListener
 4. **Event Storage**: Support Event Sourcing pattern
 
-### Data Consistency Strategies
+### Data Consistency Strategy
 1. **Strong Consistency**: ACID guarantees within the same aggregate
 2. **Eventual Consistency**: Event-driven consistency across aggregates
 3. **Compensation Mechanisms**: Saga pattern for distributed transaction handling
@@ -185,20 +185,197 @@ graph LR
 3. **Sharding Strategy**: Horizontal scaling support
 4. **Index Design**: Query performance optimization
 
-## Validation Criteria
+## Data Architecture Patterns
+
+### Event Sourcing Implementation
+```java
+@Entity
+@Table(name = \"event_store\")
+public class StoredEvent {
+    @Id
+    private String eventId;
+    
+    @Column(name = \"event_type\")
+    private String eventType;
+    
+    @Column(name = \"aggregate_id\")
+    private String aggregateId;
+    
+    @Column(name = \"event_data\", columnDefinition = \"TEXT\")
+    private String eventData;
+    
+    @Column(name = \"occurred_on\")
+    private LocalDateTime occurredOn;
+    
+    @Column(name = \"version\")
+    private Long version;
+}
+```
+
+### CQRS Pattern Implementation
+```java
+// Command Side - Write Model
+@Service
+@Transactional
+public class OrderCommandService {
+    
+    public void createOrder(CreateOrderCommand command) {
+        Order order = new Order(command);
+        orderRepository.save(order);
+        
+        // Publish domain events
+        domainEventPublisher.publishEventsFromAggregate(order);
+    }
+}
+
+// Query Side - Read Model
+@Service
+@Transactional(readOnly = true)
+public class OrderQueryService {
+    
+    public OrderView getOrderView(String orderId) {
+        return orderViewRepository.findById(orderId);
+    }
+    
+    public List<OrderSummary> getOrderSummaries(String customerId) {
+        return orderSummaryRepository.findByCustomerId(customerId);
+    }
+}
+```
+
+### Data Consistency Patterns
+```java
+// Saga Pattern for Distributed Transactions
+@Component
+public class OrderProcessingSaga {
+    
+    @SagaOrchestrationStart
+    @EventHandler
+    public void handle(OrderCreatedEvent event) {
+        // Step 1: Reserve inventory
+        commandGateway.send(new ReserveInventoryCommand(event.getOrderId()));
+    }
+    
+    @SagaOrchestrationStep
+    @EventHandler
+    public void handle(InventoryReservedEvent event) {
+        // Step 2: Process payment
+        commandGateway.send(new ProcessPaymentCommand(event.getOrderId()));
+    }
+    
+    @SagaOrchestrationStep
+    @EventHandler
+    public void handle(PaymentProcessedEvent event) {
+        // Step 3: Confirm order
+        commandGateway.send(new ConfirmOrderCommand(event.getOrderId()));
+    }
+    
+    @SagaOrchestrationStep
+    @EventHandler
+    public void handle(PaymentFailedEvent event) {
+        // Compensation: Release inventory
+        commandGateway.send(new ReleaseInventoryCommand(event.getOrderId()));
+    }
+}
+```
+
+## Data Governance Framework
+
+### Data Classification
+- **Public Data**: Non-sensitive information available to all users
+- **Internal Data**: Information restricted to internal users
+- **Confidential Data**: Sensitive business information with restricted access
+- **Restricted Data**: Highly sensitive data requiring special handling
+
+### Data Lifecycle Management
+1. **Data Creation**: Validation, classification, and initial storage
+2. **Data Usage**: Access control, monitoring, and audit logging
+3. **Data Archival**: Long-term storage and compliance requirements
+4. **Data Deletion**: Secure deletion and compliance with retention policies
+
+### Privacy and Compliance
+```java
+@Component
+public class DataPrivacyService {
+    
+    @EventListener
+    public void handleDataSubjectRequest(DataSubjectRequestEvent event) {
+        switch (event.getRequestType()) {
+            case ACCESS -> provideDataAccess(event.getSubjectId());
+            case RECTIFICATION -> updatePersonalData(event.getSubjectId(), event.getData());
+            case ERASURE -> deletePersonalData(event.getSubjectId());
+            case PORTABILITY -> exportPersonalData(event.getSubjectId());
+        }
+    }
+    
+    private void deletePersonalData(String subjectId) {
+        // Anonymize rather than delete to maintain referential integrity
+        customerService.anonymizeCustomer(subjectId);
+        auditService.logDataDeletion(subjectId);
+    }
+}
+```
+
+## Validation Standards
 
 - [ ] Data model supports all business requirements
-- [ ] Data consistency mechanisms correctly implemented
+- [ ] Data consistency mechanisms are correctly implemented
 - [ ] Domain event design is reasonable
 - [ ] Data access performance meets requirements
-- [ ] Data security and privacy protection in place
-- [ ] Data backup and recovery mechanisms complete
+- [ ] Data security and privacy protection are in place
+- [ ] Data backup and recovery mechanisms are complete
+- [ ] Event sourcing implementation is correct
+- [ ] CQRS pattern is properly implemented
+- [ ] Data governance policies are enforced
+- [ ] Compliance requirements are met
+
+## Performance Monitoring
+
+### Data Access Metrics
+```java
+@Component
+public class DataAccessMetrics {
+    
+    private final Timer queryTimer;
+    private final Counter slowQueryCounter;
+    private final Gauge connectionPoolUsage;
+    
+    @EventListener
+    public void recordDatabaseQuery(DatabaseQueryEvent event) {
+        queryTimer.record(event.getDuration());
+        
+        if (event.getDuration().toMillis() > 100) {
+            slowQueryCounter.increment(
+                Tags.of(\"query_type\", event.getQueryType())
+            );
+        }
+    }
+}
+```
+
+### Event Processing Metrics
+```java
+@Component
+public class EventProcessingMetrics {
+    
+    @EventListener
+    public void recordEventProcessing(DomainEventProcessedEvent event) {
+        Timer.builder(\"domain.events.processing.time\")
+            .tag(\"event.type\", event.getEventType())
+            .register(meterRegistry)
+            .record(event.getProcessingTime(), TimeUnit.MILLISECONDS);
+    }
+}
+```
 
 ---
 
 **Related Documents**:
 - [Domain Events Implementation Guide](domain-events.md)
-- [Data Model Design](data-model.md)
+- [Data Model Documentation](data-model.md)
 - [Event Sourcing Implementation](event-sourcing.md)
+- [MSK Data Flow Architecture](msk-data-flow-architecture.md)
+
+**Target Audience**: Data Architects and Data Engineers, System Integration Engineers and API Designers
 
 ![Information Overview](../../diagrams/viewpoints/information/information-overview.svg)

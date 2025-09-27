@@ -91,8 +91,8 @@ This viewpoint applies to all team members involved in software development, inc
   - 🎭 Staging Profile - AWS pre-production environment (complete simulation)
   - 🚀 Production Profile - AWS production environment (enterprise-grade)
   - 🗄️ Database Strategy - JPA + Flyway integrated management
-  - 📊 [Profile Dependencies Matrix](../../PROFILE_DEPENDENCIES_MATRIX.md)
-  - 🔧 [Database Configuration Matrix](../../DATABASE_CONFIGURATION_MATRIX.md)
+  - 📊 [Profile Dependencies Matrix](../../PROFILE_DEPENDENCIES_MATRIX.zh-TW.md)
+  - 🔧 [Database Configuration Matrix](../../DATABASE_CONFIGURATION_MATRIX.zh-TW.md)
 
 ### Complete Technology Stack Guide
 - 🛠️ Technology Stack and Toolchain - Complete technology stack integration guide

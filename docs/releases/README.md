@@ -18,29 +18,29 @@ Main Content:
 
 Main Content:
 
-- Establish complete testing support tool infrastructure (data builders, scenario handlers, custom matchers)
-- Refactor BDD step definitions, eliminate all conditional logic (if-else statements)
-- Improve 3A structure of integration tests, split complex tests into independent test methods
-- Establish test classification and tagging system (@UnitTest, @IntegrationTest, @SlowTest, @BddTest)
-- Significantly improve test code readability, maintainability, and reliability
+- Established complete test utility infrastructure (data builders, scenario processors, custom matchers)
+- Refactored BDD step definitions, eliminating all conditional logic (if-else statements)
+- Improved integration test 3A structure, splitting complex tests into independent test methods
+- Established test categorization and tagging system (@UnitTest, @IntegrationTest, @SlowTest, @BddTest)
+- Significantly improved test code readability, maintainability, and reliability
 
 ### [Architecture Optimization and DDD Layering Implementation - 2025-06-08](architecture-optimization-2025-06-08.md)
 
 Main Content:
 
-- Resolve interface layer directly depending on domain layer issues
-- Adjust adapter package structure to correct positions
-- Handle aggregate root inner class issues
-- Implement strict DDD layered architecture
+- Resolved interface layer direct dependency on domain layer issues
+- Adjusted adapter package structure to correct positions
+- Handled aggregate root inner class issues
+- Implemented strict DDD layered architecture
 
 ### [Promotion Module Implementation and Architecture Optimization - 2025-05-21](promotion-module-implementation-2025-05-21.md)
 
 Main Content:
 
-- Implement promotion functionality module for e-commerce platform
-- Convenience store coupon system, limited-time specials, limited-quantity specials, etc.
+- Implemented e-commerce platform promotion functionality module
+- Convenience store voucher system, flash sales, limited quantity sales features
 - Architecture optimization, reclassifying Voucher from value object to entity
-- Implement Specification interface for PromotionContext class
+- Implemented PromotionContext class Specification interface
 
 ## Release Process
 

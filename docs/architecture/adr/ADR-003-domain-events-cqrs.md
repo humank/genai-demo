@@ -548,7 +548,7 @@ public record PaymentProcessedEvent(
 
 - [ADR-001: DDD + Hexagonal Architecture Foundation](./ADR-001-ddd-hexagonal-architecture.md)
 - [ADR-002: Bounded Context Design Strategy](./ADR-002-bounded-context-design.md)
-- \1
+- [ADR-013: Blue-Green vs Canary Deployment Strategies](./ADR-013-deployment-strategies.md)
 
 ## References
 

@@ -499,9 +499,9 @@ rollback:
 
 ## Related Decisions
 
-- \1
-- \1
-- \1
+- [ADR-001: DDD + Hexagonal Architecture Foundation](ADR-001-ddd-hexagonal-architecture.md)
+- [ADR-002: Bounded Context Design Strategy](ADR-002-bounded-context-design.md)
+- [ADR-016: Well-Architected Framework Compliance](ADR-016-well-architected-compliance.md)
 
 ## References
 

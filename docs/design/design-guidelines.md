@@ -3,7 +3,7 @@
 ## Tell, Don't Ask Principle
 
 ### Origin and History
-The "Tell, Don't Ask" principle was first proposed by Alec Sharp in 1997 and later widely disseminated in Andy Hunt and Dave Thomas's book "The Pragmatic Programmer". This principle emphasizes that you should tell objects what to do, rather than asking about their state and then deciding what to do.
+The "Tell, Don't Ask" principle was first proposed by Alec Sharp in 1997 and later popularized in Andy Hunt and Dave Thomas's book "The Pragmatic Programmer." This principle emphasizes that you should tell objects what to do rather than asking about their state and then deciding what to do.
 
 ### Core Concepts
 - Objects should be responsible for handling their internal state
@@ -40,7 +40,7 @@ if (order.getStatus() == OrderStatus.CREATED) {
 
 2. Inventory Management
 ```java
-// Good design: Let inventory handle reservation logic itself
+// Good design: Let inventory handle its own reservation logic
 ReservationId reservationId = inventory.reserve(orderId, quantity);
 
 // Bad design: Check inventory then decide what to do
@@ -55,7 +55,7 @@ if (inventory.getAvailableQuantity() >= quantity) {
 // Good design: Let delivery object handle state transition
 delivery.markAsDelivered();
 
-// Bad design: Externally check status and set
+// Bad design: External status checking and setting
 if (delivery.getStatus() == DeliveryStatus.IN_TRANSIT) {
     delivery.setStatus(DeliveryStatus.DELIVERED);
     delivery.setUpdatedAt(LocalDateTime.now());
@@ -65,34 +65,34 @@ if (delivery.getStatus() == DeliveryStatus.IN_TRANSIT) {
 ## Other Important Design Considerations
 
 ### 1. Single Responsibility Principle (SRP)
-- Each class should have a clear responsibility
+- Each class should have a single, well-defined responsibility
 - There should be only one reason to change
-- Good practices in the project:
+- Good practices in our project:
   - `Order` aggregate root focuses on order lifecycle management
   - `Inventory` aggregate root focuses on inventory management
   - `Delivery` aggregate root focuses on delivery processes
 
 ### 2. Layered Architecture
-- Presentation layer: Handles HTTP requests/responses
-- Application layer: Coordinates different services, handles transactions
-- Domain layer: Implements core business logic
-- Infrastructure layer: Provides technical support
-- Practices in the project:
-  - Aggregate roots in the domain layer (like `Order`, `Inventory`) don't depend on infrastructure
+- Presentation Layer: Handles HTTP requests/responses
+- Application Layer: Coordinates different services, handles transactions
+- Domain Layer: Implements core business logic
+- Infrastructure Layer: Provides technical support
+- Practices in our project:
+  - Aggregate roots in domain layer (like `Order`, `Inventory`) don't depend on infrastructure
   - Application services coordinate domain objects to complete use cases
-  - Infrastructure layer implements interfaces defined by the domain layer
+  - Infrastructure layer implements interfaces defined by domain layer
 
 ### 3. Separation of Concerns
 - Separate business logic from technical details
 - Separate domain logic from infrastructure concerns
-- Practices in the project:
-  - Use `OrderProcessingSaga` to coordinate operations across aggregate roots
-  - Domain events are used to decouple different contexts
+- Practices in our project:
+  - Use `OrderProcessingSaga` to coordinate cross-aggregate operations
+  - Domain events decouple different contexts
 
 ### 4. Dependency Inversion Principle (DIP)
 - High-level modules should not depend on low-level modules
 - Abstractions should not depend on details
-- Practices in the project:
+- Practices in our project:
   - Use `Repository` interfaces to isolate domain layer from persistence implementation
   - Use `DomainEvent` interface rather than concrete event classes
 
@@ -100,7 +100,7 @@ if (delivery.getStatus() == DeliveryStatus.IN_TRANSIT) {
 - Hide implementation details
 - Provide meaningful interfaces
 - Control the scope of change impact
-- Practices in the project:
+- Practices in our project:
   - `Money` value object encapsulates amount and currency, providing safe operation methods
   - `OrderStatus` encapsulates state transition rules
 
@@ -127,13 +127,13 @@ The Tell, Don't Ask principle is particularly important when handling communicat
    - Each context is responsible for its own decisions
    - Notify other contexts through events
    - Avoid direct queries between contexts
-   - Practices in the project:
+   - Practices in our project:
      - Order and Payment are independent contexts
      - Communicate through `PaymentRequestedEvent`
 
 3. Anti-Corruption Layer Application
    ```java
-   // Bad design: Directly expose external system details
+   // Bad design: Directly exposing external system details
    ExternalPaymentSystem.PaymentStatus status = externalSystem.getPaymentStatus(id);
    if (status == ExternalPaymentSystem.PaymentStatus.SUCCESS) {
        // Processing logic
@@ -143,47 +143,47 @@ The Tell, Don't Ask principle is particularly important when handling communicat
    paymentAntiCorruptionLayer.processPayment(payment);
    ```
 
-### DDD Tactical Pattern Application in the Project
+### DDD Tactical Pattern Application in Our Project
 
 #### 1. Aggregate Roots
 - Maintain their own business rules and invariants
-- Practices in the project:
-  - `Order` aggregate root ensures correctness of order state transitions
+- Practices in our project:
+  - `Order` aggregate root ensures correct order state transitions
   - `Inventory` aggregate root ensures inventory quantity consistency
   - `Delivery` aggregate root manages delivery state transitions
 
 #### 2. Value Objects
 - Describe concepts in the domain without identity
 - Immutability ensures thread safety
-- Practices in the project:
+- Practices in our project:
   - `Money` value object encapsulates amount and currency
-  - Identifiers like `OrderId`, `CustomerId`
-  - Status enums like `OrderStatus`, `DeliveryStatus`
+  - `OrderId`, `CustomerId` and other identifiers
+  - `OrderStatus`, `DeliveryStatus` and other status enums
 
 #### 3. Domain Events
 - Express important events that occur in the domain
 - Decouple different bounded contexts
-- Practices in the project:
+- Practices in our project:
   - `OrderCreatedEvent`
   - `OrderItemAddedEvent`
   - `PaymentRequestedEvent`
 
 #### 4. Domain Services
-- Handle business logic across aggregate roots
+- Handle business logic that spans aggregate roots
 - Stateless
-- Practices in the project:
+- Practices in our project:
   - `DomainEventPublisherService` handles event publishing
 
 #### 5. Specification Pattern
 - Encapsulate complex business rules
 - Composable conditional expressions
-- Practices in the project:
+- Practices in our project:
   - `Specification` interface and its implementations
   - `AndSpecification`, `OrSpecification` and other composite specifications
 
 ## Defensive Programming Practices
 
-Defensive programming practices in the project:
+Defensive programming practices in our project:
 
 ### 1. Precondition Checks
 ```java
@@ -218,7 +218,7 @@ public class Money {
     private final BigDecimal amount;
     private final Currency currency;
     
-    // Don't provide setters, only provide operations that return new instances
+    // No setters, only methods that return new instances
     public Money add(Money money) {
         if (!this.currency.equals(money.currency)) {
             throw new IllegalArgumentException("Cannot add money with different currencies");
@@ -246,7 +246,7 @@ public ReservationId reserve(UUID orderId, int quantity) {
 
 ## Design Pattern Applications
 
-Design patterns applied in the project:
+Design patterns applied in our project:
 
 ### 1. Factory Method Pattern
 ```java
@@ -261,20 +261,20 @@ public static OrderId of(String id) {
 ```
 
 ### 2. Strategy Pattern
-Provides interchangeable business rule validation strategies through different specification implementations.
+Different specification implementations provide interchangeable business rule validation strategies.
 
 ### 3. Observer Pattern
-Implements observer pattern through domain events, decoupling event publishers and subscribers.
+Domain events implement the observer pattern, decoupling event publishers and subscribers.
 
 ### 4. Command Pattern
-Command and compensation operations in Saga pattern implement the command pattern concept.
+Commands and compensation operations in the Saga pattern implement the command pattern concept.
 
 ## Improvement Suggestions
 
 Based on project code analysis, here are some improvement suggestions:
 
 ### 1. Enhanced Error Handling
-- Introduce specialized business exception types, such as `InsufficientInventoryException`
+- Introduce dedicated business exception types, such as `InsufficientInventoryException`
 - Uniformly handle exceptions at the application layer, converting them to appropriate responses
 
 ### 2. Enhanced Domain Event Mechanism
