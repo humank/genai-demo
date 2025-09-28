@@ -103,7 +103,7 @@ Test the MCP integration by asking Kiro:
 | Issue | Solution |
 |-------|----------|
 | `uv: command not found` | Install UV: `brew install uv` or `pip install uv` |
-| `node: command not found` | Install Node.js from [nodejs.org](https://nodejs.org/) |
+| `node: command not found` | Install Node.js from nodejs.org |
 | `Cannot find module 'mcp-excalidraw-server'` | Run `npm install mcp-excalidraw-server` |
 | `AWS credentials not configured` | Run `aws configure --profile kim-sso` |
 | `MCP server not responding` | Restart Kiro IDE and check configuration |
@@ -782,9 +782,9 @@ curl -X POST http://prometheus-pushgateway:9091/metrics/job/architecture-assessm
 
 ### Documentation Links
 
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [AWS CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)
+- AWS Well-Architected Framework
+- AWS CDK Best Practices
+- MCP Protocol Specification
 
 ### Internal Resources
 

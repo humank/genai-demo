@@ -42,7 +42,7 @@
 
 #### Materials Provided
 - Quick Start Guide
-- [Navigation Cheat Sheet](#navigation-cheat-sheet)
+- Navigation Cheat Sheet
 - Video Recording
 
 ### Module 2: Architecture Patterns Deep Dive (60 minutes)
@@ -78,8 +78,8 @@
 
 #### Materials Provided
 - Architecture Patterns Guide
-- [Hands-on Exercise Workbook](#exercise-workbook)
-- [Code Examples Repository](#code-examples)
+- Hands-on Exercise Workbook
+- Code Examples Repository
 
 ### Module 3: Testing and Quality Assurance (45 minutes)
 **Objective**: Utilize the reorganized testing documentation  
@@ -114,8 +114,8 @@
 
 #### Materials Provided
 - Testing Strategy Guide
-- [Performance Testing Examples](#效能-examples)
-- [Quality Checklist](#quality-checklist)
+- Performance Testing Examples
+- Quality Checklist
 
 ### Module 4: Tools and Technology Stack (45 minutes)
 **Objective**: Master technology stack documentation  
@@ -150,8 +150,8 @@
 
 #### Materials Provided
 - Technology Stack Guide
-- [Configuration Templates](#configuration-templates)
-- [Setup Verification Scripts](#verification-scripts)
+- Configuration Templates
+- Setup Verification Scripts
 
 ## 🎯 Self-Paced Learning Resources
 

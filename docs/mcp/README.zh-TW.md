@@ -233,10 +233,10 @@ if __name__ == "__main__":
 
 ## 📚 相關資源
 
-- [MCP 官方文檔](https://modelcontextprotocol.io/)
-- [AWS Labs MCP Servers](https://github.com/awslabs)
-- [Kiro IDE MCP 整合指南](https://docs.kiro.ai/mcp)
-- [UV 包管理器](https://docs.astral.sh/uv/)
+- MCP 官方文檔
+- AWS Labs MCP Servers
+- Kiro IDE MCP 整合指南
+- UV 包管理器
 
 ---
 

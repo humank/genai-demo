@@ -494,23 +494,23 @@ VULNERABILITY_SEVERITY_THRESHOLD: 'HIGH'
 
 ### 文檔
 
-- [GitHub Actions 文檔](https://docs.github.com/en/actions)
-- [Docker 多架構構建](https://docs.docker.com/build/building/multi-platform/)
-- [AWS CDK 測試](https://docs.aws.amazon.com/cdk/v2/guide/testing.html)
-- [ArgoCD GitOps](https://argo-cd.readthedocs.io/en/stable/)
+- GitHub Actions 文檔
+- Docker 多架構構建
+- AWS CDK 測試
+- ArgoCD GitOps
 
 ### 工具和服務
 
-- [Trivy 安全掃描器](https://trivy.dev/)
-- [CodeQL](https://codeql.github.com/)
-- [K6 負載測試](https://k6.io/)
-- [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
+- Trivy 安全掃描器
+- CodeQL
+- K6 負載測試
+- Lighthouse CI
 
 ### 最佳實踐
 
-- [CI/CD 安全最佳實踐](https://owasp.org/www-project-devsecops-guideline/)
-- [容器安全最佳實踐](https://kubernetes.io/docs/concepts/security/)
-- [GitOps 最佳實踐](https://www.gitops.tech/)
+- CI/CD 安全最佳實踐
+- 容器安全最佳實踐
+- GitOps 最佳實踐
 
 ---
 

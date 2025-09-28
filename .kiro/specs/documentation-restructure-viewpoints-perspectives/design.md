@@ -316,9 +316,9 @@ docs/
 
 > **基於 Rozanski & Woods 方法論的企業級架構展示**
 
-[![Architecture Excellence](https://img.shields.io/badge/Architecture-Excellence-blue.svg)](docs/architecture/rozanski-woods-architecture-assessment.md)
-[![Test Coverage](https://img.shields.io/badge/Tests-568-Passed-green.svg)](docs/reports/reports-summaries/project-management/project-summary-2025.md)
-[![Documentation](https://img.shields.io/badge/Docs-120%2B-Pages-orange.svg)](docs/README.md)
+[Architecture Excellence](../../../docs/architecture/rozanski-woods-architecture-assessment.md)
+[Test Coverage](../../../reports-summaries/project-management/project-summary-2025.md)
+[Documentation](../../../docs/README.md)
 
 ## 🎯 專案價值主張
 
@@ -363,7 +363,7 @@ docker-compose up -d
 ## 📚 學習資源
 
 ### 🎯 按學習目標導航
-- **學習現代架構** → [架構視點文檔](docs/viewpoints/README.md)
+- **學習現代架構** → [架構視點文檔](../../../docs/viewpoints/README.md)
 - **學習 DDD 實踐** → 領域驅動設計
 - **學習測試策略** → 測試最佳實踐
 - **學習 AI 輔助開發** → MCP 整合指南
@@ -391,7 +391,7 @@ docker-compose up -d
 
 ## 📖 完整文檔
 
-> **文檔中心**: [docs/README.md](docs/README.md)
+> **文檔中心**: docs/README.md
 
 ### Rozanski & Woods 七大視點
 1. **功能視點** - 系統功能和職責
@@ -449,7 +449,7 @@ docker-compose up -d
 ## 🎯 快速導航
 
 ### 👨‍💼 按角色導航
-- **架構師** → [架構視點總覽](viewpoints/README.md)
+- **架構師** → [架構視點總覽](../../../docs/viewpoints/README.md)
 - **開發者** → 開發視點
 - **運維工程師** → 運營視點
 - **安全工程師** → 安全性觀點

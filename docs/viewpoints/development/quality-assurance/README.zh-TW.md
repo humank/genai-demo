@@ -109,9 +109,9 @@
 - [程式碼審查標準](../../../../.kiro/steering/code-review-standards.md)
 
 ### 外部資源
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [SonarQube Quality Gates](https://docs.sonarqube.org/latest/user-guide/quality-gates/)
-- [Google SRE Book](https://sre.google/sre-book/table-of-contents/)
+- OWASP Top 10
+- SonarQube Quality Gates
+- Google SRE Book
 
 ---
 

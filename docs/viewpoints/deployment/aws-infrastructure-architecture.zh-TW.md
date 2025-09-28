@@ -7,16 +7,16 @@
 
 ## 📋 目錄
 
-- [概覽](#概覽)
-- [CDK 架構設計](#cdk-架構設計)
-- [AWS 資源配置](#aws-資源配置)
-- [Multi-Region 部署架構](#multi-region-部署架構)
-- [網路架構](#網路架構)
-- [計算資源](#計算資源)
-- [資料儲存](#資料儲存)
-- [IAM 權限架構](#iam-權限架構)
-- [部署流程](#部署流程)
-- [成本優化](#成本優化)
+- 概覽
+- CDK 架構設計
+- AWS 資源配置
+- Multi-Region 部署架構
+- 網路架構
+- 計算資源
+- 資料儲存
+- IAM 權限架構
+- 部署流程
+- 成本優化
 
 ## 概覽
 
@@ -1186,4 +1186,4 @@ Cost Optimization Actions:
 
 - [Operational Viewpoint - DNS 解析與災難恢復](../operational/dns-resolution-disaster-recovery.md)
 - [Context Viewpoint - IAM 權限關係](../context/iam-permissions-relationships.md)
-- [Security Perspective](../../perspectives/security/aws-security-implementation.md)
+- Security Perspective

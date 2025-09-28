@@ -6,13 +6,13 @@ The Automated Documentation Translation System provides seamless translation of 
 
 ## Table of Contents
 
-- [Quick Start](#quick-start)
-- [Installation](#installation)
-- [Basic Usage](#basic-usage)
-- [Advanced Features](#advanced-features)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Best Practices](#best-practices)
+- Quick Start
+- Installation
+- Basic Usage
+- Advanced Features
+- Configuration
+- Troubleshooting
+- Best Practices
 
 ## Quick Start
 
@@ -449,8 +449,8 @@ grep ERROR logs/translation.log
 
 - [API Reference](translation-api-reference.md)
 - [Troubleshooting Guide](translation-troubleshooting.md)
-- [Configuration Reference](translation-configuration.md)
-- [Developer Guide](translation-developer-guide.md)
+- Configuration Reference
+- Developer Guide
 
 ### System Requirements
 

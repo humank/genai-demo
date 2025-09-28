@@ -190,7 +190,7 @@ python3 scripts/validate-reports.py
 
 ## 相關文檔
 
-- [專案結構](../docs/PROJECT_STRUCTURE.md)
+- 專案結構
 - [文檔標準](../docs/viewpoints/development/README.md)
 - [品質保證](../docs/viewpoints/development/quality-assurance/README.md)
 

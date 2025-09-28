@@ -342,7 +342,7 @@ graph TB
 
 ## 📚 Related Documentation
 
-- [Project Excellence Report 2025](../reports/architecture-excellence-2025.md) - Complete project results summary
-- [Architecture Assessment Report](../reports/architecture-excellence-2025.md) - Detailed architecture evaluation and analysis
+- Project Excellence Report 2025 - Complete project results summary
+- Architecture Assessment Report - Detailed architecture evaluation and analysis
 - [DDD Record Refactoring Summary](../../reports-summaries/project-management/REFACTORING_SUMMARY.md) - Detailed Java Record refactoring process
-- [Test Fixes Complete Report](../en/reports/test-fixes-complete-2025.md) - Complete record of test quality improvements
+- Test Fixes Complete Report - Complete record of test quality improvements

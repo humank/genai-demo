@@ -678,9 +678,9 @@ graph TB
 ```** - Detailed AWS services architecture diagram
 
 ### CDK Implementation Details
-- [Network Stack Configuration](network-stack-details.md)
-- [Security Stack Implementation](security-stack-details.md)
-- [Observability Stack Setup](observability-stack-details.md)
+- Network Stack Configuration
+- Security Stack Implementation
+- Observability Stack Setup
 
 ## Relationships with Other Viewpoints
 

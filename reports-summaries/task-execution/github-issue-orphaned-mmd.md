@@ -82,8 +82,8 @@
 
 ## 📚 相關資源
 
-- [孤立文件詳細報告](reports-summaries/diagrams/orphaned-mmd-files-report.md)
-- [Mermaid 遷移完成報告](reports-summaries/diagrams/mermaid-migration-complete-report.md)
+- 孤立文件詳細報告
+- Mermaid 遷移完成報告
 - **圖表生成標準** (請參考專案內部文檔)
 
 ## 💡 備註

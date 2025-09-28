@@ -101,8 +101,8 @@ The following files should be translated next:
 ## Tools and Standards Used
 
 ### Translation Standards
-- [English Documentation Standards](english-documentation-standards.md)
-- [Chinese Conversation English Documentation](chinese-conversation-english-documentation.md)
+- [English Documentation Standards](.kiro/steering/english-documentation-standards.md)
+- [Chinese Conversation English Documentation](.kiro/steering/chinese-conversation-english-documentation.md)
 - Professional technical writing guidelines
 
 ### Quality Assurance

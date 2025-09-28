@@ -339,7 +339,7 @@ Return on Investment (ROI):
 
 ### 2. Knowledge Documentation
 
-- [MCP Integration Guide](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- MCP Integration Guide
 
 ## Future Development Roadmap
 

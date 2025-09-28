@@ -257,7 +257,7 @@ task generateDiagrams(type: Exec) {
 **PlantUML Version**: 1.2024.x
 
 **Quick Navigation**:
-- [Domain Models](domain-models/) - Core business entities
+- Domain Models - Core business entities
 - [Event Storming](event-storming/) - Event-driven design
-- [Architecture](../mermaid/architecture/) - System architecture (Mermaid)
+- Architecture - System architecture (Mermaid)
 - [Legacy Diagrams](../legacy/) - Historical reference

@@ -231,7 +231,7 @@ http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-confi
 
 - \1
 - API 版本管理策略
-- [專案目錄結構說明](../../README.md#專案目錄結構)
+- 專案目錄結構說明
 - \1
 
 ---

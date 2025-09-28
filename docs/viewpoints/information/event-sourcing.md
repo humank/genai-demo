@@ -2,7 +2,7 @@
 
 ## Architecture Overview
 
-![Event Sourcing Architecture](../../diagrams/plantuml/Event%20Sourcing%20Diagram.png)
+![Event Sourcing Architecture](../../diagrams/plantuml/Event Sourcing Diagram.png)
 
 The Event Sourcing pattern provides a complete audit trail of all changes to application state by storing events rather than current state. This approach enables temporal queries, event replay, and multiple specialized read models.
 

@@ -552,7 +552,7 @@ public record PaymentProcessedEvent(
 
 ## References
 
-- [Domain Events Pattern](https://martinfowler.com/eaaDev/DomainEvent.html)
-- [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)
-- [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
-- [Implementing Domain-Driven Design](https://www.informit.com/store/implementing-domain-driven-design-9780321834577)
+- Domain Events Pattern
+- CQRS Pattern
+- Event Sourcing
+- Implementing Domain-Driven Design

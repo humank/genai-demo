@@ -617,15 +617,15 @@ echo '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "cr
 
 ### 官方文檔
 
-- [Excalidraw 官方網站](https://excalidraw.com/)
-- [MCP 協議規範](https://modelcontextprotocol.io/)
-- [Node.js 官方文檔](https://nodejs.org/docs/)
+- Excalidraw 官方網站
+- MCP 協議規範
+- Node.js 官方文檔
 
 ### 相關專案
 
-- [mcp-excalidraw-server GitHub](https://github.com/yctimlin/mcp_excalidraw)
-- [Excalidraw React 組件](https://github.com/excalidraw/excalidraw)
-- [Model Context Protocol SDK](https://github.com/modelcontextprotocol/sdk)
+- mcp-excalidraw-server GitHub
+- Excalidraw React 組件
+- Model Context Protocol SDK
 
 ### 內部文檔
 

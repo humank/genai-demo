@@ -2,10 +2,10 @@
 
 ## 📊 Overall Status Overview
 
-![Backend Status](https://img.shields.io/badge/Backend-✅-Production-Ready-brightgreen)
-![Frontend Status](https://img.shields.io/badge/Frontend-✅-Fully-Functional-brightgreen)
-![Infrastructure Status](https://img.shields.io/badge/Infrastructure-✅-Consolidated-brightgreen)
-![Tests Status](https://img.shields.io/badge/Tests-103-Passing-brightgreen)
+!Backend Status
+!Frontend Status
+!Infrastructure Status
+!Tests Status
 
 **Last Updated**: September 24, 2025 11:28 PM (Taipei Time)  
 **Project Version**: 3.3.0  

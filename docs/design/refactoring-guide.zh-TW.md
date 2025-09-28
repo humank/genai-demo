@@ -4,10 +4,10 @@
 
 ## 目錄
 
-- [代碼壞味道 (Code Smells)](#代碼壞味道-code-smells)
-- [重構技術 (Refactoring Techniques)](#重構技術-refactoring-techniques)
-- [設計原則 (Design Principles)](#設計原則-design-principles)
-- [重構流程與最佳實踐](#重構流程與最佳實踐)
+- 代碼壞味道 (Code Smells)
+- 重構技術 (Refactoring Techniques)
+- 設計原則 (Design Principles)
+- 重構流程與最佳實踐
 
 ## 代碼壞味道 (Code Smells)
 

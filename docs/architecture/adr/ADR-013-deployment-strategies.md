@@ -505,7 +505,7 @@ rollback:
 
 ## References
 
-- [Blue-Green Deployment Pattern](https://martinfowler.com/bliki/BlueGreenDeployment.html)
-- [Canary Deployment Pattern](https://martinfowler.com/bliki/CanaryRelease.html)
-- [Argo Rollouts Documentation](https://argoproj.github.io/argo-rollouts/)
-- [Kubernetes Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- Blue-Green Deployment Pattern
+- Canary Deployment Pattern
+- Argo Rollouts Documentation
+- Kubernetes Deployment Strategies

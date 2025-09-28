@@ -569,10 +569,10 @@ export class WellArchitectedDashboard {
 
 ## References
 
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [AWS Well-Architected Tool](https://aws.amazon.com/well-architected-tool/)
-- [AWS Architecture Center](https://aws.amazon.com/architecture/)
-- [AWS Cost Optimization Best Practices](https://aws.amazon.com/aws-cost-management/cost-optimization/)
+- AWS Well-Architected Framework
+- AWS Well-Architected Tool
+- AWS Architecture Center
+- AWS Cost Optimization Best Practices
 
 
 ---

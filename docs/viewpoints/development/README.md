@@ -143,18 +143,18 @@ This viewpoint applies to all team members involved in software development, inc
 ## 📊 Related Diagrams
 
 ### Architecture Diagrams
-- [🔵 Hexagonal Architecture Diagram](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)
-- [🏛️ DDD Layered Architecture](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)
-- [🌐 Microservices Architecture](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
-![Microservices Overview](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)
+- 🔵 Hexagonal Architecture Diagram
+- 🏛️ DDD Layered Architecture
+- 🌐 Microservices Architecture
+!Microservices Overview
 ![Microservices Overview](../../diagrams/viewpoints/development/microservices-overview.puml)
-- [🎭 Saga Orchestration Pattern](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)
+- 🎭 Saga Orchestration Pattern
 
 ### Process Flow Diagrams
-- [🔄 Development Workflow](../../diagrams/viewpoints/development/workflows/development-workflow.mmd)
-- [🔴🟢🔵 TDD Cycle](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd)
-- [📝 BDD Process](../../diagrams/viewpoints/development/workflows/bdd-process.mmd)
-- [👀 Code Review Process](../../diagrams/viewpoints/development/workflows/code-review-process.mmd)
+- 🔄 Development Workflow
+- 🔴🟢🔵 TDD Cycle
+- 📝 BDD Process
+- 👀 Code Review Process
 
 ## 🎯 SOLID Principles and Design Patterns
 
@@ -178,7 +178,7 @@ This viewpoint applies to all team members involved in software development, inc
 
 ### Beginner Path
 1. [📚 Quick Start](getting-started.md)
-2. [☕ Java Coding Standards](coding-standards.md#java-coding-standards)
+2. ☕ Java Coding Standards
 3. 🧪 Unit Testing Basics
 4. 🏗️ Basic Architecture Concepts
 
@@ -204,10 +204,10 @@ This viewpoint applies to all team members involved in software development, inc
 - [🚀 Deployment Viewpoint](../deployment/README.md) - Deployment and infrastructure
 
 ### External Resources
-- [Rozanski & Woods Architecture Viewpoints](https://www.viewpoints-and-perspectives.info/)
-- [Domain-Driven Design Reference](https://domainlanguage.com/ddd/reference/)
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
+- Rozanski & Woods Architecture Viewpoints
+- Domain-Driven Design Reference
+- Spring Boot Documentation
+- AWS CDK Documentation
 
 ---
 

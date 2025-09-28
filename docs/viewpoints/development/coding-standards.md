@@ -547,8 +547,8 @@ public void processComplexBusinessLogic(Order order) {
 Brief explanation of the document's purpose and scope.
 
 ## Table of Contents
-- [Section 1](#section-1)
-- [Section 2](#section-2)
+- Section 1
+- Section 2
 
 ## Section 1
 Detailed content...
@@ -827,10 +827,10 @@ jobs:
 - [Build and Deployment](build-system/)
 
 ### External References
-- [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
-- [Clean Code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
-- [Effective Java](https://www.amazon.com/Effective-Java-Joshua-Bloch/dp/0134685997)
+- Google Java Style Guide
+- Airbnb JavaScript Style Guide
+- Clean Code
+- Effective Java
 
 ---
 

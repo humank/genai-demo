@@ -259,14 +259,14 @@ graph TB
 ## 🔗 相關資源
 
 ### 內部文檔
-- [Development Standards](../development-standards.md) - 開發標準和指南
-- [Security Standards](../security-standards.md) - 安全實作標準
-- [Performance Standards](../performance-standards.md) - 效能優化指南
+- [Development Standards](../../.kiro/steering/development-standards.md) - 開發標準和指南
+- [Security Standards](../../.kiro/steering/security-standards.md) - 安全實作標準
+- [Performance Standards](../../.kiro/steering/performance-standards.md) - 效能優化指南
 
 ### 外部參考
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
+- AWS Well-Architected Framework
+- EKS Best Practices
+- Kubernetes Documentation
 
 ## 📞 支援與聯絡
 

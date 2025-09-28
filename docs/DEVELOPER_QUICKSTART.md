@@ -234,9 +234,9 @@ log.info("Order processed successfully",
 
 ### Architecture and Design
 
-- [DDD Practice Guide](docs/viewpoints/development/architecture/ddd-domain-driven-design.md)
-- [Hexagonal Architecture Guide](docs/viewpoints/development/architecture/hexagonal-architecture.md)
-- [Event-Driven Design](docs/architecture/event-driven-design.md)
+- DDD Practice Guide
+- Hexagonal Architecture Guide
+- Event-Driven Design
 
 ### Development Standards
 
@@ -246,9 +246,9 @@ log.info("Order processed successfully",
 
 ### API Documentation
 
-- [Backend API](http://localhost:8080/swagger-ui.html)
-- [Frontend Component Library](http://localhost:4200/storybook)
+- Backend API
+- Frontend Component Library
 
 ---
 
-**Quick Help**: Check [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) or [Troubleshooting Documentation](docs/troubleshooting/README.md)
+**Quick Help**: Check [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) or Troubleshooting Documentation

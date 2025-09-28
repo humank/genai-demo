@@ -32,44 +32,13 @@ GET    /api/v1/customers/{id}      # 取得特定客戶
 
 **Section 1 Preview**: ## 相關資源
 
-- [測試效能標準](../../../../.kiro/steering/test-performance-standards.md)
-- [BDD/TDD 原則](../../....
-**Section 2 Preview**: ## 相關文檔
-
-- [TDD/BDD 測試](../tdd-bdd-testing.md)
-- [測試效能標準](../../../../../.kiro/steering/test-perform...
-
----
-
-### Duplicate 3: Section
-**Similarity**: 81.46%
-**File 1**: `docs/viewpoints/development/testing/tdd-practices/README.md`
-**File 2**: `docs/viewpoints/development/architecture/hexagonal-architecture/README.md`
-
-**Section 1 Preview**: ## 相關文檔
-
-- [TDD/BDD 測試](../tdd-bdd-testing.md)
-- [測試效能標準](../../../../../.kiro/steering/test-perform...
-**Section 2 Preview**: ## 相關文檔
-
-- [六角架構](../hexagonal-architecture.md)
-- [架構決策記錄 ADR-001](../../../../architecture/adr/ADR-...
-
----
-
-### Duplicate 4: Section
-**Similarity**: 83.16%
-**File 1**: `docs/viewpoints/development/architecture/microservices/README.md`
-**File 2**: `docs/viewpoints/development/architecture/saga-patterns/README.md`
-
-**Section 1 Preview**: ## 相關文檔
-
-- [Saga 模式](../saga-patterns/)
-- [事件驅動架構](../../../../diagrams/mermaid/event-driven-archite...
-**Section 2 Preview**: ## 相關文檔
-
-- [領域事件](../../../../../.kiro/steering/domain-events.md)
-- [微服務架構](../microservices/)
+- 測試效能標準
+- BDD/TDD 原則
+- 測試效能標準
+- 測試效能標準
+- 架構決策記錄 ADR-001
+- 事件驅動架構
+- 微服務架構
 - [事件...
 
 ---

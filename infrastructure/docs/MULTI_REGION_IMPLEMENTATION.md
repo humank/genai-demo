@@ -458,10 +458,10 @@ watch -n 5 'dig api.kimkao.io'
 
 ### Additional Resources
 
-- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
-- [Aurora Global Database Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html)
-- [MSK MirrorMaker 2.0 Guide](https://docs.aws.amazon.com/msk/latest/developerguide/msk-connect.html)
-- [Route 53 Health Checks](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-creating.html)
+- AWS CDK Documentation
+- Aurora Global Database Guide
+- MSK MirrorMaker 2.0 Guide
+- Route 53 Health Checks
 
 ### Getting Help
 

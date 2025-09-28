@@ -198,13 +198,13 @@ npm run assessment:complete
 
 1. [MCP Integration Importance Guide](mcp-integration-importance.md)
 2. [Task 22 Executive Summary](../../reports-summaries/infrastructure/executive-summary.md)
-3. [Complete MCP Integration Guide](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+3. Complete MCP Integration Guide
 
 ### External Resources
 
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)
-- [AWS CDK Best Practices](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
+- AWS Well-Architected Framework
+- MCP Protocol Specification
+- AWS CDK Best Practices
 
 ---
 

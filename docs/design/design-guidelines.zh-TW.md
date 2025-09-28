@@ -295,4 +295,4 @@ Saga 模式中的命令和補償操作實現了命令模式的思想。
 2. 《重構》(Refactoring) - Martin Fowler
 3. 《領域驅動設計》(Domain-Driven Design) - Eric Evans
 4. 《實現領域驅動設計》(Implementing Domain-Driven Design) - Vaughn Vernon
-5. [Tell, Don't Ask by Alec Sharp](http://pragprog.com/articles/tell-dont-ask)
+5. Tell, Don't Ask by Alec Sharp

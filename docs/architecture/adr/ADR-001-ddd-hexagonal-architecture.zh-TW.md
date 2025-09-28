@@ -258,10 +258,10 @@ static final ArchRule aggregates_should_be_annotated =
 
 ## 參考資料
 
-- [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
-- [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Spring Boot DDD 最佳實踐](https://spring.io/guides/gs/spring-boot/)
+- Domain-Driven Design: Tackling Complexity in the Heart of Software
+- Hexagonal Architecture
+- Clean Architecture
+- Spring Boot DDD 最佳實踐
 
 ---
 

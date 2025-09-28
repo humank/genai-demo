@@ -919,7 +919,7 @@ echo "✅ 所有健康檢查通過！"
 
 ### 應用監控配置
 
-完整的監控配置請參考：**[技術棧配置](../tools-and-environment/technology-stack.md#監控配置)**
+完整的監控配置請參考：**技術棧配置**
 
 核心監控端點：
 - `/actuator/health` - 健康檢查

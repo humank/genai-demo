@@ -161,14 +161,14 @@ We use Model Context Protocol (MCP) tools to:
 ### Internal Resources
 
 - [Architecture Overview](../overview.md)
-- [Hexagonal Architecture](../hexagonal-architecture.md)
+- Hexagonal Architecture
 - [Technology Stack Documentation](../../reports/technology-stack-2025.md)
 
 ### External Resources
 
-- [ADR Best Practices](https://adr.github.io/)
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [Domain-Driven Design](https://domainlanguage.com/ddd/)
+- ADR Best Practices
+- AWS Well-Architected Framework
+- Domain-Driven Design
 
 ## Contact Information
 

@@ -213,9 +213,9 @@ RFC 3339: 2025-09-23T14:34:29+08:00
 - **格式驗證**: 檢查日期時間格式的正確性
 
 ### 📚 參考資源
-- [ISO 8601 日期時間標準](https://en.wikipedia.org/wiki/ISO_8601)
-- [RFC 3339 日期時間格式](https://tools.ietf.org/html/rfc3339)
-- [時區資料庫 (IANA)](https://www.iana.org/time-zones)
+- ISO 8601 日期時間標準
+- RFC 3339 日期時間格式
+- 時區資料庫 (IANA)
 
 ## 更新記錄
 

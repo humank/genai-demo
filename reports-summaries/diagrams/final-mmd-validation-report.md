@@ -54,12 +54,12 @@
 ### Markdown Link (14 個)
 
 **文件**: `README.md:1134`
-**匹配**: `[🔵 六角形架構](docs/diagrams/viewpoints/development/hexagonal-architecture.mmd)`
-**內容**: `- [🔵 六角形架構](docs/diagrams/viewpoints/development/hexagonal-architecture.mmd) - 端口與適配器架構`
+**匹配**: `🔵 六角形架構`
+**內容**: `- 🔵 六角形架構 - 端口與適配器架構`
 
 **文件**: `README.md:1135`
-**匹配**: `[🏛️ DDD 分層架構](docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd)`
-**內容**: `- [🏛️ DDD 分層架構](docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd) - 領域驅動設計分層`
+**匹配**: `🏛️ DDD 分層架構`
+**內容**: `- 🏛️ DDD 分層架構 - 領域驅動設計分層`
 
 **文件**: `reports-summaries/diagrams/final-mmd-validation-report.md:2994`
 **匹配**: ``[../diagrams/viewpoints/[viewpoint]/[diagram1].mmd](../diagrams/viewpoints/[viewpoint]/[diagram1].mmd`
@@ -75,341 +75,44 @@
 
 **文件**: `docs/en/templates/viewpoint-template.md:201`
 **匹配**: `[../diagrams/viewpoints/[viewpoint]/[diagram1].mmd](../diagrams/viewpoints/[viewpoint]/[diagram1].mmd`
-**內容**: `- 檔案: [../diagrams/viewpoints/[viewpoint]/[diagram1].mmd](../diagrams/viewpoints/[viewpoint]/[diagra...`
+**內容**: `- 檔案: [../diagrams/viewpoints/[viewpoint]/[diagram1].mmd](../diagrams/viewpoints/[viewpoint]/diagra...`
 
 **文件**: `docs/viewpoints/development/README.md:136`
-**匹配**: `[🔵 六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)`
-**內容**: `- [🔵 六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)`
+**匹配**: `🔵 六角架構圖`
+**內容**: `- 🔵 六角架構圖`
 
 **文件**: `docs/viewpoints/development/README.md:137`
-**匹配**: `[🏛️ DDD 分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)`
-**內容**: `- [🏛️ DDD 分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)`
+**匹配**: `🏛️ DDD 分層架構`
+**內容**: `- 🏛️ DDD 分層架構`
 
 **文件**: `docs/viewpoints/development/README.md:138`
-**匹配**: `[🌐 微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)`
-**內容**: `- [🌐 微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)`
+**匹配**: `🌐 微服務架構`
+**內容**: `- 🌐 微服務架構`
 
 **文件**: `docs/viewpoints/development/README.md:139`
-**匹配**: `[🎭 Saga 編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)`
-**內容**: `- [🎭 Saga 編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)`
+**匹配**: `🎭 Saga 編排模式`
+**內容**: `- 🎭 Saga 編排模式`
 
 **文件**: `docs/viewpoints/development/README.md:142`
-**匹配**: `[🔄 開發工作流程](../../diagrams/viewpoints/development/workflows/development-workflow.mmd)`
-**內容**: `- [🔄 開發工作流程](../../diagrams/viewpoints/development/workflows/development-workflow.mmd)`
+**匹配**: `🔄 開發工作流程`
+**內容**: `- 🔄 開發工作流程`
 
 **文件**: `docs/viewpoints/development/README.md:143`
-**匹配**: `[🔴🟢🔵 TDD 循環](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd)`
-**內容**: `- [🔴🟢🔵 TDD 循環](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd)`
+**匹配**: `🔴🟢🔵 TDD 循環`
+**內容**: `- 🔴🟢🔵 TDD 循環`
 
 **文件**: `docs/viewpoints/development/README.md:144`
-**匹配**: `[📝 BDD 流程](../../diagrams/viewpoints/development/workflows/bdd-process.mmd)`
-**內容**: `- [📝 BDD 流程](../../diagrams/viewpoints/development/workflows/bdd-process.mmd)`
+**匹配**: `📝 BDD 流程`
+**內容**: `- 📝 BDD 流程`
 
 **文件**: `docs/viewpoints/development/README.md:145`
-**匹配**: `[👀 程式碼審查流程](../../diagrams/viewpoints/development/workflows/code-review-process.mmd)`
-**內容**: `- [👀 程式碼審查流程](../../diagrams/viewpoints/development/workflows/code-review-process.mmd)`
+**匹配**: `👀 程式碼審查流程`
+**內容**: `- 👀 程式碼審查流程`
 
 ### Other (1392 個)
 
 **文件**: `README.md:1134`
-**匹配**: `六角形架構](docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `- [🔵 六角形架構](docs/diagrams/viewpoints/development/hexagonal-architecture.mmd) - 端口與適配器架構`
-
-**文件**: `README.md:1135`
-**匹配**: `分層架構](docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `- [🏛️ DDD 分層架構](docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd) - 領域驅動設計分層`
-
-**文件**: `github-issue-orphaned-mmd.md:17`
-**匹配**: ``docs/diagrams/multi_environment.mmd`
-**內容**: `- `docs/diagrams/multi_environment.mmd` - 多環境配置架構圖`
-
-**文件**: `github-issue-orphaned-mmd.md:18`
-**匹配**: ``docs/diagrams/ddd_architecture.mmd`
-**內容**: `- `docs/diagrams/ddd_architecture.mmd` - DDD 架構概覽圖`
-
-**文件**: `github-issue-orphaned-mmd.md:19`
-**匹配**: ``docs/diagrams/hexagonal_architecture.mmd`
-**內容**: `- `docs/diagrams/hexagonal_architecture.mmd` - 六角形架構圖`
-
-**文件**: `github-issue-orphaned-mmd.md:20`
-**匹配**: ``docs/diagrams/aws_infrastructure.mmd`
-**內容**: `- `docs/diagrams/aws_infrastructure.mmd` - AWS 基礎設施圖`
-
-**文件**: `github-issue-orphaned-mmd.md:21`
-**匹配**: ``docs/diagrams/aws-infrastructure-detailed.mmd`
-**內容**: `- `docs/diagrams/aws-infrastructure-detailed.mmd` - 詳細 AWS 架構圖`
-
-**文件**: `github-issue-orphaned-mmd.md:22`
-**匹配**: ``docs/diagrams/observability_architecture.mmd`
-**內容**: `- `docs/diagrams/observability_architecture.mmd` - 可觀測性架構圖`
-
-**文件**: `github-issue-orphaned-mmd.md:23`
-**匹配**: ``docs/diagrams/event_driven_architecture.mmd`
-**內容**: `- `docs/diagrams/event_driven_architecture.mmd` - 事件驅動架構圖`
-
-**文件**: `github-issue-orphaned-mmd.md:26`
-**匹配**: ``docs/diagrams/viewpoints/information/information-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/information/information-overview.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:27`
-**匹配**: ``docs/diagrams/viewpoints/information/event-driven-architecture.mmd`
-**內容**: `- `docs/diagrams/viewpoints/information/event-driven-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:28`
-**匹配**: ``docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `- `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:29`
-**匹配**: ``docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `- `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:30`
-**匹配**: ``docs/diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `- `docs/diagrams/viewpoints/concurrency/async-processing.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:31`
-**匹配**: ``docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:32`
-**匹配**: ``docs/diagrams/viewpoints/operational/monitoring-architecture.mmd`
-**內容**: `- `docs/diagrams/viewpoints/operational/monitoring-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:33`
-**匹配**: ``docs/diagrams/viewpoints/functional/functional-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/functional/functional-overview.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:34`
-**匹配**: ``docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/functional/system-overview.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:37`
-**匹配**: ``docs/templates/examples/diagram-examples/system-overview.mmd`
-**內容**: `- `docs/templates/examples/diagram-examples/system-overview.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:43`
-**匹配**: ``hexagonal_architecture.mmd`
-**內容**: `- [ ] 比較 `hexagonal_architecture.mmd` vs `viewpoints/development/hexagonal-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:43`
-**匹配**: ``viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `- [ ] 比較 `hexagonal_architecture.mmd` vs `viewpoints/development/hexagonal-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:44`
-**匹配**: ``event_driven_architecture.mmd`
-**內容**: `- [ ] 比較 `event_driven_architecture.mmd` vs `viewpoints/information/event-driven-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:44`
-**匹配**: ``viewpoints/information/event-driven-architecture.mmd`
-**內容**: `- [ ] 比較 `event_driven_architecture.mmd` vs `viewpoints/information/event-driven-architecture.mmd``
-
-**文件**: `github-issue-orphaned-mmd.md:45`
-**匹配**: ``viewpoints/functional/system-overview.mmd`
-**內容**: `- [ ] 確認 `viewpoints/functional/system-overview.mmd` 是否已完全轉換`
-
-**文件**: `github-issue-orphaned-mmd.md:50`
-**匹配**: ``aws-infrastructure-detailed.mmd`
-**內容**: `- [ ] `aws-infrastructure-detailed.mmd` → 獨立文檔`
-
-**文件**: `github-issue-orphaned-mmd.md:51`
-**匹配**: ``multi_environment.mmd`
-**內容**: `- [ ] `multi_environment.mmd` → 獨立文檔`
-
-**文件**: `github-issue-orphaned-mmd.md:52`
-**匹配**: ``async-processing.mmd`
-**內容**: `- [ ] `async-processing.mmd` → 整合到並發視角文檔`
-
-**文件**: `reports-summaries/documentation/functional-viewpoint-links-fix-report.md:13`
-**匹配**: ``.mmd`
-**內容**: `- `.mmd` source files instead of generated images`
-
-**文件**: `reports-summaries/documentation/functional-viewpoint-links-fix-report.md:67`
-**匹配**: ``.mmd`
-**內容**: `- Multiple broken references to `.puml` and `.mmd` source files`
-
-**文件**: `reports-summaries/general/generation-report_1.md:20`
-**匹配**: `docs/diagrams/aws_infrastructure.mmd`
-**內容**: `docs/diagrams/aws_infrastructure.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:21`
-**匹配**: `docs/diagrams/ddd_architecture.mmd`
-**內容**: `docs/diagrams/ddd_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:22`
-**匹配**: `docs/diagrams/event_driven_architecture.mmd`
-**內容**: `docs/diagrams/event_driven_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:23`
-**匹配**: `docs/diagrams/hexagonal_architecture.mmd`
-**內容**: `docs/diagrams/hexagonal_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:55`
-**匹配**: `docs/diagrams/multi_environment.mmd`
-**內容**: `docs/diagrams/multi_environment.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:56`
-**匹配**: `docs/diagrams/observability_architecture.mmd`
-**內容**: `docs/diagrams/observability_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:95`
-**匹配**: `docs/diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `docs/diagrams/viewpoints/concurrency/async-processing.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:96`
-**匹配**: `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:97`
-**匹配**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:98`
-**匹配**: `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:110`
-**匹配**: `docs/diagrams/viewpoints/functional/functional-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/functional/functional-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:124`
-**匹配**: `docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/functional/system-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:126`
-**匹配**: `docs/diagrams/viewpoints/information/event-driven-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/information/event-driven-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:128`
-**匹配**: `docs/diagrams/viewpoints/information/information-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/information/information-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report_1.md:129`
-**匹配**: `docs/diagrams/viewpoints/operational/monitoring-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/operational/monitoring-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:19`
-**匹配**: `docs/diagrams/aws_infrastructure.mmd`
-**內容**: `docs/diagrams/aws_infrastructure.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:20`
-**匹配**: `docs/diagrams/ddd_architecture.mmd`
-**內容**: `docs/diagrams/ddd_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:21`
-**匹配**: `docs/diagrams/event_driven_architecture.mmd`
-**內容**: `docs/diagrams/event_driven_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:22`
-**匹配**: `docs/diagrams/hexagonal_architecture.mmd`
-**內容**: `docs/diagrams/hexagonal_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:54`
-**匹配**: `docs/diagrams/multi_environment.mmd`
-**內容**: `docs/diagrams/multi_environment.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:55`
-**匹配**: `docs/diagrams/observability_architecture.mmd`
-**內容**: `docs/diagrams/observability_architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:94`
-**匹配**: `docs/diagrams/viewpoints/concurrency/async-processing.mmd`
-**內容**: `docs/diagrams/viewpoints/concurrency/async-processing.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:95`
-**匹配**: `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:96`
-**匹配**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:97`
-**匹配**: `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:109`
-**匹配**: `docs/diagrams/viewpoints/functional/functional-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/functional/functional-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:123`
-**匹配**: `docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/functional/system-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:125`
-**匹配**: `docs/diagrams/viewpoints/information/event-driven-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/information/event-driven-architecture.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:127`
-**匹配**: `docs/diagrams/viewpoints/information/information-overview.mmd`
-**內容**: `docs/diagrams/viewpoints/information/information-overview.mmd`
-
-**文件**: `reports-summaries/general/generation-report.md:128`
-**匹配**: `docs/diagrams/viewpoints/operational/monitoring-architecture.mmd`
-**內容**: `docs/diagrams/viewpoints/operational/monitoring-architecture.mmd`
-
-**文件**: `reports-summaries/architecture-design/ddd-layered-architecture-integration-report.md:5`
-**匹配**: `(`docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `Successfully created and integrated a comprehensive DDD layered architecture diagram (`docs/diagrams...`
-
-**文件**: `reports-summaries/architecture-design/ddd-layered-architecture-integration-report.md:10`
-**匹配**: ``docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `- **File**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/ddd-layered-architecture-integration-report.md:104`
-**匹配**: ``docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `- **Primary Location**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/ddd-layered-architecture-integration-report.md:241`
-**匹配**: ``docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd`
-**內容**: `**Diagram Created**: `docs/diagrams/viewpoints/development/ddd-layered-architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/hexagonal-architecture-diagram-sync-report.md:107`
-**匹配**: ``docs/diagrams/viewpoints/functional/system-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/functional/system-overview.mmd` - System overview`
-
-**文件**: `reports-summaries/architecture-design/hexagonal-architecture-diagram-sync-report.md:108`
-**匹配**: ``docs/diagrams/viewpoints/functional/functional-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/functional/functional-overview.mmd` - Functional viewpoint overview`
-
-**文件**: `reports-summaries/architecture-design/hexagonal-architecture-diagram-sync-report.md:109`
-**匹配**: ``docs/diagrams/viewpoints/information/information-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/information/information-overview.mmd` - Information viewpoint overview`
-
-**文件**: `reports-summaries/architecture-design/hexagonal-architecture-diagram-sync-report.md:114`
-**匹配**: ``docs/diagrams/viewpoints/development/hexagonal-architecture.mmd`
-**內容**: `- `docs/diagrams/viewpoints/development/hexagonal-architecture.mmd` - Alternative hexagonal view`
-
-**文件**: `reports-summaries/architecture-design/hexagonal-architecture-diagram-sync-report.md:115`
-**匹配**: ``docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd`
-**內容**: `- `docs/diagrams/viewpoints/deployment/infrastructure-overview.mmd` - Infrastructure overview`
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:13`
-**匹配**: ``docs/diagrams/ddd_architecture.mmd`
-**內容**: `- **Updated**: `docs/diagrams/ddd_architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:21`
-**匹配**: ``docs/diagrams/observability_architecture.mmd`
-**內容**: `- **Created**: `docs/diagrams/observability_architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:27`
-**匹配**: ``docs/diagrams/aws_infrastructure.mmd`
-**內容**: `- **Created**: `docs/diagrams/aws_infrastructure.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:33`
-**匹配**: ``docs/diagrams/multi_environment.mmd`
-**內容**: `- **Created**: `docs/diagrams/multi_environment.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:77`
-**匹配**: ``docs/diagrams/event_driven_architecture.mmd`
-**內容**: `- **TODO**: `docs/diagrams/event_driven_architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:82`
-**匹配**: ``docs/diagrams/hexagonal_architecture.mmd`
-**內容**: `- **TODO**: `docs/diagrams/hexagonal_architecture.mmd``
-
-**文件**: `reports-summaries/architecture-design/architecture-update-summary.md:210`
-**匹配**: `(event_driven_architecture.mmd`
-**內容**: `1. **Complete pending diagram updates** (event_driven_architecture.mmd, hexagonal_architecture.mmd)`
+**匹配**: `六角形架構`
 
 **文件**: `reports-summaries/architecture-design/architecture-update-summary.md:210`
 **匹配**: `hexagonal_architecture.mmd`
@@ -5637,35 +5340,35 @@
 
 **文件**: `docs/viewpoints/development/README.md:136`
 **匹配**: `六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd`
-**內容**: `- [🔵 六角架構圖](../../diagrams/viewpoints/development/architecture/hexagonal-architecture.mmd)`
+**內容**: `- 🔵 六角架構圖`
 
 **文件**: `docs/viewpoints/development/README.md:137`
 **匹配**: `分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd`
-**內容**: `- [🏛️ DDD 分層架構](../../diagrams/viewpoints/development/architecture/ddd-layered-architecture.mmd)`
+**內容**: `- 🏛️ DDD 分層架構`
 
 **文件**: `docs/viewpoints/development/README.md:138`
 **匹配**: `微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd`
-**內容**: `- [🌐 微服務架構](../../diagrams/viewpoints/development/architecture/microservices-overview.mmd)`
+**內容**: `- 🌐 微服務架構`
 
 **文件**: `docs/viewpoints/development/README.md:139`
 **匹配**: `編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd`
-**內容**: `- [🎭 Saga 編排模式](../../diagrams/viewpoints/development/architecture/saga-orchestration.mmd)`
+**內容**: `- 🎭 Saga 編排模式`
 
 **文件**: `docs/viewpoints/development/README.md:142`
 **匹配**: `開發工作流程](../../diagrams/viewpoints/development/workflows/development-workflow.mmd`
-**內容**: `- [🔄 開發工作流程](../../diagrams/viewpoints/development/workflows/development-workflow.mmd)`
+**內容**: `- 🔄 開發工作流程`
 
 **文件**: `docs/viewpoints/development/README.md:143`
 **匹配**: `循環](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd`
-**內容**: `- [🔴🟢🔵 TDD 循環](../../diagrams/viewpoints/development/workflows/tdd-cycle.mmd)`
+**內容**: `- 🔴🟢🔵 TDD 循環`
 
 **文件**: `docs/viewpoints/development/README.md:144`
 **匹配**: `流程](../../diagrams/viewpoints/development/workflows/bdd-process.mmd`
-**內容**: `- [📝 BDD 流程](../../diagrams/viewpoints/development/workflows/bdd-process.mmd)`
+**內容**: `- 📝 BDD 流程`
 
 **文件**: `docs/viewpoints/development/README.md:145`
 **匹配**: `程式碼審查流程](../../diagrams/viewpoints/development/workflows/code-review-process.mmd`
-**內容**: `- [👀 程式碼審查流程](../../diagrams/viewpoints/development/workflows/code-review-process.mmd)`
+**內容**: `- 👀 程式碼審查流程`
 
 **文件**: `scripts/DIAGRAM-AUTOMATION-README.md:67`
 **匹配**: `"docs/diagrams/**/*.mmd"`
@@ -7433,7 +7136,7 @@
 
 **文件**: `docs/en/templates/metadata-standards.md:71`
 **匹配**: `"../diagrams/viewpoints/functional/domain-model.mmd"`
-**內容**: `diagrams: ["../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "....`
+**內容**: `diagrams: "../diagrams/viewpoints/functional/domain-model.mmd"  # 注意：現在使用包含 Mermaid 代碼塊的 .md 文件, "....`
 
 **文件**: `docs/en/templates/metadata-standards.md:71`
 **匹配**: `["../diagrams/viewpoints/functional/domain-model.mmd`
@@ -7638,7 +7341,7 @@
 
 本次驗證檢查了以下項目：
 
-1. **Markdown 鏈接** - `[text](file.mmd)` 格式的引用
+1. **Markdown 鏈接** - `[text` 格式的引用
 2. **YAML Front Matter** - 元資料中的 .mmd 引用
 3. **目錄結構** - 文檔中的目錄樹顯示
 4. **文檔說明** - 關於 .mmd 文件的說明文字

@@ -12,13 +12,13 @@ All testing-related documentation is now unified and integrated in **[Developmen
 
 | Original Document | New Location | Description |
 |-------------------|--------------|-------------|
-| [test-execution-maintenance-guide.md](test-execution-maintenance-guide.md) | **[Test Optimization](../viewpoints/development/testing/test-optimization.md)** | Test execution and maintenance guide |
-| [test-performance-monitoring.md](test-performance-monitoring.md) | **[TestPerformanceExtension](../viewpoints/development/testing/performance-monitoring/test-performance-extension.md)** | Test performance monitoring framework |
-| [http-client-configuration-guide.md](http-client-configuration-guide.md) | **[Integration Testing](../viewpoints/development/testing/integration-testing.md)** | HTTP client configuration guide |
+| [test-execution-maintenance-guide.md](test-execution-maintenance-guide.md) | **Test Optimization** | Test execution and maintenance guide |
+| [test-performance-monitoring.md](test-performance-monitoring.md) | **TestPerformanceExtension** | Test performance monitoring framework |
+| [http-client-configuration-guide.md](http-client-configuration-guide.md) | **Integration Testing** | HTTP client configuration guide |
 | [new-developer-onboarding-guide.md](new-developer-onboarding-guide.md) | **[Getting Started](../viewpoints/development/getting-started/)** | New developer testing onboarding |
-| [test-optimization-guidelines.md](test-optimization-guidelines.md) | **[Test Optimization](../viewpoints/development/testing/test-optimization.md)** | Test optimization guidelines |
-| [testresttemplate-troubleshooting-guide.md](testresttemplate-troubleshooting-guide.md) | **[Integration Testing](../viewpoints/development/testing/integration-testing.md)** | TestRestTemplate troubleshooting |
-| [common-test-failures-troubleshooting.md](common-test-failures-troubleshooting.md) | **[Test Optimization](../viewpoints/development/testing/test-optimization.md)** | Common test failure troubleshooting |
+| [test-optimization-guidelines.md](test-optimization-guidelines.md) | **Test Optimization** | Test optimization guidelines |
+| [testresttemplate-troubleshooting-guide.md](testresttemplate-troubleshooting-guide.md) | **Integration Testing** | TestRestTemplate troubleshooting |
+| [common-test-failures-troubleshooting.md](common-test-failures-troubleshooting.md) | **Test Optimization** | Common test failure troubleshooting |
 
 ## 📚 New Testing Documentation Structure
 
@@ -165,21 +165,21 @@ static final ArchRule domainLayerRules = classes()
 1. **[Testing Overview](../viewpoints/development/testing/README.md)** - Start here for testing concepts
 2. **[TDD Practices](../viewpoints/development/testing/tdd-practices/)** - Test-Driven Development
 3. **[BDD Practices](../viewpoints/development/testing/bdd-practices/)** - Behavior-Driven Development
-4. **[Test Optimization](../viewpoints/development/testing/test-optimization.md)** - Performance and efficiency
+4. **Test Optimization** - Performance and efficiency
 
 ### For Experienced Developers
 
-1. **[Architecture Testing](../viewpoints/development/testing/architecture-testing.md)** - Advanced compliance testing
-2. **[Performance Monitoring](../viewpoints/development/testing/performance-monitoring/)** - Test performance tracking
-3. **[Integration Testing](../viewpoints/development/testing/integration-testing.md)** - Complex integration scenarios
-4. **[Test Automation](../viewpoints/development/testing/test-automation.md)** - Advanced automation strategies
+1. **Architecture Testing** - Advanced compliance testing
+2. **Performance Monitoring** - Test performance tracking
+3. **Integration Testing** - Complex integration scenarios
+4. **Test Automation** - Advanced automation strategies
 
 ### For Team Leads
 
 1. **[Testing Strategy](../viewpoints/development/testing/README.md)** - Overall testing approach
-2. **[Quality Metrics](../viewpoints/development/testing/test-optimization.md)** - Quality measurement and improvement
+2. **Quality Metrics** - Quality measurement and improvement
 3. **[Team Guidelines](../viewpoints/development/testing/tdd-practices/)** - Team testing standards
-4. **[Tool Integration](../viewpoints/development/testing/test-automation.md)** - CI/CD and tooling
+4. **Tool Integration** - CI/CD and tooling
 
 ## 💡 Migration Benefits
 

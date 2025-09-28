@@ -266,10 +266,10 @@ export AWS_REGION=ap-east-2
 
 ## 🔗 相關文檔
 
-- [ObservabilityStack 源碼](../infrastructure/src/stacks/observability-stack.ts)
-- [CloudWatch 配置](../app/src/main/java/solid/humank/genaidemo/infrastructure/config/CloudWatchMetricsConfig.java)
-- [X-Ray 配置](../app/src/main/java/solid/humank/genaidemo/infrastructure/config/XRayTracingConfig.java)
-- [測試報告](../infrastructure/test/observability-stack-concurrency-monitoring.test.ts)
+- ObservabilityStack 源碼
+- CloudWatch 配置
+- X-Ray 配置
+- 測試報告
 
 ---
 

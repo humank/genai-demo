@@ -197,9 +197,9 @@ legacy/
 
 ## Related Resources
 
-- [New Architecture Viewpoint Diagrams](../viewpoints/README.md) - New diagrams based on Rozanski & Woods
+- [New Architecture Viewpoint Diagrams](../../viewpoints/README.md) - New diagrams based on Rozanski & Woods
 - [Architecture Perspective Diagrams](../perspectives/README.md) - Quality attribute related diagrams
-- [Architecture Evolution Log](../../ARCHITECTURE_EVOLUTION_LOG.md) - Detailed record of architecture evolution
+- Architecture Evolution Log - Detailed record of architecture evolution
 
 ## Support and Maintenance
 
@@ -226,5 +226,5 @@ legacy/
 **Quick Navigation**:
 
 - [Current Architecture](../../viewpoints/) - Active architecture documentation
-- [Migration Guide](../../ARCHITECTURE_MIGRATION_GUIDE.md) - How to migrate from legacy
+- Migration Guide - How to migrate from legacy
 - [Tool Documentation](../README.md) - Current diagramming tools and standards

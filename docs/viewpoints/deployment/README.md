@@ -387,8 +387,8 @@ graph TB
     class PROMETHEUS,GRAFANA,CLOUDWATCH,FLUENTD,CLOUDWATCH_LOGS,OPENSEARCH_LOGS,XRAY,JAEGER,OTEL,SNS,PAGERDUTY,SLACK observability
     class IAM,RBAC,SERVICE_ACCOUNT,VPC,SECURITY_GROUP,NACL,NAT_GW,KMS,SECRETS_MANAGER,ENCRYPTION security
 ```
-- [Deployment Process Flow](deployment-process-flow.md)
-- [Network Architecture Details](network-architecture-details.md)
+- Deployment Process Flow
+- Network Architecture Details
 
 ## Relationships with Other Viewpoints
 

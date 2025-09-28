@@ -198,13 +198,13 @@ npm run assessment:complete
 
 1. [MCP 整合重要性說明](mcp-integration-importance.md)
 2. [任務 22 執行摘要](../../reports-summaries/infrastructure/executive-summary.md)
-3. [完整 MCP 整合指南](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+3. 完整 MCP 整合指南
 
 ### 外部資源
 
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [MCP 協議規範](https://modelcontextprotocol.io/)
-- [AWS CDK 最佳實踐](https://docs.aws.amazon.com/cdk/v2/guide/best-practices.html)
+- AWS Well-Architected Framework
+- MCP 協議規範
+- AWS CDK 最佳實踐
 
 ---
 

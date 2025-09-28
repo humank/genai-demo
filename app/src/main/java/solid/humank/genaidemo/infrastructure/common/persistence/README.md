@@ -366,4 +366,4 @@ logging:
 - [AuroraReadWriteConfiguration.java](AuroraReadWriteConfiguration.java) - 讀寫分離配置
 - [OptimisticLockingConflictDetector.java](OptimisticLockingConflictDetector.java) - 衝突檢測器
 - [OptimisticLockingRetryService.java](OptimisticLockingRetryService.java) - 重試服務
-- [OptimisticLockingCustomerService.java](../../application/customer/service/OptimisticLockingCustomerService.java) - 應用服務範例
+- OptimisticLockingCustomerService.java - 應用服務範例

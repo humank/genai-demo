@@ -318,8 +318,8 @@ docker logs -f genai-demo
 
 ## Related Diagrams
 
-- [Container Architecture Diagram](../../diagrams/deployment/container-architecture.puml)
-- [Docker Deployment Flow](../../diagrams/deployment/docker-deployment-flow.puml)
+- Container Architecture Diagram
+- Docker Deployment Flow
 
 ## Relationships with Other Viewpoints
 

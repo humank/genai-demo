@@ -56,7 +56,7 @@ inclusion: always
 
 ## Code Quality Standards
 
-> **📋 基本標準**: 基礎的程式碼品質標準請參考 [Development Standards](development-standards.md#code-standards)
+> **📋 基本標準**: 基礎的程式碼品質標準請參考 Development Standards
 
 > **🎯 用途**: 本節提供詳細的程式碼審查檢查清單和範例
 

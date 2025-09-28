@@ -150,7 +150,7 @@ docs/diagrams/viewpoints/development/
 - [Development Viewpoint Documentation](../../../viewpoints/development/README.md)
 - [Architecture Documentation](../../../architecture/README.md)
 - [Diagram Generation Standards](../../README.md)
-- [Mermaid Syntax Guide](https://mermaid-js.github.io/mermaid/)
+- Mermaid Syntax Guide
 
 ## Migration Notes
 

@@ -67,7 +67,7 @@ This document contains the complete architecture diagrams for the GenAI Demo pro
 
 ### Method 1: View in Excalidraw
 
-1. Open [Excalidraw.com](https://excalidraw.com)
+1. Open Excalidraw.com
 2. Click \"File\" > \"Open\"
 3. Copy and paste the JSON content below
 

@@ -231,7 +231,7 @@ http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-confi
 
 - [Docker Deployment Guide](../deployment/README.md)
 - API Version Management Strategy
-- [Project Directory Structure Description](../../README.md#project-directory-structure)
+- Project Directory Structure Description
 - [Development Environment Setup](../development/getting-started.md)
 
 ---

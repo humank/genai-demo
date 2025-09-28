@@ -615,7 +615,7 @@ groups:
 
 ## Test Performance Integration
 
-> **🧪 測試效能**: 詳細的測試效能監控標準請參考 [Development Standards - Test Performance Framework](development-standards.md#advanced-test-performance-framework)
+> **🧪 測試效能**: 詳細的測試效能監控標準請參考 Development Standards - Test Performance Framework
 
 **快速參考**:
 - 使用 `@TestPerformanceExtension` 進行自動效能監控

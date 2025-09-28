@@ -7,14 +7,14 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Deployment Architecture Design](#deployment-architecture-design)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Environment Management](#environment-management)
-- [Containerized Deployment](#containerized-deployment)
-- [Infrastructure Deployment](#infrastructure-deployment)
-- [Deployment Strategies](#deployment-strategies)
-- [Monitoring and Rollback](#monitoring-and-rollback)
+- Overview
+- Deployment Architecture Design
+- CI/CD Pipeline
+- Environment Management
+- Containerized Deployment
+- Infrastructure Deployment
+- Deployment Strategies
+- Monitoring and Rollback
 
 ## Overview
 

@@ -13,7 +13,7 @@
 ## Deliverables Completed
 
 ### 1. ✅ MSK Infrastructure Implementation (CDK TypeScript)
-**File**: [MSK Stack](../infrastructure/src/stacks/msk-stack.ts)
+**File**: MSK Stack
 
 **Key Achievements**:
 - Multi-AZ MSK cluster with 3 brokers across availability zones
@@ -30,7 +30,7 @@
 - **Networking**: VPC security groups with least-privilege access
 
 ### 2. ✅ MSK Stack Testing Framework
-**File**: [MSK Stack Test](../infrastructure/test/msk-stack.test.ts)
+**File**: MSK Stack Test
 
 **Key Achievements**:
 - Comprehensive CDK unit tests with 100% coverage
@@ -48,7 +48,7 @@
 - Monitoring and logging setup
 
 ### 3. ✅ Spring Boot Kafka Integration (Java Application Layer)
-**File**: [MSK Configuration](../app/src/main/java/solid/humank/genaidemo/infrastructure/config/MSKConfiguration.java)
+**File**: MSK Configuration
 
 **Key Achievements**:
 - Producer/Consumer factory configuration with X-Ray interceptors
@@ -65,7 +65,7 @@
 - **Reliability**: All replicas acknowledgment, read committed isolation
 
 ### 4. ✅ MSK Data Flow Tracking Service
-**File**: [MSK Data Flow Tracking Service](../app/src/main/java/solid/humank/genaidemo/infrastructure/messaging/MSKDataFlowTrackingService.java)
+**File**: MSK Data Flow Tracking Service
 
 **Key Achievements**:
 - Event publishing with comprehensive tracking metadata
@@ -82,7 +82,7 @@
 - **Error Handling**: Dead letter queue support and error correlation
 
 ### 5. ✅ Event Schema and Data Model
-**File**: [Data Flow Event](../app/src/main/java/solid/humank/genaidemo/infrastructure/messaging/DataFlowEvent.java)
+**File**: Data Flow Event
 
 **Key Achievements**:
 - Immutable record-based event model with builder pattern
@@ -99,7 +99,7 @@
 - **Performance Metrics**: Built-in latency and size calculation
 
 ### 6. ✅ CloudWatch Logging Integration
-**File**: [CloudWatch Data Flow Logger](../app/src/main/java/solid/humank/genaidemo/infrastructure/logging/CloudWatchDataFlowLogger.java)
+**File**: CloudWatch Data Flow Logger
 
 **Key Achievements**:
 - Structured logging optimized for CloudWatch Logs Insights
@@ -116,7 +116,7 @@
 - **Anomaly Detection**: Performance threshold monitoring
 
 ### 7. ✅ Application Configuration Enhancement
-**File**: [Application Staging Configuration](../app/src/main/resources/application-staging.yml)
+**File**: Application Staging Configuration
 
 **Key Achievements**:
 - Complete MSK configuration for staging environment
@@ -133,7 +133,7 @@
 - **Integration**: Seamless integration with existing configuration
 
 ### 8. ✅ Integration Testing Framework
-**File**: [MSK Integration Test](../app/src/test/java/solid/humank/genaidemo/infrastructure/messaging/MSKIntegrationTest.java)
+**File**: MSK Integration Test
 
 **Key Achievements**:
 - Testcontainers integration for local development and CI/CD

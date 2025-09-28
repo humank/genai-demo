@@ -11,14 +11,14 @@ This directory contains deployment-related documentation for the GenAI Demo e-co
 - **[Observability Deployment](observability-deployment.md)** - Monitoring and observability setup
 
 ### Infrastructure as Code
-- **[CDK Infrastructure](../infrastructure/)** - AWS CDK infrastructure definitions
-- **[Terraform Modules](../infrastructure/terraform/)** - Terraform infrastructure modules
-- **[Helm Charts](../infrastructure/helm/)** - Kubernetes Helm chart configurations
+- **CDK Infrastructure** - AWS CDK infrastructure definitions
+- **Terraform Modules** - Terraform infrastructure modules
+- **Helm Charts** - Kubernetes Helm chart configurations
 
 ### Environment-Specific Configurations
-- **[Development Environment](development-environment.md)** - Local development setup
-- **[Staging Environment](staging-environment.md)** - Staging deployment configuration
-- **[Production Environment](production-environment.md)** - Production deployment setup
+- **Development Environment** - Local development setup
+- **Staging Environment** - Staging deployment configuration
+- **Production Environment** - Production deployment setup
 
 ## 🏗️ Deployment Environments
 
@@ -293,9 +293,9 @@ jobs:
 - **[Testing Strategy](../viewpoints/development/testing/)** - Testing in deployment pipeline
 
 ### Infrastructure Documentation
-- **[Infrastructure as Code](../infrastructure/README.md)** - Infrastructure definitions
-- **[CDK Documentation](../infrastructure/cdk/)** - AWS CDK infrastructure
-- **[Terraform Documentation](../infrastructure/terraform/)** - Terraform modules
+- **Infrastructure as Code** - Infrastructure definitions
+- **CDK Documentation** - AWS CDK infrastructure
+- **Terraform Documentation** - Terraform modules
 
 ## 🚨 Emergency Procedures
 
@@ -339,6 +339,6 @@ jobs:
 **Version**: 2.0
 
 **Quick Links**:
-- [Quick Start Deployment](kubernetes-guide.md#quick-start) - Fast deployment guide
-- [Production Checklist](production-environment.md#checklist) - Pre-production validation
+- Quick Start Deployment - Fast deployment guide
+- Production Checklist - Pre-production validation
 - [Troubleshooting](../troubleshooting/README.md) - Common deployment issues

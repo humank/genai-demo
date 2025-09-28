@@ -230,12 +230,12 @@ This documentation update supports the following requirements from the spec:
 
 ### Mermaid Resources
 
-- [Mermaid Documentation](https://mermaid-js.github.io/mermaid/)
-- [Mermaid Live Editor](https://mermaid.live/)
-- [GitHub Mermaid Support](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
+- Mermaid Documentation
+- Mermaid Live Editor
+- GitHub Mermaid Support
 
 ### Architecture Documentation
 
-- [C4 Model](https://c4model.com/) for architecture documentation
-- [AWS Architecture Center](https://aws.amazon.com/architecture/)
-- [Domain-Driven Design Reference](https://domainlanguage.com/ddd/reference/)
+- C4 Model for architecture documentation
+- AWS Architecture Center
+- Domain-Driven Design Reference

@@ -2,44 +2,44 @@
 
 ## 📋 **Core Development Guidelines** (Primary Standards)
 
-- **[development-standards.md](development-standards.md)** - 🎯 **Primary Development Standards** (includes testing, code quality, architectural constraints)
-- **[rozanski-woods-architecture-methodology.md](rozanski-woods-architecture-methodology.md)** - 🏗️ **Architecture Methodology** (viewpoint checks and quality attribute scenarios)
-- **[code-review-standards.md](code-review-standards.md)** - 🔍 **Code Review Process** (detailed checklists and examples)
+- **development-standards.md** - 🎯 **Primary Development Standards** (includes testing, code quality, architectural constraints)
+- **rozanski-woods-architecture-methodology.md** - 🏗️ **Architecture Methodology** (viewpoint checks and quality attribute scenarios)
+- **code-review-standards.md** - 🔍 **Code Review Process** (detailed checklists and examples)
 
 ## 🛡️ **Security and Performance** (Specialized Standards)
 
-- **[security-standards.md](security-standards.md)** - 🔒 **Security Implementation Standards** (authentication, authorization, data protection)
-- **[performance-standards.md](performance-standards.md)** - ⚡ **Performance Optimization Guidelines** (monitoring, caching, database optimization)
-- **[test-performance-standards.md](test-performance-standards.md)** - 🧪 **Test Performance Reference** (in-depth technical guidelines)
+- **security-standards.md** - 🔒 **Security Implementation Standards** (authentication, authorization, data protection)
+- **performance-standards.md** - ⚡ **Performance Optimization Guidelines** (monitoring, caching, database optimization)
+- **test-performance-standards.md** - 🧪 **Test Performance Reference** (in-depth technical guidelines)
 
 ## 🎨 **Specialized Guidelines** (Domain-Specific)
 
-- **[domain-events.md](domain-events.md)** - 📡 **Domain Event Implementation** (DDD event architecture)
-- **[diagram-generation-standards.md](diagram-generation-standards.md)** - 📊 **Diagram Generation Standards** (PlantUML/Mermaid)
-- **[bdd-tdd-principles.md](bdd-tdd-principles.md)** - 🧪 **BDD/TDD Principles** (Behavior-Driven Development)
+- **domain-events.md** - 📡 **Domain Event Implementation** (DDD event architecture)
+- **diagram-generation-standards.md** - 📊 **Diagram Generation Standards** (PlantUML/Mermaid)
+- **bdd-tdd-principles.md** - 🧪 **BDD/TDD Principles** (Behavior-Driven Development)
 
 ## 📚 **Organization and Process** (Supporting Standards)
 
-- **[reports-organization-standards.md](reports-organization-standards.md)** - 📁 **Report Organization Standards** (file classification and naming)
-- **[datetime-accuracy-standards.md](datetime-accuracy-standards.md)** - 🕐 **DateTime Accuracy** (timestamp standards)
+- **reports-organization-standards.md** - 📁 **Report Organization Standards** (file classification and naming)
+- **datetime-accuracy-standards.md** - 🕐 **DateTime Accuracy** (timestamp standards)
 
 ## 🚀 **Usage Guidelines** (By Development Phase)
 
 ### **Daily Development** 
-- 🎯 **Primary**: [development-standards.md](development-standards.md) (technology stack, testing, code standards)
-- 🔍 **Review**: [code-review-standards.md](code-review-standards.md) (review checklists)
+- 🎯 **Primary**: development-standards.md (technology stack, testing, code standards)
+- 🔍 **Review**: code-review-standards.md (review checklists)
 
 ### **Architecture Design**
-- 🏗️ **Methodology**: [rozanski-woods-architecture-methodology.md](rozanski-woods-architecture-methodology.md) (viewpoint checks)
-- 📡 **Event Design**: [domain-events.md](domain-events.md) (DDD event architecture)
+- 🏗️ **Methodology**: rozanski-woods-architecture-methodology.md (viewpoint checks)
+- 📡 **Event Design**: domain-events.md (DDD event architecture)
 
 ### **Security and Performance**
-- 🔒 **Security**: [security-standards.md](security-standards.md) (security implementation)
-- ⚡ **Performance**: [performance-standards.md](performance-standards.md) (performance optimization)
+- 🔒 **Security**: security-standards.md (security implementation)
+- ⚡ **Performance**: performance-standards.md (performance optimization)
 
 ### **Documentation and Diagrams**
-- 📊 **Diagrams**: [diagram-generation-standards.md](diagram-generation-standards.md) (PlantUML/Mermaid)
-- 📁 **Reports**: [reports-organization-standards.md](reports-organization-standards.md) (file organization)
+- 📊 **Diagrams**: diagram-generation-standards.md (PlantUML/Mermaid)
+- 📁 **Reports**: reports-organization-standards.md (file organization)
 
 ## Quick Reference by Development Phase
 

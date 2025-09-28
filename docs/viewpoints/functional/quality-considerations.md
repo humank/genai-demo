@@ -595,7 +595,7 @@ public class QualityDashboardController {
 
 - [Implementation Guide](implementation-guide.md)
 - [Architecture Elements](architecture-elements.md)
-- [Performance Testing Guide](../../testing/performance-testing.md)
+- Performance Testing Guide
 - [Monitoring and Observability](../operational/observability-overview.md)
 
 ---

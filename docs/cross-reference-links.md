@@ -16,10 +16,10 @@ This document provides intelligent cross-reference links between all architectur
 
 | Navigation Type | Entry Document | Description |
 |----------------|----------------|-------------|
-| **Navigation by Role** | [Documentation Center - Navigation by Role](README.md#👨‍💼-navigation-by-role) | Architects, developers, DevOps, security engineers, etc. |
-| **Navigation by Concern** | [Documentation Center - Navigation by Concern](README.md#🔍-navigation-by-concern) | System architecture, DDD, data architecture, security, etc. |
-| **Visual Navigation** | [Documentation Center - Visual Navigation](README.md#📊-visual-navigation) | Diagram overview and visual architecture |
-| **Smart Search** | [Documentation Center - Smart Search](README.md#🔍-smart-search-and-navigation) | Keyword search and topic navigation |
+| **Navigation by Role** | Documentation Center - Navigation by Role | Architects, developers, DevOps, security engineers, etc. |
+| **Navigation by Concern** | Documentation Center - Navigation by Concern | System architecture, DDD, data architecture, security, etc. |
+| **Visual Navigation** | Documentation Center - Visual Navigation | Diagram overview and visual architecture |
+| **Smart Search** | Documentation Center - Smart Search | Keyword search and topic navigation |
 
 ## 📊 Cross-Viewpoint References
 
@@ -52,9 +52,9 @@ This document provides intelligent cross-reference links between all architectur
 - **[Operational Viewpoint](viewpoints/operational/README.md)** - External system monitoring and integration status
 
 #### Related Documents
-- **[System Boundary Definition](viewpoints/context/README.md#system-boundaries-and-external-dependencies)** ↔ **[Functional Boundary Design](viewpoints/functional/bounded-contexts.md)**
-- **[External System Integration](viewpoints/context/README.md#external-system-integration)** ↔ **[Infrastructure Deployment](viewpoints/deployment/README.md)**
-- **[Stakeholder Analysis](viewpoints/context/README.md#stakeholder-analysis)** ↔ **[Operational Monitoring Requirements](viewpoints/operational/README.md)**
+- **System Boundary Definition** ↔ **[Functional Boundary Design](viewpoints/functional/bounded-contexts.md)**
+- **External System Integration** ↔ **[Infrastructure Deployment](viewpoints/deployment/README.md)**
+- **Stakeholder Analysis** ↔ **[Operational Monitoring Requirements](viewpoints/operational/README.md)**
 
 #### Related Diagrams
 - **[System Context Diagram](diagrams/generated/context/system-context-overview.png)** - Complete system boundaries and external dependencies

@@ -546,8 +546,8 @@ public void processComplexBusinessLogic(Order order) {
 簡要說明文檔的目的和範圍。
 
 ## 目錄
-- [章節 1](#章節-1)
-- [章節 2](#章節-2)
+- 章節 1
+- 章節 2
 
 ## 章節 1
 詳細內容...
@@ -826,10 +826,10 @@ jobs:
 - [建置和部署](build-system/)
 
 ### 外部參考
-- [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
-- [Clean Code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
-- [Effective Java](https://www.amazon.com/Effective-Java-Joshua-Bloch/dp/0134685997)
+- Google Java Style Guide
+- Airbnb JavaScript Style Guide
+- Clean Code
+- Effective Java
 
 ---
 

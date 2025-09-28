@@ -169,9 +169,9 @@ A: 開發環境預設使用 H2，可在 `http://localhost:8080/h2-console` 查�
 - [API 設計](../coding-standards/api-design-standards.md)
 
 ### 外部資源
-- [Spring Boot 官方文檔](https://spring.io/projects/spring-boot)
-- [React 官方文檔](https://react.dev/)
-- [Angular 官方文檔](https://angular.io/)
+- Spring Boot 官方文檔
+- React 官方文檔
+- Angular 官方文檔
 
 ## 獲得幫助
 

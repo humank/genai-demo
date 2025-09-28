@@ -190,7 +190,7 @@ python3 scripts/validate-reports.py
 
 ## Related Documentation
 
-- [Project Structure](../docs/PROJECT_STRUCTURE.md)
+- Project Structure
 - [Documentation Standards](../docs/viewpoints/development/README.md)
 - [Quality Assurance](../docs/viewpoints/development/quality-assurance/README.md)
 

@@ -278,10 +278,10 @@ ROI: 359%
 
 ## 🔗 相關文檔
 
-- [AWS Pricing Calculator](https://calculator.aws/)
-- [Aurora Global Database 定價](https://aws.amazon.com/rds/aurora/pricing/)
-- [EKS 定價詳情](https://aws.amazon.com/eks/pricing/)
-- [成本優化最佳實踐](https://aws.amazon.com/architecture/cost-optimization/)
+- AWS Pricing Calculator
+- Aurora Global Database 定價
+- EKS 定價詳情
+- 成本優化最佳實踐
 
 ---
 

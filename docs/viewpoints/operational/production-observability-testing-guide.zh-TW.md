@@ -2,15 +2,15 @@
 
 ## 📋 目錄
 
-1. [概述](#概述)
-2. [測試目標](#測試目標)
-3. [測試架構](#測試架構)
-4. [核心測試場景](#核心測試場景)
-5. [測試環境配置](#測試環境配置)
-6. [測試執行計劃](#測試執行計劃)
-7. [驗收標準](#驗收標準)
-8. [故障排除](#故障排除)
-9. [最佳實踐](#最佳實踐)
+1. 概述
+2. 測試目標
+3. 測試架構
+4. 核心測試場景
+5. 測試環境配置
+6. 測試執行計劃
+7. 驗收標準
+8. 故障排除
+9. 最佳實踐
 
 ## 概述
 
@@ -1248,24 +1248,24 @@ aws xray get-trace-summaries --time-range-type TimeRangeByStartTime --start-time
 
 ### 技術文檔
 
-- [Spring Boot Actuator 官方文檔](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Micrometer 官方文檔](https://micrometer.io/docs)
-- [OpenTelemetry Java 文檔](https://opentelemetry.io/docs/instrumentation/java/)
-- [AWS CloudWatch 文檔](https://docs.aws.amazon.com/cloudwatch/)
-- [AWS X-Ray 文檔](https://docs.aws.amazon.com/xray/)
+- Spring Boot Actuator 官方文檔
+- Micrometer 官方文檔
+- OpenTelemetry Java 文檔
+- AWS CloudWatch 文檔
+- AWS X-Ray 文檔
 
 ### 最佳實踐指南
 
-- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/)
-- [AWS Well-Architected Framework - Observability](https://docs.aws.amazon.com/wellarchitected/latest/framework/ops_observability.html)
-- [CNCF Observability Whitepaper](https://github.com/cncf/tag-observability/blob/main/whitepaper.md)
+- Google SRE Book - Monitoring
+- AWS Well-Architected Framework - Observability
+- CNCF Observability Whitepaper
 
 ### 工具和平台
 
-- [Prometheus](https://prometheus.io/)
-- [Grafana](https://grafana.com/)
-- [Jaeger](https://www.jaegertracing.io/)
-- [ELK Stack](https://www.elastic.co/elastic-stack/)
+- Prometheus
+- Grafana
+- Jaeger
+- ELK Stack
 
 ---
 

@@ -55,8 +55,8 @@ public class OrderProcessingSaga {
 ## 相關文檔
 
 - [領域事件](../../../../../.kiro/steering/domain-events.md)
-- [微服務架構](../microservices/)
-- [事件驅動架構](../../../../diagrams/mermaid/event-driven-architecture.md)
+- 微服務架構
+- 事件驅動架構
 
 ---
 

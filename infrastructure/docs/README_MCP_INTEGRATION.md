@@ -73,7 +73,7 @@ If you encounter issues:
 1. Run `npm run mcp:test` to validate configuration
 2. Check AWS credentials: `aws sts get-caller-identity`
 3. Verify UV installation: `uv --version`
-4. Review the [troubleshooting guide](MCP_INTEGRATION_GUIDE.md#troubleshooting)
+4. Review the troubleshooting guide
 
 ### 📅 Recommended Schedule
 

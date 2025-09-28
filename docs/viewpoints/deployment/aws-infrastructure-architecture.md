@@ -7,16 +7,16 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [CDK Architecture Design](#cdk-architecture-design)
-- [AWS Resource Configuration](#aws-resource-configuration)
-- [Multi-Region Deployment Architecture](#multi-region-deployment-architecture)
-- [Network Architecture](#network-architecture)
-- [Compute Resources](#compute-resources)
-- [Data Storage](#data-storage)
-- [IAM Permission Architecture](#iam-permission-architecture)
-- [Deployment Process](#deployment-process)
-- [Cost Optimization](#cost-optimization)
+- Overview
+- CDK Architecture Design
+- AWS Resource Configuration
+- Multi-Region Deployment Architecture
+- Network Architecture
+- Compute Resources
+- Data Storage
+- IAM Permission Architecture
+- Deployment Process
+- Cost Optimization
 
 ## Overview
 

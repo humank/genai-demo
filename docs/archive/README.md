@@ -28,7 +28,7 @@ This directory is reserved for future archival needs. Historical specifications 
 | (empty) | Reserved for future archival needs | 2025-09-23 | 0 |
 
 ## Related Documentation
-- [Project Structure](../../PROJECT_STRUCTURE.md)
+- Project Structure
 - [Documentation Standards](../viewpoints/development/README.md)
 - [Reports Organization](../../reports-summaries/README.md)
 

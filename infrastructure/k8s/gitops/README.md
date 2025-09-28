@@ -458,10 +458,10 @@ kubectl get configmaps -n argocd -o yaml > argocd-configmaps-backup.yaml
 
 ## 📚 Additional Resources
 
-- [ArgoCD Documentation](https://argo-cd.readthedocs.io/)
-- [Argo Rollouts Documentation](https://argoproj.github.io/argo-rollouts/)
-- [GitOps Best Practices](https://www.gitops.tech/)
-- [Kubernetes Deployment Strategies](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+- ArgoCD Documentation
+- Argo Rollouts Documentation
+- GitOps Best Practices
+- Kubernetes Deployment Strategies
 
 ## 🤝 Contributing
 

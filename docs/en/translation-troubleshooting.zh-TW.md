@@ -10,14 +10,14 @@ This guide provides solutions to common issues encountered when using the Automa
 
 ## Table of Contents
 
-- [Installation Issues](#installation-issues)
-- [Translation API Errors](#translation-api-errors)
-- [File System Issues](#file-system-issues)
-- [Performance Problems](#performance-problems)
-- [Quality Issues](#quality-issues)
-- [Configuration Problems](#configuration-problems)
-- [Integration Issues](#integration-issues)
-- [Debugging Tools](#debugging-tools)
+- Installation Issues
+- Translation API Errors
+- File System Issues
+- Performance Problems
+- Quality Issues
+- Configuration Problems
+- Integration Issues
+- Debugging Tools
 
 ## Installation Issues
 

@@ -16,10 +16,10 @@
 
 | 導航類型 | 入口文檔 | 說明 |
 |----------|----------|------|
-| **按角色導航** | [文檔中心 - 按角色導航](README.md#👨‍💼-按角色導航) | 架構師、開發者、DevOps、安全工程師等 |
-| **按關注點導航** | [文檔中心 - 按關注點導航](README.md#🔍-按關注點導航) | 系統架構、DDD、資料架構、安全等 |
-| **視覺化導航** | [文檔中心 - 視覺化導航](README.md#📊-視覺化導航) | 圖表總覽和視覺化架構 |
-| **智能搜尋** | [文檔中心 - 智能搜尋](README.md#🔍-智能搜尋和導航) | 關鍵字搜尋和主題導航 |
+| **按角色導航** | 文檔中心 - 按角色導航 | 架構師、開發者、DevOps、安全工程師等 |
+| **按關注點導航** | 文檔中心 - 按關注點導航 | 系統架構、DDD、資料架構、安全等 |
+| **視覺化導航** | 文檔中心 - 視覺化導航 | 圖表總覽和視覺化架構 |
+| **智能搜尋** | 文檔中心 - 智能搜尋 | 關鍵字搜尋和主題導航 |
 
 ## 📊 視點間交叉引用
 
@@ -52,9 +52,9 @@
 - **[運營視點](viewpoints/operational/README.md)** - 外部系統監控和整合狀態
 
 #### 相關文檔
-- **[系統邊界定義](viewpoints/context/README.md#系統邊界和外部依賴)** ↔ **[功能邊界設計](viewpoints/functional/bounded-contexts.md)**
-- **[外部系統整合](viewpoints/context/README.md#外部系統整合)** ↔ **[基礎設施部署](viewpoints/deployment/README.md)**
-- **[利害關係人分析](viewpoints/context/README.md#利害關係人分析)** ↔ **[運營監控需求](viewpoints/operational/README.md)**
+- **系統邊界定義** ↔ **[功能邊界設計](viewpoints/functional/bounded-contexts.md)**
+- **外部系統整合** ↔ **[基礎設施部署](viewpoints/deployment/README.md)**
+- **利害關係人分析** ↔ **[運營監控需求](viewpoints/operational/README.md)**
 
 #### 相關圖表
 - **[系統上下文圖](diagrams/generated/context/system-context-overview.png)** - 完整系統邊界和外部依賴

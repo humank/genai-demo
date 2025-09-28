@@ -7,14 +7,14 @@
 
 ## 📋 目錄
 
-- [概覽](#概覽)
-- [系統邊界定義](#系統邊界定義)
-- [IAM 權限關係架構](#iam-權限關係架構)
-- [Service Account 權限映射](#service-account-權限映射)
-- [外部系統整合](#外部系統整合)
-- [跨服務通訊](#跨服務通訊)
-- [合規性和治理](#合規性和治理)
-- [權限審計和監控](#權限審計和監控)
+- 概覽
+- 系統邊界定義
+- IAM 權限關係架構
+- Service Account 權限映射
+- 外部系統整合
+- 跨服務通訊
+- 合規性和治理
+- 權限審計和監控
 
 ## 概覽
 
@@ -1424,5 +1424,5 @@ Action Items:
 **相關文件**: 
 - [Deployment Viewpoint - AWS 基礎設施架構](../deployment/aws-infrastructure-architecture.md)
 - [Operational Viewpoint - DNS 解析與災難恢復](../operational/dns-resolution-disaster-recovery.md)
-- [Security Perspective](../../perspectives/security/aws-security-implementation.md)
+- Security Perspective
 - [Development Standards - Security Standards](../../../.kiro/steering/security-standards.md)

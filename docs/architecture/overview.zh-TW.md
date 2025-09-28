@@ -345,4 +345,4 @@ graph TB
 - \1 - 完整的專案成果總結
 - \1 - 詳細的架構評估和分析
 - [DDD Record 重構總結](../../reports-summaries/project-management/REFACTORING_SUMMARY.md) - Java Record 重構的詳細過程
-- [測試修復完成報告](../en/reports/test-fixes-complete-2025.md) - 測試品質改善的完整記錄
+- 測試修復完成報告 - 測試品質改善的完整記錄

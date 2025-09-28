@@ -1134,9 +1134,9 @@ public class BankingService {
 - [測試策略](testing/)
 
 ### 外部資源
-- [Clean Code by Robert C. Martin](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350884)
-- [Design Patterns by Gang of Four](https://www.amazon.com/Design-Patterns-Elements-Reusable-Object-Oriented/dp/0201633612)
-- [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+- Clean Code by Robert C. Martin
+- Design Patterns by Gang of Four
+- SOLID Principles
 
 ---
 

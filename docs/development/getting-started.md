@@ -15,4 +15,4 @@ This guide helps you get started with the project development.
 2. Run `./gradlew build`
 3. Start the application with `docker-compose up`
 
-For more details, see [DEVELOPER_QUICKSTART.md](../../DEVELOPER_QUICKSTART.md).
+For more details, see DEVELOPER_QUICKSTART.md.

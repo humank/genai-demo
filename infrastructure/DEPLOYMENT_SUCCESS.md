@@ -76,7 +76,7 @@
 ### 應用程式端點
 
 - **負載均衡器 DNS**: `genai--Appli-OZV91Q0aq4ZZ-422145246.us-east-1.elb.amazonaws.com`
-- **CloudWatch 儀表板**: [查看監控儀表板](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#dashboards:name=GenAI-Demo-genai-demo-development-ObservabilityStack)
+- **CloudWatch 儀表板**: 查看監控儀表板
 
 ### 分析資源
 

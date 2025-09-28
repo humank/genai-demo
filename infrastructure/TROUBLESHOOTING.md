@@ -274,9 +274,9 @@ npm run cost:estimate
 
 ### Support Resources
 
-- [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/)
-- [AWS CDK GitHub Issues](https://github.com/aws/aws-cdk/issues)
-- [AWS Support Center](https://console.aws.amazon.com/support/)
+- AWS CDK Documentation
+- AWS CDK GitHub Issues
+- AWS Support Center
 
 ## 🔄 Recovery Procedures
 

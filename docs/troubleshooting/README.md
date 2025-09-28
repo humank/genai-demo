@@ -190,9 +190,9 @@ export JAVA_OPTS="-XX:TieredStopAtLevel=1 -noverify"
 - [建置和部署指南](../viewpoints/development/build-system/build-deployment.md)
 
 ### 外部資源
-- [Spring Boot 官方文檔](https://spring.io/projects/spring-boot)
-- [Gradle 使用指南](https://docs.gradle.org/current/userguide/userguide.html)
-- [Docker 官方文檔](https://docs.docker.com/)
+- Spring Boot 官方文檔
+- Gradle 使用指南
+- Docker 官方文檔
 
 ### 聯繫支援
 - 建立 GitHub Issue 描述問題

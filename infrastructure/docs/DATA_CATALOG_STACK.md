@@ -303,9 +303,9 @@ npx cdk deploy DataCatalogStack
 ## 參考資源
 
 ### AWS 文檔
-- [AWS Glue Developer Guide](https://docs.aws.amazon.com/glue/)
-- [AWS Glue Crawler Best Practices](https://docs.aws.amazon.com/glue/latest/dg/crawler-best-practices.html)
-- [Aurora PostgreSQL Integration](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/)
+- AWS Glue Developer Guide
+- AWS Glue Crawler Best Practices
+- Aurora PostgreSQL Integration
 
 ### 內部文檔
 - [Architecture Design Document](../../.kiro/specs/architecture-viewpoints-enhancement/design.md)

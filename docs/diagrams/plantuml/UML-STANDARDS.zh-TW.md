@@ -282,8 +282,8 @@ fi
 
 ## 相關資源
 
-- [PlantUML 官方文檔](https://plantuml.com/)
-- [UML 2.5 規範](https://www.omg.org/spec/UML/2.5/)
-- [DDD 戰術模式](https://martinfowler.com/bliki/DomainDrivenDesign.html)
+- PlantUML 官方文檔
+- UML 2.5 規範
+- DDD 戰術模式
 - [專案 DDD 指南](../../design/ddd-guide.md)
 - [架構決策記錄](../../architecture/adr/)

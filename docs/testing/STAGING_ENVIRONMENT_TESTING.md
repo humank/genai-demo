@@ -391,9 +391,9 @@ curl -s http://staging-app/actuator/env | jq .
 
 ## 🔗 **Related Resources**
 
-- [Profile Management Strategy](../viewpoints/development/profile-management.md)
+- Profile Management Strategy
 - [Distributed Lock Contract Tests](../../app/src/test/java/solid/humank/genaidemo/infrastructure/common/lock/DistributedLockManagerContractTest.java)
-- [In-Memory Lock Implementation Tests](../../app/src/test/java/solid/humank/genaidemo/infrastructure/common/lock/InMemoryDistributedLockManagerTest.java)
+- In-Memory Lock Implementation Tests
 - [Deployment Viewpoint](../viewpoints/deployment/README.md)
 - [Operational Viewpoint](../viewpoints/operational/README.md)
 

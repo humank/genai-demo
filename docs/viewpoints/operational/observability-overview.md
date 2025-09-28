@@ -188,9 +188,9 @@ export CLOUDWATCH_REGION=us-east-1
 
 ## Related Diagrams
 
-- [Observability Architecture Overview](../../diagrams/generated/operational/observability-architecture-overview.png)
-- [Distributed Tracing Flow](../../diagrams/generated/operational/distributed-tracing-flow.png)
-- [Metrics Collection Pipeline](../../diagrams/generated/operational/metrics-collection-pipeline.png)
+- Observability Architecture Overview
+- Distributed Tracing Flow
+- Metrics Collection Pipeline
 
 ## Relationships with Other Viewpoints
 

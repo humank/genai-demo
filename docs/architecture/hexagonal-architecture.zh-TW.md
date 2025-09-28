@@ -4,7 +4,7 @@
 
 ## 架構概述
 
-![六角架構](https://user-images.githubusercontent.com/1234567/hexagonal-architecture.png)
+!六角架構
 
 六角架構（又稱端口與適配器架構）將應用程序分為三個主要部分：
 

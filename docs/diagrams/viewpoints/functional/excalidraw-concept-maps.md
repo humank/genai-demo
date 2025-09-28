@@ -1,0 +1,128 @@
+# Excalidraw Concept Maps Collection
+
+This document records four core concept maps generated using Excalidraw MCP, which provide high-level visual overviews of the system architecture.
+
+## Concept Map List
+
+### 1. Bounded Contexts Concept Map
+
+**Purpose**: Show the main bounded contexts in the system and their relationships
+
+**Content**:
+- **Core Business Contexts**: Customer (Identity & Profile), Order (Transaction), Product (Catalog), Payment (Financial)
+- **Supporting Contexts**: Inventory (Stock), Delivery (Logistics), Promotion (Marketing), Notification (Communication)
+- **Relationship Arrows**: Show dependencies and data flow between contexts
+
+**Features**:
+- Use different colors to distinguish different types of contexts
+- Clearly mark core business flow: Customer → Order → Product → Payment
+- Show how supporting services interact with core business
+
+### 2. User Journey Concept Map
+
+**Purpose**: Visualize the complete flow of user interaction with the system
+
+**Content**:
+- **Starting Point**: Customer (ellipse, representing user)
+- **Key Steps**: Browse → Select → Order → Payment → Delivery → Complete
+- **Touchpoints**: Registration, product catalog, shopping cart, checkout, payment gateway, order tracking, delivery confirmation
+
+**Features**:
+- Use flow arrows to show the sequence of user journey
+- Different colors represent the importance of different stages
+- Clearly mark key touchpoints at each stage
+
+### 3. System Architecture Concept
+
+**Purpose**: Show the high-level structure of hexagonal architecture
+
+**Content**:
+- **Presentation Layer**: REST APIs, Web UI
+- **Application Layer**: Use case implementation, service coordination
+- **Domain Layer**: Business logic, entities
+- **Infrastructure Layer**: Database, message queue, file storage
+- **External Systems**: Payment gateway, email service, third-party APIs
+
+**Features**:
+- Clearly show the layered structure of hexagonal architecture
+- Use arrows to show dependencies between layers
+- Distinguish between internal architecture and external systems
+
+### 4. Stakeholder Mapping
+
+**Purpose**: Identify and visualize all system stakeholders and their concerns
+
+**Content**:
+- **Primary Stakeholders**: End Users (functionality), Business (requirements), Developers (implementation), Operations (deployment)
+- **Secondary Stakeholders**: Architects (design), QA Team (quality), Security (compliance)
+- **Central System**: All stakeholders are associated with the system
+
+**Features**:
+- Use ellipses to represent stakeholders, emphasizing their importance
+- Connection lines show the relationship between each stakeholder and the system
+- Different colors distinguish different types of stakeholders
+
+## Technical Implementation
+
+### Excalidraw MCP Features Used
+
+1. **Batch Element Creation** (`mcp_excalidraw_batch_create_elements`)
+   - Create multiple related elements at once
+   - Improve creation efficiency
+   - Ensure consistency between elements
+
+2. **Single Element Creation** (`mcp_excalidraw_create_element`)
+   - Create specific elements (arrows, text, etc.)
+   - Precise control over element attributes
+   - Support dynamic adjustments
+
+3. **Element Query** (`mcp_excalidraw_query_elements`)
+   - Check existing elements on canvas
+   - Ensure no duplicate creation
+   - Support element management
+
+### Design Principles
+
+1. **Color Consistency**
+   - Use consistent color schemes for each type of concept
+   - Blue series: Core business functions
+   - Orange series: User interactions
+   - Green series: Technical implementation
+   - Purple series: Management and control
+
+2. **Shape Semantics**
+   - Rectangles: System components, process steps
+   - Ellipses: Users, stakeholders
+   - Arrows: Process direction, dependency relationships
+   - Lines: Association relationships
+
+3. **Layout Logic**
+   - Left to right: Time sequence or process sequence
+   - Top to bottom: Hierarchical structure or importance
+   - Central radiation: Core concepts with related elements
+
+## Usage Guidelines
+
+### How to Read These Concept Maps
+
+1. **Bounded Context Map**: Understand the business domain division of the system
+2. **User Journey Map**: Learn how users interact with the system
+3. **System Architecture Map**: Grasp the overall structure of technical architecture
+4. **Stakeholder Map**: Identify all relevant stakeholders
+
+### Maintenance and Updates
+
+- Update corresponding concept maps when system requirements change
+- Regularly check consistency between concept maps and actual implementation
+- Use version control to track change history of concept maps
+
+## Related Documentation
+
+- [Functional Viewpoint Documentation](../../viewpoints/functional/)
+- Domain Model Design
+- [Bounded Context Implementation](../../../viewpoints/functional/bounded-contexts.md)
+- [User Experience Design](../../../perspectives/usability/)
+
+---
+
+*This document is supported by concept maps automatically generated by Excalidraw MCP, providing high-level visual overviews of system architecture.*

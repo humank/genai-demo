@@ -51,28 +51,28 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 - **Access Control**: Fine-grained permission management and role control at the data layer
 - **Data Masking**: Dynamic masking and anonymization of sensitive data
 - **Audit Trail**: Complete records of all data access and modifications
-- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | [Security Implementation](../../perspectives/security/security-implementation.md)
+- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | Security Implementation
 
 #### [Performance Perspective](../../perspectives/performance/README.md)
 - **Query Optimization**: Database query indexing strategies and execution plan optimization
 - **Caching Strategy**: Multi-tier caching architecture and cache invalidation strategies
 - **Data Partitioning**: Horizontal and vertical partitioning strategies supporting large-scale data processing
 - **Connection Pooling**: Database connection pool configuration and monitoring
-- **Related Implementation**: [Performance Optimization](../../perspectives/performance/performance-optimization.md) | [Database Performance](../../perspectives/performance/database-performance.md)
+- **Related Implementation**: Performance Optimization | Database Performance
 
 #### [Availability Perspective](../../perspectives/availability/README.md)
 - **Data Backup**: Automated backup strategies and multi-region backup
 - **Data Replication**: Master-slave and multi-master replication configuration
 - **Disaster Recovery**: Recovery objectives of RTO ≤ 5 minutes, RPO ≤ 1 minute
 - **Data Consistency**: Data consistency guarantees in distributed environments
-- **Related Implementation**: [Availability Architecture](../../perspectives/availability/availability-architecture.md) | [Disaster Recovery](../../perspectives/availability/disaster-recovery.md)
+- **Related Implementation**: Availability Architecture | Disaster Recovery
 
 #### [Regulation Perspective](../../perspectives/regulation/README.md)
 - **Data Governance**: Data classification, labeling, and lifecycle management
 - **Privacy Protection**: Compliance implementation for GDPR, CCPA, and other privacy regulations
 - **Data Retention**: Data retention and deletion policies required by regulations
 - **Compliance Auditing**: Compliance auditing and reporting of data processing activities
-- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | [Compliance Framework](../../perspectives/regulation/compliance-framework.md)
+- **Related Implementation**: [Data Governance Architecture](data-governance-architecture.md) | Compliance Framework
 
 ### 🟡 Medium Impact Perspectives
 
@@ -80,25 +80,25 @@ The Information Viewpoint describes how the system stores, manipulates, manages,
 - **Data Model Evolution**: Database schema version management and migration strategies
 - **Backward Compatibility**: Compatibility guarantees for data format changes
 - **Migration Strategy**: Zero-downtime data migration and transformation
-- **Related Implementation**: [Evolution Strategy](../../perspectives/evolution/evolution-strategy.md) | [Migration Planning](../../perspectives/evolution/migration-planning.md)
+- **Related Implementation**: Evolution Strategy | Migration Planning
 
 #### [Usability Perspective](../../perspectives/usability/README.md)
 - **Data Presentation**: Data visualization and report display
 - **Search Experience**: Full-text search and intelligent filtering capabilities
 - **Data Export**: User-friendly data export and download functionality
-- **Related Implementation**: [Usability Design](../../perspectives/usability/usability-design.md) | [User Experience](../../perspectives/usability/user-experience.md)
+- **Related Implementation**: Usability Design | User Experience
 
 #### [Location Perspective](../../perspectives/location/README.md)
 - **Data Localization**: Geographic distribution and localized storage of data
 - **Data Sovereignty**: Legal jurisdiction and compliance requirements for data storage
 - **Cross-Region Synchronization**: Data synchronization strategies for multi-region data centers
-- **Related Implementation**: [Location Strategy](../../perspectives/location/location-strategy.md) | [Geographic Distribution](../../perspectives/location/geographic-distribution.md)
+- **Related Implementation**: Location Strategy | Geographic Distribution
 
 #### [Cost Perspective](../../perspectives/cost/README.md)
 - **Storage Costs**: Cost optimization and tiered storage strategies for data storage
 - **Transfer Costs**: Cost control for data transfer and network bandwidth
 - **Query Costs**: Cost optimization for database queries and computational resources
-- **Related Implementation**: [Cost Optimization](../../perspectives/cost/cost-optimization.md) | [Resource Management](../../perspectives/cost/resource-management.md)
+- **Related Implementation**: Cost Optimization | Resource Management
 
 ## Related Diagrams
 

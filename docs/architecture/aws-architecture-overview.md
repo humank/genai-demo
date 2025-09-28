@@ -259,14 +259,14 @@ graph TB
 ## 🔗 Related Resources
 
 ### Internal Documentation
-- [Development Standards](../development-standards.md) - Development standards and guidelines
-- [Security Standards](../security-standards.md) - Security implementation standards
-- [Performance Standards](../performance-standards.md) - Performance optimization guidelines
+- [Development Standards](../../.kiro/steering/development-standards.md) - Development standards and guidelines
+- [Security Standards](../../.kiro/steering/security-standards.md) - Security implementation standards
+- [Performance Standards](../../.kiro/steering/performance-standards.md) - Performance optimization guidelines
 
 ### External References
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
+- AWS Well-Architected Framework
+- EKS Best Practices
+- Kubernetes Documentation
 
 ## 📞 Support and Contact
 

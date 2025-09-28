@@ -67,7 +67,7 @@
 
 ### 方法 1: 在 Excalidraw 中查看
 
-1. 打開 [Excalidraw.com](https://excalidraw.com)
+1. 打開 Excalidraw.com
 2. 點擊 "File" > "Open"
 3. 複製下面的 JSON 內容並貼上
 

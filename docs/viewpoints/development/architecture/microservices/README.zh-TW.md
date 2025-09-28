@@ -38,8 +38,8 @@
 
 ## 相關文檔
 
-- [Saga 模式](../saga-patterns/)
-- [事件驅動架構](../../../../diagrams/mermaid/event-driven-architecture.md)
+- Saga 模式
+- 事件驅動架構
 - [部署策略](../../../deployment/)
 
 ---

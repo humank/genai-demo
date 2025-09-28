@@ -419,8 +419,8 @@ _________________________________________________
 
 ## Related Diagrams
 
-- [Production Deployment Architecture](../../diagrams/deployment/production-architecture.puml)
-- [Deployment Process Flow](../../diagrams/deployment/deployment-process-flow.puml)
+- Production Deployment Architecture
+- Deployment Process Flow
 
 ## Relationships with Other Viewpoints
 

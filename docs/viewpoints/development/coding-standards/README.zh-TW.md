@@ -345,9 +345,9 @@ checkstyle {
 - [測試標準](../testing/README.md)
 
 ### 外部資源
-- [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
-- [Angular Style Guide](https://angular.io/guide/styleguide)
+- Google Java Style Guide
+- Airbnb JavaScript Style Guide
+- Angular Style Guide
 
 ---
 

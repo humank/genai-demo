@@ -7,7 +7,7 @@ Welcome to the documentation center of the Modern Software Architecture Best Pra
 ## 🌐 Language Versions
 
 - **English Version** (Current): [docs/](.)
-- **中文版本**: [docs/zh/](zh/)
+- **中文版本**: docs/zh/
 
 ## 🎯 Quick Navigation
 
@@ -285,7 +285,7 @@ Welcome to the documentation center of the Modern Software Architecture Best Pra
 | **Deployment Operations** | `deployment`, `kubernetes`, `docker`, `observability` | [Deployment Viewpoint](viewpoints/deployment/README.md), [Operational Viewpoint](viewpoints/operational/README.md) |
 | **Testing Quality** | `testing`, `performance monitoring`, `quality assurance` | [Testing Documentation](testing/), [Test Performance Monitoring](testing/test-performance-monitoring.md) |
 | **API Integration** | `API`, `REST`, `integration`, `frontend` | [API Documentation](api/), Frontend Integration |
-| **Diagram Visualization** | `diagram`, `mermaid`, `plantuml`, `architecture diagram` | [Diagrams Overview](diagrams/README.md), [Visual Navigation](#-visual-navigation) |
+| **Diagram Visualization** | `diagram`, `mermaid`, `plantuml`, `architecture diagram` | [Diagrams Overview](diagrams/README.md), Visual Navigation |
 
 ### 📍 Topic Navigation Map
 
@@ -368,7 +368,7 @@ mindmap
 | **[Development Viewpoint](viewpoints/development/README.md)** | Development and build | Developers, Technical Leads | 🔴 Security, Evolution, Cost | [Hexagonal Architecture](diagrams/mermaid/hexagonal-architecture.md) |
 | **[Deployment Viewpoint](viewpoints/deployment/README.md)** | Deployment and environment | DevOps, SRE | 🔴 Security, Performance, Availability, Location, Cost | [Deployment Architecture Diagram](diagrams/plantuml/deployment-diagram.svg) |
 | **[Operational Viewpoint](viewpoints/operational/README.md)** | Operations and maintenance | SRE, Operations Engineers | 🔴 Security, Performance, Availability, Regulation, Cost | Observability Architecture |
-| **[Context Viewpoint](viewpoints/context/README.md)** | System boundaries and external dependencies | Architects, Business Analysts, Integration Engineers | 🔴 Security, Regulation, Location, Cost | [System Boundary Diagram](viewpoints/context/README.md#system-boundary-definition) |
+| **[Context Viewpoint](viewpoints/context/README.md)** | System boundaries and external dependencies | Architects, Business Analysts, Integration Engineers | 🔴 Security, Regulation, Location, Cost | System Boundary Diagram |
 
 ### Eight Architectural Perspectives
 
@@ -477,8 +477,8 @@ mindmap
 
 ### 📚 For Learning and Reference
 
-- **Complete Architecture**: Follow the full [Rozanski & Woods methodology](#-rozanski--woods-methodology)
-- **Visual Learning**: Explore [Architecture Diagrams](#-visual-navigation)
+- **Complete Architecture**: Follow the full Rozanski & Woods methodology
+- **Visual Learning**: Explore Architecture Diagrams
 - **Practical Examples**: Review [Project Reports](../reports-summaries/)
 
 ---

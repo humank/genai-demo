@@ -182,10 +182,10 @@ aws logs describe-log-groups --log-group-name-prefix /aws/lambda/genai-demo
 
 ## 📞 Support Resources
 
-- **Project Documentation**: [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md)
-- **Refactoring Summary**: [reports-summaries/project-management/REFACTORING_SUMMARY.md](reports-summaries/project-management/REFACTORING_SUMMARY.md)
-- **Infrastructure Guide**: [infrastructure/CONSOLIDATED_DEPLOYMENT.md](infrastructure/CONSOLIDATED_DEPLOYMENT.md)
-- **Troubleshooting**: [docs/troubleshooting/README.md](docs/troubleshooting/README.md)
+- **Project Documentation**: PROJECT_STRUCTURE.md
+- **Refactoring Summary**: reports-summaries/project-management/REFACTORING_SUMMARY.md
+- **Infrastructure Guide**: infrastructure/CONSOLIDATED_DEPLOYMENT.md
+- **Troubleshooting**: docs/troubleshooting/README.md
 
 ---
 

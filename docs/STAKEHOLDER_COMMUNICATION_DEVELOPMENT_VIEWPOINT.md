@@ -180,7 +180,7 @@ docs/viewpoints/development/
 
 ### How to Get Help
 1. **Immediate Issues**: #dev-viewpoint-migration Slack channel
-2. **General Questions**: Email dev-team@company.com
+2. **General Questions**: Email <dev-team@company.com>
 3. **Documentation Issues**: Create GitHub issue with label "documentation"
 4. **Training Requests**: Contact team leads directly
 
@@ -243,9 +243,9 @@ docs/viewpoints/development/
 
 ### Communication Channels
 - **Urgent Issues**: #dev-viewpoint-migration (Slack)
-- **General Questions**: dev-team@company.com
+- **General Questions**: <dev-team@company.com>
 - **Documentation Issues**: GitHub issues
-- **Training Requests**: team-leads@company.com
+- **Training Requests**: <team-leads@company.com>
 
 ### Office Hours
 - **Week 1**: Daily 4:00 PM - 4:30 PM

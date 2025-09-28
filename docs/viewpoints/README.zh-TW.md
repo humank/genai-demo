@@ -105,7 +105,7 @@ graph TD
 - **[Availability Perspective](../perspectives/availability/README.md)** - System resilience and availability assurance
 
 ### 📈 Visualization and Assessment
-- **[Architecture Diagrams](../diagrams/viewpoints/README.md)** - Visual architecture representations
+- **[Architecture Diagrams](README.md)** - Visual architecture representations
 - **[Rozanski & Woods Methodology Assessment](../architecture/rozanski-woods-architecture-assessment.md)** - Architecture maturity assessment
 
 ## Cross-Reference Usage Recommendations

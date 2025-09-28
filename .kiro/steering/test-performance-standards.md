@@ -4,7 +4,7 @@
 
 This document provides specialized reference for test performance monitoring, resource management, and optimization in our Spring Boot application.
 
-> **📋 主要標準**: 基本的測試效能標準請參考 [Development Standards](development-standards.md#advanced-test-performance-framework)
+> **📋 主要標準**: 基本的測試效能標準請參考 Development Standards
 
 > **🎯 用途**: 本文件作為測試效能監控的深度技術參考，包含詳細的實作指南和故障排除
 

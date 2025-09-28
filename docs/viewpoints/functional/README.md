@@ -58,7 +58,7 @@ The Functional Viewpoint describes the system's functional elements, responsibil
 - **Access Control**: Function-level permission control, ensuring users can only access authorized functions
 - **Input Validation**: Comprehensive security validation of API and user inputs, preventing injection attacks
 - **Output Encoding**: Output processing and data sanitization to prevent XSS attacks
-- **Related Implementation**: [Security Architecture Documentation](../../perspectives/security/README.md) | [Security Standards Documentation](../../security-standards.md)
+- **Related Implementation**: [Security Architecture Documentation](../../perspectives/security/README.md) | [Security Standards Documentation](../../../.kiro/steering/security-standards.md)
 #### [Availability Perspective](../../perspectives/availability/README.md)
 - **Critical Function Protection**: Fault-tolerant design and redundancy mechanisms for core business functions
 - **Function Degradation**: Graceful degradation strategies when partial functions fail

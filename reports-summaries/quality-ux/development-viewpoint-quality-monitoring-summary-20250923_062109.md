@@ -65,8 +65,8 @@
 
 **Change**: Fixed relative path references to steering files
 ```markdown
-- [測試效能標準](../../../.kiro/steering/test-performance-standards.md)
-+ [測試效能標準](../../../../.kiro/steering/test-performance-standards.md)
+- 測試效能標準
++ 測試效能標準
 ```
 
 **Quality Impact**:

@@ -111,7 +111,7 @@ legacy/
 
 ## 相關資源
 
-- [新架構視點圖表](../viewpoints/README.md) - 基於 Rozanski & Woods 的新圖表
+- [新架構視點圖表](../../viewpoints/README.md) - 基於 Rozanski & Woods 的新圖表
 - [架構觀點圖表](../perspectives/README.md) - 品質屬性相關圖表
 - \1 - 架構演進的詳細記錄
 

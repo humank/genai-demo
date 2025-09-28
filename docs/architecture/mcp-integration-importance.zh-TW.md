@@ -339,7 +339,7 @@ on:
 
 ### 2. 知識文檔
 
-- [MCP 整合指南](../en/infrastructure/docs/MCP_INTEGRATION_GUIDE.md)
+- MCP 整合指南
 
 ## 未來發展路線圖
 

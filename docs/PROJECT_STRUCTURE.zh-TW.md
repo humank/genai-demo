@@ -1,9 +1,9 @@
 # GenAI Demo Project Structure
 
-![Infrastructure Status](https://img.shields.io/badge/Infrastructure-✅-Production-Ready-brightgreen)
-![Tests](https://img.shields.io/badge/Tests-103-Passing-brightgreen)
-![CDK](https://img.shields.io/badge/CDK-v2.208.0+-blue)
-![Architecture](https://img.shields.io/badge/Architecture-DDD-%2B-Hexagonal-orange)
+!Infrastructure Status
+!Tests
+!CDK
+!Architecture
 
 ## 🏗️ Overall Architecture
 

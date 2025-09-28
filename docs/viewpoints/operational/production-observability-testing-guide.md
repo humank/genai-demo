@@ -2,15 +2,15 @@
 
 ## 📋 Table of Contents
 
-1. [Overview](#overview)
-2. [Testing Objectives](#testing-objectives)
-3. [Testing Architecture](#testing-architecture)
-4. [Core Testing Scenarios](#core-testing-scenarios)
-5. [Test Environment Configuration](#test-environment-configuration)
-6. [Test Execution Plan](#test-execution-plan)
-7. [Acceptance Criteria](#acceptance-criteria)
-8. [Troubleshooting](#troubleshooting)
-9. [Best Practices](#best-practices)
+1. Overview
+2. Testing Objectives
+3. Testing Architecture
+4. Core Testing Scenarios
+5. Test Environment Configuration
+6. Test Execution Plan
+7. Acceptance Criteria
+8. Troubleshooting
+9. Best Practices
 
 ## Overview
 
@@ -679,24 +679,24 @@ main "$@"
 
 ### Technical Documentation
 
-- [Spring Boot Actuator Official Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Micrometer Official Documentation](https://micrometer.io/docs)
-- [OpenTelemetry Java Documentation](https://opentelemetry.io/docs/instrumentation/java/)
-- [AWS CloudWatch Documentation](https://docs.aws.amazon.com/cloudwatch/)
-- [AWS X-Ray Documentation](https://docs.aws.amazon.com/xray/)
+- Spring Boot Actuator Official Documentation
+- Micrometer Official Documentation
+- OpenTelemetry Java Documentation
+- AWS CloudWatch Documentation
+- AWS X-Ray Documentation
 
 ### Best Practice Guides
 
-- [Google SRE Book - Monitoring](https://sre.google/sre-book/monitoring-distributed-systems/)
-- [AWS Well-Architected Framework - Observability](https://docs.aws.amazon.com/wellarchitected/latest/framework/ops_observability.html)
-- [CNCF Observability Whitepaper](https://github.com/cncf/tag-observability/blob/main/whitepaper.md)
+- Google SRE Book - Monitoring
+- AWS Well-Architected Framework - Observability
+- CNCF Observability Whitepaper
 
 ### Tools and Platforms
 
-- [Prometheus](https://prometheus.io/)
-- [Grafana](https://grafana.com/)
-- [Jaeger](https://www.jaegertracing.io/)
-- [ELK Stack](https://www.elastic.co/elastic-stack/)
+- Prometheus
+- Grafana
+- Jaeger
+- ELK Stack
 
 ---
 

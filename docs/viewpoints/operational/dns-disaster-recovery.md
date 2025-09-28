@@ -7,14 +7,14 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [DNS Resolution Architecture](#dns-resolution-architecture)
-- [Normal Traffic Routing](#normal-traffic-routing)
-- [Disaster Recovery Mechanisms](#disaster-recovery-mechanisms)
-- [Failover Procedures](#failover-procedures)
-- [Monitoring and Alerting](#monitoring-and-alerting)
-- [Operations Procedures](#operations-procedures)
-- [Performance Optimization](#performance-optimization)
+- Overview
+- DNS Resolution Architecture
+- Normal Traffic Routing
+- Disaster Recovery Mechanisms
+- Failover Procedures
+- Monitoring and Alerting
+- Operations Procedures
+- Performance Optimization
 
 ## Overview
 

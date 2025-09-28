@@ -427,10 +427,10 @@ Stage 3: Complete Independence
 
 ## References
 
-- [Domain-Driven Design: Tackling Complexity in the Heart of Software](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
-- [Implementing Domain-Driven Design](https://www.amazon.com/Implementing-Domain-Driven-Design-Vaughn-Vernon/dp/0321834577)
-- [Bounded Context Canvas](https://github.com/ddd-crew/bounded-context-canvas)
-- [Context Mapping](https://www.infoq.com/articles/ddd-contextmapping/)
+- Domain-Driven Design: Tackling Complexity in the Heart of Software
+- Implementing Domain-Driven Design
+- Bounded Context Canvas
+- Context Mapping
 
 ---
 

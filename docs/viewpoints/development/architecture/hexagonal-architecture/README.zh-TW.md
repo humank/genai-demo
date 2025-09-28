@@ -25,7 +25,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 
 ## 相關文檔
 
-- [六角架構](../hexagonal-architecture.md)
+- 六角架構
 - [架構決策記錄 ADR-001](../../../../architecture/adr/ADR-001-ddd-hexagonal-architecture.md)
 - [開發標準](../../../../../.kiro/steering/development-standards.md)
 

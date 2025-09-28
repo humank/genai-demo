@@ -166,9 +166,9 @@
 
 ### 外部資源
 
-- [ADR 最佳實踐](https://adr.github.io/)
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [領域驅動設計](https://domainlanguage.com/ddd/)
+- ADR 最佳實踐
+- AWS Well-Architected Framework
+- 領域驅動設計
 
 ## 聯絡資訊
 

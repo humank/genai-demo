@@ -66,29 +66,29 @@ diagrams/
 
 ### System Architecture
 
-- **[Hexagonal Architecture](mermaid/architecture/hexagonal-architecture.mmd)** - Port-Adapter pattern implementation
-- **[Microservices Architecture](mermaid/architecture/microservices-overview.mmd)** - Service decomposition and interactions
-- **[Layered Architecture](mermaid/architecture/layered-architecture.mmd)** - DDD layered design
-- **[Event-Driven Architecture](mermaid/architecture/event-driven-architecture.mmd)** - Asynchronous communication patterns
+- **Hexagonal Architecture** - Port-Adapter pattern implementation
+- **Microservices Architecture** - Service decomposition and interactions
+- **Layered Architecture** - DDD layered design
+- **Event-Driven Architecture** - Asynchronous communication patterns
 
 ### Domain Models
 
-- **[Order Domain](plantuml/domain-models/order-domain.puml)** - Order aggregate and entities
-- **[Customer Domain](plantuml/domain-models/customer-domain.puml)** - Customer management model
-- **[Inventory Domain](plantuml/domain-models/inventory-domain.puml)** - Inventory tracking and management
-- **[Payment Domain](plantuml/domain-models/payment-domain.puml)** - Payment processing model
+- **Order Domain** - Order aggregate and entities
+- **Customer Domain** - Customer management model
+- **Inventory Domain** - Inventory tracking and management
+- **Payment Domain** - Payment processing model
 
 ### Event Storming
 
 - **[Design Level](mermaid/event-storming/design-level.md)** - Aggregate design with events
-- **[Process Level](plantuml/event-storming/process-level.puml)** - Business process flows
-- **[Implementation Level](mermaid/event-storming/implementation-level.mmd)** - Technical implementation details
+- **Process Level** - Business process flows
+- **Implementation Level** - Technical implementation details
 
 ### API Flows
 
-- **[Order Processing Flow](mermaid/api-flows/order-processing.mmd)** - Complete order lifecycle
-- **[Payment Processing Flow](mermaid/api-flows/payment-processing.mmd)** - Payment handling workflow
-- **[Inventory Management Flow](mermaid/api-flows/inventory-management.mmd)** - Inventory operations
+- **Order Processing Flow** - Complete order lifecycle
+- **Payment Processing Flow** - Payment handling workflow
+- **Inventory Management Flow** - Inventory operations
 
 ## 🔄 Diagram Lifecycle Management
 
@@ -362,5 +362,5 @@ OrderAggregate *-- OrderItem
 **Quick Links**:
 - [Mermaid Diagrams](mermaid/) - Primary diagramming tool
 - [PlantUML Diagrams](plantuml/) - UML and complex diagrams
-- [Excalidraw Diagrams](excalidraw/) - Collaborative sketches
+- Excalidraw Diagrams - Collaborative sketches
 - [Legacy Diagrams](legacy/) - Historical reference

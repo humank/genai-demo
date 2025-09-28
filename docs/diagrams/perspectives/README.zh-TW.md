@@ -117,7 +117,7 @@ graph TD
 
 ## 相關資源
 
-- [架構視點圖表](../viewpoints/README.md) - 系統架構的不同視角圖表
+- [架構視點圖表](../../viewpoints/README.md) - 系統架構的不同視角圖表
 - [歷史圖表](../legacy/README.md) - 保留的歷史圖表
 - \1 - 品質屬性場景定義
 

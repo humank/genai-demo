@@ -955,16 +955,16 @@ docker restart postgres-dev
 - **Refactoring** by Martin Fowler
 
 #### 線上課程
-- [Spring Boot 官方指南](https://spring.io/guides)
-- [React 官方教學](https://reactjs.org/tutorial/tutorial.html)
-- [Angular 官方教學](https://angular.io/tutorial)
-- [AWS 開發者指南](https://docs.aws.amazon.com/)
+- Spring Boot 官方指南
+- React 官方教學
+- Angular 官方教學
+- AWS 開發者指南
 
 #### 社群資源
-- [DDD Community](https://github.com/ddd-crew)
-- [Spring Boot GitHub](https://github.com/spring-projects/spring-boot)
-- [React GitHub](https://github.com/facebook/react)
-- [Angular GitHub](https://github.com/angular/angular)
+- DDD Community
+- Spring Boot GitHub
+- React GitHub
+- Angular GitHub
 
 ### 團隊協作和溝通
 

@@ -7,15 +7,15 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [DNS Resolution Architecture](#dns-resolution-architecture)
-- [User Access Flow](#user-access-flow)
-- [Normal Traffic Routing](#normal-traffic-routing)
-- [Disaster Recovery Mechanisms](#disaster-recovery-mechanisms)
-- [Failover Procedures](#failover-procedures)
-- [Health Check Mechanisms](#health-check-mechanisms)
-- [Monitoring and Alerting](#monitoring-and-alerting)
-- [Operations Manual](#operations-manual)
+- Overview
+- DNS Resolution Architecture
+- User Access Flow
+- Normal Traffic Routing
+- Disaster Recovery Mechanisms
+- Failover Procedures
+- Health Check Mechanisms
+- Monitoring and Alerting
+- Operations Manual
 
 ## Overview
 

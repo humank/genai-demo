@@ -427,7 +427,7 @@ grafana:
 ## Related Documentation
 
 - [Deployment Guide](../deployment/README.md) - Infrastructure and deployment setup
-- [Monitoring Configuration](../viewpoints/operational/monitoring-architecture.md) - Detailed monitoring architecture
+- Monitoring Configuration - Detailed monitoring architecture
 - [Infrastructure Configuration](../deployment/aws-eks-architecture.md) - AWS EKS monitoring setup
 - [Troubleshooting Guide](../troubleshooting/observability-troubleshooting.md) - Common observability issues
 
