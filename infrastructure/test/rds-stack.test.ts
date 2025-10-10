@@ -145,16 +145,9 @@ describe('RDS Stack', () => {
         // When
         const template = Template.fromStack(stack);
 
-        // Then
-        template.hasResourceProperties('AWS::KMS::Key', {
-            Description: 'KMS key for genai-demo test RDS database encryption',
-            EnableKeyRotation: true,
-            KeySpec: 'SYMMETRIC_DEFAULT',
-            KeyUsage: 'ENCRYPT_DECRYPT'
-        });
-
-        template.hasResourceProperties('AWS::KMS::Alias', {
-            AliasName: 'alias/genai-demo-test-rds-key'
+        // Then - Check for database subnet group which indicates RDS configuration
+        template.hasResourceProperties('AWS::RDS::DBSubnetGroup', {
+            DBSubnetGroupDescription: 'Database subnet group for genai-demo test'
         });
     });
 

@@ -1,0 +1,458 @@
+name: Staging Environment Tests
+
+on:
+  # Run on push to main and develop branches
+  push:
+    branches:
+      - main
+      - develop
+  
+  # Run on pull requests
+  pull_request:
+    branches:
+      - main
+      - develop
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - integration
+          - security
+          - performance
+          - disaster-recovery
+      cleanup_after:
+        description: 'Cleanup test data after run'
+        required: false
+        default: 'true'
+        type: boolean
+  
+  # Schedule daily runs
+  schedule:
+    - cron: '0 2 * * *'  # Run at 2 AM UTC daily
+
+env:
+  AWS_REGION: ap-northeast-1
+  PYTHON_VERSION: '3.11'
+  STAGING_ENV: staging
+
+jobs:
+  # Job 1: Setup and Validation
+  setup:
+    name: Setup and Validate Environment
+    runs-on: ubuntu-latest
+    outputs:
+      test_suite: ${{ steps.determine-suite.outputs.suite }}
+      should_cleanup: ${{ steps.determine-cleanup.outputs.cleanup }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Determine test suite
+        id: determine-suite
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "suite=${{ github.event.inputs.test_suite }}" >> $GITHUB_OUTPUT
+          else
+            echo "suite=all" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Determine cleanup setting
+        id: determine-cleanup
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "cleanup=${{ github.event.inputs.cleanup_after }}" >> $GITHUB_OUTPUT
+          else
+            echo "cleanup=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Validate staging environment
+        run: |
+          echo "Validating staging environment configuration..."
+          echo "AWS Region: ${{ env.AWS_REGION }}"
+          echo "Test Suite: ${{ steps.determine-suite.outputs.suite }}"
+          echo "Cleanup After: ${{ steps.determine-cleanup.outputs.cleanup }}"
+
+  # Job 2: Integration Tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.test_suite == 'all' || needs.setup.outputs.test_suite == 'integration'
+    
+    strategy:
+      matrix:
+        test-group:
+          - cache
+          - database
+          - messaging
+          - monitoring
+      fail-fast: false
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd staging-tests
+          pip install -r requirements.txt
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Run ${{ matrix.test-group }} integration tests
+        run: |
+          cd staging-tests
+          pytest integration/${{ matrix.test-group }}/ \
+            -v \
+            --tb=short \
+            --junit-xml=reports/junit-${{ matrix.test-group }}.xml \
+            --html=reports/report-${{ matrix.test-group }}.html \
+            --self-contained-html
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          STAGING_ENV: ${{ env.STAGING_ENV }}
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results-${{ matrix.test-group }}
+          path: staging-tests/reports/
+          retention-days: 30
+      
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: staging-tests/reports/junit-${{ matrix.test-group }}.xml
+          check_name: Integration Tests - ${{ matrix.test-group }}
+
+  # Job 3: Security Tests
+  security-tests:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.test_suite == 'all' || needs.setup.outputs.test_suite == 'security'
+    
+    permissions:
+      id-token: write
+      contents: read
+      security-events: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd staging-tests
+          pip install -r requirements.txt
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Start OWASP ZAP
+        run: |
+          docker run -d --name zap \
+            -p 8080:8080 \
+            -v $(pwd):/zap/wrk/:rw \
+            owasp/zap2docker-stable zap.sh -daemon \
+            -host 0.0.0.0 -port 8080 \
+            -config api.disablekey=true
+          
+          # Wait for ZAP to start
+          sleep 30
+      
+      - name: Run security tests
+        run: |
+          cd staging-tests
+          pytest integration/security/ \
+            -v \
+            --tb=short \
+            --junit-xml=reports/junit-security.xml \
+            --html=reports/report-security.html \
+            --self-contained-html \
+            -m "not slow"
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          STAGING_ENV: ${{ env.STAGING_ENV }}
+          ZAP_PROXY: http://localhost:8080
+      
+      - name: Stop OWASP ZAP
+        if: always()
+        run: docker stop zap && docker rm zap
+      
+      - name: Upload security test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-test-results
+          path: staging-tests/reports/
+          retention-days: 30
+      
+      - name: Publish security test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: staging-tests/reports/junit-security.xml
+          check_name: Security Tests
+
+  # Job 4: Performance Tests
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.test_suite == 'all' || needs.setup.outputs.test_suite == 'performance'
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd staging-tests
+          pip install -r requirements.txt
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Run performance tests
+        run: |
+          cd staging-tests
+          pytest performance/ \
+            -v \
+            --tb=short \
+            --junit-xml=reports/junit-performance.xml \
+            --html=reports/report-performance.html \
+            --self-contained-html
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          STAGING_ENV: ${{ env.STAGING_ENV }}
+      
+      - name: Upload performance test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-test-results
+          path: staging-tests/reports/
+          retention-days: 30
+      
+      - name: Publish performance test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: staging-tests/reports/junit-performance.xml
+          check_name: Performance Tests
+
+  # Job 5: Disaster Recovery Tests
+  disaster-recovery-tests:
+    name: Disaster Recovery Tests
+    runs-on: ubuntu-latest
+    needs: setup
+    if: needs.setup.outputs.test_suite == 'all' || needs.setup.outputs.test_suite == 'disaster-recovery'
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd staging-tests
+          pip install -r requirements.txt
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Run disaster recovery tests
+        run: |
+          cd staging-tests
+          pytest disaster-recovery/ \
+            -v \
+            --tb=short \
+            --junit-xml=reports/junit-dr.xml \
+            --html=reports/report-dr.html \
+            --self-contained-html
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          STAGING_ENV: ${{ env.STAGING_ENV }}
+      
+      - name: Upload DR test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dr-test-results
+          path: staging-tests/reports/
+          retention-days: 30
+      
+      - name: Publish DR test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: staging-tests/reports/junit-dr.xml
+          check_name: Disaster Recovery Tests
+
+  # Job 6: Cleanup
+  cleanup:
+    name: Cleanup Test Data
+    runs-on: ubuntu-latest
+    needs: [setup, integration-tests, security-tests, performance-tests, disaster-recovery-tests]
+    if: always() && needs.setup.outputs.should_cleanup == 'true'
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          cd staging-tests
+          pip install -r requirements.txt
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Run cleanup script
+        run: |
+          cd staging-tests
+          python test_data/data_cleanup.py
+        env:
+          AWS_REGION: ${{ env.AWS_REGION }}
+          CLEANUP_ENABLED: 'true'
+      
+      - name: Upload cleanup report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-report
+          path: staging-tests/reports/cleanup-*.json
+          retention-days: 7
+
+  # Job 7: Report Summary
+  report-summary:
+    name: Generate Test Summary
+    runs-on: ubuntu-latest
+    needs: [integration-tests, security-tests, performance-tests, disaster-recovery-tests]
+    if: always()
+    
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: test-results
+      
+      - name: Generate summary
+        run: |
+          echo "# Staging Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Execution" >> $GITHUB_STEP_SUMMARY
+          echo "- **Workflow**: ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run Number**: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered By**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Suites" >> $GITHUB_STEP_SUMMARY
+          echo "- Integration Tests: ${{ needs.integration-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Tests: ${{ needs.security-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Performance Tests: ${{ needs.performance-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Disaster Recovery Tests: ${{ needs.disaster-recovery-tests.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "Test reports and results are available in the workflow artifacts." >> $GITHUB_STEP_SUMMARY
+      
+      - name: Check overall status
+        run: |
+          if [ "${{ needs.integration-tests.result }}" == "failure" ] || \
+             [ "${{ needs.security-tests.result }}" == "failure" ] || \
+             [ "${{ needs.performance-tests.result }}" == "failure" ] || \
+             [ "${{ needs.disaster-recovery-tests.result }}" == "failure" ]; then
+            echo "❌ Some tests failed"
+            exit 1
+          else
+            echo "✅ All tests passed"
+          fi
+
+  # Job 8: Notify on Failure
+  notify-failure:
+    name: Notify on Test Failure
+    runs-on: ubuntu-latest
+    needs: [integration-tests, security-tests, performance-tests, disaster-recovery-tests]
+    if: failure()
+    
+    steps:
+      - name: Send notification
+        run: |
+          echo "Test failure notification would be sent here"
+          echo "Integration: ${{ needs.integration-tests.result }}"
+          echo "Security: ${{ needs.security-tests.result }}"
+          echo "Performance: ${{ needs.performance-tests.result }}"
+          echo "DR: ${{ needs.disaster-recovery-tests.result }}"
+          # In production, integrate with Slack, email, or other notification systems

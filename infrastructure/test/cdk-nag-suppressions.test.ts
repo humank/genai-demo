@@ -12,7 +12,9 @@ describe('CDK Nag Compliance with Suppressions', () => {
     });
 
     test('NetworkStack should pass CDK Nag checks with suppressions', () => {
-        const stack = new NetworkStack(app, 'TestNetworkStack', {});
+        const stack = new NetworkStack(app, 'TestNetworkStack', {
+            environment: 'test',
+            projectName: 'genai-demo'});
 
         // Add suppressions for known acceptable violations
         NagSuppressions.addStackSuppressions(stack, [
@@ -41,7 +43,10 @@ describe('CDK Nag Compliance with Suppressions', () => {
     });
 
     test('SecurityStack should pass CDK Nag checks with suppressions', () => {
-        const stack = new SecurityStack(app, 'TestSecurityStack', {});
+        const stack = new SecurityStack(app, 'TestSecurityStack', {
+            environment: 'test',
+            projectName: 'test-project'
+        });
 
         // Add suppressions for known acceptable violations
         NagSuppressions.addStackSuppressions(stack, [
@@ -72,7 +77,9 @@ describe('CDK Nag Compliance with Suppressions', () => {
     });
 
     test('should validate security group rules are properly justified', () => {
-        const stack = new NetworkStack(app, 'TestNetworkStack', {});
+        const stack = new NetworkStack(app, 'TestNetworkStack', {
+            environment: 'test',
+            projectName: 'genai-demo'});
 
         // Add suppressions with detailed justifications
         NagSuppressions.addResourceSuppressions(
@@ -94,7 +101,10 @@ describe('CDK Nag Compliance with Suppressions', () => {
     });
 
     test('should provide compliance documentation', () => {
-        const stack = new SecurityStack(app, 'TestSecurityStack', {});
+        const stack = new SecurityStack(app, 'TestSecurityStack', {
+            environment: 'test',
+            projectName: 'test-project'
+        });
 
         // Document compliance measures
         const complianceNotes = {

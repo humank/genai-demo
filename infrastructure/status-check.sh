@@ -55,7 +55,8 @@ if [ $TEST_EXIT_CODE -eq 0 ] && [ $SYNTH_EXIT_CODE -eq 0 ]; then
     echo
     echo "🚀 Next steps:"
     echo "   - Run full tests: npm test"
-    echo "   - Deploy to dev: ./deploy-consolidated.sh"
+    echo "   - Deploy to dev: ./deploy-unified.sh full -e development"
+    echo "   - Check deployment status: ./deploy-unified.sh --status"
     echo "   - View documentation: cat README.md"
 else
     echo "❌ Infrastructure needs attention"

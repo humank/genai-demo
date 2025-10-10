@@ -1,0 +1,310 @@
+# Performance Alerting Configuration
+# This file defines thresholds and alerting rules for performance monitoring
+
+# Performance thresholds for different test scenarios
+thresholds:
+  # Response time thresholds (in milliseconds)
+  response_time:
+    normal_load:
+      mean_ms: 1000
+      p95_ms: 2000
+      p99_ms: 5000
+      max_ms: 10000
+    peak_load:
+      mean_ms: 1500
+      p95_ms: 3000
+      p99_ms: 7000
+      max_ms: 15000
+    stress_test:
+      mean_ms: 2000
+      p95_ms: 5000
+      p99_ms: 10000
+      max_ms: 20000
+    endurance_test:
+      mean_ms: 1200
+      p95_ms: 2500
+      p99_ms: 6000
+      max_ms: 12000
+    spike_test:
+      mean_ms: 3000
+      p95_ms: 8000
+      p99_ms: 15000
+      max_ms: 30000
+
+  # Success rate thresholds (percentage)
+  success_rate:
+    normal_load:
+      min_percentage: 99.0
+      warning_percentage: 97.0
+    peak_load:
+      min_percentage: 98.0
+      warning_percentage: 95.0
+    stress_test:
+      min_percentage: 95.0
+      warning_percentage: 90.0
+    endurance_test:
+      min_percentage: 99.5
+      warning_percentage: 98.0
+    spike_test:
+      min_percentage: 90.0
+      warning_percentage: 85.0
+
+  # Throughput thresholds (requests per second)
+  throughput:
+    normal_load:
+      min_requests_per_second: 100
+      warning_requests_per_second: 80
+    peak_load:
+      min_requests_per_second: 300
+      warning_requests_per_second: 250
+    stress_test:
+      min_requests_per_second: 50
+      warning_requests_per_second: 30
+    endurance_test:
+      min_requests_per_second: 80
+      warning_requests_per_second: 60
+    spike_test:
+      min_requests_per_second: 200
+      warning_requests_per_second: 150
+
+  # System resource thresholds (percentage)
+  system_resources:
+    cpu_percent:
+      max_average: 80
+      max_peak: 95
+      warning_average: 70
+    memory_percent:
+      max_average: 85
+      max_peak: 95
+      warning_average: 75
+    jvm_memory_percent:
+      max_average: 80
+      max_peak: 90
+      warning_average: 70
+
+  # Database performance thresholds
+  database:
+    connection_pool_usage_percent:
+      max_average: 80
+      max_peak: 95
+      warning_average: 70
+    query_response_time_ms:
+      max_average: 100
+      max_peak: 500
+      warning_average: 50
+
+  # Performance regression thresholds
+  regression:
+    response_time_increase_percent: 20  # Alert if response time increases by more than 20%
+    throughput_decrease_percent: 15     # Alert if throughput decreases by more than 15%
+    success_rate_decrease_percent: 2    # Alert if success rate decreases by more than 2%
+    resource_usage_increase_percent: 25 # Alert if resource usage increases by more than 25%
+
+# Alerting configuration
+alerting:
+  enabled: true
+  
+  # Alert channels
+  channels:
+    - console
+    - file
+    - email
+    - slack
+  
+  # Console alerting
+  console:
+    enabled: true
+    color_output: true
+    verbose: true
+  
+  # File alerting
+  file:
+    enabled: true
+    log_file: "staging-tests/reports/performance-alerts.log"
+    max_file_size_mb: 100
+    backup_count: 5
+  
+  # Email alerting
+  email:
+    enabled: false  # Set to true to enable email alerts
+    smtp_server: "smtp.company.com"
+    smtp_port: 587
+    use_tls: true
+    username: "alerts@company.com"
+    password: "${EMAIL_PASSWORD}"  # Use environment variable
+    from_address: "performance-alerts@company.com"
+    to_addresses:
+      - "dev-team@company.com"
+      - "ops-team@company.com"
+    subject_prefix: "[PERF ALERT]"
+  
+  # Slack alerting
+  slack:
+    enabled: false  # Set to true to enable Slack alerts
+    webhook_url: "${SLACK_WEBHOOK_URL}"  # Use environment variable
+    channel: "#performance-alerts"
+    username: "Performance Bot"
+    icon_emoji: ":warning:"
+  
+  # Alert severity levels
+  severity_levels:
+    critical:
+      color: "red"
+      emoji: ":rotating_light:"
+      escalation: true
+    high:
+      color: "orange"
+      emoji: ":warning:"
+      escalation: false
+    medium:
+      color: "yellow"
+      emoji: ":exclamation:"
+      escalation: false
+    low:
+      color: "blue"
+      emoji: ":information_source:"
+      escalation: false
+
+# Alert rules configuration
+alert_rules:
+  # Response time alerts
+  - name: "High Mean Response Time"
+    condition: "mean_response_time > threshold"
+    severity: "high"
+    description: "Mean response time exceeds acceptable threshold"
+    
+  - name: "High P95 Response Time"
+    condition: "p95_response_time > threshold"
+    severity: "high"
+    description: "95th percentile response time exceeds threshold"
+    
+  - name: "High P99 Response Time"
+    condition: "p99_response_time > threshold"
+    severity: "medium"
+    description: "99th percentile response time exceeds threshold"
+  
+  # Success rate alerts
+  - name: "Low Success Rate"
+    condition: "success_rate < threshold"
+    severity: "critical"
+    description: "Success rate below acceptable threshold"
+    
+  - name: "Success Rate Warning"
+    condition: "success_rate < warning_threshold"
+    severity: "medium"
+    description: "Success rate approaching warning threshold"
+  
+  # Throughput alerts
+  - name: "Low Throughput"
+    condition: "throughput < threshold"
+    severity: "high"
+    description: "Throughput below expected minimum"
+    
+  - name: "Throughput Warning"
+    condition: "throughput < warning_threshold"
+    severity: "medium"
+    description: "Throughput approaching warning threshold"
+  
+  # System resource alerts
+  - name: "High CPU Usage"
+    condition: "cpu_usage > threshold"
+    severity: "high"
+    description: "CPU usage exceeds acceptable threshold"
+    
+  - name: "High Memory Usage"
+    condition: "memory_usage > threshold"
+    severity: "high"
+    description: "Memory usage exceeds acceptable threshold"
+    
+  - name: "High JVM Memory Usage"
+    condition: "jvm_memory_usage > threshold"
+    severity: "medium"
+    description: "JVM memory usage exceeds threshold"
+  
+  # Performance regression alerts
+  - name: "Response Time Regression"
+    condition: "response_time_increase > regression_threshold"
+    severity: "critical"
+    description: "Significant response time regression detected"
+    
+  - name: "Throughput Regression"
+    condition: "throughput_decrease > regression_threshold"
+    severity: "critical"
+    description: "Significant throughput regression detected"
+    
+  - name: "Success Rate Regression"
+    condition: "success_rate_decrease > regression_threshold"
+    severity: "critical"
+    description: "Success rate regression detected"
+
+# Notification templates
+notification_templates:
+  email:
+    subject: "{severity_emoji} {alert_name} - {test_scenario}"
+    body: |
+      Performance Alert: {alert_name}
+      
+      Test Scenario: {test_scenario}
+      Severity: {severity}
+      Timestamp: {timestamp}
+      
+      Alert Details:
+      {alert_description}
+      
+      Current Values:
+      {current_values}
+      
+      Thresholds:
+      {thresholds}
+      
+      Recommendations:
+      {recommendations}
+      
+      View detailed report: {report_url}
+  
+  slack:
+    message: |
+      {severity_emoji} *{alert_name}*
+      
+      *Test Scenario:* {test_scenario}
+      *Severity:* {severity}
+      *Time:* {timestamp}
+      
+      *Current Values:*
+      {current_values}
+      
+      *Thresholds:*
+      {thresholds}
+      
+      <{report_url}|View Detailed Report>
+
+# Report generation settings
+reporting:
+  generate_on_alert: true
+  include_charts: true
+  include_recommendations: true
+  output_format: "html"
+  retention_days: 30
+
+# Integration settings
+integrations:
+  # Prometheus integration for metrics collection
+  prometheus:
+    enabled: false
+    url: "http://localhost:9090"
+    query_timeout: 30
+  
+  # Grafana integration for dashboard links
+  grafana:
+    enabled: false
+    url: "http://localhost:3000"
+    dashboard_uid: "performance-overview"
+  
+  # JIRA integration for issue creation
+  jira:
+    enabled: false
+    url: "https://company.atlassian.net"
+    project_key: "PERF"
+    issue_type: "Bug"
+    username: "${JIRA_USERNAME}"
+    api_token: "${JIRA_API_TOKEN}"

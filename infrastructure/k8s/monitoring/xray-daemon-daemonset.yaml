@@ -1,0 +1,185 @@
+# AWS X-Ray Daemon DaemonSet for Distributed Tracing
+# This DaemonSet deploys the X-Ray daemon on every node to collect trace data
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: amazon-xray
+  labels:
+    name: amazon-xray
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: xray-daemon
+  namespace: amazon-xray
+  labels:
+    app: xray-daemon
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: xray-daemon
+  labels:
+    app: xray-daemon
+rules:
+  - apiGroups: [""]
+    resources:
+      - pods
+      - nodes
+      - endpoints
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: xray-daemon
+  labels:
+    app: xray-daemon
+subjects:
+  - kind: ServiceAccount
+    name: xray-daemon
+    namespace: amazon-xray
+roleRef:
+  kind: ClusterRole
+  name: xray-daemon
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: xray-config
+  namespace: amazon-xray
+data:
+  config.yaml: |
+    # AWS X-Ray Daemon Configuration
+    TotalBufferSizeMB: 24
+    Concurrency: 8
+    Region: "ap-northeast-1"
+    Socket:
+      UDPAddress: "0.0.0.0:2000"
+      TCPAddress: "0.0.0.0:2000"
+    Logging:
+      LogLevel: "info"
+      LogRotation: true
+    LocalMode: false
+    ResourceARN: ""
+    RoleARN: ""
+    NoVerifySSL: false
+    ProxyAddress: ""
+    Endpoint: ""
+    Version: 2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: xray-service
+  namespace: amazon-xray
+  labels:
+    app: xray-daemon
+spec:
+  selector:
+    app: xray-daemon
+  clusterIP: None
+  ports:
+  - name: incoming
+    port: 2000
+    protocol: UDP
+  - name: tcp
+    port: 2000
+    protocol: TCP
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: xray-daemon
+  namespace: amazon-xray
+  labels:
+    app: xray-daemon
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: xray-daemon
+  template:
+    metadata:
+      labels:
+        app: xray-daemon
+    spec:
+      serviceAccountName: xray-daemon
+      hostNetwork: true
+      containers:
+      - name: xray-daemon
+        image: public.ecr.aws/xray/aws-xray-daemon:latest
+        imagePullPolicy: Always
+        command:
+        - /xray
+        - -c
+        - /aws/xray/config.yaml
+        resources:
+          limits:
+            cpu: 256m
+            memory: 256Mi
+          requests:
+            cpu: 128m
+            memory: 128Mi
+        ports:
+        - name: xray-ingest
+          containerPort: 2000
+          protocol: UDP
+        - name: xray-tcp
+          containerPort: 2000
+          protocol: TCP
+        env:
+        - name: AWS_REGION
+          value: "ap-northeast-1"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /aws/xray
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 2000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 2000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: config-volume
+        configMap:
+          name: xray-config
+
+---
+# Headless service for X-Ray daemon discovery
+apiVersion: v1
+kind: Service
+metadata:
+  name: xray-daemon-service
+  namespace: amazon-xray
+  labels:
+    app: xray-daemon
+spec:
+  selector:
+    app: xray-daemon
+  type: ClusterIP
+  ports:
+  - name: xray-ingest
+    port: 2000
+    targetPort: 2000
+    protocol: UDP
+  - name: xray-tcp
+    port: 2000
+    targetPort: 2000
+    protocol: TCP

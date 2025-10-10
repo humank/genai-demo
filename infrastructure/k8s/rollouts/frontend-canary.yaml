@@ -1,0 +1,300 @@
+# Argo Rollouts Canary Deployment for Frontend Applications
+# Optimized for cost-effective progressive delivery
+
+---
+# CMC Frontend Canary Rollout
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-cmc-frontend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-cmc-frontend
+    deployment-strategy: canary
+spec:
+  replicas: 2  # Smaller replica count for frontend
+  revisionHistoryLimit: 3
+  
+  selector:
+    matchLabels:
+      app: genai-demo-cmc-frontend
+  
+  template:
+    metadata:
+      labels:
+        app: genai-demo-cmc-frontend
+    spec:
+      containers:
+      - name: cmc-frontend
+        image: ${ECR_REGISTRY}/genai-demo/cmc-frontend:latest
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        
+        # Startup Probe - protects slow-starting frontend
+        startupProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 0
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 20  # Allow up to 100 seconds for startup
+        
+        # Liveness Probe - determines if container should be restarted
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # Readiness Probe - determines if container should receive traffic
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+  
+  strategy:
+    canary:
+      canaryService: genai-demo-cmc-frontend-canary
+      stableService: genai-demo-cmc-frontend-stable
+      
+      trafficRouting:
+        istio:
+          virtualService:
+            name: genai-demo-cmc-frontend-vsvc
+            routes:
+            - primary
+      
+      steps:
+      - setWeight: 20   # Start with 20% (1 pod out of 2)
+      - pause: {duration: 3m}
+      - setWeight: 50   # Increase to 50% (1 pod each)
+      - pause: {duration: 3m}
+      # Auto-complete to 100%
+      
+      analysis:
+        templates:
+        - templateName: frontend-error-rate
+        startingStep: 1
+
+---
+# Consumer Frontend Canary Rollout
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-consumer-frontend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-consumer-frontend
+    deployment-strategy: canary
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  
+  selector:
+    matchLabels:
+      app: genai-demo-consumer-frontend
+  
+  template:
+    metadata:
+      labels:
+        app: genai-demo-consumer-frontend
+    spec:
+      containers:
+      - name: consumer-frontend
+        image: ${ECR_REGISTRY}/genai-demo/consumer-frontend:latest
+        ports:
+        - name: http
+          containerPort: 4200
+          protocol: TCP
+        
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+  
+  strategy:
+    canary:
+      canaryService: genai-demo-consumer-frontend-canary
+      stableService: genai-demo-consumer-frontend-stable
+      
+      trafficRouting:
+        istio:
+          virtualService:
+            name: genai-demo-consumer-frontend-vsvc
+            routes:
+            - primary
+      
+      steps:
+      - setWeight: 20
+      - pause: {duration: 3m}
+      - setWeight: 50
+      - pause: {duration: 3m}
+      
+      analysis:
+        templates:
+        - templateName: frontend-error-rate
+        startingStep: 1
+
+---
+# Services for CMC Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-cmc-frontend-stable
+  namespace: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: http
+  selector:
+    app: genai-demo-cmc-frontend
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-cmc-frontend-canary
+  namespace: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: http
+  selector:
+    app: genai-demo-cmc-frontend
+
+---
+# Services for Consumer Frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-consumer-frontend-stable
+  namespace: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4200
+    targetPort: http
+  selector:
+    app: genai-demo-consumer-frontend
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-consumer-frontend-canary
+  namespace: genai-demo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 4200
+    targetPort: http
+  selector:
+    app: genai-demo-consumer-frontend
+
+---
+# Analysis Template for Frontend Error Rate
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: frontend-error-rate
+  namespace: genai-demo
+spec:
+  metrics:
+  - name: error-rate
+    interval: 1m
+    successCondition: result <= 0.02  # Error rate <= 2%
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: http://prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          sum(rate(
+            http_requests_total{
+              status=~"5..",
+              namespace="genai-demo"
+            }[5m]
+          )) /
+          sum(rate(
+            http_requests_total{
+              namespace="genai-demo"
+            }[5m]
+          ))
+
+---
+# VirtualServices for traffic routing
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: genai-demo-cmc-frontend-vsvc
+  namespace: genai-demo
+spec:
+  hosts:
+  - genai-demo-cmc-frontend
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: genai-demo-cmc-frontend-stable
+      weight: 100
+    - destination:
+        host: genai-demo-cmc-frontend-canary
+      weight: 0
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: genai-demo-consumer-frontend-vsvc
+  namespace: genai-demo
+spec:
+  hosts:
+  - genai-demo-consumer-frontend
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: genai-demo-consumer-frontend-stable
+      weight: 100
+    - destination:
+        host: genai-demo-consumer-frontend-canary
+      weight: 0

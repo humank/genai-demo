@@ -12,11 +12,425 @@
 
 ### 核心設計原則
 
-1. **分層測試策略**: Local (記憶體模擬) → Staging (真實 AWS) → Production
-2. **自動化優先**: 所有測試流程完全自動化
-3. **成本控制**: 合理控制 Staging 環境的 AWS 成本
-4. **快速反饋**: 提供快速的測試結果和問題定位
-5. **安全合規**: 確保測試過程符合安全和合規要求
+1. **Active-Active 雙活架構**: 台灣和日本兩個區域同時提供完整服務
+2. **分層測試策略**: Local (記憶體模擬) → Staging (真實 AWS) → Production
+3. **自動化優先**: 所有測試流程完全自動化
+4. **成本控制**: 合理控制 Staging 環境的 AWS 成本
+5. **快速反饋**: 提供快速的測試結果和問題定位
+6. **安全合規**: 確保測試過程符合安全和合規要求
+
+## 🌏 需求4.1: Active-Active 多區域架構設計
+
+### 設計目標
+
+建立真正的 Active-Active 雙活架構，實現：
+- **零停機時間**: 任一區域故障時系統持續運行
+- **負載分散**: 兩個區域同時承擔生產流量
+- **資料一致性**: 跨區域資料同步和衝突解決
+- **智能路由**: 基於地理位置和健康狀況的流量分配
+
+### Active-Active 架構拓撲
+
+```
+全球用戶流量
+       │
+       ▼
+┌─────────────────────────────────────────────────────────────┐
+│                Route 53 DNS 智能路由                        │
+│  - 地理位置路由 (台灣用戶 → 台灣, 日本用戶 → 日本)          │
+│  - 健康檢查和自動故障轉移                                   │
+│  - 延遲優化路由 (全球用戶)                                  │
+└─────────────────────────────────────────────────────────────┘
+       │                                    │
+       ▼                                    ▼
+┌─────────────────────────────┐    ┌─────────────────────────────┐
+│     台灣區域 (Primary)      │    │     日本區域 (Secondary)    │
+│   ap-northeast-1           │    │   ap-northeast-1           │
+├─────────────────────────────┤    ├─────────────────────────────┤
+│ ┌─────────────────────────┐ │    │ ┌─────────────────────────┐ │
+│ │ EKS Cluster (Active)    │ │◄──►│ │ EKS Cluster (Active)    │ │
+│ │ - 完整應用程式部署      │ │    │ │ - 完整應用程式部署      │ │
+│ │ - 自動擴展              │ │    │ │ - 自動擴展              │ │
+│ │ - 負載均衡              │ │    │ │ - 負載均衡              │ │
+│ └─────────────────────────┘ │    │ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │    │ ┌─────────────────────────┐ │
+│ │ Aurora Global DB        │ │◄──►│ │ Aurora Global DB        │ │
+│ │ - 讀寫主節點            │ │    │ │ - 讀寫次節點            │ │
+│ │ - 雙向同步 (<1s)        │ │    │ │ - 雙向同步 (<1s)        │ │
+│ │ - 衝突解決              │ │    │ │ - 衝突解決              │ │
+│ └─────────────────────────┘ │    │ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │    │ ┌─────────────────────────┐ │
+│ │ MSK Kafka Cluster       │ │◄──►│ │ MSK Kafka Cluster       │ │
+│ │ - 事件生產和消費        │ │    │ │ - 事件生產和消費        │ │
+│ │ - MirrorMaker 2.0       │ │    │ │ - MirrorMaker 2.0       │ │
+│ │ - 跨區域複製            │ │    │ │ - 跨區域複製            │ │
+│ └─────────────────────────┘ │    │ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │    │ ┌─────────────────────────┐ │
+│ │ ElastiCache Redis       │ │◄──►│ │ ElastiCache Redis       │ │
+│ │ - 本地快取              │ │    │ │ - 本地快取              │ │
+│ │ - 跨區域複製            │ │    │ │ - 跨區域複製            │ │
+│ │ - 分散式鎖              │ │    │ │ - 分散式鎖              │ │
+│ └─────────────────────────┘ │    │ └─────────────────────────┘ │
+└─────────────────────────────┘    └─────────────────────────────┘
+```
+
+### 詳細組件設計
+
+#### 1. Aurora Global Database Active-Active 配置
+
+```typescript
+// 台灣區域 Aurora 主集群
+const taiwanAuroraCluster = new rds.DatabaseCluster(this, 'TaiwanAuroraCluster', {
+  engine: rds.DatabaseClusterEngine.auroraPostgres({
+    version: rds.AuroraPostgresEngineVersion.VER_15_4
+  }),
+  globalClusterIdentifier: 'genai-demo-global-cluster',
+  // 主要區域配置
+  isPrimaryCluster: true,
+  // 讀寫能力
+  readers: [
+    rds.ClusterInstance.provisioned('reader-1', {
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.R6G, ec2.InstanceSize.LARGE)
+    })
+  ],
+  writer: rds.ClusterInstance.provisioned('writer', {
+    instanceType: ec2.InstanceType.of(ec2.InstanceClass.R6G, ec2.InstanceSize.XLARGE)
+  }),
+  // 跨區域複製配置
+  backupRetention: cdk.Duration.days(7),
+  // 效能監控
+  monitoringInterval: cdk.Duration.minutes(1),
+  // 自動故障轉移
+  enablePerformanceInsights: true
+});
+
+// 日本區域 Aurora 次集群 (具備讀寫能力)
+const japanAuroraCluster = new rds.DatabaseCluster(this, 'JapanAuroraCluster', {
+  engine: rds.DatabaseClusterEngine.auroraPostgres({
+    version: rds.AuroraPostgresEngineVersion.VER_15_4
+  }),
+  globalClusterIdentifier: 'genai-demo-global-cluster',
+  // 次要區域但具備讀寫能力
+  isSecondaryCluster: true,
+  enableGlobalWriteForwarding: true, // 啟用全球寫入轉發
+  readers: [
+    rds.ClusterInstance.provisioned('reader-1', {
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.R6G, ec2.InstanceSize.LARGE)
+    })
+  ],
+  writer: rds.ClusterInstance.provisioned('writer', {
+    instanceType: ec2.InstanceType.of(ec2.InstanceClass.R6G, ec2.InstanceSize.XLARGE)
+  })
+});
+
+// 衝突解決策略
+const conflictResolutionLambda = new lambda.Function(this, 'ConflictResolution', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromInline(`
+    exports.handler = async (event) => {
+      // 基於時間戳和區域優先級的衝突解決
+      const { conflictData } = event;
+      
+      // 台灣區域優先級較高 (業務主要在台灣)
+      if (conflictData.taiwanTimestamp && conflictData.japanTimestamp) {
+        const timeDiff = Math.abs(conflictData.taiwanTimestamp - conflictData.japanTimestamp);
+        
+        // 如果時間差小於1秒，使用區域優先級
+        if (timeDiff < 1000) {
+          return { winner: 'taiwan', reason: 'region_priority' };
+        }
+        
+        // 否則使用最新時間戳
+        return {
+          winner: conflictData.taiwanTimestamp > conflictData.japanTimestamp ? 'taiwan' : 'japan',
+          reason: 'latest_timestamp'
+        };
+      }
+    };
+  `)
+});
+```
+
+#### 2. EKS Active-Active 集群配置
+
+```typescript
+// 台灣 EKS 集群
+const taiwanEksCluster = new eks.Cluster(this, 'TaiwanEKSCluster', {
+  version: eks.KubernetesVersion.V1_28,
+  defaultCapacity: 3,
+  defaultCapacityInstance: ec2.InstanceType.of(
+    ec2.InstanceClass.M6I, 
+    ec2.InstanceSize.LARGE
+  ),
+  // 多可用區部署
+  vpcSubnets: [
+    { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }
+  ],
+  // 自動擴展配置
+  autoScalingGroupProvider: {
+    minCapacity: 3,
+    maxCapacity: 20,
+    desiredCapacity: 5
+  }
+});
+
+// 日本 EKS 集群 (相同配置)
+const japanEksCluster = new eks.Cluster(this, 'JapanEKSCluster', {
+  version: eks.KubernetesVersion.V1_28,
+  defaultCapacity: 3,
+  defaultCapacityInstance: ec2.InstanceType.of(
+    ec2.InstanceClass.M6I, 
+    ec2.InstanceSize.LARGE
+  ),
+  vpcSubnets: [
+    { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }
+  ],
+  autoScalingGroupProvider: {
+    minCapacity: 3,
+    maxCapacity: 20,
+    desiredCapacity: 5
+  }
+});
+
+// 跨區域 VPC 對等連接
+const crossRegionPeering = new ec2.CfnVPCPeeringConnection(this, 'CrossRegionPeering', {
+  vpcId: taiwanVpc.vpcId,
+  peerVpcId: japanVpc.vpcId,
+  peerRegion: 'ap-northeast-1'
+});
+
+// ⚠️ 原 CodePipeline 設計 (已棄用 - 2025年1月21日)
+// 已改用 GitOps 方案: GitHub Actions + ArgoCD + Argo Rollouts
+// 參見: docs/gitops-deployment-guide.md
+
+/*
+// 原同步部署管道設計 (保留作為歷史記錄)
+const syncDeploymentPipeline = new codepipeline.Pipeline(this, 'SyncDeployment', {
+  pipelineName: 'ActiveActive-SyncDeployment',
+  stages: [
+    {
+      stageName: 'Source',
+      actions: [
+        new codepipeline_actions.GitHubSourceAction({
+          actionName: 'GitHub_Source',
+          owner: 'your-org',
+          repo: 'genai-demo',
+          oauthToken: cdk.SecretValue.secretsManager('github-token'),
+          output: sourceOutput
+        })
+      ]
+    },
+    {
+      stageName: 'Build',
+      actions: [
+        new codepipeline_actions.CodeBuildAction({
+          actionName: 'Build_Application',
+          project: buildProject,
+          input: sourceOutput,
+          outputs: [buildOutput]
+        })
+      ]
+    },
+    {
+      stageName: 'Deploy_Taiwan',
+      actions: [
+        new codepipeline_actions.EksAction({
+          actionName: 'Deploy_Taiwan_EKS',
+          cluster: taiwanEksCluster,
+          input: buildOutput
+        })
+      ]
+    },
+    {
+      stageName: 'Deploy_Japan',
+      actions: [
+        new codepipeline_actions.EksAction({
+          actionName: 'Deploy_Japan_EKS',
+          cluster: japanEksCluster,
+          input: buildOutput
+        })
+      ]
+    },
+    {
+      stageName: 'Verify_Sync',
+      actions: [
+        new codepipeline_actions.LambdaInvokeAction({
+          actionName: 'Verify_Deployment_Sync',
+          lambda: verificationLambda
+        })
+      ]
+    }
+  ]
+});
+*/
+
+// ✅ 新 GitOps 部署架構 (2025年1月21日起)
+// 
+// GitHub Actions Workflow (.github/workflows/ci-cd.yml):
+// 1. Source: GitHub repository (自動觸發)
+// 2. Build: 
+//    - 並行測試 (Unit, Integration, BDD, Architecture)
+//    - 安全掃描 (Trivy, CodeQL)
+//    - Docker 多架構建構 (amd64, arm64)
+//    - 推送至 ECR
+// 3. Deploy:
+//    - 更新 Kubernetes manifests
+//    - 提交至 Git (觸發 ArgoCD)
+//
+// ArgoCD + Argo Rollouts:
+// 1. ArgoCD 自動同步 (3分鐘間隔)
+// 2. Argo Rollouts 執行 Canary 部署:
+//    - Backend: 10% → 25% → 50% → 75% → 100%
+//    - Frontend: 20% → 50% → 100%
+// 3. 自動化分析和回滾
+//
+// 多區域部署:
+// - Taiwan (ap-northeast-1): 主要區域
+// - Japan (ap-northeast-1): 次要區域
+// - 透過 ArgoCD ApplicationSet 管理多區域部署
+// - 使用 Smart Routing Layer 進行區域間流量管理
+```
+
+#### 3. Route 53 智能流量管理
+
+```typescript
+// 主要 DNS 記錄 - 台灣區域
+const taiwanRecord = new route53.ARecord(this, 'TaiwanRecord', {
+  zone: hostedZone,
+  recordName: 'api',
+  target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(taiwanALB)),
+  setIdentifier: 'taiwan-region',
+  // 地理位置路由 - 台灣和亞洲用戶
+  geoLocation: route53.GeoLocation.country('TW'),
+  healthCheck: taiwanHealthCheck
+});
+
+// 次要 DNS 記錄 - 日本區域
+const japanRecord = new route53.ARecord(this, 'JapanRecord', {
+  zone: hostedZone,
+  recordName: 'api',
+  target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(japanALB)),
+  setIdentifier: 'japan-region',
+  // 地理位置路由 - 日本用戶
+  geoLocation: route53.GeoLocation.country('JP'),
+  healthCheck: japanHealthCheck
+});
+
+// 全球用戶的延遲路由
+const globalRecord = new route53.ARecord(this, 'GlobalRecord', {
+  zone: hostedZone,
+  recordName: 'api',
+  target: route53.RecordTarget.fromAlias(new targets.LoadBalancerTarget(taiwanALB)),
+  setIdentifier: 'global-latency',
+  // 延遲路由 - 選擇最低延遲的區域
+  region: 'ap-northeast-1'
+});
+
+// 進階健康檢查
+const taiwanHealthCheck = new route53.HealthCheck(this, 'TaiwanHealthCheck', {
+  type: route53.HealthCheckType.HTTPS,
+  resourcePath: '/actuator/health/readiness',
+  fqdn: 'taiwan.api.genai-demo.com',
+  port: 443,
+  requestInterval: 30,
+  failureThreshold: 2, // 2次失敗後切換
+  // 複合健康檢查
+  childHealthChecks: [
+    databaseHealthCheck,
+    applicationHealthCheck,
+    redisHealthCheck
+  ]
+});
+```
+
+#### 4. 應用程式層區域感知配置
+
+```java
+// 區域感知配置
+@Configuration
+@Profile({"taiwan", "japan"})
+public class RegionAwareConfiguration {
+    
+    @Value("${aws.region}")
+    private String currentRegion;
+    
+    @Bean
+    @ConditionalOnProperty(name = "aws.region", havingValue = "ap-northeast-1")
+    public RegionService taiwanRegionService() {
+        return new RegionService("taiwan", "ap-northeast-1");
+    }
+    
+    @Bean
+    @ConditionalOnProperty(name = "aws.region", havingValue = "ap-northeast-1") 
+    public RegionService japanRegionService() {
+        return new RegionService("japan", "ap-northeast-1");
+    }
+    
+    @Bean
+    public DataSourceRouter dataSourceRouter() {
+        return new DataSourceRouter(currentRegion);
+    }
+}
+
+// 資料源路由器
+@Component
+public class DataSourceRouter {
+    
+    private final String currentRegion;
+    private final Map<String, DataSource> regionDataSources;
+    
+    public DataSource getWriteDataSource() {
+        // 優先使用本地區域進行寫入
+        return regionDataSources.get(currentRegion + "-write");
+    }
+    
+    public DataSource getReadDataSource() {
+        // 讀取可以使用本地區域或最近的區域
+        DataSource localRead = regionDataSources.get(currentRegion + "-read");
+        
+        if (isHealthy(localRead)) {
+            return localRead;
+        }
+        
+        // 故障轉移到其他區域
+        return regionDataSources.get(getBackupRegion() + "-read");
+    }
+    
+    private boolean isHealthy(DataSource dataSource) {
+        try {
+            Connection conn = dataSource.getConnection();
+            conn.close();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+}
+
+// 跨區域事件處理
+@Component
+public class CrossRegionEventHandler {
+    
+    @EventListener
+    @Async
+    public void handleCrossRegionSync(DomainEvent event) {
+        // 確保事件在兩個區域都被處理
+        if (event.getOriginRegion().equals(currentRegion)) {
+            // 本地事件，需要同步到其他區域
+            syncEventToOtherRegion(event);
+        } else {
+            // 來自其他區域的事件，檢查是否需要本地處理
+            processRemoteEvent(event);
+        }
+    }
+    
+    private void syncEventToOtherRegion(DomainEvent event) {
+        // 使用 MSK MirrorMaker 或直接 API 調用
+        crossRegionEventPublisher.publish(event, getTargetRegion());
+    }
+}
+```
 
 ### 技術棧選擇
 
@@ -36,11 +450,11 @@ AWS 服務層:
 ├── CloudWatch + X-Ray (監控追蹤)
 └── Security Hub (安全合規)
 
-CI/CD 層:
-├── GitHub Actions (主要 CI/CD)
-├── AWS CodePipeline (AWS 原生管道)
-├── AWS CodeBuild (建構服務)
-└── AWS CodeDeploy (部署服務)
+CI/CD 層 (GitOps 架構):
+├── GitHub Actions (CI - 建構、測試、安全掃描)
+├── ArgoCD (CD - 持續部署、同步管理)
+├── Argo Rollouts (漸進式部署 - Canary/Blue-Green)
+└── ~~AWS CodePipeline/CodeBuild/CodeDeploy~~ (已棄用，改用 GitOps)
 ```
 
 ## 🏗️ 需求12: Staging 環境測試計劃和工具策略設計
@@ -665,3 +1079,393 @@ AWS_Insights_Integration:
 **最後更新**: 2025年9月24日 上午10:11 (台北時間)  
 **審核狀態**: 待審核  
 **版本**: 1.0
+
+### 5. Active-Active 監控和告警設計
+
+#### 跨區域統一監控儀表板
+
+```typescript
+// 統一監控儀表板
+const activeActiveMonitoringDashboard = new cloudwatch.Dashboard(this, 'ActiveActiveMonitoring', {
+  dashboardName: 'ActiveActive-CrossRegion-Monitoring',
+  widgets: [
+    // 區域健康狀況總覽
+    new cloudwatch.GraphWidget({
+      title: 'Region Health Overview',
+      left: [
+        taiwanRegionHealthMetric,
+        japanRegionHealthMetric
+      ],
+      right: [
+        crossRegionLatencyMetric
+      ]
+    }),
+    
+    // Aurora Global Database 監控
+    new cloudwatch.GraphWidget({
+      title: 'Aurora Global Database Metrics',
+      left: [
+        auroraReplicationLagMetric,
+        auroraWriteConflictsMetric
+      ],
+      right: [
+        auroraCrossRegionIOMetric
+      ]
+    }),
+    
+    // 流量分配監控
+    new cloudwatch.GraphWidget({
+      title: 'Traffic Distribution',
+      left: [
+        taiwanTrafficMetric,
+        japanTrafficMetric
+      ],
+      right: [
+        route53FailoverMetric
+      ]
+    }),
+    
+    // 應用程式效能對比
+    new cloudwatch.GraphWidget({
+      title: 'Application Performance Comparison',
+      left: [
+        taiwanResponseTimeMetric,
+        japanResponseTimeMetric
+      ],
+      right: [
+        taiwanErrorRateMetric,
+        japanErrorRateMetric
+      ]
+    })
+  ]
+});
+
+// 跨區域告警配置
+const crossRegionAlerts = [
+  // 區域故障告警
+  new cloudwatch.Alarm(this, 'RegionFailureAlarm', {
+    alarmName: 'ActiveActive-RegionFailure',
+    metric: regionHealthMetric,
+    threshold: 1,
+    comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
+    evaluationPeriods: 2,
+    alarmDescription: 'One or more regions are unhealthy'
+  }),
+  
+  // 跨區域延遲告警
+  new cloudwatch.Alarm(this, 'CrossRegionLatencyAlarm', {
+    alarmName: 'ActiveActive-HighLatency',
+    metric: crossRegionLatencyMetric,
+    threshold: 100, // 100ms
+    comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+    evaluationPeriods: 3,
+    alarmDescription: 'Cross-region latency is too high'
+  }),
+  
+  // 資料同步延遲告警
+  new cloudwatch.Alarm(this, 'DataSyncLagAlarm', {
+    alarmName: 'ActiveActive-DataSyncLag',
+    metric: auroraReplicationLagMetric,
+    threshold: 5, // 5秒
+    comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+    evaluationPeriods: 2,
+    alarmDescription: 'Aurora Global Database replication lag is too high'
+  })
+];
+```
+
+#### 自動化故障轉移邏輯
+
+```typescript
+// 智能故障轉移 Lambda
+const intelligentFailoverFunction = new lambda.Function(this, 'IntelligentFailover', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  timeout: cdk.Duration.minutes(5),
+  code: lambda.Code.fromInline(`
+    const AWS = require('aws-sdk');
+    const route53 = new AWS.Route53();
+    const ecs = new AWS.ECS();
+    
+    exports.handler = async (event) => {
+      const { failedRegion, healthyRegion } = event;
+      
+      console.log(\`Initiating failover from \${failedRegion} to \${healthyRegion}\`);
+      
+      try {
+        // 1. 更新 Route 53 權重，將流量導向健康區域
+        await updateRoute53Weights(failedRegion, healthyRegion);
+        
+        // 2. 擴展健康區域的容量以承接額外流量
+        await scaleUpHealthyRegion(healthyRegion);
+        
+        // 3. 如果是資料庫故障，提升次要區域為主要區域
+        if (event.failureType === 'database') {
+          await promoteSecondaryDatabase(healthyRegion);
+        }
+        
+        // 4. 更新應用程式配置，指向新的主要區域
+        await updateApplicationConfig(healthyRegion);
+        
+        // 5. 發送通知
+        await sendFailoverNotification(failedRegion, healthyRegion);
+        
+        return {
+          statusCode: 200,
+          body: JSON.stringify({
+            message: 'Failover completed successfully',
+            failedRegion,
+            healthyRegion,
+            timestamp: new Date().toISOString()
+          })
+        };
+        
+      } catch (error) {
+        console.error('Failover failed:', error);
+        await sendFailoverErrorNotification(error);
+        throw error;
+      }
+    };
+    
+    async function updateRoute53Weights(failedRegion, healthyRegion) {
+      // 將故障區域權重設為 0，健康區域權重設為 100
+      const params = {
+        HostedZoneId: process.env.HOSTED_ZONE_ID,
+        ChangeBatch: {
+          Changes: [
+            {
+              Action: 'UPSERT',
+              ResourceRecordSet: {
+                Name: 'api.genai-demo.com',
+                Type: 'A',
+                SetIdentifier: failedRegion,
+                Weight: 0,
+                AliasTarget: {
+                  DNSName: process.env[\`\${failedRegion.toUpperCase()}_ALB_DNS\`],
+                  EvaluateTargetHealth: true,
+                  HostedZoneId: process.env[\`\${failedRegion.toUpperCase()}_ALB_ZONE\`]
+                }
+              }
+            },
+            {
+              Action: 'UPSERT',
+              ResourceRecordSet: {
+                Name: 'api.genai-demo.com',
+                Type: 'A',
+                SetIdentifier: healthyRegion,
+                Weight: 100,
+                AliasTarget: {
+                  DNSName: process.env[\`\${healthyRegion.toUpperCase()}_ALB_DNS\`],
+                  EvaluateTargetHealth: true,
+                  HostedZoneId: process.env[\`\${healthyRegion.toUpperCase()}_ALB_ZONE\`]
+                }
+              }
+            }
+          ]
+        }
+      };
+      
+      return route53.changeResourceRecordSets(params).promise();
+    }
+    
+    async function scaleUpHealthyRegion(healthyRegion) {
+      // 擴展 EKS 節點組以承接額外流量
+      const eksParams = {
+        clusterName: \`\${healthyRegion}-eks-cluster\`,
+        nodegroupName: \`\${healthyRegion}-nodegroup\`,
+        scalingConfig: {
+          minSize: 5,
+          maxSize: 30,
+          desiredSize: 10 // 雙倍容量
+        }
+      };
+      
+      return ecs.updateNodegroupConfig(eksParams).promise();
+    }
+  `)
+});
+
+// 故障檢測和自動觸發
+const failureDetectionRule = new events.Rule(this, 'FailureDetectionRule', {
+  eventPattern: {
+    source: ['aws.route53', 'aws.rds', 'aws.eks'],
+    detailType: ['Health Check Failed', 'RDS DB Instance Event', 'EKS Cluster State Change']
+  },
+  targets: [new targets.LambdaFunction(intelligentFailoverFunction)]
+});
+```
+
+### 6. 成本優化策略
+
+#### Active-Active 成本控制
+
+```typescript
+// 智能成本優化
+const costOptimizationFunction = new lambda.Function(this, 'CostOptimization', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromInline(`
+    exports.handler = async (event) => {
+      const { taiwanMetrics, japanMetrics } = event;
+      
+      // 分析兩個區域的負載模式
+      const taiwanLoad = calculateAverageLoad(taiwanMetrics);
+      const japanLoad = calculateAverageLoad(japanMetrics);
+      
+      // 如果負載不均衡，調整資源分配
+      if (Math.abs(taiwanLoad - japanLoad) > 0.3) {
+        await rebalanceResources(taiwanLoad, japanLoad);
+      }
+      
+      // 在低峰時段縮減資源
+      const currentHour = new Date().getHours();
+      if (isOffPeakHour(currentHour)) {
+        await scaleDownForOffPeak();
+      }
+      
+      return { optimizationApplied: true };
+    };
+    
+    function calculateAverageLoad(metrics) {
+      return metrics.reduce((sum, metric) => sum + metric.value, 0) / metrics.length;
+    }
+    
+    async function rebalanceResources(taiwanLoad, japanLoad) {
+      // 將資源從低負載區域移動到高負載區域
+      if (taiwanLoad > japanLoad) {
+        await scaleUp('taiwan');
+        await scaleDown('japan');
+      } else {
+        await scaleUp('japan');
+        await scaleDown('taiwan');
+      }
+    }
+  `)
+});
+
+// 成本監控和預算告警
+const activeActiveBudget = new budgets.CfnBudget(this, 'ActiveActiveBudget', {
+  budget: {
+    budgetName: 'ActiveActive-MultiRegion-Budget',
+    budgetLimit: {
+      amount: 2000, // 每月2000美元預算
+      unit: 'USD'
+    },
+    timeUnit: 'MONTHLY',
+    budgetType: 'COST',
+    costFilters: {
+      Region: ['ap-northeast-1', 'ap-northeast-1']
+    }
+  },
+  notificationsWithSubscribers: [
+    {
+      notification: {
+        notificationType: 'ACTUAL',
+        comparisonOperator: 'GREATER_THAN',
+        threshold: 80
+      },
+      subscribers: [{
+        subscriptionType: 'EMAIL',
+        address: 'devops@company.com'
+      }]
+    },
+    {
+      notification: {
+        notificationType: 'FORECASTED',
+        comparisonOperator: 'GREATER_THAN',
+        threshold: 100
+      },
+      subscribers: [{
+        subscriptionType: 'EMAIL',
+        address: 'finance@company.com'
+      }]
+    }
+  ]
+});
+```
+
+### 7. 測試和驗證策略
+
+#### Chaos Engineering 測試
+
+```typescript
+// 混沌工程測試
+const chaosTestingFunction = new lambda.Function(this, 'ChaosTestingFunction', {
+  runtime: lambda.Runtime.NODEJS_18_X,
+  handler: 'index.handler',
+  code: lambda.Code.fromInline(`
+    exports.handler = async (event) => {
+      const { testType, targetRegion } = event;
+      
+      switch (testType) {
+        case 'region_failure':
+          await simulateRegionFailure(targetRegion);
+          break;
+        case 'database_lag':
+          await simulateDatabaseLag(targetRegion);
+          break;
+        case 'network_partition':
+          await simulateNetworkPartition();
+          break;
+        case 'high_load':
+          await simulateHighLoad(targetRegion);
+          break;
+      }
+      
+      // 監控系統響應
+      return await monitorSystemResponse(testType, targetRegion);
+    };
+    
+    async function simulateRegionFailure(region) {
+      // 暫時停止區域的健康檢查響應
+      console.log(\`Simulating failure in region: \${region}\`);
+      // 實際實作會調用相應的 AWS API
+    }
+    
+    async function monitorSystemResponse(testType, targetRegion) {
+      // 監控故障轉移時間、資料一致性、用戶體驗等
+      return {
+        testType,
+        targetRegion,
+        failoverTime: '< 30 seconds',
+        dataConsistency: 'maintained',
+        userImpact: 'minimal'
+      };
+    }
+  `)
+});
+
+// 定期混沌測試排程
+const chaosTestingSchedule = new events.Rule(this, 'ChaosTestingSchedule', {
+  schedule: events.Schedule.cron({
+    minute: '0',
+    hour: '2', // 凌晨2點執行
+    day: '*',
+    month: '*',
+    year: '*'
+  }),
+  targets: [new targets.LambdaFunction(chaosTestingFunction)]
+});
+```
+
+### 預期效益和 SLA 目標
+
+#### 業務連續性指標
+- **可用性**: 99.99% (年停機時間 < 53 分鐘)
+- **RTO (恢復時間目標)**: < 30 秒
+- **RPO (恢復點目標)**: < 1 秒
+- **跨區域延遲**: < 50ms (95th percentile)
+
+#### 效能指標
+- **全球用戶響應時間**: < 200ms (95th percentile)
+- **資料同步延遲**: < 1 秒
+- **故障檢測時間**: < 30 秒
+- **自動故障轉移時間**: < 30 秒
+
+#### 成本效益
+- **相比單區域增加成本**: < 80%
+- **相比傳統 DR 節省成本**: > 40%
+- **資源利用率**: > 70% (兩個區域平均)
+- **故障轉移成本**: 接近零 (自動化)
+
+這個 Active-Active 架構設計確保了真正的高可用性，同時通過智能負載分配和成本優化策略，實現了成本效益的最大化。

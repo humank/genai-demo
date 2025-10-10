@@ -1,0 +1,153 @@
+@startuml Application Services Overview
+!theme plain
+skinparam classAttributeIconSize 0
+
+title Application Services Overview\nGenerated: 2025-10-03 00:55:41\n\n
+
+package "Customer Application Services" {
+  class OptimisticLockingCustomerService <<ApplicationService>> {
+    +upgradeCustomerMembership(): boolean
+    +addRewardPointsWithRetry(): boolean
+    +updateCustomerSpendingWithRetry(): boolean
+    +batchUpdateCustomers(): int
+  }
+
+  class CustomerApplicationService <<ApplicationService>> {
+    +upgradeCustomerMembershipBasedOnSpending(): void
+    +addRewardPoints(): void
+    +updateCustomerSpending(): void
+    +getCustomers(): CustomerPageDto
+    +getCustomer(): Optional<CustomerDto>
+    +... (1 more methods)
+  }
+
+}
+
+package "Shoppingcart Application Services" {
+  class ShoppingCartApplicationService <<ApplicationService>> {
+    +createShoppingCart(): ShoppingCartDto
+    +addItemToCart(): ShoppingCartDto
+    +updateItemQuantity(): ShoppingCartDto
+    +removeItemFromCart(): ShoppingCartDto
+    +getShoppingCart(): Optional<ShoppingCartDto>
+    +... (2 more methods)
+  }
+
+}
+
+package "Inventory Application Services" {
+  class InventoryApplicationService <<ApplicationService>> {
+    +adjustInventory(): InventoryResponse
+    +getInventory(): InventoryResponse
+    +reserveInventory(): void
+  }
+
+}
+
+package "Common Application Services" {
+  class DomainEventApplicationService <<ApplicationService>> {
+    +publishEventsFromAggregate(): void
+    +publishEvent(): void
+    +publishEvents(): void
+    +publishEventsFromAggregates(): void
+    +setCorrelationId(): void
+    +... (5 more methods)
+  }
+
+}
+
+package "Product Application Services" {
+  class ProductApplicationService <<ApplicationService>> {
+    +getProduct(): Optional<ProductDto>
+    +getProducts(): ProductPageDto
+    +productExists(): boolean
+    +updateProduct(): ProductDto
+    +deleteProduct(): void
+  }
+
+}
+
+package "Observability Application Services" {
+  class ObservabilityEventService <<ApplicationService>> {
+    +processAnalyticsEvents(): void
+    +processPerformanceMetrics(): void
+    +processAnalyticsEvent(): void
+    +processPerformanceMetric(): void
+  }
+
+  class AnalyticsQueryService <<ApplicationService>> {
+    +getAnalyticsStats(): AnalyticsStatsDto
+    +getBusinessMetrics(): BusinessMetricsDto
+    +getPerformanceStats(): PerformanceStatsDto
+    +getUserActivityStats(): UserActivityStatsDto
+    +getRealTimeStats(): Map<String, Object>
+    +... (4 more methods)
+  }
+
+  class DataRetentionService <<ApplicationService>> {
+    +performManualCleanup(): void
+    +performDataCleanup(): int
+    +getDataRetentionStats(): Map<String, Object>
+    +setDataRetentionPolicy(): void
+    +checkStorageHealth(): Map<String, Object>
+    +... (1 more methods)
+  }
+
+  class AnalyticsQueryService <<ApplicationService>> {
+    +getUserBehaviorStats(): UserBehaviorStats
+    +getPagePerformanceStats(): PagePerformanceStats
+    +getBusinessMetricsStats(): BusinessMetricsStats
+    +getSessionStats(): SessionStats
+    +getAnalyticsEvents(): Page<AnalyticsEventEntity>
+    +... (10 more methods)
+  }
+
+}
+
+package "Payment Application Services" {
+  class PaymentApplicationService <<ApplicationService>> {
+    +processPayment(): PaymentResponseDto
+    +processPayment(): PaymentResponseDto
+    +processPayment(): Payment
+    +getPayment(): Optional<Payment>
+    +getPaymentDto(): PaymentResponseDto
+    +... (6 more methods)
+  }
+
+}
+
+package "Notification Application Services" {
+  class NotificationApplicationService <<ApplicationService>> {
+    +sendWelcomeEmail(): void
+    +sendOrderNotification(): void
+    +sendPromotionNotification(): void
+  }
+
+}
+
+package "Order Application Services" {
+  class OrderApplicationService <<ApplicationService>> {
+    +createOrder(): OrderResponse
+    +addOrderItem(): OrderResponse
+    +submitOrder(): OrderResponse
+    +cancelOrder(): OrderResponse
+    +getOrder(): OrderResponse
+    +... (2 more methods)
+  }
+
+}
+
+package "Promotion Application Services" {
+  class PromotionApplicationService <<ApplicationService>> {
+    +createFlashSalePromotion(): PromotionDto
+    +getActivePromotions(): List<PromotionDto>
+    +getPromotionsByType(): List<PromotionDto>
+    +getPromotionById(): Optional<PromotionDto>
+    +getFlashSales(): List<FlashSaleDto>
+    +... (3 more methods)
+  }
+
+}
+
+
+@enduml

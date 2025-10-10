@@ -78,7 +78,9 @@ export class DisasterRecoveryStack extends cdk.Stack {
                 env: {
                     account: this.account,
                     region: secondaryRegion
-                }
+                },
+                environment: environment,
+                projectName: projectName
             });
 
             // Deploy Certificate Stack for DR region
@@ -97,6 +99,8 @@ export class DisasterRecoveryStack extends cdk.Stack {
                 vpc: this.networkStack.vpc,
                 securityGroups: this.networkStack.securityGroups,
                 kmsKey: props.kmsKey,
+                environment: environment,
+                projectName: projectName,
                 env: {
                     account: this.account,
                     region: secondaryRegion

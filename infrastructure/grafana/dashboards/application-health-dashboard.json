@@ -1,0 +1,73 @@
+{
+  "dashboard": {
+    "title": "GenAI Demo - Application Health",
+    "tags": ["genai-demo", "application", "health"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Overall System Health",
+        "type": "stat",
+        "targets": [
+          {
+            "datasource": "CloudWatch",
+            "namespace": "ContainerInsights",
+            "metricName": "cluster_cpu_utilization",
+            "dimensions": {
+              "ClusterName": "genai-demo-cluster"
+            },
+            "statistic": "Average",
+            "period": 300
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Service Availability",
+        "type": "graph",
+        "targets": [
+          {
+            "datasource": "CloudWatch",
+            "namespace": "AWS/ApplicationELB",
+            "metricName": "HealthyHostCount",
+            "statistic": "Average"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4}
+      },
+      {
+        "id": 3,
+        "title": "Error Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "datasource": "CloudWatch",
+            "namespace": "GenAIDemo/Application",
+            "metricName": "http.server.requests",
+            "dimensions": {"status": "5xx"},
+            "statistic": "Sum"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4}
+      },
+      {
+        "id": 4,
+        "title": "Request Latency (P95)",
+        "type": "graph",
+        "targets": [
+          {
+            "datasource": "CloudWatch",
+            "namespace": "GenAIDemo/Application",
+            "metricName": "http.server.requests.percentile",
+            "dimensions": {"percentile": "0.95"},
+            "statistic": "Average"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12}
+      }
+    ],
+    "refresh": "30s",
+    "time": {"from": "now-1h", "to": "now"}
+  }
+}

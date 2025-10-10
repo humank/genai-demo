@@ -1,0 +1,280 @@
+{
+  "cross_region_trace_queries": {
+    "description": "CloudWatch Insights queries for cross-region distributed tracing analysis",
+    "queries": {
+      "slow_cross_region_requests": {
+        "name": "Slow Cross-Region Requests",
+        "description": "Find requests with high cross-region latency (>1000ms)",
+        "query": "fields @timestamp, @message, correlation_id, source_region, target_region, latency_ms\n| filter @message like /cross.region/\n| filter latency_ms > 1000\n| sort @timestamp desc\n| limit 100",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application",
+          "/aws/lambda/cross-region-trace-analysis"
+        ]
+      },
+      "cross_region_error_analysis": {
+        "name": "Cross-Region Error Analysis",
+        "description": "Analyze errors in cross-region requests",
+        "query": "fields @timestamp, @message, correlation_id, source_region, target_region, error_type\n| filter @message like /cross.region/ and @message like /ERROR/\n| stats count() as error_count by source_region, target_region, error_type\n| sort error_count desc",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "business_flow_performance": {
+        "name": "Business Flow Performance Analysis",
+        "description": "Analyze performance of business flows across regions",
+        "query": "fields @timestamp, @message, correlation_id, business_context, duration_ms\n| filter @message like /business.flow/\n| stats avg(duration_ms) as avg_duration, max(duration_ms) as max_duration, count() as request_count by business_context\n| sort avg_duration desc",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "trace_correlation_analysis": {
+        "name": "Trace Correlation Analysis",
+        "description": "Analyze trace correlation across regions",
+        "query": "fields @timestamp, @message, correlation_id, source_region, request_path\n| filter correlation_id like /ap-east-2/ or correlation_id like /ap-northeast-1/ or correlation_id like /us-west-2/\n| stats count() as request_count by correlation_id, source_region\n| sort request_count desc\n| limit 50",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "database_performance_cross_region": {
+        "name": "Database Performance Cross-Region",
+        "description": "Analyze database performance across regions",
+        "query": "fields @timestamp, @message, correlation_id, db_operation, db_latency_ms, source_region\n| filter @message like /database/ and db_latency_ms > 100\n| stats avg(db_latency_ms) as avg_latency, max(db_latency_ms) as max_latency, count() as query_count by db_operation, source_region\n| sort avg_latency desc",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "cache_performance_analysis": {
+        "name": "Cache Performance Analysis",
+        "description": "Analyze cache performance across regions",
+        "query": "fields @timestamp, @message, correlation_id, cache_operation, cache_latency_ms, cache_hit\n| filter @message like /cache/\n| stats avg(cache_latency_ms) as avg_latency, sum(cache_hit) as hits, count() as total_ops by cache_operation\n| eval hit_ratio = hits / total_ops * 100\n| sort hit_ratio desc",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "user_journey_tracking": {
+        "name": "User Journey Tracking",
+        "description": "Track user journeys across regions",
+        "query": "fields @timestamp, @message, correlation_id, user_id, session_id, journey_step, completed\n| filter @message like /user.journey/\n| stats count() as step_count, sum(completed) as completed_count by journey_step\n| eval completion_rate = completed_count / step_count * 100\n| sort completion_rate desc",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      },
+      "end_to_end_trace_analysis": {
+        "name": "End-to-End Trace Analysis",
+        "description": "Analyze complete request traces across regions",
+        "query": "fields @timestamp, @message, correlation_id, trace_id, span_id, operation_name, duration_ms\n| filter correlation_id != \"\"\n| sort correlation_id, @timestamp\n| stats sum(duration_ms) as total_duration, count() as span_count by correlation_id\n| sort total_duration desc\n| limit 20",
+        "log_groups": [
+          "/aws/containerinsights/genai-demo-cluster/application"
+        ]
+      }
+    }
+  },
+  "xray_service_map_queries": {
+    "description": "X-Ray Service Map analysis queries",
+    "queries": {
+      "cross_region_service_dependencies": {
+        "name": "Cross-Region Service Dependencies",
+        "description": "Analyze service dependencies across regions",
+        "xray_filter": "service(\"genai-demo\") AND annotation.cross_region = true",
+        "time_range": "PT1H"
+      },
+      "high_latency_traces": {
+        "name": "High Latency Traces",
+        "description": "Find traces with high latency (>2s)",
+        "xray_filter": "service(\"genai-demo\") AND response_time > 2000",
+        "time_range": "PT1H"
+      },
+      "error_traces": {
+        "name": "Error Traces",
+        "description": "Find traces with errors",
+        "xray_filter": "service(\"genai-demo\") AND error = true",
+        "time_range": "PT1H"
+      },
+      "business_flow_traces": {
+        "name": "Business Flow Traces",
+        "description": "Analyze business flow traces",
+        "xray_filter": "service(\"genai-demo\") AND (annotation.business_context = \"order-processing\" OR annotation.business_context = \"payment-processing\")",
+        "time_range": "PT1H"
+      },
+      "database_slow_queries": {
+        "name": "Database Slow Queries",
+        "description": "Find slow database queries in traces",
+        "xray_filter": "service(\"genai-demo\") AND subsegment.name CONTAINS \"database\" AND subsegment.response_time > 100",
+        "time_range": "PT1H"
+      }
+    }
+  },
+  "cloudwatch_metrics_queries": {
+    "description": "CloudWatch Metrics queries for cross-region analysis",
+    "queries": {
+      "cross_region_latency_metrics": {
+        "name": "Cross-Region Latency Metrics",
+        "namespace": "Custom/GenAIDemo/CrossRegion",
+        "metric_name": "CrossRegionLatency",
+        "dimensions": [
+          {"Name": "SourceRegion", "Value": "*"},
+          {"Name": "TargetRegion", "Value": "*"},
+          {"Name": "Service", "Value": "genai-demo"}
+        ],
+        "statistics": ["Average", "Maximum", "p95", "p99"],
+        "period": 300
+      },
+      "cross_region_error_rate": {
+        "name": "Cross-Region Error Rate",
+        "namespace": "Custom/GenAIDemo/CrossRegion",
+        "metric_name": "CrossRegionErrorRate",
+        "dimensions": [
+          {"Name": "SourceRegion", "Value": "*"},
+          {"Name": "TargetRegion", "Value": "*"},
+          {"Name": "Service", "Value": "genai-demo"}
+        ],
+        "statistics": ["Average", "Maximum"],
+        "period": 300
+      },
+      "business_metrics": {
+        "name": "Business Metrics",
+        "namespace": "Custom/GenAIDemo/Business",
+        "metrics": [
+          {
+            "metric_name": "OrderProcessingLatency",
+            "dimensions": [
+              {"Name": "Region", "Value": "*"},
+              {"Name": "BusinessFlow", "Value": "order-processing"}
+            ]
+          },
+          {
+            "metric_name": "PaymentProcessingLatency",
+            "dimensions": [
+              {"Name": "Region", "Value": "*"},
+              {"Name": "BusinessFlow", "Value": "payment-processing"}
+            ]
+          },
+          {
+            "metric_name": "ConversionRate",
+            "dimensions": [
+              {"Name": "Region", "Value": "*"},
+              {"Name": "BusinessFlow", "Value": "user-journey"}
+            ]
+          }
+        ],
+        "statistics": ["Average", "Maximum"],
+        "period": 900
+      }
+    }
+  },
+  "automated_analysis": {
+    "description": "Automated analysis configurations",
+    "lambda_functions": {
+      "cross_region_trace_analyzer": {
+        "name": "CrossRegionTraceAnalyzer",
+        "description": "Automated analysis of cross-region traces",
+        "schedule": "rate(15 minutes)",
+        "analysis_types": [
+          "latency_analysis",
+          "error_analysis",
+          "performance_regression_detection",
+          "business_metrics_analysis"
+        ]
+      }
+    },
+    "cloudwatch_alarms": {
+      "high_cross_region_latency": {
+        "name": "HighCrossRegionLatency",
+        "description": "Alert when cross-region latency exceeds threshold",
+        "metric_name": "AWS/X-Ray/ResponseTime",
+        "threshold": 1000,
+        "comparison_operator": "GreaterThanThreshold",
+        "evaluation_periods": 2,
+        "period": 300
+      },
+      "high_error_rate": {
+        "name": "HighCrossRegionErrorRate",
+        "description": "Alert when cross-region error rate is high",
+        "metric_name": "AWS/X-Ray/ErrorRate",
+        "threshold": 5,
+        "comparison_operator": "GreaterThanThreshold",
+        "evaluation_periods": 2,
+        "period": 300
+      },
+      "business_flow_degradation": {
+        "name": "BusinessFlowDegradation",
+        "description": "Alert when business flow performance degrades",
+        "metric_name": "Custom/GenAIDemo/Business/OrderProcessingLatency",
+        "threshold": 5000,
+        "comparison_operator": "GreaterThanThreshold",
+        "evaluation_periods": 3,
+        "period": 300
+      }
+    }
+  },
+  "dashboard_widgets": {
+    "description": "CloudWatch Dashboard widget configurations",
+    "widgets": [
+      {
+        "type": "metric",
+        "title": "Cross-Region Latency Heatmap",
+        "metrics": [
+          ["Custom/GenAIDemo/CrossRegion", "CrossRegionLatency", "SourceRegion", "ap-east-2", "TargetRegion", "ap-northeast-1"],
+          [".", ".", "SourceRegion", "ap-east-2", "TargetRegion", "us-west-2"],
+          [".", ".", "SourceRegion", "ap-northeast-1", "TargetRegion", "ap-east-2"],
+          [".", ".", "SourceRegion", "ap-northeast-1", "TargetRegion", "us-west-2"],
+          [".", ".", "SourceRegion", "us-west-2", "TargetRegion", "ap-east-2"],
+          [".", ".", "SourceRegion", "us-west-2", "TargetRegion", "ap-northeast-1"]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 300,
+        "region": "ap-east-2"
+      },
+      {
+        "type": "log",
+        "title": "Cross-Region Trace Insights",
+        "query": "SOURCE '/aws/containerinsights/genai-demo-cluster/application'\n| fields @timestamp, correlation_id, source_region, target_region, latency_ms\n| filter @message like /cross.region/\n| stats avg(latency_ms) as avg_latency by source_region, target_region\n| sort avg_latency desc",
+        "region": "ap-east-2",
+        "view": "table"
+      },
+      {
+        "type": "metric",
+        "title": "Business Flow Performance",
+        "metrics": [
+          ["Custom/GenAIDemo/Business", "OrderProcessingLatency", "BusinessFlow", "order-processing"],
+          [".", "PaymentProcessingLatency", "BusinessFlow", "payment-processing"],
+          [".", "ConversionRate", "BusinessFlow", "user-journey"]
+        ],
+        "view": "timeSeries",
+        "stat": "Average",
+        "period": 300,
+        "region": "ap-east-2"
+      }
+    ]
+  },
+  "performance_analysis_recommendations": {
+    "description": "Performance analysis and optimization recommendations",
+    "analysis_rules": [
+      {
+        "name": "High Cross-Region Latency Detection",
+        "condition": "cross_region_latency > 1000ms",
+        "recommendation": "Consider implementing circuit breakers or caching for cross-region calls",
+        "severity": "high"
+      },
+      {
+        "name": "Database Query Optimization",
+        "condition": "database_query_latency > 100ms",
+        "recommendation": "Optimize database queries or implement read replicas",
+        "severity": "medium"
+      },
+      {
+        "name": "Cache Hit Ratio Optimization",
+        "condition": "cache_hit_ratio < 80%",
+        "recommendation": "Review cache policies and TTL settings",
+        "severity": "medium"
+      },
+      {
+        "name": "Business Flow Performance Degradation",
+        "condition": "business_flow_latency > 5000ms",
+        "recommendation": "Analyze business flow bottlenecks and implement async processing",
+        "severity": "high"
+      }
+    ]
+  }
+}

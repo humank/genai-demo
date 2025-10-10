@@ -47,6 +47,55 @@ spec:
               fieldPath: metadata.annotations['eks.amazonaws.com/compute-type']
         - name: _X_AMZN_TRACE_ID
           value: ""
+        # Enhanced Cross-Region Tracing Environment Variables
+        - name: XRAY_CROSS_REGION_ENABLED
+          value: "true"
+        - name: XRAY_PRIMARY_REGION
+          value: "ap-east-2"
+        - name: XRAY_SECONDARY_REGIONS
+          value: "ap-northeast-1,us-west-2"
+        - name: XRAY_CORRELATION_HEADER
+          value: "X-Correlation-ID"
+        - name: XRAY_SOURCE_REGION_HEADER
+          value: "X-Source-Region"
+        - name: XRAY_REQUEST_PATH_HEADER
+          value: "X-Request-Path"
+        - name: XRAY_USER_CONTEXT_HEADER
+          value: "X-User-Context"
+        - name: XRAY_SESSION_ID_HEADER
+          value: "X-Session-ID"
+        - name: XRAY_SERVICE_MAP_CROSS_REGION
+          value: "true"
+        - name: XRAY_SAMPLING_RATE
+          value: "0.1"
+        - name: XRAY_BUFFER_SIZE_MB
+          value: "128"  # Increased for cross-region tracing
+        - name: XRAY_CONCURRENCY
+          value: "32"   # Increased for higher throughput
+        - name: XRAY_BATCH_SIZE
+          value: "100"
+        - name: XRAY_FLUSH_INTERVAL
+          value: "1000"  # 1 second
+        - name: XRAY_MAX_CONNECTIONS
+          value: "200"
+        - name: XRAY_KEEP_ALIVE
+          value: "true"
+        # Performance Optimization
+        - name: XRAY_PERFORMANCE_TRACKING_ENABLED
+          value: "true"
+        - name: XRAY_LATENCY_ANALYSIS_ENABLED
+          value: "true"
+        - name: XRAY_ERROR_ANALYSIS_ENABLED
+          value: "true"
+        - name: XRAY_BUSINESS_METRICS_ENABLED
+          value: "true"
+        # Cross-Region Correlation
+        - name: XRAY_TRACE_CORRELATION_ENABLED
+          value: "true"
+        - name: XRAY_DEPENDENCY_TRACKING_ENABLED
+          value: "true"
+        - name: XRAY_SERVICE_GRAPH_ENABLED
+          value: "true"
         volumeMounts:
         - name: config-volume
           mountPath: /aws/xray
@@ -86,9 +135,9 @@ metadata:
   namespace: observability
 data:
   cfg.yaml: |
-    # AWS X-Ray Daemon configuration
-    TotalBufferSizeInMB: 0
-    Concurrency: 8
+    # AWS X-Ray Daemon configuration for Multi-Region Active-Active
+    TotalBufferSizeInMB: 128  # Increased for cross-region tracing
+    Concurrency: 32  # Increased for higher throughput
     Region: "${AWS_REGION}"
     NoVerifySSL: false
     LocalMode: false
@@ -99,6 +148,132 @@ data:
     Socket:
       UDPAddress: "0.0.0.0:2000"
       TCPAddress: "0.0.0.0:2000"
+    # Enhanced Cross-Region Configuration
+    CrossRegion:
+      Enabled: true
+      Regions:
+        - "ap-east-2"      # Hong Kong (Primary)
+        - "ap-northeast-1" # Tokyo (Secondary)  
+        - "us-west-2"      # Oregon (Tertiary)
+      CorrelationHeaders:
+        - "X-Correlation-ID"
+        - "X-Source-Region"
+        - "X-Request-Path"
+        - "X-User-Context"
+        - "X-Session-ID"
+        - "X-Business-Context"
+      TracePropagation:
+        Enabled: true
+        Format: "aws-xray"
+        Headers:
+          - "X-Amzn-Trace-Id"
+          - "X-Correlation-ID"
+          - "X-Source-Region"
+      ServiceMap:
+        CrossRegionView: true
+        RegionAggregation: true
+        DependencyTracking: true
+        PerformanceAnalysis: true
+        BusinessMetrics: true
+      PerformanceTracking:
+        Enabled: true
+        CrossRegionLatency: true
+        DatabaseQueries: true
+        ExternalCalls: true
+        CacheOperations: true
+        MessageQueueOperations: true
+        LatencyThresholds:
+          Database: 100      # 100ms
+          ExternalAPI: 500   # 500ms
+          Cache: 10          # 10ms
+          CrossRegion: 1000  # 1 second
+        PerformanceAnalysis:
+          Enabled: true
+          Percentiles: [50, 90, 95, 99]
+          HistogramBuckets: [10, 50, 100, 500, 1000, 2000, 5000]
+    # Enhanced Performance Optimization
+    Performance:
+      BatchSize: 100
+      FlushInterval: 1000  # 1 second
+      MaxConnections: 200
+      KeepAlive: true
+      ConnectionPoolSize: 50
+      RetryPolicy:
+        MaxRetries: 3
+        BackoffMultiplier: 2
+        InitialBackoffMs: 100
+        MaxBackoffMs: 5000
+      Compression:
+        Enabled: true
+        Algorithm: "gzip"
+        Level: 6
+    # Enhanced Sampling Configuration
+    Sampling:
+      DefaultSamplingRate: 0.1
+      AdaptiveSampling:
+        Enabled: true
+        TargetTPS: 10
+        AdjustmentInterval: 60
+      ServiceSamplingRules:
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/api/v1/orders*"
+          FixedRate: 0.2
+          ReservoirSize: 5
+          Priority: 1000
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/api/v1/payments*"
+          FixedRate: 0.2
+          ReservoirSize: 5
+          Priority: 1000
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/api/v1/customers*"
+          FixedRate: 0.15
+          ReservoirSize: 3
+          Priority: 2000
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/api/*"
+          FixedRate: 0.1
+          ReservoirSize: 2
+          Priority: 5000
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/actuator/health"
+          FixedRate: 0.01
+          ReservoirSize: 1
+          Priority: 9000
+        - ServiceName: "genai-demo"
+          ServiceType: "*"
+          URLPath: "/actuator/*"
+          FixedRate: 0.05
+          ReservoirSize: 1
+          Priority: 8000
+      ErrorSamplingRate: 1.0  # Always sample errors
+      SlowRequestThreshold: 2000  # 2 seconds
+      SlowRequestSamplingRate: 1.0  # Always sample slow requests
+    # Business Context Configuration
+    BusinessContext:
+      Enabled: true
+      TrackUserJourneys: true
+      TrackConversionRates: true
+      TrackAbandonmentRates: true
+      TrackErrorRates: true
+      TrackPerformanceImpact: true
+      CorrelationPatterns:
+        - "order-processing"
+        - "payment-processing"
+        - "user-registration"
+        - "inventory-management"
+    # End-to-End Tracing Configuration
+    EndToEndTracing:
+      Enabled: true
+      TraceBusinessFlows: true
+      TraceUserJourneys: true
+      MaxTraceLength: 100  # Maximum number of segments per trace
+      TraceTimeout: 300    # 5 minutes
     Version: 2
 
 ---

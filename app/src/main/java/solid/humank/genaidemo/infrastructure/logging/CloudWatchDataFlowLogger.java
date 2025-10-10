@@ -2,7 +2,7 @@ package solid.humank.genaidemo.infrastructure.logging;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.kafka.support.SendResult;
+// import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.infrastructure.messaging.DataFlowEvent;
@@ -39,7 +39,7 @@ public class CloudWatchDataFlowLogger {
     /**
      * Log successful event publishing
      */
-    public void logSuccessfulPublish(DataFlowEvent event, SendResult<String, Object> result) {
+    public void logSuccessfulPublish(DataFlowEvent event, Object result) {
         publishLogger.info("Event published successfully",
             kv("eventId", event.eventId()),
             kv("correlationId", event.correlationId()),
@@ -52,9 +52,9 @@ public class CloudWatchDataFlowLogger {
             kv("dataSize", event.dataSize()),
             kv("businessContext", event.businessContext()),
             kv("boundedContext", event.boundedContext()),
-            kv("kafkaPartition", result.getRecordMetadata().partition()),
-            kv("kafkaOffset", result.getRecordMetadata().offset()),
-            kv("kafkaTimestamp", result.getRecordMetadata().timestamp()),
+            // kv("kafkaPartition", result.getRecordMetadata().partition()),
+            // kv("kafkaOffset", result.getRecordMetadata().offset()),
+            // kv("kafkaTimestamp", result.getRecordMetadata().timestamp()),
             kv("operation", "publish"),
             kv("status", "success")
         );

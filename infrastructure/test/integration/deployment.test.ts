@@ -18,6 +18,7 @@ describe('Full Deployment Integration Tests', () => {
                 region: 'us-east-1',
                 enableAnalytics: 'true',
                 enableCdkNag: 'false', // Disable for integration tests
+                '@aws-cdk/core:stackRelativeExports': true,
             },
         });
     });
@@ -30,12 +31,16 @@ describe('Full Deployment Integration Tests', () => {
         // Create all stacks in correct order
         const networkStack = new NetworkStack(app, `${config.stackPrefix}NetworkStack`, {
             env: { region: config.region },
+            environment: environment,
+            projectName: 'genai-demo',
             description: `Network infrastructure for ${environment} environment`,
             tags: config.tags,
         });
 
         const securityStack = new SecurityStack(app, `${config.stackPrefix}SecurityStack`, {
             env: { region: config.region },
+            environment,
+            projectName: 'genai-demo',
             description: `Security infrastructure for ${environment} environment`,
             tags: config.tags,
         });
@@ -64,7 +69,10 @@ describe('Full Deployment Integration Tests', () => {
             vpc: networkStack.vpc,
             securityGroups: networkStack.securityGroups,
             kmsKey: securityStack.kmsKey,
+            environment: environment,
+            projectName: 'genai-demo',
             env: { region: config.region },
+            crossRegionReferences: true,
             description: `Core infrastructure for ${environment} environment`,
             tags: config.tags,
         });
@@ -73,6 +81,7 @@ describe('Full Deployment Integration Tests', () => {
             vpc: networkStack.vpc,
             kmsKey: securityStack.kmsKey,
             env: { region: config.region },
+            crossRegionReferences: true,
             description: `Observability infrastructure for ${environment} environment`,
             tags: config.tags,
         });
@@ -128,19 +137,33 @@ describe('Full Deployment Integration Tests', () => {
         const config = getEnvironmentConfig(environment, region);
 
         // Create minimal stack set for resource counting
+        const env = { 
+            region: config.region,
+            account: '123456789012' // Mock account for testing
+        };
+
         const networkStack = new NetworkStack(app, `${config.stackPrefix}NetworkStack`, {
-            env: { region: config.region },
+            env: env,
+            environment: 'test',
+            projectName: 'genai-demo',
+            crossRegionReferences: true,
         });
 
         const securityStack = new SecurityStack(app, `${config.stackPrefix}SecurityStack`, {
-            env: { region: config.region },
+            env: env,
+            environment: 'test',
+            projectName: 'genai-demo',
+            crossRegionReferences: true,
         });
 
         const coreStack = new CoreInfrastructureStack(app, `${config.stackPrefix}CoreInfrastructureStack`, {
             vpc: networkStack.vpc,
             securityGroups: networkStack.securityGroups,
             kmsKey: securityStack.kmsKey,
-            env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo',
+            env: env,
+            crossRegionReferences: true,
         });
 
         // Get templates
@@ -150,14 +173,14 @@ describe('Full Deployment Integration Tests', () => {
 
         // Validate resource counts
         networkTemplate.resourceCountIs('AWS::EC2::VPC', 1);
-        networkTemplate.resourceCountIs('AWS::EC2::SecurityGroup', 3);
-        networkTemplate.resourceCountIs('AWS::EC2::Subnet', 6);
+        networkTemplate.resourceCountIs('AWS::EC2::SecurityGroup', 7);
+        networkTemplate.resourceCountIs('AWS::EC2::Subnet', 12);
 
         securityTemplate.resourceCountIs('AWS::KMS::Key', 1);
-        securityTemplate.resourceCountIs('AWS::IAM::Role', 1);
+        securityTemplate.resourceCountIs('AWS::IAM::Role', 3);
 
         coreTemplate.resourceCountIs('AWS::ElasticLoadBalancingV2::LoadBalancer', 1);
-        coreTemplate.resourceCountIs('AWS::ElasticLoadBalancingV2::TargetGroup', 1);
+        coreTemplate.resourceCountIs('AWS::ElasticLoadBalancingV2::TargetGroup', 3);
     });
 
     test('should validate stack outputs and cross-stack references', () => {
@@ -167,10 +190,14 @@ describe('Full Deployment Integration Tests', () => {
 
         const networkStack = new NetworkStack(app, `${config.stackPrefix}NetworkStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo'
         });
 
         const securityStack = new SecurityStack(app, `${config.stackPrefix}SecurityStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo',
         });
 
         // Verify outputs exist
@@ -188,22 +215,38 @@ describe('Full Deployment Integration Tests', () => {
             vpc: networkStack.vpc,
             securityGroups: networkStack.securityGroups,
             kmsKey: securityStack.kmsKey,
+            environment: 'test',
+            projectName: 'genai-demo',
             env: { region: config.region },
         });
 
         // Should not throw during synthesis (create new app to avoid multiple synth issue)
         const testApp = new cdk.App();
+        const testEnv = { 
+            region: config.region,
+            account: '123456789012' // Mock account for testing
+        };
+        
         const testNetworkStack = new NetworkStack(testApp, `${config.stackPrefix}NetworkStack`, {
-            env: { region: config.region },
+            env: testEnv,
+            environment: 'test',
+            projectName: 'genai-demo',
+            crossRegionReferences: true,
         });
         const testSecurityStack = new SecurityStack(testApp, `${config.stackPrefix}SecurityStack`, {
-            env: { region: config.region },
+            env: testEnv,
+            environment: 'test',
+            projectName: 'genai-demo',
+            crossRegionReferences: true,
         });
         const testCoreStack = new CoreInfrastructureStack(testApp, `${config.stackPrefix}CoreInfrastructureStack`, {
             vpc: testNetworkStack.vpc,
             securityGroups: testNetworkStack.securityGroups,
             kmsKey: testSecurityStack.kmsKey,
-            env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo',
+            env: testEnv,
+            crossRegionReferences: true,
         });
 
         expect(() => testApp.synth()).not.toThrow();
@@ -225,10 +268,14 @@ describe('Full Deployment Integration Tests', () => {
 
         const networkStack = new NetworkStack(appWithoutAnalytics, `${config.stackPrefix}NetworkStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo'
         });
 
         const securityStack = new SecurityStack(appWithoutAnalytics, `${config.stackPrefix}SecurityStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo',
         });
 
         // Should synthesize successfully without analytics
@@ -246,10 +293,14 @@ describe('Full Deployment Integration Tests', () => {
 
         const networkStack2 = new NetworkStack(appWithAnalytics, `${config.stackPrefix}NetworkStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo'
         });
 
         const securityStack2 = new SecurityStack(appWithAnalytics, `${config.stackPrefix}SecurityStack`, {
             env: { region: config.region },
+            environment: 'test',
+            projectName: 'genai-demo',
         });
 
         const alertingStack2 = new AlertingStack(appWithAnalytics, `${config.stackPrefix}AlertingStack`, {

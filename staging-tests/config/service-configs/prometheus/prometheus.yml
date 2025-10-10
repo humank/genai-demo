@@ -1,0 +1,61 @@
+# Prometheus Configuration for Staging Tests
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Application metrics (when available)
+  - job_name: 'genai-demo-app'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 10s
+
+  # PostgreSQL Exporter (if added)
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 10s
+
+  # Redis Exporter (if added)
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 10s
+
+  # Kafka Exporter (if added)
+  - job_name: 'kafka-exporter'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+    scrape_interval: 10s
+
+  # JMX Metrics from Kafka
+  - job_name: 'kafka-jmx'
+    static_configs:
+      - targets: ['kafka-1:19092', 'kafka-2:19093', 'kafka-3:19094']
+    scrape_interval: 30s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "alert_rules.yml"

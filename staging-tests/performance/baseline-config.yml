@@ -1,0 +1,336 @@
+# Performance Baseline Configuration
+# This file defines how performance baselines are created, updated, and managed
+
+# Baseline creation settings
+baseline_creation:
+  # Minimum number of test runs required to create a baseline
+  min_test_runs: 5
+  
+  # Statistical method for baseline calculation
+  # Options: mean, median, percentile
+  calculation_method: "percentile"
+  
+  # Percentile to use when calculation_method is "percentile"
+  percentile: 75
+  
+  # Confidence interval for baseline ranges
+  confidence_interval: 0.95
+  
+  # Outlier detection and removal
+  outlier_detection:
+    enabled: true
+    method: "iqr"  # Options: iqr, zscore, isolation_forest
+    threshold: 1.5  # IQR multiplier or Z-score threshold
+  
+  # Baseline validation requirements
+  validation:
+    # Minimum coefficient of variation (stability requirement)
+    max_coefficient_of_variation: 0.3
+    
+    # Maximum acceptable standard deviation percentage
+    max_std_dev_percentage: 25
+    
+    # Require successful test runs only
+    require_success_only: true
+    
+    # Minimum success rate for baseline inclusion
+    min_success_rate: 95.0
+
+# Baseline update settings
+baseline_update:
+  # Update strategy options: replace, rolling_average, weighted_average, append
+  default_strategy: "rolling_average"
+  
+  # Rolling average settings
+  rolling_average:
+    # Number of recent results to include in rolling average
+    window_size: 10
+    
+    # Weight decay factor for older results (0.0 to 1.0)
+    decay_factor: 0.9
+  
+  # Weighted average settings
+  weighted_average:
+    # Weight for new results vs existing baseline
+    new_result_weight: 0.3
+    existing_baseline_weight: 0.7
+  
+  # Automatic update triggers
+  auto_update:
+    enabled: true
+    
+    # Update after N successful test runs
+    update_frequency: 5
+    
+    # Only update if new results are within acceptable range
+    validate_before_update: true
+    
+    # Maximum deviation from current baseline to allow auto-update
+    max_deviation_percentage: 50
+
+# Regression detection settings
+regression_detection:
+  # Thresholds for different severity levels
+  thresholds:
+    critical:
+      response_time_increase_percent: 50
+      throughput_decrease_percent: 30
+      success_rate_decrease_percent: 5
+      
+    high:
+      response_time_increase_percent: 30
+      throughput_decrease_percent: 20
+      success_rate_decrease_percent: 3
+      
+    medium:
+      response_time_increase_percent: 20
+      throughput_decrease_percent: 15
+      success_rate_decrease_percent: 2
+      
+    low:
+      response_time_increase_percent: 10
+      throughput_decrease_percent: 10
+      success_rate_decrease_percent: 1
+  
+  # Statistical significance testing
+  statistical_testing:
+    enabled: true
+    
+    # Significance level for statistical tests
+    alpha: 0.05
+    
+    # Minimum sample size for statistical testing
+    min_sample_size: 3
+    
+    # Test methods: t_test, mann_whitney, ks_test
+    test_method: "t_test"
+  
+  # Regression confirmation
+  confirmation:
+    # Require multiple consecutive regressions before alerting
+    require_consecutive: true
+    consecutive_count: 2
+    
+    # Grace period after deployment (minutes)
+    deployment_grace_period: 30
+
+# Baseline storage and management
+storage:
+  # Directory for baseline files
+  baseline_directory: "staging-tests/performance/baselines"
+  
+  # File naming convention
+  # Available variables: {test_scenario}, {timestamp}, {version}
+  filename_pattern: "{test_scenario}_baseline.json"
+  
+  # Backup settings
+  backup:
+    enabled: true
+    backup_directory: "staging-tests/performance/baselines/backup"
+    max_backups: 10
+    
+  # Baseline versioning
+  versioning:
+    enabled: true
+    version_on_major_change: true
+    major_change_threshold: 25  # Percentage change to trigger new version
+  
+  # Retention policy
+  retention:
+    # Keep baselines for N days
+    retention_days: 90
+    
+    # Always keep the latest N baselines
+    keep_latest_count: 5
+
+# Test scenario specific configurations
+test_scenarios:
+  normal_load:
+    baseline_creation:
+      min_test_runs: 3
+      calculation_method: "median"
+    regression_detection:
+      thresholds:
+        critical:
+          response_time_increase_percent: 40
+          throughput_decrease_percent: 25
+        high:
+          response_time_increase_percent: 25
+          throughput_decrease_percent: 15
+  
+  peak_load:
+    baseline_creation:
+      min_test_runs: 5
+      calculation_method: "percentile"
+      percentile: 80
+    regression_detection:
+      thresholds:
+        critical:
+          response_time_increase_percent: 60
+          throughput_decrease_percent: 35
+  
+  stress_test:
+    baseline_creation:
+      min_test_runs: 3
+      calculation_method: "percentile"
+      percentile: 90
+    regression_detection:
+      thresholds:
+        critical:
+          response_time_increase_percent: 100
+          throughput_decrease_percent: 50
+    validation:
+      max_coefficient_of_variation: 0.5  # Allow higher variation for stress tests
+  
+  endurance_test:
+    baseline_creation:
+      min_test_runs: 2  # Fewer runs due to long duration
+      calculation_method: "mean"
+    regression_detection:
+      thresholds:
+        critical:
+          response_time_increase_percent: 30
+          throughput_decrease_percent: 20
+  
+  spike_test:
+    baseline_creation:
+      min_test_runs: 3
+      calculation_method: "percentile"
+      percentile: 85
+    regression_detection:
+      thresholds:
+        critical:
+          response_time_increase_percent: 80
+          throughput_decrease_percent: 40
+
+# Metrics configuration
+metrics:
+  # Primary metrics for baseline calculation
+  primary_metrics:
+    - name: "mean_response_time"
+      weight: 0.3
+      direction: "lower_is_better"
+      unit: "ms"
+      
+    - name: "p95_response_time"
+      weight: 0.25
+      direction: "lower_is_better"
+      unit: "ms"
+      
+    - name: "throughput"
+      weight: 0.25
+      direction: "higher_is_better"
+      unit: "req/s"
+      
+    - name: "success_rate"
+      weight: 0.2
+      direction: "higher_is_better"
+      unit: "%"
+  
+  # Secondary metrics for monitoring
+  secondary_metrics:
+    - name: "p99_response_time"
+      direction: "lower_is_better"
+      unit: "ms"
+      
+    - name: "total_requests"
+      direction: "higher_is_better"
+      unit: "count"
+      
+    - name: "failed_requests"
+      direction: "lower_is_better"
+      unit: "count"
+  
+  # System metrics (if available)
+  system_metrics:
+    - name: "cpu_usage_percent"
+      direction: "lower_is_better"
+      unit: "%"
+      
+    - name: "memory_usage_percent"
+      direction: "lower_is_better"
+      unit: "%"
+      
+    - name: "jvm_memory_usage_percent"
+      direction: "lower_is_better"
+      unit: "%"
+
+# Reporting and notifications
+reporting:
+  # Generate baseline reports
+  generate_reports: true
+  
+  # Report formats
+  formats: ["json", "markdown", "html"]
+  
+  # Include charts in reports
+  include_charts: true
+  
+  # Report retention
+  report_retention_days: 30
+
+# Integration settings
+integrations:
+  # CI/CD integration
+  cicd:
+    # Fail build on critical regressions
+    fail_on_critical_regression: true
+    
+    # Fail build on multiple high regressions
+    fail_on_multiple_high_regressions: true
+    max_high_regressions: 2
+    
+    # Create baseline automatically for new test scenarios
+    auto_create_baseline: true
+  
+  # Monitoring integration
+  monitoring:
+    # Send metrics to monitoring system
+    send_metrics: false
+    
+    # Monitoring system type: prometheus, datadog, newrelic
+    system_type: "prometheus"
+    
+    # Metric prefix for monitoring
+    metric_prefix: "performance_baseline"
+  
+  # Alerting integration
+  alerting:
+    # Send alerts on regressions
+    send_alerts: true
+    
+    # Alert channels
+    channels: ["console", "file", "email"]
+    
+    # Alert configuration file
+    alert_config_file: "staging-tests/performance/alerting-config.yml"
+
+# Advanced settings
+advanced:
+  # Parallel processing
+  parallel_processing:
+    enabled: true
+    max_workers: 4
+  
+  # Caching
+  caching:
+    enabled: true
+    cache_directory: "staging-tests/performance/.cache"
+    cache_ttl_hours: 24
+  
+  # Debugging
+  debug:
+    enabled: false
+    log_level: "INFO"
+    save_intermediate_results: false
+  
+  # Performance optimization
+  optimization:
+    # Use numpy for calculations when available
+    use_numpy: true
+    
+    # Batch processing for large datasets
+    batch_size: 1000
+    
+    # Memory management
+    max_memory_usage_mb: 1024

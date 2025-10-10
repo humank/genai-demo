@@ -1,0 +1,256 @@
+# Resilience4j Configuration for Disaster Recovery and Business Continuity
+# This configuration provides circuit breaker, retry, and time limiter patterns
+
+resilience4j:
+  # Circuit Breaker Configuration
+  circuitbreaker:
+    configs:
+      default:
+        # Circuit breaker opens when 50% of calls fail
+        failure-rate-threshold: 50
+        # Circuit breaker opens when 50% of calls are slow
+        slow-call-rate-threshold: 50
+        # A call is considered slow if it takes more than 2 seconds
+        slow-call-duration-threshold: 2s
+        # Wait 30 seconds before transitioning to half-open state
+        wait-duration-in-open-state: 30s
+        # Allow 5 calls in half-open state to test recovery
+        permitted-number-of-calls-in-half-open-state: 5
+        # Need at least 10 calls before calculating failure rate
+        minimum-number-of-calls: 10
+        # Use last 20 calls for calculation
+        sliding-window-size: 20
+        sliding-window-type: COUNT_BASED
+        # Automatically transition from open to half-open
+        automatic-transition-from-open-to-half-open-enabled: true
+        # Record all exceptions as failures
+        record-exceptions:
+          - java.lang.Exception
+        # Don't record these exceptions as failures
+        ignore-exceptions:
+          - java.lang.IllegalArgumentException
+          - java.lang.IllegalStateException
+      
+      # Critical services configuration - more aggressive
+      critical:
+        failure-rate-threshold: 30
+        slow-call-rate-threshold: 40
+        slow-call-duration-threshold: 1s
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 3
+        minimum-number-of-calls: 5
+        sliding-window-size: 15
+        sliding-window-type: COUNT_BASED
+      
+      # Non-critical services configuration - more lenient
+      lenient:
+        failure-rate-threshold: 70
+        slow-call-rate-threshold: 60
+        slow-call-duration-threshold: 5s
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 10
+        minimum-number-of-calls: 20
+        sliding-window-size: 30
+        sliding-window-type: COUNT_BASED
+    
+    instances:
+      # Customer service circuit breaker
+      customerService:
+        base-config: default
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+      
+      # Database circuit breaker
+      database:
+        base-config: critical
+        register-health-indicator: true
+      
+      # External API circuit breaker
+      externalApi:
+        base-config: lenient
+        register-health-indicator: true
+      
+      # Payment service circuit breaker
+      paymentService:
+        base-config: critical
+        register-health-indicator: true
+  
+  # Retry Configuration
+  retry:
+    configs:
+      default:
+        # Maximum 3 retry attempts
+        max-attempts: 3
+        # Initial wait duration
+        wait-duration: 500ms
+        # Exponential backoff multiplier
+        exponential-backoff-multiplier: 2
+        # Maximum wait duration
+        exponential-max-wait-duration: 5s
+        # Retry on all exceptions
+        retry-exceptions:
+          - java.lang.Exception
+        # Don't retry on these exceptions
+        ignore-exceptions:
+          - java.lang.IllegalArgumentException
+          - java.lang.IllegalStateException
+      
+      # Database retry configuration - more aggressive
+      database:
+        max-attempts: 5
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        exponential-max-wait-duration: 16s
+        retry-exceptions:
+          - org.springframework.dao.DataAccessException
+          - java.sql.SQLException
+      
+      # External API retry configuration - less aggressive
+      externalApi:
+        max-attempts: 2
+        wait-duration: 200ms
+        exponential-backoff-multiplier: 1.5
+        exponential-max-wait-duration: 1s
+    
+    instances:
+      # Customer service retry
+      customerService:
+        base-config: default
+        enable-exponential-backoff: true
+      
+      # Database retry
+      database:
+        base-config: database
+        enable-exponential-backoff: true
+      
+      # External API retry
+      externalApi:
+        base-config: externalApi
+        enable-exponential-backoff: true
+  
+  # Time Limiter Configuration
+  timelimiter:
+    configs:
+      default:
+        # Default timeout: 3 seconds
+        timeout-duration: 3s
+        # Cancel the operation if timeout
+        cancel-running-future: true
+      
+      # Fast operations
+      fast:
+        timeout-duration: 1s
+        cancel-running-future: true
+      
+      # Slow operations
+      slow:
+        timeout-duration: 10s
+        cancel-running-future: true
+    
+    instances:
+      customerService:
+        base-config: default
+      
+      database:
+        base-config: fast
+      
+      externalApi:
+        base-config: slow
+  
+  # Bulkhead Configuration (Resource Isolation)
+  bulkhead:
+    configs:
+      default:
+        # Maximum concurrent calls
+        max-concurrent-calls: 25
+        # Maximum wait duration for a call
+        max-wait-duration: 0ms
+    
+    instances:
+      customerService:
+        base-config: default
+        max-concurrent-calls: 50
+      
+      database:
+        base-config: default
+        max-concurrent-calls: 20
+  
+  # Thread Pool Bulkhead Configuration
+  thread-pool-bulkhead:
+    configs:
+      default:
+        # Core thread pool size
+        core-thread-pool-size: 10
+        # Maximum thread pool size
+        max-thread-pool-size: 20
+        # Queue capacity
+        queue-capacity: 100
+        # Keep alive time
+        keep-alive-duration: 20ms
+    
+    instances:
+      customerService:
+        base-config: default
+  
+  # Rate Limiter Configuration
+  ratelimiter:
+    configs:
+      default:
+        # Allow 100 requests per refresh period
+        limit-for-period: 100
+        # Refresh period: 1 second
+        limit-refresh-period: 1s
+        # Timeout for waiting for permission
+        timeout-duration: 0ms
+    
+    instances:
+      customerService:
+        base-config: default
+        limit-for-period: 200
+      
+      externalApi:
+        base-config: default
+        limit-for-period: 50
+
+# Spring Cache Configuration
+spring:
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=10m
+    cache-names:
+      - customers
+      - customersList
+      - orders
+      - products
+
+# Metrics Configuration
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        resilience4j.circuitbreaker.calls: true
+        resilience4j.retry.calls: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+        resilience4j.circuitbreaker.calls: 0.5, 0.95, 0.99
+        resilience4j.retry.calls: 0.5, 0.95, 0.99
+    export:
+      prometheus:
+        enabled: true
+      cloudwatch:
+        enabled: ${CLOUDWATCH_METRICS_ENABLED:false}
+        namespace: ${spring.application.name}
+        batch-size: 20
+        step: 1m
+  
+  # Health Indicators
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true

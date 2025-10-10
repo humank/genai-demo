@@ -57,12 +57,6 @@ This directory contains all project reports and summary documents, organized by 
 - Quality assurance reports
 - Test coverage analysis summaries
 
-#### Translation (`translation/`)
-- Translation system reports
-- Language processing summaries
-- Localization implementation reports
-- Translation quality reports
-
 #### Quality UX (`quality-ux/`)
 - User experience research reports
 - Usability testing summaries

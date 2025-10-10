@@ -18,7 +18,9 @@ spring:
   
   # Configuration import - conditional based on profile
   config:
-    import: "optional:classpath:application-observability.yml"
+    import:
+      - "optional:classpath:application-observability.yml"
+      - "optional:classpath:application-resilience.yml"
 
 server:
   port: 8080
@@ -104,7 +106,6 @@ aws:
     context-missing: LOG_ERROR
     plugins:
       - EC2Plugin
-      - ECSPlugin
       - EKSPlugin
 
 # Legacy Tracing Configuration (DISABLED)
@@ -199,6 +200,21 @@ app:
       success-threshold: 1
       ping-enabled: true
       info-enabled: true
+
+  # Multi-Region DataSource Configuration (Active-Active Architecture)
+  datasource:
+    multi-region:
+      enabled: false  # Enable in staging/production profiles
+      taiwan:
+        jdbc-url: ${TAIWAN_DB_URL:jdbc:postgresql://localhost:5432/genaidemo}
+        username: ${TAIWAN_DB_USER:postgres}
+        password: ${TAIWAN_DB_PASSWORD:postgres}
+        driver-class-name: org.postgresql.Driver
+      japan:
+        jdbc-url: ${JAPAN_DB_URL:jdbc:postgresql://localhost:5432/genaidemo}
+        username: ${JAPAN_DB_USER:postgres}
+        password: ${JAPAN_DB_PASSWORD:postgres}
+        driver-class-name: org.postgresql.Driver
 
 genai-demo:
   # 事件發布配置 (預設值，會被 profile 覆蓋)

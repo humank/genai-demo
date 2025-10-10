@@ -1,0 +1,7 @@
+# Test Reports Directory
+
+This directory will contain test execution reports including:
+- Integration test results and logs
+- Gatling performance test reports
+- Cross-region test results
+- Consolidated test reports and metrics

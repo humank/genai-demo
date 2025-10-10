@@ -1,0 +1,47 @@
+# Development Environment Configuration
+# Spring Boot Actuator Health Check - Full details for debugging
+
+spring:
+  profiles:
+    active: dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Expose all endpoints in dev
+      base-path: /actuator
+  
+  endpoint:
+    health:
+      enabled: true
+      show-details: always  # Always show full details in dev
+      probes:
+        enabled: false  # Disable K8s probes in local dev (not running in K8s)
+      group:
+        liveness:
+          include: ping,diskSpace
+          show-details: always
+        readiness:
+          include: ping,db,redis,kafka
+          show-details: always
+  
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+    db:
+      enabled: true
+    redis:
+      enabled: true
+    kafka:
+      enabled: true
+    diskspace:
+      enabled: true
+      threshold: 10MB
+
+# Development notes:
+# - All actuator endpoints exposed for debugging
+# - Health details always visible
+# - Kubernetes probes disabled (not needed in local dev)

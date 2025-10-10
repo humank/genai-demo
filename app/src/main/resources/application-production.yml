@@ -1,138 +1,46 @@
 # Production Environment Configuration
-# AWS Native Concurrency Monitoring System Configuration
+# Spring Boot Actuator Health Check for Kubernetes
 
 spring:
   profiles:
     active: production
 
-# Management and Actuator Configuration for Production
 management:
-  metrics:
-    export:
-      cloudwatch:
-        enabled: true
-        namespace: GenAIDemo/Production
-        step: 1m
-        batch-size: 20
-    tags:
-      environment: production
-      region: ${AWS_REGION:ap-east-2}
-
-# AWS X-Ray Configuration for Production
-aws:
-  region: ${AWS_REGION:ap-east-2}
-  xray:
-    enabled: true
-    tracing-name: genai-demo-production
-    daemon-address: ${XRAY_DAEMON_ADDRESS:127.0.0.1:2000}
-    sampling:
-      rate: 0.05  # Lower sampling rate for production
-      reservoir: 1
-    context-missing: LOG_ERROR
-    plugins:
-      - EC2Plugin
-      - ECSPlugin
-      - EKSPlugin
-
-# Container Insights Configuration
-container-insights:
-  enabled: true
-  cluster-name: genai-demo-production
-  log-group: /aws/containerinsights/genai-demo-production/performance
-
-# Thread Pool Configuration for KEDA Integration
-genai-demo:
-  thread-pool:
-    core-size: 10
-    max-size: 50
-    queue-capacity: 200
-    keep-alive-seconds: 60
-    metrics:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  
+  endpoint:
+    health:
       enabled: true
-      export-interval: 30s
-
-  # Observability Configuration
-  observability:
-    enabled: true
-    distributed-tracing: true
-    
-    # CloudWatch Metrics Configuration
-    metrics:
-      cloudwatch:
-        enabled: true
-        namespace: GenAIDemo/Production
-        dimensions:
-          Environment: production
-          Service: genai-demo
-          Region: ${AWS_REGION:ap-east-2}
-      
-      # Custom Metrics Configuration
-      custom:
-        thread-pool:
-          enabled: true
-          prefix: "executor"
-        jvm:
-          enabled: true
-          prefix: "jvm"
-        http:
-          enabled: true
-          prefix: "http.server"
-    
-    # X-Ray Tracing Configuration
-    tracing:
+      show-details: when-authorized  # Only show details when authorized in production
+      probes:
+        enabled: true  # Enable Kubernetes liveness and readiness probes
+      group:
+        liveness:
+          include: ping,diskSpace
+          show-details: always
+        readiness:
+          include: ping,db,redis,kafka
+          show-details: always
+  
+  health:
+    livenessstate:
       enabled: true
-      service-name: genai-demo-production
-      sampling-rate: 0.05  # Lower sampling for production
-      annotations:
-        environment: production
-        service: genai-demo
-        version: ${spring.application.version}
-    
-    # Grafana Integration
-    grafana:
+    readinessstate:
       enabled: true
-      workspace-id: ${GRAFANA_WORKSPACE_ID:}
-      dashboard-url: ${GRAFANA_DASHBOARD_URL:}
-
-# Logging Configuration for Production
-logging:
-  level:
-    root: WARN
-    solid.humank.genaidemo: INFO
-    com.amazonaws.xray: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{36} - %msg%n"
-
-# Redis Configuration for Production (ElastiCache)
-app:
-  redis:
-    enabled: true
-    mode: CLUSTER
-    cluster:
-      nodes: ${REDIS_CLUSTER_NODES}
-      max-redirections: 5
-      scan-interval: 5000
-      read-from-slaves: true
-    high-availability:
-      enable-failover: true
-      failover-timeout: 30000
-      max-failover-attempts: 3
-    health-check:
+    db:
       enabled: true
-      interval: 30000
-      timeout: 5000
-      failure-threshold: 3
-
-# Event Publishing Configuration
-  events:
-    publisher: kafka
-    async: true
+    redis:
+      enabled: true
     kafka:
-      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-      topic: genai-demo-events-production
-      producer:
-        retries: 5
-        batch-size: 32768
-        linger-ms: 10
-        buffer-memory: 67108864
-        compression-type: lz4
+      enabled: true
+    diskspace:
+      enabled: true
+      threshold: 10MB
+
+# Health check endpoints for Kubernetes:
+# - /actuator/health/liveness  - Liveness probe
+# - /actuator/health/readiness - Readiness probe

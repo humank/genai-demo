@@ -1,0 +1,7 @@
+# Gatling Simulation Scripts
+
+This directory contains Gatling simulation scripts for performance testing including:
+- NormalLoadSimulation.scala - Normal load testing scenarios
+- PeakLoadSimulation.scala - Peak load testing scenarios
+- StressTestSimulation.scala - Stress testing scenarios
+- EnduranceTestSimulation.scala - Long-running stability tests

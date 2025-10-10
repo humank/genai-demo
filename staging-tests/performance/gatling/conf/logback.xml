@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger{15} - %msg%n%rEx</pattern>
+        </encoder>
+        <immediateFlush>false</immediateFlush>
+    </appender>
+
+    <!-- Performance test specific file appender -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/gatling-performance.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Separate appender for simulation results -->
+    <appender name="SIMULATION" class="ch.qos.logback.core.FileAppender">
+        <file>logs/gatling-simulation.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [SIMULATION] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Error-only appender for critical issues -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/gatling-errors.log</file>
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] %logger{36} - %msg%n%rEx</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Async appender for better performance -->
+    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+        <queueSize>1024</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <includeCallerData>false</includeCallerData>
+    </appender>
+
+    <!-- Logger configurations -->
+    
+    <!-- Root logger - default level -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+    <!-- Gatling specific loggers -->
+    <logger name="io.gatling" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_FILE"/>
+    </logger>
+
+    <!-- HTTP engine logger -->
+    <logger name="io.gatling.http.engine" level="INFO" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC_FILE"/>
+    </logger>
+
+    <!-- Simulation logger for test execution details -->
+    <logger name="simulation" level="INFO" additivity="false">
+        <appender-ref ref="SIMULATION"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <!-- Performance monitoring logger -->
+    <logger name="performance.monitor" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC_FILE"/>
+    </logger>
+
+    <!-- Reduce noise from Netty -->
+    <logger name="io.netty" level="WARN"/>
+    
+    <!-- Reduce noise from Akka -->
+    <logger name="akka" level="WARN"/>
+    
+    <!-- Reduce noise from async-http-client -->
+    <logger name="org.asynchttpclient" level="WARN"/>
+
+    <!-- Enable debug logging for specific scenarios during development -->
+    <!-- Uncomment the following loggers for detailed debugging -->
+    
+    <!-- <logger name="io.gatling.http.request" level="DEBUG"/> -->
+    <!-- <logger name="io.gatling.http.response" level="DEBUG"/> -->
+    <!-- <logger name="io.gatling.core.action" level="DEBUG"/> -->
+    <!-- <logger name="io.gatling.core.session" level="DEBUG"/> -->
+
+</configuration>

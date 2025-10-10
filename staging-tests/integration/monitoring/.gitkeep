@@ -1,0 +1,7 @@
+# Monitoring Integration Tests
+
+This directory contains integration tests for observability and monitoring including:
+- Health check endpoint validation
+- Metrics collection and aggregation tests
+- Alerting and notification tests
+- Distributed tracing validation

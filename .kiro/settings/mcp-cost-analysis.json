@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "aws-pricing": {
+      "command": "uvx",
+      "args": ["awslabs.aws-pricing-mcp-server@latest"],
+      "env": {
+        "AWS_REGION": "ap-northeast-1",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "get_product_pricing",
+        "search_products",
+        "get_price_list",
+        "calculate_cost"
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Cache Integration Tests
+
+This directory contains integration tests for Redis cache operations including:
+- Redis cluster performance and scalability tests
+- Redis Sentinel failover scenarios
+- Cross-region cache synchronization tests
+- Cache eviction and memory management tests

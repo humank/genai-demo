@@ -7,9 +7,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
@@ -97,23 +95,22 @@ public class DatabaseConfigurationManager {
     }
 
     /**
-     * Create the primary DataSource bean using the active database configuration
+     * Get the DataSource from the active database configuration
+     * Note: DataSource beans are created by UnifiedDataSourceConfiguration
      */
-    @Bean
-    @Primary
-    public DataSource dataSource() {
-        log.info("Creating primary DataSource using {} database configuration",
+    public DataSource getDataSource() {
+        log.info("Getting DataSource from {} database configuration",
                 activeDatabaseConfiguration.getDatabaseType());
 
         try {
             DataSource dataSource = activeDatabaseConfiguration.createDataSource();
-            log.info("DataSource created successfully for database type: {}",
+            log.info("DataSource retrieved successfully for database type: {}",
                     activeDatabaseConfiguration.getDatabaseType());
             return dataSource;
         } catch (Exception e) {
-            log.error("Failed to create DataSource for database type: {}",
+            log.error("Failed to get DataSource for database type: {}",
                     activeDatabaseConfiguration.getDatabaseType(), e);
-            throw new DatabaseConfigurationException("Failed to create DataSource", e);
+            throw new DatabaseConfigurationException("Failed to get DataSource", e);
         }
     }
 

@@ -12,6 +12,7 @@
 ## 🎯 業務目標
 
 ### 主要目標 (基於評估報告發現)
+
 - 重點強化薄弱視點：Concurrency (C+→A)、Information (B→A)、Operational (B-→A)、Deployment (B-→A)
 - 保持並提升現有優勢：Development (A+維持)、Security (A→A+)、Functional (A-→A+)
 - 全面提升觀點實現：Location、Cost、Usability 從 C+/B- 提升到 A 級
@@ -22,6 +23,7 @@
 ### 成功指標 (基於評估報告建議)
 
 #### 視點完整度目標
+
 - Concurrency Viewpoint: C+ (56%) → A (85%) - 提升 29 分
 - Information Viewpoint: B (71%) → A (85%) - 提升 14 分  
 - Operational Viewpoint: B- (66%) → A (85%) - 提升 19 分
@@ -30,6 +32,7 @@
 - Context Viewpoint: B+ (80%) → A+ (95%) - 提升 15 分
 
 #### 觀點實現目標
+
 - Location 觀點: C+ (60%) → A (85%) - 提升 25 分
 - Cost 觀點: C+ (70%) → A (85%) - 提升 15 分
 - Usability 觀點: B- (75%) → A (85%) - 提升 10 分
@@ -75,17 +78,77 @@
 4. **WHEN** 需要容量規劃 **THEN** 系統 **SHALL** 提供資源使用趨勢分析
 5. **IF** 系統負載超過閾值 **THEN** 系統 **SHALL** 觸發自動擴展機制
 
-### 需求 4: AWS 原生 CI/CD 管道建構
+### 需求 4: ~~AWS 原生 CI/CD 管道建構~~ → GitOps CI/CD 管道 (已更新)
 
-**用戶故事**: 作為 DevOps 工程師，我希望擁有完整的 AWS 原生 CI/CD 管道，以確保從源碼到生產的全自動化流程。
+> **⚠️ 架構決策變更 (2025年1月21日)**:  
+> 原 AWS Code 系列方案 (CodePipeline/CodeBuild/CodeDeploy) 已被 **GitOps 方案** 取代。  
+> 新方案: **GitHub Actions + ArgoCD + Argo Rollouts**  
+> 
+> **變更原因**:
+> - 成本降低 70-80%
+> - Kubernetes 原生整合更佳
+> - 市場主流方案 (ArgoCD 市佔率 35-40%)
+> - 雲端中立，避免供應商鎖定
+> 
+> **詳細說明**: 參見 [GitOps Deployment Guide](../../../docs/gitops-deployment-guide.md)
+
+**用戶故事**: 作為 DevOps 工程師，我希望擁有完整的 GitOps CI/CD 管道，以確保從源碼到生產的全自動化流程。
+
+#### 驗收標準 (已更新為 GitOps 方案)
+
+1. **WHEN** 源碼提交 **THEN** 系統 **SHALL** 自動觸發 GitHub Actions 工作流程
+2. **WHEN** 建構階段執行 **THEN** 系統 **SHALL** 執行測試、建構 Docker 映像並推送至 ECR
+3. **WHEN** 部署階段執行 **THEN** 系統 **SHALL** 使用 Argo Rollouts 進行 Canary 部署
+4. **WHEN** 需要套件管理 **THEN** 系統 **SHALL** 使用 npm/Maven 公開倉庫或私有 registry
+5. **IF** 任何階段失敗 **THEN** 系統 **SHALL** 自動觸發回滾和通知機制
+
+#### 原 AWS Code 系列驗收標準 (已棄用 - 保留作為歷史記錄)
+
+<details>
+<summary>點擊展開查看原始需求</summary>
+
+1. ~~**WHEN** 源碼提交 **THEN** 系統 **SHALL** 自動觸發 CodePipeline 建構流程~~
+2. ~~**WHEN** 建構階段執行 **THEN** 系統 **SHALL** 使用 CodeBuild 進行 CDK synthesis 和測試~~
+3. ~~**WHEN** 部署階段執行 **THEN** 系統 **SHALL** 使用 CodeDeploy 進行 EKS Canary 部署~~
+4. ~~**WHEN** 需要私有套件 **THEN** 系統 **SHALL** 使用 CodeArtifact 進行套件管理~~
+5. ~~**IF** 任何階段失敗 **THEN** 系統 **SHALL** 自動觸發回滾和通知機制~~
+
+</details>
+
+### 需求 4.1: Active-Active 多區域高可用架構
+
+**用戶故事**: 作為系統架構師，我希望建立 Active-Active 多區域部署架構，以實現真正的高可用性和負載分散，確保任一區域故障時系統仍能正常運行。
 
 #### 驗收標準
 
-1. **WHEN** 源碼提交 **THEN** 系統 **SHALL** 自動觸發 CodePipeline 建構流程
-2. **WHEN** 建構階段執行 **THEN** 系統 **SHALL** 使用 CodeBuild 進行 CDK synthesis 和測試
-3. **WHEN** 部署階段執行 **THEN** 系統 **SHALL** 使用 CodeDeploy 進行 EKS Canary 部署
-4. **WHEN** 需要私有套件 **THEN** 系統 **SHALL** 使用 CodeArtifact 進行套件管理
-5. **IF** 任何階段失敗 **THEN** 系統 **SHALL** 自動觸發回滾和通知機制
+**雙活區域架構**
+
+1. **WHEN** 系統運行 **THEN** 系統 **SHALL** 在台灣和日本兩個區域同時提供完整服務
+2. **WHEN** 用戶訪問系統 **THEN** 系統 **SHALL** 基於地理位置和負載狀況智能路由到最佳區域
+3. **WHEN** 任一區域發生故障 **THEN** 系統 **SHALL** 自動將流量切換到健康區域且 RTO < 30秒
+4. **WHEN** 故障區域恢復 **THEN** 系統 **SHALL** 自動重新平衡流量分配
+5. **IF** 兩個區域負載不均 **THEN** 系統 **SHALL** 動態調整流量分配比例
+
+**Aurora Global Database 雙向同步**
+6. **WHEN** 台灣區域寫入資料 **THEN** 系統 **SHALL** 在 1 秒內同步到日本區域
+7. **WHEN** 日本區域寫入資料 **THEN** 系統 **SHALL** 在 1 秒內同步到台灣區域
+8. **WHEN** 發生寫入衝突 **THEN** 系統 **SHALL** 使用時間戳和區域優先級解決衝突
+9. **WHEN** 任一區域資料庫故障 **THEN** 系統 **SHALL** 自動切換到另一區域且 RPO < 1秒
+10. **IF** 網路分割發生 **THEN** 系統 **SHALL** 維持各區域獨立運行並在恢復後自動同步
+
+**EKS 雙活集群管理**
+11. **WHEN** 兩個區域 EKS 集群運行 **THEN** 系統 **SHALL** 保持相同的應用程式版本和配置
+12. **WHEN** 應用程式更新 **THEN** 系統 **SHALL** 同時部署到兩個區域並驗證一致性
+13. **WHEN** 任一區域 EKS 故障 **THEN** 系統 **SHALL** 自動擴展健康區域容量以承接全部流量
+14. **WHEN** 區域間延遲過高 **THEN** 系統 **SHALL** 優先使用本地區域資源
+15. **IF** 資源使用不均 **THEN** 系統 **SHALL** 動態調整各區域的 Pod 副本數
+
+**Route 53 智能流量管理**
+16. **WHEN** 用戶從台灣訪問 **THEN** 系統 **SHALL** 優先路由到台灣區域
+17. **WHEN** 用戶從日本訪問 **THEN** 系統 **SHALL** 優先路由到日本區域
+18. **WHEN** 檢測到區域健康狀況變化 **THEN** 系統 **SHALL** 在 30 秒內調整 DNS 權重
+19. **WHEN** 進行維護 **THEN** 系統 **SHALL** 支援計劃性流量切換
+20. **IF** 全球用戶訪問 **THEN** 系統 **SHALL** 基於延遲和負載進行最佳路由
 
 ### 需求 5: 部署流程自動化優化
 
@@ -142,6 +205,7 @@
 #### 驗收標準
 
 **核心查詢功能**
+
 1. **WHEN** 用戶輸入自然語言查詢 **THEN** 系統 **SHALL** 生成對應的安全 SQL 查詢
 2. **WHEN** 生成 SQL 查詢 **THEN** 系統 **SHALL** 驗證 SQL 安全性並防止注入攻擊
 3. **WHEN** 執行查詢 **THEN** 系統 **SHALL** 支援跨數據源查詢 (Aurora + Matomo + S3 + CloudWatch)
@@ -164,6 +228,7 @@
 #### 驗收標準
 
 **應用程式資料管道**
+
 1. **WHEN** 應用程式產生日誌 **THEN** 系統 **SHALL** 自動收集到 CloudWatch Logs 並建立索引
 2. **WHEN** 系統產生追蹤資料 **THEN** 系統 **SHALL** 透過 X-Ray 收集分散式追蹤資訊
 3. **WHEN** 容器產生事件 **THEN** 系統 **SHALL** 收集 EKS 容器日誌和 Kubernetes 事件
@@ -194,6 +259,7 @@
 #### 驗收標準
 
 **核心對話功能**
+
 1. **WHEN** 用戶提出業務問題 **THEN** 系統 **SHALL** 基於知識庫提供準確的 RAG 回答
 2. **WHEN** 用戶使用語音輸入 **THEN** 系統 **SHALL** 支援語音轉文字並提供語音回答
 3. **WHEN** 用戶使用中文或英文 **THEN** 系統 **SHALL** 支援雙語對話和自動語言檢測
@@ -244,6 +310,7 @@
 #### 驗收標準
 
 **測試計劃制定**
+
 1. **WHEN** 需要驗證 Redis/ElastiCache 整合 **THEN** 系統 **SHALL** 提供完整的分散式鎖測試計劃
 2. **WHEN** 需要驗證資料庫整合 **THEN** 系統 **SHALL** 提供 Aurora Global Database 測試計劃
 3. **WHEN** 需要驗證訊息佇列整合 **THEN** 系統 **SHALL** 提供 MSK Kafka 測試計劃
@@ -292,6 +359,7 @@
 #### 驗收標準
 
 **Container Insights 全面部署**
+
 1. **WHEN** EKS 集群運行 **THEN** 系統 **SHALL** 收集所有容器級別的指標和日誌
 2. **WHEN** Pod 資源使用異常 **THEN** 系統 **SHALL** 自動觸發告警和分析
 3. **WHEN** 容器崩潰或重啟 **THEN** 系統 **SHALL** 記錄完整的事件鏈和根因分析
@@ -344,6 +412,7 @@
 ## 🔒 非功能性需求
 
 ### 性能需求 (基於評估報告建議)
+
 - 並發處理能力提升 50% (解決 Concurrency Viewpoint 薄弱問題)
 - 系統響應時間保持在 2 秒以內 (95th percentile，符合現有標準)
 - 資料查詢性能提升 30% (基於 Information Viewpoint 強化)
@@ -351,6 +420,7 @@
 - 死鎖發生率降低到 0.01% 以下 (解決並發控制問題)
 
 ### 可用性需求 (基於 Availability 觀點提升)
+
 - 系統可用性達到 99.9% (基於現有基礎設施能力)
 - 故障恢復時間 (RTO) ≤ 5 分鐘 (基於 Operational Viewpoint 強化)
 - 資料恢復點目標 (RPO) ≤ 1 分鐘 (基於 Information Viewpoint 改善)
@@ -358,12 +428,14 @@
 - 實施多區域災難恢復策略 (基於現有 CDK + EKS 架構)
 
 ### 安全性需求
+
 - 所有敏感資料必須加密存儲
 - 資料存取必須有完整的審計追蹤
 - 系統間通信必須使用 TLS 1.3
 - 定期進行安全漏洞掃描
 
 ### 可維護性需求 (基於 Development Viewpoint 優勢)
+
 - 程式碼覆蓋率保持在 80% 以上 (維持現有高標準)
 - 文檔完整度達到 95% (重點補強薄弱視點文檔)
 - 架構一致性檢查通過率 100% (基於現有 ArchUnit 規則)
@@ -374,6 +446,7 @@
 ## 📊 驗收標準總覽
 
 ### 階段一驗收 (2週內) - 基礎卓越化
+
 - [ ] 分散式鎖機制實作完成並通過壓力測試 (10,000 併發)
 - [ ] 完整資料字典和流動圖建立 (覆蓋率 100%)
 - [ ] 並發監控指標收集機制建立 (即時監控)
@@ -382,6 +455,7 @@
 - [ ] Information Viewpoint 達到 A- 級別
 
 ### 階段二驗收 (4週內) - 進階卓越化
+
 - [ ] 死鎖檢測和預防機制實作完成 (零死鎖目標)
 - [ ] 資料一致性策略實施完成 (最終一致性 < 100ms)
 - [ ] 故障處理和自動恢復機制建立 (RTO < 2分鐘)
@@ -390,6 +464,7 @@
 - [ ] Deployment Viewpoint 達到 A- 級別
 
 ### 階段三驗收 (3個月內) - 全面卓越化
+
 - [ ] 跨視點整合機制建立完成 (自動化驗證)
 - [ ] 所有觀點實現深化完成 (A 級以上)
 - [ ] 自動化驗證機制建立完成 (CI/CD 整合)
@@ -408,18 +483,21 @@
 ## 📝 約束條件
 
 ### 技術約束
+
 - 必須基於現有的 Spring Boot 3.4.13 + Java 21 技術棧
 - 必須保持與現有 DDD + 六角形架構的相容性
 - 必須支援現有的多前端架構 (Next.js + Angular)
 - 必須與現有的 CDK + EKS 部署架構整合
 
 ### 業務約束
+
 - 實作過程中不能影響現有業務功能
 - 必須保持向後相容性
 - 必須符合現有的安全和合規要求
 - 必須在預算範圍內完成
 
 ### 時間約束
+
 - 第一階段必須在 2 週內完成
 - 關鍵功能必須在 1 個月內交付
 - 完整實作必須在 3 個月內完成

@@ -1,0 +1,7 @@
+# Performance Test Scenarios
+
+This directory contains configuration files for different performance test scenarios including:
+- Load patterns and user behavior definitions
+- Test data sets and fixtures
+- Performance thresholds and assertions
+- Environment-specific configurations

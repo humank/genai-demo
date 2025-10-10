@@ -52,8 +52,6 @@ public class DistributedLockService {
      * @throws IllegalStateException if the lock cannot be acquired
      */
     public <T> T executeWithLock(String lockKey, Supplier<T> task, Duration waitTime, Duration leaseTime) {
-        String lockValue = generateLockValue();
-        
         log.debug("Attempting to acquire lock: {} with waitTime: {} and leaseTime: {}", 
                  lockKey, waitTime, leaseTime);
         
@@ -161,6 +159,6 @@ public class DistributedLockService {
     }
     
     private String generateLockValue() {
-        return "lock-" + System.currentTimeMillis() + "-" + Thread.currentThread().getId();
+        return "lock-" + System.currentTimeMillis() + "-" + Thread.currentThread().threadId();
     }
 }

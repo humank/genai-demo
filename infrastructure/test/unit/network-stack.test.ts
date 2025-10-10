@@ -11,20 +11,22 @@ describe('NetworkStack', () => {
         app = new cdk.App();
         stack = new NetworkStack(app, 'TestNetworkStack', {
             env: { region: 'us-east-1', account: '123456789012' },
+            environment: 'test',
+            projectName: 'genai-demo'
         });
         template = Template.fromStack(stack);
     });
 
     test('should create VPC with correct configuration', () => {
         template.hasResourceProperties('AWS::EC2::VPC', {
-            CidrBlock: '10.0.0.0/16',
+            CidrBlock: '10.4.0.0/16', // us-east-1 specific CIDR
             EnableDnsHostnames: true,
             EnableDnsSupport: true,
         });
     });
 
     test('should create security groups', () => {
-        template.resourceCountIs('AWS::EC2::SecurityGroup', 3);
+        template.resourceCountIs('AWS::EC2::SecurityGroup', 7);
 
         // Check ALB security group
         template.hasResourceProperties('AWS::EC2::SecurityGroup', {
@@ -43,7 +45,7 @@ describe('NetworkStack', () => {
     });
 
     test('should create subnets in multiple AZs', () => {
-        template.resourceCountIs('AWS::EC2::Subnet', 6); // 2 AZs * 3 subnet types
+        template.resourceCountIs('AWS::EC2::Subnet', 12); // 4 AZs * 3 subnet types
     });
 
     test('should create NAT Gateway', () => {

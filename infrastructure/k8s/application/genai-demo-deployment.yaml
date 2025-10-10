@@ -86,7 +86,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        # Tracing configuration
+        # Cross-Region Distributed Tracing Configuration
         - name: TRACING_ENABLED
           value: "true"
         - name: TRACING_SAMPLING_RATIO
@@ -98,7 +98,52 @@ spec:
         - name: OTEL_SERVICE_VERSION
           value: "2.0.0"
         - name: OTEL_RESOURCE_ATTRIBUTES
-          value: "deployment.environment=kubernetes,service.namespace=genai-demo,cloud.provider=aws,cloud.platform=aws_eks"
+          value: "deployment.environment=kubernetes,service.namespace=genai-demo,cloud.provider=aws,cloud.platform=aws_eks,cloud.region=${AWS_REGION}"
+        # X-Ray Cross-Region Configuration
+        - name: AWS_XRAY_TRACING_NAME
+          value: "genai-demo-production"
+        - name: AWS_XRAY_CONTEXT_MISSING
+          value: "LOG_ERROR"
+        - name: AWS_XRAY_PLUGINS
+          value: "EC2Plugin,ECSPlugin,EKSPlugin,RDSPlugin,ElastiCachePlugin"
+        - name: AWS_XRAY_CROSS_REGION_ENABLED
+          value: "true"
+        - name: AWS_XRAY_PRIMARY_REGION
+          value: "ap-east-2"
+        - name: AWS_XRAY_SECONDARY_REGIONS
+          value: "ap-northeast-1,us-west-2"
+        - name: AWS_XRAY_CORRELATION_HEADER
+          value: "X-Correlation-ID"
+        - name: AWS_XRAY_SOURCE_REGION_HEADER
+          value: "X-Source-Region"
+        - name: AWS_XRAY_REQUEST_PATH_HEADER
+          value: "X-Request-Path"
+        - name: AWS_XRAY_USER_CONTEXT_HEADER
+          value: "X-User-Context"
+        - name: AWS_XRAY_SESSION_ID_HEADER
+          value: "X-Session-ID"
+        # Performance Tracking Configuration
+        - name: TRACING_PERFORMANCE_ENABLED
+          value: "true"
+        - name: TRACING_CROSS_REGION_LATENCY_ENABLED
+          value: "true"
+        - name: TRACING_DATABASE_QUERIES_ENABLED
+          value: "true"
+        - name: TRACING_EXTERNAL_CALLS_ENABLED
+          value: "true"
+        - name: TRACING_CACHE_OPERATIONS_ENABLED
+          value: "true"
+        - name: TRACING_SLOW_REQUEST_THRESHOLD
+          value: "2000"
+        - name: TRACING_ERROR_SAMPLING_RATE
+          value: "1.0"
+        # Business Context Tracing
+        - name: TRACING_BUSINESS_CONTEXT_ENABLED
+          value: "true"
+        - name: TRACING_USER_JOURNEY_ENABLED
+          value: "true"
+        - name: TRACING_CONVERSION_TRACKING_ENABLED
+          value: "true"
         # Logging configuration
         - name: LOGGING_LEVEL_ROOT
           value: "INFO"

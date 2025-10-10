@@ -1,0 +1,87 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "description": "GenAI Demo - High Priority Endpoints",
+      "host": "*",
+      "http_method": "*",
+      "url_path": "/api/v1/orders/*",
+      "fixed_target": 1,
+      "rate": 0.5,
+      "service_name": "genai-demo-backend",
+      "service_type": "*",
+      "resource_arn": "*",
+      "priority": 100,
+      "version": 1,
+      "attributes": {
+        "priority": "high"
+      }
+    },
+    {
+      "description": "GenAI Demo - Payment Endpoints",
+      "host": "*",
+      "http_method": "*",
+      "url_path": "/api/v1/payments/*",
+      "fixed_target": 1,
+      "rate": 1.0,
+      "service_name": "genai-demo-backend",
+      "service_type": "*",
+      "resource_arn": "*",
+      "priority": 50,
+      "version": 1,
+      "attributes": {
+        "priority": "critical"
+      }
+    },
+    {
+      "description": "GenAI Demo - Error Responses",
+      "host": "*",
+      "http_method": "*",
+      "url_path": "*",
+      "fixed_target": 1,
+      "rate": 1.0,
+      "service_name": "*",
+      "service_type": "*",
+      "resource_arn": "*",
+      "priority": 10,
+      "version": 1,
+      "attributes": {
+        "http.status": "5*"
+      }
+    },
+    {
+      "description": "GenAI Demo - Health Check (Low Priority)",
+      "host": "*",
+      "http_method": "GET",
+      "url_path": "/actuator/health*",
+      "fixed_target": 0,
+      "rate": 0.01,
+      "service_name": "*",
+      "service_type": "*",
+      "resource_arn": "*",
+      "priority": 9000,
+      "version": 1,
+      "attributes": {
+        "priority": "low"
+      }
+    },
+    {
+      "description": "GenAI Demo - Default Sampling",
+      "host": "*",
+      "http_method": "*",
+      "url_path": "*",
+      "fixed_target": 1,
+      "rate": 0.1,
+      "service_name": "genai-demo*",
+      "service_type": "*",
+      "resource_arn": "*",
+      "priority": 10000,
+      "version": 1,
+      "attributes": {}
+    }
+  ],
+  "default": {
+    "fixed_target": 1,
+    "rate": 0.05
+  }
+}

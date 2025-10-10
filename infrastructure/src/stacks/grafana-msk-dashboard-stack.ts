@@ -23,8 +23,8 @@ import { Construct } from 'constructs';
  */
 export class GrafanaMSKDashboardStack extends cdk.Stack {
   public readonly workspace: grafana.CfnWorkspace;
-  public readonly mskDataFlowDashboard: string;
-  public readonly mskConsumerLagDashboard: string;
+  public mskDataFlowDashboard: string;
+  public mskConsumerLagDashboard: string;
   public readonly mskClusterHealthDashboard: string;
   public readonly businessImpactDashboard: string;
 
@@ -121,17 +121,7 @@ export class GrafanaMSKDashboardStack extends cdk.Stack {
       organizationRoleName: 'GrafanaServiceRole',
       stackSetName: 'GrafanaMSKMonitoring',
       grafanaVersion: '9.4',
-      configuration: JSON.stringify({
-        unifiedAlerting: {
-          enabled: true,
-        },
-        plugins: {
-          pluginAdminEnabled: true,
-        },
-        dataSourcesPermissions: {
-          enabled: true,
-        },
-      }),
+
     });
 
     // Add tags
@@ -454,11 +444,12 @@ export class GrafanaMSKDashboardStack extends cdk.Stack {
     };
 
     // Store data source configurations as stack metadata
-    this.node.setContext('dataSources', {
-      cloudWatch: cloudWatchDataSource,
-      prometheus: prometheusDataSource,
-      xray: xrayDataSource,
-    });
+    // Note: setContext should be called before creating child constructs
+    // this.node.setContext('dataSources', {
+    //   cloudWatch: cloudWatchDataSource,
+    //   prometheus: prometheusDataSource,
+    //   xray: xrayDataSource,
+    // });
   }
 
   private createOutputs(): void {

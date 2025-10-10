@@ -1,0 +1,7 @@
+# Cross-Region Replication Tests
+
+This directory contains cross-region replication tests including:
+- Data consistency validation across regions
+- Replication lag monitoring and validation
+- Network partition and split-brain scenarios
+- Cross-region synchronization tests

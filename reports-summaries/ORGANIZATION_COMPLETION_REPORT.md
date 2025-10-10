@@ -23,7 +23,6 @@
 | 基礎設施 (infrastructure) | 6 | 基礎設施部署、CDK、AWS、RDS 相關報告 |
 | 專案管理 (project-management) | 6 | 專案狀態、重構、清理、專案總結報告 |
 | 測試品質 (testing) | 3 | 測試優化、性能、使用者體驗測試報告 |
-| 翻譯系統 (translation) | 1 | 翻譯系統報告和語言處理結果 |
 | 一般報告 (general) | 6 | CI/CD、本地變更、聚合修復等一般報告 |
 | 品質用戶體驗 (quality-ux) | 0 | 預留給未來的使用者體驗和品質報告 |
 

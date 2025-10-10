@@ -1,0 +1,7 @@
+# Database Integration Tests
+
+This directory contains integration tests for database operations including:
+- PostgreSQL connection pool performance tests
+- Aurora failover and recovery scenarios
+- Database health validation and monitoring
+- Cross-region database replication tests

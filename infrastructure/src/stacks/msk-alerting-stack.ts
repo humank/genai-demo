@@ -28,9 +28,9 @@ import { Construct } from 'constructs';
  * @since 2025-09-24
  */
 export class MSKAlertingStack extends cdk.Stack {
-  public readonly warningTopic: sns.Topic;
-  public readonly criticalTopic: sns.Topic;
-  public readonly emergencyTopic: sns.Topic;
+  public warningTopic: sns.Topic;
+  public criticalTopic: sns.Topic;
+  public emergencyTopic: sns.Topic;
   public readonly alertCorrelationFunction: lambda.Function;
   public readonly alertSuppressionFunction: lambda.Function;
 
@@ -64,21 +64,18 @@ export class MSKAlertingStack extends cdk.Stack {
     this.warningTopic = new sns.Topic(this, 'MSKWarningAlerts', {
       topicName: 'msk-warning-alerts',
       displayName: 'MSK Warning Level Alerts',
-      description: 'Warning level alerts for MSK monitoring - sent to Slack',
     });
 
     // Critical level alerts (PagerDuty integration)
     this.criticalTopic = new sns.Topic(this, 'MSKCriticalAlerts', {
       topicName: 'msk-critical-alerts',
       displayName: 'MSK Critical Level Alerts',
-      description: 'Critical level alerts for MSK monitoring - sent to PagerDuty',
     });
 
     // Emergency level alerts (Phone/SMS notifications)
     this.emergencyTopic = new sns.Topic(this, 'MSKEmergencyAlerts', {
       topicName: 'msk-emergency-alerts',
       displayName: 'MSK Emergency Level Alerts',
-      description: 'Emergency level alerts for MSK monitoring - Phone/SMS notifications',
     });
 
     // Add email subscriptions for testing (replace with actual integrations)

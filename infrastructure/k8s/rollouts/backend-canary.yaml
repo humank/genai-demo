@@ -1,0 +1,300 @@
+# Argo Rollouts Canary Deployment for Backend API
+# Cost-optimized deployment strategy with gradual traffic shifting
+# Replaces Blue-Green deployment to reduce infrastructure costs by 70-80%
+
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: genai-demo-backend
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    version: v1
+    deployment-strategy: canary
+spec:
+  replicas: 4
+  revisionHistoryLimit: 3
+  
+  selector:
+    matchLabels:
+      app: genai-demo-backend
+  
+  template:
+    metadata:
+      labels:
+        app: genai-demo-backend
+        version: v1
+    spec:
+      serviceAccountName: genai-demo-backend
+      containers:
+      - name: backend
+        image: ${ECR_REGISTRY}/genai-demo/backend:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: actuator
+          containerPort: 8081
+          protocol: TCP
+        
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production"
+        - name: JAVA_OPTS
+          value: "-Xms512m -Xmx1024m -XX:+UseG1GC"
+        
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        
+        # Startup Probe - protects slow-starting application
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: actuator
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 30  # Allow up to 5 minutes for startup
+        
+        # Liveness Probe - determines if container should be restarted
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: actuator
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        # Readiness Probe - determines if container should receive traffic
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: actuator
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+  
+  # Canary Deployment Strategy
+  strategy:
+    canary:
+      # Canary Service (receives canary traffic)
+      canaryService: genai-demo-backend-canary
+      
+      # Stable Service (receives stable traffic)
+      stableService: genai-demo-backend-stable
+      
+      # Traffic routing via Istio/ALB
+      trafficRouting:
+        istio:
+          virtualService:
+            name: genai-demo-backend-vsvc
+            routes:
+            - primary
+      
+      # Gradual traffic shifting steps
+      steps:
+      # Step 1: Deploy canary with 10% traffic
+      - setWeight: 10
+      - pause: {duration: 5m}  # Monitor for 5 minutes
+      
+      # Step 2: Increase to 25% traffic
+      - setWeight: 25
+      - pause: {duration: 5m}
+      
+      # Step 3: Increase to 50% traffic
+      - setWeight: 50
+      - pause: {duration: 5m}
+      
+      # Step 4: Increase to 75% traffic
+      - setWeight: 75
+      - pause: {duration: 5m}
+      
+      # Step 5: Full rollout (100%)
+      # Automatic completion after final analysis
+      
+      # Automated analysis at each step
+      analysis:
+        templates:
+        - templateName: backend-success-rate
+        - templateName: backend-latency
+        - templateName: backend-error-rate
+        startingStep: 1  # Start analysis from step 1
+        args:
+        - name: service-name
+          value: genai-demo-backend-canary
+        - name: namespace
+          value: genai-demo
+      
+      # Anti-affinity to ensure canary and stable pods are on different nodes
+      antiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution: {}
+
+---
+# Stable Service (receives stable traffic)
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-backend-stable
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    service-type: stable
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: genai-demo-backend
+
+---
+# Canary Service (receives canary traffic)
+apiVersion: v1
+kind: Service
+metadata:
+  name: genai-demo-backend-canary
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    service-type: canary
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+    protocol: TCP
+  selector:
+    app: genai-demo-backend
+
+---
+# Analysis Template: Success Rate
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: backend-success-rate
+  namespace: genai-demo
+spec:
+  args:
+  - name: service-name
+  - name: namespace
+  
+  metrics:
+  - name: success-rate
+    interval: 1m
+    successCondition: result >= 0.95  # 95% success rate required
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: http://prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          sum(rate(
+            http_requests_total{
+              service="{{args.service-name}}",
+              namespace="{{args.namespace}}",
+              status!~"5.."
+            }[5m]
+          )) /
+          sum(rate(
+            http_requests_total{
+              service="{{args.service-name}}",
+              namespace="{{args.namespace}}"
+            }[5m]
+          ))
+
+---
+# Analysis Template: Latency
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: backend-latency
+  namespace: genai-demo
+spec:
+  args:
+  - name: service-name
+  - name: namespace
+  
+  metrics:
+  - name: latency-p95
+    interval: 1m
+    successCondition: result <= 2000  # P95 latency <= 2 seconds
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: http://prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          histogram_quantile(0.95,
+            sum(rate(
+              http_request_duration_seconds_bucket{
+                service="{{args.service-name}}",
+                namespace="{{args.namespace}}"
+              }[5m]
+            )) by (le)
+          ) * 1000
+
+---
+# Analysis Template: Error Rate
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: backend-error-rate
+  namespace: genai-demo
+spec:
+  args:
+  - name: service-name
+  - name: namespace
+  
+  metrics:
+  - name: error-rate
+    interval: 1m
+    successCondition: result <= 0.05  # Error rate <= 5%
+    failureLimit: 3
+    provider:
+      prometheus:
+        address: http://prometheus.monitoring.svc.cluster.local:9090
+        query: |
+          sum(rate(
+            http_requests_total{
+              service="{{args.service-name}}",
+              namespace="{{args.namespace}}",
+              status=~"5.."
+            }[5m]
+          )) /
+          sum(rate(
+            http_requests_total{
+              service="{{args.service-name}}",
+              namespace="{{args.namespace}}"
+            }[5m]
+          ))
+
+---
+# Istio VirtualService for traffic routing
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: genai-demo-backend-vsvc
+  namespace: genai-demo
+spec:
+  hosts:
+  - genai-demo-backend
+  http:
+  - name: primary
+    route:
+    - destination:
+        host: genai-demo-backend-stable
+      weight: 100
+    - destination:
+        host: genai-demo-backend-canary
+      weight: 0

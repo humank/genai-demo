@@ -1,58 +1,121 @@
 package solid.humank.genaidemo.infrastructure.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 /**
- * Redis 配置類
+ * Redis Configuration for Active-Active Multi-Region Setup
  * 
- * 提供 Redis 相關的配置，包含：
- * 1. 基礎 Redis 配置
- * 2. 分散式鎖配置
- * 3. 連線池配置
+ * Supports multiple Redis access patterns:
+ * - Local-First: Connect to local region Redis (default, recommended)
+ * - Multi-Region: Optional cross-region read capabilities
  * 
- * 注意：目前為基礎配置，在 Staging 環境中會實現完整的 Redis 配置
+ * Global Datastore handles cross-region synchronization automatically.
+ * Application can choose local-only or multi-region access patterns.
  * 
- * 建立日期: 2025年9月24日 上午10:54 (台北時間)
- * 需求: 1.1 - 並發控制機制全面重構
- * 
- * @author Kiro AI Assistant
- * @since 1.0
+ * Requirements: 4.4 - Cross-region cache synchronization in Active-Active mode
  */
 @Configuration
+@ConditionalOnProperty(name = "redis.enabled", havingValue = "true", matchIfMissing = false)
 public class RedisConfiguration {
 
-    private static final Logger logger = LoggerFactory.getLogger(RedisConfiguration.class);
+    // Primary (local) Redis configuration
+    @Value("${redis.primary.host:localhost}")
+    private String primaryRedisHost;
 
-    public RedisConfiguration() {
-        logger.info("Redis Configuration initialized for distributed locking");
-        logger.info("Redis mode will be determined by environment configuration");
+    @Value("${redis.primary.port:6379}")
+    private int primaryRedisPort;
+
+    @Value("${redis.primary.password:}")
+    private String primaryRedisPassword;
+
+    @Value("${redis.primary.database:0}")
+    private int primaryRedisDatabase;
+
+    // Current region for context
+    @Value("${aws.region:us-east-1}")
+    private String currentRegion;
+
+    // Multi-region access (optional)
+    @Value("${redis.multiregion.enabled:false}")
+    private boolean multiRegionEnabled;
+
+    // Secondary regions (for read operations if needed)
+    @Value("${redis.secondary.regions:}")
+    private String secondaryRegions;
+
+    /**
+     * Primary Redis Connection Factory (Local Region)
+     * This is the main connection for all Redis operations in Active-Active mode
+     */
+    @Bean
+    @Primary
+    public RedisConnectionFactory primaryRedisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(primaryRedisHost);
+        config.setPort(primaryRedisPort);
+        config.setDatabase(primaryRedisDatabase);
+        
+        if (primaryRedisPassword != null && !primaryRedisPassword.trim().isEmpty()) {
+            config.setPassword(primaryRedisPassword);
+        }
+
+        return new LettuceConnectionFactory(config);
     }
-    
-    // TODO: 在 Staging 環境中實現真正的 Redis 配置
-    
+
+    // Removed duplicate redisConnectionFactory bean to avoid conflicts with Redisson auto-configuration
+
     /**
-     * 未來的 Redisson 客戶端配置 (推薦用於分散式鎖)
-     * 
-     * 使用 Redisson 提供更好的分散式鎖實現，包括：
-     * - 自動續期機制
-     * - 公平鎖支援
-     * - 讀寫鎖支援
-     * - 信號量和閂鎖
+     * Primary Redis Template for general object operations
+     * Uses local region Redis for optimal performance
      */
-    
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        return createRedisTemplate(primaryRedisConnectionFactory(), Object.class);
+    }
+
     /**
-     * 未來的 Spring Data Redis 配置 (替代方案)
-     * 
-     * 如果不使用 Redisson，可以使用 Spring Data Redis + Lua 腳本實現分散式鎖
+     * Custom String Redis Template for simple string operations
+     * Uses local region Redis for optimal performance
+     * Named differently to avoid conflict with Redisson's stringRedisTemplate
      */
-    
+    @Bean
+    public RedisTemplate<String, String> customStringRedisTemplate() {
+        return createRedisTemplate(primaryRedisConnectionFactory(), String.class);
+    }
+
     /**
-     * 未來的 Redis 健康檢查配置
+     * Generic method to create Redis templates with consistent configuration
      */
-    
-    /**
-     * 未來的 Redis 監控配置
-     */
+    private <T> RedisTemplate<String, T> createRedisTemplate(RedisConnectionFactory connectionFactory, Class<T> valueType) {
+        RedisTemplate<String, T> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        
+        // String serializer for keys
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        
+        // Value serializer based on type
+        if (valueType == String.class) {
+            StringRedisSerializer stringSerializer = new StringRedisSerializer();
+            template.setValueSerializer(stringSerializer);
+            template.setHashValueSerializer(stringSerializer);
+        } else {
+            GenericJackson2JsonRedisSerializer jsonSerializer = new GenericJackson2JsonRedisSerializer();
+            template.setValueSerializer(jsonSerializer);
+            template.setHashValueSerializer(jsonSerializer);
+        }
+        
+        template.afterPropertiesSet();
+        return template;
+    }
 }

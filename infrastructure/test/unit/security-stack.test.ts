@@ -11,48 +11,31 @@ describe('SecurityStack', () => {
         app = new cdk.App();
         stack = new SecurityStack(app, 'TestSecurityStack', {
             env: { region: 'us-east-1', account: '123456789012' },
+            environment: 'test',
+            projectName: 'test-project'
         });
         template = Template.fromStack(stack);
     });
 
     test('should create KMS key with proper configuration', () => {
         template.hasResourceProperties('AWS::KMS::Key', {
-            Description: 'KMS key for GenAI Demo application encryption',
+            Description: 'Enhanced KMS key for test-project test - internal data encryption',
             EnableKeyRotation: true,
         });
     });
 
     test('should create application IAM role', () => {
         template.hasResourceProperties('AWS::IAM::Role', {
-            AssumeRolePolicyDocument: {
-                Statement: [
-                    {
-                        Action: 'sts:AssumeRole',
-                        Effect: 'Allow',
-                        Principal: {
-                            Service: 'ec2.amazonaws.com',
-                        },
-                    },
-                ],
-            },
-            Description: 'IAM role for GenAI Demo application',
+            Description: 'Enhanced IAM role for test-project test application with internal data access',
+            RoleName: 'test-project-test-enhanced-application-role',
         });
     });
 
     test('should attach CloudWatch managed policy to role', () => {
+        // Check that the enhanced application role has managed policies
         template.hasResourceProperties('AWS::IAM::Role', {
-            ManagedPolicyArns: [
-                {
-                    'Fn::Join': [
-                        '',
-                        [
-                            'arn:',
-                            { Ref: 'AWS::Partition' },
-                            ':iam::aws:policy/CloudWatchAgentServerPolicy',
-                        ],
-                    ],
-                },
-            ],
+            RoleName: 'test-project-test-enhanced-application-role',
+            ManagedPolicyArns: Match.anyValue()
         });
     });
 

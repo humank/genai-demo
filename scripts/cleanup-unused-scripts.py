@@ -31,10 +31,6 @@ class ScriptsCleaner:
             # ddd-annotation-monitor.kiro.hook 使用的腳本
             "analyze-ddd-code.py",
             
-            # auto-translation.kiro.hook 使用的腳本
-            "translate-docs.py",
-            "kiro_translator.py",
-            
             # reports-organization-monitor.kiro.hook 使用的腳本
             "organize-reports-summaries.py",
             "update-report-links.py",

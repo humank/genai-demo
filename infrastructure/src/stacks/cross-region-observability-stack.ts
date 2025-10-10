@@ -209,7 +209,7 @@ export class CrossRegionObservabilityStack extends cdk.Stack {
         // Create log groups with cross-region replication
         const logGroups = [
             `/aws/lambda/${projectName}-${environment}`,
-            `/aws/ecs/${projectName}-${environment}`,
+            `/aws/eks/${projectName}-${environment}`,
             `/aws/rds/instance/${projectName}-${environment}`,
             `/aws/msk/cluster/${projectName}-${environment}`,
             `/aws/apigateway/${projectName}-${environment}`

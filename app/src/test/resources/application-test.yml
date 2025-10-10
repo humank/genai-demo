@@ -50,3 +50,10 @@ genai-demo:
 # Disable tracing in tests
 tracing:
   enabled: false
+
+# Disable SpringDoc in tests
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

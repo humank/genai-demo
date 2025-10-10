@@ -1,8 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.5'
+    id 'org.springframework.boot' version '3.3.13'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '2.11.2' // Allure 插件
+    id 'jacoco' // JaCoCo 代碼覆蓋率插件
 }
 
 group = 'solid.humank'
@@ -35,6 +36,81 @@ allure {
 
 // 定義 Allure 結果目錄
 def allureResultsDir = layout.buildDirectory.dir('allure-results').get().asFile.absolutePath
+
+// JaCoCo 配置
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+// JaCoCo 測試報告配置
+jacocoTestReport {
+    dependsOn test
+    
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+    
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/config/**',
+                '**/dto/**',
+                '**/entity/**',
+                '**/exception/**',
+                '**/Application.class'
+            ])
+        }))
+    }
+}
+
+// JaCoCo 覆蓋率驗證配置
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+            
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+            
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.75
+            }
+        }
+        
+        rule {
+            enabled = true
+            element = 'PACKAGE'
+            
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+        }
+    }
+    
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                '**/config/**',
+                '**/dto/**',
+                '**/entity/**',
+                '**/exception/**',
+                '**/Application.class'
+            ])
+        }))
+    }
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -89,6 +165,8 @@ dependencies {
     implementation 'software.amazon.awssdk:firehose'
     implementation 'software.amazon.awssdk:secretsmanager'
     implementation 'software.amazon.awssdk:cloudwatch'
+    implementation 'software.amazon.awssdk:dynamodb'
+    implementation 'software.amazon.awssdk:dynamodb-enhanced'
     
     // Security dependencies
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -214,45 +292,37 @@ tasks.withType(JavaExec).configureEach {
 // 分層測試任務配置 - 遵循測試金字塔原則
 // ============================================================================
 
-// 快速單元測試任務 - 日常開發使用
-tasks.register('unitTest', Test) {
-    description = '運行快速單元測試'
+// 快速測試任務 - 即時反饋 (< 2分鐘)
+tasks.register('quickTest', Test) {
+    description = 'Fast unit tests for immediate feedback during development (< 2 minutes)'
     group = 'verification'
     
     useJUnitPlatform {
-        excludeTags 'integration', 'end-to-end', 'slow'
-        includeTags 'unit'
+        excludeTags 'integration', 'end-to-end', 'slow', 'external'
+        includeTags 'unit', 'fast'
     }
     
-    maxHeapSize = '2g'
-    minHeapSize = '512m'
+    // 優化記憶體配置 - 快速測試
+    maxHeapSize = '1g'
+    minHeapSize = '256m'
     
-    testLogging {
-        events "passed", "failed", "skipped"
-        showStandardStreams = false
-        exceptionFormat = 'short'
-    }
+    // 最大並行執行
+    maxParallelForks = Runtime.runtime.availableProcessors()
+    forkEvery = 0  // 不重啟 JVM 以提高速度
     
-    systemProperty 'spring.profiles.active', 'test'
-    systemProperty 'logging.level.root', 'ERROR'
-}
-
-// 集成測試任務 - 提交前使用
-tasks.register('integrationTest', Test) {
-    description = '運行集成測試'
-    group = 'verification'
+    // 效能優化 JVM 參數
+    jvmArgs += [
+        '-XX:+UseG1GC',
+        '-XX:MaxGCPauseMillis=100',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=16m',
+        '-Djunit.jupiter.execution.parallel.enabled=true',
+        '-Djunit.jupiter.execution.parallel.mode.default=concurrent',
+        '-Djunit.jupiter.execution.parallel.config.strategy=dynamic'
+    ]
     
-    useJUnitPlatform {
-        includeTags 'integration'
-        excludeTags 'end-to-end', 'slow'
-    }
-    
-    maxHeapSize = '6g'
-    minHeapSize = '2g'
-    maxParallelForks = 1
-    forkEvery = 3
-    
-    timeout = Duration.ofMinutes(30)
+    // 快速測試超時設定
+    timeout = Duration.ofMinutes(2)
     
     testLogging {
         events "failed", "skipped"
@@ -262,33 +332,187 @@ tasks.register('integrationTest', Test) {
     
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
+    systemProperty 'junit.jupiter.execution.timeout.default', '30s'
+}
+
+// 完整單元測試任務 - 提交前驗證 (< 5分鐘)
+tasks.register('unitTest', Test) {
+    description = 'Comprehensive unit tests for pre-commit validation (< 5 minutes)'
+    group = 'verification'
+    
+    useJUnitPlatform {
+        excludeTags 'integration', 'slow'
+        includeTags 'unit'
+    }
+    
+    // 優化記憶體配置 - 單元測試
+    maxHeapSize = '2g'
+    minHeapSize = '512m'
+    
+    // 並行執行配置
+    maxParallelForks = 2
+    forkEvery = 0
+    
+    // 效能優化 JVM 參數
+    jvmArgs += [
+        '-XX:+UseG1GC',
+        '-XX:MaxGCPauseMillis=100',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=16m',
+        '-Djunit.jupiter.execution.parallel.enabled=true'
+    ]
+    
+    // 單元測試超時設定
+    timeout = Duration.ofMinutes(5)
+    
+    testLogging {
+        events "passed", "failed", "skipped"
+        showStandardStreams = false
+        exceptionFormat = 'short'
+    }
+    
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'ERROR'
+    systemProperty 'junit.jupiter.execution.timeout.default', '1m'
+}
+
+// 集成測試任務 - 提交前使用
+tasks.register('integrationTest', Test) {
+    description = 'Integration tests for pre-commit verification (~50MB, ~500ms each)'
+    group = 'verification'
+    
+    useJUnitPlatform {
+        includeTags 'integration'
+        excludeTags 'end-to-end', 'slow'
+    }
+    
+    // 集成測試記憶體配置
+    maxHeapSize = '6g'
+    minHeapSize = '2g'
+    
+    // 串行執行以避免資源競爭
+    maxParallelForks = 1
+    forkEvery = 5
+    
+    // 集成測試 JVM 優化參數
+    jvmArgs += [
+        '-XX:MaxMetaspaceSize=1g',
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        // HttpComponents 專用 JVM 參數
+        '-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog',
+        '-Dorg.apache.commons.logging.simplelog.showdatetime=true',
+        '-Dorg.apache.commons.logging.simplelog.log.org.apache.http=DEBUG',
+        '-Dorg.apache.http.wire=DEBUG',
+        // 網路超時配置
+        '-Dsun.net.useExclusiveBind=false',
+        '-Djava.net.preferIPv4Stack=true'
+    ]
+    
+    // 集成測試超時設定
+    timeout = Duration.ofMinutes(30)
+    
+    testLogging {
+        events "failed", "skipped"
+        showStandardStreams = false
+        exceptionFormat = 'short'
+    }
+    
+    // 集成測試系統屬性
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'logging.level.root', 'ERROR'
+    systemProperty 'junit.jupiter.execution.timeout.default', '2m'
+    systemProperty 'http.client.connection.timeout', '10000'
+    systemProperty 'http.client.socket.timeout', '30000'
+    systemProperty 'test.resource.cleanup.enabled', 'true'
+    systemProperty 'test.memory.monitoring.enabled', 'true'
+}
+
+// Staging 測試任務 - 完整集成測試執行
+tasks.register('stagingTest', Exec) {
+    description = 'Run comprehensive staging integration tests'
+    group = 'verification'
+    
+    workingDir file('../staging-tests')
+    
+    // 檢查 staging-tests 目錄是否存在
+    doFirst {
+        if (!file('../staging-tests').exists()) {
+            throw new GradleException('staging-tests directory not found. Please ensure staging test infrastructure is set up.')
+        }
+        if (!file('../staging-tests/scripts/run-integration-tests.sh').exists()) {
+            throw new GradleException('run-integration-tests.sh script not found in staging-tests/scripts/')
+        }
+    }
+    
+    commandLine './scripts/run-integration-tests.sh'
+    
+    environment 'TEST_ENVIRONMENT', 'staging'
+    environment 'JAVA_HOME', System.getProperty('java.home')
+    
+    // 設定超時
+    timeout = Duration.ofMinutes(45)
+    
+    // 標準輸出處理
+    standardOutput = System.out
+    errorOutput = System.err
+    
+    doLast {
+        println "✅ Staging integration tests completed successfully"
+    }
 }
 
 
 // 端到端測試任務 - 發布前使用
 tasks.register('e2eTest', Test) {
-    description = '運行端到端測試'
+    description = 'End-to-end tests for pre-release verification (~500MB, ~3s each)'
     group = 'verification'
     
     useJUnitPlatform {
         includeTags 'end-to-end'
     }
     
-    maxHeapSize = '6g'
-    minHeapSize = '2g'
+    // E2E 測試記憶體配置
+    maxHeapSize = '8g'
+    minHeapSize = '3g'
+    
+    // 串行執行以確保穩定性
     maxParallelForks = 1
     forkEvery = 2
     
-    timeout = Duration.ofMinutes(60)
+    // E2E 測試專用 JVM 參數
+    jvmArgs += [
+        '-XX:MaxMetaspaceSize=2g',
+        '-XX:+UseG1GC',
+        '-XX:+UseStringDeduplication',
+        '-XX:G1HeapRegionSize=32m',
+        '-XX:+UnlockExperimentalVMOptions',
+        '-XX:G1NewSizePercent=20',
+        '-XX:G1MaxNewSizePercent=30',
+        '-Djava.security.egd=file:/dev/./urandom'
+    ]
+    
+    // E2E 測試超時設定
+    timeout = Duration.ofHours(1)
     
     testLogging {
         events "failed", "skipped", "passed"
         showStandardStreams = false
-        exceptionFormat = 'short'
+        exceptionFormat = 'full'
     }
     
+    // E2E 測試系統屬性
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'INFO'
+    systemProperty 'junit.jupiter.execution.timeout.default', '5m'
+    systemProperty 'spring.main.lazy-initialization', 'false'
+    systemProperty 'http.client.connection.timeout', '30000'
+    systemProperty 'http.client.socket.timeout', '60000'
+    systemProperty 'test.performance.monitoring.enabled', 'true'
 }
 
 // 標準測試任務 - 保持向後兼容
@@ -336,17 +560,6 @@ tasks.register('cucumber', JavaExec) {
 // 便捷的測試任務組合
 // ============================================================================
 
-// 快速驗證 - 日常開發
-tasks.register('quickTest') {
-    dependsOn unitTest
-    description = '快速測試 - 日常開發使用 (< 2分鐘)'
-    group = 'verification'
-    
-    doLast {
-        println "✅ 快速測試完成 - 單元測試通過"
-    }
-}
-
 // 提交前驗證
 tasks.register('preCommitTest') {
     dependsOn unitTest, integrationTest
@@ -384,7 +597,7 @@ tasks.register('runAllTests') {
 
 // 生成測試性能報告
 tasks.register('generatePerformanceReport', JavaExec) {
-    description = '生成測試性能報告'
+    description = 'Generate test performance reports with metrics and dashboards'
     group = 'reporting'
     
     dependsOn testClasses
@@ -397,7 +610,62 @@ tasks.register('generatePerformanceReport', JavaExec) {
     }
     
     doLast {
-        println "測試性能報告已生成: ${buildDir}/reports/test-performance/"
+        println "✅ Test performance reports generated:"
+        println "   - HTML Report: ${buildDir}/reports/test-performance/performance-report.html"
+        println "   - CSV Data: ${buildDir}/reports/test-performance/performance-data.csv"
+        println "   - Summary: ${buildDir}/reports/test-performance/overall-performance-summary.txt"
+    }
+}
+
+// 生成測試執行指標和監控數據
+tasks.register('generateTestMetrics') {
+    description = 'Generate test execution metrics and monitoring data for CI/CD dashboards'
+    group = 'reporting'
+    
+    dependsOn test
+    
+    doLast {
+        def metricsDir = file("${buildDir}/reports/metrics")
+        metricsDir.mkdirs()
+        
+        def metricsFile = new File(metricsDir, "test-metrics.json")
+        def testResults = file("${buildDir}/test-results/test")
+        
+        def totalTests = 0
+        def passedTests = 0
+        def failedTests = 0
+        def skippedTests = 0
+        
+        if (testResults.exists()) {
+            testResults.eachFileRecurse { file ->
+                if (file.name.endsWith('.xml')) {
+                    def xml = new XmlSlurper().parse(file)
+                    totalTests += xml.@tests.toInteger()
+                    failedTests += xml.@failures.toInteger()
+                    skippedTests += xml.@skipped.toInteger()
+                }
+            }
+            passedTests = totalTests - failedTests - skippedTests
+        }
+        
+        def metrics = [
+            timestamp: new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'"),
+            totalTests: totalTests,
+            passedTests: passedTests,
+            failedTests: failedTests,
+            skippedTests: skippedTests,
+            successRate: totalTests > 0 ? (passedTests / totalTests * 100).round(2) : 0,
+            buildNumber: System.getenv('BUILD_NUMBER') ?: 'local',
+            branch: System.getenv('BRANCH_NAME') ?: 'unknown'
+        ]
+        
+        metricsFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(metrics))
+        
+        println "✅ Test metrics generated: ${metricsFile.absolutePath}"
+        println "   Total Tests: ${totalTests}"
+        println "   Passed: ${passedTests}"
+        println "   Failed: ${failedTests}"
+        println "   Success Rate: ${metrics.successRate}%"
     }
 }
 

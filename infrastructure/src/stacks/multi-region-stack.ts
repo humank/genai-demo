@@ -157,8 +157,10 @@ export class MultiRegionStack extends cdk.Stack {
         environment: string,
         multiRegionConfig: any
     ): route53.CfnHealthCheck {
-        const healthCheckInterval = multiRegionConfig['health-check-interval'] || 30;
-        const failureThreshold = multiRegionConfig['health-check-failure-threshold'] || 3;
+        // ✅ OPTIMIZATION: Reduced intervals for RTO < 2min target
+        // Optimized: 10s interval × 2 failures = 20s detection time (saves 70s vs previous 90s)
+        const healthCheckInterval = multiRegionConfig['health-check-interval'] || 10; // Changed from 30 to 10
+        const failureThreshold = multiRegionConfig['health-check-failure-threshold'] || 2; // Changed from 3 to 2
 
         // Create health check for the region's endpoint
         const healthCheck = new route53.CfnHealthCheck(this, `${regionType}HealthCheck`, {

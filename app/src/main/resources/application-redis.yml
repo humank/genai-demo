@@ -1,0 +1,107 @@
+# Redis Configuration for Active-Active Multi-Region Setup
+# Global Datastore handles cross-region synchronization automatically
+
+# Development (local Redis)
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+redis:
+  enabled: true
+  primary:
+    host: localhost
+    port: 6379
+    database: 0
+  multiregion:
+    enabled: false
+aws:
+  region: local
+
+# Staging (single region ElastiCache)
+---
+spring:
+  config:
+    activate:
+      on-profile: staging
+redis:
+  enabled: true
+  primary:
+    host: ${REDIS_PRIMARY_HOST:redis-cluster-staging-us-east-1.cache.amazonaws.com}
+    port: ${REDIS_PRIMARY_PORT:6379}
+    password: ${REDIS_PRIMARY_PASSWORD:}
+    database: 0
+  multiregion:
+    enabled: false
+aws:
+  region: ${AWS_REGION:us-east-1}
+
+# Production Active-Active (US East 1)
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+      on-cloud-platform: aws
+redis:
+  enabled: true
+  primary:
+    host: ${REDIS_PRIMARY_HOST:redis-cluster-production-us-east-1.cache.amazonaws.com}
+    port: ${REDIS_PRIMARY_PORT:6379}
+    password: ${REDIS_PRIMARY_PASSWORD:}
+    database: 0
+  multiregion:
+    enabled: ${REDIS_MULTIREGION_ENABLED:false}
+    secondary:
+      regions: ${REDIS_SECONDARY_REGIONS:us-west-2,eu-west-1}
+aws:
+  region: us-east-1
+
+# Production Active-Active (US West 2)
+---
+spring:
+  config:
+    activate:
+      on-profile: production-us-west-2
+redis:
+  enabled: true
+  primary:
+    host: ${REDIS_PRIMARY_HOST:redis-cluster-production-us-west-2.cache.amazonaws.com}
+    port: ${REDIS_PRIMARY_PORT:6379}
+    password: ${REDIS_PRIMARY_PASSWORD:}
+    database: 0
+  multiregion:
+    enabled: ${REDIS_MULTIREGION_ENABLED:false}
+    secondary:
+      regions: ${REDIS_SECONDARY_REGIONS:us-east-1,eu-west-1}
+aws:
+  region: us-west-2
+
+# Production Active-Active (EU West 1)
+---
+spring:
+  config:
+    activate:
+      on-profile: production-eu-west-1
+redis:
+  enabled: true
+  primary:
+    host: ${REDIS_PRIMARY_HOST:redis-cluster-production-eu-west-1.cache.amazonaws.com}
+    port: ${REDIS_PRIMARY_PORT:6379}
+    password: ${REDIS_PRIMARY_PASSWORD:}
+    database: 0
+  multiregion:
+    enabled: ${REDIS_MULTIREGION_ENABLED:false}
+    secondary:
+      regions: ${REDIS_SECONDARY_REGIONS:us-east-1,us-west-2}
+aws:
+  region: eu-west-1
+
+# Test (disabled by default)
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+redis:
+  enabled: false

@@ -1,0 +1,88 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "genai-demo-unified",
+    "title": "GenAI Demo - Unified Operations Dashboard",
+    "tags": ["genai-demo", "operations", "unified"],
+    "style": "dark",
+    "timezone": "browser",
+    "editable": true,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Application Health Overview",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "up{job=\"genai-demo-backend\"}",
+            "legendFormat": "Backend",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "orientation": "auto"
+        }
+      },
+      {
+        "id": 2,
+        "title": "Request Rate (RPS)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_total{job=\"genai-demo-backend\"}[5m])",
+            "legendFormat": "{{method}} {{uri}}",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Response Time P95",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_server_requests_duration_seconds_bucket[5m]))",
+            "legendFormat": "P95",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Error Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_total{status=~\"5..\"}[5m])",
+            "legendFormat": "5xx Errors",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Pod Status",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+        "targets": [
+          {
+            "expr": "kube_pod_status_phase{namespace=\"genai-demo\"}",
+            "format": "table",
+            "refId": "A"
+          }
+        ]
+      }
+    ]
+  }
+}

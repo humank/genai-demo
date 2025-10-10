@@ -75,7 +75,6 @@ describe('DataCatalogStack', () => {
             auroraCluster: auroraCluster,
             databaseSecret: databaseSecret,
             rdsSecurityGroup: securityGroup,
-            alertTopic: alertTopic,
             env: {
                 account: '123456789012',
                 region: 'us-east-1'

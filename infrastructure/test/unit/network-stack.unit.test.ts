@@ -16,6 +16,8 @@ describe('NetworkStack Unit Tests', () => {
         app = new cdk.App();
         stack = new NetworkStack(app, 'TestNetworkStack', {
             env: { region: 'us-east-1', account: '123456789012' },
+            environment: 'test',
+            projectName: 'test-project',
         });
         template = Template.fromStack(stack);
     });
@@ -23,7 +25,7 @@ describe('NetworkStack Unit Tests', () => {
     describe('VPC Configuration', () => {
         test('should create VPC with correct CIDR and configuration', () => {
             template.hasResourceProperties('AWS::EC2::VPC', {
-                CidrBlock: '10.0.0.0/16',
+                CidrBlock: '10.4.0.0/16', // us-east-1 specific CIDR
                 EnableDnsHostnames: true,
                 EnableDnsSupport: true,
             });
@@ -114,7 +116,7 @@ describe('NetworkStack Unit Tests', () => {
         test('should export VPC ID', () => {
             template.hasOutput('VpcId', {
                 Export: {
-                    Name: 'TestNetworkStack-VpcId'
+                    Name: 'test-project-test-VpcId'
                 }
             });
         });
@@ -122,7 +124,7 @@ describe('NetworkStack Unit Tests', () => {
         test('should export ALB Security Group ID', () => {
             template.hasOutput('ALBSecurityGroupId', {
                 Export: {
-                    Name: 'TestNetworkStack-ALBSecurityGroupId'
+                    Name: 'test-project-test-ALBSecurityGroupId'
                 }
             });
         });

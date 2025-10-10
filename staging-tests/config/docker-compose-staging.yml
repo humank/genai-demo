@@ -1,0 +1,417 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Primary Database
+  postgres-primary:
+    image: postgres:15-alpine
+    container_name: postgres-primary
+    environment:
+      POSTGRES_DB: genai_demo_staging
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: staging_password
+      POSTGRES_REPLICATION_USER: replicator
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_primary_data:/var/lib/postgresql/data
+      - ./service-configs/postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./service-configs/postgresql/pg_hba.conf:/etc/postgresql/pg_hba.conf
+      - ./service-configs/postgresql/init-replication.sql:/docker-entrypoint-initdb.d/init-replication.sql
+    command: >
+      postgres 
+      -c config_file=/etc/postgresql/postgresql.conf
+      -c hba_file=/etc/postgresql/pg_hba.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d genai_demo_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # PostgreSQL Replica Database
+  postgres-replica:
+    image: postgres:15-alpine
+    container_name: postgres-replica
+    environment:
+      POSTGRES_DB: genai_demo_staging
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: staging_password
+      PGUSER: postgres
+      POSTGRES_MASTER_SERVICE: postgres-primary
+      POSTGRES_REPLICATION_USER: replicator
+      POSTGRES_REPLICATION_PASSWORD: repl_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+      - ./service-configs/postgresql/setup-replica.sh:/docker-entrypoint-initdb.d/setup-replica.sh
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d genai_demo_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # Redis Sentinel Cluster
+  redis-master:
+    image: redis:7-alpine
+    container_name: redis-master
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_master_data:/data
+      - ./service-configs/redis/redis-master.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  redis-replica-1:
+    image: redis:7-alpine
+    container_name: redis-replica-1
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_replica1_data:/data
+      - ./service-configs/redis/redis-replica.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf --replicaof redis-master 6379
+    depends_on:
+      redis-master:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  redis-replica-2:
+    image: redis:7-alpine
+    container_name: redis-replica-2
+    ports:
+      - "6381:6379"
+    volumes:
+      - redis_replica2_data:/data
+      - ./service-configs/redis/redis-replica.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf --replicaof redis-master 6379
+    depends_on:
+      redis-master:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # Redis Sentinel Instances
+  redis-sentinel-1:
+    image: redis:7-alpine
+    container_name: redis-sentinel-1
+    ports:
+      - "26379:26379"
+    volumes:
+      - ./service-configs/redis/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - redis-master
+      - redis-replica-1
+      - redis-replica-2
+    networks:
+      - staging-network
+
+  redis-sentinel-2:
+    image: redis:7-alpine
+    container_name: redis-sentinel-2
+    ports:
+      - "26380:26379"
+    volumes:
+      - ./service-configs/redis/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - redis-master
+      - redis-replica-1
+      - redis-replica-2
+    networks:
+      - staging-network
+
+  redis-sentinel-3:
+    image: redis:7-alpine
+    container_name: redis-sentinel-3
+    ports:
+      - "26381:26379"
+    volumes:
+      - ./service-configs/redis/sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    depends_on:
+      - redis-master
+      - redis-replica-1
+      - redis-replica-2
+    networks:
+      - staging-network
+
+  # Kafka Cluster
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  kafka-1:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-1
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_IN_SYNC_REPLICAS: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 19092
+      KAFKA_JMX_HOSTNAME: localhost
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - staging-network
+
+  kafka-2:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-2
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9093:9093"
+      - "19093:19093"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29093,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_IN_SYNC_REPLICAS: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 19093
+      KAFKA_JMX_HOSTNAME: localhost
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9093"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - staging-network
+
+  kafka-3:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka-3
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9094:9094"
+      - "19094:19094"
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29094,PLAINTEXT_HOST://localhost:9094
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29094,PLAINTEXT_HOST://0.0.0.0:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_IN_SYNC_REPLICAS: 2
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_JMX_PORT: 19094
+      KAFKA_JMX_HOSTNAME: localhost
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9094"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - staging-network
+
+  # DynamoDB Local
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-dbPath", "./data"]
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # LocalStack for AWS Services
+  localstack:
+    image: localstack/localstack:3.0
+    container_name: localstack
+    ports:
+      - "4566:4566"
+      - "4510-4559:4510-4559"
+    environment:
+      SERVICES: s3,sqs,sns,lambda,cloudformation,sts,iam
+      DEBUG: 1
+      DATA_DIR: /tmp/localstack/data
+      DOCKER_HOST: unix:///var/run/docker.sock
+      HOST_TMP_FOLDER: /tmp/localstack
+    volumes:
+      - localstack_data:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # Prometheus for Metrics Collection
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./service-configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # Grafana for Visualization
+  grafana:
+    image: grafana/grafana:10.0.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: staging_grafana
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./service-configs/grafana/provisioning:/etc/grafana/provisioning
+      - ./service-configs/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - staging-network
+
+  # Node Exporter for System Metrics
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - staging-network
+
+volumes:
+  postgres_primary_data:
+  postgres_replica_data:
+  redis_master_data:
+  redis_replica1_data:
+  redis_replica2_data:
+  zookeeper_data:
+  zookeeper_logs:
+  kafka1_data:
+  kafka2_data:
+  kafka3_data:
+  dynamodb_data:
+  localstack_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  staging-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

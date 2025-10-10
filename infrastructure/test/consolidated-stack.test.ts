@@ -19,22 +19,27 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            networkStack = new NetworkStack(app, 'TestNetworkStack', {});
+            networkStack = new NetworkStack(app, 'TestNetworkStack', {
+                environment: 'test',
+                projectName: 'genai-demo',
+                env: { region: 'us-east-1', account: '123456789012' },
+                crossRegionReferences: true,
+            });
             template = Template.fromStack(networkStack);
         });
 
         test('should create VPC with correct CIDR', () => {
             template.hasResourceProperties('AWS::EC2::VPC', {
-                CidrBlock: '10.0.0.0/16',
+                CidrBlock: '10.4.0.0/16',
             });
         });
 
         test('should create security groups', () => {
-            template.resourceCountIs('AWS::EC2::SecurityGroup', 3);
+            template.resourceCountIs('AWS::EC2::SecurityGroup', 7);
         });
 
         test('should create subnets', () => {
-            template.resourceCountIs('AWS::EC2::Subnet', 6);
+            template.resourceCountIs('AWS::EC2::Subnet', 12);
         });
 
         test('should create outputs', () => {
@@ -48,30 +53,24 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            securityStack = new SecurityStack(app, 'TestSecurityStack', {});
+            securityStack = new SecurityStack(app, 'TestSecurityStack', {
+                environment: 'test',
+                projectName: 'test-project'
+            });
             template = Template.fromStack(securityStack);
         });
 
         test('should create KMS key', () => {
             template.hasResourceProperties('AWS::KMS::Key', {
-                Description: 'KMS key for GenAI Demo application encryption',
+                Description: 'Enhanced KMS key for test-project test - internal data encryption',
                 EnableKeyRotation: true,
             });
         });
 
         test('should create IAM role', () => {
             template.hasResourceProperties('AWS::IAM::Role', {
-                AssumeRolePolicyDocument: {
-                    Statement: [
-                        {
-                            Effect: 'Allow',
-                            Principal: {
-                                Service: 'ec2.amazonaws.com',
-                            },
-                            Action: 'sts:AssumeRole',
-                        },
-                    ],
-                },
+                Description: 'Enhanced IAM role for test-project test application with internal data access',
+                RoleName: 'test-project-test-enhanced-application-role',
             });
         });
 
@@ -88,13 +87,35 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            networkStack = new NetworkStack(app, 'TestNetworkStack', {});
-            securityStack = new SecurityStack(app, 'TestSecurityStack', {});
+            // Set consistent environment for all stacks
+            const env = {
+                account: '123456789012',
+                region: 'us-east-1'
+            };
+            
+            networkStack = new NetworkStack(app, 'TestNetworkStack', {
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
+            });
+            
+            securityStack = new SecurityStack(app, 'TestSecurityStack', {
+                vpc: networkStack.vpc,
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
+            });
 
             coreStack = new CoreInfrastructureStack(app, 'TestCoreStack', {
                 vpc: networkStack.vpc,
                 securityGroups: networkStack.securityGroups,
                 kmsKey: securityStack.kmsKey,
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
             });
 
             template = Template.fromStack(coreStack);
@@ -129,7 +150,12 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            networkStack = new NetworkStack(app, 'TestNetworkStack', {});
+            networkStack = new NetworkStack(app, 'TestNetworkStack', {
+                environment: 'test',
+                projectName: 'genai-demo',
+                env: { region: 'us-east-1', account: '123456789012' },
+                crossRegionReferences: true,
+            });
 
             alertingStack = new AlertingStack(app, 'TestAlertingStack', {
                 environment: 'test',
@@ -167,8 +193,19 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            networkStack = new NetworkStack(app, 'TestNetworkStack', {});
-            securityStack = new SecurityStack(app, 'TestSecurityStack', {});
+            const env = { region: 'us-east-1', account: '123456789012' };
+            networkStack = new NetworkStack(app, 'TestNetworkStack', {
+                environment: 'test',
+                projectName: 'genai-demo',
+                env: env,
+                crossRegionReferences: true,
+            });
+            securityStack = new SecurityStack(app, 'TestSecurityStack', {
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
+            });
 
             observabilityStack = new ObservabilityStack(app, 'TestObservabilityStack', {
                 vpc: networkStack.vpc,
@@ -179,7 +216,7 @@ describe('Consolidated Infrastructure Tests', () => {
         });
 
         test('should create CloudWatch log groups', () => {
-            template.resourceCountIs('AWS::Logs::LogGroup', 1);
+            template.resourceCountIs('AWS::Logs::LogGroup', 5);
         });
 
         test('should create CloudWatch dashboard', () => {
@@ -195,8 +232,19 @@ describe('Consolidated Infrastructure Tests', () => {
         let template: Template;
 
         beforeEach(() => {
-            networkStack = new NetworkStack(app, 'TestNetworkStack', {});
-            securityStack = new SecurityStack(app, 'TestSecurityStack', {});
+            const env = { region: 'us-east-1', account: '123456789012' };
+            networkStack = new NetworkStack(app, 'TestNetworkStack', {
+                environment: 'test',
+                projectName: 'genai-demo',
+                env: env,
+                crossRegionReferences: true,
+            });
+            securityStack = new SecurityStack(app, 'TestSecurityStack', {
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
+            });
             alertingStack = new AlertingStack(app, 'TestAlertingStack', {
                 environment: 'test',
                 region: 'us-east-1',
@@ -228,6 +276,8 @@ describe('Consolidated Infrastructure Tests', () => {
                 mskCluster: mockMskCluster,
                 alertingTopic: alertingStack.criticalAlertsTopic,
                 region: 'us-east-1',
+                env: env,
+                crossRegionReferences: true,
             });
 
             template = Template.fromStack(analyticsStack);
@@ -248,8 +298,25 @@ describe('Consolidated Infrastructure Tests', () => {
 
     describe('Stack Integration', () => {
         test('should create all stacks without errors', () => {
-            const networkStack = new NetworkStack(app, 'NetworkStack', {});
-            const securityStack = new SecurityStack(app, 'SecurityStack', {});
+            const env = {
+                account: '123456789012',
+                region: 'us-east-1'
+            };
+            
+            const networkStack = new NetworkStack(app, 'NetworkStack', {
+                environment: 'test',
+                projectName: 'genai-demo',
+                env: env,
+                crossRegionReferences: true,
+            });
+            
+            const securityStack = new SecurityStack(app, 'SecurityStack', {
+                vpc: networkStack.vpc,
+                environment: 'test',
+                projectName: 'test-project',
+                env: env,
+                crossRegionReferences: true,
+            });
 
             const alertingStack = new AlertingStack(app, 'AlertingStack', {
                 environment: 'test',
@@ -266,17 +333,26 @@ describe('Consolidated Infrastructure Tests', () => {
                         emailAddresses: ['test@example.com'],
                     },
                 },
+                env: env
             });
 
             const coreStack = new CoreInfrastructureStack(app, 'CoreStack', {
                 vpc: networkStack.vpc,
                 securityGroups: networkStack.securityGroups,
                 kmsKey: securityStack.kmsKey,
+                environment: 'test',
+                projectName: 'genai-demo',
+                crossRegionReferences: true,
+                env: {
+                    account: '123456789012',
+                    region: 'us-east-1'
+                }
             });
 
             const observabilityStack = new ObservabilityStack(app, 'ObservabilityStack', {
                 vpc: networkStack.vpc,
                 kmsKey: securityStack.kmsKey,
+                env: env
             });
 
             // Set up dependencies

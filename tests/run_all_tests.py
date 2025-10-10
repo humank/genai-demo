@@ -139,9 +139,7 @@ def run_test_categories():
     categories = {
         'Unit Tests': 'test_*.py',
         'Integration Tests': 'test_integration.py',
-        'Batch Processing Tests': 'test_batch_processor.py',
-        'Translation Tests': 'test_kiro_translator.py',
-        'Documentation Tests': 'test_translate_docs.py'
+        'Batch Processing Tests': 'test_batch_processor.py'
     }
     
     results = {}

@@ -1,0 +1,167 @@
+# CloudWatch Agent ConfigMap for Custom Metrics Collection
+# This ConfigMap configures the CloudWatch Agent to collect custom application metrics
+# including JVM metrics, Spring Boot Actuator metrics, and StatsD metrics
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudwatch-agent-custom-metrics
+  namespace: amazon-cloudwatch
+data:
+  cwagent-config.json: |
+    {
+      "agent": {
+        "region": "ap-northeast-1",
+        "debug": false
+      },
+      "logs": {
+        "metrics_collected": {
+          "kubernetes": {
+            "cluster_name": "genai-demo-cluster",
+            "metrics_collection_interval": 60
+          }
+        }
+      },
+      "metrics": {
+        "namespace": "GenAIDemo/Application",
+        "metrics_collected": {
+          "statsd": {
+            "service_address": ":8125",
+            "metrics_collection_interval": 60,
+            "metrics_aggregation_interval": 60
+          },
+          "collectd": {
+            "service_address": ":25826",
+            "name_prefix": "collectd_",
+            "metrics_collection_interval": 60,
+            "metrics_aggregation_interval": 60
+          }
+        },
+        "aggregation_dimensions": [
+          ["ClusterName", "Namespace"],
+          ["ClusterName", "Namespace", "PodName"],
+          ["ClusterName", "Namespace", "Service"],
+          ["ClusterName"]
+        ],
+        "force_flush_interval": 60
+      }
+    }
+
+---
+# Service for StatsD and collectd endpoints
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudwatch-agent-statsd
+  namespace: amazon-cloudwatch
+  labels:
+    app: cloudwatch-agent
+spec:
+  type: ClusterIP
+  ports:
+  - name: statsd-udp
+    port: 8125
+    targetPort: 8125
+    protocol: UDP
+  - name: collectd-udp
+    port: 25826
+    targetPort: 25826
+    protocol: UDP
+  selector:
+    name: cloudwatch-agent
+
+---
+# Updated CloudWatch Agent DaemonSet with custom metrics support
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cloudwatch-agent-custom
+  namespace: amazon-cloudwatch
+  labels:
+    app: cloudwatch-agent-custom
+spec:
+  selector:
+    matchLabels:
+      name: cloudwatch-agent-custom
+  template:
+    metadata:
+      labels:
+        name: cloudwatch-agent-custom
+    spec:
+      serviceAccountName: cloudwatch-agent
+      containers:
+      - name: cloudwatch-agent
+        image: amazon/cloudwatch-agent:latest
+        resources:
+          limits:
+            cpu: 300m
+            memory: 300Mi
+          requests:
+            cpu: 150m
+            memory: 150Mi
+        env:
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: HOST_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: CI_VERSION
+          value: "k8s/1.3.9"
+        ports:
+        - name: statsd-udp
+          containerPort: 8125
+          protocol: UDP
+        - name: collectd-udp
+          containerPort: 25826
+          protocol: UDP
+        volumeMounts:
+        - name: cwagentconfig
+          mountPath: /etc/cwagentconfig
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+          readOnly: true
+        - name: varlibdocker
+          mountPath: /var/lib/docker
+          readOnly: true
+        - name: containerdsock
+          mountPath: /run/containerd/containerd.sock
+          readOnly: true
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+        - name: devdisk
+          mountPath: /dev/disk
+          readOnly: true
+      volumes:
+      - name: cwagentconfig
+        configMap:
+          name: cloudwatch-agent-custom-metrics
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: varlibdocker
+        hostPath:
+          path: /var/lib/docker
+      - name: containerdsock
+        hostPath:
+          path: /run/containerd/containerd.sock
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: devdisk
+        hostPath:
+          path: /dev/disk
+      terminationGracePeriodSeconds: 60

@@ -107,6 +107,11 @@ management:
 analytics:
   enabled: false  # 完全禁用分析功能
 
+# AWS Secrets Manager Configuration for Local Development (DISABLED)
+aws:
+  secretsmanager:
+    enabled: false  # 本地開發不使用 Secrets Manager
+
 # Development Profile Features - 最小化配置
 app:
   profile:

@@ -144,7 +144,7 @@ describe('Aurora PostgreSQL Deadlock Monitoring', () => {
 
       // Check that CloudWatch dashboard is created
       template.hasResourceProperties('AWS::CloudWatch::Dashboard', {
-        DashboardName: 'GenAI-Demo-TestObservabilityStack',
+        DashboardName: 'GenAI-Demo-development',
       });
 
       // Check that dashboard exists (detailed content checking is complex due to Fn::Join)
@@ -193,16 +193,30 @@ describe('Aurora PostgreSQL Deadlock Monitoring', () => {
       // Assert
       const template = Template.fromStack(stack);
 
-      // Check that IAM policy exists for the Lambda function
-      template.resourceCountIs('AWS::IAM::Policy', 1);
+      // Check that IAM policies exist for the Lambda function and other roles
+      template.resourceCountIs('AWS::IAM::Policy', 4);
       
-      // Check that the policy contains logs and cloudwatch permissions
+      // Check that IAM policies exist and contain required permissions
       const policies = template.findResources('AWS::IAM::Policy');
-      const policyDocument = Object.values(policies)[0].Properties.PolicyDocument;
+      const policyValues = Object.values(policies);
       
-      expect(policyDocument.Statement).toHaveLength(2);
-      expect(policyDocument.Statement[0].Action).toContain('logs:StartQuery');
-      expect(policyDocument.Statement[1].Action).toContain('cloudwatch:PutMetricData');
+      // Find policies that contain the required permissions for deadlock analysis
+      const hasLogsPermissions = policyValues.some((policy: any) => {
+        const statements = policy.Properties.PolicyDocument.Statement;
+        return statements.some((stmt: any) => 
+          stmt.Action && stmt.Action.includes('logs:StartQuery')
+        );
+      });
+      
+      const hasCloudWatchPermissions = policyValues.some((policy: any) => {
+        const statements = policy.Properties.PolicyDocument.Statement;
+        return statements.some((stmt: any) => 
+          stmt.Action && stmt.Action.includes('cloudwatch:PutMetricData')
+        );
+      });
+      
+      expect(hasLogsPermissions).toBe(true);
+      expect(hasCloudWatchPermissions).toBe(true);
     });
   });
 

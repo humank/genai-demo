@@ -1,408 +1,411 @@
-# Automated Documentation Translation System
+# Enterprise E-Commerce Platform
 
-A comprehensive system for automatically translating English documentation to Traditional Chinese (zh-TW) using AI-powered translation services. This system follows an English-first approach where all documentation is written in English and automatically translated to Chinese.
+> **A Modern Software Architecture Showcase Based on Rozanski & Woods Methodology, Domain-Driven Design, and Behavior-Driven Development**
+
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.13-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![AWS CDK](https://img.shields.io/badge/AWS%20CDK-2.x-yellow.svg)](https://aws.amazon.com/cdk/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+## 🎯 Project Overview
+
+This project demonstrates enterprise-grade software architecture practices through a comprehensive e-commerce platform implementation. It showcases how to design, develop, test, and deploy a production-ready system using industry-leading methodologies and tools.
+
+### Core Design Principles
+
+**🏗️ Architecture-Driven Design**
+- **Rozanski & Woods Viewpoints & Perspectives**: Systematic architectural analysis across 7 viewpoints (Functional, Information, Concurrency, Development, Deployment, Operational, Context) and 8 perspectives (Security, Performance, Availability, Evolution, etc.)
+- **Hexagonal Architecture**: Clean separation between business logic and infrastructure concerns
+- **Event-Driven Architecture**: Asynchronous communication through domain events
+
+**🎯 Domain-Driven Design (DDD)**
+- **Strategic Design**: 13 bounded contexts with clear business boundaries
+- **Tactical Patterns**: Complete implementation of aggregates, entities, value objects, domain services, and repositories
+- **Ubiquitous Language**: Consistent terminology between business and technical teams
+- **Event Storming**: Visual modeling from business processes to system design
+
+**📋 Behavior-Driven Development (BDD)**
+- **Gherkin Scenarios**: 28+ feature files describing business requirements
+- **Acceptance Criteria**: Clear, testable specifications for each feature
+- **Living Documentation**: Tests serve as executable specifications
+- **Cucumber Integration**: Automated BDD test execution
+
+**🧪 Environment-Specific Testing Strategy**
+- **Local Environment**: Unit tests only (fast feedback loop)
+- **Staging Environment**: Integration tests with real AWS services
+- **Production Environment**: Full end-to-end tests and monitoring
+
+**☁️ Infrastructure as Code (IaC)**
+- **AWS CDK**: Complete infrastructure definition in TypeScript
+- **Multi-Stack Architecture**: Modular, reusable infrastructure components
+- **Multi-Region Support**: Cross-region deployment capabilities
+- **GitOps**: Automated deployment through ArgoCD
+
+## 📊 Architecture Overview
+
+### Bounded Contexts
+
+The system is organized into 13 bounded contexts, each representing a distinct business capability:
+
+```
+├── Customer Management      # Customer profiles, authentication, membership
+├── Product Catalog         # Product information, categories, search
+├── Inventory Management    # Stock tracking, warehouse management
+├── Order Management        # Order lifecycle, order processing
+├── Payment Processing      # Payment methods, transactions, refunds
+├── Promotion Engine        # Discounts, coupons, flash sales, bundles
+├── Pricing Strategy        # Dynamic pricing, commission rates
+├── Shopping Cart           # Cart management, item selection
+├── Logistics & Delivery    # Shipping, tracking, delivery management
+├── Notification Service    # Email, SMS, push notifications
+├── Reward Points          # Loyalty program, points accumulation
+├── Analytics & Reporting   # Business intelligence, metrics
+└── Workflow Orchestration  # Process coordination, saga patterns
+```
+
+### Technology Stack
+
+**Backend**
+- **Framework**: Spring Boot 3.3.13 with Java 21
+- **Data Access**: Spring Data JPA + Hibernate
+- **Database**: PostgreSQL (production), H2 (local/test)
+- **Caching**: Redis (staging/production), In-memory (local)
+- **Messaging**: Apache Kafka (MSK in production)
+- **API Documentation**: SpringDoc OpenAPI 3 + Swagger UI
+
+**Testing**
+- **Unit Testing**: JUnit 5 + Mockito + AssertJ
+- **BDD Testing**: Cucumber 7 with Gherkin
+- **Architecture Testing**: ArchUnit
+- **Performance Testing**: Custom test performance framework
+- **Coverage**: JaCoCo (target: 80%+)
+
+**Infrastructure**
+- **Cloud Provider**: AWS
+- **IaC Tool**: AWS CDK (TypeScript)
+- **Container Orchestration**: Amazon EKS
+- **Service Mesh**: AWS App Mesh
+- **CI/CD**: GitHub Actions + ArgoCD
+
+**Observability**
+- **Metrics**: Spring Boot Actuator + Prometheus + CloudWatch
+- **Logging**: Structured logging with correlation IDs
+- **Tracing**: AWS X-Ray for distributed tracing
+- **Monitoring**: Amazon Managed Grafana
+- **Alerting**: CloudWatch Alarms + SNS
 
 ## 🚀 Quick Start
 
-### 1. Installation
-
-```bash
-# Run the setup script
-python scripts/setup-translation-system.py
-
-# Configure your API keys
-cp .env.template .env
-# Edit .env with your API keys
-```
-
-### 2. Basic Usage
-
-```bash
-# Translate a single file
-python scripts/translation-cli.py translate --file README.md
-
-# Translate an entire directory
-python scripts/translation-cli.py batch --input-dir docs/ --output-dir docs/
-
-# Start automatic translation
-./start-translation-system.sh start
-```
-
-## 📋 Features
-
-- **AI-Powered Translation**: Uses OpenAI, Google Translate, or Azure Translator
-- **English-First Approach**: Write in English, automatically generate Chinese versions
-- **File Naming Convention**: `filename.md` → `filename.zh-TW.md`
-- **Automatic File Monitoring**: Real-time translation when files change
-- **Batch Processing**: Efficient processing of multiple files
-- **Quality Assurance**: Built-in validation and terminology consistency
-- **Kiro Integration**: Seamless integration with Kiro workflows
-- **Migration Tools**: Convert existing Chinese documentation to English-first structure
-
-## 🏗️ Architecture
-
-The system follows a modular architecture with clear separation of concerns:
-
-```
-├── scripts/                    # Core translation modules
-│   ├── translation-cli.py      # Command-line interface
-│   ├── kiro_translator.py      # AI translation engine
-│   ├── batch_processor.py      # Batch processing
-│   ├── quality_assurance.py    # Quality validation
-│   └── watch-docs.py          # File monitoring
-├── config/                     # Configuration files
-│   ├── translation-config.json # Main configuration
-│   └── terminology.json       # Technical terms
-├── tests/                      # Comprehensive test suite
-├── docs/en/                    # English documentation
-└── .kiro/hooks/               # Kiro integration hooks
-```
-
-## 📖 Documentation
-
-- **[User Guide](docs/en/translation-user-guide.md)** - Complete usage instructions
-- **[API Reference](docs/en/translation-api-reference.md)** - Programmatic interface
-- **[Troubleshooting](docs/en/translation-troubleshooting.md)** - Common issues and solutions
-
-## 🛠️ Installation
-
 ### Prerequisites
 
-- Python 3.8 or higher
-- Kiro environment (optional, for enhanced features)
-- API key for translation service (OpenAI, Google, or Azure)
+- **Java 21** or higher
+- **Gradle 8.x** (included via wrapper)
+- **Docker** and Docker Compose
+- **Node.js 18+** (for CDK)
+- **AWS CLI** (for cloud deployment)
 
-### Automated Setup
+### Local Development Setup
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/genai-demo.git
+cd genai-demo
+```
+
+2. **Start local dependencies**
+```bash
+# Start PostgreSQL and Redis
+docker-compose up -d
+```
+
+3. **Run the application**
+```bash
+# Run with local profile (unit tests only)
+./gradlew :app:bootRun --args='--spring.profiles.active=local'
+```
+
+4. **Access the application**
+- API: http://localhost:8080
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- Actuator: http://localhost:8080/actuator
+
+### Running Tests
 
 ```bash
-# Run the setup script
-python scripts/setup-translation-system.py
-
-# For verbose output
-python scripts/setup-translation-system.py --verbose
-
-# Force reinstall dependencies
-python scripts/setup-translation-system.py --force-deps
-```
-
-### Manual Setup
-
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Create configuration:**
-   ```bash
-   cp config/translation-config.example.json config/translation-config.json
-   cp .env.template .env
-   ```
-
-3. **Configure API keys in `.env`:**
-   ```bash
-   OPENAI_API_KEY=your-api-key-here
-   TRANSLATION_SERVICE=openai
-   TARGET_LANGUAGE=zh-TW
-   ```
-
-## 🎯 Usage Examples
-
-### Command Line Interface
-
-```bash
-# Translate single file
-python scripts/translation-cli.py translate --file README.md
-
-# Batch translate with custom pattern
-python scripts/translation-cli.py batch \
-  --input-dir docs/ \
-  --output-dir docs/ \
-  --pattern "*.md" \
-  --recursive
-
-# Validate translations
-python scripts/translation-cli.py validate --dir docs/
-
-# Check system status
-python scripts/translation-cli.py status
-
-# Migrate existing Chinese docs
-python scripts/translation-cli.py migrate \
-  --source docs/zh/ \
-  --target docs/ \
-  --dry-run
-```
-
-### Programmatic Usage
-
-```python
-from scripts.kiro_translator import KiroTranslator
-from config.translation_config import TranslationConfig
-
-# Initialize translator
-config = TranslationConfig()
-translator = KiroTranslator(config)
-
-# Translate text
-result = translator.translate_text("Hello, World!")
-print(result.translated_text)
-
-# Translate file
-success = translator.translate_file('README.md', 'README.zh-TW.md')
-```
-
-### Batch Processing
-
-```python
-from scripts.batch_processor import BatchProcessor
-
-# Initialize batch processor
-processor = BatchProcessor(translator, max_workers=4)
-
-# Process directory
-result = processor.process_directory(
-    'docs/',
-    'docs/',
-    recursive=True,
-    force=False
-)
-
-print(f"Processed {result.files_processed} files")
-```
-
-## ⚙️ Configuration
-
-### Main Configuration (`config/translation-config.json`)
-
-```json
-{
-  "translation_service": {
-    "service_type": "openai",
-    "model": "gpt-3.5-turbo",
-    "max_tokens": 4000,
-    "temperature": 0.3,
-    "rate_limit_per_minute": 60
-  },
-  "processing": {
-    "max_chunk_size": 3000,
-    "max_workers": 4,
-    "enable_caching": true,
-    "backup_before_translation": true
-  },
-  "quality_assurance": {
-    "enable_terminology_check": true,
-    "enable_format_validation": true,
-    "min_confidence_score": 0.7
-  }
-}
-```
-
-### Terminology Configuration (`config/terminology.json`)
-
-```json
-{
-  "preserve_terms": [
-    "API", "REST", "JSON", "HTTP",
-    "Docker", "Kubernetes", "Git"
-  ],
-  "translation_overrides": {
-    "endpoint": "端點",
-    "authentication": "身份驗證"
-  }
-}
-```
-
-## 🔄 Automatic Translation
-
-### File Watcher
-
-Start automatic translation monitoring:
-
-```bash
-# Start file watcher
-python scripts/watch-docs.py --directory docs/ --recursive
-
-# Or use the startup script
-./start-translation-system.sh start
-```
-
-### Kiro Hooks Integration
-
-The system integrates with Kiro hooks for seamless workflow automation:
-
-```json
-{
-  "name": "Auto Translation",
-  "when": {
-    "patterns": ["**/*.md"],
-    "exclude_patterns": ["**/*.zh-TW.md"]
-  },
-  "then": {
-    "command": "python scripts/translate-docs.py --file {file}"
-  }
-}
-```
-
-## 🧪 Testing
-
-### Run All Tests
-
-```bash
-# Run complete test suite
-python tests/run_all_tests.py
+# Unit tests only (local environment)
+./gradlew :app:test
 
 # Run specific test categories
-python tests/run_all_tests.py --category unit
-python tests/run_all_tests.py --category integration
+./gradlew :app:test --tests "*UnitTest"
 
-# Generate test report
-python tests/run_all_tests.py --report test_report.html
+# Run BDD tests
+./gradlew :app:cucumber
+
+# Generate coverage report
+./gradlew :app:jacocoTestReport
+
+# Architecture compliance tests
+./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-### Test Categories
+### Integration Testing (Staging)
 
-- **Unit Tests**: Core functionality testing
-- **Integration Tests**: End-to-end workflow testing
-- **Performance Tests**: System performance validation
-
-## 📊 Quality Assurance
-
-### Built-in Validation
+Integration tests run against real AWS services in the staging environment:
 
 ```bash
-# Validate translated files
-python scripts/translation-cli.py validate --dir docs/
+# Deploy to staging
+cd infrastructure
+npm run deploy:staging
 
-# Check terminology consistency
-python scripts/quality_assurance.py --check-terminology docs/
-
-# Generate quality report
-python scripts/quality_assurance.py --report quality_report.html docs/
+# Run integration tests
+cd ../staging-tests
+./gradlew test
 ```
 
-### Quality Metrics
+## 🏗️ Project Structure
 
-- Translation accuracy and consistency
-- Markdown formatting preservation
-- Link integrity validation
-- Technical terminology consistency
+```
+.
+├── app/                          # Main application
+│   ├── src/main/java/
+│   │   └── solid/humank/genaidemo/
+│   │       ├── application/      # Application services (use cases)
+│   │       ├── domain/           # Domain model (DDD)
+│   │       │   ├── customer/     # Customer bounded context
+│   │       │   ├── order/        # Order bounded context
+│   │       │   ├── product/      # Product bounded context
+│   │       │   └── ...           # Other bounded contexts
+│   │       └── infrastructure/   # Infrastructure adapters
+│   │           ├── persistence/  # Database repositories
+│   │           ├── messaging/    # Event publishers
+│   │           ├── security/     # Security configuration
+│   │           └── observability/# Metrics, logging, tracing
+│   └── src/test/
+│       ├── java/                 # Unit tests
+│       └── resources/features/   # BDD feature files
+│
+├── infrastructure/               # AWS CDK infrastructure
+│   ├── lib/stacks/              # CDK stack definitions
+│   │   ├── network-stack.ts     # VPC, subnets, security groups
+│   │   ├── eks-stack.ts         # Kubernetes cluster
+│   │   ├── rds-stack.ts         # PostgreSQL database
+│   │   ├── msk-stack.ts         # Kafka cluster
+│   │   ├── observability-stack.ts # Monitoring setup
+│   │   └── ...                  # Other infrastructure stacks
+│   └── test/                    # Infrastructure tests
+│
+├── staging-tests/               # Integration tests for staging
+├── cmc-frontend/                # Customer management console (Next.js)
+├── consumer-frontend/           # Consumer app (Angular)
+├── .kiro/                       # Kiro AI assistant configuration
+│   ├── hooks/                   # Automated quality checks
+│   └── steering/                # Development standards
+└── docs/                        # Documentation (empty, to be populated)
+```
 
-## 🔧 Troubleshooting
+## 🧪 Testing Strategy
 
-### Common Issues
+### Test Pyramid
 
-1. **API Key Not Found**
-   ```bash
-   export OPENAI_API_KEY="your-api-key-here"
-   ```
+```
+        /\
+       /  \  E2E Tests (5%)
+      /____\  - Production environment
+     /      \  - Full user journeys
+    / Integ. \ Integration Tests (15%)
+   /__________\ - Staging environment
+  /            \ - Real AWS services
+ /  Unit Tests  \ Unit Tests (80%)
+/________________\ - Local environment
+                   - Fast feedback
+```
 
-2. **Permission Errors**
-   ```bash
-   chmod 755 docs/
-   chmod 644 docs/*.md
-   ```
+### Environment-Specific Testing
 
-3. **Module Import Errors**
-   ```bash
-   pip install -r requirements.txt
-   ```
+| Environment | Test Type | Scope | Infrastructure |
+|-------------|-----------|-------|----------------|
+| **Local** | Unit Tests | Business logic, domain model | H2, In-memory |
+| **Staging** | Integration Tests | Service integration, AWS services | RDS, MSK, ElastiCache |
+| **Production** | E2E Tests | Complete user journeys, monitoring | Full AWS stack |
 
-### Diagnostic Tools
+### BDD Feature Coverage
+
+28+ feature files covering:
+- Customer management and membership
+- Product catalog and search
+- Shopping cart operations
+- Order processing workflow
+- Payment processing
+- Promotion engine (coupons, flash sales, bundles)
+- Logistics and delivery
+- Notification system
+- Reward points program
+
+## ☁️ AWS Deployment
+
+### Infrastructure Components
+
+The application deploys to AWS using CDK with the following components:
+
+**Networking**
+- VPC with public/private subnets across 3 AZs
+- NAT Gateways for private subnet internet access
+- Security groups with least-privilege access
+
+**Compute**
+- Amazon EKS cluster for container orchestration
+- Auto-scaling node groups
+- Fargate profiles for serverless pods
+
+**Data**
+- Amazon RDS PostgreSQL (Multi-AZ)
+- Amazon ElastiCache Redis (cluster mode)
+- Amazon MSK (Managed Kafka)
+
+**Observability**
+- Amazon CloudWatch for metrics and logs
+- AWS X-Ray for distributed tracing
+- Amazon Managed Grafana for dashboards
+- CloudWatch Alarms for alerting
+
+**Security**
+- AWS IAM roles and policies
+- AWS Secrets Manager for credentials
+- AWS Certificate Manager for TLS
+- AWS WAF for application firewall
+
+### Deployment Process
 
 ```bash
-# Run system diagnostics
-python scripts/run-diagnostics.py
+# Install dependencies
+cd infrastructure
+npm install
 
-# Check system health
-python scripts/setup-translation-system.py --check-only
+# Bootstrap CDK (first time only)
+npx cdk bootstrap aws://ACCOUNT-ID/REGION
 
-# View logs
-tail -f logs/translation.log
+# Deploy to staging
+npm run deploy:staging
+
+# Deploy to production
+npm run deploy:production
+
+# Destroy infrastructure
+npm run destroy:staging
 ```
 
-## 📈 Performance
+### Multi-Region Deployment
 
-### Optimization Tips
-
-- Use appropriate `max_workers` based on your system
-- Enable caching for repeated translations
-- Configure rate limits based on API quotas
-- Use batch processing for large document sets
-
-### Performance Monitoring
-
-The system includes built-in performance monitoring:
-
-- Translation speed and accuracy metrics
-- API usage and rate limiting
-- Memory and CPU usage tracking
-- Error rate monitoring
-
-## 🔄 Migration
-
-### Existing Chinese Documentation
-
-Convert existing Chinese documentation to English-first structure:
+The infrastructure supports multi-region deployment for disaster recovery:
 
 ```bash
-# Dry run to see what would be migrated
-python scripts/translation-cli.py migrate \
-  --source docs/zh/ \
-  --target docs/ \
-  --dry-run
+# Deploy to primary region (us-east-1)
+AWS_REGION=us-east-1 npm run deploy:production
 
-# Perform migration
-python scripts/translation-cli.py migrate \
-  --source docs/zh/ \
-  --target docs/
+# Deploy to secondary region (us-west-2)
+AWS_REGION=us-west-2 npm run deploy:production
 ```
+
+## 📈 Observability
+
+### Metrics
+
+**Business Metrics**
+- Order conversion rate
+- Average order value
+- Customer lifetime value
+- Cart abandonment rate
+
+**Technical Metrics**
+- API response times (p50, p95, p99)
+- Error rates by endpoint
+- Database query performance
+- Cache hit rates
+- Message queue lag
+
+### Logging
+
+Structured logging with:
+- Correlation IDs for request tracing
+- Sensitive data masking
+- Log levels by environment
+- Centralized log aggregation in CloudWatch
+
+### Tracing
+
+AWS X-Ray integration provides:
+- End-to-end request tracing
+- Service dependency maps
+- Performance bottleneck identification
+- Error root cause analysis
+
+### Dashboards
+
+Pre-configured Grafana dashboards for:
+- Application performance overview
+- Infrastructure health
+- Business KPIs
+- Cost optimization metrics
+
+## 🔒 Security
+
+### Security Measures
+
+- **Authentication**: JWT-based authentication
+- **Authorization**: Role-based access control (RBAC)
+- **Data Encryption**: TLS in transit, AES-256 at rest
+- **Secrets Management**: AWS Secrets Manager
+- **Network Security**: Private subnets, security groups, NACLs
+- **Compliance**: GDPR-ready data handling
+
+### Security Testing
+
+- Static code analysis with SonarQube
+- Dependency vulnerability scanning
+- Infrastructure security with CDK Nag
+- Penetration testing in staging
+
+## 📚 Documentation
+
+### Architecture Documentation
+
+Following Rozanski & Woods methodology, documentation is organized by viewpoints:
+
+- **Functional Viewpoint**: Business capabilities and use cases
+- **Information Viewpoint**: Data models and event flows
+- **Concurrency Viewpoint**: Asynchronous processing patterns
+- **Development Viewpoint**: Code organization and build process
+- **Deployment Viewpoint**: Infrastructure and deployment strategy
+- **Operational Viewpoint**: Monitoring, logging, and incident response
+- **Context Viewpoint**: External integrations and system boundaries
+
+### API Documentation
+
+- **OpenAPI 3.0**: Complete API specification
+- **Swagger UI**: Interactive API explorer
+- **Postman Collection**: Pre-configured API requests
 
 ## 🤝 Contributing
 
-### Development Setup
+This project follows strict development standards:
 
-1. Clone the repository
-2. Install development dependencies: `pip install -r requirements-dev.txt`
-3. Run tests: `python tests/run_all_tests.py`
-4. Follow the coding standards in the development guide
-
-### Testing
-
-- Write tests for new features
-- Ensure all tests pass before submitting
-- Include integration tests for complex workflows
+1. **Code Style**: Follow Google Java Style Guide
+2. **Testing**: Maintain 80%+ code coverage
+3. **BDD**: Write Gherkin scenarios before implementation
+4. **Architecture**: Comply with ArchUnit rules
+5. **Documentation**: Update relevant viewpoint documentation
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-### Getting Help
-
-1. **Documentation**: Check the [User Guide](docs/en/translation-user-guide.md)
-2. **Troubleshooting**: See [Troubleshooting Guide](docs/en/translation-troubleshooting.md)
-3. **API Reference**: Review [API Documentation](docs/en/translation-api-reference.md)
-4. **Diagnostics**: Run `python scripts/run-diagnostics.py`
-
-### Reporting Issues
-
-When reporting issues, include:
-
-- System information (`python scripts/run-diagnostics.py`)
-- Error messages and logs
-- Steps to reproduce the issue
-- Expected vs actual behavior
-
-## 🎉 Success Stories
-
-The Automated Documentation Translation System has been successfully used to:
-
-- Translate large documentation sets (1000+ files)
-- Maintain consistency across multilingual projects
-- Automate translation workflows in CI/CD pipelines
-- Reduce manual translation effort by 90%
+- **Rozanski & Woods**: Software Systems Architecture methodology
+- **Eric Evans**: Domain-Driven Design principles
+- **Martin Fowler**: Enterprise architecture patterns
+- **AWS**: Cloud infrastructure and services
 
 ---
 
-**Made with ❤️ for seamless documentation translation**
+**Built with ❤️ using modern software engineering practices**

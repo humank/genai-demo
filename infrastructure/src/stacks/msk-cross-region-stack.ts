@@ -2,9 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as ecs from 'aws-cdk-lib/aws-ecs';
-import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns';
-import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
+import * as eks from 'aws-cdk-lib/aws-eks';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as msk from 'aws-cdk-lib/aws-msk';
@@ -16,6 +14,7 @@ export interface MSKCrossRegionStackProps extends cdk.StackProps {
     readonly environment: string;
     readonly projectName: string;
     readonly vpc: ec2.IVpc;
+    readonly eksCluster: eks.ICluster;
     readonly primaryMskCluster: msk.CfnCluster;
     readonly secondaryMskCluster?: msk.CfnCluster;
     readonly primaryRegion: string;
@@ -25,9 +24,9 @@ export interface MSKCrossRegionStackProps extends cdk.StackProps {
 }
 
 export class MSKCrossRegionStack extends cdk.Stack {
-    public readonly mirrorMakerCluster: ecs.Cluster;
-    public readonly mirrorMakerService: ecsPatterns.ApplicationLoadBalancedFargateService;
-    public readonly mirrorMakerTaskRole: iam.Role;
+    public readonly mirrorMakerDeployment: eks.KubernetesManifest;
+    public readonly mirrorMakerService: eks.KubernetesManifest;
+    public readonly mirrorMakerServiceAccount: eks.ServiceAccount;
     public readonly mirrorMakerLogGroup: logs.LogGroup;
     public readonly replicationMonitoring: cloudwatch.Dashboard;
 
@@ -37,7 +36,7 @@ export class MSKCrossRegionStack extends cdk.Stack {
         const {
             environment,
             projectName,
-            vpc,
+            eksCluster,
             primaryMskCluster,
             secondaryMskCluster,
             primaryRegion,
@@ -65,26 +64,28 @@ export class MSKCrossRegionStack extends cdk.Stack {
 
         // Only deploy MirrorMaker if cross-region replication is enabled
         if (multiRegionConfig['enable-cross-region-replication'] && environment === 'production') {
-            // Create ECS cluster for MirrorMaker
-            this.mirrorMakerCluster = this.createECSCluster(projectName, environment, vpc);
-
-            // Create IAM role for MirrorMaker task
-            this.mirrorMakerTaskRole = this.createMirrorMakerTaskRole(projectName, environment, primaryRegion, secondaryRegion);
+            // Create Service Account for MirrorMaker on EKS
+            this.mirrorMakerServiceAccount = this.createMirrorMakerServiceAccount(projectName, environment, eksCluster);
 
             // Create log group for MirrorMaker
             this.mirrorMakerLogGroup = this.createMirrorMakerLogGroup(projectName, environment);
 
-            // Deploy MirrorMaker 2.0 service
-            this.mirrorMakerService = this.createMirrorMakerService(
+            // Deploy MirrorMaker 2.0 deployment and service on EKS
+            this.mirrorMakerDeployment = this.createMirrorMakerDeployment(
                 projectName,
                 environment,
-                vpc,
-                this.mirrorMakerCluster,
+                eksCluster,
                 primaryMskCluster,
                 secondaryMskCluster,
                 primaryRegion,
                 secondaryRegion,
                 regionType
+            );
+
+            this.mirrorMakerService = this.createMirrorMakerKubernetesService(
+                projectName,
+                environment,
+                eksCluster
             );
 
             // Create monitoring dashboard for replication
@@ -107,109 +108,37 @@ export class MSKCrossRegionStack extends cdk.Stack {
         }
     }
 
-    private createECSCluster(projectName: string, environment: string, vpc: ec2.IVpc): ecs.Cluster {
-        const cluster = new ecs.Cluster(this, 'MirrorMakerCluster', {
-            clusterName: `${projectName}-${environment}-mirrormaker`,
-            vpc: vpc,
-            containerInsights: true,
-            enableFargateCapacityProviders: true
+    private createMirrorMakerServiceAccount(projectName: string, environment: string, eksCluster: eks.ICluster): eks.ServiceAccount {
+        const serviceAccount = eksCluster.addServiceAccount('MirrorMakerServiceAccount', {
+            name: `mirrormaker-${environment}`,
+            namespace: 'default',
         });
 
-        cdk.Tags.of(cluster).add('Name', `${projectName}-${environment}-mirrormaker-cluster`);
-        cdk.Tags.of(cluster).add('Service', 'MirrorMaker');
-
-        return cluster;
-    }
-
-    private createMirrorMakerTaskRole(
-        projectName: string,
-        environment: string,
-        primaryRegion: string,
-        secondaryRegion: string
-    ): iam.Role {
-        const role = new iam.Role(this, 'MirrorMakerTaskRole', {
-            roleName: `${projectName}-${environment}-mirrormaker-task-role`,
-            assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
-            description: 'IAM role for MirrorMaker 2.0 ECS task'
-        });
-
-        // Add MSK permissions for both regions
-        const regions = [primaryRegion, secondaryRegion];
-        regions.forEach(region => {
-            role.addToPolicy(new iam.PolicyStatement({
-                effect: iam.Effect.ALLOW,
-                actions: [
-                    'kafka-cluster:Connect',
-                    'kafka-cluster:AlterCluster',
-                    'kafka-cluster:DescribeCluster',
-                    'kafka-cluster:WriteData',
-                    'kafka-cluster:ReadData',
-                    'kafka-cluster:CreateTopic',
-                    'kafka-cluster:DescribeTopic',
-                    'kafka-cluster:AlterTopic',
-                    'kafka-cluster:DeleteTopic',
-                    'kafka-cluster:DescribeGroup',
-                    'kafka-cluster:AlterGroup'
-                ],
-                resources: [
-                    `arn:aws:kafka:${region}:${this.account}:cluster/${projectName}-${environment}-msk/*`,
-                    `arn:aws:kafka:${region}:${this.account}:topic/${projectName}-${environment}-msk/*`,
-                    `arn:aws:kafka:${region}:${this.account}:group/${projectName}-${environment}-msk/*`
-                ]
-            }));
-        });
-
-        // Add CloudWatch Logs permissions
-        role.addToPolicy(new iam.PolicyStatement({
+        // Add necessary IAM permissions for cross-region MSK access
+        serviceAccount.addToPrincipalPolicy(new iam.PolicyStatement({
             effect: iam.Effect.ALLOW,
             actions: [
-                'logs:CreateLogGroup',
-                'logs:CreateLogStream',
-                'logs:PutLogEvents',
-                'logs:DescribeLogGroups',
-                'logs:DescribeLogStreams'
+                'kafka-cluster:Connect',
+                'kafka-cluster:AlterCluster',
+                'kafka-cluster:DescribeCluster',
+                'kafka-cluster:*Topic*',
+                'kafka-cluster:WriteData',
+                'kafka-cluster:ReadData',
+                'kafka-cluster:AlterGroup',
+                'kafka-cluster:DescribeGroup',
             ],
-            resources: [
-                `arn:aws:logs:${this.region}:${this.account}:log-group:/aws/ecs/mirrormaker/${projectName}-${environment}*`
-            ]
+            resources: ['*'], // Will be restricted to specific MSK clusters
         }));
 
-        // Add CloudWatch Metrics permissions
-        role.addToPolicy(new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-                'cloudwatch:PutMetricData'
-            ],
-            resources: ['*'],
-            conditions: {
-                StringEquals: {
-                    'cloudwatch:namespace': `${projectName}/${environment}/MirrorMaker`
-                }
-            }
-        }));
+        cdk.Tags.of(serviceAccount).add('Name', `${projectName}-${environment}-mirrormaker-sa`);
+        cdk.Tags.of(serviceAccount).add('Service', 'MirrorMaker');
 
-        // Add Systems Manager permissions for configuration
-        role.addToPolicy(new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-                'ssm:GetParameter',
-                'ssm:GetParameters',
-                'ssm:GetParametersByPath'
-            ],
-            resources: [
-                `arn:aws:ssm:${this.region}:${this.account}:parameter/${projectName}/${environment}/mirrormaker/*`
-            ]
-        }));
-
-        cdk.Tags.of(role).add('Name', `${projectName}-${environment}-mirrormaker-task-role`);
-        cdk.Tags.of(role).add('Service', 'MirrorMaker');
-
-        return role;
+        return serviceAccount;
     }
 
     private createMirrorMakerLogGroup(projectName: string, environment: string): logs.LogGroup {
         const logGroup = new logs.LogGroup(this, 'MirrorMakerLogGroup', {
-            logGroupName: `/aws/ecs/mirrormaker/${projectName}-${environment}`,
+            logGroupName: `/aws/eks/mirrormaker/${projectName}-${environment}`,
             retention: environment === 'production' ? logs.RetentionDays.ONE_MONTH : logs.RetentionDays.ONE_WEEK,
             removalPolicy: environment === 'production' ? cdk.RemovalPolicy.RETAIN : cdk.RemovalPolicy.DESTROY
         });
@@ -220,17 +149,16 @@ export class MSKCrossRegionStack extends cdk.Stack {
         return logGroup;
     }
 
-    private createMirrorMakerService(
+    private createMirrorMakerDeployment(
         projectName: string,
         environment: string,
-        vpc: ec2.IVpc,
-        cluster: ecs.Cluster,
+        eksCluster: eks.ICluster,
         primaryMskCluster: msk.CfnCluster,
         secondaryMskCluster: msk.CfnCluster | undefined,
         primaryRegion: string,
         secondaryRegion: string,
         regionType: 'primary' | 'secondary'
-    ): ecsPatterns.ApplicationLoadBalancedFargateService {
+    ): eks.KubernetesManifest {
         // MirrorMaker 2.0 configuration
         const mirrorMakerConfig = this.generateMirrorMakerConfig(
             projectName,
@@ -242,100 +170,158 @@ export class MSKCrossRegionStack extends cdk.Stack {
             regionType
         );
 
-        // Create Fargate service for MirrorMaker
-        const service = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'MirrorMakerService', {
-            serviceName: `${projectName}-${environment}-mirrormaker`,
-            cluster: cluster,
-            cpu: 1024, // 1 vCPU
-            memoryLimitMiB: 2048, // 2 GB
-            desiredCount: 1, // Single instance for simplicity
-
-            // Task definition
-            taskImageOptions: {
-                image: ecs.ContainerImage.fromRegistry('confluentinc/cp-kafka-connect:7.4.0'),
-                containerName: 'mirrormaker',
-                containerPort: 8083,
-
-                // Environment variables for MirrorMaker configuration
-                environment: {
-                    CONNECT_BOOTSTRAP_SERVERS: cdk.Fn.getAtt(primaryMskCluster.logicalId, 'BootstrapBrokerStringSaslIam').toString(),
-                    CONNECT_REST_ADVERTISED_HOST_NAME: 'localhost',
-                    CONNECT_REST_PORT: '8083',
-                    CONNECT_GROUP_ID: `${projectName}-${environment}-mirrormaker-group`,
-                    CONNECT_CONFIG_STORAGE_TOPIC: `${projectName}.${environment}.mirrormaker.configs`,
-                    CONNECT_OFFSET_STORAGE_TOPIC: `${projectName}.${environment}.mirrormaker.offsets`,
-                    CONNECT_STATUS_STORAGE_TOPIC: `${projectName}.${environment}.mirrormaker.status`,
-                    CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '3',
-                    CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '3',
-                    CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '3',
-                    CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.storage.StringConverter',
-                    CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter',
-                    CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false',
-                    CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter',
-                    CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter',
-                    CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE: 'false',
-                    CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false',
-                    CONNECT_LOG4J_ROOT_LOGLEVEL: 'INFO',
-                    CONNECT_LOG4J_LOGGERS: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR',
-                    CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components',
-
-                    // Security configuration for MSK IAM
-                    CONNECT_SECURITY_PROTOCOL: 'SASL_SSL',
-                    CONNECT_SASL_MECHANISM: 'AWS_MSK_IAM',
-                    CONNECT_SASL_JAAS_CONFIG: 'software.amazon.msk.auth.iam.IAMLoginModule required;',
-                    CONNECT_SASL_CLIENT_CALLBACK_HANDLER_CLASS: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',
-
-                    // Producer configuration
-                    CONNECT_PRODUCER_SECURITY_PROTOCOL: 'SASL_SSL',
-                    CONNECT_PRODUCER_SASL_MECHANISM: 'AWS_MSK_IAM',
-                    CONNECT_PRODUCER_SASL_JAAS_CONFIG: 'software.amazon.msk.auth.iam.IAMLoginModule required;',
-                    CONNECT_PRODUCER_SASL_CLIENT_CALLBACK_HANDLER_CLASS: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',
-
-                    // Consumer configuration
-                    CONNECT_CONSUMER_SECURITY_PROTOCOL: 'SASL_SSL',
-                    CONNECT_CONSUMER_SASL_MECHANISM: 'AWS_MSK_IAM',
-                    CONNECT_CONSUMER_SASL_JAAS_CONFIG: 'software.amazon.msk.auth.iam.IAMLoginModule required;',
-                    CONNECT_CONSUMER_SASL_CLIENT_CALLBACK_HANDLER_CLASS: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler',
-
-                    // MirrorMaker 2.0 specific configuration
-                    MIRRORMAKER_CONFIG: mirrorMakerConfig
+        // Create Kubernetes Deployment for MirrorMaker
+        const deployment = new eks.KubernetesManifest(this, 'MirrorMakerDeployment', {
+            cluster: eksCluster,
+            manifest: [{
+                apiVersion: 'apps/v1',
+                kind: 'Deployment',
+                metadata: {
+                    name: `mirrormaker-${environment}`,
+                    namespace: 'default',
+                    labels: {
+                        app: 'mirrormaker',
+                        environment: environment,
+                        region: regionType,
+                        project: projectName
+                    }
                 },
-
-                taskRole: this.mirrorMakerTaskRole,
-
-                // Logging configuration
-                logDriver: ecs.LogDrivers.awsLogs({
-                    logGroup: this.mirrorMakerLogGroup,
-                    streamPrefix: 'mirrormaker'
-                })
-            },
-
-            // Network configuration
-            publicLoadBalancer: false,
-            listenerPort: 8083,
-
-            // Health check configuration
-            healthCheckGracePeriod: cdk.Duration.seconds(300),
-
-            // VPC configuration
-            taskSubnets: {
-                subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS
-            }
+                spec: {
+                    replicas: 2, // High availability
+                    selector: {
+                        matchLabels: {
+                            app: 'mirrormaker',
+                            environment: environment
+                        }
+                    },
+                    template: {
+                        metadata: {
+                            labels: {
+                                app: 'mirrormaker',
+                                environment: environment,
+                                region: regionType
+                            }
+                        },
+                        spec: {
+                            serviceAccountName: `mirrormaker-${environment}`,
+                            containers: [{
+                                name: 'mirrormaker',
+                                image: 'confluentinc/cp-kafka-connect:7.4.0',
+                                ports: [{
+                                    containerPort: 8083,
+                                    name: 'connect-rest'
+                                }],
+                                env: [
+                                    { name: 'CONNECT_BOOTSTRAP_SERVERS', value: cdk.Fn.getAtt(primaryMskCluster.logicalId, 'BootstrapBrokerStringSaslIam').toString() },
+                                    { name: 'CONNECT_REST_ADVERTISED_HOST_NAME', value: 'localhost' },
+                                    { name: 'CONNECT_REST_PORT', value: '8083' },
+                                    { name: 'CONNECT_GROUP_ID', value: `${projectName}-${environment}-mirrormaker-group` },
+                                    { name: 'CONNECT_CONFIG_STORAGE_TOPIC', value: `${projectName}.${environment}.mirrormaker.configs` },
+                                    { name: 'CONNECT_OFFSET_STORAGE_TOPIC', value: `${projectName}.${environment}.mirrormaker.offsets` },
+                                    { name: 'CONNECT_STATUS_STORAGE_TOPIC', value: `${projectName}.${environment}.mirrormaker.status` },
+                                    { name: 'CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR', value: '3' },
+                                    { name: 'CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR', value: '3' },
+                                    { name: 'CONNECT_STATUS_STORAGE_REPLICATION_FACTOR', value: '3' },
+                                    { name: 'CONNECT_KEY_CONVERTER', value: 'org.apache.kafka.connect.storage.StringConverter' },
+                                    { name: 'CONNECT_VALUE_CONVERTER', value: 'org.apache.kafka.connect.json.JsonConverter' },
+                                    { name: 'CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE', value: 'false' },
+                                    { name: 'CONNECT_INTERNAL_KEY_CONVERTER', value: 'org.apache.kafka.connect.json.JsonConverter' },
+                                    { name: 'CONNECT_INTERNAL_VALUE_CONVERTER', value: 'org.apache.kafka.connect.json.JsonConverter' },
+                                    { name: 'CONNECT_INTERNAL_KEY_CONVERTER_SCHEMAS_ENABLE', value: 'false' },
+                                    { name: 'CONNECT_INTERNAL_VALUE_CONVERTER_SCHEMAS_ENABLE', value: 'false' },
+                                    { name: 'CONNECT_LOG4J_ROOT_LOGLEVEL', value: 'INFO' },
+                                    { name: 'CONNECT_LOG4J_LOGGERS', value: 'org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR' },
+                                    { name: 'CONNECT_PLUGIN_PATH', value: '/usr/share/java,/usr/share/confluent-hub-components' },
+                                    { name: 'CONNECT_SECURITY_PROTOCOL', value: 'SASL_SSL' },
+                                    { name: 'CONNECT_SASL_MECHANISM', value: 'AWS_MSK_IAM' },
+                                    { name: 'CONNECT_SASL_JAAS_CONFIG', value: 'software.amazon.msk.auth.iam.IAMLoginModule required;' },
+                                    { name: 'CONNECT_SASL_CLIENT_CALLBACK_HANDLER_CLASS', value: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler' },
+                                    { name: 'CONNECT_PRODUCER_SECURITY_PROTOCOL', value: 'SASL_SSL' },
+                                    { name: 'CONNECT_PRODUCER_SASL_MECHANISM', value: 'AWS_MSK_IAM' },
+                                    { name: 'CONNECT_PRODUCER_SASL_JAAS_CONFIG', value: 'software.amazon.msk.auth.iam.IAMLoginModule required;' },
+                                    { name: 'CONNECT_PRODUCER_SASL_CLIENT_CALLBACK_HANDLER_CLASS', value: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler' },
+                                    { name: 'CONNECT_CONSUMER_SECURITY_PROTOCOL', value: 'SASL_SSL' },
+                                    { name: 'CONNECT_CONSUMER_SASL_MECHANISM', value: 'AWS_MSK_IAM' },
+                                    { name: 'CONNECT_CONSUMER_SASL_JAAS_CONFIG', value: 'software.amazon.msk.auth.iam.IAMLoginModule required;' },
+                                    { name: 'CONNECT_CONSUMER_SASL_CLIENT_CALLBACK_HANDLER_CLASS', value: 'software.amazon.msk.auth.iam.IAMClientCallbackHandler' },
+                                    { name: 'MIRRORMAKER_CONFIG', value: mirrorMakerConfig },
+                                    { name: 'AWS_REGION', value: this.region },
+                                    { name: 'ENVIRONMENT', value: environment }
+                                ],
+                                resources: {
+                                    requests: {
+                                        cpu: '1000m',
+                                        memory: '2Gi'
+                                    },
+                                    limits: {
+                                        cpu: '2000m',
+                                        memory: '4Gi'
+                                    }
+                                },
+                                livenessProbe: {
+                                    httpGet: {
+                                        path: '/connectors',
+                                        port: 8083
+                                    },
+                                    initialDelaySeconds: 60,
+                                    periodSeconds: 30,
+                                    timeoutSeconds: 10,
+                                    failureThreshold: 3
+                                },
+                                readinessProbe: {
+                                    httpGet: {
+                                        path: '/connectors',
+                                        port: 8083
+                                    },
+                                    initialDelaySeconds: 30,
+                                    periodSeconds: 10,
+                                    timeoutSeconds: 5,
+                                    failureThreshold: 3
+                                }
+                            }]
+                        }
+                    }
+                }
+            }]
         });
 
-        // Configure health check
-        service.targetGroup.configureHealthCheck({
-            path: '/connectors',
-            port: '8083',
-            protocol: elbv2.Protocol.HTTP,
-            healthyThresholdCount: 2,
-            unhealthyThresholdCount: 3,
-            timeout: cdk.Duration.seconds(30),
-            interval: cdk.Duration.seconds(60)
-        });
+        return deployment;
+    }
 
-        cdk.Tags.of(service.service).add('Name', `${projectName}-${environment}-mirrormaker-service`);
-        cdk.Tags.of(service.service).add('Service', 'MirrorMaker');
+    private createMirrorMakerKubernetesService(
+        projectName: string,
+        environment: string,
+        eksCluster: eks.ICluster
+    ): eks.KubernetesManifest {
+        const service = new eks.KubernetesManifest(this, 'MirrorMakerKubernetesService', {
+            cluster: eksCluster,
+            manifest: [{
+                apiVersion: 'v1',
+                kind: 'Service',
+                metadata: {
+                    name: `mirrormaker-${environment}`,
+                    namespace: 'default',
+                    labels: {
+                        app: 'mirrormaker',
+                        environment: environment,
+                        project: projectName
+                    }
+                },
+                spec: {
+                    selector: {
+                        app: 'mirrormaker',
+                        environment: environment
+                    },
+                    ports: [{
+                        port: 8083,
+                        targetPort: 8083,
+                        protocol: 'TCP',
+                        name: 'connect-rest'
+                    }],
+                    type: 'ClusterIP'
+                }
+            }]
+        });
 
         return service;
     }
@@ -433,17 +419,16 @@ export class MSKCrossRegionStack extends cdk.Stack {
             })
         );
 
-        // Add MirrorMaker service metrics
+        // Add MirrorMaker service metrics (EKS-based)
         dashboard.addWidgets(
             new cloudwatch.GraphWidget({
                 title: 'MirrorMaker Service Health',
                 left: [
                     new cloudwatch.Metric({
-                        namespace: 'AWS/ECS',
-                        metricName: 'CPUUtilization',
+                        namespace: 'AWS/EKS',
+                        metricName: 'cluster_node_count',
                         dimensionsMap: {
-                            ServiceName: `${projectName}-${environment}-mirrormaker`,
-                            ClusterName: `${projectName}-${environment}-mirrormaker`
+                            ClusterName: `${projectName}-${environment}-eks`
                         },
                         statistic: 'Average',
                         period: cdk.Duration.minutes(5)
@@ -451,11 +436,11 @@ export class MSKCrossRegionStack extends cdk.Stack {
                 ],
                 right: [
                     new cloudwatch.Metric({
-                        namespace: 'AWS/ECS',
-                        metricName: 'MemoryUtilization',
+                        namespace: `${projectName}/${environment}/MirrorMaker`,
+                        metricName: 'PodCount',
                         dimensionsMap: {
-                            ServiceName: `${projectName}-${environment}-mirrormaker`,
-                            ClusterName: `${projectName}-${environment}-mirrormaker`
+                            Deployment: `mirrormaker-${environment}`,
+                            Namespace: 'default'
                         },
                         statistic: 'Average',
                         period: cdk.Duration.minutes(5)
@@ -528,16 +513,16 @@ export class MSKCrossRegionStack extends cdk.Stack {
         environment: string,
         alertingTopic: sns.ITopic
     ): void {
-        // MirrorMaker service health alarm
+        // MirrorMaker service health alarm (EKS-based)
         const serviceHealthAlarm = new cloudwatch.Alarm(this, 'MirrorMakerServiceHealthAlarm', {
             alarmName: `${projectName}-${environment}-mirrormaker-service-unhealthy`,
             alarmDescription: 'MirrorMaker service is unhealthy',
             metric: new cloudwatch.Metric({
-                namespace: 'AWS/ECS',
-                metricName: 'RunningTaskCount',
+                namespace: `${projectName}/${environment}/MirrorMaker`,
+                metricName: 'PodCount',
                 dimensionsMap: {
-                    ServiceName: `${projectName}-${environment}-mirrormaker`,
-                    ClusterName: `${projectName}-${environment}-mirrormaker`
+                    Deployment: `mirrormaker-${environment}`,
+                    Namespace: 'default'
                 },
                 statistic: 'Average',
                 period: cdk.Duration.minutes(5)
@@ -607,36 +592,36 @@ export class MSKCrossRegionStack extends cdk.Stack {
         // Store service endpoint
         new ssm.StringParameter(this, 'MirrorMakerEndpoint', {
             parameterName: `${parameterPrefix}/endpoint`,
-            stringValue: this.mirrorMakerService.loadBalancer.loadBalancerDnsName,
+            stringValue: `mirrormaker-${environment}.default.svc.cluster.local:8083`,
             description: `MirrorMaker service endpoint for ${projectName} ${environment}`,
             tier: ssm.ParameterTier.STANDARD
         });
     }
 
     private createOutputs(projectName: string, environment: string, regionType: 'primary' | 'secondary'): void {
-        // MirrorMaker service outputs
+        // MirrorMaker service outputs (EKS-based)
+        new cdk.CfnOutput(this, 'MirrorMakerDeploymentName', {
+            value: `mirrormaker-${environment}`,
+            description: 'MirrorMaker EKS deployment name',
+            exportName: `${projectName}-${environment}-${regionType}-mirrormaker-deployment-name`
+        });
+
         new cdk.CfnOutput(this, 'MirrorMakerServiceName', {
-            value: this.mirrorMakerService.service.serviceName,
-            description: 'MirrorMaker ECS service name',
+            value: `mirrormaker-${environment}`,
+            description: 'MirrorMaker Kubernetes service name',
             exportName: `${projectName}-${environment}-${regionType}-mirrormaker-service-name`
         });
 
-        new cdk.CfnOutput(this, 'MirrorMakerClusterName', {
-            value: this.mirrorMakerCluster.clusterName,
-            description: 'MirrorMaker ECS cluster name',
-            exportName: `${projectName}-${environment}-${regionType}-mirrormaker-cluster-name`
-        });
-
         new cdk.CfnOutput(this, 'MirrorMakerEndpoint', {
-            value: this.mirrorMakerService.loadBalancer.loadBalancerDnsName,
+            value: `mirrormaker-${environment}.default.svc.cluster.local:8083`,
             description: 'MirrorMaker service endpoint',
             exportName: `${projectName}-${environment}-${regionType}-mirrormaker-endpoint`
         });
 
-        new cdk.CfnOutput(this, 'MirrorMakerTaskRoleArn', {
-            value: this.mirrorMakerTaskRole.roleArn,
-            description: 'MirrorMaker task role ARN',
-            exportName: `${projectName}-${environment}-${regionType}-mirrormaker-task-role-arn`
+        new cdk.CfnOutput(this, 'MirrorMakerServiceAccountArn', {
+            value: this.mirrorMakerServiceAccount.serviceAccountName,
+            description: 'MirrorMaker service account ARN',
+            exportName: `${projectName}-${environment}-${regionType}-mirrormaker-service-account-arn`
         });
 
         new cdk.CfnOutput(this, 'ReplicationMonitoringDashboardUrl', {

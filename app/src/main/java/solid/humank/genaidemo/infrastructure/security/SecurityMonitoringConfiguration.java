@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,7 @@ public class SecurityMonitoringConfiguration {
     }
 
     @Bean
+    @ConditionalOnProperty(name = "security.monitoring.health.enabled", havingValue = "true", matchIfMissing = false)
     public SecurityHealthIndicator securityHealthIndicator(SecurityMetricsCollector metricsCollector) {
         return new SecurityHealthIndicator(metricsCollector);
     }

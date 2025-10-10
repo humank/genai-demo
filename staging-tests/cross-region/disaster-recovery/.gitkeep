@@ -1,0 +1,7 @@
+# Disaster Recovery Tests
+
+This directory contains disaster recovery scenario tests including:
+- Multi-region service availability tests
+- Disaster recovery failover scenarios
+- Recovery time and data loss measurement
+- Business continuity validation

@@ -1,0 +1,205 @@
+# Kubernetes Health Checks Template
+# 
+# This template provides standardized health check configuration for all deployments
+# Copy and customize this template for each application deployment
+#
+# Health Check Types:
+# 1. Liveness Probe  - Determines if container should be restarted
+# 2. Readiness Probe - Determines if container should receive traffic
+# 3. Startup Probe   - Protects slow-starting containers during initialization
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <APPLICATION_NAME>
+  namespace: genai-demo
+  labels:
+    app: <APPLICATION_NAME>
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: <APPLICATION_NAME>
+  template:
+    metadata:
+      labels:
+        app: <APPLICATION_NAME>
+    spec:
+      containers:
+      - name: <APPLICATION_NAME>
+        image: <ECR_REGISTRY>/genai-demo/<APPLICATION_NAME>:latest
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: actuator
+          containerPort: 8081
+          protocol: TCP
+        
+        # Environment variables
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "production"
+        
+        # Resource limits
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        
+        # ============================================
+        # STARTUP PROBE
+        # ============================================
+        # Purpose: Protects slow-starting containers
+        # - Disables liveness and readiness checks until startup succeeds
+        # - Allows up to 5 minutes for application to start (30 checks × 10s)
+        # - Use for applications with long initialization time
+        #
+        # When to use:
+        # - Database migration on startup
+        # - Large data loading
+        # - Complex initialization logic
+        # ============================================
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: actuator
+            scheme: HTTP
+          initialDelaySeconds: 0      # Start checking immediately
+          periodSeconds: 10            # Check every 10 seconds
+          timeoutSeconds: 5            # Timeout after 5 seconds
+          successThreshold: 1          # Consider successful after 1 success
+          failureThreshold: 30         # Allow 30 failures (5 minutes total)
+        
+        # ============================================
+        # LIVENESS PROBE
+        # ============================================
+        # Purpose: Determines if container should be restarted
+        # - Only fails if application is in unrecoverable state
+        # - Kubernetes will restart container if this fails
+        # - Should check minimal dependencies (disk space, basic process health)
+        #
+        # Best practices:
+        # - Keep checks lightweight and fast
+        # - Don't check external dependencies (database, cache)
+        # - Only fail if restart will fix the problem
+        # ============================================
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: actuator
+            scheme: HTTP
+          initialDelaySeconds: 60     # Wait 60s after startup probe succeeds
+          periodSeconds: 10            # Check every 10 seconds
+          timeoutSeconds: 5            # Timeout after 5 seconds
+          successThreshold: 1          # Consider healthy after 1 success
+          failureThreshold: 3          # Restart after 3 consecutive failures
+        
+        # ============================================
+        # READINESS PROBE
+        # ============================================
+        # Purpose: Determines if container should receive traffic
+        # - Fails if application temporarily can't serve requests
+        # - Kubernetes removes pod from service endpoints if this fails
+        # - Should check all critical dependencies (database, cache, message queue)
+        #
+        # Best practices:
+        # - Check all dependencies required to serve requests
+        # - Can fail temporarily without restarting container
+        # - More frequent checks than liveness probe
+        # ============================================
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: actuator
+            scheme: HTTP
+          initialDelaySeconds: 30     # Start checking 30s after container starts
+          periodSeconds: 5             # Check every 5 seconds (more frequent)
+          timeoutSeconds: 3            # Timeout after 3 seconds
+          successThreshold: 1          # Consider ready after 1 success
+          failureThreshold: 3          # Mark unready after 3 consecutive failures
+
+---
+# Service definition
+apiVersion: v1
+kind: Service
+metadata:
+  name: <APPLICATION_NAME>
+  namespace: genai-demo
+  labels:
+    app: <APPLICATION_NAME>
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: http
+    protocol: TCP
+  - name: actuator
+    port: 8081
+    targetPort: actuator
+    protocol: TCP
+  selector:
+    app: <APPLICATION_NAME>
+
+---
+# HorizontalPodAutoscaler definition
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: <APPLICATION_NAME>-hpa
+  namespace: genai-demo
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: <APPLICATION_NAME>
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
+      policies:
+      - type: Percent
+        value: 50                       # Scale down max 50% of pods at a time
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0    # Scale up immediately
+      policies:
+      - type: Percent
+        value: 100                      # Can double pods at once
+        periodSeconds: 60
+      - type: Pods
+        value: 4                        # Or add max 4 pods at once
+        periodSeconds: 60
+      selectPolicy: Max                 # Use the policy that scales up most
+
+---
+# PodDisruptionBudget to ensure availability during voluntary disruptions
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: <APPLICATION_NAME>-pdb
+  namespace: genai-demo
+spec:
+  minAvailable: 1  # Always keep at least 1 pod running
+  selector:
+    matchLabels:
+      app: <APPLICATION_NAME>

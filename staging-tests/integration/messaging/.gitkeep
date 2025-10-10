@@ -1,0 +1,7 @@
+# Messaging Integration Tests
+
+This directory contains integration tests for Kafka messaging including:
+- Kafka producer and consumer throughput tests
+- Kafka partition rebalancing and failover tests
+- Cross-region message replication tests
+- Message ordering and delivery guarantee tests

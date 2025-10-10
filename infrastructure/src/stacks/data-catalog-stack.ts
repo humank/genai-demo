@@ -19,7 +19,6 @@ export interface DataCatalogStackProps extends cdk.StackProps {
     readonly auroraCluster: rds.IDatabaseCluster;
     readonly databaseSecret: secretsmanager.ISecret;
     readonly rdsSecurityGroup: ec2.ISecurityGroup;
-    readonly alertTopic: sns.ITopic;
 }
 
 /**
@@ -51,9 +50,14 @@ export class DataCatalogStack extends cdk.Stack {
             vpc,
             auroraCluster,
             databaseSecret,
-            rdsSecurityGroup,
-            alertTopic
+            rdsSecurityGroup
         } = props;
+
+        // Create alert topic for data catalog monitoring
+        const alertTopic = new sns.Topic(this, 'DataCatalogAlertTopic', {
+            displayName: 'Data Catalog Alert Topic',
+            topicName: `${projectName}-${environment}-data-catalog-alerts`
+        });
 
         // Apply common tags
         const commonTags = {

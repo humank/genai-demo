@@ -1,0 +1,235 @@
+# Optimized HPA Configuration for GenAI Demo
+# This file provides optimized HPA configurations for different workload types
+# Apply with: kubectl apply -f optimized-hpa-config.yaml
+
+---
+# Backend Service HPA - Balanced Configuration
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: genai-demo-backend-hpa
+  namespace: genai-demo
+  labels:
+    app: genai-demo-backend
+    component: autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: genai-demo-backend
+  
+  minReplicas: 2
+  maxReplicas: 10
+  
+  metrics:
+  # CPU-based scaling
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70  # Scale up when CPU > 70%
+  
+  # Memory-based scaling
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80  # Scale up when Memory > 80%
+  
+  # Custom metrics (if Prometheus available)
+  # - type: Pods
+  #   pods:
+  #     metric:
+  #       name: http_requests_per_second
+  #     target:
+  #       type: AverageValue
+  #       averageValue: "1000"  # Scale up when > 1000 req/s per pod
+  
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # Wait 5 minutes before scaling down
+      policies:
+      - type: Percent
+        value: 50  # Scale down max 50% of pods at once
+        periodSeconds: 60
+      - type: Pods
+        value: 2  # Or scale down max 2 pods at once
+        periodSeconds: 60
+      selectPolicy: Min  # Use the policy that scales down the least
+    
+    scaleUp:
+      stabilizationWindowSeconds: 0  # Scale up immediately
+      policies:
+      - type: Percent
+        value: 100  # Can double pods at once
+        periodSeconds: 60
+      - type: Pods
+        value: 4  # Or add max 4 pods at once
+        periodSeconds: 60
+      selectPolicy: Max  # Use the policy that scales up the most
+
+---
+# Frontend Service HPA - Aggressive Scaling for User-Facing Service
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: genai-demo-frontend-hpa
+  namespace: genai-demo
+  labels:
+    app: genai-demo-frontend
+    component: autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: genai-demo-frontend
+  
+  minReplicas: 2
+  maxReplicas: 15  # Higher max for user-facing service
+  
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60  # Lower threshold for faster response
+  
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 75
+  
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 600  # Longer stabilization (10 min)
+      policies:
+      - type: Percent
+        value: 25  # More conservative scale down (25%)
+        periodSeconds: 60
+      selectPolicy: Min
+    
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 200  # Can triple pods for rapid response
+        periodSeconds: 30  # Faster evaluation
+      selectPolicy: Max
+
+---
+# Worker Service HPA - Conservative Scaling for Background Jobs
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: genai-demo-worker-hpa
+  namespace: genai-demo
+  labels:
+    app: genai-demo-worker
+    component: autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: genai-demo-worker
+  
+  minReplicas: 1  # Can scale to zero during low load
+  maxReplicas: 8
+  
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80  # Higher threshold for batch jobs
+  
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 85
+  
+  # Queue depth metric (if available)
+  # - type: External
+  #   external:
+  #     metric:
+  #       name: sqs_queue_depth
+  #     target:
+  #       type: AverageValue
+  #       averageValue: "100"  # Scale when queue > 100 messages per pod
+  
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 900  # Very conservative (15 min)
+      policies:
+      - type: Pods
+        value: 1  # Scale down 1 pod at a time
+        periodSeconds: 120
+      selectPolicy: Min
+    
+    scaleUp:
+      stabilizationWindowSeconds: 60  # Moderate scale up delay
+      policies:
+      - type: Percent
+        value: 50  # Add 50% more pods
+        periodSeconds: 60
+      selectPolicy: Max
+
+---
+# ConfigMap for HPA Tuning Parameters
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hpa-tuning-config
+  namespace: genai-demo
+data:
+  # HPA Controller Configuration
+  # These values can be used to tune the HPA controller behavior
+  
+  # How often HPA checks metrics (default: 15s)
+  horizontal-pod-autoscaler-sync-period: "10s"
+  
+  # How long to wait after last scale up before scaling down (default: 5m)
+  horizontal-pod-autoscaler-downscale-stabilization: "5m"
+  
+  # Tolerance for metric fluctuations (default: 0.1 = 10%)
+  horizontal-pod-autoscaler-tolerance: "0.1"
+  
+  # CPU initialization period (default: 5m)
+  horizontal-pod-autoscaler-cpu-initialization-period: "5m"
+  
+  # Initial readiness delay (default: 30s)
+  horizontal-pod-autoscaler-initial-readiness-delay: "30s"
+  
+  # Tuning recommendations by workload type
+  recommendations: |
+    CPU-Intensive Workloads:
+    - Lower CPU threshold (60-70%)
+    - Faster scale up (0s stabilization)
+    - Conservative scale down (5-10 min stabilization)
+    
+    Memory-Intensive Workloads:
+    - Lower memory threshold (70-75%)
+    - Monitor for memory leaks
+    - Longer stabilization windows
+    
+    Bursty Workloads:
+    - Aggressive scale up (200% increase)
+    - Longer scale down stabilization (10-15 min)
+    - Higher max replicas
+    
+    Stable Workloads:
+    - Higher thresholds (75-80%)
+    - Longer stabilization windows (10-15 min)
+    - Conservative scaling policies
+    
+    Background Jobs:
+    - Very conservative scaling
+    - Queue-based metrics preferred
+    - Can scale to zero if supported

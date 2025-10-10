@@ -1,0 +1,8 @@
+# Test Execution Scripts
+
+This directory contains automation and execution scripts including:
+- run-integration-tests.sh - Integration test execution
+- run-performance-tests.sh - Gatling performance test execution
+- run-cross-region-tests.sh - Cross-region test execution
+- wait-for-services.sh - Service readiness validation
+- cleanup scripts and utility functions

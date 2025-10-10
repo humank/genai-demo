@@ -5,7 +5,7 @@ import com.amazonaws.xray.AWSXRayRecorderBuilder;
 import com.amazonaws.xray.entities.Segment;
 import com.amazonaws.xray.entities.Subsegment;
 import com.amazonaws.xray.plugins.EC2Plugin;
-import com.amazonaws.xray.plugins.ECSPlugin;
+// ECS Plugin removed - using EKS only
 import com.amazonaws.xray.plugins.EKSPlugin;
 import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
 import com.amazonaws.xray.strategy.ContextMissingStrategy;
@@ -77,7 +77,6 @@ public class XRayTracingConfig implements WebMvcConfigurer {
             // Configure X-Ray recorder
             AWSXRayRecorderBuilder builder = AWSXRayRecorderBuilder.standard()
                     .withPlugin(new EC2Plugin())
-                    .withPlugin(new ECSPlugin())
                     .withPlugin(new EKSPlugin());
 
             // Set context missing strategy

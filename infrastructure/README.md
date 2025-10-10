@@ -11,14 +11,42 @@ This project contains the **consolidated AWS CDK infrastructure** code for the G
 
 ## 🏗️ Architecture Overview
 
-The infrastructure is organized into **6 coordinated stacks**:
+The infrastructure is organized into **18 coordinated stacks** with unified deployment:
 
+### Foundation Layer
 - **NetworkStack**: VPC, subnets, security groups, and networking components
-- **SecurityStack**: KMS keys, IAM roles, and security-related resources  
+- **SecurityStack**: KMS keys, IAM roles, and security-related resources
+- **IAMStack**: Fine-grained access control, resource-based policies
+- **CertificateStack**: SSL/TLS certificates for secure communications
+
+### Data Layer
+- **RdsStack**: Aurora PostgreSQL cluster with global database support
+- **ElastiCacheStack**: Redis cluster for distributed caching and locking
+- **MSKStack**: Kafka cluster for event streaming and data flow tracking
+
+### Compute Layer
+- **EKSStack**: Kubernetes cluster with auto-scaling and security
+- **EKSIRSAStack**: IAM Roles for Service Accounts configuration
+
+### Security & Identity Layer
+- **SSOStack**: AWS SSO integration with permission sets
+- **SecurityStack**: Enhanced security monitoring and compliance
+
+### Observability Layer
 - **AlertingStack**: SNS topics and notification infrastructure
+- **ObservabilityStack**: CloudWatch logs, dashboards, X-Ray tracing, and monitoring
+
+### Analytics Layer *(optional)*
+- **DataCatalogStack**: AWS Glue Data Catalog with automated schema discovery
+- **AnalyticsStack**: Data lake, Kinesis, Glue, and analytics pipeline
+
+### Management Layer
 - **CoreInfrastructureStack**: Application Load Balancer and core compute resources
-- **ObservabilityStack**: CloudWatch logs, dashboards, and monitoring
-- **AnalyticsStack** *(optional)*: Data lake, Kinesis, Glue, and analytics pipeline
+- **CostOptimizationStack**: Cost monitoring and optimization automation
+
+### Resilience Layer *(production)*
+- **DisasterRecoveryStack**: Multi-region disaster recovery automation
+- **MultiRegionStack**: Cross-region replication and failover
 
 ## Prerequisites
 
@@ -27,24 +55,77 @@ The infrastructure is organized into **6 coordinated stacks**:
 - AWS CDK CLI installed globally: `npm install -g aws-cdk`
 - TypeScript 5.6+ (included in dependencies)
 
+## 🚀 Quick Start
+
+### Unified Deployment (Recommended)
+
+The new unified deployment script provides a single entry point for all infrastructure deployment scenarios:
+
+```bash
+# Deploy complete development environment
+./deploy-unified.sh full -e development
+
+# Deploy only foundation components (network, security, IAM)
+./deploy-unified.sh foundation -e staging
+
+# Deploy with analytics enabled
+./deploy-unified.sh full --enable-analytics -a ops@company.com
+
+# Deploy production with multi-region
+./deploy-unified.sh full -e production --enable-multi-region
+
+# Check deployment status
+./deploy-unified.sh --status
+
+# Destroy development environment
+./deploy-unified.sh --destroy -e development
+```
+
+### NPM Scripts (Alternative)
+
+```bash
+# Quick deployment commands
+npm run deploy:dev          # Development environment
+npm run deploy:staging      # Staging with analytics
+npm run deploy:prod         # Production with multi-region
+
+# Component-specific deployments
+npm run deploy:foundation   # Network, security, IAM
+npm run deploy:data         # RDS, ElastiCache, MSK
+npm run deploy:compute      # EKS cluster
+npm run deploy:security     # IAM, SSO, IRSA
+npm run deploy:observability # Monitoring, alerting
+
+# Status and cleanup
+npm run status              # Check deployment status
+npm run destroy:dev         # Destroy development
+```
+
 ## 📁 Project Structure
 
 ```
 infrastructure/
 ├── bin/
-│   └── infrastructure.ts          # Main CDK app entry point
+│   └── infrastructure.ts          # Main CDK app entry point (NEW)
 ├── src/
-│   ├── stacks/                    # CDK stack definitions
+│   ├── stacks/                    # CDK stack definitions (18 stacks)
+│   │   ├── iam-stack.ts          # Fine-grained access control
+│   │   ├── eks-irsa-stack.ts     # IRSA configuration
+│   │   ├── sso-stack.ts          # AWS SSO integration
+│   │   ├── msk-stack.ts          # Kafka messaging
+│   │   ├── data-catalog-stack.ts # Data governance
+│   │   └── ...                   # Other stacks
 │   ├── constructs/                # Reusable CDK constructs
 │   ├── config/                    # Environment configurations
 │   └── utils/                     # Utility functions
 ├── test/
-│   ├── unit/                      # Unit tests (26 tests)
-│   ├── integration/               # Integration tests (8 tests)
-│   ├── consolidated-stack.test.ts # Main test suite (18 tests)
-│   └── cdk-nag-suppressions.test.ts # Compliance tests (4 tests)
+│   ├── unit/                      # Unit tests
+│   ├── integration/               # Integration tests
+│   └── ...                       # Test suites
 ├── docs/                          # Documentation
-├── deploy-consolidated.sh         # Unified deployment script
+├── deploy-unified.sh              # NEW: Unified deployment script
+├── deploy-iam-security.sh         # IAM security deployment
+├── deploy-consolidated.sh         # Legacy deployment script
 └── package.json                   # Dependencies and scripts
 ```
 

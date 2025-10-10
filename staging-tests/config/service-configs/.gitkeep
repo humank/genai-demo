@@ -1,0 +1,7 @@
+# Service Configuration Files
+
+This directory contains individual service configuration files including:
+- PostgreSQL configuration for performance optimization
+- Redis cluster configuration with Sentinel
+- Kafka cluster configuration with replication
+- Monitoring stack configuration (Prometheus, Grafana)

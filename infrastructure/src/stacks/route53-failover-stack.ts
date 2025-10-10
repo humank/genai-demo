@@ -119,6 +119,9 @@ export class Route53FailoverStack extends cdk.Stack {
         // Create alerting for failover events
         this.createFailoverAlerting(projectName, environment, multiRegionConfig);
 
+        // Integrate with existing SNS topics for health check alerts
+        this.integrateWithExistingSNSTopics(projectName, environment);
+
         // Create outputs
         this.createOutputs(projectName, environment, domain);
     }
@@ -130,18 +133,75 @@ export class Route53FailoverStack extends cdk.Stack {
         environment: string,
         multiRegionConfig: any
     ): route53.CfnHealthCheck {
-        const healthCheckInterval = multiRegionConfig['health-check-interval'] || 30;
-        const failureThreshold = multiRegionConfig['health-check-failure-threshold'] || 3;
+        // ✅ OPTIMIZATION: Reduced intervals for RTO < 2min target
+        // Previous: 30s interval × 3 failures = 90s detection time
+        // Optimized: 10s interval × 2 failures = 20s detection time
+        // This saves 70 seconds in failure detection, critical for RTO target
+        const healthCheckInterval = multiRegionConfig['health-check-interval'] || 10; // Changed from 30 to 10
+        const failureThreshold = multiRegionConfig['health-check-failure-threshold'] || 2; // Changed from 3 to 2
 
+        // Enhanced health check with multiple endpoints and improved monitoring
         const healthCheck = new route53.CfnHealthCheck(this, `${regionType}HealthCheck`, {
             healthCheckConfig: {
                 type: 'HTTPS',
                 fullyQualifiedDomainName: fqdn,
                 port: 443,
-                resourcePath: '/actuator/health',
+                resourcePath: '/actuator/health/readiness', // More specific readiness check
                 requestInterval: healthCheckInterval,
-                failureThreshold: failureThreshold
-            }
+                failureThreshold: failureThreshold,
+                // Enhanced configuration for multi-region support
+                enableSni: true,
+                measureLatency: true,
+                regions: [
+                    'us-east-1',
+                    'us-west-2', 
+                    'eu-west-1'
+                ], // Multi-region health checkers
+                searchString: '"status":"UP"', // Verify actual health response
+                inverted: false
+            },
+            healthCheckTags: [
+                {
+                    key: 'Name',
+                    value: `${projectName}-${environment}-${regionType.toLowerCase()}-health-check`
+                },
+                {
+                    key: 'Environment',
+                    value: environment
+                },
+                {
+                    key: 'Project',
+                    value: projectName
+                },
+                {
+                    key: 'Region',
+                    value: regionType
+                },
+                {
+                    key: 'ManagedBy',
+                    value: 'AWS-CDK'
+                }
+            ]
+        });
+
+        // Create additional health check for ALB target health
+        const albHealthCheck = new route53.CfnHealthCheck(this, `${regionType}ALBHealthCheck`, {
+            healthCheckConfig: {
+                type: 'CALCULATED',
+                childHealthChecks: [healthCheck.attrHealthCheckId],
+                healthThreshold: 1,
+                insufficientDataHealthStatus: 'Failure'
+            },
+            healthCheckTags: [
+                {
+                    key: 'Name',
+                    value: `${projectName}-${environment}-${regionType.toLowerCase()}-alb-health-check`
+                },
+                {
+                    key: 'Type',
+                    value: 'ALB-Calculated'
+                }
+            ]
         });
 
         return healthCheck;
@@ -330,16 +390,16 @@ export class Route53FailoverStack extends cdk.Stack {
         environment: string,
         multiRegionConfig: any
     ): void {
-        // Create SNS topic for failover alerts
+        // Create SNS topic for failover alerts with enhanced configuration
         const failoverAlertsTopic = new sns.Topic(this, 'FailoverAlertsTopic', {
             topicName: `${projectName}-${environment}-failover-alerts`,
-            displayName: `Failover Alerts for ${projectName} ${environment}`
+            displayName: `Enhanced Failover Alerts for ${projectName} ${environment}`
         });
 
-        // Primary region health check failure alarm
+        // Enhanced primary region health check failure alarm with 3 failures threshold
         const primaryHealthCheckAlarm = new cloudwatch.Alarm(this, 'PrimaryHealthCheckFailureAlarm', {
             alarmName: `${projectName}-${environment}-primary-health-check-failure`,
-            alarmDescription: 'Primary region health check failure - triggers failover',
+            alarmDescription: 'Primary region health check failure - triggers failover after 3 consecutive failures',
             metric: new cloudwatch.Metric({
                 namespace: 'AWS/Route53',
                 metricName: 'HealthCheckStatus',
@@ -351,7 +411,8 @@ export class Route53FailoverStack extends cdk.Stack {
             }),
             threshold: 1,
             comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
-            evaluationPeriods: multiRegionConfig['health-check-failure-threshold'] || 3,
+            evaluationPeriods: 3, // Exactly 3 failures trigger failover
+            datapointsToAlarm: 3, // All 3 datapoints must be failing
             treatMissingData: cloudwatch.TreatMissingData.BREACHING
         });
 
@@ -359,11 +420,34 @@ export class Route53FailoverStack extends cdk.Stack {
             bind: () => ({ alarmActionArn: failoverAlertsTopic.topicArn })
         });
 
+        // Enhanced health check latency alarm
+        const primaryLatencyAlarm = new cloudwatch.Alarm(this, 'PrimaryHealthCheckLatencyAlarm', {
+            alarmName: `${projectName}-${environment}-primary-health-check-latency`,
+            alarmDescription: 'Primary region health check latency too high - potential performance issue',
+            metric: new cloudwatch.Metric({
+                namespace: 'AWS/Route53',
+                metricName: 'ConnectionTime',
+                dimensionsMap: {
+                    HealthCheckId: this.primaryHealthCheck?.attrHealthCheckId || 'N/A'
+                },
+                statistic: 'Average',
+                period: cdk.Duration.minutes(5)
+            }),
+            threshold: 5000, // 5 seconds threshold
+            comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+            evaluationPeriods: 2,
+            treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+        });
+
+        primaryLatencyAlarm.addAlarmAction({
+            bind: () => ({ alarmActionArn: failoverAlertsTopic.topicArn })
+        });
+
         // Secondary region health check failure alarm (if exists)
         if (this.secondaryHealthCheck) {
             const secondaryHealthCheckAlarm = new cloudwatch.Alarm(this, 'SecondaryHealthCheckFailureAlarm', {
                 alarmName: `${projectName}-${environment}-secondary-health-check-failure`,
-                alarmDescription: 'Secondary region health check failure - both regions down',
+                alarmDescription: 'Secondary region health check failure - both regions down (critical)',
                 metric: new cloudwatch.Metric({
                     namespace: 'AWS/Route53',
                     metricName: 'HealthCheckStatus',
@@ -375,20 +459,143 @@ export class Route53FailoverStack extends cdk.Stack {
                 }),
                 threshold: 1,
                 comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
-                evaluationPeriods: multiRegionConfig['health-check-failure-threshold'] || 3,
+                evaluationPeriods: 3, // 3 failures trigger critical alert
+                datapointsToAlarm: 3,
                 treatMissingData: cloudwatch.TreatMissingData.BREACHING
             });
 
             secondaryHealthCheckAlarm.addAlarmAction({
                 bind: () => ({ alarmActionArn: failoverAlertsTopic.topicArn })
             });
+
+            // Secondary region latency alarm
+            const secondaryLatencyAlarm = new cloudwatch.Alarm(this, 'SecondaryHealthCheckLatencyAlarm', {
+                alarmName: `${projectName}-${environment}-secondary-health-check-latency`,
+                alarmDescription: 'Secondary region health check latency too high',
+                metric: new cloudwatch.Metric({
+                    namespace: 'AWS/Route53',
+                    metricName: 'ConnectionTime',
+                    dimensionsMap: {
+                        HealthCheckId: this.secondaryHealthCheck.attrHealthCheckId
+                    },
+                    statistic: 'Average',
+                    period: cdk.Duration.minutes(5)
+                }),
+                threshold: 5000, // 5 seconds threshold
+                comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_THRESHOLD,
+                evaluationPeriods: 2,
+                treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING
+            });
+
+            secondaryLatencyAlarm.addAlarmAction({
+                bind: () => ({ alarmActionArn: failoverAlertsTopic.topicArn })
+            });
         }
+
+        // Composite alarm for complete system failure
+        const systemFailureAlarm = new cloudwatch.CompositeAlarm(this, 'SystemFailureCompositeAlarm', {
+            alarmDescription: 'Complete system failure - all regions unhealthy',
+            alarmRule: cloudwatch.AlarmRule.allOf(
+                cloudwatch.AlarmRule.fromAlarm(primaryHealthCheckAlarm, cloudwatch.AlarmState.ALARM),
+                ...(this.secondaryHealthCheck ? [
+                    cloudwatch.AlarmRule.fromAlarm(
+                        new cloudwatch.Alarm(this, 'SecondaryHealthCheckFailureForComposite', {
+                            metric: new cloudwatch.Metric({
+                                namespace: 'AWS/Route53',
+                                metricName: 'HealthCheckStatus',
+                                dimensionsMap: {
+                                    HealthCheckId: this.secondaryHealthCheck.attrHealthCheckId
+                                }
+                            }),
+                            threshold: 1,
+                            evaluationPeriods: 3,
+                            comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD
+                        }),
+                        cloudwatch.AlarmState.ALARM
+                    )
+                ] : [])
+            )
+        });
+
+        systemFailureAlarm.addAlarmAction({
+            bind: () => ({ alarmActionArn: failoverAlertsTopic.topicArn })
+        });
 
         // Add tags to alerting resources
         cdk.Tags.of(failoverAlertsTopic).add('Name', `${projectName}-${environment}-failover-alerts`);
         cdk.Tags.of(failoverAlertsTopic).add('Environment', environment);
         cdk.Tags.of(failoverAlertsTopic).add('Project', projectName);
-        cdk.Tags.of(failoverAlertsTopic).add('Service', 'FailoverAlerting');
+        cdk.Tags.of(failoverAlertsTopic).add('Service', 'EnhancedFailoverAlerting');
+        cdk.Tags.of(failoverAlertsTopic).add('FailoverThreshold', '3-failures');
+    }
+
+    private integrateWithExistingSNSTopics(
+        projectName: string,
+        environment: string
+    ): void {
+        // Try to import existing SNS topics from other stacks
+        try {
+            // Import existing alerting topic if available
+            const existingAlertingTopicArn = cdk.Fn.importValue(`${projectName}-${environment}-alerting-topic-arn`);
+            const existingAlertingTopic = sns.Topic.fromTopicArn(
+                this, 
+                'ExistingAlertingTopic', 
+                existingAlertingTopicArn
+            );
+
+            // Create additional health check failure alarms that integrate with existing topics
+            if (this.primaryHealthCheck) {
+                const integratedPrimaryAlarm = new cloudwatch.Alarm(this, 'IntegratedPrimaryHealthCheckAlarm', {
+                    alarmName: `${projectName}-${environment}-integrated-primary-health-failure`,
+                    alarmDescription: 'Integrated primary health check failure alarm',
+                    metric: new cloudwatch.Metric({
+                        namespace: 'AWS/Route53',
+                        metricName: 'HealthCheckStatus',
+                        dimensionsMap: {
+                            HealthCheckId: this.primaryHealthCheck.attrHealthCheckId
+                        },
+                        statistic: 'Minimum',
+                        period: cdk.Duration.minutes(1)
+                    }),
+                    threshold: 1,
+                    comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
+                    evaluationPeriods: 3,
+                    treatMissingData: cloudwatch.TreatMissingData.BREACHING
+                });
+
+                integratedPrimaryAlarm.addAlarmAction({
+                    bind: () => ({ alarmActionArn: existingAlertingTopic.topicArn })
+                });
+            }
+
+            if (this.secondaryHealthCheck) {
+                const integratedSecondaryAlarm = new cloudwatch.Alarm(this, 'IntegratedSecondaryHealthCheckAlarm', {
+                    alarmName: `${projectName}-${environment}-integrated-secondary-health-failure`,
+                    alarmDescription: 'Integrated secondary health check failure alarm',
+                    metric: new cloudwatch.Metric({
+                        namespace: 'AWS/Route53',
+                        metricName: 'HealthCheckStatus',
+                        dimensionsMap: {
+                            HealthCheckId: this.secondaryHealthCheck.attrHealthCheckId
+                        },
+                        statistic: 'Minimum',
+                        period: cdk.Duration.minutes(1)
+                    }),
+                    threshold: 1,
+                    comparisonOperator: cloudwatch.ComparisonOperator.LESS_THAN_THRESHOLD,
+                    evaluationPeriods: 3,
+                    treatMissingData: cloudwatch.TreatMissingData.BREACHING
+                });
+
+                integratedSecondaryAlarm.addAlarmAction({
+                    bind: () => ({ alarmActionArn: existingAlertingTopic.topicArn })
+                });
+            }
+
+        } catch (error) {
+            // If existing topics are not available, create a note in the logs
+            console.log(`Note: Existing SNS topics not found for integration. Using dedicated failover topics.`);
+        }
     }
 
     private createOutputs(projectName: string, environment: string, domain: string): void {

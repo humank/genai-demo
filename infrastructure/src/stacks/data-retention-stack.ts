@@ -192,7 +192,7 @@ def handler(event, context):
             'warm_days': 90,
             'cold_days': 2555,  # 7 years
             'log_groups': [
-                f'/aws/ecs/genai-demo-{environment}',
+                f'/aws/eks/genai-demo-{environment}',
                 f'/aws/application/genai-demo-{environment}'
             ]
         },
@@ -349,7 +349,7 @@ def archive_log_stream(logs_client, s3_client, log_group: str, stream_name: str,
     private createLogGroups(environment: string, kmsKey: kms.Key): void {
         // Application log group
         new logs.LogGroup(this, 'ApplicationLogGroup', {
-            logGroupName: `/aws/ecs/genai-demo-${environment}`,
+            logGroupName: `/aws/eks/genai-demo-${environment}`,
             retention: logs.RetentionDays.ONE_MONTH,
             encryptionKey: kmsKey,
         });

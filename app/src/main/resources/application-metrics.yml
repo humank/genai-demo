@@ -1,0 +1,81 @@
+# Spring Boot Actuator and Micrometer Configuration for Custom Metrics
+# This configuration enables comprehensive metrics collection and export to CloudWatch
+# Spring Boot Version: 3.3.13
+# Micrometer Version: 1.13.x (included with Spring Boot 3.3.13)
+
+spring:
+  application:
+    name: genai-demo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,beans,threaddump,heapdump
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    metrics:
+      enabled: true
+  
+  # Metrics configuration for Spring Boot 3.x
+  metrics:
+    # Distribution configuration for percentiles and histograms
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+      percentiles:
+        "[http.server.requests]": 0.5, 0.95, 0.99
+      slo:
+        "[http.server.requests]": 100ms,200ms,500ms,1s,2s
+    
+    # Common tags applied to all metrics
+    tags:
+      application: ${spring.application.name}
+      environment: ${spring.profiles.active:default}
+      region: ${aws.region:ap-northeast-1}
+    
+    # CloudWatch export configuration
+    export:
+      cloudwatch:
+        enabled: true
+        namespace: GenAIDemo/Application
+        batch-size: 20
+        step: 1m
+        # Use IRSA for authentication (no access key needed in EKS)
+        # AWS SDK will automatically use pod service account credentials
+  
+  # StatsD export configuration (updated path for Spring Boot 3.x)
+  statsd:
+    metrics:
+      export:
+        enabled: true
+        host: cloudwatch-agent-statsd.amazon-cloudwatch.svc.cluster.local
+        port: 8125
+        protocol: udp
+        flavor: etsy
+
+# Logging configuration for metrics
+logging:
+  level:
+    "[io.micrometer]": INFO
+    "[io.micrometer.cloudwatch2]": DEBUG
+    "[software.amazon.awssdk.services.cloudwatch]": INFO
+
+# AWS Configuration
+aws:
+  region: ap-northeast-1
+
+# Custom metrics configuration
+metrics:
+  custom:
+    enabled: true
+    business-metrics:
+      enabled: true
+    jvm-metrics:
+      enabled: true
+    http-metrics:
+      enabled: true
