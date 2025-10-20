@@ -615,13 +615,19 @@ groups:
 
 ## Test Performance Integration
 
-> **🧪 測試效能**: 詳細的測試效能監控標準請參考 Development Standards - Test Performance Framework
+> **🧪 Test Performance Standards**: For comprehensive test performance monitoring, resource management, and optimization, see [Test Performance Standards](test-performance-standards.md)
 
-**快速參考**:
-- 使用 `@TestPerformanceExtension` 進行自動效能監控
-- 整合測試: < 500ms, < 50MB
-- 端到端測試: < 3s, < 500MB
-- 效能報告生成: `./gradlew generatePerformanceReport`
+**Quick Reference:**
+- Use `@TestPerformanceExtension` for automatic performance monitoring
+- Integration tests: < 500ms, < 50MB
+- E2E tests: < 3s, < 500MB
+- Generate reports: `./gradlew generatePerformanceReport`
+
+**When to Use Test Performance Standards:**
+- Setting up test performance monitoring
+- Troubleshooting slow tests
+- Configuring Gradle test tasks
+- Understanding memory management in tests
 
 ## Performance Testing Checklist
 

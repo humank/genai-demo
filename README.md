@@ -129,6 +129,41 @@ docker-compose up -d
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - Actuator: http://localhost:8080/actuator
 
+### Development Commands
+
+We provide convenient `make` commands for common development tasks:
+
+```bash
+# View all available commands
+make help
+
+# 📊 Diagram Commands
+make validate         # Validate all diagrams and references
+make generate         # Generate all diagrams from PlantUML sources
+make diagrams         # Validate and generate diagrams (combined)
+
+# 🔧 Development Setup
+make dev-setup        # Complete development environment setup
+make setup-hooks      # Set up Git hooks for validation
+make clean-hooks      # Remove Git hooks
+make status           # Check project status (hooks, diagrams, etc.)
+
+# ✅ Pre-commit Checks
+make pre-commit       # Run all pre-commit validations
+```
+
+**Quick Examples:**
+```bash
+# Before committing changes
+make pre-commit       # Validates diagrams and generates missing ones
+
+# Check current project status
+make status           # Shows hooks status and diagram counts
+
+# Set up development environment (first time)
+make dev-setup        # Sets up Git hooks and validates setup
+```
+
 ### Running Tests
 
 ```bash
@@ -202,6 +237,118 @@ cd ../staging-tests
 │   └── steering/                # Development standards
 └── docs/                        # Documentation (empty, to be populated)
 ```
+
+## 🛠️ Development Workflow
+
+### Make Commands Reference
+
+The project includes a comprehensive `Makefile` with convenient commands for common development tasks. Run `make help` to see all available commands.
+
+#### Diagram Management
+
+```bash
+# Validate diagram references and syntax
+make validate
+
+# Generate PNG diagrams from PlantUML sources
+make generate
+
+# Validate and generate (combined operation)
+make diagrams
+
+# Validate specific diagram
+make validate-diagram FILE=docs/diagrams/viewpoints/system-context.puml
+
+# Generate specific diagram
+make generate-diagram FILE=docs/diagrams/viewpoints/system-context.puml
+```
+
+#### Development Setup
+
+```bash
+# Complete development environment setup
+# - Sets up Git hooks
+# - Validates configuration
+# - Shows next steps
+make dev-setup
+
+# Set up Git hooks for automatic validation
+# - Pre-commit: Validates diagram references
+# - Commit-msg: Validates commit message format
+# - Pre-push: Comprehensive validation and generation
+make setup-hooks
+
+# Remove Git hooks
+make clean-hooks
+
+# Check project status
+# - Shows Git hooks status
+# - Shows diagram counts
+# - Suggests quick actions
+make status
+```
+
+#### Pre-commit Workflow
+
+```bash
+# Run all pre-commit checks
+# - Validates all diagrams
+# - Generates missing diagrams
+# - Ensures everything is ready to commit
+make pre-commit
+```
+
+#### Maintenance Commands
+
+```bash
+# Clean generated diagram files (use with caution!)
+make clean-generated
+
+# View all available commands with descriptions
+make help
+```
+
+### Git Hooks
+
+The project uses Git hooks to maintain code quality. Set them up with:
+
+```bash
+make setup-hooks
+```
+
+This creates three hooks:
+
+1. **Pre-commit Hook**: Validates diagram references before commit
+2. **Commit Message Hook**: Ensures commit messages follow conventional format
+3. **Pre-push Hook**: Runs comprehensive validation before push
+
+**Commit Message Format:**
+```
+<type>(<scope>): <description>
+
+Types: feat, fix, docs, style, refactor, test, chore, perf
+Examples:
+  feat(auth): add user authentication
+  fix(api): resolve timeout issue
+  docs(diagrams): update system context diagram
+```
+
+**Bypassing Hooks** (when necessary):
+```bash
+git commit --no-verify    # Skip pre-commit and commit-msg hooks
+git push --no-verify      # Skip pre-push hook
+```
+
+### Automated Validation (CI/CD)
+
+GitHub Actions automatically validates:
+- ✅ PlantUML diagram syntax
+- ✅ Diagram references in documentation
+- ✅ Documentation structure
+- ✅ Markdown linting
+- ✅ Hook configuration
+
+See `.github/workflows/validate-documentation.yml` for details.
 
 ## 🧪 Testing Strategy
 
@@ -369,8 +516,9 @@ Pre-configured Grafana dashboards for:
 
 ### Architecture Documentation
 
-Following Rozanski & Woods methodology, documentation is organized by viewpoints:
+Following Rozanski & Woods methodology, documentation is organized by viewpoints and perspectives:
 
+**Viewpoints** (System Structure)
 - **Functional Viewpoint**: Business capabilities and use cases
 - **Information Viewpoint**: Data models and event flows
 - **Concurrency Viewpoint**: Asynchronous processing patterns
@@ -378,6 +526,16 @@ Following Rozanski & Woods methodology, documentation is organized by viewpoints
 - **Deployment Viewpoint**: Infrastructure and deployment strategy
 - **Operational Viewpoint**: Monitoring, logging, and incident response
 - **Context Viewpoint**: External integrations and system boundaries
+
+**Perspectives** (Quality Attributes)
+- **Security Perspective**: Authentication, authorization, encryption, compliance
+- **Performance & Scalability Perspective**: Response times, throughput, horizontal scaling
+- **Availability & Resilience Perspective**: High availability, disaster recovery, fault tolerance
+- **Evolution Perspective**: Extensibility, maintainability, technology evolution
+- **Accessibility Perspective**: User interface accessibility, API usability
+- **Development Resource Perspective**: Team structure, skill requirements, tooling
+- **Internationalization Perspective**: Multi-language support, localization
+- **Location Perspective**: Geographic distribution, data residency, latency optimization
 
 ### API Documentation
 

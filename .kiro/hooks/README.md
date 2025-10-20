@@ -4,73 +4,123 @@
 
 本目錄包含了 Kiro IDE 的自動化 hooks 配置，用於監控文件變更並觸發相應的自動化任務。
 
+> **💡 設計哲學**: "Automate pain, not process" - 只自動化真正痛苦的任務，其他用腳本和手動檢查
+
 ## 當前 Hooks 狀態
 
 ### 🟢 啟用的 Hooks
 
-1. **english-documentation-enforcement.kiro.hook** (v1.0) - **🆕 新增**
-   - **功能**: 英文文檔標準強制執行
-   - **監控**: 所有 *.md 文件
-   - **作用**: 自動檢測非英文內容，強制要求所有新文檔使用英文撰寫
-   - **優先級**: 最高 - 確保語言標準一致性
+1. **diagram-auto-generation.kiro.hook** (v1.0)
+   - **功能**: PlantUML 圖表自動生成
+   - **監控**: docs/diagrams/viewpoints/**/*.puml, docs/diagrams/perspectives/**/*.puml
+   - **作用**: 當 .puml 文件變更時自動生成 PNG/SVG 圖表
+   - **價值**: ⭐⭐⭐⭐⭐ 高 - 節省時間，防止忘記重新生成
+   - **維護成本**: 低
+   - **ROI**: 優秀
 
-2. **reports-organization-monitor.kiro.hook** (v1.0) - **🆕 新增**
-   - **功能**: 報告和總結文件組織監控
-   - **監控**: *report*.md, *summary*.md 等報告文件
-   - **作用**: 自動檢測散置的報告文件，提醒移動到 reports-summaries/ 目錄
-   - **優先級**: 高 - 確保文件組織標準
+### 📋 替代方案（推薦使用腳本而非 Hooks）
 
-3. **reports-quality-assurance.kiro.hook** (v1.0) - **🆕 新增**
-   - **功能**: 報告目錄內文件品質保證
-   - **監控**: reports-summaries/**/*.md
-   - **作用**: 檢查命名規範、分類正確性、內容品質、索引更新
-   - **優先級**: 中 - 維護報告品質標準
+以下功能通過腳本和手動流程實現，無需 hooks：
 
-4. **viewpoints-perspectives-quality.kiro.hook** (v1.1)
-   - **功能**: Rozanski & Woods 文件結構品質保證
-   - **監控**: viewpoints/*.md, perspectives/*.md, templates/*.md
-   - **作用**: 結構驗證、內容品質檢查、交叉引用驗證、模板同步
-   - **優先級**: 最高 - 確保架構文件品質
+#### 圖表驗證
+```bash
+# 手動運行或加入 pre-commit hook
+./scripts/validate-diagrams.sh
 
-5. **diagram-documentation-sync.kiro.hook** (v1.0)
-   - **功能**: 圖表與文件雙向同步
-   - **監控**: 圖表文件 (*.puml, *.mmd, *.excalidraw) 和文件 (viewpoints/*.md, perspectives/*.md)
-   - **作用**: 當圖表變更時自動更新文件引用，當文件變更時檢查圖表需求
-   - **協調**: 與 viewpoints-perspectives-quality 協調工作
+# 或在 CI/CD 中運行
+# 見 .github/workflows/validate-docs.yml
+```
 
-6. **ddd-annotation-monitor.kiro.hook** (v1.0)
-   - **功能**: DDD 註解監控和結構分析
-   - **監控**: Java 領域層文件 (@AggregateRoot, Domain Events, Services)
-   - **作用**: 觸發 DDD 結構分析和圖表更新
-   - **協調**: 與其他 hooks 協調工作
+**為什麼不用 hook**: 
+- 驗證不需要即時反饋
+- Pre-commit 或 CI/CD 更合適
+- 避免編輯時的干擾
 
-7. **bdd-feature-monitor.kiro.hook** (v1.0)
-   - **功能**: BDD 特性文件監控和業務分析
-   - **監控**: .feature 文件 (Scenarios, Actors, Business Events)
-   - **作用**: 觸發業務流程分析和 Event Storming 更新
-   - **協調**: 與其他 hooks 協調工作
+#### DDD/BDD 監控
+```bash
+# 需要時手動分析
+python3 scripts/analyze-ddd-code.py
+python3 scripts/analyze-bdd-features.py
+```
 
-### 🗑️ 已移除的 Hooks
+**為什麼不用 hook**:
+- Code review 會抓到領域模型變更
+- 不需要每次編輯都觸發
+- 手動分析更有針對性
 
-1. **diagram-auto-generation.kiro.hook** - **已刪除**
-   - **原因**: 功能完全被 diagram-documentation-sync.kiro.hook 取代
-   - **狀態**: 已從系統中移除
+#### 文檔品質檢查
+```bash
+# 提交前運行
+./scripts/validate-documentation-structure.sh
+./scripts/check-spelling.sh
+```
 
-2. **java-code-documentation-sync.kiro.hook** - **已刪除 (2025-09-24)**
+**為什麼不用 hook**:
+- 品質判斷需要人工
+- 模板已經提供結構指引
+- Code review 是最佳品質閘門
+
+### 🗑️ 已移除的 Hooks（簡化策略）
+
+**移除日期**: 2025-01-17  
+**原因**: 採用極簡主義策略 - "Automate pain, not process"
+
+#### 已刪除的 Hooks
+
+1. **diagram-validation.kiro.hook** - **已刪除 (2025-01-17)**
+   - **原因**: 驗證可以在 pre-commit 或 CI/CD 中進行，不需要即時反饋
+   - **替代方案**: `./scripts/validate-diagrams.sh` + Git pre-commit hook
+   - **ROI**: 低 - 維護成本 > 實際價值
+
+2. **ddd-annotation-monitor.kiro.hook** - **已刪除 (2025-01-17)**
+   - **原因**: Code review 足以抓到領域模型變更，不需要自動監控
+   - **替代方案**: 手動 code review + `scripts/analyze-ddd-code.py`
+   - **ROI**: 低 - 對小團隊來說是過度工程
+
+3. **bdd-feature-monitor.kiro.hook** - **已刪除 (2025-01-17)**
+   - **原因**: Feature 變更在 code review 中很明顯，不需要自動監控
+   - **替代方案**: 手動 code review + `scripts/analyze-bdd-features.py`
+   - **ROI**: 低 - 增加噪音多於價值
+
+4. **java-code-documentation-sync.kiro.hook** - **已刪除 (2025-09-24)**
    - **原因**: 95% 功能與 ddd-annotation-monitor.kiro.hook 重複
-   - **狀態**: 功能已整合到 DDD 監控 hook
+   - **狀態**: 功能已整合到 DDD 監控 hook（後來也被刪除）
 
-3. **bdd-feature-documentation-sync.kiro.hook** - **已刪除 (2025-09-24)**
+5. **bdd-feature-documentation-sync.kiro.hook** - **已刪除 (2025-09-24)**
    - **原因**: 90% 功能與 bdd-feature-monitor.kiro.hook 重複
-   - **狀態**: 功能已整合到 BDD 監控 hook
+   - **狀態**: 功能已整合到 BDD 監控 hook（後來也被刪除）
 
-4. **development-viewpoint-maintenance.kiro.hook** - **已刪除 (2025-09-24)**
+6. **development-viewpoint-maintenance.kiro.hook** - **已刪除 (2025-09-24)**
    - **原因**: 定時 hook 不實用，功能重複
    - **狀態**: 轉為手動腳本執行
 
-5. **development-viewpoint-quality-monitor.kiro.hook** - **已刪除 (2025-09-24)**
+7. **development-viewpoint-quality-monitor.kiro.hook** - **已刪除 (2025-09-24)**
    - **原因**: 功能與 viewpoints-perspectives-quality.kiro.hook 重複
-   - **狀態**: 功能已整合到主要品質保證 hook
+   - **狀態**: 功能已整合到主要品質保證 hook（從未實現）
+
+### 📝 從未實現的 Hooks（已從計劃中移除）
+
+這些 hooks 曾在文檔中規劃，但經過評估後決定不實現：
+
+1. **english-documentation-enforcement.kiro.hook**
+   - **原因**: Code review 可以抓到語言問題，自動化會產生誤報
+   - **替代方案**: Code review + 團隊約定
+
+2. **reports-organization-monitor.kiro.hook**
+   - **原因**: 文件組織是簡單的手動任務，不需要自動化
+   - **替代方案**: 定期手動整理
+
+3. **reports-quality-assurance.kiro.hook**
+   - **原因**: 報告是臨時文件，不需要嚴格品質控制
+   - **替代方案**: 手動檢查
+
+4. **viewpoints-perspectives-quality.kiro.hook**
+   - **原因**: 模板 + code review 已經足夠，自動化過於複雜
+   - **替代方案**: 模板 + `scripts/validate-documentation-structure.sh`
+
+5. **diagram-documentation-sync.kiro.hook**
+   - **原因**: 雙向同步過於複雜，容易產生衝突，價值不高
+   - **替代方案**: 手動更新引用（不常發生）+ 驗證腳本
 
 ## Hook 協調機制
 
@@ -83,6 +133,8 @@ graph TB
     B -->|Reports/Summaries 散置| RO[reports-organization-monitor]
     B -->|Reports 目錄內| RQ[reports-quality-assurance]
     B -->|Viewpoints/Perspectives| VP[viewpoints-perspectives-quality]
+    B -->|PlantUML 源文件| DG[diagram-auto-generation]
+    B -->|文檔文件| DV[diagram-validation]
     B -->|圖表文件| C[diagram-documentation-sync]
     B -->|Java DDD| D[ddd-annotation-monitor]
     B -->|BDD Feature| E[bdd-feature-monitor]
@@ -91,6 +143,10 @@ graph TB
     RO --> ROA[檢測散置報告]
     RQ --> RQA[品質保證檢查]
     VP --> VPQ[品質保證檢查]
+    DG --> DGA[驗證語法]
+    DG --> DGB[生成 PNG/SVG]
+    DV --> DVA[檢查引用]
+    DV --> DVB[驗證完整性]
     C --> G[更新文件引用]
     D --> H[分析內容變更]
     E --> I[更新業務圖表]
@@ -102,10 +158,10 @@ graph TB
     VPQ --> K[結構驗證]
     VPQ --> L[內容品質檢查]
     VPQ --> M[交叉引用驗證]
-    
-    H --> C
-    I --> C
-
+    DGB --> C
+    DVB --> C
+    H --> DG
+    I --> DG
     
     C --> N[驗證引用完整性]
     N --> O[生成同步報告]
@@ -116,6 +172,7 @@ graph TB
     K --> P
     L --> P
     M --> P
+    O --> P
 ```
 
 ### 避免衝突的設計
@@ -125,29 +182,44 @@ graph TB
    - `reports-organization-monitor`: 負責報告文件組織監控 (高優先級)
    - `reports-quality-assurance`: 負責報告目錄內品質保證 (中優先級)
    - `viewpoints-perspectives-quality`: 負責架構文件品質保證 (高優先級)
-   - `diagram-documentation-sync`: 負責圖表引用同步
-   - `ddd-annotation-monitor`: 負責 DDD 內容分析
-   - `bdd-feature-monitor`: 負責業務流程分析
+   - `diagram-auto-generation`: 負責 PlantUML 圖表自動生成 (高優先級)
+   - `diagram-validation`: 負責圖表引用驗證 (中優先級)
+   - `diagram-documentation-sync`: 負責圖表引用同步 (中優先級)
+   - `ddd-annotation-monitor`: 負責 DDD 內容分析 (低優先級)
+   - `bdd-feature-monitor`: 負責業務流程分析 (低優先級)
 
 2. **執行優先級**:
    - **第一級**: `english-documentation-enforcement` (英文標準強制執行)
    - **第二級**: `viewpoints-perspectives-quality` (架構文件品質保證)
    - **第三級**: `reports-organization-monitor` (報告組織監控)
-   - **第四級**: `reports-quality-assurance` (報告品質保證)
-   - **第五級**: 內容分析 hooks (`ddd-annotation-monitor`, `bdd-feature-monitor`)
+   - **第四級**: `diagram-auto-generation` (圖表自動生成)
+   - **第五級**: `reports-quality-assurance`, `diagram-validation` (品質檢查)
    - **第六級**: `diagram-documentation-sync` (引用同步)
+   - **第七級**: 內容分析 hooks (`ddd-annotation-monitor`, `bdd-feature-monitor`)
 
 3. **協調機制**:
    - 品質保證 hook 協調所有其他 hooks
-
-   - 內容分析 hooks 通知圖表同步需求
+   - 圖表生成 → 引用同步 → 驗證的流程
+   - 內容分析 hooks 通知圖表生成需求
    - 所有 hooks 共享品質標準
 
-4. **狀態管理**:
+4. **圖表 Hooks 協調流程**:
+   ```
+   .puml 文件變更
+        ↓
+   diagram-auto-generation (生成 PNG/SVG)
+        ↓
+   diagram-documentation-sync (更新引用)
+        ↓
+   diagram-validation (驗證完整性)
+   ```
+
+5. **狀態管理**:
    - 每個 hook 都有明確的輸入輸出
    - 品質保證 hook 維護整體狀態
    - 避免同時修改同一文件
    - 使用鎖定機制防止衝突
+   - 圖表生成使用臨時文件避免衝突
 
 ## 配置文件
 

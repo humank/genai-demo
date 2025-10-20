@@ -1,0 +1,24 @@
+{
+  "enabled": true,
+  "name": "Diagram Auto-Generation Hook",
+  "description": "Automatically generates PNG/SVG diagrams when PlantUML source files are modified (coordinates with diagram-documentation-sync.kiro.hook)",
+  "version": "1.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "docs/diagrams/viewpoints/**/*.puml",
+      "docs/diagrams/perspectives/**/*.puml"
+    ],
+    "exclude": [
+      "**/.git/**",
+      "**/.kiro/**",
+      "**/generated/**",
+      "**/target/**",
+      "**/build/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "PlantUML diagram source files have been modified. Please generate updated diagrams:\n\n## Quick Diagram Generation\n\nThe following PlantUML files have changed and need to be regenerated:\n- Check syntax validity\n- Generate PNG for GitHub documentation\n- Generate SVG for high-resolution needs (optional)\n- Update documentation references\n\n## Recommended Actions\n\n### 1. Validate PlantUML Syntax\n```bash\n# Validate all modified .puml files\n./scripts/validate-diagrams.sh --check-syntax\n```\n\n### 2. Generate Diagrams\n```bash\n# Generate PNG diagrams (recommended for GitHub)\n./scripts/generate-diagrams.sh --format=png\n\n# Or generate both PNG and SVG\n./scripts/generate-diagrams.sh --format=both\n```\n\n### 3. Verify Generated Files\n```bash\n# Check for missing generated diagrams\n./scripts/validate-diagrams.sh --check-missing\n```\n\n### 4. Update Documentation References (if needed)\n```bash\n# Sync diagram references in documentation\npython3 scripts/sync-diagram-references.py --mode=diagram-to-docs\n```\n\n## Expected Outcomes\n- ✅ All modified .puml files have valid syntax\n- ✅ PNG diagrams generated in docs/diagrams/generated/\n- ✅ Documentation references are up-to-date\n- ✅ No broken diagram links\n\n## Quality Checks\n- Diagram renders correctly\n- Text is readable at default zoom\n- Colors follow standards (Event Storming colors if applicable)\n- File size is reasonable (<500KB for PNG)\n\n## Integration Notes\n- This hook works with `diagram-documentation-sync.kiro.hook` for reference updates\n- Generated files should be committed to version control\n- Use PNG format for better GitHub rendering\n\nPlease execute these commands and report any generation errors or warnings."
+  }
+}

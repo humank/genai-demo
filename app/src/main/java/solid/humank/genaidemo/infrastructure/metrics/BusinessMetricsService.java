@@ -102,7 +102,7 @@ public class BusinessMetricsService {
     public <T extends Number> void registerGauge(String name, String description,
             Supplier<T> valueSupplier,
             String... tags) {
-        Gauge.builder(name, valueSupplier)
+        Gauge.builder(name, valueSupplier, supplier -> supplier.get().doubleValue())
                 .description(description)
                 .tags(tags)
                 .register(meterRegistry);

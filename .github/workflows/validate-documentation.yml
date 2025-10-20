@@ -1,0 +1,230 @@
+name: Validate Documentation
+
+on:
+  pull_request:
+    paths:
+      - 'docs/**/*.md'
+      - 'docs/**/*.puml'
+      - 'scripts/validate-diagrams.sh'
+      - 'scripts/generate-diagrams.sh'
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**/*.md'
+      - 'docs/**/*.puml'
+      - 'scripts/validate-diagrams.sh'
+      - 'scripts/generate-diagrams.sh'
+
+jobs:
+  validate-diagrams:
+    name: Validate Diagrams and Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Cache PlantUML
+      uses: actions/cache@v3
+      with:
+        path: plantuml.jar
+        key: plantuml-${{ hashFiles('scripts/generate-diagrams.sh') }}
+    
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/validate-diagrams.sh
+        chmod +x scripts/generate-diagrams.sh
+    
+    - name: Validate PlantUML syntax
+      run: |
+        echo "🔍 Validating PlantUML syntax..."
+        ./scripts/validate-diagrams.sh --check-syntax
+    
+    - name: Check diagram references
+      run: |
+        echo "🔗 Checking diagram references in documentation..."
+        ./scripts/validate-diagrams.sh --check-references
+    
+    - name: Check for missing diagrams
+      run: |
+        echo "📊 Checking for missing generated diagrams..."
+        ./scripts/validate-diagrams.sh --check-missing
+    
+    - name: Generate missing diagrams
+      run: |
+        echo "🎨 Generating any missing diagrams..."
+        ./scripts/generate-diagrams.sh --format=png
+    
+    - name: Verify generation success
+      run: |
+        echo "✅ Verifying all diagrams are generated..."
+        ./scripts/validate-diagrams.sh --check-missing
+    
+    - name: Upload generated diagrams (if any)
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: generated-diagrams
+        path: docs/diagrams/generated/
+        retention-days: 7
+
+  validate-documentation-structure:
+    name: Validate Documentation Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Check documentation structure
+      run: |
+        echo "📁 Validating documentation structure..."
+        
+        # Check required directories exist
+        required_dirs=(
+          "docs/viewpoints"
+          "docs/perspectives" 
+          "docs/templates"
+          "docs/diagrams/viewpoints"
+          "docs/diagrams/mermaid"
+          ".kiro/steering"
+        )
+        
+        for dir in "${required_dirs[@]}"; do
+          if [ ! -d "$dir" ]; then
+            echo "❌ Missing required directory: $dir"
+            exit 1
+          else
+            echo "✅ Found: $dir"
+          fi
+        done
+    
+    - name: Check template consistency
+      run: |
+        echo "📝 Checking template files..."
+        
+        # Check if template files exist
+        templates=(
+          "docs/templates/viewpoint-template.md"
+          "docs/templates/perspective-template.md"
+          "docs/templates/adr-template.md"
+        )
+        
+        for template in "${templates[@]}"; do
+          if [ ! -f "$template" ]; then
+            echo "❌ Missing template: $template"
+            exit 1
+          else
+            echo "✅ Found: $template"
+          fi
+        done
+    
+    - name: Check for broken internal links
+      run: |
+        echo "🔗 Checking for broken internal links..."
+        
+        # Find all markdown files
+        find docs -name "*.md" -type f | while read -r file; do
+          echo "Checking: $file"
+          
+          # Extract internal links (relative paths)
+          grep -o '\[.*\](\..*\.md)' "$file" 2>/dev/null | while read -r link; do
+            # Extract the path part
+            path=$(echo "$link" | sed 's/.*](\(.*\))/\1/')
+            
+            # Resolve relative path
+            dir=$(dirname "$file")
+            full_path="$dir/$path"
+            
+            # Normalize path
+            normalized_path=$(realpath -m "$full_path" 2>/dev/null || echo "$full_path")
+            
+            # Check if file exists
+            if [ ! -f "$normalized_path" ]; then
+              echo "❌ Broken link in $file: $link -> $normalized_path"
+              exit 1
+            fi
+          done
+        done
+        
+        echo "✅ All internal links are valid"
+
+  lint-markdown:
+    name: Lint Markdown Files
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    
+    - name: Install markdownlint
+      run: npm install -g markdownlint-cli
+    
+    - name: Create markdownlint config
+      run: |
+        cat > .markdownlint.json << 'EOF'
+        {
+          "MD013": false,
+          "MD033": false,
+          "MD041": false,
+          "MD001": false
+        }
+        EOF
+    
+    - name: Lint markdown files
+      run: |
+        echo "📝 Linting markdown files..."
+        markdownlint docs/**/*.md --config .markdownlint.json
+
+  check-hook-status:
+    name: Check Hook Status
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Verify hook configuration
+      run: |
+        echo "🔧 Checking hook configuration..."
+        
+        # Check if only essential hook exists
+        hook_count=$(find .kiro/hooks -name "*.kiro.hook" | wc -l)
+        
+        if [ "$hook_count" -eq 1 ]; then
+          echo "✅ Correct number of hooks: $hook_count"
+        else
+          echo "❌ Expected 1 hook, found: $hook_count"
+          echo "Existing hooks:"
+          find .kiro/hooks -name "*.kiro.hook"
+          exit 1
+        fi
+        
+        # Check if the correct hook exists
+        if [ -f ".kiro/hooks/diagram-auto-generation.kiro.hook" ]; then
+          echo "✅ Essential hook exists: diagram-auto-generation.kiro.hook"
+        else
+          echo "❌ Missing essential hook: diagram-auto-generation.kiro.hook"
+          exit 1
+        fi
+        
+        # Check if README is updated
+        if grep -q "diagram-auto-generation.kiro.hook" .kiro/hooks/README.md; then
+          echo "✅ README mentions the correct hook"
+        else
+          echo "❌ README doesn't mention diagram-auto-generation.kiro.hook"
+          exit 1
+        fi
+        
+        echo "🎉 Hook configuration is correct!"
