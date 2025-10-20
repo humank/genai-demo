@@ -161,7 +161,7 @@ dependencies {
     }
     
     // AWS SDK v2 for analytics and security
-    implementation platform('software.amazon.awssdk:bom:2.21.29')
+    implementation platform('software.amazon.awssdk:bom:2.35.10')
     implementation 'software.amazon.awssdk:firehose'
     implementation 'software.amazon.awssdk:secretsmanager'
     implementation 'software.amazon.awssdk:cloudwatch'
