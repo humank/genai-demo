@@ -1,0 +1,137 @@
+@startuml bounded-contexts-overview
+!define BOUNDED_CONTEXT_COLOR #E8F5E9
+!define SHARED_KERNEL_COLOR #FFF9C4
+!define EXTERNAL_SYSTEM_COLOR #E3F2FD
+
+title Enterprise E-Commerce Platform - Bounded Contexts Overview
+
+skinparam component {
+    BackgroundColor BOUNDED_CONTEXT_COLOR
+    BorderColor #4CAF50
+    FontSize 12
+}
+
+skinparam package {
+    BackgroundColor SHARED_KERNEL_COLOR
+    BorderColor #FBC02D
+    FontSize 11
+}
+
+skinparam cloud {
+    BackgroundColor EXTERNAL_SYSTEM_COLOR
+    BorderColor #2196F3
+}
+
+' Core Business Contexts
+package "Core Business Contexts" {
+    component [Customer Context\n---\nCustomer Management\nProfile Management\nMembership Levels\nReward Points\nDelivery Addresses] as Customer
+    
+    component [Order Context\n---\nOrder Creation\nOrder Submission\nOrder Tracking\nOrder History\nInvoice Generation] as Order
+    
+    component [Product Context\n---\nProduct Catalog\nProduct Search\nCategory Management\nProduct Reviews] as Product
+    
+    component [Shopping Cart Context\n---\nCart Management\nItem Operations\nCart Checkout] as Cart
+}
+
+' Supporting Business Contexts
+package "Supporting Business Contexts" {
+    component [Payment Context\n---\nPayment Processing\nRefund Management\nReceipt Generation] as Payment
+    
+    component [Inventory Context\n---\nStock Management\nReservation\nReplenishment\nLow Stock Alerts] as Inventory
+    
+    component [Delivery Context\n---\nDelivery Scheduling\nTracking\nStatus Updates] as Delivery
+    
+    component [Promotion Context\n---\nPromotion Management\nCoupon Validation\nDiscount Calculation] as Promotion
+}
+
+' Additional Contexts
+package "Additional Contexts" {
+    component [Review Context\n---\nReview Submission\nReview Moderation\nRating Aggregation] as Review
+    
+    component [Seller Context\n---\nSeller Registration\nSeller Management\nSeller Products\nSeller Ratings] as Seller
+    
+    component [Pricing Context\n---\nPrice Calculation\nDynamic Pricing\nDiscount Application] as Pricing
+    
+    component [Notification Context\n---\nEmail Notifications\nSMS Notifications\nPush Notifications] as Notification
+    
+    component [Observability Context\n---\nMetrics Collection\nLogging\nTracing\nMonitoring] as Observability
+}
+
+' Shared Kernel
+package "Shared Kernel" <<Rectangle>> {
+    component [Common Value Objects\n---\nMoney\nAddress\nEmail\nPhone\nCustomerId\nOrderId\nProductId] as SharedVO
+}
+
+' External Systems
+cloud "External Systems" {
+    component [Payment Gateway] as PaymentGW
+    component [Email Service] as EmailSvc
+    component [Shipping Provider] as ShippingSvc
+}
+
+' Core Business Relationships
+Customer --> Order : places
+Customer --> Cart : manages
+Customer --> Review : writes
+Cart --> Product : contains
+Order --> Product : references
+Order --> Payment : requires
+Order --> Delivery : triggers
+Order --> Inventory : reserves
+
+' Supporting Relationships
+Promotion --> Pricing : influences
+Pricing --> Order : calculates for
+Seller --> Product : owns
+Review --> Product : rates
+Inventory --> Product : tracks stock for
+
+' Notification Relationships
+Order ..> Notification : notifies
+Payment ..> Notification : notifies
+Delivery ..> Notification : notifies
+Customer ..> Notification : receives
+
+' Observability Relationships
+Customer ..> Observability : logs events
+Order ..> Observability : logs events
+Payment ..> Observability : logs events
+Delivery ..> Observability : logs events
+
+' External System Relationships
+Payment --> PaymentGW : integrates with
+Notification --> EmailSvc : uses
+Delivery --> ShippingSvc : integrates with
+
+' Shared Kernel Usage
+Customer --> SharedVO : uses
+Order --> SharedVO : uses
+Product --> SharedVO : uses
+Payment --> SharedVO : uses
+Delivery --> SharedVO : uses
+
+note right of Customer
+  **Customer Context**
+  Manages customer lifecycle,
+  profiles, and preferences
+end note
+
+note right of Order
+  **Order Context**
+  Core business process
+  for order management
+end note
+
+note bottom of SharedVO
+  **Shared Kernel**
+  Common value objects
+  used across contexts
+end note
+
+note bottom of PaymentGW
+  **External Systems**
+  Third-party integrations
+  for payments, email, shipping
+end note
+
+@enduml

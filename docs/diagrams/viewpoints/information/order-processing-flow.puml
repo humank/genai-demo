@@ -1,0 +1,106 @@
+@startuml order-processing-flow
+!define CONTEXT_COLOR #E3F2FD
+!define EVENT_COLOR #FFF9C4
+!define ACTION_COLOR #C8E6C9
+
+title Order Processing Data Flow
+
+skinparam componentStyle rectangle
+
+' Contexts
+package "Shopping Cart Context" as cart_ctx CONTEXT_COLOR {
+    component "Shopping Cart" as cart
+}
+
+package "Order Context" as order_ctx CONTEXT_COLOR {
+    component "Order" as order
+}
+
+package "Inventory Context" as inventory_ctx CONTEXT_COLOR {
+    component "Inventory" as inventory
+}
+
+package "Payment Context" as payment_ctx CONTEXT_COLOR {
+    component "Payment" as payment
+}
+
+package "Shipping Context" as shipping_ctx CONTEXT_COLOR {
+    component "Shipping" as shipping
+}
+
+package "Notification Context" as notification_ctx CONTEXT_COLOR {
+    component "Notification" as notification
+}
+
+' Events
+queue "CartConvertedToOrderEvent" as e1 EVENT_COLOR
+queue "OrderCreatedEvent" as e2 EVENT_COLOR
+queue "OrderSubmittedEvent" as e3 EVENT_COLOR
+queue "InventoryReservedEvent" as e4 EVENT_COLOR
+queue "PaymentAuthorizedEvent" as e5 EVENT_COLOR
+queue "OrderConfirmedEvent" as e6 EVENT_COLOR
+queue "ShipmentCreatedEvent" as e7 EVENT_COLOR
+
+' Flow
+cart --> e1 : "1. Convert cart to order"
+e1 --> order : "2. Create order"
+order --> e2 : "3. Order created"
+e2 --> inventory : "4. Check availability"
+
+order --> e3 : "5. Submit order"
+e3 --> inventory : "6. Reserve inventory"
+e3 --> payment : "7. Process payment"
+e3 --> notification : "8. Send confirmation"
+
+inventory --> e4 : "9. Inventory reserved"
+e4 --> order : "10. Update order"
+
+payment --> e5 : "11. Payment authorized"
+e5 --> order : "12. Update order"
+
+order --> e6 : "13. Confirm order"
+e6 --> shipping : "14. Create shipment"
+e6 --> notification : "15. Send notification"
+
+shipping --> e7 : "16. Shipment created"
+e7 --> order : "17. Update order"
+e7 --> notification : "18. Send tracking info"
+
+' Notes
+note right of cart
+    **Cart Data:**
+    - Customer ID
+    - Cart items
+    - Product snapshots
+    - Current prices
+end note
+
+note right of order
+    **Order Data:**
+    - Order ID
+    - Customer ID (reference)
+    - Order items (snapshot)
+    - Addresses (snapshot)
+    - Total amount
+    - Status
+end note
+
+note right of inventory
+    **Inventory Data:**
+    - Product ID
+    - Quantity on hand
+    - Quantity reserved
+    - Quantity available
+    - Reservations
+end note
+
+note right of payment
+    **Payment Data:**
+    - Payment ID
+    - Order ID (reference)
+    - Amount
+    - Payment method
+    - Transaction status
+end note
+
+@enduml

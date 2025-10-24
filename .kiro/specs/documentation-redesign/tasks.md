@@ -76,43 +76,286 @@ This implementation plan breaks down the documentation redesign project into dis
   - Create example Mermaid diagrams
   - _Requirements: 4.2_
 
-- [ ] 4. Set up documentation validation automation
-- [ ] 4.1 Create link validation script
+- [x] 4. Refactor Steering Rules Architecture
+- [x] 4.1 Create new steering file structure
+  - [x] 4.1.1 Create `core-principles.md` (150 lines) - Extract all core principles
+    - Architecture principles (DDD + Hexagonal + Event-Driven)
+    - Domain model principles (Aggregates, Events, Value Objects)
+    - Code quality principles (Test-First, SOLID, Clean Code)
+    - Technology stack overview
+    - _Requirements: 1.1, 1.2_
+  
+  - [x] 4.1.2 Create `design-principles.md` (200 lines) - XP and OO design principles
+    - Extreme Programming core values (Simplicity, Communication, Feedback, Courage)
+    - Tell, Don't Ask principle with quick checks
+    - Law of Demeter with quick checks
+    - Composition Over Inheritance with quick checks
+    - SOLID principles with quick checks
+    - Four Rules of Simple Design (Kent Beck)
+    - Design smells to avoid
+    - Quick reference card for all principles
+    - _Requirements: 1.1, 1.2_
+  
+  - [x] 4.1.3 Create `ddd-tactical-patterns.md` (200 lines) - DDD pattern rules
+    - Aggregate Root pattern (must follow/avoid)
+    - Domain Events pattern (must follow/avoid)
+    - Value Objects pattern (must follow/avoid)
+    - Repository pattern (must follow/avoid)
+    - Example structure for each pattern
+    - Validation commands
+    - _Requirements: 1.1, 1.2_
+  
+  - [x] 4.1.4 Create `architecture-constraints.md` (150 lines) - Architecture rules
+    - Layer dependencies diagram
+    - Package structure standards
+    - Bounded context rules
+    - Cross-cutting concerns
+    - Validation commands
+    - _Requirements: 1.1, 1.2_
+  
+  - [x] 4.1.5 Create `code-quality-checklist.md` (150 lines) - Quality checklist
+    - Naming conventions checklist
+    - Error handling checklist
+    - API design checklist
+    - Security checklist
+    - Performance checklist
+    - Code review checklist
+    - _Requirements: 1.1, 1.2_
+  
+  - [x] 4.1.6 Create `testing-strategy.md` (150 lines) - Testing rules
+    - Test pyramid overview
+    - Test classification (Unit/Integration/E2E)
+    - Test performance requirements
+    - BDD testing approach
+    - Gradle test commands
+    - Validation commands
+    - _Requirements: 1.1, 1.2_
+
+- [x] 4.2 Create examples directory structure
+  - [x] 4.2.1 Create `examples/design-patterns/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+  
+  - [x] 4.2.2 Create `examples/xp-practices/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+  
+  - [x] 4.2.3 Create `examples/ddd-patterns/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+  
+  - [x] 4.2.4 Create `examples/architecture/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+  
+  - [x] 4.2.5 Create `examples/code-patterns/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+  
+  - [x] 4.2.6 Create `examples/testing/` directory
+    - Create directory structure
+    - Create placeholder README.md
+    - _Requirements: 1.1_
+
+- [x] 4.3 Migrate existing content to new structure
+  - [x] 4.3.1 Extract rules from `development-standards.md`
+    - Extract core principles → `core-principles.md`
+    - Extract DDD patterns → `ddd-tactical-patterns.md`
+    - Extract architecture rules → `architecture-constraints.md`
+    - Move detailed examples → `examples/code-patterns/`
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.2 Extract rules from `domain-events.md`
+    - Extract event pattern rules → `ddd-tactical-patterns.md`
+    - Move detailed examples → `examples/ddd-patterns/domain-events-examples.md`
+    - Move event store guide → `examples/ddd-patterns/event-store-guide.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.3 Extract checklists from `security-standards.md`
+    - Extract security checklist → `code-quality-checklist.md`
+    - Move detailed patterns → `examples/code-patterns/security-patterns.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.4 Extract checklists from `performance-standards.md`
+    - Extract performance checklist → `code-quality-checklist.md`
+    - Move optimization guide → `examples/code-patterns/performance-optimization.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.5 Extract checklists from `code-review-standards.md`
+    - Extract review checklist → `code-quality-checklist.md`
+    - Move detailed guide → `examples/process/code-review-guide.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.6 Move `event-storming-standards.md`
+    - Move entire file → `examples/architecture/event-storming-guide.md`
+    - Update cross-references
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.7 Move `test-performance-standards.md`
+    - Move entire file → `examples/testing/test-performance-guide.md`
+    - Update cross-references
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.8 Move `diagram-generation-standards.md`
+    - Move entire file → `docs/diagrams/README.md`
+    - Update cross-references
+    - _Requirements: 1.2_
+  
+  - [x] 4.3.9 Simplify `rozanski-woods-architecture-methodology.md`
+    - Extract core constraints → `architecture-constraints.md`
+    - Move detailed guide → `examples/architecture/viewpoints-guide.md`
+    - _Requirements: 1.2_
+
+- [x] 4.4 Create detailed example files
+  - [x] 4.4.1 Create design pattern examples
+    - Create `examples/design-patterns/tell-dont-ask-examples.md`
+    - Create `examples/design-patterns/law-of-demeter-examples.md`
+    - Create `examples/design-patterns/composition-over-inheritance-examples.md`
+    - Create `examples/design-patterns/dependency-injection-examples.md`
+    - Create `examples/design-patterns/design-smells-refactoring.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.4.2 Create XP practice examples
+    - Create `examples/xp-practices/simple-design-examples.md`
+    - Create `examples/xp-practices/refactoring-guide.md`
+    - Create `examples/xp-practices/pair-programming-guide.md`
+    - Create `examples/xp-practices/continuous-integration.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.4.3 Create DDD pattern examples
+    - Create `examples/ddd-patterns/aggregate-root-examples.md`
+    - Create `examples/ddd-patterns/domain-events-examples.md`
+    - Create `examples/ddd-patterns/value-objects-examples.md`
+    - Create `examples/ddd-patterns/repository-examples.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.4.4 Create code pattern examples
+    - Create `examples/code-patterns/error-handling.md`
+    - Create `examples/code-patterns/api-design.md`
+    - Create `examples/code-patterns/security-patterns.md`
+    - Create `examples/code-patterns/performance-optimization.md`
+    - _Requirements: 1.2_
+  
+  - [x] 4.4.5 Create testing examples
+    - Create `examples/testing/unit-testing-guide.md`
+    - Create `examples/testing/integration-testing-guide.md`
+    - Create `examples/testing/bdd-cucumber-guide.md`
+    - Create `examples/testing/test-performance-guide.md`
+    - _Requirements: 1.2_
+
+- [x] 4.5 Update steering README.md navigation
+  - [x] 4.5.1 Create quick start section
+    - Add "I need to..." scenario navigation
+    - Link to appropriate steering files
+    - _Requirements: 10.1, 10.2_
+  
+  - [x] 4.5.2 Create document categories table
+    - Core Standards (必讀)
+    - Specialized Standards (領域專用)
+    - Reference Standards (深入參考)
+    - Include file names, purposes, and when to use
+    - _Requirements: 10.1, 10.2_
+  
+  - [x] 4.5.3 Create common scenarios section
+    - Starting a new feature
+    - Fixing performance issues
+    - Writing documentation
+    - Conducting architecture design
+    - _Requirements: 10.2_
+  
+  - [x] 4.5.4 Create document relationships diagram
+    - Create Mermaid diagram showing file relationships
+    - Show dependencies between steering files
+    - _Requirements: 4.2, 10.1_
+  
+  - [x] 4.5.5 Add usage guidelines
+    - How to use steering rules
+    - How to use examples
+    - How to contribute
+    - _Requirements: 10.2_
+
+- [x] 4.6 Validate and test new structure
+  - [x] 4.6.1 Test #[[file:]] reference mechanism
+    - Verify all cross-references work correctly
+    - Test with AI to ensure proper loading
+    - _Requirements: 11.2_
+  
+  - [x] 4.6.2 Validate all cross-references
+    - Check all internal links
+    - Check all file references
+    - Fix any broken references
+    - _Requirements: 10.5, 11.2_
+  
+  - [x] 4.6.3 Measure token usage reduction
+    - Compare old vs new token usage
+    - Verify 80%+ reduction achieved
+    - Document metrics
+    - _Requirements: Performance improvement_
+  
+  - [x] 4.6.4 Test AI comprehension
+    - Test with sample queries
+    - Verify AI can find and use rules correctly
+    - Verify AI can load examples when needed
+    - _Requirements: Usability_
+
+- [x] 4.7 Clean up old steering files
+  - [x] 4.7.1 Archive old steering files
+    - Move old files to `.kiro/steering/archive/`
+    - Keep for reference during transition
+    - _Requirements: 1.2_
+  
+  - [x] 4.7.2 Update all documentation references
+    - Update references in docs/
+    - Update references in README files
+    - _Requirements: 10.4, 10.5_
+  
+  - [x] 4.7.3 Delete archived files after validation
+    - Confirm new structure works
+    - Delete archived files
+    - _Requirements: 1.2_
+
+- [x] 4.8 Set up documentation validation automation
+- [x] 4.8.1 Create link validation script
   - Write `scripts/validate-links.sh` using markdown-link-check
   - Configure to check all internal and external links
   - Add to pre-commit hook
   - _Requirements: 10.5, 11.2_
 
-- [ ] 4.2 Create template compliance validation script
+- [x] 4.8.2 Create template compliance validation script
   - Write `scripts/validate-templates.sh` to check document structure
   - Verify all viewpoints have required files
   - Verify all perspectives have required files
   - _Requirements: 11.1, 11.4_
 
-- [ ] 4.3 Create spelling and grammar check script
+- [x] 4.8.3 Create spelling and grammar check script
   - Write `scripts/check-spelling.sh` using cspell
   - Configure custom dictionary for technical terms
   - _Requirements: 11.4_
 
-- [ ] 4.4 Create documentation drift detection script
+- [x] 4.8.4 Create documentation drift detection script
   - Write `scripts/check-doc-drift.sh` to detect outdated docs
   - Check if code changes have corresponding doc updates
   - _Requirements: 12.1, 12.2_
 
-- [ ] 5. Set up CI/CD integration
-- [ ] 5.1 Create GitHub Actions workflow for diagram generation
+- [x] 5. Set up CI/CD integration
+- [x] 5.1 Create GitHub Actions workflow for diagram generation
   - Write `.github/workflows/generate-diagrams.yml`
   - Trigger on changes to .puml files
   - Auto-commit generated diagrams
   - _Requirements: 4.3, 12.5_
 
-- [ ] 5.2 Create GitHub Actions workflow for documentation validation
+- [x] 5.2 Create GitHub Actions workflow for documentation validation
   - Write `.github/workflows/validate-docs.yml`
   - Run link validation, spelling check, template compliance
   - Fail PR if validation fails
   - _Requirements: 11.2, 11.5, 12.3_
 
-- [ ] 5.3 Create Kiro hook for documentation sync
+- [x] 5.3 Create Kiro hook for documentation sync
   - Write `.kiro/hooks/documentation-sync.kiro.hook`
   - Trigger on code changes in app/src and infrastructure/
   - Remind developers to update documentation
@@ -122,121 +365,121 @@ This implementation plan breaks down the documentation redesign project into dis
 
 ## Phase 2: Core Viewpoints Documentation (Week 3-4)
 
-- [ ] 6. Document Functional Viewpoint
-- [ ] 6.1 Write Functional Viewpoint overview
+- [x] 6. Document Functional Viewpoint
+- [x] 6.1 Write Functional Viewpoint overview
   - Create `docs/viewpoints/functional/overview.md`
   - Describe system capabilities and functional elements
   - _Requirements: 2.1_
 
-- [ ] 6.2 Document bounded contexts
+- [x] 6.2 Document bounded contexts
   - Create `docs/viewpoints/functional/bounded-contexts.md`
   - Document all 13 bounded contexts with responsibilities
   - Create bounded contexts overview diagram
   - _Requirements: 2.1_
 
-- [ ] 6.3 Document use cases
+- [x] 6.3 Document use cases
   - Create `docs/viewpoints/functional/use-cases.md`
   - Document key use cases for each bounded context
   - Link to BDD feature files
   - _Requirements: 2.1_
 
-- [ ] 6.4 Document functional interfaces
+- [x] 6.4 Document functional interfaces
   - Create `docs/viewpoints/functional/interfaces.md`
   - Document REST API interfaces
   - Document domain event interfaces
   - _Requirements: 2.1_
 
-- [ ] 6.5 Create Functional Viewpoint diagrams
+- [x] 6.5 Create Functional Viewpoint diagrams
   - Create `bounded-contexts-overview.puml`
   - Create context-specific diagrams (customer, order, product, etc.)
   - Generate PNG files
   - _Requirements: 2.1, 4.3_
 
-- [ ] 7. Document Information Viewpoint
-- [ ] 7.1 Write Information Viewpoint overview
+- [x] 7. Document Information Viewpoint
+- [x] 7.1 Write Information Viewpoint overview
   - Create `docs/viewpoints/information/overview.md`
   - Describe data management approach
   - _Requirements: 2.2_
 
-- [ ] 7.2 Document domain models
+- [x] 7.2 Document domain models
   - Create `docs/viewpoints/information/domain-models.md`
   - Document entity relationships for each bounded context
   - Include value objects and aggregates
   - _Requirements: 2.2_
 
-- [ ] 7.3 Document data ownership
+- [x] 7.3 Document data ownership
   - Create `docs/viewpoints/information/data-ownership.md`
   - Define which context owns which data
   - Document eventual consistency strategies
   - _Requirements: 2.2_
 
-- [ ] 7.4 Document data flow
+- [x] 7.4 Document data flow
   - Create `docs/viewpoints/information/data-flow.md`
   - Document how data moves between contexts
   - Document domain event flows
   - _Requirements: 2.2_
 
-- [ ] 7.5 Create Information Viewpoint diagrams
+- [x] 7.5 Create Information Viewpoint diagrams
   - Create entity-relationship diagrams for each context
   - Create data flow diagrams
   - Create event flow diagrams
   - _Requirements: 2.2, 4.3_
 
-- [ ] 8. Document Development Viewpoint
-- [ ] 8.1 Write Development Viewpoint overview
+- [x] 8. Document Development Viewpoint
+- [x] 8.1 Write Development Viewpoint overview
   - Create `docs/viewpoints/development/overview.md`
   - Describe code organization and module structure
   - _Requirements: 2.4_
 
-- [ ] 8.2 Document module organization
+- [x] 8.2 Document module organization
   - Create `docs/viewpoints/development/module-organization.md`
   - Document package structure (domain, application, infrastructure, interfaces)
   - Document bounded context organization
   - _Requirements: 2.4_
 
-- [ ] 8.3 Document dependency rules
+- [x] 8.3 Document dependency rules
   - Create `docs/viewpoints/development/dependency-rules.md`
   - Document hexagonal architecture layer dependencies
   - Document prohibited dependencies
   - Include ArchUnit rules
   - _Requirements: 2.4_
 
-- [ ] 8.4 Document build process
+- [x] 8.4 Document build process
   - Create `docs/viewpoints/development/build-process.md`
   - Document Gradle build configuration
   - Document test execution strategy
   - _Requirements: 2.4_
 
-- [ ] 8.5 Create Development Viewpoint diagrams
+- [x] 8.5 Create Development Viewpoint diagrams
   - Create package structure diagram
   - Create dependency diagram
   - Create build pipeline diagram
   - _Requirements: 2.4, 4.3_
 
-- [ ] 9. Document Context Viewpoint
-- [ ] 9.1 Write Context Viewpoint overview
+- [x] 9. Document Context Viewpoint
+- [x] 9.1 Write Context Viewpoint overview
   - Create `docs/viewpoints/context/overview.md`
   - Describe system boundaries and external interactions
   - _Requirements: 2.7_
 
-- [ ] 9.2 Document system scope and boundaries
+- [x] 9.2 Document system scope and boundaries
   - Create `docs/viewpoints/context/scope-and-boundaries.md`
   - Define what's in scope and out of scope
   - _Requirements: 2.7_
 
-- [ ] 9.3 Document external systems
+- [x] 9.3 Document external systems
   - Create `docs/viewpoints/context/external-systems.md`
   - Document payment gateway integration
   - Document email service integration
   - Document shipping provider integration
   - _Requirements: 2.7_
 
-- [ ] 9.4 Document stakeholders
+- [x] 9.4 Document stakeholders
   - Create `docs/viewpoints/context/stakeholders.md`
   - Map stakeholders to their concerns
   - _Requirements: 2.7_
 
-- [ ] 9.5 Create Context Viewpoint diagrams
+- [x] 9.5 Create Context Viewpoint diagrams
   - Create system context diagram
   - Create external integrations diagram
   - Create stakeholder map
@@ -246,44 +489,44 @@ This implementation plan breaks down the documentation redesign project into dis
 
 ## Phase 3: Remaining Viewpoints Documentation (Week 5-6)
 
-- [ ] 10. Document Concurrency Viewpoint
-- [ ] 10.1 Write Concurrency Viewpoint overview
+- [x] 10. Document Concurrency Viewpoint
+- [x] 10.1 Write Concurrency Viewpoint overview
   - Create `docs/viewpoints/concurrency/overview.md`
   - Describe concurrency model and strategies
   - _Requirements: 2.3_
 
-- [ ] 10.2 Document synchronous vs asynchronous operations
+- [x] 10.2 Document synchronous vs asynchronous operations
   - Create `docs/viewpoints/concurrency/sync-async-operations.md`
   - Document which operations are synchronous
   - Document which operations are asynchronous
   - _Requirements: 2.3_
 
-- [ ] 10.3 Document synchronization mechanisms
+- [x] 10.3 Document synchronization mechanisms
   - Create `docs/viewpoints/concurrency/synchronization.md`
   - Document distributed locking (Redis)
   - Document transaction boundaries
   - Document optimistic locking
   - _Requirements: 2.3_
 
-- [ ] 10.4 Document state management
+- [x] 10.4 Document state management
   - Create `docs/viewpoints/concurrency/state-management.md`
   - Document stateless vs stateful components
   - Document session management
   - _Requirements: 2.3_
 
-- [ ] 10.5 Create Concurrency Viewpoint diagrams
+- [x] 10.5 Create Concurrency Viewpoint diagrams
   - Create concurrency model diagram
   - Create thread pool configuration diagram
   - Create distributed locking sequence diagram
   - _Requirements: 2.3, 4.3_
 
-- [ ] 11. Document Deployment Viewpoint
-- [ ] 11.1 Write Deployment Viewpoint overview
+- [x] 11. Document Deployment Viewpoint
+- [x] 11.1 Write Deployment Viewpoint overview
   - Create `docs/viewpoints/deployment/overview.md`
   - Describe AWS infrastructure architecture
   - _Requirements: 2.5_
 
-- [ ] 11.2 Document physical architecture
+- [x] 11.2 Document physical architecture
   - Create `docs/viewpoints/deployment/physical-architecture.md`
   - Document EKS cluster configuration
   - Document RDS database configuration
@@ -291,52 +534,52 @@ This implementation plan breaks down the documentation redesign project into dis
   - Document MSK Kafka configuration
   - _Requirements: 2.5_
 
-- [ ] 11.3 Document network architecture
+- [x] 11.3 Document network architecture
   - Create `docs/viewpoints/deployment/network-architecture.md`
   - Document VPC configuration
   - Document subnet organization
   - Document security groups
   - _Requirements: 2.5_
 
-- [ ] 11.4 Document deployment process
+- [x] 11.4 Document deployment process
   - Create `docs/viewpoints/deployment/deployment-process.md`
   - Document CI/CD pipeline
   - Document deployment strategies (rolling, blue-green)
   - _Requirements: 2.5_
 
-- [ ] 11.5 Create Deployment Viewpoint diagrams
+- [x] 11.5 Create Deployment Viewpoint diagrams
   - Create AWS infrastructure diagram
   - Create network topology diagram
   - Create deployment pipeline diagram
   - _Requirements: 2.5, 4.3_
 
-- [ ] 12. Document Operational Viewpoint
-- [ ] 12.1 Write Operational Viewpoint overview
+- [x] 12. Document Operational Viewpoint
+- [x] 12.1 Write Operational Viewpoint overview
   - Create `docs/viewpoints/operational/overview.md`
   - Describe operational approach and responsibilities
   - _Requirements: 2.6_
 
-- [ ] 12.2 Document monitoring and alerting
+- [x] 12.2 Document monitoring and alerting
   - Create `docs/viewpoints/operational/monitoring-alerting.md`
   - Document key metrics (business and technical)
   - Document alert thresholds and escalation
   - Document dashboard configurations
   - _Requirements: 2.6_
 
-- [ ] 12.3 Document backup and recovery
+- [x] 12.3 Document backup and recovery
   - Create `docs/viewpoints/operational/backup-recovery.md`
   - Document backup schedules
   - Document recovery procedures
   - Document RTO/RPO targets
   - _Requirements: 2.6_
 
-- [ ] 12.4 Document operational procedures
+- [x] 12.4 Document operational procedures
   - Create `docs/viewpoints/operational/procedures.md`
   - Document startup/shutdown procedures
   - Document upgrade procedures
   - _Requirements: 2.6_
 
-- [ ] 12.5 Create Operational Viewpoint diagrams
+- [x] 12.5 Create Operational Viewpoint diagrams
   - Create monitoring architecture diagram
   - Create backup strategy diagram
   - Create incident response flow diagram
@@ -346,65 +589,65 @@ This implementation plan breaks down the documentation redesign project into dis
 
 ## Phase 4: Core Perspectives Documentation (Week 7-8)
 
-- [ ] 13. Document Security Perspective
-- [ ] 13.1 Write Security Perspective overview
+- [x] 13. Document Security Perspective
+- [x] 13.1 Write Security Perspective overview
   - Create `docs/perspectives/security/overview.md`
   - Describe security approach and concerns
   - _Requirements: 3.1_
 
-- [ ] 13.2 Document authentication and authorization
+- [x] 13.2 Document authentication and authorization
   - Create `docs/perspectives/security/authentication.md`
   - Document JWT-based authentication
   - Create `docs/perspectives/security/authorization.md`
   - Document RBAC model
   - _Requirements: 3.1_
 
-- [ ] 13.3 Document data protection
+- [x] 13.3 Document data protection
   - Create `docs/perspectives/security/data-protection.md`
   - Document encryption at rest and in transit
   - Document sensitive data handling
   - _Requirements: 3.1_
 
-- [ ] 13.4 Document security testing
+- [x] 13.4 Document security testing
   - Create `docs/perspectives/security/verification.md`
   - Document security testing approach
   - Document penetration testing procedures
   - _Requirements: 3.1_
 
-- [ ] 13.5 Document compliance
+- [x] 13.5 Document compliance
   - Create `docs/perspectives/security/compliance.md`
   - Document GDPR compliance
   - Document PCI-DSS compliance
   - _Requirements: 3.1_
 
-- [ ] 14. Document Performance & Scalability Perspective
-- [ ] 14.1 Write Performance Perspective overview
+- [x] 14. Document Performance & Scalability Perspective
+- [x] 14.1 Write Performance Perspective overview
   - Create `docs/perspectives/performance/overview.md`
   - Describe performance approach and targets
   - _Requirements: 3.2_
 
-- [ ] 14.2 Document performance requirements
+- [x] 14.2 Document performance requirements
   - Create `docs/perspectives/performance/requirements.md`
   - Document response time targets (API, database, frontend)
   - Document throughput targets
   - Include quality attribute scenarios
   - _Requirements: 3.2_
 
-- [ ] 14.3 Document scalability strategy
+- [x] 14.3 Document scalability strategy
   - Create `docs/perspectives/performance/scalability.md`
   - Document horizontal scaling approach
   - Document auto-scaling configuration
   - Document database scaling (read replicas)
   - _Requirements: 3.2_
 
-- [ ] 14.4 Document performance optimization
+- [x] 14.4 Document performance optimization
   - Create `docs/perspectives/performance/optimization.md`
   - Document caching strategy
   - Document database optimization
   - Document asynchronous processing
   - _Requirements: 3.2_
 
-- [ ] 14.5 Document performance testing
+- [x] 14.5 Document performance testing
   - Create `docs/perspectives/performance/verification.md`
   - Document load testing approach
   - Document performance benchmarks

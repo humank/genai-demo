@@ -1,0 +1,158 @@
+@startuml external-integrations
+!define PLATFORM_COLOR #C8E6C9
+!define EXTERNAL_COLOR #FFF3E0
+!define CRITICAL_COLOR #FFCDD2
+!define HIGH_COLOR #FFE0B2
+!define MEDIUM_COLOR #FFF9C4
+
+title External System Integrations
+
+' Define styles
+skinparam rectangle {
+    FontSize 11
+    BorderColor #01579B
+}
+
+skinparam note {
+    BackgroundColor #FFFDE7
+    BorderColor #F57F17
+}
+
+' Platform
+rectangle "E-Commerce Platform" as platform #C8E6C9 {
+    rectangle "Payment Context" as payment_ctx
+    rectangle "Notification Context" as notification_ctx
+    rectangle "Delivery Context" as delivery_ctx
+    rectangle "Observability Context" as observability_ctx
+}
+
+' External Systems - Critical
+rectangle "Payment Gateway (Stripe)" as stripe <<Critical>> #FFCDD2 {
+    [Payment API]
+    [Webhook Receiver]
+}
+
+' External Systems - High Priority
+rectangle "Email Service (SendGrid)" as sendgrid <<High>> #FFE0B2 {
+    [Email API]
+    [Delivery Webhooks]
+}
+
+rectangle "Shipping Providers" as shipping <<High>> #FFE0B2 {
+    rectangle "FedEx" as fedex {
+        [Rate API]
+        [Ship API]
+        [Track API]
+    }
+    rectangle "UPS" as ups {
+        [Rate API]
+        [Ship API]
+        [Track API]
+    }
+    rectangle "DHL" as dhl {
+        [Rate API]
+        [Ship API]
+        [Track API]
+    }
+}
+
+' External Systems - Medium Priority
+rectangle "SMS Service (Twilio)" as twilio <<Medium>> #FFF9C4 {
+    [SMS API]
+    [Status Webhooks]
+}
+
+rectangle "Cloud Services (AWS)" as aws <<Critical>> #FFCDD2 {
+    [EKS]
+    [RDS]
+    [ElastiCache]
+    [MSK]
+    [CloudWatch]
+    [X-Ray]
+}
+
+' Payment integrations
+payment_ctx --> [Payment API] : Create Payment\nConfirm Payment\nProcess Refund
+[Webhook Receiver] ..> payment_ctx : payment_intent.succeeded\npayment_intent.failed\ncharge.refunded
+
+' Email integrations
+notification_ctx --> [Email API] : Send Email\nBatch Send
+[Delivery Webhooks] ..> notification_ctx : delivered\nopen\nclick\nbounce
+
+' SMS integrations
+notification_ctx --> [SMS API] : Send SMS
+[Status Webhooks] ..> notification_ctx : delivered\nfailed
+
+' Shipping integrations
+delivery_ctx --> fedex : Calculate Rates\nCreate Shipment\nTrack Package
+delivery_ctx --> ups : Calculate Rates\nCreate Shipment\nTrack Package
+delivery_ctx --> dhl : Calculate Rates\nCreate Shipment\nTrack Package
+
+fedex ..> delivery_ctx : Tracking Updates
+ups ..> delivery_ctx : Tracking Updates
+dhl ..> delivery_ctx : Tracking Updates
+
+' AWS integrations
+platform --> aws : Hosted Infrastructure\nMonitoring\nTracing
+
+' Integration patterns
+note right of stripe
+  **Pattern:** Synchronous + Webhooks
+  **Auth:** API Key (Bearer)
+  **Rate Limit:** 100 req/s
+  **SLA:** 99.99% uptime
+  **Retry:** 3 attempts, exponential backoff
+  **Circuit Breaker:** 5 failures threshold
+  **Fallback:** Queue for manual processing
+end note
+
+note right of sendgrid
+  **Pattern:** Asynchronous + Webhooks
+  **Auth:** API Key
+  **Rate Limit:** 10K emails/hour
+  **SLA:** 99.95% uptime
+  **Retry:** 5 attempts, exponential backoff
+  **Fallback:** Dead letter queue
+end note
+
+note right of shipping
+  **Pattern:** Synchronous + Webhooks
+  **Auth:** OAuth 2.0 (FedEx, UPS), API Key (DHL)
+  **Rate Limits:** 
+    - FedEx: 1K req/hour
+    - UPS: 500 req/hour
+    - DHL: 2K req/hour
+  **Fallback:** Try alternative provider
+  **Load Balancing:** Round-robin with failover
+end note
+
+note right of twilio
+  **Pattern:** Asynchronous + Webhooks
+  **Auth:** Account SID + Auth Token
+  **Rate Limit:** 1K msg/s
+  **SLA:** 99.95% uptime
+  **Fallback:** Send email instead
+end note
+
+note bottom of aws
+  **Services Used:**
+  - EKS: Container orchestration
+  - RDS: PostgreSQL database
+  - ElastiCache: Redis caching
+  - MSK: Kafka event streaming
+  - CloudWatch: Logging & monitoring
+  - X-Ray: Distributed tracing
+end note
+
+' Legend
+legend right
+  |= Priority |= Description |
+  | Critical | System cannot function without it |
+  | High | Major features impacted if unavailable |
+  | Medium | Non-critical features affected |
+  |= Arrow Type |= Meaning |
+  | Solid | Synchronous API call |
+  | Dotted | Asynchronous webhook/callback |
+endlegend
+
+@enduml

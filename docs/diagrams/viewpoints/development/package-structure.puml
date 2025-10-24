@@ -1,0 +1,182 @@
+@startuml package-structure
+' Metadata
+' Title: Package Structure Diagram
+' Viewpoint: Development
+' Last Updated: 2025-10-23
+' Related Docs: viewpoints/development/module-organization.md
+
+!define DOMAIN_COLOR #FFE4B5
+!define APPLICATION_COLOR #E0F2F7
+!define INFRASTRUCTURE_COLOR #F0F4C3
+!define INTERFACES_COLOR #FFCCBC
+
+title Package Structure - Hexagonal Architecture
+
+package "solid.humank.genaidemo" {
+    
+    package "domain" <<Rectangle>> DOMAIN_COLOR {
+        package "customer" {
+            package "model" {
+                package "aggregate" {
+                    class Customer
+                }
+                package "entity" {
+                    class CustomerProfile
+                }
+                package "valueobject" {
+                    class CustomerId
+                    class Email
+                }
+            }
+            package "events" {
+                class CustomerCreatedEvent
+            }
+            package "repository" {
+                interface CustomerRepository
+            }
+            package "service" {
+                class CustomerDomainService
+            }
+        }
+        
+        package "order" {
+            package "model" {
+                package "aggregate" {
+                    class Order
+                }
+                package "entity" {
+                    class OrderItem
+                }
+                package "valueobject" {
+                    class OrderId
+                    class Money
+                }
+            }
+            package "events" {
+                class OrderSubmittedEvent
+            }
+            package "repository" {
+                interface OrderRepository
+            }
+        }
+        
+        package "shared" {
+            package "valueobject" {
+                class Address
+                class PhoneNumber
+            }
+            package "exception" {
+                class DomainException
+            }
+        }
+    }
+    
+    package "application" <<Rectangle>> APPLICATION_COLOR {
+        package "customer" {
+            class CustomerApplicationService
+            package "command" {
+                class CreateCustomerCommand
+            }
+            package "dto" {
+                class CustomerDto
+            }
+        }
+        
+        package "order" {
+            class OrderApplicationService
+            package "command" {
+                class SubmitOrderCommand
+            }
+            package "dto" {
+                class OrderDto
+            }
+        }
+    }
+    
+    package "infrastructure" <<Rectangle>> INFRASTRUCTURE_COLOR {
+        package "customer" {
+            package "persistence" {
+                package "entity" {
+                    class CustomerEntity
+                }
+                package "repository" {
+                    class CustomerRepositoryImpl
+                }
+            }
+        }
+        
+        package "order" {
+            package "persistence" {
+                package "entity" {
+                    class OrderEntity
+                }
+                package "repository" {
+                    class OrderRepositoryImpl
+                }
+            }
+        }
+        
+        package "config" {
+            class DatabaseConfiguration
+            class RedisConfiguration
+        }
+        
+        package "event" {
+            class DomainEventPublisher
+        }
+    }
+    
+    package "interfaces" <<Rectangle>> INTERFACES_COLOR {
+        package "rest" {
+            package "customer" {
+                package "controller" {
+                    class CustomerController
+                }
+                package "dto" {
+                    class CustomerRequest
+                    class CustomerResponse
+                }
+            }
+            
+            package "order" {
+                package "controller" {
+                    class OrderController
+                }
+                package "dto" {
+                    class OrderRequest
+                    class OrderResponse
+                }
+            }
+        }
+    }
+}
+
+note right of domain
+  **Domain Layer**
+  - Pure business logic
+  - No external dependencies
+  - Defines interfaces
+end note
+
+note right of application
+  **Application Layer**
+  - Use case orchestration
+  - Depends only on domain
+  - Manages transactions
+end note
+
+note right of infrastructure
+  **Infrastructure Layer**
+  - Technical implementations
+  - Implements domain interfaces
+  - External integrations
+end note
+
+note right of interfaces
+  **Interfaces Layer**
+  - REST API controllers
+  - DTO conversions
+  - HTTP handling
+end note
+
+@enduml

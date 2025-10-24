@@ -32,6 +32,48 @@
 - **PlantUML**: 複雜 UML 圖表和詳細系統架構
 - **Mermaid**: 簡單流程圖和基本架構圖表
 
+#### Documentation Date Standards
+
+> **⚠️ CRITICAL**: All documentation files MUST use the current actual date when created or updated.
+
+**Mandatory Requirements**:
+- **ALWAYS** execute `date +%Y-%m-%d` to get the current date before creating/updating any documentation
+- **NEVER** use placeholder dates like "YYYY-MM-DD", "2025-01-XX", or hardcoded dates
+- **ALWAYS** update the following fields with the current date:
+  - Frontmatter `last_updated` field
+  - Document header `Last Updated` field
+  - Change History table entries
+  - ADR date fields
+  - Any timestamp fields
+
+**Example - Correct Usage**:
+```bash
+# Get current date first
+CURRENT_DATE=$(date +%Y-%m-%d)
+
+# Then use it in documentation
+---
+last_updated: "2025-10-22"  # ✅ Actual current date
+---
+
+> **Last Updated**: 2025-10-22  # ✅ Actual current date
+```
+
+**Example - Incorrect Usage**:
+```markdown
+---
+last_updated: "2025-01-22"  # ❌ Hardcoded old date
+---
+
+> **Last Updated**: YYYY-MM-DD  # ❌ Placeholder
+```
+
+**Rationale**: Accurate timestamps are essential for:
+- Tracking documentation freshness
+- Identifying outdated content
+- Audit trails and compliance
+- Team coordination and maintenance scheduling
+
 ## Error Handling Standards
 
 ### Exception Design Patterns

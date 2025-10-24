@@ -1,0 +1,137 @@
+@startuml incident-response-flow
+!define DETECT_COLOR #FFEBEE
+!define RESPOND_COLOR #FFF3E0
+!define RESOLVE_COLOR #E8F5E9
+!define REVIEW_COLOR #E3F2FD
+
+title Incident Response Flow
+
+skinparam activity {
+    FontSize 10
+    BorderColor #01579B
+}
+
+start
+
+partition "Detection" #DETECT_COLOR {
+    :Incident Detected;
+    note right
+      **Detection Sources:**
+      • Automated monitoring alerts
+      • User reports
+      • Internal discovery
+      • Security alerts
+    end note
+    
+    :Create Incident Ticket;
+    :Assess Severity (P1-P4);
+}
+
+partition "Triage" #RESPOND_COLOR {
+    if (Severity?) then (P1 - Critical)
+        :Page On-Call SRE\n(Phone + SMS);
+        :Create War Room\n(Slack channel);
+        :Notify Management;
+    elseif (P2 - High)
+        :Page On-Call SRE\n(Push notification);
+        :Create Incident Channel;
+    elseif (P3 - Medium)
+        :Notify via Slack;
+    else (P4 - Low)
+        :Create Ticket;
+    endif
+    
+    :Assign Incident Commander;
+    :Assign Technical Lead;
+    :Assign Communications Lead;
+}
+
+partition "Investigation" #RESPOND_COLOR {
+    :Review Monitoring Dashboards;
+    :Check Recent Changes;
+    :Analyze Logs and Traces;
+    :Identify Root Cause;
+    
+    note right
+      **Investigation Tools:**
+      • Grafana dashboards
+      • CloudWatch logs
+      • X-Ray traces
+      • Git commit history
+      • Deployment logs
+    end note
+}
+
+partition "Mitigation" #RESOLVE_COLOR {
+    if (Root Cause Found?) then (yes)
+        if (Fix Available?) then (yes)
+            :Implement Fix;
+        else (no - workaround)
+            :Implement Workaround;
+        endif
+    else (no - rollback)
+        :Rollback to Last Known Good;
+    endif
+    
+    :Verify Fix/Workaround;
+    :Monitor Metrics;
+    
+    if (Issue Resolved?) then (yes)
+        :Update Status Page\n(Resolved);
+    else (no)
+        :Escalate to Senior Engineer;
+        stop
+    endif
+}
+
+partition "Recovery" #RESOLVE_COLOR {
+    :Restore Normal Operations;
+    :Verify All Systems Healthy;
+    :Clear Alerts;
+    :Communicate Resolution;
+    
+    note right
+      **Communication:**
+      • Update status page
+      • Notify stakeholders
+      • Post to Slack
+      • Email summary
+    end note
+}
+
+partition "Post-Incident Review" #REVIEW_COLOR {
+    :Schedule PIR Meeting\n(within 48 hours);
+    :Document Timeline;
+    :Identify Root Cause;
+    :Create Action Items;
+    :Update Runbooks;
+    :Share Learnings;
+    
+    note right
+      **PIR Deliverables:**
+      • Incident timeline
+      • Root cause analysis
+      • Action items with owners
+      • Updated documentation
+      • Lessons learned
+    end note
+}
+
+:Close Incident Ticket;
+
+stop
+
+legend right
+  |= Severity |= Response Time |= Escalation |
+  | P1 (Critical) | < 5 minutes | 5 min → Senior, 15 min → Manager |
+  | P2 (High) | < 15 minutes | 15 min → Senior |
+  | P3 (Medium) | < 1 hour | None |
+  | P4 (Low) | Next business day | None |
+  
+  |= Role |= Responsibility |
+  | Incident Commander | Lead response, coordinate team |
+  | Technical Lead | Investigate, implement fix |
+  | Communications Lead | Update stakeholders |
+endlegend
+
+@enduml

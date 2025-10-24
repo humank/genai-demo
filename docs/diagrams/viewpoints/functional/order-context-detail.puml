@@ -1,0 +1,261 @@
+@startuml order-context-detail
+!define AGGREGATE_COLOR #FFE0B2
+!define ENTITY_COLOR #FFF3E0
+!define VALUE_OBJECT_COLOR #FFF9C4
+!define SERVICE_COLOR #E1F5FE
+
+title Order Context - Detailed View
+
+skinparam class {
+    BackgroundColor AGGREGATE_COLOR
+    BorderColor #FF9800
+    FontSize 11
+}
+
+package "Order Context" {
+    
+    ' Aggregate Root
+    class Order <<AggregateRoot>> {
+        - id: OrderId
+        - customerId: CustomerId
+        - items: List<OrderItem>
+        - status: OrderStatus
+        - shippingAddress: Address
+        - billingAddress: Address
+        - subtotal: Money
+        - discount: Money
+        - tax: Money
+        - shippingCost: Money
+        - totalAmount: Money
+        - createdAt: LocalDateTime
+        - submittedAt: LocalDateTime
+        - confirmedAt: LocalDateTime
+        --
+        + create()
+        + addItem()
+        + removeItem()
+        + updateItemQuantity()
+        + applyDiscount()
+        + calculateTotal()
+        + submit()
+        + confirm()
+        + cancel()
+        + ship()
+        + deliver()
+        + complete()
+    }
+    
+    ' Entities
+    class OrderItem <<Entity>> {
+        - id: OrderItemId
+        - orderId: OrderId
+        - productId: ProductId
+        - productName: String
+        - quantity: int
+        - unitPrice: Money
+        - subtotal: Money
+        - discount: Money
+        - total: Money
+        --
+        + updateQuantity()
+        + applyDiscount()
+        + calculateTotal()
+    }
+    
+    class OrderHistory <<Entity>> {
+        - id: OrderHistoryId
+        - orderId: OrderId
+        - status: OrderStatus
+        - changedBy: String
+        - changedAt: LocalDateTime
+        - reason: String
+        --
+        + record()
+    }
+    
+    ' Value Objects
+    class OrderId <<ValueObject>> {
+        - value: String
+        --
+        + {static} generate()
+        + {static} of(value: String)
+    }
+    
+    class OrderStatus <<ValueObject>> {
+        - status: String
+        --
+        + {static} CREATED
+        + {static} PENDING
+        + {static} CONFIRMED
+        + {static} SHIPPED
+        + {static} DELIVERED
+        + {static} COMPLETED
+        + {static} CANCELLED
+        + canTransitionTo(newStatus: OrderStatus)
+    }
+    
+    class Money <<ValueObject>> {
+        - amount: BigDecimal
+        - currency: Currency
+        --
+        + add(other: Money)
+        + subtract(other: Money)
+        + multiply(factor: BigDecimal)
+        + isZero()
+        + isPositive()
+    }
+    
+    class Address <<ValueObject>> {
+        - addressLine1: String
+        - addressLine2: String
+        - city: String
+        - state: String
+        - postalCode: String
+        - country: String
+        --
+        + format()
+    }
+    
+    ' Domain Events
+    class OrderCreatedEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + items: List<OrderItem>
+        + totalAmount: Money
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderSubmittedEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + items: List<OrderItem>
+        + totalAmount: Money
+        + shippingAddress: Address
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderConfirmedEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + confirmedAt: LocalDateTime
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderCancelledEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + reason: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderShippedEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + trackingNumber: String
+        + carrier: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderDeliveredEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + deliveredAt: LocalDateTime
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class OrderCompletedEvent <<DomainEvent>> {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + completedAt: LocalDateTime
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    ' Repository
+    interface OrderRepository <<Repository>> {
+        + findById(id: OrderId): Optional<Order>
+        + findByCustomerId(customerId: CustomerId): List<Order>
+        + findByStatus(status: OrderStatus): List<Order>
+        + save(order: Order): Order
+        + delete(id: OrderId): void
+    }
+    
+    ' Domain Service
+    class OrderPricingService <<DomainService>> {
+        + calculateSubtotal(items: List<OrderItem>): Money
+        + calculateTax(subtotal: Money, address: Address): Money
+        + calculateShipping(items: List<OrderItem>, address: Address): Money
+        + calculateTotal(order: Order): Money
+    }
+}
+
+' Relationships
+Order "1" *-- "many" OrderItem : contains
+Order "1" *-- "many" OrderHistory : tracks
+Order --> OrderId : identified by
+Order --> OrderStatus : has
+Order --> Money : calculates
+Order --> Address : ships to
+
+OrderItem --> Money : has price
+
+Order ..> OrderCreatedEvent : publishes
+Order ..> OrderSubmittedEvent : publishes
+Order ..> OrderConfirmedEvent : publishes
+Order ..> OrderCancelledEvent : publishes
+Order ..> OrderShippedEvent : publishes
+Order ..> OrderDeliveredEvent : publishes
+Order ..> OrderCompletedEvent : publishes
+
+OrderRepository ..> Order : manages
+
+OrderPricingService ..> Order : calculates for
+OrderPricingService ..> Money : produces
+
+note right of Order
+  **Order Aggregate Root**
+  
+  Responsibilities:
+  - Manage order lifecycle
+  - Track order items
+  - Calculate pricing
+  - Handle status transitions
+  - Maintain order history
+  
+  Business Rules:
+  - Order must have at least one item
+  - Status transitions must be valid
+  - Cannot cancel after shipping
+  - Total must match sum of items
+  - Addresses must be valid
+end note
+
+note bottom of OrderStatus
+  **Order Status Transitions**
+  
+  CREATED → PENDING → CONFIRMED
+  → SHIPPED → DELIVERED → COMPLETED
+  
+  CREATED/PENDING/CONFIRMED → CANCELLED
+  
+  Cannot cancel after SHIPPED
+end note
+
+note bottom of OrderPricingService
+  **Order Pricing Service**
+  
+  Handles complex pricing calculations:
+  - Subtotal from items
+  - Tax based on shipping address
+  - Shipping cost calculation
+  - Discount application
+  - Final total calculation
+end note
+
+@enduml

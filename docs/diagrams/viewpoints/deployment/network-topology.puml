@@ -1,0 +1,140 @@
+@startuml network-topology
+!define PUBLIC_COLOR #E3F2FD
+!define PRIVATE_COLOR #FFF3E0
+!define DB_COLOR #F3E5F5
+
+title Network Topology - VPC and Security Groups
+
+' Internet
+cloud "Internet\n0.0.0.0/0" as internet
+
+' VPC
+package "VPC: 10.0.0.0/16" {
+    
+    ' Internet Gateway
+    component "Internet Gateway" as igw
+    
+    ' Public Subnets
+    rectangle "Public Subnets" PUBLIC_COLOR {
+        component "ALB\n(alb-sg)" as alb
+        component "NAT Gateway 1a" as nat1
+        component "NAT Gateway 1b" as nat2
+        component "NAT Gateway 1c" as nat3
+    }
+    
+    ' Private Application Subnets
+    rectangle "Private Application Subnets\n10.0.10.0/23, 10.0.12.0/23, 10.0.14.0/23" PRIVATE_COLOR {
+        component "EKS Nodes\n(eks-node-sg)" as eks
+        note right of eks
+          **Inbound Rules:**
+          - 8080 from alb-sg
+          - All from eks-node-sg
+          - 443, 10250 from control plane
+          
+          **Outbound Rules:**
+          - All traffic (via NAT)
+        end note
+    }
+    
+    ' Private Database Subnets
+    rectangle "Private Database Subnets\n10.0.20.0/24, 10.0.21.0/24, 10.0.22.0/24" DB_COLOR {
+        database "RDS\n(rds-sg)" as rds
+        database "ElastiCache\n(redis-sg)" as redis
+        
+        note right of rds
+          **Inbound Rules:**
+          - 5432 from eks-node-sg only
+          
+          **Outbound Rules:**
+          - 5432 to rds-sg (replication)
+        end note
+        
+        note right of redis
+          **Inbound Rules:**
+          - 6379 from eks-node-sg only
+          
+          **Outbound Rules:**
+          - 6379 to redis-sg (replication)
+        end note
+    }
+    
+    ' Private Messaging Subnets
+    rectangle "Private Messaging Subnets\n10.0.30.0/24, 10.0.31.0/24, 10.0.32.0/24" DB_COLOR {
+        component "MSK Kafka\n(msk-sg)" as kafka
+        
+        note right of kafka
+          **Inbound Rules:**
+          - 9092, 9094 from eks-node-sg
+          - 2181 from msk-sg
+          
+          **Outbound Rules:**
+          - All to msk-sg (cluster)
+        end note
+    }
+    
+    ' VPC Endpoints
+    component "VPC Endpoints" as vpce {
+        [S3 Gateway Endpoint]
+        [ECR Interface Endpoint]
+        [CloudWatch Logs Endpoint]
+    }
+}
+
+' Traffic Flow - Inbound
+internet -[#blue]-> igw : HTTPS (443)
+igw -[#blue]-> alb : HTTPS (443)
+alb -[#blue]-> eks : HTTP (8080)
+eks -[#blue]-> rds : PostgreSQL (5432)
+eks -[#blue]-> redis : Redis (6379)
+eks -[#blue]-> kafka : Kafka (9092)
+
+' Traffic Flow - Outbound
+eks -[#green]-> nat1 : Internet Access
+eks -[#green]-> nat2 : Internet Access
+eks -[#green]-> nat3 : Internet Access
+nat1 -[#green]-> igw : To Internet
+nat2 -[#green]-> igw : To Internet
+nat3 -[#green]-> igw : To Internet
+
+' VPC Endpoint Access
+eks -[#purple]-> vpce : AWS Services
+vpce -[#purple]-> [S3 Gateway Endpoint] : S3 Access
+vpce -[#purple]-> [ECR Interface Endpoint] : Container Images
+vpce -[#purple]-> [CloudWatch Logs Endpoint] : Logging
+
+' Route Tables
+note top of igw
+  **Public Route Table**
+  - 10.0.0.0/16 → local
+  - 0.0.0.0/0 → igw
+end note
+
+note bottom of nat1
+  **Private Route Table (per AZ)**
+  - 10.0.0.0/16 → local
+  - 0.0.0.0/0 → nat-gateway
+  - s3-prefix → vpce-s3
+end note
+
+note bottom of rds
+  **Database Route Table**
+  - 10.0.0.0/16 → local
+  - No internet access
+end note
+
+' Security Group Summary
+legend right
+  |= Security Group |= Inbound |= Outbound |
+  | alb-sg | 443 from 0.0.0.0/0 | 8080 to eks-node-sg |
+  | eks-node-sg | 8080 from alb-sg | All traffic |
+  | rds-sg | 5432 from eks-node-sg | 5432 to rds-sg |
+  | redis-sg | 6379 from eks-node-sg | 6379 to redis-sg |
+  | msk-sg | 9092 from eks-node-sg | All to msk-sg |
+  
+  |= Arrow Color |= Traffic Type |
+  | Blue | Inbound user traffic |
+  | Green | Outbound internet traffic |
+  | Purple | VPC endpoint traffic |
+endlegend
+
+@enduml

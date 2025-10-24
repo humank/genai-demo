@@ -1,0 +1,115 @@
+@startuml layer-dependencies
+' Metadata
+' Title: Layer Dependencies Diagram
+' Viewpoint: Development
+' Last Updated: 2025-10-23
+' Related Docs: viewpoints/development/dependency-rules.md
+
+!define DOMAIN_COLOR #FFE4B5
+!define APPLICATION_COLOR #E0F2F7
+!define INFRASTRUCTURE_COLOR #F0F4C3
+!define INTERFACES_COLOR #FFCCBC
+
+title Layer Dependencies - Hexagonal Architecture
+
+rectangle "Interfaces Layer" as interfaces INTERFACES_COLOR {
+    [REST Controllers]
+    [Event Handlers]
+    [Web UI]
+}
+
+rectangle "Application Layer" as application APPLICATION_COLOR {
+    [Application Services]
+    [Use Case Orchestration]
+    [Transaction Management]
+}
+
+rectangle "Domain Layer" as domain DOMAIN_COLOR {
+    [Aggregates]
+    [Domain Events]
+    [Value Objects]
+    [Repository Interfaces]
+    [Domain Services]
+}
+
+rectangle "Infrastructure Layer" as infrastructure INFRASTRUCTURE_COLOR {
+    [Repository Implementations]
+    [Event Publishers]
+    [External Service Adapters]
+    [Database Entities]
+}
+
+' Dependencies (arrows point in direction of dependency)
+interfaces -down-> application : depends on
+interfaces -down-> domain : depends on
+
+application -down-> domain : depends on
+
+infrastructure -up-> domain : implements interfaces
+
+note right of domain
+  **Domain Layer**
+  ✅ NO dependencies on other layers
+  ✅ Pure business logic
+  ✅ Framework independent
+  
+  **Allowed:**
+  - Java Standard Library
+  - Other domain packages
+  - Shared kernel
+  
+  **Prohibited:**
+  ❌ Application layer
+  ❌ Infrastructure layer
+  ❌ Interfaces layer
+  ❌ JPA annotations
+  ❌ Spring Framework (except @Component)
+end note
+
+note left of application
+  **Application Layer**
+  ✅ Depends ONLY on domain
+  ✅ Orchestrates use cases
+  ✅ Manages transactions
+  
+  **Allowed:**
+  - Domain layer
+  - Spring @Transactional
+  
+  **Prohibited:**
+  ❌ Infrastructure implementations
+  ❌ Interfaces layer
+  ❌ JPA/Hibernate
+end note
+
+note left of infrastructure
+  **Infrastructure Layer**
+  ✅ Implements domain interfaces
+  ✅ Technical concerns
+  
+  **Allowed:**
+  - Domain interfaces
+  - Spring Framework
+  - JPA/Hibernate
+  - External libraries
+  
+  **Prohibited:**
+  ❌ Application layer
+  ❌ Interfaces layer
+end note
+
+note right of interfaces
+  **Interfaces Layer**
+  ✅ Exposes system to outside
+  ✅ Converts DTOs
+  
+  **Allowed:**
+  - Application layer
+  - Domain layer
+  - Spring Web
+  
+  **Prohibited:**
+  ❌ Direct infrastructure dependencies
+end note
+
+@enduml

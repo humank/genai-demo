@@ -1,0 +1,93 @@
+@startuml shopping-cart-context-er
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+
+title Shopping Cart Context - Entity Relationship Diagram
+
+package "ShoppingCart Aggregate" <<Rectangle>> {
+    
+    entity "ShoppingCart" as cart <<Aggregate Root>> AGGREGATE_ROOT_COLOR {
+        * cartId : CartId <<PK>>
+        --
+        * customerId : CustomerId
+        * status : CartStatus
+        * createdAt : LocalDateTime
+        * updatedAt : LocalDateTime
+        * expiresAt : LocalDateTime
+        --
+        + create()
+        + addItem()
+        + removeItem()
+        + updateItemQuantity()
+        + clear()
+        + abandon()
+        + convertToOrder()
+    }
+    
+    entity "CartItem" as cartItem <<Entity>> ENTITY_COLOR {
+        * cartItemId : CartItemId <<PK>>
+        * cartId : CartId <<FK>>
+        --
+        * productId : ProductId
+        * productName : String
+        * quantity : Integer
+        * unitPrice : Money
+        * subtotal : Money
+        * addedAt : LocalDateTime
+        --
+        + updateQuantity()
+        + calculateSubtotal()
+    }
+    
+    object "Money" as money <<Value Object>> VALUE_OBJECT_COLOR {
+        * amount : BigDecimal
+        * currency : Currency
+    }
+    
+    object "CartId" as cartId <<Value Object>> VALUE_OBJECT_COLOR {
+        * value : String
+    }
+    
+    enum CartStatus {
+        ACTIVE
+        ABANDONED
+        CONVERTED
+    }
+}
+
+' Relationships
+cart ||--o{ cartItem : "contains"
+cart *-- cartId
+cart -- CartStatus
+cartItem *-- money : "unitPrice, subtotal"
+
+' Business Rules
+note right of cart
+    **Business Rules:**
+    - Cart expires after 7 days of inactivity
+    - Cart item quantity must be > 0
+    - Cart total = sum of all item subtotals
+    - Can only convert to order if has items
+end note
+
+' Domain Events
+note left of cart
+    **Domain Events:**
+    - CartCreatedEvent
+    - ItemAddedToCartEvent
+    - ItemRemovedFromCartEvent
+    - ItemQuantityUpdatedEvent
+    - CartAbandonedEvent
+    - CartConvertedToOrderEvent
+end note
+
+' External References
+note bottom of cart
+    **External References:**
+    - customerId → Customer Context
+    - productId → Product Context
+    - Converts to → Order Context
+end note
+
+@enduml

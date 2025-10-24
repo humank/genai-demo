@@ -1,0 +1,215 @@
+@startuml event-flow-overview
+!define CONTEXT_COLOR #E8F5E9
+!define EVENT_COLOR #FFF9C4
+
+title Domain Event Flow - Order Submission Workflow
+
+skinparam component {
+    BackgroundColor CONTEXT_COLOR
+    BorderColor #4CAF50
+    FontSize 11
+}
+
+skinparam note {
+    BackgroundColor EVENT_COLOR
+    BorderColor #FBC02D
+}
+
+' Bounded Contexts
+component [Customer Context] as Customer
+component [Order Context] as Order
+component [Shopping Cart Context] as Cart
+component [Inventory Context] as Inventory
+component [Payment Context] as Payment
+component [Pricing Context] as Pricing
+component [Delivery Context] as Delivery
+component [Notification Context] as Notification
+component [Observability Context] as Observability
+
+' Event Flow for Order Submission
+Customer -> Cart : 1. Add items to cart
+note right
+  **User Action**
+  Customer adds products
+  to shopping cart
+end note
+
+Cart -> Order : 2. Checkout cart\n(Create Order)
+note right
+  **OrderCreatedEvent**
+  - orderId
+  - customerId
+  - items
+  - totalAmount
+end note
+
+Order -> Pricing : 3. Calculate pricing
+note right
+  **Calculate**
+  - Subtotal
+  - Discounts
+  - Tax
+  - Shipping
+end note
+
+Pricing --> Order : 4. Return calculated prices
+
+Order -> Order : 5. Submit order
+note right
+  **OrderSubmittedEvent**
+  - orderId
+  - customerId
+  - items
+  - totalAmount
+  - shippingAddress
+end note
+
+Order --> Inventory : 6. Reserve inventory
+note right
+  **Event Handler**
+  Inventory Context listens to
+  OrderSubmittedEvent and
+  reserves stock
+end note
+
+Inventory -> Inventory : 7. Check stock availability
+note right
+  **InventoryReservedEvent**
+  - orderId
+  - productId
+  - quantity
+  - reservationId
+end note
+
+Order --> Payment : 8. Process payment
+note right
+  **Event Handler**
+  Payment Context listens to
+  OrderSubmittedEvent and
+  initiates payment
+end note
+
+Payment -> Payment : 9. Charge customer
+note right
+  **PaymentCompletedEvent**
+  - orderId
+  - paymentId
+  - amount
+  - paymentMethod
+end note
+
+Payment --> Order : 10. Payment confirmed
+note right
+  **Event Handler**
+  Order Context listens to
+  PaymentCompletedEvent
+end note
+
+Inventory --> Order : 11. Inventory confirmed
+note right
+  **Event Handler**
+  Order Context listens to
+  InventoryReservedEvent
+end note
+
+Order -> Order : 12. Confirm order
+note right
+  **OrderConfirmedEvent**
+  - orderId
+  - customerId
+  - confirmedAt
+end note
+
+Order --> Delivery : 13. Schedule delivery
+note right
+  **Event Handler**
+  Delivery Context listens to
+  OrderConfirmedEvent
+end note
+
+Delivery -> Delivery : 14. Create delivery
+note right
+  **DeliveryScheduledEvent**
+  - orderId
+  - deliveryId
+  - estimatedDeliveryDate
+end note
+
+Order --> Notification : 15. Send confirmation
+note right
+  **Event Handler**
+  Notification Context listens to
+  OrderConfirmedEvent
+end note
+
+Notification -> Customer : 16. Email confirmation
+note right
+  **Notification Sent**
+  - Order confirmation email
+  - Order details
+  - Tracking information
+end note
+
+Order --> Observability : 17. Log metrics
+Payment --> Observability : 18. Log metrics
+Delivery --> Observability : 19. Log metrics
+note right
+  **Observability**
+  All contexts publish
+  metrics and logs for
+  monitoring
+end note
+
+' Alternative Flow: Payment Failed
+Payment -[#red]-> Order : Payment failed
+note right #FFCDD2
+  **PaymentFailedEvent**
+  - orderId
+  - paymentId
+  - reason
+  
+  **Compensation**
+  Order Context releases
+  inventory reservation
+end note
+
+Order -[#red]-> Inventory : Release reservation
+note right #FFCDD2
+  **InventoryReleasedEvent**
+  - orderId
+  - reservationId
+  
+  Stock returned to
+  available inventory
+end note
+
+Order -[#red]-> Notification : Notify failure
+note right #FFCDD2
+  **Notification Sent**
+  Payment failure email
+  with retry instructions
+end note
+
+legend right
+  **Event Flow Legend**
+  
+  Black arrows: Normal flow
+  Red arrows: Error/compensation flow
+  
+  **Event Types**
+  - OrderCreatedEvent
+  - OrderSubmittedEvent
+  - OrderConfirmedEvent
+  - InventoryReservedEvent
+  - PaymentCompletedEvent
+  - PaymentFailedEvent
+  - DeliveryScheduledEvent
+  
+  **Key Principles**
+  - Asynchronous communication
+  - Eventually consistent
+  - Idempotent event handlers
+  - Compensation for failures
+endlegend
+
+@enduml

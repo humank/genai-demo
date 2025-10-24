@@ -1,0 +1,186 @@
+@startuml customer-aggregate
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define DOMAIN_EVENT_COLOR #FFCCBC
+
+title Customer Aggregate Structure
+
+package "Customer Aggregate" <<Rectangle>> {
+    
+    class Customer <<AggregateRoot>> AGGREGATE_ROOT_COLOR {
+        - id: CustomerId
+        - name: CustomerName
+        - email: Email
+        - phone: Phone
+        - addresses: List<CustomerAddress>
+        - membershipLevel: MembershipLevel
+        - registrationDate: LocalDate
+        - status: CustomerStatus
+        --
+        + register(): void
+        + updateProfile(name, email, phone): void
+        + addAddress(address: Address, type: AddressType): void
+        + setDefaultAddress(addressId: AddressId): void
+        + upgradeMembership(level: MembershipLevel): void
+        + suspend(): void
+        --
+        - validateEmailUniqueness(email: Email): void
+        - collectEvent(event: DomainEvent): void
+    }
+    
+    class CustomerAddress <<Entity>> ENTITY_COLOR {
+        - id: AddressId
+        - address: Address
+        - addressType: AddressType
+        - isDefault: Boolean
+        --
+        + setAsDefault(): void
+        + update(address: Address): void
+    }
+    
+    class CustomerId <<ValueObject>> VALUE_OBJECT_COLOR {
+        - value: String
+        --
+        + {static} generate(): CustomerId
+        + {static} of(value: String): CustomerId
+        + getValue(): String
+    }
+    
+    class CustomerName <<ValueObject>> VALUE_OBJECT_COLOR {
+        - firstName: String
+        - lastName: String
+        --
+        + getFullName(): String
+        --
+        - validateName(name: String): void
+    }
+    
+    class Email <<ValueObject>> VALUE_OBJECT_COLOR {
+        - value: String
+        --
+        + {static} of(value: String): Email
+        + getValue(): String
+        --
+        - validateFormat(value: String): void
+    }
+    
+    class Phone <<ValueObject>> VALUE_OBJECT_COLOR {
+        - value: String
+        --
+        + {static} of(value: String): Phone
+        + getValue(): String
+        --
+        - validateFormat(value: String): void
+    }
+    
+    class Address <<ValueObject>> VALUE_OBJECT_COLOR {
+        - street: String
+        - city: String
+        - state: String
+        - postalCode: String
+        - country: String
+        --
+        + getFullAddress(): String
+    }
+    
+    enum MembershipLevel {
+        STANDARD
+        PREMIUM
+        VIP
+    }
+    
+    enum CustomerStatus {
+        ACTIVE
+        SUSPENDED
+        DELETED
+    }
+    
+    enum AddressType {
+        BILLING
+        SHIPPING
+    }
+    
+    class CustomerRegisteredEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + customerId: CustomerId
+        + customerName: CustomerName
+        + email: Email
+        + membershipLevel: MembershipLevel
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): CustomerRegisteredEvent
+        + getEventType(): String
+        + getAggregateId(): String
+    }
+    
+    class CustomerProfileUpdatedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + customerId: CustomerId
+        + customerName: CustomerName
+        + email: Email
+        + phone: Phone
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): CustomerProfileUpdatedEvent
+    }
+    
+    class CustomerMembershipUpgradedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + customerId: CustomerId
+        + oldLevel: MembershipLevel
+        + newLevel: MembershipLevel
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): CustomerMembershipUpgradedEvent
+    }
+}
+
+' Relationships
+Customer "1" *-- "many" CustomerAddress : has
+Customer *-- CustomerId : has
+Customer *-- CustomerName : has
+Customer *-- Email : has
+Customer *-- Phone : has
+Customer -- MembershipLevel : has
+Customer -- CustomerStatus : has
+CustomerAddress *-- Address : has
+CustomerAddress -- AddressType : has
+Customer ..> CustomerRegisteredEvent : publishes
+Customer ..> CustomerProfileUpdatedEvent : publishes
+Customer ..> CustomerMembershipUpgradedEvent : publishes
+
+' Business Rules
+note right of Customer
+    **Invariants:**
+    - Email must be unique
+    - At least one address required
+    - Only one default address per type
+    - Cannot delete customer with active orders
+    
+    **Validation:**
+    - Email format validation
+    - Phone format validation
+    - Name length validation
+    - Address completeness validation
+end note
+
+' Value Objects
+note left of Email
+    **Value Object Pattern:**
+    - Immutable (Record)
+    - Validation in constructor
+    - No setters
+    - Equality by value
+    
+    **Example:**
+    public record Email(String value) {
+        public Email {
+            if (!isValid(value)) {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+end note
+
+@enduml

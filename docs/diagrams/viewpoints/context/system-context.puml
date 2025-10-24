@@ -1,0 +1,108 @@
+@startuml system-context
+!define RECTANGLE_COLOR #E1F5FE
+!define EXTERNAL_COLOR #FFF3E0
+!define USER_COLOR #F3E5F5
+!define SYSTEM_COLOR #C8E6C9
+
+title System Context Diagram - E-Commerce Platform
+
+' Define styles
+skinparam rectangle {
+    BackgroundColor RECTANGLE_COLOR
+    BorderColor #01579B
+    FontSize 12
+}
+
+skinparam actor {
+    BackgroundColor USER_COLOR
+    BorderColor #4A148C
+}
+
+' Users
+actor "Customer" as customer <<User>> #F3E5F5
+actor "Seller" as seller <<User>> #F3E5F5
+actor "Administrator" as admin <<User>> #F3E5F5
+actor "Support Agent" as support <<User>> #F3E5F5
+
+' Main System
+rectangle "E-Commerce Platform" as platform #C8E6C9 {
+    rectangle "Consumer Web App\n(Angular)" as consumer_app
+    rectangle "CMC Management Console\n(Next.js)" as cmc_app
+    rectangle "REST API Layer" as api
+    rectangle "Core Business Logic\n(13 Bounded Contexts)" as core
+    rectangle "Event Bus\n(Kafka)" as events
+    rectangle "Data Storage\n(PostgreSQL + Redis)" as storage
+}
+
+' External Systems
+rectangle "Payment Gateway\n(Stripe)" as payment_gateway <<External>> #FFF3E0
+rectangle "Email Service\n(SendGrid)" as email_service <<External>> #FFF3E0
+rectangle "SMS Service\n(Twilio)" as sms_service <<External>> #FFF3E0
+rectangle "Shipping Providers\n(FedEx, UPS, DHL)" as shipping <<External>> #FFF3E0
+rectangle "Cloud Infrastructure\n(AWS)" as aws <<External>> #FFF3E0
+
+' User interactions
+customer --> consumer_app : Browse/Order
+seller --> cmc_app : Manage Products
+admin --> cmc_app : Configure System
+support --> cmc_app : Assist Customers
+
+' Internal flows
+consumer_app --> api : API Calls
+cmc_app --> api : API Calls
+api --> core : Business Logic
+core --> storage : Store/Retrieve Data
+core --> events : Publish Events
+events --> core : Consume Events
+
+' External integrations
+core --> payment_gateway : Process Payments
+payment_gateway ..> api : Payment Webhooks
+
+core --> email_service : Send Emails
+email_service ..> api : Delivery Webhooks
+
+core --> sms_service : Send SMS
+sms_service ..> api : Status Webhooks
+
+core --> shipping : Calculate Rates\nCreate Shipments
+shipping ..> api : Tracking Webhooks
+
+platform --> aws : Hosted On
+
+' Notes
+note right of platform
+  **Core Capabilities:**
+  - Customer Management
+  - Product Catalog
+  - Order Processing
+  - Payment Processing
+  - Inventory Management
+  - Shipping & Logistics
+  - Promotions & Pricing
+  - Notifications
+end note
+
+note right of payment_gateway
+  **Integration Pattern:**
+  - Synchronous API
+  - Webhook callbacks
+  - PCI-DSS compliant
+end note
+
+note right of shipping
+  **Multiple Providers:**
+  - FedEx (primary)
+  - UPS (backup)
+  - DHL (international)
+end note
+
+legend right
+  |= Symbol |= Meaning |
+  | <<User>> | Human user |
+  | <<External>> | External system |
+  | Solid arrow | Synchronous call |
+  | Dotted arrow | Asynchronous callback |
+endlegend
+
+@enduml

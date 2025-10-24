@@ -14,9 +14,6 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PLANTUML_JAR="${PLANTUML_JAR:-plantuml.jar}"
-PLANTUML_VERSION="1.2024.3"
-PLANTUML_URL="https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar"
 SOURCE_DIR="docs/diagrams/viewpoints"
 OUTPUT_DIR="docs/diagrams/generated"
 FORMAT="png"
@@ -83,24 +80,15 @@ print_error() {
 
 # Function to check if PlantUML is available
 check_plantuml() {
-    if [ ! -f "$PLANTUML_JAR" ]; then
-        print_warning "PlantUML JAR not found. Downloading..."
-        curl -L -o "$PLANTUML_JAR" "$PLANTUML_URL"
-        if [ $? -eq 0 ]; then
-            print_success "PlantUML downloaded successfully"
-        else
-            print_error "Failed to download PlantUML"
-            exit 1
-        fi
-    fi
-    
-    # Check Java installation
-    if ! command -v java &> /dev/null; then
-        print_error "Java is not installed. Please install Java 11 or higher."
+    # Check if plantuml command is available (Homebrew installation)
+    if ! command -v plantuml &> /dev/null; then
+        print_error "PlantUML is not installed. Please install it using Homebrew:"
+        print_error "  brew install plantuml"
         exit 1
     fi
     
-    print_info "Using PlantUML: $PLANTUML_JAR"
+    print_info "Using PlantUML: $(which plantuml)"
+    print_info "PlantUML version: $(plantuml -version | head -n 1)"
 }
 
 # Function to validate PlantUML syntax
@@ -108,12 +96,12 @@ validate_diagram() {
     local file="$1"
     print_info "Validating: $file"
     
-    if java -jar "$PLANTUML_JAR" -syntax "$file" > /dev/null 2>&1; then
+    if plantuml -checkonly "$file" > /dev/null 2>&1; then
         print_success "✓ Valid: $file"
         return 0
     else
         print_error "✗ Invalid: $file"
-        java -jar "$PLANTUML_JAR" -syntax "$file"
+        plantuml -checkonly "$file"
         return 1
     fi
 }
@@ -148,13 +136,14 @@ generate_diagram() {
             ;;
     esac
     
-    if java -jar "$PLANTUML_JAR" $format_flag -o "$(pwd)/$output_path" "$source_file" > /dev/null 2>&1; then
+    # Use plantuml command (Homebrew)
+    if plantuml $format_flag -o "$(pwd)/$output_path" "$source_file" > /dev/null 2>&1; then
         local filename=$(basename "$source_file" .puml)
         print_success "✓ Generated: $output_path/$filename.$format"
         return 0
     else
         print_error "✗ Failed to generate: $source_file"
-        java -jar "$PLANTUML_JAR" $format_flag -o "$(pwd)/$output_path" "$source_file"
+        plantuml $format_flag -o "$(pwd)/$output_path" "$source_file"
         return 1
     fi
 }

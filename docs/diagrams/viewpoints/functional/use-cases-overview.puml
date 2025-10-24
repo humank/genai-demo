@@ -1,0 +1,220 @@
+@startuml use-cases-overview
+!define ACTOR_COLOR #E3F2FD
+!define USECASE_COLOR #E8F5E9
+
+title Enterprise E-Commerce Platform - Use Cases Overview
+
+skinparam actor {
+    BackgroundColor ACTOR_COLOR
+    BorderColor #2196F3
+}
+
+skinparam usecase {
+    BackgroundColor USECASE_COLOR
+    BorderColor #4CAF50
+}
+
+left to right direction
+
+' Actors
+actor "Customer" as Customer
+actor "Guest" as Guest
+actor "Seller" as Seller
+actor "Admin" as Admin
+actor "Logistics Staff" as Logistics
+actor "Payment Gateway" as PaymentGW #LightGray
+actor "Email Service" as EmailSvc #LightGray
+
+' Customer Use Cases
+package "Customer Management" {
+    usecase "Register Account" as UC1
+    usecase "Login" as UC2
+    usecase "Update Profile" as UC3
+    usecase "Manage Addresses" as UC4
+    usecase "View Reward Points" as UC5
+    usecase "Update Preferences" as UC6
+}
+
+package "Product Browsing" {
+    usecase "Browse Products" as UC7
+    usecase "Search Products" as UC8
+    usecase "View Product Details" as UC9
+    usecase "Filter by Category" as UC10
+    usecase "View Reviews" as UC11
+}
+
+package "Shopping Cart" {
+    usecase "Add to Cart" as UC12
+    usecase "Update Cart" as UC13
+    usecase "Remove from Cart" as UC14
+    usecase "View Cart" as UC15
+    usecase "Checkout" as UC16
+}
+
+package "Order Management" {
+    usecase "Place Order" as UC17
+    usecase "View Order History" as UC18
+    usecase "Track Order" as UC19
+    usecase "Cancel Order" as UC20
+    usecase "Download Invoice" as UC21
+}
+
+package "Payment" {
+    usecase "Process Payment" as UC22
+    usecase "Request Refund" as UC23
+    usecase "View Payment History" as UC24
+}
+
+package "Reviews" {
+    usecase "Submit Review" as UC25
+    usecase "Update Review" as UC26
+    usecase "Delete Review" as UC27
+}
+
+' Seller Use Cases
+package "Seller Management" {
+    usecase "Register as Seller" as UC28
+    usecase "Manage Products" as UC29
+    usecase "Update Inventory" as UC30
+    usecase "View Sales Reports" as UC31
+    usecase "Manage Promotions" as UC32
+}
+
+' Admin Use Cases
+package "Administration" {
+    usecase "Approve Sellers" as UC33
+    usecase "Moderate Reviews" as UC34
+    usecase "Manage Categories" as UC35
+    usecase "View Analytics" as UC36
+    usecase "Manage Promotions" as UC37
+}
+
+' Logistics Use Cases
+package "Logistics" {
+    usecase "Update Delivery Status" as UC38
+    usecase "Assign Delivery" as UC39
+    usecase "Track Shipments" as UC40
+}
+
+' Guest Use Cases
+Guest --> UC7
+Guest --> UC8
+Guest --> UC9
+Guest --> UC10
+Guest --> UC11
+Guest --> UC1
+
+' Customer Use Cases
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+Customer --> UC9
+Customer --> UC10
+Customer --> UC11
+Customer --> UC12
+Customer --> UC13
+Customer --> UC14
+Customer --> UC15
+Customer --> UC16
+Customer --> UC17
+Customer --> UC18
+Customer --> UC19
+Customer --> UC20
+Customer --> UC21
+Customer --> UC22
+Customer --> UC23
+Customer --> UC24
+Customer --> UC25
+Customer --> UC26
+Customer --> UC27
+
+' Seller Use Cases
+Seller --> UC28
+Seller --> UC29
+Seller --> UC30
+Seller --> UC31
+Seller --> UC32
+
+' Admin Use Cases
+Admin --> UC33
+Admin --> UC34
+Admin --> UC35
+Admin --> UC36
+Admin --> UC37
+
+' Logistics Use Cases
+Logistics --> UC38
+Logistics --> UC39
+Logistics --> UC40
+
+' System Interactions
+UC22 ..> PaymentGW : <<uses>>
+UC1 ..> EmailSvc : <<uses>>
+UC17 ..> EmailSvc : <<uses>>
+UC23 ..> EmailSvc : <<uses>>
+UC38 ..> EmailSvc : <<uses>>
+
+' Use Case Relationships
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC22 : <<include>>
+UC17 ..> UC30 : <<include>>
+UC20 ..> UC23 : <<include>>
+
+note right of UC17
+  **Place Order Flow**
+  
+  1. Customer checks out cart
+  2. System creates order
+  3. System reserves inventory
+  4. System processes payment
+  5. System confirms order
+  6. System schedules delivery
+  7. System sends confirmation
+end note
+
+note right of UC22
+  **Payment Processing**
+  
+  Integrates with external
+  payment gateway for:
+  - Credit card processing
+  - Digital wallet payments
+  - Bank transfers
+  
+  Handles:
+  - Payment authorization
+  - Payment capture
+  - Refund processing
+end note
+
+note bottom of UC29
+  **Seller Product Management**
+  
+  Sellers can:
+  - Create new products
+  - Update product details
+  - Upload product images
+  - Set pricing
+  - Manage inventory
+  - Activate/deactivate products
+end note
+
+note bottom of UC38
+  **Delivery Status Updates**
+  
+  Logistics staff updates:
+  - Order dispatched
+  - In transit
+  - Out for delivery
+  - Delivered
+  - Delivery failed
+  
+  Customers receive notifications
+  for each status change
+end note
+
+@enduml

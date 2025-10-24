@@ -1,0 +1,231 @@
+@startuml distributed-locking
+!define SUCCESS_COLOR #C8E6C9
+!define FAILURE_COLOR #FFCDD2
+!define WAITING_COLOR #FFF9C4
+
+title Distributed Locking Sequence - Order Processing
+
+skinparam sequence {
+    ArrowColor #01579B
+    ActorBorderColor #01579B
+    LifeLineBorderColor #01579B
+    ParticipantBorderColor #01579B
+}
+
+actor "User" as user
+participant "Order Service\n(Instance 1)" as service1
+participant "Order Service\n(Instance 2)" as service2
+participant "Redis\n(Distributed Lock)" as redis
+database "PostgreSQL" as db
+participant "Kafka" as kafka
+
+== Scenario 1: Successful Lock Acquisition ==
+
+user -> service1: POST /orders/{orderId}/submit
+activate service1 SUCCESS_COLOR
+
+service1 -> redis: SETNX lock:order:{orderId}\nvalue=instance1\nEX=30
+activate redis
+redis --> service1: OK (Lock acquired)
+deactivate redis
+
+note right of service1
+  **Lock Acquired**
+  Key: lock:order:{orderId}
+  Value: instance1
+  TTL: 30 seconds
+end note
+
+service1 -> db: BEGIN TRANSACTION
+activate db
+
+service1 -> db: SELECT * FROM orders\nWHERE id = {orderId}\nFOR UPDATE
+db --> service1: Order data
+
+service1 -> service1: Validate order\nCheck inventory\nCalculate total
+
+service1 -> db: UPDATE orders\nSET status = 'SUBMITTED'
+db --> service1: Success
+
+service1 -> db: COMMIT
+deactivate db
+
+service1 -> kafka: Publish OrderSubmittedEvent
+activate kafka
+kafka --> service1: Ack
+deactivate kafka
+
+service1 -> redis: DEL lock:order:{orderId}
+activate redis
+redis --> service1: OK (Lock released)
+deactivate redis
+
+service1 --> user: 200 OK\n{order details}
+deactivate service1
+
+== Scenario 2: Lock Contention ==
+
+user -> service1: POST /orders/{orderId}/submit
+activate service1 SUCCESS_COLOR
+
+user -> service2: POST /orders/{orderId}/submit\n(concurrent request)
+activate service2 WAITING_COLOR
+
+service1 -> redis: SETNX lock:order:{orderId}\nvalue=instance1\nEX=30
+activate redis
+redis --> service1: OK (Lock acquired)
+deactivate redis
+
+service2 -> redis: SETNX lock:order:{orderId}\nvalue=instance2\nEX=30
+activate redis
+redis --> service2: NULL (Lock already held)
+deactivate redis
+
+note right of service2
+  **Lock Acquisition Failed**
+  Another instance holds the lock
+  Retry with exponential backoff
+end note
+
+service2 -> service2: Wait 100ms
+
+service2 -> redis: SETNX lock:order:{orderId}\nvalue=instance2\nEX=30
+activate redis
+redis --> service2: NULL (Still locked)
+deactivate redis
+
+service2 -> service2: Wait 200ms
+
+service1 -> db: Process order...
+activate db
+db --> service1: Success
+deactivate db
+
+service1 -> redis: DEL lock:order:{orderId}
+activate redis
+redis --> service1: OK (Lock released)
+deactivate redis
+
+service1 --> user: 200 OK
+deactivate service1
+
+service2 -> redis: SETNX lock:order:{orderId}\nvalue=instance2\nEX=30
+activate redis
+redis --> service2: OK (Lock acquired)
+deactivate redis
+
+service2 -> db: Process order...
+activate db
+db --> service2: Success
+deactivate db
+
+service2 -> redis: DEL lock:order:{orderId}
+activate redis
+redis --> service2: OK
+deactivate redis
+
+service2 --> user: 200 OK
+deactivate service2
+
+== Scenario 3: Lock Timeout (Deadlock Prevention) ==
+
+user -> service1: POST /orders/{orderId}/submit
+activate service1 SUCCESS_COLOR
+
+service1 -> redis: SETNX lock:order:{orderId}\nvalue=instance1\nEX=30
+activate redis
+redis --> service1: OK (Lock acquired)
+deactivate redis
+
+service1 -> db: BEGIN TRANSACTION
+activate db
+
+note right of service1
+  **Service crashes or hangs**
+  Lock is not released manually
+end note
+
+service1 -[#red]x service1: Service crashes
+
+... 30 seconds pass ...
+
+note right of redis
+  **TTL Expires**
+  Lock automatically released
+  Prevents deadlock
+end note
+
+redis -> redis: TTL expires\nlock:order:{orderId} deleted
+
+user -> service2: POST /orders/{orderId}/submit\n(retry)
+activate service2 SUCCESS_COLOR
+
+service2 -> redis: SETNX lock:order:{orderId}\nvalue=instance2\nEX=30
+activate redis
+redis --> service2: OK (Lock acquired)
+deactivate redis
+
+service2 -> db: Process order...
+db --> service2: Success
+deactivate db
+
+service2 -> redis: DEL lock:order:{orderId}
+activate redis
+redis --> service2: OK
+deactivate redis
+
+service2 --> user: 200 OK
+deactivate service2
+
+== Scenario 4: Optimistic Locking (Database Level) ==
+
+user -> service1: POST /orders/{orderId}/update
+activate service1 SUCCESS_COLOR
+
+service1 -> db: SELECT * FROM orders\nWHERE id = {orderId}
+activate db
+db --> service1: Order (version=1)
+deactivate db
+
+service1 -> service1: Modify order data
+
+service1 -> db: UPDATE orders\nSET ..., version=2\nWHERE id={orderId}\nAND version=1
+activate db
+db --> service1: 1 row updated
+deactivate db
+
+service1 --> user: 200 OK
+deactivate service1
+
+user -> service2: POST /orders/{orderId}/update\n(concurrent update)
+activate service2 FAILURE_COLOR
+
+service2 -> db: SELECT * FROM orders\nWHERE id = {orderId}
+activate db
+db --> service2: Order (version=2)
+deactivate db
+
+service2 -> service2: Modify order data
+
+service2 -> db: UPDATE orders\nSET ..., version=3\nWHERE id={orderId}\nAND version=1
+activate db
+db --> service2: 0 rows updated\n(version mismatch)
+deactivate db
+
+service2 --> user: 409 Conflict\nOptimistic lock failure
+deactivate service2
+
+note right of service2
+  **Optimistic Lock Failure**
+  Version mismatch detected
+  Client should retry with latest version
+end note
+
+legend right
+  |= Lock Type |= Use Case |= Pros |= Cons |
+  | Distributed Lock (Redis) | Cross-instance coordination | Prevents concurrent execution | Network overhead, TTL management |
+  | Pessimistic Lock (DB) | Critical data updates | Strong consistency | Reduced concurrency |
+  | Optimistic Lock (Version) | High-concurrency updates | Better performance | Retry logic needed |
+endlegend
+
+@enduml

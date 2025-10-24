@@ -1,0 +1,98 @@
+@startuml customer-context-er
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+
+title Customer Context - Entity Relationship Diagram
+
+package "Customer Aggregate" <<Rectangle>> {
+    
+    entity "Customer" as customer <<Aggregate Root>> AGGREGATE_ROOT_COLOR {
+        * customerId : CustomerId <<PK>>
+        --
+        * customerName : CustomerName
+        * email : Email
+        * phone : Phone
+        * membershipLevel : MembershipLevel
+        * registrationDate : LocalDate
+        * status : CustomerStatus
+        --
+        + register()
+        + updateProfile()
+        + addAddress()
+        + upgradeMembership()
+        + suspend()
+    }
+    
+    entity "CustomerAddress" as address <<Entity>> ENTITY_COLOR {
+        * addressId : AddressId <<PK>>
+        * customerId : CustomerId <<FK>>
+        --
+        * address : Address
+        * addressType : AddressType
+        * isDefault : Boolean
+        --
+        + setAsDefault()
+        + update()
+    }
+    
+    object "CustomerName" as customerName <<Value Object>> VALUE_OBJECT_COLOR {
+        * firstName : String
+        * lastName : String
+    }
+    
+    object "Email" as email <<Value Object>> VALUE_OBJECT_COLOR {
+        * value : String
+    }
+    
+    object "Phone" as phone <<Value Object>> VALUE_OBJECT_COLOR {
+        * value : String
+    }
+    
+    object "Address" as addressVO <<Value Object>> VALUE_OBJECT_COLOR {
+        * street : String
+        * city : String
+        * state : String
+        * postalCode : String
+        * country : String
+    }
+    
+    enum MembershipLevel {
+        STANDARD
+        PREMIUM
+        VIP
+    }
+    
+    enum CustomerStatus {
+        ACTIVE
+        SUSPENDED
+        DELETED
+    }
+    
+    enum AddressType {
+        BILLING
+        SHIPPING
+    }
+}
+
+' Relationships
+customer ||--o{ address : "has"
+customer *-- customerName
+customer *-- email
+customer *-- phone
+customer -- MembershipLevel
+customer -- CustomerStatus
+address *-- addressVO
+address -- AddressType
+
+' Domain Events
+note right of customer
+    **Domain Events:**
+    - CustomerRegisteredEvent
+    - CustomerProfileUpdatedEvent
+    - CustomerAddressAddedEvent
+    - CustomerMembershipUpgradedEvent
+    - CustomerSuspendedEvent
+end note
+
+@enduml

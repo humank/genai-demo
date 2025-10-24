@@ -1,0 +1,190 @@
+name: Generate Diagrams
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/diagrams/viewpoints/**/*.puml'
+      - 'docs/diagrams/perspectives/**/*.puml'
+      - 'scripts/generate-diagrams.sh'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/diagrams/viewpoints/**/*.puml'
+      - 'docs/diagrams/perspectives/**/*.puml'
+      - 'scripts/generate-diagrams.sh'
+  workflow_dispatch:
+    inputs:
+      format:
+        description: 'Output format (png, svg, both)'
+        required: false
+        default: 'png'
+        type: choice
+        options:
+          - png
+          - svg
+          - both
+
+jobs:
+  generate-diagrams:
+    name: Generate PlantUML Diagrams
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for proper diff
+    
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+    
+    - name: Cache PlantUML
+      uses: actions/cache@v3
+      with:
+        path: plantuml.jar
+        key: plantuml-${{ hashFiles('scripts/generate-diagrams.sh') }}
+        restore-keys: |
+          plantuml-
+    
+    - name: Make scripts executable
+      run: |
+        chmod +x scripts/generate-diagrams.sh
+        chmod +x scripts/validate-diagrams.sh
+    
+    - name: Validate PlantUML syntax
+      run: |
+        echo "🔍 Validating PlantUML syntax..."
+        ./scripts/generate-diagrams.sh --validate
+    
+    - name: Generate diagrams
+      run: |
+        echo "🎨 Generating diagrams..."
+        FORMAT="${{ github.event.inputs.format || 'png' }}"
+        ./scripts/generate-diagrams.sh --format=$FORMAT
+    
+    - name: Check for changes
+      id: check_changes
+      run: |
+        if [ -n "$(git status --porcelain docs/diagrams/generated/)" ]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+          echo "📊 Diagram changes detected"
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+          echo "✅ No diagram changes"
+        fi
+    
+    - name: Commit and push generated diagrams
+      if: steps.check_changes.outputs.changes == 'true' && github.event_name == 'push'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        
+        git add docs/diagrams/generated/
+        git commit -m "chore: auto-generate diagrams from PlantUML sources [skip ci]"
+        git push
+    
+    - name: Upload generated diagrams as artifact (PR)
+      if: steps.check_changes.outputs.changes == 'true' && github.event_name == 'pull_request'
+      uses: actions/upload-artifact@v4
+      with:
+        name: generated-diagrams
+        path: docs/diagrams/generated/
+        retention-days: 7
+    
+    - name: Comment on PR with diagram changes
+      if: steps.check_changes.outputs.changes == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          // Get list of changed diagrams
+          const { execSync } = require('child_process');
+          const changedFiles = execSync('git status --porcelain docs/diagrams/generated/')
+            .toString()
+            .trim()
+            .split('\n')
+            .filter(line => line.trim())
+            .map(line => line.substring(3));
+          
+          if (changedFiles.length === 0) return;
+          
+          let comment = '## 📊 Diagram Generation Report\n\n';
+          comment += `Generated ${changedFiles.length} diagram(s) from PlantUML sources:\n\n`;
+          
+          changedFiles.forEach(file => {
+            const fileName = path.basename(file);
+            const category = path.dirname(file).split('/').pop();
+            comment += `- \`${category}/${fileName}\`\n`;
+          });
+          
+          comment += '\n### 📥 Download Artifacts\n\n';
+          comment += 'The generated diagrams are available as artifacts in this workflow run.\n';
+          comment += 'Download them to review before merging.\n\n';
+          comment += '### ⚠️ Important\n\n';
+          comment += 'These diagrams will be automatically committed when this PR is merged to main.\n';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+    
+    - name: Generate diagram summary
+      if: always()
+      run: |
+        echo "## Diagram Generation Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -d "docs/diagrams/generated" ]; then
+          echo "### Generated Diagrams" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Count diagrams by category
+          for category in docs/diagrams/generated/*/; do
+            if [ -d "$category" ]; then
+              category_name=$(basename "$category")
+              count=$(find "$category" -type f | wc -l)
+              echo "- **$category_name**: $count diagram(s)" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          total=$(find docs/diagrams/generated -type f | wc -l)
+          echo "**Total**: $total diagram(s) generated" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "No diagrams generated" >> $GITHUB_STEP_SUMMARY
+        fi
+
+  verify-diagram-references:
+    name: Verify Diagram References
+    runs-on: ubuntu-latest
+    needs: generate-diagrams
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Make scripts executable
+      run: chmod +x scripts/validate-diagrams.sh
+    
+    - name: Check diagram references in documentation
+      run: |
+        echo "🔗 Checking diagram references..."
+        ./scripts/validate-diagrams.sh --check-references
+    
+    - name: Check for missing diagrams
+      run: |
+        echo "📊 Checking for missing diagrams..."
+        ./scripts/validate-diagrams.sh --check-missing

@@ -1,0 +1,28 @@
+{
+  "enabled": true,
+  "name": "Documentation Sync Hook",
+  "description": "Reminds developers to update documentation when code changes are made in app/src or infrastructure/",
+  "version": "1.0",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "app/src/**/*.java",
+      "infrastructure/**/*.java",
+      "app/src/**/*.ts",
+      "infrastructure/**/*.ts"
+    ],
+    "exclude": [
+      "**/.git/**",
+      "**/.kiro/**",
+      "**/test/**",
+      "**/tests/**",
+      "**/target/**",
+      "**/build/**",
+      "**/node_modules/**"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Code changes detected in application or infrastructure layers. Please review if documentation updates are needed:\n\n## Documentation Update Checklist\n\n### 1. Check if API Changes Were Made\n\nIf you modified REST API endpoints, domain events, or public interfaces:\n\n```bash\n# Check API documentation\nls docs/api/rest/endpoints/\nls docs/api/events/contexts/\n```\n\n**Update Required If:**\n- ✅ New REST endpoints added → Update `docs/api/rest/endpoints/*.md`\n- ✅ Endpoint signatures changed → Update request/response examples\n- ✅ New domain events added → Update `docs/api/events/contexts/*.md`\n- ✅ Event schemas changed → Update event documentation\n\n### 2. Check if Architecture Changes Were Made\n\nIf you modified aggregates, bounded contexts, or architectural patterns:\n\n```bash\n# Check architecture documentation\nls docs/viewpoints/functional/\nls docs/viewpoints/information/\nls docs/diagrams/viewpoints/\n```\n\n**Update Required If:**\n- ✅ New aggregate added → Update functional viewpoint\n- ✅ New bounded context → Update context documentation\n- ✅ Domain model changed → Update information viewpoint\n- ✅ Architecture patterns changed → Update relevant diagrams\n\n### 3. Check if Infrastructure Changes Were Made\n\nIf you modified deployment, configuration, or infrastructure code:\n\n```bash\n# Check infrastructure documentation\nls docs/viewpoints/deployment/\nls docs/viewpoints/operational/\nls docs/operations/\n```\n\n**Update Required If:**\n- ✅ New AWS resources added → Update deployment viewpoint\n- ✅ Configuration changed → Update environment configuration docs\n- ✅ Monitoring/alerting changed → Update operational documentation\n- ✅ New runbooks needed → Create operational runbooks\n\n### 4. Check if Development Guides Need Updates\n\nIf you added new patterns, practices, or changed development workflow:\n\n```bash\n# Check development documentation\nls docs/development/\nls .kiro/steering/\nls .kiro/examples/\n```\n\n**Update Required If:**\n- ✅ New coding patterns introduced → Update steering rules or examples\n- ✅ New testing approaches → Update testing guides\n- ✅ New development tools → Update setup guides\n- ✅ Build process changed → Update build documentation\n\n### 5. Validate Documentation Quality\n\nAfter making documentation updates:\n\n```bash\n# Validate links and references\nnode scripts/check-links-advanced.js --internal-only\n\n# Validate diagrams (if updated)\n./scripts/validate-diagrams.sh --check-references\n\n# Run comprehensive quality check\nbash scripts/check-documentation-quality.sh\n```\n\n## Quick Actions\n\n### If No Documentation Updates Needed\n\nIf your changes are:\n- Internal refactoring without API changes\n- Bug fixes without behavior changes\n- Test-only changes\n- Minor code improvements\n\nThen you can skip documentation updates. Just confirm:\n```\n✅ Confirmed: No documentation updates required for this change\n```\n\n### If Documentation Updates Are Needed\n\n1. **Identify affected documentation files**\n2. **Update the relevant documentation**\n3. **Update diagrams if needed** (run `./scripts/generate-diagrams.sh`)\n4. **Validate changes** (run validation scripts)\n5. **Commit documentation with code changes**\n\n## Documentation Drift Prevention\n\n### Best Practices\n- Update documentation in the same PR as code changes\n- Use descriptive commit messages for documentation updates\n- Link documentation updates to code changes in PR description\n- Review documentation as part of code review process\n\n### Automated Checks\n- CI/CD will validate documentation structure\n- Link validation will catch broken references\n- Template compliance will ensure consistency\n- Outdated content detection will flag stale docs\n\n## Common Documentation Patterns\n\n### For New REST Endpoints\n```markdown\n## POST /api/v1/resource\n\nCreate a new resource.\n\n### Request\n```json\n{\n  \"field\": \"value\"\n}\n```\n\n### Response (201 Created)\n```json\n{\n  \"id\": \"123\",\n  \"field\": \"value\"\n}\n```\n```\n\n### For New Domain Events\n```markdown\n## ResourceCreatedEvent\n\n**Published When:** A new resource is created\n\n**Schema:**\n```json\n{\n  \"resourceId\": \"string\",\n  \"field\": \"value\",\n  \"eventId\": \"uuid\",\n  \"occurredOn\": \"timestamp\"\n}\n```\n\n**Consumers:**\n- NotificationService: Sends creation notification\n- AnalyticsService: Records creation metric\n```\n\n### For Architecture Changes\n```markdown\n## New Aggregate: Resource\n\n**Responsibilities:**\n- Manage resource lifecycle\n- Enforce business rules\n- Publish domain events\n\n**Commands:**\n- CreateResource\n- UpdateResource\n- DeleteResource\n\n**Events:**\n- ResourceCreated\n- ResourceUpdated\n- ResourceDeleted\n```\n\n## Need Help?\n\nIf you're unsure what documentation to update:\n1. Check similar recent changes in git history\n2. Review the documentation structure in `docs/README.md`\n3. Ask in team chat or during code review\n4. Refer to `.kiro/steering/README.md` for documentation guidelines\n\nPlease review the checklist above and update documentation as needed."
+  }
+}

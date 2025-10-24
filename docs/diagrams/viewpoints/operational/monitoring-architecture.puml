@@ -1,0 +1,88 @@
+@startuml monitoring-architecture
+!define COLLECT_COLOR #E3F2FD
+!define STORE_COLOR #FFF3E0
+!define VISUALIZE_COLOR #E8F5E9
+!define ALERT_COLOR #FFEBEE
+
+title Monitoring Architecture
+
+skinparam rectangle {
+    FontSize 10
+    BorderColor #01579B
+}
+
+package "Application Layer" as apps {
+    component "Order Service" as order
+    component "Customer Service" as customer
+    component "Payment Service" as payment
+    component "Product Service" as product
+}
+
+package "Metrics Collection" as collection {
+    component "CloudWatch Agent" as cw_agent
+    component "Prometheus" as prometheus
+    component "X-Ray Agent" as xray
+}
+
+package "Storage Layer" as storage {
+    database "CloudWatch Metrics" as cw_metrics
+    database "Prometheus TSDB" as prom_db
+    database "X-Ray Traces" as xray_db
+    database "CloudWatch Logs" as cw_logs
+}
+
+package "Visualization" as viz {
+    component "Grafana" as grafana
+    component "CloudWatch Dashboards" as cw_dash
+    component "X-Ray Console" as xray_console
+}
+
+package "Alerting" as alerting {
+    component "CloudWatch Alarms" as cw_alarms
+    component "Prometheus Alertmanager" as alert_mgr
+    component "PagerDuty" as pagerduty
+    component "Slack" as slack
+}
+
+' Data flow
+apps --> cw_agent : "System metrics\nApplication logs"
+apps --> prometheus : "Custom metrics\nBusiness metrics"
+apps --> xray : "Request traces"
+
+cw_agent --> cw_metrics
+cw_agent --> cw_logs
+prometheus --> prom_db
+xray --> xray_db
+
+cw_metrics --> grafana
+cw_metrics --> cw_dash
+prom_db --> grafana
+xray_db --> xray_console
+cw_logs --> cw_dash
+
+cw_metrics --> cw_alarms
+prom_db --> alert_mgr
+
+cw_alarms --> pagerduty : "P1, P2"
+cw_alarms --> slack : "P2, P3, P4"
+alert_mgr --> pagerduty : "P1, P2"
+alert_mgr --> slack : "All"
+
+note right of collection
+  **Metrics Collected:**
+  • CPU, Memory, Disk, Network
+  • Request rate, Response time
+  • Error rate, Success rate
+  • Business metrics
+  • Custom application metrics
+end note
+
+note right of alerting
+  **Alert Severity:**
+  • P1 (Critical): PagerDuty + Phone
+  • P2 (High): PagerDuty + Slack
+  • P3 (Medium): Slack
+  • P4 (Low): Email + Slack
+end note
+
+@enduml

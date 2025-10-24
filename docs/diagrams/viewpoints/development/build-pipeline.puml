@@ -1,0 +1,91 @@
+@startuml build-pipeline
+' Metadata
+' Title: Build Pipeline Diagram
+' Viewpoint: Development
+' Last Updated: 2025-10-23
+' Related Docs: viewpoints/development/build-process.md
+
+!define SUCCESS_COLOR #90EE90
+!define PROCESS_COLOR #87CEEB
+!define QUALITY_COLOR #FFD700
+
+title Build and CI/CD Pipeline
+
+|Developer|
+start
+:Code Changes;
+:Run Quick Tests\n(~2 minutes);
+
+if (Tests Pass?) then (yes)
+  :Commit Changes;
+else (no)
+  :Fix Issues;
+  stop
+endif
+
+|CI Pipeline|
+:Checkout Code;
+:Setup JDK 21;
+
+partition "Test Phase" {
+  :Unit Tests\n(~2 minutes);
+  if (Pass?) then (no)
+    #FF6B6B:Build Failed;
+    stop
+  endif
+  
+  :Integration Tests\n(~5 minutes);
+  if (Pass?) then (no)
+    #FF6B6B:Build Failed;
+    stop
+  endif
+  
+  :Architecture Tests\n(~1 minute);
+  if (Pass?) then (no)
+    #FF6B6B:Build Failed;
+    stop
+  endif
+}
+
+partition "Quality Phase" QUALITY_COLOR {
+  :Generate Coverage Report;
+  :Upload to Codecov;
+  
+  if (Coverage >= 80%?) then (no)
+    #FFA500:Warning: Low Coverage;
+  endif
+  
+  :Run PMD Analysis;
+  :Run Checkstyle;
+  
+  if (Quality Gates Pass?) then (no)
+    #FFA500:Warning: Quality Issues;
+  endif
+}
+
+partition "Build Phase" PROCESS_COLOR {
+  :Compile Sources;
+  :Package JAR;
+  :Upload Artifacts;
+}
+
+partition "Deploy Phase" SUCCESS_COLOR {
+  if (Branch = main?) then (yes)
+    :Deploy to Staging;
+    :Run Smoke Tests;
+    
+    if (Smoke Tests Pass?) then (yes)
+      :Deploy to Production;
+    else (no)
+      :Rollback;
+      stop
+    endif
+  else (no)
+    :Skip Deployment;
+  endif
+}
+
+#90EE90:Build Success;
+stop
+
+@enduml

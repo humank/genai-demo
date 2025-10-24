@@ -6,7 +6,7 @@
 
 - **Write code**: Start with [Development Standards](development-standards.md)
 - **Review code**: Use [Code Review Standards](code-review-standards.md)
-- **Write documentation**: See [Documentation & Language Standards](documentation-language-standards.md)
+- **Write documentation**: See [Development Standards](development-standards.md) and [Diagram Generation Standards](diagram-generation-standards.md)
 - **Design architecture**: Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md)
 - **Optimize performance**: Review [Performance Standards](performance-standards.md)
 - **Implement security**: Follow [Security Standards](security-standards.md)
@@ -21,7 +21,6 @@ Essential standards for daily development work.
 |----------|---------|-------------|
 | [Development Standards](development-standards.md) | Primary development guide | Daily coding, testing, architecture |
 | [Code Review Standards](code-review-standards.md) | Review process and checklist | Before and during code reviews |
-| [Documentation & Language Standards](documentation-language-standards.md) | Writing and language rules | Creating any documentation |
 
 ### Specialized Standards (Domain-Specific)
 
@@ -61,7 +60,7 @@ Detailed technical references for specific topics.
 
 ### Writing Documentation
 
-1. Follow [Documentation & Language Standards](documentation-language-standards.md) - Language rules
+1. Follow [Development Standards](development-standards.md) - Documentation guidelines
 2. Use [Diagram Generation Standards](diagram-generation-standards.md) - For technical diagrams
 3. Document [Event Storming Sessions](event-storming-standards.md) - For workshop results
 
@@ -72,7 +71,7 @@ graph TD
     A[Development Standards] --> B[Test Performance Standards]
     A --> C[Performance Standards]
     A --> D[Security Standards]
-    E[Documentation & Language Standards] --> J[Diagram Generation]
+    A --> J[Diagram Generation]
     G[Rozanski & Woods] --> A
     K[Event Storming] --> H
     H[Domain Events] --> A
@@ -100,6 +99,6 @@ When updating steering rules:
 
 ---
 
-**Total Documents**: 11  
-**Last Updated**: 2025-01-17  
+**Total Documents**: 16  
+**Last Updated**: 2025-01-22  
 **Owner**: Development Team

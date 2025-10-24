@@ -1,0 +1,117 @@
+@startuml concurrency-model
+!define SYNC_COLOR #E3F2FD
+!define ASYNC_COLOR #FFF3E0
+!define EVENT_COLOR #F3E5F5
+
+title Concurrency Model - E-Commerce Platform
+
+skinparam rectangle {
+    FontSize 11
+    BorderColor #01579B
+}
+
+rectangle "Request Layer" as request_layer #E3F2FD {
+    [HTTP Request Handler\n(Tomcat Thread Pool)]
+    [API Gateway\n(Rate Limiting)]
+}
+
+rectangle "Synchronous Processing" as sync_layer #E3F2FD {
+    [Order Validation]
+    [Inventory Check]
+    [Payment Authorization]
+    [Database Transaction]
+}
+
+rectangle "Asynchronous Processing" as async_layer #FFF3E0 {
+    [Async Task Executor\n(Thread Pool)]
+    [Email Service]
+    [SMS Service]
+    [Report Generator]
+}
+
+rectangle "Event-Driven Processing" as event_layer #F3E5F5 {
+    [Kafka Producer]
+    [Kafka Consumer\n(Multiple Threads)]
+    [Event Handlers]
+}
+
+rectangle "State Management" as state_layer {
+    database "PostgreSQL\n(Persistent State)" as db
+    database "Redis\n(Session & Cache)" as redis
+    database "Kafka\n(Event Stream)" as kafka
+}
+
+' Request flow
+[HTTP Request Handler\n(Tomcat Thread Pool)] --> [Order Validation] : Synchronous
+[Order Validation] --> [Inventory Check]
+[Inventory Check] --> [Payment Authorization]
+[Payment Authorization] --> [Database Transaction]
+
+' Async flow
+[Database Transaction] ..> [Async Task Executor\n(Thread Pool)] : Trigger Async
+[Async Task Executor\n(Thread Pool)] --> [Email Service]
+[Async Task Executor\n(Thread Pool)] --> [SMS Service]
+[Async Task Executor\n(Thread Pool)] --> [Report Generator]
+
+' Event flow
+[Database Transaction] ..> [Kafka Producer] : Publish Events
+[Kafka Producer] --> kafka
+kafka --> [Kafka Consumer\n(Multiple Threads)]
+[Kafka Consumer\n(Multiple Threads)] --> [Event Handlers]
+
+' State access
+[Database Transaction] --> db : Read/Write
+[Order Validation] --> redis : Cache Lookup
+[Kafka Consumer\n(Multiple Threads)] --> db : Update State
+
+note right of [HTTP Request Handler\n(Tomcat Thread Pool)]
+  **Configuration:**
+  - Max Threads: 200
+  - Min Threads: 10
+  - Queue Size: 100
+  - Timeout: 30s
+end note
+
+note right of [Async Task Executor\n(Thread Pool)]
+  **Configuration:**
+  - Core Pool: 10
+  - Max Pool: 50
+  - Queue: 100
+  - Rejection: CallerRuns
+end note
+
+note right of [Kafka Consumer\n(Multiple Threads)]
+  **Configuration:**
+  - Concurrency: 3-5
+  - Max Poll: 100
+  - Auto Commit: false
+  - Isolation: read_committed
+end note
+
+note bottom of db
+  **Concurrency Control:**
+  - Optimistic Locking (@Version)
+  - Pessimistic Locking (FOR UPDATE)
+  - Transaction Isolation
+  - Connection Pool (HikariCP)
+end note
+
+note bottom of redis
+  **Usage:**
+  - Session Storage
+  - Distributed Cache
+  - Distributed Locks
+  - Rate Limiting
+end note
+
+legend right
+  |= Pattern |= Use Case |
+  | Synchronous | User-facing operations |
+  | Asynchronous | Background tasks |
+  | Event-Driven | Cross-context communication |
+  |= Arrow Type |= Meaning |
+  | Solid | Synchronous call |
+  | Dotted | Asynchronous trigger |
+endlegend
+
+@enduml

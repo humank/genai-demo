@@ -1,0 +1,155 @@
+@startuml aws-infrastructure
+
+title AWS Infrastructure Architecture - E-Commerce Platform
+
+' Define colors
+!define PUBLIC_COLOR #E3F2FD
+!define PRIVATE_APP_COLOR #FFF3E0
+!define PRIVATE_DB_COLOR #F3E5F5
+!define PRIVATE_MSG_COLOR #E8F5E9
+
+skinparam rectangle {
+    FontSize 11
+    BorderColor #01579B
+}
+
+' Internet
+cloud "Internet" as internet
+
+' VPC
+rectangle "VPC: 10.0.0.0/16" as vpc {
+    
+    component "Internet Gateway" as igw
+    
+    ' Availability Zones
+    rectangle "us-east-1a" as az1 {
+        rectangle "Public Subnet\n10.0.1.0/24" as pub1 PUBLIC_COLOR {
+            component "ALB" as alb1
+            component "NAT GW" as nat1
+        }
+        
+        rectangle "Private App\n10.0.10.0/23" as app1 PRIVATE_APP_COLOR {
+            component "EKS Nodes\nt3.large x3" as eks1
+        }
+        
+        rectangle "Private DB\n10.0.20.0/24" as db1 PRIVATE_DB_COLOR {
+            database "RDS Primary\ndb.r5.xlarge" as rds1
+            database "Redis Primary\ncache.r5.large" as redis1
+        }
+        
+        rectangle "Private Msg\n10.0.30.0/24" as msg1 PRIVATE_MSG_COLOR {
+            component "Kafka Broker 1\nkafka.m5.large" as kafka1
+        }
+    }
+    
+    rectangle "us-east-1b" as az2 {
+        rectangle "Public Subnet\n10.0.2.0/24" as pub2 PUBLIC_COLOR {
+            component "ALB" as alb2
+            component "NAT GW" as nat2
+        }
+        
+        rectangle "Private App\n10.0.12.0/23" as app2 PRIVATE_APP_COLOR {
+            component "EKS Nodes\nt3.large x3" as eks2
+        }
+        
+        rectangle "Private DB\n10.0.21.0/24" as db2 PRIVATE_DB_COLOR {
+            database "RDS Standby\ndb.r5.xlarge" as rds2
+            database "Redis Replica\ncache.r5.large" as redis2
+        }
+        
+        rectangle "Private Msg\n10.0.31.0/24" as msg2 PRIVATE_MSG_COLOR {
+            component "Kafka Broker 2\nkafka.m5.large" as kafka2
+        }
+    }
+    
+    rectangle "us-east-1c" as az3 {
+        rectangle "Public Subnet\n10.0.3.0/24" as pub3 PUBLIC_COLOR {
+            component "ALB" as alb3
+            component "NAT GW" as nat3
+        }
+        
+        rectangle "Private App\n10.0.14.0/23" as app3 PRIVATE_APP_COLOR {
+            component "EKS Nodes\nr5.xlarge x2" as eks3
+        }
+        
+        rectangle "Private DB\n10.0.22.0/24" as db3 PRIVATE_DB_COLOR {
+            database "Read Replica\ndb.r5.large" as rds3
+            database "Redis Replica\ncache.r5.large" as redis3
+        }
+        
+        rectangle "Private Msg\n10.0.32.0/24" as msg3 PRIVATE_MSG_COLOR {
+            component "Kafka Broker 3\nkafka.m5.large" as kafka3
+        }
+    }
+}
+
+' Connections
+internet --> alb1
+internet --> alb2
+internet --> alb3
+
+alb1 --> eks1
+alb2 --> eks2
+alb3 --> eks3
+
+eks1 --> rds1
+eks2 --> rds1
+eks3 --> rds1
+
+eks1 --> redis1
+eks2 --> redis1
+eks3 --> redis1
+
+eks1 --> kafka1
+eks2 --> kafka2
+eks3 --> kafka3
+
+rds1 -[#red]-> rds2 : Sync Replication
+rds1 --> rds3 : Async Replication
+
+redis1 --> redis2 : Replication
+redis1 --> redis3 : Replication
+
+kafka1 <--> kafka2 : Cluster
+kafka2 <--> kafka3 : Cluster
+kafka1 <--> kafka3 : Cluster
+
+eks1 --> nat1 : Internet Access
+eks2 --> nat2 : Internet Access
+eks3 --> nat3 : Internet Access
+
+note right of vpc
+  **High Availability Design**
+  - Multi-AZ deployment across 3 AZs
+  - Automatic failover for RDS and Redis
+  - Load balanced traffic distribution
+  - Independent NAT Gateways per AZ
+end note
+
+note bottom of rds1
+  **RDS Configuration**
+  - Engine: PostgreSQL 15.4
+  - Multi-AZ: Enabled
+  - Backup: 7-day retention
+  - Encryption: At rest and in transit
+end note
+
+note bottom of eks1
+  **EKS Configuration**
+  - Kubernetes: 1.28
+  - Node Groups: General + Memory
+  - Auto-scaling: 3-10 nodes
+  - Namespaces: Per bounded context
+end note
+
+legend right
+  |= Component |= Purpose |= HA Strategy |
+  | ALB | Load balancing | Multi-AZ by default |
+  | EKS | Container orchestration | Multi-AZ node groups |
+  | RDS | Relational database | Multi-AZ with failover |
+  | ElastiCache | Distributed cache | Multi-AZ with replicas |
+  | MSK | Event streaming | Multi-AZ cluster |
+  | NAT Gateway | Outbound internet | One per AZ |
+endlegend
+
+@enduml

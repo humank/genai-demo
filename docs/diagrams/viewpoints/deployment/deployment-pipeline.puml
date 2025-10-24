@@ -1,0 +1,188 @@
+@startuml deployment-pipeline
+!define BUILD_COLOR #E3F2FD
+!define TEST_COLOR #FFF3E0
+!define DEPLOY_COLOR #E8F5E9
+!define MONITOR_COLOR #F3E5F5
+
+title CI/CD Deployment Pipeline
+
+skinparam activity {
+    BackgroundColor #FFFFFF
+    BorderColor #01579B
+    FontSize 11
+}
+
+|Developer|
+start
+:Push code to GitHub;
+note right
+  Branches:
+  - develop → Dev
+  - staging → Staging
+  - main → Production
+end note
+
+|GitHub Actions|
+:Trigger CI/CD Pipeline;
+
+partition "Stage 1: Build & Test" BUILD_COLOR {
+    :Checkout code;
+    :Set up JDK 21;
+    fork
+        :Run unit tests;
+    fork again
+        :Run integration tests;
+    end fork
+    :Generate coverage report;
+    :Build JAR artifact;
+    if (Tests passed?) then (yes)
+        :Archive artifacts;
+    else (no)
+        #FF6B6B:Fail pipeline;
+        stop
+    endif
+}
+
+partition "Stage 2: Quality & Security" TEST_COLOR {
+    fork
+        :SonarQube scan;
+        if (Quality gate passed?) then (no)
+            #FF6B6B:Fail pipeline;
+            stop
+        endif
+    fork again
+        :Snyk security scan;
+    fork again
+        :Build Docker image;
+        :Trivy vulnerability scan;
+        if (Critical vulnerabilities?) then (yes)
+            #FF6B6B:Fail pipeline;
+            stop
+        endif
+    end fork
+}
+
+partition "Stage 3: Build & Push Image" BUILD_COLOR {
+    :Configure AWS credentials;
+    :Login to Amazon ECR;
+    :Build Docker image;
+    :Tag image\n(branch-sha, semver);
+    :Push to ECR;
+}
+
+if (Branch?) then (develop)
+    partition "Stage 4: Deploy to Development" DEPLOY_COLOR {
+        :Update kubeconfig (dev cluster);
+        :Helm upgrade --install\n(automatic);
+        :Wait for rollout;
+        :Verify deployment;
+    }
+    
+elseif (staging)
+    partition "Stage 4: Deploy to Staging" DEPLOY_COLOR {
+        |Approver|
+        :Manual approval required;
+        note right
+          Requires approval from:
+          - Tech Lead
+          - QA Lead
+        end note
+        
+        |GitHub Actions|
+        :Update kubeconfig (staging cluster);
+        :Helm upgrade --install;
+        :Wait for rollout;
+        :Run smoke tests;
+        if (Smoke tests passed?) then (no)
+            #FF6B6B:Deployment failed;
+            stop
+        endif
+    }
+    
+elseif (main)
+    partition "Stage 4: Deploy to Production" DEPLOY_COLOR {
+        |Approver|
+        :Manual approval required;
+        note right
+          Requires approval from:
+          - Engineering Manager
+          - Product Manager
+        end note
+        
+        |GitHub Actions|
+        :Update kubeconfig (prod cluster);
+        
+        ' Canary Deployment
+        :Deploy Canary (10%);
+        note right
+          **Canary Strategy:**
+          1. Deploy 10% traffic
+          2. Monitor for 5 minutes
+          3. Check error rate < 1%
+          4. Check response time < 2s
+        end note
+        
+        :Monitor canary metrics\n(5 minutes);
+        
+        if (Canary healthy?) then (no)
+            #FF6B6B:Rollback canary;
+            :Notify team;
+            stop
+        else (yes)
+            :Promote to full deployment;
+            :Rolling update (100%);
+            :Wait for rollout;
+        endif
+        
+        :Run production smoke tests;
+        
+        if (Smoke tests passed?) then (no)
+            #FF6B6B:Automatic rollback;
+            :Notify team;
+            stop
+        endif
+    }
+endif
+
+partition "Stage 5: Monitor & Verify" MONITOR_COLOR {
+    fork
+        :Monitor CloudWatch metrics;
+    fork again
+        :Monitor Prometheus metrics;
+    fork again
+        :Check error rates;
+    fork again
+        :Check response times;
+    end fork
+    
+    if (All metrics healthy?) then (yes)
+        #90EE90:Deployment successful!;
+        :Send Slack notification;
+    else (no)
+        #FF6B6B:Trigger automatic rollback;
+        :Rollback to previous version;
+        :Send alert notification;
+        stop
+    endif
+}
+
+|Developer|
+:Deployment complete;
+stop
+
+legend right
+  |= Stage |= Duration |= Failure Action |
+  | Build & Test | 5-10 min | Fail pipeline |
+  | Quality & Security | 5-10 min | Fail pipeline |
+  | Build & Push | 3-5 min | Fail pipeline |
+  | Deploy Dev | 5-10 min | Fail deployment |
+  | Deploy Staging | 10-15 min | Manual rollback |
+  | Deploy Production | 15-20 min | Auto rollback |
+  
+  |= Environment |= Approval |= Strategy |
+  | Development | Automatic | Rolling |
+  | Staging | Manual | Rolling |
+  | Production | Manual | Canary → Rolling |
+endlegend
+
+@enduml

@@ -1,0 +1,126 @@
+@startuml payment-context-er
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+
+title Payment Context - Entity Relationship Diagram
+
+package "Payment Aggregate" <<Rectangle>> {
+    
+    entity "Payment" as payment <<Aggregate Root>> AGGREGATE_ROOT_COLOR {
+        * paymentId : PaymentId <<PK>>
+        --
+        * orderId : OrderId
+        * customerId : CustomerId
+        * amount : Money
+        * paymentMethod : PaymentMethod
+        * status : PaymentStatus
+        * transactionId : String
+        * createdAt : LocalDateTime
+        * processedAt : LocalDateTime
+        --
+        + initiate()
+        + authorize()
+        + capture()
+        + fail()
+        + refund()
+    }
+    
+    entity "PaymentTransaction" as transaction <<Entity>> ENTITY_COLOR {
+        * transactionId : TransactionId <<PK>>
+        * paymentId : PaymentId <<FK>>
+        --
+        * transactionType : TransactionType
+        * amount : Money
+        * status : TransactionStatus
+        * gatewayResponse : String
+        * processedAt : LocalDateTime
+        --
+        + process()
+        + markSuccess()
+        + markFailed()
+    }
+    
+    object "PaymentMethod" as paymentMethod <<Value Object>> VALUE_OBJECT_COLOR {
+        * type : PaymentMethodType
+        * last4Digits : String
+        * expiryDate : YearMonth
+        * cardBrand : String
+    }
+    
+    object "Money" as money <<Value Object>> VALUE_OBJECT_COLOR {
+        * amount : BigDecimal
+        * currency : Currency
+    }
+    
+    object "PaymentId" as paymentId <<Value Object>> VALUE_OBJECT_COLOR {
+        * value : String
+    }
+    
+    enum PaymentStatus {
+        PENDING
+        AUTHORIZED
+        CAPTURED
+        FAILED
+        REFUNDED
+    }
+    
+    enum TransactionType {
+        AUTHORIZATION
+        CAPTURE
+        REFUND
+    }
+    
+    enum TransactionStatus {
+        SUCCESS
+        FAILED
+    }
+    
+    enum PaymentMethodType {
+        CREDIT_CARD
+        DEBIT_CARD
+        PAYPAL
+        BANK_TRANSFER
+    }
+}
+
+' Relationships
+payment ||--|{ transaction : "has"
+payment *-- paymentMethod
+payment *-- money : "amount"
+payment *-- paymentId
+payment -- PaymentStatus
+transaction *-- money : "amount"
+transaction -- TransactionType
+transaction -- TransactionStatus
+paymentMethod -- PaymentMethodType
+
+' Business Rules
+note right of payment
+    **Business Rules:**
+    - Must authorize before capture
+    - Refund amount ≤ captured amount
+    - Failed payments can retry up to 3 times
+    - Payment expires after 24 hours if not captured
+end note
+
+' Domain Events
+note left of payment
+    **Domain Events:**
+    - PaymentInitiatedEvent
+    - PaymentAuthorizedEvent
+    - PaymentCapturedEvent
+    - PaymentFailedEvent
+    - PaymentRefundedEvent
+end note
+
+' Security Note
+note bottom of payment
+    **Security:**
+    - Full card numbers never stored
+    - Payment tokens for recurring payments
+    - All data encrypted at rest and in transit
+    - PCI-DSS compliant
+end note
+
+@enduml

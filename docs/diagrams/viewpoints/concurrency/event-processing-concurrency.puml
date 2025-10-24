@@ -1,0 +1,186 @@
+@startuml event-processing-concurrency
+!define PRODUCER_COLOR #E3F2FD
+!define CONSUMER_COLOR #FFF3E0
+!define HANDLER_COLOR #F3E5F5
+
+title Event Processing Concurrency Model
+
+skinparam component {
+    FontSize 11
+    BorderColor #01579B
+}
+
+package "Event Producers" as producers #E3F2FD {
+    component "Order Service" as order_service
+    component "Customer Service" as customer_service
+    component "Payment Service" as payment_service
+}
+
+package "Kafka Cluster" as kafka_cluster {
+    component "Topic: order-events" as order_topic {
+        [Partition 0]
+        [Partition 1]
+        [Partition 2]
+    }
+    
+    component "Topic: customer-events" as customer_topic {
+        [Partition 0]
+        [Partition 1]
+    }
+    
+    component "Topic: payment-events" as payment_topic {
+        [Partition 0]
+        [Partition 1]
+        [Partition 2]
+    }
+}
+
+package "Event Consumers" as consumers #FFF3E0 {
+    component "Inventory Service\nConsumer Group" as inventory_consumer {
+        [Consumer Thread 1] as inv_t1
+        [Consumer Thread 2] as inv_t2
+        [Consumer Thread 3] as inv_t3
+        note right
+          **Configuration:**
+          - Concurrency: 3
+          - Group ID: inventory-service
+          - Auto-commit: false
+          - Isolation: read_committed
+        end note
+    }
+    
+    component "Notification Service\nConsumer Group" as notification_consumer {
+        [Consumer Thread 1] as notif_t1
+        [Consumer Thread 2] as notif_t2
+        [Consumer Thread 3] as notif_t3
+        [Consumer Thread 4] as notif_t4
+        [Consumer Thread 5] as notif_t5
+        note right
+          **Configuration:**
+          - Concurrency: 5
+          - Group ID: notification-service
+          - Auto-commit: false
+          - Isolation: read_committed
+        end note
+    }
+    
+    component "Analytics Service\nConsumer Group" as analytics_consumer {
+        [Consumer Thread 1] as analytics_t1
+        [Consumer Thread 2] as analytics_t2
+        [Consumer Thread 3] as analytics_t3
+        note right
+          **Configuration:**
+          - Concurrency: 3
+          - Group ID: analytics-service
+          - Auto-commit: false
+          - Isolation: read_committed
+        end note
+    }
+}
+
+package "Event Handlers" as handlers #F3E5F5 {
+    component "Inventory Handlers" as inv_handlers {
+        [OrderSubmittedHandler]
+        [OrderCancelledHandler]
+        [OrderShippedHandler]
+    }
+    
+    component "Notification Handlers" as notif_handlers {
+        [OrderConfirmedHandler]
+        [PaymentProcessedHandler]
+        [ShipmentHandler]
+    }
+    
+    component "Analytics Handlers" as analytics_handlers {
+        [OrderAnalyticsHandler]
+        [CustomerAnalyticsHandler]
+        [PaymentAnalyticsHandler]
+    }
+}
+
+' Producer to Kafka
+order_service --> [Partition 0] : OrderSubmittedEvent
+order_service --> [Partition 1] : OrderCancelledEvent
+order_service --> [Partition 2] : OrderShippedEvent
+
+customer_service --> customer_topic
+payment_service --> payment_topic
+
+' Kafka to Consumers (Partition Assignment)
+[Partition 0] --> inv_t1 : Assigned
+[Partition 1] --> inv_t2 : Assigned
+[Partition 2] --> inv_t3 : Assigned
+
+[Partition 0] --> notif_t1 : Assigned
+[Partition 1] --> notif_t2 : Assigned
+[Partition 2] --> notif_t3 : Assigned
+[Partition 0] --> notif_t4 : Assigned (shared)
+[Partition 1] --> notif_t5 : Assigned (shared)
+
+[Partition 0] --> analytics_t1 : Assigned
+[Partition 1] --> analytics_t2 : Assigned
+[Partition 2] --> analytics_t3 : Assigned
+
+' Consumers to Handlers
+inv_t1 --> [OrderSubmittedHandler]
+inv_t2 --> [OrderCancelledHandler]
+inv_t3 --> [OrderShippedHandler]
+
+notif_t1 --> [OrderConfirmedHandler]
+notif_t2 --> [PaymentProcessedHandler]
+notif_t3 --> [ShipmentHandler]
+
+analytics_t1 --> [OrderAnalyticsHandler]
+analytics_t2 --> [CustomerAnalyticsHandler]
+analytics_t3 --> [PaymentAnalyticsHandler]
+
+note top of kafka_cluster
+  **Partition Strategy:**
+  - Events partitioned by aggregate ID
+  - Ensures ordering within same aggregate
+  - Enables parallel processing across aggregates
+  
+  **Replication:**
+  - Replication factor: 3
+  - Min in-sync replicas: 2
+  - Ensures durability and availability
+end note
+
+note bottom of inventory_consumer
+  **Concurrency Model:**
+  - One thread per partition
+  - Sequential processing within partition
+  - Parallel processing across partitions
+  - Maintains event ordering per aggregate
+end note
+
+note bottom of notification_consumer
+  **High Throughput:**
+  - More threads than partitions
+  - Multiple threads can share partitions
+  - Higher concurrency for I/O-bound tasks
+  - Trade-off: potential ordering issues
+end note
+
+note bottom of analytics_consumer
+  **Balanced Approach:**
+  - Threads match partition count
+  - Optimal for CPU-bound tasks
+  - Maintains ordering guarantees
+  - Predictable resource usage
+end note
+
+legend right
+  |= Pattern |= Concurrency |= Ordering |= Use Case |
+  | 1:1 (Thread:Partition) | Moderate | Strict | Inventory updates |
+  | N:M (More threads) | High | Relaxed | Notifications |
+  | 1:1 (Balanced) | Moderate | Strict | Analytics |
+  
+  |= Configuration |= Value |= Purpose |
+  | max.poll.records | 100 | Batch size |
+  | session.timeout.ms | 30000 | Consumer liveness |
+  | max.poll.interval.ms | 300000 | Processing time limit |
+  | enable.auto.commit | false | Manual commit control |
+endlegend
+
+@enduml

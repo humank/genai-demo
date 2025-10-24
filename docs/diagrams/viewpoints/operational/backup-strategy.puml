@@ -1,0 +1,87 @@
+@startuml backup-strategy
+!define PRIMARY_COLOR #E3F2FD
+!define BACKUP_COLOR #FFF3E0
+!define DR_COLOR #FFEBEE
+
+title Backup and Disaster Recovery Strategy
+
+skinparam rectangle {
+    FontSize 10
+    BorderColor #01579B
+}
+
+package "Primary Region (us-east-1)" as primary {
+    database "RDS Primary" as rds_primary
+    component "Redis Primary" as redis_primary
+    component "Kafka Cluster" as kafka_primary
+    component "EKS Cluster" as eks_primary
+}
+
+package "Backup Storage" as backup {
+    storage "RDS Automated Snapshots\n(30 days retention)" as rds_snap
+    storage "Redis Snapshots\n(7 days retention)" as redis_snap
+    storage "Kafka MirrorMaker" as kafka_mirror
+    storage "K8s Config Backup\n(S3, 90 days)" as k8s_backup
+}
+
+package "DR Region (us-west-2)" as dr {
+    database "RDS Read Replica" as rds_replica
+    storage "Redis Snapshot Copy" as redis_dr
+    component "Kafka DR Cluster" as kafka_dr
+    storage "CDK Infrastructure\n(Git)" as cdk_dr
+}
+
+' Backup flows
+rds_primary --> rds_snap : "Automated\nContinuous"
+rds_primary --> rds_replica : "Async Replication\nRPO: 5 min"
+
+redis_primary --> redis_snap : "Hourly\nRPO: 1 hour"
+redis_snap --> redis_dr : "Daily Copy"
+
+kafka_primary --> kafka_mirror : "Continuous\nRPO: 15 min"
+kafka_mirror --> kafka_dr : "Replication"
+
+eks_primary --> k8s_backup : "Daily Export"
+
+' Recovery flows
+rds_snap -.-> rds_primary : "Point-in-Time\nRecovery"
+redis_snap -.-> redis_primary : "Restore"
+k8s_backup -.-> eks_primary : "Restore Config"
+
+' DR failover
+rds_replica -.-> rds_primary : "Promote\n(RTO: 15 min)"
+redis_dr -.-> redis_primary : "Restore\n(RTO: 5 min)"
+kafka_dr -.-> kafka_primary : "Failover\n(RTO: 30 min)"
+
+note top of primary
+  **Primary Region**
+  • Active production workload
+  • Real-time data processing
+  • Multi-AZ deployment
+end note
+
+note top of backup
+  **Backup Strategy**
+  • Automated daily backups
+  • Point-in-time recovery
+  • Cross-region replication
+  • Compliance: 7 years (Glacier)
+end note
+
+note top of dr
+  **Disaster Recovery**
+  • RTO: < 1 hour
+  • RPO: < 15 minutes
+  • Quarterly DR drills
+  • Automated failover
+end note
+
+legend right
+  |= Component |= RPO |= RTO |= Backup Frequency |
+  | RDS Database | 5 min | 15 min | Continuous |
+  | Redis Cache | 1 hour | 5 min | Hourly |
+  | Kafka | 15 min | 30 min | Continuous |
+  | Configuration | 24 hours | 10 min | Daily |
+endlegend
+
+@enduml

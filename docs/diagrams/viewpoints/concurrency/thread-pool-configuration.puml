@@ -1,0 +1,149 @@
+@startuml thread-pool-configuration
+!define TOMCAT_COLOR #E3F2FD
+!define ASYNC_COLOR #FFF3E0
+!define KAFKA_COLOR #F3E5F5
+!define SCHEDULED_COLOR #E8F5E9
+
+title Thread Pool Configuration - E-Commerce Platform
+
+skinparam component {
+    FontSize 11
+    BorderColor #01579B
+}
+
+package "HTTP Request Processing" as http_layer #E3F2FD {
+    component "Tomcat Thread Pool" as tomcat {
+        [Thread 1..200]
+        note right
+          **Configuration:**
+          - server.tomcat.threads.max=200
+          - server.tomcat.threads.min-spare=10
+          - server.tomcat.accept-count=100
+          - server.tomcat.connection-timeout=30000ms
+          
+          **Purpose:**
+          - Handle incoming HTTP requests
+          - Execute synchronous operations
+          - Return responses to clients
+        end note
+    }
+}
+
+package "Asynchronous Task Processing" as async_layer #FFF3E0 {
+    component "Async Task Executor" as async_executor {
+        [Core: 10 threads]
+        [Max: 50 threads]
+        [Queue: 100 tasks]
+        note right
+          **Configuration:**
+          - @Async("taskExecutor")
+          - corePoolSize=10
+          - maxPoolSize=50
+          - queueCapacity=100
+          - rejectedExecutionHandler=CallerRunsPolicy
+          
+          **Purpose:**
+          - Email notifications
+          - SMS notifications
+          - Report generation
+          - File processing
+        end note
+    }
+}
+
+package "Event Processing" as event_layer #F3E5F5 {
+    component "Kafka Consumer Threads" as kafka_consumer {
+        [Listener 1: 3 threads]
+        [Listener 2: 5 threads]
+        [Listener 3: 3 threads]
+        note right
+          **Configuration:**
+          - spring.kafka.listener.concurrency=3-5
+          - max.poll.records=100
+          - enable.auto.commit=false
+          - isolation.level=read_committed
+          
+          **Purpose:**
+          - Process domain events
+          - Update read models
+          - Trigger cross-context operations
+        end note
+    }
+}
+
+package "Scheduled Tasks" as scheduled_layer #E8F5E9 {
+    component "Scheduled Task Executor" as scheduled_executor {
+        [Pool: 5 threads]
+        note right
+          **Configuration:**
+          - @Scheduled
+          - poolSize=5
+          
+          **Purpose:**
+          - Cleanup expired sessions
+          - Generate daily reports
+          - Sync inventory
+          - Health checks
+        end note
+    }
+}
+
+package "Database Connection Pool" as db_layer {
+    component "HikariCP" as hikari {
+        [Connection 1..20]
+        note right
+          **Configuration:**
+          - maximumPoolSize=20
+          - minimumIdle=5
+          - connectionTimeout=20000ms
+          - idleTimeout=300000ms
+          - maxLifetime=1200000ms
+          
+          **Purpose:**
+          - Manage database connections
+          - Connection reuse
+          - Connection validation
+        end note
+    }
+}
+
+' Relationships
+tomcat --> hikari : Uses
+async_executor --> hikari : Uses
+kafka_consumer --> hikari : Uses
+scheduled_executor --> hikari : Uses
+
+' Resource limits
+note bottom of http_layer
+  **Resource Limits:**
+  - Max concurrent requests: 200
+  - Request timeout: 30s
+  - Keep-alive timeout: 60s
+end note
+
+note bottom of async_layer
+  **Rejection Policy:**
+  When queue is full:
+  1. Try to add thread (up to max)
+  2. If max reached, use CallerRunsPolicy
+  3. Caller thread executes task
+end note
+
+note bottom of event_layer
+  **Backpressure Handling:**
+  - Max poll records: 100
+  - Session timeout: 30s
+  - Rebalance timeout: 60s
+  - Pause/Resume on overload
+end note
+
+legend right
+  |= Thread Pool |= Size |= Purpose |
+  | Tomcat | 10-200 | HTTP requests |
+  | Async Executor | 10-50 | Background tasks |
+  | Kafka Consumer | 3-5 per listener | Event processing |
+  | Scheduled | 5 | Periodic tasks |
+  | HikariCP | 5-20 | DB connections |
+endlegend
+
+@enduml

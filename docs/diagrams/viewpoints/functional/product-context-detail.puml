@@ -1,0 +1,247 @@
+@startuml product-context-detail
+!define AGGREGATE_COLOR #FFE0B2
+!define ENTITY_COLOR #FFF3E0
+!define VALUE_OBJECT_COLOR #FFF9C4
+
+title Product Context - Detailed View
+
+skinparam class {
+    BackgroundColor AGGREGATE_COLOR
+    BorderColor #FF9800
+    FontSize 11
+}
+
+package "Product Context" {
+    
+    ' Aggregate Root
+    class Product <<AggregateRoot>> {
+        - id: ProductId
+        - sellerId: SellerId
+        - name: ProductName
+        - description: String
+        - category: Category
+        - price: Money
+        - images: List<ProductImage>
+        - specifications: Map<String, String>
+        - status: ProductStatus
+        - averageRating: Rating
+        - reviewCount: int
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        --
+        + create()
+        + updateDetails()
+        + updatePrice()
+        + addImage()
+        + removeImage()
+        + updateSpecifications()
+        + activate()
+        + deactivate()
+        + discontinue()
+        + updateRating()
+    }
+    
+    ' Entities
+    class ProductImage <<Entity>> {
+        - id: ImageId
+        - productId: ProductId
+        - url: String
+        - altText: String
+        - displayOrder: int
+        - isPrimary: boolean
+        --
+        + setAsPrimary()
+        + updateOrder()
+    }
+    
+    class Category <<Entity>> {
+        - id: CategoryId
+        - name: String
+        - parentCategoryId: CategoryId
+        - description: String
+        - displayOrder: int
+        --
+        + addSubcategory()
+        + updateDetails()
+    }
+    
+    ' Value Objects
+    class ProductId <<ValueObject>> {
+        - value: String
+        --
+        + {static} generate()
+        + {static} of(value: String)
+    }
+    
+    class ProductName <<ValueObject>> {
+        - value: String
+        --
+        + validate()
+    }
+    
+    class ProductStatus <<ValueObject>> {
+        - status: String
+        --
+        + {static} DRAFT
+        + {static} ACTIVE
+        + {static} INACTIVE
+        + {static} DISCONTINUED
+    }
+    
+    class Money <<ValueObject>> {
+        - amount: BigDecimal
+        - currency: Currency
+        --
+        + add(other: Money)
+        + subtract(other: Money)
+        + multiply(factor: BigDecimal)
+    }
+    
+    class Rating <<ValueObject>> {
+        - value: BigDecimal
+        --
+        + {static} MIN_RATING = 0.0
+        + {static} MAX_RATING = 5.0
+        + validate()
+    }
+    
+    ' Domain Events
+    class ProductCreatedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + sellerId: SellerId
+        + name: ProductName
+        + price: Money
+        + category: Category
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class ProductUpdatedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + name: ProductName
+        + description: String
+        + specifications: Map<String, String>
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class ProductPriceChangedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + oldPrice: Money
+        + newPrice: Money
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class ProductStatusChangedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + oldStatus: ProductStatus
+        + newStatus: ProductStatus
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class ProductDiscontinuedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + reason: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class ProductRatingUpdatedEvent <<DomainEvent>> {
+        + productId: ProductId
+        + oldRating: Rating
+        + newRating: Rating
+        + reviewCount: int
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    ' Repository
+    interface ProductRepository <<Repository>> {
+        + findById(id: ProductId): Optional<Product>
+        + findByCategory(category: Category): List<Product>
+        + findBySellerId(sellerId: SellerId): List<Product>
+        + search(criteria: SearchCriteria): List<Product>
+        + save(product: Product): Product
+        + delete(id: ProductId): void
+    }
+    
+    ' Domain Service
+    class ProductSearchService <<DomainService>> {
+        + search(query: String, filters: Map<String, String>): List<Product>
+        + searchByCategory(category: Category): List<Product>
+        + searchByPriceRange(min: Money, max: Money): List<Product>
+        + searchByRating(minRating: Rating): List<Product>
+    }
+}
+
+' Relationships
+Product "1" *-- "many" ProductImage : contains
+Product --> ProductId : identified by
+Product --> ProductName : has
+Product --> Category : belongs to
+Product --> Money : priced in
+Product --> ProductStatus : has
+Product --> Rating : rated with
+
+Category "1" o-- "many" Category : contains subcategories
+
+Product ..> ProductCreatedEvent : publishes
+Product ..> ProductUpdatedEvent : publishes
+Product ..> ProductPriceChangedEvent : publishes
+Product ..> ProductStatusChangedEvent : publishes
+Product ..> ProductDiscontinuedEvent : publishes
+Product ..> ProductRatingUpdatedEvent : publishes
+
+ProductRepository ..> Product : manages
+
+ProductSearchService ..> Product : searches
+
+note right of Product
+  **Product Aggregate Root**
+  
+  Responsibilities:
+  - Manage product information
+  - Handle pricing
+  - Manage product images
+  - Track product status
+  - Maintain average rating
+  
+  Business Rules:
+  - Product name must be unique per seller
+  - Price must be positive
+  - At least one image required for active products
+  - Cannot delete product with active orders
+  - Rating calculated from reviews
+end note
+
+note bottom of ProductSearchService
+  **Product Search Service**
+  
+  Provides advanced search capabilities:
+  - Full-text search
+  - Category filtering
+  - Price range filtering
+  - Rating filtering
+  - Multi-criteria search
+  
+  Integrates with search engine
+  (e.g., Elasticsearch)
+end note
+
+note bottom of Category
+  **Category Hierarchy**
+  
+  Supports nested categories:
+  - Electronics
+    - Computers
+      - Laptops
+      - Desktops
+    - Mobile Phones
+  - Clothing
+    - Men's
+    - Women's
+end note
+
+@enduml

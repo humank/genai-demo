@@ -1,0 +1,117 @@
+@startuml event-data-sync
+!define CONTEXT_COLOR #E3F2FD
+!define EVENT_COLOR #FFF9C4
+!define CACHE_COLOR #FFE0B2
+
+title Event-Driven Data Synchronization
+
+skinparam componentStyle rectangle
+
+' Source Context
+package "Product Context (Owner)" as product_owner CONTEXT_COLOR {
+    component "Product Aggregate" as product
+    database "Product DB" as product_db
+}
+
+' Event Bus
+queue "Kafka Event Bus" as kafka EVENT_COLOR {
+    queue "ProductCreatedEvent" as e1
+    queue "ProductUpdatedEvent" as e2
+    queue "ProductPriceChangedEvent" as e3
+}
+
+' Consumer Contexts
+package "Order Context (Consumer)" as order_consumer CONTEXT_COLOR {
+    component "Product Cache" as order_cache CACHE_COLOR
+    component "Order Service" as order_service
+    database "Order DB" as order_db
+}
+
+package "Shopping Cart Context (Consumer)" as cart_consumer CONTEXT_COLOR {
+    component "Product Cache" as cart_cache CACHE_COLOR
+    component "Cart Service" as cart_service
+    database "Cart DB" as cart_db
+}
+
+package "Pricing Context (Consumer)" as pricing_consumer CONTEXT_COLOR {
+    component "Product Cache" as pricing_cache CACHE_COLOR
+    component "Pricing Service" as pricing_service
+    database "Pricing DB" as pricing_db
+}
+
+' Flow
+product --> product_db : "1. Update product"
+product --> kafka : "2. Publish event"
+
+kafka --> order_cache : "3. Update cache"
+order_cache --> order_db : "4. Persist cache"
+
+kafka --> cart_cache : "5. Update cache"
+cart_cache --> cart_db : "6. Persist cache"
+
+kafka --> pricing_cache : "7. Update cache"
+pricing_cache --> pricing_db : "8. Persist cache"
+
+' Usage
+order_service --> order_cache : "Read product info"
+cart_service --> cart_cache : "Read product info"
+pricing_service --> pricing_cache : "Read product info"
+
+' Synchronization Patterns
+note right of product
+    **Source of Truth:**
+    - Product name
+    - Product description
+    - Product price
+    - Product status
+    
+    **Publishes:**
+    - ProductCreatedEvent
+    - ProductUpdatedEvent
+    - ProductPriceChangedEvent
+    - ProductDiscontinuedEvent
+end note
+
+note right of order_cache
+    **Cached Data:**
+    - Product name (for display)
+    - Product price (snapshot)
+    
+    **Synchronization:**
+    - Event-driven updates
+    - Eventual consistency
+    - Cache invalidation on events
+end note
+
+note right of cart_cache
+    **Cached Data:**
+    - Product name
+    - Current price
+    - Availability status
+    
+    **Synchronization:**
+    - Real-time price updates
+    - Refresh on cart load
+end note
+
+note right of pricing_cache
+    **Cached Data:**
+    - Base price
+    - Product category
+    
+    **Synchronization:**
+    - Price calculation rules
+    - Promotion eligibility
+end note
+
+' Consistency Model
+note bottom of kafka
+    **Consistency Model:**
+    - Source: Strong consistency (ACID)
+    - Consumers: Eventual consistency
+    - Latency: Seconds to minutes
+    - Idempotency: Event handlers are idempotent
+    - Ordering: Kafka partition ordering
+end note
+
+@enduml

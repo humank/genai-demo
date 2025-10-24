@@ -1,0 +1,160 @@
+@startuml product-aggregate
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define DOMAIN_EVENT_COLOR #FFCCBC
+
+title Product Aggregate Structure
+
+package "Product Aggregate" <<Rectangle>> {
+    
+    class Product <<AggregateRoot>> AGGREGATE_ROOT_COLOR {
+        - id: ProductId
+        - productName: String
+        - description: String
+        - category: Category
+        - price: Money
+        - specifications: List<ProductSpecification>
+        - images: List<ProductImage>
+        - status: ProductStatus
+        - sellerId: SellerId
+        --
+        + create(): void
+        + update(name, description): void
+        + changePrice(newPrice: Money): void
+        + discontinue(): void
+        + addSpecification(spec: ProductSpecification): void
+        + addImage(image: ProductImage): void
+        + setPrimaryImage(imageId: ImageId): void
+        --
+        - validatePrice(price: Money): void
+        - collectEvent(event: DomainEvent): void
+    }
+    
+    class ProductSpecification <<Entity>> ENTITY_COLOR {
+        - id: SpecificationId
+        - attributeName: String
+        - attributeValue: String
+        --
+        + update(value: String): void
+    }
+    
+    class ProductImage <<Entity>> ENTITY_COLOR {
+        - id: ImageId
+        - imageUrl: String
+        - isPrimary: Boolean
+        - displayOrder: Integer
+        --
+        + setAsPrimary(): void
+        + updateOrder(order: Integer): void
+    }
+    
+    class ProductId <<ValueObject>> VALUE_OBJECT_COLOR {
+        - value: String
+        --
+        + {static} generate(): ProductId
+        + {static} of(value: String): ProductId
+        + getValue(): String
+    }
+    
+    class Category <<ValueObject>> VALUE_OBJECT_COLOR {
+        - categoryId: String
+        - categoryName: String
+        - parentCategoryId: String
+        --
+        + isSubCategoryOf(parent: Category): Boolean
+    }
+    
+    class Money <<ValueObject>> VALUE_OBJECT_COLOR {
+        - amount: BigDecimal
+        - currency: Currency
+        --
+        + add(other: Money): Money
+        + multiply(factor: int): Money
+    }
+    
+    enum ProductStatus {
+        ACTIVE
+        DISCONTINUED
+        OUT_OF_STOCK
+    }
+    
+    class ProductCreatedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + productId: ProductId
+        + productName: String
+        + category: Category
+        + price: Money
+        + sellerId: SellerId
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): ProductCreatedEvent
+        + getEventType(): String
+        + getAggregateId(): String
+    }
+    
+    class ProductPriceChangedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + productId: ProductId
+        + oldPrice: Money
+        + newPrice: Money
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): ProductPriceChangedEvent
+    }
+    
+    class ProductDiscontinuedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + productId: ProductId
+        + reason: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): ProductDiscontinuedEvent
+    }
+}
+
+' Relationships
+Product "1" *-- "many" ProductSpecification : has
+Product "1" *-- "many" ProductImage : has
+Product *-- ProductId : has
+Product *-- Category : has
+Product *-- Money : price
+Product -- ProductStatus : has
+Product ..> ProductCreatedEvent : publishes
+Product ..> ProductPriceChangedEvent : publishes
+Product ..> ProductDiscontinuedEvent : publishes
+
+' Business Rules
+note right of Product
+    **Invariants:**
+    - Product name must be unique per seller
+    - Price must be positive
+    - At least one image required
+    - Only one primary image allowed
+    - Cannot discontinue with active orders
+    
+    **External References:**
+    - sellerId → Seller Context
+    - Inventory → Inventory Context
+    - Reviews → Review Context
+end note
+
+' Event Usage
+note left of Product
+    **Event-Driven Integration:**
+    
+    **ProductCreatedEvent:**
+    → Inventory Context: Create inventory item
+    → Pricing Context: Initialize pricing rules
+    
+    **ProductPriceChangedEvent:**
+    → Order Context: Update cached prices
+    → Shopping Cart Context: Refresh cart prices
+    → Pricing Context: Update price history
+    
+    **ProductDiscontinuedEvent:**
+    → Inventory Context: Stop reordering
+    → Order Context: Prevent new orders
+end note
+
+@enduml

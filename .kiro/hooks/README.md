@@ -18,6 +18,14 @@
    - **維護成本**: 低
    - **ROI**: 優秀
 
+2. **documentation-sync.kiro.hook** (v1.0)
+   - **功能**: 文檔同步提醒
+   - **監控**: app/src/**/*.java, infrastructure/**/*.java, app/src/**/*.ts, infrastructure/**/*.ts
+   - **作用**: 當代碼變更時提醒開發者更新相關文檔
+   - **價值**: ⭐⭐⭐⭐ 高 - 防止文檔漂移，保持文檔與代碼同步
+   - **維護成本**: 低
+   - **ROI**: 優秀
+
 ### 📋 替代方案（推薦使用腳本而非 Hooks）
 
 以下功能通過腳本和手動流程實現，無需 hooks：

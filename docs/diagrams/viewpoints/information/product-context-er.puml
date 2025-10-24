@@ -1,0 +1,98 @@
+@startuml product-context-er
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+
+title Product Context - Entity Relationship Diagram
+
+package "Product Aggregate" <<Rectangle>> {
+    
+    entity "Product" as product <<Aggregate Root>> AGGREGATE_ROOT_COLOR {
+        * productId : ProductId <<PK>>
+        --
+        * productName : String
+        * description : String
+        * category : Category
+        * price : Money
+        * status : ProductStatus
+        * sellerId : SellerId
+        --
+        + create()
+        + update()
+        + changePrice()
+        + discontinue()
+        + addSpecification()
+        + addImage()
+    }
+    
+    entity "ProductSpecification" as spec <<Entity>> ENTITY_COLOR {
+        * specificationId : SpecificationId <<PK>>
+        * productId : ProductId <<FK>>
+        --
+        * attributeName : String
+        * attributeValue : String
+        --
+        + update()
+    }
+    
+    entity "ProductImage" as image <<Entity>> ENTITY_COLOR {
+        * imageId : ImageId <<PK>>
+        * productId : ProductId <<FK>>
+        --
+        * imageUrl : String
+        * isPrimary : Boolean
+        * displayOrder : Integer
+        --
+        + setAsPrimary()
+        + updateOrder()
+    }
+    
+    object "Category" as category <<Value Object>> VALUE_OBJECT_COLOR {
+        * categoryId : String
+        * categoryName : String
+        * parentCategoryId : String
+    }
+    
+    object "Money" as money <<Value Object>> VALUE_OBJECT_COLOR {
+        * amount : BigDecimal
+        * currency : Currency
+    }
+    
+    object "ProductId" as productId <<Value Object>> VALUE_OBJECT_COLOR {
+        * value : String
+    }
+    
+    enum ProductStatus {
+        ACTIVE
+        DISCONTINUED
+        OUT_OF_STOCK
+    }
+}
+
+' Relationships
+product ||--o{ spec : "has"
+product ||--o{ image : "has"
+product *-- category
+product *-- money : "price"
+product *-- productId
+product -- ProductStatus
+
+' Domain Events
+note right of product
+    **Domain Events:**
+    - ProductCreatedEvent
+    - ProductUpdatedEvent
+    - ProductPriceChangedEvent
+    - ProductDiscontinuedEvent
+    - ProductImageAddedEvent
+end note
+
+' External References
+note left of product
+    **External References:**
+    - sellerId → Seller Context
+    - Reviews → Review Context
+    - Inventory → Inventory Context
+end note
+
+@enduml

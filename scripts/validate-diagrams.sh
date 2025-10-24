@@ -14,7 +14,6 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PLANTUML_JAR="${PLANTUML_JAR:-plantuml.jar}"
 SOURCE_DIR="docs/diagrams/viewpoints"
 GENERATED_DIR="docs/diagrams/generated"
 DOCS_DIR="docs"
@@ -93,27 +92,21 @@ check_syntax() {
         return 0
     fi
     
-    # Check if PlantUML JAR exists
-    if [ ! -f "$PLANTUML_JAR" ]; then
-        print_error "PlantUML JAR not found: $PLANTUML_JAR"
-        print_info "Run ./scripts/generate-diagrams.sh first to download PlantUML"
-        return 1
-    fi
-    
-    # Check Java installation
-    if ! command -v java &> /dev/null; then
-        print_error "Java is not installed. Please install Java 11 or higher."
+    # Check if plantuml command is available (Homebrew)
+    if ! command -v plantuml &> /dev/null; then
+        print_error "PlantUML is not installed. Please install it using Homebrew:"
+        print_error "  brew install plantuml"
         return 1
     fi
     
     # Validate each file
     for file in $files; do
         ((total++))
-        if java -jar "$PLANTUML_JAR" -syntax "$file" > /dev/null 2>&1; then
+        if plantuml -checkonly "$file" > /dev/null 2>&1; then
             print_success "✓ Valid: $file"
         else
             print_error "✗ Invalid: $file"
-            java -jar "$PLANTUML_JAR" -syntax "$file"
+            plantuml -checkonly "$file"
             ((errors++))
         fi
     done

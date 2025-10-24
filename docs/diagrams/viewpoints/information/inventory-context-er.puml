@@ -1,0 +1,90 @@
+@startuml inventory-context-er
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+
+title Inventory Context - Entity Relationship Diagram
+
+package "InventoryItem Aggregate" <<Rectangle>> {
+    
+    entity "InventoryItem" as inventory <<Aggregate Root>> AGGREGATE_ROOT_COLOR {
+        * inventoryItemId : InventoryItemId <<PK>>
+        --
+        * productId : ProductId
+        * warehouseId : String
+        * quantityOnHand : Integer
+        * quantityReserved : Integer
+        * quantityAvailable : Integer
+        * reorderPoint : Integer
+        * reorderQuantity : Integer
+        --
+        + receive(quantity)
+        + reserve(quantity)
+        + fulfill(reservationId)
+        + releaseReservation(reservationId)
+        + checkLowStock()
+    }
+    
+    entity "InventoryReservation" as reservation <<Entity>> ENTITY_COLOR {
+        * reservationId : ReservationId <<PK>>
+        * inventoryItemId : InventoryItemId <<FK>>
+        --
+        * orderId : OrderId
+        * quantity : Integer
+        * reservedAt : LocalDateTime
+        * expiresAt : LocalDateTime
+        * status : ReservationStatus
+        --
+        + fulfill()
+        + expire()
+        + cancel()
+    }
+    
+    object "StockLevel" as stockLevel <<Value Object>> VALUE_OBJECT_COLOR {
+        * onHand : Integer
+        * reserved : Integer
+        * available : Integer
+        --
+        + calculateAvailable()
+    }
+    
+    enum ReservationStatus {
+        ACTIVE
+        FULFILLED
+        EXPIRED
+        CANCELLED
+    }
+}
+
+' Relationships
+inventory ||--o{ reservation : "has"
+inventory *-- stockLevel
+
+' Business Rules
+note right of inventory
+    **Business Rules:**
+    - available = onHand - reserved
+    - Cannot reserve more than available
+    - Reservations expire after 15 minutes
+    - Low stock alert when available < reorderPoint
+end note
+
+' Domain Events
+note left of inventory
+    **Domain Events:**
+    - InventoryReceivedEvent
+    - InventoryReservedEvent
+    - InventoryReservationExpiredEvent
+    - InventoryReservationCancelledEvent
+    - InventoryFulfilledEvent
+    - LowStockAlertEvent
+end note
+
+' External References
+note bottom of inventory
+    **External References:**
+    - productId → Product Context
+    - orderId → Order Context
+end note
+
+@enduml

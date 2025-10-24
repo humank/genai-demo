@@ -1,0 +1,105 @@
+@startuml customer-registration-flow
+!define CONTEXT_COLOR #E3F2FD
+!define EVENT_COLOR #FFF9C4
+!define API_COLOR #F3E5F5
+
+title Customer Registration Data Flow
+
+skinparam componentStyle rectangle
+
+actor "Customer" as customer
+
+' API Layer
+package "API Layer" as api_layer API_COLOR {
+    component "Customer API" as api
+}
+
+' Contexts
+package "Customer Context" as customer_ctx CONTEXT_COLOR {
+    component "Customer Service" as customer_service
+    component "Customer Aggregate" as customer_agg
+    database "Customer DB" as customer_db
+}
+
+package "Notification Context" as notification_ctx CONTEXT_COLOR {
+    component "Notification Service" as notification_service
+    component "Email Service" as email_service
+    database "Notification DB" as notification_db
+}
+
+package "Promotion Context" as promotion_ctx CONTEXT_COLOR {
+    component "Promotion Service" as promotion_service
+    component "Coupon Generator" as coupon_gen
+    database "Promotion DB" as promotion_db
+}
+
+' Events
+queue "CustomerRegisteredEvent" as event EVENT_COLOR
+
+' Flow
+customer --> api : "1. POST /api/v1/customers\\n{name, email, password}"
+api --> customer_service : "2. RegisterCustomerCommand"
+customer_service --> customer_agg : "3. Create customer"
+customer_agg --> customer_db : "4. Persist customer"
+customer_agg --> event : "5. Publish event"
+
+event --> notification_service : "6. Handle event"
+notification_service --> email_service : "7. Send welcome email"
+email_service --> notification_db : "8. Log notification"
+
+event --> promotion_service : "9. Handle event"
+promotion_service --> coupon_gen : "10. Generate welcome coupon"
+coupon_gen --> promotion_db : "11. Save coupon"
+
+api --> customer : "12. 201 Created\\n{customerId, ...}"
+
+' Data Details
+note right of customer_agg
+    **Customer Data Created:**
+    - Customer ID (generated)
+    - Customer name
+    - Email (validated, unique)
+    - Password (hashed)
+    - Membership level (STANDARD)
+    - Registration date
+    - Status (ACTIVE)
+end note
+
+note right of event
+    **Event Payload:**
+    - customerId
+    - customerName
+    - email
+    - membershipLevel
+    - eventId
+    - occurredOn
+end note
+
+note right of notification_service
+    **Notification Data:**
+    - Customer email
+    - Customer name
+    - Welcome template
+    - Delivery status
+    - Sent timestamp
+end note
+
+note right of promotion_service
+    **Promotion Data:**
+    - Welcome coupon code
+    - Discount amount (10%)
+    - Valid for 30 days
+    - Single use
+    - Customer ID
+end note
+
+' Consistency
+note bottom of event
+    **Data Consistency:**
+    - Customer Context: Strong consistency (ACID)
+    - Notification Context: Eventual consistency
+    - Promotion Context: Eventual consistency
+    - Latency: < 5 seconds for notifications
+end note
+
+@enduml

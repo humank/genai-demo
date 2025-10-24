@@ -1,0 +1,159 @@
+@startuml order-aggregate
+!define AGGREGATE_ROOT_COLOR #FFE4B5
+!define ENTITY_COLOR #E0F2F7
+!define VALUE_OBJECT_COLOR #F0F4C3
+!define DOMAIN_EVENT_COLOR #FFCCBC
+
+title Order Aggregate Structure
+
+package "Order Aggregate" <<Rectangle>> {
+    
+    class Order <<AggregateRoot>> AGGREGATE_ROOT_COLOR {
+        - id: OrderId
+        - customerId: CustomerId
+        - items: List<OrderItem>
+        - totalAmount: Money
+        - shippingAddress: Address
+        - billingAddress: Address
+        - status: OrderStatus
+        - orderDate: LocalDateTime
+        --
+        + submit(): void
+        + confirm(): void
+        + ship(): void
+        + deliver(): void
+        + cancel(): void
+        + addItem(item: OrderItem): void
+        + removeItem(itemId: OrderItemId): void
+        --
+        - validateOrderSubmission(): void
+        - calculateTotal(): Money
+        - collectEvent(event: DomainEvent): void
+    }
+    
+    class OrderItem <<Entity>> ENTITY_COLOR {
+        - id: OrderItemId
+        - productId: ProductId
+        - productName: String
+        - quantity: Integer
+        - unitPrice: Money
+        - subtotal: Money
+        --
+        + updateQuantity(quantity: Integer): void
+        + calculateSubtotal(): Money
+        --
+        - validateQuantity(quantity: Integer): void
+    }
+    
+    class OrderId <<ValueObject>> VALUE_OBJECT_COLOR {
+        - value: String
+        --
+        + {static} generate(): OrderId
+        + {static} of(value: String): OrderId
+        + getValue(): String
+    }
+    
+    class Money <<ValueObject>> VALUE_OBJECT_COLOR {
+        - amount: BigDecimal
+        - currency: Currency
+        --
+        + add(other: Money): Money
+        + subtract(other: Money): Money
+        + multiply(factor: int): Money
+        --
+        - validateSameCurrency(other: Money): void
+    }
+    
+    class Address <<ValueObject>> VALUE_OBJECT_COLOR {
+        - street: String
+        - city: String
+        - state: String
+        - postalCode: String
+        - country: String
+        --
+        + getFullAddress(): String
+    }
+    
+    enum OrderStatus {
+        CREATED
+        PENDING
+        CONFIRMED
+        SHIPPED
+        DELIVERED
+        CANCELLED
+    }
+    
+    class OrderSubmittedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + totalAmount: Money
+        + itemCount: int
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): OrderSubmittedEvent
+        + getEventType(): String
+        + getAggregateId(): String
+    }
+    
+    class OrderConfirmedEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + orderId: OrderId
+        + customerId: CustomerId
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): OrderConfirmedEvent
+    }
+    
+    class OrderCancelledEvent <<DomainEvent>> DOMAIN_EVENT_COLOR {
+        + orderId: OrderId
+        + reason: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+        --
+        + {static} create(...): OrderCancelledEvent
+    }
+}
+
+' Relationships
+Order "1" *-- "many" OrderItem : contains
+Order *-- OrderId : has
+Order *-- Money : totalAmount
+Order *-- Address : shippingAddress
+Order *-- Address : billingAddress
+Order -- OrderStatus : has
+Order ..> OrderSubmittedEvent : publishes
+Order ..> OrderConfirmedEvent : publishes
+Order ..> OrderCancelledEvent : publishes
+OrderItem *-- Money : unitPrice, subtotal
+
+' Business Rules
+note right of Order
+    **Invariants:**
+    - Order must have at least one item
+    - Total amount = sum of item subtotals
+    - Cannot modify items after CONFIRMED
+    - Cannot cancel after SHIPPED
+    
+    **Consistency Boundary:**
+    - All changes within Order aggregate
+      are immediately consistent
+    - Changes across aggregates are
+      eventually consistent via events
+end note
+
+' Event Collection
+note left of Order
+    **Event Collection:**
+    1. Business method executes
+    2. State changes applied
+    3. Domain event collected
+    4. Application service publishes
+    
+    **Example:**
+    order.submit()
+      → status = PENDING
+      → collectEvent(OrderSubmittedEvent)
+end note
+
+@enduml

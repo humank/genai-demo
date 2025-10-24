@@ -1,0 +1,179 @@
+@startuml stakeholder-map
+!define BUSINESS_COLOR #E3F2FD
+!define TECHNICAL_COLOR #F3E5F5
+!define USER_COLOR #FFF3E0
+!define EXTERNAL_COLOR #E8F5E9
+
+title Stakeholder Map - E-Commerce Platform
+
+' Define styles
+skinparam rectangle {
+    FontSize 10
+    BorderColor #01579B
+}
+
+skinparam actor {
+    FontSize 10
+}
+
+' Central System
+rectangle "E-Commerce Platform" as platform #FFFFFF {
+    [Core System]
+}
+
+' Business Stakeholders
+package "Business Stakeholders" #E3F2FD {
+    actor "Executive\nLeadership" as exec
+    actor "Product\nManagement" as product
+    actor "Business\nAnalysts" as ba
+    
+    note right of exec
+      **Concerns:**
+      - ROI & Revenue
+      - Market Position
+      - Strategic Goals
+      **Engagement:** Quarterly
+    end note
+    
+    note right of product
+      **Concerns:**
+      - Feature Delivery
+      - User Experience
+      - Time to Market
+      **Engagement:** Weekly
+    end note
+}
+
+' Technical Stakeholders
+package "Technical Stakeholders" #F3E5F5 {
+    actor "Development\nTeam" as dev
+    actor "Architecture\nTeam" as arch
+    actor "QA Team" as qa
+    actor "Operations\nTeam" as ops
+    actor "Security\nTeam" as sec
+    
+    note right of dev
+      **Concerns:**
+      - Code Quality
+      - Development Velocity
+      - Technical Debt
+      **Engagement:** Daily
+    end note
+    
+    note right of ops
+      **Concerns:**
+      - Reliability (99.9%)
+      - Monitoring
+      - Incident Response
+      **Engagement:** Daily
+    end note
+}
+
+' End Users
+package "End Users" #FFF3E0 {
+    actor "Customers" as customers
+    actor "Sellers" as sellers
+    actor "Support\nAgents" as support
+    actor "System\nAdmins" as admins
+    
+    note right of customers
+      **Concerns:**
+      - Easy Shopping
+      - Fast Checkout
+      - Order Tracking
+      **Engagement:** Continuous
+    end note
+    
+    note right of sellers
+      **Concerns:**
+      - Product Management
+      - Order Fulfillment
+      - Sales Analytics
+      **Engagement:** Daily
+    end note
+}
+
+' External Stakeholders
+package "External Stakeholders" #E8F5E9 {
+    actor "Payment\nGateway" as payment_ext
+    actor "Shipping\nProviders" as shipping_ext
+    actor "Regulatory\nBodies" as regulatory
+    
+    note right of regulatory
+      **Concerns:**
+      - GDPR Compliance
+      - PCI-DSS Compliance
+      - Consumer Protection
+      **Engagement:** As needed
+    end note
+}
+
+' Relationships - Business Stakeholders
+exec --> platform : Strategic Direction\nBudget Approval
+product --> platform : Feature Requirements\nPrioritization
+ba --> platform : Business Requirements\nProcess Definition
+
+' Relationships - Technical Stakeholders
+dev --> platform : Implementation\nMaintenance
+arch --> platform : Architecture Design\nTechnical Standards
+qa --> platform : Quality Assurance\nTesting
+ops --> platform : Deployment\nMonitoring
+sec --> platform : Security\nCompliance
+
+' Relationships - End Users
+customers --> platform : Use System\nProvide Feedback
+sellers --> platform : Manage Products\nFulfill Orders
+support --> platform : Customer Assistance\nIssue Resolution
+admins --> platform : System Configuration\nUser Management
+
+' Relationships - External Stakeholders
+platform --> payment_ext : Payment Processing
+platform --> shipping_ext : Shipping Services
+platform --> regulatory : Compliance Reporting
+
+' Collaboration relationships
+exec ..> product : Strategy Alignment
+product ..> dev : Feature Collaboration
+product ..> ba : Requirements Refinement
+dev ..> arch : Technical Consultation
+dev ..> qa : Quality Collaboration
+dev ..> ops : Deployment Coordination
+ops ..> sec : Security Monitoring
+support ..> dev : Bug Reports
+customers ..> support : Support Requests
+sellers ..> support : Seller Support
+
+' Influence levels
+note top of exec
+  **High Influence**
+  **Low Engagement**
+end note
+
+note top of dev
+  **Medium Influence**
+  **High Engagement**
+end note
+
+note top of customers
+  **Low Influence**
+  **High Engagement**
+end note
+
+note top of regulatory
+  **High Influence**
+  **Low Engagement**
+end note
+
+' Stakeholder priorities
+legend right
+  |= Stakeholder Type |= Primary Focus |= Engagement Level |
+  | Business | Strategy, Features, ROI | Weekly-Quarterly |
+  | Technical | Quality, Reliability, Security | Daily-Weekly |
+  | End Users | Usability, Performance | Continuous |
+  | External | Compliance, Integration | As Needed |
+  |= Line Type |= Meaning |
+  | Solid | Direct interaction |
+  | Dotted | Collaboration/Influence |
+endlegend
+
+@enduml

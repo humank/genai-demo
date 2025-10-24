@@ -1,0 +1,250 @@
+@startuml customer-context-detail
+!define AGGREGATE_COLOR #FFE0B2
+!define ENTITY_COLOR #FFF3E0
+!define VALUE_OBJECT_COLOR #FFF9C4
+!define SERVICE_COLOR #E1F5FE
+!define REPOSITORY_COLOR #F3E5F5
+
+title Customer Context - Detailed View
+
+skinparam class {
+    BackgroundColor AGGREGATE_COLOR
+    BorderColor #FF9800
+    FontSize 11
+}
+
+package "Customer Context" {
+    
+    ' Aggregate Root
+    class Customer <<AggregateRoot>> {
+        - id: CustomerId
+        - name: CustomerName
+        - email: Email
+        - phone: Phone
+        - status: CustomerStatus
+        - membershipLevel: MembershipLevel
+        - rewardPoints: RewardPoints
+        - addresses: List<DeliveryAddress>
+        - preferences: CustomerPreferences
+        - createdAt: LocalDateTime
+        - updatedAt: LocalDateTime
+        --
+        + register()
+        + updateProfile()
+        + addAddress()
+        + updateAddress()
+        + removeAddress()
+        + upgradeMembership()
+        + earnRewardPoints()
+        + redeemRewardPoints()
+        + updatePreferences()
+        + suspend()
+        + activate()
+    }
+    
+    ' Entities
+    class DeliveryAddress <<Entity>> {
+        - id: AddressId
+        - customerId: CustomerId
+        - addressLine1: String
+        - addressLine2: String
+        - city: String
+        - state: String
+        - postalCode: String
+        - country: String
+        - isDefault: boolean
+        --
+        + update()
+        + setAsDefault()
+    }
+    
+    class CustomerPreferences <<Entity>> {
+        - customerId: CustomerId
+        - language: Language
+        - currency: Currency
+        - notificationSettings: NotificationSettings
+        - privacySettings: PrivacySettings
+        --
+        + updateLanguage()
+        + updateCurrency()
+        + updateNotifications()
+        + updatePrivacy()
+    }
+    
+    ' Value Objects
+    class CustomerId <<ValueObject>> {
+        - value: String
+        --
+        + {static} generate()
+        + {static} of(value: String)
+    }
+    
+    class CustomerName <<ValueObject>> {
+        - firstName: String
+        - lastName: String
+        --
+        + getFullName()
+    }
+    
+    class Email <<ValueObject>> {
+        - value: String
+        --
+        + validate()
+    }
+    
+    class Phone <<ValueObject>> {
+        - countryCode: String
+        - number: String
+        --
+        + format()
+    }
+    
+    class MembershipLevel <<ValueObject>> {
+        - level: String
+        - discountRate: BigDecimal
+        - rewardMultiplier: BigDecimal
+        --
+        + {static} STANDARD
+        + {static} SILVER
+        + {static} GOLD
+        + {static} PLATINUM
+    }
+    
+    class RewardPoints <<ValueObject>> {
+        - points: int
+        --
+        + add(points: int)
+        + redeem(points: int)
+        + canRedeem(points: int)
+    }
+    
+    ' Domain Events
+    class CustomerCreatedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + customerName: CustomerName
+        + email: Email
+        + membershipLevel: MembershipLevel
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class CustomerProfileUpdatedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + customerName: CustomerName
+        + email: Email
+        + phone: Phone
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class MembershipLevelUpgradedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + oldLevel: MembershipLevel
+        + newLevel: MembershipLevel
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class DeliveryAddressAddedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + addressId: AddressId
+        + address: DeliveryAddress
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class RewardPointsEarnedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + points: int
+        + reason: String
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    class RewardPointsRedeemedEvent <<DomainEvent>> {
+        + customerId: CustomerId
+        + points: int
+        + orderId: OrderId
+        + eventId: UUID
+        + occurredOn: LocalDateTime
+    }
+    
+    ' Repository
+    interface CustomerRepository <<Repository>> {
+        + findById(id: CustomerId): Optional<Customer>
+        + findByEmail(email: Email): Optional<Customer>
+        + save(customer: Customer): Customer
+        + delete(id: CustomerId): void
+        + findByMembershipLevel(level: MembershipLevel): List<Customer>
+    }
+    
+    ' Domain Service
+    class CustomerDomainService <<DomainService>> {
+        + calculateMembershipUpgrade(customer: Customer, totalSpending: Money): MembershipLevel
+        + calculateRewardPoints(orderAmount: Money, membershipLevel: MembershipLevel): int
+        + validateCustomerEligibility(customer: Customer): boolean
+    }
+}
+
+' Relationships
+Customer "1" *-- "many" DeliveryAddress : contains
+Customer "1" *-- "1" CustomerPreferences : has
+Customer --> CustomerId : identified by
+Customer --> CustomerName : has
+Customer --> Email : has
+Customer --> Phone : has
+Customer --> MembershipLevel : has
+Customer --> RewardPoints : has
+
+Customer ..> CustomerCreatedEvent : publishes
+Customer ..> CustomerProfileUpdatedEvent : publishes
+Customer ..> MembershipLevelUpgradedEvent : publishes
+Customer ..> DeliveryAddressAddedEvent : publishes
+Customer ..> RewardPointsEarnedEvent : publishes
+Customer ..> RewardPointsRedeemedEvent : publishes
+
+CustomerRepository ..> Customer : manages
+
+CustomerDomainService ..> Customer : operates on
+CustomerDomainService ..> MembershipLevel : calculates
+
+note right of Customer
+  **Customer Aggregate Root**
+  
+  Responsibilities:
+  - Manage customer lifecycle
+  - Handle profile updates
+  - Manage delivery addresses
+  - Track membership level
+  - Manage reward points
+  
+  Business Rules:
+  - Email must be unique
+  - At least one address required
+  - Membership upgrades based on spending
+  - Reward points expire after 1 year
+end note
+
+note bottom of CustomerRepository
+  **Repository Pattern**
+  
+  Interface in domain layer
+  Implementation in infrastructure layer
+  
+  Provides persistence abstraction
+  for Customer aggregate
+end note
+
+note bottom of CustomerDomainService
+  **Domain Service**
+  
+  Handles business logic that
+  doesn't naturally fit in
+  a single aggregate
+  
+  Examples:
+  - Membership upgrade calculation
+  - Reward points calculation
+end note
+
+@enduml
