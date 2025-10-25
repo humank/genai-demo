@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/common/DomainEvent.json",
+  "title": "DomainEvent",
+  "description": "Base schema for all domain events in the system",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "occurredOn",
+    "aggregateId"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this event"
+    },
+    "eventType": {
+      "type": "string",
+      "description": "Type of the event (e.g., CustomerCreated, OrderSubmitted)",
+      "pattern": "^[A-Z][a-zA-Z0-9]*$"
+    },
+    "occurredOn": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the event occurred (ISO 8601 format)"
+    },
+    "aggregateId": {
+      "type": "string",
+      "description": "Identifier of the aggregate that generated this event"
+    }
+  }
+}

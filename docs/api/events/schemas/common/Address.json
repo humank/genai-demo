@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/common/Address.json",
+  "title": "Address",
+  "description": "Physical address",
+  "type": "object",
+  "required": [
+    "street",
+    "city",
+    "postalCode"
+  ],
+  "properties": {
+    "recipientName": {
+      "type": "string",
+      "description": "Name of the recipient",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "street": {
+      "type": "string",
+      "description": "Street address",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "city": {
+      "type": "string",
+      "description": "City name",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "state": {
+      "type": "string",
+      "description": "State or province",
+      "maxLength": 100
+    },
+    "postalCode": {
+      "type": "string",
+      "description": "Postal or ZIP code",
+      "pattern": "^[0-9]{3,10}$"
+    },
+    "country": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code",
+      "pattern": "^[A-Z]{2}$",
+      "default": "TW"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number",
+      "pattern": "^\\+?[0-9\\-\\s()]+$"
+    }
+  }
+}

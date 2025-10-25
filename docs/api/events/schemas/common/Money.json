@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/common/Money.json",
+  "title": "Money",
+  "description": "Monetary value with currency",
+  "type": "object",
+  "required": [
+    "amount",
+    "currency"
+  ],
+  "properties": {
+    "amount": {
+      "type": "number",
+      "description": "Monetary amount (in smallest currency unit, e.g., cents for USD, 元 for TWD)",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 currency code",
+      "pattern": "^[A-Z]{3}$",
+      "examples": ["TWD", "USD", "EUR", "JPY"]
+    }
+  }
+}

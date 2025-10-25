@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/order/OrderSubmittedEvent.json",
+  "title": "OrderSubmittedEvent",
+  "description": "Event published when a customer submits an order for processing",
+  "version": "1.0.0",
+  "allOf": [
+    {
+      "$ref": "../common/DomainEvent.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "orderId",
+        "customerId",
+        "totalAmount",
+        "itemCount",
+        "paymentMethod"
+      ],
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Unique order identifier",
+          "pattern": "^ORD-[0-9]{4}-[0-9]+$",
+          "examples": ["ORD-2025-001", "ORD-2025-12345"]
+        },
+        "customerId": {
+          "type": "string",
+          "description": "Customer identifier",
+          "pattern": "^CUST-[0-9]+$"
+        },
+        "totalAmount": {
+          "$ref": "../common/Money.json",
+          "description": "Total order amount including tax and shipping"
+        },
+        "itemCount": {
+          "type": "integer",
+          "description": "Total number of items in the order",
+          "minimum": 1
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Selected payment method",
+          "enum": [
+            "CREDIT_CARD",
+            "DEBIT_CARD",
+            "BANK_TRANSFER",
+            "CASH_ON_DELIVERY",
+            "DIGITAL_WALLET"
+          ]
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "eventId": "110e8400-e29b-41d4-a716-446655440001",
+      "eventType": "OrderSubmitted",
+      "occurredOn": "2025-10-25T10:05:00Z",
+      "aggregateId": "ORD-2025-001",
+      "orderId": "ORD-2025-001",
+      "customerId": "CUST-001",
+      "totalAmount": {
+        "amount": 37695,
+        "currency": "TWD"
+      },
+      "itemCount": 1,
+      "paymentMethod": "CREDIT_CARD"
+    }
+  ]
+}

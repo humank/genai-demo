@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/customer/CustomerCreatedEvent.json",
+  "title": "CustomerCreatedEvent",
+  "description": "Event published when a new customer account is created",
+  "version": "2.0.0",
+  "allOf": [
+    {
+      "$ref": "../common/DomainEvent.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "customerId",
+        "customerName",
+        "email",
+        "membershipLevel"
+      ],
+      "properties": {
+        "customerId": {
+          "type": "string",
+          "description": "Unique customer identifier",
+          "pattern": "^CUST-[0-9]+$",
+          "examples": ["CUST-001", "CUST-12345"]
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Customer's full name",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Customer's email address"
+        },
+        "membershipLevel": {
+          "type": "string",
+          "description": "Customer's membership level",
+          "enum": ["STANDARD", "PREMIUM", "VIP"]
+        },
+        "birthDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Customer's birth date (optional, V2 field)"
+        },
+        "address": {
+          "$ref": "../common/Address.json",
+          "description": "Customer's primary address (optional, V2 field)"
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "eventId": "550e8400-e29b-41d4-a716-446655440000",
+      "eventType": "CustomerCreated",
+      "occurredOn": "2025-10-25T10:30:00Z",
+      "aggregateId": "CUST-001",
+      "customerId": "CUST-001",
+      "customerName": "張小明",
+      "email": "ming.chang@example.com",
+      "membershipLevel": "STANDARD",
+      "birthDate": "1990-05-15",
+      "address": {
+        "street": "台北市信義區信義路五段7號",
+        "city": "台北市",
+        "postalCode": "110",
+        "country": "TW"
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.example.com/schemas/payment/PaymentProcessedEvent.json",
+  "title": "PaymentProcessedEvent",
+  "description": "Event published when a payment is successfully processed",
+  "version": "1.0.0",
+  "allOf": [
+    {
+      "$ref": "../common/DomainEvent.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "paymentId",
+        "orderId",
+        "customerId",
+        "paidAmount",
+        "transactionId",
+        "paymentMethod",
+        "processedAt"
+      ],
+      "properties": {
+        "paymentId": {
+          "type": "string",
+          "description": "Unique payment identifier",
+          "pattern": "^PAY-[0-9]{4}-[0-9]+$",
+          "examples": ["PAY-2025-001"]
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Associated order identifier",
+          "pattern": "^ORD-[0-9]{4}-[0-9]+$"
+        },
+        "customerId": {
+          "type": "string",
+          "description": "Customer identifier",
+          "pattern": "^CUST-[0-9]+$"
+        },
+        "paidAmount": {
+          "$ref": "../common/Money.json",
+          "description": "Amount paid"
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "Payment gateway transaction identifier",
+          "minLength": 1
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment method used",
+          "enum": [
+            "CREDIT_CARD",
+            "DEBIT_CARD",
+            "BANK_TRANSFER",
+            "CASH_ON_DELIVERY",
+            "DIGITAL_WALLET"
+          ]
+        },
+        "processedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Payment processing timestamp"
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "eventId": "310e8400-e29b-41d4-a716-446655440001",
+      "eventType": "PaymentProcessed",
+      "occurredOn": "2025-10-25T10:06:00Z",
+      "aggregateId": "PAY-2025-001",
+      "paymentId": "PAY-2025-001",
+      "orderId": "ORD-2025-001",
+      "customerId": "CUST-001",
+      "paidAmount": {
+        "amount": 37695,
+        "currency": "TWD"
+      },
+      "transactionId": "TXN-20251025-001",
+      "paymentMethod": "CREDIT_CARD",
+      "processedAt": "2025-10-25T10:06:00Z"
+    }
+  ]
+}
