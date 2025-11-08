@@ -1,5 +1,5 @@
 # Multi-stage build for Consumer Frontend (Angular) - ARM64 optimized
-FROM --platform=linux/arm64/v8 node:24-alpine AS builder
+FROM --platform=linux/arm64/v8 node:25-alpine AS builder
 
 # Set build environment variables
 ENV NODE_ENV=production
@@ -23,7 +23,7 @@ COPY . .
 RUN npm run build
 
 # Production stage - ARM64 Node.js with Express
-FROM --platform=linux/arm64/v8 node:24-alpine AS runner
+FROM --platform=linux/arm64/v8 node:25-alpine AS runner
 
 # Install runtime dependencies
 RUN apk add --no-cache wget tzdata && \
