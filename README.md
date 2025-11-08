@@ -7,16 +7,48 @@
 [![AWS CDK](https://img.shields.io/badge/AWS%20CDK-2.x-yellow.svg)](https://aws.amazon.com/cdk/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+## 📑 Table of Contents
+
+- [🎯 Project Overview](#-project-overview)
+- [🏛️ Architecture Methodology: Rozanski & Woods](#️-architecture-methodology-rozanski--woods)
+  - [📐 Architecture Viewpoints](#-architecture-viewpoints-system-structure)
+  - [🎯 Quality Perspectives](#-quality-perspectives-cross-cutting-concerns)
+  - [🗺️ Quick Navigation Guide](#️-quick-navigation-guide)
+- [📊 Domain Model: Bounded Contexts](#-domain-model-bounded-contexts)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [🚀 Quick Start](#-quick-start)
+- [🏗️ Project Structure](#️-project-structure)
+- [🧪 Testing Strategy](#-testing-strategy)
+- [☁️ AWS Deployment](#️-aws-deployment)
+- [📈 Observability](#-observability)
+- [📚 Documentation Structure](#-documentation-structure)
+
+---
+
 ## 🎯 Project Overview
 
 This project demonstrates enterprise-grade software architecture practices through a comprehensive e-commerce platform implementation. It showcases how to design, develop, test, and deploy a production-ready system using industry-leading methodologies and tools.
 
+> **🏛️ Architecture First**: This project emphasizes **architecture-driven development** using the Rozanski & Woods methodology. See [Architecture Methodology](#️-architecture-methodology-rozanski--woods) for details.
+
 ### Core Design Principles
 
-**🏗️ Architecture-Driven Design**
-- **Rozanski & Woods Viewpoints & Perspectives**: Systematic architectural analysis across 7 viewpoints (Functional, Information, Concurrency, Development, Deployment, Operational, Context) and 8 perspectives (Security, Performance, Availability, Evolution, etc.)
+**🏗️ Architecture-Driven Design (Rozanski & Woods)**
+
+This project is built on the **Rozanski & Woods Software Systems Architecture** methodology, providing:
+
+- **7 Viewpoints** for systematic structural analysis:
+  - [Context](docs/viewpoints/context/README.md), [Functional](docs/viewpoints/functional/README.md), [Information](docs/viewpoints/information/README.md), [Concurrency](docs/viewpoints/concurrency/README.md)
+  - [Development](docs/viewpoints/development/README.md), [Deployment](docs/viewpoints/deployment/README.md), [Operational](docs/viewpoints/operational/README.md)
+
+- **8 Perspectives** for quality attribute analysis:
+  - [Security](docs/perspectives/security/README.md), [Performance](docs/perspectives/performance/README.md), [Availability](docs/perspectives/availability/README.md), [Evolution](docs/perspectives/evolution/README.md)
+  - [Accessibility](docs/perspectives/accessibility/README.md), [Development Resource](docs/perspectives/development-resource/README.md), [i18n](docs/perspectives/internationalization/README.md), [Location](docs/perspectives/location/README.md)
+
 - **Hexagonal Architecture**: Clean separation between business logic and infrastructure concerns
 - **Event-Driven Architecture**: Asynchronous communication through domain events
+
+📖 **Learn More**: [Complete Methodology Guide](docs/rozanski-woods-methodology-guide.md)
 
 **🎯 Domain-Driven Design (DDD)**
 - **Strategic Design**: 13 bounded contexts with clear business boundaries
@@ -41,11 +73,122 @@ This project demonstrates enterprise-grade software architecture practices throu
 - **Multi-Region Support**: Cross-region deployment capabilities
 - **GitOps**: Automated deployment through ArgoCD
 
-## 📊 Architecture Overview
+## 🏛️ Architecture Methodology: Rozanski & Woods
 
-### Bounded Contexts
+This project follows the **Rozanski & Woods Software Systems Architecture** methodology, providing systematic architectural analysis through **7 Viewpoints** (system structure) and **8 Perspectives** (quality attributes).
 
-The system is organized into 13 bounded contexts, each representing a distinct business capability:
+### 📐 Architecture Viewpoints (System Structure)
+
+Viewpoints describe **WHAT** the system is and **HOW** it's organized:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    CONTEXT VIEWPOINT                            │
+│              (System Boundaries & External Relations)           │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+┌───────▼──────┐  ┌──────▼──────┐  ┌────▼──────────┐
+│  FUNCTIONAL  │  │ INFORMATION │  │  CONCURRENCY  │
+│  (Business   │  │  (Data &    │  │  (Parallel    │
+│  Capabilities)│  │   Events)   │  │  Processing)  │
+└───────┬──────┘  └──────┬──────┘  └────┬──────────┘
+        │                │                │
+        └────────────────┼────────────────┘
+                         │
+        ┌────────────────┼────────────────┐
+        │                │                │
+┌───────▼──────┐  ┌──────▼──────┐  ┌────▼──────────┐
+│ DEVELOPMENT  │  │ DEPLOYMENT  │  │  OPERATIONAL  │
+│ (Code &      │  │ (Infra &    │  │  (Monitoring  │
+│  Build)      │  │  Scaling)   │  │  & Support)   │
+└──────────────┘  └─────────────┘  └───────────────┘
+```
+
+| Viewpoint | Purpose | Documentation |
+|-----------|---------|---------------|
+| **[Context](docs/viewpoints/context/README.md)** | System boundaries, external integrations, stakeholders | [📄 View Docs](docs/viewpoints/context/README.md) |
+| **[Functional](docs/viewpoints/functional/README.md)** | Business capabilities, use cases, bounded contexts | [📄 View Docs](docs/viewpoints/functional/README.md) |
+| **[Information](docs/viewpoints/information/README.md)** | Data models, event flows, data ownership | [📄 View Docs](docs/viewpoints/information/README.md) |
+| **[Concurrency](docs/viewpoints/concurrency/README.md)** | Asynchronous processing, event-driven patterns | [📄 View Docs](docs/viewpoints/concurrency/README.md) |
+| **[Development](docs/viewpoints/development/README.md)** | Code organization, build process, module dependencies | [📄 View Docs](docs/viewpoints/development/README.md) |
+| **[Deployment](docs/viewpoints/deployment/README.md)** | Infrastructure, AWS services, scaling strategy | [📄 View Docs](docs/viewpoints/deployment/README.md) |
+| **[Operational](docs/viewpoints/operational/README.md)** | Monitoring, logging, incident response, maintenance | [📄 View Docs](docs/viewpoints/operational/README.md) |
+
+### 🎯 Quality Perspectives (Cross-Cutting Concerns)
+
+Perspectives describe **quality attributes** that affect the entire system:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    ALL VIEWPOINTS                               │
+│  (Functional, Information, Concurrency, Development,            │
+│   Deployment, Operational, Context)                             │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+         ┌───────────────┼───────────────┐
+         │               │               │
+    ┌────▼────┐    ┌─────▼─────┐   ┌───▼────────┐
+    │Security │    │Performance│   │Availability│
+    │         │    │& Scaling  │   │& Resilience│
+    └────┬────┘    └─────┬─────┘   └───┬────────┘
+         │               │               │
+         └───────────────┼───────────────┘
+                         │
+         ┌───────────────┼───────────────┐
+         │               │               │
+    ┌────▼────┐    ┌─────▼─────┐   ┌───▼────────┐
+    │Evolution│    │Accessibility   │Development │
+    │         │    │           │   │Resource    │
+    └────┬────┘    └─────┬─────┘   └───┬────────┘
+         │               │               │
+         └───────────────┼───────────────┘
+                         │
+         ┌───────────────┴───────────────┐
+         │                               │
+    ┌────▼────────┐              ┌───────▼────┐
+    │i18n         │              │Location    │
+    │             │              │            │
+    └─────────────┘              └────────────┘
+```
+
+| Perspective | Key Concerns | Documentation |
+|-------------|--------------|---------------|
+| **[Security](docs/perspectives/security/README.md)** | Authentication, authorization, encryption, compliance | [📄 View Docs](docs/perspectives/security/README.md) |
+| **[Performance & Scalability](docs/perspectives/performance/README.md)** | Response times, throughput, horizontal scaling | [📄 View Docs](docs/perspectives/performance/README.md) |
+| **[Availability & Resilience](docs/perspectives/availability/README.md)** | High availability, disaster recovery, fault tolerance | [📄 View Docs](docs/perspectives/availability/README.md) |
+| **[Evolution](docs/perspectives/evolution/README.md)** | Extensibility, maintainability, technology evolution | [📄 View Docs](docs/perspectives/evolution/README.md) |
+| **[Accessibility](docs/perspectives/accessibility/README.md)** | UI accessibility, API usability, documentation | [📄 View Docs](docs/perspectives/accessibility/README.md) |
+| **[Development Resource](docs/perspectives/development-resource/README.md)** | Team structure, skills, tools, productivity | [📄 View Docs](docs/perspectives/development-resource/README.md) |
+| **[Internationalization](docs/perspectives/internationalization/README.md)** | Multi-language support, localization | [📄 View Docs](docs/perspectives/internationalization/README.md) |
+| **[Location](docs/perspectives/location/README.md)** | Geographic distribution, data residency, latency | [📄 View Docs](docs/perspectives/location/README.md) |
+
+### 🗺️ Quick Navigation Guide
+
+**For New Team Members:**
+1. Start with [Context Viewpoint](docs/viewpoints/context/README.md) → Understand system boundaries
+2. Read [Functional Viewpoint](docs/viewpoints/functional/README.md) → Learn what the system does
+3. Review [Development Viewpoint](docs/viewpoints/development/README.md) → Understand code organization
+
+**For Architects:**
+- Review all [Viewpoints](docs/viewpoints/README.md) for complete system understanding
+- Check [Perspectives](docs/perspectives/README.md) for quality attributes
+- Review [Architecture Decisions (ADRs)](docs/architecture/adrs/README.md) for design rationale
+
+**For Developers:**
+- Focus on [Development Viewpoint](docs/viewpoints/development/README.md) for code structure
+- Review [Functional Viewpoint](docs/viewpoints/functional/README.md) for business logic
+- Check [Information Viewpoint](docs/viewpoints/information/README.md) for data models
+
+**For Operations:**
+- Focus on [Deployment Viewpoint](docs/viewpoints/deployment/README.md) for infrastructure
+- Review [Operational Viewpoint](docs/viewpoints/operational/README.md) for procedures
+- Check [Operations Runbooks](docs/operations/runbooks/README.md) for incident response
+
+## 📊 Domain Model: Bounded Contexts
+
+The system is organized into **13 bounded contexts** following Domain-Driven Design principles:
 
 ```
 ├── Customer Management      # Customer profiles, authentication, membership
@@ -63,9 +206,20 @@ The system is organized into 13 bounded contexts, each representing a distinct b
 └── Workflow Orchestration  # Process coordination, saga patterns
 ```
 
-### Technology Stack
+**📖 Detailed Documentation:** See [Functional Viewpoint](docs/viewpoints/functional/README.md) for complete bounded context descriptions and interactions.
 
-**Backend**
+## 🛠️ Technology Stack
+
+### Architecture & Design
+
+- **Architecture Methodology**: Rozanski & Woods (7 Viewpoints + 8 Perspectives)
+- **Architecture Patterns**: Hexagonal Architecture, Event-Driven Architecture, CQRS
+- **Domain Modeling**: Domain-Driven Design (DDD), Event Storming
+- **Documentation**: PlantUML, Mermaid, Architecture Decision Records (ADRs)
+- **Architecture Testing**: ArchUnit for enforcing architectural rules
+
+### Backend
+
 - **Framework**: Spring Boot 3.3.13 with Java 21
 - **Data Access**: Spring Data JPA + Hibernate
 - **Database**: PostgreSQL (production), H2 (local/test)
@@ -73,21 +227,24 @@ The system is organized into 13 bounded contexts, each representing a distinct b
 - **Messaging**: Apache Kafka (MSK in production)
 - **API Documentation**: SpringDoc OpenAPI 3 + Swagger UI
 
-**Testing**
+### Testing
+
 - **Unit Testing**: JUnit 5 + Mockito + AssertJ
 - **BDD Testing**: Cucumber 7 with Gherkin
 - **Architecture Testing**: ArchUnit
 - **Performance Testing**: Custom test performance framework
 - **Coverage**: JaCoCo (target: 80%+)
 
-**Infrastructure**
+### Infrastructure
+
 - **Cloud Provider**: AWS
 - **IaC Tool**: AWS CDK (TypeScript)
 - **Container Orchestration**: Amazon EKS
 - **Service Mesh**: AWS App Mesh
 - **CI/CD**: GitHub Actions + ArgoCD
 
-**Observability**
+### Observability
+
 - **Metrics**: Spring Boot Actuator + Prometheus + CloudWatch
 - **Logging**: Structured logging with correlation IDs
 - **Tracing**: AWS X-Ray for distributed tracing
@@ -512,36 +669,64 @@ Pre-configured Grafana dashboards for:
 - Infrastructure security with CDK Nag
 - Penetration testing in staging
 
-## 📚 Documentation
+## 📚 Documentation Structure
 
-### Architecture Documentation
+Our documentation follows the **Rozanski & Woods** methodology with clear separation between structure and quality:
 
-Following Rozanski & Woods methodology, documentation is organized by viewpoints and perspectives:
+### 📐 Architecture Documentation
 
-**Viewpoints** (System Structure)
-- **Functional Viewpoint**: Business capabilities and use cases
-- **Information Viewpoint**: Data models and event flows
-- **Concurrency Viewpoint**: Asynchronous processing patterns
-- **Development Viewpoint**: Code organization and build process
-- **Deployment Viewpoint**: Infrastructure and deployment strategy
-- **Operational Viewpoint**: Monitoring, logging, and incident response
-- **Context Viewpoint**: External integrations and system boundaries
+```
+docs/
+├── viewpoints/              # System Structure (7 Viewpoints)
+│   ├── context/            # System boundaries & external relations
+│   ├── functional/         # Business capabilities & use cases
+│   ├── information/        # Data models & event flows
+│   ├── concurrency/        # Asynchronous processing patterns
+│   ├── development/        # Code organization & build process
+│   ├── deployment/         # Infrastructure & deployment strategy
+│   └── operational/        # Monitoring, logging, incident response
+│
+├── perspectives/           # Quality Attributes (8 Perspectives)
+│   ├── security/          # Authentication, authorization, encryption
+│   ├── performance/       # Response times, throughput, scaling
+│   ├── availability/      # High availability, disaster recovery
+│   ├── evolution/         # Extensibility, maintainability
+│   ├── accessibility/     # UI/API usability, documentation
+│   ├── development-resource/  # Team structure, skills, tools
+│   ├── internationalization/  # Multi-language support
+│   └── location/          # Geographic distribution, latency
+│
+├── architecture/          # Architecture Decisions & Patterns
+│   ├── adrs/             # Architecture Decision Records
+│   └── patterns/         # Design patterns used
+│
+├── operations/           # Operational Guides
+│   ├── runbooks/        # Incident response procedures
+│   ├── monitoring/      # Monitoring setup & dashboards
+│   └── deployment/      # Deployment procedures
+│
+└── api/                 # API Documentation
+    ├── rest/           # REST API specifications
+    └── events/         # Domain event catalog
+```
 
-**Perspectives** (Quality Attributes)
-- **Security Perspective**: Authentication, authorization, encryption, compliance
-- **Performance & Scalability Perspective**: Response times, throughput, horizontal scaling
-- **Availability & Resilience Perspective**: High availability, disaster recovery, fault tolerance
-- **Evolution Perspective**: Extensibility, maintainability, technology evolution
-- **Accessibility Perspective**: User interface accessibility, API usability
-- **Development Resource Perspective**: Team structure, skill requirements, tooling
-- **Internationalization Perspective**: Multi-language support, localization
-- **Location Perspective**: Geographic distribution, data residency, latency optimization
+### 🔗 Key Documentation Links
 
-### API Documentation
+| Category | Description | Link |
+|----------|-------------|------|
+| **Architecture Overview** | Complete methodology guide | [📖 Rozanski & Woods Guide](docs/rozanski-woods-methodology-guide.md) |
+| **Viewpoints Index** | All 7 viewpoints overview | [📐 Viewpoints](docs/viewpoints/README.md) |
+| **Perspectives Index** | All 8 perspectives overview | [🎯 Perspectives](docs/perspectives/README.md) |
+| **Architecture Decisions** | ADR repository | [📋 ADRs](docs/architecture/adrs/README.md) |
+| **Operations Guide** | Runbooks & procedures | [🔧 Operations](docs/operations/README.md) |
+| **API Documentation** | REST API & Events | [🔌 API Docs](docs/api/README.md) |
 
-- **OpenAPI 3.0**: Complete API specification
-- **Swagger UI**: Interactive API explorer
-- **Postman Collection**: Pre-configured API requests
+### 📖 API Documentation
+
+- **OpenAPI 3.0**: Complete API specification at `/api-docs`
+- **Swagger UI**: Interactive API explorer at `/swagger-ui.html`
+- **Event Catalog**: Domain events documentation in [docs/api/events/](docs/api/events/)
+- **Postman Collection**: Pre-configured API requests (coming soon)
 
 ## 🤝 Contributing
 
