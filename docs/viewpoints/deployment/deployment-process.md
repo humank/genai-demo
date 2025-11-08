@@ -20,14 +20,17 @@ This document describes the continuous integration and continuous deployment (CI
 
 ### Pipeline Stages
 
-```text
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Source    │ -> │    Build    │ -> │    Test     │ -> │   Deploy    │ -> │   Monitor   │
-│   Control   │    │  & Package  │    │  & Scan     │    │   to Env    │    │  & Verify   │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
-     GitHub            Docker            JUnit              Kubernetes          CloudWatch
-                       Gradle            SonarQube          ArgoCD              Prometheus
-                       Maven             Trivy              Helm                Grafana
+```mermaid
+graph LR
+    N1["Source"]
+    N2["Build"]
+    N1 --> N2
+    N3["Test"]
+    N2 --> N3
+    N4["Deploy"]
+    N3 --> N4
+    N5["Monitor"]
+    N4 --> N5
 ```
 
 ### Pipeline Tools

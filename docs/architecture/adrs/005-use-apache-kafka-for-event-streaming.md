@@ -94,8 +94,17 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 
 **Architecture**:
 
-```text
-Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consumer → Event Handlers
+```mermaid
+graph LR
+    N1["Domain Events"]
+    N2["Spring Kafka Producer"]
+    N1 --> N2
+    N3["MSK Cluster"]
+    N2 --> N3
+    N4["Spring Kafka Consumer"]
+    N3 --> N4
+    N5["Event Handlers"]
+    N4 --> N5
 ```
 
 **Pros**:

@@ -43,38 +43,11 @@ This perspective ensures the system can:
 
 ### i18n vs L10n
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│     Internationalization (i18n) vs Localization (L10n)  │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Internationalization (i18n)                            │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ Design & Development Phase                    │     │
-│  │                                               │     │
-│  │ - Externalize strings                         │     │
-│  │ - Support Unicode (UTF-8)                     │     │
-│  │ - Locale-aware formatting                     │     │
-│  │ - Flexible layouts (RTL support)              │     │
-│  │ - Cultural neutrality in design               │     │
-│  │                                               │     │
-│  │ Done Once: Enables multiple localizations     │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Localization (L10n)                                    │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ Content & Adaptation Phase                    │     │
-│  │                                               │     │
-│  │ - Translate strings                           │     │
-│  │ - Adapt date/time/number formats              │     │
-│  │ - Localize images and media                   │     │
-│  │ - Adapt payment methods                       │     │
-│  │ - Cultural customization                      │     │
-│  │                                               │     │
-│  │ Done Per Locale: Specific to each market      │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N10["Done Once: Enables multiple localizations"]
+    N11["Localization (L10n)"]
+    N10 --> N11
 ```
 
 ## Supported Languages and Regions
@@ -110,48 +83,17 @@ This perspective ensures the system can:
 
 ### Multi-Layer i18n Strategy
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              i18n Architecture Layers                    │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Layer 1: Content Management                            │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Translation files (JSON, YAML)              │     │
-│  │ - CMS for dynamic content                     │     │
-│  │ - Translation Management System (TMS)         │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 2: Application Layer                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ Backend:                                      │     │
-│  │ - Spring MessageSource                        │     │
-│  │ - Locale resolution                           │     │
-│  │ - Content negotiation                         │     │
-│  │                                               │     │
-│  │ Frontend:                                     │     │
-│  │ - React i18next / Angular i18n                │     │
-│  │ - Locale detection                            │     │
-│  │ - Dynamic loading                             │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 3: Formatting & Display                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Date/Time formatting (Intl API)             │     │
-│  │ - Number formatting                           │     │
-│  │ - Currency formatting                         │     │
-│  │ - Pluralization rules                         │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 4: Cultural Adaptation                           │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Payment methods                             │     │
-│  │ - Shipping options                            │     │
-│  │ - Legal compliance                            │     │
-│  │ - Cultural preferences                        │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- Translation Management System (TMS)"]
+    N7["Layer 2: Application Layer"]
+    N6 --> N7
+    N15["- Dynamic loading"]
+    N16["Layer 3: Formatting & Display"]
+    N15 --> N16
+    N20["- Pluralization rules"]
+    N21["Layer 4: Cultural Adaptation"]
+    N20 --> N21
 ```
 
 ## Language Support Implementation
@@ -379,54 +321,23 @@ formatCurrency(1234.56, 'ja-JP', 'JPY');  // ¥1,235
 
 ### Translation Process
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Translation Workflow                        │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  1. Development                                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Developer adds new strings                  │     │
-│  │ - Strings marked for translation              │     │
-│  │ - Default language (en-US) provided           │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  2. Extraction                                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Extract translatable strings                │     │
-│  │ - Generate translation files                  │     │
-│  │ - Upload to TMS (Translation Management)      │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  3. Translation                                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Translators work in TMS                     │     │
-│  │ - Context and screenshots provided            │     │
-│  │ - Translation memory used                     │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  4. Review                                              │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Native speakers review                      │     │
-│  │ - Quality assurance checks                    │     │
-│  │ - Corrections and refinements                 │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  5. Integration                                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Download translations from TMS              │     │
-│  │ - Integrate into codebase                     │     │
-│  │ - Test in staging environment                 │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  6. Deployment                                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Deploy to production                        │     │
-│  │ - Monitor for issues                          │     │
-│  │ - Collect user feedback                       │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- Default language (en-US) provided"]
+    N7["2. Extraction"]
+    N6 --> N7
+    N10["- Upload to TMS (Translation Management)"]
+    N11["3. Translation"]
+    N10 --> N11
+    N14["- Translation memory used"]
+    N15["4. Review"]
+    N14 --> N15
+    N18["- Corrections and refinements"]
+    N19["5. Integration"]
+    N18 --> N19
+    N22["- Test in staging environment"]
+    N23["6. Deployment"]
+    N22 --> N23
 ```
 
 ### Translation Management System (TMS)

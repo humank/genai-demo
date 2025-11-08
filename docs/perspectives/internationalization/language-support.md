@@ -123,16 +123,25 @@ files:
 
 ### 3. Translation Process
 
-```text
-Developer → Add String → Extract → Upload to TMS
-                                         ↓
-                                    Translator
-                                         ↓
-                                    Review (QA)
-                                         ↓
-                                    Download
-                                         ↓
-                                    Commit → Deploy
+```mermaid
+graph TD
+    N1["Developer"]
+    N2["Add String"]
+    N1 --> N2
+    N3["Extract"]
+    N2 --> N3
+    N4["Upload to TMS"]
+    N3 --> N4
+    N8["Commit"]
+    N9["Deploy"]
+    N8 --> N9
+    N5["Translator"]
+    N4 --> N5
+    N6["Review (QA)"]
+    N5 --> N6
+    N7["Download"]
+    N6 --> N7
+    N7 --> N9
 ```
 
 **Timeline**:

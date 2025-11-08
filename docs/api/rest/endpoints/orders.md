@@ -10,10 +10,21 @@ The Order API provides endpoints for managing customer orders, including order c
 
 ## Order Lifecycle
 
-```text
-CREATED → PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED
-                                     ↓
-                                 CANCELLED
+```mermaid
+graph TD
+    N1["CREATED"]
+    N2["PENDING"]
+    N1 --> N2
+    N3["CONFIRMED"]
+    N2 --> N3
+    N4["PROCESSING"]
+    N3 --> N4
+    N5["SHIPPED"]
+    N4 --> N5
+    N6["DELIVERED"]
+    N5 --> N6
+    N7["CANCELLED"]
+    N6 --> N7
 ```
 
 ## Endpoints

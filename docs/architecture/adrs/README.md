@@ -179,8 +179,13 @@ See [ADR Roadmap](ADR-ROADMAP.md) for detailed planning of 51 additional ADRs co
 
 ### ADR Status Transitions
 
-```text
-Proposed → Accepted → [Deprecated | Superseded]
+```mermaid
+graph LR
+    N1["Proposed"]
+    N2["Accepted"]
+    N1 --> N2
+    N3["[Deprecated | Superseded]"]
+    N2 --> N3
 ```
 
 ### Naming Convention

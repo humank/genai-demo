@@ -61,38 +61,17 @@ This document defines the strategy for evolving the technology stack of the Ente
 
 ### Upgrade Decision Matrix
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Upgrade Decision Flow                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  New Version Released                                   │
-│         │                                               │
-│         ▼                                               │
-│  ┌──────────────┐                                       │
-│  │  Security    │ Yes → Upgrade Immediately             │
-│  │  Patch?      │                                       │
-│  └──────┬───────┘                                       │
-│         │ No                                            │
-│         ▼                                               │
-│  ┌──────────────┐                                       │
-│  │  Breaking    │ Yes → Plan Migration                  │
-│  │  Changes?    │       (3-6 months)                    │
-│  └──────┬───────┘                                       │
-│         │ No                                            │
-│         ▼                                               │
-│  ┌──────────────┐                                       │
-│  │  Significant │ Yes → Evaluate Benefits               │
-│  │  Features?   │       Schedule Upgrade                │
-│  └──────┬───────┘                                       │
-│         │ No                                            │
-│         ▼                                               │
-│  ┌──────────────┐                                       │
-│  │  Wait for    │                                       │
-│  │  Next Cycle  │                                       │
-│  └──────────────┘                                       │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph LR
+    N5["Security Yes"]
+    N6["Upgrade Immediately"]
+    N5 --> N6
+    N10["Breaking Yes"]
+    N11["Plan Migration"]
+    N10 --> N11
+    N13["Significant Yes"]
+    N14["Evaluate Benefits"]
+    N13 --> N14
 ```
 
 ---

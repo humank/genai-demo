@@ -77,10 +77,19 @@ Use asynchronous (non-blocking) operations when:
 
 **Flow**:
 
-```text
-User → Submit Registration → Validate Data → Create Account → Return Success
-                                    ↓
-                              (Async) Send Welcome Email
+```mermaid
+graph TD
+    N1["User"]
+    N2["Submit Registration"]
+    N1 --> N2
+    N3["Validate Data"]
+    N2 --> N3
+    N4["Create Account"]
+    N3 --> N4
+    N5["Return Success"]
+    N4 --> N5
+    N6["(Async) Send Welcome Email"]
+    N5 --> N6
 ```
 
 **Response Time**: < 1 second  
@@ -95,8 +104,17 @@ User → Submit Registration → Validate Data → Create Account → Return Suc
 
 **Flow**:
 
-```text
-User → Submit Credentials → Validate → Generate JWT → Return Token
+```mermaid
+graph LR
+    N1["User"]
+    N2["Submit Credentials"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Generate JWT"]
+    N3 --> N4
+    N5["Return Token"]
+    N4 --> N5
 ```
 
 **Response Time**: < 500ms  
@@ -111,10 +129,19 @@ User → Submit Credentials → Validate → Generate JWT → Return Token
 
 **Flow**:
 
-```text
-User → Submit Changes → Validate → Update Database → Return Success
-                                          ↓
-                                  (Async) Sync to Analytics
+```mermaid
+graph TD
+    N1["User"]
+    N2["Submit Changes"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Update Database"]
+    N3 --> N4
+    N5["Return Success"]
+    N4 --> N5
+    N6["(Async) Sync to Analytics"]
+    N5 --> N6
 ```
 
 **Response Time**: < 1 second  
@@ -131,8 +158,15 @@ User → Submit Changes → Validate → Update Database → Return Success
 
 **Flow**:
 
-```text
-User → Search Query → Query Database/Cache → Return Results
+```mermaid
+graph LR
+    N1["User"]
+    N2["Search Query"]
+    N1 --> N2
+    N3["Query Database/Cache"]
+    N2 --> N3
+    N4["Return Results"]
+    N3 --> N4
 ```
 
 **Response Time**: < 500ms  
@@ -147,8 +181,15 @@ User → Search Query → Query Database/Cache → Return Results
 
 **Flow**:
 
-```text
-User → Request Product → Query Database → Return Product Details
+```mermaid
+graph LR
+    N1["User"]
+    N2["Request Product"]
+    N1 --> N2
+    N3["Query Database"]
+    N2 --> N3
+    N4["Return Product Details"]
+    N3 --> N4
 ```
 
 **Response Time**: < 300ms  
@@ -165,8 +206,17 @@ User → Request Product → Query Database → Return Product Details
 
 **Flow**:
 
-```text
-User → Add Item → Validate Availability → Update Cart → Return Updated Cart
+```mermaid
+graph LR
+    N1["User"]
+    N2["Add Item"]
+    N1 --> N2
+    N3["Validate Availability"]
+    N2 --> N3
+    N4["Update Cart"]
+    N3 --> N4
+    N5["Return Updated Cart"]
+    N4 --> N5
 ```
 
 **Response Time**: < 500ms  
@@ -181,8 +231,19 @@ User → Add Item → Validate Availability → Update Cart → Return Updated C
 
 **Flow**:
 
-```text
-User → Update Quantity → Validate → Update Cart → Recalculate Total → Return Cart
+```mermaid
+graph LR
+    N1["User"]
+    N2["Update Quantity"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Update Cart"]
+    N3 --> N4
+    N5["Recalculate Total"]
+    N4 --> N5
+    N6["Return Cart"]
+    N5 --> N6
 ```
 
 **Response Time**: < 500ms  
@@ -199,12 +260,21 @@ User → Update Quantity → Validate → Update Cart → Recalculate Total → 
 
 **Flow**:
 
-```text
-User → Submit Order → Validate → Reserve Inventory → Create Order → Return Order ID
-                                                            ↓
-                                                    (Async) Process Payment
-                                                    (Async) Send Confirmation Email
-                                                    (Async) Notify Warehouse
+```mermaid
+graph TD
+    N1["User"]
+    N2["Submit Order"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Reserve Inventory"]
+    N3 --> N4
+    N5["Create Order"]
+    N4 --> N5
+    N6["Return Order ID"]
+    N5 --> N6
+    N7["(Async) Process Payment"]
+    N6 --> N7
 ```
 
 **Response Time**: < 2 seconds  
@@ -219,8 +289,15 @@ User → Submit Order → Validate → Reserve Inventory → Create Order → Re
 
 **Flow**:
 
-```text
-User → Query Order → Fetch from Database → Return Status
+```mermaid
+graph LR
+    N1["User"]
+    N2["Query Order"]
+    N1 --> N2
+    N3["Fetch from Database"]
+    N2 --> N3
+    N4["Return Status"]
+    N3 --> N4
 ```
 
 **Response Time**: < 500ms  
@@ -237,8 +314,17 @@ User → Query Order → Fetch from Database → Return Status
 
 **Flow**:
 
-```text
-User → Submit Payment → Call Payment Gateway → Wait for Response → Return Result
+```mermaid
+graph LR
+    N1["User"]
+    N2["Submit Payment"]
+    N1 --> N2
+    N3["Call Payment Gateway"]
+    N2 --> N3
+    N4["Wait for Response"]
+    N3 --> N4
+    N5["Return Result"]
+    N4 --> N5
 ```
 
 **Response Time**: < 3 seconds  
@@ -255,8 +341,15 @@ User → Submit Payment → Call Payment Gateway → Wait for Response → Retur
 
 **Flow**:
 
-```text
-User → Check Status → Query Database → Return Status
+```mermaid
+graph LR
+    N1["User"]
+    N2["Check Status"]
+    N1 --> N2
+    N3["Query Database"]
+    N2 --> N3
+    N4["Return Status"]
+    N3 --> N4
 ```
 
 **Response Time**: < 500ms  
@@ -273,8 +366,15 @@ User → Check Status → Query Database → Return Status
 
 **Flow**:
 
-```text
-User → Check Availability → Query Inventory → Return Stock Level
+```mermaid
+graph LR
+    N1["User"]
+    N2["Check Availability"]
+    N1 --> N2
+    N3["Query Inventory"]
+    N2 --> N3
+    N4["Return Stock Level"]
+    N3 --> N4
 ```
 
 **Response Time**: < 300ms  
@@ -289,8 +389,17 @@ User → Check Availability → Query Inventory → Return Stock Level
 
 **Flow**:
 
-```text
-Order Service → Reserve Items → Lock Inventory → Update Stock → Return Confirmation
+```mermaid
+graph LR
+    N1["Order Service"]
+    N2["Reserve Items"]
+    N1 --> N2
+    N3["Lock Inventory"]
+    N2 --> N3
+    N4["Update Stock"]
+    N3 --> N4
+    N5["Return Confirmation"]
+    N4 --> N5
 ```
 
 **Response Time**: < 1 second  
@@ -309,10 +418,17 @@ Order Service → Reserve Items → Lock Inventory → Update Stock → Return C
 
 **Flow**:
 
-```text
-Event → Publish to Kafka → Email Service Consumes → Send via SendGrid
-                                                            ↓
-                                                    (Webhook) Delivery Status
+```mermaid
+graph TD
+    N1["Event"]
+    N2["Publish to Kafka"]
+    N1 --> N2
+    N3["Email Service Consumes"]
+    N2 --> N3
+    N4["Send via SendGrid"]
+    N3 --> N4
+    N5["(Webhook) Delivery Status"]
+    N4 --> N5
 ```
 
 **Processing Time**: 1-5 seconds  
@@ -335,10 +451,17 @@ Event → Publish to Kafka → Email Service Consumes → Send via SendGrid
 
 **Flow**:
 
-```text
-Event → Publish to Kafka → SMS Service Consumes → Send via Twilio
-                                                         ↓
-                                                 (Webhook) Delivery Status
+```mermaid
+graph TD
+    N1["Event"]
+    N2["Publish to Kafka"]
+    N1 --> N2
+    N3["SMS Service Consumes"]
+    N2 --> N3
+    N4["Send via Twilio"]
+    N3 --> N4
+    N5["(Webhook) Delivery Status"]
+    N4 --> N5
 ```
 
 **Processing Time**: 1-3 seconds  
@@ -361,8 +484,17 @@ Event → Publish to Kafka → SMS Service Consumes → Send via Twilio
 
 **Flow**:
 
-```text
-User Action → Publish Event → Analytics Service → Process → Store in Data Warehouse
+```mermaid
+graph LR
+    N1["User Action"]
+    N2["Publish Event"]
+    N1 --> N2
+    N3["Analytics Service"]
+    N2 --> N3
+    N4["Process"]
+    N3 --> N4
+    N5["Store in Data Warehouse"]
+    N4 --> N5
 ```
 
 **Processing Time**: Minutes to hours  
@@ -377,8 +509,17 @@ User Action → Publish Event → Analytics Service → Process → Store in Dat
 
 **Flow**:
 
-```text
-User Request → Queue Report Job → Generate Report → Store Result → Notify User
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["Queue Report Job"]
+    N1 --> N2
+    N3["Generate Report"]
+    N2 --> N3
+    N4["Store Result"]
+    N3 --> N4
+    N5["Notify User"]
+    N4 --> N5
 ```
 
 **Processing Time**: Minutes to hours  
@@ -393,8 +534,17 @@ User Request → Queue Report Job → Generate Report → Store Result → Notif
 
 **Flow**:
 
-```text
-Scheduled Job → Extract Data → Transform → Load to Data Warehouse → Update Dashboards
+```mermaid
+graph LR
+    N1["Scheduled Job"]
+    N2["Extract Data"]
+    N1 --> N2
+    N3["Transform"]
+    N2 --> N3
+    N4["Load to Data Warehouse"]
+    N3 --> N4
+    N5["Update Dashboards"]
+    N4 --> N5
 ```
 
 **Processing Time**: Hours  
@@ -411,8 +561,17 @@ Scheduled Job → Extract Data → Transform → Load to Data Warehouse → Upda
 
 **Flow**:
 
-```text
-Inventory Change → Publish Event → Sync Service → Call Warehouse API → Update Status
+```mermaid
+graph LR
+    N1["Inventory Change"]
+    N2["Publish Event"]
+    N1 --> N2
+    N3["Sync Service"]
+    N2 --> N3
+    N4["Call Warehouse API"]
+    N3 --> N4
+    N5["Update Status"]
+    N4 --> N5
 ```
 
 **Processing Time**: Seconds to minutes  
@@ -427,8 +586,17 @@ Inventory Change → Publish Event → Sync Service → Call Warehouse API → U
 
 **Flow**:
 
-```text
-Scheduled Job → Fetch from Supplier API → Validate → Update Inventory → Publish Events
+```mermaid
+graph LR
+    N1["Scheduled Job"]
+    N2["Fetch from Supplier API"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Update Inventory"]
+    N3 --> N4
+    N5["Publish Events"]
+    N4 --> N5
 ```
 
 **Processing Time**: Minutes  
@@ -445,8 +613,17 @@ Scheduled Job → Fetch from Supplier API → Validate → Update Inventory → 
 
 **Flow**:
 
-```text
-OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed → ShippingScheduled
+```mermaid
+graph LR
+    N1["OrderCreated"]
+    N2["InventoryReserved"]
+    N1 --> N2
+    N3["PaymentProcessed"]
+    N2 --> N3
+    N4["OrderConfirmed"]
+    N3 --> N4
+    N5["ShippingScheduled"]
+    N4 --> N5
 ```
 
 **Processing Time**: Seconds to minutes  
@@ -461,8 +638,17 @@ OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed → S
 
 **Flow**:
 
-```text
-OrderConfirmed → Queue Label Job → Call Shipping API → Generate Label → Store PDF
+```mermaid
+graph LR
+    N1["OrderConfirmed"]
+    N2["Queue Label Job"]
+    N1 --> N2
+    N3["Call Shipping API"]
+    N2 --> N3
+    N4["Generate Label"]
+    N3 --> N4
+    N5["Store PDF"]
+    N4 --> N5
 ```
 
 **Processing Time**: 5-30 seconds  
@@ -479,8 +665,17 @@ OrderConfirmed → Queue Label Job → Call Shipping API → Generate Label → 
 
 **Flow**:
 
-```text
-Image Upload → Queue Processing Job → Resize/Optimize → Store in S3 → Update Database
+```mermaid
+graph LR
+    N1["Image Upload"]
+    N2["Queue Processing Job"]
+    N1 --> N2
+    N3["Resize/Optimize"]
+    N2 --> N3
+    N4["Store in S3"]
+    N3 --> N4
+    N5["Update Database"]
+    N4 --> N5
 ```
 
 **Processing Time**: Seconds to minutes  
@@ -495,8 +690,17 @@ Image Upload → Queue Processing Job → Resize/Optimize → Store in S3 → Up
 
 **Flow**:
 
-```text
-User Request → Queue Export Job → Generate CSV/Excel → Upload to S3 → Send Download Link
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["Queue Export Job"]
+    N1 --> N2
+    N3["Generate CSV/Excel"]
+    N2 --> N3
+    N4["Upload to S3"]
+    N3 --> N4
+    N5["Send Download Link"]
+    N4 --> N5
 ```
 
 **Processing Time**: Minutes to hours  
@@ -511,8 +715,19 @@ User Request → Queue Export Job → Generate CSV/Excel → Upload to S3 → Se
 
 **Flow**:
 
-```text
-File Upload → Queue Import Job → Validate → Process → Update Database → Generate Report
+```mermaid
+graph LR
+    N1["File Upload"]
+    N2["Queue Import Job"]
+    N1 --> N2
+    N3["Validate"]
+    N2 --> N3
+    N4["Process"]
+    N3 --> N4
+    N5["Update Database"]
+    N4 --> N5
+    N6["Generate Report"]
+    N5 --> N6
 ```
 
 **Processing Time**: Minutes to hours  
@@ -529,8 +744,15 @@ File Upload → Queue Import Job → Validate → Process → Update Database �
 
 **Flow**:
 
-```text
-Scheduled Job → Identify Popular Items → Fetch from Database → Populate Cache
+```mermaid
+graph LR
+    N1["Scheduled Job"]
+    N2["Identify Popular Items"]
+    N1 --> N2
+    N3["Fetch from Database"]
+    N2 --> N3
+    N4["Populate Cache"]
+    N3 --> N4
 ```
 
 **Processing Time**: Minutes  
@@ -545,8 +767,15 @@ Scheduled Job → Identify Popular Items → Fetch from Database → Populate Ca
 
 **Flow**:
 
-```text
-Data Update → Publish Event → Cache Service → Invalidate Cache Keys
+```mermaid
+graph LR
+    N1["Data Update"]
+    N2["Publish Event"]
+    N1 --> N2
+    N3["Cache Service"]
+    N2 --> N3
+    N4["Invalidate Cache Keys"]
+    N3 --> N4
 ```
 
 **Processing Time**: Milliseconds to seconds  

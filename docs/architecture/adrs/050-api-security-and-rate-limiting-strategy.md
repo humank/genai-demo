@@ -100,8 +100,17 @@ The platform needs multi-layer API security that includes:
 
 **Architecture**:
 
-```text
-Request → CloudFront → WAF (Layer 1) → API Gateway (Layer 2) → Application (Layer 3)
+```mermaid
+graph LR
+    N1["Request"]
+    N2["CloudFront"]
+    N1 --> N2
+    N3["WAF (Layer 1)"]
+    N2 --> N3
+    N4["API Gateway (Layer 2)"]
+    N3 --> N4
+    N5["Application (Layer 3)"]
+    N4 --> N5
 ```
 
 **Protection Layers**:

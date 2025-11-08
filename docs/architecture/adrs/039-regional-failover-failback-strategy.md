@@ -121,11 +121,23 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 
 **Failover Process**:
 
-```text
-Detection → Validation → Decision → Execution → Verification
-   ↓           ↓           ↓          ↓            ↓
-Health      Multiple    Auto/      Route 53    Monitor
-Checks      Checks      Manual     Update      Metrics
+```mermaid
+graph TD
+    N1["Detection"]
+    N2["Validation"]
+    N1 --> N2
+    N3["Decision"]
+    N2 --> N3
+    N4["Execution"]
+    N3 --> N4
+    N5["Verification"]
+    N4 --> N5
+    N6["Health Multiple Auto/ Route 53 Monitor"]
+    N1 --> N6
+    N2 --> N6
+    N3 --> N6
+    N4 --> N6
+    N5 --> N6
 ```
 
 **Pros**:
@@ -718,13 +730,20 @@ If issues detected within 30 minutes:
 5. **Reversible**: Can abort and stay in failover region
 
 **Failback Process**:
-```text
-
-Data Reconciliation → Canary Failback → Validation → Full Failback
-        ↓                    ↓              ↓            ↓
-   Sync Data          10% Traffic    Monitor      100% Traffic
-   Resolve Conflicts   Validate      Metrics      Complete
-
+```mermaid
+graph TD
+    N1["Data Reconciliation"]
+    N2["Canary Failback"]
+    N1 --> N2
+    N3["Validation"]
+    N2 --> N3
+    N4["Full Failback"]
+    N3 --> N4
+    N5["Sync Data 10% Traffic Monitor 100% Traffic"]
+    N1 --> N5
+    N2 --> N5
+    N3 --> N5
+    N4 --> N5
 ```
 
 **Failback Orchestration**:

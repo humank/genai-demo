@@ -143,14 +143,28 @@ graph TB
 
 **Documented Flow**:
 
-```text
-.puml change → diagram-auto-generation → diagram-documentation-sync → diagram-validation
+```mermaid
+graph LR
+    N1[".puml change"]
+    N2["diagram-auto-generation"]
+    N1 --> N2
+    N3["diagram-documentation-sync"]
+    N2 --> N3
+    N4["diagram-validation"]
+    N3 --> N4
 ```
 
 **Actual Flow** (with missing sync hook):
 
-```text
-.puml change → diagram-auto-generation → ❌ BROKEN → diagram-validation
+```mermaid
+graph LR
+    N1[".puml change"]
+    N2["diagram-auto-generation"]
+    N1 --> N2
+    N3["❌ BROKEN"]
+    N2 --> N3
+    N4["diagram-validation"]
+    N3 --> N4
 ```
 
 **Impact**:

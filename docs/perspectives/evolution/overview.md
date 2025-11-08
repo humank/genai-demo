@@ -42,40 +42,17 @@ This perspective ensures the system can:
 
 ### Evolution Strategy
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Evolution Strategy Layers                  │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Layer 1: Extension Points                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Plugin Architecture                         │     │
-│  │ - Strategy Pattern                            │     │
-│  │ - Event-Driven Extensions                     │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 2: API Versioning                               │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - URL Versioning (/api/v1, /api/v2)          │     │
-│  │ - Backward Compatibility                      │     │
-│  │ - Deprecation Policy                          │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 3: Technology Upgrade                           │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Framework Upgrade Strategy                  │     │
-│  │ - Library Version Management                  │     │
-│  │ - Migration Paths                             │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Layer 4: Technical Debt Management                    │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Code Quality Metrics                        │     │
-│  │ - Refactoring Sprints                         │     │
-│  │ - Architecture Reviews                        │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- Event-Driven Extensions"]
+    N7["Layer 2: API Versioning"]
+    N6 --> N7
+    N10["- Deprecation Policy"]
+    N11["Layer 3: Technology Upgrade"]
+    N10 --> N11
+    N14["- Migration Paths"]
+    N15["Layer 4: Technical Debt Management"]
+    N14 --> N15
 ```
 
 ## Extensibility Architecture
@@ -141,14 +118,19 @@ Our hexagonal architecture provides natural extension points:
 
 We adopt technologies based on maturity:
 
-```text
-Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment
-                                                              ↓
-                                                    Slope of Enlightenment
-                                                              ↓
-                                                    Plateau of Productivity
-                                                              ↓
-                                                    ✅ ADOPTION POINT
+```mermaid
+graph TD
+    N1["Innovation Trigger"]
+    N2["Peak of Inflated Expectations"]
+    N1 --> N2
+    N3["Trough of Disillusionment"]
+    N2 --> N3
+    N4["Slope of Enlightenment"]
+    N3 --> N4
+    N5["Plateau of Productivity"]
+    N4 --> N5
+    N6["✅ ADOPTION POINT"]
+    N5 --> N6
 ```
 
 **Adoption Criteria**:
@@ -163,30 +145,16 @@ Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionme
 
 ### API Versioning
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              API Version Lifecycle                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  v1 (Current)          v2 (New)          v3 (Future)   │
-│  ┌──────────┐         ┌──────────┐      ┌──────────┐  │
-│  │ Active   │         │ Beta     │      │ Alpha    │  │
-│  │ Support  │         │ Testing  │      │ Design   │  │
-│  └──────────┘         └──────────┘      └──────────┘  │
-│       │                    │                  │        │
-│       │ 12 months          │ 6 months         │        │
-│       ↓                    ↓                  ↓        │
-│  ┌──────────┐         ┌──────────┐      ┌──────────┐  │
-│  │Deprecated│         │ Active   │      │ Beta     │  │
-│  │ 6 months │         │ Support  │      │ Testing  │  │
-│  └──────────┘         └──────────┘      └──────────┘  │
-│       │                                                │
-│       ↓                                                │
-│  ┌──────────┐                                         │
-│  │ Removed  │                                         │
-│  └──────────┘                                         │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["12 months 6 months"]
+    N7["Deprecated Active Beta"]
+    N6 --> N7
+    N6 --> N7
+    N6 --> N7
+    N8["6 months Support Testing"]
+    N9["Removed"]
+    N8 --> N9
 ```
 
 ### Deprecation Policy

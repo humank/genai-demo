@@ -47,11 +47,17 @@ The E-Commerce Platform is deployed as a **cloud-native application** on AWS, le
 
 The platform maintains three environments with progressive deployment:
 
-```text
-Development → Staging → Production
-    ↓           ↓           ↓
-  Feature    Integration  Live
-  Testing     Testing    Traffic
+```mermaid
+graph TD
+    N1["Development"]
+    N2["Staging"]
+    N1 --> N2
+    N3["Production"]
+    N2 --> N3
+    N4["Feature Integration Live"]
+    N1 --> N4
+    N2 --> N4
+    N3 --> N4
 ```
 
 **Environment Characteristics**:

@@ -37,29 +37,13 @@ The system follows **Hexagonal Architecture** (also known as Ports and Adapters 
 
 ### Layer Structure
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                    Interfaces Layer                      │
-│  (REST Controllers, Event Handlers, Web UI)             │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────┐
-│                  Application Layer                       │
-│  (Use Case Orchestration, Application Services)         │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ↓
-┌─────────────────────────────────────────────────────────┐
-│                    Domain Layer                          │
-│  (Business Logic, Aggregates, Events, Value Objects)    │
-└─────────────────────────────────────────────────────────┘
-                     ↑
-                     │
-┌─────────────────────────────────────────────────────────┐
-│                Infrastructure Layer                      │
-│  (Persistence, Messaging, External Services)            │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N3["┬"]
+    N4["Application Layer"]
+    N3 --> N4
+    N6["Domain Layer"]
+    N3 --> N6
 ```
 
 ### Dependency Rules

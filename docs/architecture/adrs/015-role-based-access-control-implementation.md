@@ -185,16 +185,15 @@ RBAC with permissions was selected for the following reasons:
 
 **Authorization Model**:
 
-```text
-User → Roles → Permissions → Resources
-
-Examples:
-
-- User "john@example.com" has Role "CUSTOMER"
-- Role "CUSTOMER" has Permissions ["order:create", "order:read:own", "profile:update:own"]
-- Permission "order:create" grants access to POST /api/v1/orders
-- Permission "order:read:own" grants access to GET /api/v1/orders/{id} (own orders only)
-
+```mermaid
+graph LR
+    N1["User"]
+    N2["Roles"]
+    N1 --> N2
+    N3["Permissions"]
+    N2 --> N3
+    N4["Resources"]
+    N3 --> N4
 ```
 
 **Role Hierarchy**:

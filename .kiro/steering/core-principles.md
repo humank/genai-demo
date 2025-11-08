@@ -20,8 +20,13 @@ This document defines the fundamental principles that guide all development work
 
 ### Architecture Layers
 
-```text
-interfaces/ → application/ → domain/ ← infrastructure/
+```mermaid
+graph LR
+    N1["interfaces/"]
+    N2["application/"]
+    N1 --> N2
+    N3["domain/ ← infrastructure/"]
+    N2 --> N3
 ```
 
 **Detailed Guide**: #[[file:../examples/architecture/hexagonal-architecture.md]]

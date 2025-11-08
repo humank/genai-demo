@@ -271,26 +271,17 @@ public record CustomerCreatedEvent(
 
 ### Event Publishing Flow
 
-```text
-
-1. Aggregate Root collects events during business operations
-
-   ↓
-
-2. Application Service saves aggregate to repository
-
-   ↓
-
-3. Application Service publishes collected events
-
-   ↓
-
-4. Event Publisher sends events to message broker (Kafka)
-
-   ↓
-
-5. Event Handlers in other contexts consume events
-
+```mermaid
+graph TD
+    N1["1. Aggregate Root collects events during business operations"]
+    N2["2. Application Service saves aggregate to repository"]
+    N1 --> N2
+    N3["3. Application Service publishes collected events"]
+    N2 --> N3
+    N4["4. Event Publisher sends events to message broker (Kafka)"]
+    N3 --> N4
+    N5["5. Event Handlers in other contexts consume events"]
+    N4 --> N5
 ```
 
 ### Domain Events by Context
@@ -589,8 +580,13 @@ Retry-After: 60
 
 **Example**:
 
-```text
-Customer → Shopping Cart API → Product API (get product details)
+```mermaid
+graph LR
+    N1["Customer"]
+    N2["Shopping Cart API"]
+    N1 --> N2
+    N3["Product API (get product details)"]
+    N2 --> N3
 ```
 
 ### Asynchronous Integration (Domain Events)

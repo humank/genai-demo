@@ -13,8 +13,13 @@ This document defines the mandatory architecture constraints for this project ba
 
 ### Dependency Rule
 
-```text
-interfaces/ → application/ → domain/ ← infrastructure/
+```mermaid
+graph LR
+    N1["interfaces/"]
+    N2["application/"]
+    N1 --> N2
+    N3["domain/ ← infrastructure/"]
+    N2 --> N3
 ```
 
 ### Must Follow
@@ -252,14 +257,19 @@ interfaces/rest/{context}/
 
 ### Event Flow
 
-```text
-Aggregate Root → collectEvent()
-    ↓
-Application Service → publishEventsFromAggregate()
-    ↓
-Event Publisher (Infrastructure)
-    ↓
-Event Handlers (Infrastructure)
+```mermaid
+graph TD
+    N1["Aggregate Root"]
+    N2["collectEvent()"]
+    N1 --> N2
+    N3["Application Service"]
+    N4["publishEventsFromAggregate()"]
+    N3 --> N4
+    N2 --> N3
+    N5["Event Publisher (Infrastructure)"]
+    N4 --> N5
+    N6["Event Handlers (Infrastructure)"]
+    N5 --> N6
 ```
 
 ### Must Follow

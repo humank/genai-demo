@@ -447,8 +447,17 @@ Never duplicate:
 
 #### 1. Event-Driven Synchronization
 
-```text
-Context A → State Change → Domain Event → Context B Event Handler → Update Local Cache
+```mermaid
+graph LR
+    N1["Context A"]
+    N2["State Change"]
+    N1 --> N2
+    N3["Domain Event"]
+    N2 --> N3
+    N4["Context B Event Handler"]
+    N3 --> N4
+    N5["Update Local Cache"]
+    N4 --> N5
 ```
 
 - **Use Case**: Product price changes, customer profile updates
@@ -457,8 +466,15 @@ Context A → State Change → Domain Event → Context B Event Handler → Upda
 
 #### 2. Snapshot Pattern
 
-```text
-Context A → Create Snapshot → Store in Context B → Never Update
+```mermaid
+graph LR
+    N1["Context A"]
+    N2["Create Snapshot"]
+    N1 --> N2
+    N3["Store in Context B"]
+    N2 --> N3
+    N4["Never Update"]
+    N3 --> N4
 ```
 
 - **Use Case**: Order items with product details
@@ -467,8 +483,15 @@ Context A → Create Snapshot → Store in Context B → Never Update
 
 #### 3. Query Pattern
 
-```text
-Context A → Query Context B API → Get Latest Data → Cache Locally (optional)
+```mermaid
+graph LR
+    N1["Context A"]
+    N2["Query Context B API"]
+    N1 --> N2
+    N3["Get Latest Data"]
+    N2 --> N3
+    N4["Cache Locally (optional)"]
+    N3 --> N4
 ```
 
 - **Use Case**: Real-time product availability check

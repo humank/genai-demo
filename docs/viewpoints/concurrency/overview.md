@@ -321,10 +321,26 @@ spring:
 
 **Example**: Order Processing Saga
 
-```text
-OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed
-     ↓              ↓                    ↓                  ↓
-  (Fail)    → InventoryReleased  → PaymentRefunded → OrderCancelled
+```mermaid
+graph TD
+    N1["OrderCreated"]
+    N2["InventoryReserved"]
+    N1 --> N2
+    N3["PaymentProcessed"]
+    N2 --> N3
+    N4["OrderConfirmed"]
+    N3 --> N4
+    N5["(Fail)"]
+    N6["InventoryReleased"]
+    N5 --> N6
+    N7["PaymentRefunded"]
+    N6 --> N7
+    N8["OrderCancelled"]
+    N7 --> N8
+    N1 -.->|fail| N5
+    N2 --> N6
+    N3 --> N7
+    N4 --> N8
 ```
 
 ## State Management

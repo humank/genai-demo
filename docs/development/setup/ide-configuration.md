@@ -22,16 +22,26 @@ This guide provides detailed instructions for configuring your Integrated Develo
 
 #### 1. Import Project
 
-```text
-File → Open → Select project root directory
+```mermaid
+graph LR
+    N1["File"]
+    N2["Open"]
+    N1 --> N2
+    N3["Select project root directory"]
+    N2 --> N3
 ```
 
 IntelliJ will automatically detect the Gradle project and import it.
 
 #### 2. Configure JDK
 
-```text
-File → Project Structure → Project
+```mermaid
+graph LR
+    N1["File"]
+    N2["Project Structure"]
+    N1 --> N2
+    N3["Project"]
+    N2 --> N3
 ```
 
 - **Project SDK**: Select Java 21 (or add if not present)
@@ -40,8 +50,17 @@ File → Project Structure → Project
 
 #### 3. Configure Gradle
 
-```text
-File → Settings → Build, Execution, Deployment → Build Tools → Gradle
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Build, Execution, Deployment"]
+    N2 --> N3
+    N4["Build Tools"]
+    N3 --> N4
+    N5["Gradle"]
+    N4 --> N5
 ```
 
 - **Build and run using**: Gradle
@@ -53,8 +72,15 @@ File → Settings → Build, Execution, Deployment → Build Tools → Gradle
 
 #### Install Required Plugins
 
-```text
-File → Settings → Plugins → Marketplace
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Plugins"]
+    N2 --> N3
+    N4["Marketplace"]
+    N3 --> N4
 ```
 
 **Required Plugins:**
@@ -152,8 +178,17 @@ Create `.idea/codeStyles/Project.xml`:
 
 #### 2. Configure Code Style Settings
 
-```text
-File → Settings → Editor → Code Style → Java
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Editor"]
+    N2 --> N3
+    N4["Code Style"]
+    N3 --> N4
+    N5["Java"]
+    N4 --> N5
 ```
 
 - **Tabs and Indents**:
@@ -173,8 +208,15 @@ File → Settings → Editor → Code Style → Java
 
 #### 1. General Settings
 
-```text
-File → Settings → Editor → General
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Editor"]
+    N2 --> N3
+    N4["General"]
+    N3 --> N4
 ```
 
 - ✅ Ensure line feed at file end on Save
@@ -184,8 +226,17 @@ File → Settings → Editor → General
 
 #### 2. Auto Import
 
-```text
-File → Settings → Editor → General → Auto Import
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Editor"]
+    N2 --> N3
+    N4["General"]
+    N3 --> N4
+    N5["Auto Import"]
+    N4 --> N5
 ```
 
 - ✅ Add unambiguous imports on the fly
@@ -193,8 +244,15 @@ File → Settings → Editor → General → Auto Import
 
 #### 3. Inspections
 
-```text
-File → Settings → Editor → Inspections
+```mermaid
+graph LR
+    N1["File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Editor"]
+    N2 --> N3
+    N4["Inspections"]
+    N3 --> N4
 ```
 
 Enable the following inspections:
@@ -209,8 +267,15 @@ Enable the following inspections:
 
 #### 1. Spring Boot Application
 
-```text
-Run → Edit Configurations → + → Spring Boot
+```mermaid
+graph LR
+    N1["Run"]
+    N2["Edit Configurations"]
+    N1 --> N2
+    N3["+"]
+    N2 --> N3
+    N4["Spring Boot"]
+    N3 --> N4
 ```
 
 - **Name**: Enterprise E-Commerce Platform
@@ -221,8 +286,15 @@ Run → Edit Configurations → + → Spring Boot
 
 #### 2. Gradle Test Configuration
 
-```text
-Run → Edit Configurations → + → Gradle
+```mermaid
+graph LR
+    N1["Run"]
+    N2["Edit Configurations"]
+    N1 --> N2
+    N3["+"]
+    N2 --> N3
+    N4["Gradle"]
+    N3 --> N4
 ```
 
 **Unit Tests:**
@@ -241,8 +313,15 @@ Run → Edit Configurations → + → Gradle
 
 #### 3. Cucumber Configuration
 
-```text
-Run → Edit Configurations → + → Cucumber Java
+```mermaid
+graph LR
+    N1["Run"]
+    N2["Edit Configurations"]
+    N1 --> N2
+    N3["+"]
+    N2 --> N3
+    N4["Cucumber Java"]
+    N3 --> N4
 ```
 
 - **Name**: BDD Tests
@@ -278,8 +357,19 @@ Run → Edit Configurations → + → Cucumber Java
 
 #### Configure Database Connection
 
-```text
-View → Tool Windows → Database → + → Data Source → PostgreSQL
+```mermaid
+graph LR
+    N1["View"]
+    N2["Tool Windows"]
+    N1 --> N2
+    N3["Database"]
+    N2 --> N3
+    N4["+"]
+    N3 --> N4
+    N5["Data Source"]
+    N4 --> N5
+    N6["PostgreSQL"]
+    N5 --> N6
 ```
 
 - **Host**: localhost
@@ -590,36 +680,42 @@ indent_style = tab
 
 **Solution:**
 
-```text
-
-1. File → Settings → Build, Execution, Deployment → Compiler → Annotation Processors
-2. Enable "Enable annotation processing"
-3. Rebuild project
-
+```mermaid
+graph LR
+    N1["1. File"]
+    N2["Settings"]
+    N1 --> N2
+    N3["Build, Execution, Deployment"]
+    N2 --> N3
+    N4["Compiler"]
+    N3 --> N4
+    N5["Annotation Processors"]
+    N4 --> N5
 ```
 
 #### Issue: Spring Boot Run Configuration Not Available
 
 **Solution:**
 
-```text
-
-1. File → Invalidate Caches / Restart
-2. Wait for re-indexing
-3. Right-click on Application.java → Run
-
+```mermaid
+graph LR
+    N1["1. File"]
+    N2["Invalidate Caches / Restart"]
+    N1 --> N2
+    N4["3. Right-click on Application.java"]
+    N5["Run"]
+    N4 --> N5
 ```
 
 #### Issue: Gradle Sync Failed
 
 **Solution:**
 
-```text
-
-1. File → Invalidate Caches / Restart
-2. Delete .gradle directory
-3. Reimport Gradle project
-
+```mermaid
+graph LR
+    N1["1. File"]
+    N2["Invalidate Caches / Restart"]
+    N1 --> N2
 ```
 
 ### VS Code Issues
@@ -628,12 +724,11 @@ indent_style = tab
 
 **Solution:**
 
-```text
-
-1. Cmd+Shift+P → "Java: Clean Java Language Server Workspace"
-2. Reload window
-3. Wait for Java extension to activate
-
+```mermaid
+graph LR
+    N1["1. Cmd+Shift+P"]
+    N2[""Java: Clean Java Language Server Workspace""]
+    N1 --> N2
 ```
 
 #### Issue: Cannot Run Spring Boot Application

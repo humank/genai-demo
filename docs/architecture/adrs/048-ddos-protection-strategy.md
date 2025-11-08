@@ -98,8 +98,19 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 
 **Architecture**:
 
-```text
-Internet → CloudFront (CDN) → AWS Shield Advanced → WAF → ALB → EKS
+```mermaid
+graph LR
+    N1["Internet"]
+    N2["CloudFront (CDN)"]
+    N1 --> N2
+    N3["AWS Shield Advanced"]
+    N2 --> N3
+    N4["WAF"]
+    N3 --> N4
+    N5["ALB"]
+    N4 --> N5
+    N6["EKS"]
+    N5 --> N6
 ```
 
 **Pros**:
@@ -134,8 +145,17 @@ Internet → CloudFront (CDN) → AWS Shield Advanced → WAF → ALB → EKS
 
 **Architecture**:
 
-```text
-Internet → CloudFront (CDN) → WAF → ALB → EKS
+```mermaid
+graph LR
+    N1["Internet"]
+    N2["CloudFront (CDN)"]
+    N1 --> N2
+    N3["WAF"]
+    N2 --> N3
+    N4["ALB"]
+    N3 --> N4
+    N5["EKS"]
+    N4 --> N5
 ```
 
 **Pros**:

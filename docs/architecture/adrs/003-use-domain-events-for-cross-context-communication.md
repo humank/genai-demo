@@ -83,14 +83,19 @@ The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to 
 
 **Architecture**:
 
-```text
-Aggregate → collectEvent()
-    ↓
-Application Service → publishEventsFromAggregate()
-    ↓
-Spring ApplicationEventPublisher
-    ↓
-Event Handlers (same JVM) + External Message Broker (async)
+```mermaid
+graph TD
+    N1["Aggregate"]
+    N2["collectEvent()"]
+    N1 --> N2
+    N3["Application Service"]
+    N4["publishEventsFromAggregate()"]
+    N3 --> N4
+    N2 --> N3
+    N5["Spring ApplicationEventPublisher"]
+    N4 --> N5
+    N6["Event Handlers (same JVM) + External Message Broker (async)"]
+    N5 --> N6
 ```
 
 **Pros**:

@@ -10,66 +10,26 @@ This document provides comprehensive information about the development toolchain
 
 ## Toolchain Architecture
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Development Toolchain Stack                 │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Developer Workstation                                  │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ IDE: IntelliJ IDEA / VS Code                  │     │
-│  │ Version Control: Git + GitHub Desktop         │     │
-│  │ Local Runtime: Docker Desktop                 │     │
-│  │ Database Tools: DataGrip, pgAdmin             │     │
-│  │ API Testing: Postman, Insomnia                │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Source Control & Collaboration                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ GitHub Enterprise                             │     │
-│  │ - Repository hosting                          │     │
-│  │ - Code review (Pull Requests)                 │     │
-│  │ - Issue tracking                              │     │
-│  │ - GitHub Actions (CI/CD)                      │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Build & Package Management                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ Backend: Gradle 8.x, Maven Central            │     │
-│  │ Frontend: npm/pnpm, Node.js 20                │     │
-│  │ Containers: Docker, Docker Compose            │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  CI/CD Pipeline                                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ GitHub Actions (Build, Test, Deploy)          │     │
-│  │ AWS CodePipeline (Production deployment)      │     │
-│  │ ArgoCD (GitOps for Kubernetes)                │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Quality & Security                                     │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ SonarQube (Code quality)                      │     │
-│  │ Snyk (Security scanning)                      │     │
-│  │ Dependabot (Dependency updates)               │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Monitoring & Observability                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ CloudWatch (Logs, Metrics)                    │     │
-│  │ X-Ray (Distributed tracing)                   │     │
-│  │ Grafana (Dashboards)                          │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Collaboration & Communication                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ Slack (Team communication)                    │     │
-│  │ Jira (Project management)                     │     │
-│  │ Confluence (Documentation)                    │     │
-│  │ Miro (Diagramming)                            │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N8["API Testing: Postman, Insomnia"]
+    N9["Source Control & Collaboration"]
+    N8 --> N9
+    N14["- GitHub Actions (CI/CD)"]
+    N15["Build & Package Management"]
+    N14 --> N15
+    N18["Containers: Docker, Docker Compose"]
+    N19["CI/CD Pipeline"]
+    N18 --> N19
+    N22["ArgoCD (GitOps for Kubernetes)"]
+    N23["Quality & Security"]
+    N22 --> N23
+    N26["Dependabot (Dependency updates)"]
+    N27["Monitoring & Observability"]
+    N26 --> N27
+    N30["Grafana (Dashboards)"]
+    N31["Collaboration & Communication"]
+    N30 --> N31
 ```
 
 ## Development Tools

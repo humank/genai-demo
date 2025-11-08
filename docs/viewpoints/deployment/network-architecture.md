@@ -626,44 +626,52 @@ Outbound Rules:
 
 ### Inbound Traffic Flow
 
-```text
-Internet
-  ↓
-Internet Gateway
-  ↓
-Application Load Balancer (Public Subnet)
-  ↓ (Security Group: alb-sg → eks-node-sg)
-EKS Ingress Controller (Private Subnet)
-  ↓ (Pod Network)
-Application Pods (Private Subnet)
-  ↓ (Security Group: eks-node-sg → rds-sg)
-RDS Database (Private Subnet - Database)
+```mermaid
+graph TD
+    N4["↓ (Security Group: alb-sg"]
+    N5["eks-node-sg)"]
+    N4 --> N5
+    N8["↓ (Security Group: eks-node-sg"]
+    N9["rds-sg)"]
+    N8 --> N9
+    N1["Internet"]
+    N2["Internet Gateway"]
+    N1 --> N2
+    N3["Application Load Balancer (Public Subnet)"]
+    N2 --> N3
+    N6["EKS Ingress Controller (Private Subnet)"]
+    N7["Application Pods (Private Subnet)"]
+    N6 --> N7
 ```
 
 ### Outbound Traffic Flow
 
-```text
-Application Pods (Private Subnet)
-  ↓ (Security Group: eks-node-sg)
-NAT Gateway (Public Subnet)
-  ↓
-Internet Gateway
-  ↓
-Internet
+```mermaid
+graph TD
+    N1["Application Pods (Private Subnet)"]
+    N2["NAT Gateway (Public Subnet)"]
+    N1 --> N2
+    N3["Internet Gateway"]
+    N2 --> N3
+    N4["Internet"]
+    N3 --> N4
 ```
 
 ### Internal Service Communication
 
-```text
-Order Service Pod
-  ↓ (Pod Network)
-Kafka Producer
-  ↓ (Security Group: eks-node-sg → msk-sg)
-MSK Broker (Private Subnet - Messaging)
-  ↓ (Kafka Replication)
-Other MSK Brokers
-  ↓ (Kafka Consumer)
-Inventory Service Pod
+```mermaid
+graph TD
+    N3["↓ (Security Group: eks-node-sg"]
+    N4["msk-sg)"]
+    N3 --> N4
+    N1["Order Service Pod"]
+    N2["Kafka Producer"]
+    N1 --> N2
+    N5["MSK Broker (Private Subnet - Messaging)"]
+    N6["Other MSK Brokers"]
+    N5 --> N6
+    N7["Inventory Service Pod"]
+    N6 --> N7
 ```
 
 ## DNS Configuration

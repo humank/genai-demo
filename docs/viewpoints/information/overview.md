@@ -126,8 +126,19 @@ Our system is organized into 13 bounded contexts, each owning specific data:
 
 #### 1. Command-Event Pattern
 
-```text
-User Request → Command → Aggregate → Domain Event → Event Handler → Side Effects
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["Command"]
+    N1 --> N2
+    N3["Aggregate"]
+    N2 --> N3
+    N4["Domain Event"]
+    N3 --> N4
+    N5["Event Handler"]
+    N4 --> N5
+    N6["Side Effects"]
+    N5 --> N6
 ```
 
 - Commands modify aggregate state
@@ -137,8 +148,15 @@ User Request → Command → Aggregate → Domain Event → Event Handler → Si
 
 #### 2. Query Pattern
 
-```text
-User Request → Query → Read Model → Response
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["Query"]
+    N1 --> N2
+    N3["Read Model"]
+    N2 --> N3
+    N4["Response"]
+    N3 --> N4
 ```
 
 - Queries read from optimized read models
@@ -147,8 +165,17 @@ User Request → Query → Read Model → Response
 
 #### 3. Integration Pattern
 
-```text
-Context A → Domain Event → Message Bus → Context B Event Handler → Context B Aggregate
+```mermaid
+graph LR
+    N1["Context A"]
+    N2["Domain Event"]
+    N1 --> N2
+    N3["Message Bus"]
+    N2 --> N3
+    N4["Context B Event Handler"]
+    N3 --> N4
+    N5["Context B Aggregate"]
+    N4 --> N5
 ```
 
 - Asynchronous communication via events

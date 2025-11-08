@@ -250,37 +250,14 @@ We chose the Adapter Pattern with Anti-Corruption Layer as our third-party integ
 
 **Integration Architecture**:
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                      Domain Layer                            │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Payment Domain Service                               │  │
-│  │  - processPayment(order, paymentMethod)              │  │
-│  │  - refundPayment(order)                              │  │
-│  └──────────────────────────────────────────────────────┘  │
-│                           ↓                                  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  PaymentGateway Interface (Port)                     │  │
-│  │  - charge(amount, paymentMethod): PaymentResult     │  │
-│  │  - refund(transactionId): RefundResult              │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────────┐
-│                  Infrastructure Layer                        │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  StripePaymentAdapter (Adapter)                      │  │
-│  │  - charge(): translates to Stripe API               │  │
-│  │  - refund(): translates to Stripe API               │  │
-│  │  - Anti-Corruption Layer: Domain ↔ Stripe models    │  │
-│  └──────────────────────────────────────────────────────┘  │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  PayPalPaymentAdapter (Adapter)                      │  │
-│  │  - charge(): translates to PayPal API               │  │
-│  │  - refund(): translates to PayPal API               │  │
-│  │  - Anti-Corruption Layer: Domain ↔ PayPal models    │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N4["- refundPayment(order)"]
+    N5["PaymentGateway Interface (Port)"]
+    N4 --> N5
+    N7["- refund(transactionId): RefundResult"]
+    N8["Infrastructure Layer"]
+    N7 --> N8
 ```
 
 ## Impact Analysis

@@ -91,13 +91,18 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 
 **Architecture**:
 
-```text
-Application → CloudWatch (Metrics/Logs)
-           → X-Ray (Traces)
-           ↓
-         Grafana (Visualization)
-           ↓
-         Alerts → PagerDuty/Slack
+```mermaid
+graph TD
+    N1["Application"]
+    N2["CloudWatch (Metrics/Logs)"]
+    N1 --> N2
+    N5["Alerts"]
+    N6["PagerDuty/Slack"]
+    N5 --> N6
+    N3["X-Ray (Traces)"]
+    N4["Grafana (Visualization)"]
+    N3 --> N4
+    N4 --> N5
 ```
 
 **Pros**:

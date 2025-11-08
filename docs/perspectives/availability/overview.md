@@ -67,34 +67,17 @@ This perspective applies to all system components and addresses:
 
 Our availability and resilience approach follows a defense-in-depth strategy:
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│ Layer 1: Infrastructure Redundancy                      │
-│ - Multi-AZ deployment                                   │
-│ - Load balancing                                        │
-│ - Auto-scaling                                          │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│ Layer 2: Application Resilience                         │
-│ - Circuit breakers                                      │
-│ - Retry mechanisms                                      │
-│ - Graceful degradation                                  │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│ Layer 3: Data Protection                                │
-│ - Automated backups                                     │
-│ - Point-in-time recovery                                │
-│ - Cross-region replication                              │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│ Layer 4: Monitoring & Response                          │
-│ - Real-time monitoring                                  │
-│ - Automated alerting                                    │
-│ - Incident response procedures                          │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N4["- Auto-scaling"]
+    N5["Layer 2: Application Resilience"]
+    N4 --> N5
+    N8["- Graceful degradation"]
+    N9["Layer 3: Data Protection"]
+    N8 --> N9
+    N12["- Cross-region replication"]
+    N13["Layer 4: Monitoring & Response"]
+    N12 --> N13
 ```
 
 ### Key Principles

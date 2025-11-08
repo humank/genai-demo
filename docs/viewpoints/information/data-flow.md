@@ -23,8 +23,21 @@ This document describes how data flows through the system, including synchronous
 
 The primary pattern for state changes in the system:
 
-```text
-User Request → REST API → Command → Application Service → Aggregate → Domain Event → Event Handlers
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["REST API"]
+    N1 --> N2
+    N3["Command"]
+    N2 --> N3
+    N4["Application Service"]
+    N3 --> N4
+    N5["Aggregate"]
+    N4 --> N5
+    N6["Domain Event"]
+    N5 --> N6
+    N7["Event Handlers"]
+    N6 --> N7
 ```
 
 **Flow Steps**:
@@ -38,25 +51,23 @@ User Request → REST API → Command → Application Service → Aggregate → 
 
 **Example: Order Submission**
 
-```text
-POST /api/v1/orders/{orderId}/submit
-    ↓
-SubmitOrderCommand
-    ↓
-OrderApplicationService.submitOrder()
-    ↓
-Order.submit() → collectEvent(OrderSubmittedEvent)
-    ↓
-DomainEventApplicationService.publishEventsFromAggregate()
-    ↓
-OrderSubmittedEvent published to Kafka
-    ↓
-Event Handlers:
-
-  - InventoryService.reserveItems()
-  - PaymentService.processPayment()
-  - NotificationService.sendOrderConfirmation()
-
+```mermaid
+graph TD
+    N4["Order.submit()"]
+    N5["collectEvent(OrderSubmittedEvent)"]
+    N4 --> N5
+    N1["POST /api/v1/orders/{orderId}/submit"]
+    N2["SubmitOrderCommand"]
+    N1 --> N2
+    N3["OrderApplicationService.submitOrder()"]
+    N2 --> N3
+    N3 --> N4
+    N6["DomainEventApplicationService.publishEventsFromAggregate()"]
+    N5 --> N6
+    N7["OrderSubmittedEvent published to Kafka"]
+    N6 --> N7
+    N8["Event Handlers:"]
+    N7 --> N8
 ```
 
 ---
@@ -65,8 +76,21 @@ Event Handlers:
 
 Optimized read operations without side effects:
 
-```text
-User Request → REST API → Query → Application Service → Repository → Read Model → Response
+```mermaid
+graph LR
+    N1["User Request"]
+    N2["REST API"]
+    N1 --> N2
+    N3["Query"]
+    N2 --> N3
+    N4["Application Service"]
+    N3 --> N4
+    N5["Repository"]
+    N4 --> N5
+    N6["Read Model"]
+    N5 --> N6
+    N7["Response"]
+    N6 --> N7
 ```
 
 **Flow Steps**:
@@ -80,18 +104,19 @@ User Request → REST API → Query → Application Service → Repository → R
 
 **Example: Get Customer Orders**
 
-```text
-GET /api/v1/customers/{customerId}/orders
-    ↓
-GetCustomerOrdersQuery
-    ↓
-OrderApplicationService.getCustomerOrders()
-    ↓
-OrderRepository.findByCustomerId()
-    ↓
-OrderResponse DTOs
-    ↓
-HTTP 200 OK with order list
+```mermaid
+graph TD
+    N1["GET /api/v1/customers/{customerId}/orders"]
+    N2["GetCustomerOrdersQuery"]
+    N1 --> N2
+    N3["OrderApplicationService.getCustomerOrders()"]
+    N2 --> N3
+    N4["OrderRepository.findByCustomerId()"]
+    N3 --> N4
+    N5["OrderResponse DTOs"]
+    N4 --> N5
+    N6["HTTP 200 OK with order list"]
+    N5 --> N6
 ```
 
 ---
@@ -100,8 +125,17 @@ HTTP 200 OK with order list
 
 Asynchronous communication between bounded contexts:
 
-```text
-Context A → Domain Event → Kafka Topic → Context B Event Handler → Context B Aggregate
+```mermaid
+graph LR
+    N1["Context A"]
+    N2["Domain Event"]
+    N1 --> N2
+    N3["Kafka Topic"]
+    N2 --> N3
+    N4["Context B Event Handler"]
+    N3 --> N4
+    N5["Context B Aggregate"]
+    N4 --> N5
 ```
 
 **Flow Steps**:
@@ -115,27 +149,27 @@ Context A → Domain Event → Kafka Topic → Context B Event Handler → Conte
 
 **Example: Inventory Reservation**
 
-```text
-Order Context:
-  OrderSubmittedEvent published
-    ↓
-Kafka Topic: order-events
-    ↓
-Inventory Context:
-  OrderSubmittedEventHandler.handle()
-    ↓
-  Check if already processed (idempotency)
-    ↓
-  InventoryItem.reserve(quantity)
-    ↓
-  InventoryReservedEvent published
-    ↓
-Kafka Topic: inventory-events
-    ↓
-Order Context:
-  InventoryReservedEventHandler.handle()
-    ↓
-  Order.confirmInventoryReservation()
+```mermaid
+graph TD
+    N2["OrderSubmittedEvent published"]
+    N3["Kafka Topic: order-events"]
+    N2 --> N3
+    N4["Inventory Context:"]
+    N3 --> N4
+    N5["OrderSubmittedEventHandler.handle()"]
+    N6["Check if already processed (idempotency)"]
+    N5 --> N6
+    N7["InventoryItem.reserve(quantity)"]
+    N6 --> N7
+    N8["InventoryReservedEvent published"]
+    N7 --> N8
+    N9["Kafka Topic: inventory-events"]
+    N8 --> N9
+    N1["Order Context:"]
+    N9 --> N1
+    N10["InventoryReservedEventHandler.handle()"]
+    N11["Order.confirmInventoryReservation()"]
+    N10 --> N11
 ```
 
 ---
@@ -546,16 +580,38 @@ public class ProductCacheService {
 
 ### Event Publication
 
-```text
-Aggregate → collectEvent() → Application Service → publishEventsFromAggregate() → 
-Event Publisher → Kafka Producer → Kafka Topic
+```mermaid
+graph LR
+    N1["Aggregate"]
+    N2["collectEvent()"]
+    N1 --> N2
+    N3["Application Service"]
+    N2 --> N3
+    N4["publishEventsFromAggregate()"]
+    N3 --> N4
+    N5["Event Publisher"]
+    N6["Kafka Producer"]
+    N5 --> N6
+    N7["Kafka Topic"]
+    N6 --> N7
 ```
 
 ### Event Consumption
 
-```text
-Kafka Topic → Kafka Consumer → Event Listener → Event Handler → 
-Idempotency Check → Business Logic → Local State Update
+```mermaid
+graph LR
+    N1["Kafka Topic"]
+    N2["Kafka Consumer"]
+    N1 --> N2
+    N3["Event Listener"]
+    N2 --> N3
+    N4["Event Handler"]
+    N3 --> N4
+    N5["Idempotency Check"]
+    N6["Business Logic"]
+    N5 --> N6
+    N7["Local State Update"]
+    N6 --> N7
 ```
 
 ### Event Ordering

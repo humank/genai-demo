@@ -11,7 +11,7 @@ This document provides detailed information about the engineering team structure
 ## Organizational Chart
 
 ```text
-                    ┌─────────────────────┐
+┌─────────────────────┐
                     │   VP Engineering    │
                     │   (1 person)        │
                     └──────────┬──────────┘
@@ -605,18 +605,22 @@ For major features, we form temporary cross-functional squads:
 
 ### Engineering Career Ladder
 
-```text
-Junior Engineer (Level 1-2)
-    ↓ 2-3 years
-Mid-level Engineer (Level 3-4)
-    ↓ 3-4 years
-Senior Engineer (Level 5-6)
-    ↓
-    ├─→ Staff Engineer (Level 7) → Principal Engineer (Level 8)
-    │   (Technical Leadership Track)
-    │
-    └─→ Engineering Manager (Level 7) → Senior EM (Level 8)
-        (People Management Track)
+```mermaid
+graph TD
+    N4["├"]
+    N5["Staff Engineer (Level 7)"]
+    N4 --> N5
+    N6["Principal Engineer (Level 8)"]
+    N5 --> N6
+    N8["Engineering Manager (Level 7)"]
+    N9["Senior EM (Level 8)"]
+    N8 --> N9
+    N1["Junior Engineer (Level 1-2)"]
+    N2["Mid-level Engineer (Level 3-4)"]
+    N1 --> N2
+    N3["Senior Engineer (Level 5-6)"]
+    N2 --> N3
+    N3 --> N4
 ```
 
 ### Promotion Criteria

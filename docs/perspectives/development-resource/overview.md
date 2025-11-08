@@ -34,58 +34,20 @@ This perspective covers:
 
 ### Current Team Organization
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Engineering Organization                    │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Engineering Leadership                                 │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - VP Engineering                              │     │
-│  │ - Engineering Manager                         │     │
-│  │ - Technical Lead / Architect                  │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │           Backend Development Team              │   │
-│  │  - 2 Senior Backend Engineers                   │   │
-│  │  - 3 Mid-level Backend Engineers                │   │
-│  │  - 2 Junior Backend Engineers                   │   │
-│  │  Team Focus: Domain logic, APIs, services      │   │
-│  └─────────────────────────────────────────────────┘   │
-│                        ↓                                │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │           Frontend Development Team             │   │
-│  │  - 1 Senior Frontend Engineer                   │   │
-│  │  - 2 Mid-level Frontend Engineers               │   │
-│  │  - 1 Junior Frontend Engineer                   │   │
-│  │  Team Focus: CMC & Consumer UIs                │   │
-│  └─────────────────────────────────────────────────┘   │
-│                        ↓                                │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │         Infrastructure & DevOps Team            │   │
-│  │  - 1 Senior DevOps Engineer                     │   │
-│  │  - 1 Mid-level DevOps Engineer                  │   │
-│  │  Team Focus: AWS infrastructure, CI/CD          │   │
-│  └─────────────────────────────────────────────────┘   │
-│                        ↓                                │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │              QA & Testing Team                  │   │
-│  │  - 1 Senior QA Engineer                         │   │
-│  │  - 2 QA Engineers                               │   │
-│  │  Team Focus: Test automation, quality           │   │
-│  └─────────────────────────────────────────────────┘   │
-│                                                         │
-│  Supporting Roles                                       │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Product Manager (1)                         │     │
-│  │ - UX Designer (1)                             │     │
-│  │ - Technical Writer (0.5 FTE)                  │     │
-│  │ - Security Specialist (0.5 FTE)              │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-│  Total Team Size: 18 people                            │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- Technical Lead / Architect"]
+    N7["Backend Development Team"]
+    N6 --> N7
+    N11["Team Focus: Domain logic, APIs, services"]
+    N12["Frontend Development Team"]
+    N11 --> N12
+    N16["Team Focus: CMC & Consumer UIs"]
+    N17["Infrastructure & DevOps Team"]
+    N16 --> N17
+    N20["Team Focus: AWS infrastructure, CI/CD"]
+    N21["QA & Testing Team"]
+    N20 --> N21
 ```
 
 ### Team Roles and Responsibilities
@@ -191,63 +153,26 @@ This perspective covers:
 
 ### Core Development Tools
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              Development Toolchain                       │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  IDE & Editors                                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - IntelliJ IDEA Ultimate (Backend)            │     │
-│  │ - VS Code (Frontend, Infrastructure)          │     │
-│  │ - DataGrip (Database)                         │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Version Control                                        │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Git                                         │     │
-│  │ - GitHub (Repository hosting)                 │     │
-│  │ - GitHub Desktop / GitKraken                  │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Build & Package Management                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Gradle 8.x (Backend)                        │     │
-│  │ - npm / pnpm (Frontend)                       │     │
-│  │ - Docker (Containerization)                   │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Testing Tools                                          │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - JUnit 5, Mockito, AssertJ (Backend)        │     │
-│  │ - Cucumber (BDD)                              │     │
-│  │ - Jest, Cypress (Frontend)                    │     │
-│  │ - Postman (API testing)                       │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  CI/CD                                                  │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - GitHub Actions (CI/CD pipelines)           │     │
-│  │ - AWS CodePipeline (Deployment)               │     │
-│  │ - ArgoCD (GitOps)                             │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Monitoring & Observability                             │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - CloudWatch (Logs, Metrics)                  │     │
-│  │ - X-Ray (Distributed tracing)                 │     │
-│  │ - Grafana (Dashboards)                        │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Collaboration Tools                                    │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Slack (Team communication)                  │     │
-│  │ - Jira (Project management)                   │     │
-│  │ - Confluence (Documentation)                  │     │
-│  │ - Miro (Diagramming, brainstorming)          │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- DataGrip (Database)"]
+    N7["Version Control"]
+    N6 --> N7
+    N10["- GitHub Desktop / GitKraken"]
+    N11["Build & Package Management"]
+    N10 --> N11
+    N14["- Docker (Containerization)"]
+    N15["Testing Tools"]
+    N14 --> N15
+    N19["- Postman (API testing)"]
+    N20["CI/CD"]
+    N19 --> N20
+    N23["- ArgoCD (GitOps)"]
+    N24["Monitoring & Observability"]
+    N23 --> N24
+    N27["- Grafana (Dashboards)"]
+    N28["Collaboration Tools"]
+    N27 --> N28
 ```
 
 ### Tool Categories and Selections

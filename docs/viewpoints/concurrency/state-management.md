@@ -284,10 +284,21 @@ public class Order {
 
 **State Machine**:
 
-```text
-CREATED → PENDING → CONFIRMED → SHIPPED → DELIVERED
-   ↓         ↓          ↓
-CANCELLED  CANCELLED  CANCELLED
+```mermaid
+graph TD
+    N1["CREATED"]
+    N2["PENDING"]
+    N1 --> N2
+    N3["CONFIRMED"]
+    N2 --> N3
+    N4["SHIPPED"]
+    N3 --> N4
+    N5["DELIVERED"]
+    N4 --> N5
+    N6["CANCELLED CANCELLED CANCELLED"]
+    N1 --> N6
+    N2 --> N6
+    N3 --> N6
 ```
 
 ---

@@ -16,27 +16,13 @@ The fundamental principle of Hexagonal Architecture is:
 
 > **Dependencies point inward. Inner layers know nothing about outer layers.**
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│                    Interfaces Layer                      │
-│                    (Outer Layer)                         │
-└────────────────────┬────────────────────────────────────┘
-                     │ depends on ↓
-┌─────────────────────────────────────────────────────────┐
-│                  Application Layer                       │
-│                  (Orchestration)                         │
-└────────────────────┬────────────────────────────────────┘
-                     │ depends on ↓
-┌─────────────────────────────────────────────────────────┐
-│                    Domain Layer                          │
-│                  (Business Logic)                        │
-│                   ← NO DEPENDENCIES →                    │
-└─────────────────────────────────────────────────────────┘
-                     ↑ implements interfaces
-┌─────────────────────────────────────────────────────────┐
-│                Infrastructure Layer                      │
-│              (Technical Implementations)                 │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N3["┬"]
+    N4["Application Layer"]
+    N3 --> N4
+    N6["Domain Layer"]
+    N3 --> N6
 ```
 
 ### Key Principles

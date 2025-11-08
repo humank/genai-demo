@@ -155,12 +155,20 @@ This document details the multi-region deployment strategy for the Enterprise E-
 
 **Traffic Distribution**:
 
-```text
-User Location → Routing Decision
-─────────────────────────────────
-North America → US-EAST-1 (primary)
-Europe        → EU-WEST-1 (local reads, remote writes)
-Asia Pacific  → AP-SE-1 (local reads, remote writes)
+```mermaid
+graph LR
+    N1["User Location"]
+    N2["Routing Decision"]
+    N1 --> N2
+    N3["North America"]
+    N4["US-EAST-1 (primary)"]
+    N3 --> N4
+    N5["Europe"]
+    N6["EU-WEST-1 (local reads, remote writes)"]
+    N5 --> N6
+    N7["Asia Pacific"]
+    N8["AP-SE-1 (local reads, remote writes)"]
+    N7 --> N8
 ```
 
 **Write Path**:
@@ -453,22 +461,23 @@ US-EAST-1 VPC (10.0.0.0/16)
 
 **Route Tables**:
 
-```text
-US-EAST-1:
-
-  - 10.1.0.0/16 → pcx-us-to-eu
-  - 10.2.0.0/16 → pcx-us-to-ap
-
-EU-WEST-1:
-
-  - 10.0.0.0/16 → pcx-eu-to-us
-  - 10.2.0.0/16 → pcx-eu-to-ap (via US)
-
-AP-SE-1:
-
-  - 10.0.0.0/16 → pcx-ap-to-us
-  - 10.1.0.0/16 → pcx-ap-to-eu (via US)
-
+```mermaid
+graph LR
+    N2["- 10.1.0.0/16"]
+    N3["pcx-us-to-eu"]
+    N2 --> N3
+    N4["- 10.2.0.0/16"]
+    N5["pcx-us-to-ap"]
+    N4 --> N5
+    N7["- 10.0.0.0/16"]
+    N8["pcx-eu-to-us"]
+    N7 --> N8
+    N9["pcx-eu-to-ap (via US)"]
+    N4 --> N9
+    N11["pcx-ap-to-us"]
+    N7 --> N11
+    N12["pcx-ap-to-eu (via US)"]
+    N2 --> N12
 ```
 
 ### Transit Gateway (Future)

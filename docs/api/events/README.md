@@ -19,14 +19,23 @@ This documentation describes the domain events published by the e-commerce platf
 
 ### Event Publishing Flow
 
-```text
-Aggregate Root → collectEvent()
-    ↓
-Application Service → publishEventsFromAggregate()
-    ↓
-Event Publisher (Infrastructure) → Kafka
-    ↓
-Event Handlers (Infrastructure) → Process Events
+```mermaid
+graph TD
+    N1["Aggregate Root"]
+    N2["collectEvent()"]
+    N1 --> N2
+    N3["Application Service"]
+    N4["publishEventsFromAggregate()"]
+    N3 --> N4
+    N5["Event Publisher (Infrastructure)"]
+    N6["Kafka"]
+    N5 --> N6
+    N7["Event Handlers (Infrastructure)"]
+    N8["Process Events"]
+    N7 --> N8
+    N2 --> N3
+    N4 --> N5
+    N6 --> N7
 ```
 
 ### Event Structure

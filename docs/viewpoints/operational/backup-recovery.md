@@ -81,31 +81,59 @@ This document describes backup strategies, recovery procedures, and disaster rec
 
 **Backup Creation Flow**:
 
-```text
-
-1. Source System → Backup Trigger (Scheduled/Manual)
-2. Backup Service → Create Snapshot/Export
-3. Snapshot Storage → Native Service Storage (EBS/ElastiCache)
-4. Export Process → Copy to S3 (if applicable)
-5. S3 Lifecycle → Transition to appropriate storage class
-6. Cross-Region Replication → Copy to DR region
-7. Verification Service → Validate backup integrity
-8. Monitoring → Record metrics and send alerts
-
+```mermaid
+graph LR
+    N1["1. Source System"]
+    N2["Backup Trigger (Scheduled/Manual)"]
+    N1 --> N2
+    N3["2. Backup Service"]
+    N4["Create Snapshot/Export"]
+    N3 --> N4
+    N5["3. Snapshot Storage"]
+    N6["Native Service Storage (EBS/ElastiCache)"]
+    N5 --> N6
+    N7["4. Export Process"]
+    N8["Copy to S3 (if applicable)"]
+    N7 --> N8
+    N9["5. S3 Lifecycle"]
+    N10["Transition to appropriate storage class"]
+    N9 --> N10
+    N11["6. Cross-Region Replication"]
+    N12["Copy to DR region"]
+    N11 --> N12
+    N13["7. Verification Service"]
+    N14["Validate backup integrity"]
+    N13 --> N14
+    N15["8. Monitoring"]
+    N16["Record metrics and send alerts"]
+    N15 --> N16
 ```
 
 **Recovery Flow**:
 
-```text
-
-1. Recovery Request → Identify required backup
-2. Backup Location → Retrieve from storage tier
-3. Restore Service → Create new instance/cluster
-4. Data Validation → Verify integrity and completeness
-5. Application Update → Point to restored resource
-6. Health Check → Verify application functionality
-7. Monitoring → Track recovery metrics
-
+```mermaid
+graph LR
+    N1["1. Recovery Request"]
+    N2["Identify required backup"]
+    N1 --> N2
+    N3["2. Backup Location"]
+    N4["Retrieve from storage tier"]
+    N3 --> N4
+    N5["3. Restore Service"]
+    N6["Create new instance/cluster"]
+    N5 --> N6
+    N7["4. Data Validation"]
+    N8["Verify integrity and completeness"]
+    N7 --> N8
+    N9["5. Application Update"]
+    N10["Point to restored resource"]
+    N9 --> N10
+    N11["6. Health Check"]
+    N12["Verify application functionality"]
+    N11 --> N12
+    N13["7. Monitoring"]
+    N14["Track recovery metrics"]
+    N13 --> N14
 ```
 
 ## Recovery Objectives

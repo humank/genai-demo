@@ -273,53 +273,26 @@ This viewpoint covers:
 
 ### Incident Response Process
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                  Incident Response Flow                      │
-└─────────────────────────────────────────────────────────────┘
-
-1. Detection
-
-   ↓
-   • Automated monitoring alerts
-   • User reports
-   • Internal discovery
-   
-2. Triage
-
-   ↓
-   • Assess severity
-   • Assign incident commander
-   • Create incident channel
-   
-3. Investigation
-
-   ↓
-   • Review metrics and logs
-   • Check recent changes
-   • Identify root cause
-   
-4. Mitigation
-
-   ↓
-   • Implement fix or workaround
-   • Rollback if necessary
-   • Verify resolution
-   
-5. Recovery
-
-   ↓
-   • Restore normal operations
-   • Verify all systems healthy
-   • Communicate status
-   
-6. Post-Incident Review
-
-   ↓
-   • Document timeline
-   • Identify root cause
-   • Create action items
-   • Update runbooks
+```mermaid
+graph TD
+    N2["1. Detection"]
+    N3["• Automated monitoring alerts"]
+    N2 --> N3
+    N6["2. Triage"]
+    N7["• Assess severity"]
+    N6 --> N7
+    N10["3. Investigation"]
+    N11["• Review metrics and logs"]
+    N10 --> N11
+    N14["4. Mitigation"]
+    N15["• Implement fix or workaround"]
+    N14 --> N15
+    N18["5. Recovery"]
+    N19["• Restore normal operations"]
+    N18 --> N19
+    N22["6. Post-Incident Review"]
+    N23["• Document timeline"]
+    N22 --> N23
 ```
 
 ### Incident Roles

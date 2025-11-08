@@ -26,16 +26,29 @@ This guide provides comprehensive debugging workflows, diagnostic procedures, an
 
 ### General Debugging Decision Tree
 
-```text
-Issue Detected
-    ↓
-Is it a memory issue? → YES → [Memory Issues Section](#memory-issues)
-    ↓ NO
-Is it a thread issue? → YES → [Thread Issues Section](#thread-issues)
-    ↓ NO
-Is it a performance issue? → YES → [Performance Issues Section](#performance-issues)
-    ↓ NO
-Check application logs and metrics → [Common Issues](common-issues.md)
+```mermaid
+graph TD
+    N2["Is it a memory issue?"]
+    N3["YES"]
+    N2 --> N3
+    N4["[Memory Issues Section](#memory-issues)"]
+    N3 --> N4
+    N5["Is it a thread issue?"]
+    N5 --> N3
+    N6["[Thread Issues Section](#thread-issues)"]
+    N3 --> N6
+    N7["Is it a performance issue?"]
+    N7 --> N3
+    N8["[Performance Issues Section](#performance-issues)"]
+    N3 --> N8
+    N9["Check application logs and metrics"]
+    N10["[Common Issues](common-issues.md)"]
+    N9 --> N10
+    N1["Issue Detected"]
+    N1 --> N2
+    N4 --> N5
+    N6 --> N7
+    N8 --> N9
 ```
 
 ### Initial Diagnostic Steps
@@ -83,14 +96,25 @@ kubectl logs -n production ${POD_NAME} --previous
 
 ### Memory Issue Decision Tree
 
-```text
-High Memory Usage Detected
-    ↓
-Is memory increasing continuously? → YES → Memory Leak Investigation
-    ↓ NO
-Is memory spiking periodically? → YES → GC Pressure Investigation
-    ↓ NO
-Is memory usage stable but high? → YES → Heap Size Optimization
+```mermaid
+graph TD
+    N2["Is memory increasing continuously?"]
+    N3["YES"]
+    N2 --> N3
+    N4["Memory Leak Investigation"]
+    N3 --> N4
+    N5["Is memory spiking periodically?"]
+    N5 --> N3
+    N6["GC Pressure Investigation"]
+    N3 --> N6
+    N7["Is memory usage stable but high?"]
+    N7 --> N3
+    N8["Heap Size Optimization"]
+    N3 --> N8
+    N1["High Memory Usage Detected"]
+    N1 --> N2
+    N4 --> N5
+    N6 --> N7
 ```
 
 ### Memory Leak Detection and Resolution
@@ -397,16 +421,30 @@ java -jar gcviewer.jar gc.log
 
 ### Thread Issue Decision Tree
 
-```text
-Thread Issue Detected
-    ↓
-Are threads blocked? → YES → Deadlock Investigation
-    ↓ NO
-Are threads waiting? → YES → Contention Investigation
-    ↓ NO
-Too many threads? → YES → Thread Leak Investigation
-    ↓ NO
-High CPU usage? → YES → CPU Profiling
+```mermaid
+graph TD
+    N2["Are threads blocked?"]
+    N3["YES"]
+    N2 --> N3
+    N4["Deadlock Investigation"]
+    N3 --> N4
+    N5["Are threads waiting?"]
+    N5 --> N3
+    N6["Contention Investigation"]
+    N3 --> N6
+    N7["Too many threads?"]
+    N7 --> N3
+    N8["Thread Leak Investigation"]
+    N3 --> N8
+    N9["High CPU usage?"]
+    N9 --> N3
+    N10["CPU Profiling"]
+    N3 --> N10
+    N1["Thread Issue Detected"]
+    N1 --> N2
+    N4 --> N5
+    N6 --> N7
+    N8 --> N9
 ```
 
 ### Thread Dump Analysis
@@ -613,16 +651,30 @@ public void processData() {
 
 ### Performance Debugging Decision Tree
 
-```text
-Slow Performance Detected
-    ↓
-Is CPU high? → YES → CPU Profiling
-    ↓ NO
-Is I/O high? → YES → I/O Analysis
-    ↓ NO
-Is database slow? → YES → Database Profiling
-    ↓ NO
-Is network slow? → YES → Network Analysis
+```mermaid
+graph TD
+    N2["Is CPU high?"]
+    N3["YES"]
+    N2 --> N3
+    N4["CPU Profiling"]
+    N3 --> N4
+    N5["Is I/O high?"]
+    N5 --> N3
+    N6["I/O Analysis"]
+    N3 --> N6
+    N7["Is database slow?"]
+    N7 --> N3
+    N8["Database Profiling"]
+    N3 --> N8
+    N9["Is network slow?"]
+    N9 --> N3
+    N10["Network Analysis"]
+    N3 --> N10
+    N1["Slow Performance Detected"]
+    N1 --> N2
+    N4 --> N5
+    N6 --> N7
+    N8 --> N9
 ```
 
 ### CPU Profiling

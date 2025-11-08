@@ -37,15 +37,29 @@ This document details the comprehensive latency optimization strategy for the En
 
 ### Regional Latency Targets
 
-```text
-User Location → Target Latency
-────────────────────────────────
-North America → US-EAST-1:     < 50ms
-Europe        → EU-WEST-1:     < 50ms
-Asia Pacific  → AP-SE-1:       < 100ms
-South America → US-EAST-1:     < 150ms
-Africa        → EU-WEST-1:     < 200ms
-Middle East   → EU-WEST-1:     < 150ms
+```mermaid
+graph LR
+    N1["User Location"]
+    N2["Target Latency"]
+    N1 --> N2
+    N3["North America"]
+    N4["US-EAST-1: < 50ms"]
+    N3 --> N4
+    N5["Europe"]
+    N6["EU-WEST-1: < 50ms"]
+    N5 --> N6
+    N7["Asia Pacific"]
+    N8["AP-SE-1: < 100ms"]
+    N7 --> N8
+    N9["South America"]
+    N10["US-EAST-1: < 150ms"]
+    N9 --> N10
+    N11["Africa"]
+    N12["EU-WEST-1: < 200ms"]
+    N11 --> N12
+    N13["Middle East"]
+    N14["EU-WEST-1: < 150ms"]
+    N13 --> N14
 ```
 
 ## CDN Strategy

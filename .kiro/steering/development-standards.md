@@ -268,8 +268,13 @@ public record ErrorResponse(
 
 ### Layer Dependency Rules
 
-```text
-interfaces/ → application/ → domain/ ← infrastructure/
+```mermaid
+graph LR
+    N1["interfaces/"]
+    N2["application/"]
+    N1 --> N2
+    N3["domain/ ← infrastructure/"]
+    N2 --> N3
 ```
 
 ### Domain Event Design Constraints

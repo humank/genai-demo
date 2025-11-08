@@ -382,31 +382,17 @@ We support and reimburse the following certifications:
 
 ### Skill Gap Analysis Process
 
-```text
-┌─────────────────────────────────────────┐
-│  1. Identify Required Skills            │
-│     (Role requirements, project needs)  │
-└──────────────┬──────────────────────────┘
-               ↓
-┌─────────────────────────────────────────┐
-│  2. Assess Current Skills               │
-│     (Self-assessment, peer feedback)    │
-└──────────────┬──────────────────────────┘
-               ↓
-┌─────────────────────────────────────────┐
-│  3. Identify Gaps                       │
-│     (Compare required vs current)       │
-└──────────────┬──────────────────────────┘
-               ↓
-┌─────────────────────────────────────────┐
-│  4. Create Development Plan             │
-│     (Training, mentoring, projects)     │
-└──────────────┬──────────────────────────┘
-               ↓
-┌─────────────────────────────────────────┐
-│  5. Execute & Monitor                   │
-│     (Track progress, adjust plan)       │
-└─────────────────────────────────────────┘
+```mermaid
+graph TD
+    N3["┬"]
+    N4["2. Assess Current Skills"]
+    N3 --> N4
+    N6["3. Identify Gaps"]
+    N3 --> N6
+    N8["4. Create Development Plan"]
+    N3 --> N8
+    N10["5. Execute & Monitor"]
+    N3 --> N10
 ```
 
 ## Related Documentation

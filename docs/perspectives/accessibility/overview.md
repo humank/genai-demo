@@ -32,42 +32,17 @@ This perspective addresses accessibility across three dimensions:
 
 ### POUR Principles (WCAG 2.1)
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│              POUR Accessibility Principles              │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Perceivable                                            │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Text alternatives for non-text content     │     │
-│  │ - Captions and alternatives for multimedia   │     │
-│  │ - Adaptable content structure                │     │
-│  │ - Distinguishable visual and audio content   │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Operable                                               │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Keyboard accessible                         │     │
-│  │ - Enough time to read and use content        │     │
-│  │ - No content that causes seizures            │     │
-│  │ - Navigable and findable                     │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Understandable                                         │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Readable text                               │     │
-│  │ - Predictable functionality                   │     │
-│  │ - Input assistance and error prevention      │     │
-│  └───────────────────────────────────────────────┘     │
-│                        ↓                                │
-│  Robust                                                 │
-│  ┌───────────────────────────────────────────────┐     │
-│  │ - Compatible with assistive technologies     │     │
-│  │ - Valid, semantic HTML                        │     │
-│  │ - ARIA attributes when needed                │     │
-│  └───────────────────────────────────────────────┘     │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N7["- Distinguishable visual and audio content"]
+    N8["Operable"]
+    N7 --> N8
+    N12["- Navigable and findable"]
+    N13["Understandable"]
+    N12 --> N13
+    N16["- Input assistance and error prevention"]
+    N17["Robust"]
+    N16 --> N17
 ```
 
 ## Accessibility Standards
@@ -126,37 +101,20 @@ This perspective addresses accessibility across three dimensions:
 
 ### Multi-Layered Strategy
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│         Accessibility Implementation Layers             │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Layer 1: Semantic HTML Foundation                     │
-│  - Proper HTML5 elements                                │
-│  - Semantic structure                                   │
-│  - Valid markup                                         │
-│                        ↓                                │
-│  Layer 2: ARIA Enhancement                              │
-│  - ARIA roles, states, properties                       │
-│  - Live regions                                         │
-│  - Accessible names                                     │
-│                        ↓                                │
-│  Layer 3: Keyboard Navigation                           │
-│  - Tab order                                            │
-│  - Focus management                                     │
-│  - Keyboard shortcuts                                   │
-│                        ↓                                │
-│  Layer 4: Visual Design                                 │
-│  - Color contrast                                       │
-│  - Text sizing                                          │
-│  - Visual indicators                                    │
-│                        ↓                                │
-│  Layer 5: Testing & Validation                          │
-│  - Automated testing                                    │
-│  - Manual testing                                       │
-│  - User testing                                         │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    N6["- Valid markup"]
+    N7["Layer 2: ARIA Enhancement"]
+    N6 --> N7
+    N10["- Accessible names"]
+    N11["Layer 3: Keyboard Navigation"]
+    N10 --> N11
+    N14["- Keyboard shortcuts"]
+    N15["Layer 4: Visual Design"]
+    N14 --> N15
+    N18["- Visual indicators"]
+    N19["Layer 5: Testing & Validation"]
+    N18 --> N19
 ```
 
 ## Accessibility Features

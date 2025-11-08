@@ -171,12 +171,18 @@ kubectl top pods -n production
 
 **Decision Tree**:
 
-```text
-Is CPU > 90%?
-├─ Yes → Check for memory leak (Go to Step 3A)
-└─ No → Is error rate > 5%?
-    ├─ Yes → Check application logs (Go to Step 3B)
-    └─ No → Check network latency (Go to Step 3C)
+```mermaid
+graph LR
+    N2["├ Yes"]
+    N3["Check for memory leak (Go to Step 3A)"]
+    N2 --> N3
+    N4["No"]
+    N5["Is error rate > 5%?"]
+    N4 --> N5
+    N6["Check application logs (Go to Step 3B)"]
+    N2 --> N6
+    N7["Check network latency (Go to Step 3C)"]
+    N4 --> N7
 ```
 
 ### Step 3: Gather Additional Information

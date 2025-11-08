@@ -1121,53 +1121,31 @@ psql -c "REINDEX DATABASE ecommerce_production CONCURRENTLY;"
 
 ## Troubleshooting Decision Tree
 
-```text
-Performance Degradation Detected
-│
-├─ Response Time > 5s?
-│  ├─ Yes → P1 Incident
-│  │  ├─ Scale immediately
-│  │  ├─ Check for outages
-│  │  └─ Engage on-call
-│  └─ No → Continue analysis
-│
-├─ Affecting All Endpoints?
-│  ├─ Yes → System-wide issue
-│  │  ├─ Check resource utilization
-│  │  ├─ Check database performance
-│  │  └─ Check external dependencies
-│  └─ No → Endpoint-specific issue
-│     ├─ Analyze specific endpoint
-│     ├─ Check query performance
-│     └─ Review recent code changes
-│
-├─ Cache Hit Rate < 70%?
-│  ├─ Yes → Cache issue
-│  │  ├─ Warm cache
-│  │  ├─ Increase TTL
-│  │  └─ Review cache strategy
-│  └─ No → Continue analysis
-│
-├─ Database Queries > 100ms?
-│  ├─ Yes → Database issue
-│  │  ├─ Add indexes
-│  │  ├─ Optimize queries
-│  │  └─ Check for locks
-│  └─ No → Continue analysis
-│
-├─ External API Timeout?
-│  ├─ Yes → External dependency issue
-│  │  ├─ Check circuit breaker
-│  │  ├─ Implement fallback
-│  │  └─ Contact vendor
-│  └─ No → Continue analysis
-│
-└─ Resource Utilization > 80%?
-   ├─ Yes → Resource contention
-   │  ├─ Scale resources
-   │  ├─ Optimize code
-   │  └─ Review architecture
-   └─ No → Deep dive analysis required
+```mermaid
+graph LR
+    N3["├ Yes"]
+    N4["P1 Incident"]
+    N3 --> N4
+    N8["No"]
+    N9["Continue analysis"]
+    N8 --> N9
+    N11["System-wide issue"]
+    N3 --> N11
+    N15["Endpoint-specific issue"]
+    N8 --> N15
+    N20["Cache issue"]
+    N3 --> N20
+    N8 --> N9
+    N25["Database issue"]
+    N3 --> N25
+    N8 --> N9
+    N30["External dependency issue"]
+    N3 --> N30
+    N8 --> N9
+    N35["Resource contention"]
+    N3 --> N35
+    N39["Deep dive analysis required"]
+    N8 --> N39
 ```
 
 ## Common Patterns and Solutions

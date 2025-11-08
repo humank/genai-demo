@@ -1554,30 +1554,26 @@ echo "=== Rollback Complete ==="
 
 ### Restore Procedure Decision Tree
 
-```text
-┌─────────────────────────────────────┐
-│   What needs to be restored?        │
-└──────────────┬──────────────────────┘
-               │
-       ┌───────┴───────┐
-       │               │
-   Database        Application
-       │               │
-       ├─ Complete DB? ├─ Configuration?
-       │   │           │   │
-       │   ├─ Yes → Full Snapshot Restore (15-30 min)
-       │   │           │   ├─ Yes → K8s Config Restore (10-15 min)
-       │   └─ No       │   └─ No
-       │       │       │
-       │       ├─ Specific tables? → Partial Restore (10-30 min)
-       │       │       ├─ Cache?
-       │       │       │   └─ Yes → Redis Restore (5-10 min)
-       │       │       │
-       │       └─ Specific time? → Point-in-Time Restore (20-35 min)
-       │               │
-       └─ Secrets?     └─ State?
-           │               └─ Yes → Application State Restore (varies)
-           └─ Yes → Secrets Manager Restore (5-10 min)
+```mermaid
+graph LR
+    N6["├ Yes"]
+    N7["Full Snapshot Restore (15-30 min)"]
+    N6 --> N7
+    N8["K8s Config Restore (10-15 min)"]
+    N6 --> N8
+    N10["├ Specific tables?"]
+    N11["Partial Restore (10-30 min)"]
+    N10 --> N11
+    N13["Yes"]
+    N14["Redis Restore (5-10 min)"]
+    N13 --> N14
+    N15["Specific time?"]
+    N16["Point-in-Time Restore (20-35 min)"]
+    N15 --> N16
+    N18["Application State Restore (varies)"]
+    N13 --> N18
+    N19["Secrets Manager Restore (5-10 min)"]
+    N13 --> N19
 ```
 
 ### Restore Checklist Template

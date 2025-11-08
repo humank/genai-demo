@@ -68,26 +68,14 @@ resilience4j:
 
 #### States
 
-```text
-┌─────────────┐
-│   CLOSED    │ ◄─── Normal operation
-│  (Healthy)  │      All requests pass through
-└──────┬──────┘
-       │ Failure rate > threshold
-       ▼
-┌─────────────┐
-│    OPEN     │ ◄─── Service is failing
-│  (Failing)  │      All requests fail fast
-└──────┬──────┘
-       │ After wait duration
-       ▼
-┌─────────────┐
-│ HALF_OPEN   │ ◄─── Testing recovery
-│  (Testing)  │      Limited requests allowed
-└──────┬──────┘
-       │
-       ├─── Success → CLOSED
-       └─── Failure → OPEN
+```mermaid
+graph LR
+    N11["├ Success"]
+    N12["CLOSED"]
+    N11 --> N12
+    N13["Failure"]
+    N14["OPEN"]
+    N13 --> N14
 ```
 
 #### Monitoring
