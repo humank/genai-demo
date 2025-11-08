@@ -33,7 +33,8 @@ Deep-dive standards for specific areas.
 | [Security Standards](security-standards.md) | Security implementation | Implementing auth, encryption, etc. |
 | [Performance Standards](performance-standards.md) | Performance optimization | Optimizing system performance |
 | [Domain Events](domain-events.md) | DDD event patterns | Implementing domain events |
-| [Diagram Generation](diagram-generation-standards.md) | PlantUML/Mermaid standards | Creating technical diagrams |
+| [Diagram Standards](diagram-standards.md) | When to use ASCII/Mermaid/PlantUML/Excalidraw | Creating any diagram |
+| [Diagram Generation](diagram-generation-standards.md) | PlantUML generation details | Generating PlantUML diagrams |
 
 ### Reference Standards (Deep Dive)
 
@@ -51,6 +52,7 @@ Detailed technical references for specific topics.
 2. Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md) - Viewpoint analysis
 3. Conduct [Event Storming](event-storming-standards.md) - For domain discovery
 4. Follow [Domain Events](domain-events.md) - If using DDD patterns
+5. Create diagrams using [Diagram Standards](diagram-standards.md) - Choose right format
 
 ### Fixing Performance Issues
 
@@ -61,8 +63,9 @@ Detailed technical references for specific topics.
 ### Writing Documentation
 
 1. Follow [Development Standards](development-standards.md) - Documentation guidelines
-2. Use [Diagram Generation Standards](diagram-generation-standards.md) - For technical diagrams
-3. Document [Event Storming Sessions](event-storming-standards.md) - For workshop results
+2. Choose diagram format with [Diagram Standards](diagram-standards.md) - ASCII/Mermaid/PlantUML/Excalidraw
+3. Generate PlantUML with [Diagram Generation Standards](diagram-generation-standards.md) - For complex UML
+4. Document [Event Storming Sessions](event-storming-standards.md) - For workshop results
 
 ## 📖 Document Relationships
 
@@ -99,6 +102,6 @@ When updating steering rules:
 
 ---
 
-**Total Documents**: 16  
-**Last Updated**: 2025-01-22  
+**Total Documents**: 17  
+**Last Updated**: 2025-11-08  
 **Owner**: Development Team
