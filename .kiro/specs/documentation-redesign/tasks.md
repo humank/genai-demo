@@ -1624,7 +1624,7 @@ Below is the comprehensive list of all planned ADRs organized by category and pr
     - _Requirements: 7.4_
 
 - [ ] 25.9 Create comprehensive database maintenance guide
-  - [ ] 25.9.1 Expand routine maintenance procedures
+  - [x] 25.9.1 Expand routine maintenance procedures
     - Add detailed daily maintenance checklist with automation scripts
     - Document weekly maintenance tasks with timing recommendations
     - Include monthly maintenance procedures with downtime planning
@@ -1634,7 +1634,7 @@ Below is the comprehensive list of all planned ADRs organized by category and pr
     - Add maintenance task automation with cron jobs or AWS Systems Manager
     - _Requirements: 7.4_
   
-  - [ ] 25.9.2 Add comprehensive performance tuning guide
+  - [x] 25.9.2 Add comprehensive performance tuning guide
     - Document PostgreSQL parameter tuning methodology
     - Add query optimization workflow and best practices
     - Include index strategy and optimization
@@ -1646,7 +1646,7 @@ Below is the comprehensive list of all planned ADRs organized by category and pr
     - Include WAL configuration optimization
     - _Requirements: 7.4_
   
-  - [ ] 25.9.3 Add advanced monitoring and diagnostics
+  - [x] 25.9.3 Add advanced monitoring and diagnostics
     - Document pg_stat_statements analysis and optimization
     - Add slow query log analysis procedures
     - Include lock monitoring and deadlock analysis
@@ -1658,7 +1658,7 @@ Below is the comprehensive list of all planned ADRs organized by category and pr
     - Include query plan analysis and optimization
     - _Requirements: 7.4_
   
-  - [ ] 25.9.4 Create index management procedures
+  - [x] 25.9.4 Create index management procedures
     - Document index creation best practices (CONCURRENTLY)
     - Add index usage analysis and unused index identification
     - Include index maintenance (REINDEX) procedures
