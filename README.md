@@ -85,29 +85,32 @@ This project follows the **Rozanski & Woods Software Systems Architecture** meth
 
 Viewpoints describe **WHAT** the system is and **HOW** it's organized:
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                    CONTEXT VIEWPOINT                            │
-│              (System Boundaries & External Relations)           │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-┌───────▼──────┐  ┌──────▼──────┐  ┌────▼──────────┐
-│  FUNCTIONAL  │  │ INFORMATION │  │  CONCURRENCY  │
-│  (Business   │  │  (Data &    │  │  (Parallel    │
-│  Capabilities)│  │   Events)   │  │  Processing)  │
-└───────┬──────┘  └──────┬──────┘  └────┬──────────┘
-        │                │                │
-        └────────────────┼────────────────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-┌───────▼──────┐  ┌──────▼──────┐  ┌────▼──────────┐
-│ DEVELOPMENT  │  │ DEPLOYMENT  │  │  OPERATIONAL  │
-│ (Code &      │  │ (Infra &    │  │  (Monitoring  │
-│  Build)      │  │  Scaling)   │  │  & Support)   │
-└──────────────┘  └─────────────┘  └───────────────┘
+```mermaid
+graph TB
+    Context["<b>CONTEXT VIEWPOINT</b><br/>System Boundaries &<br/>External Relations"]
+    
+    Context --> Functional["<b>FUNCTIONAL</b><br/>Business<br/>Capabilities"]
+    Context --> Information["<b>INFORMATION</b><br/>Data &<br/>Events"]
+    Context --> Concurrency["<b>CONCURRENCY</b><br/>Parallel<br/>Processing"]
+    
+    Functional --> Development["<b>DEVELOPMENT</b><br/>Code &<br/>Build"]
+    Information --> Development
+    Concurrency --> Development
+    
+    Functional --> Deployment["<b>DEPLOYMENT</b><br/>Infrastructure &<br/>Scaling"]
+    Information --> Deployment
+    Concurrency --> Deployment
+    
+    Development --> Operational["<b>OPERATIONAL</b><br/>Monitoring &<br/>Support"]
+    Deployment --> Operational
+    
+    style Context fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    style Functional fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Information fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Concurrency fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Development fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Deployment fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Operational fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
 ```
 
 | Viewpoint | Purpose | Documentation |
@@ -124,37 +127,43 @@ Viewpoints describe **WHAT** the system is and **HOW** it's organized:
 
 Perspectives describe **quality attributes** that affect the entire system:
 
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                    ALL VIEWPOINTS                               │
-│  (Functional, Information, Concurrency, Development,            │
-│   Deployment, Operational, Context)                             │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-         ┌───────────────┼───────────────┐
-         │               │               │
-    ┌────▼────┐    ┌─────▼─────┐   ┌───▼────────┐
-    │Security │    │Performance│   │Availability│
-    │         │    │& Scaling  │   │& Resilience│
-    └────┬────┘    └─────┬─────┘   └───┬────────┘
-         │               │               │
-         └───────────────┼───────────────┘
-                         │
-         ┌───────────────┼───────────────┐
-         │               │               │
-    ┌────▼────┐    ┌─────▼─────┐   ┌───▼────────┐
-    │Evolution│    │Accessibility   │Development │
-    │         │    │           │   │Resource    │
-    └────┬────┘    └─────┬─────┘   └───┬────────┘
-         │               │               │
-         └───────────────┼───────────────┘
-                         │
-         ┌───────────────┴───────────────┐
-         │                               │
-    ┌────▼────────┐              ┌───────▼────┐
-    │i18n         │              │Location    │
-    │             │              │            │
-    └─────────────┘              └────────────┘
+```mermaid
+graph TB
+    Viewpoints["<b>ALL VIEWPOINTS</b><br/>Functional, Information, Concurrency<br/>Development, Deployment, Operational, Context"]
+    
+    Viewpoints --> Security["<b>Security</b><br/>Authentication<br/>Authorization<br/>Encryption"]
+    Viewpoints --> Performance["<b>Performance</b><br/>& Scalability<br/>Response Times<br/>Throughput"]
+    Viewpoints --> Availability["<b>Availability</b><br/>& Resilience<br/>High Availability<br/>Fault Tolerance"]
+    
+    Security --> Evolution["<b>Evolution</b><br/>Extensibility<br/>Maintainability"]
+    Performance --> Evolution
+    Availability --> Evolution
+    
+    Security --> Accessibility["<b>Accessibility</b><br/>UI/API Usability<br/>Documentation"]
+    Performance --> Accessibility
+    Availability --> Accessibility
+    
+    Security --> DevResource["<b>Development</b><br/><b>Resource</b><br/>Team & Tools"]
+    Performance --> DevResource
+    Availability --> DevResource
+    
+    Evolution --> i18n["<b>i18n</b><br/>Multi-language<br/>Localization"]
+    Accessibility --> i18n
+    DevResource --> i18n
+    
+    Evolution --> Location["<b>Location</b><br/>Geographic<br/>Distribution<br/>Data Residency"]
+    Accessibility --> Location
+    DevResource --> Location
+    
+    style Viewpoints fill:#e1f5ff,stroke:#01579b,stroke-width:3px
+    style Security fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+    style Performance fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style Availability fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    style Evolution fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    style Accessibility fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    style DevResource fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style i18n fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    style Location fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px
 ```
 
 | Perspective | Key Concerns | Documentation |
