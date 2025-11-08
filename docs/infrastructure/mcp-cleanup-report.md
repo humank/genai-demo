@@ -28,22 +28,26 @@
 ### Global Configuration
 
 **Before**:
+
 - Total servers: 19
 - Active: 7 (including 2 duplicates)
 - Disabled: 12
 
 **After**:
+
 - Total servers: 17
 - Active: 5 (no duplicates)
 - Disabled: 9
 
 **Removed**:
+
 - ❌ `aws-docs` (duplicate - active in project config)
 - ❌ `time` (duplicate - disabled in global, active in project)
 
 ### Project Configuration
 
 **Before & After**: No changes (already optimal)
+
 - Total servers: 5
 - Active: 5
 - Disabled: 0
@@ -77,11 +81,13 @@
 ## 🔍 Verification Results
 
 ### Duplicate Check
-```
+
+```text
 ✅ No duplicates found between global and project configs
 ```
 
 ### Server Count
+
 - **Global Active**: 5 servers
 - **Project Active**: 5 servers
 - **Total Active**: 10 unique servers
@@ -184,12 +190,14 @@ cp .kiro/settings/mcp.json.backup.20251107_115520 .kiro/settings/mcp.json
 ## 📈 Configuration Health
 
 ### Before Cleanup
+
 - **Health Score**: 6/10
   - ❌ Duplicate configurations
   - ❌ Unclear server ownership
   - ✅ All servers functional
 
 ### After Cleanup
+
 - **Health Score**: 9/10
   - ✅ No duplicates
   - ✅ Clear server ownership
@@ -204,16 +212,19 @@ cp .kiro/settings/mcp.json.backup.20251107_115520 .kiro/settings/mcp.json
 ### GitHub MCP Server Token
 
 The GitHub token in global config may be expired:
-```
+
+```text
 Bearer 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
 ```
 
 **Action Required** (if using GitHub features):
-1. Generate new token: https://github.com/settings/tokens
+
+1. Generate new token: <https://github.com/settings/tokens>
 2. Update in `~/.kiro/settings/mcp.json`
 3. Restart Kiro
 
 **Permissions Needed**:
+
 - `repo` - Repository access
 - `read:org` - Organization access
 - `read:user` - User profile access
@@ -267,6 +278,7 @@ Bearer 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
 ## 🎉 Conclusion
 
 The MCP configuration cleanup has been successfully completed. Your configuration is now:
+
 - ✅ Free of duplicates
 - ✅ Well-organized
 - ✅ Maintainable

@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 ### Business Context
 
 **Business Drivers**:
+
 - Multiple user types with different access levels (customers, sellers, admins, support)
 - Need for granular control over sensitive operations (refunds, price changes)
 - Regulatory compliance (data access controls, audit trails)
@@ -40,6 +41,7 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 - Expected growth from 10K to 1M+ users
 
 **Constraints**:
+
 - Must integrate with existing JWT authentication (ADR-014)
 - Performance: Authorization check < 5ms
 - Must support role hierarchy (admin inherits all permissions)
@@ -48,12 +50,14 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 with Spring Security
 - JWT-based authentication implemented (ADR-014)
 - Microservices architecture
 - PostgreSQL database
 
 **Requirements**:
+
 - Role-based access control with permissions
 - Support for role hierarchy
 - Dynamic role and permission management
@@ -79,6 +83,7 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 **Description**: Roles contain permissions, permissions grant access to resources
 
 **Pros**:
+
 - ✅ Flexible and granular control
 - ✅ Easy to understand and maintain
 - ✅ Supports role hierarchy
@@ -89,6 +94,7 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 - ✅ No additional costs
 
 **Cons**:
+
 - ⚠️ Requires careful permission design
 - ⚠️ JWT token size increases with permissions
 - ⚠️ Permission changes require token refresh
@@ -102,11 +108,13 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 **Description**: Access based on attributes (user, resource, environment)
 
 **Pros**:
+
 - ✅ Very flexible and dynamic
 - ✅ Context-aware decisions
 - ✅ Fine-grained control
 
 **Cons**:
+
 - ❌ Complex to implement and maintain
 - ❌ Performance overhead (policy evaluation)
 - ❌ Harder to understand and debug
@@ -122,11 +130,13 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 **Description**: Access control based only on roles, no separate permissions
 
 **Pros**:
+
 - ✅ Very simple to implement
 - ✅ Fast performance
 - ✅ Easy to understand
 
 **Cons**:
+
 - ❌ Not flexible enough
 - ❌ Role explosion (need many roles)
 - ❌ Hard to maintain
@@ -141,10 +151,12 @@ The Enterprise E-Commerce Platform requires a flexible, scalable authorization s
 **Description**: Delegate authorization to external service
 
 **Pros**:
+
 - ✅ Centralized authorization
 - ✅ Advanced features
 
 **Cons**:
+
 - ❌ Network latency on every request
 - ❌ Additional infrastructure
 - ❌ Single point of failure
@@ -173,18 +185,21 @@ RBAC with permissions was selected for the following reasons:
 
 **Authorization Model**:
 
-```
+```text
 User → Roles → Permissions → Resources
 
 Examples:
+
 - User "john@example.com" has Role "CUSTOMER"
 - Role "CUSTOMER" has Permissions ["order:create", "order:read:own", "profile:update:own"]
 - Permission "order:create" grants access to POST /api/v1/orders
 - Permission "order:read:own" grants access to GET /api/v1/orders/{id} (own orders only)
+
 ```
 
 **Role Hierarchy**:
-```
+
+```text
 SUPER_ADMIN (all permissions)
   ├── ADMIN (manage users, orders, products)
   ├── SELLER (manage own products, orders)
@@ -209,6 +224,7 @@ SUPER_ADMIN (all permissions)
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All API endpoints (authorization required)
 - All microservices (permission checks)
 - Database schema (roles and permissions tables)
@@ -269,12 +285,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Authorization failures > 5%
 - Performance degradation > 10ms per request
 - Security vulnerabilities discovered
 - Data corruption in roles/permissions
 
 **Rollback Steps**:
+
 1. Revert to simple role-only authorization
 2. Investigate and fix RBAC implementation
 3. Re-deploy with fixes
@@ -295,6 +313,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `authz.check.time` (histogram)
 - `authz.denied` (count, by permission)
 - `authz.granted` (count, by permission)
@@ -303,18 +322,21 @@ Affects:
 - `role.revoked` (count)
 
 **Alerts**:
+
 - Authorization check latency > 10ms for 5 minutes
 - Authorization error rate > 1% for 5 minutes
 - Suspicious authorization patterns (privilege escalation attempts)
 - Role changes outside business hours
 
 **Security Monitoring**:
+
 - Failed authorization attempts per user
 - Permission usage patterns
 - Role assignment changes
 - Privilege escalation attempts
 
 **Review Schedule**:
+
 - Daily: Check authorization metrics
 - Weekly: Review denied access logs
 - Monthly: Permission audit and cleanup
@@ -343,11 +365,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No permission groups implemented (acceptable initially)
 2. Manual permission audit process (acceptable for now)
 3. No dynamic permission loading (acceptable with short token expiration)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement permission groups to reduce JWT size
 - **Q3 2026**: Automate permission audit and cleanup
 - **Q4 2026**: Implement dynamic permission loading for long-lived sessions
@@ -365,6 +389,7 @@ Affects:
 Format: `{resource}:{action}:{scope}`
 
 Examples:
+
 - `order:create:any` - Create any order
 - `order:read:own` - Read own orders only
 - `order:update:any` - Update any order
@@ -384,36 +409,44 @@ roles:
   ADMIN:
     description: "Platform administrator"
     permissions:
+
       - "user:*:any"
       - "order:*:any"
       - "product:*:any"
       - "report:read:any"
+
     hierarchy_level: 90
     
   SELLER:
     description: "Product seller"
     permissions:
+
       - "product:create:own"
       - "product:update:own"
       - "product:read:any"
       - "order:read:own"
       - "order:update:own"
+
     hierarchy_level: 50
     
   CUSTOMER:
     description: "Regular customer"
     permissions:
+
       - "order:create:own"
       - "order:read:own"
       - "order:cancel:own"
       - "profile:update:own"
       - "product:read:any"
+
     hierarchy_level: 10
     
   GUEST:
     description: "Unauthenticated user"
     permissions:
+
       - "product:read:any"
+
     hierarchy_level: 0
 ```
 

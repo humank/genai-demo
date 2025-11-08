@@ -30,6 +30,7 @@ The Enterprise E-Commerce Platform requires comprehensive authentication securit
 - Compliance violations (password policies)
 
 Taiwan's cyber security environment presents additional challenges:
+
 - Frequent targeted attacks from state-sponsored actors
 - High-value e-commerce platform as attractive target
 - Need for defense-in-depth authentication security
@@ -38,6 +39,7 @@ Taiwan's cyber security environment presents additional challenges:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect customer accounts and sensitive data
 - Maintain customer trust and platform reputation
 - Comply with security regulations and standards
@@ -45,6 +47,7 @@ Taiwan's cyber security environment presents additional challenges:
 - Support 100K+ user accounts with varying risk profiles
 
 **Constraints**:
+
 - Must balance security with user experience
 - Cannot require complex authentication for all users
 - Must support legacy password migration
@@ -53,6 +56,7 @@ Taiwan's cyber security environment presents additional challenges:
 ### Technical Context
 
 **Current State**:
+
 - JWT-based authentication (ADR-014)
 - Basic password hashing with BCrypt
 - No multi-factor authentication
@@ -60,6 +64,7 @@ Taiwan's cyber security environment presents additional challenges:
 - No anomalous login detection
 
 **Requirements**:
+
 - Strong password policy enforcement
 - Multi-factor authentication (MFA) support
 - Account protection mechanisms (lockout, anomaly detection)
@@ -85,6 +90,7 @@ Taiwan's cyber security environment presents additional challenges:
 **Description**: Multi-layered authentication security with password policy, MFA, account protection, and monitoring
 
 **Components**:
+
 - Strong password policy (12+ chars, complexity, history, rotation)
 - Multi-factor authentication (TOTP, SMS backup)
 - Account lockout (5 failed attempts = 15-min lockout)
@@ -94,6 +100,7 @@ Taiwan's cyber security environment presents additional challenges:
 - Mandatory MFA for admin accounts
 
 **Pros**:
+
 - ✅ Defense-in-depth security approach
 - ✅ Protects against multiple attack vectors
 - ✅ Compliance with security standards
@@ -103,6 +110,7 @@ Taiwan's cyber security environment presents additional challenges:
 - ✅ Supports risk-based authentication
 
 **Cons**:
+
 - ⚠️ Increased implementation complexity
 - ⚠️ Higher operational overhead
 - ⚠️ Potential user friction (MFA, password requirements)
@@ -117,12 +125,14 @@ Taiwan's cyber security environment presents additional challenges:
 **Description**: Minimal security hardening with password policy and basic lockout
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low operational overhead
 - ✅ Minimal user friction
 - ✅ Low cost
 
 **Cons**:
+
 - ❌ Insufficient protection against sophisticated attacks
 - ❌ No MFA protection
 - ❌ Limited anomaly detection
@@ -138,12 +148,14 @@ Taiwan's cyber security environment presents additional challenges:
 **Description**: Delegate authentication security to managed service
 
 **Pros**:
+
 - ✅ Managed security features
 - ✅ Professional support
 - ✅ Advanced features (adaptive MFA, risk scoring)
 - ✅ Compliance certifications
 
 **Cons**:
+
 - ❌ High cost ($3,000-5,000/month)
 - ❌ Vendor lock-in
 - ❌ Less control over security policies
@@ -173,6 +185,7 @@ Comprehensive security hardening was selected for the following reasons:
 ### Password Policy
 
 **Requirements**:
+
 - Minimum 12 characters (industry best practice)
 - Complexity requirements:
   - At least 1 uppercase letter
@@ -185,6 +198,7 @@ Comprehensive security hardening was selected for the following reasons:
 - No personal information in password (name, email, birthdate)
 
 **Implementation**:
+
 ```java
 public class PasswordPolicy {
     private static final int MIN_LENGTH = 12;
@@ -229,18 +243,21 @@ public class PasswordPolicy {
 ### Multi-Factor Authentication (MFA)
 
 **Primary Method**: Time-based One-Time Password (TOTP)
+
 - Standard: RFC 6238
 - Apps: Google Authenticator, Authy, Microsoft Authenticator
 - Code validity: 30 seconds
 - Code length: 6 digits
 
 **Backup Method**: SMS One-Time Password
+
 - Used when TOTP unavailable
 - Code validity: 5 minutes
 - Rate limited: 3 codes per hour
 - Cost: $0.01 per SMS
 
 **MFA Requirements**:
+
 - Mandatory for admin accounts
 - Optional but recommended for customer accounts
 - Mandatory for high-value transactions (> $1,000)
@@ -248,6 +265,7 @@ public class PasswordPolicy {
 - Remember device for 30 days (optional)
 
 **Implementation**:
+
 ```java
 @Service
 public class MfaService {
@@ -288,12 +306,14 @@ public class MfaService {
 ### Account Protection
 
 **Account Lockout**:
+
 - Trigger: 5 failed login attempts within 15 minutes
 - Lockout duration: 15 minutes
 - Unlock methods: Time expiration, email verification, admin unlock
 - Notification: Email sent to user on lockout
 
 **Anomalous Login Detection**:
+
 - Location-based: Login from new country/city
 - Device-based: Login from new device/browser
 - Time-based: Login at unusual time (3 AM local time)
@@ -301,12 +321,14 @@ public class MfaService {
 - Action: Require MFA verification, send notification email
 
 **Session Management**:
+
 - Idle timeout: 30 minutes of inactivity
 - Absolute timeout: 8 hours maximum session
 - Concurrent sessions: Maximum 3 active sessions per user
 - Session termination: Logout all sessions on password change
 
 **Implementation**:
+
 ```java
 @Service
 public class AccountProtectionService {
@@ -354,17 +376,20 @@ public class AccountProtectionService {
 ### Password Storage
 
 **Hashing Algorithm**: BCrypt with cost factor 12
+
 - Industry standard for password hashing
 - Adaptive cost factor (increases with hardware improvements)
 - Built-in salt generation
 - Resistant to rainbow table attacks
 
 **Alternative**: Argon2 (future consideration)
+
 - Winner of Password Hashing Competition (2015)
 - Memory-hard algorithm (resistant to GPU attacks)
 - Configurable memory, time, and parallelism parameters
 
 **Implementation**:
+
 ```java
 @Service
 public class PasswordService {
@@ -421,6 +446,7 @@ public class PasswordService {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All authentication endpoints
 - User registration and login flows
 - Password reset functionality
@@ -486,12 +512,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical security vulnerability in implementation
 - Excessive user lockouts (> 5% of login attempts)
 - MFA service failures (> 1% failure rate)
 - Performance degradation (> 100ms authentication overhead)
 
 **Rollback Steps**:
+
 1. Disable MFA enforcement (make optional)
 2. Relax password policy temporarily
 3. Disable account lockout
@@ -515,6 +543,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `auth.password.validation.failure` (count by reason)
 - `auth.account.lockout` (count)
 - `auth.mfa.enrollment` (count)
@@ -524,6 +553,7 @@ Affects:
 - `auth.session.timeout` (count)
 
 **Alerts**:
+
 - Account lockout rate > 2% for 10 minutes
 - MFA verification failure rate > 5% for 10 minutes
 - Anomalous login detection spike (> 100 in 5 minutes)
@@ -531,6 +561,7 @@ Affects:
 - Suspicious authentication patterns
 
 **Security Monitoring**:
+
 - Failed login attempts per IP/user
 - Account lockout patterns
 - MFA bypass attempts
@@ -538,6 +569,7 @@ Affects:
 - Session hijacking attempts
 
 **Review Schedule**:
+
 - Daily: Check authentication security metrics
 - Weekly: Review anomalous login detections
 - Monthly: Password policy effectiveness review
@@ -566,12 +598,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. BCrypt cost factor may need increase in future (currently 12)
 2. SMS MFA is less secure than TOTP (acceptable as backup)
 3. No biometric authentication support (future enhancement)
 4. No adaptive authentication (risk scoring)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement adaptive authentication with risk scoring
 - **Q3 2026**: Add biometric authentication support (WebAuthn)
 - **Q4 2026**: Migrate to Argon2 for password hashing

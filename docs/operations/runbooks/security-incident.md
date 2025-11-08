@@ -121,6 +121,7 @@ aws cloudtrail lookup-events \
 ### Immediate Actions (First 15 Minutes)
 
 1. **Activate Incident Response Team**:
+
 ```bash
 # Page security team
 # Notify: Security Lead, Engineering Manager, Legal, PR
@@ -129,9 +130,10 @@ aws cloudtrail lookup-events \
 # Slack: #incident-security-YYYYMMDD
 ```
 
-2. **Contain the Threat**:
+1. **Contain the Threat**:
 
 **Block malicious IP addresses**:
+
 ```bash
 # Add IP to WAF block list
 aws wafv2 update-ip-set \
@@ -147,6 +149,7 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 **Revoke compromised credentials**:
+
 ```bash
 # Disable compromised IAM user
 aws iam update-access-key \
@@ -164,6 +167,7 @@ aws iam delete-login-profile --user-name ${USER_NAME}
 ```
 
 **Isolate affected systems**:
+
 ```bash
 # Scale down affected pods
 kubectl scale deployment/ecommerce-backend --replicas=0 -n production
@@ -174,7 +178,8 @@ kubectl patch service ecommerce-backend -n production \
   -p '{"spec":{"selector":{"quarantine":"false"}}}'
 ```
 
-3. **Enable Enhanced Logging**:
+1. **Enable Enhanced Logging**:
+
 ```bash
 # Enable VPC Flow Logs
 aws ec2 create-flow-logs \
@@ -193,6 +198,7 @@ aws cloudtrail put-event-selectors \
 ### Investigation (First Hour)
 
 1. **Collect Evidence**:
+
 ```bash
 # Capture logs
 kubectl logs deployment/ecommerce-backend -n production --since=24h > incident-logs.txt
@@ -211,7 +217,8 @@ aws cloudtrail lookup-events \
   --max-results 1000 > cloudtrail-events.json
 ```
 
-2. **Analyze Attack Pattern**:
+1. **Analyze Attack Pattern**:
+
 ```bash
 # Analyze access patterns
 cat incident-logs.txt | grep ${SUSPICIOUS_IP} | \
@@ -224,7 +231,8 @@ cat incident-logs.txt | grep -iE "admin|root|sudo|privilege"
 cat incident-logs.txt | grep -iE "ssh|rdp|smb|internal"
 ```
 
-3. **Assess Data Breach**:
+1. **Assess Data Breach**:
+
 ```sql
 -- Check accessed customer data
 SELECT c.id, c.email, c.created_at, c.last_modified
@@ -247,6 +255,7 @@ WHERE action IN ('EXPORT', 'DOWNLOAD', 'BULK_READ')
 ### Remediation
 
 1. **Patch Vulnerabilities**:
+
 ```bash
 # Update dependencies
 ./gradlew dependencyUpdates
@@ -261,7 +270,8 @@ kubectl set image deployment/ecommerce-backend \
   -n production
 ```
 
-2. **Rotate Credentials**:
+1. **Rotate Credentials**:
+
 ```bash
 # Rotate database passwords
 aws secretsmanager rotate-secret \
@@ -279,7 +289,8 @@ aws secretsmanager rotate-secret \
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-3. **Strengthen Security**:
+1. **Strengthen Security**:
+
 ```bash
 # Enable MFA for all users
 aws iam update-account-password-policy \
@@ -305,30 +316,35 @@ aws wafv2 update-web-acl \
 ### Communication
 
 1. **Internal Communication**:
-```
+
+```text
 Subject: Security Incident - [SEVERITY] - [DATE]
 
 Status: [Contained/Under Investigation/Resolved]
 
 Summary:
+
 - Incident Type: [Type]
 - Detection Time: [Time]
 - Affected Systems: [Systems]
 - Data Exposure: [Yes/No/Unknown]
 
 Actions Taken:
+
 - [Action 1]
 - [Action 2]
 
 Next Steps:
+
 - [Step 1]
 - [Step 2]
 
 Contact: security-team@ecommerce.example.com
 ```
 
-2. **Customer Communication** (if data breach):
-```
+1. **Customer Communication** (if data breach):
+
+```text
 Subject: Important Security Notice
 
 Dear Customer,
@@ -345,6 +361,7 @@ What We Are Doing:
 [Actions taken]
 
 What You Should Do:
+
 - Change your password immediately
 - Monitor your account for suspicious activity
 - Enable two-factor authentication
@@ -354,7 +371,8 @@ We sincerely apologize for this incident.
 Contact: support@ecommerce.example.com
 ```
 
-3. **Regulatory Notification** (if required):
+1. **Regulatory Notification** (if required):
+
 ```bash
 # GDPR breach notification (within 72 hours)
 # Notify relevant data protection authority
@@ -382,25 +400,31 @@ Contact: support@ecommerce.example.com
 
 ```yaml
 # Implement security best practices
+
 - Enable MFA for all accounts
 - Use least privilege access
 - Encrypt data at rest and in transit
 - Regular security audits
 - Penetration testing
 - Security training for team
+
 ```
 
 ### 2. Enhanced Monitoring
 
 ```yaml
 # Set up security monitoring
+
 - alert: SuspiciousLoginActivity
+
   expr: rate(authentication_failures[5m]) > 10
   
 - alert: UnusualAPIAccess
+
   expr: rate(api_requests{status="403"}[5m]) > 5
   
 - alert: DataExfiltrationAttempt
+
   expr: rate(data_export_requests[5m]) > 1
 ```
 

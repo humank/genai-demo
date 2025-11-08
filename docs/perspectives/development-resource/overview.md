@@ -34,7 +34,7 @@ This perspective covers:
 
 ### Current Team Organization
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Engineering Organization                    │
 ├─────────────────────────────────────────────────────────┤
@@ -191,7 +191,7 @@ This perspective covers:
 
 ### Core Development Tools
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Development Toolchain                       │
 ├─────────────────────────────────────────────────────────┤
@@ -272,20 +272,24 @@ This perspective covers:
 ### Onboarding Program
 
 #### Week 1: Orientation and Setup
+
 - **Day 1-2**: Company orientation, team introductions, tool setup
 - **Day 3-4**: Architecture overview, codebase walkthrough
 - **Day 5**: First small task, pair programming
 
 #### Week 2-4: Domain and Technical Training
+
 - **Week 2**: Domain-Driven Design principles, bounded contexts
 - **Week 3**: Hexagonal architecture, event-driven patterns
 - **Week 4**: Testing strategy, BDD with Cucumber
 
 #### Month 2-3: Hands-On Development
+
 - **Month 2**: Work on small features with mentorship
 - **Month 3**: Independent feature development, code reviews
 
 **Onboarding Success Criteria**:
+
 - ✅ Can set up local development environment independently
 - ✅ Understands system architecture and bounded contexts
 - ✅ Can implement a small feature end-to-end
@@ -315,7 +319,7 @@ This perspective covers:
 
 ### Team Capacity Model
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Sprint Capacity Allocation                  │
 ├─────────────────────────────────────────────────────────┤
@@ -369,6 +373,7 @@ This perspective covers:
 ### Skill Gap Analysis
 
 Conducted quarterly to identify training needs:
+
 - Survey team on skill confidence levels
 - Identify gaps between required and current skills
 - Create targeted training plans
@@ -377,14 +382,17 @@ Conducted quarterly to identify training needs:
 ## Related Documentation
 
 ### Viewpoints
+
 - [Development Viewpoint](../../viewpoints/development/overview.md) - Code organization and build process
 - [Operational Viewpoint](../../viewpoints/operational/overview.md) - Operations team structure
 
 ### Other Perspectives
+
 - [Evolution Perspective](../evolution/overview.md) - Technology evolution and skill requirements
 - [Accessibility Perspective](../accessibility/overview.md) - Accessibility skills and training
 
 ### Implementation Guides
+
 - [Team Structure](team-structure.md) - Detailed team organization and roles
 - [Required Skills](required-skills.md) - Comprehensive skill matrix and development paths
 - [Development Toolchain](toolchain.md) - Tool selection, setup, and usage guides

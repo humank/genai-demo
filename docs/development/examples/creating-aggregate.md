@@ -9,6 +9,7 @@ This guide provides step-by-step instructions for creating a new aggregate root 
 ## Prerequisites
 
 Before starting, ensure you understand:
+
 - [DDD Tactical Patterns](../../architecture/patterns/ddd-patterns.md)
 - [Coding Standards](../coding-standards/java-standards.md)
 - [Testing Strategy](../testing/testing-strategy.md)
@@ -20,13 +21,15 @@ We'll create a `Review` aggregate that allows customers to review products they'
 ### Step 1: Define Requirements
 
 **User Story:**
-```
+
+```text
 As a customer
 I want to review products I've purchased
 So that I can share my experience with other customers
 ```
 
 **Acceptance Criteria:**
+
 - Customer can create a review for a purchased product
 - Review includes rating (1-5 stars) and comment
 - Customer can only review products they've purchased
@@ -42,11 +45,13 @@ So that I can share my experience with other customers
 **Entities:** None (Review is a simple aggregate)
 
 **Value Objects:**
+
 - `ReviewId`: Unique identifier
 - `Rating`: 1-5 stars with validation
 - `ReviewComment`: Text content with length validation
 
 **Domain Events:**
+
 - `ReviewCreatedEvent`
 - `ReviewUpdatedEvent`
 - `ReviewDeletedEvent`

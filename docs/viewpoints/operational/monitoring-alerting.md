@@ -20,7 +20,7 @@ This document describes the monitoring and alerting infrastructure, metrics coll
 
 ### High-Level Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Application Layer                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
@@ -110,54 +110,71 @@ This document describes the monitoring and alerting infrastructure, metrics coll
 #### EKS Cluster Metrics
 
 **Node-Level Metrics**:
+
 ```yaml
 Metrics:
   CPU:
+
     - node_cpu_utilization
     - node_cpu_limit
     - node_cpu_reserved_capacity
+
     Target: < 70% utilization
     
   Memory:
+
     - node_memory_utilization
     - node_memory_limit
     - node_memory_reserved_capacity
+
     Target: < 80% utilization
     
   Disk:
+
     - node_filesystem_utilization
     - node_filesystem_available
+
     Target: < 80% utilization
     
   Network:
+
     - node_network_total_bytes
     - node_network_rx_bytes
     - node_network_tx_bytes
     - node_network_rx_dropped
     - node_network_tx_dropped
+
 ```
 
 **Pod-Level Metrics**:
+
 ```yaml
 Metrics:
   CPU:
+
     - pod_cpu_utilization
     - pod_cpu_utilization_over_pod_limit
+
     Target: < 70% of limit
     
   Memory:
+
     - pod_memory_utilization
     - pod_memory_utilization_over_pod_limit
+
     Target: < 80% of limit
     
   Network:
+
     - pod_network_rx_bytes
     - pod_network_tx_bytes
     
   Status:
+
     - pod_number_of_container_restarts
     - pod_status_ready
     - pod_status_scheduled
+
 ```
 
 #### Database Metrics (RDS)
@@ -165,6 +182,7 @@ Metrics:
 ```yaml
 Metrics:
   Performance:
+
     - DatabaseConnections
     - CPUUtilization (Target: < 70%)
     - FreeableMemory (Target: > 20%)
@@ -172,17 +190,21 @@ Metrics:
     - WriteLatency (Target: < 10ms)
     
   Throughput:
+
     - ReadThroughput
     - WriteThroughput
     - ReadIOPS
     - WriteIOPS
     
   Storage:
+
     - FreeStorageSpace (Target: > 20%)
     - DiskQueueDepth (Target: < 10)
     
   Replication:
+
     - ReplicaLag (Target: < 1 second)
+
 ```
 
 #### Cache Metrics (ElastiCache Redis)
@@ -190,25 +212,30 @@ Metrics:
 ```yaml
 Metrics:
   Performance:
+
     - CPUUtilization (Target: < 70%)
     - EngineCPUUtilization (Target: < 70%)
     - DatabaseMemoryUsagePercentage (Target: < 80%)
     
   Operations:
+
     - CacheHits
     - CacheMisses
     - CacheHitRate (Target: > 90%)
     - Evictions (Target: < 100/min)
     
   Network:
+
     - NetworkBytesIn
     - NetworkBytesOut
     - NetworkPacketsIn
     - NetworkPacketsOut
     
   Connections:
+
     - CurrConnections
     - NewConnections
+
 ```
 
 #### Message Queue Metrics (MSK Kafka)
@@ -216,22 +243,27 @@ Metrics:
 ```yaml
 Metrics:
   Broker:
+
     - CpuUser (Target: < 70%)
     - MemoryUsed (Target: < 80%)
     - KafkaDataLogsDiskUsed (Target: < 80%)
     
   Throughput:
+
     - BytesInPerSec
     - BytesOutPerSec
     - MessagesInPerSec
     
   Consumer Lag:
+
     - MaxOffsetLag (Target: < 1000)
     - SumOffsetLag
     
   Partitions:
+
     - UnderReplicatedPartitions (Target: 0)
     - OfflinePartitionsCount (Target: 0)
+
 ```
 
 ### Application Metrics
@@ -239,6 +271,7 @@ Metrics:
 #### API Metrics
 
 **Request Metrics**:
+
 ```java
 // Spring Boot Actuator + Micrometer
 @RestController
@@ -267,28 +300,35 @@ public class OrderController {
 ```
 
 **Metrics Collected**:
+
 ```yaml
 API Metrics:
   Request Rate:
+
     - http_server_requests_seconds_count
     - Grouped by: endpoint, method, status
     
   Response Time:
+
     - http_server_requests_seconds_sum
     - http_server_requests_seconds_max
     - Percentiles: p50, p95, p99
     
   Error Rate:
+
     - http_server_requests_errors_total
     - Grouped by: endpoint, error_type
     
   Active Requests:
+
     - http_server_requests_active
+
 ```
 
 #### Business Metrics
 
 **Order Service Metrics**:
+
 ```java
 @Component
 public class OrderMetrics {
@@ -333,8 +373,10 @@ public class OrderMetrics {
 ```
 
 **Business Metrics Collected**:
+
 ```yaml
 Order Metrics:
+
   - orders.created (counter)
   - orders.completed (counter)
   - orders.cancelled (counter)
@@ -343,22 +385,26 @@ Order Metrics:
   - orders.revenue.total (gauge)
   
 Customer Metrics:
+
   - customers.registered (counter)
   - customers.active (gauge)
   - customers.login.success (counter)
   - customers.login.failed (counter)
   
 Product Metrics:
+
   - products.viewed (counter)
   - products.added_to_cart (counter)
   - products.purchased (counter)
   - products.out_of_stock (gauge)
   
 Payment Metrics:
+
   - payments.initiated (counter)
   - payments.successful (counter)
   - payments.failed (counter)
   - payments.processing.time (timer)
+
 ```
 
 ### Distributed Tracing
@@ -366,6 +412,7 @@ Payment Metrics:
 #### X-Ray Configuration
 
 **Spring Boot Integration**:
+
 ```java
 @Configuration
 public class XRayConfiguration {
@@ -409,8 +456,10 @@ public class OrderService {
 ```
 
 **Trace Data Collected**:
+
 ```yaml
 Trace Information:
+
   - Request ID
   - Service name
   - Operation name
@@ -422,10 +471,12 @@ Trace Information:
   - Custom metadata
   
 Service Map:
+
   - Service dependencies
   - Call patterns
   - Error rates per service
   - Latency per service
+
 ```
 
 ## Dashboard Design
@@ -460,6 +511,7 @@ Service Map:
    - Revenue per hour
 
 **Grafana Dashboard JSON**:
+
 ```json
 {
   "dashboard": {
@@ -570,14 +622,17 @@ Description: |
   Service {{$labels.service}} is down.
   
 Actions:
+
   1. Check service logs
   2. Check pod status
   3. Check recent deployments
   4. Rollback if necessary
   
 Escalation:
+
   - 5 minutes: Escalate to senior engineer
   - 15 minutes: Escalate to engineering manager
+
 ```
 
 #### High Error Rate Alert
@@ -596,10 +651,12 @@ Description: |
   Error rate for {{$labels.service}} is {{$value}}% (threshold: 5%)
   
 Actions:
+
   1. Check error logs
   2. Check recent changes
   3. Check external dependencies
   4. Consider rollback
+
 ```
 
 #### Database Connection Failure
@@ -616,10 +673,12 @@ Description: |
   Unable to connect to database {{$labels.database}}
   
 Actions:
+
   1. Check RDS instance status
   2. Check security groups
   3. Check network connectivity
   4. Check connection pool configuration
+
 ```
 
 ### High Priority Alerts (P2)
@@ -641,10 +700,12 @@ Description: |
   95th percentile response time for {{$labels.endpoint}} is {{$value}}s
   
 Actions:
+
   1. Check database query performance
   2. Check cache hit rate
   3. Check external API latency
   4. Review recent code changes
+
 ```
 
 #### High Memory Usage Alert
@@ -663,10 +724,12 @@ Description: |
   Memory usage on {{$labels.instance}} is {{$value}}%
   
 Actions:
+
   1. Check for memory leaks
   2. Review application logs
   3. Consider scaling up
   4. Restart pods if necessary
+
 ```
 
 ### Medium Priority Alerts (P3)
@@ -687,9 +750,11 @@ Description: |
   Error rate for {{$labels.service}} is {{$value}}% (threshold: 1%)
   
 Actions:
+
   1. Monitor error trends
   2. Review error logs
   3. Investigate if rate increases
+
 ```
 
 #### Low Cache Hit Rate Alert
@@ -708,10 +773,12 @@ Description: |
   Cache hit rate is {{$value}}% (threshold: 80%)
   
 Actions:
+
   1. Review cache configuration
   2. Check cache key patterns
   3. Consider cache warming
   4. Review TTL settings
+
 ```
 
 ### Low Priority Alerts (P4)
@@ -732,9 +799,11 @@ Description: |
   Disk usage on {{$labels.instance}} is {{$value}}%
   
 Actions:
+
   1. Review disk usage trends
   2. Clean up old logs
   3. Plan for capacity increase
+
 ```
 
 ## Alert Management
@@ -742,61 +811,78 @@ Actions:
 ### Alert Routing
 
 **PagerDuty Integration**:
+
 ```yaml
 Routing Rules:
   Critical (P1):
+
     - Primary: On-call SRE
     - Escalation (5 min): Senior SRE
     - Escalation (15 min): Engineering Manager
     - Notification: Phone + SMS + Push
     
   High (P2):
+
     - Primary: On-call SRE
     - Escalation (15 min): Senior SRE
     - Notification: Push + SMS
     
   Medium (P3):
+
     - Primary: On-call SRE
     - No escalation
     - Notification: Push only
     
   Low (P4):
+
     - Primary: Ops team
     - No escalation
     - Notification: Email
+
 ```
 
 ### Alert Suppression
 
 **Maintenance Windows**:
+
 ```yaml
 Suppression Rules:
+
   - name: "Scheduled Maintenance"
+
     schedule: "Sunday 02:00-04:00 EST"
     suppress:
+
       - ServiceDown
       - HighErrorRate
       - HighResponseTime
     
   - name: "Deployment Window"
+
     trigger: "deployment_in_progress == true"
     suppress:
+
       - ServiceDown (for 5 minutes)
       - HighErrorRate (for 5 minutes)
+
 ```
 
 ### Alert Aggregation
 
 **Grouping Rules**:
+
 ```yaml
 Aggregation:
+
   - name: "Service Errors"
+
     group_by: ["service", "error_type"]
     group_wait: 30s
     group_interval: 5m
     repeat_interval: 4h
     
   - name: "Infrastructure Issues"
+
     group_by: ["instance", "issue_type"]
     group_wait: 1m
     group_interval: 10m
@@ -811,11 +897,13 @@ Aggregation:
 Format: <namespace>.<subsystem>.<metric_name>.<unit>
 
 Examples:
+
   - api.orders.requests.total (counter)
   - api.orders.response.time.seconds (histogram)
   - database.connections.active (gauge)
   - cache.hits.total (counter)
   - events.processed.total (counter)
+
 ```
 
 ### Dashboard Best Practices

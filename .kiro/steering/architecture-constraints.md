@@ -12,17 +12,20 @@ This document defines the mandatory architecture constraints for this project ba
 ## Layer Dependencies
 
 ### Dependency Rule
-```
+
+```text
 interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
 ### Must Follow
+
 - [ ] **Domain layer**: No dependencies on any other layer
 - [ ] **Application layer**: Depends only on domain layer
 - [ ] **Infrastructure layer**: Depends on domain layer (implements interfaces)
 - [ ] **Interfaces layer**: Depends on application and domain layers
 
 ### Must Avoid
+
 - [ ] ❌ Domain depending on infrastructure
 - [ ] ❌ Domain depending on application
 - [ ] ❌ Circular dependencies between layers
@@ -35,7 +38,8 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Package Structure Standards
 
 ### Domain Layer
-```
+
+```text
 domain/
 ├── {context}/
 │   ├── model/
@@ -52,7 +56,8 @@ domain/
 ```
 
 ### Application Layer
-```
+
+```text
 application/
 └── {context}/
     ├── {UseCase}ApplicationService.java
@@ -62,7 +67,8 @@ application/
 ```
 
 ### Infrastructure Layer
-```
+
+```text
 infrastructure/
 └── {context}/
     ├── persistence/        # Repository implementations
@@ -75,7 +81,8 @@ infrastructure/
 ```
 
 ### Interfaces Layer
-```
+
+```text
 interfaces/
 ├── rest/
 │   └── {context}/
@@ -90,6 +97,7 @@ interfaces/
 ## Bounded Context Rules
 
 ### Must Follow
+
 - [ ] Each context is independent and self-contained
 - [ ] Communication between contexts via domain events only
 - [ ] No direct dependencies between bounded contexts
@@ -97,6 +105,7 @@ interfaces/
 - [ ] Context map documented
 
 ### Context Isolation
+
 ```java
 // ✅ GOOD: Communication via events
 @Component
@@ -116,6 +125,7 @@ public class OrderService {
 ```
 
 ### Bounded Contexts in This Project
+
 - Customer Context
 - Order Context
 - Product Context
@@ -135,6 +145,7 @@ public class OrderService {
 ## Cross-Cutting Concerns
 
 ### Must Follow
+
 - [ ] **Logging**: Infrastructure layer only
 - [ ] **Metrics**: Infrastructure layer only
 - [ ] **Security**: Infrastructure layer only
@@ -142,7 +153,8 @@ public class OrderService {
 - [ ] **Caching**: Infrastructure layer only
 
 ### Implementation Location
-```
+
+```text
 infrastructure/
 ├── logging/
 ├── metrics/
@@ -156,12 +168,14 @@ infrastructure/
 ## Dependency Injection Rules
 
 ### Must Follow
+
 - [ ] Use constructor injection
 - [ ] Inject interfaces, not implementations
 - [ ] No `@Autowired` on fields
 - [ ] Use `final` for injected dependencies
 
 ### Example
+
 ```java
 // ✅ GOOD: Constructor injection with interface
 @Service
@@ -191,13 +205,15 @@ public class OrderApplicationService {
 ## Configuration Management
 
 ### Must Follow
+
 - [ ] Configuration in `config/` package
 - [ ] Use `@Configuration` classes
 - [ ] Profile-specific configuration
 - [ ] Externalize sensitive data
 
 ### Configuration Structure
-```
+
+```text
 config/
 ├── DatabaseConfiguration.java
 ├── RedisConfiguration.java
@@ -211,7 +227,8 @@ config/
 ## API Design Constraints
 
 ### REST API Structure
-```
+
+```text
 interfaces/rest/{context}/
 ├── controller/
 │   └── {Entity}Controller.java
@@ -223,6 +240,7 @@ interfaces/rest/{context}/
 ```
 
 ### Must Follow
+
 - [ ] RESTful URL conventions
 - [ ] Proper HTTP methods (GET, POST, PUT, DELETE)
 - [ ] Consistent response format
@@ -233,7 +251,8 @@ interfaces/rest/{context}/
 ## Event-Driven Architecture
 
 ### Event Flow
-```
+
+```text
 Aggregate Root → collectEvent()
     ↓
 Application Service → publishEventsFromAggregate()
@@ -244,6 +263,7 @@ Event Handlers (Infrastructure)
 ```
 
 ### Must Follow
+
 - [ ] Aggregates collect events, don't publish
 - [ ] Application services publish after successful transaction
 - [ ] Event handlers in infrastructure layer
@@ -254,7 +274,8 @@ Event Handlers (Infrastructure)
 ## Testing Architecture
 
 ### Test Package Structure
-```
+
+```text
 test/
 ├── unit/                   # Unit tests (domain logic)
 ├── integration/            # Integration tests
@@ -263,6 +284,7 @@ test/
 ```
 
 ### Must Follow
+
 - [ ] Unit tests for domain logic
 - [ ] Integration tests for infrastructure
 - [ ] E2E tests for complete flows
@@ -273,11 +295,13 @@ test/
 ## Validation Commands
 
 ### Architecture Compliance
+
 ```bash
 ./gradlew archUnit  # Verify all architecture rules
 ```
 
 ### ArchUnit Rules
+
 ```java
 // Layer dependency rules
 @ArchTest

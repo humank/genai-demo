@@ -11,7 +11,7 @@ This document describes the security testing and verification strategies used to
 
 ### Testing Pyramid for Security
 
-```
+```text
         /\
        /  \      Penetration Testing (Manual, Quarterly)
       /____\
@@ -24,24 +24,28 @@ This document describes the security testing and verification strategies used to
 ### Test Types
 
 #### Security Unit Tests
+
 - **Frequency**: Every build
 - **Scope**: Individual security functions
 - **Tools**: JUnit, Mockito
 - **Examples**: Password validation, encryption/decryption, input sanitization
 
 #### Security Integration Tests
+
 - **Frequency**: Daily (CI/CD)
 - **Scope**: Security controls across components
 - **Tools**: Spring Security Test, TestContainers
 - **Examples**: Authentication flows, authorization checks, API security
 
 #### Security Scanning
+
 - **Frequency**: Every commit
 - **Scope**: Code and dependencies
 - **Tools**: SpotBugs, OWASP Dependency-Check, SonarQube
 - **Examples**: Vulnerability detection, code quality issues
 
 #### Penetration Testing
+
 - **Frequency**: Quarterly
 - **Scope**: Complete system
 - **Tools**: OWASP ZAP, Burp Suite, Manual testing
@@ -572,26 +576,32 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
       
       - name: Run OWASP Dependency Check
+
         run: ./gradlew dependencyCheckAnalyze
       
       - name: Run SpotBugs
+
         run: ./gradlew spotbugsMain
       
       - name: SonarQube Scan
+
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube
       
       - name: Upload Security Reports
+
         uses: actions/upload-artifact@v3
         with:
           name: security-reports
@@ -613,21 +623,29 @@ services:
     image: owasp/zap2docker-stable
     command: zap-baseline.py -t http://app:8080 -r zap-report.html
     volumes:
+
       - ./zap-reports:/zap/wrk
+
     depends_on:
+
       - app
     
   app:
     image: ecommerce-platform:latest
     ports:
+
       - "8080:8080"
+
     environment:
+
       - SPRING_PROFILES_ACTIVE=test
+
 ```
 
 ### Manual Penetration Testing Checklist
 
 #### Authentication & Session Management
+
 - [ ] Test for weak password policy
 - [ ] Test for brute force protection
 - [ ] Test for session fixation
@@ -637,6 +655,7 @@ services:
 - [ ] Test for password reset mechanism
 
 #### Authorization
+
 - [ ] Test for privilege escalation
 - [ ] Test for horizontal access control
 - [ ] Test for vertical access control
@@ -644,6 +663,7 @@ services:
 - [ ] Test for missing function level access control
 
 #### Input Validation
+
 - [ ] Test for SQL injection
 - [ ] Test for XSS (reflected, stored, DOM-based)
 - [ ] Test for command injection
@@ -652,12 +672,14 @@ services:
 - [ ] Test for LDAP injection
 
 #### Data Protection
+
 - [ ] Test for sensitive data exposure
 - [ ] Test for insecure cryptographic storage
 - [ ] Test for insufficient transport layer protection
 - [ ] Test for unencrypted communications
 
 #### Business Logic
+
 - [ ] Test for business logic flaws
 - [ ] Test for race conditions
 - [ ] Test for price manipulation
@@ -716,21 +738,27 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Run Security Unit Tests
+
         run: ./gradlew test --tests '*Security*'
       
       - name: Run Security Integration Tests
+
         run: ./gradlew integrationTest --tests '*Security*'
       
       - name: Dependency Vulnerability Scan
+
         run: ./gradlew dependencyCheckAnalyze
       
       - name: Static Security Analysis
+
         run: ./gradlew spotbugsMain
       
       - name: Fail on Security Issues
+
         run: |
           if [ -f build/reports/dependency-check-report.xml ]; then
             if grep -q 'severity="CRITICAL"' build/reports/dependency-check-report.xml; then
@@ -772,7 +800,7 @@ jobs:
 
 ## References
 
-- OWASP Testing Guide: https://owasp.org/www-project-web-security-testing-guide/
-- OWASP ZAP: https://www.zaproxy.org/
-- Spring Security Testing: https://docs.spring.io/spring-security/reference/servlet/test/index.html
-- OWASP Dependency-Check: https://owasp.org/www-project-dependency-check/
+- OWASP Testing Guide: <https://owasp.org/www-project-web-security-testing-guide/>
+- OWASP ZAP: <https://www.zaproxy.org/>
+- Spring Security Testing: <https://docs.spring.io/spring-security/reference/servlet/test/index.html>
+- OWASP Dependency-Check: <https://owasp.org/www-project-dependency-check/>

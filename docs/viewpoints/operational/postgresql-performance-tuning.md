@@ -106,6 +106,7 @@ echo "Baseline metrics captured: $OUTPUT_DIR/baseline_$TIMESTAMP.txt"
 ### 3. Tuning Implementation
 
 **Systematic Tuning Approach**:
+
 1. Memory configuration (shared_buffers, work_mem, effective_cache_size)
 2. Query optimization (indexes, query rewriting)
 3. Connection pooling (HikariCP, pgBouncer)
@@ -115,6 +116,7 @@ echo "Baseline metrics captured: $OUTPUT_DIR/baseline_$TIMESTAMP.txt"
 ### 4. Validation and Monitoring
 
 **Verify Improvements**:
+
 ```bash
 # Compare before/after metrics
 ./compare-performance-metrics.sh baseline_before.txt baseline_after.txt
@@ -124,17 +126,18 @@ echo "Baseline metrics captured: $OUTPUT_DIR/baseline_$TIMESTAMP.txt"
 
 ### Memory Configuration Parameters
 
-
 #### shared_buffers
 
 **Purpose**: PostgreSQL's main memory cache for data pages
 
 **Tuning Guidelines**:
+
 - **Default**: 128MB (too low for production)
 - **Recommended**: 25% of total RAM (up to 8-16GB)
 - **AWS RDS**: Limited by instance type
 
 **Configuration**:
+
 ```sql
 -- Check current value
 SHOW shared_buffers;
@@ -152,6 +155,7 @@ aws rds modify-db-parameter-group \
 ```
 
 **Validation**:
+
 ```sql
 -- Monitor buffer cache hit ratio (target: >99%)
 SELECT 
@@ -166,11 +170,13 @@ FROM pg_statio_user_tables;
 **Purpose**: Memory for sorting and hash operations per query operation
 
 **Tuning Guidelines**:
+
 - **Default**: 4MB (often too low)
 - **Recommended**: Start with 16-64MB, adjust based on workload
 - **Formula**: (Total RAM - shared_buffers) / (max_connections * 2-3)
 
 **Configuration**:
+
 ```sql
 -- Check current value
 SHOW work_mem;
@@ -186,6 +192,7 @@ SELECT /*+ Set(work_mem '256MB') */ * FROM large_table ORDER BY column;
 ```
 
 **Monitoring**:
+
 ```sql
 -- Identify queries using temp files (sign of insufficient work_mem)
 SELECT 
@@ -200,17 +207,18 @@ ORDER BY temp_blks_written DESC
 LIMIT 20;
 ```
 
-
 #### effective_cache_size
 
 **Purpose**: Hint to query planner about available OS cache
 
 **Tuning Guidelines**:
+
 - **Default**: 4GB
 - **Recommended**: 50-75% of total RAM
 - **Does not allocate memory**, only affects query planning
 
 **Configuration**:
+
 ```sql
 -- Check current value
 SHOW effective_cache_size;
@@ -231,11 +239,13 @@ SELECT pg_reload_conf();
 **Purpose**: Memory for maintenance operations (VACUUM, CREATE INDEX, ALTER TABLE)
 
 **Tuning Guidelines**:
+
 - **Default**: 64MB
 - **Recommended**: 256MB - 2GB
 - **Maximum**: 2GB (PostgreSQL limitation)
 
 **Configuration**:
+
 ```sql
 -- Check current value
 SHOW maintenance_work_mem;
@@ -256,12 +266,14 @@ REINDEX TABLE large_table;
 **Purpose**: Cost estimate for random disk I/O
 
 **Tuning Guidelines**:
+
 - **Default**: 4.0 (for spinning disks)
 - **SSD/NVMe**: 1.1 - 1.5
 - **AWS EBS gp3**: 1.1
 - **AWS EBS io2**: 1.0
 
 **Configuration**:
+
 ```sql
 -- Check current value
 SHOW random_page_cost;
@@ -276,12 +288,14 @@ SELECT pg_reload_conf();
 **Purpose**: Number of concurrent disk I/O operations
 
 **Tuning Guidelines**:
+
 - **Default**: 1
 - **SSD**: 200
 - **NVMe**: 200-300
 - **AWS EBS**: 200
 
 **Configuration**:
+
 ```sql
 -- Set for SSD storage
 ALTER SYSTEM SET effective_io_concurrency = 200;
@@ -295,11 +309,13 @@ SELECT pg_reload_conf();
 **Purpose**: Maximum number of concurrent connections
 
 **Tuning Guidelines**:
+
 - **Default**: 100
 - **Recommended**: Based on application needs and available memory
 - **Formula**: Consider work_mem * max_connections < available RAM
 
 **Configuration**:
+
 ```sql
 -- Check current connections
 SELECT count(*) FROM pg_stat_activity;
@@ -311,12 +327,12 @@ ALTER SYSTEM SET max_connections = 200;
 
 **Best Practice**: Use connection pooling (pgBouncer) instead of increasing max_connections
 
-
 ## Query Optimization Workflow
 
 ### Step 1: Identify Slow Queries
 
 **Enable pg_stat_statements**:
+
 ```sql
 -- Check if extension is enabled
 SELECT * FROM pg_extension WHERE extname = 'pg_stat_statements';
@@ -331,6 +347,7 @@ SELECT pg_reload_conf();
 ```
 
 **Find Slow Queries**:
+
 ```sql
 -- Top 20 slowest queries by average execution time
 SELECT 
@@ -369,6 +386,7 @@ LIMIT 20;
 ### Step 2: Analyze Query Execution Plans
 
 **Use EXPLAIN ANALYZE**:
+
 ```sql
 -- Basic explain
 EXPLAIN SELECT * FROM orders WHERE customer_id = 'CUST-001';
@@ -386,6 +404,7 @@ SELECT * FROM products WHERE category = 'Electronics' ORDER BY price DESC LIMIT 
 ```
 
 **Interpret Execution Plans**:
+
 ```sql
 -- Look for these issues:
 -- 1. Sequential Scans on large tables
@@ -398,6 +417,7 @@ SELECT * FROM products WHERE category = 'Electronics' ORDER BY price DESC LIMIT 
 ### Step 3: Query Rewriting Techniques
 
 **Avoid SELECT ***:
+
 ```sql
 -- ❌ Bad: Fetches all columns
 SELECT * FROM orders WHERE customer_id = 'CUST-001';
@@ -409,6 +429,7 @@ WHERE customer_id = 'CUST-001';
 ```
 
 **Use EXISTS instead of IN for subqueries**:
+
 ```sql
 -- ❌ Bad: IN with subquery
 SELECT * FROM customers 
@@ -423,6 +444,7 @@ WHERE EXISTS (
 ```
 
 **Optimize JOINs**:
+
 ```sql
 -- ❌ Bad: Multiple LEFT JOINs
 SELECT o.*, c.*, p.*, i.*
@@ -440,6 +462,7 @@ WHERE o.order_date >= '2024-01-01';
 ```
 
 **Use LIMIT with ORDER BY**:
+
 ```sql
 -- ❌ Bad: No limit on large result set
 SELECT * FROM products ORDER BY created_at DESC;
@@ -449,7 +472,6 @@ SELECT * FROM products
 ORDER BY created_at DESC 
 LIMIT 20 OFFSET 0;
 ```
-
 
 ## Index Strategy and Optimization
 
@@ -511,6 +533,7 @@ CREATE INDEX idx_promotions_period ON promotions USING GIST (valid_period);
 ### Index Design Best Practices
 
 **1. Analyze Query Patterns**:
+
 ```sql
 -- Find missing indexes
 SELECT 
@@ -527,6 +550,7 @@ LIMIT 20;
 ```
 
 **2. Create Covering Indexes**:
+
 ```sql
 -- Include additional columns in index
 CREATE INDEX idx_orders_customer_covering 
@@ -540,6 +564,7 @@ WHERE customer_id = 'CUST-001';
 ```
 
 **3. Use Partial Indexes**:
+
 ```sql
 -- Index only active records
 CREATE INDEX idx_active_customers 
@@ -553,6 +578,7 @@ WHERE order_date >= '2024-01-01';
 ```
 
 **4. Optimize Composite Indexes**:
+
 ```sql
 -- Order matters: most selective column first
 CREATE INDEX idx_orders_status_date ON orders(status, order_date);
@@ -568,6 +594,7 @@ CREATE INDEX idx_orders_status_date ON orders(status, order_date);
 ### Index Maintenance
 
 **Identify Unused Indexes**:
+
 ```sql
 -- Find indexes that are never used
 SELECT 
@@ -583,6 +610,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 ```
 
 **Find Duplicate Indexes**:
+
 ```sql
 -- Identify duplicate indexes
 SELECT 
@@ -604,6 +632,7 @@ ORDER BY sum(pg_relation_size(idx)) DESC;
 ```
 
 **Rebuild Bloated Indexes**:
+
 ```sql
 -- Check index bloat
 SELECT 
@@ -626,12 +655,12 @@ ALTER INDEX idx_orders_customer_id_new RENAME TO idx_orders_customer_id;
 REINDEX INDEX CONCURRENTLY idx_orders_customer_id;
 ```
 
-
 ## Connection Pool Tuning
 
 ### HikariCP Configuration (Application Layer)
 
 **Optimal Settings**:
+
 ```yaml
 # application.yml
 spring:
@@ -662,22 +691,28 @@ spring:
 ```
 
 **Sizing Guidelines**:
-```
+
+```text
 Formula: connections = ((core_count * 2) + effective_spindle_count)
 
 For CPU-bound applications:
+
 - connections = core_count * 2
 
 For I/O-bound applications:
+
 - connections = core_count * 4
 
 Example:
+
 - 4 core CPU, SSD storage
 - connections = (4 * 2) + 1 = 9
 - Set maximum-pool-size = 10-20
+
 ```
 
 **Monitoring HikariCP**:
+
 ```java
 @Component
 public class HikariMetrics {
@@ -703,6 +738,7 @@ public class HikariMetrics {
 ### pgBouncer Configuration (Database Layer)
 
 **Installation and Setup**:
+
 ```bash
 # Install pgBouncer
 sudo apt-get install pgbouncer
@@ -712,6 +748,7 @@ sudo vi /etc/pgbouncer/pgbouncer.ini
 ```
 
 **Optimal Configuration**:
+
 ```ini
 [databases]
 ecommerce = host=ecommerce-prod-db.xxx.rds.amazonaws.com port=5432 dbname=ecommerce
@@ -772,6 +809,7 @@ stats_users = pgbouncer_stats
    - Cannot use transactions
 
 **Monitoring pgBouncer**:
+
 ```bash
 # Connect to pgBouncer admin console
 psql -h localhost -p 6432 -U pgbouncer_admin pgbouncer
@@ -793,6 +831,7 @@ SHOW CONFIG;
 ```
 
 **pgBouncer Metrics to Monitor**:
+
 ```sql
 -- In pgBouncer admin console
 SHOW POOLS;
@@ -804,18 +843,19 @@ SHOW POOLS;
 -- - maxwait: Max wait time for connection
 ```
 
-
 ## VACUUM and Autovacuum Tuning
 
 ### Understanding VACUUM
 
 **Purpose**:
+
 - Reclaim storage from dead tuples
 - Update statistics for query planner
 - Prevent transaction ID wraparound
 - Update visibility map for index-only scans
 
 **Types of VACUUM**:
+
 ```sql
 -- Regular VACUUM (non-blocking)
 VACUUM;
@@ -832,6 +872,7 @@ VACUUM FREEZE;
 ### Autovacuum Configuration
 
 **Check Autovacuum Status**:
+
 ```sql
 -- Check if autovacuum is enabled
 SHOW autovacuum;
@@ -853,6 +894,7 @@ ORDER BY last_autovacuum DESC NULLS LAST;
 ```
 
 **Autovacuum Parameters**:
+
 ```sql
 -- Global settings (requires restart)
 ALTER SYSTEM SET autovacuum = on;
@@ -874,6 +916,7 @@ SELECT pg_reload_conf();
 ```
 
 **Per-Table Autovacuum Settings**:
+
 ```sql
 -- Aggressive autovacuum for high-churn tables
 ALTER TABLE orders SET (
@@ -898,6 +941,7 @@ ALTER TABLE products SET (
 ### Monitoring Dead Tuples
 
 **Check Table Bloat**:
+
 ```sql
 -- Identify tables with high dead tuple ratio
 SELECT 
@@ -929,6 +973,7 @@ LIMIT 20;
 ### Manual VACUUM Strategy
 
 **Scheduled VACUUM**:
+
 ```bash
 #!/bin/bash
 # Script: scheduled-vacuum.sh
@@ -965,6 +1010,7 @@ echo "Scheduled vacuum completed at $(date)"
 ```
 
 **VACUUM FULL Strategy** (requires downtime):
+
 ```bash
 #!/bin/bash
 # Script: vacuum-full-maintenance.sh
@@ -993,12 +1039,12 @@ EOF
 echo "VACUUM FULL maintenance completed at $(date)"
 ```
 
-
 ## Statistics Collection Optimization
 
 ### Understanding PostgreSQL Statistics
 
 **Statistics Types**:
+
 1. **Table statistics**: Row counts, dead tuples, vacuum activity
 2. **Index statistics**: Index scans, tuples read/fetched
 3. **Query statistics**: Execution times, buffer usage (pg_stat_statements)
@@ -1006,6 +1052,7 @@ echo "VACUUM FULL maintenance completed at $(date)"
 ### Configure Statistics Collection
 
 **Statistics Parameters**:
+
 ```sql
 -- Enable statistics collection
 ALTER SYSTEM SET track_activities = on;
@@ -1025,6 +1072,7 @@ SELECT pg_reload_conf();
 ```
 
 **Statistics Target Guidelines**:
+
 - **Default (100)**: Sufficient for most columns
 - **Higher (500-1000)**: For columns with high cardinality or used in complex queries
 - **Lower (10-50)**: For columns with low cardinality
@@ -1032,6 +1080,7 @@ SELECT pg_reload_conf();
 ### Manual Statistics Update
 
 **ANALYZE Command**:
+
 ```sql
 -- Analyze entire database
 ANALYZE;
@@ -1055,6 +1104,7 @@ ORDER BY last_analyze DESC NULLS LAST;
 ```
 
 **Scheduled Statistics Update**:
+
 ```bash
 #!/bin/bash
 # Script: update-statistics.sh
@@ -1084,6 +1134,7 @@ echo "Statistics update completed at $(date)"
 ### Monitor Statistics Quality
 
 **Check Statistics Accuracy**:
+
 ```sql
 -- Compare estimated vs actual row counts
 EXPLAIN (ANALYZE, BUFFERS) 
@@ -1119,6 +1170,7 @@ ORDER BY abs(n_distinct) DESC;
 ### Write-Ahead Log (WAL) Basics
 
 **Purpose**:
+
 - Ensure data durability
 - Enable point-in-time recovery
 - Support replication
@@ -1126,6 +1178,7 @@ ORDER BY abs(n_distinct) DESC;
 ### WAL Parameters for Write-Heavy Workloads
 
 **Core WAL Settings**:
+
 ```sql
 -- WAL level (minimal, replica, logical)
 ALTER SYSTEM SET wal_level = 'replica';
@@ -1144,6 +1197,7 @@ SELECT pg_reload_conf();
 ```
 
 **Synchronous Commit Settings**:
+
 ```sql
 -- Synchronous commit modes:
 -- - on: Wait for WAL write to disk (safest, slowest)
@@ -1164,6 +1218,7 @@ SET synchronous_commit = 'off';
 ```
 
 **WAL Archiving**:
+
 ```sql
 -- Enable WAL archiving
 ALTER SYSTEM SET archive_mode = 'on';
@@ -1177,6 +1232,7 @@ ALTER SYSTEM SET archive_timeout = '300';  -- 5 minutes
 ### Monitor WAL Activity
 
 **Check WAL Generation Rate**:
+
 ```sql
 -- Current WAL location
 SELECT pg_current_wal_lsn();
@@ -1195,6 +1251,7 @@ FROM pg_ls_waldir();
 ```
 
 **Monitor WAL Writes**:
+
 ```sql
 -- Check WAL write statistics
 SELECT 
@@ -1208,17 +1265,18 @@ SELECT
 FROM pg_stat_bgwriter;
 ```
 
-
 ## Checkpoint Tuning for Write-Heavy Workloads
 
 ### Understanding Checkpoints
 
 **Purpose**:
+
 - Write dirty buffers to disk
 - Create recovery points
 - Prevent WAL growth
 
 **Checkpoint Triggers**:
+
 1. Time-based: checkpoint_timeout
 2. WAL-based: max_wal_size
 3. Manual: CHECKPOINT command
@@ -1226,6 +1284,7 @@ FROM pg_stat_bgwriter;
 ### Checkpoint Configuration
 
 **Optimal Settings for Write-Heavy Workloads**:
+
 ```sql
 -- Checkpoint timeout (default: 5min)
 -- Increase for write-heavy workloads to reduce checkpoint frequency
@@ -1254,6 +1313,7 @@ SELECT pg_reload_conf();
 **Tuning Guidelines**:
 
 1. **For OLTP workloads** (many small transactions):
+
    ```sql
    checkpoint_timeout = '10min'
    max_wal_size = '2GB'
@@ -1261,6 +1321,7 @@ SELECT pg_reload_conf();
    ```
 
 2. **For batch/ETL workloads** (large bulk operations):
+
    ```sql
    checkpoint_timeout = '30min'
    max_wal_size = '8GB'
@@ -1268,6 +1329,7 @@ SELECT pg_reload_conf();
    ```
 
 3. **For mixed workloads**:
+
    ```sql
    checkpoint_timeout = '15min'
    max_wal_size = '4GB'
@@ -1277,6 +1339,7 @@ SELECT pg_reload_conf();
 ### Monitor Checkpoint Performance
 
 **Check Checkpoint Statistics**:
+
 ```sql
 -- View checkpoint activity
 SELECT 
@@ -1309,6 +1372,7 @@ FROM pg_stat_bgwriter;
 ```
 
 **Identify Checkpoint Issues**:
+
 ```bash
 # Check PostgreSQL logs for checkpoint warnings
 grep "checkpoints are occurring too frequently" /var/log/postgresql/postgresql.log
@@ -1320,6 +1384,7 @@ grep "checkpoints are occurring too frequently" /var/log/postgresql/postgresql.l
 ```
 
 **Checkpoint Monitoring Script**:
+
 ```bash
 #!/bin/bash
 # Script: monitor-checkpoints.sh
@@ -1362,6 +1427,7 @@ EOF
 ### Optimize Background Writer
 
 **Background Writer Parameters**:
+
 ```sql
 -- Background writer delay (default: 200ms)
 ALTER SYSTEM SET bgwriter_delay = '200ms';
@@ -1380,6 +1446,7 @@ SELECT pg_reload_conf();
 ```
 
 **Monitor Background Writer**:
+
 ```sql
 -- Check background writer efficiency
 SELECT 
@@ -1395,6 +1462,7 @@ FROM pg_stat_bgwriter;
 ### pg_stat_statements Analysis and Optimization
 
 **Enable and Configure pg_stat_statements**:
+
 ```sql
 -- Check if extension is enabled
 SELECT * FROM pg_extension WHERE extname = 'pg_stat_statements';
@@ -1411,6 +1479,7 @@ SELECT pg_reload_conf();
 ```
 
 **Analyze Query Performance Patterns**:
+
 ```sql
 -- Top 20 queries by total execution time
 SELECT 
@@ -1459,6 +1528,7 @@ SELECT pg_stat_statements_reset();
 ### Slow Query Log Analysis
 
 **Configure Slow Query Logging**:
+
 ```sql
 -- Enable slow query logging
 ALTER SYSTEM SET log_min_duration_statement = 1000;  -- Log queries > 1 second
@@ -1473,6 +1543,7 @@ SELECT pg_reload_conf();
 ```
 
 **Analyze Slow Query Logs**:
+
 ```bash
 #!/bin/bash
 # Script: analyze-slow-queries.sh
@@ -1506,6 +1577,7 @@ echo "Slow query analysis completed: $OUTPUT_DIR/analysis_$TIMESTAMP.txt"
 ```
 
 **Use pgBadger for Log Analysis**:
+
 ```bash
 # Install pgBadger
 sudo apt-get install pgbadger
@@ -1526,6 +1598,7 @@ pgbadger -f stderr \
 ### Lock Monitoring and Deadlock Analysis
 
 **Monitor Active Locks**:
+
 ```sql
 -- View all current locks
 SELECT 
@@ -1579,6 +1652,7 @@ SELECT pg_terminate_backend(blocking_pid);
 ```
 
 **Deadlock Detection and Analysis**:
+
 ```sql
 -- Configure deadlock detection
 ALTER SYSTEM SET deadlock_timeout = '1s';
@@ -1590,6 +1664,7 @@ SELECT pg_reload_conf();
 ```
 
 **Deadlock Analysis Script**:
+
 ```bash
 #!/bin/bash
 # Script: analyze-deadlocks.sh
@@ -1616,6 +1691,7 @@ echo "Deadlock analysis completed: $OUTPUT_FILE"
 ### Table and Index Bloat Detection
 
 **Detect Table Bloat**:
+
 ```sql
 -- Estimate table bloat
 SELECT 
@@ -1648,6 +1724,7 @@ LIMIT 20;
 ```
 
 **Detect Index Bloat**:
+
 ```sql
 -- Identify bloated indexes
 SELECT 
@@ -1690,6 +1767,7 @@ ORDER BY sum(pg_relation_size(idx)) DESC;
 ### Replication Monitoring and Lag Analysis
 
 **Monitor Replication Status**:
+
 ```sql
 -- Check replication slots
 SELECT 
@@ -1726,6 +1804,7 @@ FROM pg_stat_replication;
 ```
 
 **Replication Monitoring Script**:
+
 ```bash
 #!/bin/bash
 # Script: monitor-replication.sh
@@ -1754,6 +1833,7 @@ done
 ### Connection Monitoring and Leak Detection
 
 **Monitor Connection Usage**:
+
 ```sql
 -- Current connection statistics
 SELECT 
@@ -1817,6 +1897,7 @@ ORDER BY state_change;
 ```
 
 **Connection Leak Detection Script**:
+
 ```bash
 #!/bin/bash
 # Script: detect-connection-leaks.sh
@@ -1851,6 +1932,7 @@ EOF
 ### Cache Hit Ratio Analysis
 
 **Monitor Buffer Cache Performance**:
+
 ```sql
 -- Overall cache hit ratio (target: >99%)
 SELECT 
@@ -1888,6 +1970,7 @@ WHERE datname = 'ecommerce';
 ```
 
 **Identify Tables with Poor Cache Performance**:
+
 ```sql
 -- Tables with low cache hit ratio
 SELECT 
@@ -1905,6 +1988,7 @@ ORDER BY heap_blks_read DESC;
 ### Disk I/O and Throughput Monitoring
 
 **Monitor Disk I/O Statistics**:
+
 ```sql
 -- Table I/O statistics
 SELECT 
@@ -1947,6 +2031,7 @@ ORDER BY temp_bytes DESC;
 ```
 
 **Monitor WAL I/O**:
+
 ```sql
 -- WAL statistics
 SELECT 
@@ -1968,6 +2053,7 @@ SELECT
 ### Query Plan Analysis and Optimization
 
 **Analyze Query Execution Plans**:
+
 ```sql
 -- Enable detailed query planning information
 SET auto_explain.log_min_duration = 1000;  -- Log plans for queries > 1s
@@ -1998,6 +2084,7 @@ SELECT * FROM orders WHERE customer_id = 'CUST-001';
 ```
 
 **Identify Suboptimal Query Plans**:
+
 ```sql
 -- Queries with sequential scans on large tables
 SELECT 
@@ -2028,6 +2115,7 @@ LIMIT 20;
 ```
 
 **Query Plan Optimization Checklist**:
+
 ```sql
 -- Check planner statistics are up to date
 SELECT 
@@ -2125,4 +2213,5 @@ ORDER BY seq_tup_read DESC;
 **Last Updated**: 2025-01-22  
 **Owner**: DBA Team, Operations Team  
 **Change History**:
+
 - 2025-01-22: Initial comprehensive PostgreSQL performance tuning guide

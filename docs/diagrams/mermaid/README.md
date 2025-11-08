@@ -4,11 +4,12 @@
 
 This directory contains Mermaid diagrams for the project. Mermaid is a JavaScript-based diagramming tool that renders markdown-inspired text definitions to create diagrams dynamically.
 
-> **🔗 Related Standards**: 
+> **🔗 Related Standards**:
+>
 > - [Diagram Generation Standards](../../.kiro/steering/diagram-generation-standards.md) - Complete diagram standards
 > - [Event Storming Standards](../../.kiro/steering/event-storming-standards.md) - Event Storming diagram examples
 
-## Why Mermaid?
+## Why Mermaid
 
 ### Advantages
 
@@ -191,7 +192,7 @@ gitGraph
 
 ## Directory Structure
 
-```
+```text
 docs/diagrams/mermaid/
 ├── README.md                          # This file
 ├── architecture/                      # Architecture diagrams
@@ -237,7 +238,8 @@ graph LR
     F --> G{Payment OK?}
     G -->|Yes| H[Confirm Order]
     G -->|No| I[Release Inventory]
-```
+```text
+
 ```
 
 ### Standalone Diagram Files
@@ -262,7 +264,8 @@ graph TB
     NotifyCustomer --> End[Complete]
     BackOrder --> NotifyDelay[Notify Customer of Delay]
     NotifyDelay --> End
-```
+```text
+
 ```
 
 Then reference it in documentation:
@@ -382,6 +385,7 @@ Most modern IDEs support Mermaid preview:
 ### Online Editor
 
 Use the [Mermaid Live Editor](https://mermaid.live/) for:
+
 - Testing complex diagrams
 - Experimenting with styling
 - Sharing diagrams with stakeholders
@@ -400,7 +404,8 @@ Use the [Mermaid Live Editor](https://mermaid.live/) for:
 
 ### Issue: Text Overlapping
 
-**Solution**: 
+**Solution**:
+
 - Shorten labels
 - Use line breaks in labels: `A[Line 1<br/>Line 2]`
 - Adjust diagram direction
@@ -408,6 +413,7 @@ Use the [Mermaid Live Editor](https://mermaid.live/) for:
 ### Issue: Too Complex
 
 **Solution**:
+
 - Break into multiple diagrams
 - Use subgraphs
 - Create a high-level overview and detailed sub-diagrams
@@ -415,6 +421,7 @@ Use the [Mermaid Live Editor](https://mermaid.live/) for:
 ### Issue: Inconsistent Styling
 
 **Solution**:
+
 - Define style classes
 - Use consistent color scheme
 - Follow Event Storming color standards

@@ -10,7 +10,7 @@ This document provides comprehensive information about the development toolchain
 
 ## Toolchain Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Development Toolchain Stack                 │
 ├─────────────────────────────────────────────────────────┤
@@ -85,6 +85,7 @@ This document provides comprehensive information about the development toolchain
 **Users**: All backend engineers (7 people)
 
 **Key Features**:
+
 - Best-in-class Java and Spring Boot support
 - Intelligent code completion and refactoring
 - Built-in database tools
@@ -93,6 +94,7 @@ This document provides comprehensive information about the development toolchain
 - Plugin ecosystem
 
 **Setup Guide**:
+
 1. Download from [JetBrains website](https://www.jetbrains.com/idea/)
 2. Install and activate with company license
 3. Install required plugins:
@@ -106,6 +108,7 @@ This document provides comprehensive information about the development toolchain
 6. Set up Gradle integration
 
 **Best Practices**:
+
 - Use keyboard shortcuts for productivity
 - Enable auto-import for dependencies
 - Configure code inspections
@@ -123,6 +126,7 @@ This document provides comprehensive information about the development toolchain
 **Users**: All frontend engineers (4 people), DevOps (2 people)
 
 **Key Features**:
+
 - Excellent TypeScript/JavaScript support
 - Rich extension marketplace
 - Integrated terminal
@@ -131,6 +135,7 @@ This document provides comprehensive information about the development toolchain
 - Lightweight and fast
 
 **Setup Guide**:
+
 1. Download from [VS Code website](https://code.visualstudio.com/)
 2. Install recommended extensions:
    - ESLint
@@ -146,6 +151,7 @@ This document provides comprehensive information about the development toolchain
 5. Configure debugging for Node.js
 
 **Recommended Extensions**:
+
 ```json
 {
   "recommendations": [
@@ -172,6 +178,7 @@ This document provides comprehensive information about the development toolchain
 **Users**: Backend engineers (7 people), QA (3 people)
 
 **Key Features**:
+
 - Support for PostgreSQL, Redis, and other databases
 - Intelligent SQL editor with auto-completion
 - Query execution and result visualization
@@ -180,6 +187,7 @@ This document provides comprehensive information about the development toolchain
 - Query performance analysis
 
 **Setup Guide**:
+
 1. Download from [JetBrains website](https://www.jetbrains.com/datagrip/)
 2. Configure database connections:
    - Local PostgreSQL (development)
@@ -199,16 +207,20 @@ This document provides comprehensive information about the development toolchain
 **Users**: All engineers (18 people)
 
 **Setup Guide**:
+
 1. Install Git from [git-scm.com](https://git-scm.com/)
 2. Configure user information:
+
    ```bash
    git config --global user.name "Your Name"
    git config --global user.email "your.email@company.com"
    ```
+
 3. Set up SSH keys for GitHub
 4. Configure Git aliases from repository
 
 **Git Workflow**:
+
 - Main branch: `main` (production)
 - Development branch: `develop`
 - Feature branches: `feature/{ticket-number}-{description}`
@@ -216,7 +228,8 @@ This document provides comprehensive information about the development toolchain
 - Release branches: `release/{version}`
 
 **Commit Message Convention**:
-```
+
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -237,6 +250,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 **Users**: All engineers (18 people)
 
 **Key Features**:
+
 - Unlimited private repositories
 - Pull request reviews
 - GitHub Actions (CI/CD)
@@ -246,6 +260,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 - Team management
 
 **Setup Guide**:
+
 1. Create GitHub account with company email
 2. Join organization
 3. Set up 2FA (required)
@@ -253,6 +268,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 5. Install GitHub CLI (optional)
 
 **Branch Protection Rules**:
+
 - Require pull request reviews (2 approvals)
 - Require status checks to pass
 - Require branches to be up to date
@@ -270,6 +286,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 **Users**: Optional for all engineers
 
 **Use Cases**:
+
 - Visual diff and merge conflict resolution
 - Easier branch management for beginners
 - Visual commit history
@@ -288,6 +305,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 **Version**: 8.x
 
 **Key Features**:
+
 - Dependency management
 - Multi-project builds
 - Incremental builds
@@ -295,18 +313,24 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 - Plugin ecosystem
 
 **Setup Guide**:
+
 1. Install via SDKMAN:
+
    ```bash
    sdk install gradle 8.5
    ```
+
 2. Verify installation:
+
    ```bash
    gradle --version
    ```
+
 3. Configure Gradle wrapper in project
 4. Set up Gradle daemon for faster builds
 
 **Common Commands**:
+
 ```bash
 ./gradlew clean build          # Clean and build
 ./gradlew test                 # Run tests
@@ -324,24 +348,30 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 **Cost**: $0  
 **Users**: All frontend engineers (4 people)
 
-**Versions**: 
+**Versions**:
+
 - Node.js: 20.x LTS
 - npm: 10.x
 - pnpm: 8.x (preferred for monorepos)
 
 **Setup Guide**:
+
 1. Install Node.js from [nodejs.org](https://nodejs.org/)
 2. Install pnpm globally:
+
    ```bash
    npm install -g pnpm
    ```
+
 3. Verify installation:
+
    ```bash
    node --version
    pnpm --version
    ```
 
 **Common Commands**:
+
 ```bash
 pnpm install                   # Install dependencies
 pnpm run dev                   # Start dev server
@@ -361,6 +391,7 @@ pnpm run lint                  # Run linter
 **Users**: All engineers (18 people)
 
 **Key Features**:
+
 - Run containers locally
 - Docker Compose for multi-container apps
 - Kubernetes support (optional)
@@ -368,6 +399,7 @@ pnpm run lint                  # Run linter
 - Network management
 
 **Setup Guide**:
+
 1. Download from [docker.com](https://www.docker.com/products/docker-desktop/)
 2. Install and start Docker Desktop
 3. Configure resources (CPU, Memory)
@@ -375,6 +407,7 @@ pnpm run lint                  # Run linter
 5. Log in to Docker Hub (optional)
 
 **Common Commands**:
+
 ```bash
 docker-compose up              # Start services
 docker-compose down            # Stop services
@@ -394,6 +427,7 @@ docker exec -it <container> sh # Shell into container
 **Users**: All engineers (18 people)
 
 **Key Features**:
+
 - API request builder
 - Collection organization
 - Environment variables
@@ -402,6 +436,7 @@ docker exec -it <container> sh # Shell into container
 - API documentation
 
 **Setup Guide**:
+
 1. Download from [postman.com](https://www.postman.com/)
 2. Create account with company email
 3. Join team workspace
@@ -409,6 +444,7 @@ docker exec -it <container> sh # Shell into container
 5. Configure environments (local, staging, production)
 
 **Best Practices**:
+
 - Organize requests into collections
 - Use environment variables for URLs and tokens
 - Write tests for API responses
@@ -426,17 +462,21 @@ docker exec -it <container> sh # Shell into container
 **Users**: QA engineers (3 people), Senior backend engineers
 
 **Use Cases**:
+
 - Load testing
 - Stress testing
 - Performance benchmarking
 - Capacity planning
 
 **Setup Guide (JMeter)**:
+
 1. Download from [jmeter.apache.org](https://jmeter.apache.org/)
 2. Extract and run:
+
    ```bash
    ./bin/jmeter
    ```
+
 3. Install plugins via Plugin Manager
 4. Configure test plans
 
@@ -451,6 +491,7 @@ docker exec -it <container> sh # Shell into container
 **Users**: All engineers (automated)
 
 **Key Features**:
+
 - Workflow automation
 - Matrix builds
 - Secrets management
@@ -460,6 +501,7 @@ docker exec -it <container> sh # Shell into container
 **Workflow Examples**:
 
 **Backend CI Workflow**:
+
 ```yaml
 name: Backend CI
 
@@ -473,21 +515,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Build with Gradle
+
         run: ./gradlew build
+
       - name: Run tests
+
         run: ./gradlew test
+
       - name: Upload coverage
+
         uses: codecov/codecov-action@v3
 ```
 
 **Frontend CI Workflow**:
+
 ```yaml
 name: Frontend CI
 
@@ -501,18 +552,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       - name: Setup Node.js
+
         uses: actions/setup-node@v3
         with:
           node-version: '20'
+
       - name: Install dependencies
+
         run: pnpm install
+
       - name: Lint
+
         run: pnpm run lint
+
       - name: Test
+
         run: pnpm test
+
       - name: Build
+
         run: pnpm run build
 ```
 
@@ -527,6 +588,7 @@ jobs:
 **Users**: DevOps engineers (2 people)
 
 **Key Features**:
+
 - Declarative GitOps
 - Automated sync
 - Health monitoring
@@ -534,6 +596,7 @@ jobs:
 - Multi-cluster support
 
 **Setup Guide**:
+
 1. Install ArgoCD in Kubernetes cluster
 2. Configure Git repository connection
 3. Create application manifests
@@ -551,6 +614,7 @@ jobs:
 **Users**: All engineers (automated in CI/CD)
 
 **Key Features**:
+
 - Code smell detection
 - Security vulnerability scanning
 - Code coverage tracking
@@ -558,6 +622,7 @@ jobs:
 - Quality gates
 
 **Setup Guide**:
+
 1. Access SonarQube server (hosted internally)
 2. Configure project in SonarQube
 3. Add SonarQube plugin to Gradle/npm
@@ -565,6 +630,7 @@ jobs:
 5. Integrate with GitHub Actions
 
 **Quality Gates**:
+
 - Code coverage > 80%
 - No critical/blocker issues
 - Technical debt ratio < 5%
@@ -581,6 +647,7 @@ jobs:
 **Users**: All engineers (automated)
 
 **Key Features**:
+
 - Dependency vulnerability scanning
 - Container image scanning
 - Infrastructure as Code scanning
@@ -588,19 +655,27 @@ jobs:
 - Automated fix PRs
 
 **Setup Guide**:
+
 1. Install Snyk CLI:
+
    ```bash
    npm install -g snyk
    ```
+
 2. Authenticate:
+
    ```bash
    snyk auth
    ```
+
 3. Test project:
+
    ```bash
    snyk test
    ```
+
 4. Monitor project:
+
    ```bash
    snyk monitor
    ```
@@ -616,16 +691,20 @@ jobs:
 **Users**: All engineers (automated)
 
 **Configuration** (`.github/dependabot.yml`):
+
 ```yaml
 version: 2
 updates:
+
   - package-ecosystem: "gradle"
+
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
     
   - package-ecosystem: "npm"
+
     directory: "/frontend"
     schedule:
       interval: "weekly"
@@ -643,6 +722,7 @@ updates:
 **Users**: All engineers, Operations team
 
 **Key Features**:
+
 - Log aggregation
 - Metrics collection
 - Alarms and notifications
@@ -650,6 +730,7 @@ updates:
 - Log Insights queries
 
 **Setup Guide**:
+
 1. Configure CloudWatch agent on EC2/EKS
 2. Set up log groups
 3. Create metric filters
@@ -667,6 +748,7 @@ updates:
 **Users**: Backend engineers, DevOps
 
 **Key Features**:
+
 - Request tracing
 - Service map visualization
 - Performance analysis
@@ -674,10 +756,13 @@ updates:
 - Integration with Spring Boot
 
 **Setup Guide**:
+
 1. Add X-Ray SDK to Spring Boot:
+
    ```gradle
    implementation 'com.amazonaws:aws-xray-recorder-sdk-spring'
    ```
+
 2. Configure X-Ray daemon
 3. Add tracing annotations
 4. View traces in X-Ray console
@@ -693,6 +778,7 @@ updates:
 **Users**: All engineers, Operations team
 
 **Key Features**:
+
 - Beautiful dashboards
 - Multiple data sources
 - Alerting
@@ -700,6 +786,7 @@ updates:
 - Templating
 
 **Setup Guide**:
+
 1. Access Grafana instance (hosted internally)
 2. Configure data sources (CloudWatch, Prometheus)
 3. Import dashboard templates
@@ -717,6 +804,7 @@ updates:
 **Users**: All team members (25+ people)
 
 **Key Channels**:
+
 - `#engineering` - General engineering discussions
 - `#backend` - Backend team
 - `#frontend` - Frontend team
@@ -728,6 +816,7 @@ updates:
 - `#monitoring` - Monitoring alerts
 
 **Integrations**:
+
 - GitHub (PR notifications, commits)
 - Jira (issue updates)
 - PagerDuty (incident alerts)
@@ -745,6 +834,7 @@ updates:
 **Users**: All team members (25+ people)
 
 **Key Features**:
+
 - Agile boards (Scrum/Kanban)
 - Sprint planning
 - Backlog management
@@ -752,11 +842,13 @@ updates:
 - Workflow automation
 
 **Project Structure**:
+
 - **ECOM**: Main e-commerce project
 - **INFRA**: Infrastructure tasks
 - **TECH**: Technical debt and improvements
 
 **Issue Types**:
+
 - Epic
 - Story
 - Task
@@ -774,12 +866,14 @@ updates:
 **Users**: All team members (25+ people)
 
 **Key Spaces**:
+
 - **Engineering** - Technical documentation
 - **Product** - Product requirements and roadmap
 - **Operations** - Runbooks and procedures
 - **Onboarding** - New hire documentation
 
 **Best Practices**:
+
 - Use templates for consistency
 - Link to code repositories
 - Keep documentation up-to-date
@@ -797,6 +891,7 @@ updates:
 **Users**: All engineers (18 people)
 
 **Use Cases**:
+
 - Event storming workshops
 - Architecture diagrams
 - Sprint planning
@@ -833,6 +928,7 @@ updates:
 ### New Engineer Onboarding
 
 **Day 1: Account Setup**
+
 - [ ] Create company email account
 - [ ] Set up GitHub account and join organization
 - [ ] Set up Slack account and join channels
@@ -841,6 +937,7 @@ updates:
 - [ ] Enable 2FA on all accounts
 
 **Day 1-2: Development Environment**
+
 - [ ] Install IDE (IntelliJ IDEA or VS Code)
 - [ ] Install Git and configure
 - [ ] Install Docker Desktop
@@ -851,6 +948,7 @@ updates:
 - [ ] Install Postman and import collections
 
 **Day 3: Additional Tools**
+
 - [ ] Install DataGrip (if needed)
 - [ ] Set up AWS CLI and credentials
 - [ ] Install kubectl (if needed)
@@ -858,6 +956,7 @@ updates:
 - [ ] Configure IDE plugins and settings
 
 **Week 1: Verification**
+
 - [ ] Successfully run application locally
 - [ ] Create first pull request
 - [ ] Run tests locally

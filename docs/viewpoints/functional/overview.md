@@ -8,9 +8,11 @@ version: "1.0"
 status: "active"
 owner: "Architecture Team"
 related_docs:
+
   - "viewpoints/information/overview.md"
   - "viewpoints/context/overview.md"
   - "perspectives/security/overview.md"
+
 tags: ["ddd", "bounded-contexts", "use-cases", "functional-capabilities"]
 ---
 
@@ -29,6 +31,7 @@ The Enterprise E-Commerce Platform is built using **Hexagonal Architecture** (Po
 ## Purpose
 
 This viewpoint answers the following key questions:
+
 - What are the core business capabilities of the system?
 - How is the system organized into bounded contexts?
 - What are the key use cases and user journeys?
@@ -38,12 +41,14 @@ This viewpoint answers the following key questions:
 ## Stakeholders
 
 ### Primary Stakeholders
+
 - **Business Analysts**: Understand business capabilities and requirements
 - **Product Managers**: Validate feature completeness and business value
 - **Developers**: Implement business logic and features
 - **Architects**: Design system structure and integration patterns
 
 ### Secondary Stakeholders
+
 - **QA Engineers**: Design functional tests and validation scenarios
 - **Technical Writers**: Document user-facing features
 - **Support Teams**: Understand system capabilities for customer support
@@ -51,11 +56,13 @@ This viewpoint answers the following key questions:
 ## Contents
 
 ### 📄 Documents
+
 - [Bounded Contexts](bounded-contexts.md) - Detailed description of all 13 bounded contexts
 - [Use Cases](use-cases.md) - Key user journeys and business processes
 - [Functional Interfaces](interfaces.md) - REST APIs and domain events
 
 ### 📊 Diagrams
+
 - [Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png) - High-level context map
 - Context-specific diagrams for each bounded context (see bounded-contexts.md)
 
@@ -68,6 +75,7 @@ This viewpoint answers the following key questions:
 **Why it matters**: Clear boundaries between business capabilities reduce coupling, enable team autonomy, and allow the system to evolve independently in different areas.
 
 **How it's addressed**: The system is decomposed into 13 bounded contexts using DDD strategic design:
+
 - Customer Context
 - Order Context
 - Product Context
@@ -88,7 +96,8 @@ This viewpoint answers the following key questions:
 
 **Why it matters**: Tight coupling between contexts would negate the benefits of bounded context separation and make the system harder to evolve.
 
-**How it's addressed**: 
+**How it's addressed**:
+
 - **Domain Events**: Asynchronous communication via domain events for cross-context workflows
 - **REST APIs**: Synchronous communication for real-time queries
 - **Shared Kernel**: Minimal shared value objects in `domain/shared/`
@@ -101,6 +110,7 @@ This viewpoint answers the following key questions:
 **Why it matters**: Inconsistent business rule enforcement leads to data integrity issues and unpredictable system behavior.
 
 **How it's addressed**:
+
 - **Aggregate Roots**: Enforce invariants and business rules
 - **Domain Services**: Implement complex business logic spanning multiple aggregates
 - **Validation**: Multi-layer validation (value objects, aggregates, application services)
@@ -112,7 +122,7 @@ This viewpoint answers the following key questions:
 
 Each bounded context follows the Hexagonal Architecture pattern:
 
-```
+```text
 Bounded Context
 ├── Domain Layer (Core Business Logic)
 │   ├── model/
@@ -140,6 +150,7 @@ Bounded Context
 ```
 
 **Key Elements**:
+
 - **Domain Layer**: Contains pure business logic with no infrastructure dependencies
 - **Application Layer**: Orchestrates use cases, manages transactions, publishes events
 - **Infrastructure Layer**: Implements technical concerns (database, messaging, external APIs)
@@ -149,7 +160,7 @@ Bounded Context
 
 Bounded contexts communicate asynchronously via domain events:
 
-```
+```text
 Order Context                    Inventory Context
      |                                 |
      | OrderSubmittedEvent             |
@@ -162,6 +173,7 @@ Order Context                    Inventory Context
 ```
 
 **Event Flow**:
+
 1. Aggregate root collects domain events during business operations
 2. Application service publishes events after successful transaction
 3. Event handlers in other contexts react to events
@@ -175,13 +187,15 @@ Order Context                    Inventory Context
 
 **Decision**: Adopt DDD strategic design with 13 bounded contexts
 
-**Rationale**: 
+**Rationale**:
+
 - Aligns software structure with business organization
 - Enables independent evolution of different business capabilities
 - Reduces cognitive load by creating clear boundaries
 - Supports team autonomy and parallel development
 
-**Consequences**: 
+**Consequences**:
+
 - Requires careful context boundary definition
 - Need for cross-context communication patterns
 - Potential data duplication across contexts
@@ -196,12 +210,14 @@ Order Context                    Inventory Context
 **Decision**: Use domain events for cross-context communication
 
 **Rationale**:
+
 - Decouples bounded contexts (no direct dependencies)
 - Enables asynchronous processing for better scalability
 - Provides audit trail of business events
 - Supports eventual consistency model
 
 **Consequences**:
+
 - Increased system complexity (distributed transactions)
 - Need for event versioning and schema evolution
 - Requires robust event delivery guarantees
@@ -212,26 +228,32 @@ Order Context                    Inventory Context
 ## Key Concepts
 
 ### Bounded Context
+
 A bounded context is a logical boundary within which a particular domain model is defined and applicable. Each context has its own ubiquitous language and is responsible for a specific business capability.
 
 ### Aggregate Root
+
 An aggregate root is the entry point to a cluster of domain objects that must be treated as a single unit for data changes. It enforces business invariants and collects domain events.
 
 ### Domain Event
+
 A domain event represents something significant that happened in the business domain. Events are immutable records of past occurrences and are used for cross-context communication.
 
 ### Use Case
+
 A use case represents a specific way a user interacts with the system to achieve a goal. Each use case is implemented as an application service that orchestrates domain objects.
 
 ## Constraints and Assumptions
 
 ### Constraints
+
 - Each bounded context must be independently deployable
 - Domain layer must have no dependencies on infrastructure
 - Cross-context communication must be asynchronous (except for queries)
 - Each context owns its own data (no shared databases)
 
 ### Assumptions
+
 - Business capabilities are relatively stable (context boundaries don't change frequently)
 - Eventual consistency is acceptable for cross-context workflows
 - Domain events are delivered reliably (at-least-once delivery)
@@ -240,26 +262,31 @@ A use case represents a specific way a user interacts with the system to achieve
 ## Related Documentation
 
 ### Related Viewpoints
+
 - [Information Viewpoint](../information/overview.md) - Data models and ownership within each context
 - [Development Viewpoint](../development/overview.md) - Code organization and module structure
 - [Context Viewpoint](../context/overview.md) - External system integrations and boundaries
 
 ### Related Perspectives
+
 - [Security Perspective](../../perspectives/security/overview.md) - Authentication and authorization across contexts
 - [Performance Perspective](../../perspectives/performance/overview.md) - Performance considerations for each context
 - [Evolution Perspective](../../perspectives/evolution/overview.md) - How contexts evolve independently
 
 ### Related Architecture Decisions
+
 - [ADR-002: Adopt Hexagonal Architecture](../../architecture/adrs/ADR-002-adopt-hexagonal-architecture.md)
 - [ADR-003: Use Domain Events for Cross-Context Communication](../../architecture/adrs/ADR-003-domain-events-communication.md)
 
 ### Related Guides
+
 - [Development Guide](../../development/README.md) - How to implement features in bounded contexts
 - [API Documentation](../../api/README.md) - REST API reference for each context
 
 ## Implementation Guidelines
 
 ### For Developers
+
 1. **Identify the Bounded Context**: Determine which context your feature belongs to
 2. **Follow DDD Tactical Patterns**: Use aggregates, value objects, and domain events
 3. **Respect Context Boundaries**: Never directly access another context's database or domain objects
@@ -267,6 +294,7 @@ A use case represents a specific way a user interacts with the system to achieve
 5. **Test in Isolation**: Each context should be testable independently
 
 ### For Architects
+
 1. **Define Clear Boundaries**: Ensure each context has a well-defined responsibility
 2. **Minimize Context Coupling**: Limit dependencies between contexts
 3. **Design Event Contracts**: Define stable event schemas for cross-context communication
@@ -274,6 +302,7 @@ A use case represents a specific way a user interacts with the system to achieve
 5. **Monitor Context Health**: Track metrics for each context separately
 
 ### For Operations
+
 1. **Deploy Independently**: Each context can be deployed without affecting others
 2. **Monitor Separately**: Track metrics and logs for each context
 3. **Scale Independently**: Scale contexts based on their individual load patterns
@@ -282,18 +311,21 @@ A use case represents a specific way a user interacts with the system to achieve
 ## Verification and Validation
 
 ### How to Verify
+
 - Review bounded context boundaries with domain experts
 - Validate that each context has a clear, single responsibility
 - Ensure domain events capture all significant business occurrences
 - Verify that use cases are implemented correctly in application services
 
 ### Validation Criteria
+
 - Each bounded context is independently deployable
 - Domain layer has no infrastructure dependencies (verified by ArchUnit)
 - All cross-context communication uses domain events
 - Business rules are enforced within aggregate roots
 
 ### Testing Approach
+
 - **Unit Tests**: Test domain logic in isolation (aggregates, value objects, domain services)
 - **Integration Tests**: Test repository implementations and event publishing
 - **BDD Tests**: Validate use cases with Cucumber scenarios
@@ -302,12 +334,14 @@ A use case represents a specific way a user interacts with the system to achieve
 ## Known Issues and Limitations
 
 ### Current Limitations
+
 - **Eventual Consistency**: Cross-context workflows may have temporary inconsistencies
   - *Mitigation*: Design UX to handle eventual consistency, provide status updates
 - **Distributed Transactions**: No ACID transactions across contexts
   - *Mitigation*: Use Saga pattern for complex workflows, implement compensating transactions
 
 ### Technical Debt
+
 - **Context Boundary Refinement**: Some contexts may need to be split or merged as the domain understanding evolves
   - *Plan*: Conduct quarterly context boundary reviews with domain experts
 - **Event Versioning**: Need better tooling for event schema evolution
@@ -316,11 +350,13 @@ A use case represents a specific way a user interacts with the system to achieve
 ## Future Considerations
 
 ### Planned Improvements
+
 - **Context Map Visualization**: Interactive diagram showing context relationships and dependencies (Q1 2025)
 - **Event Catalog**: Searchable catalog of all domain events with schemas (Q2 2025)
 - **Context Health Dashboard**: Real-time monitoring of each context's health metrics (Q2 2025)
 
 ### Evolution Strategy
+
 - Contexts will evolve independently based on business needs
 - New contexts may be extracted from existing ones as business grows
 - Context boundaries will be reviewed quarterly with domain experts
@@ -338,6 +374,7 @@ A use case represents a specific way a user interacts with the system to achieve
 ## Appendix
 
 ### Glossary
+
 - **Bounded Context**: A logical boundary within which a domain model is defined
 - **Aggregate Root**: Entry point to a cluster of domain objects
 - **Domain Event**: Immutable record of a significant business occurrence
@@ -346,6 +383,7 @@ A use case represents a specific way a user interacts with the system to achieve
 - **Hexagonal Architecture**: Architecture pattern separating business logic from technical concerns
 
 ### References
+
 - [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
 - [Implementing Domain-Driven Design by Vaughn Vernon](https://vaughnvernon.com/)
 - [Rozanski & Woods Software Systems Architecture](https://www.viewpoints-and-perspectives.info/)

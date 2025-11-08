@@ -11,6 +11,7 @@ The Deployment Viewpoint describes how the system is deployed to AWS infrastruct
 ## Purpose
 
 This viewpoint answers:
+
 - What infrastructure is needed?
 - How is the network configured?
 - What is the deployment process?
@@ -24,12 +25,14 @@ This viewpoint answers:
 ## Contents
 
 ### 📄 Documents
+
 - [Overview](overview.md) - AWS infrastructure approach
 - [Physical Architecture](physical-architecture.md) - EKS, RDS, ElastiCache, MSK
 - [Network Architecture](network-architecture.md) - VPC, subnets, security groups
 - [Deployment Process](deployment-process.md) - CI/CD pipeline and deployment strategies
 
 ### 📊 Diagrams
+
 - AWS infrastructure diagram
 - Network topology diagram
 - Deployment pipeline diagram
@@ -37,6 +40,7 @@ This viewpoint answers:
 ## Key Concepts
 
 ### Infrastructure Components
+
 - **Compute**: Amazon EKS (Kubernetes)
 - **Database**: Amazon RDS PostgreSQL (Multi-AZ)
 - **Cache**: Amazon ElastiCache Redis
@@ -44,12 +48,14 @@ This viewpoint answers:
 - **Observability**: CloudWatch, X-Ray, Grafana
 
 ### Network Architecture
+
 - **VPC**: 10.0.0.0/16
 - **Public Subnets**: ALB, NAT Gateway
 - **Private Subnets**: Application tier
 - **Data Subnets**: RDS, ElastiCache
 
 ### Deployment Strategy
+
 - **CI/CD**: GitHub Actions + ArgoCD
 - **Strategy**: Rolling deployment with health checks
 - **Environments**: Local, Staging, Production
@@ -57,15 +63,18 @@ This viewpoint answers:
 ## Related Documentation
 
 ### Related Viewpoints
+
 - [Operational Viewpoint](../operational/README.md) - Monitoring and operations
 - [Development Viewpoint](../development/README.md) - Build artifacts
 
 ### Related Perspectives
+
 - [Security Perspective](../../perspectives/security/README.md) - Network security
 - [Availability Perspective](../../perspectives/availability/README.md) - Multi-AZ deployment
 - [Performance Perspective](../../perspectives/performance/README.md) - Auto-scaling
 
 ### Related Guides
+
 - [Deployment Guide](../../operations/deployment/README.md) - Step-by-step procedures
 
 ## Quick Links

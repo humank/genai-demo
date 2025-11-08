@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance", "evolution"]
 The Enterprise E-Commerce Platform requires a robust multi-region deployment strategy to address:
 
 **Business Requirements**:
+
 - **High Availability**: 99.9% uptime SLA
 - **Disaster Recovery**: RTO < 5 minutes, RPO < 1 minute
 - **Geopolitical Risks**: Taiwan-China tensions require regional redundancy
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 - **Compliance**: Data residency requirements (Taiwan, Japan)
 
 **Technical Challenges**:
+
 - Complex deployment orchestration across regions
 - Data synchronization and consistency
 - Network latency between regions
@@ -39,6 +41,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 - Testing and validation across regions
 
 **Current State**:
+
 - Single region deployment (Taiwan)
 - Manual deployment processes
 - No disaster recovery capability
@@ -48,6 +51,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 ### Business Context
 
 **Business Drivers**:
+
 - Expand to Japanese market
 - Ensure business continuity during regional disasters
 - Meet customer expectations for availability
@@ -55,6 +59,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 - Support future global expansion
 
 **Constraints**:
+
 - Budget: $200,000 for initial setup
 - Timeline: 6 months for full implementation
 - Team: 5 engineers available
@@ -63,6 +68,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 ### Technical Context
 
 **Current Architecture**:
+
 - Single AWS region (ap-northeast-3 - Taiwan)
 - Monolithic deployment
 - Manual deployment scripts
@@ -70,6 +76,7 @@ The Enterprise E-Commerce Platform requires a robust multi-region deployment str
 - Single point of failure
 
 **Target Architecture**:
+
 - Multi-region active-active (Taiwan + Tokyo)
 - Automated deployment pipeline
 - Cross-region data replication
@@ -381,17 +388,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Build and Test
+
         run: |
           ./gradlew clean build test
           
       - name: Build Docker Images
+
         run: |
           docker build -t ecommerce-api:${{ github.sha }} .
           
       - name: Push to ECR (Multi-Region)
+
         run: |
           # Push to Taiwan ECR
           aws ecr get-login-password --region ap-northeast-3 | \
@@ -409,13 +420,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+
       - name: Deploy to Staging
+
         run: |
           kubectl set image deployment/ecommerce-api \
             ecommerce-api=$ECR_TAIWAN/ecommerce-api:${{ github.sha }} \
             --namespace=staging
           
       - name: Run Integration Tests
+
         run: |
           ./scripts/run-integration-tests.sh staging
   
@@ -424,17 +438,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: production-taiwan
     steps:
+
       - name: Canary Deployment (10%)
+
         run: |
           kubectl apply -f k8s/canary-10.yaml
           sleep 300  # Monitor for 5 minutes
           
       - name: Canary Deployment (50%)
+
         run: |
           kubectl apply -f k8s/canary-50.yaml
           sleep 600  # Monitor for 10 minutes
           
       - name: Full Deployment (100%)
+
         run: |
           kubectl set image deployment/ecommerce-api \
             ecommerce-api=$ECR_TAIWAN/ecommerce-api:${{ github.sha }} \
@@ -445,10 +463,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: production-tokyo
     steps:
+
       - name: Wait for Taiwan Stability
+
         run: sleep 1800  # Wait 30 minutes
         
       - name: Canary Deployment Tokyo
+
         run: |
           # Same canary process for Tokyo
           kubectl apply -f k8s/canary-10.yaml --context=tokyo
@@ -515,6 +536,7 @@ interface MonitoringStrategy {
 ```
 
 **Pros**:
+
 - ✅ High availability (99.9%+)
 - ✅ Fast disaster recovery (< 5 minutes)
 - ✅ Low latency for regional users
@@ -524,6 +546,7 @@ interface MonitoringStrategy {
 - ✅ Reduced manual intervention
 
 **Cons**:
+
 - ⚠️ Higher infrastructure costs (2x resources)
 - ⚠️ Complex data synchronization
 - ⚠️ Increased operational complexity
@@ -538,11 +561,13 @@ interface MonitoringStrategy {
 **Description**: Primary region active, secondary region on standby with manual failover
 
 **Pros**:
+
 - ✅ Lower cost (standby resources minimal)
 - ✅ Simpler data synchronization
 - ✅ Easier to implement
 
 **Cons**:
+
 - ❌ Slower failover (30+ minutes)
 - ❌ Manual intervention required
 - ❌ Higher latency for distant users
@@ -557,11 +582,13 @@ interface MonitoringStrategy {
 **Description**: Single region with multi-AZ deployment and enhanced backup
 
 **Pros**:
+
 - ✅ Lowest cost
 - ✅ Simplest architecture
 - ✅ No cross-region complexity
 
 **Cons**:
+
 - ❌ No protection from regional failures
 - ❌ Single point of failure
 - ❌ Does not meet DR requirements
@@ -596,6 +623,7 @@ Active-active multi-region deployment provides the best balance of availability,
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All application services
 - Database infrastructure
 - Caching layer
@@ -621,6 +649,7 @@ Affects:
 ### Phase 1: Infrastructure Setup (Month 1-2)
 
 **Tasks**:
+
 - [ ] Deploy EKS clusters in both regions
 - [ ] Set up Aurora Global Database
 - [ ] Configure ElastiCache Global Datastore
@@ -629,6 +658,7 @@ Affects:
 - [ ] Set up monitoring and alerting
 
 **Success Criteria**:
+
 - Infrastructure operational in both regions
 - Cross-region connectivity verified
 - Monitoring dashboards configured
@@ -636,6 +666,7 @@ Affects:
 ### Phase 2: Deployment Pipeline (Month 2-3)
 
 **Tasks**:
+
 - [ ] Implement CI/CD pipeline
 - [ ] Configure multi-region ECR
 - [ ] Set up canary deployment
@@ -643,6 +674,7 @@ Affects:
 - [ ] Create deployment documentation
 
 **Success Criteria**:
+
 - Automated deployment to both regions
 - Canary deployment working
 - Rollback tested and verified
@@ -650,6 +682,7 @@ Affects:
 ### Phase 3: Data Replication (Month 3-4)
 
 **Tasks**:
+
 - [ ] Configure database replication
 - [ ] Set up cache replication
 - [ ] Implement data consistency checks
@@ -657,6 +690,7 @@ Affects:
 - [ ] Optimize replication performance
 
 **Success Criteria**:
+
 - Data replication working
 - Replication lag < 1 second
 - Failover tested successfully
@@ -664,6 +698,7 @@ Affects:
 ### Phase 4: Application Migration (Month 4-5)
 
 **Tasks**:
+
 - [ ] Deploy applications to both regions
 - [ ] Configure traffic routing
 - [ ] Test cross-region functionality
@@ -671,6 +706,7 @@ Affects:
 - [ ] Update documentation
 
 **Success Criteria**:
+
 - Applications running in both regions
 - Traffic routing working correctly
 - Performance targets met
@@ -678,6 +714,7 @@ Affects:
 ### Phase 5: Testing & Validation (Month 5-6)
 
 **Tasks**:
+
 - [ ] Integration testing
 - [ ] Failover testing
 - [ ] Performance testing
@@ -686,6 +723,7 @@ Affects:
 - [ ] Disaster recovery drills
 
 **Success Criteria**:
+
 - All tests passing
 - Failover < 5 minutes
 - Performance acceptable
@@ -694,6 +732,7 @@ Affects:
 ### Phase 6: Production Rollout (Month 6)
 
 **Tasks**:
+
 - [ ] Gradual traffic migration
 - [ ] Monitor performance
 - [ ] Validate failover
@@ -701,6 +740,7 @@ Affects:
 - [ ] Complete documentation
 
 **Success Criteria**:
+
 - 100% traffic on multi-region
 - All metrics within targets
 - Team trained on operations
@@ -708,11 +748,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical failures in new infrastructure
 - Data consistency issues
 - Performance degradation
 
 **Rollback Steps**:
+
 1. Route all traffic to Taiwan region
 2. Disable Tokyo region
 3. Investigate and fix issues
@@ -761,12 +803,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual configuration for some services
 2. Basic monitoring dashboards
 3. Limited automation for DR procedures
 4. Incomplete documentation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Full automation of DR procedures
 - **Q3 2026**: Advanced monitoring and alerting
 - **Q4 2026**: Complete documentation and training
@@ -791,24 +835,28 @@ Affects:
 ### Multi-Region Deployment Best Practices
 
 **Traffic Routing**:
+
 - Use geolocation routing for optimal performance
 - Implement health checks with automatic failover
 - Monitor traffic distribution continuously
 - Test failover scenarios regularly
 
 **Data Management**:
+
 - Use appropriate consistency models per data type
 - Monitor replication lag closely
 - Implement conflict resolution strategies
 - Test data recovery procedures
 
 **Cost Optimization**:
+
 - Use Reserved Instances for baseline capacity
 - Implement auto-scaling for variable load
 - Monitor cross-region data transfer
 - Optimize resource utilization
 
 **Operations**:
+
 - Automate deployment processes
 - Implement comprehensive monitoring
 - Create detailed runbooks
@@ -823,4 +871,3 @@ Affects:
 | Data | Primary writes | Primary writes (Japan) |
 | Failover Role | Can handle 100% | Can handle 100% |
 | Cost | Higher | Lower |
-

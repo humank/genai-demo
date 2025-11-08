@@ -15,11 +15,13 @@ After disabling the global AWS MCP servers, the `aws-pricing` server in project 
 ## 🔧 Action Taken
 
 ### Backup Created
+
 ```bash
 .kiro/settings/mcp.json.backup.20251107_121500
 ```
 
 ### Server Disabled
+
 ```bash
 # Disabled aws-pricing in project config
 jq '.mcpServers["aws-pricing"].disabled = true' .kiro/settings/mcp.json
@@ -49,10 +51,12 @@ jq '.mcpServers["aws-pricing"].disabled = true' .kiro/settings/mcp.json
 ## 📊 Summary
 
 **Total Active Servers**: 6
+
 - Global: 2 (`github`, `awslabs.cdk-mcp-server`)
 - Project: 4 (`time`, `aws-docs`, `aws-cdk`, `excalidraw`)
 
 **Total Disabled Due to Timeout**: 4
+
 - Global: 3 (`lambda`, `iam`, `aws-pricing-mcp-server`)
 - Project: 1 (`aws-pricing`)
 
@@ -80,6 +84,7 @@ The AWS Pricing API servers (both global and project versions) are experiencing 
 ## 💡 Recommendations
 
 ### Short Term (Current)
+
 ✅ Keep pricing servers disabled for stable operation
 
 ### Long Term (Optional)
@@ -87,11 +92,13 @@ The AWS Pricing API servers (both global and project versions) are experiencing 
 If you need pricing functionality:
 
 1. **Pre-install the package**:
+
    ```bash
    uvx awslabs.aws-pricing-mcp-server@latest --help
    ```
 
 2. **Test manually**:
+
    ```bash
    AWS_PROFILE=kim-sso AWS_REGION=ap-northeast-1 \
      uvx awslabs.aws-pricing-mcp-server@latest
@@ -102,6 +109,7 @@ If you need pricing functionality:
    - Increase to 60-90 seconds for pricing servers
 
 4. **Use AWS CLI instead**:
+
    ```bash
    # Get pricing via CLI
    aws pricing get-products \
@@ -115,16 +123,19 @@ If you need pricing functionality:
 ## 🔄 Alternative Solutions
 
 ### Option 1: Use AWS Cost Explorer
+
 - More reliable for cost analysis
 - Web-based interface
 - Historical cost data
 
 ### Option 2: Use AWS Pricing Calculator
-- https://calculator.aws/
+
+- <https://calculator.aws/>
 - Comprehensive pricing estimates
 - No API timeouts
 
 ### Option 3: Use Infracost (for CDK)
+
 ```bash
 # Install Infracost
 brew install infracost
@@ -157,5 +168,6 @@ All timeout issues have been resolved by disabling the problematic pricing serve
 ---
 
 **Related Documentation**:
+
 - [MCP Final Status](./mcp-final-status.md)
 - [AWS Servers Troubleshooting](./mcp-aws-servers-troubleshooting.md)

@@ -37,7 +37,7 @@ This document defines the API usability standards for the Enterprise E-Commerce 
 
 **Principle**: URLs should represent resources, not actions.
 
-```
+```text
 ✅ GOOD: Resource-oriented URLs
 GET    /api/v1/products              # List products
 GET    /api/v1/products/{id}         # Get specific product
@@ -72,7 +72,8 @@ GET    /api/v1/getCustomerOrders?customerId=123
 ### HTTP Status Codes
 
 **Success Codes**:
-```
+
+```text
 200 OK                  - Successful GET, PUT, PATCH, or DELETE
 201 Created             - Successful POST that creates a resource
 202 Accepted            - Request accepted for async processing
@@ -80,7 +81,8 @@ GET    /api/v1/getCustomerOrders?customerId=123
 ```
 
 **Client Error Codes**:
-```
+
+```text
 400 Bad Request         - Invalid request syntax or validation error
 401 Unauthorized        - Authentication required or failed
 403 Forbidden           - Authenticated but not authorized
@@ -92,7 +94,8 @@ GET    /api/v1/getCustomerOrders?customerId=123
 ```
 
 **Server Error Codes**:
-```
+
+```text
 500 Internal Server Error - Unexpected server error
 502 Bad Gateway          - Invalid response from upstream server
 503 Service Unavailable  - Server temporarily unavailable
@@ -106,6 +109,7 @@ GET    /api/v1/getCustomerOrders?customerId=123
 ### Request Headers
 
 **Required Headers**:
+
 ```http
 Content-Type: application/json
 Accept: application/json
@@ -113,6 +117,7 @@ Authorization: Bearer {token}
 ```
 
 **Optional Headers**:
+
 ```http
 X-Request-ID: {uuid}              # For request tracing
 X-Idempotency-Key: {uuid}         # For idempotent operations
@@ -123,6 +128,7 @@ Accept-Language: en-US            # Preferred language
 ### Request Body Standards
 
 **Good Request Body Design**:
+
 ```json
 {
   "customer": {
@@ -149,6 +155,7 @@ Accept-Language: en-US            # Preferred language
 ```
 
 **Naming Conventions**:
+
 - Use camelCase for field names
 - Use descriptive, self-explanatory names
 - Avoid abbreviations unless widely understood
@@ -175,27 +182,31 @@ Accept-Language: en-US            # Preferred language
 ### Query Parameters
 
 **Filtering**:
-```
+
+```text
 GET /api/v1/products?category=electronics&minPrice=100&maxPrice=500
 GET /api/v1/orders?status=pending&customerId=123
 GET /api/v1/products?search=laptop&brand=apple
 ```
 
 **Sorting**:
-```
+
+```text
 GET /api/v1/products?sortBy=price&sortOrder=asc
 GET /api/v1/orders?sortBy=createdAt&sortOrder=desc
 ```
 
 **Pagination**:
-```
+
+```text
 GET /api/v1/products?page=1&pageSize=20
 GET /api/v1/products?offset=0&limit=20
 GET /api/v1/products?cursor=eyJpZCI6MTIzfQ==
 ```
 
 **Field Selection**:
-```
+
+```text
 GET /api/v1/products?fields=id,name,price
 GET /api/v1/orders?include=items,customer
 ```
@@ -207,6 +218,7 @@ GET /api/v1/orders?include=items,customer
 ### Response Structure
 
 **Success Response**:
+
 ```json
 {
   "data": {
@@ -239,6 +251,7 @@ GET /api/v1/orders?include=items,customer
 ```
 
 **Collection Response with Pagination**:
+
 ```json
 {
   "data": [
@@ -283,6 +296,7 @@ GET /api/v1/orders?include=items,customer
 ### Response Headers
 
 **Standard Headers**:
+
 ```http
 Content-Type: application/json; charset=utf-8
 X-Request-ID: req_abc123
@@ -291,6 +305,7 @@ Cache-Control: no-cache, no-store, must-revalidate
 ```
 
 **Rate Limiting Headers**:
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -299,6 +314,7 @@ Retry-After: 3600
 ```
 
 **Pagination Headers** (Alternative to body):
+
 ```http
 Link: </api/v1/products?page=2>; rel="next",
       </api/v1/products?page=1>; rel="first",
@@ -315,6 +331,7 @@ X-Page-Size: 20
 ### Error Response Structure
 
 **Standard Error Response**:
+
 ```json
 {
   "error": {
@@ -343,6 +360,7 @@ X-Page-Size: 20
 ### Error Code Catalog
 
 **Validation Errors (400)**:
+
 ```json
 {
   "error": {
@@ -354,6 +372,7 @@ X-Page-Size: 20
 ```
 
 **Authentication Errors (401)**:
+
 ```json
 {
   "error": {
@@ -369,6 +388,7 @@ X-Page-Size: 20
 ```
 
 **Authorization Errors (403)**:
+
 ```json
 {
   "error": {
@@ -384,6 +404,7 @@ X-Page-Size: 20
 ```
 
 **Resource Not Found (404)**:
+
 ```json
 {
   "error": {
@@ -403,6 +424,7 @@ X-Page-Size: 20
 ```
 
 **Business Rule Violation (409)**:
+
 ```json
 {
   "error": {
@@ -423,6 +445,7 @@ X-Page-Size: 20
 ```
 
 **Rate Limiting (429)**:
+
 ```json
 {
   "error": {
@@ -440,6 +463,7 @@ X-Page-Size: 20
 ```
 
 **Server Error (500)**:
+
 ```json
 {
   "error": {
@@ -456,6 +480,7 @@ X-Page-Size: 20
 ### Error Message Guidelines
 
 **Good Error Messages**:
+
 - ✅ Specific and actionable
 - ✅ Include what went wrong
 - ✅ Suggest how to fix it
@@ -463,6 +488,7 @@ X-Page-Size: 20
 - ✅ Link to documentation
 
 **Bad Error Messages**:
+
 - ❌ Generic: "An error occurred"
 - ❌ Technical jargon: "NullPointerException at line 42"
 - ❌ No context: "Invalid input"
@@ -501,6 +527,7 @@ X-Page-Size: 20
 ### OpenAPI Specification
 
 **Complete Endpoint Documentation**:
+
 ```yaml
 openapi: 3.0.0
 info:
@@ -521,9 +548,13 @@ info:
     url: https://support.ecommerce.example.com
 
 servers:
+
   - url: https://api.ecommerce.example.com/api/v1
+
     description: Production server
+
   - url: https://sandbox-api.ecommerce.example.com/api/v1
+
     description: Sandbox server
 
 paths:
@@ -534,6 +565,7 @@ paths:
         Creates a new order for the authenticated customer.
         
         ## Business Rules
+
         - Customer must have a valid payment method
         - All products must be in stock
         - Order total must be greater than $0
@@ -543,11 +575,17 @@ paths:
         
       operationId: createOrder
       tags:
+
         - Orders
+
       security:
+
         - bearerAuth: []
+
       parameters:
+
         - name: X-Idempotency-Key
+
           in: header
           description: Unique key to ensure idempotent requests
           required: false
@@ -566,7 +604,9 @@ paths:
                 value:
                   customerId: "cust_123"
                   items:
+
                     - productId: "prod_001"
+
                       quantity: 1
                   shippingAddress:
                     street: "123 Main St"
@@ -579,9 +619,13 @@ paths:
                 value:
                   customerId: "cust_123"
                   items:
+
                     - productId: "prod_001"
+
                       quantity: 2
+
                     - productId: "prod_002"
+
                       quantity: 1
                   promoCode: "SAVE10"
                   shippingAddress:
@@ -628,7 +672,9 @@ paths:
                       code: "VALIDATION_ERROR"
                       message: "The request contains invalid data"
                       details:
+
                         - field: "items"
+
                           message: "At least one item is required"
         '401':
           $ref: '#/components/responses/Unauthorized'
@@ -665,9 +711,11 @@ components:
     CreateOrderRequest:
       type: object
       required:
+
         - customerId
         - items
         - shippingAddress
+
       properties:
         customerId:
           type: string
@@ -871,12 +919,14 @@ curl -X POST https://api.ecommerce.example.com/api/v1/orders \
 ### Version Communication
 
 **In URL**:
-```
+
+```yaml
 https://api.ecommerce.example.com/api/v1/orders
 https://api.ecommerce.example.com/api/v2/orders
 ```
 
 **Deprecation Headers**:
+
 ```http
 Deprecation: true
 Sunset: 2025-12-31T23:59:59Z
@@ -884,6 +934,7 @@ Link: </api/v2/orders>; rel="successor-version"
 ```
 
 **Version Information in Response**:
+
 ```json
 {
   "data": {...},
@@ -905,6 +956,7 @@ Link: </api/v2/orders>; rel="successor-version"
 ### Rate Limit Information
 
 **Headers**:
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -912,6 +964,7 @@ X-RateLimit-Reset: 1635091200
 ```
 
 **Rate Limit Exceeded Response**:
+
 ```json
 {
   "error": {
@@ -984,12 +1037,13 @@ console.log('Order created:', order.id);
 
 ### Sandbox Environment
 
-```
+```text
 Production: https://api.ecommerce.example.com
 Sandbox:    https://sandbox-api.ecommerce.example.com
 ```
 
 **Sandbox Features**:
+
 - Isolated test environment
 - Test credit cards accepted
 - No real charges
@@ -999,14 +1053,16 @@ Sandbox:    https://sandbox-api.ecommerce.example.com
 ### Test Data
 
 **Test Credit Cards**:
-```
+
+```text
 Success: 4242 4242 4242 4242
 Decline: 4000 0000 0000 0002
 Insufficient Funds: 4000 0000 0000 9995
 ```
 
 **Test Customers**:
-```
+
+```text
 test_customer_success@example.com
 test_customer_decline@example.com
 ```
@@ -1057,6 +1113,7 @@ test_customer_decline@example.com
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Accessibility perspective introduction
 - [UI Accessibility](ui-accessibility.md) - User interface accessibility
 - [Documentation](documentation.md) - Documentation clarity standards

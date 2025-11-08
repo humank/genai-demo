@@ -32,6 +32,7 @@ This document defines the scalability strategy for the e-commerce platform. The 
 #### Kubernetes Horizontal Pod Autoscaler (HPA)
 
 **Configuration**:
+
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -45,19 +46,25 @@ spec:
   minReplicas: 2
   maxReplicas: 20
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
         type: Utilization
         averageUtilization: 80
+
   - type: Pods
+
     pods:
       metric:
         name: http_requests_per_second
@@ -68,28 +75,36 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
+
       - type: Percent
+
         value: 50
         periodSeconds: 60
+
       - type: Pods
+
         value: 2
         periodSeconds: 60
       selectPolicy: Max
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
+
       - type: Percent
+
         value: 10
         periodSeconds: 60
       selectPolicy: Min
 ```
 
 **Scaling Triggers**:
+
 - **CPU Utilization**: Scale when average CPU > 70% for 3 minutes
 - **Memory Utilization**: Scale when average memory > 80% for 3 minutes
 - **Request Rate**: Scale when requests/second > 100 per pod
 
 **Scaling Behavior**:
+
 - **Scale-Up**: Aggressive (50% increase or 2 pods, whichever is larger)
 - **Scale-Down**: Conservative (10% decrease, 5-minute stabilization window)
 - **Min Replicas**: 2 (for high availability)
@@ -106,6 +121,7 @@ spec:
 | Notification Service | 2 | 15 | Queue Depth | 100 messages |
 
 **Rationale**:
+
 - Product Service has higher max replicas due to read-heavy workload
 - Payment Service has lower CPU target for safety margin
 - Notification Service scales based on message queue depth
@@ -115,6 +131,7 @@ spec:
 #### Application Load Balancer (ALB)
 
 **Configuration**:
+
 - **Algorithm**: Round-robin with least outstanding requests
 - **Health Checks**: HTTP GET /actuator/health every 30 seconds
 - **Healthy Threshold**: 2 consecutive successes
@@ -123,6 +140,7 @@ spec:
 - **Deregistration Delay**: 30 seconds (connection draining)
 
 **Sticky Sessions**:
+
 - **Disabled** for stateless services
 - **Enabled** only for specific use cases (e.g., file uploads)
 - **Duration**: 1 hour maximum
@@ -134,12 +152,14 @@ spec:
 #### Read Replica Strategy
 
 **Configuration**:
+
 - **Primary Database**: Handles all writes
 - **Read Replicas**: 1-3 replicas based on read load
 - **Replication**: Asynchronous replication
 - **Lag Monitoring**: Alert if lag > 2 seconds
 
 **Read/Write Routing**:
+
 ```java
 @Configuration
 public class DatabaseRoutingConfiguration {
@@ -181,12 +201,14 @@ public class OrderService {
 ```
 
 **Scaling Triggers**:
+
 - Add replica when primary CPU > 70% and read ratio > 80%
 - Remove replica when all replicas CPU < 30% for 1 hour
 
 #### Connection Pool Scaling
 
 **HikariCP Configuration**:
+
 ```yaml
 spring:
   datasource:
@@ -200,12 +222,14 @@ spring:
 ```
 
 **Scaling Formula**:
-```
+
+```text
 Max Connections = (Number of Pods × Pool Size) + Buffer
 Example: (10 pods × 20 connections) + 50 buffer = 250 connections
 ```
 
 **RDS Max Connections**: Configure based on instance type
+
 - db.t3.medium: 420 connections
 - db.r5.large: 1000 connections
 - db.r5.xlarge: 2000 connections
@@ -215,12 +239,14 @@ Example: (10 pods × 20 connections) + 50 buffer = 250 connections
 #### Redis Cluster Configuration
 
 **Cluster Setup**:
+
 - **Node Type**: cache.r5.large (13.07 GB memory)
 - **Number of Shards**: 3 (for data distribution)
 - **Replicas per Shard**: 1 (for high availability)
 - **Total Nodes**: 6 (3 primary + 3 replicas)
 
 **Scaling Strategy**:
+
 - **Vertical Scaling**: Upgrade node type when memory > 80%
 - **Horizontal Scaling**: Add shards when data size grows
 - **Read Scaling**: Add replicas for read-heavy workloads
@@ -228,6 +254,7 @@ Example: (10 pods × 20 connections) + 50 buffer = 250 connections
 **Auto-Scaling**: Not available for ElastiCache, manual scaling required
 
 **Monitoring**:
+
 - Memory usage per node
 - CPU utilization per node
 - Cache hit rate
@@ -240,6 +267,7 @@ Example: (10 pods × 20 connections) + 50 buffer = 250 connections
 For known traffic patterns (e.g., Black Friday), implement predictive scaling:
 
 **Scheduled Scaling**:
+
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -256,6 +284,7 @@ spec:
 ```
 
 **Schedule**:
+
 - **Black Friday**: Scale to 10 replicas 2 hours before
 - **Cyber Monday**: Scale to 10 replicas 2 hours before
 - **Flash Sales**: Scale to 15 replicas 30 minutes before
@@ -264,16 +293,19 @@ spec:
 ### Target Tracking Scaling
 
 **CPU-Based Scaling**:
+
 - Target: 70% CPU utilization
 - Scale-up: When CPU > 70% for 3 minutes
 - Scale-down: When CPU < 50% for 10 minutes
 
 **Memory-Based Scaling**:
+
 - Target: 80% memory utilization
 - Scale-up: When memory > 80% for 3 minutes
 - Scale-down: When memory < 60% for 10 minutes
 
 **Request-Based Scaling**:
+
 - Target: 100 requests/second per pod
 - Scale-up: When requests > 100/s for 2 minutes
 - Scale-down: When requests < 50/s for 10 minutes
@@ -281,16 +313,19 @@ spec:
 ### Scaling Limits and Safeguards
 
 **Rate Limits**:
+
 - Maximum scale-up: 50% of current replicas per minute
 - Maximum scale-down: 10% of current replicas per minute
 - Minimum time between scaling events: 3 minutes
 
 **Cost Controls**:
+
 - Maximum replicas per service: 20-30 (based on service)
 - Alert when total pod count > 100
 - Budget alerts for infrastructure costs
 
 **Safety Measures**:
+
 - Minimum 2 replicas for high availability
 - Pod disruption budgets: Allow max 1 unavailable pod
 - Graceful shutdown: 30-second termination grace period
@@ -300,11 +335,13 @@ spec:
 ### Growth Projections
 
 **Traffic Growth**:
+
 - Year 1: 2x current traffic
 - Year 2: 5x current traffic
 - Year 3: 10x current traffic
 
 **Data Growth**:
+
 - Database: 50% growth per year
 - Object storage: 100% growth per year
 - Logs: 200% growth per year
@@ -326,6 +363,7 @@ spec:
 **Participants**: Architecture team, operations team, finance team
 
 **Agenda**:
+
 1. Review current capacity utilization
 2. Analyze growth trends
 3. Project future capacity needs
@@ -341,6 +379,7 @@ spec:
 **Objective**: Verify auto-scaling works correctly
 
 **Test Plan**:
+
 1. Start with 2 replicas, 100 req/s
 2. Increase to 500 req/s over 10 minutes
 3. Increase to 1000 req/s over 10 minutes
@@ -348,6 +387,7 @@ spec:
 5. Decrease to 100 req/s over 10 minutes
 
 **Success Criteria**:
+
 - Auto-scaling triggers at expected thresholds
 - Response times remain within targets
 - No errors during scaling events
@@ -358,12 +398,14 @@ spec:
 **Objective**: Verify system handles sudden traffic spikes
 
 **Test Plan**:
+
 1. Start with 2 replicas, 100 req/s
 2. Spike to 1000 req/s immediately
 3. Maintain for 10 minutes
 4. Return to 100 req/s
 
 **Success Criteria**:
+
 - System remains stable during spike
 - Auto-scaling responds within 5 minutes
 - Error rate < 1% during spike
@@ -374,11 +416,13 @@ spec:
 **Objective**: Verify system stability over extended period
 
 **Test Plan**:
+
 1. Maintain 500 req/s for 24 hours
 2. Monitor resource usage and performance
 3. Check for memory leaks or resource exhaustion
 
 **Success Criteria**:
+
 - Performance remains stable over 24 hours
 - No memory leaks detected
 - No resource exhaustion
@@ -389,6 +433,7 @@ spec:
 **Objective**: Verify system resilience during scaling events
 
 **Scenarios**:
+
 1. **Pod Termination**: Randomly terminate pods during load test
 2. **Network Latency**: Introduce network delays between services
 3. **Database Failover**: Trigger RDS failover during load
@@ -405,6 +450,7 @@ spec:
 **Use Case**: Reduce database load for frequently accessed data
 
 **Implementation**:
+
 ```java
 @Service
 public class ProductService {
@@ -423,6 +469,7 @@ public class ProductService {
 ```
 
 **Benefits**:
+
 - Reduces database queries by 60-80%
 - Improves response time by 40-50%
 - Enables horizontal scaling of read operations
@@ -432,6 +479,7 @@ public class ProductService {
 **Use Case**: Decouple non-critical operations from API response
 
 **Implementation**:
+
 ```java
 @Service
 public class OrderService {
@@ -461,6 +509,7 @@ public class OrderCreatedEventHandler {
 ```
 
 **Benefits**:
+
 - Reduces API response time by 200-300ms
 - Enables independent scaling of event processors
 - Improves system resilience
@@ -472,6 +521,7 @@ public class OrderCreatedEventHandler {
 **Implementation**: See "Read Replica Strategy" section above
 
 **Benefits**:
+
 - Reduces primary database load by 70%
 - Enables horizontal scaling of read operations
 - Improves write performance on primary
@@ -481,11 +531,13 @@ public class OrderCreatedEventHandler {
 **Use Case**: Offload static content delivery
 
 **Implementation**:
+
 - CloudFront distribution for static assets
 - S3 origin for images, CSS, JavaScript
 - Edge caching with appropriate TTL
 
 **Benefits**:
+
 - Reduces origin server load by 80%
 - Improves global latency by 50-70%
 - Reduces bandwidth costs
@@ -495,18 +547,21 @@ public class OrderCreatedEventHandler {
 ### Scaling Metrics
 
 **Application Metrics**:
+
 - Current replica count
 - Desired replica count
 - Scaling events (up/down)
 - Time to scale (scale-up/scale-down)
 
 **Resource Metrics**:
+
 - CPU utilization per pod
 - Memory utilization per pod
 - Request rate per pod
 - Error rate per pod
 
 **Database Metrics**:
+
 - Connection count
 - Replication lag
 - Read/write distribution
@@ -527,11 +582,13 @@ public class OrderCreatedEventHandler {
 ### Right-Sizing
 
 **Pod Resource Requests**:
+
 - Set based on actual usage (P95 of historical data)
 - Review and adjust quarterly
 - Use Vertical Pod Autoscaler for recommendations
 
 **Database Instance Sizing**:
+
 - Start with smaller instances
 - Scale up based on actual usage
 - Consider Reserved Instances for cost savings
@@ -539,12 +596,14 @@ public class OrderCreatedEventHandler {
 ### Cost-Aware Scaling
 
 **Strategies**:
+
 1. **Scale-down aggressively during off-peak**: Reduce to minimum replicas
 2. **Use Spot Instances**: For non-critical workloads
 3. **Scheduled scaling**: Pre-scale for known events, scale down after
 4. **Cache effectively**: Reduce database instance requirements
 
 **Cost Monitoring**:
+
 - Track cost per request
 - Monitor infrastructure costs daily
 - Set budget alerts

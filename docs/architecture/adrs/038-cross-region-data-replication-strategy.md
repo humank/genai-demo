@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance", "evolution"]
 Active-active multi-region architecture (ADR-037) requires data synchronization between Taiwan and Tokyo regions. Different bounded contexts have different consistency requirements:
 
 **Challenges**:
+
 - **Consistency vs Availability**: CAP theorem trade-offs
 - **Replication Lag**: Network latency between regions (40-60ms)
 - **Data Conflicts**: Concurrent updates in different regions
@@ -31,6 +32,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Performance**: Replication impact on application performance
 
 **Business Impact**:
+
 - Order processing errors due to inconsistency
 - Inventory overselling
 - Customer data conflicts
@@ -40,6 +42,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 ### Business Context
 
 **Business Drivers**:
+
 - Data consistency for critical operations (orders, payments)
 - High availability for all operations
 - Low latency for read operations
@@ -47,21 +50,23 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - Regulatory compliance (data residency)
 
 **Constraints**:
+
 - Network latency: 40-60ms between Taiwan-Tokyo
 - Budget: $50,000/year for data transfer
 - Replication lag tolerance varies by context
 - Must support bidirectional replication
 - Zero data loss for critical data
 
-
 ### Technical Context
 
 **Current State**:
+
 - Single-region deployment
 - No cross-region replication
 - No conflict resolution mechanisms
 
 **Requirements**:
+
 - Bidirectional replication for all data stores
 - Bounded context-specific consistency levels
 - Conflict detection and resolution
@@ -85,6 +90,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 **Description**: Different replication strategies based on bounded context requirements
 
 **Tier 1 - Strong Consistency (CP)**:
+
 - **Contexts**: Orders, Payments, Inventory
 - **Strategy**: Quorum write (both regions acknowledge)
 - **Technology**: PostgreSQL synchronous replication
@@ -92,6 +98,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Cost**: Higher latency, lower throughput
 
 **Tier 2 - Eventual Consistency (AP)**:
+
 - **Contexts**: Product Catalog, Customer Profiles, Reviews
 - **Strategy**: Asynchronous replication
 - **Technology**: PostgreSQL logical replication
@@ -99,6 +106,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Cost**: Low latency, high throughput
 
 **Tier 3 - Regional Isolation**:
+
 - **Contexts**: Shopping Carts, Sessions
 - **Strategy**: Regional data, merge on demand
 - **Technology**: Redis with regional clusters
@@ -106,12 +114,14 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 - **Cost**: Lowest
 
 **Pros**:
+
 - ✅ Optimal balance of consistency and availability
 - ✅ Cost-effective (only replicate what's needed)
 - ✅ Performance optimized per context
 - ✅ Clear consistency guarantees
 
 **Cons**:
+
 - ⚠️ Complexity in managing different strategies
 - ⚠️ Requires careful context classification
 
@@ -124,10 +134,12 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 **Description**: All data synchronously replicated
 
 **Pros**:
+
 - ✅ Strong consistency everywhere
 - ✅ Simple to understand
 
 **Cons**:
+
 - ❌ High latency (100ms+ for all writes)
 - ❌ Lower throughput
 - ❌ Availability impact
@@ -140,11 +152,13 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 **Description**: All data asynchronously replicated
 
 **Pros**:
+
 - ✅ Low latency
 - ✅ High throughput
 - ✅ Low cost ($30,000/year)
 
 **Cons**:
+
 - ❌ Consistency issues for critical data
 - ❌ Risk of data loss
 - ❌ Complex conflict resolution
@@ -158,6 +172,7 @@ Active-active multi-region architecture (ADR-037) requires data synchronization 
 ### Rationale
 
 Tiered replication provides optimal balance:
+
 1. **Strong Consistency**: Where needed (orders, payments)
 2. **High Availability**: Where acceptable (product catalog)
 3. **Performance**: Optimized per context
@@ -195,6 +210,7 @@ Tiered replication provides optimal balance:
 ### PostgreSQL Replication Configuration
 
 **Tier 1 - Synchronous Replication**:
+
 ```sql
 -- postgresql.conf
 synchronous_commit = remote_apply
@@ -208,6 +224,7 @@ ALTER SYSTEM SET synchronous_standby_names = 'taiwan_standby';
 ```
 
 **Tier 2 - Logical Replication**:
+
 ```sql
 -- Taiwan publisher
 CREATE PUBLICATION taiwan_catalog FOR TABLE 
@@ -227,6 +244,7 @@ CREATE SUBSCRIPTION tokyo_catalog
 ### Redis Replication Strategy
 
 **Global Datastore for Critical Data**:
+
 ```typescript
 const globalRedis = new elasticache.CfnGlobalReplicationGroup(this, 'GlobalRedis', {
   globalReplicationGroupIdSuffix: 'critical',
@@ -240,6 +258,7 @@ const globalRedis = new elasticache.CfnGlobalReplicationGroup(this, 'GlobalRedis
 ```
 
 **Regional Clusters for Sessions**:
+
 ```typescript
 // Separate clusters, no replication
 const taiwanSessionRedis = new elasticache.CfnReplicationGroup(this, 'TaiwanSessions', {
@@ -258,6 +277,7 @@ const tokyoSessionRedis = new elasticache.CfnReplicationGroup(this, 'TokyoSessio
 ### Kafka Cross-Region Replication
 
 **MirrorMaker 2.0 Configuration**:
+
 ```yaml
 clusters:
   taiwan:
@@ -268,13 +288,16 @@ clusters:
     security.protocol: SSL
 
 mirrors:
+
   - source: taiwan
+
     target: tokyo
     topics: "orders.*, payments.*, inventory.*"
     sync.topic.configs.enabled: true
     replication.factor: 3
     
   - source: tokyo
+
     target: taiwan
     topics: "orders.*, payments.*, inventory.*"
     sync.topic.configs.enabled: true
@@ -284,6 +307,7 @@ mirrors:
 ### Conflict Resolution Mechanisms
 
 **Last-Write-Wins (LWW)**:
+
 ```java
 @Entity
 public class CustomerProfile {
@@ -312,6 +336,7 @@ public class CustomerProfile {
 ```
 
 **Application-Level Resolution**:
+
 ```java
 public class InventoryConflictResolver {
     
@@ -359,24 +384,28 @@ public class InventoryConflictResolver {
 ## Implementation Plan
 
 ### Phase 1: Foundation (Month 1)
+
 - [ ] Set up PostgreSQL logical replication
 - [ ] Configure Redis Global Datastore
 - [ ] Deploy Kafka MirrorMaker 2.0
 - [ ] Implement replication monitoring
 
 ### Phase 2: Tier 1 Implementation (Month 2)
+
 - [ ] Configure synchronous replication for orders
 - [ ] Implement distributed locking for inventory
 - [ ] Test quorum writes
 - [ ] Validate consistency
 
 ### Phase 3: Tier 2 Implementation (Month 3)
+
 - [ ] Configure async replication for catalog
 - [ ] Implement conflict resolution
 - [ ] Test replication lag
 - [ ] Validate eventual consistency
 
 ### Phase 4: Production (Month 4)
+
 - [ ] Gradual rollout
 - [ ] Monitor replication metrics
 - [ ] Tune performance

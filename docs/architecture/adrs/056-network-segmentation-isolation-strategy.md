@@ -30,6 +30,7 @@ The Enterprise E-Commerce Platform requires comprehensive network segmentation a
 - Enable defense-in-depth security architecture
 
 Taiwan's cyber security environment presents unique challenges:
+
 - Sophisticated APT attacks targeting e-commerce platforms
 - Need for defense-in-depth against state-sponsored threats
 - Regulatory requirements for network security (Taiwan Cyber Security Management Act)
@@ -39,6 +40,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect customer data and business operations
 - Minimize impact of security breaches
 - Comply with PCI-DSS network segmentation requirements
@@ -46,6 +48,7 @@ Taiwan's cyber security environment presents unique challenges:
 - Maintain platform availability and reputation
 
 **Constraints**:
+
 - Must not impact application performance (< 5ms latency)
 - Cannot disrupt existing services during implementation
 - Must support microservices architecture
@@ -54,6 +57,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Technical Context
 
 **Current State**:
+
 - Basic VPC with public and private subnets
 - Simple security groups with broad rules
 - No network segmentation between services
@@ -62,6 +66,7 @@ Taiwan's cyber security environment presents unique challenges:
 - No service mesh
 
 **Requirements**:
+
 - Multi-tier network segmentation
 - Micro-segmentation between services
 - Zero Trust network architecture
@@ -87,6 +92,7 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Comprehensive network segmentation using VPC subnets, security groups, NACLs, and Istio service mesh for micro-segmentation
 
 **Components**:
+
 - **VPC Segmentation**: Separate subnets for different tiers (public, private, database, management)
 - **Security Groups**: Stateful firewall rules at instance level
 - **Network ACLs**: Stateless firewall rules at subnet level
@@ -95,6 +101,7 @@ Taiwan's cyber security environment presents unique challenges:
 - **AWS PrivateLink**: Secure access to AWS services
 
 **Pros**:
+
 - ✅ Defense-in-depth with multiple security layers
 - ✅ Micro-segmentation between services
 - ✅ mTLS for service-to-service authentication
@@ -104,6 +111,7 @@ Taiwan's cyber security environment presents unique challenges:
 - ✅ PCI-DSS compliant
 
 **Cons**:
+
 - ⚠️ Implementation complexity
 - ⚠️ Service mesh learning curve
 - ⚠️ Additional latency (3-5ms)
@@ -118,12 +126,14 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Simple network segmentation using VPC subnets and security groups
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low operational overhead
 - ✅ No additional latency
 - ✅ Low cost
 
 **Cons**:
+
 - ❌ No micro-segmentation
 - ❌ No service-to-service authentication
 - ❌ Limited visibility
@@ -139,11 +149,13 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Deploy enterprise network security platform (Palo Alto, Cisco)
 
 **Pros**:
+
 - ✅ Advanced security features
 - ✅ Proven enterprise solution
 - ✅ Professional support
 
 **Cons**:
+
 - ❌ Very high cost ($10,000-20,000/month)
 - ❌ Complex deployment
 - ❌ Performance overhead
@@ -173,7 +185,7 @@ Multi-layer network segmentation with service mesh was selected for the followin
 
 **Network Architecture**:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                         VPC (10.0.0.0/16)                    │
 ├─────────────────────────────────────────────────────────────┤
@@ -210,12 +222,14 @@ Multi-layer network segmentation with service mesh was selected for the followin
 ```
 
 **Subnet Design Principles**:
+
 - **Public Subnet**: Internet-facing resources only (ALB, NAT Gateway)
 - **Private Subnet**: Application workloads with no direct internet access
 - **Database Subnet**: Isolated database tier with no internet access
 - **Management Subnet**: Administrative access with strict controls
 
 **Implementation**:
+
 ```typescript
 // CDK VPC Configuration
 const vpc = new ec2.Vpc(this, 'ECommerceVPC', {
@@ -259,6 +273,7 @@ const vpc = new ec2.Vpc(this, 'ECommerceVPC', {
 ### Security Groups
 
 **Security Group Strategy**:
+
 - **Least Privilege**: Only allow required traffic
 - **Deny by Default**: Explicit allow rules only
 - **Stateful**: Automatic return traffic handling
@@ -267,6 +282,7 @@ const vpc = new ec2.Vpc(this, 'ECommerceVPC', {
 **Security Group Rules**:
 
 **ALB Security Group**:
+
 ```typescript
 const albSecurityGroup = new ec2.SecurityGroup(this, 'ALBSecurityGroup', {
   vpc,
@@ -297,6 +313,7 @@ albSecurityGroup.addEgressRule(
 ```
 
 **Application Security Group**:
+
 ```typescript
 const appSecurityGroup = new ec2.SecurityGroup(this, 'AppSecurityGroup', {
   vpc,
@@ -341,6 +358,7 @@ appSecurityGroup.addEgressRule(
 ```
 
 **Database Security Group**:
+
 ```typescript
 const dbSecurityGroup = new ec2.SecurityGroup(this, 'DBSecurityGroup', {
   vpc,
@@ -359,6 +377,7 @@ dbSecurityGroup.addIngressRule(
 ```
 
 **Management Security Group**:
+
 ```typescript
 const mgmtSecurityGroup = new ec2.SecurityGroup(this, 'MgmtSecurityGroup', {
   vpc,
@@ -377,12 +396,14 @@ mgmtSecurityGroup.addIngressRule(
 ### Network ACLs
 
 **NACL Strategy**:
+
 - **Subnet-Level Protection**: Additional layer beyond security groups
 - **Stateless**: Explicit inbound and outbound rules
 - **Block Known Threats**: Block malicious IP ranges
 - **Compliance**: Meet regulatory requirements
 
 **Implementation**:
+
 ```typescript
 // Public Subnet NACL
 const publicNacl = new ec2.NetworkAcl(this, 'PublicNACL', {
@@ -445,6 +466,7 @@ dbNacl.addEntry('DenyAllOtherInbound', {
 ### Service Mesh (Istio) Micro-Segmentation
 
 **Service Mesh Benefits**:
+
 - **mTLS**: Automatic mutual TLS between services
 - **Fine-Grained Authorization**: Service-level access control
 - **Traffic Management**: Intelligent routing and load balancing
@@ -452,6 +474,7 @@ dbNacl.addEntry('DenyAllOtherInbound', {
 - **Zero Trust**: Verify every service-to-service call
 
 **Istio Installation**:
+
 ```bash
 # Install Istio on EKS
 istioctl install --set profile=production \
@@ -464,6 +487,7 @@ kubectl label namespace default istio-injection=enabled
 ```
 
 **Authorization Policies**:
+
 ```yaml
 # Allow only order service to access payment service
 apiVersion: security.istio.io/v1beta1
@@ -477,11 +501,15 @@ spec:
       app: payment-service
   action: ALLOW
   rules:
+
   - from:
     - source:
+
         principals: ["cluster.local/ns/default/sa/order-service"]
     to:
+
     - operation:
+
         methods: ["POST"]
         paths: ["/api/v1/payments"]
 
@@ -498,12 +526,15 @@ spec:
       app: payment-service
   action: DENY
   rules:
+
   - from:
     - source:
+
         notPrincipals: ["cluster.local/ns/default/sa/order-service"]
 ```
 
 **mTLS Configuration**:
+
 ```yaml
 # Enforce strict mTLS for all services
 apiVersion: security.istio.io/v1beta1
@@ -530,6 +561,7 @@ spec:
 ```
 
 **Service-to-Service Authorization**:
+
 ```yaml
 # Customer service can only access order service
 apiVersion: security.istio.io/v1beta1
@@ -543,13 +575,19 @@ spec:
       app: order-service
   action: ALLOW
   rules:
+
   - from:
     - source:
+
         principals: 
+
         - "cluster.local/ns/default/sa/customer-service"
         - "cluster.local/ns/default/sa/admin-service"
+
     to:
+
     - operation:
+
         methods: ["GET", "POST"]
         paths: ["/api/v1/orders/*"]
 
@@ -566,18 +604,26 @@ spec:
       app: product-service
   action: ALLOW
   rules:
+
   - from:
     - source:
+
         principals: ["cluster.local/ns/default/sa/*"]
     to:
+
     - operation:
+
         methods: ["GET"]
         paths: ["/api/v1/products/*"]
+
   - from:
     - source:
+
         principals: ["cluster.local/ns/default/sa/admin-service"]
     to:
+
     - operation:
+
         methods: ["POST", "PUT", "DELETE"]
         paths: ["/api/v1/products/*"]
 ```
@@ -585,6 +631,7 @@ spec:
 ### VPC Flow Logs
 
 **Flow Log Configuration**:
+
 ```typescript
 // Enable VPC Flow Logs to S3
 const flowLogsBucket = new s3.Bucket(this, 'FlowLogsBucket', {
@@ -611,6 +658,7 @@ vpc.addFlowLog('VPCFlowLog', {
 ```
 
 **Flow Log Analysis**:
+
 ```sql
 -- Athena query to detect suspicious traffic
 SELECT 
@@ -646,6 +694,7 @@ ORDER BY total_bytes DESC;
 ### AWS PrivateLink
 
 **PrivateLink for AWS Services**:
+
 ```typescript
 // VPC Endpoints for AWS services (no internet gateway needed)
 vpc.addInterfaceEndpoint('ECREndpoint', {
@@ -686,6 +735,7 @@ vpc.addGatewayEndpoint('S3Endpoint', {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All network traffic
 - All services and applications
 - Deployment processes
@@ -743,12 +793,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Service disruption > 5 minutes
 - Performance degradation > 10%
 - Critical security policy misconfiguration
 - Service mesh instability
 
 **Rollback Steps**:
+
 1. Disable Istio authorization policies
 2. Revert to previous security group rules
 3. Remove service mesh sidecars
@@ -771,6 +823,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `network.traffic.volume` (bytes by subnet)
 - `network.connections.rejected` (count by security group)
 - `servicemesh.mtls.success` (percentage)
@@ -778,6 +831,7 @@ Affects:
 - `network.latency` (histogram)
 
 **Alerts**:
+
 - Unusual network traffic pattern
 - Security group rule violation
 - mTLS failure
@@ -785,6 +839,7 @@ Affects:
 - VPC Flow Log anomaly
 
 **Review Schedule**:
+
 - Daily: Review security policy violations
 - Weekly: Analyze network traffic patterns
 - Monthly: Security policy review
@@ -812,12 +867,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual security policy creation (acceptable initially)
 2. Basic flow log analysis (rule-based)
 3. No automated policy testing
 4. Limited network simulation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated policy generation
 - **Q3 2026**: ML-powered flow log analysis
 - **Q4 2026**: Automated policy testing framework

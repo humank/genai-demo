@@ -36,30 +36,35 @@
 These hooks are documented in README but don't exist in `.kiro/hooks/`:
 
 #### 2.1 english-documentation-enforcement.kiro.hook
+
 - **Priority**: Highest (Level 1)
 - **Function**: English documentation standard enforcement
 - **Impact**: High - Language consistency not enforced
 - **Recommendation**: **Implement or remove from README**
 
 #### 2.2 reports-organization-monitor.kiro.hook
+
 - **Priority**: High (Level 3)
 - **Function**: Report file organization monitoring
 - **Impact**: Medium - Reports may be disorganized
 - **Recommendation**: **Implement or remove from README**
 
 #### 2.3 reports-quality-assurance.kiro.hook
+
 - **Priority**: Medium (Level 5)
 - **Function**: Report quality assurance
 - **Impact**: Medium - Report quality not validated
 - **Recommendation**: **Implement or remove from README**
 
 #### 2.4 viewpoints-perspectives-quality.kiro.hook
+
 - **Priority**: Highest (Level 2)
 - **Function**: Architecture documentation quality assurance
 - **Impact**: High - Architecture docs not validated
 - **Recommendation**: **Implement or remove from README**
 
 #### 2.5 diagram-documentation-sync.kiro.hook
+
 - **Priority**: Medium (Level 6)
 - **Function**: Diagram-documentation bidirectional sync
 - **Impact**: High - Referenced by new diagram hooks
@@ -72,12 +77,14 @@ These hooks are documented in README but don't exist in `.kiro/hooks/`:
 **Issue**: README states this hook was deleted, but we just created it.
 
 **README Statement**:
-```
+
+```text
 ### 🗑️ 已移除的 Hooks
 
 1. **diagram-auto-generation.kiro.hook** - **已刪除**
    - **原因**: 功能完全被 diagram-documentation-sync.kiro.hook 取代
    - **狀態**: 已從系統中移除
+
 ```
 
 **Current Status**: Hook exists and is listed as active (Hook #5)
@@ -85,12 +92,14 @@ These hooks are documented in README but don't exist in `.kiro/hooks/`:
 **Resolution Options**:
 
 **Option A: Keep New Implementation** (Recommended)
+
 - Remove from "已移除的 Hooks" section
 - Keep in active hooks list
 - Update version history
 - Rationale: New implementation has clear purpose and doesn't duplicate sync hook
 
 **Option B: Delete and Rely on Sync Hook**
+
 - Delete newly created hook
 - Ensure diagram-documentation-sync handles generation
 - Update documentation
@@ -133,16 +142,19 @@ graph TB
 #### 5.1 Execution Flow Problems
 
 **Documented Flow**:
-```
+
+```text
 .puml change → diagram-auto-generation → diagram-documentation-sync → diagram-validation
 ```
 
 **Actual Flow** (with missing sync hook):
-```
+
+```text
 .puml change → diagram-auto-generation → ❌ BROKEN → diagram-validation
 ```
 
-**Impact**: 
+**Impact**:
+
 - Generated diagrams won't have updated references
 - Validation may fail due to missing sync
 - Manual intervention required
@@ -170,12 +182,14 @@ README lists priorities but some hooks don't exist:
 ### Immediate Actions (Critical)
 
 #### 1. Implement diagram-documentation-sync.kiro.hook
+
 **Priority**: 🔴 Critical  
 **Reason**: Required by both new diagram hooks  
 **Effort**: Medium  
 **Impact**: High
 
 **Suggested Implementation**:
+
 ```json
 {
   "enabled": true,
@@ -199,12 +213,14 @@ README lists priorities but some hooks don't exist:
 ```
 
 #### 2. Resolve diagram-auto-generation Conflict
+
 **Priority**: 🔴 Critical  
 **Action**: Remove from "已移除的 Hooks" section in README  
 **Effort**: Low  
 **Impact**: Medium
 
 #### 3. Update README to Match Reality
+
 **Priority**: 🟡 High  
 **Action**: Either implement missing hooks or remove from documentation  
 **Effort**: Low (documentation) or High (implementation)  
@@ -215,18 +231,21 @@ README lists priorities but some hooks don't exist:
 #### 4. Decide on Missing Hooks Strategy
 
 **Option A: Implement All Missing Hooks**
+
 - Pros: Complete system as documented
 - Cons: High effort, may not all be needed
 - Effort: High (5 hooks to implement)
 - Timeline: 2-3 weeks
 
 **Option B: Remove Unnecessary Hooks from README**
+
 - Pros: Documentation matches reality
 - Cons: Lose planned functionality
 - Effort: Low (update documentation)
 - Timeline: 1 day
 
 **Option C: Phased Implementation**
+
 - Pros: Prioritize critical hooks
 - Cons: Temporary inconsistency
 - Effort: Medium
@@ -235,30 +254,36 @@ README lists priorities but some hooks don't exist:
 **Recommended**: **Option C - Phased Implementation**
 
 **Phase 1** (Week 1):
+
 1. Implement `diagram-documentation-sync.kiro.hook` (critical dependency)
 2. Update README to remove conflict
 
 **Phase 2** (Week 2):
-3. Evaluate need for quality assurance hooks
-4. Implement if needed or remove from README
+
+1. Evaluate need for quality assurance hooks
+2. Implement if needed or remove from README
 
 **Phase 3** (Future):
-5. Consider implementing language enforcement
-6. Consider implementing report organization
+
+1. Consider implementing language enforcement
+2. Consider implementing report organization
 
 ### Long-term Actions (Medium Priority)
 
 #### 5. Create Hook Testing Framework
+
 - Test hook triggers
 - Validate hook coordination
 - Prevent future conflicts
 
 #### 6. Document Hook Dependencies
+
 - Create dependency map
 - Validate before adding new hooks
 - Automated dependency checking
 
 #### 7. Implement Hook Monitoring
+
 - Track hook execution
 - Monitor performance
 - Alert on failures
@@ -270,15 +295,21 @@ README lists priorities but some hooks don't exist:
 **File**: `.kiro/hooks/README.md`
 
 **Remove from "已移除的 Hooks"**:
+
 ```markdown
+
 1. **diagram-auto-generation.kiro.hook** - **已刪除**
    - **原因**: 功能完全被 diagram-documentation-sync.kiro.hook 取代
    - **狀態**: 已從系統中移除
+
 ```
 
 **Add to version history**:
+
 ```markdown
+
 - **v1.3** (2025-01-17): Re-implemented diagram-auto-generation with improved design
+
 ```
 
 ### Change 2: Create diagram-documentation-sync.kiro.hook
@@ -293,6 +324,7 @@ README lists priorities but some hooks don't exist:
 Add status indicators to README:
 
 ```markdown
+
 1. **english-documentation-enforcement.kiro.hook** (v1.0) - ⚠️ **未實現**
 2. **reports-organization-monitor.kiro.hook** (v1.0) - ⚠️ **未實現**
 3. **reports-quality-assurance.kiro.hook** (v1.0) - ⚠️ **未實現**
@@ -302,6 +334,7 @@ Add status indicators to README:
 7. **diagram-documentation-sync.kiro.hook** (v1.0) - 🔴 **需要實現（關鍵依賴）**
 8. **ddd-annotation-monitor.kiro.hook** (v1.0) - ✅ **已實現**
 9. **bdd-feature-monitor.kiro.hook** (v1.0) - ✅ **已實現**
+
 ```
 
 ## Risk Assessment
@@ -320,19 +353,19 @@ Add status indicators to README:
 
 ### Medium Risk Issues
 
-3. **Missing Quality Assurance Hooks**
+1. **Missing Quality Assurance Hooks**
    - Risk: Quality issues not caught automatically
    - Mitigation: Manual reviews or implement hooks
    - Timeline: 1-2 weeks
 
-4. **Hook Coordination Complexity**
+2. **Hook Coordination Complexity**
    - Risk: Hooks may conflict or duplicate work
    - Mitigation: Clear documentation and testing
    - Timeline: Ongoing
 
 ### Low Risk Issues
 
-5. **Missing Language Enforcement**
+1. **Missing Language Enforcement**
    - Risk: Inconsistent documentation language
    - Mitigation: Manual reviews
    - Timeline: Future consideration

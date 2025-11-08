@@ -22,7 +22,7 @@ This guide provides detailed instructions for configuring your Integrated Develo
 
 #### 1. Import Project
 
-```
+```text
 File → Open → Select project root directory
 ```
 
@@ -30,7 +30,7 @@ IntelliJ will automatically detect the Gradle project and import it.
 
 #### 2. Configure JDK
 
-```
+```text
 File → Project Structure → Project
 ```
 
@@ -40,7 +40,7 @@ File → Project Structure → Project
 
 #### 3. Configure Gradle
 
-```
+```text
 File → Settings → Build, Execution, Deployment → Build Tools → Gradle
 ```
 
@@ -53,7 +53,7 @@ File → Settings → Build, Execution, Deployment → Build Tools → Gradle
 
 #### Install Required Plugins
 
-```
+```text
 File → Settings → Plugins → Marketplace
 ```
 
@@ -80,19 +80,19 @@ File → Settings → Plugins → Marketplace
 
 **Recommended Plugins:**
 
-5. **SonarLint**
+1. **SonarLint**
    - Real-time code quality analysis
    - Search: "SonarLint"
 
-6. **Rainbow Brackets**
+2. **Rainbow Brackets**
    - Better bracket visualization
    - Search: "Rainbow Brackets"
 
-7. **GitToolBox**
+3. **GitToolBox**
    - Enhanced Git integration
    - Search: "GitToolBox"
 
-8. **Key Promoter X**
+4. **Key Promoter X**
    - Learn keyboard shortcuts
    - Search: "Key Promoter X"
 
@@ -152,7 +152,7 @@ Create `.idea/codeStyles/Project.xml`:
 
 #### 2. Configure Code Style Settings
 
-```
+```text
 File → Settings → Editor → Code Style → Java
 ```
 
@@ -173,7 +173,7 @@ File → Settings → Editor → Code Style → Java
 
 #### 1. General Settings
 
-```
+```text
 File → Settings → Editor → General
 ```
 
@@ -184,7 +184,7 @@ File → Settings → Editor → General
 
 #### 2. Auto Import
 
-```
+```text
 File → Settings → Editor → General → Auto Import
 ```
 
@@ -193,7 +193,7 @@ File → Settings → Editor → General → Auto Import
 
 #### 3. Inspections
 
-```
+```text
 File → Settings → Editor → Inspections
 ```
 
@@ -209,7 +209,7 @@ Enable the following inspections:
 
 #### 1. Spring Boot Application
 
-```
+```text
 Run → Edit Configurations → + → Spring Boot
 ```
 
@@ -221,17 +221,19 @@ Run → Edit Configurations → + → Spring Boot
 
 #### 2. Gradle Test Configuration
 
-```
+```text
 Run → Edit Configurations → + → Gradle
 ```
 
 **Unit Tests:**
+
 - **Name**: Unit Tests
 - **Gradle project**: Select project root
 - **Tasks**: `unitTest`
 - **Arguments**: `--info`
 
 **Integration Tests:**
+
 - **Name**: Integration Tests
 - **Gradle project**: Select project root
 - **Tasks**: `integrationTest`
@@ -239,7 +241,7 @@ Run → Edit Configurations → + → Gradle
 
 #### 3. Cucumber Configuration
 
-```
+```text
 Run → Edit Configurations → + → Cucumber Java
 ```
 
@@ -276,7 +278,7 @@ Run → Edit Configurations → + → Cucumber Java
 
 #### Configure Database Connection
 
-```
+```text
 View → Tool Windows → Database → + → Data Source → PostgreSQL
 ```
 
@@ -331,19 +333,19 @@ Press `Cmd+Shift+X` (Mac) or `Ctrl+Shift+X` (Windows/Linux) to open Extensions v
 
 **Recommended Extensions:**
 
-6. **SonarLint**
+1. **SonarLint**
    - ID: `SonarSource.sonarlint-vscode`
 
-7. **GitLens**
+2. **GitLens**
    - ID: `eamodio.gitlens`
 
-8. **Docker**
+3. **Docker**
    - ID: `ms-azuretools.vscode-docker`
 
-9. **REST Client**
+4. **REST Client**
    - ID: `humao.rest-client`
 
-10. **Prettier - Code formatter**
+5. **Prettier - Code formatter**
     - ID: `esbenp.prettier-vscode`
 
 ### Workspace Settings
@@ -489,7 +491,7 @@ Create `.vscode/tasks.json`:
 
 Ensure the following entries are in `.gitignore`:
 
-```
+```text
 # IDE
 .idea/
 *.iml
@@ -587,28 +589,37 @@ indent_style = tab
 #### Issue: Lombok Not Working
 
 **Solution:**
-```
+
+```text
+
 1. File → Settings → Build, Execution, Deployment → Compiler → Annotation Processors
 2. Enable "Enable annotation processing"
 3. Rebuild project
+
 ```
 
 #### Issue: Spring Boot Run Configuration Not Available
 
 **Solution:**
-```
+
+```text
+
 1. File → Invalidate Caches / Restart
 2. Wait for re-indexing
 3. Right-click on Application.java → Run
+
 ```
 
 #### Issue: Gradle Sync Failed
 
 **Solution:**
-```
+
+```text
+
 1. File → Invalidate Caches / Restart
 2. Delete .gradle directory
 3. Reimport Gradle project
+
 ```
 
 ### VS Code Issues
@@ -616,20 +627,26 @@ indent_style = tab
 #### Issue: Java Extension Not Working
 
 **Solution:**
-```
+
+```text
+
 1. Cmd+Shift+P → "Java: Clean Java Language Server Workspace"
 2. Reload window
 3. Wait for Java extension to activate
+
 ```
 
 #### Issue: Cannot Run Spring Boot Application
 
 **Solution:**
-```
+
+```text
+
 1. Ensure Extension Pack for Java is installed
 2. Ensure Spring Boot Extension Pack is installed
 3. Check JAVA_HOME environment variable
 4. Reload window
+
 ```
 
 ## Next Steps

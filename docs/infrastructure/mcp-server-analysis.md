@@ -12,11 +12,13 @@ This document analyzes the current MCP (Model Context Protocol) server configura
 ## Configuration Hierarchy
 
 ### Global Configuration
+
 **Location**: `~/.kiro/settings/mcp.json`  
 **Scope**: Available across all Kiro workspaces  
 **Priority**: Lower (overridden by project-level config)
 
 ### Project Configuration
+
 **Location**: `.kiro/settings/mcp.json`  
 **Scope**: This project only  
 **Priority**: Higher (overrides global config for same server names)
@@ -75,6 +77,7 @@ These servers are defined in both configurations. **Project-level takes preceden
 | `time` | ❌ Disabled | ✅ Active | Keep project-level, remove from global |
 
 **Note**: The following have different names but same functionality:
+
 - Global: `awslabs.cdk-mcp-server` vs Project: `aws-cdk`
 - Global: `awslabs.aws-pricing-mcp-server` vs Project: `aws-pricing`
 
@@ -87,32 +90,39 @@ These servers are defined in both configurations. **Project-level takes preceden
 Based on the configuration, these servers may have connection issues:
 
 #### 1. **aws-knowledge-mcp-server** (Global, Disabled)
+
 ```json
 "command": "uvx",
 "args": ["mcp-proxy", "--transport", "streamablehttp", 
          "https://knowledge-mcp.global.api.aws"]
 ```
+
 **Issue**: Requires AWS authentication and network access to AWS MCP endpoint  
 **Status**: Currently disabled  
 **Action**: Leave disabled unless AWS MCP service is available
 
 #### 2. **github** (Global, Active)
+
 ```json
 "args": ["mcp-proxy", "--transport", "streamablehttp",
          "--headers", "Authorization", "Bearer gho_16gd32s7..."]
 ```
+
 **Issue**: Bearer token may be expired or invalid  
 **Status**: Active but may fail authentication  
 **Action**: Update token or disable if not needed
 
 #### 3. **excalidraw** (Project, Active) ✅
+
 ```json
 "command": "node",
 "args": ["/Users/yikaikao/git/genai-demo/node_modules/mcp-excalidraw-server/src/index.js"]
 ```
+
 **Status**: ✅ **Fully Functional** - Local installation verified  
 **Version**: 1.0.5  
-**Features**: 
+**Features**:
+
 - Complete MCP server with 15+ tools
 - Element creation (rectangles, ellipses, diamonds, arrows, text, lines)
 - Element management (update, delete, query)
@@ -120,12 +130,14 @@ Based on the configuration, these servers may have connection issues:
 - Advanced features (grouping, alignment, distribution, locking)
 - Optional canvas sync with frontend (currently disabled)
 
-**Configuration**: 
+**Configuration**:
+
 - `ENABLE_CANVAS_SYNC=false` - Running in standalone mode
 - No frontend server required for basic diagram creation
 - All tools available via MCP protocol
 
 **Available Tools**:
+
 - `create_element`, `update_element`, `delete_element`, `query_elements`
 - `batch_create_elements`
 - `group_elements`, `ungroup_elements`
@@ -136,10 +148,12 @@ Based on the configuration, these servers may have connection issues:
 **Action**: ✅ No action needed - working correctly
 
 #### 4. **ppt-automation** (Global, Disabled)
+
 ```json
 "command": "uv",
 "args": ["run", "--directory", "/Users/yikaikao/git/dst-lab/powerpoint-automation-mcp", ...]
 ```
+
 **Issue**: Depends on external project directory  
 **Status**: Disabled  
 **Action**: Leave disabled unless PowerPoint automation is needed
@@ -151,6 +165,7 @@ Based on the configuration, these servers may have connection issues:
 ### Immediate Actions
 
 1. **Remove Duplicates from Global Config**
+
    ```bash
    # Edit ~/.kiro/settings/mcp.json and remove:
    # - aws-docs (keep in project)
@@ -158,10 +173,11 @@ Based on the configuration, these servers may have connection issues:
    ```
 
 2. **Fix GitHub Token** (if using GitHub MCP)
-   - Generate new token at: https://github.com/settings/tokens
+   - Generate new token at: <https://github.com/settings/tokens>
    - Update in `~/.kiro/settings/mcp.json`
 
 3. **Verify Excalidraw Installation**
+
    ```bash
    cd /Users/yikaikao/git/genai-demo
    npm install mcp-excalidraw-server
@@ -170,6 +186,7 @@ Based on the configuration, these servers may have connection issues:
 ### Configuration Optimization
 
 #### Recommended Global Config (Cross-Project Tools)
+
 ```json
 {
   "mcpServers": {
@@ -208,6 +225,7 @@ Based on the configuration, these servers may have connection issues:
 ```
 
 #### Recommended Project Config (Project-Specific Tools)
+
 ```json
 {
   "mcpServers": {
@@ -254,6 +272,7 @@ Based on the configuration, these servers may have connection issues:
 ## Testing MCP Servers
 
 ### Test Individual Server
+
 ```bash
 # Test if uvx can run a server
 uvx mcp-server-time --help
@@ -263,6 +282,7 @@ uvx awslabs.aws-documentation-mcp-server@latest --help
 ```
 
 ### Verify Server Status in Kiro
+
 1. Open Command Palette: `Cmd+Shift+P`
 2. Search: "MCP Server"
 3. Select: "View MCP Servers"
@@ -273,6 +293,7 @@ uvx awslabs.aws-documentation-mcp-server@latest --help
 ## Summary
 
 ### Current Status
+
 - **Total Servers Configured**: 21
 - **Active (Project)**: 5
 - **Active (Global)**: 6
@@ -280,12 +301,14 @@ uvx awslabs.aws-documentation-mcp-server@latest --help
 - **Duplicates**: 2 (aws-docs, time)
 
 ### Key Issues
+
 1. ✅ **Excalidraw**: Local dependency - verify installation
 2. ⚠️ **GitHub**: Token may be expired
 3. ⚠️ **Duplicates**: Remove from global config
 4. ℹ️ **Many Disabled**: Consider cleanup
 
 ### Next Steps
+
 1. Clean up duplicate configurations
 2. Update GitHub token if needed
 3. Verify excalidraw installation
@@ -295,5 +318,6 @@ uvx awslabs.aws-documentation-mcp-server@latest --help
 ---
 
 **Related Documentation**:
+
 - [MCP Configuration Guide](https://docs.kiro.ai/mcp)
 - [AWS MCP Servers](https://github.com/awslabs/mcp-servers)

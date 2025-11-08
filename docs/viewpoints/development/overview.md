@@ -37,7 +37,7 @@ The system follows **Hexagonal Architecture** (also known as Ports and Adapters 
 
 ### Layer Structure
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Interfaces Layer                      │
 │  (REST Controllers, Event Handlers, Web UI)             │
@@ -94,7 +94,7 @@ The architecture enforces strict dependency rules:
 
 ### Root Package Structure
 
-```
+```text
 solid.humank.genaidemo/
 ├── domain/              # Domain Layer
 │   ├── customer/       # Customer Bounded Context
@@ -130,7 +130,7 @@ solid.humank.genaidemo/
 
 Each bounded context follows a consistent structure within the domain layer:
 
-```
+```text
 domain/{context}/
 ├── model/
 │   ├── aggregate/      # Aggregate Roots
@@ -145,7 +145,7 @@ domain/{context}/
 
 ### Example: Customer Bounded Context
 
-```
+```text
 domain/customer/
 ├── model/
 │   ├── aggregate/
@@ -174,12 +174,14 @@ domain/customer/
 ### Technology Stack
 
 #### Backend Core
+
 - **Java**: 21 (LTS)
 - **Spring Boot**: 3.4.5
 - **Spring Framework**: 6.x
 - **Gradle**: 8.x
 
 #### Data & Persistence
+
 - **Spring Data JPA**: For repository implementations
 - **Hibernate**: ORM framework
 - **Flyway**: Database migrations
@@ -187,6 +189,7 @@ domain/customer/
 - **PostgreSQL**: Production database
 
 #### Testing
+
 - **JUnit 5**: Unit testing framework
 - **Mockito**: Mocking framework
 - **AssertJ**: Fluent assertions
@@ -194,10 +197,12 @@ domain/customer/
 - **ArchUnit**: Architecture testing
 
 #### API & Documentation
+
 - **SpringDoc OpenAPI 3**: API documentation
 - **Swagger UI**: API exploration
 
 #### Observability
+
 - **Spring Boot Actuator**: Metrics and health checks
 - **AWS X-Ray**: Distributed tracing
 - **Micrometer**: Metrics collection
@@ -283,7 +288,7 @@ Feature: Customer Registration
 
 ### Gradle Build Structure
 
-```
+```text
 project/
 ├── build.gradle                # Root build configuration
 ├── settings.gradle             # Project settings
@@ -404,4 +409,3 @@ Before merging code:
 ---
 
 **Next**: [Module Organization](module-organization.md) →
-

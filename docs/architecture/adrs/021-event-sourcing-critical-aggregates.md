@@ -25,6 +25,7 @@ affected_perspectives: ["availability", "evolution", "performance"]
 Certain critical aggregates in the E-Commerce Platform could benefit from event sourcing to:
 
 **Business Requirements**:
+
 - **Complete Audit Trail**: Full history of all state changes
 - **Temporal Queries**: Query state at any point in time
 - **Regulatory Compliance**: Meet audit and compliance requirements
@@ -33,6 +34,7 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 - **Undo/Redo**: Support complex business workflows
 
 **Technical Challenges**:
+
 - Current state-based persistence loses history
 - Difficult to audit changes
 - Cannot replay past states
@@ -41,6 +43,7 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 - Compliance requirements for financial data
 
 **Candidate Aggregates**:
+
 - **Order**: Complete order lifecycle tracking
 - **Payment**: Financial transaction history
 - **Inventory**: Stock movement tracking
@@ -50,6 +53,7 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 ### Business Context
 
 **Business Drivers**:
+
 - Regulatory compliance (financial auditing)
 - Customer dispute resolution
 - Business intelligence and analytics
@@ -57,6 +61,7 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 - Customer service improvements
 
 **Constraints**:
+
 - Budget: $80,000 for implementation
 - Timeline: 3 months
 - Team: 2 senior developers
@@ -67,12 +72,14 @@ Certain critical aggregates in the E-Commerce Platform could benefit from event 
 ### Technical Context
 
 **Current Approach**:
+
 - Traditional CRUD with JPA
 - Domain events for integration
 - Limited audit logging
 - No event history
 
 **Target Approach**:
+
 - Event sourcing for critical aggregates
 - Event store for persistence
 - Projections for read models
@@ -164,24 +171,32 @@ public class Order extends EventSourcedAggregateRoot {
 public interface EventStore {
     
     /**
+
      * Save events for an aggregate
+
      */
     void saveEvents(String aggregateId, 
                    List<DomainEvent> events, 
                    long expectedVersion);
     
     /**
+
      * Load all events for an aggregate
+
      */
     List<DomainEvent> getEvents(String aggregateId);
     
     /**
+
      * Load events after a specific version
+
      */
     List<DomainEvent> getEventsAfterVersion(String aggregateId, long version);
     
     /**
+
      * Load events in a time range
+
      */
     List<DomainEvent> getEventsBetween(String aggregateId, 
                                        LocalDateTime start, 
@@ -467,7 +482,9 @@ public class OrderHistoryService {
     private final EventStore eventStore;
     
     /**
+
      * Get order state at specific point in time
+
      */
     public Order getOrderAtTime(OrderId orderId, LocalDateTime timestamp) {
         List<DomainEvent> events = eventStore.getEventsBetween(
@@ -483,7 +500,9 @@ public class OrderHistoryService {
     }
     
     /**
+
      * Get all changes to order in time range
+
      */
     public List<OrderChange> getOrderChanges(OrderId orderId,
                                              LocalDateTime start,
@@ -500,7 +519,9 @@ public class OrderHistoryService {
     }
     
     /**
+
      * Replay events for debugging
+
      */
     public void replayOrderEvents(OrderId orderId) {
         List<DomainEvent> events = eventStore.getEvents(orderId.getValue());
@@ -521,6 +542,7 @@ public class OrderHistoryService {
 ```
 
 **Pros**:
+
 - ✅ Complete audit trail for critical aggregates
 - ✅ Temporal queries and time travel
 - ✅ Excellent debugging capabilities
@@ -530,6 +552,7 @@ public class OrderHistoryService {
 - ✅ Can coexist with CRUD approach
 
 **Cons**:
+
 - ⚠️ Increased complexity
 - ⚠️ Learning curve for team
 - ⚠️ More storage required
@@ -546,11 +569,13 @@ public class OrderHistoryService {
 **Description**: Apply event sourcing to all aggregates
 
 **Pros**:
+
 - ✅ Consistent approach across system
 - ✅ Maximum auditability
 - ✅ Simplified architecture (one pattern)
 
 **Cons**:
+
 - ❌ Very high complexity
 - ❌ Significant performance overhead
 - ❌ Large storage requirements
@@ -566,11 +591,13 @@ public class OrderHistoryService {
 **Description**: Keep CRUD but add comprehensive audit logging
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low complexity
 - ✅ Familiar to team
 
 **Cons**:
+
 - ❌ Limited temporal queries
 - ❌ Cannot replay state
 - ❌ Less powerful for debugging
@@ -607,6 +634,7 @@ Selective event sourcing for critical aggregates (Order, Payment) provides the b
 **Selected Impact Radius**: **Bounded Context**
 
 Affects:
+
 - Order bounded context (initially)
 - Payment bounded context (future)
 - Event store infrastructure
@@ -630,6 +658,7 @@ Affects:
 ### Phase 1: Proof of Concept (Month 1)
 
 **Tasks**:
+
 - [ ] Implement event store
 - [ ] Create Order aggregate with event sourcing
 - [ ] Build simple projection
@@ -638,6 +667,7 @@ Affects:
 - [ ] Document learnings
 
 **Success Criteria**:
+
 - POC working
 - Performance acceptable
 - Team understands approach
@@ -645,6 +675,7 @@ Affects:
 ### Phase 2: Production Implementation (Month 2)
 
 **Tasks**:
+
 - [ ] Production-ready event store
 - [ ] Snapshot mechanism
 - [ ] Complete Order projections
@@ -653,6 +684,7 @@ Affects:
 - [ ] Documentation
 
 **Success Criteria**:
+
 - Production ready
 - All features working
 - Monitoring in place
@@ -660,6 +692,7 @@ Affects:
 ### Phase 3: Rollout and Validation (Month 3)
 
 **Tasks**:
+
 - [ ] Deploy to production
 - [ ] Monitor performance
 - [ ] Validate audit capabilities
@@ -667,6 +700,7 @@ Affects:
 - [ ] Decide on expansion
 
 **Success Criteria**:
+
 - Production stable
 - Benefits realized
 - Team comfortable
@@ -674,11 +708,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Unacceptable performance
 - Team cannot maintain
 - Benefits not realized
 
 **Rollback Steps**:
+
 1. Stop using event-sourced aggregates
 2. Migrate to CRUD approach
 3. Archive event store
@@ -726,12 +762,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Event versioning strategy needed
 2. Snapshot optimization required
 3. Projection rebuild mechanism
 4. Event archiving strategy
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Event versioning framework
 - **Q3 2026**: Snapshot optimization
 - **Q4 2026**: Projection rebuild tools
@@ -754,6 +792,7 @@ Affects:
 ### When to Use Event Sourcing
 
 **Good Candidates**:
+
 - ✅ Aggregates requiring complete audit trail
 - ✅ Financial transactions
 - ✅ Regulatory compliance requirements
@@ -761,6 +800,7 @@ Affects:
 - ✅ Temporal queries needed
 
 **Poor Candidates**:
+
 - ❌ Simple CRUD entities
 - ❌ Reference data
 - ❌ High-volume, low-value data
@@ -769,6 +809,7 @@ Affects:
 ### Event Sourcing Best Practices
 
 **DO**:
+
 - ✅ Start with one aggregate
 - ✅ Use snapshots for performance
 - ✅ Version events properly
@@ -777,6 +818,7 @@ Affects:
 - ✅ Monitor projection lag
 
 **DON'T**:
+
 - ❌ Apply to all aggregates
 - ❌ Store large payloads in events
 - ❌ Modify past events

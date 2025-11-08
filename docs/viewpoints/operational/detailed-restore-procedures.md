@@ -9,6 +9,7 @@ This section provides comprehensive, step-by-step restore workflows for all back
 **Use Case**: Complete database failure or corruption requiring full restoration
 
 **Prerequisites**:
+
 - Identify the snapshot to restore from
 - Verify snapshot integrity and availability
 - Ensure sufficient RDS instance capacity
@@ -216,6 +217,7 @@ cat > /tmp/restore-report-${TARGET_INSTANCE}.md <<EOF
 # Database Restore Report
 
 ## Restore Details
+
 - **Restore Date**: $(date +"%Y-%m-%d %H:%M:%S %Z")
 - **Source Snapshot**: $SNAPSHOT_ID
 - **Snapshot Date**: $SNAPSHOT_TIME
@@ -230,6 +232,7 @@ $(cat /tmp/validation-results.txt)
 $(cat /tmp/performance-results.txt)
 
 ## Next Steps
+
 1. Review validation results for any data integrity issues
 2. Update application configuration to use new endpoint
 3. Perform application-level smoke tests
@@ -279,6 +282,7 @@ echo "✓ Notification sent to operations team"
 ```
 
 **Post-Restore Checklist**:
+
 - [ ] Validation results reviewed and approved
 - [ ] Application smoke tests passed
 - [ ] Performance metrics within acceptable range
@@ -290,12 +294,12 @@ echo "✓ Notification sent to operations team"
 - [ ] Incident documentation updated
 - [ ] Post-mortem scheduled (if applicable)
 
-
 #### Point-in-Time Database Restore
 
 **Use Case**: Restore database to a specific point in time (e.g., before data corruption or accidental deletion)
 
 **Prerequisites**:
+
 - Point-in-time recovery must be enabled
 - Target restore time must be within retention period (30 days)
 - Verify transaction logs are available
@@ -392,12 +396,12 @@ echo "Endpoint: $DB_ENDPOINT"
 echo "Restore Time: $RESTORE_TIME"
 ```
 
-
 #### Partial Database Restore (Specific Tables)
 
 **Use Case**: Restore only specific tables without affecting the entire database
 
 **Prerequisites**:
+
 - Export of specific tables from snapshot
 - Target database is accessible
 - Sufficient storage space for temporary data
@@ -533,6 +537,7 @@ done
 ```
 
 **Rollback Procedure**:
+
 ```bash
 # If restore needs to be rolled back
 for TABLE in orders order_items; do
@@ -543,7 +548,6 @@ for TABLE in orders order_items; do
 done
 ```
 
-
 ### Application State Restore Procedures
 
 #### Redis Cache Restore
@@ -551,6 +555,7 @@ done
 **Use Case**: Restore Redis cache from snapshot after cache failure or data loss
 
 **Prerequisites**:
+
 - Redis snapshot available
 - Target Redis cluster provisioned or existing
 - Application can tolerate brief cache unavailability
@@ -701,7 +706,6 @@ echo "Cluster: $NEW_CLUSTER"
 echo "Endpoint: $CLUSTER_ENDPOINT"
 ```
 
-
 ### Configuration Restore Procedures
 
 #### Kubernetes Configuration Restore
@@ -709,6 +713,7 @@ echo "Endpoint: $CLUSTER_ENDPOINT"
 **Use Case**: Restore Kubernetes ConfigMaps, Secrets, and Deployments after cluster failure or misconfiguration
 
 **Prerequisites**:
+
 - Configuration backup available in S3
 - kubectl access to target cluster
 - Appropriate RBAC permissions
@@ -907,7 +912,6 @@ echo ""
 echo "=== Restore Complete ==="
 ```
 
-
 ### Restore Testing in Isolated Environment
 
 #### Creating Isolated Test Environment
@@ -915,6 +919,7 @@ echo "=== Restore Complete ==="
 **Purpose**: Test restore procedures without affecting production
 
 **Prerequisites**:
+
 - Separate AWS account or VPC for testing
 - Copy of production backups
 - Test database and application instances
@@ -1054,7 +1059,6 @@ echo "To cleanup test environment:"
 echo "  aws rds delete-db-instance --db-instance-identifier $TEST_DB_INSTANCE --skip-final-snapshot"
 echo "  aws ec2 delete-vpc --vpc-id $VPC_ID"
 ```
-
 
 ### Data Validation After Restore
 
@@ -1301,7 +1305,6 @@ aws sns publish \
 exit $EXIT_CODE
 ```
 
-
 ### Rollback Procedures
 
 #### Database Restore Rollback
@@ -1309,6 +1312,7 @@ exit $EXIT_CODE
 **Use Case**: Revert to previous database state if restore causes issues
 
 **Prerequisites**:
+
 - Original database endpoint still available
 - Application can be quickly reconfigured
 - Backup of pre-restore state exists
@@ -1379,22 +1383,26 @@ cat > /tmp/rollback-report-$(date +%Y%m%d-%H%M%S).md <<EOF
 # Database Restore Rollback Report
 
 ## Rollback Details
+
 - **Rollback Date**: $(date +"%Y-%m-%d %H:%M:%S %Z")
 - **Original Endpoint**: $ORIGINAL_ENDPOINT
 - **Restored Instance**: $RESTORED_INSTANCE
 - **Reason**: [TO BE FILLED]
 
 ## Actions Taken
+
 1. Reverted application configuration to original endpoint
 2. Verified application health across all namespaces
 3. Tagged restored instance for deletion
 
 ## Impact
+
 - **Downtime**: [TO BE FILLED]
 - **Affected Services**: [TO BE FILLED]
 - **Data Loss**: [TO BE FILLED]
 
 ## Next Steps
+
 1. Investigate root cause of restore issues
 2. Update restore procedures if needed
 3. Schedule restored instance deletion
@@ -1475,7 +1483,6 @@ echo ""
 echo "=== Rollback Complete ==="
 ```
 
-
 ### Restore Time Estimation
 
 #### Database Restore Time Estimates
@@ -1490,6 +1497,7 @@ echo "=== Rollback Complete ==="
 | > 1 TB | 90+ minutes | 120+ minutes | 30+ minutes | 150+ minutes |
 
 **Factors Affecting Restore Time**:
+
 - Database size and complexity
 - Number of tables and indexes
 - Instance class (CPU and I/O capacity)
@@ -1537,6 +1545,7 @@ echo "=== Rollback Complete ==="
 | Multi-service failure | 35 min | 10 min | 12 min | 20 min | 5 min | 82 minutes |
 
 **Notes on Time Estimates**:
+
 - Times are estimates based on typical scenarios
 - Actual times may vary based on system load and conditions
 - Parallel operations can reduce total time
@@ -1545,7 +1554,7 @@ echo "=== Rollback Complete ==="
 
 ### Restore Procedure Decision Tree
 
-```
+```text
 ┌─────────────────────────────────────┐
 │   What needs to be restored?        │
 └──────────────┬──────────────────────┘
@@ -1577,6 +1586,7 @@ echo "=== Rollback Complete ==="
 # Restore Procedure Checklist
 
 ## Pre-Restore
+
 - [ ] Incident documented with ticket number: ___________
 - [ ] Stakeholders notified of restore operation
 - [ ] Maintenance window scheduled: ___________
@@ -1586,6 +1596,7 @@ echo "=== Rollback Complete ==="
 - [ ] Test environment validated (if applicable)
 
 ## During Restore
+
 - [ ] Backup integrity verified
 - [ ] Restore initiated at: ___________
 - [ ] Progress monitored and logged
@@ -1593,6 +1604,7 @@ echo "=== Rollback Complete ==="
 - [ ] Communication updates sent every 15 minutes
 
 ## Post-Restore Validation
+
 - [ ] Data integrity checks passed
 - [ ] Referential integrity verified
 - [ ] Business rule validation completed
@@ -1601,6 +1613,7 @@ echo "=== Rollback Complete ==="
 - [ ] Critical business functions verified
 
 ## Application Update
+
 - [ ] Configuration updated
 - [ ] DNS/load balancer updated (if needed)
 - [ ] Application restarted
@@ -1608,6 +1621,7 @@ echo "=== Rollback Complete ==="
 - [ ] Monitoring alerts configured
 
 ## Verification
+
 - [ ] End-to-end testing completed
 - [ ] Business team sign-off received
 - [ ] Performance metrics acceptable
@@ -1615,6 +1629,7 @@ echo "=== Rollback Complete ==="
 - [ ] Restore completed at: ___________
 
 ## Post-Restore
+
 - [ ] Incident ticket updated
 - [ ] Restore report generated
 - [ ] Stakeholders notified of completion
@@ -1623,11 +1638,13 @@ echo "=== Rollback Complete ==="
 - [ ] Documentation updated with lessons learned
 
 ## Rollback (if needed)
+
 - [ ] Rollback decision made by: ___________
 - [ ] Rollback procedure executed
 - [ ] Application reverted to previous state
 - [ ] Rollback verified and confirmed
 - [ ] Incident escalated appropriately
+
 ```
 
 ---

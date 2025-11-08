@@ -9,11 +9,13 @@ This document provides troubleshooting procedures for security-related incidents
 ### Issue: JWT Token Expiration
 
 **Symptoms**:
+
 - Users getting logged out unexpectedly
 - "Token expired" errors in API responses
 - 401 Unauthorized errors after period of inactivity
 
 **Quick Diagnosis**:
+
 ```bash
 # Check token expiration time in logs
 kubectl logs -l app=ecommerce-backend -n production | grep "JWT.*expired"
@@ -27,12 +29,14 @@ curl -H "Authorization: Bearer ${TOKEN}" \
 ```
 
 **Common Causes**:
+
 1. Token TTL too short (< 1 hour)
 2. Clock skew between services
 3. Token refresh mechanism not working
 4. Session timeout configuration mismatch
 
 **Quick Fix**:
+
 ```bash
 # Increase token TTL (temporary)
 kubectl set env deployment/ecommerce-backend \
@@ -43,6 +47,7 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
 **Permanent Solution**:
+
 1. Review and adjust token TTL in configuration
 2. Implement proper token refresh mechanism
 3. Add sliding session expiration
@@ -55,11 +60,13 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 ### Issue: Invalid Token Signature
 
 **Symptoms**:
+
 - "Invalid signature" errors
 - Authentication failures after deployment
 - Intermittent 401 errors
 
 **Quick Diagnosis**:
+
 ```bash
 # Check JWT secret configuration
 kubectl get secret jwt-secret -n production -o jsonpath='{.data.secret}' | base64 -d
@@ -72,12 +79,14 @@ kubectl get pods -n production -o jsonpath='{range .items[*]}{.metadata.name}{"\
 ```
 
 **Common Causes**:
+
 1. JWT secret changed without invalidating old tokens
 2. Multiple services using different secrets
 3. Secret rotation not synchronized
 4. Incorrect signing algorithm configuration
 
 **Quick Fix**:
+
 ```bash
 # Force all users to re-authenticate
 kubectl delete secret jwt-secret -n production
@@ -90,6 +99,7 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
 **Permanent Solution**:
+
 1. Implement proper secret rotation strategy
 2. Use centralized secret management (AWS Secrets Manager)
 3. Coordinate secret updates across all services
@@ -100,11 +110,13 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 ### Issue: Authentication Service Unavailable
 
 **Symptoms**:
+
 - All login attempts failing
 - "Service unavailable" errors
 - Authentication endpoint timing out
 
 **Quick Diagnosis**:
+
 ```bash
 # Check authentication service health
 kubectl get pods -n production -l app=auth-service
@@ -119,6 +131,7 @@ kubectl logs -l app=auth-service -n production --tail=100
 ```
 
 **Quick Fix**:
+
 ```bash
 # Restart authentication service
 kubectl rollout restart deployment/auth-service -n production
@@ -136,11 +149,13 @@ kubectl scale deployment/auth-service --replicas=3 -n production
 ### Issue: Permission Denied (RBAC)
 
 **Symptoms**:
+
 - 403 Forbidden errors
 - "Access denied" messages
 - Users unable to access resources they should have access to
 
 **Quick Diagnosis**:
+
 ```bash
 # Check user roles and permissions
 kubectl logs -l app=ecommerce-backend -n production | grep "Access denied.*user=${USER_ID}"
@@ -154,12 +169,14 @@ curl -H "Authorization: Bearer ${TOKEN}" \
 ```
 
 **Common Causes**:
+
 1. Role not assigned to user
 2. Permission not granted to role
 3. Resource ownership mismatch
 4. RBAC policy cache not updated
 
 **Quick Fix**:
+
 ```bash
 # Clear RBAC cache
 kubectl exec -it ${POD_NAME} -n production -- \
@@ -170,7 +187,9 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
 **Investigation Steps**:
+
 1. Verify user's roles in database:
+
 ```sql
 SELECT u.id, u.email, r.name as role
 FROM users u
@@ -179,7 +198,8 @@ JOIN roles r ON ur.role_id = r.id
 WHERE u.id = '${USER_ID}';
 ```
 
-2. Check role permissions:
+1. Check role permissions:
+
 ```sql
 SELECT r.name as role, p.resource, p.action
 FROM roles r
@@ -188,13 +208,15 @@ JOIN permissions p ON rp.permission_id = p.id
 WHERE r.name = '${ROLE_NAME}';
 ```
 
-3. Review audit logs:
+1. Review audit logs:
+
 ```bash
 kubectl logs -l app=ecommerce-backend -n production | \
   grep "Authorization.*${USER_ID}" | tail -50
 ```
 
 **Permanent Solution**:
+
 1. Review and update RBAC policies
 2. Implement proper role hierarchy
 3. Add permission inheritance
@@ -205,11 +227,13 @@ kubectl logs -l app=ecommerce-backend -n production | \
 ### Issue: Resource Ownership Validation Failure
 
 **Symptoms**:
+
 - Users can't access their own resources
 - "Not authorized to access this resource" errors
 - Ownership checks failing incorrectly
 
 **Quick Diagnosis**:
+
 ```bash
 # Check resource ownership in database
 psql -c "SELECT id, owner_id, created_by FROM orders WHERE id = '${ORDER_ID}';"
@@ -220,12 +244,14 @@ kubectl logs -l app=ecommerce-backend -n production | \
 ```
 
 **Common Causes**:
+
 1. User ID mismatch (string vs UUID)
 2. Ownership field not populated
 3. Delegation/sharing not working
 4. Cache inconsistency
 
 **Quick Fix**:
+
 ```bash
 # Clear ownership cache
 kubectl exec -it ${POD_NAME} -n production -- \
@@ -239,11 +265,13 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Issue: Security Group Blocking Traffic
 
 **Symptoms**:
+
 - Connection timeouts to specific services
 - Intermittent connectivity issues
 - "Connection refused" errors
 
 **Quick Diagnosis**:
+
 ```bash
 # Check security group rules
 aws ec2 describe-security-groups \
@@ -260,12 +288,14 @@ aws ec2 describe-flow-logs \
 ```
 
 **Common Causes**:
+
 1. Missing ingress/egress rules
 2. Wrong CIDR blocks
 3. Port mismatch
 4. Security group not attached to resource
 
 **Quick Fix**:
+
 ```bash
 # Add temporary rule (be specific!)
 aws ec2 authorize-security-group-ingress \
@@ -276,7 +306,9 @@ aws ec2 authorize-security-group-ingress \
 ```
 
 **Investigation Steps**:
+
 1. Review VPC flow logs for rejected connections:
+
 ```bash
 aws logs filter-log-events \
   --log-group-name /aws/vpc/flowlogs \
@@ -284,13 +316,15 @@ aws logs filter-log-events \
   --start-time $(date -u -d '1 hour ago' +%s)000
 ```
 
-2. Verify network ACLs:
+1. Verify network ACLs:
+
 ```bash
 aws ec2 describe-network-acls \
   --filters "Name=vpc-id,Values=${VPC_ID}"
 ```
 
 **Permanent Solution**:
+
 1. Document required security group rules
 2. Use Infrastructure as Code (CDK) for security groups
 3. Implement least privilege access
@@ -301,11 +335,13 @@ aws ec2 describe-network-acls \
 ### Issue: Network ACL Blocking Traffic
 
 **Symptoms**:
+
 - Entire subnet connectivity issues
 - Both inbound and outbound traffic affected
 - Security groups correct but traffic still blocked
 
 **Quick Diagnosis**:
+
 ```bash
 # Check Network ACL rules
 aws ec2 describe-network-acls \
@@ -319,12 +355,14 @@ aws ec2 describe-network-acls \
 ```
 
 **Common Causes**:
+
 1. Deny rule with lower number (higher priority)
 2. Missing allow rules for ephemeral ports
 3. Stateless nature of NACLs not considered
 4. Rule number conflicts
 
 **Quick Fix**:
+
 ```bash
 # Add allow rule (use appropriate rule number)
 aws ec2 create-network-acl-entry \
@@ -342,11 +380,13 @@ aws ec2 create-network-acl-entry \
 ### Issue: WAF Blocking Legitimate Traffic
 
 **Symptoms**:
+
 - 403 Forbidden from CloudFront/ALB
 - Legitimate requests being blocked
 - "Request blocked by WAF" in logs
 
 **Quick Diagnosis**:
+
 ```bash
 # Check WAF logs
 aws wafv2 get-sampled-requests \
@@ -364,12 +404,14 @@ aws logs filter-log-events \
 ```
 
 **Common Causes**:
+
 1. Rate limiting too aggressive
 2. Geo-blocking legitimate users
 3. SQL injection rule false positive
 4. XSS protection blocking valid input
 
 **Quick Fix**:
+
 ```bash
 # Temporarily disable problematic rule
 aws wafv2 update-web-acl \
@@ -387,7 +429,9 @@ aws wafv2 update-ip-set \
 ```
 
 **Investigation Steps**:
+
 1. Analyze blocked requests:
+
 ```bash
 # Get detailed WAF logs
 aws logs get-log-events \
@@ -397,7 +441,8 @@ aws logs get-log-events \
   jq '.events[] | select(.message | contains("BLOCK"))'
 ```
 
-2. Review rule match details:
+1. Review rule match details:
+
 ```bash
 # Check which rule matched
 aws wafv2 get-sampled-requests \
@@ -410,6 +455,7 @@ aws wafv2 get-sampled-requests \
 ```
 
 **Permanent Solution**:
+
 1. Fine-tune WAF rules based on traffic patterns
 2. Implement custom rules for known false positives
 3. Use count mode before blocking
@@ -422,12 +468,14 @@ aws wafv2 get-sampled-requests \
 ### Issue: Suspected DDoS Attack
 
 **Symptoms**:
+
 - Sudden spike in traffic
 - High number of requests from specific IPs/regions
 - Service degradation or unavailability
 - Unusual traffic patterns
 
 **Quick Diagnosis**:
+
 ```bash
 # Check request rate
 kubectl logs -l app=ecommerce-backend -n production | \
@@ -451,6 +499,7 @@ aws shield describe-attack \
 **Immediate Actions**:
 
 1. **Enable AWS Shield Advanced (if not already)**:
+
 ```bash
 # Check Shield status
 aws shield describe-subscription
@@ -459,7 +508,8 @@ aws shield describe-subscription
 aws shield associate-drt-role --role-arn ${DRT_ROLE_ARN}
 ```
 
-2. **Activate rate limiting**:
+1. **Activate rate limiting**:
+
 ```bash
 # Update WAF rate limit rule
 aws wafv2 update-web-acl \
@@ -469,7 +519,8 @@ aws wafv2 update-web-acl \
   --rules file://rate-limit-rules.json
 ```
 
-3. **Block malicious IPs**:
+1. **Block malicious IPs**:
+
 ```bash
 # Add IPs to block list
 aws wafv2 update-ip-set \
@@ -479,7 +530,8 @@ aws wafv2 update-ip-set \
   --lock-token ${LOCK_TOKEN}
 ```
 
-4. **Enable CloudFront geo-blocking** (if applicable):
+1. **Enable CloudFront geo-blocking** (if applicable):
+
 ```bash
 aws cloudfront update-distribution \
   --id ${DISTRIBUTION_ID} \
@@ -489,6 +541,7 @@ aws cloudfront update-distribution \
 **Investigation Steps**:
 
 1. Analyze traffic patterns:
+
 ```bash
 # Top source IPs
 aws logs filter-log-events \
@@ -502,7 +555,8 @@ kubectl logs -l app=ecommerce-backend -n production | \
   grep "HTTP" | awk '{print $7}' | sort | uniq -c | sort -rn
 ```
 
-2. Check for attack signatures:
+1. Check for attack signatures:
+
 ```bash
 # Look for common DDoS patterns
 kubectl logs -l app=ecommerce-backend -n production | \
@@ -533,6 +587,7 @@ aws ec2 describe-flow-logs \
    - Network ACL rules
 
 **Post-Incident**:
+
 1. Review attack patterns and update defenses
 2. Document attack characteristics
 3. Update incident response procedures
@@ -545,6 +600,7 @@ aws ec2 describe-flow-logs \
 ### Issue: Unusual User Behavior
 
 **Symptoms**:
+
 - Multiple failed login attempts
 - Access from unusual locations
 - Unusual API usage patterns
@@ -553,6 +609,7 @@ aws ec2 describe-flow-logs \
 **Investigation Procedure**:
 
 1. **Gather user activity data**:
+
 ```bash
 # Check authentication logs
 kubectl logs -l app=ecommerce-backend -n production | \
@@ -568,7 +625,8 @@ kubectl logs -l app=ecommerce-backend -n production | \
   awk '{print $7}' | sort | uniq -c | sort -rn
 ```
 
-2. **Analyze login patterns**:
+1. **Analyze login patterns**:
+
 ```sql
 -- Check recent login attempts
 SELECT 
@@ -595,7 +653,8 @@ GROUP BY ip_address
 HAVING COUNT(*) > 5;
 ```
 
-3. **Check for privilege escalation**:
+1. **Check for privilege escalation**:
+
 ```sql
 -- Check role changes
 SELECT 
@@ -621,7 +680,8 @@ WHERE user_id = '${USER_ID}'
 ORDER BY granted_at DESC;
 ```
 
-4. **Analyze data access patterns**:
+1. **Analyze data access patterns**:
+
 ```sql
 -- Check sensitive data access
 SELECT 
@@ -640,6 +700,7 @@ ORDER BY accessed_at DESC;
 **Response Actions**:
 
 1. **If account compromised**:
+
 ```bash
 # Immediately disable account
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/disable \
@@ -654,7 +715,8 @@ curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/force-password-
   -H "Authorization: Bearer ${ADMIN_TOKEN}"
 ```
 
-2. **If suspicious but not confirmed**:
+1. **If suspicious but not confirmed**:
+
 ```bash
 # Enable enhanced monitoring
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/enable-monitoring \
@@ -670,6 +732,7 @@ curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/require-mfa \
 ### Issue: Data Exfiltration Attempt
 
 **Symptoms**:
+
 - Large number of API requests
 - Bulk data downloads
 - Unusual database queries
@@ -678,6 +741,7 @@ curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/require-mfa \
 **Investigation Procedure**:
 
 1. **Check API usage**:
+
 ```bash
 # Count API requests by user
 kubectl logs -l app=ecommerce-backend -n production | \
@@ -689,7 +753,8 @@ kubectl logs -l app=ecommerce-backend -n production | \
   awk '{sum+=$10} END {print "Total bytes:", sum}'
 ```
 
-2. **Analyze database queries**:
+1. **Analyze database queries**:
+
 ```sql
 -- Check for bulk queries
 SELECT 
@@ -705,7 +770,8 @@ WHERE user_id = '${USER_ID}'
 ORDER BY rows_returned DESC;
 ```
 
-3. **Check export operations**:
+1. **Check export operations**:
+
 ```sql
 -- Check data exports
 SELECT 
@@ -721,6 +787,7 @@ ORDER BY created_at DESC;
 ```
 
 **Response Actions**:
+
 ```bash
 # Block user immediately
 curl -X POST http://localhost:8080/api/v1/admin/users/${USER_ID}/block \
@@ -743,6 +810,7 @@ curl -X DELETE http://localhost:8080/api/v1/admin/users/${USER_ID}/api-keys \
 **Common Queries**:
 
 1. **Failed authentication attempts**:
+
 ```sql
 SELECT 
   ip_address,
@@ -758,7 +826,8 @@ HAVING COUNT(*) > 10
 ORDER BY attempts DESC;
 ```
 
-2. **Privilege escalation events**:
+1. **Privilege escalation events**:
+
 ```sql
 SELECT 
   user_id,
@@ -774,7 +843,8 @@ WHERE action IN ('ROLE_CHANGE', 'PERMISSION_GRANT', 'ADMIN_ACCESS')
 ORDER BY created_at DESC;
 ```
 
-3. **Sensitive data access**:
+1. **Sensitive data access**:
+
 ```sql
 SELECT 
   user_id,
@@ -790,7 +860,8 @@ HAVING COUNT(*) > 100
 ORDER BY access_count DESC;
 ```
 
-4. **Configuration changes**:
+1. **Configuration changes**:
+
 ```sql
 SELECT 
   user_id,
@@ -809,7 +880,8 @@ LIMIT 50;
 **CloudWatch Insights Queries**:
 
 1. **Authentication failures by IP**:
-```
+
+```text
 fields @timestamp, ip_address, user_id, error_message
 | filter event_type = "authentication_failure"
 | stats count() as failure_count by ip_address
@@ -817,16 +889,18 @@ fields @timestamp, ip_address, user_id, error_message
 | limit 20
 ```
 
-2. **Authorization failures**:
-```
+1. **Authorization failures**:
+
+```text
 fields @timestamp, user_id, resource, action, reason
 | filter event_type = "authorization_failure"
 | stats count() as denial_count by user_id, resource
 | sort denial_count desc
 ```
 
-3. **Suspicious API patterns**:
-```
+1. **Suspicious API patterns**:
+
+```text
 fields @timestamp, user_id, endpoint, response_code
 | filter response_code = 403 or response_code = 401
 | stats count() as error_count by user_id, endpoint
@@ -883,6 +957,7 @@ fields @timestamp, user_id, endpoint, response_code
 ## Quick Reference Commands
 
 ### Authentication Checks
+
 ```bash
 # Validate JWT token
 curl -H "Authorization: Bearer ${TOKEN}" \
@@ -898,6 +973,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 ```
 
 ### Authorization Checks
+
 ```bash
 # Check user roles
 curl -H "Authorization: Bearer ${ADMIN_TOKEN}" \
@@ -913,6 +989,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ```
 
 ### Network Security Checks
+
 ```bash
 # Check security groups
 aws ec2 describe-security-groups --group-ids ${SG_ID}
@@ -929,6 +1006,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ```
 
 ### Audit Log Queries
+
 ```bash
 # CloudWatch Logs
 aws logs filter-log-events \
@@ -948,6 +1026,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 ### Severity Levels
 
 **P0 - Critical**:
+
 - Active security breach
 - Data exfiltration in progress
 - System-wide compromise
@@ -955,6 +1034,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 - **Escalation**: Security team + CTO
 
 **P1 - High**:
+
 - Suspected account compromise
 - DDoS attack
 - Multiple authentication failures
@@ -962,6 +1042,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 - **Escalation**: Security team + Engineering manager
 
 **P2 - Medium**:
+
 - Authorization issues
 - WAF blocking legitimate traffic
 - Security configuration issues
@@ -969,6 +1050,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 - **Escalation**: On-call engineer
 
 **P3 - Low**:
+
 - Minor security warnings
 - Audit log anomalies
 - Non-critical security updates
@@ -977,7 +1059,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 
 ### Contact Information
 
-- **Security Team**: security@company.com
+- **Security Team**: <security@company.com>
 - **On-Call Engineer**: PagerDuty
 - **AWS Support**: Premium support portal
 - **Incident Commander**: See on-call schedule
@@ -998,5 +1080,4 @@ kubectl logs -l app=ecommerce-backend -n production | \
 **Last Updated**: 2025-10-25  
 **Owner**: Security Team  
 **Review Cycle**: Quarterly  
-**Emergency Contact**: security@company.com
-
+**Emergency Contact**: <security@company.com>

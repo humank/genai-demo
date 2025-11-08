@@ -270,7 +270,7 @@ This document provides a comprehensive breakdown of technical and soft skills re
 
 ### Backend Engineer Career Path
 
-```
+```text
 Junior Backend Engineer
 ├─ Focus: Java fundamentals, Spring Boot basics, SQL
 ├─ Timeline: 0-2 years
@@ -289,7 +289,7 @@ Senior Backend Engineer
 
 ### Frontend Engineer Career Path
 
-```
+```text
 Junior Frontend Engineer
 ├─ Focus: HTML/CSS/JS, React or Angular basics
 ├─ Timeline: 0-2 years
@@ -308,7 +308,7 @@ Senior Frontend Engineer
 
 ### DevOps Engineer Career Path
 
-```
+```text
 Junior DevOps Engineer
 ├─ Focus: Linux, Docker, Basic AWS
 ├─ Timeline: 0-2 years
@@ -355,12 +355,14 @@ Senior DevOps Engineer
 We support and reimburse the following certifications:
 
 **AWS Certifications**:
+
 - AWS Certified Solutions Architect (Associate/Professional)
 - AWS Certified Developer (Associate)
 - AWS Certified DevOps Engineer (Professional)
 - AWS Certified Security (Specialty)
 
 **Other Certifications**:
+
 - Certified Kubernetes Administrator (CKA)
 - Certified Kubernetes Application Developer (CKAD)
 - ISTQB Test Automation Engineer
@@ -380,7 +382,7 @@ We support and reimburse the following certifications:
 
 ### Skill Gap Analysis Process
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │  1. Identify Required Skills            │
 │     (Role requirements, project needs)  │

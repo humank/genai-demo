@@ -29,6 +29,7 @@ TZ="America/New_York" date
 ```
 
 **Capabilities**:
+
 - ✅ Get current system time
 - ✅ Format time in various ways
 - ✅ Get UTC time
@@ -37,6 +38,7 @@ TZ="America/New_York" date
 - ✅ Always available
 
 **Limitations**:
+
 - ❌ Requires bash command execution
 - ❌ Manual timezone conversion logic
 - ❌ Less convenient for complex operations
@@ -49,6 +51,7 @@ TZ="America/New_York" date
 **How it works**: Dedicated MCP server with time tools
 
 **Configuration**:
+
 ```json
 {
   "mcpServers": {
@@ -68,6 +71,7 @@ TZ="America/New_York" date
 ```
 
 **Capabilities**:
+
 - ✅ `get_current_time` - Get current time in any timezone
 - ✅ `get_timezone` - Get timezone information
 - ✅ `convert_time` - Convert between timezones
@@ -77,6 +81,7 @@ TZ="America/New_York" date
 - ✅ Cross-platform consistency
 
 **Limitations**:
+
 - ❌ Requires MCP server installation
 - ❌ Additional dependency to manage
 - ❌ Slightly more overhead than direct commands
@@ -101,20 +106,23 @@ TZ="America/New_York" date
 
 ## 🎯 Use Case Recommendations
 
-### Use System Commands When:
+### Use System Commands When
+
 - ✅ Simple time queries (current time, date)
 - ✅ One-off time operations
 - ✅ Minimal dependencies preferred
 - ✅ Quick scripts and automation
 
 **Example**:
+
 ```bash
 # Get current date for documentation
 CURRENT_DATE=$(date +%Y-%m-%d)
 echo "Last Updated: $CURRENT_DATE"
 ```
 
-### Use Time MCP Server When:
+### Use Time MCP Server When
+
 - ✅ Complex timezone conversions
 - ✅ Multiple time operations in sequence
 - ✅ Need structured time data
@@ -122,7 +130,8 @@ echo "Last Updated: $CURRENT_DATE"
 - ✅ Frequent time-related queries
 
 **Example**:
-```
+
+```text
 User: "What time is it in Tokyo, New York, and London?"
 Kiro: Uses time MCP server to get all three times in one operation
 ```
@@ -134,6 +143,7 @@ Kiro: Uses time MCP server to get all three times in one operation
 ### Example 1: Documentation Timestamps
 
 **Using System Commands** (Recommended):
+
 ```bash
 # Simple and direct
 date +%Y-%m-%d
@@ -141,7 +151,8 @@ date +%Y-%m-%d
 ```
 
 **Using Time MCP Server**:
-```
+
+```text
 get_current_time(timezone="Asia/Taipei", format="YYYY-MM-DD")
 ```
 
@@ -152,6 +163,7 @@ get_current_time(timezone="Asia/Taipei", format="YYYY-MM-DD")
 ### Example 2: Multi-Timezone Meeting Scheduler
 
 **Using System Commands**:
+
 ```bash
 # Requires multiple commands
 TZ="America/New_York" date
@@ -160,7 +172,8 @@ TZ="Asia/Tokyo" date
 ```
 
 **Using Time MCP Server**:
-```
+
+```text
 get_current_time(timezone="America/New_York")
 get_current_time(timezone="Europe/London")
 get_current_time(timezone="Asia/Tokyo")
@@ -173,6 +186,7 @@ get_current_time(timezone="Asia/Tokyo")
 ### Example 3: Time Difference Calculation
 
 **Using System Commands**:
+
 ```bash
 # Complex manual calculation needed
 start_time=$(date +%s)
@@ -183,7 +197,8 @@ echo "$diff seconds"
 ```
 
 **Using Time MCP Server**:
-```
+
+```text
 calculate_time_difference(
   start_time="2025-01-22T10:00:00Z",
   end_time="2025-01-22T14:30:00Z"
@@ -200,6 +215,7 @@ calculate_time_difference(
 ### Your Current Setup
 
 **Project Config**: Time MCP server is **enabled**
+
 ```json
 "time": {
   "command": "uvx",
@@ -209,6 +225,7 @@ calculate_time_difference(
 ```
 
 **Global Config**: Time MCP server is **disabled**
+
 ```json
 "time": {
   "command": "uvx",
@@ -222,6 +239,7 @@ calculate_time_difference(
 **Keep the Time MCP Server in Project Config** ✅
 
 **Reasons**:
+
 1. **Provides advanced capabilities** beyond simple date commands
 2. **Already installed and working** - no reason to remove
 3. **Useful for documentation** with multiple timezone support
@@ -229,6 +247,7 @@ calculate_time_difference(
 5. **Better UX** - structured API vs manual bash commands
 
 **Remove from Global Config** ✅
+
 - It's disabled anyway
 - Project config takes precedence
 - Reduces configuration duplication
@@ -237,9 +256,10 @@ calculate_time_difference(
 
 ## 📋 Recommended Action
 
-### Keep This Configuration:
+### Keep This Configuration
 
 **Project Config** (`.kiro/settings/mcp.json`):
+
 ```json
 {
   "mcpServers": {
@@ -261,6 +281,7 @@ calculate_time_difference(
 ```
 
 **Global Config** (`~/.kiro/settings/mcp.json`):
+
 ```json
 {
   "mcpServers": {
@@ -273,7 +294,8 @@ calculate_time_difference(
 
 ## 🧪 Testing Both Methods
 
-### Test System Commands:
+### Test System Commands
+
 ```bash
 # Current time
 date
@@ -288,13 +310,16 @@ date -u
 TZ="America/New_York" date
 ```
 
-### Test Time MCP Server:
-```
+### Test Time MCP Server
+
+```text
 Ask Kiro:
+
 - "What time is it?"
 - "What time is it in Tokyo?"
 - "Convert 2pm EST to Tokyo time"
 - "What's the time difference between New York and London?"
+
 ```
 
 ---
@@ -315,5 +340,6 @@ Ask Kiro:
 ---
 
 **Related Documentation**:
+
 - [MCP Server Analysis](./mcp-server-analysis.md)
 - [MCP Cleanup Recommendations](./mcp-cleanup-recommendations.md)

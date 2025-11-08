@@ -11,6 +11,7 @@ This document defines the Java coding standards for the Enterprise E-Commerce Pl
 ### Classes and Interfaces
 
 **Classes:**
+
 - Use **PascalCase** (UpperCamelCase)
 - Use nouns or noun phrases
 - Be specific and descriptive
@@ -28,6 +29,7 @@ public class Manager { }            // Too generic
 ```
 
 **Interfaces:**
+
 - Use **PascalCase**
 - Use nouns or adjectives
 - Avoid "I" prefix
@@ -44,6 +46,7 @@ public interface orderRepository { }   // Wrong case
 ```
 
 **Abstract Classes:**
+
 - Use **PascalCase**
 - Consider "Abstract" prefix or "Base" suffix for clarity
 
@@ -59,6 +62,7 @@ public abstract class DomainEventHandler { }  // Not clear it's abstract
 ### Methods
 
 **Method Names:**
+
 - Use **camelCase** (lowerCamelCase)
 - Start with a verb
 - Be descriptive of the action
@@ -77,6 +81,7 @@ public boolean discount(Customer customer) { } // Not descriptive
 ```
 
 **Boolean Methods:**
+
 - Use `is`, `has`, `can`, `should` prefixes
 
 ```java
@@ -92,6 +97,7 @@ public boolean permission() { }
 ```
 
 **Getter/Setter Methods:**
+
 - Use `get`/`set` prefix for properties
 - Use `is` prefix for boolean getters
 
@@ -110,6 +116,7 @@ public boolean getActive() { }        // Use 'is' for boolean
 ### Variables
 
 **Local Variables and Parameters:**
+
 - Use **camelCase**
 - Use descriptive names
 - Avoid single-letter names (except loop counters)
@@ -127,6 +134,7 @@ List<Product> list = new ArrayList<>();  // Too generic
 ```
 
 **Constants:**
+
 - Use **UPPER_SNAKE_CASE**
 - Declare as `static final`
 - Group related constants
@@ -143,6 +151,7 @@ public static final String currency = "USD";   // Not descriptive
 ```
 
 **Instance Variables:**
+
 - Use **camelCase**
 - Use descriptive names
 - Consider `private` access by default
@@ -162,6 +171,7 @@ public String customerId;             // Should be private
 ### Packages
 
 **Package Names:**
+
 - Use **lowercase**
 - Use singular nouns
 - Follow reverse domain name convention
@@ -234,6 +244,7 @@ public class OrderService {
 ### Method Organization
 
 **Method Length:**
+
 - Keep methods short (< 20 lines preferred)
 - Extract complex logic into separate methods
 - One level of abstraction per method
@@ -274,6 +285,7 @@ public void processOrder(Order order) {
 ### Parameter Lists
 
 **Limit Parameters:**
+
 - Maximum 3-4 parameters per method
 - Use parameter objects for more parameters
 - Use builder pattern for complex objects
@@ -302,14 +314,17 @@ public Customer createCustomer(String name, String email, String phone,
 ### Formatting
 
 **Indentation:**
+
 - Use 4 spaces for indentation
 - No tabs
 
 **Line Length:**
+
 - Maximum 120 characters per line
 - Break long lines at logical points
 
 **Braces:**
+
 - Opening brace on same line
 - Closing brace on new line
 - Always use braces, even for single statements
@@ -328,6 +343,7 @@ if (condition) { doSomething(); }  // Not on separate lines
 ```
 
 **Whitespace:**
+
 - One blank line between methods
 - One blank line between logical sections
 - Space after keywords (`if`, `for`, `while`)
@@ -357,6 +373,7 @@ public void processOrder(Order order){
 ### Imports
 
 **Import Organization:**
+
 - No wildcard imports
 - Group imports logically
 - Remove unused imports
@@ -504,6 +521,7 @@ public Customer findCustomerById(String id) {
 ### JavaDoc Comments
 
 **When to Use JavaDoc:**
+
 - Public classes and interfaces
 - Public and protected methods
 - Complex algorithms
@@ -511,6 +529,7 @@ public Customer findCustomerById(String id) {
 
 ```java
 /**
+
  * Service for managing customer operations.
  * 
  * This service handles customer registration, profile updates,
@@ -519,17 +538,20 @@ public Customer findCustomerById(String id) {
  * 
  * @author Development Team
  * @since 1.0
+
  */
 @Service
 public class CustomerService {
     
     /**
+
      * Creates a new customer account.
      * 
      * @param command the customer creation command containing all required information
      * @return the created customer with generated ID and timestamps
      * @throws EmailAlreadyExistsException if the email is already registered
      * @throws ValidationException if the customer information is invalid
+
      */
     public Customer createCustomer(CreateCustomerCommand command) {
         // Implementation
@@ -540,6 +562,7 @@ public class CustomerService {
 ### Inline Comments
 
 **When to Use Inline Comments:**
+
 - Complex business logic
 - Non-obvious algorithms
 - Workarounds or temporary solutions

@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 ### Business Context
 
 **Business Drivers**:
+
 - Complex business rules for e-commerce operations
 - Need for clear business logic encapsulation
 - Requirement for data consistency in transactions
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 - Long-term maintainability of business logic
 
 **Constraints**:
+
 - Team has limited DDD experience
 - Hexagonal Architecture already adopted (ADR-002)
 - Domain events for cross-context communication (ADR-003)
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
 - Domain events (ADR-003)
@@ -58,6 +61,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 - 13 bounded contexts identified
 
 **Requirements**:
+
 - Rich domain models with behavior
 - Clear aggregate boundaries
 - Consistency guarantees within aggregates
@@ -85,6 +89,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 **Description**: Implement complete set of DDD tactical patterns (Aggregates, Entities, Value Objects, Repositories, Domain Services, Factories, Specifications)
 
 **Pros**:
+
 - ✅ Rich domain models with behavior
 - ✅ Clear aggregate boundaries
 - ✅ Strong consistency guarantees
@@ -95,6 +100,7 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 - ✅ Supports complex business logic
 
 **Cons**:
+
 - ⚠️ Learning curve for team
 - ⚠️ More initial design effort
 - ⚠️ Can be over-engineering for simple CRUD
@@ -108,11 +114,13 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 **Description**: Simple data objects with getters/setters, business logic in services
 
 **Pros**:
+
 - ✅ Simple to understand
 - ✅ Familiar to most developers
 - ✅ Quick to implement
 
 **Cons**:
+
 - ❌ Business logic scattered across services
 - ❌ No encapsulation
 - ❌ Difficult to maintain complex logic
@@ -128,10 +136,12 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 **Description**: Procedural code organized by use cases
 
 **Pros**:
+
 - ✅ Simple for simple use cases
 - ✅ Easy to understand
 
 **Cons**:
+
 - ❌ Doesn't scale to complex domains
 - ❌ Code duplication
 - ❌ No reusability
@@ -146,10 +156,12 @@ The Enterprise E-Commerce Platform requires a structured approach to domain mode
 **Description**: Use only aggregates and entities, skip value objects and other patterns
 
 **Pros**:
+
 - ✅ Some benefits of DDD
 - ✅ Lower learning curve
 
 **Cons**:
+
 - ❌ Missing type safety from value objects
 - ❌ Incomplete pattern implementation
 - ❌ Confusion about which patterns to use
@@ -181,6 +193,7 @@ Full DDD tactical patterns were selected for the following reasons:
 **Core Patterns**:
 
 1. **Aggregate Root**:
+
 ```java
 @AggregateRoot(name = "Order", boundedContext = "Order", version = "1.0")
 public class Order extends AggregateRootBase {
@@ -253,7 +266,8 @@ public class Order extends AggregateRootBase {
 }
 ```
 
-2. **Entity**:
+1. **Entity**:
+
 ```java
 public class OrderItem {
     private final OrderItemId id;
@@ -286,7 +300,8 @@ public class OrderItem {
 }
 ```
 
-3. **Value Object**:
+1. **Value Object**:
+
 ```java
 public record OrderId(String value) {
     public OrderId {
@@ -343,7 +358,8 @@ public record Money(BigDecimal amount, Currency currency) {
 }
 ```
 
-4. **Repository Interface** (in domain layer):
+1. **Repository Interface** (in domain layer):
+
 ```java
 public interface OrderRepository {
     Optional<Order> findById(OrderId orderId);
@@ -353,7 +369,8 @@ public interface OrderRepository {
 }
 ```
 
-5. **Domain Service**:
+1. **Domain Service**:
+
 ```java
 @Service
 public class PricingService {
@@ -378,7 +395,8 @@ public class PricingService {
 }
 ```
 
-6. **Factory**:
+1. **Factory**:
+
 ```java
 @Component
 public class OrderFactory {
@@ -408,7 +426,8 @@ public class OrderFactory {
 }
 ```
 
-7. **Specification**:
+1. **Specification**:
+
 ```java
 public interface Specification<T> {
     boolean isSatisfiedBy(T candidate);
@@ -470,6 +489,7 @@ if (eligibleForDiscount.isSatisfiedBy(order)) {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts
 - Domain layer structure
 - Testing approach
@@ -500,6 +520,7 @@ Affects:
   - Domain services vs application services
 
 - [ ] Create base classes and interfaces
+
   ```java
   public abstract class AggregateRootBase implements AggregateRootInterface {
       private final List<DomainEvent> uncommittedEvents = new ArrayList<>();
@@ -526,6 +547,7 @@ Affects:
   ```
 
 - [ ] Create annotations
+
   ```java
   @Target(ElementType.TYPE)
   @Retention(RetentionPolicy.RUNTIME)
@@ -547,6 +569,7 @@ Affects:
 ### Phase 2: Customer Bounded Context (Week 2-4)
 
 - [ ] Design Customer aggregate
+
   ```java
   @AggregateRoot(name = "Customer", boundedContext = "Customer")
   public class Customer extends AggregateRootBase {
@@ -599,6 +622,7 @@ Affects:
   ```
 
 - [ ] Create value objects
+
   ```java
   @ValueObject
   public record CustomerName(String value) {
@@ -680,6 +704,7 @@ Affects:
 ### Phase 6: ArchUnit Validation (Week 12)
 
 - [ ] Create ArchUnit tests
+
   ```java
   @ArchTest
   static final ArchRule aggregateRootRules = classes()
@@ -709,12 +734,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Team unable to adopt DDD after 6 months
 - Development velocity decreases > 40%
 - Aggregate boundaries causing major issues
 - Over-engineering becomes problematic
 
 **Rollback Steps**:
+
 1. Simplify to anemic domain model
 2. Move business logic to application services
 3. Keep value objects for type safety
@@ -738,6 +765,7 @@ Affects:
 ### Monitoring Plan
 
 **Code Quality Metrics**:
+
 - Number of aggregates per bounded context
 - Value object usage rate
 - Domain logic test coverage
@@ -745,6 +773,7 @@ Affects:
 - Code review findings
 
 **Review Schedule**:
+
 - Weekly: Domain modeling sessions
 - Monthly: Architecture review
 - Quarterly: DDD practice retrospective
@@ -772,12 +801,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some aggregates may have incorrect boundaries initially (will refine)
 2. Not all value objects implemented yet (gradual adoption)
 3. Some domain services may be in wrong layer (will refactor)
 4. Limited specification pattern usage (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Refine aggregate boundaries based on experience
 - **Q2 2026**: Complete value object adoption
 - **Q3 2026**: Review and refactor domain services
@@ -794,6 +825,7 @@ Affects:
 ### Aggregate Design Guidelines
 
 **DO**:
+
 - Keep aggregates small
 - Design around business invariants
 - Use value objects for concepts
@@ -802,6 +834,7 @@ Affects:
 - Make aggregates testable
 
 **DON'T**:
+
 - Create large aggregates
 - Reference other aggregates directly
 - Expose internal collections
@@ -819,23 +852,27 @@ Affects:
 ### Common Patterns
 
 **Aggregate Root Pattern**:
+
 - Single entry point to aggregate
 - Enforces invariants
 - Collects domain events
 - Controls access to entities
 
 **Repository Pattern**:
+
 - Interface in domain layer
 - Implementation in infrastructure
 - One repository per aggregate root
 - Returns domain objects
 
 **Factory Pattern**:
+
 - Complex object creation
 - Enforces creation rules
 - Hides construction complexity
 
 **Specification Pattern**:
+
 - Encapsulates business rules
 - Reusable and composable
 - Testable in isolation

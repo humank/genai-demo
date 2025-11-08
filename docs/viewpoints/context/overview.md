@@ -157,6 +157,7 @@ The following are external to the platform:
 **Description**: Individuals who browse products, place orders, and manage their accounts.
 
 **Interactions**:
+
 - Browse product catalog
 - Search for products
 - Add items to shopping cart
@@ -173,6 +174,7 @@ The following are external to the platform:
 **Description**: Third-party sellers who list and sell products on the platform.
 
 **Interactions**:
+
 - Manage product listings
 - View sales reports
 - Process orders
@@ -188,6 +190,7 @@ The following are external to the platform:
 **Description**: Internal staff who manage the platform and support operations.
 
 **Interactions**:
+
 - Manage users and permissions
 - Configure system settings
 - Monitor system health
@@ -205,6 +208,7 @@ The following are external to the platform:
 **Description**: External service that processes payment transactions.
 
 **Interactions**:
+
 - Process credit card payments
 - Handle payment authorization
 - Manage payment methods
@@ -220,6 +224,7 @@ The following are external to the platform:
 **Description**: Third-party logistics companies that handle package delivery.
 
 **Interactions**:
+
 - Generate shipping labels
 - Calculate shipping costs
 - Track package delivery
@@ -235,6 +240,7 @@ The following are external to the platform:
 **Description**: Email delivery service for transactional and marketing emails.
 
 **Interactions**:
+
 - Send transactional emails (order confirmations, password resets)
 - Send marketing emails (promotions, newsletters)
 - Track email delivery and opens
@@ -249,6 +255,7 @@ The following are external to the platform:
 **Description**: SMS delivery service for notifications and alerts.
 
 **Interactions**:
+
 - Send order status updates
 - Send delivery notifications
 - Send verification codes
@@ -263,6 +270,7 @@ The following are external to the platform:
 **Description**: Web analytics service for tracking user behavior and conversions.
 
 **Interactions**:
+
 - Track page views and user sessions
 - Track e-commerce transactions
 - Track conversion funnels
@@ -288,52 +296,64 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 ### Business Stakeholders
 
 #### Product Owners
+
 **Concerns**:
+
 - Feature prioritization
 - User experience
 - Business value delivery
 - Market competitiveness
 
 **Information Needs**:
+
 - Product roadmap
 - Feature specifications
 - User feedback
 - Business metrics
 
 #### Marketing Team
+
 **Concerns**:
+
 - Customer acquisition
 - Conversion optimization
 - Campaign effectiveness
 - Brand consistency
 
 **Information Needs**:
+
 - Analytics data
 - Campaign performance
 - Customer segmentation
 - A/B test results
 
 #### Finance Team
+
 **Concerns**:
+
 - Revenue tracking
 - Cost management
 - Financial reporting
 - Compliance
 
 **Information Needs**:
+
 - Transaction data
 - Revenue reports
 - Cost analysis
 - Audit trails
 
 #### Customer Support Team
+
 **Concerns**:
+
 - Customer satisfaction
 - Issue resolution
 - Support efficiency
 - Knowledge management
 
 **Information Needs**:
+
 - Customer data
 - Order history
 - Issue tracking
@@ -342,52 +362,64 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 ### Technical Stakeholders
 
 #### Development Team
+
 **Concerns**:
+
 - Code quality
 - Technical debt
 - Development velocity
 - System maintainability
 
 **Information Needs**:
+
 - Architecture documentation
 - API specifications
 - Development guidelines
 - Technical roadmap
 
 #### Operations Team (SRE/DevOps)
+
 **Concerns**:
+
 - System reliability
 - Performance
 - Scalability
 - Incident management
 
 **Information Needs**:
+
 - Infrastructure documentation
 - Monitoring dashboards
 - Runbooks
 - Deployment procedures
 
 #### Security Team
+
 **Concerns**:
+
 - Data protection
 - Vulnerability management
 - Compliance
 - Incident response
 
 **Information Needs**:
+
 - Security architecture
 - Threat models
 - Compliance reports
 - Security policies
 
 #### Quality Assurance Team
+
 **Concerns**:
+
 - Software quality
 - Test coverage
 - Bug tracking
 - Release readiness
 
 **Information Needs**:
+
 - Test plans
 - Test results
 - Bug reports
@@ -396,39 +428,48 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 ### External Stakeholders
 
 #### Customers
+
 **Concerns**:
+
 - Product availability
 - Order fulfillment
 - Payment security
 - Customer service
 
 **Information Needs**:
+
 - Product information
 - Order status
 - Delivery tracking
 - Support contact
 
 #### Partners/Sellers
+
 **Concerns**:
+
 - Sales performance
 - Commission structure
 - Platform reliability
 - Support quality
 
 **Information Needs**:
+
 - Sales reports
 - Commission statements
 - Platform status
 - Integration documentation
 
 #### Regulators
+
 **Concerns**:
+
 - Data privacy (GDPR, CCPA)
 - Consumer protection
 - Tax compliance
 - Accessibility
 
 **Information Needs**:
+
 - Compliance reports
 - Privacy policies
 - Audit trails
@@ -441,6 +482,7 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 #### Data Privacy Regulations
 
 **GDPR (General Data Protection Regulation)**
+
 - Applies to: EU customers
 - Requirements:
   - Right to access personal data
@@ -450,6 +492,7 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
   - Data breach notification
 
 **CCPA (California Consumer Privacy Act)**
+
 - Applies to: California residents
 - Requirements:
   - Right to know what data is collected
@@ -458,6 +501,7 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
   - Non-discrimination
 
 #### Payment Card Industry (PCI DSS)
+
 - Applies to: All payment processing
 - Requirements:
   - Secure network infrastructure
@@ -469,6 +513,7 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 #### Accessibility Standards
 
 **WCAG 2.1 (Web Content Accessibility Guidelines)**
+
 - Level: AA compliance required
 - Requirements:
   - Perceivable content
@@ -479,16 +524,19 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 ### Geographic Constraints
 
 #### Regional Availability
+
 - **Primary Markets**: North America, Europe, Asia-Pacific
 - **Language Support**: English, Spanish, French, German, Chinese, Japanese
 - **Currency Support**: USD, EUR, GBP, JPY, CNY
 
 #### Data Residency Requirements
+
 - **EU**: Customer data must be stored within EU
 - **China**: Customer data must be stored within China
 - **Other Regions**: No specific requirements
 
 #### Regional Restrictions
+
 - **Shipping**: Some products cannot be shipped to certain countries
 - **Payment Methods**: Availability varies by region
 - **Content**: Some content may be restricted in certain regions
@@ -496,18 +544,21 @@ The stakeholder map above visualizes all stakeholder groups and their relationsh
 ### Technical Constraints
 
 #### External Service Dependencies
+
 - **Payment Gateway**: 99.9% uptime SLA
 - **Email Service**: Rate limits apply
 - **SMS Service**: Cost per message
 - **Shipping APIs**: Rate limits and quotas
 
 #### Integration Protocols
+
 - **REST APIs**: Primary integration method
 - **Webhooks**: For asynchronous notifications
 - **Message Queues**: For internal event processing
 - **Batch Processing**: For bulk data transfers
 
 #### Performance Requirements
+
 - **API Response Time**: < 2 seconds (95th percentile)
 - **Page Load Time**: < 3 seconds
 - **Concurrent Users**: Support 10,000+ concurrent users
@@ -528,6 +579,7 @@ The diagram above shows all external system integrations with their criticality 
 ### Synchronous Integration
 
 Used for:
+
 - Payment processing
 - Real-time inventory checks
 - Shipping cost calculation
@@ -536,6 +588,7 @@ Used for:
 **Pattern**: Request-Response via REST API
 
 **Characteristics**:
+
 - Immediate response required
 - Strong consistency
 - Timeout handling
@@ -544,6 +597,7 @@ Used for:
 ### Asynchronous Integration
 
 Used for:
+
 - Email notifications
 - SMS notifications
 - Analytics tracking
@@ -552,6 +606,7 @@ Used for:
 **Pattern**: Event-driven via Message Queue (Kafka)
 
 **Characteristics**:
+
 - Eventual consistency
 - Decoupled systems
 - Resilient to failures
@@ -560,6 +615,7 @@ Used for:
 ### Batch Integration
 
 Used for:
+
 - Daily sales reports
 - Inventory synchronization
 - Financial reconciliation
@@ -568,6 +624,7 @@ Used for:
 **Pattern**: Scheduled batch jobs
 
 **Characteristics**:
+
 - Periodic execution
 - Large data volumes
 - Off-peak processing
@@ -634,4 +691,3 @@ Used for:
 ---
 
 **Next**: [Scope & Boundaries →](scope-and-boundaries.md)
-

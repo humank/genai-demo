@@ -9,6 +9,7 @@ This runbook covers database backup and restore procedures for the Enterprise E-
 ### Automated Backups
 
 Automated backups run according to schedule:
+
 - **Production**: Hourly snapshots, 30-day retention
 - **Staging**: Daily snapshots, 7-day retention
 

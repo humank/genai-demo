@@ -8,8 +8,10 @@ version: "1.0"
 status: "draft|active|deprecated"
 owner: "Team/Person Name"
 related_docs:
+
   - "path/to/related/doc1.md"
   - "path/to/related/doc2.md"
+
 tags: ["tag1", "tag2", "tag3"]
 ---
 
@@ -26,6 +28,7 @@ tags: ["tag1", "tag2", "tag3"]
 ## Purpose
 
 This perspective ensures:
+
 - Quality attribute 1
 - Quality attribute 2
 - Quality attribute 3
@@ -34,16 +37,19 @@ This perspective ensures:
 ## Stakeholders
 
 ### Primary Stakeholders
+
 - **Stakeholder 1**: Their quality concerns
 - **Stakeholder 2**: Their quality concerns
 
 ### Secondary Stakeholders
+
 - **Stakeholder 3**: Their quality concerns
 - **Stakeholder 4**: Their quality concerns
 
 ## Contents
 
 ### 📄 Documents
+
 - [Concerns](concerns.md) - Quality attribute concerns
 - [Requirements](requirements.md) - Quality attribute scenarios and requirements
 - [Design Decisions](design-decisions.md) - How concerns are addressed
@@ -51,6 +57,7 @@ This perspective ensures:
 - [Verification](verification.md) - How to verify and test
 
 ### 📊 Diagrams
+
 - [Diagram 1](../../diagrams/perspectives/{category}/diagram1.puml) - Description
 - [Diagram 2](../../diagrams/perspectives/{category}/diagram2.puml) - Description
 
@@ -195,16 +202,19 @@ This perspective ensures:
 ## Implementation Guidelines
 
 ### Architectural Patterns
+
 - **Pattern 1**: Description and when to use
 - **Pattern 2**: Description and when to use
 - **Pattern 3**: Description and when to use
 
 ### Best Practices
+
 1. **Best Practice 1**: Description
 2. **Best Practice 2**: Description
 3. **Best Practice 3**: Description
 
 ### Anti-Patterns to Avoid
+
 - ❌ **Anti-Pattern 1**: Why to avoid and what to do instead
 - ❌ **Anti-Pattern 2**: Why to avoid and what to do instead
 - ❌ **Anti-Pattern 3**: Why to avoid and what to do instead
@@ -232,6 +242,7 @@ public class AnotherExample {
 ## Verification and Testing
 
 ### Verification Methods
+
 - **Method 1**: Description
 - **Method 2**: Description
 - **Method 3**: Description
@@ -239,6 +250,7 @@ public class AnotherExample {
 ### Testing Strategy
 
 #### Test Type 1: {Test Type}
+
 **Purpose**: [What this test verifies]
 
 **Approach**: [How to conduct the test]
@@ -248,6 +260,7 @@ public class AnotherExample {
 **Frequency**: [How often to run]
 
 #### Test Type 2: {Test Type}
+
 **Purpose**: [What this test verifies]
 
 **Approach**: [How to conduct the test]
@@ -272,6 +285,7 @@ public class AnotherExample {
 [Describe how this quality attribute affects this viewpoint]
 
 **Specific concerns**:
+
 - Concern 1
 - Concern 2
 
@@ -284,6 +298,7 @@ public class AnotherExample {
 [Describe how this quality attribute affects this viewpoint]
 
 **Specific concerns**:
+
 - Concern 1
 - Concern 2
 
@@ -296,6 +311,7 @@ public class AnotherExample {
 [Describe how this quality attribute affects this viewpoint]
 
 **Specific concerns**:
+
 - Concern 1
 - Concern 2
 
@@ -305,32 +321,39 @@ public class AnotherExample {
 ## Related Documentation
 
 ### Related Perspectives
+
 - [Perspective 1](../perspective1/README.md) - How they interact
 - [Perspective 2](../perspective2/README.md) - How they interact
 
 ### Related Architecture Decisions
+
 - [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
 - [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
 
 ### Related Standards and Guidelines
+
 - Standard 1: [Link or description]
 - Standard 2: [Link or description]
 
 ### Related Tools
+
 - Tool 1: [Description and link]
 - Tool 2: [Description and link]
 
 ## Known Issues and Limitations
 
 ### Current Limitations
+
 - **Limitation 1**: Description and mitigation plan
 - **Limitation 2**: Description and mitigation plan
 
 ### Technical Debt
+
 - **Debt Item 1**: Description and plan to address
 - **Debt Item 2**: Description and plan to address
 
 ### Risks
+
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|-------------------|
 | Risk 1 | High/Med/Low | High/Med/Low | Strategy |
@@ -339,13 +362,16 @@ public class AnotherExample {
 ## Future Considerations
 
 ### Planned Improvements
+
 - **Improvement 1**: Description and timeline
 - **Improvement 2**: Description and timeline
 
 ### Evolution Strategy
+
 [Describe how this perspective is expected to evolve]
 
 ### Emerging Technologies
+
 [Discuss relevant emerging technologies that might affect this quality attribute]
 
 ## Quick Links
@@ -357,11 +383,13 @@ public class AnotherExample {
 ## Appendix
 
 ### Glossary
+
 - **Term 1**: Definition
 - **Term 2**: Definition
 - **Term 3**: Definition
 
 ### References
+
 - Reference 1: [Title](URL)
 - Reference 2: [Title](URL)
 - Reference 3: [Title](URL)

@@ -26,12 +26,14 @@ decision_makers: ["Architecture Team", "Backend Team"]
 ### Problem Statement
 
 The Enterprise E-Commerce Platform consists of 13 bounded contexts that may be deployed as separate microservices. We need to decide on inter-service communication protocols to enable:
+
 - Synchronous request-response communication
 - Asynchronous event-driven communication
 - Service-to-service data exchange
 - Cross-context business process coordination
 
 This decision impacts:
+
 - System performance and latency
 - Service coupling and independence
 - Data consistency and eventual consistency
@@ -42,6 +44,7 @@ This decision impacts:
 ### Business Context
 
 **Business Drivers**:
+
 - Fast response times for user-facing operations
 - Reliable order processing across multiple services
 - Scalable architecture supporting business growth
@@ -50,6 +53,7 @@ This decision impacts:
 - Enable independent service deployment
 
 **Business Constraints**:
+
 - Order processing requires coordination across multiple services (Order, Inventory, Payment, Shipping)
 - Some operations require immediate consistency (payment processing)
 - Some operations can tolerate eventual consistency (email notifications, analytics)
@@ -58,6 +62,7 @@ This decision impacts:
 - 99.9% availability requirement
 
 **Business Requirements**:
+
 - Support synchronous operations for immediate responses
 - Support asynchronous operations for long-running processes
 - Enable event-driven architecture for loose coupling
@@ -67,6 +72,7 @@ This decision impacts:
 ### Technical Context
 
 **Current Architecture**:
+
 - Backend: Spring Boot microservices (13 bounded contexts)
 - Architecture: Hexagonal Architecture with DDD (ADR-002)
 - Event System: Domain Events (ADR-003)
@@ -76,6 +82,7 @@ This decision impacts:
 - API Gateway: Kong Gateway (ADR-030)
 
 **Technical Constraints**:
+
 - Must support Spring Boot ecosystem
 - Must integrate with existing Kafka infrastructure
 - Must work with Kong API Gateway
@@ -84,6 +91,7 @@ This decision impacts:
 - Must ensure message delivery for asynchronous calls
 
 **Dependencies**:
+
 - ADR-002: Hexagonal Architecture (service boundaries)
 - ADR-003: Domain Events (event-driven communication)
 - ADR-005: Apache Kafka (message broker)
@@ -109,6 +117,7 @@ This decision impacts:
 Use RESTful HTTP APIs for synchronous request-response communication and Apache Kafka for asynchronous event-driven communication.
 
 **Pros** ✅:
+
 - **Clear Separation**: Synchronous vs asynchronous communication clearly separated
 - **Familiar Technologies**: REST and Kafka are well-known and widely adopted
 - **Flexibility**: Choose appropriate protocol for each use case
@@ -119,6 +128,7 @@ Use RESTful HTTP APIs for synchronous request-response communication and Apache 
 - **Event-Driven**: Kafka enables true event-driven architecture
 
 **Cons** ❌:
+
 - **Dual Protocol**: Need to manage two different communication protocols
 - **Complexity**: More complex than single protocol approach
 - **Latency**: REST has higher latency than gRPC for sync calls
@@ -126,6 +136,7 @@ Use RESTful HTTP APIs for synchronous request-response communication and Apache 
 - **Learning Curve**: Team needs expertise in both REST and Kafka
 
 **Cost**:
+
 - **Implementation Cost**: 2 person-weeks (configure REST clients and Kafka producers/consumers)
 - **Infrastructure Cost**: $500/month (Kafka MSK cluster already exists)
 - **Maintenance Cost**: 1 person-day/month
@@ -145,6 +156,7 @@ Use RESTful HTTP APIs for synchronous request-response communication and Apache 
 Use gRPC for synchronous request-response communication and Apache Kafka for asynchronous event-driven communication.
 
 **Pros** ✅:
+
 - **Performance**: gRPC provides lower latency and higher throughput than REST
 - **Type Safety**: Protocol Buffers provide strong typing and schema validation
 - **Efficient**: Binary serialization reduces payload size
@@ -154,6 +166,7 @@ Use gRPC for synchronous request-response communication and Apache Kafka for asy
 - **Event-Driven**: Kafka enables event-driven architecture
 
 **Cons** ❌:
+
 - **Learning Curve**: Team needs to learn gRPC and Protocol Buffers
 - **Debugging**: Binary protocol harder to debug than JSON
 - **Browser Support**: Limited browser support (requires gRPC-Web)
@@ -163,6 +176,7 @@ Use gRPC for synchronous request-response communication and Apache Kafka for asy
 - **Complexity**: More complex than REST for simple use cases
 
 **Cost**:
+
 - **Implementation Cost**: 6 person-weeks (migrate to gRPC, train team)
 - **Infrastructure Cost**: $500/month (Kafka MSK)
 - **Maintenance Cost**: 1.5 person-days/month
@@ -182,6 +196,7 @@ Use gRPC for synchronous request-response communication and Apache Kafka for asy
 Use Apache Kafka for all inter-service communication, including both synchronous and asynchronous patterns.
 
 **Pros** ✅:
+
 - **Single Protocol**: Unified communication protocol
 - **Event-Driven**: True event-driven architecture
 - **Decoupling**: Maximum decoupling between services
@@ -190,6 +205,7 @@ Use Apache Kafka for all inter-service communication, including both synchronous
 - **Audit Trail**: Complete event history for debugging
 
 **Cons** ❌:
+
 - **Latency**: Higher latency for request-response patterns
 - **Complexity**: Request-response over Kafka is complex
 - **Correlation**: Need to correlate requests and responses
@@ -199,6 +215,7 @@ Use Apache Kafka for all inter-service communication, including both synchronous
 - **Learning Curve**: Team needs deep Kafka expertise
 
 **Cost**:
+
 - **Implementation Cost**: 8 person-weeks (implement request-response over Kafka)
 - **Infrastructure Cost**: $500/month (Kafka MSK)
 - **Maintenance Cost**: 2 person-days/month
@@ -238,6 +255,7 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 **Communication Pattern Guidelines**:
 
 **Use REST (Synchronous) When**:
+
 - Immediate response required (query operations)
 - Simple request-response pattern
 - External API calls (third-party integrations)
@@ -246,6 +264,7 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 - Examples: Get customer profile, check product availability, validate coupon
 
 **Use Kafka (Asynchronous) When**:
+
 - Event notification (something happened)
 - Long-running processes (order fulfillment)
 - Cross-context workflows (saga pattern)
@@ -269,6 +288,7 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 **Selected Impact Radius**: System
 
 **Impact Description**:
+
 - **System**: Communication patterns affect all services
   - All services implement REST endpoints for synchronous operations
   - All services publish/consume Kafka events for asynchronous operations
@@ -296,6 +316,7 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 **Overall Risk Level**: Low
 
 **Risk Mitigation Plan**:
+
 - Provide clear communication pattern guidelines
 - Create code templates for REST clients and Kafka producers/consumers
 - Implement distributed tracing across REST and Kafka
@@ -307,11 +328,13 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Phase 1: Communication Pattern Guidelines (Timeline: Week 1)
 
 **Objectives**:
+
 - Define when to use REST vs Kafka
 - Create communication pattern guidelines
 - Document best practices
 
 **Tasks**:
+
 - [ ] Document REST usage guidelines (synchronous operations)
 - [ ] Document Kafka usage guidelines (asynchronous operations)
 - [ ] Create decision tree for protocol selection
@@ -321,22 +344,26 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 - [ ] Create code examples for common patterns
 
 **Deliverables**:
+
 - Communication pattern guidelines document
 - Protocol selection decision tree
 - Code examples and templates
 
 **Success Criteria**:
+
 - Clear guidelines for when to use each protocol
 - Team understands protocol selection criteria
 
 ### Phase 2: REST Client Implementation (Timeline: Week 1-2)
 
 **Objectives**:
+
 - Implement REST clients for service-to-service calls
 - Configure timeouts and retries
 - Integrate with observability
 
 **Tasks**:
+
 - [ ] Create RestTemplate/WebClient configuration
 - [ ] Configure connection pooling and timeouts
 - [ ] Implement circuit breaker for REST calls (Resilience4j)
@@ -346,22 +373,26 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 - [ ] Document REST client usage
 
 **Deliverables**:
+
 - Configured REST clients with resilience patterns
 - Code templates for REST communication
 - Documentation
 
 **Success Criteria**:
+
 - REST clients working with circuit breaker and retries
 - Distributed tracing working across services
 
 ### Phase 3: Kafka Producer/Consumer Implementation (Timeline: Week 2-3)
 
 **Objectives**:
+
 - Implement Kafka producers for event publishing
 - Implement Kafka consumers for event handling
 - Ensure reliable message delivery
 
 **Tasks**:
+
 - [ ] Configure Kafka producers with idempotency
 - [ ] Configure Kafka consumers with error handling
 - [ ] Implement dead letter queue for failed messages
@@ -371,11 +402,13 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 - [ ] Document Kafka usage patterns
 
 **Deliverables**:
+
 - Configured Kafka producers and consumers
 - Dead letter queue implementation
 - Code templates and documentation
 
 **Success Criteria**:
+
 - Kafka messages delivered reliably
 - Failed messages routed to dead letter queue
 - Distributed tracing working for Kafka events
@@ -383,11 +416,13 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Phase 4: Testing and Validation (Timeline: Week 3-4)
 
 **Objectives**:
+
 - Test synchronous and asynchronous flows
 - Validate performance and reliability
 - Create testing guidelines
 
 **Tasks**:
+
 - [ ] Create integration tests for REST communication
 - [ ] Create integration tests for Kafka communication
 - [ ] Test circuit breaker and retry behavior
@@ -398,11 +433,13 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 - [ ] Document troubleshooting procedures
 
 **Deliverables**:
+
 - Comprehensive integration tests
 - Load testing results
 - Testing guidelines
 
 **Success Criteria**:
+
 - All tests passing
 - Performance targets met (REST < 100ms, Kafka throughput > 10,000 msg/s)
 - Distributed tracing working end-to-end
@@ -410,12 +447,14 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical performance degradation (> 50% latency increase)
 - Message loss or data inconsistency
 - Service communication failures
 - Team unable to implement patterns correctly
 
 **Rollback Steps**:
+
 1. **Immediate Action**: Revert to previous communication patterns
 2. **Service Rollback**: Deploy previous service versions
 3. **Configuration Rollback**: Restore previous REST/Kafka configurations
@@ -441,17 +480,20 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Monitoring Plan
 
 **Dashboards**:
+
 - **REST Communication Dashboard**: Latency, success rate, circuit breaker status
 - **Kafka Communication Dashboard**: Throughput, consumer lag, message delivery
 - **Service Communication Map**: Visualize service dependencies and communication patterns
 
 **Alerts**:
+
 - **Critical**: REST success rate < 95% (PagerDuty)
 - **Critical**: Kafka consumer lag > 10,000 messages (PagerDuty)
 - **Warning**: REST latency > 200ms p95 (Slack)
 - **Warning**: Kafka message delivery failure (Slack)
 
 **Review Schedule**:
+
 - **Real-time**: Automated monitoring and alerting
 - **Daily**: Review communication metrics and errors
 - **Weekly**: Analyze communication patterns and optimize
@@ -486,11 +528,13 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Technical Debt
 
 **Debt Introduced**:
+
 - **Protocol Expertise**: Team needs expertise in both REST and Kafka
 - **Monitoring Complexity**: Need to monitor two different protocols
 - **Testing Complexity**: Need to test both synchronous and asynchronous flows
 
 **Debt Repayment Plan**:
+
 - **Training**: Regular training on REST and Kafka best practices
 - **Documentation**: Maintain comprehensive communication pattern guidelines
 - **Automation**: Automate testing for both protocols
@@ -499,6 +543,7 @@ We chose a hybrid approach using REST for synchronous communication and Kafka fo
 ### Long-term Implications
 
 This decision establishes REST + Kafka as our inter-service communication strategy for the next 3-5 years. As the platform evolves:
+
 - Consider gRPC for specific high-performance use cases
 - Evaluate GraphQL for flexible client queries
 - Monitor communication patterns and optimize
@@ -510,6 +555,7 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 ## Related Decisions
 
 ### Related ADRs
+
 - [ADR-002: Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Service boundaries
 - [ADR-003: Domain Events](003-use-domain-events-for-cross-context-communication.md) - Event-driven communication
 - [ADR-005: Apache Kafka](005-use-apache-kafka-for-event-streaming.md) - Message broker
@@ -518,11 +564,13 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 - [ADR-030: API Gateway Pattern](030-api-gateway-pattern.md) - External API access
 
 ### Affected Viewpoints
+
 - [Functional Viewpoint](../../viewpoints/functional/README.md) - Service interactions
 - [Concurrency Viewpoint](../../viewpoints/concurrency/README.md) - Synchronous vs asynchronous
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Service deployment
 
 ### Affected Perspectives
+
 - [Performance Perspective](../../perspectives/performance/README.md) - Communication latency
 - [Availability Perspective](../../perspectives/availability/README.md) - Fault tolerance
 - [Evolution Perspective](../../perspectives/evolution/README.md) - Protocol evolution
@@ -530,6 +578,7 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 ## Notes
 
 ### Assumptions
+
 - Team has REST and Kafka expertise
 - Kong Gateway supports REST routing
 - Kafka cluster available and reliable
@@ -537,6 +586,7 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 - Distributed tracing infrastructure available
 
 ### Constraints
+
 - Must support Spring Boot ecosystem
 - Must integrate with Kong API Gateway
 - Must work with existing Kafka infrastructure
@@ -544,12 +594,14 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 - Must ensure message delivery for asynchronous calls
 
 ### Open Questions
+
 - Should we introduce gRPC for specific high-performance use cases?
 - What is optimal timeout for REST calls between services?
 - How to handle Kafka schema evolution?
 - Should we use Kafka Streams for complex event processing?
 
 ### Follow-up Actions
+
 - [ ] Create communication pattern guidelines - Architecture Team
 - [ ] Implement REST client templates - Backend Team
 - [ ] Implement Kafka producer/consumer templates - Backend Team
@@ -558,6 +610,7 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 - [ ] Conduct training on communication patterns - Tech Lead
 
 ### References
+
 - [Microservices Communication Patterns](https://microservices.io/patterns/communication-style/messaging.html)
 - [REST vs gRPC Comparison](https://cloud.google.com/blog/products/api-management/understanding-grpc-openapi-and-rest)
 - [Kafka for Microservices](https://www.confluent.io/blog/apache-kafka-for-service-architectures/)

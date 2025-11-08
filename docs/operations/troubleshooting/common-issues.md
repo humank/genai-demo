@@ -11,12 +11,14 @@ This document provides quick solutions for common issues encountered in the Ente
 **Symptoms**: Pods in CrashLoopBackOff, application logs show startup errors
 
 **Quick Checks**:
+
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE}
 kubectl describe pod ${POD_NAME} -n ${NAMESPACE}
 ```
 
 **Common Causes**:
+
 1. **Database connection failure**
    - Check database endpoint and credentials
    - Verify security group rules
@@ -37,18 +39,21 @@ kubectl describe pod ${POD_NAME} -n ${NAMESPACE}
 **Symptoms**: Response time > 2s, timeout errors
 
 **Quick Checks**:
+
 ```bash
 curl http://localhost:8080/actuator/metrics/http.server.requests
 kubectl top pods -n ${NAMESPACE}
 ```
 
 **Common Causes**:
+
 1. High CPU/Memory usage
 2. Slow database queries
 3. Cache misses
 4. External API delays
 
-**Solution**: 
+**Solution**:
+
 - Quick fix: See [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
 - Detailed investigation: See [Application Debugging Guide](application-debugging.md#performance-issues)
 
@@ -57,18 +62,21 @@ kubectl top pods -n ${NAMESPACE}
 **Symptoms**: Memory usage continuously increasing, OOMKilled pods
 
 **Quick Checks**:
+
 ```bash
 kubectl top pod ${POD_NAME} -n ${NAMESPACE}
 jmap -histo:live 1
 ```
 
 **Common Causes**:
+
 1. Unclosed database connections
 2. Unbounded caches
 3. Static collections growing
 4. ThreadLocal not cleaned
 
-**Solution**: 
+**Solution**:
+
 - Quick fix: See [High Memory Usage Runbook](../runbooks/high-memory-usage.md)
 - Detailed investigation: See [Application Debugging Guide](application-debugging.md#memory-issues)
 
@@ -79,6 +87,7 @@ jmap -histo:live 1
 **Symptoms**: "Too many connections" errors
 
 **Quick Fix**:
+
 ```bash
 # Kill idle connections
 psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < NOW() - INTERVAL '10 minutes';"
@@ -94,6 +103,7 @@ kubectl set env deployment/ecommerce-backend HIKARI_MAX_POOL_SIZE=30
 **Symptoms**: Query time > 1s, database CPU high
 
 **Quick Diagnosis**:
+
 ```sql
 SELECT query, calls, mean_time, max_time
 FROM pg_stat_statements
@@ -101,6 +111,7 @@ ORDER BY mean_time DESC LIMIT 10;
 ```
 
 **Quick Fix**:
+
 - Add missing indexes
 - Optimize query
 - Use query caching
@@ -114,12 +125,14 @@ ORDER BY mean_time DESC LIMIT 10;
 **Symptoms**: Rollout not progressing, pods pending
 
 **Quick Checks**:
+
 ```bash
 kubectl rollout status deployment/ecommerce-backend -n ${NAMESPACE}
 kubectl get events -n ${NAMESPACE} --sort-by='.lastTimestamp'
 ```
 
 **Quick Fix**:
+
 ```bash
 # Rollback if needed
 kubectl rollout undo deployment/ecommerce-backend -n ${NAMESPACE}
@@ -132,6 +145,7 @@ kubectl rollout undo deployment/ecommerce-backend -n ${NAMESPACE}
 **Symptoms**: ImagePullBackOff, ErrImagePull
 
 **Quick Fix**:
+
 ```bash
 # Update image pull secret
 TOKEN=$(aws ecr get-login-password)
@@ -149,6 +163,7 @@ kubectl create secret docker-registry ecr-secret \
 **Symptoms**: Connection refused, timeout errors
 
 **Quick Checks**:
+
 ```bash
 kubectl get svc -n ${NAMESPACE}
 kubectl get endpoints -n ${NAMESPACE}
@@ -156,6 +171,7 @@ kubectl describe svc ecommerce-backend -n ${NAMESPACE}
 ```
 
 **Common Causes**:
+
 1. Service selector mismatch
 2. Pod not ready
 3. Network policy blocking
@@ -168,6 +184,7 @@ kubectl describe svc ecommerce-backend -n ${NAMESPACE}
 **Symptoms**: "Name or service not known" errors
 
 **Quick Fix**:
+
 ```bash
 # Test DNS resolution
 kubectl exec -it ${POD_NAME} -- nslookup kubernetes.default
@@ -176,7 +193,8 @@ kubectl exec -it ${POD_NAME} -- nslookup kubernetes.default
 kubectl rollout restart deployment/coredns -n kube-system
 ```
 
-**Solution**: 
+**Solution**:
+
 - Quick fix: Restart CoreDNS
 - Detailed investigation: See [Network and Connectivity Troubleshooting Guide](network-connectivity.md#dns-resolution-troubleshooting)
 
@@ -187,11 +205,13 @@ kubectl rollout restart deployment/coredns -n kube-system
 **Symptoms**: Cache hit rate < 70%, slow responses
 
 **Quick Diagnosis**:
+
 ```bash
 redis-cli INFO stats | grep keyspace
 ```
 
 **Quick Fix**:
+
 - Increase cache TTL
 - Warm cache with frequently accessed data
 - Review cache key strategy
@@ -201,12 +221,14 @@ redis-cli INFO stats | grep keyspace
 **Symptoms**: "Connection refused" to Redis
 
 **Quick Checks**:
+
 ```bash
 redis-cli ping
 kubectl get pods -n ${NAMESPACE} -l app=redis
 ```
 
 **Quick Fix**:
+
 ```bash
 # Restart Redis
 kubectl rollout restart statefulset/redis -n ${NAMESPACE}
@@ -219,6 +241,7 @@ kubectl rollout restart statefulset/redis -n ${NAMESPACE}
 **Symptoms**: Grafana dashboards empty, no metrics
 
 **Quick Checks**:
+
 ```bash
 # Check metrics endpoint
 curl http://localhost:8080/actuator/metrics
@@ -228,6 +251,7 @@ curl http://prometheus:9090/api/v1/targets
 ```
 
 **Quick Fix**:
+
 - Verify Prometheus scrape config
 - Check service monitor
 - Restart Prometheus
@@ -237,6 +261,7 @@ curl http://prometheus:9090/api/v1/targets
 **Symptoms**: No alerts despite issues
 
 **Quick Checks**:
+
 ```bash
 # Check alert rules
 curl http://prometheus:9090/api/v1/rules
@@ -248,6 +273,7 @@ curl http://alertmanager:9093/api/v1/alerts
 ## Quick Reference Commands
 
 ### Health Checks
+
 ```bash
 # Application health
 curl http://localhost:8080/actuator/health
@@ -263,6 +289,7 @@ kafka-broker-api-versions --bootstrap-server ${KAFKA_BOOTSTRAP}
 ```
 
 ### Resource Checks
+
 ```bash
 # Pod resources
 kubectl top pods -n ${NAMESPACE}
@@ -275,6 +302,7 @@ psql -c "SELECT count(*) FROM pg_stat_activity;"
 ```
 
 ### Log Checks
+
 ```bash
 # Application logs
 kubectl logs -f deployment/ecommerce-backend -n ${NAMESPACE}
@@ -289,19 +317,22 @@ kubectl logs -l app=ecommerce-backend -n ${NAMESPACE} --tail=100
 ## Getting Help
 
 ### Internal Resources
+
 - **Runbooks**: `/docs/operations/runbooks/`
 - **Monitoring**: Grafana dashboards
 - **Logs**: CloudWatch Logs, Kibana
 
 ### Escalation
+
 - **L1 Support**: DevOps team
 - **L2 Support**: Backend engineering team
 - **On-Call**: Check PagerDuty schedule
 
 ### External Resources
+
 - **AWS Support**: Premium support available
-- **Kubernetes Docs**: https://kubernetes.io/docs/
-- **Spring Boot Docs**: https://spring.io/projects/spring-boot
+- **Kubernetes Docs**: <https://kubernetes.io/docs/>
+- **Spring Boot Docs**: <https://spring.io/projects/spring-boot>
 
 ## Related Documentation
 

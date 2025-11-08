@@ -2,7 +2,7 @@
 
 ## 🚀 Quick Start
 
-### I need to...
+### I need to
 
 - **Write code**: Start with [Development Standards](development-standards.md)
 - **Review code**: Use [Code Review Standards](code-review-standards.md)

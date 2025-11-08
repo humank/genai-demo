@@ -21,6 +21,7 @@ Process a payment for an order.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "orderId": "order-789",
@@ -42,6 +43,7 @@ Process a payment for an order.
 ```
 
 **Validation Rules**:
+
 - `orderId`: Required, must exist
 - `amount`: Required, must match order total
 - `currency`: Required, must match order currency
@@ -49,6 +51,7 @@ Process a payment for an order.
 - `paymentDetails.cardToken`: Required for card payments (never send raw card numbers)
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -74,6 +77,7 @@ Process a payment for an order.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Missing or invalid token
 - `402 Payment Required`: Insufficient funds
@@ -81,6 +85,7 @@ Process a payment for an order.
 - `422 Unprocessable Entity`: Payment declined
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/payments \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -110,9 +115,11 @@ Retrieve payment details.
 **Authorization**: User can access own payments, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Payment ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -143,11 +150,13 @@ Retrieve payment details.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Payment not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/payments/pay-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -163,11 +172,13 @@ Retrieve a paginated list of payments.
 
 **Authentication**: Required
 
-**Authorization**: 
+**Authorization**:
+
 - Regular users see only their own payments
 - ADMIN role can see all payments
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `sort`: Sort field (default: `createdAt,desc`)
@@ -178,6 +189,7 @@ Retrieve a paginated list of payments.
 - `endDate`: Filter payments before this date
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -204,6 +216,7 @@ Retrieve a paginated list of payments.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/payments?status=COMPLETED&page=0&size=20" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -222,9 +235,11 @@ Process a full or partial refund.
 **Authorization**: ADMIN or SUPPORT role required
 
 **Path Parameters**:
+
 - `id`: Payment ID
 
 **Request Body**:
+
 ```json
 {
   "amount": 1995.00,
@@ -234,16 +249,19 @@ Process a full or partial refund.
 ```
 
 **Refund Types**:
+
 - `FULL`: Refund entire payment amount
 - `PARTIAL`: Refund specified amount
 
 **Validation Rules**:
+
 - `amount`: Required for partial refunds, must be <= original amount
 - `reason`: Required, 10-500 characters
 - Payment must be in COMPLETED status
 - Cannot refund more than original amount
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -262,6 +280,7 @@ Process a full or partial refund.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid refund amount
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
@@ -269,6 +288,7 @@ Process a full or partial refund.
 - `409 Conflict`: Payment not refundable
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/payments/pay-123/refund \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -293,9 +313,11 @@ Check the status of a refund.
 **Authorization**: User can access own refunds, or ADMIN role required
 
 **Path Parameters**:
+
 - `refundId`: Refund ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -315,12 +337,14 @@ Check the status of a refund.
 ```
 
 **Refund Status**:
+
 - `PENDING`: Refund initiated
 - `PROCESSING`: Being processed by payment gateway
 - `COMPLETED`: Refund completed
 - `FAILED`: Refund failed
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/payments/refunds/refund-456 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -337,6 +361,7 @@ Save a payment method for future use.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "type": "CREDIT_CARD",
@@ -353,6 +378,7 @@ Save a payment method for future use.
 ```
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -371,6 +397,7 @@ Save a payment method for future use.
 **Security Note**: Card details are tokenized and never stored in plain text.
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/payments/methods \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -394,6 +421,7 @@ Retrieve saved payment methods.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -422,6 +450,7 @@ Retrieve saved payment methods.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/payments/methods \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -438,16 +467,19 @@ Remove a saved payment method.
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `id`: Payment method ID
 
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `404 Not Found`: Payment method not found
 - `409 Conflict`: Cannot delete default payment method (set another as default first)
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/payments/methods/pm-789 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -466,16 +498,20 @@ Download payment receipt.
 **Authorization**: User can access own receipts, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Payment ID
 
 **Query Parameters**:
+
 - `format`: Receipt format (PDF, HTML, default: PDF)
 
 **Success Response** (200 OK):
+
 - Content-Type: application/pdf or text/html
 - Returns receipt document
 
 **curl Example**:
+
 ```bash
 # Download PDF receipt
 curl -X GET "https://api.ecommerce.com/api/v1/payments/pay-123/receipt?format=PDF" \
@@ -498,11 +534,13 @@ Verify payment status (for async payment methods).
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `id`: Payment ID
 
 **Use Case**: For payment methods that require async verification (bank transfers, etc.)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -515,6 +553,7 @@ Verify payment status (for async payment methods).
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/payments/pay-123/verify \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -618,6 +657,7 @@ sequenceDiagram
 ### Card Tokenization
 
 **Process**:
+
 1. Customer enters card details on secure form
 2. Frontend sends card data directly to payment gateway
 3. Gateway returns a token
@@ -625,6 +665,7 @@ sequenceDiagram
 5. API processes payment using token
 
 **Example (Frontend)**:
+
 ```javascript
 // Use payment gateway SDK to tokenize card
 const token = await paymentGateway.createToken({

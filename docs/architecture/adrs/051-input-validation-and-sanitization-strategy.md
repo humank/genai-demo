@@ -40,17 +40,20 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 ### Business Context
 
 **Business Drivers**:
+
 - **Data Integrity**: Ensure data quality and consistency
 - **Security Compliance**: PCI-DSS, GDPR requirements
 - **User Trust**: Protect customer data from breaches
 - **Regulatory Requirements**: Must prevent data manipulation
 
 **Taiwan-Specific Context**:
+
 - **High Attack Volume**: Frequent injection attack attempts
 - **E-Commerce Targeting**: Payment and customer data are prime targets
 - **Regulatory Scrutiny**: Taiwan Personal Data Protection Act compliance
 
 **Constraints**:
+
 - Must not impact user experience (< 10ms validation overhead)
 - Must support internationalization (Unicode, multi-language)
 - Must integrate with existing Spring Boot application
@@ -59,6 +62,7 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 with Spring Validation
 - Basic @Valid annotation usage
 - No comprehensive sanitization
@@ -66,6 +70,7 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 - Limited input validation
 
 **Attack Vectors**:
+
 - **Login Form**: SQL injection, XSS in username/password
 - **Search**: SQL injection, XSS in search terms
 - **Product Reviews**: XSS in review content
@@ -91,12 +96,14 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 **Description**: Defense-in-depth with validation at every layer
 
 **Validation Layers**:
+
 1. **Frontend**: UX validation (immediate feedback)
 2. **API Gateway**: Schema validation (early rejection)
 3. **Application**: Business logic validation (comprehensive)
 4. **Database**: Final defense (constraints, triggers)
 
 **Pros**:
+
 - ✅ **Defense in Depth**: Multiple layers of protection
 - ✅ **Early Rejection**: Invalid requests rejected at gateway
 - ✅ **User Experience**: Immediate frontend feedback
@@ -105,6 +112,7 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 - ✅ **Maintainability**: Clear separation of concerns
 
 **Cons**:
+
 - ⚠️ **Complexity**: Multiple validation layers to maintain
 - ⚠️ **Duplication**: Some validation logic duplicated across layers
 
@@ -117,10 +125,12 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 **Description**: Validation only at application layer
 
 **Pros**:
+
 - ✅ **Simple**: Single validation layer
 - ✅ **Low Maintenance**: One place to update
 
 **Cons**:
+
 - ❌ **No Early Rejection**: Invalid requests reach application
 - ❌ **Performance**: Wasted processing on invalid requests
 - ❌ **Security**: Single point of failure
@@ -134,10 +144,12 @@ The platform requires defense-in-depth validation strategy with multiple layers:
 **Description**: Use external validation service
 
 **Pros**:
+
 - ✅ **Managed Service**: Less operational overhead
 - ✅ **Advanced Features**: ML-based validation
 
 **Cons**:
+
 - ❌ **High Cost**: $500-2,000/month
 - ❌ **Latency**: Additional network hop
 - ❌ **Vendor Lock-In**: Difficult to migrate
@@ -165,36 +177,42 @@ Multi-layer validation was selected for the following reasons:
 **Validation Strategy by Layer**:
 
 **Layer 1 - Frontend (UX Validation)**:
+
 - **Purpose**: Immediate user feedback, reduce server load
 - **Validation**: Format, length, required fields
 - **Technology**: React Hook Form, Angular Forms
 - **Example**: Email format, password strength, required fields
 
 **Layer 2 - API Gateway (Schema Validation)**:
+
 - **Purpose**: Early rejection of malformed requests
 - **Validation**: JSON schema, request structure
 - **Technology**: OpenAPI 3.0 schema validation
 - **Example**: Required fields, data types, enum values
 
 **Layer 3 - Application (Business Logic Validation)**:
+
 - **Purpose**: Comprehensive validation and sanitization
 - **Validation**: Business rules, cross-field validation, sanitization
 - **Technology**: Spring Validation, Hibernate Validator, OWASP Java Encoder
 - **Example**: Business rules, SQL injection prevention, XSS prevention
 
 **Layer 4 - Database (Final Defense)**:
+
 - **Purpose**: Data integrity constraints
 - **Validation**: Database constraints, triggers
 - **Technology**: PostgreSQL constraints, check constraints
 - **Example**: Unique constraints, foreign keys, check constraints
 
 **SQL Injection Prevention**:
+
 - **Mandatory**: Use parameterized queries (JPA, JDBC PreparedStatement)
 - **Prohibited**: String concatenation for SQL queries
 - **ORM Usage**: Prefer JPA/Hibernate over native SQL
 - **Code Review**: Automated checks for SQL injection vulnerabilities
 
 **XSS Prevention**:
+
 - **Output Encoding**: Encode all user-generated content
 - **HTML Sanitization**: Use OWASP Java HTML Sanitizer
 - **CSP Headers**: Content Security Policy headers
@@ -202,6 +220,7 @@ Multi-layer validation was selected for the following reasons:
 - **Secure Cookies**: HTTPS-only cookies
 
 **CSRF Prevention**:
+
 - **CSRF Tokens**: Required for all state-changing operations
 - **SameSite Cookies**: SameSite=Strict or Lax
 - **Double-Submit Cookie**: Additional CSRF protection
@@ -256,11 +275,13 @@ Multi-layer validation was selected for the following reasons:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Validation causing service outage
 - False positive rate > 1% (legitimate requests rejected)
 - Performance degradation > 20ms
 
 **Rollback Steps**:
+
 1. Disable specific validation rules causing issues
 2. Revert to previous validation configuration
 3. Investigate and fix issues
@@ -282,6 +303,7 @@ Multi-layer validation was selected for the following reasons:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `validation.errors` (count by field)
 - `validation.sql_injection_attempts` (count)
 - `validation.xss_attempts` (count)
@@ -289,12 +311,14 @@ Multi-layer validation was selected for the following reasons:
 - `validation.latency` (histogram)
 
 **Alerts**:
+
 - **P0 Critical**: SQL injection attempts > 100/min
 - **P1 High**: XSS attempts > 50/min
 - **P2 Medium**: Validation error rate > 10%
 - **P3 Low**: Unusual validation patterns
 
 **Review Schedule**:
+
 - **Real-Time**: 24/7 monitoring dashboard
 - **Daily**: Review validation errors
 - **Weekly**: Analyze attack patterns
@@ -322,11 +346,13 @@ Multi-layer validation was selected for the following reasons:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual validation rule updates (acceptable initially)
 2. Limited internationalization support for error messages
 3. No automated validation testing
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated validation rule generation
 - **Q3 2026**: Enhance internationalization support
 - **Q4 2026**: Implement automated validation testing
@@ -343,6 +369,7 @@ Multi-layer validation was selected for the following reasons:
 ### Validation Examples
 
 **Spring Validation (Application Layer)**:
+
 ```java
 public record CreateCustomerRequest(
     @NotBlank(message = "Name is required")
@@ -364,6 +391,7 @@ public record CreateCustomerRequest(
 ```
 
 **SQL Injection Prevention**:
+
 ```java
 // ✅ GOOD: Parameterized query
 @Query("SELECT c FROM Customer c WHERE c.email = :email AND c.status = :status")
@@ -374,6 +402,7 @@ String query = "SELECT * FROM customers WHERE email = '" + email + "'";
 ```
 
 **XSS Prevention**:
+
 ```java
 @Component
 public class XSSProtectionService {
@@ -396,6 +425,7 @@ public class XSSProtectionService {
 ```
 
 **CSRF Protection**:
+
 ```java
 @Configuration
 @EnableWebSecurity
@@ -416,6 +446,7 @@ public class SecurityConfiguration {
 ### Database Constraints
 
 **PostgreSQL Constraints**:
+
 ```sql
 -- Unique constraint
 ALTER TABLE customers ADD CONSTRAINT uk_customer_email UNIQUE (email);
@@ -434,6 +465,7 @@ ALTER TABLE customers ALTER COLUMN email SET NOT NULL;
 ### Security Headers
 
 **Spring Security Headers**:
+
 ```java
 @Configuration
 public class SecurityHeadersConfiguration {
@@ -459,6 +491,7 @@ public class SecurityHeadersConfiguration {
 ### Cost Breakdown
 
 **Monthly Costs**:
+
 - Spring Validation: $0 (included in Spring Boot)
 - OWASP Java HTML Sanitizer: $0 (open source)
 - Database Constraints: $0 (included in PostgreSQL)

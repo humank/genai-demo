@@ -7,6 +7,7 @@
 **Purpose**: Create indexes without blocking writes to the table
 
 **Best Practice - Use CONCURRENTLY**:
+
 ```sql
 -- ✅ GOOD: Create index without blocking writes
 CREATE INDEX CONCURRENTLY idx_orders_customer_id ON orders(customer_id);
@@ -24,6 +25,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ```
 
 **CONCURRENTLY Considerations**:
+
 - Takes longer than regular index creation
 - Requires two table scans instead of one
 - Cannot be run inside a transaction block
@@ -31,6 +33,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 - Requires more disk space during creation
 
 **Handle CONCURRENTLY Failures**:
+
 ```sql
 -- Check for invalid indexes after failed CONCURRENTLY operation
 SELECT 
@@ -51,6 +54,7 @@ CREATE INDEX CONCURRENTLY idx_orders_customer_id ON orders(customer_id);
 #### Index Creation Monitoring
 
 **Monitor Index Creation Progress**:
+
 ```sql
 -- Check active index creation operations
 SELECT 
@@ -75,6 +79,7 @@ JOIN pg_stat_activity a ON p.pid = a.pid;
 ```
 
 **Estimate Index Creation Time**:
+
 ```sql
 -- Estimate time based on table size and system performance
 SELECT 
@@ -92,6 +97,7 @@ WHERE schemaname || '.' || tablename = 'public.orders';
 #### Identify Missing Indexes
 
 **Analyze Sequential Scans on Large Tables**:
+
 ```sql
 -- Tables with high sequential scan activity (potential missing indexes)
 SELECT 
@@ -112,6 +118,7 @@ LIMIT 20;
 ```
 
 **Analyze Query Patterns for Missing Indexes**:
+
 ```sql
 -- Queries that might benefit from indexes (using pg_stat_statements)
 SELECT 
@@ -130,6 +137,7 @@ LIMIT 20;
 ```
 
 **Suggest Indexes Based on WHERE Clauses**:
+
 ```sql
 -- Analyze slow queries for potential index candidates
 -- This requires manual analysis of EXPLAIN output
@@ -148,6 +156,7 @@ WHERE customer_id = 'CUST-001'
 #### Identify Unused Indexes
 
 **Find Indexes Never Used**:
+
 ```sql
 -- Indexes with zero scans (candidates for removal)
 SELECT 
@@ -167,6 +176,7 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 ```
 
 **Find Rarely Used Indexes**:
+
 ```sql
 -- Indexes with very low usage (< 100 scans)
 SELECT 
@@ -185,6 +195,7 @@ LIMIT 20;
 ```
 
 **Analyze Index Usage Over Time**:
+
 ```bash
 #!/bin/bash
 # Script: track-index-usage.sh
@@ -219,6 +230,7 @@ echo "Index usage snapshot saved: $OUTPUT_DIR/index_usage_$TIMESTAMP.csv"
 #### Identify Duplicate and Redundant Indexes
 
 **Find Exact Duplicate Indexes**:
+
 ```sql
 -- Indexes with identical definitions
 SELECT 
@@ -243,6 +255,7 @@ ORDER BY sum(pg_relation_size(idx)) DESC;
 ```
 
 **Find Redundant Indexes (Left-Prefix)**:
+
 ```sql
 -- Indexes where one is a left-prefix of another
 -- Example: idx(a,b,c) makes idx(a) and idx(a,b) redundant
@@ -266,12 +279,14 @@ ORDER BY pg_relation_size(i1.indexrelid) DESC;
 #### REINDEX Operations
 
 **When to REINDEX**:
+
 - Index bloat detected (>30% bloat ratio)
 - After bulk data modifications
 - Corrupted index (rare)
 - Performance degradation over time
 
 **REINDEX Methods**:
+
 ```sql
 -- Method 1: REINDEX CONCURRENTLY (PostgreSQL 12+, no downtime)
 REINDEX INDEX CONCURRENTLY idx_orders_customer_id;
@@ -289,6 +304,7 @@ REINDEX INDEX idx_orders_customer_id;
 ```
 
 **Detect Index Bloat**:
+
 ```sql
 -- Estimate index bloat
 SELECT 
@@ -325,6 +341,7 @@ LIMIT 20;
 ```
 
 **Scheduled REINDEX Script**:
+
 ```bash
 #!/bin/bash
 # Script: scheduled-reindex.sh
@@ -366,6 +383,7 @@ echo "Scheduled reindex completed at $(date)"
 #### Index Size Monitoring
 
 **Monitor Index Growth**:
+
 ```sql
 -- Track index sizes over time
 SELECT 
@@ -382,6 +400,7 @@ LIMIT 20;
 ```
 
 **Index Size Alerts**:
+
 ```sql
 -- Identify indexes consuming excessive space
 SELECT 
@@ -401,12 +420,14 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 #### When to Use Partial Indexes
 
 **Use Cases**:
+
 - Filtering on status columns (e.g., active records only)
 - Date range queries (e.g., recent orders only)
 - Boolean flags (e.g., is_deleted = false)
 - Sparse data (e.g., non-null values only)
 
 **Partial Index Examples**:
+
 ```sql
 -- Index only active customers
 CREATE INDEX CONCURRENTLY idx_active_customers_email 
@@ -435,12 +456,14 @@ WHERE total_amount > 1000;
 ```
 
 **Partial Index Benefits**:
+
 - Smaller index size (faster scans, less storage)
 - Faster index maintenance (fewer entries to update)
 - Better cache utilization
 - Reduced write overhead
 
 **Verify Partial Index Usage**:
+
 ```sql
 -- Check if query uses partial index
 EXPLAIN (ANALYZE, BUFFERS)
@@ -458,6 +481,7 @@ WHERE status = 'ACTIVE'
 **Purpose**: Include additional columns in index to satisfy queries without table access (Index-Only Scan)
 
 **Covering Index Syntax**:
+
 ```sql
 -- Include additional columns in index
 CREATE INDEX CONCURRENTLY idx_orders_customer_covering 
@@ -471,6 +495,7 @@ WHERE customer_id = 'CUST-001';
 ```
 
 **Covering Index Examples**:
+
 ```sql
 -- Cover common query patterns
 CREATE INDEX CONCURRENTLY idx_products_category_covering 
@@ -489,6 +514,7 @@ INCLUDE (total_amount);
 ```
 
 **Verify Index-Only Scan**:
+
 ```sql
 -- Check if query uses Index-Only Scan
 EXPLAIN (ANALYZE, BUFFERS)
@@ -501,10 +527,12 @@ WHERE customer_id = 'CUST-001';
 ```
 
 **Covering Index Trade-offs**:
+
 - **Pros**: Faster queries (no table access), better cache utilization
 - **Cons**: Larger index size, slower writes, more storage
 
 **When to Use Covering Indexes**:
+
 - Frequently executed queries with specific column access patterns
 - Queries that would otherwise require table lookups
 - Read-heavy workloads where query performance is critical
@@ -515,6 +543,7 @@ WHERE customer_id = 'CUST-001';
 #### Maintenance Window Planning
 
 **Determine Optimal Maintenance Windows**:
+
 ```sql
 -- Analyze query patterns by hour
 SELECT 
@@ -540,6 +569,7 @@ LIMIT 20;
 ```
 
 **Scheduled Index Maintenance Script**:
+
 ```bash
 #!/bin/bash
 # Script: weekly-index-maintenance.sh
@@ -615,6 +645,7 @@ echo "=== Index Maintenance Completed: $(date) ===" | tee -a $LOG_FILE
 #### Measure Index Impact on Writes
 
 **Analyze Write Performance**:
+
 ```sql
 -- Check index write overhead
 SELECT 
@@ -630,6 +661,7 @@ ORDER BY count(*) DESC;
 ```
 
 **Benchmark Index Impact**:
+
 ```sql
 -- Test write performance with and without indexes
 BEGIN;
@@ -650,6 +682,7 @@ ROLLBACK;
 #### Analyze Index Scan Performance
 
 **Compare Index Scan vs Sequential Scan**:
+
 ```sql
 -- Force sequential scan
 SET enable_indexscan = off;
@@ -667,6 +700,7 @@ SELECT * FROM orders WHERE customer_id = 'CUST-001';
 ```
 
 **Index Selectivity Analysis**:
+
 ```sql
 -- Check index selectivity (how well it filters data)
 SELECT 

@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance"]
 The Enterprise E-Commerce Platform requires a reliable way to handle distributed transactions across multiple bounded contexts:
 
 **Business Requirements**:
+
 - **Data Consistency**: Maintain consistency across microservices
 - **Reliability**: Ensure business processes complete successfully
 - **Compensation**: Handle failures gracefully with rollback
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires a reliable way to handle distributed
 - **Scalability**: Support high transaction volumes
 
 **Technical Challenges**:
+
 - 13 bounded contexts with separate databases
 - No distributed transactions (2PC not suitable)
 - Complex business workflows spanning multiple services
@@ -39,6 +41,7 @@ The Enterprise E-Commerce Platform requires a reliable way to handle distributed
 - Monitoring long-running processes
 
 **Example Workflows**:
+
 1. **Order Submission**: Order → Inventory → Payment → Shipping
 2. **Order Cancellation**: Order → Payment Refund → Inventory Release
 3. **Customer Registration**: Customer → Email → Loyalty Program
@@ -46,6 +49,7 @@ The Enterprise E-Commerce Platform requires a reliable way to handle distributed
 ### Business Context
 
 **Business Drivers**:
+
 - Ensure order processing reliability
 - Handle payment failures gracefully
 - Maintain inventory accuracy
@@ -53,6 +57,7 @@ The Enterprise E-Commerce Platform requires a reliable way to handle distributed
 - Enable business process monitoring
 
 **Constraints**:
+
 - Budget: $60,000 for implementation
 - Timeline: 2 months
 - Team: 3 senior developers
@@ -63,12 +68,14 @@ The Enterprise E-Commerce Platform requires a reliable way to handle distributed
 ### Technical Context
 
 **Current Approach**:
+
 - Domain events for integration
 - No coordination mechanism
 - Manual compensation logic
 - Difficult to track workflow state
 
 **Target Approach**:
+
 - Saga pattern for orchestration
 - Automated compensation
 - Workflow state tracking
@@ -451,6 +458,7 @@ public class SagaTimeoutMonitor {
 ```
 
 **Pros**:
+
 - ✅ Decentralized, no single point of failure
 - ✅ Services remain loosely coupled
 - ✅ Natural fit for event-driven architecture
@@ -459,6 +467,7 @@ public class SagaTimeoutMonitor {
 - ✅ Simple to understand
 
 **Cons**:
+
 - ⚠️ Difficult to track overall workflow
 - ⚠️ Complex to debug
 - ⚠️ Cyclic dependencies possible
@@ -473,12 +482,14 @@ public class SagaTimeoutMonitor {
 **Description**: Central orchestrator coordinates saga execution
 
 **Pros**:
+
 - ✅ Centralized workflow logic
 - ✅ Easy to track progress
 - ✅ Simpler debugging
 - ✅ Clear compensation flow
 
 **Cons**:
+
 - ❌ Single point of failure
 - ❌ Tight coupling to orchestrator
 - ❌ More complex infrastructure
@@ -493,10 +504,12 @@ public class SagaTimeoutMonitor {
 **Description**: Distributed transaction protocol
 
 **Pros**:
+
 - ✅ Strong consistency
 - ✅ ACID guarantees
 
 **Cons**:
+
 - ❌ Blocking protocol
 - ❌ Poor performance
 - ❌ Scalability issues
@@ -531,6 +544,7 @@ Choreography-based saga fits naturally with our existing event-driven architectu
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts
 - Event-driven architecture
 - Business workflows
@@ -554,6 +568,7 @@ Affects:
 ### Phase 1: Framework Setup (Week 1-2)
 
 **Tasks**:
+
 - [ ] Create saga tracking infrastructure
 - [ ] Implement idempotency framework
 - [ ] Set up monitoring dashboards
@@ -561,6 +576,7 @@ Affects:
 - [ ] Document patterns
 
 **Success Criteria**:
+
 - Framework operational
 - Monitoring working
 - Documentation complete
@@ -568,6 +584,7 @@ Affects:
 ### Phase 2: Pilot Saga (Week 3-4)
 
 **Tasks**:
+
 - [ ] Implement Order Submission saga
 - [ ] Add compensation logic
 - [ ] Test failure scenarios
@@ -575,6 +592,7 @@ Affects:
 - [ ] Gather feedback
 
 **Success Criteria**:
+
 - Saga working end-to-end
 - Compensation tested
 - Team comfortable
@@ -582,6 +600,7 @@ Affects:
 ### Phase 3: Additional Sagas (Week 5-6)
 
 **Tasks**:
+
 - [ ] Implement Order Cancellation saga
 - [ ] Implement Customer Registration saga
 - [ ] Add monitoring for all sagas
@@ -589,6 +608,7 @@ Affects:
 - [ ] Train team
 
 **Success Criteria**:
+
 - All critical sagas implemented
 - Monitoring comprehensive
 - Team trained
@@ -596,6 +616,7 @@ Affects:
 ### Phase 4: Production Rollout (Week 7-8)
 
 **Tasks**:
+
 - [ ] Deploy to production
 - [ ] Monitor saga execution
 - [ ] Handle edge cases
@@ -603,6 +624,7 @@ Affects:
 - [ ] Document lessons learned
 
 **Success Criteria**:
+
 - Production stable
 - Sagas executing reliably
 - Team confident
@@ -610,11 +632,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Unacceptable failure rate
 - Performance issues
 - Team cannot maintain
 
 **Rollback Steps**:
+
 1. Disable saga pattern
 2. Use synchronous calls
 3. Fix issues
@@ -661,12 +685,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual saga timeout handling
 2. Limited saga visualization
 3. Basic compensation testing
 4. No saga replay capability
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated timeout handling
 - **Q3 2026**: Saga visualization dashboard
 - **Q4 2026**: Comprehensive compensation testing
@@ -689,6 +715,7 @@ Affects:
 ### Saga Design Best Practices
 
 **DO**:
+
 - ✅ Design idempotent operations
 - ✅ Use correlation IDs
 - ✅ Implement compensation logic
@@ -697,6 +724,7 @@ Affects:
 - ✅ Test failure scenarios
 
 **DON'T**:
+
 - ❌ Create cyclic dependencies
 - ❌ Ignore idempotency
 - ❌ Skip compensation logic
@@ -706,13 +734,16 @@ Affects:
 ### Common Saga Patterns
 
 **Order Processing**:
+
 1. Create Order → Reserve Inventory → Process Payment → Confirm Order
 2. Compensation: Release Inventory ← Refund Payment ← Cancel Order
 
 **Order Cancellation**:
+
 1. Cancel Order → Refund Payment → Release Inventory → Notify Customer
 2. Compensation: Restore Order ← Reverse Refund
 
 **Customer Registration**:
+
 1. Create Customer → Send Email → Create Loyalty Account → Send Welcome Gift
 2. Compensation: Delete Customer ← Delete Loyalty Account

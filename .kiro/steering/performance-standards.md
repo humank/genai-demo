@@ -552,9 +552,13 @@ public class CustomerRepository {
 ```yaml
 # Prometheus Alert Rules for Performance
 groups:
+
   - name: performance-alerts
+
     rules:
+
       - alert: HighResponseTime
+
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
         for: 2m
         labels:
@@ -565,6 +569,7 @@ groups:
           description: "95th percentile response time is {{ $value }} seconds"
           
       - alert: HighMemoryUsage
+
         expr: (jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"}) > 0.8
         for: 5m
         labels:
@@ -575,6 +580,7 @@ groups:
           description: "Memory usage is {{ $value }}%"
           
       - alert: DatabaseConnectionPoolExhausted
+
         expr: hikari_connections_active / hikari_connections_max > 0.9
         for: 1m
         labels:
@@ -585,6 +591,7 @@ groups:
           description: "Connection pool usage is {{ $value }}%"
           
       - alert: SlowDatabaseQueries
+
         expr: rate(database_slow_queries_total[5m]) > 0.1
         for: 2m
         labels:
@@ -618,12 +625,14 @@ groups:
 > **🧪 Test Performance Standards**: For comprehensive test performance monitoring, resource management, and optimization, see [Test Performance Standards](test-performance-standards.md)
 
 **Quick Reference:**
+
 - Use `@TestPerformanceExtension` for automatic performance monitoring
 - Integration tests: < 500ms, < 50MB
 - E2E tests: < 3s, < 500MB
 - Generate reports: `./gradlew generatePerformanceReport`
 
 **When to Use Test Performance Standards:**
+
 - Setting up test performance monitoring
 - Troubleshooting slow tests
 - Configuring Gradle test tasks

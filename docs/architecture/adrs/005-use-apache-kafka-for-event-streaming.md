@@ -36,6 +36,7 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 ### Business Context
 
 **Business Drivers**:
+
 - Need for real-time business event processing
 - Requirement for event-driven architecture across bounded contexts
 - Support for real-time analytics and reporting
@@ -44,6 +45,7 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 - Support for future event-driven features (recommendations, fraud detection)
 
 **Constraints**:
+
 - AWS cloud infrastructure (ADR-007)
 - Budget: $3,000/month for messaging infrastructure
 - Team has limited Kafka experience
@@ -54,6 +56,7 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 ### Technical Context
 
 **Current State**:
+
 - Domain events implemented (ADR-003)
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
@@ -62,6 +65,7 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 - PostgreSQL for primary database (ADR-001)
 
 **Requirements**:
+
 - Event throughput: 10,000+ events/second (normal), 100,000+ events/second (peak)
 - Event retention: 7 days minimum, 30 days for audit
 - Message durability: No data loss
@@ -82,7 +86,6 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 7. **AWS Integration**: Native AWS service integration
 8. **Cost**: Stay within budget constraints
 
-
 ## Considered Options
 
 ### Option 1: Amazon MSK (Managed Streaming for Apache Kafka)
@@ -90,11 +93,13 @@ The Enterprise E-Commerce Platform requires a robust event streaming platform th
 **Description**: AWS managed Kafka service with full Kafka API compatibility
 
 **Architecture**:
-```
+
+```text
 Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consumer → Event Handlers
 ```
 
 **Pros**:
+
 - ✅ Fully managed Kafka service (AWS handles operations)
 - ✅ Full Kafka API compatibility
 - ✅ High throughput (millions of messages/second)
@@ -108,12 +113,14 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 - ✅ Large ecosystem and community
 
 **Cons**:
+
 - ⚠️ More complex than SQS/SNS
 - ⚠️ Requires Kafka knowledge
 - ⚠️ Higher cost than SQS
 - ⚠️ Need to manage topics and partitions
 
-**Cost**: 
+**Cost**:
+
 - Development: $500/month (kafka.m5.large, 2 brokers)
 - Production: $2,500/month (kafka.m5.xlarge, 3 brokers, Multi-AZ)
 - Storage: $100/month (1TB retention)
@@ -126,6 +133,7 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 **Description**: AWS managed message queue and pub/sub service
 
 **Pros**:
+
 - ✅ Fully managed (no operations)
 - ✅ Simple to use
 - ✅ Cost-effective
@@ -133,6 +141,7 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 - ✅ AWS native integration
 
 **Cons**:
+
 - ❌ No event replay capability
 - ❌ Limited ordering guarantees (FIFO queues have throughput limits)
 - ❌ No event streaming semantics
@@ -145,12 +154,12 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 
 **Risk**: **Medium** - Limited capabilities for event streaming
 
-
 ### Option 3: Amazon Kinesis Data Streams
 
 **Description**: AWS managed real-time data streaming service
 
 **Pros**:
+
 - ✅ Fully managed
 - ✅ Real-time streaming
 - ✅ AWS native integration
@@ -158,6 +167,7 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 - ✅ Event replay capability
 
 **Cons**:
+
 - ❌ Proprietary API (not Kafka compatible)
 - ❌ More expensive than MSK at scale
 - ❌ Limited retention (365 days max)
@@ -174,11 +184,13 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 **Description**: Run Kafka cluster on EC2 instances
 
 **Pros**:
+
 - ✅ Full control over configuration
 - ✅ Potentially lower cost
 - ✅ Full Kafka features
 
 **Cons**:
+
 - ❌ High operational overhead
 - ❌ Need Kafka expertise
 - ❌ Manual scaling and patching
@@ -195,11 +207,13 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 **Description**: Open-source message broker
 
 **Pros**:
+
 - ✅ Mature message broker
 - ✅ Good Spring integration
 - ✅ Flexible routing
 
 **Cons**:
+
 - ❌ Not designed for event streaming
 - ❌ Limited event replay
 - ❌ Lower throughput than Kafka
@@ -209,7 +223,6 @@ Domain Events → Spring Kafka Producer → MSK Cluster → Spring Kafka Consume
 **Cost**: $1,000/month (Amazon MQ)
 
 **Risk**: **Medium** - Not optimal for event streaming
-
 
 ## Decision Outcome
 
@@ -233,28 +246,35 @@ Amazon MSK was selected for the following reasons:
 **Implementation Strategy**:
 
 **MSK Cluster Configuration**:
-```
+
+```text
 Production Cluster:
+
 - Broker Type: kafka.m5.xlarge (3 brokers)
 - Multi-AZ: 3 availability zones
 - Storage: 1TB per broker (EBS gp3)
 - Replication Factor: 3
 - Min In-Sync Replicas: 2
 - Retention: 7 days (configurable per topic)
+
 ```
 
 **Topic Design**:
-```
+
+```text
 Topics by Bounded Context:
+
 - customer-events (partitions: 10)
 - order-events (partitions: 20)
 - product-events (partitions: 10)
 - payment-events (partitions: 15)
 - inventory-events (partitions: 10)
 - notification-events (partitions: 5)
+
 ```
 
 **Producer Configuration**:
+
 ```java
 @Configuration
 public class KafkaProducerConfiguration {
@@ -287,6 +307,7 @@ public class KafkaProducerConfiguration {
 ```
 
 **Consumer Configuration**:
+
 ```java
 @Configuration
 public class KafkaConsumerConfiguration {
@@ -328,7 +349,6 @@ public class KafkaConsumerConfiguration {
 
 **Why Not Self-Managed**: Team lacks Kafka operations expertise, high operational overhead not justified.
 
-
 ## Impact Analysis
 
 ### Stakeholder Impact
@@ -346,6 +366,7 @@ public class KafkaConsumerConfiguration {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (event publishing and consuming)
 - Event-driven architecture implementation
 - Infrastructure deployment (ADR-007)
@@ -366,12 +387,12 @@ Affects:
 
 **Overall Risk Level**: **Low**
 
-
 ## Implementation Plan
 
 ### Phase 1: MSK Cluster Setup (Week 1-2)
 
 - [ ] Provision MSK cluster using AWS CDK
+
   ```typescript
   import * as msk from 'aws-cdk-lib/aws-msk';
   
@@ -430,6 +451,7 @@ Affects:
 ### Phase 2: Spring Kafka Integration (Week 2-3)
 
 - [ ] Add Spring Kafka dependencies
+
   ```xml
   <dependency>
     <groupId>org.springframework.kafka</groupId>
@@ -443,6 +465,7 @@ Affects:
   ```
 
 - [ ] Configure application properties
+
   ```yaml
   spring:
     kafka:
@@ -466,6 +489,7 @@ Affects:
   ```
 
 - [ ] Create Kafka event publisher
+
   ```java
   @Component
   public class KafkaEventPublisher {
@@ -511,10 +535,10 @@ Affects:
   }
   ```
 
-
 ### Phase 3: Event Consumers (Week 3-4)
 
 - [ ] Create Kafka event listeners
+
   ```java
   @Component
   public class OrderEventConsumer {
@@ -574,6 +598,7 @@ Affects:
   ```
 
 - [ ] Implement error handling and retry
+
   ```java
   @Configuration
   public class KafkaErrorHandlingConfiguration {
@@ -603,6 +628,7 @@ Affects:
   ```
 
 - [ ] Set up dead letter topics
+
   ```java
   @Component
   public class DeadLetterPublisher {
@@ -628,6 +654,7 @@ Affects:
 ### Phase 4: Monitoring and Alerting (Week 4-5)
 
 - [ ] Configure CloudWatch metrics
+
   ```typescript
   // MSK metrics to monitor
   const metrics = [
@@ -669,10 +696,10 @@ Affects:
   - High producer latency > 100ms
   - High consumer latency > 500ms
 
-
 ### Phase 5: Testing (Week 5-6)
 
 - [ ] Set up embedded Kafka for tests
+
   ```java
   @SpringBootTest
   @EmbeddedKafka(
@@ -728,6 +755,7 @@ Affects:
   ```
 
 - [ ] Test event ordering
+
   ```java
   @Test
   void should_maintain_event_order_within_partition() {
@@ -758,6 +786,7 @@ Affects:
 
 - [ ] Deploy MSK cluster to production
 - [ ] Create production topics with proper configuration
+
   ```bash
   # Create topics with replication and retention
   kafka-topics.sh --create \
@@ -797,6 +826,7 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Message loss > 0.01%
 - Consumer lag consistently > 1 hour
 - Cost exceeds $4,000/month
@@ -804,6 +834,7 @@ Affects:
 - Performance issues affecting SLA
 
 **Rollback Steps**:
+
 1. Switch to SQS/SNS for critical events
 2. Keep Kafka for non-critical events
 3. Simplify event architecture

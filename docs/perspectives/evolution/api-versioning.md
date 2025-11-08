@@ -14,13 +14,14 @@ This document defines the API versioning strategy for the Enterprise E-Commerce 
 
 We use URL-based versioning as our primary strategy:
 
-```
+```yaml
 https://api.ecommerce.example.com/api/v1/orders
 https://api.ecommerce.example.com/api/v2/orders
 https://api.ecommerce.example.com/api/v3/orders
 ```
 
 **Rationale**:
+
 - ✅ Clear and explicit
 - ✅ Easy to route and cache
 - ✅ Simple for clients to understand
@@ -33,7 +34,7 @@ https://api.ecommerce.example.com/api/v3/orders
 
 ### Version States
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              API Version Lifecycle                      │
 ├─────────────────────────────────────────────────────────┤
@@ -90,6 +91,7 @@ https://api.ecommerce.example.com/api/v3/orders
 ❌ **Breaking changes that require a new API version**:
 
 1. **Removing fields**
+
    ```json
    // v1 - Has email field
    {
@@ -106,6 +108,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 2. **Changing field types**
+
    ```json
    // v1 - Price as number
    {
@@ -122,6 +125,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 3. **Renaming fields**
+
    ```json
    // v1
    {
@@ -135,6 +139,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 4. **Changing URL structure**
+
    ```
    // v1
    GET /api/v1/customers/{id}/orders
@@ -144,6 +149,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 5. **Changing HTTP methods**
+
    ```
    // v1
    POST /api/v1/orders/{id}/cancel
@@ -153,6 +159,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 6. **Adding required fields**
+
    ```json
    // v1 - Optional field
    {
@@ -171,6 +178,7 @@ https://api.ecommerce.example.com/api/v3/orders
 ✅ **Non-breaking changes that can be made within the same version**:
 
 1. **Adding optional fields**
+
    ```json
    // Before
    {
@@ -187,6 +195,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 2. **Adding new endpoints**
+
    ```
    // Existing
    GET /api/v1/orders
@@ -196,6 +205,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 3. **Adding new optional query parameters**
+
    ```
    // Before
    GET /api/v1/orders?status=pending
@@ -205,6 +215,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 4. **Adding new HTTP methods to existing endpoints**
+
    ```
    // Existing
    GET /api/v1/orders/{id}
@@ -214,6 +225,7 @@ https://api.ecommerce.example.com/api/v3/orders
    ```
 
 5. **Expanding enum values**
+
    ```json
    // Before
    {
@@ -387,7 +399,7 @@ paths:
 
 #### 3. Send Email Notifications
 
-```
+```text
 Subject: API v1 Deprecation Notice - Action Required
 
 Dear API Consumer,
@@ -396,6 +408,7 @@ We are writing to inform you that API v1 will be deprecated on 2025-06-30
 and will be completely removed on 2025-12-31.
 
 Your application is currently using the following deprecated endpoints:
+
 - GET /api/v1/orders
 - POST /api/v1/orders
 
@@ -410,7 +423,7 @@ API Team
 
 ### Deprecation Timeline
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │           Deprecation Timeline (6 months)               │
 ├─────────────────────────────────────────────────────────┤
@@ -537,6 +550,7 @@ public class RetiredEndpointsController {
 #### Code Examples
 
 **Before (V1)**:
+
 ```javascript
 // JavaScript client
 const response = await fetch('https://api.ecommerce.example.com/api/v1/orders/123');
@@ -547,6 +561,7 @@ console.log(order.total_amount);  // 99.99
 ```
 
 **After (V2)**:
+
 ```javascript
 // JavaScript client
 const response = await fetch('https://api.ecommerce.example.com/api/v2/orders/123');
@@ -687,6 +702,7 @@ public class ApiVersionMetrics {
 ### Version Analytics Dashboard
 
 Track:
+
 - **Requests per version**: Which versions are most used
 - **Client distribution**: Which clients use which versions
 - **Deprecation impact**: How many clients still use deprecated versions
@@ -696,6 +712,7 @@ Track:
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Evolution perspective introduction
 - [Extensibility](extensibility.md) - Extension points and mechanisms
 - [Technology Evolution](technology-evolution.md) - Framework upgrades

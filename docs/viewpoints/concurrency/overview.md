@@ -47,12 +47,14 @@ The E-Commerce Platform uses an **event-driven architecture** as its primary con
 The system employs a hybrid model that combines:
 
 **Synchronous Operations** (Request-Response):
+
 - User-facing API calls requiring immediate response
 - Payment processing requiring real-time confirmation
 - Inventory checks requiring immediate availability status
 - Order submission requiring immediate validation
 
 **Asynchronous Operations** (Event-Driven):
+
 - Email and SMS notifications
 - Analytics and reporting
 - Inventory synchronization with external systems
@@ -84,6 +86,7 @@ The system handles concurrency at multiple levels:
 **Problem**: Multiple customers attempting to purchase the last item in stock simultaneously.
 
 **Solution**:
+
 - Distributed locking (Redis) for inventory reservation
 - Optimistic locking with version numbers
 - Inventory reservation timeout mechanism
@@ -94,6 +97,7 @@ The system handles concurrency at multiple levels:
 **Problem**: Ensuring order processing steps execute in correct sequence without race conditions.
 
 **Solution**:
+
 - Saga pattern for distributed transactions
 - Event sourcing for order state tracking
 - Idempotent event handlers
@@ -104,6 +108,7 @@ The system handles concurrency at multiple levels:
 **Problem**: Preventing duplicate payment charges for the same order.
 
 **Solution**:
+
 - Idempotency keys for payment API calls
 - Database unique constraints
 - Distributed locks during payment processing
@@ -114,6 +119,7 @@ The system handles concurrency at multiple levels:
 **Problem**: Maintaining cart consistency across multiple user sessions and devices.
 
 **Solution**:
+
 - Redis-based session storage
 - Optimistic locking for cart updates
 - Cart merge strategy for multi-device access
@@ -126,12 +132,14 @@ The system handles concurrency at multiple levels:
 **Principle**: Application services are stateless to enable horizontal scaling.
 
 **Implementation**:
+
 - No in-memory session state in application servers
 - JWT tokens for authentication (stateless)
 - Redis for distributed session storage
 - Database for persistent state
 
 **Benefits**:
+
 - Easy horizontal scaling
 - No session affinity required
 - Simplified deployment and rollback
@@ -142,12 +150,14 @@ The system handles concurrency at multiple levels:
 **Principle**: Assume conflicts are rare; detect and resolve when they occur.
 
 **Implementation**:
+
 - JPA `@Version` annotation for entity versioning
 - Version checking before updates
 - Retry logic for version conflicts
 - User-friendly conflict resolution
 
 **Use Cases**:
+
 - Product catalog updates
 - Customer profile updates
 - Shopping cart modifications
@@ -158,12 +168,14 @@ The system handles concurrency at multiple levels:
 **Principle**: Prevent conflicts by locking resources before access.
 
 **Implementation**:
+
 - Database row-level locks (`SELECT ... FOR UPDATE`)
 - Redis distributed locks (Redisson)
 - Lock timeout configuration
 - Deadlock detection and prevention
 
 **Use Cases**:
+
 - Critical inventory operations
 - Payment processing
 - Order finalization
@@ -174,12 +186,14 @@ The system handles concurrency at multiple levels:
 **Principle**: Coordinate distributed operations through domain events.
 
 **Implementation**:
+
 - Kafka for event streaming
 - Event sourcing for audit trail
 - Idempotent event handlers
 - Dead letter queues for failed events
 
 **Use Cases**:
+
 - Cross-context communication
 - Asynchronous notifications
 - Analytics and reporting
@@ -194,6 +208,7 @@ The system handles concurrency at multiple levels:
 ### HTTP Request Handling
 
 **Configuration**:
+
 ```yaml
 server:
   tomcat:
@@ -205,6 +220,7 @@ server:
 ```
 
 **Characteristics**:
+
 - One thread per HTTP request
 - Thread pool managed by Tomcat
 - Blocking I/O for synchronous operations
@@ -213,6 +229,7 @@ server:
 ### Asynchronous Task Execution
 
 **Configuration**:
+
 ```java
 @Configuration
 @EnableAsync
@@ -231,6 +248,7 @@ public class AsyncConfiguration {
 ```
 
 **Use Cases**:
+
 - Email sending
 - SMS notifications
 - Report generation
@@ -243,6 +261,7 @@ public class AsyncConfiguration {
 *Figure 3: Event processing concurrency model with partition assignment and consumer groups*
 
 **Configuration**:
+
 ```yaml
 spring:
   kafka:
@@ -254,6 +273,7 @@ spring:
 ```
 
 **Characteristics**:
+
 - Multiple consumer threads per topic
 - Parallel event processing
 - Ordered processing within partition
@@ -266,6 +286,7 @@ spring:
 **Principle**: Keep transactions short and focused.
 
 **Implementation**:
+
 - `@Transactional` at application service level
 - Read-only transactions for queries
 - Separate transactions for independent operations
@@ -276,12 +297,14 @@ spring:
 **Default**: `READ_COMMITTED`
 
 **Rationale**:
+
 - Prevents dirty reads
 - Allows concurrent reads
 - Good balance between consistency and performance
 - Suitable for most e-commerce operations
 
 **Special Cases**:
+
 - `SERIALIZABLE` for critical financial operations
 - `READ_UNCOMMITTED` for analytics (read-only)
 
@@ -290,13 +313,15 @@ spring:
 **Approach**: Saga Pattern (Choreography-based)
 
 **Implementation**:
+
 1. Each service publishes domain events
 2. Other services react to events
 3. Compensation events for rollback
 4. Eventual consistency across contexts
 
 **Example**: Order Processing Saga
-```
+
+```text
 OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed
      ↓              ↓                    ↓                  ↓
   (Fail)    → InventoryReleased  → PaymentRefunded → OrderCancelled
@@ -309,6 +334,7 @@ OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed
 **Storage**: Redis (distributed session store)
 
 **Configuration**:
+
 ```yaml
 spring:
   session:
@@ -319,6 +345,7 @@ spring:
 ```
 
 **Characteristics**:
+
 - Shared across all application instances
 - Automatic expiration
 - Serializable session attributes
@@ -329,6 +356,7 @@ spring:
 **Principle**: Minimize mutable shared state.
 
 **Guidelines**:
+
 - Use immutable value objects
 - Avoid static mutable fields
 - Use thread-safe collections when needed
@@ -339,6 +367,7 @@ spring:
 **Storage**: Redis (distributed cache)
 
 **Strategy**:
+
 - Cache-aside pattern
 - TTL-based expiration
 - Cache invalidation via events
@@ -351,12 +380,14 @@ spring:
 **Technology**: Redis with Redisson
 
 **Use Cases**:
+
 - Inventory reservation
 - Order processing
 - Payment processing
 - Critical resource access
 
 **Configuration**:
+
 ```java
 @Configuration
 public class RedissonConfiguration {
@@ -375,6 +406,7 @@ public class RedissonConfiguration {
 ### Database Locking
 
 **Optimistic Locking**:
+
 ```java
 @Entity
 public class Product {
@@ -385,6 +417,7 @@ public class Product {
 ```
 
 **Pessimistic Locking**:
+
 ```java
 @Lock(LockModeType.PESSIMISTIC_WRITE)
 @Query("SELECT i FROM Inventory i WHERE i.productId = :productId")
@@ -396,6 +429,7 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 **Mechanism**: Kafka topics with ordered partitions
 
 **Guarantees**:
+
 - Events in same partition are processed in order
 - At-least-once delivery
 - Idempotent event handlers
@@ -406,11 +440,13 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 ### Concurrency vs. Performance Trade-offs
 
 **High Concurrency Benefits**:
+
 - Better resource utilization
 - Higher throughput
 - Improved scalability
 
 **High Concurrency Costs**:
+
 - Increased context switching
 - Lock contention
 - Memory overhead
@@ -443,24 +479,28 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 ### Key Metrics
 
 **Thread Pool Metrics**:
+
 - Active threads
 - Queue size
 - Rejected tasks
 - Average task execution time
 
 **Lock Metrics**:
+
 - Lock acquisition time
 - Lock hold time
 - Lock contention rate
 - Deadlock occurrences
 
 **Transaction Metrics**:
+
 - Transaction duration
 - Rollback rate
 - Deadlock rate
 - Connection pool usage
 
 **Event Processing Metrics**:
+
 - Event processing lag
 - Event processing rate
 - Failed event count

@@ -41,18 +41,21 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 ### Business Context
 
 **Business Drivers**:
+
 - **Revenue Protection**: Downtime costs $10,000/hour in lost sales
 - **Customer Trust**: DDoS attacks damage brand reputation
 - **Regulatory Compliance**: Must maintain service availability commitments
 - **Competitive Advantage**: Reliable service differentiates from competitors
 
 **Taiwan-Specific Context**:
+
 - **Frequent Attacks**: Taiwan experiences regular DDoS attacks from China-based sources
 - **Political Sensitivity**: Attacks often coincide with political events
 - **Submarine Cable Vulnerability**: Limited international connectivity increases risk
 - **Regional Targeting**: Taiwan-based services are high-priority targets
 
 **Constraints**:
+
 - Budget: $3,000-5,000/month for DDoS protection
 - Must integrate with existing AWS infrastructure
 - Cannot impact legitimate user experience
@@ -61,6 +64,7 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 ### Technical Context
 
 **Current State**:
+
 - AWS EKS deployment with Application Load Balancer
 - CloudFront CDN for static content
 - No dedicated DDoS protection (only AWS Shield Standard)
@@ -68,6 +72,7 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 - Single region deployment (Taiwan)
 
 **Attack Vectors**:
+
 - **Layer 3/4 Attacks**: SYN floods, UDP floods, ICMP floods
 - **Layer 7 Attacks**: HTTP floods, Slowloris, application-specific attacks
 - **Volumetric Attacks**: Bandwidth exhaustion (10-100 Gbps)
@@ -92,11 +97,13 @@ The platform requires a comprehensive, multi-layer DDoS protection strategy that
 **Description**: Comprehensive AWS-native DDoS protection with multi-layer defense
 
 **Architecture**:
-```
+
+```text
 Internet → CloudFront (CDN) → AWS Shield Advanced → WAF → ALB → EKS
 ```
 
 **Pros**:
+
 - ✅ **Comprehensive Protection**: Layer 3/4 (Shield) + Layer 7 (WAF)
 - ✅ **AWS Integration**: Native integration with CloudFront, ALB, Route 53
 - ✅ **DDoS Response Team**: 24/7 AWS DDoS Response Team (DRT) support
@@ -107,11 +114,13 @@ Internet → CloudFront (CDN) → AWS Shield Advanced → WAF → ALB → EKS
 - ✅ **Health-Based Routing**: Route 53 health checks for automatic failover
 
 **Cons**:
+
 - ⚠️ **Cost**: $3,000/month base + $1/million requests (WAF)
 - ⚠️ **Complexity**: Requires configuration and tuning
 - ⚠️ **Learning Curve**: Team needs training on Shield Advanced features
 
-**Cost**: 
+**Cost**:
+
 - Shield Advanced: $3,000/month
 - WAF: ~$500/month (estimated for 100M requests)
 - CloudFront: ~$500/month (data transfer)
@@ -124,17 +133,20 @@ Internet → CloudFront (CDN) → AWS Shield Advanced → WAF → ALB → EKS
 **Description**: Basic AWS DDoS protection with WAF for application layer
 
 **Architecture**:
-```
+
+```text
 Internet → CloudFront (CDN) → WAF → ALB → EKS
 ```
 
 **Pros**:
+
 - ✅ **Lower Cost**: No Shield Advanced fees
 - ✅ **Basic Protection**: Shield Standard included free
 - ✅ **Application Protection**: WAF for Layer 7 attacks
 - ✅ **CloudFront Benefits**: Edge caching and basic DDoS absorption
 
 **Cons**:
+
 - ❌ **Limited Protection**: No advanced Layer 3/4 mitigation
 - ❌ **No DRT Support**: No 24/7 DDoS Response Team
 - ❌ **No Cost Protection**: Scaling charges during attacks
@@ -150,11 +162,13 @@ Internet → CloudFront (CDN) → WAF → ALB → EKS
 **Description**: Use third-party DDoS protection service
 
 **Pros**:
+
 - ✅ **Specialized Protection**: DDoS protection is core business
 - ✅ **Global Network**: Large edge network for traffic absorption
 - ✅ **Advanced Features**: Bot management, rate limiting, caching
 
 **Cons**:
+
 - ❌ **Higher Cost**: $5,000-10,000/month for enterprise plans
 - ❌ **Vendor Lock-In**: Difficult to migrate away
 - ❌ **Integration Complexity**: Requires DNS changes and configuration
@@ -170,10 +184,12 @@ Internet → CloudFront (CDN) → WAF → ALB → EKS
 **Description**: Deploy dedicated DDoS protection hardware
 
 **Pros**:
+
 - ✅ **Full Control**: Complete control over protection
 - ✅ **No Recurring Fees**: One-time hardware cost
 
 **Cons**:
+
 - ❌ **High Initial Cost**: $50,000-100,000 for hardware
 - ❌ **Operational Overhead**: Requires dedicated team
 - ❌ **Limited Capacity**: Fixed capacity, cannot scale
@@ -204,18 +220,21 @@ AWS Shield Advanced with WAF and CloudFront was selected for the following reaso
 **Multi-Layer Defense Strategy**:
 
 **Layer 1 - CloudFront (Edge Protection)**:
+
 - Hide origin server IP addresses
 - Absorb volumetric attacks at edge locations
 - Cache static content to reduce origin load
 - Geo-blocking for high-risk countries (optional)
 
 **Layer 2 - AWS Shield Advanced (Network/Transport Protection)**:
+
 - Automatic detection of Layer 3/4 attacks
 - Real-time mitigation within seconds
 - Protection against SYN floods, UDP floods, reflection attacks
 - DDoS cost protection (no scaling charges)
 
 **Layer 3 - AWS WAF (Application Protection)**:
+
 - Rate limiting (2000 requests/min per IP)
 - SQL injection and XSS protection
 - Bot detection and mitigation
@@ -223,11 +242,13 @@ AWS Shield Advanced with WAF and CloudFront was selected for the following reaso
 - Geo-blocking for high-risk regions
 
 **Layer 4 - Application Load Balancer (Distribution)**:
+
 - Health checks and automatic failover
 - Connection draining during attacks
 - SSL/TLS termination
 
 **Layer 5 - Auto-Scaling (Capacity)**:
+
 - Automatic scaling based on traffic
 - Absorb attack traffic with additional capacity
 - Cost-effective scaling with Spot Instances
@@ -254,6 +275,7 @@ AWS Shield Advanced with WAF and CloudFront was selected for the following reaso
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All public-facing endpoints (web, mobile, API)
 - CloudFront distribution configuration
 - Route 53 DNS configuration
@@ -327,12 +349,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - False positive rate > 1% (legitimate traffic blocked)
 - Service degradation during normal traffic
 - Configuration errors causing outages
 - Cost overrun > 50% of budget
 
 **Rollback Steps**:
+
 1. Disable WAF rules causing false positives
 2. Remove CloudFront distribution (revert to direct ALB access)
 3. Downgrade to Shield Standard if Shield Advanced issues
@@ -356,6 +380,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `DDoSDetected` (Shield Advanced)
 - `DDoSAttackBitsPerSecond` (Shield Advanced)
 - `DDoSAttackPacketsPerSecond` (Shield Advanced)
@@ -368,18 +393,21 @@ Affects:
 - `CloudFrontRequests`
 
 **Alerts**:
+
 - **P0 Critical**: DDoS attack detected (immediate notification)
 - **P1 High**: WAF block rate > 10% (potential attack or false positives)
 - **P2 Medium**: CloudFront error rate > 5%
 - **P3 Low**: Unusual traffic patterns
 
 **Security Monitoring**:
+
 - Real-time WAF log analysis (Kinesis + Lambda)
 - Attack pattern analysis (Athena queries on S3 logs)
 - Geo-location analysis of attack sources
 - Bot detection and analysis
 
 **Review Schedule**:
+
 - **Real-Time**: 24/7 monitoring dashboard
 - **Daily**: Review attack logs and blocked requests
 - **Weekly**: Analyze attack patterns and tune WAF rules
@@ -410,11 +438,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual WAF rule tuning (acceptable initially)
 2. No automated attack response beyond AWS defaults
 3. Limited geo-blocking (may need expansion)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated WAF rule tuning based on attack patterns
 - **Q3 2026**: Develop custom automated response (Lambda functions)
 - **Q4 2026**: Expand geo-blocking based on attack source analysis
@@ -431,26 +461,31 @@ Affects:
 ### DDoS Protection Layers
 
 **Layer 1 - CloudFront (Edge)**:
+
 - **Purpose**: Hide origin IP, absorb volumetric attacks
 - **Protection**: Bandwidth exhaustion, volumetric attacks
 - **Capacity**: Unlimited (AWS global edge network)
 
 **Layer 2 - Shield Advanced (Network/Transport)**:
+
 - **Purpose**: Detect and mitigate Layer 3/4 attacks
 - **Protection**: SYN floods, UDP floods, reflection attacks
 - **Capacity**: Up to 100+ Gbps
 
 **Layer 3 - WAF (Application)**:
+
 - **Purpose**: Protect against Layer 7 attacks
 - **Protection**: HTTP floods, SQL injection, XSS, bot attacks
 - **Capacity**: Configurable rate limits
 
 **Layer 4 - ALB (Distribution)**:
+
 - **Purpose**: Distribute traffic and health checks
 - **Protection**: Connection draining, health-based routing
 - **Capacity**: Auto-scaling based on traffic
 
 **Layer 5 - Auto-Scaling (Capacity)**:
+
 - **Purpose**: Absorb attack traffic with additional capacity
 - **Protection**: Capacity-based attacks
 - **Capacity**: Unlimited (auto-scaling)
@@ -458,12 +493,14 @@ Affects:
 ### Taiwan-Specific Considerations
 
 **Attack Patterns**:
+
 - **Timing**: Attacks often coincide with political events
 - **Sources**: Primarily from China-based IP ranges
 - **Types**: Mix of volumetric (Layer 3/4) and application (Layer 7) attacks
 - **Duration**: Typically 1-4 hours, sometimes sustained for days
 
 **Mitigation Strategies**:
+
 - **Geo-Blocking**: Consider blocking China IP ranges during attacks (business impact assessment required)
 - **Proactive Monitoring**: Increased monitoring during sensitive political periods
 - **DRT Engagement**: Proactive engagement with AWS DRT during high-risk periods
@@ -472,6 +509,7 @@ Affects:
 ### Cost Breakdown
 
 **Monthly Costs**:
+
 - AWS Shield Advanced: $3,000/month (base fee)
 - WAF: $5/month (Web ACL) + $1/million requests (~$500/month for 100M requests)
 - CloudFront: $0.085/GB data transfer (~$500/month for 6TB)
@@ -479,6 +517,7 @@ Affects:
 - **Total**: ~$4,050/month
 
 **Cost Protection**:
+
 - Shield Advanced includes DDoS cost protection
 - No scaling charges during attacks (EC2, ELB, CloudFront, Route 53)
 - Potential savings: $10,000+ during large attacks
@@ -486,6 +525,7 @@ Affects:
 ### Emergency Procedures
 
 **During Active Attack**:
+
 1. **Immediate**: Verify Shield Advanced is mitigating
 2. **5 minutes**: Review WAF logs for application-layer attacks
 3. **10 minutes**: Engage AWS DRT if attack persists
@@ -494,6 +534,7 @@ Affects:
 6. **Post-Attack**: Conduct post-mortem and update runbooks
 
 **DRT Escalation**:
+
 - **Trigger**: Attack persists > 15 minutes or causes service degradation
 - **Contact**: AWS Support (Enterprise plan) or DRT hotline
 - **Information**: Attack type, affected resources, business impact

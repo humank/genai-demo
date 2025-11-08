@@ -14,7 +14,7 @@ This document provides a detailed description of the module organization, packag
 
 All code resides under the root package:
 
-```
+```text
 solid.humank.genaidemo
 ```
 
@@ -22,7 +22,7 @@ solid.humank.genaidemo
 
 The system is organized into four primary layers following Hexagonal Architecture:
 
-```
+```text
 solid.humank.genaidemo/
 ├── domain/              # Domain Layer - Business Logic
 ├── application/         # Application Layer - Use Case Orchestration
@@ -36,7 +36,7 @@ solid.humank.genaidemo/
 
 The domain layer is organized by bounded contexts, with each context being completely independent:
 
-```
+```text
 domain/
 ├── customer/           # Customer Bounded Context
 ├── order/              # Order Bounded Context
@@ -58,7 +58,7 @@ domain/
 
 Each bounded context follows a consistent internal structure:
 
-```
+```text
 domain/{context}/
 ├── model/
 │   ├── aggregate/      # Aggregate Roots
@@ -73,7 +73,7 @@ domain/{context}/
 
 ### Example: Customer Bounded Context
 
-```
+```text
 domain/customer/
 ├── model/
 │   ├── aggregate/
@@ -106,7 +106,7 @@ domain/customer/
 
 ### Example: Order Bounded Context
 
-```
+```text
 domain/order/
 ├── model/
 │   ├── aggregate/
@@ -143,7 +143,7 @@ domain/order/
 
 The shared kernel contains common value objects and utilities used across multiple bounded contexts:
 
-```
+```text
 domain/shared/
 ├── valueobject/
 │   ├── Money.java                           # Money (amount + currency)
@@ -166,7 +166,7 @@ domain/shared/
 
 The application layer is organized by bounded contexts, mirroring the domain structure:
 
-```
+```text
 application/
 ├── customer/           # Customer Use Cases
 ├── order/              # Order Use Cases
@@ -185,7 +185,7 @@ application/
 
 ### Application Context Internal Structure
 
-```
+```text
 application/{context}/
 ├── {UseCase}ApplicationService.java         # Application Service
 ├── command/                                  # Command Objects
@@ -203,7 +203,7 @@ application/{context}/
 
 ### Example: Customer Application Layer
 
-```
+```text
 application/customer/
 ├── CustomerApplicationService.java          # Main Application Service
 ├── command/
@@ -223,7 +223,7 @@ application/customer/
 
 ### Example: Order Application Layer
 
-```
+```text
 application/order/
 ├── OrderApplicationService.java             # Main Application Service
 ├── command/
@@ -249,7 +249,7 @@ application/order/
 
 The infrastructure layer implements technical concerns and adapters:
 
-```
+```text
 infrastructure/
 ├── customer/           # Customer Infrastructure
 ├── order/              # Order Infrastructure
@@ -273,7 +273,7 @@ infrastructure/
 
 ### Infrastructure Context Internal Structure
 
-```
+```text
 infrastructure/{context}/
 ├── persistence/
 │   ├── entity/                              # JPA Entities
@@ -295,7 +295,7 @@ infrastructure/{context}/
 
 ### Example: Customer Infrastructure
 
-```
+```text
 infrastructure/customer/
 ├── persistence/
 │   ├── entity/
@@ -319,7 +319,7 @@ infrastructure/customer/
 
 ### Example: Order Infrastructure
 
-```
+```text
 infrastructure/order/
 ├── persistence/
 │   ├── entity/
@@ -345,7 +345,7 @@ infrastructure/order/
 
 ### Cross-Cutting Infrastructure
 
-```
+```text
 infrastructure/
 ├── config/
 │   ├── DatabaseConfiguration.java           # Database Config
@@ -376,7 +376,7 @@ infrastructure/
 
 The interfaces layer exposes the system to external clients:
 
-```
+```text
 interfaces/
 ├── rest/               # REST API Controllers
 │   ├── customer/      # Customer API
@@ -397,7 +397,7 @@ interfaces/
 
 ### REST API Context Structure
 
-```
+```text
 interfaces/rest/{context}/
 ├── controller/
 │   └── {Entity}Controller.java              # REST Controller
@@ -416,7 +416,7 @@ interfaces/rest/{context}/
 
 ### Example: Customer REST API
 
-```
+```text
 interfaces/rest/customer/
 ├── controller/
 │   └── CustomerController.java              # Customer API Controller
@@ -435,7 +435,7 @@ interfaces/rest/customer/
 
 ### Example: Order REST API
 
-```
+```text
 interfaces/rest/order/
 ├── controller/
 │   └── OrderController.java                 # Order API Controller
@@ -485,7 +485,7 @@ interfaces/rest/order/
 
 ### Allowed Dependencies
 
-```
+```text
 Domain Layer:
   ✅ Java Standard Library
   ✅ Domain-specific libraries (e.g., Money API)
@@ -571,4 +571,3 @@ Dependencies are enforced through:
 ---
 
 **Previous**: [← Overview](overview.md) | **Next**: [Dependency Rules →](dependency-rules.md)
-

@@ -30,6 +30,7 @@ The Enterprise E-Commerce Platform requires comprehensive security monitoring an
 - Protect against sophisticated cyber attacks
 
 Taiwan's cyber security environment presents unique challenges:
+
 - Frequent DDoS attacks from state-sponsored actors
 - Advanced Persistent Threat (APT) campaigns
 - High-value e-commerce platform as attractive target
@@ -39,6 +40,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect customer data and business operations
 - Maintain platform availability and reputation
 - Comply with security regulations
@@ -46,6 +48,7 @@ Taiwan's cyber security environment presents unique challenges:
 - Enable rapid incident response and recovery
 
 **Constraints**:
+
 - Must operate 24/7 with minimal false positives
 - Cannot impact system performance
 - Must integrate with existing monitoring (ADR-008)
@@ -54,6 +57,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Technical Context
 
 **Current State**:
+
 - Basic CloudWatch monitoring (ADR-008)
 - No dedicated security monitoring
 - No intrusion detection system
@@ -61,6 +65,7 @@ Taiwan's cyber security environment presents unique challenges:
 - Manual security log analysis
 
 **Requirements**:
+
 - Real-time threat detection
 - Automated incident response
 - Comprehensive audit logging
@@ -86,6 +91,7 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Comprehensive security monitoring using AWS native services
 
 **Components**:
+
 - **AWS GuardDuty**: Threat detection for AWS accounts and workloads
 - **AWS Security Hub**: Centralized security findings management
 - **AWS CloudTrail**: API audit logging
@@ -96,6 +102,7 @@ Taiwan's cyber security environment presents unique challenges:
 - **Amazon SNS**: Alert notifications
 
 **Pros**:
+
 - ✅ Native AWS integration (no agents required)
 - ✅ Comprehensive threat detection (ML-powered)
 - ✅ Automated response capabilities
@@ -106,6 +113,7 @@ Taiwan's cyber security environment presents unique challenges:
 - ✅ Low operational overhead
 
 **Cons**:
+
 - ⚠️ Limited customization compared to SIEM
 - ⚠️ AWS-specific (not multi-cloud)
 - ⚠️ Additional cost for GuardDuty and Security Hub
@@ -119,6 +127,7 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Deploy dedicated Security Information and Event Management system
 
 **Pros**:
+
 - ✅ Advanced correlation and analytics
 - ✅ Customizable detection rules
 - ✅ Multi-cloud support
@@ -126,6 +135,7 @@ Taiwan's cyber security environment presents unique challenges:
 - ✅ Extensive integration ecosystem
 
 **Cons**:
+
 - ❌ High cost ($10,000-20,000/month)
 - ❌ Complex deployment and maintenance
 - ❌ Requires dedicated security team
@@ -141,12 +151,14 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Outsource security monitoring to third-party SOC
 
 **Pros**:
+
 - ✅ 24/7 professional monitoring
 - ✅ Expert incident response
 - ✅ No internal SOC required
 - ✅ Compliance support
 
 **Cons**:
+
 - ❌ Very high cost ($20,000-50,000/month)
 - ❌ Less control over security operations
 - ❌ Data privacy concerns
@@ -176,7 +188,7 @@ AWS native security monitoring was selected for the following reasons:
 
 ### Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Security Monitoring                       │
 ├─────────────────────────────────────────────────────────────┤
@@ -209,6 +221,7 @@ AWS native security monitoring was selected for the following reasons:
 ### AWS GuardDuty Configuration
 
 **Threat Detection Categories**:
+
 - **Reconnaissance**: Port scanning, unusual API calls
 - **Instance Compromise**: Malware, cryptocurrency mining, backdoor communication
 - **Account Compromise**: Credential theft, unusual API activity
@@ -216,12 +229,14 @@ AWS native security monitoring was selected for the following reasons:
 - **Kubernetes Threats**: Container compromise, privilege escalation
 
 **Detection Mechanisms**:
+
 - Machine learning models
 - Threat intelligence feeds
 - Anomaly detection
 - Behavioral analysis
 
 **Implementation**:
+
 ```python
 # Enable GuardDuty via CDK
 guardduty = aws_guardduty.CfnDetector(
@@ -240,12 +255,14 @@ guardduty = aws_guardduty.CfnDetector(
 ### AWS Security Hub Configuration
 
 **Security Standards**:
+
 - AWS Foundational Security Best Practices
 - CIS AWS Foundations Benchmark
 - PCI DSS
 - NIST Cybersecurity Framework
 
 **Integration**:
+
 - GuardDuty findings
 - AWS Config compliance checks
 - IAM Access Analyzer findings
@@ -253,6 +270,7 @@ guardduty = aws_guardduty.CfnDetector(
 - Inspector vulnerability findings
 
 **Implementation**:
+
 ```python
 # Enable Security Hub via CDK
 security_hub = aws_securityhub.CfnHub(
@@ -273,12 +291,14 @@ aws_securityhub.CfnStandard(
 **Approach**: Network-based IDS using Suricata on EC2
 
 **Deployment**:
+
 - Suricata instances in each VPC
 - Mirror VPC traffic to IDS instances
 - Analyze traffic for malicious patterns
 - Alert on suspicious activity
 
 **Detection Rules**:
+
 - OWASP Top 10 attack patterns
 - Known malware signatures
 - Anomalous traffic patterns
@@ -286,6 +306,7 @@ aws_securityhub.CfnStandard(
 - Command and control communication
 
 **Implementation**:
+
 ```yaml
 # Suricata configuration
 vars:
@@ -294,25 +315,31 @@ vars:
     EXTERNAL_NET: "!$HOME_NET"
 
 rule-files:
+
   - suricata.rules
   - emerging-threats.rules
   - custom-rules.rules
 
 outputs:
+
   - eve-log:
+
       enabled: yes
       filetype: regular
       filename: eve.json
       types:
+
         - alert
         - http
         - dns
         - tls
+
 ```
 
 ### Automated Incident Response
 
 **Response Actions**:
+
 1. **Auto-Block Malicious IPs**: Update WAF and Security Groups
 2. **Isolate Compromised Instances**: Remove from load balancer, restrict network
 3. **Collect Forensics**: Snapshot volumes, capture memory, save logs
@@ -320,6 +347,7 @@ outputs:
 5. **Create Incident Ticket**: Automatically create Jira ticket
 
 **Implementation**:
+
 ```python
 # Lambda function for automated response
 def lambda_handler(event, context):
@@ -364,12 +392,14 @@ def lambda_handler(event, context):
 ### Security Event Correlation
 
 **SIEM Capabilities**:
+
 - Correlate events across multiple sources
 - Detect multi-stage attacks
 - Identify attack patterns
 - Generate security insights
 
 **Implementation with CloudWatch Insights**:
+
 ```sql
 -- Detect brute force attacks
 fields @timestamp, userIdentity.principalId, sourceIPAddress, errorCode
@@ -389,6 +419,7 @@ fields @timestamp, sourceIPAddress, bytesOut
 ### Threat Intelligence Integration
 
 **Sources**:
+
 - AWS Threat Intelligence
 - AlienVault OTX
 - Abuse.ch
@@ -396,12 +427,14 @@ fields @timestamp, sourceIPAddress, bytesOut
 - Custom threat intelligence
 
 **Integration**:
+
 - Automatically update WAF IP blocklists
 - Enrich GuardDuty findings
 - Correlate with known threat actors
 - Share intelligence with Taiwan CERT
 
 **Implementation**:
+
 ```python
 # Update threat intelligence feeds
 def update_threat_feeds():
@@ -428,23 +461,27 @@ def update_threat_feeds():
 ### 24/7 Security Operations
 
 **SOC Structure**:
+
 - **Tier 1**: Alert triage and initial response (outsourced to Taiwan SOC)
 - **Tier 2**: Incident investigation and remediation (internal team)
 - **Tier 3**: Advanced threat hunting and forensics (internal team)
 
 **On-Call Rotation**:
+
 - 24/7 on-call coverage
 - Primary and secondary on-call engineers
 - Escalation to security lead for critical incidents
 - PagerDuty integration for alerting
 
 **Incident Classification**:
+
 - **P0 (Critical)**: Active data breach, system compromise
 - **P1 (High)**: Attempted breach, high-severity vulnerability
 - **P2 (Medium)**: Security policy violation, medium-severity finding
 - **P3 (Low)**: Informational finding, low-severity issue
 
 **Response SLAs**:
+
 - P0: 15 minutes response, 1 hour resolution
 - P1: 1 hour response, 4 hours resolution
 - P2: 4 hours response, 24 hours resolution
@@ -467,6 +504,7 @@ def update_threat_feeds():
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All AWS accounts and resources
 - All network traffic
 - All API calls
@@ -526,12 +564,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Excessive false positives (> 10% of alerts)
 - Performance degradation (> 5% overhead)
 - Cost overrun (> 150% of budget)
 - Operational issues
 
 **Rollback Steps**:
+
 1. Disable automated response actions
 2. Reduce GuardDuty sensitivity
 3. Pause IDS deployment
@@ -555,6 +595,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `security.threats.detected` (count by severity)
 - `security.incidents.created` (count by priority)
 - `security.response.time` (histogram)
@@ -562,6 +603,7 @@ Affects:
 - `security.compliance.score` (gauge)
 
 **Alerts**:
+
 - Critical security finding detected
 - Incident response SLA breach
 - False positive rate > 10%
@@ -569,6 +611,7 @@ Affects:
 - Threat intelligence feed update failure
 
 **Review Schedule**:
+
 - Daily: Review security alerts and incidents
 - Weekly: Analyze threat trends and patterns
 - Monthly: Compliance and audit review
@@ -597,12 +640,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual threat intelligence integration (acceptable initially)
 2. Basic security event correlation (acceptable for MVP)
 3. No advanced threat hunting capabilities
 4. Limited forensics automation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement advanced threat hunting with Athena
 - **Q3 2026**: Automate forensics collection and analysis
 - **Q4 2026**: Integrate with SOAR platform for orchestration

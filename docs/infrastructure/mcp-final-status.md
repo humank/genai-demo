@@ -8,6 +8,7 @@
 ## 🎯 Executive Summary
 
 Your MCP configuration has been optimized for stability and performance:
+
 - ✅ Removed duplicate configurations
 - ✅ Disabled timeout-prone servers
 - ✅ Kept all essential working servers
@@ -68,17 +69,20 @@ Your MCP configuration has been optimized for stability and performance:
 ## 🔄 Changes Made Today
 
 ### Phase 1: Duplicate Removal
+
 - ❌ Removed `aws-docs` from global (kept in project)
 - ❌ Removed `time` from global (kept in project)
 - ✅ Result: No more duplicates
 
 ### Phase 2: Timeout Server Handling (Global)
+
 - ❌ Disabled `awslabs.lambda-mcp-server` (timeout)
 - ❌ Disabled `awslabs.iam-mcp-server` (timeout)
 - ❌ Disabled `awslabs.aws-pricing-mcp-server` (timeout)
 - ✅ Result: Faster Kiro startup, no timeout errors
 
 ### Phase 3: Additional Timeout Fix (Project)
+
 - ❌ Disabled `aws-pricing` (timeout)
 - ✅ Result: All timeout issues resolved
 
@@ -87,12 +91,14 @@ Your MCP configuration has been optimized for stability and performance:
 ## 📈 Performance Improvements
 
 ### Before Optimization
+
 - **Startup Time**: ~30-60 seconds (with timeouts)
 - **Active Servers**: 11 (including 2 duplicates)
 - **Timeout Errors**: 3 servers
 - **Configuration Health**: 6/10
 
 ### After Optimization
+
 - **Startup Time**: ~10-15 seconds (estimated)
 - **Active Servers**: 7 (no duplicates)
 - **Timeout Errors**: 0 servers
@@ -103,16 +109,19 @@ Your MCP configuration has been optimized for stability and performance:
 ## ✅ Verified Working Features
 
 ### Documentation & Learning
+
 - ✅ AWS documentation search
 - ✅ CDK guidance and best practices
 - ✅ CDK Nag rule explanations
 
 ### Development Tools
+
 - ✅ Time operations and timezone conversions
 - ✅ Diagram creation with Excalidraw
 - ✅ AWS pricing analysis
 
 ### Version Control
+
 - ✅ GitHub repository operations
 - ✅ Issue and PR management
 
@@ -121,6 +130,7 @@ Your MCP configuration has been optimized for stability and performance:
 ## 🔧 Maintenance Tasks
 
 ### Immediate (Done)
+
 - [x] Backup configurations
 - [x] Remove duplicates
 - [x] Disable timeout servers
@@ -128,17 +138,21 @@ Your MCP configuration has been optimized for stability and performance:
 - [x] Verify working servers
 
 ### Next Steps (User Action Required)
+
 - [ ] Restart Kiro to apply changes
 - [ ] Test working servers
 - [ ] Update GitHub token if needed
 
 ### Optional (When Time Permits)
+
 - [ ] Pre-install timeout servers:
+
   ```bash
   uvx awslabs.lambda-mcp-server@latest --help
   uvx awslabs.iam-mcp-server@latest --help
   uvx awslabs.aws-pricing-mcp-server@latest --help
   ```
+
 - [ ] Re-enable servers if needed
 - [ ] Clean up old disabled servers
 
@@ -169,6 +183,7 @@ Your MCP configuration has been optimized for stability and performance:
 This is your current optimized configuration:
 
 ### Global Config (`~/.kiro/settings/mcp.json`)
+
 ```json
 {
   "mcpServers": {
@@ -200,6 +215,7 @@ This is your current optimized configuration:
 ```
 
 ### Project Config (`.kiro/settings/mcp.json`)
+
 ```json
 {
   "mcpServers": {
@@ -243,16 +259,19 @@ This is your current optimized configuration:
 After restarting Kiro, test these features:
 
 ### Basic Functionality
+
 - [ ] "What time is it?" (time server)
 - [ ] "What time is it in Tokyo?" (time server)
 - [ ] "Search AWS docs for Lambda" (aws-docs)
 - [ ] "Explain CDK Nag rule AwsSolutions-IAM4" (aws-cdk)
 
 ### Diagram Creation
+
 - [ ] "Create a simple flowchart with 3 boxes" (excalidraw)
 - [ ] "Create a system architecture diagram" (excalidraw)
 
 ### GitHub Integration (if token is valid)
+
 - [ ] "List my GitHub repositories" (github)
 - [ ] "Show recent issues in my repo" (github)
 
@@ -263,16 +282,19 @@ After restarting Kiro, test these features:
 If you need to rollback any changes:
 
 ### Rollback to Before Duplicate Removal
+
 ```bash
 cp ~/.kiro/settings/mcp.json.backup.20251107_115520 ~/.kiro/settings/mcp.json
 ```
 
 ### Rollback to Before Timeout Fix
+
 ```bash
 cp ~/.kiro/settings/mcp.json.backup.20251107_120841 ~/.kiro/settings/mcp.json
 ```
 
 ### Rollback Project Config (if needed)
+
 ```bash
 cp .kiro/settings/mcp.json.backup.20251107_115520 .kiro/settings/mcp.json
 ```
@@ -282,6 +304,7 @@ cp .kiro/settings/mcp.json.backup.20251107_115520 .kiro/settings/mcp.json
 ## 📊 Statistics
 
 ### Configuration Cleanup
+
 - **Duplicates Removed**: 2
 - **Servers Disabled**: 3 (timeout issues)
 - **Servers Kept Active**: 7
@@ -290,6 +313,7 @@ cp .kiro/settings/mcp.json.backup.20251107_115520 .kiro/settings/mcp.json
 - **Scripts Created**: 2
 
 ### Time Saved
+
 - **Kiro Startup**: ~20-45 seconds faster
 - **No Timeout Errors**: Eliminates frustration
 - **Clear Configuration**: Easier to maintain
@@ -316,9 +340,10 @@ All success criteria have been met:
 3. **Enjoy faster startup** and no timeout errors!
 
 Optional:
-4. Pre-install timeout servers when you have time
-5. Update GitHub token if using GitHub features
-6. Clean up old disabled servers you'll never use
+
+1. Pre-install timeout servers when you have time
+2. Update GitHub token if using GitHub features
+3. Clean up old disabled servers you'll never use
 
 ---
 

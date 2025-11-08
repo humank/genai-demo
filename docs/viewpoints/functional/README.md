@@ -11,6 +11,7 @@ The Functional Viewpoint describes the system's functional capabilities, how the
 ## Purpose
 
 This viewpoint answers:
+
 - What does the system do?
 - What are the main functional capabilities?
 - How are functions organized?
@@ -24,6 +25,7 @@ This viewpoint answers:
 ## Contents
 
 ### 📄 Documents
+
 - [Overview](overview.md) - High-level functional description
 - [Bounded Contexts](bounded-contexts.md) - 13 bounded contexts and their responsibilities
 - [Use Cases](use-cases.md) - Key use cases and scenarios
@@ -31,6 +33,7 @@ This viewpoint answers:
 - [Interfaces](interfaces.md) - External interfaces and APIs
 
 ### 📊 Diagrams
+
 - [Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
 - [Customer Context](../../diagrams/viewpoints/functional/customer-context.puml)
 - [Order Context](../../diagrams/viewpoints/functional/order-context.puml)
@@ -39,7 +42,9 @@ This viewpoint answers:
 ## Key Concepts
 
 ### Bounded Contexts
+
 The system is organized into 13 bounded contexts following Domain-Driven Design:
+
 1. Customer Management
 2. Product Catalog
 3. Inventory Management
@@ -55,6 +60,7 @@ The system is organized into 13 bounded contexts following Domain-Driven Design:
 13. Workflow Orchestration
 
 ### Functional Architecture
+
 - **Architecture Pattern**: Hexagonal Architecture (Ports & Adapters)
 - **Communication**: Domain Events for cross-context communication
 - **API Style**: RESTful APIs with OpenAPI 3.0 specification
@@ -62,16 +68,19 @@ The system is organized into 13 bounded contexts following Domain-Driven Design:
 ## Related Documentation
 
 ### Related Viewpoints
+
 - [Information Viewpoint](../information/README.md) - Data models for each bounded context
 - [Development Viewpoint](../development/README.md) - Code organization by bounded context
 - [Context Viewpoint](../context/README.md) - External system interactions
 
 ### Related Perspectives
+
 - [Security Perspective](../../perspectives/security/README.md) - Authentication and authorization
 - [Performance Perspective](../../perspectives/performance/README.md) - API response times
 - [Evolution Perspective](../../perspectives/evolution/README.md) - API versioning
 
 ### Related Guides
+
 - [API Documentation](../../api/README.md) - Detailed API reference
 - [Development Guide](../../development/README.md) - How to add new features
 

@@ -19,6 +19,7 @@ Retrieve notifications for the authenticated user.
 **Authentication**: Required
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `type`: Filter by type (EMAIL, SMS, IN_APP, PUSH)
@@ -26,6 +27,7 @@ Retrieve notifications for the authenticated user.
 - `category`: Filter by category (ORDER, PROMOTION, SYSTEM, ACCOUNT)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -70,6 +72,7 @@ Retrieve notifications for the authenticated user.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/notifications/me?status=UNREAD" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -88,9 +91,11 @@ Retrieve a specific notification.
 **Authorization**: User can only access own notifications
 
 **Path Parameters**:
+
 - `id`: Notification ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -117,10 +122,12 @@ Retrieve a specific notification.
 ```
 
 **Error Responses**:
+
 - `403 Forbidden`: Cannot access other user's notifications
 - `404 Not Found`: Notification not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/notifications/notif-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -137,9 +144,11 @@ Mark a notification as read.
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `id`: Notification ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -151,6 +160,7 @@ Mark a notification as read.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/notifications/notif-123/read \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -167,6 +177,7 @@ Mark all notifications as read for the authenticated user.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -177,6 +188,7 @@ Mark all notifications as read for the authenticated user.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/notifications/me/read-all \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -193,11 +205,13 @@ Delete a notification (soft delete/archive).
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `id`: Notification ID
 
 **Success Response** (204 No Content)
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/notifications/notif-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -214,6 +228,7 @@ Get count of unread notifications.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -229,6 +244,7 @@ Get count of unread notifications.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/notifications/me/unread-count \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -245,6 +261,7 @@ Get notification preferences for the authenticated user.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -295,6 +312,7 @@ Get notification preferences for the authenticated user.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/notifications/me/preferences \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -311,6 +329,7 @@ Update notification preferences.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "email": {
@@ -341,6 +360,7 @@ Update notification preferences.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -374,6 +394,7 @@ Update notification preferences.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/notifications/me/preferences \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -401,6 +422,7 @@ Send a notification to users (admin only).
 **Authorization**: ADMIN or MARKETING role required
 
 **Request Body**:
+
 ```json
 {
   "recipients": {
@@ -428,11 +450,13 @@ Send a notification to users (admin only).
 ```
 
 **Recipient Types**:
+
 - `ALL_USERS`: All registered users
 - `SPECIFIC_USERS`: List of user IDs
 - `SEGMENT`: User segment based on filters
 
 **Success Response** (202 Accepted):
+
 ```json
 {
   "data": {
@@ -446,10 +470,12 @@ Send a notification to users (admin only).
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `403 Forbidden`: Insufficient permissions
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/notifications/send \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -480,9 +506,11 @@ Get status of a notification campaign.
 **Authorization**: ADMIN or MARKETING role required
 
 **Path Parameters**:
+
 - `campaignId`: Campaign ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -510,6 +538,7 @@ Get status of a notification campaign.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/notifications/campaigns/camp-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -528,10 +557,12 @@ Get available notification templates.
 **Authorization**: ADMIN or MARKETING role required
 
 **Query Parameters**:
+
 - `type`: Filter by type (EMAIL, SMS)
 - `category`: Filter by category
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": [
@@ -560,6 +591,7 @@ Get available notification templates.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/notifications/templates?category=ORDER" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -647,6 +679,7 @@ The system can send webhook events for notification status updates:
 ```
 
 **Event Types**:
+
 - `notification.sent`: Notification sent
 - `notification.delivered`: Notification delivered
 - `notification.failed`: Delivery failed

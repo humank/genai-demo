@@ -21,6 +21,7 @@ This document defines the refactoring strategy for the Enterprise E-Commerce Pla
 ### When to Refactor
 
 ✅ **Refactor when**:
+
 - Adding new features to existing code
 - Fixing bugs in complex code
 - Code review identifies issues
@@ -29,6 +30,7 @@ This document defines the refactoring strategy for the Enterprise E-Commerce Pla
 - Technical debt is blocking progress
 
 ❌ **Don't refactor when**:
+
 - Under tight deadline pressure
 - No tests exist (write tests first)
 - You don't understand the code
@@ -95,6 +97,7 @@ public class OrderService {
 **Problem**: Long methods that do multiple things
 
 **Before**:
+
 ```java
 public void processOrder(Order order) {
     // Validate order
@@ -129,6 +132,7 @@ public void processOrder(Order order) {
 ```
 
 **After**:
+
 ```java
 public void processOrder(Order order) {
     validateOrder(order);
@@ -180,6 +184,7 @@ private void sendNotification(Order order) {
 **Problem**: Complex if-else or switch statements
 
 **Before**:
+
 ```java
 public Money calculateShipping(Order order, String shippingMethod) {
     if ("STANDARD".equals(shippingMethod)) {
@@ -199,6 +204,7 @@ public Money calculateShipping(Order order, String shippingMethod) {
 ```
 
 **After**:
+
 ```java
 // Strategy interface
 public interface ShippingStrategy {
@@ -278,6 +284,7 @@ public class ShippingService {
 **Problem**: Methods with many parameters
 
 **Before**:
+
 ```java
 public Order createOrder(
     String customerId,
@@ -293,6 +300,7 @@ public Order createOrder(
 ```
 
 **After**:
+
 ```java
 public record CreateOrderRequest(
     String customerId,
@@ -316,6 +324,7 @@ public Order createOrder(CreateOrderRequest request) {
 **Problem**: Hard-coded values scattered throughout code
 
 **Before**:
+
 ```java
 public boolean isEligibleForDiscount(Customer customer) {
     return customer.getOrderCount() > 10 
@@ -328,6 +337,7 @@ public Money calculateLoyaltyPoints(Money amount) {
 ```
 
 **After**:
+
 ```java
 public class CustomerConstants {
     public static final int DISCOUNT_ELIGIBILITY_ORDER_COUNT = 10;
@@ -352,6 +362,7 @@ public Money calculateLoyaltyPoints(Money amount) {
 **Problem**: Class doing too many things
 
 **Before**:
+
 ```java
 public class Order {
     private OrderId id;
@@ -376,6 +387,7 @@ public class Order {
 ```
 
 **After**:
+
 ```java
 public class Order {
     private OrderId id;
@@ -417,7 +429,7 @@ public class PaymentInfo {
 
 ### Safe Refactoring Process
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │           Safe Refactoring Workflow                     │
 ├─────────────────────────────────────────────────────────┤
@@ -456,6 +468,7 @@ public class PaymentInfo {
 ### Refactoring Checklist
 
 Before refactoring:
+
 - [ ] Tests exist and pass
 - [ ] Code is under version control
 - [ ] You understand what the code does
@@ -463,6 +476,7 @@ Before refactoring:
 - [ ] No urgent deadlines
 
 During refactoring:
+
 - [ ] Make one change at a time
 - [ ] Run tests after each change
 - [ ] Commit working code frequently
@@ -470,6 +484,7 @@ During refactoring:
 - [ ] Don't add new features
 
 After refactoring:
+
 - [ ] All tests pass
 - [ ] No new warnings or errors
 - [ ] Code is more readable
@@ -531,24 +546,28 @@ open build/reports/jacoco/test/html/index.html
 
 ### Refactoring Sprint Planning
 
-```
+```text
 Week 1: Planning
+
 - Identify technical debt
 - Prioritize refactoring tasks
 - Estimate effort
 - Assign tasks
 
 Week 2-3: Execution
+
 - Implement refactorings
 - Write/update tests
 - Code reviews
 - Documentation
 
 Week 4: Validation
+
 - Integration testing
 - Performance testing
 - Deploy to staging
 - Monitor metrics
+
 ```
 
 ---
@@ -567,13 +586,15 @@ Week 4: Validation
 
 ### ROI Calculation
 
-```
+```text
 Refactoring Cost:
+
 - Developer time: 40 hours × $100/hour = $4,000
 - Testing time: 10 hours × $100/hour = $1,000
 - Total cost: $5,000
 
 Benefits (Annual):
+
 - Reduced bug fixing: 20 hours × $100/hour = $2,000
 - Faster feature development: 30 hours × $100/hour = $3,000
 - Improved maintainability: $2,000
@@ -697,6 +718,7 @@ public class OrderService {
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Evolution perspective introduction
 - [Extensibility](extensibility.md) - Extension points and mechanisms
 - [Technology Evolution](technology-evolution.md) - Framework upgrades

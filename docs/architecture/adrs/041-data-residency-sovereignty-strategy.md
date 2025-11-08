@@ -23,6 +23,7 @@ affected_perspectives: ["security", "location"]
 Active-active multi-region architecture must comply with data residency and sovereignty regulations:
 
 **Regulatory Requirements**:
+
 - **GDPR (EU)**: Personal data of EU residents must stay in EU or adequate countries
 - **Taiwan PDPA**: Personal data protection requirements
 - **Japan APPI**: Act on Protection of Personal Information
@@ -30,6 +31,7 @@ Active-active multi-region architecture must comply with data residency and sove
 - **Industry Standards**: PCI-DSS for payment data
 
 **Data Sovereignty Challenges**:
+
 - **Cross-Border Transfer**: Restrictions on moving personal data across borders
 - **Data Localization**: Requirements to store data in specific countries
 - **Lawful Access**: Government access to data
@@ -37,6 +39,7 @@ Active-active multi-region architecture must comply with data residency and sove
 - **Business Flexibility**: Need to serve customers globally
 
 **Business Impact**:
+
 - Regulatory fines (up to 4% of revenue for GDPR)
 - Legal liability
 - Customer trust erosion
@@ -46,6 +49,7 @@ Active-active multi-region architecture must comply with data residency and sove
 ### Business Context
 
 **Business Drivers**:
+
 - Regulatory compliance (mandatory)
 - Customer trust and privacy
 - Market expansion (Japan, potentially China)
@@ -53,6 +57,7 @@ Active-active multi-region architecture must comply with data residency and sove
 - Risk mitigation
 
 **Constraints**:
+
 - Budget: $75,000/year for compliance infrastructure
 - Must support Taiwan and Japan markets
 - Future expansion to China possible
@@ -62,6 +67,7 @@ Active-active multi-region architecture must comply with data residency and sove
 ### Technical Context
 
 **Current State**:
+
 - Active-active architecture in Taiwan and Tokyo
 - Cross-region data replication
 - No data classification system
@@ -69,13 +75,13 @@ Active-active multi-region architecture must comply with data residency and sove
 - No compliance monitoring
 
 **Requirements**:
+
 - Data classification by sensitivity
 - Regional data isolation where required
 - Controlled cross-border transfers
 - Audit trails for data access
 - Compliance monitoring and reporting
 - Support for future regions
-
 
 ## Decision Drivers
 
@@ -97,16 +103,18 @@ Active-active multi-region architecture must comply with data residency and sove
 **Data Classification Tiers**:
 
 **Tier 1 - Strict Regional Isolation (PII/Payment)**:
+
 - **Data Types**: Customer PII, payment information, health data
 - **Storage**: Regional isolation (no cross-border replication)
 - **Access**: Regional only
 - **Regulations**: GDPR, APPI, PCI-DSS, Taiwan PDPA
-- **Examples**: 
+- **Examples**:
   - Taiwan customer PII → Taiwan region only
   - Japan customer PII → Tokyo region only
   - Payment card data → Regional isolation
 
 **Tier 2 - Controlled Cross-Region (Transactional)**:
+
 - **Data Types**: Orders, inventory, transactions
 - **Storage**: Cross-region replication with controls
 - **Access**: Cross-region with audit
@@ -117,6 +125,7 @@ Active-active multi-region architecture must comply with data residency and sove
   - Transaction logs → Replicated for audit
 
 **Tier 3 - Global Replication (Public/Non-Sensitive)**:
+
 - **Data Types**: Product catalog, public content
 - **Storage**: Global replication
 - **Access**: Unrestricted
@@ -127,6 +136,7 @@ Active-active multi-region architecture must comply with data residency and sove
   - Public reviews → Global
 
 **Pros**:
+
 - ✅ Compliant with all regulations
 - ✅ Flexible for different data types
 - ✅ Maintains availability where possible
@@ -135,6 +145,7 @@ Active-active multi-region architecture must comply with data residency and sove
 - ✅ Balances compliance and performance
 
 **Cons**:
+
 - ⚠️ Complexity in data classification
 - ⚠️ Regional data silos for Tier 1
 - ⚠️ Cross-region queries more complex
@@ -148,11 +159,13 @@ Active-active multi-region architecture must comply with data residency and sove
 **Description**: All customer data stays in customer's region
 
 **Pros**:
+
 - ✅ Maximum compliance
 - ✅ Simple to understand
 - ✅ Clear data boundaries
 
 **Cons**:
+
 - ❌ Poor availability (no cross-region failover for PII)
 - ❌ Complex cross-region operations
 - ❌ Performance issues for global features
@@ -167,11 +180,13 @@ Active-active multi-region architecture must comply with data residency and sove
 **Description**: Store all data globally with user consent
 
 **Pros**:
+
 - ✅ Simple architecture
 - ✅ Best performance
 - ✅ Easy operations
 
 **Cons**:
+
 - ❌ Regulatory non-compliance
 - ❌ Privacy concerns
 - ❌ Market access restrictions
@@ -213,6 +228,7 @@ Tiered data classification provides optimal balance:
 ### Data Residency Architecture
 
 **Regional Data Isolation**:
+
 ```typescript
 // Customer data routing based on residency
 class DataResidencyRouter {
@@ -265,6 +281,7 @@ class DataResidencyRouter {
 ```
 
 **Database Schema with Regional Partitioning**:
+
 ```sql
 -- Customer PII table with regional partitioning
 CREATE TABLE customer_pii (
@@ -324,6 +341,7 @@ CREATE PUBLICATION tokyo_orders FOR TABLE orders;
 ```
 
 **Application-Level Data Classification**:
+
 ```java
 @Entity
 @Table(name = "customer_pii")
@@ -404,6 +422,7 @@ public class Product {
 ### Cross-Border Transfer Controls
 
 **Transfer Authorization**:
+
 ```java
 @Service
 public class CrossBorderTransferService {
@@ -468,6 +487,7 @@ public class CrossBorderTransferService {
 ```
 
 **Data Transfer Agreement (DTA)**:
+
 ```java
 @Entity
 @Table(name = "data_transfer_agreements")
@@ -513,6 +533,7 @@ public class DataTransferAgreement {
 ### Compliance Monitoring and Audit
 
 **Data Access Audit Trail**:
+
 ```java
 @Entity
 @Table(name = "data_access_audit")
@@ -592,6 +613,7 @@ public class DataAccessAuditAspect {
 ```
 
 **Compliance Dashboard**:
+
 ```typescript
 // Compliance monitoring metrics
 const complianceMetrics = {
@@ -620,6 +642,7 @@ const complianceMetrics = {
 ### Customer Consent Management
 
 **Consent Framework**:
+
 ```java
 @Entity
 @Table(name = "customer_consents")
@@ -730,10 +753,10 @@ public class ConsentService {
 }
 ```
 
-
 ### Data Subject Rights (GDPR/APPI/PDPA)
 
 **Data Subject Request Handler**:
+
 ```java
 @Service
 public class DataSubjectRequestService {
@@ -844,6 +867,7 @@ public class DataSubjectRequestService {
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All data models
 - All database schemas
 - All application services
@@ -869,11 +893,13 @@ Affects:
 ### Phase 1: Data Classification (Month 1-2)
 
 **Objectives**:
+
 - Define data classification framework
 - Classify all existing data
 - Implement classification annotations
 
 **Tasks**:
+
 - [ ] Define data tiers and rules
 - [ ] Audit existing data
 - [ ] Classify all data types
@@ -881,6 +907,7 @@ Affects:
 - [ ] Create classification documentation
 
 **Success Criteria**:
+
 - All data classified
 - Classification rules documented
 - Team trained on classification
@@ -888,11 +915,13 @@ Affects:
 ### Phase 2: Regional Isolation (Month 3-4)
 
 **Objectives**:
+
 - Implement regional data isolation
 - Deploy regional routing
 - Test isolation controls
 
 **Tasks**:
+
 - [ ] Implement regional database partitioning
 - [ ] Deploy data residency router
 - [ ] Implement access controls
@@ -900,6 +929,7 @@ Affects:
 - [ ] Validate no cross-border leaks
 
 **Success Criteria**:
+
 - Tier 1 data isolated
 - Regional routing working
 - No cross-border violations
@@ -907,11 +937,13 @@ Affects:
 ### Phase 3: Audit and Compliance (Month 5-6)
 
 **Objectives**:
+
 - Implement audit trail
 - Deploy compliance monitoring
 - Set up reporting
 
 **Tasks**:
+
 - [ ] Implement data access audit
 - [ ] Deploy compliance dashboard
 - [ ] Configure alerts
@@ -919,6 +951,7 @@ Affects:
 - [ ] Test audit trail
 
 **Success Criteria**:
+
 - Audit trail operational
 - Compliance monitoring active
 - Reports generated
@@ -926,11 +959,13 @@ Affects:
 ### Phase 4: Consent Management (Month 7-8)
 
 **Objectives**:
+
 - Implement consent framework
 - Deploy consent UI
 - Test consent flows
 
 **Tasks**:
+
 - [ ] Implement consent service
 - [ ] Create consent UI
 - [ ] Integrate with data access
@@ -938,6 +973,7 @@ Affects:
 - [ ] Document consent procedures
 
 **Success Criteria**:
+
 - Consent framework operational
 - UI deployed
 - Consent validation working
@@ -945,11 +981,13 @@ Affects:
 ### Phase 5: Data Subject Rights (Month 9-10)
 
 **Objectives**:
+
 - Implement DSR handling
 - Deploy DSR portal
 - Test all DSR types
 
 **Tasks**:
+
 - [ ] Implement DSR service
 - [ ] Create DSR portal
 - [ ] Test access requests
@@ -957,6 +995,7 @@ Affects:
 - [ ] Test portability requests
 
 **Success Criteria**:
+
 - All DSR types supported
 - Portal operational
 - Response time < 30 days
@@ -964,11 +1003,13 @@ Affects:
 ### Phase 6: Production Readiness (Month 11-12)
 
 **Objectives**:
+
 - Comprehensive testing
 - Legal review
 - Production deployment
 
 **Tasks**:
+
 - [ ] Conduct compliance audit
 - [ ] Legal review and approval
 - [ ] Train all teams
@@ -976,6 +1017,7 @@ Affects:
 - [ ] Monitor for 60 days
 
 **Success Criteria**:
+
 - Compliance audit passed
 - Legal approval obtained
 - Production stable
@@ -983,12 +1025,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Compliance violations
 - Data leakage
 - Performance issues
 - Operational problems
 
 **Rollback Steps**:
+
 1. **Immediate**: Disable cross-border transfers
 2. **Isolate**: Full regional isolation
 3. **Audit**: Review all data access
@@ -1040,6 +1084,7 @@ const residencyMetrics = {
 ### Monitoring Dashboards
 
 **Compliance Dashboard**:
+
 - Data residency status
 - Compliance violations
 - Audit trail coverage
@@ -1047,6 +1092,7 @@ const residencyMetrics = {
 - Consent status
 
 **Data Classification Dashboard**:
+
 - Data by tier
 - Regional distribution
 - Cross-border transfers
@@ -1084,12 +1130,14 @@ const residencyMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual data classification for some data types
 2. Basic consent management (no granular controls)
 3. Limited DSR automation
 4. Manual compliance reporting
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated data classification
 - **Q3 2026**: Granular consent controls
 - **Q4 2026**: Fully automated DSR handling
@@ -1117,16 +1165,19 @@ const residencyMetrics = {
 ### Data Localization Requirements
 
 **Taiwan**:
+
 - No strict data localization
 - Personal data protection required
 - Cross-border transfer allowed with safeguards
 
 **Japan**:
+
 - No strict data localization
 - APPI compliance required
 - Cross-border transfer allowed with consent
 
 **China** (Future):
+
 - Strict data localization
 - Critical data must stay in China
 - Cross-border transfer requires approval
@@ -1134,6 +1185,7 @@ const residencyMetrics = {
 ### Standard Contractual Clauses (SCC)
 
 For cross-border transfers, use EU Standard Contractual Clauses:
+
 - Module 1: Controller to Controller
 - Module 2: Controller to Processor
 - Module 3: Processor to Processor
@@ -1152,12 +1204,14 @@ For cross-border transfers, use EU Standard Contractual Clauses:
 ### Future Considerations
 
 **China Expansion**:
+
 - Requires separate China region
 - Full data localization
 - Government approval for cross-border
 - Local partner may be required
 
 **EU Expansion**:
+
 - Requires EU region (e.g., Frankfurt)
 - GDPR compliance critical
 - Standard Contractual Clauses

@@ -61,7 +61,7 @@ This document defines the strategy for evolving the technology stack of the Ente
 
 ### Upgrade Decision Matrix
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Upgrade Decision Flow                      │
 ├─────────────────────────────────────────────────────────┤
@@ -356,15 +356,20 @@ SELECT * FROM pg_stat_replication;
 # Dependabot configuration (.github/dependabot.yml)
 version: 2
 updates:
+
   - package-ecosystem: "gradle"
+
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
     reviewers:
+
       - "architecture-team"
+
     labels:
+
       - "dependencies"
       - "automated"
     
@@ -372,10 +377,14 @@ updates:
     groups:
       spring-framework:
         patterns:
+
           - "org.springframework*"
+
       aws-sdk:
         patterns:
+
           - "software.amazon.awssdk*"
+
 ```
 
 #### Manual Review Process
@@ -449,7 +458,7 @@ dependencies {
 
 #### Evaluation Process
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │         Technology Adoption Process                     │
 ├─────────────────────────────────────────────────────────┤
@@ -489,7 +498,9 @@ dependencies {
 ### Technology Radar
 
 #### Adopt
+
 Technologies we are confident in and actively using:
+
 - Spring Boot 3.x
 - Java 21 LTS
 - PostgreSQL 15+
@@ -500,21 +511,27 @@ Technologies we are confident in and actively using:
 - AWS CDK 2.x
 
 #### Trial
+
 Technologies we are experimenting with:
+
 - Virtual Threads (Java 21)
 - Spring AI
 - Testcontainers
 - GraalVM Native Image
 
 #### Assess
+
 Technologies we are monitoring:
+
 - Java 23
 - Spring Boot 4.0 (future)
 - PostgreSQL 17
 - Kubernetes 1.30+
 
 #### Hold
+
 Technologies we are phasing out:
+
 - Java 17 (migrating to 21)
 - Spring Boot 2.x
 - PostgreSQL 14
@@ -527,7 +544,7 @@ Technologies we are phasing out:
 
 Gradually replace old system with new:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Strangler Fig Migration                    │
 ├─────────────────────────────────────────────────────────┤
@@ -662,19 +679,23 @@ kubectl scale deployment order-service --replicas=9
 ```yaml
 # CloudWatch Alarms
 Alarms:
+
   - Name: Post-Upgrade-Error-Rate
+
     Metric: ErrorRate
     Threshold: 1%
     Period: 5 minutes
     EvaluationPeriods: 2
     
   - Name: Post-Upgrade-Response-Time
+
     Metric: ResponseTime
     Threshold: 2000ms
     Period: 5 minutes
     EvaluationPeriods: 3
     
   - Name: Post-Upgrade-Memory-Usage
+
     Metric: MemoryUtilization
     Threshold: 85%
     Period: 5 minutes
@@ -684,6 +705,7 @@ Alarms:
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Evolution perspective introduction
 - [Extensibility](extensibility.md) - Extension points and plugin architecture
 - [API Versioning](api-versioning.md) - API compatibility and versioning

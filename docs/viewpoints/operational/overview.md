@@ -44,7 +44,7 @@ This viewpoint covers:
 
 ### Operational Responsibilities
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Operational Ownership                     │
 ├─────────────────────────────────────────────────────────────┤
@@ -73,6 +73,7 @@ This viewpoint covers:
 ### Team Responsibilities
 
 #### SRE Team
+
 - **Primary Focus**: System reliability and performance
 - **Responsibilities**:
   - Monitor system health and performance
@@ -84,6 +85,7 @@ This viewpoint covers:
   - Performance optimization
 
 #### DevOps Team
+
 - **Primary Focus**: Infrastructure and deployment automation
 - **Responsibilities**:
   - Manage AWS infrastructure (EKS, RDS, ElastiCache, MSK)
@@ -94,6 +96,7 @@ This viewpoint covers:
   - Security patching and updates
 
 #### Support Team
+
 - **Primary Focus**: User support and issue resolution
 - **Responsibilities**:
   - Handle user-reported issues
@@ -103,6 +106,7 @@ This viewpoint covers:
   - Track support metrics
 
 #### Development Team
+
 - **Primary Focus**: Feature development and bug fixes
 - **Responsibilities**:
   - Develop new features
@@ -151,6 +155,7 @@ This viewpoint covers:
 #### 1. Metrics (Quantitative Data)
 
 **Infrastructure Metrics**:
+
 - CPU utilization (target: < 70%)
 - Memory usage (target: < 80%)
 - Disk I/O (target: < 80%)
@@ -158,6 +163,7 @@ This viewpoint covers:
 - Pod/container health
 
 **Application Metrics**:
+
 - Request rate (requests/second)
 - Error rate (errors/second)
 - Response time (p50, p95, p99)
@@ -165,6 +171,7 @@ This viewpoint covers:
 - Queue depth
 
 **Business Metrics**:
+
 - Orders per minute
 - Revenue per hour
 - Active users
@@ -174,12 +181,14 @@ This viewpoint covers:
 #### 2. Logs (Event Data)
 
 **Log Levels**:
+
 - **ERROR**: System errors requiring immediate attention
 - **WARN**: Potential issues or degraded performance
 - **INFO**: Important business events
 - **DEBUG**: Detailed diagnostic information
 
 **Log Aggregation**:
+
 - Centralized logging with CloudWatch Logs
 - Structured JSON logging format
 - Log retention: 30 days (hot), 1 year (cold)
@@ -188,6 +197,7 @@ This viewpoint covers:
 #### 3. Traces (Request Flow)
 
 **Distributed Tracing**:
+
 - AWS X-Ray for request tracing
 - Trace all API requests
 - Track cross-service calls
@@ -210,6 +220,7 @@ This viewpoint covers:
 ### Alert Severity Levels
 
 #### Critical (P1)
+
 - **Response Time**: Immediate (< 5 minutes)
 - **Notification**: PagerDuty + Phone + Slack
 - **Examples**:
@@ -219,6 +230,7 @@ This viewpoint covers:
   - Data loss detected
 
 #### High (P2)
+
 - **Response Time**: < 15 minutes
 - **Notification**: PagerDuty + Slack
 - **Examples**:
@@ -228,6 +240,7 @@ This viewpoint covers:
   - Backup failures
 
 #### Medium (P3)
+
 - **Response Time**: < 1 hour
 - **Notification**: Slack
 - **Examples**:
@@ -237,6 +250,7 @@ This viewpoint covers:
   - Disk usage > 80%
 
 #### Low (P4)
+
 - **Response Time**: Next business day
 - **Notification**: Email + Slack
 - **Examples**:
@@ -247,6 +261,7 @@ This viewpoint covers:
 ### Alert Fatigue Prevention
 
 **Best Practices**:
+
 - Set appropriate thresholds to avoid false positives
 - Use alert aggregation (group similar alerts)
 - Implement alert suppression during maintenance
@@ -258,42 +273,48 @@ This viewpoint covers:
 
 ### Incident Response Process
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                  Incident Response Flow                      │
 └─────────────────────────────────────────────────────────────┘
 
 1. Detection
+
    ↓
    • Automated monitoring alerts
    • User reports
    • Internal discovery
    
 2. Triage
+
    ↓
    • Assess severity
    • Assign incident commander
    • Create incident channel
    
 3. Investigation
+
    ↓
    • Review metrics and logs
    • Check recent changes
    • Identify root cause
    
 4. Mitigation
+
    ↓
    • Implement fix or workaround
    • Rollback if necessary
    • Verify resolution
    
 5. Recovery
+
    ↓
    • Restore normal operations
    • Verify all systems healthy
    • Communicate status
    
 6. Post-Incident Review
+
    ↓
    • Document timeline
    • Identify root cause
@@ -304,6 +325,7 @@ This viewpoint covers:
 ### Incident Roles
 
 #### Incident Commander
+
 - **Responsibilities**:
   - Lead incident response
   - Coordinate team activities
@@ -312,6 +334,7 @@ This viewpoint covers:
   - Ensure post-incident review
 
 #### Technical Lead
+
 - **Responsibilities**:
   - Investigate technical issues
   - Implement fixes
@@ -319,6 +342,7 @@ This viewpoint covers:
   - Provide technical guidance
 
 #### Communications Lead
+
 - **Responsibilities**:
   - Update status page
   - Communicate with customers
@@ -328,12 +352,14 @@ This viewpoint covers:
 ### Incident Communication
 
 **Internal Communication**:
+
 - Create dedicated Slack channel for each incident
 - Regular status updates (every 15-30 minutes)
 - Clear, concise updates
 - Include impact assessment
 
 **External Communication**:
+
 - Update status page (status.ecommerce-platform.com)
 - Email notifications for major incidents
 - Social media updates if needed
@@ -344,12 +370,14 @@ This viewpoint covers:
 ### Scheduled Maintenance
 
 **Regular Maintenance Windows**:
+
 - **Frequency**: Monthly
 - **Duration**: 2 hours
 - **Time**: Sunday 2:00 AM - 4:00 AM EST
 - **Notification**: 7 days advance notice
 
 **Activities**:
+
 - Security patches
 - Database maintenance
 - Infrastructure updates
@@ -357,6 +385,7 @@ This viewpoint covers:
 - Backup verification
 
 **Emergency Maintenance**:
+
 - Critical security patches
 - Data corruption fixes
 - Service restoration
@@ -389,12 +418,14 @@ This viewpoint covers:
 ### Capacity Planning Process
 
 **Monthly Review**:
+
 - Analyze resource utilization trends
 - Forecast growth based on business metrics
 - Identify capacity constraints
 - Plan infrastructure scaling
 
 **Key Metrics**:
+
 - CPU utilization trends
 - Memory usage trends
 - Storage growth rate
@@ -402,6 +433,7 @@ This viewpoint covers:
 - Database connection pool usage
 
 **Scaling Triggers**:
+
 - CPU > 70% for 15 minutes → Scale up
 - Memory > 80% for 15 minutes → Scale up
 - Request queue depth > 100 → Scale out
@@ -410,6 +442,7 @@ This viewpoint covers:
 ### Auto-Scaling Configuration
 
 **EKS Node Groups**:
+
 - Minimum nodes: 3 (one per AZ)
 - Maximum nodes: 20
 - Target CPU utilization: 70%
@@ -417,6 +450,7 @@ This viewpoint covers:
 - Scale-down cooldown: 10 minutes
 
 **Application Pods**:
+
 - Minimum replicas: 2
 - Maximum replicas: 10
 - Target CPU: 70%
@@ -427,6 +461,7 @@ This viewpoint covers:
 ### Performance Monitoring
 
 **Key Performance Indicators**:
+
 - API response time (p50, p95, p99)
 - Database query performance
 - Cache hit rates
@@ -434,6 +469,7 @@ This viewpoint covers:
 - Page load times
 
 **Performance Baselines**:
+
 - Establish baseline metrics
 - Track performance trends
 - Identify degradation early
@@ -442,6 +478,7 @@ This viewpoint covers:
 ### Performance Optimization
 
 **Regular Activities**:
+
 - Database query optimization
 - Index analysis and tuning
 - Cache strategy review
@@ -449,6 +486,7 @@ This viewpoint covers:
 - Load testing
 
 **Performance Testing**:
+
 - Weekly load tests
 - Monthly stress tests
 - Quarterly capacity tests
@@ -459,6 +497,7 @@ This viewpoint covers:
 ### Security Monitoring
 
 **Security Metrics**:
+
 - Failed authentication attempts
 - Unauthorized access attempts
 - Suspicious API activity
@@ -466,6 +505,7 @@ This viewpoint covers:
 - Security patch compliance
 
 **Security Alerts**:
+
 - Multiple failed login attempts
 - Unusual API access patterns
 - Privilege escalation attempts
@@ -475,6 +515,7 @@ This viewpoint covers:
 ### Security Incident Response
 
 **Process**:
+
 1. Detect security incident
 2. Contain the threat
 3. Investigate scope and impact
@@ -483,8 +524,9 @@ This viewpoint covers:
 6. Post-incident analysis
 
 **Security Team Contacts**:
-- Security Lead: security@ecommerce-platform.com
-- Incident Response: security-incident@ecommerce-platform.com
+
+- Security Lead: <security@ecommerce-platform.com>
+- Incident Response: <security-incident@ecommerce-platform.com>
 - 24/7 Security Hotline: +1-XXX-XXX-XXXX
 
 ## Operational Metrics and KPIs
@@ -526,10 +568,10 @@ This viewpoint covers:
 
 ### Contact Information
 
-- **Operations Team**: ops@ecommerce-platform.com
-- **SRE Team**: sre@ecommerce-platform.com
-- **DevOps Team**: devops@ecommerce-platform.com
-- **Support Team**: support@ecommerce-platform.com
+- **Operations Team**: <ops@ecommerce-platform.com>
+- **SRE Team**: <sre@ecommerce-platform.com>
+- **DevOps Team**: <devops@ecommerce-platform.com>
+- **Support Team**: <support@ecommerce-platform.com>
 - **Emergency Hotline**: +1-XXX-XXX-XXXX (24/7)
 
 ---

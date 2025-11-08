@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance"]
 Active-active multi-region architecture requires comprehensive observability to ensure operational excellence:
 
 **Observability Challenges**:
+
 - **Distributed Tracing**: Track requests across multiple regions
 - **Unified Monitoring**: Aggregate metrics from all regions
 - **Cross-Region Correlation**: Correlate events across regions
@@ -31,6 +32,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 - **Root Cause Analysis**: Quickly identify failure causes
 
 **Monitoring Gaps**:
+
 - Regional monitoring silos
 - No cross-region request tracing
 - Difficult to correlate regional events
@@ -39,6 +41,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Reactive incident response
 
 **Business Impact**:
+
 - Delayed incident detection (target: < 1 minute)
 - Slow root cause analysis (target: < 15 minutes)
 - Customer experience degradation
@@ -48,6 +51,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 ### Business Context
 
 **Business Drivers**:
+
 - MTTD (Mean Time To Detect): < 1 minute
 - MTTR (Mean Time To Resolve): < 15 minutes
 - Availability SLO: 99.9%
@@ -55,6 +59,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Operational efficiency
 
 **Constraints**:
+
 - Budget: $60,000/year for observability tools
 - Data retention: 30 days hot, 1 year cold
 - Query performance: < 5 seconds
@@ -64,6 +69,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 ### Technical Context
 
 **Current State**:
+
 - Regional CloudWatch monitoring
 - Basic application metrics
 - No distributed tracing
@@ -71,6 +77,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 - Limited cross-region visibility
 
 **Requirements**:
+
 - Unified observability platform
 - Distributed tracing across regions
 - Real-time metrics aggregation
@@ -98,6 +105,7 @@ Active-active multi-region architecture requires comprehensive observability to 
 **Three Pillars of Observability**:
 
 **1. Metrics (Amazon CloudWatch + Prometheus)**:
+
 ```typescript
 // Multi-region metrics aggregation
 interface MetricsArchitecture {
@@ -153,6 +161,7 @@ const observabilityMetrics = {
 ```
 
 **2. Logs (Amazon CloudWatch Logs + OpenSearch)**:
+
 ```typescript
 // Centralized log management
 interface LogArchitecture {
@@ -213,6 +222,7 @@ const exampleLog: LogEntry = {
 ```
 
 **3. Traces (AWS X-Ray)**:
+
 ```typescript
 // Distributed tracing architecture
 interface TracingArchitecture {
@@ -291,6 +301,7 @@ const exampleTrace: CrossRegionTrace = {
 ```
 
 **Pros**:
+
 - ✅ AWS native integration
 - ✅ Unified cross-region view
 - ✅ Distributed tracing
@@ -299,6 +310,7 @@ const exampleTrace: CrossRegionTrace = {
 - ✅ Compliance-ready
 
 **Cons**:
+
 - ⚠️ AWS vendor lock-in
 - ⚠️ Learning curve
 - ⚠️ Initial setup complexity
@@ -312,11 +324,13 @@ const exampleTrace: CrossRegionTrace = {
 **Description**: Use Datadog or New Relic for unified observability
 
 **Pros**:
+
 - ✅ Feature-rich
 - ✅ Easy setup
 - ✅ Great UX
 
 **Cons**:
+
 - ❌ High cost ($150,000/year)
 - ❌ Data egress costs
 - ❌ Vendor lock-in
@@ -330,11 +344,13 @@ const exampleTrace: CrossRegionTrace = {
 **Description**: Self-managed Prometheus, Grafana, Jaeger
 
 **Pros**:
+
 - ✅ No vendor lock-in
 - ✅ Full control
 - ✅ Lower licensing costs
 
 **Cons**:
+
 - ❌ High operational overhead
 - ❌ Scaling challenges
 - ❌ Maintenance burden
@@ -354,6 +370,7 @@ AWS native tools provide optimal balance of cost, integration, and capabilities 
 **4. Alerting and Incident Management**:
 
 **Multi-Level Alerting Strategy**:
+
 ```typescript
 interface AlertingStrategy {
   levels: {
@@ -433,6 +450,7 @@ const criticalAlerts = {
 ```
 
 **Anomaly Detection**:
+
 ```typescript
 interface AnomalyDetection {
   methods: {
@@ -474,6 +492,7 @@ interface AnomalyDetection {
 **5. Dashboards and Visualization**:
 
 **Executive Dashboard**:
+
 ```typescript
 interface ExecutiveDashboard {
   metrics: {
@@ -518,6 +537,7 @@ interface ExecutiveDashboard {
 ```
 
 **Operations Dashboard**:
+
 ```typescript
 interface OperationsDashboard {
   sections: {
@@ -549,6 +569,7 @@ interface OperationsDashboard {
 ```
 
 **Service-Specific Dashboards**:
+
 ```typescript
 interface ServiceDashboard {
   service: 'order-service';
@@ -585,6 +606,7 @@ interface ServiceDashboard {
 **6. Cross-Region Correlation**:
 
 **Correlation Engine**:
+
 ```typescript
 class CrossRegionCorrelationEngine {
   
@@ -653,6 +675,7 @@ class CrossRegionCorrelationEngine {
 **7. Performance Analytics**:
 
 **Query Performance Analysis**:
+
 ```typescript
 interface PerformanceAnalytics {
   slowQueries: {
@@ -704,6 +727,7 @@ interface PerformanceAnalytics {
 **8. Compliance and Audit**:
 
 **Audit Logging**:
+
 ```typescript
 interface AuditLogging {
   requirements: {
@@ -730,6 +754,7 @@ interface AuditLogging {
 ```
 
 **Compliance Monitoring**:
+
 ```typescript
 interface ComplianceMonitoring {
   checks: {
@@ -778,6 +803,7 @@ interface ComplianceMonitoring {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All services and applications
 - Infrastructure monitoring
 - Database and cache monitoring
@@ -802,11 +828,13 @@ Affects:
 ### Phase 1: Metrics Foundation (Month 1-2)
 
 **Objectives**:
+
 - Deploy metrics collection infrastructure
 - Implement key business and technical metrics
 - Set up basic dashboards
 
 **Tasks**:
+
 - [ ] Deploy CloudWatch agents to all EC2 instances
 - [ ] Configure Prometheus in each region
 - [ ] Set up Prometheus federation for cross-region aggregation
@@ -817,6 +845,7 @@ Affects:
 - [ ] Configure basic alerts
 
 **Success Criteria**:
+
 - All services emitting metrics
 - Dashboards operational
 - Basic alerts configured
@@ -825,11 +854,13 @@ Affects:
 ### Phase 2: Centralized Logging (Month 3-4)
 
 **Objectives**:
+
 - Implement centralized log management
 - Deploy structured logging
 - Create log analysis dashboards
 
 **Tasks**:
+
 - [ ] Deploy Fluent Bit as DaemonSet on EKS
 - [ ] Configure CloudWatch Logs aggregation
 - [ ] Deploy OpenSearch cluster
@@ -840,6 +871,7 @@ Affects:
 - [ ] Set up log retention policies
 
 **Success Criteria**:
+
 - All logs centralized
 - Structured logging implemented
 - Log search operational
@@ -848,11 +880,13 @@ Affects:
 ### Phase 3: Distributed Tracing (Month 5-6)
 
 **Objectives**:
+
 - Implement distributed tracing
 - Enable cross-region trace correlation
 - Create service maps
 
 **Tasks**:
+
 - [ ] Deploy X-Ray daemon in each region
 - [ ] Integrate X-Ray SDK in applications
 - [ ] Configure automatic instrumentation
@@ -863,6 +897,7 @@ Affects:
 - [ ] Train team on trace analysis
 
 **Success Criteria**:
+
 - Distributed tracing operational
 - Cross-region traces visible
 - Service maps accurate
@@ -871,11 +906,13 @@ Affects:
 ### Phase 4: Alerting & Analytics (Month 7-8)
 
 **Objectives**:
+
 - Implement comprehensive alerting
 - Deploy anomaly detection
 - Create runbooks
 
 **Tasks**:
+
 - [ ] Configure CloudWatch alarms for all critical metrics
 - [ ] Integrate PagerDuty for on-call management
 - [ ] Configure Slack notifications
@@ -886,6 +923,7 @@ Affects:
 - [ ] Train teams on incident response
 
 **Success Criteria**:
+
 - All critical alerts configured
 - Anomaly detection operational
 - Runbooks complete
@@ -894,11 +932,13 @@ Affects:
 ### Phase 5: Advanced Analytics (Month 9-10)
 
 **Objectives**:
+
 - Implement performance analytics
 - Deploy compliance monitoring
 - Optimize observability costs
 
 **Tasks**:
+
 - [ ] Implement slow query detection
 - [ ] Create performance regression detection
 - [ ] Deploy compliance monitoring dashboards
@@ -909,6 +949,7 @@ Affects:
 - [ ] Create cost optimization dashboard
 
 **Success Criteria**:
+
 - Performance analytics operational
 - Compliance monitoring active
 - Costs optimized
@@ -917,11 +958,13 @@ Affects:
 ### Phase 6: Continuous Improvement (Month 11-12)
 
 **Objectives**:
+
 - Optimize and refine observability
 - Establish continuous improvement process
 - Measure and improve MTTD/MTTR
 
 **Tasks**:
+
 - [ ] Conduct observability review
 - [ ] Optimize alert thresholds
 - [ ] Refine dashboards based on feedback
@@ -932,6 +975,7 @@ Affects:
 - [ ] Plan next phase improvements
 
 **Success Criteria**:
+
 - MTTD < 1 minute achieved
 - MTTR < 15 minutes achieved
 - Team satisfaction high
@@ -940,12 +984,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Observability platform unavailable
 - Performance impact on production
 - Cost overruns
 - Data privacy violations
 
 **Rollback Steps**:
+
 1. **Immediate**: Disable non-critical monitoring
 2. **Reduce**: Scale back to essential metrics only
 3. **Fallback**: Use regional monitoring only
@@ -1007,6 +1053,7 @@ const observabilitySuccessMetrics = {
 ### Monitoring Dashboards
 
 **Observability Health Dashboard**:
+
 - Platform availability and performance
 - Data ingestion rates
 - Query performance
@@ -1014,6 +1061,7 @@ const observabilitySuccessMetrics = {
 - Cost tracking
 
 **Incident Response Dashboard**:
+
 - Active incidents
 - MTTD/MTTR trends
 - On-call status
@@ -1056,6 +1104,7 @@ const observabilitySuccessMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual dashboard creation and maintenance
 2. Basic anomaly detection (statistical only)
 3. Limited automated remediation
@@ -1063,6 +1112,7 @@ const observabilitySuccessMetrics = {
 5. Basic cost optimization
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated dashboard generation from service metadata
 - **Q3 2026**: Advanced ML-based anomaly detection
 - **Q4 2026**: Automated remediation for common issues
@@ -1081,23 +1131,25 @@ const observabilitySuccessMetrics = {
 **Last Reviewed**: 2025-10-25  
 **Next Review**: 2026-01-25 (Quarterly)
 
-
 ## Notes
 
 ### Observability Best Practices
 
 **Golden Signals** (Google SRE):
+
 1. **Latency**: Time to service a request
 2. **Traffic**: Demand on the system
 3. **Errors**: Rate of failed requests
 4. **Saturation**: Resource utilization
 
 **RED Method** (for services):
+
 - **Rate**: Requests per second
 - **Errors**: Number of failed requests
 - **Duration**: Time to process requests
 
 **USE Method** (for resources):
+
 - **Utilization**: Percentage of time resource is busy
 - **Saturation**: Amount of work resource cannot service
 - **Errors**: Count of error events
@@ -1105,6 +1157,7 @@ const observabilitySuccessMetrics = {
 ### Tool Selection Rationale
 
 **Why AWS Native Tools**:
+
 1. **Cost**: $60K/year vs $150K for Datadog
 2. **Integration**: Native AWS service integration
 3. **Data Locality**: No data egress costs
@@ -1113,6 +1166,7 @@ const observabilitySuccessMetrics = {
 6. **Support**: AWS enterprise support
 
 **Trade-offs Accepted**:
+
 1. **Vendor Lock-in**: Acceptable for cost savings
 2. **Feature Set**: Slightly less features than Datadog
 3. **Learning Curve**: Team needs AWS training
@@ -1123,6 +1177,7 @@ const observabilitySuccessMetrics = {
 **Standard Format**: `{namespace}.{category}.{metric_name}`
 
 **Examples**:
+
 - `app.requests.total`
 - `app.requests.duration`
 - `app.requests.errors`
@@ -1131,6 +1186,7 @@ const observabilitySuccessMetrics = {
 - `region.latency.cross_region`
 
 **Labels/Tags**:
+
 - `service`: Service name
 - `region`: AWS region
 - `environment`: prod/staging/dev
@@ -1148,12 +1204,14 @@ const observabilitySuccessMetrics = {
 ### Trace Sampling Strategy
 
 **Adaptive Sampling**:
+
 - **Error Traces**: 100% sampling
 - **Slow Traces (> 2s)**: 100% sampling
 - **Normal Traces**: 5% sampling
 - **Fast Traces (< 100ms)**: 1% sampling
 
 **Cost Optimization**:
+
 - Reduces trace volume by 95%
 - Maintains visibility into issues
 - Estimated cost: $10,000/year vs $50,000 for 100% sampling
@@ -1179,12 +1237,14 @@ const observabilitySuccessMetrics = {
 ### Compliance Requirements
 
 **GDPR/PDPA Compliance**:
+
 - PII in logs must be masked or encrypted
 - Log retention policies documented
 - Access controls on sensitive logs
 - Audit trail for log access
 
 **PCI-DSS Compliance**:
+
 - Payment card data never logged
 - Audit logs for payment transactions
 - Log integrity protection
@@ -1193,18 +1253,21 @@ const observabilitySuccessMetrics = {
 ### Cost Optimization Strategies
 
 **Metric Optimization**:
+
 - Filter low-value metrics
 - Aggregate similar metrics
 - Use metric math for derived metrics
 - Implement metric retention policies
 
 **Log Optimization**:
+
 - Filter debug logs in production
 - Compress logs before storage
 - Use log sampling for high-volume logs
 - Implement log lifecycle policies
 
 **Trace Optimization**:
+
 - Adaptive sampling
 - Filter internal health checks
 - Compress trace data
@@ -1213,12 +1276,14 @@ const observabilitySuccessMetrics = {
 ### Future Enhancements
 
 **Phase 2 (2026)**:
+
 - AI-powered anomaly detection
 - Automated root cause analysis
 - Predictive alerting
 - Self-healing automation
 
 **Phase 3 (2027)**:
+
 - AIOps platform integration
 - Automated capacity planning
 - Intelligent alert routing

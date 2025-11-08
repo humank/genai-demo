@@ -17,12 +17,14 @@ We use a simplified Git Flow model with the following branch types:
 **Purpose**: Production-ready code
 
 **Characteristics:**
+
 - Always deployable
 - Protected branch (requires PR and reviews)
 - Automatically deployed to production
 - Never commit directly to main
 
 **Protection Rules:**
+
 - Require pull request reviews (minimum 2 approvals)
 - Require status checks to pass
 - Require branches to be up to date
@@ -33,6 +35,7 @@ We use a simplified Git Flow model with the following branch types:
 **Purpose**: Integration branch for features
 
 **Characteristics:**
+
 - Latest development changes
 - Protected branch (requires PR)
 - Automatically deployed to staging
@@ -45,10 +48,12 @@ We use a simplified Git Flow model with the following branch types:
 **Naming Convention**: `feature/TICKET-ID-short-description`
 
 **Examples:**
+
 - `feature/JIRA-123-customer-registration`
 - `feature/JIRA-456-order-discount-calculation`
 
 **Lifecycle:**
+
 1. Branch from `develop`
 2. Develop feature
 3. Create PR to `develop`
@@ -61,10 +66,12 @@ We use a simplified Git Flow model with the following branch types:
 **Naming Convention**: `bugfix/TICKET-ID-short-description`
 
 **Examples:**
+
 - `bugfix/JIRA-789-fix-email-validation`
 - `bugfix/JIRA-101-correct-price-calculation`
 
 **Lifecycle:**
+
 1. Branch from `develop`
 2. Fix bug
 3. Create PR to `develop`
@@ -77,10 +84,12 @@ We use a simplified Git Flow model with the following branch types:
 **Naming Convention**: `hotfix/TICKET-ID-short-description`
 
 **Examples:**
+
 - `hotfix/JIRA-999-fix-payment-gateway-error`
 - `hotfix/JIRA-888-security-vulnerability-patch`
 
 **Lifecycle:**
+
 1. Branch from `main`
 2. Fix critical issue
 3. Create PR to `main` AND `develop`
@@ -93,10 +102,12 @@ We use a simplified Git Flow model with the following branch types:
 **Naming Convention**: `release/v{major}.{minor}.{patch}`
 
 **Examples:**
+
 - `release/v1.2.0`
 - `release/v2.0.0`
 
 **Lifecycle:**
+
 1. Branch from `develop`
 2. Final testing and bug fixes
 3. Merge to `main` and tag
@@ -107,7 +118,7 @@ We use a simplified Git Flow model with the following branch types:
 
 ### Feature Development Flow
 
-```
+```text
 develop
   │
   ├─── feature/JIRA-123-new-feature
@@ -124,7 +135,7 @@ develop
 
 ### Hotfix Flow
 
-```
+```text
 main
   │
   ├─── hotfix/JIRA-999-critical-fix
@@ -144,7 +155,7 @@ develop
 
 ### Release Flow
 
-```
+```text
 develop
   │
   ├─── release/v1.2.0
@@ -166,7 +177,7 @@ main
 
 ### Format
 
-```
+```text
 <type>(<scope>): <subject>
 
 <body>
@@ -189,6 +200,7 @@ main
 ### Scope
 
 The scope should indicate the affected area:
+
 - `customer`: Customer-related changes
 - `order`: Order-related changes
 - `product`: Product-related changes
@@ -218,7 +230,8 @@ The scope should indicate the affected area:
 ### Examples
 
 **Simple commit:**
-```
+
+```text
 feat(customer): add email validation for customer registration
 
 Implement email format validation using regex pattern to ensure
@@ -228,7 +241,8 @@ Closes #123
 ```
 
 **Bug fix:**
-```
+
+```text
 fix(order): correct total calculation for discounted items
 
 Fixed an issue where discount was not properly applied to order
@@ -238,7 +252,8 @@ Fixes #456
 ```
 
 **Breaking change:**
-```
+
+```text
 refactor(api): change customer API response format
 
 BREAKING CHANGE: Customer API now returns nested address object
@@ -290,11 +305,13 @@ git push origin feature/JIRA-123-new-feature
 #### 2. Create PR on GitHub
 
 **PR Title Format:**
-```
+
+```json
 [TYPE] TICKET-ID: Brief description
 ```
 
 **Examples:**
+
 - `[FEAT] JIRA-123: Add customer registration feature`
 - `[FIX] JIRA-456: Fix order total calculation`
 - `[REFACTOR] JIRA-789: Improve payment service architecture`
@@ -306,6 +323,7 @@ git push origin feature/JIRA-123-new-feature
 Brief description of the changes
 
 ## Type of Change
+
 - [ ] New feature
 - [ ] Bug fix
 - [ ] Breaking change
@@ -315,11 +333,13 @@ Brief description of the changes
 Closes #123
 
 ## Changes Made
+
 - Change 1
 - Change 2
 - Change 3
 
 ## Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] Manual testing completed
@@ -328,6 +348,7 @@ Closes #123
 [Add screenshots for UI changes]
 
 ## Checklist
+
 - [ ] Code follows project coding standards
 - [ ] Self-review completed
 - [ ] Comments added for complex logic
@@ -335,6 +356,7 @@ Closes #123
 - [ ] No new warnings generated
 - [ ] Tests pass locally
 - [ ] Dependent changes merged
+
 ```
 
 #### 3. Request Reviews
@@ -349,6 +371,7 @@ Closes #123
 #### Review Checklist
 
 **Code Quality:**
+
 - [ ] Code follows coding standards
 - [ ] No code duplication
 - [ ] Proper error handling
@@ -356,18 +379,21 @@ Closes #123
 - [ ] No security vulnerabilities
 
 **Testing:**
+
 - [ ] Tests are included
 - [ ] Tests are meaningful
 - [ ] Tests pass
 - [ ] Coverage is adequate
 
 **Documentation:**
+
 - [ ] Code is self-documenting
 - [ ] Complex logic is commented
 - [ ] API documentation updated
 - [ ] README updated if needed
 
 **Architecture:**
+
 - [ ] Follows project architecture
 - [ ] No architectural violations
 - [ ] Proper layer separation
@@ -385,7 +411,7 @@ Closes #123
 
 **Examples:**
 
-```
+```yaml
 nit: Consider using a more descriptive variable name here
 
 question: Why did you choose this approach over X?
@@ -402,6 +428,7 @@ praise: Great use of the builder pattern here!
 #### Merge Strategies
 
 **1. Squash and Merge (Preferred)**
+
 - Combines all commits into one
 - Keeps history clean
 - Use for feature branches
@@ -411,11 +438,13 @@ praise: Great use of the builder pattern here!
 ```
 
 **2. Rebase and Merge**
+
 - Maintains individual commits
 - Linear history
 - Use for small, well-organized commits
 
 **3. Merge Commit**
+
 - Creates a merge commit
 - Preserves all commits
 - Use for release branches
@@ -539,6 +568,7 @@ public void processOrder(Order order) {
 ```
 
 **Resolution:**
+
 ```java
 // Resolved version
 public void processOrder(Order order) {

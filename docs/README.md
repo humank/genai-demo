@@ -12,23 +12,27 @@ Welcome to the comprehensive documentation for the Enterprise E-Commerce Platfor
 ## 📖 Documentation by Stakeholder
 
 ### For Business Stakeholders
+
 - [Functional Viewpoint](viewpoints/functional/README.md) - What the system does
 - [Context Viewpoint](viewpoints/context/README.md) - System boundaries and integrations
 - [Architecture Overview](architecture/README.md) - High-level system design
 
 ### For Developers
+
 - [Development Viewpoint](viewpoints/development/README.md) - Code organization and structure
 - [Development Guide](development/README.md) - How to develop and contribute
 - [API Documentation](api/README.md) - REST APIs and domain events
 - [Testing Guide](development/testing/testing-strategy.md) - Testing approach and guidelines
 
 ### For Operations & SRE
+
 - [Deployment Viewpoint](viewpoints/deployment/README.md) - Infrastructure and deployment
 - [Operational Viewpoint](viewpoints/operational/README.md) - Operations and monitoring
 - [Operations Guide](operations/README.md) - Runbooks and procedures
 - [Monitoring Guide](operations/monitoring/monitoring-strategy.md) - Monitoring and alerting
 
 ### For Architects
+
 - [All Viewpoints](viewpoints/README.md) - Complete system structure documentation
 - [All Perspectives](perspectives/README.md) - Quality attributes and cross-cutting concerns
 - [Architecture Decisions](architecture/adrs/README.md) - ADRs and design rationale
@@ -61,22 +65,26 @@ Perspectives describe quality attributes that cut across viewpoints:
 ## 📚 Additional Documentation
 
 ### Architecture & Design
+
 - [Architecture Decision Records (ADRs)](architecture/adrs/README.md) - Key architectural decisions
 - [Design Patterns](architecture/patterns/README.md) - Patterns used in the system
 - [Architecture Principles](architecture/principles/README.md) - Guiding principles
 
 ### API Documentation
+
 - [REST API](api/rest/README.md) - RESTful API endpoints
 - [Domain Events](api/events/README.md) - Event-driven architecture
 - [External Integrations](api/integration/README.md) - Third-party integrations
 
 ### Development
+
 - [Setup Guide](development/setup/README.md) - Environment setup
 - [Coding Standards](development/coding-standards/README.md) - Code style and conventions
 - [Testing Guide](development/testing/README.md) - Testing strategy and practices
 - [Workflows](development/workflows/README.md) - Git workflow, code review, CI/CD
 
 ### Operations
+
 - [Deployment](operations/deployment/README.md) - Deployment procedures
 - [Monitoring](operations/monitoring/README.md) - Monitoring and alerting
 - [Runbooks](operations/runbooks/README.md) - Operational procedures
@@ -85,6 +93,7 @@ Perspectives describe quality attributes that cut across viewpoints:
 ## 🔍 Finding Information
 
 ### By Topic
+
 - **Authentication & Security**: [Security Perspective](perspectives/security/README.md)
 - **Performance Optimization**: [Performance Perspective](perspectives/performance/README.md)
 - **Deployment & Infrastructure**: [Deployment Viewpoint](viewpoints/deployment/README.md)
@@ -93,6 +102,7 @@ Perspectives describe quality attributes that cut across viewpoints:
 - **Troubleshooting**: [Troubleshooting Guide](operations/troubleshooting/README.md)
 
 ### By Task
+
 - **I want to add a new feature**: [Development Guide](development/README.md) → [Functional Viewpoint](viewpoints/functional/README.md)
 - **I need to fix a bug**: [Troubleshooting Guide](operations/troubleshooting/README.md) → [Development Guide](development/README.md)
 - **I need to deploy**: [Deployment Guide](operations/deployment/README.md)
@@ -116,6 +126,7 @@ All architectural diagrams are organized by viewpoint and perspective:
 ## 📈 Documentation Health
 
 Current documentation status:
+
 - ✅ Viewpoints: 7/7 documented
 - ✅ Perspectives: 8/8 documented
 - ✅ API Endpoints: Documented
@@ -125,7 +136,7 @@ Last updated: 2025-01-17
 
 ---
 
-## Need Help?
+## Need Help
 
 - **Can't find what you're looking for?** Check the [Site Map](SITEMAP.md)
 - **Found an issue?** [Report a documentation issue](https://github.com/yourusername/genai-demo/issues/new?labels=documentation)

@@ -19,6 +19,7 @@ Create a new customer account.
 **Authentication**: Not required
 
 **Request Body**:
+
 ```json
 {
   "name": "John Doe",
@@ -36,6 +37,7 @@ Create a new customer account.
 ```
 
 **Validation Rules**:
+
 - `name`: Required, 2-100 characters
 - `email`: Required, valid email format, unique
 - `password`: Required, min 8 characters, must contain uppercase, lowercase, and number
@@ -43,6 +45,7 @@ Create a new customer account.
 - `address`: Required object with all fields
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -70,10 +73,12 @@ Create a new customer account.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `409 Conflict`: Email already registered
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/customers \
   -H "Content-Type: application/json" \
@@ -105,9 +110,11 @@ Retrieve a specific customer by their ID.
 **Authorization**: User can access own profile, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID (e.g., `cust-123`)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -136,11 +143,13 @@ Retrieve a specific customer by their ID.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Customer not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/customers/cust-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -157,6 +166,7 @@ Retrieve the authenticated user's profile.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -185,9 +195,11 @@ Retrieve the authenticated user's profile.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/customers/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -206,6 +218,7 @@ Retrieve a paginated list of customers.
 **Authorization**: ADMIN role required
 
 **Query Parameters**:
+
 - `page`: Page number (0-based, default: 0)
 - `size`: Page size (default: 20, max: 100)
 - `sort`: Sort field and direction (default: `createdAt,desc`)
@@ -215,6 +228,7 @@ Retrieve a paginated list of customers.
 - `status`: Filter by status (ACTIVE, INACTIVE, SUSPENDED)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -249,10 +263,12 @@ Retrieve a paginated list of customers.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions (ADMIN required)
 
 **curl Example**:
+
 ```bash
 # Basic list
 curl -X GET "https://api.ecommerce.com/api/v1/customers?page=0&size=20" \
@@ -276,9 +292,11 @@ Update customer information.
 **Authorization**: User can update own profile, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Request Body**:
+
 ```json
 {
   "name": "John Doe Updated",
@@ -294,12 +312,14 @@ Update customer information.
 ```
 
 **Validation Rules**:
+
 - `name`: Optional, 2-100 characters if provided
 - `phone`: Optional, valid phone format if provided
 - `address`: Optional, all fields required if provided
 - `email`: Cannot be updated (use separate endpoint)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -321,12 +341,14 @@ Update customer information.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Customer not found
 
 **curl Example**:
+
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/customers/cust-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -357,9 +379,11 @@ Partially update customer information (only specified fields).
 **Authorization**: User can update own profile, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Request Body** (all fields optional):
+
 ```json
 {
   "name": "John Doe Updated",
@@ -368,6 +392,7 @@ Partially update customer information (only specified fields).
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -389,12 +414,14 @@ Partially update customer information (only specified fields).
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Customer not found
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -417,17 +444,20 @@ Delete a customer account.
 **Authorization**: User can delete own account, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Customer not found
 - `409 Conflict`: Cannot delete customer with active orders
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/customers/cust-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -446,9 +476,11 @@ Update customer email address (requires verification).
 **Authorization**: User can update own email, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Request Body**:
+
 ```json
 {
   "newEmail": "newemail@example.com",
@@ -457,10 +489,12 @@ Update customer email address (requires verification).
 ```
 
 **Validation Rules**:
+
 - `newEmail`: Required, valid email format, unique
 - `password`: Required for verification
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -471,11 +505,13 @@ Update customer email address (requires verification).
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Invalid password
 - `409 Conflict`: Email already in use
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/customers/cust-123/email \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -499,14 +535,17 @@ Retrieve orders for a specific customer.
 **Authorization**: User can access own orders, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `status`: Filter by order status (PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -533,6 +572,7 @@ Retrieve orders for a specific customer.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/customers/cust-123/orders?status=DELIVERED" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -551,9 +591,11 @@ Update customer preferences and settings.
 **Authorization**: User can update own preferences
 
 **Path Parameters**:
+
 - `id`: Customer ID
 
 **Request Body**:
+
 ```json
 {
   "newsletter": true,
@@ -564,6 +606,7 @@ Update customer preferences and settings.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -579,6 +622,7 @@ Update customer preferences and settings.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/customers/cust-123/preferences \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \

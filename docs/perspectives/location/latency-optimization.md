@@ -7,10 +7,12 @@ last_updated: "2025-10-24"
 version: "1.0"
 status: "active"
 related_docs:
+
   - "overview.md"
   - "multi-region.md"
   - "../../perspectives/performance/README.md"
   - "../../viewpoints/deployment/README.md"
+
 tags: ["latency", "performance", "cdn", "caching", "optimization"]
 ---
 
@@ -35,7 +37,7 @@ This document details the comprehensive latency optimization strategy for the En
 
 ### Regional Latency Targets
 
-```
+```text
 User Location → Target Latency
 ────────────────────────────────
 North America → US-EAST-1:     < 50ms
@@ -51,7 +53,8 @@ Middle East   → EU-WEST-1:     < 150ms
 ### CloudFront Configuration
 
 **Distribution Setup**:
-```
+
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              CloudFront Distribution                     │
 ├─────────────────────────────────────────────────────────┤
@@ -72,8 +75,8 @@ Middle East   → EU-WEST-1:     < 150ms
 └─────────────────────────────────────────────────────────┘
 ```
 
-
 **Cache Behaviors**:
+
 ```yaml
 # Static Assets (Images, CSS, JS)
 PathPattern: /static/*
@@ -97,7 +100,8 @@ ViewerProtocolPolicy: https-only
 ```
 
 **Origin Failover**:
-```
+
+```text
 Primary Origin: US-EAST-1
   ├─ Health Check: /health
   ├─ Timeout: 10 seconds
@@ -112,6 +116,7 @@ Secondary Origin: EU-WEST-1
 ### Content Optimization
 
 **Image Optimization**:
+
 - WebP format for modern browsers
 - JPEG fallback for legacy browsers
 - Responsive images with srcset
@@ -119,6 +124,7 @@ Secondary Origin: EU-WEST-1
 - Image compression (80% quality)
 
 **JavaScript Optimization**:
+
 - Minification and bundling
 - Code splitting by route
 - Tree shaking to remove unused code
@@ -126,17 +132,17 @@ Secondary Origin: EU-WEST-1
 - Service worker for offline caching
 
 **CSS Optimization**:
+
 - Minification and bundling
 - Critical CSS inlined
 - Non-critical CSS loaded asynchronously
 - Remove unused CSS
 
-
 ## Caching Strategy
 
 ### Multi-Layer Caching
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Caching Layers                          │
 ├─────────────────────────────────────────────────────────┤
@@ -168,6 +174,7 @@ Secondary Origin: EU-WEST-1
 ### Redis Caching Configuration
 
 **Cluster Setup**:
+
 ```yaml
 # Production Redis Configuration
 cluster:
@@ -190,8 +197,8 @@ performance:
   tcp-keepalive: 300
 ```
 
-
 **Cache Key Strategy**:
+
 ```java
 @Service
 public class CacheKeyGenerator {
@@ -215,6 +222,7 @@ public class CacheKeyGenerator {
 ```
 
 **Cache Invalidation**:
+
 ```java
 @Service
 public class CacheInvalidationService {
@@ -247,7 +255,8 @@ public class CacheInvalidationService {
 ### Read Replica Strategy
 
 **Configuration**:
-```
+
+```text
 Primary Database (US-EAST-1)
   ├─ Writes: All write operations
   ├─ Reads: 20% of read operations
@@ -264,8 +273,8 @@ Read Replica 2 (AP-SE-1)
   └─ Promotion Ready: Yes
 ```
 
-
 **Query Optimization**:
+
 ```sql
 -- Index Strategy
 CREATE INDEX idx_products_category ON products(category_id);
@@ -283,6 +292,7 @@ CREATE INDEX idx_pending_orders ON orders(customer_id) WHERE status = 'PENDING';
 ```
 
 **Connection Pooling**:
+
 ```yaml
 # HikariCP Configuration
 hikari:
@@ -297,6 +307,7 @@ hikari:
 ### Query Caching
 
 **Application-Level Query Cache**:
+
 ```java
 @Service
 public class ProductQueryService {
@@ -319,6 +330,7 @@ public class ProductQueryService {
 ### TCP Optimization
 
 **Kernel Parameters**:
+
 ```bash
 # /etc/sysctl.conf
 net.core.rmem_max = 134217728
@@ -329,10 +341,10 @@ net.ipv4.tcp_congestion_control = bbr
 net.ipv4.tcp_fastopen = 3
 ```
 
-
 ### HTTP/2 and HTTP/3
 
 **Configuration**:
+
 ```nginx
 # Nginx Configuration
 http {
@@ -358,6 +370,7 @@ http {
 ### DNS Optimization
 
 **Route 53 Configuration**:
+
 ```yaml
 # Latency-Based Routing
 routing_policy: latency
@@ -367,15 +380,19 @@ health_check:
   failure_threshold: 3
   
 regions:
+
   - name: us-east-1
+
     weight: 50
     health_check: /health
   
   - name: eu-west-1
+
     weight: 30
     health_check: /health
   
   - name: ap-southeast-1
+
     weight: 20
     health_check: /health
 ```
@@ -385,6 +402,7 @@ regions:
 ### GraphQL Optimization
 
 **Query Batching**:
+
 ```graphql
 # Single Request with Multiple Queries
 query BatchedQueries {
@@ -408,6 +426,7 @@ query BatchedQueries {
 ```
 
 **DataLoader for N+1 Prevention**:
+
 ```java
 @Component
 public class ProductDataLoader implements BatchLoader<String, Product> {
@@ -424,10 +443,10 @@ public class ProductDataLoader implements BatchLoader<String, Product> {
 }
 ```
 
-
 ### REST API Optimization
 
 **Response Compression**:
+
 ```java
 @Configuration
 public class CompressionConfiguration {
@@ -443,6 +462,7 @@ public class CompressionConfiguration {
 ```
 
 **Pagination**:
+
 ```java
 @GetMapping("/products")
 public ResponseEntity<Page<ProductDto>> getProducts(
@@ -458,6 +478,7 @@ public ResponseEntity<Page<ProductDto>> getProducts(
 ```
 
 **Field Selection**:
+
 ```java
 @GetMapping("/products/{id}")
 public ResponseEntity<ProductDto> getProduct(
@@ -480,34 +501,46 @@ public ResponseEntity<ProductDto> getProduct(
 ### Latency Monitoring
 
 **CloudWatch Metrics**:
+
 ```yaml
 metrics:
+
   - name: APILatency
+
     namespace: ECommerce/API
     dimensions:
+
       - Region
       - Endpoint
+
     statistics:
+
       - Average
       - p50
       - p95
       - p99
+
     period: 60
   
   - name: DatabaseLatency
+
     namespace: ECommerce/Database
     dimensions:
+
       - Region
       - QueryType
+
     statistics:
+
       - Average
       - p95
       - p99
+
     period: 60
 ```
 
-
 **Real User Monitoring (RUM)**:
+
 ```javascript
 // Frontend Performance Monitoring
 window.addEventListener('load', () => {
@@ -530,6 +563,7 @@ window.addEventListener('load', () => {
 ### Performance Testing
 
 **Load Testing Script**:
+
 ```bash
 #!/bin/bash
 # scripts/load-test-latency.sh
@@ -548,6 +582,7 @@ ab -n 1000 -c 10 https://api-ap-southeast-1.example.com/api/v1/products
 ```
 
 **Synthetic Monitoring**:
+
 ```yaml
 # CloudWatch Synthetics Canary
 canary:
@@ -582,7 +617,6 @@ canary:
       return await apiTest();
     };
 ```
-
 
 ## Best Practices
 
@@ -635,6 +669,7 @@ canary:
 ### High Latency Diagnosis
 
 **Step 1: Identify Layer**:
+
 ```bash
 # Check CDN latency
 curl -w "@curl-format.txt" -o /dev/null -s https://cdn.example.com/static/logo.png
@@ -647,6 +682,7 @@ psql -h db.example.com -c "EXPLAIN ANALYZE SELECT * FROM products LIMIT 10;"
 ```
 
 **Step 2: Analyze Metrics**:
+
 ```bash
 # CloudWatch metrics
 aws cloudwatch get-metric-statistics \
@@ -658,7 +694,6 @@ aws cloudwatch get-metric-statistics \
   --period 300 \
   --statistics Average,Maximum
 ```
-
 
 **Step 3: Common Issues and Solutions**:
 

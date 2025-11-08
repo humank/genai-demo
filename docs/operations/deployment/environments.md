@@ -414,17 +414,23 @@ features:
 ```yaml
 # Production metrics
 metrics:
+
   - name: APIResponseTime
+
     namespace: ECommerce/Production
     dimensions:
+
       - Environment: production
       - Service: backend
   
   - name: ErrorRate
+
     namespace: ECommerce/Production
     dimensions:
+
       - Environment: production
       - Service: backend
+
 ```
 
 ### Alarms
@@ -432,12 +438,15 @@ metrics:
 ```yaml
 # Production alarms
 alarms:
+
   - name: HighErrorRate
+
     threshold: 5
     period: 300
     evaluation_periods: 2
     
   - name: HighResponseTime
+
     threshold: 2000
     period: 300
     evaluation_periods: 2
@@ -485,19 +494,23 @@ VPC:
   CIDR: 10.0.0.0/16
   
   PublicSubnets:
+
     - 10.0.1.0/24  # AZ-1
     - 10.0.2.0/24  # AZ-2
     - 10.0.3.0/24  # AZ-3
   
   PrivateSubnets:
+
     - 10.0.11.0/24  # AZ-1
     - 10.0.12.0/24  # AZ-2
     - 10.0.13.0/24  # AZ-3
   
   DatabaseSubnets:
+
     - 10.0.21.0/24  # AZ-1
     - 10.0.22.0/24  # AZ-2
     - 10.0.23.0/24  # AZ-3
+
 ```
 
 ### Security Groups

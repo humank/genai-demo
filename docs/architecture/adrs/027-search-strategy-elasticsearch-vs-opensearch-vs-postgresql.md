@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 ### Business Context
 
 **Business Drivers**:
+
 - Product discovery is critical for conversion (60% of users use search)
 - Fast search improves user experience and sales
 - Advanced search features (filters, facets) increase engagement
@@ -41,6 +42,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 - Expected search traffic: 1000+ searches/second during peak
 
 **Business Constraints**:
+
 - Budget: $1000/month for search infrastructure
 - Search response time < 200ms (95th percentile)
 - Must support Chinese and English full-text search
@@ -50,6 +52,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 ### Technical Context
 
 **Current State**:
+
 - PostgreSQL primary database (ADR-001)
 - Redis for caching (ADR-004)
 - Spring Boot 3.4.5 application
@@ -57,6 +60,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 - 13 bounded contexts with search needs
 
 **Requirements**:
+
 - Full-text search with relevance ranking
 - Faceted search (filters by category, price, brand, etc.)
 - Autocomplete and suggestions
@@ -84,6 +88,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 **Description**: Use PostgreSQL's built-in full-text search capabilities
 
 **Pros**:
+
 - ✅ No additional infrastructure
 - ✅ ACID transactions with search
 - ✅ Simple to implement
@@ -92,6 +97,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 - ✅ Good for simple searches
 
 **Cons**:
+
 - ❌ Limited full-text search features
 - ❌ Poor performance at scale (> 100K documents)
 - ❌ No faceted search support
@@ -112,6 +118,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 **Description**: Use Elasticsearch via AWS OpenSearch Service (Elasticsearch-compatible)
 
 **Pros**:
+
 - ✅ Excellent full-text search capabilities
 - ✅ Rich faceted search and aggregations
 - ✅ Fast search performance (< 50ms)
@@ -125,13 +132,15 @@ The Enterprise E-Commerce Platform requires search functionality for:
 - ✅ Spring Data Elasticsearch integration
 
 **Cons**:
+
 - ⚠️ Additional infrastructure cost
 - ⚠️ Data synchronization complexity
 - ⚠️ Eventual consistency
 - ⚠️ Operational overhead (indexing, monitoring)
 - ⚠️ Learning curve
 
-**Cost**: 
+**Cost**:
+
 - Development: $800/month (t3.medium.search x 2)
 - Production: $1200/month (r6g.large.search x 2)
 
@@ -144,6 +153,7 @@ The Enterprise E-Commerce Platform requires search functionality for:
 **Description**: Use OpenSearch (AWS's open-source fork of Elasticsearch)
 
 **Pros**:
+
 - ✅ All Elasticsearch features (fork from ES 7.10)
 - ✅ Excellent full-text search capabilities
 - ✅ Rich faceted search and aggregations
@@ -155,12 +165,14 @@ The Enterprise E-Commerce Platform requires search functionality for:
 - ✅ Spring Data Elasticsearch compatible
 
 **Cons**:
+
 - ⚠️ Smaller community than Elasticsearch
 - ⚠️ Data synchronization complexity
 - ⚠️ Eventual consistency
 - ⚠️ Operational overhead
 
-**Cost**: 
+**Cost**:
+
 - Development: $600/month (t3.medium.search x 2)
 - Production: $1000/month (r6g.large.search x 2)
 
@@ -173,12 +185,14 @@ The Enterprise E-Commerce Platform requires search functionality for:
 **Description**: Use PostgreSQL for simple searches, Redis for autocomplete
 
 **Pros**:
+
 - ✅ Leverages existing infrastructure
 - ✅ Cost-effective
 - ✅ Simple to implement
 - ✅ Good for basic use cases
 
 **Cons**:
+
 - ❌ Limited search features
 - ❌ Poor performance at scale
 - ❌ No faceted search
@@ -212,17 +226,20 @@ OpenSearch was selected for the following reasons:
 **Search Architecture**:
 
 **Primary Use Cases**:
+
 - **Product Search**: Full-text search with facets (category, price, brand, rating)
 - **Order Search**: Search by order number, customer, date range, status
 - **Customer Search**: Search by name, email, phone (admin only)
 
 **Indexing Strategy**:
+
 - **Real-Time**: Product updates indexed within 1 minute
 - **Batch**: Bulk indexing for historical data
 - **CDC**: Change Data Capture from PostgreSQL to OpenSearch
 - **Event-Driven**: Domain events trigger index updates
 
 **Search Features**:
+
 - Full-text search with relevance ranking
 - Faceted search (filters and aggregations)
 - Autocomplete and search suggestions
@@ -254,6 +271,7 @@ OpenSearch was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - Product bounded context (primary)
 - Order bounded context (secondary)
 - Customer bounded context (admin search)
@@ -312,12 +330,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Search response time > 500ms
 - OpenSearch availability < 99%
 - Data sync lag > 5 minutes
 - Cost exceeds budget by > 50%
 
 **Rollback Steps**:
+
 1. Disable OpenSearch search
 2. Fall back to PostgreSQL simple search
 3. Investigate and fix issues
@@ -340,6 +360,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - SearchRate (searches per second)
 - SearchLatency (p50, p95, p99)
 - IndexingRate (documents per second)
@@ -350,6 +371,7 @@ Affects:
 - DiskQueueDepth
 
 **Application Metrics**:
+
 ```java
 @Component
 public class SearchMetrics {
@@ -363,6 +385,7 @@ public class SearchMetrics {
 ```
 
 **Alerts**:
+
 - Search latency > 500ms
 - Cluster status not green
 - CPU utilization > 80%
@@ -371,6 +394,7 @@ public class SearchMetrics {
 - Search error rate > 1%
 
 **Review Schedule**:
+
 - Daily: Check search metrics
 - Weekly: Review search relevance
 - Monthly: Optimize search performance
@@ -399,11 +423,13 @@ public class SearchMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual relevance tuning (can be automated with ML)
 2. Simple CDC (can use Debezium for robust CDC)
 3. No search analytics (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement Debezium for robust CDC
 - **Q3 2026**: Add ML-based relevance tuning
 - **Q4 2026**: Implement search analytics and A/B testing

@@ -32,6 +32,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 ### Business Context
 
 **Business Drivers**:
+
 - Need for reliable transaction processing (orders, payments)
 - Regulatory compliance requirements (GDPR, PCI-DSS)
 - Expected growth from 10K to 1M+ users
@@ -39,6 +40,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 - Multi-region deployment for global users
 
 **Constraints**:
+
 - Budget: $5,000/month for database infrastructure
 - Team expertise: Strong Java/Spring Boot experience
 - Timeline: 3 months to production
@@ -47,12 +49,14 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 ### Technical Context
 
 **Current State**:
+
 - New greenfield project
 - No existing database infrastructure
 - Spring Boot application framework chosen
 - AWS cloud infrastructure
 
 **Requirements**:
+
 - Support for complex joins and transactions
 - JSON data type support for flexible schemas
 - Full-text search capabilities
@@ -78,6 +82,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 **Description**: Open-source relational database with advanced features
 
 **Pros**:
+
 - ✅ Strong ACID compliance and data integrity
 - ✅ Excellent Spring Boot/JPA integration
 - ✅ Rich feature set (JSON, full-text search, arrays)
@@ -89,11 +94,13 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 - ✅ Cost-effective for our scale
 
 **Cons**:
+
 - ⚠️ Write scaling requires sharding (complex)
 - ⚠️ Vertical scaling has limits
 - ⚠️ Replication lag in read replicas
 
-**Cost**: 
+**Cost**:
+
 - Development: $3,000/month (db.r5.xlarge Multi-AZ)
 - Production: $5,000/month (db.r5.2xlarge Multi-AZ + 2 read replicas)
 
@@ -104,6 +111,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 **Description**: Popular open-source relational database
 
 **Pros**:
+
 - ✅ Wide adoption and community
 - ✅ Good Spring Boot integration
 - ✅ AWS RDS managed service
@@ -111,6 +119,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 - ✅ Lower resource usage
 
 **Cons**:
+
 - ❌ Less advanced features than PostgreSQL
 - ❌ Weaker JSON support
 - ❌ Limited full-text search
@@ -126,12 +135,14 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 **Description**: Document-oriented NoSQL database
 
 **Pros**:
+
 - ✅ Flexible schema
 - ✅ Horizontal scaling built-in
 - ✅ Good for rapid development
 - ✅ Native JSON support
 
 **Cons**:
+
 - ❌ No ACID transactions across documents (until v4.0)
 - ❌ Eventual consistency by default
 - ❌ Less suitable for complex joins
@@ -148,6 +159,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 **Description**: AWS-native PostgreSQL-compatible database
 
 **Pros**:
+
 - ✅ PostgreSQL compatibility
 - ✅ Better performance than standard PostgreSQL
 - ✅ Automatic scaling
@@ -155,6 +167,7 @@ The Enterprise E-Commerce Platform requires a robust, scalable, and reliable dat
 - ✅ Up to 15 read replicas
 
 **Cons**:
+
 - ❌ Vendor lock-in to AWS
 - ❌ Higher cost than RDS PostgreSQL
 - ❌ Some PostgreSQL extensions not supported
@@ -202,6 +215,7 @@ PostgreSQL was selected as the primary database for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (data storage)
 - Application layer (JPA configuration)
 - Infrastructure layer (RDS setup)
@@ -252,12 +266,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Performance degradation > 50%
 - Data corruption or loss
 - Unrecoverable errors
 - Cost exceeds budget by > 50%
 
 **Rollback Steps**:
+
 1. If in development: Switch to H2 in-memory database temporarily
 2. If in production: Restore from latest backup
 3. Investigate root cause
@@ -280,6 +296,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - DatabaseConnections
 - CPUUtilization
 - FreeableMemory
@@ -288,6 +305,7 @@ Affects:
 - DiskQueueDepth
 
 **Alerts**:
+
 - CPU > 80% for 5 minutes
 - Connections > 80% of max
 - Replication lag > 5 seconds
@@ -295,6 +313,7 @@ Affects:
 - Failed connections > 10/minute
 
 **Review Schedule**:
+
 - Daily: Check CloudWatch dashboard
 - Weekly: Review slow query log
 - Monthly: Capacity planning review
@@ -323,11 +342,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No sharding strategy implemented (acceptable for current scale)
 2. Single-region write master (acceptable for current requirements)
 3. Manual query optimization needed (ongoing process)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Evaluate need for sharding based on growth
 - **Q3 2026**: Implement caching layer to reduce database load
 - **Q4 2026**: Consider Aurora migration if performance requirements increase
@@ -362,6 +383,7 @@ max_wal_size: 4GB
 ### Migration Path to Aurora
 
 If future requirements demand Aurora:
+
 1. Create Aurora cluster from RDS snapshot
 2. Update application connection string
 3. Test thoroughly in staging

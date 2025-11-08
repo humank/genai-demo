@@ -30,15 +30,18 @@ decision_makers: ["person1", "person2"]
 ### Business Context
 
 **Business Drivers**:
+
 - Driver 1: Description
 - Driver 2: Description
 - Driver 3: Description
 
 **Business Constraints**:
+
 - Constraint 1: Description
 - Constraint 2: Description
 
 **Business Requirements**:
+
 - Requirement 1: Description
 - Requirement 2: Description
 
@@ -48,11 +51,13 @@ decision_makers: ["person1", "person2"]
 [Describe the current state of the architecture relevant to this decision]
 
 **Technical Constraints**:
+
 - Constraint 1: Description
 - Constraint 2: Description
 - Constraint 3: Description
 
 **Dependencies**:
+
 - Dependency 1: Description
 - Dependency 2: Description
 
@@ -74,16 +79,19 @@ List the factors that influenced this decision:
 [Detailed description of this option]
 
 **Pros** ✅:
+
 - Advantage 1: Description
 - Advantage 2: Description
 - Advantage 3: Description
 
 **Cons** ❌:
+
 - Disadvantage 1: Description
 - Disadvantage 2: Description
 - Disadvantage 3: Description
 
 **Cost**:
+
 - **Implementation Cost**: $X or Y person-days
 - **Maintenance Cost**: $X/month or Y person-days/month
 - **Total Cost of Ownership (3 years)**: $X
@@ -102,16 +110,19 @@ List the factors that influenced this decision:
 [Detailed description of this option]
 
 **Pros** ✅:
+
 - Advantage 1: Description
 - Advantage 2: Description
 - Advantage 3: Description
 
 **Cons** ❌:
+
 - Disadvantage 1: Description
 - Disadvantage 2: Description
 - Disadvantage 3: Description
 
 **Cost**:
+
 - **Implementation Cost**: $X or Y person-days
 - **Maintenance Cost**: $X/month or Y person-days/month
 - **Total Cost of Ownership (3 years)**: $X
@@ -130,16 +141,19 @@ List the factors that influenced this decision:
 [Detailed description of this option]
 
 **Pros** ✅:
+
 - Advantage 1: Description
 - Advantage 2: Description
 - Advantage 3: Description
 
 **Cons** ❌:
+
 - Disadvantage 1: Description
 - Disadvantage 2: Description
 - Disadvantage 3: Description
 
 **Cost**:
+
 - **Implementation Cost**: $X or Y person-days
 - **Maintenance Cost**: $X/month or Y person-days/month
 - **Total Cost of Ownership (3 years)**: $X
@@ -160,6 +174,7 @@ List the factors that influenced this decision:
 [Detailed explanation of why this option was chosen. Address how it best satisfies the decision drivers and why it was preferred over other options.]
 
 **Key Factors in Decision**:
+
 1. Factor 1: Explanation
 2. Factor 2: Explanation
 3. Factor 3: Explanation
@@ -181,6 +196,7 @@ List the factors that influenced this decision:
 **Selected Impact Radius**: Local | Bounded Context | System | Enterprise
 
 **Impact Description**:
+
 - **Local**: [Changes within single component/service]
 - **Bounded Context**: [Changes across related services]
 - **System**: [Changes across multiple bounded contexts]
@@ -210,68 +226,82 @@ List the factors that influenced this decision:
 ### Phase 1: Preparation (Timeline: Week 1-2)
 
 **Objectives**:
+
 - Objective 1
 - Objective 2
 
 **Tasks**:
+
 - [ ] Task 1: Description
 - [ ] Task 2: Description
 - [ ] Task 3: Description
 
 **Deliverables**:
+
 - Deliverable 1
 - Deliverable 2
 
 **Success Criteria**:
+
 - Criterion 1
 - Criterion 2
 
 ### Phase 2: Implementation (Timeline: Week 3-6)
 
 **Objectives**:
+
 - Objective 1
 - Objective 2
 
 **Tasks**:
+
 - [ ] Task 1: Description
 - [ ] Task 2: Description
 - [ ] Task 3: Description
 
 **Deliverables**:
+
 - Deliverable 1
 - Deliverable 2
 
 **Success Criteria**:
+
 - Criterion 1
 - Criterion 2
 
 ### Phase 3: Deployment (Timeline: Week 7-8)
 
 **Objectives**:
+
 - Objective 1
 - Objective 2
 
 **Tasks**:
+
 - [ ] Task 1: Description
 - [ ] Task 2: Description
 - [ ] Task 3: Description
 
 **Deliverables**:
+
 - Deliverable 1
 - Deliverable 2
 
 **Success Criteria**:
+
 - Criterion 1
 - Criterion 2
 
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Condition 1: Description
 - Condition 2: Description
 - Condition 3: Description
 
 **Rollback Steps**:
+
 1. **Immediate Action**: Description
 2. **Data Rollback**: Description (if needed)
 3. **Service Rollback**: Description
@@ -294,14 +324,17 @@ List the factors that influenced this decision:
 ### Monitoring Plan
 
 **Dashboards**:
+
 - Dashboard 1: [Link and description]
 - Dashboard 2: [Link and description]
 
 **Alerts**:
+
 - Alert 1: Condition and threshold
 - Alert 2: Condition and threshold
 
 **Review Schedule**:
+
 - **Daily**: Quick metrics check
 - **Weekly**: Detailed review with team
 - **Monthly**: Stakeholder review
@@ -329,10 +362,12 @@ List the factors that influenced this decision:
 ### Technical Debt
 
 **Debt Introduced**:
+
 - Debt Item 1: Description
 - Debt Item 2: Description
 
 **Debt Repayment Plan**:
+
 - Plan for Debt Item 1: Timeline and approach
 - Plan for Debt Item 2: Timeline and approach
 
@@ -343,57 +378,71 @@ List the factors that influenced this decision:
 ## Related Decisions
 
 ### Supersedes
+
 - [ADR-XXX: Previous Decision](YYYYMMDD-XXX-title.md) - Why it's being replaced
 
 ### Superseded By
+
 - [ADR-YYY: New Decision](YYYYMMDD-YYY-title.md) - Why this decision is no longer valid
 
 ### Related ADRs
+
 - [ADR-AAA: Related Decision 1](YYYYMMDD-AAA-title.md) - How they relate
 - [ADR-BBB: Related Decision 2](YYYYMMDD-BBB-title.md) - How they relate
 
 ### Affected Viewpoints
+
 - [Viewpoint 1](../../viewpoints/viewpoint1/README.md) - How it's affected
 - [Viewpoint 2](../../viewpoints/viewpoint2/README.md) - How it's affected
 
 ### Affected Perspectives
+
 - [Perspective 1](../../perspectives/perspective1/README.md) - How it's affected
 - [Perspective 2](../../perspectives/perspective2/README.md) - How it's affected
 
 ## Notes
 
 ### Assumptions
+
 - Assumption 1: Description
 - Assumption 2: Description
 
 ### Constraints
+
 - Constraint 1: Description
 - Constraint 2: Description
 
 ### Open Questions
+
 - Question 1: Description
 - Question 2: Description
 
 ### Follow-up Actions
+
 - [ ] Action 1: Description and owner
 - [ ] Action 2: Description and owner
 
 ### References
+
 - Reference 1: [Title](URL)
 - Reference 2: [Title](URL)
 
 ## Appendix
 
 ### Proof of Concept Results
+
 [Include results from any POC or spike work]
 
 ### Performance Benchmarks
+
 [Include relevant performance data]
 
 ### Cost Analysis Details
+
 [Include detailed cost breakdown]
 
 ### Alternative Approaches Considered
+
 [Include any other approaches that were briefly considered but not fully evaluated]
 
 ---

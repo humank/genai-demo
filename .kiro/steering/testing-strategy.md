@@ -12,11 +12,13 @@ This document defines the testing strategy and standards for this project, follo
 ## Test Pyramid
 
 ### Distribution
+
 - **Unit Tests (80%)**: < 50ms, < 5MB per test
 - **Integration Tests (15%)**: < 500ms, < 50MB per test
 - **E2E Tests (5%)**: < 3s, < 500MB per test
 
 ### Must Follow
+
 - [ ] Majority of tests are unit tests
 - [ ] Integration tests for infrastructure
 - [ ] Minimal E2E tests for critical paths
@@ -29,18 +31,21 @@ This document defines the testing strategy and standards for this project, follo
 ### Unit Tests (Preferred)
 
 #### When to Use
+
 - Testing domain logic in isolation
 - Validating business rules
 - Testing utility functions
 - Verifying calculations
 
 #### Must Follow
+
 - [ ] Use `@ExtendWith(MockitoExtension.class)`
 - [ ] No Spring context
 - [ ] Mock external dependencies
 - [ ] Fast execution (< 50ms)
 
 #### Example
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class OrderTest {
@@ -65,18 +70,21 @@ class OrderTest {
 ### Integration Tests
 
 #### When to Use
+
 - Testing repository implementations
 - Validating database queries
 - Testing API endpoints
 - Verifying serialization/deserialization
 
 #### Must Follow
+
 - [ ] Use `@DataJpaTest`, `@WebMvcTest`, or `@JsonTest`
 - [ ] Partial Spring context only
 - [ ] Use test database (H2)
 - [ ] Clean state between tests
 
 #### Example
+
 ```java
 @DataJpaTest
 @ActiveProfiles("test")
@@ -111,17 +119,20 @@ class OrderRepositoryTest {
 ### E2E Tests
 
 #### When to Use
+
 - Testing complete user journeys
 - Validating system integration
 - Smoke testing critical paths
 
 #### Must Follow
+
 - [ ] Use `@SpringBootTest(webEnvironment = RANDOM_PORT)`
 - [ ] Full Spring context
 - [ ] Test complete workflows
 - [ ] Minimal number of E2E tests
 
 #### Example
+
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -144,12 +155,14 @@ class OrderE2ETest {
 ## BDD Testing with Cucumber
 
 ### Must Follow
+
 - [ ] Write Gherkin scenarios before implementation
 - [ ] Use Given-When-Then format
 - [ ] Use ubiquitous language
 - [ ] One scenario per business rule
 
 ### Gherkin Structure
+
 ```gherkin
 Feature: Order Submission
   
@@ -163,6 +176,7 @@ Feature: Order Submission
 ```
 
 ### Step Definitions
+
 ```java
 @Given("a customer with ID {string}")
 public void aCustomerWithId(String customerId) {
@@ -190,6 +204,7 @@ public void theOrderStatusShouldBe(String expectedStatus) {
 ## Test Performance
 
 ### Must Follow
+
 - [ ] Use `@TestPerformanceExtension` for monitoring
 - [ ] Unit tests: < 50ms, < 5MB
 - [ ] Integration tests: < 500ms, < 50MB
@@ -197,6 +212,7 @@ public void theOrderStatusShouldBe(String expectedStatus) {
 - [ ] Clean up resources after tests
 
 ### Performance Monitoring
+
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 500, maxMemoryIncreaseMB = 50)
 @DataJpaTest
@@ -212,12 +228,14 @@ class OrderRepositoryTest {
 ## Test Data Management
 
 ### Must Follow
+
 - [ ] Use test data builders
 - [ ] Create reusable test fixtures
 - [ ] Use meaningful test data
 - [ ] Clean state between tests
 
 ### Test Data Builder
+
 ```java
 public class OrderTestDataBuilder {
     private OrderId orderId = OrderId.generate();
@@ -248,7 +266,8 @@ Order order = anOrder()
 ## Test Organization
 
 ### Test Package Structure
-```
+
+```text
 test/
 ├── java/
 │   └── solid/humank/genaidemo/
@@ -262,6 +281,7 @@ test/
 ```
 
 ### Test Naming
+
 ```java
 // Unit test
 class OrderTest { }
@@ -280,6 +300,7 @@ class OrderE2ETest { }
 ## Gradle Test Commands
 
 ### Daily Development
+
 ```bash
 ./gradlew quickTest          # Unit tests only (< 2 min)
 ./gradlew preCommitTest      # Unit + Integration (< 5 min)
@@ -287,6 +308,7 @@ class OrderE2ETest { }
 ```
 
 ### Specific Test Types
+
 ```bash
 ./gradlew unitTest           # Fast unit tests
 ./gradlew integrationTest    # Integration tests
@@ -295,6 +317,7 @@ class OrderE2ETest { }
 ```
 
 ### Test Reports
+
 ```bash
 ./gradlew test jacocoTestReport              # Coverage report
 ./gradlew generatePerformanceReport          # Performance report
@@ -305,6 +328,7 @@ class OrderE2ETest { }
 ## Test Quality Standards
 
 ### Must Achieve
+
 - [ ] Code coverage > 80%
 - [ ] All tests pass
 - [ ] No flaky tests
@@ -312,6 +336,7 @@ class OrderE2ETest { }
 - [ ] No skipped tests in CI/CD
 
 ### Test Characteristics
+
 - [ ] **Fast**: Quick feedback
 - [ ] **Isolated**: Independent tests
 - [ ] **Repeatable**: Same result every time
@@ -323,6 +348,7 @@ class OrderE2ETest { }
 ## Validation
 
 ### Coverage Check
+
 ```bash
 ./gradlew test jacocoTestReport
 # Check: build/reports/jacoco/test/html/index.html
@@ -330,6 +356,7 @@ class OrderE2ETest { }
 ```
 
 ### Performance Check
+
 ```bash
 ./gradlew generatePerformanceReport
 # Check: build/reports/test-performance/performance-report.html

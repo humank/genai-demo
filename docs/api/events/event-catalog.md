@@ -268,7 +268,7 @@ All events follow these naming conventions:
 
 #### Order Processing Flow
 
-```
+```text
 CartCheckedOutEvent
     → OrderCreatedEvent
     → OrderSubmittedEvent
@@ -284,7 +284,7 @@ CartCheckedOutEvent
 
 #### Customer Registration Flow
 
-```
+```text
 CustomerCreatedEvent
     → NotificationSentEvent (Welcome Email)
     → CustomerEmailVerifiedEvent
@@ -292,7 +292,7 @@ CustomerCreatedEvent
 
 #### Product Purchase Flow
 
-```
+```text
 ItemAddedToCartEvent
     → CartCheckedOutEvent
     → OrderCreatedEvent

@@ -30,6 +30,7 @@ The Enterprise E-Commerce Platform requires comprehensive security testing to:
 - Prepare for real-world attacks
 
 Taiwan's cyber security environment presents unique challenges:
+
 - Sophisticated APT attacks from state-sponsored actors
 - High-value e-commerce platform as attractive target
 - Need to test defenses against advanced threats
@@ -39,6 +40,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect customer data and business operations
 - Maintain platform reputation and trust
 - Comply with PCI-DSS requirement 11.3 (penetration testing)
@@ -46,6 +48,7 @@ Taiwan's cyber security environment presents unique challenges:
 - Improve incident response readiness
 
 **Constraints**:
+
 - Must not disrupt production services
 - Cannot expose real customer data
 - Must comply with legal and ethical guidelines
@@ -55,6 +58,7 @@ Taiwan's cyber security environment presents unique challenges:
 ### Technical Context
 
 **Current State**:
+
 - No regular penetration testing
 - No red team exercises
 - Ad-hoc security assessments
@@ -63,6 +67,7 @@ Taiwan's cyber security environment presents unique challenges:
 - No attack simulation framework
 
 **Requirements**:
+
 - Regular penetration testing (quarterly)
 - Annual red team exercises
 - Automated security testing
@@ -88,6 +93,7 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Combination of external penetration testing, internal security testing, and red team exercises
 
 **Components**:
+
 - **Quarterly External Penetration Testing**: Professional security firm
 - **Semi-Annual Internal Testing**: Internal security team
 - **Annual Red Team Exercise**: Simulate APT attack
@@ -96,6 +102,7 @@ Taiwan's cyber security environment presents unique challenges:
 - **Post-Major-Update Testing**: Test after significant changes
 
 **Pros**:
+
 - ✅ Comprehensive coverage (external + internal + automated)
 - ✅ Regular testing cadence
 - ✅ Real-world attack simulation
@@ -105,6 +112,7 @@ Taiwan's cyber security environment presents unique challenges:
 - ✅ Team skill development
 
 **Cons**:
+
 - ⚠️ Requires coordination
 - ⚠️ Internal team capacity needed
 - ⚠️ Potential for service disruption
@@ -118,11 +126,13 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Rely solely on external security firms
 
 **Pros**:
+
 - ✅ Professional expertise
 - ✅ Compliance-ready reports
 - ✅ No internal capacity needed
 
 **Cons**:
+
 - ❌ Limited testing frequency
 - ❌ No continuous testing
 - ❌ No team skill development
@@ -137,11 +147,13 @@ Taiwan's cyber security environment presents unique challenges:
 **Description**: Build internal security testing capability
 
 **Pros**:
+
 - ✅ Continuous testing capability
 - ✅ Deep system knowledge
 - ✅ Lower long-term cost
 
 **Cons**:
+
 - ❌ Limited expertise
 - ❌ Potential bias
 - ❌ Compliance concerns
@@ -172,6 +184,7 @@ Hybrid penetration testing program was selected for the following reasons:
 **Testing Categories**:
 
 **1. Web Application Testing**
+
 - OWASP Top 10 vulnerabilities
 - Authentication and authorization
 - Session management
@@ -180,6 +193,7 @@ Hybrid penetration testing program was selected for the following reasons:
 - API security
 
 **2. API Endpoint Testing**
+
 - REST API security
 - GraphQL security (if applicable)
 - Authentication bypass
@@ -188,6 +202,7 @@ Hybrid penetration testing program was selected for the following reasons:
 - Data exposure
 
 **3. Infrastructure Testing**
+
 - Network segmentation
 - Firewall rules
 - Cloud configuration
@@ -196,12 +211,14 @@ Hybrid penetration testing program was selected for the following reasons:
 - Database security
 
 **4. Social Engineering**
+
 - Phishing campaigns
 - Pretexting
 - Physical security (optional)
 - Insider threat simulation
 
 **Testing Methodology**:
+
 - **Black Box**: No prior knowledge (external attacker perspective)
 - **Gray Box**: Limited knowledge (compromised user perspective)
 - **White Box**: Full knowledge (insider threat perspective)
@@ -209,6 +226,7 @@ Hybrid penetration testing program was selected for the following reasons:
 ### Quarterly External Penetration Testing
 
 **Testing Schedule**:
+
 - **Q1**: Web application and API testing
 - **Q2**: Infrastructure and cloud security testing
 - **Q3**: Full-scope testing (web + infrastructure)
@@ -217,6 +235,7 @@ Hybrid penetration testing program was selected for the following reasons:
 **Testing Process**:
 
 **Week 1: Planning and Scoping**
+
 - Define testing scope and objectives
 - Identify critical assets and systems
 - Establish rules of engagement
@@ -224,6 +243,7 @@ Hybrid penetration testing program was selected for the following reasons:
 - Coordinate with operations team
 
 **Week 2-3: Testing Execution**
+
 - Reconnaissance and information gathering
 - Vulnerability identification
 - Exploitation attempts
@@ -232,6 +252,7 @@ Hybrid penetration testing program was selected for the following reasons:
 - Data exfiltration simulation
 
 **Week 4: Reporting and Remediation**
+
 - Detailed findings report
 - Risk prioritization
 - Remediation recommendations
@@ -239,6 +260,7 @@ Hybrid penetration testing program was selected for the following reasons:
 - Remediation validation (optional)
 
 **Vendor Selection Criteria**:
+
 - CREST or OSCP certified testers
 - Experience with e-commerce platforms
 - Understanding of Taiwan cyber threats
@@ -246,23 +268,27 @@ Hybrid penetration testing program was selected for the following reasons:
 - Good communication and reporting
 
 **Implementation**:
+
 ```yaml
 # Penetration Testing Checklist
 penetration_testing:
   frequency: quarterly
   vendor: "Professional Security Firm"
   scope:
+
     - web_applications
     - api_endpoints
     - infrastructure
     - cloud_configuration
   
   methodology:
+
     - black_box
     - gray_box
     - white_box
   
   deliverables:
+
     - detailed_findings_report
     - executive_summary
     - remediation_recommendations
@@ -275,12 +301,14 @@ penetration_testing:
 ### Semi-Annual Internal Testing
 
 **Internal Testing Focus**:
+
 - Validate external testing findings
 - Test new features and changes
 - Continuous security assessment
 - Team skill development
 
 **Testing Tools**:
+
 - **Burp Suite Professional**: Web application testing
 - **OWASP ZAP**: Automated scanning
 - **Metasploit**: Exploitation framework
@@ -288,6 +316,7 @@ penetration_testing:
 - **Nikto**: Web server scanning
 
 **Internal Testing Process**:
+
 ```bash
 # Automated security scanning
 #!/bin/bash
@@ -316,6 +345,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 ### Annual Red Team Exercise
 
 **Red Team Objectives**:
+
 - Simulate Advanced Persistent Threat (APT) attack
 - Test detection and response capabilities
 - Identify security gaps
@@ -325,6 +355,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 **Attack Scenarios**:
 
 **Scenario 1: External Breach**
+
 - Initial access via phishing or vulnerability exploitation
 - Establish persistence
 - Privilege escalation
@@ -333,12 +364,14 @@ trivy image app:latest --severity HIGH,CRITICAL
 - Cover tracks
 
 **Scenario 2: Insider Threat**
+
 - Compromised employee account
 - Abuse of legitimate access
 - Data theft
 - Sabotage attempts
 
 **Scenario 3: Supply Chain Attack**
+
 - Compromised third-party dependency
 - Malicious code injection
 - Backdoor installation
@@ -346,6 +379,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 **Red Team Exercise Process**:
 
 **Phase 1: Planning (Week 1-2)**
+
 - Define objectives and scope
 - Establish rules of engagement
 - Identify target systems
@@ -353,6 +387,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 - Set up command and control infrastructure
 
 **Phase 2: Execution (Week 3-6)**
+
 - Reconnaissance and intelligence gathering
 - Initial access attempts
 - Establish foothold
@@ -362,6 +397,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 - Maintain persistence
 
 **Phase 3: Reporting (Week 7-8)**
+
 - Detailed attack timeline
 - Techniques, tactics, and procedures (TTPs)
 - Detection gaps identified
@@ -369,6 +405,7 @@ trivy image app:latest --severity HIGH,CRITICAL
 - Recommendations for improvement
 
 **Implementation**:
+
 ```yaml
 # Red Team Exercise Plan
 red_team_exercise:
@@ -377,17 +414,20 @@ red_team_exercise:
   team: "External Red Team + Internal Security"
   
   objectives:
+
     - test_detection_capabilities
     - validate_incident_response
     - identify_security_gaps
     - improve_security_awareness
   
   scenarios:
+
     - external_breach
     - insider_threat
     - supply_chain_attack
   
   rules_of_engagement:
+
     - no_production_data_exfiltration
     - no_service_disruption
     - coordinate_with_operations
@@ -399,20 +439,25 @@ red_team_exercise:
 ### Continuous Automated Testing
 
 **DAST (Dynamic Application Security Testing)**:
+
 ```yaml
 # GitHub Actions - DAST Scanning
 name: DAST Scan
 
 on:
   schedule:
+
     - cron: '0 2 * * *'  # Daily at 2 AM
+
   workflow_dispatch:
 
 jobs:
   dast-scan:
     runs-on: ubuntu-latest
     steps:
+
       - name: OWASP ZAP Scan
+
         uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: 'https://staging.example.com'
@@ -420,12 +465,14 @@ jobs:
           cmd_options: '-a'
       
       - name: Upload SARIF results
+
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
 ```
 
 **SAST (Static Application Security Testing)**:
+
 ```yaml
 # GitHub Actions - SAST Scanning
 name: SAST Scan
@@ -440,9 +487,11 @@ jobs:
   sast-scan:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Run Semgrep
+
         uses: returntocorp/semgrep-action@v1
         with:
           config: >-
@@ -451,6 +500,7 @@ jobs:
             p/java
       
       - name: Run SonarQube
+
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -460,12 +510,14 @@ jobs:
 ### Bug Bounty Program
 
 **Program Structure**:
+
 - **Platform**: HackerOne or Bugcrowd
 - **Scope**: Production web application and APIs
 - **Budget**: $10,000/year
 - **Rewards**: $100-$5,000 per vulnerability
 
 **Reward Tiers**:
+
 | Severity | Reward Range | Examples |
 |----------|--------------|----------|
 | Critical | $2,000-$5,000 | RCE, SQL Injection, Authentication bypass |
@@ -474,20 +526,24 @@ jobs:
 | Low | $100-$200 | Security misconfiguration |
 
 **Program Rules**:
+
 ```markdown
 # Bug Bounty Program Rules
 
 ## In Scope
+
 - *.example.com (production)
 - api.example.com
 - admin.example.com
 
 ## Out of Scope
+
 - staging.example.com
 - dev.example.com
 - Third-party services
 
 ## Prohibited Activities
+
 - DDoS attacks
 - Social engineering
 - Physical attacks
@@ -495,21 +551,25 @@ jobs:
 - Accessing other users' data
 
 ## Reporting Requirements
+
 - Detailed vulnerability description
 - Steps to reproduce
 - Proof of concept
 - Impact assessment
+
 ```
 
 ### Post-Major-Update Testing
 
 **Testing Triggers**:
+
 - Major feature releases
 - Infrastructure changes
 - Security control updates
 - Third-party integration changes
 
 **Testing Process**:
+
 1. Identify changes and potential security impacts
 2. Conduct focused penetration testing
 3. Validate security controls
@@ -533,6 +593,7 @@ jobs:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All applications and services
 - Infrastructure and cloud configuration
 - Security controls and policies
@@ -590,6 +651,7 @@ Affects:
 **Not Applicable** - Testing is non-destructive and conducted in controlled manner
 
 **Safety Measures**:
+
 - Test in staging environment first
 - Coordinate with operations team
 - Have rollback plan for any changes
@@ -611,6 +673,7 @@ Affects:
 ### Monitoring Plan
 
 **Tracking Metrics**:
+
 - `security.testing.completed` (count by type)
 - `security.vulnerabilities.found` (count by severity)
 - `security.vulnerabilities.remediated` (count by severity)
@@ -618,12 +681,14 @@ Affects:
 - `security.testing.cost` (dollars)
 
 **Reporting**:
+
 - Monthly: Vulnerability remediation status
 - Quarterly: Penetration testing results
 - Annual: Red team exercise report
 - Annual: Security posture assessment
 
 **Review Schedule**:
+
 - Monthly: Vulnerability remediation review
 - Quarterly: Testing program effectiveness
 - Annual: Program budget and scope review
@@ -650,12 +715,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual testing coordination (acceptable initially)
 2. Limited internal testing capability
 3. No automated remediation validation
 4. Basic bug bounty program
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automate testing coordination and scheduling
 - **Q3 2026**: Build internal red team capability
 - **Q4 2026**: Implement automated remediation validation
@@ -673,6 +740,7 @@ Affects:
 ### PCI-DSS Requirement 11.3
 
 **Requirement**: Implement a methodology for penetration testing that includes:
+
 - External and internal penetration testing at least annually
 - Testing after significant infrastructure or application upgrades
 - Segmentation and scope-reduction controls testing
@@ -682,6 +750,7 @@ Affects:
 ### OWASP Testing Guide
 
 Follow OWASP Testing Guide v4.2 methodology:
+
 1. Information Gathering
 2. Configuration and Deployment Management Testing
 3. Identity Management Testing
@@ -697,12 +766,14 @@ Follow OWASP Testing Guide v4.2 methodology:
 ### Red Team vs Penetration Testing
 
 **Penetration Testing**:
+
 - Focused on finding vulnerabilities
 - Time-boxed engagement
 - Comprehensive reporting
 - Known to blue team
 
 **Red Team Exercise**:
+
 - Focused on achieving objectives
 - Extended engagement
 - Simulates real attack

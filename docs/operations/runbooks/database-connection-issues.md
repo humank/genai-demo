@@ -67,6 +67,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Immediate Actions
 
 1. **Kill idle connections** (if safe):
+
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} \
@@ -76,16 +77,18 @@ kubectl exec -it ${POD_NAME} -n production -- \
       AND query_start < NOW() - INTERVAL '10 minutes';"
 ```
 
-2. **Restart application pods**:
+1. **Restart application pods**:
+
 ```bash
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
 ### Root Cause Fixes
 
-#### If connection pool exhausted:
+#### If connection pool exhausted
 
 1. Increase connection pool size:
+
 ```yaml
 spring:
   datasource:
@@ -94,21 +97,22 @@ spring:
       minimum-idle: 15       # Increase from 10
 ```
 
-2. Fix connection leaks in code:
+1. Fix connection leaks in code:
    - Ensure proper try-with-resources usage
    - Close connections in finally blocks
    - Use @Transactional properly
 
-#### If database max_connections reached:
+#### If database max_connections reached
 
 1. Increase RDS max_connections:
+
 ```bash
 aws rds modify-db-parameter-group \
   --db-parameter-group-name ecommerce-prod \
   --parameters "ParameterName=max_connections,ParameterValue=200,ApplyMethod=immediate"
 ```
 
-2. Restart RDS instance if needed
+1. Restart RDS instance if needed
 
 ## Verification
 

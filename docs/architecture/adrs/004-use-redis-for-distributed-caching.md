@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 ### Business Context
 
 **Business Drivers**:
+
 - Need for sub-second API response times (< 500ms target)
 - Expected traffic spikes during promotions (10x normal load)
 - Cost optimization by reducing database queries
@@ -40,6 +41,7 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 - Support for 10K → 1M users growth
 
 **Constraints**:
+
 - Budget: $500/month for caching infrastructure
 - Must integrate with AWS infrastructure
 - Need for high availability (99.9% uptime)
@@ -48,12 +50,14 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 ### Technical Context
 
 **Current State**:
+
 - PostgreSQL primary database (ADR-001)
 - Hexagonal Architecture (ADR-002)
 - Spring Boot 3.4.5 with Spring Cache abstraction
 - AWS cloud infrastructure
 
 **Requirements**:
+
 - Distributed caching across multiple instances
 - Sub-millisecond read latency
 - Support for complex data structures (lists, sets, sorted sets)
@@ -79,6 +83,7 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 **Description**: In-memory data store with optional persistence, managed by AWS ElastiCache
 
 **Pros**:
+
 - ✅ Sub-millisecond latency (< 1ms)
 - ✅ Rich data structures (strings, lists, sets, sorted sets, hashes)
 - ✅ Excellent Spring Boot integration (Spring Data Redis)
@@ -90,11 +95,13 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 - ✅ Large community and ecosystem
 
 **Cons**:
+
 - ⚠️ In-memory only (requires sufficient RAM)
 - ⚠️ Persistence has performance trade-offs
 - ⚠️ Cluster mode adds complexity
 
-**Cost**: 
+**Cost**:
+
 - Development: $200/month (cache.t3.medium)
 - Production: $500/month (cache.r6g.large with replica)
 
@@ -105,6 +112,7 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 **Description**: Simple in-memory key-value store
 
 **Pros**:
+
 - ✅ Very fast (sub-millisecond)
 - ✅ Simple to use
 - ✅ Multi-threaded architecture
@@ -112,6 +120,7 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 - ✅ Lower memory overhead
 
 **Cons**:
+
 - ❌ Only supports simple key-value pairs
 - ❌ No persistence
 - ❌ No pub/sub
@@ -128,12 +137,14 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 **Description**: In-memory data grid with distributed caching
 
 **Pros**:
+
 - ✅ Distributed caching built-in
 - ✅ Rich data structures
 - ✅ Strong consistency options
 - ✅ Good Spring Boot integration
 
 **Cons**:
+
 - ❌ Higher memory usage
 - ❌ More complex setup
 - ❌ No AWS managed service
@@ -149,12 +160,14 @@ The Enterprise E-Commerce Platform needs a caching solution to:
 **Description**: In-process caching with Caffeine library
 
 **Pros**:
+
 - ✅ Zero network latency
 - ✅ Simple to implement
 - ✅ No additional infrastructure
 - ✅ Excellent Spring Boot integration
 
 **Cons**:
+
 - ❌ Not distributed (each instance has own cache)
 - ❌ Cache invalidation across instances is complex
 - ❌ Limited by JVM heap size
@@ -184,6 +197,7 @@ Redis was selected for the following reasons:
 9. **Proven**: Industry-standard solution with large community
 
 **Caching Strategy**:
+
 - **Read-Through**: Cache customer profiles, product catalog
 - **Write-Through**: Update cache on data changes
 - **Cache-Aside**: For complex queries and aggregations
@@ -213,6 +227,7 @@ Redis was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (caching layer)
 - Application services (cache annotations)
 - Infrastructure layer (Redis configuration)
@@ -268,12 +283,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Cache hit rate < 50%
 - Cache-related errors > 1%
 - Cost exceeds budget by > 50%
 - Performance degradation with cache
 
 **Rollback Steps**:
+
 1. Disable caching annotations
 2. Route all requests to database
 3. Investigate root cause
@@ -295,6 +312,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - CacheHits / CacheMisses
 - CPUUtilization
 - NetworkBytesIn / NetworkBytesOut
@@ -303,6 +321,7 @@ Affects:
 - ReplicationLag
 
 **Application Metrics**:
+
 ```java
 @Component
 public class CacheMetrics {
@@ -315,6 +334,7 @@ public class CacheMetrics {
 ```
 
 **Alerts**:
+
 - Cache hit rate < 70%
 - CPU utilization > 80%
 - Evictions > 100/minute
@@ -322,6 +342,7 @@ public class CacheMetrics {
 - Connection count > 80% of max
 
 **Review Schedule**:
+
 - Daily: Check cache hit rates
 - Weekly: Review cache patterns and TTLs
 - Monthly: Cost optimization review
@@ -350,11 +371,13 @@ public class CacheMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual cache invalidation (can be improved with CDC)
 2. No cache warming on deployment (future enhancement)
 3. Simple TTL-based expiration (can add smarter policies)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement CDC-based cache invalidation
 - **Q3 2026**: Add cache warming on deployment
 - **Q4 2026**: Implement adaptive TTL based on access patterns
@@ -399,6 +422,7 @@ public class CacheConfiguration {
 ### Caching Patterns
 
 **Read-Through Caching**:
+
 ```java
 @Service
 @CacheConfig(cacheNames = "customers")
@@ -418,6 +442,7 @@ public class CustomerService {
 ```
 
 **Distributed Locking**:
+
 ```java
 @Service
 public class OrderService {
@@ -443,13 +468,15 @@ public class OrderService {
 
 ### Cache Key Strategy
 
-```
+```text
 Pattern: {context}:{entity}:{id}:{version}
 
 Examples:
+
 - customer:profile:CUST-123:v1
 - product:details:PROD-456:v2
 - order:summary:ORD-789:v1
+
 ```
 
 ### ElastiCache Configuration

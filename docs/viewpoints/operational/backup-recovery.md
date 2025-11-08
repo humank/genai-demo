@@ -20,7 +20,7 @@ This document describes backup strategies, recovery procedures, and disaster rec
 
 ### High-Level Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Production Environment                       │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
@@ -80,7 +80,9 @@ This document describes backup strategies, recovery procedures, and disaster rec
 ### Data Flow
 
 **Backup Creation Flow**:
-```
+
+```text
+
 1. Source System → Backup Trigger (Scheduled/Manual)
 2. Backup Service → Create Snapshot/Export
 3. Snapshot Storage → Native Service Storage (EBS/ElastiCache)
@@ -89,10 +91,13 @@ This document describes backup strategies, recovery procedures, and disaster rec
 6. Cross-Region Replication → Copy to DR region
 7. Verification Service → Validate backup integrity
 8. Monitoring → Record metrics and send alerts
+
 ```
 
 **Recovery Flow**:
-```
+
+```text
+
 1. Recovery Request → Identify required backup
 2. Backup Location → Retrieve from storage tier
 3. Restore Service → Create new instance/cluster
@@ -100,6 +105,7 @@ This document describes backup strategies, recovery procedures, and disaster rec
 5. Application Update → Point to restored resource
 6. Health Check → Verify application functionality
 7. Monitoring → Track recovery metrics
+
 ```
 
 ## Recovery Objectives
@@ -120,6 +126,7 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### RDS Database (Primary)
 
 **RTO: 15 minutes**
+
 - Snapshot identification: 2 minutes
 - Instance provisioning: 8 minutes
 - Data restoration: 3 minutes
@@ -127,12 +134,14 @@ This document describes backup strategies, recovery procedures, and disaster rec
 - Health verification: 1 minute
 
 **RPO: 5 minutes**
+
 - Automated snapshots: Every 5 minutes
 - Transaction logs: Continuous
 - Point-in-time recovery: 5-minute granularity
 - Data loss window: Maximum 5 minutes
 
 **Business Impact**:
+
 - Critical: Order processing, payment transactions
 - Acceptable data loss: Up to 5 minutes of transactions
 - Recovery priority: Highest (P0)
@@ -140,16 +149,19 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### RDS Database (Multi-AZ Standby)
 
 **RTO: Immediate (30-120 seconds)**
+
 - Automatic failover detection: 30 seconds
 - DNS propagation: 30-60 seconds
 - Connection re-establishment: 30 seconds
 
 **RPO: 0 (Zero data loss)**
+
 - Synchronous replication to standby
 - All committed transactions replicated
 - No data loss during failover
 
 **Business Impact**:
+
 - Transparent to application
 - No manual intervention required
 - Maintains transaction consistency
@@ -157,17 +169,20 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### Redis Cache
 
 **RTO: 5 minutes**
+
 - Snapshot identification: 1 minute
 - Cluster provisioning: 2 minutes
 - Data restoration: 1 minute
 - Application reconnection: 1 minute
 
 **RPO: 1 hour**
+
 - Hourly automated snapshots
 - Cache data is non-critical (can be rebuilt)
 - Acceptable data loss: Up to 1 hour of cache state
 
 **Business Impact**:
+
 - Medium: Temporary performance degradation
 - Cache miss rate increases temporarily
 - Application remains functional (slower)
@@ -176,17 +191,20 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### Kafka Topics
 
 **RTO: 30 minutes**
+
 - Failover to backup cluster: 5 minutes
 - Consumer group rebalancing: 10 minutes
 - Message replay verification: 10 minutes
 - Application reconnection: 5 minutes
 
 **RPO: 15 minutes**
+
 - Continuous replication with 15-minute lag
 - Message retention: 7 days
 - Replay capability from any point
 
 **Business Impact**:
+
 - Medium: Event processing delay
 - Messages queued during recovery
 - No message loss (retained for replay)
@@ -195,17 +213,20 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### Application Configuration
 
 **RTO: 10 minutes**
+
 - Backup retrieval from S3: 2 minutes
 - ConfigMap/Secret application: 3 minutes
 - Pod restart and initialization: 4 minutes
 - Health check verification: 1 minute
 
 **RPO: 24 hours**
+
 - Daily automated backups
 - Configuration changes are infrequent
 - Acceptable loss: Up to 24 hours of config changes
 
 **Business Impact**:
+
 - Low: Configuration rarely changes
 - Manual reconfiguration possible
 - Recovery priority: Low (P3)
@@ -213,17 +234,20 @@ This document describes backup strategies, recovery procedures, and disaster rec
 #### Infrastructure (CDK)
 
 **RTO: 1 hour**
+
 - Code checkout from Git: 5 minutes
 - CDK synthesis: 10 minutes
 - Stack deployment: 40 minutes
 - Verification and testing: 5 minutes
 
 **RPO: 24 hours**
+
 - Git commits provide version history
 - Infrastructure as Code (IaC)
 - Point-in-time recovery via Git
 
 **Business Impact**:
+
 - Low: Infrastructure changes are planned
 - Rollback via Git history
 - Recovery priority: Low (P3)
@@ -233,6 +257,7 @@ This document describes backup strategies, recovery procedures, and disaster rec
 ### S3 Storage Architecture
 
 **Bucket Configuration**:
+
 ```yaml
 Primary Backup Bucket:
   Name: ecommerce-backups-prod-us-east-1
@@ -252,6 +277,7 @@ DR Backup Bucket:
 ### S3 Lifecycle Policies
 
 **Database Backups Lifecycle**:
+
 ```json
 {
   "Rules": [
@@ -287,6 +313,7 @@ DR Backup Bucket:
 ```
 
 **Cache Snapshots Lifecycle**:
+
 ```json
 {
   "Rules": [
@@ -315,6 +342,7 @@ DR Backup Bucket:
 ```
 
 **Configuration Backups Lifecycle**:
+
 ```json
 {
   "Rules": [
@@ -343,6 +371,7 @@ DR Backup Bucket:
 ```
 
 **Application Logs Lifecycle**:
+
 ```json
 {
   "Rules": [
@@ -386,18 +415,21 @@ DR Backup Bucket:
 ### Cross-Region Replication
 
 **Replication Configuration**:
+
 ```yaml
 Replication Rule:
   Source Bucket: ecommerce-backups-prod-us-east-1
   Destination Bucket: ecommerce-backups-prod-us-west-2
   
   Replication Criteria:
+
     - All objects with prefix: rds-snapshots/
     - All objects with prefix: redis-snapshots/
     - All objects with prefix: k8s-config/
     - All objects with prefix: kafka-archives/
   
   Replication Options:
+
     - Replicate delete markers: No
     - Replicate encrypted objects: Yes
     - Replicate object metadata: Yes
@@ -405,9 +437,11 @@ Replication Rule:
     - Replication Time Control (RTC): Enabled (15 minutes)
   
   Monitoring:
+
     - Replication lag alert: > 30 minutes
     - Failed replication alert: Any failure
     - Metrics: Published to CloudWatch
+
 ```
 
 ## Database Backup Strategy
@@ -415,6 +449,7 @@ Replication Rule:
 ### RDS Automated Backups
 
 **Configuration**:
+
 ```yaml
 Automated Backups:
   Enabled: true
@@ -438,6 +473,7 @@ Multi-AZ Deployment:
 ```
 
 **Snapshot Export to S3**:
+
 ```bash
 # Export RDS snapshot to S3 for long-term storage
 aws rds start-export-task \
@@ -455,6 +491,7 @@ aws rds describe-export-tasks \
 ```
 
 **Manual Snapshots**:
+
 ```bash
 # Create manual snapshot before major changes
 aws rds create-db-snapshot \
@@ -477,6 +514,7 @@ aws rds copy-db-snapshot \
 ### Encryption Standards
 
 **At-Rest Encryption**:
+
 ```yaml
 RDS Database:
   Encryption: AES-256
@@ -502,6 +540,7 @@ Kafka:
 ```
 
 **In-Transit Encryption**:
+
 ```yaml
 Backup Transfer:
   Protocol: TLS 1.2+
@@ -519,6 +558,7 @@ Restore Operations:
 ### Access Control
 
 **IAM Policies**:
+
 ```json
 {
   "Version": "2012-10-17",
@@ -582,6 +622,7 @@ Restore Operations:
 ```
 
 **S3 Bucket Policy**:
+
 ```json
 {
   "Version": "2012-10-17",
@@ -632,6 +673,7 @@ Restore Operations:
 ### KMS Key Management
 
 **Backup KMS Key Configuration**:
+
 ```yaml
 Key Alias: alias/ecommerce-backup-key
 Key Type: Symmetric
@@ -639,6 +681,7 @@ Key Spec: SYMMETRIC_DEFAULT
 Key Usage: ENCRYPT_DECRYPT
 
 Key Policy:
+
   - Service: RDS, ElastiCache, S3
   - Principals: backup.amazonaws.com
   - Actions: Encrypt, Decrypt, GenerateDataKey
@@ -657,6 +700,7 @@ Multi-Region:
 ### Automated Verification
 
 **Database Backup Verification**:
+
 ```bash
 #!/bin/bash
 # automated-db-backup-verification.sh
@@ -764,6 +808,7 @@ echo "Backup verification completed successfully" | tee -a $VERIFICATION_RESULTS
 ### Integrity Checking
 
 **Checksum Verification**:
+
 ```bash
 #!/bin/bash
 # calculate-backup-checksums.sh
@@ -790,6 +835,7 @@ aws s3api head-object \
 ```
 
 **Data Consistency Checks**:
+
 ```sql
 -- Database consistency verification queries
 -- Run these after backup restoration
@@ -841,6 +887,7 @@ HAVING ABS(o.total_amount - SUM(oi.quantity * oi.unit_price)) > 0.01;
 ### Database Backup Verification
 
 **Weekly Verification Process**:
+
 ```bash
 #!/bin/bash
 # verify-db-backup.sh
@@ -874,6 +921,7 @@ aws rds delete-db-instance \
 ### Cost Analysis
 
 **Monthly Backup Costs (Estimated)**:
+
 ```yaml
 RDS Snapshots:
   Automated Snapshots (30 days): $150/month
@@ -907,6 +955,7 @@ Annual Cost: $6,636/year
 #### 1. Lifecycle Policy Optimization
 
 **Aggressive Tiering**:
+
 ```json
 {
   "Rules": [
@@ -937,6 +986,7 @@ Annual Cost: $6,636/year
 #### 2. Snapshot Retention Optimization
 
 **Reduced Retention Periods**:
+
 ```yaml
 Before:
   RDS Automated: 30 days
@@ -954,6 +1004,7 @@ Estimated Savings: $120/month
 #### 3. Compression and Deduplication
 
 **Database Export Compression**:
+
 ```bash
 # Export with compression
 pg_dump -h $DB_HOST -U admin ecommerce | gzip -9 > backup.sql.gz
@@ -970,6 +1021,7 @@ pg_dump -h $DB_HOST -U admin ecommerce | gzip -9 > backup.sql.gz
 #### 4. Incremental Backups
 
 **Incremental Backup Strategy**:
+
 ```yaml
 Full Backups:
   Frequency: Weekly (Sunday)
@@ -986,6 +1038,7 @@ Estimated Savings: $100/month (40% reduction)
 #### 5. S3 Intelligent-Tiering
 
 **Automatic Cost Optimization**:
+
 ```yaml
 Configuration:
   Frequent Access Tier: First 30 days
@@ -995,6 +1048,7 @@ Configuration:
   Deep Archive Access: 365+ days
   
 Benefits:
+
   - Automatic tier transitions
   - No retrieval fees for frequent/infrequent tiers
   - Monitoring fee: $0.0025 per 1,000 objects
@@ -1005,13 +1059,16 @@ Estimated Savings: $60/month
 #### 6. Cross-Region Replication Optimization
 
 **Selective Replication**:
+
 ```yaml
 Replicate Only:
+
   - Critical database backups
   - Compliance-required data
   - Recent backups (< 30 days)
 
 Do Not Replicate:
+
   - Cache snapshots
   - Logs older than 30 days
   - Non-critical configuration backups
@@ -1022,13 +1079,16 @@ Estimated Savings: $35/month (70% reduction in transfer costs)
 #### 7. Backup Consolidation
 
 **Eliminate Redundant Backups**:
+
 ```yaml
 Before:
+
   - RDS automated snapshots: Every 5 minutes
   - Manual snapshots: Daily
   - Export to S3: Daily
   
 After:
+
   - RDS automated snapshots: Every 5 minutes (keep)
   - Manual snapshots: Weekly only
   - Export to S3: Weekly (for long-term storage)
@@ -1039,6 +1099,7 @@ Estimated Savings: $45/month
 #### 8. Reserved Capacity
 
 **S3 Storage Lens Recommendations**:
+
 ```yaml
 Purchase S3 Storage Lens:
   Cost: $0.20 per million objects analyzed
@@ -1050,32 +1111,40 @@ Estimated Savings: $30/month from cleanup
 ### Cost Monitoring
 
 **CloudWatch Cost Metrics**:
+
 ```yaml
 Metrics:
+
   - backup.storage.cost.daily
   - backup.transfer.cost.daily
   - backup.snapshot.cost.daily
   
 Alarms:
+
   - Daily cost > $25 (alert)
   - Monthly cost > $600 (critical)
   - Cost increase > 20% week-over-week (warning)
+
 ```
 
 **Cost Allocation Tags**:
+
 ```yaml
 Tags:
+
   - Environment: production|staging|development
   - Component: rds|redis|kafka|config
   - CostCenter: operations
   - Retention: short-term|long-term|compliance
   - Criticality: critical|important|standard
+
 ```
 
 ### Total Potential Savings
 
 ```yaml
 Optimization Strategy Summary:
+
   1. Lifecycle Policy Optimization: $80/month
   2. Retention Optimization: $120/month
   3. Compression: $75/month
@@ -1110,6 +1179,7 @@ Manual Snapshots:
 ```
 
 **Manual Backup**:
+
 ```bash
 # Create manual snapshot
 aws elasticache create-snapshot \
@@ -1128,6 +1198,7 @@ aws elasticache copy-snapshot \
 #### RDB (Redis Database) Snapshots
 
 **RDB Configuration**:
+
 ```yaml
 # redis.conf
 save 900 1      # Save if at least 1 key changed in 900 seconds
@@ -1144,6 +1215,7 @@ stop-writes-on-bgsave-error yes
 ```
 
 **Manual RDB Backup**:
+
 ```bash
 #!/bin/bash
 # redis-rdb-backup.sh
@@ -1213,6 +1285,7 @@ echo "Redis RDB backup process completed successfully"
 #### AOF (Append-Only File) Backup
 
 **AOF Configuration**:
+
 ```yaml
 # redis.conf
 appendonly yes
@@ -1227,6 +1300,7 @@ aof-use-rdb-preamble yes
 ```
 
 **AOF Backup Script**:
+
 ```bash
 #!/bin/bash
 # redis-aof-backup.sh
@@ -1272,6 +1346,7 @@ echo "AOF backup completed and exported to S3"
 #### Restore from RDB Snapshot
 
 **ElastiCache Restore**:
+
 ```bash
 #!/bin/bash
 # redis-restore-from-rdb.sh
@@ -1331,6 +1406,7 @@ echo "Update application to use new Redis endpoint: $CLUSTER_ENDPOINT"
 #### Restore from AOF File
 
 **Self-Managed Redis Restore**:
+
 ```bash
 #!/bin/bash
 # redis-restore-from-aof.sh
@@ -1386,6 +1462,7 @@ echo "Redis restore from AOF completed successfully"
 #### Automated Snapshot Lifecycle
 
 **Snapshot Retention Policy**:
+
 ```yaml
 Automated Snapshots:
   Retention: 7 days
@@ -1403,6 +1480,7 @@ Long-Term Archive:
 ```
 
 **Snapshot Cleanup Script**:
+
 ```bash
 #!/bin/bash
 # cleanup-old-redis-snapshots.sh
@@ -1444,6 +1522,7 @@ echo "Snapshot cleanup completed"
 #### Cross-Region Snapshot Copy
 
 **Disaster Recovery Snapshot Replication**:
+
 ```bash
 #!/bin/bash
 # replicate-redis-snapshots.sh
@@ -1500,6 +1579,7 @@ Topic Backup:
 ```
 
 **Backup Verification**:
+
 ```bash
 # Check replication lag
 kafka-consumer-groups.sh \
@@ -1518,6 +1598,7 @@ kafka-console-consumer.sh \
 #### Automated Topic Backup
 
 **MirrorMaker 2.0 Configuration**:
+
 ```yaml
 # kafka-mirror-maker-config.yaml
 apiVersion: kafka.strimzi.io/v1beta2
@@ -1531,7 +1612,9 @@ spec:
   connectCluster: "backup-cluster"
   
   clusters:
+
     - alias: "source-cluster"
+
       bootstrapServers: kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092
       config:
         config.storage.replication.factor: 3
@@ -1539,6 +1622,7 @@ spec:
         status.storage.replication.factor: 3
         
     - alias: "backup-cluster"
+
       bootstrapServers: kafka-backup-1.us-west-2:9092,kafka-backup-2.us-west-2:9092
       config:
         config.storage.replication.factor: 3
@@ -1546,7 +1630,9 @@ spec:
         status.storage.replication.factor: 3
   
   mirrors:
+
     - sourceCluster: "source-cluster"
+
       targetCluster: "backup-cluster"
       sourceConnector:
         config:
@@ -1571,6 +1657,7 @@ spec:
 ```
 
 **Topic Archive to S3**:
+
 ```bash
 #!/bin/bash
 # kafka-topic-archive.sh
@@ -1637,6 +1724,7 @@ echo "Kafka topic archive completed successfully"
 #### Kafka Topic Recovery
 
 **Restore from Backup Cluster**:
+
 ```bash
 #!/bin/bash
 # kafka-topic-restore.sh
@@ -1683,6 +1771,7 @@ echo "Topic restoration initiated. Monitor replication lag."
 ```
 
 **Restore from S3 Archive**:
+
 ```bash
 #!/bin/bash
 # kafka-restore-from-s3.sh
@@ -1752,6 +1841,7 @@ echo "Topic restoration from S3 completed successfully"
 #### Kafka Consumer Group Offset Backup
 
 **Backup Consumer Offsets**:
+
 ```bash
 #!/bin/bash
 # backup-consumer-offsets.sh
@@ -1792,6 +1882,7 @@ echo "Consumer offset backup completed"
 ### S3 Versioning Configuration
 
 **Enable Versioning on Critical Buckets**:
+
 ```bash
 #!/bin/bash
 # enable-s3-versioning.sh
@@ -1815,6 +1906,7 @@ done
 ```
 
 **Versioning Lifecycle Policy**:
+
 ```json
 {
   "Rules": [
@@ -1842,6 +1934,7 @@ done
 ### S3 Cross-Region Replication
 
 **Replication Configuration**:
+
 ```bash
 #!/bin/bash
 # configure-s3-replication.sh
@@ -1900,13 +1993,16 @@ echo "S3 replication configured from $SOURCE_BUCKET to $DEST_BUCKET"
 ### AWS Backup for EFS
 
 **Backup Plan Configuration**:
+
 ```yaml
 # efs-backup-plan.yaml
 BackupPlan:
   Name: ecommerce-efs-backup-plan
   
   Rules:
+
     - RuleName: daily-backup
+
       TargetBackupVault: ecommerce-backup-vault
       ScheduleExpression: "cron(0 5 * * ? *)"  # Daily at 5 AM UTC
       StartWindowMinutes: 60
@@ -1920,6 +2016,7 @@ BackupPlan:
 ```
 
 **Create Backup Plan**:
+
 ```bash
 #!/bin/bash
 # create-efs-backup-plan.sh
@@ -1952,6 +2049,7 @@ echo "EFS backup plan configured successfully"
 
 ```yaml
 Configuration Sources:
+
   - Kubernetes ConfigMaps
   - Kubernetes Secrets
   - AWS Secrets Manager
@@ -1965,6 +2063,7 @@ Backup Strategy:
 ```
 
 **Comprehensive Backup Script**:
+
 ```bash
 #!/bin/bash
 # backup-application-config.sh
@@ -2010,6 +2109,7 @@ echo "Application configuration backup completed successfully"
 ### AWS Secrets Manager Backup
 
 **Automated Secrets Backup**:
+
 ```bash
 #!/bin/bash
 # backup-secrets-manager.sh
@@ -2134,20 +2234,24 @@ kubectl rollout restart deployment/order-service -n order-context
 ### DR Strategy
 
 **Multi-Region Setup**:
-```
+
+```text
 Primary Region: us-east-1
 DR Region: us-west-2
 
 Replication:
+
   - RDS: Cross-region read replica
   - Redis: Backup snapshots copied to DR region
   - Kafka: MirrorMaker 2.0 replication
   - S3: Cross-region replication enabled
+
 ```
 
 ### DR Failover Procedure
 
 **Step 1: Assess Situation**
+
 ```bash
 # Check primary region status
 aws rds describe-db-instances \
@@ -2161,6 +2265,7 @@ aws rds describe-db-instances \
 ```
 
 **Step 2: Promote DR Database**
+
 ```bash
 # Promote read replica to standalone instance
 aws rds promote-read-replica \
@@ -2174,6 +2279,7 @@ aws rds wait db-instance-available \
 ```
 
 **Step 3: Update DNS**
+
 ```bash
 # Update Route 53 to point to DR region
 aws route53 change-resource-record-sets \
@@ -2182,6 +2288,7 @@ aws route53 change-resource-record-sets \
 ```
 
 **Step 4: Deploy Application to DR Region**
+
 ```bash
 # Deploy application stack to DR region
 cdk deploy --region us-west-2 --all
@@ -2193,12 +2300,14 @@ curl https://api-dr.ecommerce-platform.com/health
 ### DR Testing
 
 **Quarterly DR Drill**:
+
 ```yaml
 Schedule: Quarterly (January, April, July, October)
 Duration: 4 hours
 Scope: Full failover to DR region
 
 Test Procedure:
+
   1. Announce DR drill to team
   2. Simulate primary region failure
   3. Execute failover procedure
@@ -2208,10 +2317,12 @@ Test Procedure:
   7. Document lessons learned
   
 Success Criteria:
+
   - RTO < 1 hour
   - RPO < 15 minutes
   - All critical services operational
   - No data loss
+
 ```
 
 ## Complete Disaster Recovery Procedures
@@ -2219,17 +2330,20 @@ Success Criteria:
 ### DR Overview
 
 **Disaster Recovery Objectives**:
+
 ```yaml
 Recovery Time Objective (RTO): 1 hour
 Recovery Point Objective (RPO): 15 minutes
 Availability Target: 99.95% (4.38 hours downtime/year)
 
 DR Scope:
+
   - Complete system recovery from catastrophic failure
   - Multi-region failover capability
   - Infrastructure recreation from CDK
   - Data synchronization and validation
   - Business continuity procedures
+
 ```
 
 ### Disaster Scenarios and Response
@@ -2237,6 +2351,7 @@ DR Scope:
 #### Scenario 1: Complete Primary Region Failure
 
 **Trigger Conditions**:
+
 - Primary region (us-east-1) completely unavailable
 - Multiple availability zones affected
 - AWS service outage confirmed
@@ -2629,6 +2744,7 @@ echo "✓ Data validation complete"
 #### Scenario 2: Database Corruption or Data Loss
 
 **Trigger Conditions**:
+
 - Database corruption detected
 - Accidental data deletion
 - Ransomware attack
@@ -2710,6 +2826,7 @@ echo "✓ Database recovery complete"
 #### Scenario 3: Infrastructure Recreation from CDK
 
 **Trigger Conditions**:
+
 - Complete infrastructure loss
 - Account compromise requiring rebuild
 - Migration to new AWS account
@@ -2902,6 +3019,7 @@ Current Phase: [Phase name]
 Impact: All services temporarily unavailable
 
 Actions Required:
+
 - Engineering: Monitor DR failover progress
 - Operations: Prepare for post-recovery validation
 - Support: Prepare customer communications
@@ -2921,16 +3039,19 @@ Dear Valued Customer,
 We are currently experiencing a service disruption affecting our e-commerce platform. Our team is actively working to restore full service.
 
 What We Know:
+
 - Issue detected at: [Time]
 - Estimated resolution: [Time]
 - Affected services: [List]
 
 What We're Doing:
+
 - Activated disaster recovery procedures
 - Failing over to backup systems
 - Monitoring restoration progress
 
 What You Can Do:
+
 - Check status.ecommerce-platform.com for updates
 - Contact support@ecommerce-platform.com for urgent issues
 
@@ -2951,6 +3072,7 @@ Q1 Drill (January):
   Scope: Walk through DR procedures
   Participants: All teams
   Objectives:
+
     - Review DR procedures
     - Identify gaps in documentation
     - Update contact lists
@@ -2962,6 +3084,7 @@ Q2 Drill (April):
   Scope: Failover non-production environment
   Participants: Engineering + Operations
   Objectives:
+
     - Test RDS promotion
     - Test infrastructure deployment
     - Measure RTO/RPO
@@ -2973,6 +3096,7 @@ Q3 Drill (July):
   Scope: Complete failover to DR region
   Participants: All teams
   Objectives:
+
     - Execute complete DR procedure
     - Test all recovery scenarios
     - Validate business continuity
@@ -2984,16 +3108,19 @@ Q4 Drill (October):
   Scope: Unannounced failover test
   Participants: On-call teams
   Objectives:
+
     - Test real-world response
     - Measure actual RTO/RPO
     - Identify training needs
     - Update procedures
+
 ```
 
 **DR Drill Execution Checklist**:
 
 ```markdown
 # Pre-Drill (1 week before)
+
 - [ ] Schedule drill date and time
 - [ ] Notify all participants
 - [ ] Prepare test environment
@@ -3003,6 +3130,7 @@ Q4 Drill (October):
 - [ ] Set up communication channels
 
 # During Drill
+
 - [ ] Start timer for RTO measurement
 - [ ] Execute DR procedures step-by-step
 - [ ] Document all actions taken
@@ -3014,6 +3142,7 @@ Q4 Drill (October):
 - [ ] Validate monitoring and alerting
 
 # Post-Drill (within 24 hours)
+
 - [ ] Calculate actual RTO and RPO
 - [ ] Document lessons learned
 - [ ] Identify procedure gaps
@@ -3021,6 +3150,7 @@ Q4 Drill (October):
 - [ ] Schedule remediation tasks
 - [ ] Share results with stakeholders
 - [ ] Update training materials
+
 ```
 
 ### Post-DR Validation Checklist
@@ -3029,6 +3159,7 @@ Q4 Drill (October):
 
 ```yaml
 Infrastructure Validation:
+
   - [ ] All EKS nodes healthy and ready
   - [ ] RDS database accessible and responsive
   - [ ] Redis cache operational
@@ -3041,6 +3172,7 @@ Infrastructure Validation:
   - [ ] VPC peering connections active
 
 Application Validation:
+
   - [ ] All pods running and ready
   - [ ] Health checks passing
   - [ ] API endpoints responding
@@ -3053,6 +3185,7 @@ Application Validation:
   - [ ] Scheduled tasks executing
 
 Data Validation:
+
   - [ ] Database integrity checks passed
   - [ ] No orphaned records
   - [ ] Referential integrity maintained
@@ -3065,6 +3198,7 @@ Data Validation:
   - [ ] Archive data accessible
 
 Monitoring Validation:
+
   - [ ] CloudWatch metrics flowing
   - [ ] Logs being collected
   - [ ] Alerts configured and firing
@@ -3077,6 +3211,7 @@ Monitoring Validation:
   - [ ] On-call rotations updated
 
 Security Validation:
+
   - [ ] TLS certificates valid
   - [ ] Secrets accessible
   - [ ] Encryption at rest enabled
@@ -3089,6 +3224,7 @@ Security Validation:
   - [ ] Vulnerability scans clean
 
 Business Validation:
+
   - [ ] Order processing functional
   - [ ] Payment processing working
   - [ ] Customer registration active
@@ -3099,6 +3235,7 @@ Business Validation:
   - [ ] Inventory updates processing
   - [ ] Reporting queries running
   - [ ] Analytics data flowing
+
 ```
 
 **Performance Validation**:
@@ -3148,6 +3285,7 @@ echo "✓ Performance validation complete"
 ### CloudWatch Metrics
 
 **Backup Operation Metrics**:
+
 ```yaml
 Custom Metrics:
   backup.rds.snapshot.created:
@@ -3199,14 +3337,17 @@ Custom Metrics:
 ### CloudWatch Alarms
 
 **Critical Alarms (P0)**:
+
 ```yaml
 RDS Backup Failure:
   Metric: backup.rds.snapshot.created
   Condition: Sum < 1 in 1 hour
   Threshold: 0
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:critical-alerts
     - PagerDuty: High Priority
+
   Description: "RDS automated backup failed"
   
 RDS Snapshot Age:
@@ -3214,8 +3355,10 @@ RDS Snapshot Age:
   Condition: Maximum > 86400 seconds (24 hours)
   Threshold: 86400
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:critical-alerts
     - PagerDuty: High Priority
+
   Description: "No recent RDS snapshot available"
   
 Cross-Region Replication Failure:
@@ -3223,19 +3366,24 @@ Cross-Region Replication Failure:
   Condition: Maximum > 3600 seconds (1 hour)
   Threshold: 3600
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:critical-alerts
     - PagerDuty: High Priority
+
   Description: "Cross-region replication lag exceeded 1 hour"
 ```
 
 **Warning Alarms (P1)**:
+
 ```yaml
 Redis Snapshot Failure:
   Metric: backup.redis.snapshot.created
   Condition: Sum < 1 in 2 hours
   Threshold: 0
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:warning-alerts
+
   Description: "Redis snapshot creation failed"
   
 Backup Verification Failure:
@@ -3243,7 +3391,9 @@ Backup Verification Failure:
   Condition: Sum < 1 in 7 days
   Threshold: 0
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:warning-alerts
+
   Description: "Weekly backup verification not completed"
   
 S3 Upload Failure:
@@ -3251,7 +3401,9 @@ S3 Upload Failure:
   Condition: Sum < expected count in 1 day
   Threshold: varies by backup type
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:warning-alerts
+
   Description: "S3 backup upload incomplete"
   
 Backup Cost Anomaly:
@@ -3259,18 +3411,23 @@ Backup Cost Anomaly:
   Condition: > 120% of 7-day average
   Threshold: Dynamic (based on average)
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:cost-alerts
+
   Description: "Backup costs increased significantly"
 ```
 
 **Informational Alarms (P2)**:
+
 ```yaml
 Backup Duration Increase:
   Metric: backup.rds.snapshot.duration
   Condition: Average > 3600 seconds (1 hour)
   Threshold: 3600
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:info-alerts
+
   Description: "Backup duration increased, may need optimization"
   
 Storage Class Transition:
@@ -3278,7 +3435,9 @@ Storage Class Transition:
   Condition: Sum > 0
   Threshold: 0
   Actions:
+
     - SNS: arn:aws:sns:us-east-1:123456789012:info-alerts
+
   Description: "Objects transitioned to different storage class"
 ```
 
@@ -3299,6 +3458,7 @@ Storage Class Transition:
 > **🧪 Comprehensive Backup Testing**: For detailed backup testing procedures including monthly restore testing, quarterly DR drills, backup integrity verification, restore performance benchmarking, automated testing framework, test result documentation, and lessons learned tracking, see [Backup Testing Procedures](backup-testing-procedures.md).
 
 **Quick Reference**:
+
 - **Monthly Testing**: Database, application state, and infrastructure backup restore tests
 - **Quarterly DR Drills**: Full disaster recovery simulations with RTO/RPO measurement
 - **Integrity Verification**: Daily checksum validation and weekly consistency checks
@@ -3340,13 +3500,16 @@ Production Data:
 ### Backup Compliance
 
 **Requirements**:
+
 - SOC 2 Type II compliance
 - PCI DSS compliance (payment data)
 - GDPR compliance (EU customer data)
 
 **Audit Trail**:
+
 ```yaml
 Logged Events:
+
   - Backup creation
   - Backup deletion
   - Restore operations

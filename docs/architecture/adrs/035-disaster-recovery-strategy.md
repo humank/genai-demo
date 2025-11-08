@@ -26,6 +26,7 @@ decision_makers: ["Architecture Team", "Operations Team", "Business Leadership"]
 ### Problem Statement
 
 The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (DR) strategy to ensure business continuity in the face of various disaster scenarios. Given Taiwan's geopolitical situation and natural disaster risks, we need to:
+
 - Protect against regional failures (earthquake, typhoon, submarine cable cuts)
 - Mitigate geopolitical risks (Taiwan-China tensions, potential military conflict)
 - Ensure rapid recovery from infrastructure failures
@@ -36,6 +37,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 ### Business Context
 
 **Business Drivers**:
+
 - Business continuity requirements for 24/7 e-commerce operations
 - Revenue protection (estimated $50K/hour downtime cost)
 - Customer trust and brand reputation
@@ -44,6 +46,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 - Investor confidence in business resilience
 
 **Business Constraints**:
+
 - Budget limitations for DR infrastructure
 - Acceptable Recovery Time Objective (RTO): 5 minutes
 - Acceptable Recovery Point Objective (RPO): 1 minute
@@ -51,6 +54,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 - Must comply with data residency requirements
 
 **Business Requirements**:
+
 - 99.9% annual availability (8.76 hours downtime/year)
 - Automated failover for critical services
 - Manual failover capability for extreme scenarios
@@ -60,6 +64,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 ### Technical Context
 
 **Current Architecture**:
+
 - Multi-region deployment (Taipei ap-northeast-3 + Tokyo ap-northeast-1)
 - Active-active architecture for critical services
 - PostgreSQL with cross-region replication
@@ -68,6 +73,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 - S3 with Cross-Region Replication (CRR)
 
 **Technical Constraints**:
+
 - Network latency between Taipei and Tokyo (~40ms)
 - Data consistency requirements for financial transactions
 - Submarine cable dependency for cross-region communication
@@ -75,6 +81,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 - Kubernetes cluster management complexity
 
 **Dependencies**:
+
 - ADR-017: Multi-Region Deployment Strategy
 - ADR-037: Active-Active Multi-Region Architecture
 - ADR-038: Cross-Region Data Replication Strategy
@@ -99,6 +106,7 @@ The Enterprise E-Commerce Platform requires a comprehensive disaster recovery (D
 Deploy active-active architecture across Taipei and Tokyo regions with automated health checks and failover. Both regions serve production traffic simultaneously, with automatic traffic rerouting on failure.
 
 **Pros** ✅:
+
 - Fastest recovery time (< 5 minutes automated failover)
 - No data loss for most scenarios (RPO < 1 minute)
 - Continuous validation of DR capability (both regions always active)
@@ -107,6 +115,7 @@ Deploy active-active architecture across Taipei and Tokyo regions with automated
 - Supports gradual traffic shifting for testing
 
 **Cons** ❌:
+
 - Highest infrastructure cost (double compute resources)
 - Complex data synchronization and conflict resolution
 - Increased operational complexity
@@ -115,6 +124,7 @@ Deploy active-active architecture across Taipei and Tokyo regions with automated
 - Requires sophisticated monitoring and automation
 
 **Cost**:
+
 - **Implementation Cost**: 12 person-weeks (architecture, automation, testing)
 - **Monthly Cost**:
   - Compute: $8,000/month (double resources)
@@ -137,6 +147,7 @@ Deploy active-active architecture across Taipei and Tokyo regions with automated
 Primary region (Taipei) serves all traffic, with warm standby in Tokyo. Standby region maintains minimal compute resources with data replication, scaled up during failover.
 
 **Pros** ✅:
+
 - Lower infrastructure cost (minimal standby resources)
 - Simpler data consistency (single active region)
 - Easier to manage and operate
@@ -145,6 +156,7 @@ Primary region (Taipei) serves all traffic, with warm standby in Tokyo. Standby 
 - Proven DR pattern
 
 **Cons** ❌:
+
 - Slower recovery time (10-15 minutes for scale-up)
 - Potential data loss during failover (RPO 5-10 minutes)
 - Standby resources underutilized
@@ -153,6 +165,7 @@ Primary region (Taipei) serves all traffic, with warm standby in Tokyo. Standby 
 - Longer failback process
 
 **Cost**:
+
 - **Implementation Cost**: 6 person-weeks
 - **Monthly Cost**:
   - Primary compute: $4,000/month
@@ -176,6 +189,7 @@ Primary region (Taipei) serves all traffic, with warm standby in Tokyo. Standby 
 Regular backups to S3 with cold standby infrastructure. DR region infrastructure provisioned only during disaster using Infrastructure as Code (CDK).
 
 **Pros** ✅:
+
 - Lowest infrastructure cost (no standby resources)
 - Simple to implement and maintain
 - Clear backup and restore procedures
@@ -183,6 +197,7 @@ Regular backups to S3 with cold standby infrastructure. DR region infrastructure
 - Flexible DR region selection
 
 **Cons** ❌:
+
 - Very slow recovery time (1-4 hours)
 - Significant data loss potential (RPO 15-60 minutes)
 - Manual recovery process
@@ -191,6 +206,7 @@ Regular backups to S3 with cold standby infrastructure. DR region infrastructure
 - Unacceptable for e-commerce platform
 
 **Cost**:
+
 - **Implementation Cost**: 3 person-weeks
 - **Monthly Cost**:
   - Primary compute: $4,000/month
@@ -226,6 +242,7 @@ We chose active-active multi-region architecture with automated failover as our 
 6. **Competitive Advantage**: 99.9% availability with sub-5-minute recovery provides competitive differentiation in Taiwan's e-commerce market.
 
 **Key Factors in Decision**:
+
 1. **Business Impact**: $50K/hour downtime cost justifies higher infrastructure investment
 2. **Geopolitical Reality**: Taiwan-China tensions require immediate failover capability
 3. **Technical Feasibility**: Active-active architecture proven at scale by major platforms
@@ -249,6 +266,7 @@ We chose active-active multi-region architecture with automated failover as our 
 **Selected Impact Radius**: Enterprise
 
 **Impact Description**:
+
 - **Enterprise**: Changes affect entire platform across all regions
   - All services must support multi-region deployment
   - All data stores must implement cross-region replication
@@ -279,6 +297,7 @@ We chose active-active multi-region architecture with automated failover as our 
 **Overall Risk Level**: Medium
 
 **Risk Mitigation Plan**:
+
 - Quarterly DR drills to validate failover procedures
 - Automated monitoring and alerting for replication lag
 - Manual failover procedures as backup to automation
@@ -291,11 +310,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Phase 1: Foundation (Timeline: Week 1-2)
 
 **Objectives**:
+
 - Establish multi-region infrastructure
 - Configure cross-region replication
 - Set up monitoring and alerting
 
 **Tasks**:
+
 - [ ] Deploy EKS clusters in both regions (Taipei + Tokyo)
 - [ ] Configure PostgreSQL logical replication
 - [ ] Set up Redis cluster with cross-region replication
@@ -305,11 +326,13 @@ We chose active-active multi-region architecture with automated failover as our 
 - [ ] Configure CloudWatch cross-region dashboards
 
 **Deliverables**:
+
 - Multi-region infrastructure deployed
 - Cross-region replication configured
 - Monitoring dashboards operational
 
 **Success Criteria**:
+
 - Both regions serving traffic
 - Replication lag < 5 seconds
 - Health checks functioning correctly
@@ -317,11 +340,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Phase 2: Automated Failover (Timeline: Week 3-4)
 
 **Objectives**:
+
 - Implement automated failover logic
 - Configure health checks and triggers
 - Test failover automation
 
 **Tasks**:
+
 - [ ] Implement Route 53 health check automation
 - [ ] Configure automatic traffic shifting on failure
 - [ ] Implement split-brain prevention (quorum-based)
@@ -331,11 +356,13 @@ We chose active-active multi-region architecture with automated failover as our 
 - [ ] Document automated failover procedures
 
 **Deliverables**:
+
 - Automated failover system operational
 - Split-brain prevention implemented
 - Failover alerting configured
 
 **Success Criteria**:
+
 - Automated failover completes in < 5 minutes
 - No data loss during failover
 - Split-brain scenarios prevented
@@ -343,11 +370,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Phase 3: Manual Procedures (Timeline: Week 5-6)
 
 **Objectives**:
+
 - Document manual failover procedures
 - Create operational runbooks
 - Train operations team
 
 **Tasks**:
+
 - [ ] Document manual failover procedures for extreme scenarios
 - [ ] Create runbooks for common disaster scenarios
 - [ ] Document failback procedures
@@ -357,11 +386,13 @@ We chose active-active multi-region architecture with automated failover as our 
 - [ ] Document escalation procedures
 
 **Deliverables**:
+
 - Comprehensive runbooks
 - Trained operations team
 - Communication templates
 
 **Success Criteria**:
+
 - Operations team can execute manual failover in < 10 minutes
 - All disaster scenarios documented
 - Communication procedures tested
@@ -369,11 +400,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Phase 4: Testing and Validation (Timeline: Week 7-8)
 
 **Objectives**:
+
 - Conduct DR drills
 - Validate RTO/RPO targets
 - Refine procedures based on results
 
 **Tasks**:
+
 - [ ] Conduct automated failover drill (Taipei → Tokyo)
 - [ ] Conduct manual failover drill (extreme scenario)
 - [ ] Test failback procedures (Tokyo → Taipei)
@@ -383,11 +416,13 @@ We chose active-active multi-region architecture with automated failover as our 
 - [ ] Document lessons learned and improvements
 
 **Deliverables**:
+
 - DR drill reports
 - RTO/RPO validation results
 - Improvement action items
 
 **Success Criteria**:
+
 - RTO < 5 minutes achieved
 - RPO < 1 minute achieved
 - No data loss or corruption
@@ -396,12 +431,14 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Automated failover causing data corruption
 - Split-brain scenario detected
 - Unacceptable performance degradation in multi-region setup
 - Cost exceeding budget by > 50%
 
 **Rollback Steps**:
+
 1. **Immediate Action**: Disable automated failover, route all traffic to primary region
 2. **Data Verification**: Verify data consistency in primary region
 3. **Standby Conversion**: Convert Tokyo to warm standby mode
@@ -428,11 +465,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Monitoring Plan
 
 **Dashboards**:
+
 - **Multi-Region Health Dashboard**: Regional health, replication lag, traffic distribution
 - **Failover Dashboard**: Failover events, RTO/RPO metrics, success rates
 - **Cost Dashboard**: Multi-region infrastructure costs, optimization opportunities
 
 **Alerts**:
+
 - **Critical**: Regional failure detected, automated failover initiated (PagerDuty)
 - **Critical**: Replication lag > 10 seconds (PagerDuty)
 - **Warning**: Replication lag > 5 seconds (Slack)
@@ -440,6 +479,7 @@ We chose active-active multi-region architecture with automated failover as our 
 - **Info**: Failover drill scheduled (Email)
 
 **Review Schedule**:
+
 - **Daily**: Quick health check (replication lag, regional availability)
 - **Weekly**: Detailed review of multi-region metrics
 - **Monthly**: RTO/RPO compliance review
@@ -476,11 +516,13 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Technical Debt
 
 **Debt Introduced**:
+
 - **Multi-Region Complexity**: Increased system complexity requires ongoing maintenance
 - **Data Synchronization**: Custom conflict resolution logic needs continuous refinement
 - **Monitoring Overhead**: Multi-region monitoring requires additional tooling and dashboards
 
 **Debt Repayment Plan**:
+
 - **Complexity**: Quarterly architecture reviews to simplify where possible
 - **Synchronization**: Continuous improvement of conflict resolution based on production data
 - **Monitoring**: Consolidate monitoring tools and automate dashboard generation
@@ -488,6 +530,7 @@ We chose active-active multi-region architecture with automated failover as our 
 ### Long-term Implications
 
 This decision establishes active-active multi-region architecture as our standard DR approach for the next 5+ years. As the platform evolves:
+
 - Consider third region (Singapore/Seoul) for additional resilience
 - Evaluate edge computing for reduced latency
 - Implement more sophisticated conflict resolution (CRDT, operational transformation)
@@ -498,6 +541,7 @@ The active-active architecture provides foundation for future global expansion, 
 ## Related Decisions
 
 ### Related ADRs
+
 - [ADR-017: Multi-Region Deployment Strategy](20250117-017-multi-region-deployment-strategy.md) - Foundation for DR architecture
 - [ADR-037: Active-Active Multi-Region Architecture](20250117-037-active-active-multi-region-architecture.md) - Detailed active-active implementation
 - [ADR-038: Cross-Region Data Replication Strategy](20250117-038-cross-region-data-replication-strategy.md) - Data replication for DR
@@ -505,10 +549,12 @@ The active-active architecture provides foundation for future global expansion, 
 - [ADR-044: Business Continuity Plan for Geopolitical Risks](20250117-044-business-continuity-plan-geopolitical-risks.md) - BCP integration
 
 ### Affected Viewpoints
+
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Multi-region deployment architecture
 - [Operational Viewpoint](../../viewpoints/operational/README.md) - DR procedures and runbooks
 
 ### Affected Perspectives
+
 - [Availability Perspective](../../perspectives/availability/README.md) - 99.9% availability target
 - [Security Perspective](../../perspectives/security/README.md) - Data protection during disasters
 - [Location Perspective](../../perspectives/location/README.md) - Geographic distribution for DR
@@ -516,6 +562,7 @@ The active-active architecture provides foundation for future global expansion, 
 ## Notes
 
 ### Assumptions
+
 - AWS regions (Taipei, Tokyo) remain available
 - Submarine cable provides sufficient bandwidth for replication
 - Operations team can be trained on multi-region management
@@ -523,6 +570,7 @@ The active-active architecture provides foundation for future global expansion, 
 - Geopolitical situation remains stable enough for cross-region communication
 
 ### Constraints
+
 - Must meet 5-minute RTO and 1-minute RPO
 - Must comply with data residency requirements
 - Must support Taiwan and Japan operations
@@ -530,12 +578,14 @@ The active-active architecture provides foundation for future global expansion, 
 - Must integrate with existing monitoring and alerting
 
 ### Open Questions
+
 - Should we implement third region (Singapore/Seoul) for additional resilience?
 - What is optimal balance between consistency and availability for each bounded context?
 - Should we implement multi-cloud DR for vendor diversification?
 - How to handle extreme scenarios (dual-region simultaneous failure)?
 
 ### Follow-up Actions
+
 - [ ] Conduct quarterly DR drills - Operations Team
 - [ ] Implement chaos engineering for resilience testing - SRE Team
 - [ ] Create detailed runbooks for all disaster scenarios - Operations Team
@@ -544,6 +594,7 @@ The active-active architecture provides foundation for future global expansion, 
 - [ ] Implement cost optimization for multi-region infrastructure - FinOps Team
 
 ### References
+
 - [AWS Multi-Region Architecture](https://aws.amazon.com/solutions/implementations/multi-region-application-architecture/)
 - [Disaster Recovery of Workloads on AWS](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html)
 - [Netflix Multi-Region Architecture](https://netflixtechblog.com/active-active-for-multi-regional-resiliency-c47719f6685b)

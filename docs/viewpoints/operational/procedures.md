@@ -21,6 +21,7 @@ This document provides detailed operational procedures for common tasks includin
 ### Service Startup Procedure
 
 **Prerequisites**:
+
 - AWS infrastructure is healthy
 - Database is accessible
 - Redis cache is available
@@ -29,6 +30,7 @@ This document provides detailed operational procedures for common tasks includin
 **Steps**:
 
 1. **Verify Infrastructure Health**
+
 ```bash
 # Check EKS cluster status
 kubectl cluster-info
@@ -44,7 +46,8 @@ redis-cli -h ecommerce-redis.xxx.cache.amazonaws.com ping
 kafka-broker-api-versions.sh --bootstrap-server kafka-broker:9092
 ```
 
-2. **Start Core Services** (in order)
+1. **Start Core Services** (in order)
+
 ```bash
 # 1. Start Customer Service
 kubectl scale deployment/customer-service --replicas=3 -n customer-context
@@ -67,7 +70,8 @@ kubectl scale deployment --all --replicas=2 -n notification-context
 kubectl scale deployment --all --replicas=2 -n search-context
 ```
 
-3. **Verify Service Health**
+1. **Verify Service Health**
+
 ```bash
 # Check all pods are running
 kubectl get pods --all-namespaces | grep -v Running
@@ -81,7 +85,8 @@ done
 curl https://api.ecommerce-platform.com/actuator/metrics
 ```
 
-4. **Enable Traffic**
+1. **Enable Traffic**
+
 ```bash
 # Update load balancer to route traffic
 kubectl annotate service api-gateway service.beta.kubernetes.io/aws-load-balancer-backend-protocol=http
@@ -93,6 +98,7 @@ watch -n 5 'kubectl top pods -n order-context'
 ### Service Shutdown Procedure
 
 **Use Cases**:
+
 - Planned maintenance
 - Emergency shutdown
 - Cost optimization (non-prod environments)
@@ -100,6 +106,7 @@ watch -n 5 'kubectl top pods -n order-context'
 **Steps**:
 
 1. **Notify Stakeholders**
+
 ```bash
 # Post to status page
 curl -X POST https://status.ecommerce-platform.com/api/incidents \
@@ -111,7 +118,8 @@ curl -X POST $SLACK_WEBHOOK_URL \
   -d '{"text": "🔧 Planned maintenance starting. Services will be unavailable for 2 hours."}'
 ```
 
-2. **Drain Traffic**
+1. **Drain Traffic**
+
 ```bash
 # Stop accepting new requests
 kubectl annotate service api-gateway service.beta.kubernetes.io/aws-load-balancer-backend-protocol=none
@@ -120,7 +128,8 @@ kubectl annotate service api-gateway service.beta.kubernetes.io/aws-load-balance
 sleep 300
 ```
 
-3. **Shutdown Services** (reverse order)
+1. **Shutdown Services** (reverse order)
+
 ```bash
 # 1. Stop non-critical services
 kubectl scale deployment --all --replicas=0 -n notification-context
@@ -139,7 +148,8 @@ kubectl scale deployment/product-service --replicas=0 -n product-context
 kubectl scale deployment/customer-service --replicas=0 -n customer-context
 ```
 
-4. **Verify Shutdown**
+1. **Verify Shutdown**
+
 ```bash
 # Verify no pods are running
 kubectl get pods --all-namespaces --field-selector=status.phase=Running
@@ -153,6 +163,7 @@ kubectl get pods --all-namespaces --field-selector=status.phase!=Succeeded,statu
 ### Manual Scaling
 
 **Scale Up**:
+
 ```bash
 # Scale specific service
 kubectl scale deployment/order-service --replicas=10 -n order-context
@@ -163,6 +174,7 @@ kubectl top pods -n order-context
 ```
 
 **Scale Down**:
+
 ```bash
 # Gradually scale down
 kubectl scale deployment/order-service --replicas=3 -n order-context
@@ -174,6 +186,7 @@ watch -n 5 'kubectl get pods -n order-context'
 ### Auto-Scaling Configuration
 
 **Update HPA**:
+
 ```bash
 # Update Horizontal Pod Autoscaler
 kubectl autoscale deployment order-service \
@@ -192,11 +205,13 @@ kubectl describe hpa order-service -n order-context
 ### High CPU Usage
 
 **Symptoms**:
+
 - CPU utilization > 80%
 - Slow response times
 - Increased error rates
 
 **Investigation**:
+
 ```bash
 # 1. Identify affected pods
 kubectl top pods --all-namespaces --sort-by=cpu
@@ -212,6 +227,7 @@ kubectl get --raw /apis/metrics.k8s.io/v1beta1/namespaces/<namespace>/pods/<pod-
 ```
 
 **Resolution**:
+
 ```bash
 # Option 1: Scale horizontally
 kubectl scale deployment/<service> --replicas=<new-count> -n <namespace>
@@ -229,11 +245,13 @@ kubectl rollout restart deployment/<service> -n <namespace>
 ### High Memory Usage
 
 **Symptoms**:
+
 - Memory utilization > 85%
 - OOMKilled pods
 - Pod restarts
 
 **Investigation**:
+
 ```bash
 # 1. Check memory usage
 kubectl top pods --all-namespaces --sort-by=memory
@@ -247,6 +265,7 @@ kubectl exec <pod-name> -n <namespace> -- \
 ```
 
 **Resolution**:
+
 ```bash
 # Option 1: Increase memory limits
 kubectl set resources deployment/<service> \
@@ -264,11 +283,13 @@ kubectl scale deployment/<service> --replicas=<new-count> -n <namespace>
 ### Database Connection Issues
 
 **Symptoms**:
+
 - "Too many connections" errors
 - Connection timeouts
 - Slow queries
 
 **Investigation**:
+
 ```bash
 # 1. Check active connections
 psql -h <rds-endpoint> -U admin -d ecommerce \
@@ -284,6 +305,7 @@ aws rds describe-db-instances \
 ```
 
 **Resolution**:
+
 ```bash
 # Option 1: Kill idle connections
 psql -h <rds-endpoint> -U admin -d ecommerce \
@@ -303,11 +325,13 @@ kubectl set env deployment/<service> \
 ### Service Unavailable
 
 **Symptoms**:
+
 - 503 Service Unavailable errors
 - No healthy pods
 - Load balancer health checks failing
 
 **Investigation**:
+
 ```bash
 # 1. Check pod status
 kubectl get pods -n <namespace>
@@ -323,6 +347,7 @@ kubectl logs <pod-name> -n <namespace> --previous
 ```
 
 **Resolution**:
+
 ```bash
 # Option 1: Rollback to previous version
 kubectl rollout undo deployment/<service> -n <namespace>
@@ -344,6 +369,7 @@ kubectl edit configmap <service>-config -n <namespace>
 **Automated Tasks** (via cron or AWS Systems Manager):
 
 1. **Log Management**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/daily-log-rotation.sh
@@ -371,7 +397,8 @@ aws logs describe-log-streams \
 echo "Daily log rotation completed at $(date)"
 ```
 
-2. **Health Check Verification**
+1. **Health Check Verification**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/daily-health-check.sh
@@ -398,7 +425,8 @@ fi
 echo "Daily health check completed at $(date)"
 ```
 
-3. **Disk Space Monitoring**
+1. **Disk Space Monitoring**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/daily-disk-check.sh
@@ -420,7 +448,8 @@ kubectl get nodes -o json | \
 echo "Daily disk check completed at $(date)"
 ```
 
-4. **Backup Verification**
+1. **Backup Verification**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/daily-backup-verify.sh
@@ -448,6 +477,7 @@ echo "Daily backup verification completed at $(date)"
 ```
 
 **Manual Verification Tasks**:
+
 - [ ] Review CloudWatch dashboards for anomalies
 - [ ] Check PagerDuty for overnight incidents
 - [ ] Verify all automated maintenance scripts executed successfully
@@ -460,6 +490,7 @@ echo "Daily backup verification completed at $(date)"
 **Automated Tasks**:
 
 1. **Cache Performance Analysis**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/weekly-cache-analysis.sh
@@ -490,7 +521,8 @@ echo "Weekly cache analysis completed at $(date)"
 echo "Hit rate: $HIT_PERCENTAGE%, Memory: $MEMORY_USED / $MEMORY_MAX"
 ```
 
-2. **Database Statistics Update**
+1. **Database Statistics Update**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/weekly-db-stats.sh
@@ -518,7 +550,8 @@ EOF
 echo "Weekly database statistics update completed at $(date)"
 ```
 
-3. **Security Certificate Check**
+1. **Security Certificate Check**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/weekly-cert-check.sh
@@ -543,7 +576,8 @@ fi
 echo "Weekly certificate check completed at $(date)"
 ```
 
-4. **Performance Metrics Report**
+1. **Performance Metrics Report**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/weekly-performance-report.sh
@@ -568,6 +602,7 @@ echo "Weekly performance report generated at $(date)"
 ```
 
 **Manual Tasks**:
+
 - [ ] Review weekly performance trends
 - [ ] Check for security vulnerabilities in dependencies
 - [ ] Review and update on-call rotation
@@ -580,6 +615,7 @@ echo "Weekly performance report generated at $(date)"
 **Timing**: First Sunday of each month, 2:00 AM - 6:00 AM UTC
 
 **Downtime Planning**:
+
 - Notify stakeholders 1 week in advance
 - Schedule during lowest traffic period
 - Prepare rollback plan
@@ -588,6 +624,7 @@ echo "Weekly performance report generated at $(date)"
 **Automated Tasks**:
 
 1. **Database Maintenance**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/monthly-db-maintenance.sh
@@ -626,7 +663,8 @@ psql -h $DB_ENDPOINT -U admin -d ecommerce -c "SELECT version();"
 echo "Monthly database maintenance completed at $(date)"
 ```
 
-2. **Index Optimization**
+1. **Index Optimization**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/monthly-index-optimization.sh
@@ -663,7 +701,8 @@ EOF
 echo "Monthly index optimization analysis completed at $(date)"
 ```
 
-3. **Security Patch Application**
+1. **Security Patch Application**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/monthly-security-patches.sh
@@ -691,7 +730,8 @@ aws eks update-nodegroup-version \
 echo "Monthly security patches applied at $(date)"
 ```
 
-4. **Capacity Planning Analysis**
+1. **Capacity Planning Analysis**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/monthly-capacity-analysis.sh
@@ -721,6 +761,7 @@ echo "Monthly capacity analysis completed at $(date)"
 ```
 
 **Manual Tasks**:
+
 - [ ] Review and update disaster recovery plan
 - [ ] Conduct security audit
 - [ ] Review and optimize cloud costs
@@ -737,6 +778,7 @@ echo "Monthly capacity analysis completed at $(date)"
 **Planning Phase** (2 weeks before):
 
 1. **Upgrade Assessment**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/quarterly-upgrade-assessment.sh
@@ -765,13 +807,15 @@ cd /opt/ecommerce-platform
 echo "Quarterly upgrade assessment completed at $(date)"
 ```
 
-2. **Risk Assessment**
+1. **Risk Assessment**
+
 - Identify breaking changes in upgrades
 - Review compatibility matrix
 - Assess impact on dependent services
 - Create rollback plan
 
-3. **Testing Plan**
+1. **Testing Plan**
+
 - Schedule staging environment testing
 - Define test scenarios
 - Identify success criteria
@@ -780,6 +824,7 @@ echo "Quarterly upgrade assessment completed at $(date)"
 **Execution Phase**:
 
 1. **Staging Environment Upgrade**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/quarterly-staging-upgrade.sh
@@ -806,7 +851,8 @@ kubectl apply -f k8s/staging/
 echo "Staging environment upgraded at $(date)"
 ```
 
-2. **Production Upgrade** (with downtime window)
+1. **Production Upgrade** (with downtime window)
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/quarterly-production-upgrade.sh
@@ -836,6 +882,7 @@ echo "Production upgrade completed at $(date)"
 ```
 
 **Post-Upgrade Tasks**:
+
 - [ ] Verify all services are healthy
 - [ ] Run smoke tests
 - [ ] Monitor error rates for 24 hours
@@ -849,6 +896,7 @@ echo "Production upgrade completed at $(date)"
 **Comprehensive Database Review**:
 
 1. **Performance Analysis**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/annual-db-health-assessment.sh
@@ -925,13 +973,15 @@ EOF
 echo "Annual database health assessment completed at $(date)"
 ```
 
-2. **Capacity Planning**
+1. **Capacity Planning**
+
 - Analyze 12-month growth trends
 - Project storage requirements for next year
 - Plan for compute resource scaling
 - Budget planning for infrastructure costs
 
-3. **Disaster Recovery Testing**
+1. **Disaster Recovery Testing**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/annual-dr-test.sh
@@ -968,7 +1018,8 @@ aws rds delete-db-instance \
 echo "Annual DR test completed at $(date)"
 ```
 
-4. **Security Audit**
+1. **Security Audit**
+
 - Review IAM policies and roles
 - Audit database user permissions
 - Review network security groups
@@ -976,6 +1027,7 @@ echo "Annual DR test completed at $(date)"
 - Update security documentation
 
 **Annual Review Checklist**:
+
 - [ ] Review and update architecture documentation
 - [ ] Conduct cost optimization analysis
 - [ ] Review SLA compliance for the year
@@ -1000,6 +1052,7 @@ echo "Annual DR test completed at $(date)"
 **Communication Plan**:
 
 1. **Advance Notification**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/notify-maintenance-window.sh
@@ -1056,7 +1109,8 @@ esac
 echo "Maintenance notification sent for $MAINTENANCE_TYPE maintenance on $MAINTENANCE_DATE"
 ```
 
-2. **Status Updates During Maintenance**
+1. **Status Updates During Maintenance**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/maintenance-status-update.sh
@@ -1081,6 +1135,7 @@ echo "Status updated: $STATUS - $MESSAGE"
 **AWS Systems Manager Configuration**:
 
 1. **Create Maintenance Window**
+
 ```bash
 # Create daily maintenance window
 aws ssm create-maintenance-window \
@@ -1107,7 +1162,8 @@ aws ssm create-maintenance-window \
   --allow-unassociated-targets
 ```
 
-2. **Register Maintenance Tasks**
+1. **Register Maintenance Tasks**
+
 ```bash
 # Register daily log rotation task
 aws ssm register-task-with-maintenance-window \
@@ -1144,7 +1200,8 @@ aws ssm register-task-with-maintenance-window \
   --max-errors 0
 ```
 
-3. **Cron Job Configuration** (Alternative to Systems Manager)
+1. **Cron Job Configuration** (Alternative to Systems Manager)
+
 ```bash
 # Install maintenance scripts
 sudo mkdir -p /opt/maintenance
@@ -1174,7 +1231,8 @@ sudo crontab -e
 0 2 1-7 * 0 /opt/maintenance/monthly-capacity-analysis.sh >> /var/log/maintenance/monthly.log 2>&1
 ```
 
-4. **Monitoring Maintenance Jobs**
+1. **Monitoring Maintenance Jobs**
+
 ```bash
 #!/bin/bash
 # Script: /opt/maintenance/monitor-maintenance-jobs.sh
@@ -1210,11 +1268,13 @@ fi
 ### Emergency Rollback
 
 **When to Use**:
+
 - Critical bugs in production
 - Performance degradation
 - Data corruption
 
 **Steps**:
+
 ```bash
 # 1. Identify current version
 kubectl rollout history deployment/<service> -n <namespace>
@@ -1235,11 +1295,13 @@ watch -n 5 'kubectl top pods -n <namespace>'
 ### Emergency Scale Down
 
 **When to Use**:
+
 - Cost overrun
 - Resource exhaustion
 - DDoS attack mitigation
 
 **Steps**:
+
 ```bash
 # 1. Scale down non-critical services
 kubectl scale deployment --all --replicas=1 -n notification-context
@@ -1284,6 +1346,7 @@ watch -n 5 'kubectl get hpa --all-namespaces'
 **Last Updated**: 2025-01-22  
 **Owner**: Operations Team  
 **Change History**:
+
 - 2025-01-22: Expanded routine maintenance procedures with daily, weekly, monthly, quarterly, and annual tasks
 - 2025-10-23: Initial version with basic operational procedures
 

@@ -11,7 +11,7 @@ This document defines the verification and testing strategies for ensuring the e
 
 ### Test Pyramid for Performance
 
-```
+```text
         /\
        /  \
       / E2E \     5% - End-to-End Performance Tests
@@ -76,6 +76,7 @@ This document defines the verification and testing strategies for ensuring the e
 #### Test Scenarios
 
 **Scenario 1: Browse Products**
+
 ```xml
 <HTTPSamplerProxy testname="Get Product List">
   <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
@@ -91,6 +92,7 @@ This document defines the verification and testing strategies for ensuring the e
 ```
 
 **Scenario 2: Add to Cart**
+
 ```xml
 <HTTPSamplerProxy testname="Add to Cart">
   <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
@@ -108,6 +110,7 @@ This document defines the verification and testing strategies for ensuring the e
 ```
 
 **Scenario 3: Submit Order**
+
 ```xml
 <HTTPSamplerProxy testname="Submit Order">
   <stringProp name="HTTPSampler.domain">${BASE_URL}</stringProp>
@@ -149,21 +152,26 @@ name: Performance Testing
 
 on:
   schedule:
+
     - cron: '0 2 * * 1'  # Weekly on Monday 2 AM
+
   workflow_dispatch:
 
 jobs:
   performance-test:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Setup JMeter
+
         run: |
           wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.5.tgz
           tar -xzf apache-jmeter-5.5.tgz
       
       - name: Run Load Test
+
         run: |
           apache-jmeter-5.5/bin/jmeter -n \
             -t tests/performance/load-test.jmx \
@@ -173,10 +181,12 @@ jobs:
             -e -o report
       
       - name: Check Performance Thresholds
+
         run: |
           python scripts/check-performance-thresholds.py results.jtl
       
       - name: Upload Results
+
         uses: actions/upload-artifact@v3
         with:
           name: performance-report
@@ -190,12 +200,14 @@ jobs:
 **Objective**: Verify system handles typical business hours traffic
 
 **Configuration**:
+
 - Users: 100 concurrent users
 - Ramp-up: 5 minutes
 - Duration: 30 minutes
 - Think time: 3-5 seconds between requests
 
 **Success Criteria**:
+
 - 95th percentile response time ≤ 1000ms
 - Error rate < 0.1%
 - CPU utilization < 70%
@@ -206,12 +218,14 @@ jobs:
 **Objective**: Verify system handles peak traffic (Black Friday)
 
 **Configuration**:
+
 - Users: 500 concurrent users
 - Ramp-up: 10 minutes
 - Duration: 30 minutes
 - Think time: 2-3 seconds between requests
 
 **Success Criteria**:
+
 - 95th percentile response time ≤ 1500ms
 - Error rate < 0.5%
 - Auto-scaling triggers appropriately
@@ -222,11 +236,13 @@ jobs:
 **Objective**: Verify system handles sudden traffic spikes
 
 **Configuration**:
+
 - Users: 0 to 500 in 1 minute
 - Duration: 10 minutes at peak
 - Ramp-down: 5 minutes
 
 **Success Criteria**:
+
 - No failed requests during spike
 - Auto-scaling responds within 5 minutes
 - System recovers after spike
@@ -237,11 +253,13 @@ jobs:
 **Objective**: Detect memory leaks and resource exhaustion
 
 **Configuration**:
+
 - Users: 200 concurrent users
 - Duration: 24 hours
 - Constant load throughout
 
 **Success Criteria**:
+
 - Performance remains stable over 24 hours
 - No memory leaks detected
 - No resource exhaustion
@@ -254,6 +272,7 @@ jobs:
 #### CloudWatch Metrics
 
 **Custom Metrics**:
+
 ```java
 @Component
 public class PerformanceMetrics {
@@ -279,6 +298,7 @@ public class PerformanceMetrics {
 ```
 
 **Dashboard Configuration**:
+
 ```json
 {
   "widgets": [
@@ -335,12 +355,14 @@ public class XRayTracingAspect {
 #### RDS Performance Insights
 
 **Key Metrics to Monitor**:
+
 - Database load (average active sessions)
 - Top SQL statements by execution time
 - Wait events (I/O, CPU, lock)
 - Connection count
 
 **Alert Configuration**:
+
 ```yaml
 DatabaseCPUAlarm:
   Type: AWS::CloudWatch::Alarm
@@ -644,6 +666,7 @@ def check_performance_thresholds(results_file, baseline_file):
 ### Performance Monitoring Dashboard
 
 **Grafana Dashboard Configuration**:
+
 ```json
 {
   "dashboard": {

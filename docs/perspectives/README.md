@@ -2,9 +2,10 @@
 
 This section contains documentation for all 8 quality perspectives following the Rozanski & Woods methodology. Each perspective describes quality attributes that cut across multiple viewpoints.
 
-## What are Perspectives?
+## What are Perspectives
 
 Perspectives are quality attributes that affect the entire system:
+
 - **Cross-cutting concerns** that span multiple viewpoints
 - **Quality requirements** like security, performance, availability
 - **Non-functional requirements** that constrain the design
@@ -12,9 +13,11 @@ Perspectives are quality attributes that affect the entire system:
 ## The 8 Perspectives
 
 ### 1. [Security Perspective](security/README.md)
+
 **Concerns**: Authentication, authorization, data protection, compliance
 
 **Key Questions**:
+
 - How is the system protected from attacks?
 - How is sensitive data secured?
 - How are users authenticated and authorized?
@@ -24,9 +27,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 2. [Performance & Scalability Perspective](performance/README.md)
+
 **Concerns**: Response times, throughput, resource usage, scaling
 
 **Key Questions**:
+
 - How fast does the system respond?
 - How many users can it support?
 - How does it scale under load?
@@ -36,9 +41,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 3. [Availability & Resilience Perspective](availability/README.md)
+
 **Concerns**: Uptime, fault tolerance, disaster recovery
 
 **Key Questions**:
+
 - What is the system uptime?
 - How does it handle failures?
 - How quickly can it recover?
@@ -48,9 +55,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 4. [Evolution Perspective](evolution/README.md)
+
 **Concerns**: Extensibility, maintainability, technology evolution
 
 **Key Questions**:
+
 - How easy is it to add new features?
 - How can technology be upgraded?
 - How is backward compatibility maintained?
@@ -60,9 +69,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 5. [Accessibility Perspective](accessibility/README.md)
+
 **Concerns**: UI accessibility, API usability, documentation clarity
 
 **Key Questions**:
+
 - Can users with disabilities use the system?
 - Is the API easy to use?
 - Is documentation clear?
@@ -72,9 +83,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 6. [Development Resource Perspective](development-resource/README.md)
+
 **Concerns**: Team structure, skills, tools, productivity
 
 **Key Questions**:
+
 - What skills are required?
 - What tools are needed?
 - How is knowledge transferred?
@@ -84,9 +97,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 7. [Internationalization Perspective](internationalization/README.md)
+
 **Concerns**: Multi-language support, localization, cultural adaptation
 
 **Key Questions**:
+
 - What languages are supported?
 - How is content localized?
 - What are cultural considerations?
@@ -96,9 +111,11 @@ Perspectives are quality attributes that affect the entire system:
 ---
 
 ### 8. [Location Perspective](location/README.md)
+
 **Concerns**: Geographic distribution, data residency, latency
 
 **Key Questions**:
+
 - Where are users located?
 - Where is data stored?
 - How is latency minimized?
@@ -110,16 +127,19 @@ Perspectives are quality attributes that affect the entire system:
 ## How to Use This Documentation
 
 ### For Quality Assurance
+
 - Review all perspectives to understand quality requirements
 - Use quality attribute scenarios for testing
 - Verify implementation against requirements
 
 ### For Architects
+
 - Apply perspectives to viewpoints during design
 - Ensure quality attributes are addressed
 - Document trade-offs and decisions
 
 ### For Developers
+
 - Understand quality constraints for implementation
 - Follow implementation guidelines
 - Verify code against quality requirements
@@ -140,6 +160,7 @@ Perspectives are quality attributes that affect the entire system:
 ## Quality Attribute Scenarios
 
 Each perspective includes quality attribute scenarios in the format:
+
 - **Source**: Who/what generates the stimulus
 - **Stimulus**: The condition that affects the system
 - **Environment**: System state when stimulus occurs
@@ -148,7 +169,8 @@ Each perspective includes quality attribute scenarios in the format:
 - **Response Measure**: How to measure the response
 
 Example:
-```
+
+```text
 Source: Web user
 Stimulus: Submit order during peak hours
 Environment: 1000 concurrent users

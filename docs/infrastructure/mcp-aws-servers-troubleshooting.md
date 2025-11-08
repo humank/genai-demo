@@ -8,6 +8,7 @@
 ## 🔴 Current Issue
 
 The following AWS MCP servers are experiencing connection timeouts:
+
 - ❌ `awslabs.iam-mcp-server`
 - ❌ `awslabs.lambda-mcp-server`
 - ❌ `awslabs.aws-pricing-mcp-server`
@@ -17,6 +18,7 @@ The following AWS MCP servers are experiencing connection timeouts:
 ## 🔍 Diagnosis
 
 ### AWS Credentials Status
+
 ```bash
 ✅ AWS Profile: kim-sso
 ✅ Account: 584518143473
@@ -94,6 +96,7 @@ uvx awslabs.aws-pricing-mcp-server@latest --help
 ```
 
 This will:
+
 - Download and cache the packages
 - Verify they work with your AWS credentials
 - Speed up Kiro startup
@@ -109,6 +112,7 @@ Ensure consistent region configuration:
 **Option A: Use us-east-1 (matches AWS CLI default)**
 
 Edit `~/.kiro/settings/mcp.json`:
+
 ```json
 {
   "mcpServers": {
@@ -140,6 +144,7 @@ Edit `~/.kiro/settings/mcp.json`:
 **Option B: Keep ap-northeast-1 (if you need Tokyo region)**
 
 Keep the config as is, but be aware:
+
 - Lambda functions must exist in ap-northeast-1
 - IAM is global, so region doesn't matter much
 - Pricing API works globally
@@ -208,6 +213,7 @@ code ~/.kiro/settings/mcp.json
 ### Step 2: Investigate (When Time Permits)
 
 1. **Pre-install packages**:
+
    ```bash
    uvx awslabs.lambda-mcp-server@latest --help
    uvx awslabs.iam-mcp-server@latest --help
@@ -224,6 +230,7 @@ code ~/.kiro/settings/mcp.json
 ### Step 3: Re-enable (If Needed)
 
 Once packages are pre-installed and tested:
+
 1. Set `disabled: false` in config
 2. Restart Kiro
 3. Verify connection
@@ -235,6 +242,7 @@ Once packages are pre-installed and tested:
 If you don't need AWS resource management via MCP, here's a minimal config:
 
 **Global Config** (`~/.kiro/settings/mcp.json`):
+
 ```json
 {
   "mcpServers": {
@@ -254,6 +262,7 @@ If you don't need AWS resource management via MCP, here's a minimal config:
 ```
 
 **Project Config** (`.kiro/settings/mcp.json`):
+
 ```json
 {
   "mcpServers": {
@@ -296,6 +305,7 @@ If you don't need AWS resource management via MCP, here's a minimal config:
 ```
 
 This keeps:
+
 - ✅ Documentation servers (aws-docs, aws-cdk)
 - ✅ Pricing analysis (aws-pricing)
 - ✅ Diagram creation (excalidraw)
@@ -303,6 +313,7 @@ This keeps:
 - ✅ GitHub integration (github)
 
 Removes:
+
 - ❌ Lambda management (rarely needed in IDE)
 - ❌ IAM management (rarely needed in IDE)
 
@@ -311,6 +322,7 @@ Removes:
 ## 🔍 Debugging Commands
 
 ### Check Package Installation
+
 ```bash
 # List installed uvx packages
 ls ~/.local/share/uv/tools/
@@ -320,6 +332,7 @@ ls ~/.local/share/uv/tools/ | grep awslabs
 ```
 
 ### Test AWS Connectivity
+
 ```bash
 # Test AWS CLI works
 aws sts get-caller-identity --profile kim-sso
@@ -332,6 +345,7 @@ aws iam list-users --profile kim-sso --max-items 1
 ```
 
 ### Check Kiro Logs
+
 Look for MCP-related errors in Kiro's output panel or logs.
 
 ---
@@ -382,6 +396,7 @@ echo "3. Optionally pre-install packages and re-enable"
 ```
 
 Run with:
+
 ```bash
 chmod +x fix-aws-mcp-servers.sh
 ./fix-aws-mcp-servers.sh
@@ -392,11 +407,13 @@ chmod +x fix-aws-mcp-servers.sh
 ## 🎯 Recommended Solution
 
 **For immediate productivity**:
+
 1. Disable the three problematic servers
 2. Keep the working servers (aws-docs, aws-cdk, aws-pricing in project, github in global)
 3. Restart Kiro
 
 **For long-term**:
+
 1. Pre-install the packages when you have time
 2. Test them manually
 3. Re-enable only if you actually need them
@@ -406,5 +423,6 @@ Most developers don't need Lambda/IAM management directly in their IDE, so disab
 ---
 
 **Related Documentation**:
+
 - [MCP Cleanup Report](./mcp-cleanup-report.md)
 - [MCP Server Analysis](./mcp-server-analysis.md)

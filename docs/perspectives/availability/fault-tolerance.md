@@ -13,9 +13,11 @@ This document describes the fault tolerance patterns implemented in the Enterpri
 ### 1. Circuit Breaker Pattern
 
 #### Purpose
+
 Prevent cascading failures by stopping requests to a failing service and allowing it time to recover.
 
 #### When to Use
+
 - External service integrations (payment gateway, email service, SMS service)
 - Internal service calls that may fail or timeout
 - Any dependency that could cause cascading failures
@@ -66,7 +68,7 @@ resilience4j:
 
 #### States
 
-```
+```text
 ┌─────────────┐
 │   CLOSED    │ ◄─── Normal operation
 │  (Healthy)  │      All requests pass through
@@ -114,9 +116,11 @@ public class CircuitBreakerMetrics {
 ### 2. Retry Pattern
 
 #### Purpose
+
 Automatically retry failed operations with exponential backoff to handle transient failures.
 
 #### When to Use
+
 - Network timeouts
 - Temporary service unavailability
 - Database connection failures
@@ -161,15 +165,19 @@ resilience4j:
         enableExponentialBackoff: true
         exponentialBackoffMultiplier: 2
         retryExceptions:
+
           - java.net.SocketTimeoutException
           - org.springframework.web.client.ResourceAccessException
+
         ignoreExceptions:
+
           - solid.humank.genaidemo.domain.BusinessRuleViolationException
+
 ```
 
 #### Retry Strategy
 
-```
+```text
 Attempt 1: Immediate
 Attempt 2: Wait 1s  (1s × 2^0)
 Attempt 3: Wait 2s  (1s × 2^1)
@@ -208,9 +216,11 @@ public class RetryConfiguration {
 ### 3. Fallback Pattern
 
 #### Purpose
+
 Provide alternative responses when primary operations fail.
 
 #### When to Use
+
 - Non-critical features that can degrade gracefully
 - Services with cached alternatives
 - Operations with default values
@@ -290,9 +300,11 @@ public class OrderService {
 ### 4. Bulkhead Pattern
 
 #### Purpose
+
 Isolate resources to prevent failures in one area from affecting others.
 
 #### When to Use
+
 - Thread pool isolation for different services
 - Connection pool separation
 - Resource quota management
@@ -349,7 +361,7 @@ public class OrderProcessingService {
 
 #### Resource Isolation
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         Application Resources           │
 ├─────────────────────────────────────────┤
@@ -372,9 +384,11 @@ public class OrderProcessingService {
 ### 5. Timeout Pattern
 
 #### Purpose
+
 Prevent indefinite waiting for responses and free up resources.
 
 #### When to Use
+
 - All external service calls
 - Database queries
 - Network operations
@@ -407,7 +421,7 @@ resilience4j:
 
 #### Timeout Hierarchy
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │  HTTP Client Timeout: 30s               │
 │  ┌───────────────────────────────────┐  │
@@ -424,6 +438,7 @@ resilience4j:
 ### 6. Health Check Pattern
 
 #### Purpose
+
 Continuously monitor service health and remove unhealthy instances from load balancing.
 
 #### Implementation
@@ -477,7 +492,9 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+
   - name: order-service
+
     livenessProbe:
       httpGet:
         path: /actuator/health/liveness
@@ -504,17 +521,20 @@ spec:
 ### Recommended Combinations
 
 #### External Service Integration
-```
+
+```text
 Circuit Breaker + Retry + Timeout + Fallback
 ```
 
 #### Database Operations
-```
+
+```text
 Retry + Timeout + Connection Pool (Bulkhead)
 ```
 
 #### Async Processing
-```
+
+```text
 Bulkhead + Timeout + Retry
 ```
 
@@ -594,9 +614,13 @@ public class FaultToleranceMetrics {
 ```yaml
 # Prometheus Alert Rules
 groups:
+
   - name: fault_tolerance
+
     rules:
+
       - alert: CircuitBreakerOpen
+
         expr: circuit_breaker_state{state="open"} == 1
         for: 5m
         labels:
@@ -605,6 +629,7 @@ groups:
           summary: "Circuit breaker {{ $labels.name }} is open"
           
       - alert: HighRetryRate
+
         expr: rate(retry_attempts_total[5m]) > 10
         for: 5m
         labels:
@@ -613,6 +638,7 @@ groups:
           summary: "High retry rate for {{ $labels.name }}"
           
       - alert: FrequentFallbacks
+
         expr: rate(fallback_executions_total[5m]) > 5
         for: 5m
         labels:
@@ -692,6 +718,7 @@ class FaultToleranceTest {
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Availability perspective introduction
 - [Requirements](requirements.md) - Availability targets and scenarios
 - [High Availability](high-availability.md) - Infrastructure design

@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 ### Business Context
 
 **Business Drivers**:
+
 - Product prices must be accurate (no stale pricing)
 - Inventory levels must be reasonably current (< 1 minute stale acceptable)
 - Customer profiles can tolerate some staleness (< 5 minutes acceptable)
@@ -40,6 +41,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 - Promotional pricing must be immediately effective
 
 **Business Constraints**:
+
 - Critical data (prices, inventory) must be fresh
 - Non-critical data (product descriptions) can be stale
 - Must support high cache hit rates (> 80%)
@@ -49,6 +51,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 ### Technical Context
 
 **Current State**:
+
 - Redis distributed caching (ADR-004)
 - Domain events for cross-context communication (ADR-003)
 - Kafka for event streaming (ADR-005)
@@ -56,6 +59,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 - PostgreSQL primary database
 
 **Requirements**:
+
 - Consistent cache invalidation across instances
 - Support for different TTL strategies per data type
 - Event-driven invalidation for critical data
@@ -82,12 +86,14 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 **Description**: Rely solely on Time-To-Live (TTL) for cache expiration
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ No additional infrastructure
 - ✅ Automatic cleanup
 - ✅ Low overhead
 
 **Cons**:
+
 - ❌ Stale data until TTL expires
 - ❌ No immediate invalidation
 - ❌ Inefficient for frequently updated data
@@ -103,11 +109,13 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 **Description**: Update cache synchronously on every write
 
 **Pros**:
+
 - ✅ Always consistent
 - ✅ No stale data
 - ✅ Simple logic
 
 **Cons**:
+
 - ❌ Increased write latency
 - ❌ Cache write failures affect writes
 - ❌ Doesn't scale well
@@ -122,6 +130,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 **Description**: Use domain events to trigger cache invalidation
 
 **Pros**:
+
 - ✅ Near real-time consistency
 - ✅ Decoupled from business logic
 - ✅ Works across instances (pub/sub)
@@ -129,6 +138,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 - ✅ Leverages existing event infrastructure
 
 **Cons**:
+
 - ⚠️ Eventual consistency (small lag)
 - ⚠️ Requires event infrastructure
 - ⚠️ More complex implementation
@@ -142,6 +152,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 **Description**: Combine TTL for baseline expiration with event-driven invalidation for critical updates
 
 **Pros**:
+
 - ✅ Best of both worlds
 - ✅ TTL as safety net
 - ✅ Event-driven for immediate updates
@@ -150,6 +161,7 @@ The Enterprise E-Commerce Platform uses Redis for distributed caching (ADR-004) 
 - ✅ High cache hit rates
 
 **Cons**:
+
 - ⚠️ More complex implementation
 - ⚠️ Requires careful configuration
 
@@ -177,28 +189,33 @@ The hybrid approach was selected for the following reasons:
 **Cache Invalidation Strategy by Data Type**:
 
 **Critical Data (Immediate Invalidation)**:
+
 - **Product Prices**: Event-driven + 5-minute TTL
 - **Inventory Levels**: Event-driven + 1-minute TTL
 - **Order Status**: Event-driven + 5-minute TTL
 - **Payment Status**: Event-driven + 5-minute TTL
 
 **Semi-Critical Data (Near Real-Time)**:
+
 - **Customer Profiles**: Event-driven + 30-minute TTL
 - **Shopping Cart**: Event-driven + 15-minute TTL
 - **Promotions**: Event-driven + 10-minute TTL
 
 **Non-Critical Data (Lazy Invalidation)**:
+
 - **Product Descriptions**: 1-hour TTL only
 - **Product Images**: 24-hour TTL only
 - **Static Content**: 24-hour TTL only
 
 **Invalidation Patterns**:
+
 1. **Single Key**: Invalidate specific cache entry
 2. **Pattern-Based**: Invalidate all keys matching pattern
 3. **Tag-Based**: Invalidate all entries with specific tag
 4. **Bulk**: Invalidate multiple related entries
 
 **Cache Stampede Prevention**:
+
 - **Probabilistic Early Expiration**: Refresh before TTL expires
 - **Lock-Based Refresh**: Only one instance refreshes
 - **Stale-While-Revalidate**: Serve stale while refreshing
@@ -226,6 +243,7 @@ The hybrid approach was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (cache invalidation)
 - Application services (invalidation logic)
 - Infrastructure layer (Redis pub/sub)
@@ -281,12 +299,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Cache hit rate drops > 20%
 - Invalidation errors > 5%
 - Performance degradation > 10%
 - Data consistency issues
 
 **Rollback Steps**:
+
 1. Disable event-driven invalidation
 2. Rely on TTL only
 3. Investigate and fix issues
@@ -309,6 +329,7 @@ Affects:
 ### Monitoring Plan
 
 **Application Metrics**:
+
 ```java
 @Component
 public class CacheInvalidationMetrics {
@@ -323,6 +344,7 @@ public class CacheInvalidationMetrics {
 ```
 
 **CloudWatch Metrics**:
+
 - Cache invalidations per second
 - Invalidation latency (p50, p95, p99)
 - Cache hit rate by data type
@@ -331,6 +353,7 @@ public class CacheInvalidationMetrics {
 - Event processing lag
 
 **Alerts**:
+
 - Cache hit rate < 70%
 - Invalidation latency > 10ms
 - Invalidation error rate > 1%
@@ -338,6 +361,7 @@ public class CacheInvalidationMetrics {
 - Event lag > 1 second
 
 **Review Schedule**:
+
 - Daily: Check cache metrics
 - Weekly: Review invalidation patterns
 - Monthly: Optimize TTL and strategies
@@ -366,11 +390,13 @@ public class CacheInvalidationMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual TTL configuration (can be adaptive)
 2. Simple pattern matching (can use advanced patterns)
 3. No automatic invalidation optimization (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement adaptive TTL based on access patterns
 - **Q3 2026**: Add ML-based invalidation optimization
 - **Q4 2026**: Implement automatic pattern optimization

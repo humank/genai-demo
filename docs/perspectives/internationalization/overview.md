@@ -43,7 +43,7 @@ This perspective ensures the system can:
 
 ### i18n vs L10n
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │     Internationalization (i18n) vs Localization (L10n)  │
 ├─────────────────────────────────────────────────────────┤
@@ -110,7 +110,7 @@ This perspective ensures the system can:
 
 ### Multi-Layer i18n Strategy
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              i18n Architecture Layers                    │
 ├─────────────────────────────────────────────────────────┤
@@ -159,6 +159,7 @@ This perspective ensures the system can:
 ### Backend i18n (Spring Boot)
 
 **Message Source Configuration**:
+
 ```java
 @Configuration
 public class I18nConfiguration {
@@ -190,7 +191,8 @@ public class I18nConfiguration {
 ```
 
 **Message Files Structure**:
-```
+
+```text
 src/main/resources/i18n/
 ├── messages.properties           # Default (English)
 ├── messages_en_US.properties     # English (US)
@@ -201,6 +203,7 @@ src/main/resources/i18n/
 ```
 
 **Usage Example**:
+
 ```java
 @Service
 public class OrderService {
@@ -220,6 +223,7 @@ public class OrderService {
 ### Frontend i18n (React with i18next)
 
 **Configuration**:
+
 ```typescript
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -246,7 +250,8 @@ export default i18n;
 ```
 
 **Translation Files Structure**:
-```
+
+```text
 public/locales/
 ├── en-US/
 │   ├── common.json
@@ -266,6 +271,7 @@ public/locales/
 ```
 
 **Usage Example**:
+
 ```typescript
 import { useTranslation } from 'react-i18next';
 
@@ -285,6 +291,7 @@ function ProductCard({ product }) {
 ### Frontend i18n (Angular)
 
 **Configuration**:
+
 ```typescript
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
@@ -322,6 +329,7 @@ export class AppModule { }
 | **ko-KR** | YYYY.MM.DD | 12-hour (오전/오후) | 2025.10.24 오후 2:30 |
 
 **Implementation**:
+
 ```typescript
 // Using Intl.DateTimeFormat
 const formatDate = (date: Date, locale: string) => {
@@ -351,6 +359,7 @@ formatDate(new Date(), 'ja-JP');  // 2025年10月24日 14:30
 | **ko-KR** | 1,234.56 | KRW (₩) | ₩1,235 |
 
 **Implementation**:
+
 ```typescript
 // Using Intl.NumberFormat
 const formatCurrency = (amount: number, locale: string, currency: string) => {
@@ -370,7 +379,7 @@ formatCurrency(1234.56, 'ja-JP', 'JPY');  // ¥1,235
 
 ### Translation Process
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Translation Workflow                        │
 ├─────────────────────────────────────────────────────────┤
@@ -423,11 +432,13 @@ formatCurrency(1234.56, 'ja-JP', 'JPY');  // ¥1,235
 ### Translation Management System (TMS)
 
 **Recommended Tools**:
+
 - **Crowdin**: Cloud-based TMS with GitHub integration
 - **Lokalise**: Developer-friendly TMS with API
 - **Phrase**: Enterprise TMS with advanced features
 
 **Key Features Needed**:
+
 - GitHub/GitLab integration
 - Translation memory
 - Context and screenshots
@@ -509,14 +520,17 @@ formatCurrency(1234.56, 'ja-JP', 'JPY');  // ¥1,235
 ## Related Documentation
 
 ### Viewpoints
+
 - [Functional Viewpoint](../../viewpoints/functional/overview.md) - Localized features
 - [Development Viewpoint](../../viewpoints/development/overview.md) - i18n implementation
 
 ### Other Perspectives
+
 - [Accessibility Perspective](../accessibility/overview.md) - Accessible in all languages
 - [Location Perspective](../location/overview.md) - Geographic distribution
 
 ### Implementation Guides
+
 - [Language Support](language-support.md) - Supported languages and implementation
 - [Localization Strategy](localization.md) - Content localization approach
 - [Cultural Adaptation](cultural-adaptation.md) - Region-specific customization

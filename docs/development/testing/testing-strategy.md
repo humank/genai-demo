@@ -20,7 +20,7 @@ This document defines the comprehensive testing strategy for the Enterprise E-Co
 
 Our testing strategy follows the test pyramid model:
 
-```
+```text
         /\
        /  \
       / E2E \     5% - End-to-End Tests
@@ -34,6 +34,7 @@ Our testing strategy follows the test pyramid model:
 ```
 
 **Distribution:**
+
 - **Unit Tests (80%)**: Fast, isolated tests of business logic
 - **Integration Tests (15%)**: Tests of component interactions
 - **End-to-End Tests (5%)**: Tests of complete user journeys
@@ -45,12 +46,14 @@ Our testing strategy follows the test pyramid model:
 **Purpose**: Test individual units of code in isolation
 
 **Characteristics:**
+
 - Fast execution (< 50ms per test)
 - No external dependencies
 - Use mocking for dependencies
 - Focus on business logic
 
 **When to Write:**
+
 - Testing domain logic
 - Testing value objects
 - Testing utility functions
@@ -107,12 +110,14 @@ class OrderTest {
 **Purpose**: Test integration between components and external systems
 
 **Characteristics:**
+
 - Moderate execution time (< 500ms per test)
 - Use test database (H2 or Testcontainers)
 - Test repository implementations
 - Test API endpoints
 
 **When to Write:**
+
 - Testing repository implementations
 - Testing database queries
 - Testing REST API endpoints
@@ -167,12 +172,14 @@ class OrderRepositoryTest {
 **Purpose**: Test complete user journeys through the system
 
 **Characteristics:**
+
 - Slower execution (< 3s per test)
 - Full Spring context
 - Test complete workflows
 - Minimal number of tests
 
 **When to Write:**
+
 - Testing critical user journeys
 - Testing complete business processes
 - Smoke testing after deployment
@@ -367,7 +374,7 @@ public Money calculateTotalWithDiscount(Customer customer) {
 
 ### Package Structure
 
-```
+```text
 src/test/
 ├── java/
 │   └── solid/humank/genaidemo/
@@ -392,11 +399,13 @@ src/test/
 ### Test Naming Conventions
 
 **Test Classes:**
+
 - Unit tests: `{ClassName}Test`
 - Integration tests: `{ClassName}IntegrationTest`
 - E2E tests: `{Feature}E2ETest`
 
 **Test Methods:**
+
 - Use `should_expectedBehavior_when_condition` format
 - Be descriptive and specific
 - Avoid abbreviations
@@ -500,12 +509,14 @@ public class TestFixtures {
 ### When to Mock
 
 **Mock External Dependencies:**
+
 - External services (payment gateway, email service)
 - Repositories (in service tests)
 - Time-dependent operations
 - Complex dependencies tested separately
 
 **Don't Mock:**
+
 - Value objects
 - Entities
 - Domain logic being tested
@@ -635,27 +646,34 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
       
       - name: Run Unit Tests
+
         run: ./gradlew unitTest
       
       - name: Run Integration Tests
+
         run: ./gradlew integrationTest
       
       - name: Run E2E Tests
+
         run: ./gradlew e2eTest
       
       - name: Generate Coverage Report
+
         run: ./gradlew jacocoTestReport
       
       - name: Upload Coverage to Codecov
+
         uses: codecov/codecov-action@v3
 ```
 
@@ -686,6 +704,7 @@ jobs:
 **Issue: Tests Pass Locally But Fail in CI**
 
 **Solution:**
+
 - Check for environment-specific configuration
 - Ensure test data is not environment-dependent
 - Verify timezone and locale settings
@@ -694,6 +713,7 @@ jobs:
 **Issue: Slow Test Execution**
 
 **Solution:**
+
 - Profile tests to identify slow tests
 - Use test slices instead of full Spring context
 - Mock external services
@@ -703,6 +723,7 @@ jobs:
 **Issue: Flaky Tests**
 
 **Solution:**
+
 - Identify non-deterministic behavior
 - Fix timing issues with proper waits
 - Ensure proper test isolation

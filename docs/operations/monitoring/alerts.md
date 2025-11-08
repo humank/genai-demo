@@ -320,35 +320,49 @@ annotations:
 
 ```yaml
 escalation_policy:
+
   - level: 1
+
     delay: 0m
     notify:
+
       - on-call-engineer
+
     channels:
+
       - pagerduty
       - sms
   
   - level: 2
+
     delay: 5m
     notify:
+
       - on-call-engineer
       - team-lead
+
     channels:
+
       - pagerduty
       - sms
       - phone
   
   - level: 3
+
     delay: 15m
     notify:
+
       - on-call-engineer
       - team-lead
       - engineering-manager
+
     channels:
+
       - pagerduty
       - sms
       - phone
       - email
+
 ```
 
 ### On-Call Schedule
@@ -393,12 +407,18 @@ email:
   from: alerts@ecommerce.example.com
   recipients:
     critical:
+
       - oncall@ecommerce.example.com
       - manager@ecommerce.example.com
+
     high:
+
       - oncall@ecommerce.example.com
+
     medium:
+
       - team@ecommerce.example.com
+
 ```
 
 ## Alert Response Procedures

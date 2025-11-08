@@ -35,7 +35,7 @@ This document defines the disaster recovery (DR) strategy for the Enterprise E-C
 
 ### Multi-Region Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         Route 53 (Global DNS)                   │
 │                    Health Check + Failover Routing              │
@@ -76,6 +76,7 @@ This document defines the disaster recovery (DR) strategy for the Enterprise E-C
 ### DR Modes
 
 #### Warm Standby (Current)
+
 - **Description**: DR region runs with minimal capacity
 - **Cost**: Medium (30% of primary region cost)
 - **RTO**: 30 minutes
@@ -83,6 +84,7 @@ This document defines the disaster recovery (DR) strategy for the Enterprise E-C
 - **Use Case**: Balance between cost and recovery speed
 
 #### Hot Standby (Future)
+
 - **Description**: DR region runs at full capacity
 - **Cost**: High (100% of primary region cost)
 - **RTO**: 5 minutes
@@ -104,10 +106,12 @@ RDS Automated Backups:
   BackupType: Automated snapshot
   
   Features:
+
     - Point-in-time recovery (PITR)
     - Transaction log backups every 5 minutes
     - Automatic backup to S3
     - Cross-region backup copy enabled
+
 ```
 
 #### Manual Snapshots
@@ -521,17 +525,21 @@ aws route53 change-resource-record-sets \
 ```yaml
 # CloudWatch Alarms for DR readiness
 Alarms:
+
   - Name: DR-Database-Replication-Lag
+
     Metric: ReplicaLag
     Threshold: 300 seconds
     Action: Alert DR team
   
   - Name: DR-S3-Replication-Lag
+
     Metric: ReplicationLatency
     Threshold: 900 seconds
     Action: Alert DR team
   
   - Name: DR-Region-Health-Check-Failed
+
     Metric: HealthCheckStatus
     Threshold: 2 consecutive failures
     Action: Alert DR team
@@ -542,15 +550,19 @@ Alarms:
 ```yaml
 # Alerts during DR activation
 Alerts:
+
   - Event: DR activation initiated
+
     Recipients: [leadership, ops-team, dev-team]
     Channel: [email, slack, pagerduty]
   
   - Event: DNS failover completed
+
     Recipients: [ops-team]
     Channel: [slack]
   
   - Event: DR services verified
+
     Recipients: [leadership, ops-team]
     Channel: [email, slack]
 ```
@@ -599,6 +611,7 @@ Alerts:
 ### Audit Trail
 
 All DR activities must be logged:
+
 - DR activation timestamp
 - Actions taken and by whom
 - RTO/RPO achieved
@@ -631,6 +644,7 @@ After each DR activation or test:
 ### DR Metrics Dashboard
 
 Track and visualize:
+
 - DR test frequency and results
 - RTO/RPO trends
 - Backup success rates
@@ -640,6 +654,7 @@ Track and visualize:
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Availability perspective introduction
 - [Requirements](requirements.md) - Recovery objectives and scenarios
 - [Fault Tolerance](fault-tolerance.md) - Application resilience patterns

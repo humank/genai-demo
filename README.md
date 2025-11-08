@@ -51,23 +51,27 @@ This project is built on the **Rozanski & Woods Software Systems Architecture** 
 📖 **Learn More**: [Complete Methodology Guide](docs/rozanski-woods-methodology-guide.md)
 
 **🎯 Domain-Driven Design (DDD)**
+
 - **Strategic Design**: 13 bounded contexts with clear business boundaries
 - **Tactical Patterns**: Complete implementation of aggregates, entities, value objects, domain services, and repositories
 - **Ubiquitous Language**: Consistent terminology between business and technical teams
 - **Event Storming**: Visual modeling from business processes to system design
 
 **📋 Behavior-Driven Development (BDD)**
+
 - **Gherkin Scenarios**: 28+ feature files describing business requirements
 - **Acceptance Criteria**: Clear, testable specifications for each feature
 - **Living Documentation**: Tests serve as executable specifications
 - **Cucumber Integration**: Automated BDD test execution
 
 **🧪 Environment-Specific Testing Strategy**
+
 - **Local Environment**: Unit tests only (fast feedback loop)
 - **Staging Environment**: Integration tests with real AWS services
 - **Production Environment**: Full end-to-end tests and monitoring
 
 **☁️ Infrastructure as Code (IaC)**
+
 - **AWS CDK**: Complete infrastructure definition in TypeScript
 - **Multi-Stack Architecture**: Modular, reusable infrastructure components
 - **Multi-Region Support**: Cross-region deployment capabilities
@@ -81,7 +85,7 @@ This project follows the **Rozanski & Woods Software Systems Architecture** meth
 
 Viewpoints describe **WHAT** the system is and **HOW** it's organized:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    CONTEXT VIEWPOINT                            │
 │              (System Boundaries & External Relations)           │
@@ -120,7 +124,7 @@ Viewpoints describe **WHAT** the system is and **HOW** it's organized:
 
 Perspectives describe **quality attributes** that affect the entire system:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    ALL VIEWPOINTS                               │
 │  (Functional, Information, Concurrency, Development,            │
@@ -167,21 +171,25 @@ Perspectives describe **quality attributes** that affect the entire system:
 ### 🗺️ Quick Navigation Guide
 
 **For New Team Members:**
+
 1. Start with [Context Viewpoint](docs/viewpoints/context/README.md) → Understand system boundaries
 2. Read [Functional Viewpoint](docs/viewpoints/functional/README.md) → Learn what the system does
 3. Review [Development Viewpoint](docs/viewpoints/development/README.md) → Understand code organization
 
 **For Architects:**
+
 - Review all [Viewpoints](docs/viewpoints/README.md) for complete system understanding
 - Check [Perspectives](docs/perspectives/README.md) for quality attributes
 - Review [Architecture Decisions (ADRs)](docs/architecture/adrs/README.md) for design rationale
 
 **For Developers:**
+
 - Focus on [Development Viewpoint](docs/viewpoints/development/README.md) for code structure
 - Review [Functional Viewpoint](docs/viewpoints/functional/README.md) for business logic
 - Check [Information Viewpoint](docs/viewpoints/information/README.md) for data models
 
 **For Operations:**
+
 - Focus on [Deployment Viewpoint](docs/viewpoints/deployment/README.md) for infrastructure
 - Review [Operational Viewpoint](docs/viewpoints/operational/README.md) for procedures
 - Check [Operations Runbooks](docs/operations/runbooks/README.md) for incident response
@@ -190,7 +198,7 @@ Perspectives describe **quality attributes** that affect the entire system:
 
 The system is organized into **13 bounded contexts** following Domain-Driven Design principles:
 
-```
+```text
 ├── Customer Management      # Customer profiles, authentication, membership
 ├── Product Catalog         # Product information, categories, search
 ├── Inventory Management    # Stock tracking, warehouse management
@@ -264,27 +272,31 @@ The system is organized into **13 bounded contexts** following Domain-Driven Des
 ### Local Development Setup
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/yourusername/genai-demo.git
 cd genai-demo
 ```
 
-2. **Start local dependencies**
+1. **Start local dependencies**
+
 ```bash
 # Start PostgreSQL and Redis
 docker-compose up -d
 ```
 
-3. **Run the application**
+1. **Run the application**
+
 ```bash
 # Run with local profile (unit tests only)
 ./gradlew :app:bootRun --args='--spring.profiles.active=local'
 ```
 
-4. **Access the application**
-- API: http://localhost:8080
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- Actuator: http://localhost:8080/actuator
+1. **Access the application**
+
+- API: <http://localhost:8080>
+- Swagger UI: <http://localhost:8080/swagger-ui.html>
+- Actuator: <http://localhost:8080/actuator>
 
 ### Development Commands
 
@@ -310,6 +322,7 @@ make pre-commit       # Run all pre-commit validations
 ```
 
 **Quick Examples:**
+
 ```bash
 # Before committing changes
 make pre-commit       # Validates diagrams and generates missing ones
@@ -356,7 +369,7 @@ cd ../staging-tests
 
 ## 🏗️ Project Structure
 
-```
+```text
 .
 ├── app/                          # Main application
 │   ├── src/main/java/
@@ -480,7 +493,8 @@ This creates three hooks:
 3. **Pre-push Hook**: Runs comprehensive validation before push
 
 **Commit Message Format:**
-```
+
+```text
 <type>(<scope>): <description>
 
 Types: feat, fix, docs, style, refactor, test, chore, perf
@@ -491,6 +505,7 @@ Examples:
 ```
 
 **Bypassing Hooks** (when necessary):
+
 ```bash
 git commit --no-verify    # Skip pre-commit and commit-msg hooks
 git push --no-verify      # Skip pre-push hook
@@ -499,6 +514,7 @@ git push --no-verify      # Skip pre-push hook
 ### Automated Validation (CI/CD)
 
 GitHub Actions automatically validates:
+
 - ✅ PlantUML diagram syntax
 - ✅ Diagram references in documentation
 - ✅ Documentation structure
@@ -511,7 +527,7 @@ See `.github/workflows/validate-documentation.yml` for details.
 
 ### Test Pyramid
 
-```
+```text
         /\
        /  \  E2E Tests (5%)
       /____\  - Production environment
@@ -521,7 +537,9 @@ See `.github/workflows/validate-documentation.yml` for details.
   /            \ - Real AWS services
  /  Unit Tests  \ Unit Tests (80%)
 /________________\ - Local environment
+
                    - Fast feedback
+
 ```
 
 ### Environment-Specific Testing
@@ -535,6 +553,7 @@ See `.github/workflows/validate-documentation.yml` for details.
 ### BDD Feature Coverage
 
 28+ feature files covering:
+
 - Customer management and membership
 - Product catalog and search
 - Shopping cart operations
@@ -552,27 +571,32 @@ See `.github/workflows/validate-documentation.yml` for details.
 The application deploys to AWS using CDK with the following components:
 
 **Networking**
+
 - VPC with public/private subnets across 3 AZs
 - NAT Gateways for private subnet internet access
 - Security groups with least-privilege access
 
 **Compute**
+
 - Amazon EKS cluster for container orchestration
 - Auto-scaling node groups
 - Fargate profiles for serverless pods
 
 **Data**
+
 - Amazon RDS PostgreSQL (Multi-AZ)
 - Amazon ElastiCache Redis (cluster mode)
 - Amazon MSK (Managed Kafka)
 
 **Observability**
+
 - Amazon CloudWatch for metrics and logs
 - AWS X-Ray for distributed tracing
 - Amazon Managed Grafana for dashboards
 - CloudWatch Alarms for alerting
 
 **Security**
+
 - AWS IAM roles and policies
 - AWS Secrets Manager for credentials
 - AWS Certificate Manager for TLS
@@ -615,12 +639,14 @@ AWS_REGION=us-west-2 npm run deploy:production
 ### Metrics
 
 **Business Metrics**
+
 - Order conversion rate
 - Average order value
 - Customer lifetime value
 - Cart abandonment rate
 
 **Technical Metrics**
+
 - API response times (p50, p95, p99)
 - Error rates by endpoint
 - Database query performance
@@ -630,6 +656,7 @@ AWS_REGION=us-west-2 npm run deploy:production
 ### Logging
 
 Structured logging with:
+
 - Correlation IDs for request tracing
 - Sensitive data masking
 - Log levels by environment
@@ -638,6 +665,7 @@ Structured logging with:
 ### Tracing
 
 AWS X-Ray integration provides:
+
 - End-to-end request tracing
 - Service dependency maps
 - Performance bottleneck identification
@@ -646,6 +674,7 @@ AWS X-Ray integration provides:
 ### Dashboards
 
 Pre-configured Grafana dashboards for:
+
 - Application performance overview
 - Infrastructure health
 - Business KPIs
@@ -675,7 +704,7 @@ Our documentation follows the **Rozanski & Woods** methodology with clear separa
 
 ### 📐 Architecture Documentation
 
-```
+```text
 docs/
 ├── viewpoints/              # System Structure (7 Viewpoints)
 │   ├── context/            # System boundaries & external relations

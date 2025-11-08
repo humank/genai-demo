@@ -22,17 +22,20 @@ This document outlines the backup testing procedures, schedules, and validation 
 
 ```yaml
 Testing Principles:
+
   - Test Early, Test Often: Regular testing prevents surprises
   - Automate Everything: Reduce human error and increase frequency
   - Document Everything: Track results and lessons learned
   - Continuous Improvement: Update procedures based on findings
   - Realistic Scenarios: Test actual failure conditions
   - Measure and Monitor: Track RTO/RPO metrics
+
 ```
 
 ### Testing Objectives
 
 **Primary Objectives**:
+
 - Verify backup integrity and completeness
 - Validate restore procedures and documentation
 - Measure actual RTO and RPO
@@ -41,6 +44,7 @@ Testing Principles:
 - Ensure compliance with backup policies
 
 **Success Criteria**:
+
 - All backups can be successfully restored
 - RTO meets target (< 1 hour for critical systems)
 - RPO meets target (< 15 minutes for critical data)
@@ -52,42 +56,49 @@ Testing Principles:
 
 ### Monthly Testing Schedule
 
-
 ```yaml
 Monthly Testing Calendar:
   Week 1 (1st-7th):
     Focus: Database Backups
     Tests:
+
       - RDS automated snapshot restore
       - Point-in-time recovery validation
       - Cross-region replica promotion
+
     Duration: 4 hours
     Team: DBA Team + Operations
     
   Week 2 (8th-14th):
     Focus: Application State Backups
     Tests:
+
       - Redis cache restore
       - Kafka topic recovery
       - Configuration restore
+
     Duration: 3 hours
     Team: Operations Team
     
   Week 3 (15th-21st):
     Focus: Infrastructure Backups
     Tests:
+
       - CDK infrastructure recreation
       - EKS cluster configuration restore
       - Secrets and credentials restore
+
     Duration: 4 hours
     Team: SRE Team + Operations
     
   Week 4 (22nd-28th):
     Focus: Integration Testing
     Tests:
+
       - End-to-end restore validation
       - Application functionality testing
       - Performance benchmarking
+
     Duration: 6 hours
     Team: All Teams
 ```
@@ -495,7 +506,6 @@ echo "✓ Configuration restore test completed"
 
 ## Quarterly Full DR Drill Procedures
 
-
 ### Quarterly DR Drill Schedule
 
 ```yaml
@@ -602,18 +612,21 @@ cat > /var/dr-drills/$DRILL_DATE/drill-plan.md <<EOF
 # DR Drill Plan - $DRILL_DATE
 
 ## Drill Information
+
 - **Type**: $DRILL_TYPE
 - **Date**: $DRILL_DATE
 - **Duration**: 6-8 hours
 - **Participants**: [List participants]
 
 ## Objectives
+
 - Validate DR procedures
 - Measure RTO and RPO
 - Train team members
 - Identify improvement areas
 
 ## Success Criteria
+
 - RTO < 1 hour
 - RPO < 15 minutes
 - All critical services operational
@@ -623,12 +636,14 @@ cat > /var/dr-drills/$DRILL_DATE/drill-plan.md <<EOF
 [Describe the failure scenario]
 
 ## Roles and Responsibilities
+
 - **Incident Commander**: [Name]
 - **Database Team**: [Names]
 - **Operations Team**: [Names]
 - **Communications**: [Name]
 
 ## Timeline
+
 - 09:00 - Drill kickoff
 - 09:15 - Simulate failure
 - 09:30 - Begin failover
@@ -637,9 +652,11 @@ cat > /var/dr-drills/$DRILL_DATE/drill-plan.md <<EOF
 - 12:00 - Debrief and lessons learned
 
 ## Communication Plan
+
 - War room: #dr-drill-$DRILL_DATE
 - Status updates: Every 15 minutes
 - Stakeholder notifications: As per plan
+
 EOF
 
 # 4. Send notifications
@@ -817,12 +834,15 @@ cat >> $REPORT_FILE <<EOF
 ## Lessons Learned
 
 ### What Went Well
+
 - [To be filled during debrief]
 
 ### What Needs Improvement
+
 - [To be filled during debrief]
 
 ### Action Items
+
 - [ ] [Action item 1]
 - [ ] [Action item 2]
 
@@ -853,7 +873,6 @@ aws sns publish \
 ```
 
 ## Backup Integrity Verification Tests
-
 
 ### Checksum Verification
 
@@ -1155,18 +1174,22 @@ cat > /var/backup-tests/benchmarks/report-${DATE}.md <<EOF
 # Restore Performance Benchmark Report - $DATE
 
 ## RDS Snapshot Restore
+
 - Snapshot Size: ${SNAPSHOT_SIZE} GB
 - Restore Duration: ${DURATION}s ($(($DURATION / 60)) minutes)
 - Throughput: ${THROUGHPUT} GB/minute
 
 ## Redis Snapshot Restore
+
 - Restore Duration: ${DURATION}s ($(($DURATION / 60)) minutes)
 
 ## Performance Trends
 [Compare with previous benchmarks]
 
 ## Recommendations
+
 - [Based on performance data]
+
 EOF
 
 echo "Benchmark completed: $BENCHMARK_FILE"
@@ -1225,6 +1248,7 @@ def analyze_performance_trends():
 # Restore Performance Trend Analysis
 
 ## RDS Snapshot Restore (Last 90 Days)
+
 - Mean Duration: {rds_stats['mean']:.0f}s ({rds_stats['mean']/60:.1f} minutes)
 - Median Duration: {rds_stats['median']:.0f}s ({rds_stats['median']/60:.1f} minutes)
 - Standard Deviation: {rds_stats['stdev']:.0f}s
@@ -1232,6 +1256,7 @@ def analyze_performance_trends():
 - Max Duration: {rds_stats['max']:.0f}s ({rds_stats['max']/60:.1f} minutes)
 
 ## Redis Snapshot Restore (Last 90 Days)
+
 - Mean Duration: {redis_stats['mean']:.0f}s ({redis_stats['mean']/60:.1f} minutes)
 - Median Duration: {redis_stats['median']:.0f}s ({redis_stats['median']/60:.1f} minutes)
 - Standard Deviation: {redis_stats['stdev']:.0f}s
@@ -1239,6 +1264,7 @@ def analyze_performance_trends():
 - Max Duration: {redis_stats['max']:.0f}s ({redis_stats['max']/60:.1f} minutes)
 
 ## Trend Analysis
+
 - RDS restore times are {'increasing' if rds_durations[-1] > rds_stats['mean'] else 'stable'}
 - Redis restore times are {'increasing' if redis_durations[-1] > redis_stats['mean'] else 'stable'}
 
@@ -1263,7 +1289,6 @@ if __name__ == '__main__':
 
 ## Automated Backup Testing Framework
 
-
 ### Automated Testing Architecture
 
 ```yaml
@@ -1271,6 +1296,7 @@ Testing Framework Components:
   Scheduler:
     Tool: AWS EventBridge
     Triggers:
+
       - Daily: Checksum verification
       - Weekly: Consistency checks
       - Monthly: Full restore tests
@@ -1279,6 +1305,7 @@ Testing Framework Components:
   Execution Engine:
     Tool: AWS Step Functions
     Workflows:
+
       - Backup restore workflow
       - Validation workflow
       - Cleanup workflow
@@ -1286,6 +1313,7 @@ Testing Framework Components:
   Monitoring:
     Tool: CloudWatch + SNS
     Metrics:
+
       - Test success rate
       - Restore duration
       - Data integrity score
@@ -1293,9 +1321,11 @@ Testing Framework Components:
   Reporting:
     Tool: Lambda + S3
     Outputs:
+
       - Test results (JSON)
       - Performance metrics
       - Trend analysis
+
 ```
 
 ### Step Functions Workflow
@@ -1818,6 +1848,7 @@ if __name__ == '__main__':
 # Backup Test Lessons Learned - [Date]
 
 ## Test Information
+
 - **Test ID**: [test-id]
 - **Test Type**: [monthly/quarterly/ad-hoc]
 - **Test Date**: [YYYY-MM-DD]
@@ -1825,11 +1856,13 @@ if __name__ == '__main__':
 - **Outcome**: [PASSED/FAILED]
 
 ## What Went Well
+
 1. [Success 1]
 2. [Success 2]
 3. [Success 3]
 
 ## What Didn't Go Well
+
 1. [Issue 1]
    - **Impact**: [Description]
    - **Root Cause**: [Analysis]
@@ -1841,25 +1874,30 @@ if __name__ == '__main__':
    - **Resolution**: [How it was fixed]
 
 ## Unexpected Findings
+
 - [Finding 1]
 - [Finding 2]
 
 ## Action Items
+
 - [ ] [Action 1] - Owner: [Name] - Due: [Date]
 - [ ] [Action 2] - Owner: [Name] - Due: [Date]
 - [ ] [Action 3] - Owner: [Name] - Due: [Date]
 
 ## Documentation Updates Required
+
 - [ ] Update procedure: [Procedure name]
 - [ ] Update runbook: [Runbook name]
 - [ ] Update training materials
 
 ## Recommendations
+
 1. [Recommendation 1]
 2. [Recommendation 2]
 3. [Recommendation 3]
 
 ## Metrics
+
 - **RTO Achieved**: [X minutes]
 - **RTO Target**: [Y minutes]
 - **RPO Achieved**: [X minutes]
@@ -1867,6 +1905,7 @@ if __name__ == '__main__':
 - **Data Integrity Score**: [X%]
 
 ## Follow-up Actions
+
 - Next test scheduled: [Date]
 - Procedure review scheduled: [Date]
 - Team training scheduled: [Date]

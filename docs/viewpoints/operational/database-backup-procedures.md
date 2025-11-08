@@ -5,6 +5,7 @@
 ### Automated Backup Settings
 
 **Primary Database Configuration**:
+
 ```yaml
 Database Instance: ecommerce-prod-db
 Instance Class: db.r5.2xlarge
@@ -23,17 +24,24 @@ Automated Backup Configuration:
   
   CopyTagsToSnapshot: true
   Tags:
+
     - Key: Environment
+
       Value: production
+
     - Key: BackupType
+
       Value: automated
+
     - Key: Compliance
+
       Value: required
 ```
 
 ### Backup Window Optimization
 
 **Selecting Optimal Backup Window**:
+
 ```bash
 # Analyze database activity patterns
 aws cloudwatch get-metric-statistics \
@@ -51,6 +59,7 @@ aws cloudwatch get-metric-statistics \
 ```
 
 **Modifying Backup Window**:
+
 ```bash
 # Update backup window
 aws rds modify-db-instance \
@@ -64,12 +73,12 @@ aws rds describe-db-instances \
   --query 'DBInstances[0].PreferredBackupWindow'
 ```
 
-
 ## Manual Snapshot Procedures
 
 ### Creating Manual Snapshots
 
 **Pre-Deployment Snapshot**:
+
 ```bash
 #!/bin/bash
 # create-pre-deployment-snapshot.sh
@@ -116,6 +125,7 @@ fi
 ```
 
 **Pre-Migration Snapshot**:
+
 ```bash
 #!/bin/bash
 # create-pre-migration-snapshot.sh
@@ -144,10 +154,12 @@ echo "Pre-migration snapshot created: ${SNAPSHOT_ID}"
 ### Manual Snapshot Best Practices
 
 **Naming Conventions**:
+
 ```yaml
 Format: {instance}-{purpose}-{identifier}-{date}
 
 Examples:
+
   - ecommerce-prod-db-pre-deploy-20251023-143000
   - ecommerce-prod-db-pre-migration-v2.5-20251023
   - ecommerce-prod-db-manual-backup-20251023
@@ -161,27 +173,31 @@ Components:
 ```
 
 **Tagging Strategy**:
+
 ```yaml
 Required Tags:
+
   - Purpose: Reason for snapshot creation
   - CreatedBy: User or automation system
   - Environment: production | staging | development
   - Date: Creation date (YYYY-MM-DD)
 
 Optional Tags:
+
   - Migration: Migration name (for pre-migration snapshots)
   - Version: Application version (for pre-deployment snapshots)
   - Ticket: JIRA ticket number
   - Compliance: Compliance requirement (SOC2, PCI-DSS, GDPR)
   - RetentionPeriod: Custom retention period in days
-```
 
+```
 
 ## Point-in-Time Recovery (PITR) Procedures
 
 ### Understanding PITR
 
 **PITR Capabilities**:
+
 ```yaml
 Recovery Granularity: 5 minutes
 Maximum Recovery Window: 30 days (based on retention period)
@@ -189,15 +205,18 @@ Recovery Method: Transaction log replay
 Data Loss: Maximum 5 minutes (RPO)
 
 Supported Scenarios:
+
   - Accidental data deletion
   - Application bugs causing data corruption
   - Failed deployments or migrations
   - Rollback to specific point before incident
+
 ```
 
 ### PITR Recovery Process
 
 **Step 1: Identify Recovery Point**:
+
 ```bash
 #!/bin/bash
 # identify-recovery-point.sh
@@ -220,6 +239,7 @@ aws rds describe-db-instances \
 ```
 
 **Step 2: Perform PITR**:
+
 ```bash
 #!/bin/bash
 # perform-pitr-recovery.sh
@@ -272,6 +292,7 @@ echo "4. Delete old instance after confirmation"
 ```
 
 **Step 3: Verify Restored Data**:
+
 ```bash
 #!/bin/bash
 # verify-pitr-data.sh
@@ -313,6 +334,7 @@ echo "✓ Data verification completed"
 ### PITR Use Cases
 
 **Use Case 1: Accidental Data Deletion**:
+
 ```bash
 # Scenario: Accidentally deleted 100 orders at 10:25 AM
 # Recovery: Restore to 10:24 AM (1 minute before deletion)
@@ -324,6 +346,7 @@ RECOVERY_TIME="2025-10-23T10:24:00Z"
 ```
 
 **Use Case 2: Failed Migration Rollback**:
+
 ```bash
 # Scenario: Migration started at 02:00 AM, failed at 02:45 AM
 # Recovery: Restore to 01:59 AM (before migration)
@@ -335,6 +358,7 @@ RECOVERY_TIME="2025-10-23T01:59:00Z"
 ```
 
 **Use Case 3: Application Bug Data Corruption**:
+
 ```bash
 # Scenario: Bug deployed at 14:00, corrupted data until 14:30
 # Recovery: Restore to 13:59 (before bug deployment)
@@ -345,32 +369,37 @@ RECOVERY_TIME="2025-10-23T13:59:00Z"
 ./perform-pitr-recovery.sh ${RECOVERY_TIME}
 ```
 
-
 ## Cross-Region Backup Replication
 
 ### Replication Strategy
 
 **Multi-Region Backup Architecture**:
+
 ```yaml
 Primary Region: us-east-1
+
   - Automated snapshots: 30 days retention
   - Manual snapshots: 90 days retention
   - Transaction logs: Continuous
 
 DR Region: us-west-2
+
   - Replicated automated snapshots: 30 days retention
   - Replicated manual snapshots: 90 days retention
   - Read replica: Real-time replication
 
 Replication Method:
+
   - Automated: Copy snapshots to DR region daily
   - Manual: Copy critical snapshots immediately
   - Real-time: Multi-AZ read replica in DR region
+
 ```
 
 ### Automated Cross-Region Snapshot Copy
 
 **Setup Automated Replication**:
+
 ```bash
 #!/bin/bash
 # setup-cross-region-replication.sh
@@ -395,6 +424,7 @@ aws rds modify-db-instance \
 ```
 
 **Lambda Function for Automated Copy**:
+
 ```python
 # lambda-cross-region-snapshot-copy.py
 import boto3
@@ -461,17 +491,27 @@ Resources:
       Description: "Trigger Lambda on RDS snapshot creation"
       EventPattern:
         source:
+
           - aws.rds
+
         detail-type:
+
           - "RDS DB Snapshot Event"
+
         detail:
           EventCategories:
+
             - creation
+
           SourceType:
+
             - SNAPSHOT
+
       State: ENABLED
       Targets:
+
         - Arn: !GetAtt SnapshotCopyLambda.Arn
+
           Id: SnapshotCopyTarget
 """
 ```
@@ -479,6 +519,7 @@ Resources:
 ### Manual Cross-Region Copy
 
 **Copy Specific Snapshot**:
+
 ```bash
 #!/bin/bash
 # copy-snapshot-to-dr.sh
@@ -550,6 +591,7 @@ aws rds describe-db-snapshots \
 ### Read Replica for Real-Time Replication
 
 **Create Cross-Region Read Replica**:
+
 ```bash
 #!/bin/bash
 # create-cross-region-read-replica.sh
@@ -597,6 +639,7 @@ echo "Replication lag: Monitor via CloudWatch metric 'ReplicaLag'"
 ```
 
 **Monitor Replication Lag**:
+
 ```bash
 #!/bin/bash
 # monitor-replication-lag.sh
@@ -640,12 +683,12 @@ if (( $(echo "$LAG > 300" | bc -l) )); then
 fi
 ```
 
-
 ## Database Export Procedures
 
 ### pg_dump Export
 
 **Full Database Export**:
+
 ```bash
 #!/bin/bash
 # export-database-full.sh
@@ -707,6 +750,7 @@ echo "  S3 location: ${S3_BUCKET}"
 ```
 
 **Schema-Only Export**:
+
 ```bash
 #!/bin/bash
 # export-schema-only.sh
@@ -733,6 +777,7 @@ echo "✓ Schema export completed: ${EXPORT_FILE}"
 ```
 
 **Table-Specific Export**:
+
 ```bash
 #!/bin/bash
 # export-specific-tables.sh
@@ -776,6 +821,7 @@ echo "✓ Table export completed: ${EXPORT_FILE}"
 ### Logical Backup with pg_basebackup
 
 **Base Backup for Replication**:
+
 ```bash
 #!/bin/bash
 # create-base-backup.sh
@@ -822,6 +868,7 @@ echo "✓ Uploaded to S3"
 ### Export Optimization
 
 **Parallel Export for Large Databases**:
+
 ```bash
 #!/bin/bash
 # parallel-export.sh
@@ -857,6 +904,7 @@ echo "✓ Parallel export completed"
 ```
 
 **Exclude Large Tables**:
+
 ```bash
 #!/bin/bash
 # export-exclude-large-tables.sh
@@ -880,12 +928,12 @@ PGPASSWORD=${DB_PASSWORD} pg_dump \
 echo "✓ Export completed (large tables excluded): ${EXPORT_FILE}"
 ```
 
-
 ## Incremental Backup Strategies
 
 ### Transaction Log Shipping
 
 **Continuous Archive Mode**:
+
 ```sql
 -- Enable WAL archiving (requires restart)
 ALTER SYSTEM SET wal_level = 'replica';
@@ -899,6 +947,7 @@ WHERE name IN ('wal_level', 'archive_mode', 'archive_command', 'archive_timeout'
 ```
 
 **WAL Archive Management**:
+
 ```bash
 #!/bin/bash
 # manage-wal-archives.sh
@@ -928,6 +977,7 @@ echo "✓ WAL archive cleanup completed"
 ### Differential Backups
 
 **Create Differential Backup**:
+
 ```bash
 #!/bin/bash
 # create-differential-backup.sh
@@ -960,6 +1010,7 @@ echo "✓ Differential backup completed"
 ### Incremental Backup Schedule
 
 **Backup Schedule Strategy**:
+
 ```yaml
 Weekly Schedule:
   Sunday 02:00 UTC:
@@ -978,12 +1029,15 @@ Weekly Schedule:
     Storage: S3 Intelligent-Tiering
 
 Recovery Capability:
+
   - Full restore: From any Sunday backup
   - Point-in-time: Any time within 30 days
   - Incremental restore: Apply differential + WAL logs
+
 ```
 
 **Automated Backup Scheduler**:
+
 ```bash
 #!/bin/bash
 # automated-backup-scheduler.sh
@@ -1004,12 +1058,12 @@ fi
 /usr/local/bin/archive-wal-logs.sh
 ```
 
-
 ## Backup Compression and Optimization
 
 ### Compression Strategies
 
 **Compression Level Comparison**:
+
 ```yaml
 Compression Levels (gzip):
   Level 1 (Fast):
@@ -1031,12 +1085,15 @@ Compression Levels (gzip):
     Use Case: Long-term storage, compliance backups
 
 Recommendation:
+
   - Real-time/Automated: Level 6
   - Manual/Archival: Level 9
   - Large databases (>1TB): Level 1-3
+
 ```
 
 **Optimized Compression Script**:
+
 ```bash
 #!/bin/bash
 # optimized-compression-backup.sh
@@ -1095,6 +1152,7 @@ echo "  Compression ratio: ${RATIO}%"
 ### Parallel Compression
 
 **Multi-threaded Compression**:
+
 ```bash
 #!/bin/bash
 # parallel-compression-backup.sh
@@ -1121,6 +1179,7 @@ echo "✓ Parallel compression completed"
 ### Deduplication
 
 **Identify Duplicate Data**:
+
 ```sql
 -- Find duplicate rows in tables
 SELECT 
@@ -1145,6 +1204,7 @@ WHERE COUNT(*) > COUNT(DISTINCT ctid);
 ### Backup Size Optimization
 
 **Exclude Unnecessary Data**:
+
 ```bash
 #!/bin/bash
 # optimized-size-backup.sh
@@ -1183,6 +1243,7 @@ echo "✓ Optimized backup completed"
 ```
 
 **Vacuum Before Backup**:
+
 ```bash
 #!/bin/bash
 # vacuum-before-backup.sh
@@ -1213,12 +1274,12 @@ echo "  Database size: ${SIZE_AFTER}"
 echo "  Ready for backup"
 ```
 
-
 ## Backup Validation and Test Restore Procedures
 
 ### Automated Validation
 
 **Daily Backup Validation**:
+
 ```bash
 #!/bin/bash
 # daily-backup-validation.sh
@@ -1326,6 +1387,7 @@ aws sns publish \
 ### Test Restore Procedures
 
 **Weekly Test Restore**:
+
 ```bash
 #!/bin/bash
 # weekly-test-restore.sh
@@ -1468,8 +1530,10 @@ echo "✓ Test restore completed successfully"
 ### Restore Verification Checklist
 
 **Post-Restore Verification**:
+
 ```yaml
 Database Level:
+
   - [ ] Database is accessible
   - [ ] All schemas present
   - [ ] All tables present
@@ -1480,6 +1544,7 @@ Database Level:
   - [ ] Stored procedures exist
 
 Data Integrity:
+
   - [ ] No orphaned records
   - [ ] Foreign key relationships intact
   - [ ] No null primary keys
@@ -1488,6 +1553,7 @@ Data Integrity:
   - [ ] No data corruption
 
 Business Logic:
+
   - [ ] Recent transactions present
   - [ ] Order totals calculate correctly
   - [ ] Customer balances are accurate
@@ -1495,6 +1561,7 @@ Business Logic:
   - [ ] Payment records are complete
 
 Performance:
+
   - [ ] Query performance is acceptable
   - [ ] Index usage is optimal
   - [ ] No blocking queries
@@ -1502,16 +1569,19 @@ Performance:
   - [ ] Resource utilization is normal
 
 Application:
+
   - [ ] Application can connect
   - [ ] Read operations work
   - [ ] Write operations work
   - [ ] Authentication works
   - [ ] Business workflows function
+
 ```
 
 ### Continuous Validation
 
 **Automated Monitoring**:
+
 ```bash
 #!/bin/bash
 # continuous-backup-monitoring.sh
@@ -1560,4 +1630,3 @@ fi
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-26  
 **Owner**: Operations Team, DBA Team
-

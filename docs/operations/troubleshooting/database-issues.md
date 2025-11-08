@@ -6,7 +6,8 @@ This document provides comprehensive troubleshooting procedures for database-rel
 
 **Target Audience**: Database administrators, DevOps engineers, backend developers  
 **Prerequisites**: Access to database, kubectl, psql client  
-**Related Documents**: 
+**Related Documents**:
+
 - [Database Maintenance](../maintenance/database-maintenance.md)
 - [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
 - [Performance Standards](../../.kiro/steering/performance-standards.md)
@@ -46,6 +47,7 @@ Query performance issues are the most common cause of application slowdowns. Thi
 #### Step 1: Identify Slow Queries
 
 **Using pg_stat_statements** (recommended):
+
 ```sql
 -- Top 10 slowest queries by average execution time
 SELECT 
@@ -61,8 +63,8 @@ ORDER BY mean_time DESC
 LIMIT 10;
 ```
 
-
 **Using pg_stat_activity** (real-time):
+
 ```sql
 -- Currently running slow queries
 SELECT 
@@ -77,6 +79,7 @@ ORDER BY duration DESC;
 ```
 
 **Using application logs**:
+
 ```bash
 # Find slow queries in application logs
 kubectl logs -l app=ecommerce-backend -n production | \
@@ -96,6 +99,7 @@ WHERE customer_id = 'CUST-123'
 ```
 
 **Key metrics to check**:
+
 - **Execution Time**: Total time vs. planning time
 - **Rows**: Estimated vs. actual rows
 - **Buffers**: Shared hits vs. reads (cache efficiency)
@@ -166,6 +170,7 @@ WHERE status IN ('PENDING', 'PROCESSING');
 ```
 
 **Best Practices**:
+
 - Use `CONCURRENTLY` to avoid locking
 - Create indexes during low-traffic periods
 - Monitor index size and usage
@@ -174,6 +179,7 @@ WHERE status IN ('PENDING', 'PROCESSING');
 #### Strategy 2: Optimize Query Structure
 
 **Before** (inefficient):
+
 ```sql
 SELECT * FROM orders o
 WHERE o.customer_id IN (
@@ -182,6 +188,7 @@ WHERE o.customer_id IN (
 ```
 
 **After** (optimized):
+
 ```sql
 SELECT o.* FROM orders o
 INNER JOIN customers c ON o.customer_id = c.customer_id
@@ -204,6 +211,7 @@ VACUUM ANALYZE orders;
 #### Strategy 4: Query Rewriting
 
 **Use LIMIT for pagination**:
+
 ```sql
 -- Instead of fetching all rows
 SELECT * FROM orders 
@@ -213,6 +221,7 @@ LIMIT 20 OFFSET 0;
 ```
 
 **Use EXISTS instead of COUNT**:
+
 ```sql
 -- Instead of: SELECT COUNT(*) > 0
 SELECT EXISTS(
@@ -238,9 +247,12 @@ ORDER BY mean_time DESC;
 ```
 
 **Set up alerts**:
+
 ```yaml
 # Prometheus alert rule
+
 - alert: SlowDatabaseQueries
+
   expr: pg_stat_statements_mean_time_seconds > 1
   for: 5m
   labels:
@@ -314,7 +326,6 @@ kubectl exec -it ${POD_NAME} -n production -- \
 kubectl exec -it ${POD_NAME} -n production -- \
     curl http://localhost:8080/actuator/metrics/hikaricp.connections | jq
 ```
-
 
 #### Step 3: Identify Connection Leaks
 
@@ -465,7 +476,9 @@ public void processOrder(String orderId) {
 
 ```yaml
 # Prometheus alert
+
 - alert: HighConnectionPoolUsage
+
   expr: hikaricp_connections_active / hikaricp_connections_max > 0.8
   for: 5m
   labels:
@@ -474,6 +487,7 @@ public void processOrder(String orderId) {
     summary: "Connection pool usage > 80%"
 
 - alert: ConnectionPoolExhausted
+
   expr: hikaricp_connections_pending > 0
   for: 2m
   labels:
@@ -581,7 +595,6 @@ JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid = bl
 WHERE NOT blocked_locks.granted;
 ```
 
-
 ### Common Deadlock Scenarios
 
 #### Scenario 1: Update Order Deadlock
@@ -642,7 +655,8 @@ COMMIT;
 
 **Problem**: Concurrent updates causing index lock conflicts
 
-**Solution**: 
+**Solution**:
+
 - Batch updates when possible
 - Use smaller transactions
 - Consider using advisory locks
@@ -685,6 +699,7 @@ public void updateOrder(String orderId, OrderStatus status) {
 #### Workflow 3: Code Refactoring
 
 **Before** (deadlock-prone):
+
 ```java
 public void processOrders(List<String> orderIds) {
     for (String orderId : orderIds) {
@@ -696,6 +711,7 @@ public void processOrders(List<String> orderIds) {
 ```
 
 **After** (deadlock-safe):
+
 ```java
 public void processOrders(List<String> orderIds) {
     // Sort IDs to ensure consistent lock order
@@ -869,7 +885,6 @@ FROM pg_stat_user_tables
 ORDER BY total_modifications DESC
 LIMIT 20;
 ```
-
 
 ### Optimization Strategies
 
@@ -1150,7 +1165,6 @@ SELECT
 FROM pg_replication_slots;
 ```
 
-
 ### Root Cause Analysis
 
 #### Cause 1: High Write Volume
@@ -1302,7 +1316,9 @@ public class OrderService {
 
 ```yaml
 # Prometheus alert rules
+
 - alert: HighReplicationLag
+
   expr: pg_replication_lag_seconds > 30
   for: 5m
   labels:
@@ -1312,6 +1328,7 @@ public class OrderService {
     description: "Replica {{ $labels.instance }} is {{ $value }}s behind"
 
 - alert: CriticalReplicationLag
+
   expr: pg_replication_lag_seconds > 300
   for: 2m
   labels:
@@ -1431,24 +1448,28 @@ SHOW work_mem;
 ### Parameter Tuning Workflow
 
 1. **Baseline Measurement**:
+
 ```bash
 # Run pgbench for baseline
 pgbench -i -s 100 ecommerce
 pgbench -c 10 -j 2 -t 1000 ecommerce
 ```
 
-2. **Apply Changes**:
+1. **Apply Changes**:
+
 ```sql
 ALTER SYSTEM SET work_mem = '64MB';
 SELECT pg_reload_conf();
 ```
 
-3. **Measure Impact**:
+1. **Measure Impact**:
+
 ```bash
 pgbench -c 10 -j 2 -t 1000 ecommerce
 ```
 
-4. **Compare Results**:
+1. **Compare Results**:
+
 ```sql
 SELECT 
     query,
@@ -1483,7 +1504,6 @@ SELECT pg_reload_conf();
 -- Verify installation
 SELECT * FROM pg_stat_statements LIMIT 1;
 ```
-
 
 ### Analysis Techniques
 
@@ -1717,68 +1737,81 @@ SELECT * FROM orders WHERE customer_id = 'CUST-123';
 #### Node Types
 
 **Sequential Scan**:
-```
+
+```text
 Seq Scan on orders  (cost=0.00..1234.56 rows=100 width=200)
                     (actual time=0.123..45.678 rows=95 loops=1)
 ```
+
 - **Meaning**: Full table scan (reads every row)
 - **When OK**: Small tables (< 1000 rows)
 - **When BAD**: Large tables, should use index
 
 **Index Scan**:
-```
+
+```text
 Index Scan using idx_orders_customer on orders
     (cost=0.42..8.44 rows=1 width=200)
     (actual time=0.012..0.015 rows=1 loops=1)
 ```
+
 - **Meaning**: Uses index to find rows
 - **Good**: Efficient for selective queries
 - **Cost**: Lower than sequential scan
 
 **Index Only Scan**:
-```
+
+```text
 Index Only Scan using idx_orders_customer_status on orders
     (cost=0.42..4.44 rows=1 width=16)
     (actual time=0.008..0.010 rows=1 loops=1)
     Heap Fetches: 0
 ```
+
 - **Meaning**: All data from index, no table access
 - **Best**: Most efficient, no heap access needed
 
 **Bitmap Scan**:
-```
+
+```text
 Bitmap Heap Scan on orders
     (cost=12.34..56.78 rows=100 width=200)
     ->  Bitmap Index Scan on idx_orders_status
         (cost=0.00..12.31 rows=100 width=0)
 ```
+
 - **Meaning**: Uses index to build bitmap, then scans heap
 - **When**: Multiple index conditions or large result sets
 
 #### Key Metrics
 
 **Cost**:
-```
+
+```text
 (cost=0.42..8.44 rows=1 width=200)
        ^^^^  ^^^^
        startup  total
 ```
+
 - **Startup cost**: Cost before first row
 - **Total cost**: Cost to return all rows
 - **Units**: Arbitrary, compare relative values
 
 **Actual Time**:
-```
+
+```text
 (actual time=0.012..0.015 rows=1 loops=1)
             ^^^^^  ^^^^^
             first  last
 ```
+
 - **First row time**: Time to first row (ms)
 - **Last row time**: Time to last row (ms)
 - **Loops**: Number of times node executed
 
 **Rows**:
-```
+
+```text
 (cost=0.42..8.44 rows=100 width=200)
                  ^^^^^^^^
                  estimated
@@ -1786,10 +1819,10 @@ Bitmap Heap Scan on orders
                           ^^^^^^^
                           actual
 ```
+
 - **Estimated rows**: Planner's estimate
 - **Actual rows**: Actual rows returned
 - **Large difference**: Statistics may be outdated
-
 
 ### Interpretation Examples
 
@@ -1809,6 +1842,7 @@ Execution Time: 456.912 ms
 ```
 
 **Analysis**:
+
 - ❌ Sequential scan on large table
 - ❌ High execution time (456ms)
 - ❌ Many rows filtered out (99905)
@@ -1832,6 +1866,7 @@ Index Scan using idx_orders_status on orders
 ```
 
 **Analysis**:
+
 - ❌ Estimated 1 row, actual 10,000 rows
 - ❌ Planner chose wrong plan
 - **Solution**: Update statistics
@@ -1862,6 +1897,7 @@ Nested Loop  (cost=0.85..25678.90 rows=100 width=250)
 ```
 
 **Analysis**:
+
 - ❌ Sequential scan on orders
 - ❌ Nested loop with 100 iterations
 - **Solution**: Add index on orders.status
@@ -1894,6 +1930,7 @@ Limit  (cost=15234.56..15234.81 rows=100 width=200)
 ```
 
 **Analysis**:
+
 - ❌ Full table scan then sort
 - ❌ High buffer reads (5678)
 - **Solution**: Create index on order_date
@@ -1922,6 +1959,7 @@ HashAggregate  (cost=23456.78..24567.89 rows=10000 width=40)
 ```
 
 **Analysis**:
+
 - ❌ Using temp files (disk spill)
 - ❌ Indicates insufficient work_mem
 - **Solution**: Increase work_mem
@@ -1948,6 +1986,7 @@ Index Scan using idx_orders_customer on orders
 ```
 
 **Buffer Metrics**:
+
 - **shared hit**: Blocks found in cache (good)
 - **shared read**: Blocks read from disk (slower)
 - **Cache hit ratio**: hit / (hit + read) × 100%
@@ -1956,18 +1995,21 @@ Index Scan using idx_orders_customer on orders
 ### Optimization Workflow
 
 1. **Identify Problem**:
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS, VERBOSE)
 SELECT * FROM orders WHERE customer_id = 'CUST-123';
 ```
 
-2. **Analyze Output**:
+1. **Analyze Output**:
+
 - Check for sequential scans
 - Compare estimated vs actual rows
 - Check buffer usage
 - Look for temp file usage
 
-3. **Apply Fix**:
+1. **Apply Fix**:
+
 ```sql
 -- Add index
 CREATE INDEX CONCURRENTLY idx_orders_customer 
@@ -1980,13 +2022,15 @@ ANALYZE orders;
 SET work_mem = '256MB';
 ```
 
-4. **Verify Improvement**:
+1. **Verify Improvement**:
+
 ```sql
 EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM orders WHERE customer_id = 'CUST-123';
 ```
 
-5. **Compare Results**:
+1. **Compare Results**:
+
 - Execution time reduced?
 - Better plan chosen?
 - Fewer buffer reads?
@@ -2074,4 +2118,3 @@ FROM pg_statio_user_tables;
 **Owner**: Database Team  
 **Review Cycle**: Quarterly  
 **Version**: 1.0
-

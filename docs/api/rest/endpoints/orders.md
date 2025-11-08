@@ -10,7 +10,7 @@ The Order API provides endpoints for managing customer orders, including order c
 
 ## Order Lifecycle
 
-```
+```text
 CREATED → PENDING → CONFIRMED → PROCESSING → SHIPPED → DELIVERED
                                      ↓
                                  CANCELLED
@@ -27,6 +27,7 @@ Create a new order from shopping cart.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "customerId": "cust-123",
@@ -62,6 +63,7 @@ Create a new order from shopping cart.
 ```
 
 **Validation Rules**:
+
 - `customerId`: Required, must exist
 - `items`: Required, at least 1 item
 - `items[].productId`: Required, must exist and be in stock
@@ -70,6 +72,7 @@ Create a new order from shopping cart.
 - `paymentMethod`: Required (CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, CASH_ON_DELIVERY)
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -122,11 +125,13 @@ Create a new order from shopping cart.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Missing or invalid token
 - `409 Conflict`: Insufficient inventory
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/orders \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -164,9 +169,11 @@ Retrieve a specific order by its ID.
 **Authorization**: User can access own orders, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Order ID (e.g., `order-789`)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -218,11 +225,13 @@ Retrieve a specific order by its ID.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Order not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/orders/order-789 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -238,11 +247,13 @@ Retrieve a paginated list of orders.
 
 **Authentication**: Required
 
-**Authorization**: 
+**Authorization**:
+
 - Regular users see only their own orders
 - ADMIN role can see all orders
 
 **Query Parameters**:
+
 - `page`: Page number (0-based, default: 0)
 - `size`: Page size (default: 20, max: 100)
 - `sort`: Sort field and direction (default: `createdAt,desc`)
@@ -252,6 +263,7 @@ Retrieve a paginated list of orders.
 - `endDate`: Filter orders created before this date (ISO 8601)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -283,6 +295,7 @@ Retrieve a paginated list of orders.
 ```
 
 **curl Example**:
+
 ```bash
 # List own orders
 curl -X GET "https://api.ecommerce.com/api/v1/orders?page=0&size=20&status=SHIPPED" \
@@ -306,9 +319,11 @@ Update the status of an order.
 **Authorization**: ADMIN or SELLER role required
 
 **Path Parameters**:
+
 - `id`: Order ID
 
 **Request Body**:
+
 ```json
 {
   "status": "CONFIRMED",
@@ -317,12 +332,14 @@ Update the status of an order.
 ```
 
 **Valid Status Transitions**:
+
 - `PENDING` → `CONFIRMED` or `CANCELLED`
 - `CONFIRMED` → `PROCESSING` or `CANCELLED`
 - `PROCESSING` → `SHIPPED` or `CANCELLED`
 - `SHIPPED` → `DELIVERED`
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -347,6 +364,7 @@ Update the status of an order.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid status transition
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
@@ -354,6 +372,7 @@ Update the status of an order.
 - `409 Conflict`: Invalid state transition
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/orders/order-789/status \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -377,9 +396,11 @@ Cancel an order.
 **Authorization**: User can cancel own orders (if eligible), or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Order ID
 
 **Request Body**:
+
 ```json
 {
   "reason": "Changed my mind",
@@ -388,11 +409,13 @@ Cancel an order.
 ```
 
 **Cancellation Rules**:
+
 - Can cancel if status is PENDING or CONFIRMED
 - Cannot cancel if status is PROCESSING, SHIPPED, or DELIVERED
 - Refund processed automatically for paid orders
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -407,12 +430,14 @@ Cancel an order.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Order not found
 - `409 Conflict`: Order cannot be cancelled (already shipped)
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/orders/order-789/cancel \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -436,9 +461,11 @@ Add shipping tracking information to an order.
 **Authorization**: ADMIN or SELLER role required
 
 **Path Parameters**:
+
 - `id`: Order ID
 
 **Request Body**:
+
 ```json
 {
   "trackingNumber": "TW123456789",
@@ -449,6 +476,7 @@ Add shipping tracking information to an order.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -464,6 +492,7 @@ Add shipping tracking information to an order.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/orders/order-789/tracking \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -488,12 +517,15 @@ Retrieve the invoice for an order.
 **Authorization**: User can access own order invoices, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Order ID
 
 **Query Parameters**:
+
 - `format`: Invoice format (PDF, HTML, default: PDF)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -530,6 +562,7 @@ Retrieve the invoice for an order.
 ```
 
 **curl Example**:
+
 ```bash
 # Get invoice metadata
 curl -X GET https://api.ecommerce.com/api/v1/orders/order-789/invoice \
@@ -554,9 +587,11 @@ Retrieve the complete history of status changes for an order.
 **Authorization**: User can access own order history, or ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Order ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -598,6 +633,7 @@ Retrieve the complete history of status changes for an order.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/orders/order-789/history \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"

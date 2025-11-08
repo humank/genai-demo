@@ -85,26 +85,32 @@ sequenceDiagram
 ### Actions Performed
 
 1. **Syntax Validation**
+
    ```bash
    ./scripts/validate-diagrams.sh --check-syntax
    ```
+
    - Validates PlantUML syntax
    - Reports errors with line numbers
    - Prevents generation of invalid diagrams
 
 2. **Diagram Generation**
+
    ```bash
    ./scripts/generate-diagrams.sh --format=png
    ```
+
    - Generates PNG for GitHub documentation
    - Optionally generates SVG for high-resolution
    - Maintains directory structure
    - Handles errors gracefully
 
 3. **Missing Diagram Check**
+
    ```bash
    ./scripts/validate-diagrams.sh --check-missing
    ```
+
    - Verifies all source files have generated diagrams
    - Reports missing files
    - Suggests regeneration if needed
@@ -187,26 +193,32 @@ sequenceDiagram
 ### Actions Performed
 
 1. **Reference Validation**
+
    ```bash
    ./scripts/validate-diagrams.sh --check-references
    ```
+
    - Checks all diagram references in markdown
    - Verifies referenced files exist
    - Validates relative paths
    - Reports broken links
 
 2. **Missing Diagram Check**
+
    ```bash
    ./scripts/validate-diagrams.sh --check-missing
    ```
+
    - Identifies source files without generated diagrams
    - Suggests regeneration
    - Warns about outdated diagrams
 
 3. **Comprehensive Validation**
+
    ```bash
    ./scripts/validate-diagrams.sh
    ```
+
    - Runs all validation checks
    - Generates validation report
    - Provides actionable recommendations
@@ -272,6 +284,7 @@ graph LR
 ### Execution Order
 
 1. **On .puml file change**:
+
    ```
    diagram-auto-generation (generate)
         ↓
@@ -281,6 +294,7 @@ graph LR
    ```
 
 2. **On .md file change**:
+
    ```
    diagram-validation (check references)
         ↓
@@ -341,6 +355,7 @@ name: Validate Diagrams
 on:
   pull_request:
     paths:
+
       - 'docs/diagrams/**/*.puml'
       - 'docs/**/*.md'
 
@@ -348,20 +363,25 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Setup Java
+
         uses: actions/setup-java@v3
         with:
           java-version: '11'
       
       - name: Validate Diagram Syntax
+
         run: ./scripts/validate-diagrams.sh --check-syntax
       
       - name: Check Diagram References
+
         run: ./scripts/validate-diagrams.sh --check-references
       
       - name: Check Missing Diagrams
+
         run: ./scripts/validate-diagrams.sh --check-missing
 ```
 
@@ -408,6 +428,7 @@ jobs:
 **Symptoms**: Hook doesn't run when files are edited
 
 **Solutions**:
+
 1. Check hook is enabled in `.kiro/hooks/`
 2. Verify file patterns match edited files
 3. Check Kiro IDE hook settings
@@ -418,6 +439,7 @@ jobs:
 **Symptoms**: Diagrams not generated or errors shown
 
 **Solutions**:
+
 1. Validate PlantUML syntax manually
 2. Check Java installation
 3. Verify PlantUML JAR exists
@@ -429,6 +451,7 @@ jobs:
 **Symptoms**: Validation reports broken references
 
 **Solutions**:
+
 1. Check relative paths are correct
 2. Verify referenced files exist
 3. Check for typos in filenames
@@ -439,6 +462,7 @@ jobs:
 **Symptoms**: Hooks take too long to execute
 
 **Solutions**:
+
 1. Generate only changed files
 2. Use PNG format only (skip SVG)
 3. Optimize PlantUML diagrams

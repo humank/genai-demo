@@ -20,12 +20,14 @@ For detailed operational procedures, see [Backup and Restore Runbook](../runbook
 ### Backup Schedule
 
 **Production**:
+
 - Database: Automated snapshots every hour
 - Application config: On every deployment
 - Logs: Continuous to CloudWatch (90-day retention)
 - Metrics: 15-month retention in CloudWatch
 
 **Staging**:
+
 - Database: Daily snapshots
 - Application config: On deployment
 - Logs: 30-day retention
@@ -35,6 +37,7 @@ For detailed operational procedures, see [Backup and Restore Runbook](../runbook
 ### Automated RDS Snapshots
 
 Configured in RDS:
+
 - Backup window: 02:00-04:00 UTC
 - Retention: 30 days
 - Multi-AZ: Enabled
@@ -63,6 +66,7 @@ git commit -m "Backup: ConfigMaps $(date +%Y-%m-%d)"
 ### Infrastructure as Code
 
 All infrastructure defined in CDK:
+
 - Version controlled in Git
 - Automated backups via GitHub
 - Can recreate entire infrastructure from code

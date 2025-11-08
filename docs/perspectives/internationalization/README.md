@@ -18,27 +18,32 @@ The Internationalization Perspective ensures the system supports multiple langua
 ## Supported Languages
 
 ### Phase 1 (Launch)
+
 - English (US)
 - Traditional Chinese (Taiwan)
 - Simplified Chinese (China)
 
 ### Phase 2 (6 months)
+
 - Japanese
 - Korean
 
 ## Localization Strategy
 
 ### Text Translation
+
 - **Framework**: Spring MessageSource
 - **Files**: messages_en.properties, messages_zh_TW.properties
 - **Fallback**: English
 
 ### Date/Time
+
 - **Format**: ISO 8601
 - **Timezone**: User's local timezone
 - **Display**: Localized format
 
 ### Currency
+
 - **Storage**: USD (base currency)
 - **Display**: User's local currency
 - **Exchange Rates**: Daily update

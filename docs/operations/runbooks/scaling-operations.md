@@ -56,19 +56,25 @@ spec:
   minReplicas: 4
   maxReplicas: 20
   metrics:
+
     - type: Resource
+
       resource:
         name: cpu
         target:
           type: Utilization
           averageUtilization: 60
+
     - type: Resource
+
       resource:
         name: memory
         target:
           type: Utilization
           averageUtilization: 70
+
     - type: Pods
+
       pods:
         metric:
           name: http_requests_per_second
@@ -79,20 +85,28 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
+
         - type: Percent
+
           value: 50
           periodSeconds: 60
+
         - type: Pods
+
           value: 2
           periodSeconds: 60
       selectPolicy: Max
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
+
         - type: Percent
+
           value: 10
           periodSeconds: 60
+
         - type: Pods
+
           value: 1
           periodSeconds: 60
       selectPolicy: Min
@@ -543,12 +557,16 @@ spec:
         spec:
           serviceAccountName: scaler
           containers:
+
           - name: kubectl
+
             image: bitnami/kubectl:latest
             command:
+
             - /bin/sh
             - -c
             - kubectl scale deployment/ecommerce-backend --replicas=2 -n production
+
           restartPolicy: OnFailure
 ---
 apiVersion: batch/v1
@@ -564,12 +582,16 @@ spec:
         spec:
           serviceAccountName: scaler
           containers:
+
           - name: kubectl
+
             image: bitnami/kubectl:latest
             command:
+
             - /bin/sh
             - -c
             - kubectl scale deployment/ecommerce-backend --replicas=6 -n production
+
           restartPolicy: OnFailure
 EOF
 ```

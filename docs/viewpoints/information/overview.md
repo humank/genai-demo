@@ -4,14 +4,18 @@ viewpoint: "Information"
 status: "Active"
 last_updated: "2025-10-23"
 stakeholders:
+
   - "Development Team"
   - "Data Architects"
   - "Database Administrators"
   - "Business Analysts"
+
 related_perspectives:
+
   - "Security Perspective"
   - "Performance & Scalability Perspective"
   - "Evolution Perspective"
+
 ---
 
 # Information Viewpoint
@@ -122,7 +126,7 @@ Our system is organized into 13 bounded contexts, each owning specific data:
 
 #### 1. Command-Event Pattern
 
-```
+```text
 User Request → Command → Aggregate → Domain Event → Event Handler → Side Effects
 ```
 
@@ -133,7 +137,7 @@ User Request → Command → Aggregate → Domain Event → Event Handler → Si
 
 #### 2. Query Pattern
 
-```
+```text
 User Request → Query → Read Model → Response
 ```
 
@@ -143,7 +147,7 @@ User Request → Query → Read Model → Response
 
 #### 3. Integration Pattern
 
-```
+```text
 Context A → Domain Event → Message Bus → Context B Event Handler → Context B Aggregate
 ```
 
@@ -156,12 +160,14 @@ Context A → Domain Event → Message Bus → Context B Event Handler → Conte
 ### 1. Aggregate Design
 
 **Principles**:
+
 - Keep aggregates small and focused
 - One aggregate per transaction
 - Reference other aggregates by ID only
 - Enforce invariants within aggregate boundaries
 
 **Example**: Order Aggregate
+
 ```java
 @AggregateRoot
 public class Order {
@@ -183,12 +189,14 @@ public class Order {
 ### 2. Value Object Design
 
 **Principles**:
+
 - Immutable by design (use Records)
 - Validate in constructor
 - Provide meaningful domain types
 - Replace primitive obsession
 
 **Example**: Email Value Object
+
 ```java
 public record Email(String value) {
     public Email {
@@ -202,12 +210,14 @@ public record Email(String value) {
 ### 3. Domain Event Design
 
 **Principles**:
+
 - Immutable records
 - Past tense naming
 - Include all necessary data
 - Include event metadata
 
 **Example**: OrderSubmittedEvent
+
 ```java
 public record OrderSubmittedEvent(
     OrderId orderId,
@@ -224,12 +234,14 @@ public record OrderSubmittedEvent(
 ### 4. Repository Pattern
 
 **Principles**:
+
 - Interface in domain layer
 - Implementation in infrastructure layer
 - Return domain objects, not entities
 - One repository per aggregate root
 
 **Example**: OrderRepository
+
 ```java
 // Domain layer interface
 public interface OrderRepository {

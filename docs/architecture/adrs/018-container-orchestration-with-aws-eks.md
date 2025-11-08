@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance", "evolution", "development
 The Enterprise E-Commerce Platform requires a robust container orchestration solution to:
 
 **Business Requirements**:
+
 - **Scalability**: Auto-scale based on demand (10x traffic spikes)
 - **High Availability**: 99.9% uptime with zero-downtime deployments
 - **Resource Efficiency**: Optimize infrastructure costs
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - **Portability**: Avoid vendor lock-in
 
 **Technical Challenges**:
+
 - Complex microservices architecture (13 bounded contexts)
 - Variable traffic patterns (peak hours, sales events)
 - Need for rolling updates and canary deployments
@@ -40,6 +42,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - Security and compliance requirements
 
 **Current State**:
+
 - Manual deployment to EC2 instances
 - No auto-scaling
 - Difficult to manage multiple services
@@ -50,6 +53,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 ### Business Context
 
 **Business Drivers**:
+
 - Reduce deployment time from hours to minutes
 - Support rapid feature releases
 - Optimize infrastructure costs (30% reduction target)
@@ -57,6 +61,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - Improve system reliability and availability
 
 **Constraints**:
+
 - Budget: $150,000 for initial setup
 - Timeline: 4 months for migration
 - Team: 3 DevOps engineers, 8 developers
@@ -66,6 +71,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 ### Technical Context
 
 **Current Architecture**:
+
 - Monolithic application on EC2
 - Manual deployment scripts
 - Static capacity provisioning
@@ -73,6 +79,7 @@ The Enterprise E-Commerce Platform requires a robust container orchestration sol
 - Complex networking
 
 **Target Architecture**:
+
 - Microservices on Kubernetes
 - Automated CI/CD pipeline
 - Dynamic auto-scaling
@@ -324,17 +331,24 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
+
             - matchExpressions:
               - key: workload-type
+
                 operator: In
                 values:
+
                 - general
       
       containers:
+
       - name: api
+
         image: 123456789012.dkr.ecr.ap-northeast-3.amazonaws.com/ecommerce-api:v1.0.0
         ports:
+
         - containerPort: 8080
+
           name: http
         
         # Resource requests and limits
@@ -367,19 +381,27 @@ spec:
         
         # Environment variables
         env:
+
         - name: SPRING_PROFILES_ACTIVE
+
           value: production
+
         - name: DB_HOST
+
           valueFrom:
             secretKeyRef:
               name: database-credentials
               key: host
+
         - name: DB_PASSWORD
+
           valueFrom:
             secretKeyRef:
               name: database-credentials
               key: password
+
         - name: REDIS_HOST
+
           valueFrom:
             configMapKeyRef:
               name: redis-config
@@ -387,12 +409,16 @@ spec:
         
         # Volume mounts
         volumeMounts:
+
         - name: config
+
           mountPath: /app/config
           readOnly: true
       
       volumes:
+
       - name: config
+
         configMap:
           name: ecommerce-api-config
 
@@ -411,13 +437,17 @@ spec:
   minReplicas: 5
   maxReplicas: 50
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
@@ -427,17 +457,23 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
+
       - type: Percent
+
         value: 50
         periodSeconds: 60
+
       - type: Pods
+
         value: 5
         periodSeconds: 60
       selectPolicy: Max
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
+
       - type: Percent
+
         value: 10
         periodSeconds: 60
       selectPolicy: Min
@@ -454,7 +490,9 @@ spec:
   selector:
     app: ecommerce-api
   ports:
+
   - port: 80
+
     targetPort: 8080
     protocol: TCP
     name: http
@@ -476,10 +514,14 @@ metadata:
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-3:123456789012:certificate/xxx
 spec:
   rules:
+
   - host: api.ecommerce.example.com
+
     http:
       paths:
+
       - path: /
+
         pathType: Prefix
         backend:
           service:
@@ -502,7 +544,9 @@ spec:
     matchLabels:
       app: ecommerce-api
   endpoints:
+
   - port: http
+
     path: /actuator/prometheus
     interval: 30s
 
@@ -560,14 +604,18 @@ spec:
   privileged: false
   allowPrivilegeEscalation: false
   requiredDropCapabilities:
+
     - ALL
+
   volumes:
+
     - 'configMap'
     - 'emptyDir'
     - 'projected'
     - 'secret'
     - 'downwardAPI'
     - 'persistentVolumeClaim'
+
   hostNetwork: false
   hostIPC: false
   hostPID: false
@@ -591,34 +639,49 @@ spec:
     matchLabels:
       app: ecommerce-api
   policyTypes:
+
   - Ingress
   - Egress
+
   ingress:
+
   - from:
     - namespaceSelector:
+
         matchLabels:
           name: ingress-nginx
     ports:
+
     - protocol: TCP
+
       port: 8080
   egress:
+
   - to:
     - namespaceSelector:
+
         matchLabels:
           name: database
     ports:
+
     - protocol: TCP
+
       port: 5432
+
   - to:
     - namespaceSelector:
+
         matchLabels:
           name: cache
     ports:
+
     - protocol: TCP
+
       port: 6379
 ```
 
 **Pros**:
+
 - ✅ Fully managed control plane
 - ✅ Deep AWS integration (IAM, VPC, ELB, etc.)
 - ✅ Auto-scaling for pods and nodes
@@ -629,6 +692,7 @@ spec:
 - ✅ Familiar Kubernetes API
 
 **Cons**:
+
 - ⚠️ Control plane cost ($0.10/hour = $73/month per cluster)
 - ⚠️ Learning curve for Kubernetes
 - ⚠️ Complex networking (VPC CNI)
@@ -643,12 +707,14 @@ spec:
 **Description**: AWS-native container orchestration service
 
 **Pros**:
+
 - ✅ Simpler than Kubernetes
 - ✅ Deep AWS integration
 - ✅ No control plane cost
 - ✅ Fargate support
 
 **Cons**:
+
 - ❌ Less flexible than Kubernetes
 - ❌ Smaller ecosystem
 - ❌ AWS vendor lock-in
@@ -663,11 +729,13 @@ spec:
 **Description**: Deploy and manage Kubernetes clusters on EC2 instances
 
 **Pros**:
+
 - ✅ Full control over cluster
 - ✅ No control plane cost
 - ✅ Maximum flexibility
 
 **Cons**:
+
 - ❌ High operational overhead
 - ❌ Manual upgrades and patching
 - ❌ Complex setup and maintenance
@@ -702,6 +770,7 @@ AWS EKS provides the best balance of Kubernetes ecosystem benefits with managed 
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All application services
 - Deployment processes
 - Infrastructure management
@@ -726,6 +795,7 @@ Affects:
 ### Phase 1: Infrastructure Setup (Month 1)
 
 **Tasks**:
+
 - [ ] Deploy EKS clusters in Taiwan and Tokyo
 - [ ] Configure VPC and networking
 - [ ] Set up IAM roles and policies
@@ -734,6 +804,7 @@ Affects:
 - [ ] Set up CI/CD pipeline integration
 
 **Success Criteria**:
+
 - EKS clusters operational
 - Networking configured
 - Add-ons installed and tested
@@ -741,6 +812,7 @@ Affects:
 ### Phase 2: Application Containerization (Month 2)
 
 **Tasks**:
+
 - [ ] Containerize all services
 - [ ] Create Kubernetes manifests
 - [ ] Set up Helm charts
@@ -749,6 +821,7 @@ Affects:
 - [ ] Test in development environment
 
 **Success Criteria**:
+
 - All services containerized
 - Manifests validated
 - Development deployment successful
@@ -756,6 +829,7 @@ Affects:
 ### Phase 3: Staging Migration (Month 3)
 
 **Tasks**:
+
 - [ ] Deploy to staging EKS cluster
 - [ ] Configure auto-scaling
 - [ ] Set up monitoring and alerting
@@ -764,6 +838,7 @@ Affects:
 - [ ] Security scanning
 
 **Success Criteria**:
+
 - Staging environment operational
 - All tests passing
 - Performance acceptable
@@ -771,6 +846,7 @@ Affects:
 ### Phase 4: Production Migration (Month 4)
 
 **Tasks**:
+
 - [ ] Gradual production migration
 - [ ] Blue-green deployment
 - [ ] Monitor performance
@@ -779,6 +855,7 @@ Affects:
 - [ ] Complete documentation
 
 **Success Criteria**:
+
 - 100% traffic on EKS
 - All metrics within targets
 - Team trained on operations
@@ -786,11 +863,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical failures in EKS
 - Performance degradation
 - Data loss or corruption
 
 **Rollback Steps**:
+
 1. Route traffic back to EC2
 2. Investigate and fix issues
 3. Retry migration
@@ -838,12 +917,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some services not fully containerized
 2. Manual configuration for some resources
 3. Basic monitoring dashboards
 4. Limited automation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Complete containerization
 - **Q3 2026**: Full GitOps implementation
 - **Q4 2026**: Advanced monitoring and automation
@@ -888,26 +969,29 @@ Affects:
 ### Best Practices
 
 **Cluster Management**:
+
 - Use managed node groups
 - Enable cluster logging
 - Regular version upgrades
 - Implement pod security policies
 
 **Application Deployment**:
+
 - Use Helm for package management
 - Implement proper health checks
 - Set resource requests and limits
 - Use horizontal pod autoscaling
 
 **Security**:
+
 - Use IAM roles for service accounts
 - Implement network policies
 - Enable encryption at rest
 - Regular security scanning
 
 **Cost Optimization**:
+
 - Use Spot instances for non-critical workloads
 - Implement cluster autoscaler
 - Right-size pod resources
 - Use Fargate for batch jobs
-

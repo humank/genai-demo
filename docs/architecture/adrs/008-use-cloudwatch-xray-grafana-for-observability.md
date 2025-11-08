@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 ### Business Context
 
 **Business Drivers**:
+
 - 99.9% uptime SLA requirement
 - Need for rapid incident detection and response
 - Regulatory compliance requiring audit trails
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 - Customer experience monitoring
 
 **Constraints**:
+
 - AWS cloud infrastructure (ADR-007)
 - Budget: $2,000/month for observability tools
 - Team has limited observability experience
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 ### Technical Context
 
 **Current State**:
+
 - AWS cloud infrastructure
 - Spring Boot microservices
 - EKS for container orchestration
@@ -59,6 +62,7 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 - Event-driven architecture
 
 **Requirements**:
+
 - Metrics collection (business and technical)
 - Distributed tracing across services
 - Log aggregation and analysis
@@ -86,7 +90,8 @@ The Enterprise E-Commerce Platform requires comprehensive observability to:
 **Description**: Use AWS native services for collection with Grafana for visualization
 
 **Architecture**:
-```
+
+```text
 Application → CloudWatch (Metrics/Logs)
            → X-Ray (Traces)
            ↓
@@ -96,6 +101,7 @@ Application → CloudWatch (Metrics/Logs)
 ```
 
 **Pros**:
+
 - ✅ Native AWS integration (no agents needed)
 - ✅ X-Ray provides distributed tracing
 - ✅ CloudWatch handles metrics and logs
@@ -107,11 +113,13 @@ Application → CloudWatch (Metrics/Logs)
 - ✅ Unified dashboard in Grafana
 
 **Cons**:
+
 - ⚠️ Need to manage Grafana instance
 - ⚠️ Multiple tools to learn
 - ⚠️ CloudWatch query language learning curve
 
-**Cost**: 
+**Cost**:
+
 - CloudWatch: ~$500/month (included in AWS usage)
 - X-Ray: ~$300/month (traces)
 - Grafana: $0 (self-hosted OSS) or $200/month (Grafana Cloud)
@@ -124,6 +132,7 @@ Application → CloudWatch (Metrics/Logs)
 **Description**: Comprehensive observability platform
 
 **Pros**:
+
 - ✅ All-in-one solution
 - ✅ Excellent UI and dashboards
 - ✅ Strong APM capabilities
@@ -131,6 +140,7 @@ Application → CloudWatch (Metrics/Logs)
 - ✅ Machine learning anomaly detection
 
 **Cons**:
+
 - ❌ Expensive ($15-31/host/month + $5/million spans)
 - ❌ Vendor lock-in
 - ❌ Cost scales with usage
@@ -145,6 +155,7 @@ Application → CloudWatch (Metrics/Logs)
 **Description**: Open-source observability stack
 
 **Pros**:
+
 - ✅ Open source and free
 - ✅ Powerful query language (PromQL)
 - ✅ Excellent Grafana integration
@@ -152,6 +163,7 @@ Application → CloudWatch (Metrics/Logs)
 - ✅ Large community
 
 **Cons**:
+
 - ❌ Need to manage infrastructure
 - ❌ Prometheus storage limitations
 - ❌ Complex setup and maintenance
@@ -168,12 +180,14 @@ Application → CloudWatch (Metrics/Logs)
 **Description**: Commercial APM and observability platform
 
 **Pros**:
+
 - ✅ Comprehensive APM
 - ✅ Good AWS integration
 - ✅ User-friendly interface
 - ✅ Strong support
 
 **Cons**:
+
 - ❌ Expensive ($99-349/host/month)
 - ❌ Vendor lock-in
 - ❌ Cost scales with data ingestion
@@ -188,12 +202,14 @@ Application → CloudWatch (Metrics/Logs)
 **Description**: Use only AWS CloudWatch for all observability
 
 **Pros**:
+
 - ✅ Native AWS integration
 - ✅ No additional infrastructure
 - ✅ Cost-effective
 - ✅ Easy setup
 
 **Cons**:
+
 - ❌ Limited visualization capabilities
 - ❌ Poor dashboard customization
 - ❌ Expensive for high-cardinality metrics
@@ -224,18 +240,21 @@ The hybrid approach was selected for the following reasons:
 **Implementation Strategy**:
 
 **Metrics Collection**: CloudWatch
+
 - Application metrics via Micrometer
 - AWS service metrics (RDS, EKS, MSK)
 - Custom business metrics
 - Log aggregation
 
 **Distributed Tracing**: X-Ray
+
 - Request tracing across services
 - Service map visualization
 - Performance bottleneck identification
 - Error tracking
 
 **Visualization**: Grafana
+
 - Unified dashboards for all metrics
 - Custom business dashboards
 - Alert management
@@ -264,6 +283,7 @@ The hybrid approach was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All microservices (instrumentation)
 - Infrastructure monitoring
 - Incident response procedures
@@ -288,6 +308,7 @@ Affects:
 ### Phase 1: CloudWatch Setup (Week 1-2)
 
 - [x] Configure CloudWatch agent on EKS
+
   ```yaml
   # CloudWatch agent ConfigMap
   apiVersion: v1
@@ -314,6 +335,7 @@ Affects:
 ### Phase 2: Application Instrumentation (Week 2-3)
 
 - [ ] Add Micrometer dependencies
+
   ```xml
   <dependency>
     <groupId>io.micrometer</groupId>
@@ -322,6 +344,7 @@ Affects:
   ```
 
 - [ ] Configure CloudWatch metrics
+
   ```java
   @Configuration
   public class MetricsConfiguration {
@@ -335,6 +358,7 @@ Affects:
   ```
 
 - [ ] Add custom business metrics
+
   ```java
   @Component
   public class OrderMetrics {
@@ -354,6 +378,7 @@ Affects:
 ### Phase 3: X-Ray Integration (Week 3-4)
 
 - [ ] Add X-Ray SDK dependencies
+
   ```xml
   <dependency>
     <groupId>com.amazonaws</groupId>
@@ -362,6 +387,7 @@ Affects:
   ```
 
 - [ ] Configure X-Ray daemon on EKS
+
   ```yaml
   apiVersion: apps/v1
   kind: DaemonSet
@@ -371,14 +397,19 @@ Affects:
     template:
       spec:
         containers:
+
         - name: xray-daemon
+
           image: amazon/aws-xray-daemon
           ports:
+
           - containerPort: 2000
+
             protocol: UDP
   ```
 
 - [ ] Instrument application with X-Ray
+
   ```java
   @Configuration
   public class XRayConfiguration {
@@ -390,6 +421,7 @@ Affects:
   ```
 
 - [ ] Configure sampling rules
+
   ```json
   {
     "version": 2,
@@ -413,6 +445,7 @@ Affects:
 ### Phase 4: Grafana Setup (Week 4-5)
 
 - [ ] Deploy Grafana on EKS
+
   ```yaml
   apiVersion: apps/v1
   kind: Deployment
@@ -423,17 +456,24 @@ Affects:
     template:
       spec:
         containers:
+
         - name: grafana
+
           image: grafana/grafana:latest
           ports:
+
           - containerPort: 3000
+
   ```
 
 - [ ] Configure CloudWatch data source
+
   ```yaml
   apiVersion: 1
   datasources:
+
   - name: CloudWatch
+
     type: cloudwatch
     jsonData:
       authType: default
@@ -466,6 +506,7 @@ Affects:
 ### Phase 6: Alerting Configuration (Week 6-7)
 
 - [ ] Configure CloudWatch alarms
+
   ```typescript
   new cloudwatch.Alarm(this, 'HighErrorRate', {
     metric: new cloudwatch.Metric({
@@ -495,12 +536,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Monitoring costs exceed $2,500/month
 - System performance degradation > 10%
 - Team unable to use tools effectively
 - Critical monitoring gaps
 
 **Rollback Steps**:
+
 1. Simplify to CloudWatch only
 2. Remove Grafana infrastructure
 3. Use CloudWatch native dashboards
@@ -524,6 +567,7 @@ Affects:
 ### Monitoring Plan
 
 **Observability Metrics**:
+
 - Metric collection rate
 - Trace sampling rate
 - Dashboard query performance
@@ -531,6 +575,7 @@ Affects:
 - Cost tracking
 
 **Review Schedule**:
+
 - Daily: Check alert status and incidents
 - Weekly: Review dashboard usage and metrics
 - Monthly: Cost optimization review
@@ -559,12 +604,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Grafana not yet in HA mode (acceptable for MVP)
 2. Limited custom dashboards initially (will grow)
 3. Alert thresholds need tuning (ongoing process)
 4. Some services not fully instrumented (gradual rollout)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Deploy Grafana in HA mode
 - **Q2 2026**: Complete instrumentation of all services
 - **Q3 2026**: Implement advanced alerting with ML
@@ -579,6 +626,7 @@ Affects:
 ### Key Metrics to Monitor
 
 **Technical Metrics**:
+
 - Response time (p50, p95, p99)
 - Error rate (4xx, 5xx)
 - Throughput (requests/second)
@@ -588,6 +636,7 @@ Affects:
 - Queue depths
 
 **Business Metrics**:
+
 - Orders per minute
 - Revenue per hour
 - Customer registrations
@@ -641,10 +690,14 @@ Affects:
 # Grafana alert rules
 apiVersion: 1
 groups:
+
   - name: ecommerce-alerts
+
     interval: 1m
     rules:
+
       - alert: HighErrorRate
+
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.01
         for: 5m
         labels:
@@ -654,6 +707,7 @@ groups:
           description: "Error rate is {{ $value }} errors/sec"
           
       - alert: HighResponseTime
+
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
         for: 5m
         labels:
@@ -666,6 +720,7 @@ groups:
 ### X-Ray Service Map
 
 X-Ray automatically generates service maps showing:
+
 - Service dependencies
 - Request flow
 - Latency at each hop

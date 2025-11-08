@@ -659,6 +659,7 @@ void should_handle_odd_numbers() {
 **問題**：測試執行時間過長
 
 **解決方案**：
+
 - 使用 Mock 替代真實的外部依賴
 - 避免在測試中使用 Thread.sleep()
 - 不要在單元測試中連接真實資料庫
@@ -669,6 +670,7 @@ void should_handle_odd_numbers() {
 **問題**：測試有時通過，有時失敗
 
 **解決方案**：
+
 - 避免依賴系統時間，使用可控的時間源
 - 不要依賴測試執行順序
 - 避免使用隨機數，或使用固定的種子
@@ -679,6 +681,7 @@ void should_handle_odd_numbers() {
 **問題**：Mock 太多，測試失去意義
 
 **解決方案**：
+
 ```java
 // ❌ 不好：Mock 太多
 @Test
@@ -764,6 +767,7 @@ test {
 ```
 
 查看報告：
+
 ```bash
 ./gradlew test jacocoTestReport
 open build/reports/jacoco/test/html/index.html
@@ -911,9 +915,9 @@ class ConditionalTest {
   - "xUnit Test Patterns" by Gerard Meszaros
 
 - **線上資源**：
-  - JUnit 5 官方文件：https://junit.org/junit5/docs/current/user-guide/
-  - Mockito 官方文件：https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
-  - AssertJ 官方文件：https://assertj.github.io/doc/
+  - JUnit 5 官方文件：<https://junit.org/junit5/docs/current/user-guide/>
+  - Mockito 官方文件：<https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html>
+  - AssertJ 官方文件：<https://assertj.github.io/doc/>
 
 ### 常用工具
 

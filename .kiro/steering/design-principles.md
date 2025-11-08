@@ -12,24 +12,28 @@ This document defines the design principles that guide how we write code, focusi
 ## Extreme Programming (XP) Core Values
 
 ### Simplicity ⭐
+
 - [ ] Do the simplest thing that could possibly work
 - [ ] YAGNI (You Aren't Gonna Need It)
 - [ ] Remove duplication
 - [ ] Minimize the number of classes and methods
 
 ### Communication
+
 - [ ] Code communicates intent clearly
 - [ ] Use ubiquitous language from domain
 - [ ] Pair programming for knowledge sharing
 - [ ] Collective code ownership
 
 ### Feedback
+
 - [ ] Test-first development
 - [ ] Continuous integration
 - [ ] Short iterations
 - [ ] Customer involvement
 
 ### Courage
+
 - [ ] Refactor when needed
 - [ ] Throw away code when necessary
 - [ ] Admit when you don't know
@@ -44,12 +48,14 @@ This document defines the design principles that guide how we write code, focusi
 **Principle**: Objects should tell other objects what to do, not ask for their state and make decisions.
 
 ### Must Follow
+
 - [ ] Behavior should be in the object that owns the data
 - [ ] Avoid getter chains
 - [ ] Methods should do work, not just return data
 - [ ] Push decisions into the object
 
 ### Quick Check
+
 ```java
 // ❌ BAD: Asking for state and making decisions
 if (order.getStatus() == OrderStatus.CREATED) {
@@ -70,6 +76,7 @@ order.submit();  // Object handles its own state transitions
 **Principle**: Only talk to your immediate friends, don't talk to strangers.
 
 ### Must Follow
+
 - [ ] Only call methods on:
   - The object itself (this)
   - Objects passed as parameters
@@ -79,6 +86,7 @@ order.submit();  // Object handles its own state transitions
 - [ ] One dot rule (with exceptions for fluent APIs)
 
 ### Quick Check
+
 ```java
 // ❌ BAD: Violates Law of Demeter
 customer.getAddress().getCity().getPostalCode();
@@ -96,12 +104,14 @@ customer.getPostalCode();  // Customer knows how to get it
 **Principle**: Favor object composition over class inheritance.
 
 ### Must Follow
+
 - [ ] Use composition for "has-a" relationships
 - [ ] Use inheritance only for "is-a" relationships
 - [ ] Prefer interfaces over abstract classes
 - [ ] Keep inheritance hierarchies shallow (max 2-3 levels)
 
 ### Quick Check
+
 ```java
 // ❌ BAD: Inheritance for code reuse
 class OrderWithDiscount extends Order {
@@ -126,15 +136,18 @@ class Order {
 ## SOLID Principles
 
 ### Single Responsibility Principle (SRP)
+
 **Principle**: A class should have only one reason to change.
 
 #### Must Follow
+
 - [ ] Each class has one clear responsibility
 - [ ] Methods do one thing well
 - [ ] Separate business logic from infrastructure
 - [ ] Split large classes into focused ones
 
 #### Quick Check
+
 ```java
 // ❌ BAD: Multiple responsibilities
 class OrderService {
@@ -152,9 +165,11 @@ class OrderProcessingService {
 ---
 
 ### Open/Closed Principle (OCP)
+
 **Principle**: Open for extension, closed for modification.
 
 #### Must Follow
+
 - [ ] Use interfaces and abstract classes
 - [ ] Strategy pattern for varying behavior
 - [ ] Avoid modifying existing code
@@ -163,9 +178,11 @@ class OrderProcessingService {
 ---
 
 ### Liskov Substitution Principle (LSP)
+
 **Principle**: Subtypes must be substitutable for their base types.
 
 #### Must Follow
+
 - [ ] Subclasses honor parent class contracts
 - [ ] Don't strengthen preconditions
 - [ ] Don't weaken postconditions
@@ -174,15 +191,18 @@ class OrderProcessingService {
 ---
 
 ### Interface Segregation Principle (ISP)
+
 **Principle**: Clients shouldn't depend on interfaces they don't use.
 
 #### Must Follow
+
 - [ ] Keep interfaces small and focused
 - [ ] Split large interfaces into smaller ones
 - [ ] Role-based interfaces
 - [ ] Avoid "fat" interfaces
 
 #### Quick Check
+
 ```java
 // ❌ BAD: Fat interface
 interface OrderOperations {
@@ -199,15 +219,18 @@ interface OrderFulfillment { void approve(); void ship(); }
 ---
 
 ### Dependency Inversion Principle (DIP)
+
 **Principle**: Depend on abstractions, not concretions.
 
 #### Must Follow
+
 - [ ] High-level modules don't depend on low-level modules
 - [ ] Both depend on abstractions (interfaces)
 - [ ] Use dependency injection
 - [ ] Program to interfaces, not implementations
 
 #### Quick Check
+
 ```java
 // ❌ BAD: Depends on concrete implementation
 class OrderService {
@@ -231,12 +254,14 @@ class OrderService {
 ## Four Rules of Simple Design (Kent Beck)
 
 ### Priority Order
+
 1. **Passes all tests** - Code must work correctly
 2. **Reveals intention** - Code communicates clearly
 3. **No duplication** - DRY principle
 4. **Fewest elements** - Minimal classes and methods
 
 ### Must Follow
+
 - [ ] Tests pass (correctness first)
 - [ ] Clear naming and structure
 - [ ] Extract duplication
@@ -249,6 +274,7 @@ class OrderService {
 ## Design Smells to Avoid
 
 ### Code Smells
+
 - [ ] ❌ Long methods (> 20 lines)
 - [ ] ❌ Large classes (> 200 lines)
 - [ ] ❌ Long parameter lists (> 3 parameters)
@@ -257,6 +283,7 @@ class OrderService {
 - [ ] ❌ Data clumps
 
 ### Design Smells
+
 - [ ] ❌ Rigidity (hard to change)
 - [ ] ❌ Fragility (breaks in many places)
 - [ ] ❌ Immobility (hard to reuse)
@@ -286,6 +313,7 @@ class OrderService {
 ## Validation
 
 ### Code Review Checklist
+
 - [ ] Does code follow Tell, Don't Ask?
 - [ ] Are there any Law of Demeter violations?
 - [ ] Is composition used appropriately?
@@ -294,6 +322,7 @@ class OrderService {
 - [ ] Are interfaces small and focused?
 
 ### Automated Checks
+
 ```bash
 # Check for design violations
 ./gradlew archUnit

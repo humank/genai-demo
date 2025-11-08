@@ -21,12 +21,14 @@ The system implements JWT-based authentication with the following characteristic
 ### Token Types
 
 #### Access Token
+
 - **Purpose**: Short-lived token for API access
 - **Validity**: 1 hour
 - **Contains**: User ID, roles, permissions
 - **Usage**: Included in Authorization header for all API requests
 
 #### Refresh Token
+
 - **Purpose**: Long-lived token for obtaining new access tokens
 - **Validity**: 24 hours
 - **Contains**: User ID, token family ID
@@ -36,31 +38,37 @@ The system implements JWT-based authentication with the following characteristic
 
 ### Initial Login
 
-```
+```text
+
 1. User submits credentials (email + password)
 2. System validates credentials against database
 3. System generates access token and refresh token
 4. Tokens returned to client
 5. Client stores tokens securely
+
 ```
 
 ### Subsequent Requests
 
-```
+```text
+
 1. Client includes access token in Authorization header
 2. System validates token signature and expiration
 3. System extracts user identity and permissions
 4. Request processed with user context
+
 ```
 
 ### Token Refresh
 
-```
+```text
+
 1. Client detects access token expiration
 2. Client sends refresh token to /auth/refresh endpoint
 3. System validates refresh token
 4. System generates new access token
 5. New access token returned to client
+
 ```
 
 ## JWT Token Structure
@@ -113,7 +121,9 @@ public class JwtTokenProvider {
     private int refreshTokenValidity; // 24 hours
     
     /**
+
      * Generate access token for authenticated user
+
      */
     public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -135,7 +145,9 @@ public class JwtTokenProvider {
     }
     
     /**
+
      * Generate refresh token for user
+
      */
     public String generateRefreshToken(String userId) {
         String tokenFamily = UUID.randomUUID().toString();
@@ -153,7 +165,9 @@ public class JwtTokenProvider {
     }
     
     /**
+
      * Validate token signature and expiration
+
      */
     public boolean validateToken(String token) {
         try {
@@ -171,7 +185,9 @@ public class JwtTokenProvider {
     }
     
     /**
+
      * Extract user ID from token
+
      */
     public String getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
@@ -182,7 +198,9 @@ public class JwtTokenProvider {
     }
     
     /**
+
      * Extract roles from token
+
      */
     public List<String> getRolesFromToken(String token) {
         Claims claims = Jwts.parser()
@@ -311,7 +329,9 @@ public class PasswordEncoderService {
         new BCryptPasswordEncoder(BCRYPT_STRENGTH);
     
     /**
+
      * Hash password using BCrypt with strength factor 12
+
      */
     public String encodePassword(String rawPassword) {
         validatePasswordStrength(rawPassword);
@@ -319,14 +339,18 @@ public class PasswordEncoderService {
     }
     
     /**
+
      * Verify password matches hash
+
      */
     public boolean matches(String rawPassword, String encodedPassword) {
         return encoder.matches(rawPassword, encodedPassword);
     }
     
     /**
+
      * Validate password meets strength requirements
+
      */
     private void validatePasswordStrength(String password) {
         if (password == null || password.length() < 8) {
@@ -427,6 +451,7 @@ curl -X POST https://api.example.com/api/v1/auth/login \
 ```
 
 **Response:**
+
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzUxMiJ9...",
@@ -459,6 +484,7 @@ curl -X POST https://api.example.com/api/v1/auth/refresh \
 ```
 
 **Response:**
+
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzUxMiJ9...",
@@ -472,6 +498,7 @@ curl -X POST https://api.example.com/api/v1/auth/refresh \
 ### Token Storage
 
 **Client-Side Storage:**
+
 - ✅ **Recommended**: Store in memory (JavaScript variable)
 - ✅ **Acceptable**: HttpOnly, Secure cookies
 - ❌ **Not Recommended**: localStorage (vulnerable to XSS)
@@ -623,6 +650,6 @@ class AuthenticationControllerTest {
 
 ## References
 
-- JWT Specification: https://tools.ietf.org/html/rfc7519
-- OWASP Authentication Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
-- Spring Security Documentation: https://spring.io/projects/spring-security
+- JWT Specification: <https://tools.ietf.org/html/rfc7519>
+- OWASP Authentication Cheat Sheet: <https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html>
+- Spring Security Documentation: <https://spring.io/projects/spring-security>

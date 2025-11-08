@@ -5,16 +5,19 @@ This document provides comprehensive guidelines for Domain Event design and impl
 ## Core Principles
 
 ### 1. Event Publishing Responsibility
+
 - **Aggregate Roots** are responsible for collecting domain events during business operations
 - **Application Services** are responsible for publishing collected events
 - **Infrastructure Layer** handles the technical aspects of event delivery
 
 ### 2. Transaction Boundary Management
+
 - Events are collected during business logic execution but not immediately published
 - Events are published within transaction boundaries using `@TransactionalEventListener`
 - Events are marked as committed only after successful publication
 
 ### 3. Event Immutability
+
 - All domain events must be implemented as immutable Java Records
 - Events should contain all necessary data for event handlers to process them independently
 - Events should not contain references to mutable objects
@@ -22,6 +25,7 @@ This document provides comprehensive guidelines for Domain Event design and impl
 ## Implementation Standards
 
 ### Event Definition
+
 ```java
 // Domain Event as Record - following project style
 public record CustomerCreatedEvent(
@@ -34,7 +38,9 @@ public record CustomerCreatedEvent(
 ) implements DomainEvent {
     
     /**
+
      * Factory method with automatic eventId and occurredOn generation
+
      */
     public static CustomerCreatedEvent create(
         CustomerId customerId, 
@@ -66,6 +72,7 @@ public record CustomerCreatedEvent(
 ```
 
 ### Event Collection in Aggregate Roots
+
 ```java
 @AggregateRoot(name = "Customer", description = "客戶聚合根", boundedContext = "Customer", version = "2.0")
 public class Customer implements AggregateRootInterface {
@@ -92,6 +99,7 @@ public class Customer implements AggregateRootInterface {
 ```
 
 ### Event Publishing in Application Services
+
 ```java
 @Service
 @Transactional
@@ -117,6 +125,7 @@ public class CustomerApplicationService {
 ```
 
 ### Event Handling
+
 ```java
 @Component
 public class CustomerProfileUpdatedEventHandler extends AbstractDomainEventHandler<CustomerProfileUpdatedEvent> {
@@ -164,23 +173,27 @@ public class CustomerProfileUpdatedEventHandler extends AbstractDomainEventHandl
 ## Best Practices
 
 ### 1. Event Naming Conventions
+
 - Use past tense verbs: `CustomerCreated`, `OrderSubmitted`, `PaymentCompleted`
 - Include the aggregate name: `Customer*Event`, `Order*Event`
 - Be specific about what happened: `CustomerProfileUpdated` not `CustomerChanged`
 
 ### 2. Event Content Guidelines
+
 - Include aggregate ID for event routing
 - Include all data needed by event handlers
 - Avoid including sensitive information that shouldn't be shared
 - Include event metadata (eventId, occurredOn, eventType)
 
 ### 3. Event Handler Design
+
 - **Single Responsibility**: Each handler should handle one specific event type
 - **Idempotency**: Handlers should be safe to run multiple times
 - **Error Handling**: Implement proper error handling and logging
 - **Transaction Management**: Use appropriate transaction boundaries
 
 ### 4. Cross-Aggregate Communication
+
 ```java
 // Good: Use events for cross-aggregate communication
 @Component
@@ -201,6 +214,7 @@ public class OrderCreatedEventHandler extends AbstractDomainEventHandler<OrderCr
 ```
 
 ### 5. Event Ordering and Dependencies
+
 ```java
 // Use @Order annotation for event handler precedence
 @Component
@@ -219,6 +233,7 @@ public class OrderConfirmationHandler extends AbstractDomainEventHandler<OrderCr
 ## Advanced Patterns
 
 ### 1. Event Versioning (Schema Evolution Pattern)
+
 ```java
 // Recommended: Schema Evolution with Backward Compatibility
 public record CustomerCreatedEvent(
@@ -278,6 +293,7 @@ public record CustomerCreatedEvent(
 ```
 
 #### Event Schema Registry Pattern (Advanced)
+
 ```java
 public interface DomainEvent extends Serializable {
     // Existing methods...
@@ -341,6 +357,7 @@ public record EventSchema(int version, Set<Integer> compatibleVersions) {
 ```
 
 #### Event Upcasting Pattern
+
 ```java
 @Component
 public class EventUpcaster {
@@ -381,6 +398,7 @@ public class EventUpcaster {
 ```
 
 ### 2. Event Categories and Priorities
+
 ```java
 public interface DomainEvent extends Serializable {
     // Existing methods...
@@ -396,6 +414,7 @@ public interface DomainEvent extends Serializable {
 ```
 
 ### 3. Saga Pattern for Complex Workflows
+
 ```java
 @Component
 public class OrderProcessingSaga {
@@ -426,6 +445,7 @@ public class OrderProcessingSaga {
 ### 4. Event Store Solutions
 
 #### Event Store Interface
+
 ```java
 public interface EventStore {
     void store(DomainEvent event);
@@ -436,6 +456,7 @@ public interface EventStore {
 ```
 
 #### Option 1: EventStore DB (Recommended for Production)
+
 ```yaml
 # docker-compose.yml
 version: '3.8'
@@ -444,6 +465,7 @@ services:
     image: eventstore/eventstore:23.10.0-bookworm-slim
     container_name: eventstore
     environment:
+
       - EVENTSTORE_CLUSTER_SIZE=1
       - EVENTSTORE_RUN_PROJECTIONS=All
       - EVENTSTORE_START_STANDARD_PROJECTIONS=true
@@ -452,10 +474,14 @@ services:
       - EVENTSTORE_INSECURE=true
       - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
       - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+
     ports:
+
       - "1113:1113"
       - "2113:2113"
+
     volumes:
+
       - eventstore-volume-data:/var/lib/eventstore
       - eventstore-volume-logs:/var/log/eventstore
 
@@ -503,6 +529,7 @@ public class EventStoreDbAdapter implements EventStore {
 ```
 
 #### Option 2: JPA Event Store (Recommended for Development)
+
 ```java
 @Entity
 @Table(name = "event_store")
@@ -595,6 +622,7 @@ public class JpaEventStore implements EventStore {
 ```
 
 #### Option 3: In-Memory Event Store (Testing Only)
+
 ```java
 @Component
 @Profile("test")
@@ -638,6 +666,7 @@ public class InMemoryEventStore implements EventStore {
 ```
 
 #### Event Store Configuration
+
 ```java
 @Configuration
 public class EventStoreConfiguration {
@@ -663,6 +692,7 @@ public class EventStoreConfiguration {
 ```
 
 #### Event Store Integration
+
 ```java
 @Component
 public class EventStoreIntegration {
@@ -679,6 +709,7 @@ public class EventStoreIntegration {
 ## Error Handling and Resilience
 
 ### 1. Retry Mechanism
+
 ```java
 @Component
 public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {
@@ -702,6 +733,7 @@ public class ResilientEventHandler extends AbstractDomainEventHandler<CustomerCr
 ```
 
 ### 2. Dead Letter Queue
+
 ```java
 @Component
 public class DeadLetterService {
@@ -726,6 +758,7 @@ public class DeadLetterService {
 ## Testing Guidelines
 
 ### 1. Event Collection Testing
+
 ```java
 @Test
 void should_collect_customer_created_event_when_customer_is_created() {
@@ -751,6 +784,7 @@ void should_collect_customer_created_event_when_customer_is_created() {
 ```
 
 ### Event Store Testing
+
 ```java
 @SpringBootTest
 @ActiveProfiles("test")
@@ -813,6 +847,7 @@ void should_store_and_retrieve_events_by_aggregate() {
 ```
 
 ### 2. Event Handler Testing
+
 ```java
 @Test
 void should_send_welcome_email_when_customer_created() {
@@ -836,18 +871,21 @@ void should_send_welcome_email_when_customer_created() {
 ## Architecture Rules
 
 ### 1. Event Publishing Rules
+
 - Only Aggregate Roots can collect domain events using `collectEvent()`
 - Application Services are responsible for publishing events via `DomainEventApplicationService`
 - Event handlers must be in Infrastructure Layer
 - Events must be published within transaction boundaries
 
 ### 2. Event Handler Rules
+
 - Event handlers must extend `AbstractDomainEventHandler<T>`
 - Event handlers must be annotated with `@Component`
 - Event handlers must implement idempotency checks
 - Event handlers must use `@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)`
 
 ### 3. Event Design Rules
+
 - Events must be implemented as immutable Java Records
 - Events must implement the `DomainEvent` interface
 - Events must include eventId, occurredOn, eventType, and aggregateId
@@ -858,6 +896,7 @@ void should_send_welcome_email_when_customer_created() {
 ## Monitoring and Observability
 
 ### 1. Event Metrics
+
 ```java
 @Component
 public class EventMetricsCollector {
@@ -878,6 +917,7 @@ public class EventMetricsCollector {
 ```
 
 ### 2. Event Tracing
+
 ```java
 @Component
 public class EventTracingHandler {
@@ -903,10 +943,13 @@ public class EventTracingHandler {
 ```
 
 This comprehensive guide ensures consistent, reliable, and maintainable domain event implementation across the entire project.
+
 ## Enviro
+
 nment-Specific Configuration
 
 ### Development Configuration
+
 ```yaml
 # application-development.yml
 spring:
@@ -929,6 +972,7 @@ logging:
 ```
 
 ### Test Configuration
+
 ```yaml
 # application-test.yml
 spring:
@@ -946,6 +990,7 @@ event-store:
 ```
 
 ### Production Configuration
+
 ```yaml
 # application-production.yml
 spring:
@@ -964,16 +1009,19 @@ logging:
 ## Event Store Recommendations by Environment
 
 ### Development Stage
+
 - **Recommended**: JPA Event Store with H2 file database
 - **Benefits**: Persistent across restarts, easy to inspect data, SQL queries for debugging
 - **Setup**: No additional containers needed
 
 ### Testing Stage  
+
 - **Recommended**: In-Memory Event Store
 - **Benefits**: Fast, clean state between tests, no external dependencies
 - **Setup**: Automatic cleanup, perfect isolation
 
 ### Production Stage
+
 - **Recommended**: EventStore DB
 - **Benefits**: Purpose-built for event sourcing, high performance, built-in projections
 - **Alternative**: Axon Framework Event Store for Java ecosystem integration

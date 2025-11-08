@@ -413,11 +413,13 @@ open app/build/reports/tests/test/index.html
 #### Issue: Port Already in Use
 
 **Symptom:**
-```
+
+```text
 Port 8080 is already in use
 ```
 
 **Solution:**
+
 ```bash
 # Find process using port 8080
 lsof -i :8080
@@ -432,11 +434,13 @@ SERVER_PORT=8081 ./gradlew bootRun
 #### Issue: Docker Services Not Starting
 
 **Symptom:**
-```
+
+```text
 ERROR: Cannot start service postgres: port is already allocated
 ```
 
 **Solution:**
+
 ```bash
 # Stop all Docker containers
 docker-compose down
@@ -451,11 +455,13 @@ docker-compose up -d
 #### Issue: Database Connection Failed
 
 **Symptom:**
-```
+
+```text
 Connection to localhost:5432 refused
 ```
 
 **Solution:**
+
 ```bash
 # Check if PostgreSQL is running
 docker-compose ps postgres
@@ -470,11 +476,13 @@ docker-compose restart postgres
 #### Issue: Gradle Build Failed
 
 **Symptom:**
-```
+
+```text
 BUILD FAILED
 ```
 
 **Solution:**
+
 ```bash
 # Clean build directory
 ./gradlew clean
@@ -492,11 +500,13 @@ echo $JAVA_HOME
 #### Issue: Frontend Dependencies Installation Failed
 
 **Symptom:**
-```
+
+```text
 npm ERR! code ERESOLVE
 ```
 
 **Solution:**
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -511,11 +521,13 @@ npm install --legacy-peer-deps
 #### Issue: Redis Connection Timeout
 
 **Symptom:**
-```
+
+```text
 Unable to connect to Redis at localhost:6379
 ```
 
 **Solution:**
+
 ```bash
 # Check if Redis is running
 docker-compose ps redis
@@ -574,10 +586,10 @@ cd consumer-frontend && npm start
 
 ### Service URLs
 
-- Backend API: http://localhost:8080
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- CMC Frontend: http://localhost:3000
-- Consumer Frontend: http://localhost:4200
+- Backend API: <http://localhost:8080>
+- Swagger UI: <http://localhost:8080/swagger-ui.html>
+- CMC Frontend: <http://localhost:3000>
+- Consumer Frontend: <http://localhost:4200>
 - PostgreSQL: localhost:5432
 - Redis: localhost:6379
 - Kafka: localhost:9092

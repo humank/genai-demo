@@ -9,6 +9,7 @@ This document defines the standards for generating and managing diagrams in the 
 ### Format Priority for GitHub Documentation
 
 #### Primary Format: PNG ✅ **RECOMMENDED**
+
 - **Use Case**: All GitHub documentation references
 - **Advantages**:
   - Superior text clarity and readability
@@ -19,6 +20,7 @@ This document defines the standards for generating and managing diagrams in the 
 - **File Location**: `docs/diagrams/generated/{category}/{diagram-name}.png`
 
 #### Secondary Format: SVG 📋 **SUPPLEMENTARY**
+
 - **Use Case**: High-resolution printing, scalable displays
 - **Advantages**:
   - Vector format with infinite zoom
@@ -30,6 +32,7 @@ This document defines the standards for generating and managing diagrams in the 
 ### Generation Workflow
 
 #### Automatic Generation
+
 ```bash
 # Generate both PNG and SVG (recommended)
 ./scripts/generate-diagrams.sh
@@ -42,6 +45,7 @@ This document defines the standards for generating and managing diagrams in the 
 ```
 
 #### Manual Generation for Specific Diagrams
+
 ```bash
 # Generate specific diagram
 ./scripts/generate-diagrams.sh bounded-contexts-overview.puml
@@ -53,6 +57,7 @@ This document defines the standards for generating and managing diagrams in the 
 ### Documentation Reference Standards
 
 #### Markdown Link Format
+
 ```markdown
 <!-- ✅ CORRECT: Reference PNG for better GitHub display -->
 <!-- Diagram: Bounded Contexts Overview (需要重新生成) -->
@@ -66,6 +71,7 @@ This document defines the standards for generating and managing diagrams in the 
 ```
 
 #### HTML Format (when needed)
+
 ```html
 <!-- For better control over image size -->
 <img src="../../diagrams/generated/functional/bounded-contexts-overview.png" 
@@ -79,15 +85,18 @@ This document defines the standards for generating and managing diagrams in the 
 ### GitHub Native Support ✅ **PREFERRED**
 
 #### Inline Code Blocks (Recommended)
+
 ```markdown
 ```mermaid
 graph TB
     A[Start] --> B[Process]
     B --> C[End]
-```
+```text
+
 ```
 
 #### Standalone Files
+
 - **File Extension**: `.mmd`
 - **Location**: `docs/diagrams/mermaid/`
 - **GitHub Rendering**: Automatic for `.mmd` files
@@ -96,6 +105,7 @@ graph TB
 ### When to Use Each Format
 
 #### Use Mermaid When:
+
 - Simple process flows
 - Basic architecture diagrams
 - Quick conceptual diagrams
@@ -103,6 +113,7 @@ graph TB
 - Collaborative editing required
 
 #### Use PlantUML When:
+
 - Complex UML diagrams
 - Detailed class diagrams
 - Comprehensive system architecture
@@ -112,7 +123,8 @@ graph TB
 ## File Organization Standards
 
 ### Directory Structure
-```
+```text
+
 docs/diagrams/
 ├── generated/                    # Auto-generated PNG/SVG files
 │   ├── functional/              # Functional viewpoint diagrams
@@ -121,7 +133,7 @@ docs/diagrams/
 │   └── perspectives/            # Cross-cutting perspective diagrams
 ├── viewpoints/                  # PlantUML source files
 │   ├── functional/              # *.puml files for functional viewpoint
-│   ├── information/             # *.puml files for information viewpoint
+│   ├── information/             #*.puml files for information viewpoint
 │   └── deployment/              # *.puml files for deployment viewpoint
 ├── mermaid/                     # Mermaid diagram files
 │   ├── architecture-overview.md # Mermaid diagrams in markdown
@@ -129,17 +141,20 @@ docs/diagrams/
 └── legacy/                      # Legacy diagram files
     ├── plantuml/               # Old PlantUML organization
     └── uml/                    # Legacy UML files
+
 ```
 
 ### Naming Conventions
 
 #### PlantUML Files
+
 - **Source**: `{concept}-{type}.puml`
   - Examples: `bounded-contexts-overview.puml`, `customer-aggregate-details.puml`
 - **Generated PNG**: `{concept}-{type}.png`
 - **Generated SVG**: `{concept}-{type}.svg`
 
 #### Mermaid Files
+
 - **Standalone**: `{concept}-{type}.mmd`
 - **In Markdown**: Use descriptive section headers
 
@@ -148,11 +163,13 @@ docs/diagrams/
 ### Image Quality Requirements
 
 #### PNG Generation Settings
+
 - **Resolution**: High DPI for text clarity
 - **Compression**: Balanced for file size vs quality
 - **Text Rendering**: Anti-aliased for smooth appearance
 
 #### Layout Optimization
+
 - **Width**: Optimize for GitHub's content width (~800-1000px)
 - **Height**: Avoid excessive vertical scrolling
 - **Text Size**: Ensure readability at default zoom levels
@@ -173,6 +190,7 @@ docs/diagrams/
 ```
 
 #### Automated Generation
+
 - **Trigger**: On PlantUML file changes
 - **Hook**: `.kiro/hooks/diagram-documentation-sync.kiro.hook`
 - **Output**: Both PNG and SVG formats
@@ -183,16 +201,19 @@ docs/diagrams/
 ### Viewpoint Documentation
 
 #### Functional Viewpoint
+
 - **Source**: `docs/diagrams/viewpoints/functional/*.puml`
 - **Generated**: `docs/diagrams/generated/functional/*.png`
 - **References**: `docs/viewpoints/functional/*.md`
 
 #### Information Viewpoint
+
 - **Source**: `docs/diagrams/viewpoints/information/*.puml`
 - **Generated**: `docs/diagrams/generated/information/*.png`
 - **References**: `docs/viewpoints/information/*.md`
 
 #### Deployment Viewpoint
+
 - **Source**: `docs/diagrams/viewpoints/deployment/*.puml`
 - **Generated**: `docs/diagrams/generated/deployment/*.png`
 - **References**: `docs/viewpoints/deployment/*.md`
@@ -200,6 +221,7 @@ docs/diagrams/
 ### Cross-Reference Management
 
 #### Automatic Synchronization
+
 - **Hook Trigger**: File changes in diagram directories
 - **Action**: Update documentation references
 - **Validation**: Check for broken links
@@ -218,11 +240,13 @@ docs/diagrams/
 ### Maintenance Guidelines
 
 #### Regular Tasks
+
 - **Weekly**: Regenerate all diagrams to ensure consistency
 - **Monthly**: Review and cleanup unused diagrams
 - **Quarterly**: Optimize diagram layouts for readability
 
 #### Performance Considerations
+
 - **File Size**: Monitor PNG file sizes, optimize if >500KB
 - **Generation Time**: Batch generate for efficiency
 - **Storage**: Use Git LFS for large diagram files if needed
@@ -232,6 +256,7 @@ docs/diagrams/
 ### Common Issues
 
 #### PlantUML Generation Failures
+
 ```bash
 # Check Java installation
 java -version
@@ -245,11 +270,13 @@ java -version
 ```
 
 #### GitHub Display Issues
+
 - **Problem**: Diagram appears too small
 - **Solution**: Use PNG instead of SVG
 - **Alternative**: Add HTML img tag with width specification
 
 #### Link Validation Failures
+
 ```bash
 # Check all documentation links
 ./scripts/check-links-advanced.js

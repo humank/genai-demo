@@ -22,7 +22,8 @@ All API endpoints must meet the following response time targets at the 95th perc
 
 **Measurement Method**: CloudWatch metrics with custom dimensions for endpoint and method
 
-**Verification**: 
+**Verification**:
+
 - Continuous monitoring in production
 - Load testing in staging environment
 - Performance regression tests in CI/CD pipeline
@@ -38,6 +39,7 @@ All API endpoints must meet the following response time targets at the 95th perc
 **Measurement Method**: RDS Performance Insights, slow query logs
 
 **Verification**:
+
 - Database performance monitoring
 - Weekly slow query log analysis
 - Query execution plan reviews
@@ -54,12 +56,14 @@ Based on Google's Core Web Vitals and industry best practices:
 | Cumulative Layout Shift (CLS) | ≤ 0.1 | Visual stability during page load |
 | Time to Interactive (TTI) | ≤ 3.5s | Time until page is fully interactive |
 
-**Measurement Method**: 
+**Measurement Method**:
+
 - CloudWatch RUM for real user monitoring
 - Lighthouse CI in deployment pipeline
 - Synthetic monitoring with CloudWatch Synthetics
 
 **Verification**:
+
 - Real user monitoring in production
 - Lighthouse scores in CI/CD (minimum score: 90)
 - Weekly performance audits
@@ -78,6 +82,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: ALB metrics, application metrics
 
 **Verification**:
+
 - Load testing with JMeter (weekly in staging)
 - Production traffic monitoring
 - Capacity planning reviews (quarterly)
@@ -94,6 +99,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: Custom application metrics, business metrics
 
 **Verification**:
+
 - Transaction monitoring dashboards
 - Business metrics correlation
 - Load testing scenarios
@@ -114,6 +120,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: CloudWatch metrics, JVM metrics via Micrometer
 
 **Verification**:
+
 - Continuous monitoring
 - Resource utilization reports (weekly)
 - Capacity planning reviews
@@ -131,6 +138,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: RDS CloudWatch metrics, Performance Insights
 
 **Verification**:
+
 - Database performance monitoring
 - Capacity planning reviews
 - Storage growth analysis
@@ -147,6 +155,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: Redis INFO stats, custom metrics
 
 **Verification**:
+
 - Cache performance monitoring
 - Cache hit rate analysis
 - Cache sizing reviews
@@ -166,6 +175,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: Kubernetes metrics, auto-scaling events
 
 **Verification**:
+
 - Auto-scaling load tests (weekly)
 - Production scaling events analysis
 - Scaling policy tuning
@@ -182,6 +192,7 @@ Based on Google's Core Web Vitals and industry best practices:
 **Measurement Method**: RDS metrics, replication lag monitoring
 
 **Verification**:
+
 - Replication lag monitoring
 - Failover testing (quarterly)
 - Read/write distribution analysis
@@ -195,12 +206,14 @@ Based on Google's Core Web Vitals and industry best practices:
 **Stimulus**: Traffic increases from 100 to 1000 concurrent users over 1 hour
 
 **Expected Response**:
+
 - System auto-scales from 2 to 10 instances within 5 minutes
 - 95th percentile response time remains ≤ 1000ms
 - No failed requests due to capacity issues
 - Database read replicas handle increased read load
 
 **Acceptance Criteria**:
+
 - ✅ Auto-scaling completes within target time
 - ✅ Response times within targets
 - ✅ Error rate < 0.1%
@@ -215,12 +228,14 @@ Based on Google's Core Web Vitals and industry best practices:
 **Stimulus**: Query joins 5 tables with aggregations
 
 **Expected Response**:
+
 - Query execution time ≤ 100ms (95th percentile)
 - Proper indexes created for query optimization
 - Query plan reviewed and optimized
 - No impact on other database operations
 
 **Acceptance Criteria**:
+
 - ✅ Query execution time within target
 - ✅ Database CPU remains < 70%
 - ✅ No connection pool exhaustion
@@ -235,12 +250,14 @@ Based on Google's Core Web Vitals and industry best practices:
 **Stimulus**: 1000 requests/second for product details
 
 **Expected Response**:
+
 - Cache hit rate ≥ 85%
 - API response time ≤ 200ms for cached data
 - Database load reduced by 80%
 - Cache memory usage within limits
 
 **Acceptance Criteria**:
+
 - ✅ Cache hit rate meets target
 - ✅ Response time improvement measurable
 - ✅ Database query reduction verified
@@ -255,12 +272,14 @@ Based on Google's Core Web Vitals and industry best practices:
 **Stimulus**: User navigates to product listing page
 
 **Expected Response**:
+
 - LCP ≤ 2.5s on mobile 4G
 - FID ≤ 100ms
 - Page fully interactive within 3.5s
 - Images lazy-loaded appropriately
 
 **Acceptance Criteria**:
+
 - ✅ Core Web Vitals meet targets
 - ✅ Lighthouse mobile score ≥ 90
 - ✅ Bundle size optimized
@@ -275,12 +294,14 @@ Based on Google's Core Web Vitals and industry best practices:
 **Stimulus**: Traffic doubles in 30 seconds
 
 **Expected Response**:
+
 - Circuit breakers prevent cascading failures
 - Connection pools don't exhaust
 - System degrades gracefully
 - Auto-scaling triggers immediately
 
 **Acceptance Criteria**:
+
 - ✅ No connection timeout errors
 - ✅ Circuit breakers trip appropriately
 - ✅ Fallback responses provided
@@ -357,12 +378,14 @@ All services must expose the following performance metrics:
 **Frequency**: Weekly in staging, before major releases
 
 **Scenarios**:
+
 1. Normal load: 500 req/s for 30 minutes
 2. Peak load: 1000 req/s for 30 minutes
 3. Spike test: 0 to 1000 req/s in 1 minute
 4. Endurance test: 500 req/s for 24 hours
 
 **Success Criteria**:
+
 - All response time targets met
 - Error rate < 0.1%
 - Auto-scaling works correctly
@@ -397,6 +420,7 @@ All services must expose the following performance metrics:
 **Attendees**: Development team, operations team, architects
 
 **Agenda**:
+
 - Review performance metrics
 - Identify performance issues
 - Plan optimization work

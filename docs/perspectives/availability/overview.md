@@ -67,7 +67,7 @@ This perspective applies to all system components and addresses:
 
 Our availability and resilience approach follows a defense-in-depth strategy:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │ Layer 1: Infrastructure Redundancy                      │
 │ - Multi-AZ deployment                                   │
@@ -109,7 +109,7 @@ Our availability and resilience approach follows a defense-in-depth strategy:
 
 ### High Availability Components
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                    Route 53 (DNS)                        │
 │              Global Load Balancing                       │
@@ -140,15 +140,18 @@ Our availability and resilience approach follows a defense-in-depth strategy:
 ## Related Documentation
 
 ### Viewpoints
+
 - [Deployment Viewpoint](../../viewpoints/deployment/overview.md) - Infrastructure architecture
 - [Operational Viewpoint](../../viewpoints/operational/overview.md) - Monitoring and incident response
 - [Concurrency Viewpoint](../../viewpoints/concurrency/overview.md) - State management and synchronization
 
 ### Other Perspectives
+
 - [Performance & Scalability Perspective](../performance/overview.md) - Performance under failure scenarios
 - [Security Perspective](../security/overview.md) - Security during incidents
 
 ### Implementation Guides
+
 - [Fault Tolerance Patterns](fault-tolerance.md) - Circuit breakers, retries, fallbacks
 - [High Availability Design](high-availability.md) - Multi-AZ, load balancing, health checks
 - [Disaster Recovery](disaster-recovery.md) - Backup, restore, and failover procedures
@@ -189,6 +192,7 @@ See [Operational Viewpoint - Monitoring](../../viewpoints/operational/monitoring
 ### Chaos Engineering
 
 We practice chaos engineering to proactively identify weaknesses:
+
 - Random pod termination in Kubernetes
 - Network latency injection
 - Database failover simulation

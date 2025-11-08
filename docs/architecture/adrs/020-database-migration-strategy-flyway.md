@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "evolution"]
 The Enterprise E-Commerce Platform requires a robust database migration strategy to:
 
 **Business Requirements**:
+
 - **Zero Downtime**: Database changes must not cause service interruptions
 - **Version Control**: All schema changes must be tracked and versioned
 - **Rollback Safety**: Ability to rollback failed migrations
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 - **Team Collaboration**: Multiple developers making schema changes
 
 **Technical Challenges**:
+
 - Complex schema with 13 bounded contexts
 - High transaction volume (10,000+ TPS)
 - Multiple database instances (RDS primary + read replicas)
@@ -40,6 +42,7 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 - Coordination with application deployments
 
 **Current State**:
+
 - Manual SQL scripts
 - No version control for schema
 - Inconsistent schemas across environments
@@ -50,6 +53,7 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 ### Business Context
 
 **Business Drivers**:
+
 - Enable continuous delivery
 - Reduce deployment risk
 - Improve database reliability
@@ -58,6 +62,7 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 - Meet compliance requirements
 
 **Constraints**:
+
 - Budget: $30,000 for implementation
 - Timeline: 6 weeks
 - Team: 2 database engineers, 3 developers
@@ -68,12 +73,14 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 ### Technical Context
 
 **Current Database**:
+
 - PostgreSQL 15 on AWS RDS
 - Primary + 2 read replicas per region
 - 500GB data size
 - 10,000+ TPS peak load
 
 **Target State**:
+
 - Automated schema migrations
 - Version-controlled migrations
 - Backward compatible changes
@@ -99,7 +106,7 @@ The Enterprise E-Commerce Platform requires a robust database migration strategy
 
 **Migration Structure**:
 
-```
+```text
 src/main/resources/db/migration/
 ├── V1__initial_schema.sql
 ├── V2__add_customer_email_index.sql
@@ -138,19 +145,21 @@ spring:
 
 **Migration Naming Convention**:
 
-```
+```text
 V{version}__{description}.sql
 ├── V: Versioned migration (runs once)
 ├── U: Undo migration (rollback)
 ├── R: Repeatable migration (runs on checksum change)
 
 Examples:
+
 - V1__initial_schema.sql
 - V2__add_customer_email_index.sql
 - V3.1__add_order_status_column.sql
 - V3.2__migrate_order_status_data.sql
 - U3__rollback_order_status_column.sql
 - R__create_customer_summary_view.sql
+
 ```
 
 **Backward Compatible Migration Pattern**:
@@ -286,20 +295,24 @@ on:
   push:
     branches: [main]
     paths:
+
       - 'src/main/resources/db/migration/**'
 
 jobs:
   validate-migrations:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Setup Java
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
       
       - name: Validate Migration Scripts
+
         run: |
           # Check naming convention
           ./scripts/validate-migration-names.sh
@@ -311,6 +324,7 @@ jobs:
           ./gradlew flywayValidate
       
       - name: Test Migrations on Staging
+
         run: |
           # Run migrations on staging database
           ./gradlew flywayMigrate \
@@ -319,9 +333,11 @@ jobs:
             -Dflyway.password=${{ secrets.STAGING_DB_PASSWORD }}
       
       - name: Run Integration Tests
+
         run: ./gradlew integrationTest
       
       - name: Approve for Production
+
         if: success()
         run: |
           # Create approval request
@@ -333,9 +349,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Backup Database
+
         run: |
           # Create backup before migration
           aws rds create-db-snapshot \
@@ -343,6 +361,7 @@ jobs:
             --db-snapshot-identifier pre-migration-$(date +%Y%m%d-%H%M%S)
       
       - name: Run Production Migrations
+
         run: |
           ./gradlew flywayMigrate \
             -Dflyway.url=${{ secrets.PROD_DB_URL }} \
@@ -350,6 +369,7 @@ jobs:
             -Dflyway.password=${{ secrets.PROD_DB_PASSWORD }}
       
       - name: Verify Migration
+
         run: |
           # Check migration status
           ./gradlew flywayInfo
@@ -358,6 +378,7 @@ jobs:
           ./scripts/database-smoke-tests.sh
       
       - name: Rollback on Failure
+
         if: failure()
         run: |
           # Restore from backup
@@ -484,6 +505,7 @@ public class FlywayMigrationMonitor {
 ```
 
 **Pros**:
+
 - ✅ Industry standard with large community
 - ✅ Excellent Spring Boot integration
 - ✅ Version control for schema changes
@@ -495,6 +517,7 @@ public class FlywayMigrationMonitor {
 - ✅ Good documentation
 
 **Cons**:
+
 - ⚠️ Learning curve for team
 - ⚠️ Requires discipline in migration writing
 - ⚠️ Undo migrations need manual creation
@@ -509,12 +532,14 @@ public class FlywayMigrationMonitor {
 **Description**: XML/YAML-based database migration tool
 
 **Pros**:
+
 - ✅ Database-agnostic
 - ✅ XML/YAML format
 - ✅ Automatic rollback generation
 - ✅ Change set tracking
 
 **Cons**:
+
 - ❌ More complex configuration
 - ❌ XML verbosity
 - ❌ Steeper learning curve
@@ -529,11 +554,13 @@ public class FlywayMigrationMonitor {
 **Description**: Manual SQL scripts with custom versioning
 
 **Pros**:
+
 - ✅ Full control
 - ✅ No external dependencies
 - ✅ Simple for small projects
 
 **Cons**:
+
 - ❌ No automation
 - ❌ Error-prone
 - ❌ No version tracking
@@ -569,6 +596,7 @@ Flyway provides the optimal balance of simplicity, reliability, and features for
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All database schema changes
 - Application deployments
 - CI/CD pipeline
@@ -592,6 +620,7 @@ Affects:
 ### Phase 1: Setup and Configuration (Week 1-2)
 
 **Tasks**:
+
 - [ ] Add Flyway dependency to project
 - [ ] Configure Flyway in application.yml
 - [ ] Set up migration directory structure
@@ -600,6 +629,7 @@ Affects:
 - [ ] Set up monitoring
 
 **Success Criteria**:
+
 - Flyway configured and working
 - Baseline migration applied
 - CI/CD pipeline updated
@@ -607,6 +637,7 @@ Affects:
 ### Phase 2: Migration Templates and Guidelines (Week 3)
 
 **Tasks**:
+
 - [ ] Create migration templates
 - [ ] Document naming conventions
 - [ ] Write migration guidelines
@@ -614,6 +645,7 @@ Affects:
 - [ ] Set up validation scripts
 
 **Success Criteria**:
+
 - Templates available
 - Guidelines documented
 - Validation working
@@ -621,12 +653,14 @@ Affects:
 ### Phase 3: Team Training (Week 4)
 
 **Tasks**:
+
 - [ ] Conduct training sessions
 - [ ] Create example migrations
 - [ ] Practice rollback procedures
 - [ ] Review best practices
 
 **Success Criteria**:
+
 - Team trained
 - Examples created
 - Procedures documented
@@ -634,6 +668,7 @@ Affects:
 ### Phase 4: Production Rollout (Week 5-6)
 
 **Tasks**:
+
 - [ ] Apply baseline to production
 - [ ] Migrate existing changes to Flyway
 - [ ] Test rollback procedures
@@ -641,6 +676,7 @@ Affects:
 - [ ] Gather feedback
 
 **Success Criteria**:
+
 - Production using Flyway
 - All migrations tracked
 - Team comfortable with process
@@ -648,11 +684,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Migration failures
 - Data corruption
 - Performance issues
 
 **Rollback Steps**:
+
 1. Stop application
 2. Restore database backup
 3. Fix migration script
@@ -701,12 +739,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Existing schema not in Flyway
 2. No automated rollback testing
 3. Manual undo migration creation
 4. Limited large data migration patterns
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Baseline all existing schemas
 - **Q2 2026**: Automated rollback testing
 - **Q3 2026**: Large data migration framework
@@ -729,6 +769,7 @@ Affects:
 ### Migration Best Practices
 
 **DO**:
+
 - ✅ Use backward compatible changes
 - ✅ Test migrations in staging first
 - ✅ Create backups before production
@@ -738,6 +779,7 @@ Affects:
 - ✅ Use transactions for safety
 
 **DON'T**:
+
 - ❌ Modify existing migrations
 - ❌ Skip version numbers
 - ❌ Use out-of-order migrations
@@ -748,6 +790,7 @@ Affects:
 ### Common Migration Patterns
 
 **Add Column**:
+
 ```sql
 -- Phase 1: Add nullable column
 ALTER TABLE table_name ADD COLUMN new_column TYPE;
@@ -760,6 +803,7 @@ ALTER TABLE table_name ALTER COLUMN new_column SET NOT NULL;
 ```
 
 **Rename Column**:
+
 ```sql
 -- Phase 1: Add new column
 ALTER TABLE table_name ADD COLUMN new_name TYPE;
@@ -772,6 +816,7 @@ ALTER TABLE table_name DROP COLUMN old_name;
 ```
 
 **Split Table**:
+
 ```sql
 -- Phase 1: Create new table
 CREATE TABLE new_table (...);

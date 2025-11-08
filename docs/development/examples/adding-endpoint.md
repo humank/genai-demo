@@ -15,6 +15,7 @@ We'll add an endpoint to retrieve all orders for a specific customer.
 **Endpoint:** `GET /api/v1/customers/{customerId}/orders`
 
 **Request:**
+
 - Path parameter: `customerId` (String)
 - Query parameters:
   - `status` (optional): Filter by order status
@@ -22,6 +23,7 @@ We'll add an endpoint to retrieve all orders for a specific customer.
   - `size` (optional, default: 20): Page size
 
 **Response:** `200 OK`
+
 ```json
 {
   "content": [
@@ -41,6 +43,7 @@ We'll add an endpoint to retrieve all orders for a specific customer.
 ```
 
 **Error Responses:**
+
 - `404 Not Found`: Customer not found
 - `400 Bad Request`: Invalid parameters
 
@@ -320,7 +323,7 @@ Retrieves all orders for a specific customer.
 
 ```http
 GET /api/v1/customers/{customerId}/orders?status=PENDING&page=0&size=20
-```
+```text
 
 ### Parameters
 
@@ -349,14 +352,15 @@ GET /api/v1/customers/{customerId}/orders?status=PENDING&page=0&size=20
   "totalElements": 1,
   "totalPages": 1
 }
-```
+```text
 
 ### Example
 
 ```bash
 curl -X GET "http://localhost:8080/api/v1/customers/CUST-001/orders?status=PENDING" \
   -H "Authorization: Bearer YOUR_TOKEN"
-```
+```text
+
 ```
 
 ### Step 9: Test Manually

@@ -4,9 +4,11 @@ viewpoint: "Information"
 status: "Active"
 last_updated: "2025-10-23"
 related_documents:
+
   - "overview.md"
   - "data-ownership.md"
   - "data-flow.md"
+
 ---
 
 # Domain Models
@@ -85,7 +87,7 @@ Manages customer profiles, authentication, and preferences.
 
 #### Relationships
 
-```
+```text
 Customer (1) ----< (0..*) CustomerAddress
 ```
 
@@ -145,7 +147,7 @@ Manages order lifecycle from creation to fulfillment.
 
 #### Relationships
 
-```
+```text
 Order (1) ----< (1..*) OrderItem
 Order (1) ---- (1) ShippingAddress
 Order (1) ---- (1) BillingAddress
@@ -213,7 +215,7 @@ Manages product catalog, specifications, and inventory information.
 
 #### Relationships
 
-```
+```text
 Product (1) ----< (0..*) ProductSpecification
 Product (1) ----< (0..*) ProductImage
 Product (1) ---- (1) Category
@@ -270,7 +272,7 @@ Manages stock levels, reservations, and inventory movements.
 
 #### Relationships
 
-```
+```text
 InventoryItem (1) ----< (0..*) InventoryReservation
 ```
 
@@ -336,7 +338,7 @@ Manages payment processing, transactions, and payment methods.
 
 #### Relationships
 
-```
+```text
 Payment (1) ----< (1..*) PaymentTransaction
 Payment (1) ---- (1) PaymentMethod
 ```
@@ -396,7 +398,7 @@ Manages active shopping carts and cart items before order creation.
 
 #### Relationships
 
-```
+```text
 ShoppingCart (1) ----< (0..*) CartItem
 ```
 
@@ -458,7 +460,7 @@ Manages discount rules, promotional campaigns, and coupon codes.
 
 #### Relationships
 
-```
+```text
 Promotion (1) ----< (0..*) PromotionRule
 Promotion (1) ----< (0..*) CouponCode
 ```
@@ -510,7 +512,7 @@ Manages product reviews and ratings from customers.
 
 #### Relationships
 
-```
+```text
 Review (1) ----< (0..*) ReviewImage
 Review (1) ----< (0..*) ReviewComment
 ```

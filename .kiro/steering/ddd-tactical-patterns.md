@@ -12,6 +12,7 @@ This document defines the Domain-Driven Design tactical patterns used in this pr
 ## Aggregate Root Pattern
 
 ### Must Follow
+
 - [ ] Extend `AggregateRoot` base class
 - [ ] Use `@AggregateRoot` annotation with metadata
 - [ ] Collect events with `collectEvent()` method
@@ -20,12 +21,14 @@ This document defines the Domain-Driven Design tactical patterns used in this pr
 - [ ] Only aggregate roots can be obtained from repositories
 
 ### Must Avoid
+
 - [ ] ❌ Exposing internal collections directly
 - [ ] ❌ Setters for internal state
 - [ ] ❌ Publishing events directly from aggregate
 - [ ] ❌ Accessing other aggregates directly
 
 ### Example Structure
+
 ```java
 @AggregateRoot(name = "Order", boundedContext = "Order", version = "1.0")
 public class Order extends AggregateRoot {
@@ -59,6 +62,7 @@ public class Order extends AggregateRoot {
 ## Domain Events Pattern
 
 ### Must Follow
+
 - [ ] Use Record implementation for immutability
 - [ ] Implement `DomainEvent` interface
 - [ ] Use factory method with `createEventMetadata()`
@@ -67,12 +71,14 @@ public class Order extends AggregateRoot {
 - [ ] Include aggregate ID in event
 
 ### Must Avoid
+
 - [ ] ❌ Mutable event fields
 - [ ] ❌ Business logic in events
 - [ ] ❌ References to mutable objects
 - [ ] ❌ Missing event metadata (eventId, occurredOn)
 
 ### Example Structure
+
 ```java
 public record OrderSubmittedEvent(
     OrderId orderId,
@@ -116,6 +122,7 @@ public record OrderSubmittedEvent(
 ## Value Objects Pattern
 
 ### Must Follow
+
 - [ ] Use Record for immutability
 - [ ] Validate in constructor
 - [ ] No setters
@@ -124,12 +131,14 @@ public record OrderSubmittedEvent(
 - [ ] Use descriptive names (e.g., `Email`, not `String`)
 
 ### Must Avoid
+
 - [ ] ❌ Mutable fields
 - [ ] ❌ Setters or modification methods
 - [ ] ❌ Identity-based equality
 - [ ] ❌ Primitive obsession (using String instead of Email)
 
 ### Example Structure
+
 ```java
 public record Email(String value) {
     
@@ -181,6 +190,7 @@ public record Money(BigDecimal amount, Currency currency) {
 ## Repository Pattern
 
 ### Must Follow
+
 - [ ] Interface in domain layer
 - [ ] Implementation in infrastructure layer
 - [ ] Return domain objects, not entities
@@ -189,12 +199,14 @@ public record Money(BigDecimal amount, Currency currency) {
 - [ ] Only aggregate roots have repositories
 
 ### Must Avoid
+
 - [ ] ❌ Repository in infrastructure layer without domain interface
 - [ ] ❌ Exposing JPA entities
 - [ ] ❌ Business logic in repository
 - [ ] ❌ Repositories for non-aggregate entities
 
 ### Example Structure
+
 ```java
 // Domain layer: interface
 package solid.humank.genaidemo.domain.order.repository;
@@ -237,18 +249,21 @@ public class JpaOrderRepository implements OrderRepository {
 ## Domain Services Pattern
 
 ### When to Use
+
 - [ ] Business logic that doesn't naturally fit in an aggregate
 - [ ] Operations involving multiple aggregates
 - [ ] Complex calculations or algorithms
 - [ ] Integration with external domain concepts
 
 ### Must Follow
+
 - [ ] Stateless services
 - [ ] Interface in domain layer
 - [ ] Implementation can be in domain or infrastructure
 - [ ] Use domain language in method names
 
 ### Example Structure
+
 ```java
 // Domain layer
 package solid.humank.genaidemo.domain.pricing.service;
@@ -276,6 +291,7 @@ public class PricingServiceImpl implements PricingService {
 ## Application Services Pattern
 
 ### Responsibilities
+
 - [ ] Orchestrate use cases
 - [ ] Load aggregates from repositories
 - [ ] Invoke aggregate methods
@@ -284,12 +300,14 @@ public class PricingServiceImpl implements PricingService {
 - [ ] Transaction management
 
 ### Must Follow
+
 - [ ] Thin application services (orchestration only)
 - [ ] No business logic in application services
 - [ ] Use `@Transactional` for consistency
 - [ ] Publish events after successful transaction
 
 ### Example Structure
+
 ```java
 @Service
 @Transactional
@@ -320,6 +338,7 @@ public class OrderApplicationService {
 ## Bounded Context Pattern
 
 ### Must Follow
+
 - [ ] Each context is independent
 - [ ] Communication via domain events
 - [ ] No direct dependencies between contexts
@@ -327,7 +346,8 @@ public class OrderApplicationService {
 - [ ] Context map documented
 
 ### Package Structure
-```
+
+```text
 domain/
 ├── customer/          # Customer bounded context
 │   ├── model/
@@ -348,6 +368,7 @@ domain/
 ## Event Handlers Pattern
 
 ### Must Follow
+
 - [ ] Extend `AbstractDomainEventHandler<T>`
 - [ ] Annotate with `@Component`
 - [ ] Implement idempotency checks
@@ -355,6 +376,7 @@ domain/
 - [ ] Handle errors gracefully
 
 ### Example Structure
+
 ```java
 @Component
 public class OrderSubmittedEventHandler 
@@ -388,11 +410,13 @@ public class OrderSubmittedEventHandler
 ## Validation
 
 ### Architecture Compliance
+
 ```bash
 ./gradlew archUnit  # Verify DDD patterns compliance
 ```
 
 ### ArchUnit Rules
+
 ```java
 @ArchTest
 static final ArchRule aggregateRootRules = classes()

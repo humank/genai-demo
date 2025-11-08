@@ -17,7 +17,7 @@ This directory contains JSON Schema definitions for all domain events in the sys
 
 Schemas are organized by bounded context:
 
-```
+```text
 schemas/
 ├── README.md (this file)
 ├── customer/

@@ -75,6 +75,7 @@ This document provides detailed guidelines for implementing accessible user inte
 #### 1.4 Distinguishable
 
 **Color Contrast Requirements**:
+
 - Normal text: 4.5:1 minimum
 - Large text (18pt+): 3:1 minimum
 - UI components: 3:1 minimum
@@ -165,6 +166,7 @@ function Dropdown() {
 #### 2.4 Navigable
 
 **Skip Links**:
+
 ```tsx
 // ✅ Good: Skip to main content
 <a href="#main-content" className="skip-link">
@@ -189,6 +191,7 @@ function Dropdown() {
 ```
 
 **Focus Management**:
+
 ```tsx
 // ✅ Good: Focus management in modal
 function Modal({ isOpen, onClose, children }) {
@@ -240,6 +243,7 @@ function Modal({ isOpen, onClose, children }) {
 #### 3.2 Predictable
 
 **Consistent Navigation**:
+
 ```tsx
 // ✅ Good: Consistent navigation across pages
 <nav aria-label="Main navigation">
@@ -255,6 +259,7 @@ function Modal({ isOpen, onClose, children }) {
 #### 3.3 Input Assistance
 
 **Form Validation**:
+
 ```tsx
 // ✅ Good: Accessible form with validation
 function CheckoutForm() {
@@ -294,6 +299,7 @@ function CheckoutForm() {
 #### 4.1 Compatible
 
 **Valid HTML and ARIA**:
+
 ```tsx
 // ✅ Good: Proper ARIA usage
 <button
@@ -522,6 +528,7 @@ describe('ProductCard', () => {
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Accessibility perspective introduction
 - [API Usability](api-usability.md) - API accessibility
 - [Documentation](documentation.md) - Documentation clarity

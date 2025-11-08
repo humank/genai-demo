@@ -9,11 +9,13 @@ Added comprehensive documentation for Make commands to the root `README.md` file
 ### New Sections Added
 
 #### 1. Development Commands (in Quick Start)
+
 - Quick reference for common make commands
 - Organized by category (Diagrams, Development Setup, Pre-commit)
 - Includes practical examples
 
 #### 2. Development Workflow (New Section)
+
 - **Make Commands Reference**: Detailed explanation of all commands
   - Diagram Management commands
   - Development Setup commands
@@ -34,12 +36,14 @@ Added comprehensive documentation for Make commands to the root `README.md` file
 ### Location in README
 
 The new content is inserted between:
+
 - **Before**: "Quick Start" section
 - **After**: "Testing Strategy" section
 
 ### Quick Reference
 
 Users can now find:
+
 ```bash
 # In Quick Start section
 make help           # See all commands

@@ -32,6 +32,7 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 ### Business Context
 
 **Business Drivers**:
+
 - Prevent overselling inventory (critical business requirement)
 - Ensure order processing integrity (no duplicate charges)
 - Support horizontal scaling (multiple application instances)
@@ -39,6 +40,7 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 - Handle high concurrency during promotions (1000+ concurrent users)
 
 **Business Constraints**:
+
 - Must prevent inventory overselling (zero tolerance)
 - Order processing must be atomic and consistent
 - Lock acquisition must be fast (< 10ms)
@@ -47,6 +49,7 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 ### Technical Context
 
 **Current State**:
+
 - Redis distributed caching (ADR-004)
 - Kafka for event streaming (ADR-005)
 - Saga pattern for distributed transactions (ADR-025)
@@ -54,6 +57,7 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 - PostgreSQL with optimistic locking
 
 **Requirements**:
+
 - Distributed lock across multiple instances
 - Lock timeout and automatic release
 - Deadlock prevention
@@ -79,6 +83,7 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 **Description**: Use Redisson library for Redis-based distributed locks with advanced features
 
 **Pros**:
+
 - ✅ Built on existing Redis infrastructure (ADR-004)
 - ✅ Excellent Spring Boot integration
 - ✅ Automatic lock renewal (watchdog)
@@ -90,11 +95,13 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 - ✅ Comprehensive documentation
 
 **Cons**:
+
 - ⚠️ Requires Redis cluster for high availability
 - ⚠️ Network partition can cause issues
 - ⚠️ Additional library dependency
 
-**Cost**: 
+**Cost**:
+
 - Development: $0 (uses existing Redis)
 - Production: $0 (included in Redis cost)
 - Learning: 2-3 days
@@ -106,12 +113,14 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 **Description**: Use PostgreSQL advisory locks or SELECT FOR UPDATE
 
 **Pros**:
+
 - ✅ Strong consistency guarantees
 - ✅ No additional infrastructure
 - ✅ ACID transaction support
 - ✅ Simple to implement
 
 **Cons**:
+
 - ❌ Higher latency (10-50ms)
 - ❌ Increases database load
 - ❌ Doesn't scale well with high concurrency
@@ -128,12 +137,14 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 **Description**: Use Apache ZooKeeper for distributed coordination
 
 **Pros**:
+
 - ✅ Strong consistency (CP system)
 - ✅ Proven for distributed coordination
 - ✅ Automatic lock release on client failure
 - ✅ Watch mechanism for lock notifications
 
 **Cons**:
+
 - ❌ Additional infrastructure to manage
 - ❌ Higher operational complexity
 - ❌ Higher latency (20-50ms)
@@ -150,11 +161,13 @@ The Enterprise E-Commerce Platform requires distributed locking to:
 **Description**: Rely solely on database optimistic locking (version fields)
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ No additional infrastructure
 - ✅ Works well for low contention
 
 **Cons**:
+
 - ❌ High retry rate under contention
 - ❌ Poor user experience (frequent failures)
 - ❌ Doesn't prevent race conditions
@@ -183,6 +196,7 @@ Redisson was selected for the following reasons:
 8. **Scalability**: Handles 1000+ concurrent requests
 
 **Lock Strategy**:
+
 - **Inventory Updates**: Exclusive locks with 30-second timeout
 - **Order Processing**: Fair locks (FIFO) with 60-second timeout
 - **Payment Processing**: Exclusive locks with 30-second timeout
@@ -212,6 +226,7 @@ Redisson was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - Inventory bounded context (critical)
 - Order bounded context (critical)
 - Payment bounded context (critical)
@@ -268,12 +283,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Lock acquisition failure rate > 5%
 - Lock timeout rate > 10%
 - Redis unavailability > 1%
 - Performance degradation > 20%
 
 **Rollback Steps**:
+
 1. Disable distributed locks
 2. Fall back to optimistic locking
 3. Reduce concurrent request limits
@@ -296,6 +313,7 @@ Affects:
 ### Monitoring Plan
 
 **Application Metrics**:
+
 ```java
 @Component
 public class LockMetrics {
@@ -310,6 +328,7 @@ public class LockMetrics {
 ```
 
 **CloudWatch Metrics**:
+
 - Lock acquisition time (p50, p95, p99)
 - Lock acquisition success rate
 - Lock timeout rate
@@ -318,6 +337,7 @@ public class LockMetrics {
 - Lock wait time
 
 **Alerts**:
+
 - Lock acquisition time > 50ms
 - Lock failure rate > 5%
 - Lock timeout rate > 10%
@@ -325,6 +345,7 @@ public class LockMetrics {
 - Lock contention > 10%
 
 **Review Schedule**:
+
 - Daily: Check lock metrics
 - Weekly: Review lock patterns and timeouts
 - Monthly: Lock performance optimization
@@ -353,11 +374,13 @@ public class LockMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual lock timeout tuning (can be automated)
 2. No automatic deadlock detection (future enhancement)
 3. Simple lock ordering (can add priority locks)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement adaptive lock timeouts
 - **Q3 2026**: Add deadlock detection and resolution
 - **Q4 2026**: Implement priority-based lock queues
@@ -395,6 +418,7 @@ public class RedissonConfiguration {
 ### Lock Usage Patterns
 
 **Exclusive Lock**:
+
 ```java
 @Service
 public class InventoryService {
@@ -428,6 +452,7 @@ public class InventoryService {
 ```
 
 **Fair Lock (FIFO)**:
+
 ```java
 @Service
 public class OrderService {
@@ -450,6 +475,7 @@ public class OrderService {
 ```
 
 **Read-Write Lock**:
+
 ```java
 @Service
 public class ProductCatalogService {
@@ -482,6 +508,7 @@ public class ProductCatalogService {
 ```
 
 **Semaphore (Rate Limiting)**:
+
 ```java
 @Service
 public class ApiRateLimiter {
@@ -502,14 +529,16 @@ public class ApiRateLimiter {
 
 ### Lock Naming Convention
 
-```
+```text
 Pattern: {context}:{operation}:{resource-id}
 
 Examples:
+
 - inventory:reserve:PROD-123
 - order:process:ORD-456
 - payment:charge:PAY-789
 - cache:update:customer:CUST-001
+
 ```
 
 ### Lock Timeout Guidelines

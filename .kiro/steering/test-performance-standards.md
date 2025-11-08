@@ -264,7 +264,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
 
 ### Performance Report Structure
 
-```
+```text
 build/reports/test-performance/
 ├── performance-report.html          # Interactive HTML report with charts (via TestPerformanceReportGenerator)
 ├── performance-data.csv             # Raw performance data (via TestPerformanceReportGenerator)

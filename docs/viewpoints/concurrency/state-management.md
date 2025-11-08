@@ -23,6 +23,7 @@ This document describes how the E-Commerce Platform manages state across distrib
 **Principle**: Application services should be stateless to enable horizontal scaling.
 
 **Benefits**:
+
 - Easy horizontal scaling
 - No session affinity required
 - Simplified deployment and rollback
@@ -30,6 +31,7 @@ This document describes how the E-Commerce Platform manages state across distrib
 - Load balancing flexibility
 
 **Implementation**:
+
 - No in-memory session state in application servers
 - All state stored in external systems (database, cache)
 - JWT tokens for authentication (self-contained)
@@ -40,6 +42,7 @@ This document describes how the E-Commerce Platform manages state across distrib
 **Principle**: Store state in dedicated, scalable storage systems.
 
 **State Storage Options**:
+
 - **Database (PostgreSQL)**: Persistent, transactional state
 - **Cache (Redis)**: Temporary, fast-access state
 - **Message Queue (Kafka)**: Event state and history
@@ -50,6 +53,7 @@ This document describes how the E-Commerce Platform manages state across distrib
 **Principle**: Accept eventual consistency for non-critical state.
 
 **Use Cases**:
+
 - Analytics and reporting
 - Search indexes
 - Cache updates
@@ -64,6 +68,7 @@ This document describes how the E-Commerce Platform manages state across distrib
 **Storage**: JWT Token (Stateless)
 
 **Implementation**:
+
 ```java
 @Component
 public class JwtTokenProvider {
@@ -97,12 +102,14 @@ public class JwtTokenProvider {
 ```
 
 **Characteristics**:
+
 - Self-contained (no server-side storage)
 - Stateless authentication
 - Cannot be revoked (until expiration)
 - Includes user identity and roles
 
 **Token Revocation Strategy**:
+
 ```java
 @Component
 public class TokenBlacklistService {
@@ -137,6 +144,7 @@ public class TokenBlacklistService {
 **Storage**: Redis (Distributed Session)
 
 **Configuration**:
+
 ```yaml
 spring:
   session:
@@ -148,6 +156,7 @@ spring:
 ```
 
 **Implementation**:
+
 ```java
 @Service
 public class ShoppingCartService {
@@ -184,12 +193,14 @@ public class ShoppingCartService {
 ```
 
 **Characteristics**:
+
 - Shared across all application instances
 - Automatic expiration (30 minutes)
 - Survives application restarts
 - Supports multi-device access
 
 **Cart Merge Strategy** (Multi-device):
+
 ```java
 @Service
 public class CartMergeService {
@@ -226,6 +237,7 @@ public class CartMergeService {
 **Storage**: PostgreSQL (Primary Database)
 
 **State Transitions**:
+
 ```java
 @Entity
 @Table(name = "orders")
@@ -271,7 +283,8 @@ public class Order {
 ```
 
 **State Machine**:
-```
+
+```text
 CREATED → PENDING → CONFIRMED → SHIPPED → DELIVERED
    ↓         ↓          ↓
 CANCELLED  CANCELLED  CANCELLED
@@ -284,6 +297,7 @@ CANCELLED  CANCELLED  CANCELLED
 **Storage**: Database + Event Store
 
 **Event Sourcing Pattern**:
+
 ```java
 @Service
 public class OrderEventSourcingService {
@@ -325,6 +339,7 @@ public class OrderEventSourcingService {
 **Storage**: Redis (Distributed Cache)
 
 **Configuration**:
+
 ```java
 @Configuration
 @EnableCaching
@@ -355,6 +370,7 @@ public class CacheConfiguration {
 ```
 
 **Cache Usage**:
+
 ```java
 @Service
 @CacheConfig(cacheNames = "products")
@@ -379,6 +395,7 @@ public class ProductService {
 ```
 
 **Cache Invalidation Strategy**:
+
 ```java
 @Component
 public class CacheInvalidationHandler extends AbstractDomainEventHandler<ProductUpdatedEvent> {
@@ -404,6 +421,7 @@ public class CacheInvalidationHandler extends AbstractDomainEventHandler<Product
 **Storage**: Thread-Local Variables
 
 **Implementation**:
+
 ```java
 @Component
 public class RequestContextHolder {
@@ -452,6 +470,7 @@ public class RequestContextFilter implements Filter {
 **Storage**: Database (Job Status Table)
 
 **Implementation**:
+
 ```java
 @Entity
 @Table(name = "background_jobs")
@@ -711,6 +730,7 @@ public class CustomerStateMigration {
 ### State Metrics
 
 **Key Metrics**:
+
 - Cache hit/miss ratio
 - Session count and duration
 - State transition rates
@@ -718,6 +738,7 @@ public class CustomerStateMigration {
 - State storage size
 
 **Implementation**:
+
 ```java
 @Component
 public class StateMetrics {

@@ -19,7 +19,7 @@
 
 - **Alert**: `HighMemoryUsage` alert fires
 - **Monitoring Dashboard**: Operations Dashboard > Infrastructure > Memory Utilization
-- **Log Patterns**: 
+- **Log Patterns**:
   - `java.lang.OutOfMemoryError`
   - `GC overhead limit exceeded`
   - `OOMKilled` in pod events
@@ -106,6 +106,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Immediate Actions
 
 1. **Restart affected pod** (temporary relief):
+
 ```bash
 # Delete pod to trigger restart
 kubectl delete pod ${POD_NAME} -n production
@@ -114,13 +115,15 @@ kubectl delete pod ${POD_NAME} -n production
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-2. **Scale horizontally** to distribute load:
+1. **Scale horizontally** to distribute load:
+
 ```bash
 # Increase replica count
 kubectl scale deployment/ecommerce-backend --replicas=8 -n production
 ```
 
-3. **Force garbage collection** (if pod is still responsive):
+1. **Force garbage collection** (if pod is still responsive):
+
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   jcmd 1 GC.run
@@ -128,9 +131,10 @@ kubectl exec -it ${POD_NAME} -n production -- \
 
 ### Root Cause Fixes
 
-#### If caused by insufficient memory allocation:
+#### If caused by insufficient memory allocation
 
 1. **Increase memory limits**:
+
 ```yaml
 # Update deployment
 resources:
@@ -140,20 +144,24 @@ resources:
     memory: "4Gi"    # Increase from 2Gi
 ```
 
-2. **Adjust JVM heap settings**:
+1. **Adjust JVM heap settings**:
+
 ```yaml
 env:
+
   - name: JAVA_OPTS
+
     value: "-Xms2g -Xmx3g -XX:MaxMetaspaceSize=512m"
 ```
 
-3. **Apply changes**:
+1. **Apply changes**:
+
 ```bash
 kubectl apply -f deployment.yaml
 kubectl rollout status deployment/ecommerce-backend -n production
 ```
 
-#### If caused by memory leak:
+#### If caused by memory leak
 
 1. **Analyze heap dump** using tools like:
    - Eclipse Memory Analyzer (MAT)
@@ -168,6 +176,7 @@ kubectl rollout status deployment/ecommerce-backend -n production
    - ThreadLocal variables not cleaned
 
 3. **Fix identified leaks**:
+
 ```java
 // Example: Fix cache leak
 @Configuration
@@ -187,10 +196,11 @@ public class CacheConfiguration {
 }
 ```
 
-#### If caused by large object allocation:
+#### If caused by large object allocation
 
 1. **Identify large objects** from heap histogram
 2. **Optimize data structures**:
+
 ```java
 // Example: Stream large datasets instead of loading all
 public Stream<Order> findOrdersStream(LocalDate date) {
@@ -208,12 +218,15 @@ public void processOrders(LocalDate date) {
 }
 ```
 
-#### If caused by inefficient garbage collection:
+#### If caused by inefficient garbage collection
 
 1. **Tune GC parameters**:
+
 ```yaml
 env:
+
   - name: JAVA_OPTS
+
     value: >-
       -Xms2g -Xmx3g
       -XX:+UseG1GC
@@ -226,7 +239,8 @@ env:
       -Xloggc:/var/log/gc.log
 ```
 
-2. **Monitor GC performance**:
+1. **Monitor GC performance**:
+
 ```bash
 # Analyze GC logs
 kubectl logs ${POD_NAME} -n production | grep "GC" > gc.log
@@ -275,7 +289,9 @@ resources:
 
 # Configure JVM heap
 env:
+
   - name: JAVA_OPTS
+
     value: >-
       -Xms2g
       -Xmx3g
@@ -318,13 +334,16 @@ public void processLargeDataset() {
 
 ```yaml
 # Set up memory monitoring alerts
+
 - alert: MemoryUsageIncreasing
+
   expr: rate(jvm_memory_used_bytes{area="heap"}[5m]) > 0
   for: 30m
   annotations:
     summary: "Memory usage is steadily increasing"
 
 - alert: HighGCTime
+
   expr: rate(jvm_gc_pause_seconds_sum[5m]) > 0.1
   for: 10m
   annotations:

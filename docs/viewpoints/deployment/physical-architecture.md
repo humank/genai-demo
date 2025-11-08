@@ -25,6 +25,7 @@ This document provides detailed specifications for all physical infrastructure c
 ### Cluster Configuration
 
 **Cluster Details**:
+
 - **Name**: `ecommerce-platform-prod`
 - **Version**: Kubernetes 1.28
 - **Region**: us-east-1
@@ -33,6 +34,7 @@ This document provides detailed specifications for all physical infrastructure c
 - **Logging**: Control plane logging enabled (API, audit, authenticator, controller manager, scheduler)
 
 **Control Plane**:
+
 - **Managed by AWS**: Automatic updates and patching
 - **High Availability**: Multi-AZ deployment by default
 - **API Server**: Load balanced across multiple AZs
@@ -43,9 +45,11 @@ This document provides detailed specifications for all physical infrastructure c
 #### General Purpose Node Group
 
 **Configuration**:
+
 ```yaml
 Name: general-purpose-nodes
 Instance Type: t3.large
+
   - vCPU: 2
   - Memory: 8 GiB
   - Network: Up to 5 Gbps
@@ -66,11 +70,13 @@ AMI: Amazon EKS optimized Amazon Linux 2
 ```
 
 **Use Cases**:
+
 - Stateless microservices (Order, Customer, Product services)
 - API gateways
 - Background workers
 
 **Labels**:
+
 ```yaml
 workload-type: general
 node-group: general-purpose
@@ -81,9 +87,11 @@ node-group: general-purpose
 #### Memory Optimized Node Group
 
 **Configuration**:
+
 ```yaml
 Name: memory-optimized-nodes
 Instance Type: r5.xlarge
+
   - vCPU: 4
   - Memory: 32 GiB
   - Network: Up to 10 Gbps
@@ -104,19 +112,24 @@ AMI: Amazon EKS optimized Amazon Linux 2
 ```
 
 **Use Cases**:
+
 - Data-intensive services (Analytics, Reporting)
 - In-memory caching services
 - Search and indexing services
 
 **Labels**:
+
 ```yaml
 workload-type: memory-intensive
 node-group: memory-optimized
 ```
 
 **Taints**:
+
 ```yaml
+
 - key: workload-type
+
   value: memory-intensive
   effect: NoSchedule
 ```
@@ -125,11 +138,13 @@ node-group: memory-optimized
 
 ```yaml
 # System namespaces
+
 - kube-system          # Kubernetes system components
 - kube-public          # Public cluster information
 - kube-node-lease      # Node heartbeat data
 
 # Application namespaces (by bounded context)
+
 - customer-context     # Customer service and related components
 - order-context        # Order service and related components
 - product-context      # Product service and related components
@@ -138,9 +153,11 @@ node-group: memory-optimized
 - notification-context # Notification service and related components
 
 # Infrastructure namespaces
+
 - monitoring           # Prometheus, Grafana
 - logging              # Fluentd, Elasticsearch
 - ingress-nginx        # Ingress controller
+
 ```
 
 ### Pod Resource Configuration
@@ -159,7 +176,9 @@ spec:
   template:
     spec:
       containers:
+
       - name: order-service
+
         image: order-service:latest
         resources:
           requests:
@@ -206,16 +225,20 @@ spec:
 ### Auto-Scaling Configuration
 
 **Cluster Autoscaler**:
+
 ```yaml
 # Scales node groups based on pending pods
 Configuration:
+
   - Scale up when pods are pending for > 30 seconds
   - Scale down when node utilization < 50% for > 10 minutes
   - Respect pod disruption budgets
   - Never scale below minimum node count
+
 ```
 
 **Horizontal Pod Autoscaler (HPA)**:
+
 ```yaml
 # Example for Order Service
 apiVersion: autoscaling/v2
@@ -231,19 +254,25 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
         type: Utilization
         averageUtilization: 80
+
   - type: Pods
+
     pods:
       metric:
         name: http_requests_per_second
@@ -257,10 +286,12 @@ spec:
 ### Primary Instance Configuration
 
 **Instance Details**:
+
 ```yaml
 Identifier: ecommerce-platform-prod-primary
 Engine: PostgreSQL 15.4
 Instance Class: db.r5.xlarge
+
   - vCPU: 4
   - Memory: 32 GiB
   - Network: Up to 10 Gbps
@@ -280,6 +311,7 @@ Deployment:
 ```
 
 **Database Configuration**:
+
 ```sql
 -- PostgreSQL Parameters
 max_connections = 200
@@ -302,9 +334,11 @@ max_parallel_workers = 4
 ### Read Replica Configuration
 
 **Replica 1** (us-east-1c):
+
 ```yaml
 Identifier: ecommerce-platform-prod-replica-1
 Instance Class: db.r5.large
+
   - vCPU: 2
   - Memory: 16 GiB
 
@@ -320,9 +354,11 @@ Replication:
 ```
 
 **Replica 2** (us-east-1a):
+
 ```yaml
 Identifier: ecommerce-platform-prod-replica-2
 Instance Class: db.r5.large
+
   - vCPU: 2
   - Memory: 16 GiB
 
@@ -340,6 +376,7 @@ Replication:
 ### Backup and Maintenance
 
 **Automated Backups**:
+
 ```yaml
 Backup Retention: 7 days
 Backup Window: 03:00-04:00 UTC (off-peak hours)
@@ -348,20 +385,24 @@ Point-in-Time Recovery: Enabled (up to 7 days)
 ```
 
 **Maintenance Window**:
+
 ```yaml
 Preferred Window: Sun 04:00-05:00 UTC
 Auto Minor Version Upgrade: Enabled
 ```
 
 **Monitoring**:
+
 ```yaml
 Enhanced Monitoring: Enabled (60-second granularity)
 Performance Insights: Enabled (7-day retention)
 CloudWatch Alarms:
+
   - CPU Utilization > 80%
   - Free Storage Space < 20%
   - Database Connections > 180
   - Replication Lag > 5 seconds
+
 ```
 
 ## Amazon ElastiCache (Redis)
@@ -369,11 +410,13 @@ CloudWatch Alarms:
 ### Cluster Configuration
 
 **Cluster Details**:
+
 ```yaml
 Cluster ID: ecommerce-platform-prod-redis
 Engine: Redis 7.0
 Cluster Mode: Enabled
 Node Type: cache.r5.large
+
   - vCPU: 2
   - Memory: 13.07 GiB
   - Network: Up to 10 Gbps
@@ -384,6 +427,7 @@ Total Nodes: 6 (3 primary + 3 replicas)
 ```
 
 **Shard Distribution**:
+
 ```yaml
 Shard 1:
   Primary: us-east-1a
@@ -404,6 +448,7 @@ Shard 3:
 ### Redis Configuration
 
 **Parameters**:
+
 ```yaml
 maxmemory-policy: allkeys-lru
 timeout: 300
@@ -415,6 +460,7 @@ notify-keyspace-events: Ex
 ```
 
 **Persistence**:
+
 ```yaml
 AOF (Append-Only File): Enabled
 AOF Rewrite: Automatic when file grows 100%
@@ -424,6 +470,7 @@ Snapshot: Disabled (using AOF for durability)
 ### Backup and Maintenance
 
 **Automated Backups**:
+
 ```yaml
 Backup Retention: 7 days
 Backup Window: 03:00-04:00 UTC
@@ -431,14 +478,17 @@ Final Snapshot: Enabled on cluster deletion
 ```
 
 **Maintenance Window**:
+
 ```yaml
 Preferred Window: Sun 04:00-05:00 UTC
 Auto Minor Version Upgrade: Enabled
 ```
 
 **Monitoring**:
+
 ```yaml
 CloudWatch Metrics:
+
   - CPUUtilization
   - DatabaseMemoryUsagePercentage
   - CurrConnections
@@ -447,10 +497,12 @@ CloudWatch Metrics:
   - ReplicationLag
 
 Alarms:
+
   - CPU > 75%
   - Memory > 90%
   - Evictions > 1000/min
   - Cache Hit Rate < 80%
+
 ```
 
 ## Amazon MSK (Managed Streaming for Apache Kafka)
@@ -458,22 +510,27 @@ Alarms:
 ### Cluster Configuration
 
 **Cluster Details**:
+
 ```yaml
 Cluster Name: ecommerce-platform-prod-kafka
 Kafka Version: 3.5.1
 Broker Type: kafka.m5.large
+
   - vCPU: 2
   - Memory: 8 GiB
   - Network: Up to 10 Gbps
 
 Brokers: 3 (one per AZ)
 Availability Zones:
+
   - us-east-1a
   - us-east-1b
   - us-east-1c
+
 ```
 
 **Storage Configuration**:
+
 ```yaml
 Storage per Broker: 1000 GB
 Storage Type: EBS (gp3)
@@ -485,6 +542,7 @@ Auto-scaling: Enabled (up to 2000 GB)
 ### Kafka Configuration
 
 **Broker Settings**:
+
 ```properties
 # Replication
 default.replication.factor=3
@@ -511,6 +569,7 @@ compression.type=snappy
 ### Topic Configuration
 
 **Standard Topics**:
+
 ```yaml
 # Order Events
 order-events:
@@ -548,8 +607,10 @@ notification-events:
 ### Monitoring and Security
 
 **Monitoring**:
+
 ```yaml
 CloudWatch Metrics:
+
   - KafkaBytesInPerSec
   - KafkaBytesOutPerSec
   - KafkaMessagesInPerSec
@@ -558,13 +619,16 @@ CloudWatch Metrics:
   - OfflinePartitionsCount
 
 Alarms:
+
   - UnderReplicatedPartitions > 0
   - OfflinePartitionsCount > 0
   - CPU > 75%
   - Disk Usage > 80%
+
 ```
 
 **Security**:
+
 ```yaml
 Encryption:
   In Transit: TLS 1.2

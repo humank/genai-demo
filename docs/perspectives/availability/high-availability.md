@@ -33,7 +33,7 @@ This document describes the high availability (HA) architecture of the Enterpris
 
 ### AWS Multi-AZ Strategy
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         AWS Region (us-east-1)                  │
 ├─────────────────────────────────────────────────────────────────┤
@@ -92,21 +92,31 @@ LoadBalancer:
   IpAddressType: ipv4
   
   Subnets:
+
     - subnet-az1-public
     - subnet-az2-public
     - subnet-az3-public
   
   SecurityGroups:
+
     - alb-security-group
   
   LoadBalancerAttributes:
+
     - Key: deletion_protection.enabled
+
       Value: true
+
     - Key: idle_timeout.timeout_seconds
+
       Value: 60
+
     - Key: routing.http2.enabled
+
       Value: true
+
     - Key: routing.http.drop_invalid_header_fields.enabled
+
       Value: true
 ```
 
@@ -179,16 +189,20 @@ public class HealthCheckController {
 ### Load Balancing Algorithms
 
 #### Round Robin (Default)
+
 - Distributes requests evenly across targets
 - Simple and effective for homogeneous instances
 
 #### Least Outstanding Requests
+
 - Routes to target with fewest active connections
 - Better for varying request processing times
 
 ```yaml
 TargetGroupAttributes:
+
   - Key: load_balancing.algorithm.type
+
     Value: least_outstanding_requests
 ```
 
@@ -208,18 +222,22 @@ metadata:
   version: "1.28"
 
 availabilityZones:
+
   - us-east-1a
   - us-east-1b
   - us-east-1c
 
 managedNodeGroups:
+
   - name: application-nodes
+
     instanceType: t3.large
     minSize: 3
     maxSize: 15
     desiredCapacity: 9  # 3 per AZ
     
     availabilityZones:
+
       - us-east-1a
       - us-east-1b
       - us-east-1c
@@ -253,7 +271,9 @@ spec:
     spec:
       # Spread pods across AZs
       topologySpreadConstraints:
+
         - maxSkew: 1
+
           topologyKey: topology.kubernetes.io/zone
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
@@ -264,7 +284,9 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
+
             - weight: 100
+
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
@@ -272,7 +294,9 @@ spec:
                 topologyKey: kubernetes.io/hostname
       
       containers:
+
         - name: order-service
+
           image: order-service:latest
           
           resources:
@@ -321,7 +345,9 @@ spec:
   maxReplicas: 30  # 10 per AZ
   
   metrics:
+
     - type: Resource
+
       resource:
         name: cpu
         target:
@@ -329,6 +355,7 @@ spec:
           averageUtilization: 70
     
     - type: Resource
+
       resource:
         name: memory
         target:
@@ -336,6 +363,7 @@ spec:
           averageUtilization: 80
     
     - type: Pods
+
       pods:
         metric:
           name: http_requests_per_second
@@ -347,14 +375,18 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
+
         - type: Percent
+
           value: 50
           periodSeconds: 60
     
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
+
         - type: Percent
+
           value: 10
           periodSeconds: 60
 ```
@@ -395,7 +427,7 @@ DBInstance:
 
 ### Automatic Failover
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Normal Operation                     │
 ├─────────────────────────────────────────────────────────┤
@@ -428,12 +460,15 @@ DBInstance:
 
 ```yaml
 ReadReplica:
+
   - DBInstanceIdentifier: ecommerce-db-read-1
+
     SourceDBInstanceIdentifier: ecommerce-db
     AvailabilityZone: us-east-1b
     PubliclyAccessible: false
   
   - DBInstanceIdentifier: ecommerce-db-read-2
+
     SourceDBInstanceIdentifier: ecommerce-db
     AvailabilityZone: us-east-1c
     PubliclyAccessible: false
@@ -521,7 +556,7 @@ ReplicationGroup:
 
 ### Redis Cluster Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Redis Cluster (3 Shards)                   │
 ├─────────────────────────────────────────────────────────┤
@@ -707,6 +742,7 @@ public class ComprehensiveHealthIndicator implements HealthIndicator {
 ### Monitoring Dashboard
 
 Key metrics to monitor:
+
 - **Instance Health**: Number of healthy vs unhealthy instances
 - **Request Distribution**: Requests per instance
 - **Response Times**: P50, P95, P99 latencies
@@ -749,6 +785,7 @@ kubectl top pods
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Availability perspective introduction
 - [Requirements](requirements.md) - Availability targets and scenarios
 - [Fault Tolerance](fault-tolerance.md) - Application-level resilience

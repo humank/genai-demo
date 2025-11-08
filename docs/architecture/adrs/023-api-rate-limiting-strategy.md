@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect system from malicious traffic (DDoS, scraping)
 - Ensure fair usage across all customers
 - Support tiered pricing model (different limits per tier)
@@ -41,6 +42,7 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 - Enable burst capacity for legitimate peak usage
 
 **Business Constraints**:
+
 - Must not impact legitimate user experience
 - Different limits for different API endpoints
 - Support for API key-based rate limiting
@@ -50,6 +52,7 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 ### Technical Context
 
 **Current State**:
+
 - RESTful API design (ADR-009)
 - Redis distributed caching (ADR-004)
 - Distributed locking (ADR-022)
@@ -57,6 +60,7 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 - Multiple application instances (horizontal scaling)
 
 **Requirements**:
+
 - Multi-level rate limiting (global, per-user, per-IP, per-endpoint)
 - Support for burst traffic (allow temporary spikes)
 - Distributed rate limiting across instances
@@ -83,6 +87,7 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 **Description**: Users accumulate tokens at a fixed rate, consume tokens per request, allows burst traffic
 
 **Pros**:
+
 - ✅ Allows burst traffic (accumulated tokens)
 - ✅ Flexible rate control (different token costs)
 - ✅ Better user experience (smooth traffic)
@@ -93,11 +98,13 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 - ✅ Low latency (< 5ms)
 
 **Cons**:
+
 - ⚠️ Can allow large bursts if bucket is full
 - ⚠️ Requires token refill logic
 - ⚠️ More complex than fixed window
 
-**Cost**: 
+**Cost**:
+
 - Development: 5 person-days
 - Infrastructure: $0 (uses existing Redis)
 - Maintenance: Low
@@ -111,12 +118,14 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 **Description**: Requests enter a queue, processed at fixed rate, excess requests overflow
 
 **Pros**:
+
 - ✅ Smooth, constant output rate
 - ✅ Prevents burst traffic completely
 - ✅ Simple conceptual model
 - ✅ Predictable resource usage
 
 **Cons**:
+
 - ❌ No burst traffic support (poor UX)
 - ❌ Requests queued (increased latency)
 - ❌ Queue management complexity
@@ -124,7 +133,8 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 - ❌ Harder to implement distributed
 - ❌ Less flexible for different endpoints
 
-**Cost**: 
+**Cost**:
+
 - Development: 8 person-days
 - Infrastructure: $0 (uses existing Redis)
 - Maintenance: Medium
@@ -138,18 +148,21 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 **Description**: Count requests in fixed time windows (e.g., per minute)
 
 **Pros**:
+
 - ✅ Very simple to implement
 - ✅ Low memory usage
 - ✅ Fast (< 2ms)
 - ✅ Easy to understand
 
 **Cons**:
+
 - ❌ Burst at window boundaries (2x limit possible)
 - ❌ Unfair (early requests get priority)
 - ❌ Poor user experience
 - ❌ No burst handling
 
-**Cost**: 
+**Cost**:
+
 - Development: 2 person-days
 - Infrastructure: $0
 - Maintenance: Low
@@ -163,17 +176,20 @@ The Enterprise E-Commerce Platform needs rate limiting to:
 **Description**: Track timestamp of each request, count requests in sliding window
 
 **Pros**:
+
 - ✅ Accurate rate limiting
 - ✅ No boundary burst problem
 - ✅ Fair distribution
 
 **Cons**:
+
 - ❌ High memory usage (store all timestamps)
 - ❌ Expensive to compute (scan all timestamps)
 - ❌ Doesn't scale well
 - ❌ No burst support
 
-**Cost**: 
+**Cost**:
+
 - Development: 6 person-days
 - Infrastructure: Higher Redis memory
 - Maintenance: High
@@ -202,17 +218,20 @@ Token Bucket was selected for the following reasons:
 **Rate Limiting Strategy**:
 
 **Multi-Level Limits**:
+
 - **Global**: 10,000 requests/minute (system-wide)
 - **Per-User**: 100 requests/minute (authenticated users)
 - **Per-IP**: 1,000 requests/minute (anonymous users)
 - **Per-Endpoint Sensitive**: 10 requests/minute (payment, admin)
 
 **User Tiers**:
+
 - **Free**: 100 req/min, burst 150
 - **Premium**: 500 req/min, burst 750
 - **Enterprise**: 2,000 req/min, burst 3,000
 
 **Token Bucket Parameters**:
+
 - **Bucket Capacity**: 1.5x rate limit (allows 50% burst)
 - **Refill Rate**: Rate limit per minute
 - **Token Cost**: 1 token per request (can vary by endpoint)
@@ -241,6 +260,7 @@ Token Bucket was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All API endpoints (rate limiting middleware)
 - Authentication layer (user tier identification)
 - Infrastructure layer (Redis rate limit storage)
@@ -296,12 +316,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Rate limiter latency > 10ms
 - False positive rate > 5%
 - Redis errors > 1%
 - User complaints > threshold
 
 **Rollback Steps**:
+
 1. Disable rate limiting middleware
 2. Allow all requests through
 3. Investigate and fix issues
@@ -324,6 +346,7 @@ Affects:
 ### Monitoring Plan
 
 **Application Metrics**:
+
 ```java
 @Component
 public class RateLimitMetrics {
@@ -337,6 +360,7 @@ public class RateLimitMetrics {
 ```
 
 **CloudWatch Metrics**:
+
 - Rate limit checks per second
 - Rate limit exceeded count
 - Rate limit check latency
@@ -345,6 +369,7 @@ public class RateLimitMetrics {
 - Token bucket fill rate
 
 **Alerts**:
+
 - Rate limit check latency > 10ms
 - Rate limit exceeded spike (> 100/min)
 - Redis rate limit errors > 1%
@@ -352,6 +377,7 @@ public class RateLimitMetrics {
 - Suspicious rate limit patterns
 
 **Review Schedule**:
+
 - Daily: Check rate limit metrics
 - Weekly: Review rate limit patterns
 - Monthly: Adjust limits based on usage
@@ -380,11 +406,13 @@ public class RateLimitMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Static rate limits (can be dynamic based on load)
 2. Simple token cost (can vary by endpoint complexity)
 3. No automatic limit adjustment (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement dynamic rate limits based on system load
 - **Q3 2026**: Add endpoint-specific token costs
 - **Q4 2026**: Implement ML-based anomaly detection
@@ -541,7 +569,7 @@ rate-limit:
 
 ### Rate Limit Response Headers
 
-```
+```text
 HTTP/1.1 200 OK
 X-RateLimit-Limit: 100
 X-RateLimit-Remaining: 75
@@ -556,14 +584,16 @@ Retry-After: 60
 
 ### Rate Limit Key Strategy
 
-```
+```text
 Pattern: {type}:{identifier}:{endpoint}
 
 Examples:
+
 - user:CUST-123:/api/v1/orders
 - ip:192.168.1.1:/api/v1/products
 - apikey:key-abc123:/api/v1/data
 - global:system:/api/v1/*
+
 ```
 
 ---

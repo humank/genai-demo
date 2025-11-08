@@ -6,7 +6,8 @@ inclusion: always
 
 ## Mandatory Architectural Viewpoint Checks
 
-> **🔗 相關標準**: 
+> **🔗 相關標準**:
+>
 > - [Development Standards](development-standards.md) - 基本開發和架構約束
 > - [Domain Events](domain-events.md) - DDD 事件架構實作
 > - [Security Standards](security-standards.md) - 安全架構要求
@@ -69,7 +70,7 @@ inclusion: always
 
 #### Performance Scenarios
 
-```
+```text
 Template:
 Source: [User/System/Load Generator]
 Stimulus: [Specific request/operation with load characteristics]
@@ -89,7 +90,7 @@ Response Measure: Response time ≤ 2000ms, Success rate ≥ 99.5%
 
 #### Security Scenarios
 
-```
+```text
 Template:
 Source: [Attacker/Malicious user/System]
 Stimulus: [Attack type/unauthorized access attempt]
@@ -109,7 +110,7 @@ Response Measure: Attack blocked within 100ms, Incident logged, No data exposure
 
 #### Availability Scenarios
 
-```
+```text
 Template:
 Source: [Failure source]
 Stimulus: [Failure type]
@@ -129,7 +130,7 @@ Response Measure: RTO ≤ 5 minutes, RPO ≤ 1 minute, Availability ≥ 99.9%
 
 #### Scalability Scenarios
 
-```
+```text
 Template:
 Source: [Load source]
 Stimulus: [Load increase pattern]
@@ -149,7 +150,7 @@ Response Measure: Maintains response time ≤ 2s, Scales to handle 1000 users, C
 
 #### Usability Scenarios
 
-```
+```text
 Template:
 Source: [User type]
 Stimulus: [User task/goal]
@@ -250,6 +251,7 @@ static final ArchRule valueObjectRules = classes()
 [Current architecture, technical constraints, and dependencies]
 
 ## Decision Drivers
+
 - [Driver 1: e.g., Performance requirements]
 - [Driver 2: e.g., Cost constraints]
 - [Driver 3: e.g., Team expertise]
@@ -258,10 +260,12 @@ static final ArchRule valueObjectRules = classes()
 ## Considered Options
 ### Option 1: [Name]
 **Pros:**
+
 - [Advantage 1]
 - [Advantage 2]
 
 **Cons:**
+
 - [Disadvantage 1]
 - [Disadvantage 2]
 
@@ -291,6 +295,7 @@ static final ArchRule valueObjectRules = classes()
 | Business | Medium | Cost increase | Budget approval obtained |
 
 ### Impact Radius Assessment
+
 - **Local**: [Changes within single component/service]
 - **Bounded Context**: [Changes across related services]
 - **System**: [Changes across multiple bounded contexts]
@@ -311,16 +316,19 @@ static final ArchRule valueObjectRules = classes()
 
 ### Migration Path
 **Phase 1: Preparation (Week 1-2)**
+
 - [ ] Team training
 - [ ] Environment setup
 - [ ] Proof of concept
 
 **Phase 2: Implementation (Week 3-6)**
+
 - [ ] Core functionality implementation
 - [ ] Unit and integration tests
 - [ ] Documentation updates
 
 **Phase 3: Deployment (Week 7-8)**
+
 - [ ] Staging environment deployment
 - [ ] Performance testing
 - [ ] Production deployment
@@ -328,11 +336,13 @@ static final ArchRule valueObjectRules = classes()
 
 ### Rollback Strategy
 **Trigger Conditions:**
+
 - Performance degradation > 20%
 - Error rate > 1%
 - Critical functionality unavailable > 5 minutes
 
 **Rollback Steps:**
+
 1. [Immediate action - e.g., traffic routing]
 2. [Database rollback if needed]
 3. [Service rollback procedure]
@@ -343,11 +353,13 @@ static final ArchRule valueObjectRules = classes()
 ## Monitoring and Success Criteria
 
 ### Success Metrics
+
 - [Metric 1: e.g., Response time < 2s]
 - [Metric 2: e.g., Error rate < 0.1%]
 - [Metric 3: e.g., Cost reduction of 20%]
 
 ### Monitoring Plan
+
 - [Dashboard/Alert 1]
 - [Dashboard/Alert 2]
 - [Review schedule]
@@ -355,18 +367,22 @@ static final ArchRule valueObjectRules = classes()
 ## Consequences
 
 ### Positive Consequences
+
 - [Benefit 1]
 - [Benefit 2]
 
 ### Negative Consequences
+
 - [Trade-off 1]
 - [Trade-off 2]
 
 ### Technical Debt
+
 - [Any technical debt introduced]
 - [Plan to address technical debt]
 
 ## Related Decisions
+
 - [ADR-XXX: Related decision]
 - [Link to relevant documentation]
 
@@ -583,9 +599,13 @@ public class TraceContextFilter implements Filter {
 ```yaml
 # Prometheus Alert Rules
 groups:
+
   - name: customer-service-alerts
+
     rules:
+
       - alert: HighErrorRate
+
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.01
         for: 2m
         labels:
@@ -596,6 +616,7 @@ groups:
           description: "Error rate is {{ $value }} errors per second"
           
       - alert: HighResponseTime
+
         expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
         for: 5m
         labels:
@@ -606,6 +627,7 @@ groups:
           description: "95th percentile response time is {{ $value }} seconds"
           
       - alert: DatabaseConnectionPoolExhausted
+
         expr: hikaricp_connections_active / hikaricp_connections_max > 0.9
         for: 1m
         labels:
@@ -619,9 +641,13 @@ groups:
 #### Business Metrics Alerts
 
 ```yaml
+
   - name: business-metrics-alerts
+
     rules:
+
       - alert: CustomerCreationRateDropped
+
         expr: rate(customers_created_total[10m]) < 0.1
         for: 5m
         labels:
@@ -631,6 +657,7 @@ groups:
           summary: "Customer creation rate has dropped significantly"
           
       - alert: HighCustomerChurnRate
+
         expr: rate(customers_churned_total[1h]) / rate(customers_created_total[1h]) > 0.1
         for: 10m
         labels:

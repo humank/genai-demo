@@ -507,7 +507,7 @@ Published when an order is shipped.
     "shippedAt": "2025-10-25T10:00:00Z"
   }
 }
-```
+```text
 
 ### Event Handlers
 
@@ -528,7 +528,8 @@ public class OrderShippedNotificationHandler
         // Handle event
     }
 }
-```
+```text
+
 ```
 
 ## Summary

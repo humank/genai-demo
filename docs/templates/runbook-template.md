@@ -17,17 +17,20 @@
 ## Symptoms
 
 ### User-Visible Symptoms
+
 - Symptom 1: Description
 - Symptom 2: Description
 - Symptom 3: Description
 
 ### System Symptoms
+
 - Symptom 1: Description (e.g., High CPU usage > 90%)
 - Symptom 2: Description (e.g., Error rate > 5%)
 - Symptom 3: Description (e.g., Response time > 5s)
 
 ### Log Patterns
-```
+
+```text
 Example log pattern to look for:
 ERROR [timestamp] ServiceName: Error message pattern
 ```
@@ -35,26 +38,31 @@ ERROR [timestamp] ServiceName: Error message pattern
 ## Impact
 
 ### Severity Level
+
 **Severity**: Critical | High | Medium | Low
 
 **Severity Criteria**:
+
 - **Critical**: Complete service outage, data loss, security breach
 - **High**: Major functionality unavailable, significant performance degradation
 - **Medium**: Minor functionality affected, some users impacted
 - **Low**: Minimal impact, workaround available
 
 ### Affected Users
+
 - **User Group 1**: Impact description
 - **User Group 2**: Impact description
 - **Estimated Affected Users**: Number or percentage
 
 ### Business Impact
+
 - **Revenue Impact**: Description and estimated amount
 - **SLA Impact**: Which SLAs are at risk
 - **Reputation Impact**: Description
 - **Compliance Impact**: Any regulatory concerns
 
 ### Affected Components
+
 - Component 1: Description of impact
 - Component 2: Description of impact
 - Component 3: Description of impact
@@ -64,28 +72,34 @@ ERROR [timestamp] ServiceName: Error message pattern
 ### Automated Detection
 
 **Primary Alert**:
+
 - **Alert Name**: Alert name from monitoring system
 - **Alert Condition**: Condition that triggers the alert
 - **Alert Channel**: Slack/PagerDuty/Email
 - **Alert Link**: [Link to alert configuration]
 
 **Secondary Alerts**:
+
 - Alert 1: Description
 - Alert 2: Description
 
 ### Monitoring Dashboards
+
 - **Primary Dashboard**: [Dashboard Name](dashboard-link)
   - Key metrics to check: Metric 1, Metric 2, Metric 3
 - **Secondary Dashboard**: [Dashboard Name](dashboard-link)
   - Key metrics to check: Metric 1, Metric 2
 
 ### Manual Detection
+
 **How to manually verify the issue**:
+
 1. Step 1: Description
 2. Step 2: Description
 3. Step 3: Description
 
 **Commands to check**:
+
 ```bash
 # Check service health
 kubectl get pods -n production | grep service-name
@@ -104,6 +118,7 @@ curl http://service-name:8080/actuator/metrics/http.server.requests
 **Objective**: Confirm the issue is occurring
 
 **Actions**:
+
 ```bash
 # Command 1: Check service status
 kubectl get pods -n production
@@ -116,6 +131,7 @@ kubectl logs deployment/service-name -n production --since=10m
 ```
 
 **Expected Results**:
+
 - Result 1: Description
 - Result 2: Description
 
@@ -127,19 +143,21 @@ kubectl logs deployment/service-name -n production --since=10m
 **Objective**: Determine what's causing the issue
 
 **Common Causes**:
+
 1. **Cause 1**: Description
    - How to verify: Commands or checks
    - Indicators: What to look for
-   
+
 2. **Cause 2**: Description
    - How to verify: Commands or checks
    - Indicators: What to look for
-   
+
 3. **Cause 3**: Description
    - How to verify: Commands or checks
    - Indicators: What to look for
 
 **Diagnostic Commands**:
+
 ```bash
 # Check resource usage
 kubectl top pods -n production
@@ -152,7 +170,8 @@ kubectl top pods -n production
 ```
 
 **Decision Tree**:
-```
+
+```text
 Is CPU > 90%?
 ├─ Yes → Check for memory leak (Go to Step 3A)
 └─ No → Is error rate > 5%?
@@ -163,6 +182,7 @@ Is CPU > 90%?
 ### Step 3: Gather Additional Information
 
 **Information to Collect**:
+
 - [ ] Recent deployments (last 24 hours)
 - [ ] Recent configuration changes
 - [ ] Traffic patterns (current vs normal)
@@ -171,6 +191,7 @@ Is CPU > 90%?
 - [ ] External dependency status
 
 **Commands**:
+
 ```bash
 # Get recent deployments
 kubectl rollout history deployment/service-name -n production
@@ -189,23 +210,29 @@ kubectl get configmap service-config -n production -o yaml
 **Priority**: Stop the bleeding
 
 1. **Action 1**: Description
+
    ```bash
    # Command to execute
    ```
+
    **Expected Result**: Description
    **Verification**: How to verify it worked
 
 2. **Action 2**: Description
+
    ```bash
    # Command to execute
    ```
+
    **Expected Result**: Description
    **Verification**: How to verify it worked
 
 3. **Action 3**: Description
+
    ```bash
    # Command to execute
    ```
+
    **Expected Result**: Description
    **Verification**: How to verify it worked
 
@@ -214,16 +241,20 @@ kubectl get configmap service-config -n production -o yaml
 **Priority**: Restore service to acceptable level
 
 1. **Fix 1**: Description
+
    ```bash
    # Commands to execute
    ```
+
    **Expected Result**: Description
    **Rollback**: How to rollback if this doesn't work
 
 2. **Fix 2**: Description
+
    ```bash
    # Commands to execute
    ```
+
    **Expected Result**: Description
    **Rollback**: How to rollback if this doesn't work
 
@@ -244,19 +275,25 @@ kubectl get configmap service-config -n production -o yaml
 ### Resolution by Root Cause
 
 #### If Root Cause is: High CPU Usage
+
 **Resolution Steps**:
+
 1. Step 1: Description
 2. Step 2: Description
 3. Step 3: Description
 
 #### If Root Cause is: Database Connection Issues
+
 **Resolution Steps**:
+
 1. Step 1: Description
 2. Step 2: Description
 3. Step 3: Description
 
 #### If Root Cause is: External Service Failure
+
 **Resolution Steps**:
+
 1. Step 1: Description
 2. Step 2: Description
 3. Step 3: Description
@@ -301,6 +338,7 @@ kubectl logs deployment/service-name -n production --since=5m | grep ERROR
 ## Prevention
 
 ### Immediate Prevention Measures
+
 1. **Measure 1**: Description
    - Implementation: How to implement
    - Timeline: When to implement
@@ -310,6 +348,7 @@ kubectl logs deployment/service-name -n production --since=5m | grep ERROR
    - Timeline: When to implement
 
 ### Long-term Prevention Strategy
+
 1. **Strategy 1**: Description
    - Owner: Team/Person
    - Timeline: Timeline
@@ -321,11 +360,13 @@ kubectl logs deployment/service-name -n production --since=5m | grep ERROR
    - Success Criteria: How to measure success
 
 ### Monitoring Improvements
+
 - **Improvement 1**: Add alert for X
 - **Improvement 2**: Add dashboard for Y
 - **Improvement 3**: Add automated check for Z
 
 ### Process Improvements
+
 - **Improvement 1**: Description
 - **Improvement 2**: Description
 - **Improvement 3**: Description
@@ -344,21 +385,25 @@ kubectl logs deployment/service-name -n production --since=5m | grep ERROR
 ### Contact Information
 
 **On-Call Engineer**:
+
 - PagerDuty: [Link to schedule]
 - Slack: #oncall-channel
 
 **Team Lead**:
+
 - Name: Person Name
 - Phone: +X-XXX-XXX-XXXX
 - Slack: @username
 
 **Subject Matter Experts**:
+
 - **Expert 1** (Area): @username
 - **Expert 2** (Area): @username
 
 ### Escalation Triggers
 
 Escalate immediately if:
+
 - Issue affects > X% of users
 - Revenue impact > $Y
 - Data loss or security breach
@@ -371,17 +416,20 @@ Escalate immediately if:
 ### Internal Communication
 
 **Slack Channels**:
+
 - **#incidents**: For incident updates
 - **#engineering**: For technical discussion
 - **#leadership**: For executive updates
 
 **Update Frequency**:
+
 - **Critical**: Every 15 minutes
 - **High**: Every 30 minutes
 - **Medium**: Every hour
 
 **Update Template**:
-```
+
+```text
 🚨 Incident Update - [Timestamp]
 Status: Investigating | Identified | Monitoring | Resolved
 Impact: [Description]
@@ -395,11 +443,13 @@ Next Update: [Time]
 **Status Page**: [Link to status page]
 
 **Customer Communication**:
+
 - **When to communicate**: Criteria for customer notification
 - **Communication channels**: Email, status page, social media
 - **Message template**: [Link to template]
 
 **Stakeholder Communication**:
+
 - **Who to notify**: List of stakeholders
 - **When to notify**: Criteria
 - **Communication method**: Email, phone, Slack
@@ -411,12 +461,14 @@ Next Update: [Time]
 **Schedule PIR**: Within 48 hours of resolution
 
 **PIR Attendees**:
+
 - Incident responders
 - Team lead
 - Product manager
 - Relevant stakeholders
 
 **PIR Agenda**:
+
 1. Timeline of events
 2. Root cause analysis
 3. What went well
@@ -426,6 +478,7 @@ Next Update: [Time]
 ### Documentation Updates
 
 After resolution, update:
+
 - [ ] This runbook with lessons learned
 - [ ] Monitoring alerts if needed
 - [ ] Architecture documentation if relevant
@@ -440,14 +493,17 @@ After resolution, update:
 ### Lessons Learned
 
 **What Worked Well**:
+
 - Item 1
 - Item 2
 
 **What Could Be Improved**:
+
 - Item 1
 - Item 2
 
 **Action Items**:
+
 - [ ] Action 1: Description
 - [ ] Action 2: Description
 
@@ -478,6 +534,7 @@ kubectl top pods -n production
 ```
 
 ### Useful Links
+
 - [Monitoring Dashboard](link)
 - [Log Aggregation](link)
 - [Deployment Pipeline](link)

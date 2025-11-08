@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "evolution"]
 Current active-active architecture in Taiwan and Tokyo provides high availability but lacks geographic diversity for true disaster recovery:
 
 **Current Limitations**:
+
 - **Geographic Concentration**: Both regions in East Asia
 - **Correlated Risks**: Regional disasters (earthquakes, typhoons) could affect both
 - **Geopolitical Risks**: Taiwan Strait tensions could impact both regions
@@ -31,6 +32,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 - **Data Sovereignty**: Need alternative region for data residency compliance
 
 **Disaster Scenarios Requiring Third Region**:
+
 1. **Dual Region Failure**: Both Taiwan and Tokyo unavailable
 2. **Regional Natural Disaster**: Major earthquake affecting East Asia
 3. **Geopolitical Crisis**: Conflict impacting multiple regions
@@ -38,6 +40,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 5. **Data Migration**: Need to relocate data due to regulatory changes
 
 **Business Impact Without Third Region**:
+
 - Complete service outage if both primary regions fail
 - Extended recovery time (> 4 hours)
 - Potential data loss
@@ -48,6 +51,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 ### Business Context
 
 **Business Drivers**:
+
 - Business continuity (mandatory)
 - Geographic risk diversification
 - Regulatory compliance (data residency)
@@ -56,6 +60,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 - Market expansion opportunities
 
 **Constraints**:
+
 - Budget: $50,000/year for third region
 - Must maintain 99.9% availability
 - Data sovereignty requirements
@@ -65,6 +70,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 ### Technical Context
 
 **Current State**:
+
 - Active-active in Taiwan (ap-northeast-1) and Tokyo (ap-northeast-1)
 - No third region
 - Manual disaster recovery procedures
@@ -72,6 +78,7 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 - 4-hour RTO for complete region loss
 
 **Requirements**:
+
 - Third region in different geographic area
 - Automated failover capability
 - < 2 hour RTO for third region activation
@@ -97,7 +104,8 @@ Current active-active architecture in Taiwan and Tokyo provides high availabilit
 **Description**: Deploy Singapore (ap-southeast-1) as warm standby third region with Seoul (ap-northeast-2) as cold standby backup
 
 **Architecture**:
-```
+
+```text
 Primary Regions (Active-Active):
 ├── Taiwan (ap-northeast-1) - 50% traffic
 └── Tokyo (ap-northeast-1) - 50% traffic
@@ -118,6 +126,7 @@ Backup Region (Cold Standby):
 ```
 
 **Singapore Warm Standby Configuration**:
+
 ```typescript
 interface SingaporeWarmStandby {
   infrastructure: {
@@ -170,6 +179,7 @@ interface SingaporeWarmStandby {
 ```
 
 **Seoul Cold Standby Configuration**:
+
 ```typescript
 interface SeoulColdStandby {
   infrastructure: {
@@ -198,6 +208,7 @@ interface SeoulColdStandby {
 ```
 
 **Why Singapore?**:
+
 - ✅ Geographic diversity (Southeast Asia vs East Asia)
 - ✅ Low latency to Taiwan/Tokyo (~50-80ms)
 - ✅ Stable political environment
@@ -207,6 +218,7 @@ interface SeoulColdStandby {
 - ✅ Regional hub for APAC
 
 **Why Seoul as Backup?**:
+
 - ✅ Geographic proximity to Taiwan/Tokyo
 - ✅ Lower cost than Singapore
 - ✅ Good AWS infrastructure
@@ -216,6 +228,7 @@ interface SeoulColdStandby {
 **Activation Procedures**:
 
 **Scenario 1: Activate Singapore (Dual Region Failure)**:
+
 ```typescript
 interface SingaporeActivation {
   trigger: {
@@ -278,6 +291,7 @@ interface SingaporeActivation {
 ```
 
 **Scenario 2: Activate Seoul (Singapore Also Unavailable)**:
+
 ```typescript
 interface SeoulActivation {
   trigger: {
@@ -340,6 +354,7 @@ interface SeoulActivation {
 ```
 
 **Data Replication Strategy**:
+
 ```typescript
 interface DataReplicationStrategy {
   tier1_critical: {
@@ -372,6 +387,7 @@ interface DataReplicationStrategy {
 ```
 
 **Cost Breakdown**:
+
 ```typescript
 const thirdRegionCosts = {
   singapore: {
@@ -401,6 +417,7 @@ const thirdRegionCosts = {
 ```
 
 **Cost Optimization Options**:
+
 1. **Reduce Singapore capacity to 10%**: Save $18,000/year
 2. **Use Spot instances**: Save $15,000/year
 3. **Optimize data transfer**: Save $10,000/year
@@ -409,6 +426,7 @@ const thirdRegionCosts = {
 6. **Optimized cost**: $71,000/year (still over budget)
 
 **Pros**:
+
 - ✅ True geographic diversity
 - ✅ Fast activation (< 2 hours)
 - ✅ Low data loss (< 15 minutes RPO)
@@ -418,6 +436,7 @@ const thirdRegionCosts = {
 - ✅ Regional expansion opportunity
 
 **Cons**:
+
 - ⚠️ Cost exceeds budget ($126K vs $50K)
 - ⚠️ Operational complexity
 - ⚠️ Data transfer costs
@@ -432,11 +451,13 @@ const thirdRegionCosts = {
 **Description**: Deploy Seoul as single third region (warm standby)
 
 **Pros**:
+
 - ✅ Lower cost ($60K/year)
 - ✅ Simpler operations
 - ✅ Geographic proximity
 
 **Cons**:
+
 - ❌ Still in East Asia (limited diversity)
 - ❌ Single backup option
 - ❌ Higher correlated risk
@@ -450,11 +471,13 @@ const thirdRegionCosts = {
 **Description**: Deploy Mumbai (ap-south-1) as third region
 
 **Pros**:
+
 - ✅ True geographic diversity
 - ✅ Lower cost than Singapore
 - ✅ Growing AWS region
 
 **Cons**:
+
 - ❌ Higher latency (~150ms)
 - ❌ Less mature infrastructure
 - ❌ Potential connectivity issues
@@ -472,6 +495,7 @@ const thirdRegionCosts = {
 Singapore provides optimal geographic diversity with acceptable latency, while Seoul offers cost-effective backup option.
 
 **Cost Optimization Plan**:
+
 1. Reduce Singapore capacity to 15% (save $12K)
 2. Use Spot instances for non-critical workloads (save $15K)
 3. Optimize data transfer with caching (save $10K)
@@ -497,6 +521,7 @@ Singapore provides optimal geographic diversity with acceptable latency, while S
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All services and data
 - Infrastructure architecture
 - Disaster recovery procedures
@@ -520,6 +545,7 @@ Affects:
 ### Phase 1: Singapore Infrastructure Setup (Month 1-2)
 
 **Tasks**:
+
 - [ ] Deploy EKS cluster in Singapore
 - [ ] Set up RDS read replica
 - [ ] Configure ElastiCache
@@ -530,6 +556,7 @@ Affects:
 - [ ] Perform initial failover test
 
 **Success Criteria**:
+
 - Singapore infrastructure operational
 - Data replication working (< 5 min lag)
 - Initial failover test successful
@@ -537,6 +564,7 @@ Affects:
 ### Phase 2: Seoul Backup Setup (Month 3)
 
 **Tasks**:
+
 - [ ] Create IaC templates for Seoul
 - [ ] Set up automated snapshots
 - [ ] Configure backup replication
@@ -545,6 +573,7 @@ Affects:
 - [ ] Document activation procedures
 
 **Success Criteria**:
+
 - Seoul can be deployed < 2 hours
 - Backup restoration tested
 - Procedures documented
@@ -552,6 +581,7 @@ Affects:
 ### Phase 3: Automation & Testing (Month 4-5)
 
 **Tasks**:
+
 - [ ] Implement automated failover
 - [ ] Create activation runbooks
 - [ ] Conduct failover drills
@@ -560,6 +590,7 @@ Affects:
 - [ ] Train operations team
 
 **Success Criteria**:
+
 - Automated failover working
 - RTO < 2 hours achieved
 - RPO < 15 minutes achieved
@@ -568,6 +599,7 @@ Affects:
 ### Phase 4: Cost Optimization (Month 6)
 
 **Tasks**:
+
 - [ ] Implement Spot instances
 - [ ] Optimize data transfer
 - [ ] Right-size resources
@@ -575,6 +607,7 @@ Affects:
 - [ ] Monitor and adjust
 
 **Success Criteria**:
+
 - Cost reduced to $71K/year
 - Performance maintained
 - Availability maintained
@@ -582,11 +615,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Cost exceeds budget significantly
 - Performance degradation
 - Activation failures
 
 **Rollback Steps**:
+
 1. Decommission Singapore infrastructure
 2. Return to two-region architecture
 3. Maintain Seoul snapshots only
@@ -637,12 +672,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual cost optimization
 2. Basic failover automation
 3. Limited testing scenarios
 4. Manual capacity planning
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Advanced automation
 - **Q3 2026**: AI-powered capacity planning
 - **Q4 2026**: Predictive failover
@@ -665,6 +702,7 @@ Affects:
 ### Geographic Diversity Analysis
 
 **Current Risk (Taiwan + Tokyo)**:
+
 - Both in East Asia
 - Similar seismic risk
 - Similar typhoon risk
@@ -672,6 +710,7 @@ Affects:
 - Limited diversity
 
 **With Singapore**:
+
 - Southeast Asia vs East Asia
 - Different seismic zones
 - Different weather patterns
@@ -703,6 +742,7 @@ Affects:
 **Budget Gap**: $21,000/year
 
 **Options**:
+
 1. Request budget increase
 2. Further cost optimization
 3. Phased implementation

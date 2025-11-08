@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 ### Business Context
 
 **Business Drivers**:
+
 - Improve user experience (don't block on slow operations)
 - Handle peak loads (queue jobs during traffic spikes)
 - Ensure reliability (retry failed operations automatically)
@@ -41,6 +42,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - Maintain system responsiveness (offload heavy tasks)
 
 **Business Constraints**:
+
 - Budget: $300/month for job processing infrastructure
 - Job processing latency < 5 minutes for high-priority jobs
 - Support for job priorities (critical, high, normal, low)
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 application
 - Kafka for event streaming (ADR-005)
 - Redis for distributed caching (ADR-022)
@@ -58,6 +61,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - Multiple application instances (horizontal scaling)
 
 **Requirements**:
+
 - Distributed job processing (multiple workers)
 - Job scheduling (cron-like)
 - Job priorities and queues
@@ -86,6 +90,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 **Description**: Use Spring's @Async with database-backed job queue
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ No additional infrastructure
 - ✅ ACID transactions with jobs
@@ -93,6 +98,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ Easy to debug
 
 **Cons**:
+
 - ❌ Poor scalability (database bottleneck)
 - ❌ No built-in scheduling
 - ❌ Limited retry logic
@@ -112,6 +118,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 **Description**: Use AWS SQS for job queues with Spring Cloud AWS integration
 
 **Pros**:
+
 - ✅ Fully managed service
 - ✅ Highly scalable (unlimited throughput)
 - ✅ At-least-once delivery
@@ -124,12 +131,14 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ No operational overhead
 
 **Cons**:
+
 - ⚠️ No built-in scheduling (need EventBridge)
 - ⚠️ Limited message size (256KB)
 - ⚠️ Eventual consistency
 - ⚠️ No priority within queue (need multiple queues)
 
-**Cost**: 
+**Cost**:
+
 - SQS: $0.40/million requests (first 1M free)
 - EventBridge: $1.00/million events
 - Total: $50-100/month (10M jobs/month)
@@ -143,6 +152,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 **Description**: Use Redis as job queue with Spring Data Redis
 
 **Pros**:
+
 - ✅ Uses existing Redis infrastructure
 - ✅ Fast (in-memory)
 - ✅ Simple to implement
@@ -151,6 +161,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ Pub/sub for notifications
 
 **Cons**:
+
 - ❌ No built-in scheduling
 - ❌ Limited persistence (AOF/RDB)
 - ❌ Manual retry logic
@@ -169,6 +180,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 **Description**: Use Quartz Scheduler for job scheduling and execution
 
 **Pros**:
+
 - ✅ Mature scheduling library
 - ✅ Cron-like scheduling
 - ✅ Clustered mode (distributed)
@@ -177,6 +189,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ Misfire handling
 
 **Cons**:
+
 - ❌ Database-backed (scalability limits)
 - ❌ Complex configuration
 - ❌ Not designed for high-throughput queues
@@ -195,6 +208,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 **Description**: Use existing Kafka infrastructure for job processing
 
 **Pros**:
+
 - ✅ Already deployed (ADR-005)
 - ✅ High throughput
 - ✅ Durable (replicated)
@@ -203,6 +217,7 @@ The Enterprise E-Commerce Platform requires background job processing for:
 - ✅ Good for event-driven jobs
 
 **Cons**:
+
 - ❌ No built-in scheduling
 - ❌ Complex retry logic
 - ❌ No priority queues
@@ -236,6 +251,7 @@ AWS SQS with EventBridge was selected for the following reasons:
 **Job Processing Architecture**:
 
 **Queue Structure**:
+
 - `ecommerce-jobs-critical`: Critical jobs (payment processing, order confirmation)
 - `ecommerce-jobs-high`: High-priority jobs (email sending, notifications)
 - `ecommerce-jobs-normal`: Normal jobs (report generation, data sync)
@@ -243,18 +259,21 @@ AWS SQS with EventBridge was selected for the following reasons:
 - `ecommerce-jobs-dlq`: Dead letter queue for failed jobs
 
 **Job Types**:
+
 - **Immediate Jobs**: Processed as soon as possible (email, notifications)
 - **Scheduled Jobs**: Triggered by EventBridge (daily reports, reminders)
 - **Delayed Jobs**: Delayed execution (abandoned cart after 1 hour)
 - **Recurring Jobs**: Periodic execution (inventory sync every 15 minutes)
 
 **Retry Strategy**:
+
 - **Automatic Retries**: SQS visibility timeout (exponential backoff)
 - **Max Retries**: 3 attempts before moving to DLQ
 - **Backoff**: 1 minute, 5 minutes, 15 minutes
 - **DLQ Processing**: Manual review and reprocessing
 
 **EventBridge Scheduling**:
+
 - Daily reports: 8:00 AM UTC
 - Inventory sync: Every 15 minutes
 - Abandoned cart reminders: Every hour
@@ -285,6 +304,7 @@ AWS SQS with EventBridge was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (job processing)
 - Application services (job submission)
 - Infrastructure layer (SQS client, EventBridge)
@@ -340,12 +360,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Job processing failure rate > 5%
 - Queue depth > 10,000 messages
 - SQS errors > 1%
 - Cost exceeds budget by > 50%
 
 **Rollback Steps**:
+
 1. Disable job submission to SQS
 2. Fall back to synchronous processing
 3. Investigate and fix issues
@@ -368,6 +390,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - SQS Queue Depth (per queue)
 - SQS Messages Sent/Received
 - SQS Message Age
@@ -377,6 +400,7 @@ Affects:
 - Lambda Duration (for EventBridge targets)
 
 **Application Metrics**:
+
 ```java
 @Component
 public class JobProcessingMetrics {
@@ -390,6 +414,7 @@ public class JobProcessingMetrics {
 ```
 
 **Alerts**:
+
 - Queue depth > 5,000 messages
 - Message age > 30 minutes
 - DLQ messages > 100
@@ -398,6 +423,7 @@ public class JobProcessingMetrics {
 - Cost > $150/month
 
 **Review Schedule**:
+
 - Daily: Check job processing metrics
 - Weekly: Review failed jobs and DLQ
 - Monthly: Optimize job processing
@@ -426,11 +452,13 @@ public class JobProcessingMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual DLQ processing (can automate with Lambda)
 2. Simple retry logic (can add exponential backoff with jitter)
 3. No job prioritization within queue (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated DLQ processing
 - **Q3 2026**: Add advanced retry strategies
 - **Q4 2026**: Implement job prioritization and scheduling optimization

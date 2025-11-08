@@ -18,6 +18,7 @@ The Availability & Resilience Perspective ensures the system remains operational
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Database Failover
+
 - **Source**: Database server
 - **Stimulus**: Primary database fails
 - **Environment**: Production during business hours

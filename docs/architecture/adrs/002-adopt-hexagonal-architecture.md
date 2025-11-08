@@ -32,6 +32,7 @@ The Enterprise E-Commerce Platform needs an architecture that:
 ### Business Context
 
 **Business Drivers**:
+
 - Need for rapid feature development without breaking existing functionality
 - Requirement to support multiple client types (web, mobile, API consumers)
 - Expected evolution of technology stack over 5+ year lifespan
@@ -39,6 +40,7 @@ The Enterprise E-Commerce Platform needs an architecture that:
 - Team growth from 5 to 20+ developers
 
 **Constraints**:
+
 - Team has Spring Boot experience but limited DDD experience
 - 3-month timeline to MVP
 - Must integrate with existing AWS infrastructure
@@ -47,12 +49,14 @@ The Enterprise E-Commerce Platform needs an architecture that:
 ### Technical Context
 
 **Current State**:
+
 - New greenfield project
 - Spring Boot 3.4.5 + Java 21
 - Domain-Driven Design (DDD) tactical patterns chosen
 - Event-driven architecture for cross-context communication
 
 **Requirements**:
+
 - Clear separation of concerns
 - Testable business logic
 - Technology-agnostic domain layer
@@ -78,7 +82,8 @@ The Enterprise E-Commerce Platform needs an architecture that:
 **Description**: Architecture pattern that separates core business logic from external concerns through ports (interfaces) and adapters (implementations)
 
 **Structure**:
-```
+
+```text
 domain/          # Core business logic (no dependencies)
 ├── model/       # Aggregates, entities, value objects
 ├── events/      # Domain events
@@ -99,6 +104,7 @@ interfaces/      # External interfaces (adapters)
 ```
 
 **Pros**:
+
 - ✅ Complete separation of business logic from infrastructure
 - ✅ Domain layer has zero external dependencies
 - ✅ Easy to test domain logic in isolation
@@ -109,12 +115,14 @@ interfaces/      # External interfaces (adapters)
 - ✅ Supports event-driven architecture naturally
 
 **Cons**:
+
 - ⚠️ More initial setup and boilerplate
 - ⚠️ Learning curve for team
 - ⚠️ More interfaces and abstractions
 - ⚠️ Can feel over-engineered for simple CRUD
 
-**Cost**: 
+**Cost**:
+
 - Initial: 2 weeks additional setup time
 - Ongoing: Minimal (pays off in maintainability)
 
@@ -125,19 +133,22 @@ interfaces/      # External interfaces (adapters)
 **Description**: Traditional layered architecture with presentation, business, and data layers
 
 **Structure**:
-```
+
+```text
 presentation/    # Controllers, views
 business/        # Business logic
 data/            # Data access
 ```
 
 **Pros**:
+
 - ✅ Familiar to most developers
 - ✅ Simple to understand
 - ✅ Less boilerplate
 - ✅ Quick to implement
 
 **Cons**:
+
 - ❌ Business logic often leaks into other layers
 - ❌ Tight coupling to frameworks and databases
 - ❌ Difficult to test in isolation
@@ -154,7 +165,8 @@ data/            # Data access
 **Description**: Similar to Hexagonal but with more explicit layer definitions
 
 **Structure**:
-```
+
+```text
 entities/        # Enterprise business rules
 use-cases/       # Application business rules
 interface-adapters/  # Controllers, presenters, gateways
@@ -162,12 +174,14 @@ frameworks/      # External frameworks and tools
 ```
 
 **Pros**:
+
 - ✅ Similar benefits to Hexagonal
 - ✅ Very explicit layer boundaries
 - ✅ Strong emphasis on dependency rule
 - ✅ Good for complex domains
 
 **Cons**:
+
 - ⚠️ More layers than Hexagonal
 - ⚠️ Can be overly complex
 - ⚠️ Less Spring Boot integration examples
@@ -182,11 +196,13 @@ frameworks/      # External frameworks and tools
 **Description**: Single deployable with clear module boundaries
 
 **Pros**:
+
 - ✅ Simpler deployment
 - ✅ Clear module boundaries
 - ✅ Can evolve to microservices
 
 **Cons**:
+
 - ❌ Doesn't address layer separation
 - ❌ Can still have tight coupling
 - ❌ Doesn't solve testability issues
@@ -234,6 +250,7 @@ Hexagonal Architecture was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (package structure)
 - All layers (domain, application, infrastructure, interfaces)
 - Testing strategy (unit tests for domain)
@@ -289,12 +306,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Team unable to adopt after 4 weeks
 - Development velocity decreases by > 30%
 - Excessive boilerplate slows development
 - Architecture violations > 50% of PRs
 
 **Rollback Steps**:
+
 1. Simplify to layered architecture
 2. Keep domain models but allow direct dependencies
 3. Merge infrastructure into application layer
@@ -319,6 +338,7 @@ Affects:
 ### Monitoring Plan
 
 **ArchUnit Tests**:
+
 ```java
 @ArchTest
 static final ArchRule domainLayerRules = classes()
@@ -334,6 +354,7 @@ static final ArchRule repositoryRules = classes()
 ```
 
 **Code Review Checklist**:
+
 - [ ] Domain logic in domain layer
 - [ ] No infrastructure dependencies in domain
 - [ ] Repositories are interfaces in domain
@@ -341,6 +362,7 @@ static final ArchRule repositoryRules = classes()
 - [ ] Application services orchestrate use cases
 
 **Review Schedule**:
+
 - Weekly: Architecture review in team meeting
 - Monthly: ArchUnit test results review
 - Quarterly: Architecture retrospective
@@ -368,11 +390,13 @@ static final ArchRule repositoryRules = classes()
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some simple CRUD operations have unnecessary abstraction (acceptable trade-off)
 2. Boilerplate code for mappers between layers (can be reduced with MapStruct)
 3. Learning curve for new team members (decreases over time)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Introduce MapStruct to reduce mapper boilerplate
 - **Q2 2026**: Create code generators for common patterns
 - **Q3 2026**: Refine patterns based on 6 months of experience
@@ -387,7 +411,7 @@ static final ArchRule repositoryRules = classes()
 
 ### Package Structure
 
-```
+```text
 solid.humank.genaidemo/
 ├── domain/
 │   ├── customer/
@@ -452,6 +476,7 @@ solid.humank.genaidemo/
 **Scenario**: Add "Update Customer Email" feature
 
 1. **Domain Layer**: Add method to Customer aggregate
+
    ```java
    public void updateEmail(Email newEmail) {
        validateEmail(newEmail);
@@ -461,6 +486,7 @@ solid.humank.genaidemo/
    ```
 
 2. **Application Layer**: Create command and service method
+
    ```java
    public void updateCustomerEmail(UpdateEmailCommand command) {
        Customer customer = customerRepository.findById(command.customerId());
@@ -473,6 +499,7 @@ solid.humank.genaidemo/
 3. **Infrastructure Layer**: No changes needed (repository already exists)
 
 4. **Interfaces Layer**: Add REST endpoint
+
    ```java
    @PutMapping("/{id}/email")
    public ResponseEntity<Void> updateEmail(@PathVariable String id, @RequestBody UpdateEmailRequest request) {
@@ -484,6 +511,7 @@ solid.humank.genaidemo/
 ### Testing Strategy
 
 **Unit Tests** (Domain Layer):
+
 ```java
 @Test
 void should_update_email_when_valid_email_provided() {
@@ -501,6 +529,7 @@ void should_update_email_when_valid_email_provided() {
 ```
 
 **Integration Tests** (Infrastructure Layer):
+
 ```java
 @DataJpaTest
 @Test
@@ -518,6 +547,7 @@ void should_save_and_retrieve_customer() {
 ```
 
 **API Tests** (Interfaces Layer):
+
 ```java
 @WebMvcTest(CustomerController.class)
 @Test

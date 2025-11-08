@@ -5,6 +5,7 @@
 This guide provides troubleshooting procedures for distributed system issues in the e-commerce platform, including event-driven architecture with Apache Kafka, distributed tracing with AWS X-Ray, saga patterns, and cross-service transactions.
 
 **Technology Stack**:
+
 - **Messaging**: Apache Kafka (Amazon MSK)
 - **Container Orchestration**: Amazon EKS
 - **Distributed Tracing**: AWS X-Ray
@@ -34,12 +35,14 @@ This guide provides troubleshooting procedures for distributed system issues in 
 ### Kafka Consumer Lag
 
 #### Symptoms
+
 - Events are not being processed in real-time
 - Consumer lag metrics increasing in CloudWatch
 - Delayed order confirmations or inventory updates
 - Dashboard shows high consumer lag values
 
 #### Detection
+
 ```bash
 # Check consumer lag using Kafka tools
 kubectl exec -it kafka-client -n production -- \
@@ -60,6 +63,7 @@ aws cloudwatch get-metric-statistics \
 #### Diagnosis
 
 **Step 1: Check Consumer Health**
+
 ```bash
 # Check if consumers are running
 kubectl get pods -n production -l app=order-consumer
@@ -72,6 +76,7 @@ kubectl logs deployment/order-consumer -n production | grep -i error | tail -20
 ```
 
 **Step 2: Analyze Consumer Performance**
+
 ```bash
 # Check consumer processing rate via Spring Boot Actuator
 kubectl exec -it deployment/order-consumer -n production -- \
@@ -87,6 +92,7 @@ kubectl exec -it deployment/order-consumer -n production -- \
 
 **Step 3: Identify Bottlenecks**
 Common causes:
+
 - Slow message processing (check application logs)
 - Database connection pool exhaustion
 - External service timeouts
@@ -98,6 +104,7 @@ Common causes:
 **Immediate Actions**
 
 1. **Scale Consumer Instances**
+
 ```bash
 # Increase consumer replicas
 kubectl scale deployment order-consumer -n production --replicas=5
@@ -106,7 +113,8 @@ kubectl scale deployment order-consumer -n production --replicas=5
 kubectl get pods -n production -l app=order-consumer -w
 ```
 
-2. **Increase Partition Count** (if consumer instances > partitions)
+1. **Increase Partition Count** (if consumer instances > partitions)
+
 ```bash
 # Check current partition count
 kubectl exec -it kafka-client -n production -- \
@@ -119,7 +127,8 @@ kubectl exec -it kafka-client -n production -- \
   --alter --topic order-events --partitions 10
 ```
 
-3. **Optimize Consumer Configuration**
+1. **Optimize Consumer Configuration**
+
 ```yaml
 # application.yml
 spring:
@@ -134,6 +143,7 @@ spring:
 ```
 
 **Root Cause Fixes**
+
 - Optimize message processing logic
 - Add database connection pooling (HikariCP configuration)
 - Implement async processing for slow operations
@@ -141,6 +151,7 @@ spring:
 - Optimize database queries
 
 #### Prevention
+
 - Monitor consumer lag continuously in CloudWatch
 - Set up CloudWatch alarms for lag > 1000 messages
 - Implement auto-scaling based on lag metrics using KEDA
@@ -152,6 +163,7 @@ spring:
 ### Kafka Partition Rebalancing
 
 #### Symptoms
+
 - Frequent consumer group rebalancing
 - Temporary processing delays during rebalance
 - "Rebalance in progress" errors in logs
@@ -159,6 +171,7 @@ spring:
 - Consumer lag spikes during rebalance
 
 #### Detection
+
 ```bash
 # Check rebalance frequency in logs
 kubectl logs deployment/order-consumer -n production | \
@@ -172,6 +185,7 @@ kubectl exec -it deployment/order-consumer -n production -- \
 #### Diagnosis
 
 **Step 1: Identify Rebalance Triggers**
+
 ```bash
 # Check consumer logs for rebalance reasons
 kubectl logs deployment/order-consumer -n production | \
@@ -186,6 +200,7 @@ kubectl logs deployment/order-consumer -n production | \
 ```
 
 **Step 2: Check Consumer Configuration**
+
 ```yaml
 # Verify consumer settings in application.yml
 spring:
@@ -197,6 +212,7 @@ spring:
 ```
 
 **Step 3: Check Pod Stability**
+
 ```bash
 # Check for pod restarts
 kubectl get pods -n production -l app=order-consumer
@@ -210,6 +226,7 @@ kubectl describe pod <pod-name> -n production | grep -A 10 Events
 **Immediate Actions**
 
 1. **Increase Timeout Values**
+
 ```yaml
 spring:
   kafka:
@@ -219,13 +236,15 @@ spring:
       heartbeat-interval-ms: 10000  # Increase from 3s
 ```
 
-2. **Reduce Processing Time**
+1. **Reduce Processing Time**
+
 - Optimize message processing logic
 - Reduce batch size (max-poll-records)
 - Implement async processing for slow operations
 - Add timeouts for external service calls
 
-3. **Fix Pod Stability Issues**
+1. **Fix Pod Stability Issues**
+
 ```bash
 # Check resource limits
 kubectl describe deployment order-consumer -n production | grep -A 5 Limits
@@ -237,6 +256,7 @@ kubectl set resources deployment order-consumer -n production \
 ```
 
 **Root Cause Fixes**
+
 - Fix slow message processing
 - Ensure consumers send heartbeats regularly
 - Implement graceful shutdown
@@ -244,6 +264,7 @@ kubectl set resources deployment order-consumer -n production \
 - Use static consumer group membership (Kafka 2.3+)
 
 #### Prevention
+
 - Monitor rebalance frequency in CloudWatch
 - Set appropriate timeout values based on processing time
 - Implement health checks
@@ -257,12 +278,14 @@ kubectl set resources deployment order-consumer -n production \
 ### AWS X-Ray Trace Analysis
 
 #### Symptoms
+
 - Slow API responses
 - Timeout errors
 - Unclear where latency is occurring
 - Need to trace request across multiple services
 
 #### Detection
+
 ```bash
 # Access X-Ray console via AWS CLI
 aws xray get-trace-summaries \
@@ -277,6 +300,7 @@ aws xray get-trace-summaries \
 #### Diagnosis
 
 **Step 1: Identify Slow Traces**
+
 ```bash
 # Find traces with high latency
 aws xray get-trace-summaries \
@@ -295,6 +319,7 @@ aws xray get-trace-summaries \
 ```
 
 **Step 2: Analyze Trace Details**
+
 ```bash
 # Get detailed trace
 aws xray batch-get-traces --trace-ids <trace-id>
@@ -308,12 +333,14 @@ aws xray batch-get-traces --trace-ids <trace-id>
 ```
 
 **Step 3: Check Service Dependencies**
+
 - Review X-Ray service map for bottlenecks
 - Identify services with high error rates
 - Check for circular dependencies
 - Verify timeout configurations
 
 **Step 4: Analyze Subsegments**
+
 ```bash
 # Extract subsegment information
 aws xray batch-get-traces --trace-ids <trace-id> | \
@@ -325,6 +352,7 @@ aws xray batch-get-traces --trace-ids <trace-id> | \
 **Immediate Actions**
 
 1. **Add Detailed X-Ray Instrumentation**
+
 ```java
 // Add subsegments for detailed tracing
 import com.amazonaws.xray.AWSXRay;
@@ -351,7 +379,8 @@ public class OrderService {
 }
 ```
 
-2. **Add Custom Annotations and Metadata**
+1. **Add Custom Annotations and Metadata**
+
 ```java
 // Add business context to traces
 AWSXRay.getCurrentSegment().putAnnotation("orderId", order.getId());
@@ -360,7 +389,8 @@ AWSXRay.getCurrentSegment().putMetadata("orderAmount", order.getTotal());
 AWSXRay.getCurrentSegment().putMetadata("itemCount", order.getItems().size());
 ```
 
-3. **Configure X-Ray Sampling**
+1. **Configure X-Ray Sampling**
+
 ```json
 // sampling-rules.json
 {
@@ -408,6 +438,7 @@ AWSXRay.getCurrentSegment().putMetadata("itemCount", order.getItems().size());
 ```
 
 **Root Cause Fixes**
+
 - Optimize slow database queries
 - Add caching for frequently accessed data
 - Implement async processing for non-critical operations
@@ -415,6 +446,7 @@ AWSXRay.getCurrentSegment().putMetadata("itemCount", order.getItems().size());
 - Optimize serialization/deserialization
 
 #### Prevention
+
 - Monitor trace latency continuously in CloudWatch
 - Set up CloudWatch alarms for slow traces (p95 > 2s)
 - Regular performance testing
@@ -428,6 +460,7 @@ AWSXRay.getCurrentSegment().putMetadata("itemCount", order.getItems().size());
 ### Order Processing Saga Failure
 
 #### Symptoms
+
 - Order stuck in intermediate state
 - Inventory reserved but payment failed
 - Compensation not triggered automatically
@@ -435,6 +468,7 @@ AWSXRay.getCurrentSegment().putMetadata("itemCount", order.getItems().size());
 - Customer sees "processing" status indefinitely
 
 #### Detection
+
 ```bash
 # Check saga state via application endpoint
 kubectl exec -it deployment/order-service -n production -- \
@@ -452,6 +486,7 @@ kubectl exec -it deployment/order-service -n production -- \
 #### Diagnosis
 
 **Step 1: Identify Saga State**
+
 ```sql
 -- Query saga state from database
 SELECT 
@@ -478,6 +513,7 @@ ORDER BY executed_at;
 ```
 
 **Step 2: Check Compensation Status**
+
 ```bash
 # Verify compensation events in Kafka
 kubectl exec -it kafka-client -n production -- \
@@ -491,6 +527,7 @@ kubectl logs deployment/order-service -n production | \
 ```
 
 **Step 3: Analyze Failure Point**
+
 ```bash
 # Check which step failed
 kubectl logs deployment/order-service -n production | \
@@ -502,6 +539,7 @@ kubectl get events -n production --sort-by='.lastTimestamp' | \
 ```
 
 **Step 4: Check Event Delivery**
+
 ```bash
 # Verify events were published
 kubectl logs deployment/order-service -n production | \
@@ -518,6 +556,7 @@ kubectl exec -it kafka-client -n production -- \
 **Immediate Actions**
 
 1. **Manual Compensation**
+
 ```bash
 # Trigger manual compensation via API
 curl -X POST http://order-service:8080/api/v1/sagas/<saga-id>/compensate \
@@ -527,7 +566,8 @@ curl -X POST http://order-service:8080/api/v1/sagas/<saga-id>/compensate \
 curl http://order-service:8080/api/v1/sagas/<saga-id>/status
 ```
 
-2. **Retry Failed Step**
+1. **Retry Failed Step**
+
 ```bash
 # Retry specific saga step
 curl -X POST http://order-service:8080/api/v1/sagas/<saga-id>/retry \
@@ -535,7 +575,8 @@ curl -X POST http://order-service:8080/api/v1/sagas/<saga-id>/retry \
   -d '{"step": "process-payment"}'
 ```
 
-3. **Verify Compensating Transactions**
+1. **Verify Compensating Transactions**
+
 ```java
 // Example compensation logic
 @Component
@@ -570,6 +611,7 @@ public class OrderSagaCompensation {
 ```
 
 **Root Cause Fixes**
+
 - Implement idempotent compensation operations
 - Add saga timeout handling with automatic compensation
 - Implement saga recovery mechanism for stuck sagas
@@ -577,6 +619,7 @@ public class OrderSagaCompensation {
 - Ensure all saga steps publish events reliably
 
 #### Prevention
+
 - Monitor saga completion rates in CloudWatch
 - Set up alarms for stuck sagas (> 5 minutes in progress)
 - Implement saga timeout policies (e.g., 10 minutes max)
@@ -591,6 +634,7 @@ public class OrderSagaCompensation {
 ### Data Inconsistency Between Services
 
 #### Symptoms
+
 - Customer sees different data in different views
 - Order total doesn't match inventory records
 - Payment processed but order not confirmed
@@ -598,6 +642,7 @@ public class OrderSagaCompensation {
 - Read-after-write inconsistency
 
 #### Detection
+
 ```bash
 # Check event processing lag
 kubectl exec -it deployment/order-service -n production -- \
@@ -617,6 +662,7 @@ kubectl exec -it kafka-client -n production -- \
 #### Diagnosis
 
 **Step 1: Check Event Delivery**
+
 ```bash
 # Verify events were published
 kubectl logs deployment/order-service -n production | \
@@ -634,6 +680,7 @@ kubectl exec -it kafka-client -n production -- \
 ```
 
 **Step 2: Identify Consistency Window**
+
 ```bash
 # Compare event timestamps
 # Event published time
@@ -648,6 +695,7 @@ kubectl logs deployment/inventory-service -n production | \
 ```
 
 **Step 3: Check for Failed Events**
+
 ```bash
 # Check dead letter queue
 kubectl exec -it kafka-client -n production -- \
@@ -665,6 +713,7 @@ kubectl logs deployment/inventory-service -n production | \
 **Immediate Actions**
 
 1. **Replay Failed Events from DLQ**
+
 ```bash
 # Consume from DLQ and republish to main topic
 kubectl exec -it kafka-client -n production -- bash -c '
@@ -677,7 +726,8 @@ kafka-console-producer.sh --bootstrap-server <msk-broker>:9092 \
 '
 ```
 
-2. **Force Synchronization**
+1. **Force Synchronization**
+
 ```bash
 # Trigger manual sync for specific order
 curl -X POST http://inventory-service:8080/api/v1/sync/order/<order-id>
@@ -686,7 +736,8 @@ curl -X POST http://inventory-service:8080/api/v1/sync/order/<order-id>
 curl http://inventory-service:8080/api/v1/inventory/order/<order-id>
 ```
 
-3. **Implement Read-Your-Writes Consistency**
+1. **Implement Read-Your-Writes Consistency**
+
 ```java
 // Return version/timestamp with write response
 @PostMapping("/orders")
@@ -721,6 +772,7 @@ public ResponseEntity<OrderResponse> getOrder(
 ```
 
 **Root Cause Fixes**
+
 - Implement event versioning and ordering
 - Add idempotency keys to prevent duplicate processing
 - Implement event replay mechanism
@@ -728,6 +780,7 @@ public ResponseEntity<OrderResponse> getOrder(
 - Use outbox pattern for reliable event publishing
 
 #### Prevention
+
 - Monitor event processing lag in CloudWatch
 - Implement eventual consistency UI patterns (loading states, optimistic updates)
 - Add version vectors for conflict detection
@@ -742,6 +795,7 @@ public ResponseEntity<OrderResponse> getOrder(
 ### Distributed Transaction Rollback
 
 #### Symptoms
+
 - Transaction partially committed across services
 - Some services updated, others not
 - Data inconsistency across bounded contexts
@@ -749,6 +803,7 @@ public ResponseEntity<OrderResponse> getOrder(
 - Orphaned data in some services
 
 #### Detection
+
 ```bash
 # Check transaction logs
 kubectl logs deployment/order-service -n production | \
@@ -762,6 +817,7 @@ kubectl exec -it deployment/order-service -n production -- \
 #### Diagnosis
 
 **Step 1: Identify Transaction Scope**
+
 ```bash
 # Check which services were involved
 kubectl logs deployment/order-service -n production | \
@@ -776,6 +832,7 @@ done
 
 **Step 2: Analyze Failure Cause**
 Common causes:
+
 - Network timeout between services
 - Service unavailability during transaction
 - Database deadlock
@@ -783,6 +840,7 @@ Common causes:
 - Timeout configuration mismatch
 
 **Step 3: Check Service Health at Failure Time**
+
 ```bash
 # Check service events around failure time
 kubectl get events -n production --sort-by='.lastTimestamp' | \
@@ -798,6 +856,7 @@ kubectl logs deployment/payment-service -n production \
 **Immediate Actions**
 
 1. **Use Saga Pattern Instead**
+
 ```java
 // Replace distributed transactions with saga pattern
 @Service
@@ -830,7 +889,8 @@ public class OrderSagaOrchestrator {
 }
 ```
 
-2. **Implement Idempotent Operations**
+1. **Implement Idempotent Operations**
+
 ```java
 @Service
 public class PaymentService {
@@ -853,6 +913,7 @@ public class PaymentService {
 ```
 
 **Root Cause Fixes**
+
 - Avoid distributed transactions when possible
 - Use saga pattern for long-running business processes
 - Implement compensating transactions
@@ -860,6 +921,7 @@ public class PaymentService {
 - Use event-driven architecture for loose coupling
 
 #### Prevention
+
 - Design for eventual consistency
 - Use saga pattern for cross-service workflows
 - Implement idempotent operations
@@ -874,6 +936,7 @@ public class PaymentService {
 ### Circuit Breaker Open State
 
 #### Symptoms
+
 - Service calls failing immediately without attempting
 - "Circuit breaker is open" errors in logs
 - Fallback responses returned to clients
@@ -881,6 +944,7 @@ public class PaymentService {
 - Increased error rates in dependent services
 
 #### Detection
+
 ```bash
 # Check circuit breaker state via Actuator
 kubectl exec -it deployment/order-service -n production -- \
@@ -894,6 +958,7 @@ kubectl exec -it deployment/order-service -n production -- \
 #### Diagnosis
 
 **Step 1: Check Circuit Breaker Configuration**
+
 ```yaml
 # application.yml
 resilience4j:
@@ -911,6 +976,7 @@ resilience4j:
 ```
 
 **Step 2: Verify Target Service Health**
+
 ```bash
 # Check if target service is healthy
 kubectl get pods -n production -l app=payment-service
@@ -925,6 +991,7 @@ kubectl exec -it deployment/payment-service -n production -- \
 ```
 
 **Step 3: Review Failure History**
+
 ```bash
 # Check recent failures that triggered circuit breaker
 kubectl logs deployment/order-service -n production | \
@@ -940,6 +1007,7 @@ kubectl exec -it deployment/order-service -n production -- \
 **Immediate Actions**
 
 1. **Fix Target Service**
+
 ```bash
 # Restart unhealthy service
 kubectl rollout restart deployment/payment-service -n production
@@ -952,7 +1020,8 @@ kubectl exec -it deployment/payment-service -n production -- \
   curl localhost:8080/actuator/health
 ```
 
-2. **Monitor Circuit Breaker Recovery**
+1. **Monitor Circuit Breaker Recovery**
+
 ```bash
 # Watch circuit breaker state transitions
 watch -n 1 'kubectl exec -it deployment/order-service -n production -- \
@@ -960,7 +1029,8 @@ watch -n 1 'kubectl exec -it deployment/order-service -n production -- \
   jq ".components.circuitBreakers.details.paymentService.state"'
 ```
 
-3. **Implement Better Fallback Logic**
+1. **Implement Better Fallback Logic**
+
 ```java
 @Service
 public class OrderService {
@@ -986,6 +1056,7 @@ public class OrderService {
 ```
 
 **Root Cause Fixes**
+
 - Fix underlying service issues
 - Adjust circuit breaker thresholds based on actual behavior
 - Implement meaningful fallback logic
@@ -993,6 +1064,7 @@ public class OrderService {
 - Improve service resilience
 
 #### Prevention
+
 - Monitor circuit breaker state changes in CloudWatch
 - Set up alarms for open circuits
 - Regular health checks on dependencies
@@ -1007,12 +1079,14 @@ public class OrderService {
 ### Application-Level Rate Limiting
 
 #### Symptoms
+
 - 429 Too Many Requests responses
 - Clients receiving rate limit errors
 - Legitimate traffic being blocked
 - Uneven rate limit distribution across instances
 
 #### Detection
+
 ```bash
 # Check rate limit metrics via Actuator
 kubectl exec -it deployment/api-gateway -n production -- \
@@ -1028,6 +1102,7 @@ kubectl logs deployment/api-gateway -n production | \
 #### Diagnosis
 
 **Step 1: Identify Rate Limited Clients**
+
 ```bash
 # Check rate limit logs
 kubectl logs deployment/api-gateway -n production | \
@@ -1041,6 +1116,7 @@ kubectl logs deployment/api-gateway -n production | \
 ```
 
 **Step 2: Review Rate Limit Configuration**
+
 ```java
 // Rate limiting using Bucket4j with Redis
 @Configuration
@@ -1068,6 +1144,7 @@ public class OrderController {
 ```
 
 **Step 3: Check Redis Rate Limiter State**
+
 ```bash
 # Connect to Redis
 kubectl exec -it redis-0 -n production -- redis-cli
@@ -1088,6 +1165,7 @@ HGETALL ratelimit:<client-id>:bucket
 **Immediate Actions**
 
 1. **Increase Rate Limits** (if legitimate traffic)
+
 ```java
 // Adjust rate limits in configuration
 @Configuration
@@ -1109,7 +1187,8 @@ public class RateLimitConfiguration {
 }
 ```
 
-2. **Implement Tiered Rate Limiting**
+1. **Implement Tiered Rate Limiting**
+
 ```java
 @Component
 public class TieredRateLimiter {
@@ -1137,7 +1216,8 @@ public class TieredRateLimiter {
 }
 ```
 
-3. **Add Rate Limit Headers**
+1. **Add Rate Limit Headers**
+
 ```java
 @Component
 public class RateLimitFilter extends OncePerRequestFilter {
@@ -1167,6 +1247,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 ```
 
 **Root Cause Fixes**
+
 - Implement proper client identification
 - Add rate limit headers in responses
 - Implement exponential backoff in clients
@@ -1174,6 +1255,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 - Implement distributed rate limiting with Redis
 
 #### Prevention
+
 - Monitor rate limit usage in CloudWatch
 - Set up alarms for high violation rates
 - Implement rate limit headers
@@ -1186,6 +1268,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 ### Service Throttling Under Load
 
 #### Symptoms
+
 - Slow response times under high load
 - Service rejecting requests
 - Queue buildup
@@ -1193,6 +1276,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 - Increased error rates
 
 #### Detection
+
 ```bash
 # Check service metrics
 kubectl exec -it deployment/order-service -n production -- \
@@ -1209,6 +1293,7 @@ kubectl top pods -n production -l app=order-service
 #### Diagnosis
 
 **Step 1: Check Thread Pool Configuration**
+
 ```yaml
 # application.yml
 server:
@@ -1222,6 +1307,7 @@ server:
 ```
 
 **Step 2: Analyze Request Queue**
+
 ```bash
 # Check queue depth
 kubectl exec -it deployment/order-service -n production -- \
@@ -1234,6 +1320,7 @@ kubectl exec -it deployment/order-service -n production -- \
 
 **Step 3: Identify Bottlenecks**
 Common causes:
+
 - Database connection pool exhaustion
 - External service timeouts
 - Memory pressure causing GC pauses
@@ -1245,6 +1332,7 @@ Common causes:
 **Immediate Actions**
 
 1. **Scale Service Horizontally**
+
 ```bash
 # Increase replicas
 kubectl scale deployment order-service -n production --replicas=10
@@ -1253,7 +1341,8 @@ kubectl scale deployment order-service -n production --replicas=10
 kubectl get pods -n production -l app=order-service -w
 ```
 
-2. **Increase Thread Pool Size**
+1. **Increase Thread Pool Size**
+
 ```yaml
 server:
   tomcat:
@@ -1262,7 +1351,8 @@ server:
       min-spare: 20
 ```
 
-3. **Implement Bulkhead Pattern**
+1. **Implement Bulkhead Pattern**
+
 ```java
 @Configuration
 public class BulkheadConfiguration {
@@ -1293,6 +1383,7 @@ public class OrderService {
 ```
 
 **Root Cause Fixes**
+
 - Optimize slow operations
 - Implement async processing
 - Add caching for frequently accessed data
@@ -1300,6 +1391,7 @@ public class OrderService {
 - Implement load shedding for non-critical requests
 
 #### Prevention
+
 - Monitor service capacity in CloudWatch
 - Implement auto-scaling based on metrics
 - Regular load testing
@@ -1314,36 +1406,42 @@ public class OrderService {
 ### Key Metrics to Monitor
 
 #### Event-Driven Architecture
+
 - **Consumer Lag**: Alert if > 1000 messages for > 5 minutes
 - **Rebalance Frequency**: Alert if > 5 rebalances/hour
 - **Event Processing Rate**: Monitor throughput
 - **Dead Letter Queue Size**: Alert if > 100 messages
 
 #### Distributed Tracing
+
 - **Trace Latency**: P95, P99 response times
 - **Trace Error Rate**: Alert if > 1%
 - **Missing Spans**: Alert if > 5%
 - **Service Dependency Health**: Monitor all dependencies
 
 #### Saga Patterns
+
 - **Saga Completion Rate**: Alert if < 95%
 - **Compensation Execution Rate**: Monitor frequency
 - **Stuck Saga Count**: Alert if > 10
 - **Saga Duration**: P95, P99 durations
 
 #### Eventual Consistency
+
 - **Event Processing Lag**: Alert if > 5 seconds
 - **Consistency Window Duration**: Monitor average time
 - **Failed Event Count**: Alert if > 10/minute
 - **DLQ Message Count**: Alert if increasing
 
 #### Circuit Breakers
+
 - **Circuit Breaker State**: Alert on state changes
 - **State Transition Frequency**: Monitor oscillations
 - **Fallback Execution Rate**: Monitor usage
 - **Half-Open Test Success Rate**: Track recovery
 
 #### Rate Limiting
+
 - **Rate Limit Violations**: Alert if > 100/minute
 - **Client Request Distribution**: Monitor patterns
 - **Rate Limit Utilization**: Track usage per tier
@@ -1406,24 +1504,28 @@ aws cloudwatch put-metric-alarm \
 ## Escalation Procedures
 
 ### Level 1: On-Call Engineer
+
 - Initial triage and diagnosis
 - Apply immediate fixes (scaling, restarts)
 - Monitor recovery
 - Document incident
 
 ### Level 2: Senior Engineer
+
 - Complex distributed system issues
 - Saga pattern failures requiring manual intervention
 - Cross-service transaction issues
 - Performance optimization
 
 ### Level 3: Architecture Team
+
 - System-wide consistency issues
 - Architecture changes needed
 - Major incident coordination
 - Post-mortem analysis
 
 ### External Support
+
 - **AWS Support**: MSK, EKS, RDS infrastructure issues
 - **Vendor Support**: Third-party service issues
 - **Security Team**: Security-related incidents

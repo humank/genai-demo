@@ -169,6 +169,7 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Immediate Actions
 
 1. **Stop writes** to affected data (if critical):
+
 ```bash
 # Scale down to prevent further inconsistency
 kubectl scale deployment/ecommerce-backend --replicas=0 -n production
@@ -179,7 +180,8 @@ kubectl set env deployment/ecommerce-backend \
   -n production
 ```
 
-2. **Notify stakeholders**:
+1. **Notify stakeholders**:
+
 ```bash
 # Send incident notification
 # Subject: P1 - Data Inconsistency Detected
@@ -189,9 +191,10 @@ kubectl set env deployment/ecommerce-backend \
 
 ### Root Cause Fixes
 
-#### If caused by failed event processing:
+#### If caused by failed event processing
 
 1. **Replay failed events**:
+
 ```bash
 # Get failed events from DLQ
 kubectl exec -it kafka-0 -n production -- \
@@ -207,7 +210,8 @@ kubectl exec -it kafka-0 -n production -- \
   --topic ecommerce-events < failed-events.json
 ```
 
-2. **Implement idempotency**:
+1. **Implement idempotency**:
+
 ```java
 @Component
 public class OrderEventHandler {
@@ -236,9 +240,10 @@ public class OrderEventHandler {
 }
 ```
 
-#### If caused by race conditions:
+#### If caused by race conditions
 
 1. **Implement optimistic locking**:
+
 ```java
 @Entity
 public class Product {
@@ -277,7 +282,8 @@ public class InventoryService {
 }
 ```
 
-2. **Use distributed locks** for critical sections:
+1. **Use distributed locks** for critical sections:
+
 ```java
 @Service
 public class OrderService {
@@ -309,9 +315,10 @@ public class OrderService {
 }
 ```
 
-#### If caused by cache staleness:
+#### If caused by cache staleness
 
 1. **Clear stale cache**:
+
 ```bash
 # Clear specific cache entries
 kubectl exec -it redis-0 -n production -- redis-cli DEL customer:12345
@@ -320,7 +327,8 @@ kubectl exec -it redis-0 -n production -- redis-cli DEL customer:12345
 kubectl exec -it redis-0 -n production -- redis-cli FLUSHDB
 ```
 
-2. **Implement cache invalidation**:
+1. **Implement cache invalidation**:
+
 ```java
 @Service
 public class CustomerService {
@@ -343,9 +351,10 @@ public class CustomerService {
 }
 ```
 
-#### If caused by database corruption:
+#### If caused by database corruption
 
 1. **Run data reconciliation**:
+
 ```sql
 -- Fix orphaned orders
 DELETE FROM orders 
@@ -377,7 +386,8 @@ SET stock_quantity = (
 );
 ```
 
-2. **Create reconciliation job**:
+1. **Create reconciliation job**:
+
 ```java
 @Component
 public class DataReconciliationJob {
@@ -422,12 +432,14 @@ public class DataReconciliationJob {
 If data loss occurred:
 
 1. **Restore from backup**:
+
 ```bash
 # See backup-restore.md for detailed procedures
 ./scripts/restore-from-backup.sh --date=2025-10-25 --time=10:00
 ```
 
-2. **Replay events** from event store:
+1. **Replay events** from event store:
+
 ```java
 @Service
 public class EventReplayService {
@@ -553,11 +565,14 @@ public class IdempotentEventHandler {
 
 ```yaml
 # Set up data quality alerts
+
 - alert: DataInconsistencyDetected
+
   expr: data_integrity_check_failures > 0
   for: 5m
   
 - alert: HighEventProcessingLag
+
   expr: kafka_consumer_lag > 10000
   for: 10m
 ```

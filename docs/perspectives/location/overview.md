@@ -7,11 +7,13 @@ last_updated: "2025-10-24"
 version: "1.0"
 status: "active"
 related_docs:
+
   - "viewpoints/deployment/README.md"
   - "viewpoints/information/README.md"
   - "viewpoints/operational/README.md"
   - "perspectives/performance/README.md"
   - "perspectives/availability/README.md"
+
 tags: ["geography", "multi-region", "data-residency", "latency", "compliance"]
 ---
 
@@ -28,12 +30,14 @@ The Location Perspective addresses how the system serves users across different 
 **Concern**: How do we ensure the system is accessible and performant for users worldwide?
 
 **Challenges**:
+
 - Users distributed across multiple continents
 - Varying network infrastructure quality by region
 - Need for local presence in key markets
 - Cost optimization across regions
 
 **Approach**:
+
 - Multi-region deployment strategy
 - Content delivery network (CDN) for static assets
 - Regional API endpoints
@@ -44,12 +48,14 @@ The Location Perspective addresses how the system serves users across different 
 **Concern**: How do we comply with data sovereignty laws and regulations?
 
 **Challenges**:
+
 - GDPR requirements for EU data
 - China data localization laws
 - Industry-specific regulations (PCI-DSS, HIPAA)
 - Cross-border data transfer restrictions
 
 **Approach**:
+
 - Region-specific data storage
 - Data classification and tagging
 - Compliance-aware data replication
@@ -60,12 +66,14 @@ The Location Perspective addresses how the system serves users across different 
 **Concern**: How do we minimize latency for users regardless of their location?
 
 **Challenges**:
+
 - Physical distance between users and servers
 - Network congestion and routing inefficiencies
 - Database query latency across regions
 - Real-time data synchronization delays
 
 **Approach**:
+
 - Edge computing and caching
 - Read replicas in multiple regions
 - Asynchronous data replication
@@ -76,12 +84,14 @@ The Location Perspective addresses how the system serves users across different 
 **Concern**: How do we manage and monitor a globally distributed system?
 
 **Challenges**:
+
 - Coordinating deployments across regions
 - Monitoring and alerting at global scale
 - Incident response across time zones
 - Cost management and optimization
 
 **Approach**:
+
 - Centralized deployment orchestration
 - Regional monitoring with global aggregation
 - Follow-the-sun support model
@@ -138,7 +148,7 @@ The Location Perspective addresses how the system serves users across different 
 
 ### Multi-Region Deployment Model
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Global Infrastructure                     │
 ├─────────────────────────────────────────────────────────────┤
@@ -166,6 +176,7 @@ The Location Perspective addresses how the system serves users across different 
 **Principle**: Data stays in the region where it was created unless explicitly allowed to move.
 
 **Implementation**:
+
 1. **Data Classification**: Tag all data with origin region
 2. **Storage Isolation**: Separate databases per region for sensitive data
 3. **Replication Control**: Only non-sensitive data replicates cross-region
@@ -203,11 +214,13 @@ The Location Perspective addresses how the system serves users across different 
 **Chosen**: Active-Active for US and EU, Active-Passive for APAC
 
 **Rationale**:
+
 - US and EU have sufficient traffic to justify active-active
 - APAC traffic lower, active-passive more cost-effective
 - Allows for regional failover without full active-active complexity
 
 **Trade-offs**:
+
 - Higher complexity for US-EU synchronization
 - Cost savings in APAC region
 - Acceptable latency for APAC users
@@ -217,11 +230,13 @@ The Location Perspective addresses how the system serves users across different 
 **Chosen**: Selective asynchronous replication
 
 **Rationale**:
+
 - Not all data needs to be replicated globally
 - Asynchronous replication reduces latency impact
 - Selective replication reduces costs and complexity
 
 **Implementation**:
+
 - Product catalog: Replicated globally (read-heavy)
 - Customer data: Region-specific (compliance)
 - Order data: Replicated to primary region only
@@ -232,11 +247,13 @@ The Location Perspective addresses how the system serves users across different 
 **Chosen**: GeoDNS with Route 53
 
 **Rationale**:
+
 - Automatic routing based on user location
 - Health check-based failover
 - Low latency DNS resolution
 
 **Configuration**:
+
 - Latency-based routing for optimal performance
 - Health checks on regional endpoints
 - Automatic failover to healthy regions
@@ -301,12 +318,14 @@ The Location Perspective addresses how the system serves users across different 
 **Objective**: Verify latency targets are met for each region
 
 **Approach**:
+
 1. Deploy synthetic monitoring in each region
 2. Measure API response times from regional endpoints
 3. Test CDN performance from edge locations
 4. Validate database query latency
 
 **Success Criteria**:
+
 - Same-region latency < 200ms (95th percentile)
 - Cross-region latency < 500ms (95th percentile)
 - CDN latency < 50ms globally
@@ -316,12 +335,14 @@ The Location Perspective addresses how the system serves users across different 
 **Objective**: Verify data stays in designated regions
 
 **Approach**:
+
 1. Tag test data with region markers
 2. Query data location from all regions
 3. Attempt unauthorized cross-region access
 4. Audit data replication logs
 
 **Success Criteria**:
+
 - 100% of EU data in EU region
 - Zero unauthorized cross-region data access
 - Complete audit trail of data movement
@@ -331,12 +352,14 @@ The Location Perspective addresses how the system serves users across different 
 **Objective**: Verify regional failover works correctly
 
 **Approach**:
+
 1. Simulate regional outage
 2. Measure failover time
 3. Verify data consistency after failover
 4. Test failback procedures
 
 **Success Criteria**:
+
 - RTO ≤ 5 minutes
 - RPO ≤ 1 minute
 - Zero data loss during failover
@@ -377,16 +400,19 @@ The Location Perspective addresses how the system serves users across different 
 ## Related Documentation
 
 ### Viewpoints
+
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Multi-region infrastructure
 - [Information Viewpoint](../../viewpoints/information/README.md) - Data replication strategy
 - [Operational Viewpoint](../../viewpoints/operational/README.md) - Regional operations
 
 ### Perspectives
+
 - [Performance Perspective](../performance/README.md) - Latency optimization
 - [Availability Perspective](../availability/README.md) - Regional failover
 - [Security Perspective](../security/README.md) - Data protection
 
 ### Architecture Decisions
+
 - [ADR-015: Multi-Region Deployment Strategy](../../architecture/adrs/015-multi-region-deployment.md)
 - [ADR-016: Data Residency Compliance](../../architecture/adrs/016-data-residency-compliance.md)
 - [ADR-017: CDN Strategy](../../architecture/adrs/017-cdn-strategy.md)

@@ -8,10 +8,12 @@ version: "1.0"
 status: "active"
 owner: "API Team"
 related_docs:
+
   - "viewpoints/functional/overview.md"
   - "viewpoints/functional/bounded-contexts.md"
   - "api/rest/README.md"
   - "api/events/README.md"
+
 tags: ["rest-api", "domain-events", "interfaces", "integration"]
 ---
 
@@ -33,6 +35,7 @@ All interfaces follow consistent design principles and are documented with OpenA
 ## Interface Design Principles
 
 ### REST API Principles
+
 - **RESTful Design**: Follow REST architectural constraints
 - **Resource-Oriented**: URLs represent resources, not actions
 - **HTTP Semantics**: Proper use of HTTP methods and status codes
@@ -40,6 +43,7 @@ All interfaces follow consistent design principles and are documented with OpenA
 - **Consistency**: Consistent naming, error handling, and response formats
 
 ### Domain Event Principles
+
 - **Event Sourcing**: Events are immutable records of what happened
 - **Past Tense**: Event names use past tense (e.g., `OrderSubmitted`)
 - **Self-Contained**: Events contain all necessary data
@@ -65,6 +69,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 **Public Endpoints** (no authentication required):
+
 - `GET /api/v1/products` - List products
 - `GET /api/v1/products/{id}` - Get product details
 - `GET /api/v1/products/search` - Search products
@@ -73,6 +78,7 @@ Authorization: Bearer {jwt_token}
 ### Common Response Format
 
 #### Success Response
+
 ```json
 {
   "data": {
@@ -87,6 +93,7 @@ Authorization: Bearer {jwt_token}
 ```
 
 #### Error Response
+
 ```json
 {
   "error": {
@@ -264,16 +271,26 @@ public record CustomerCreatedEvent(
 
 ### Event Publishing Flow
 
-```
+```text
+
 1. Aggregate Root collects events during business operations
+
    ↓
+
 2. Application Service saves aggregate to repository
+
    ↓
+
 3. Application Service publishes collected events
+
    ↓
+
 4. Event Publisher sends events to message broker (Kafka)
+
    ↓
+
 5. Event Handlers in other contexts consume events
+
 ```
 
 ### Domain Events by Context
@@ -394,16 +411,19 @@ public record CustomerCreatedEvent(
 ### REST API Contracts
 
 #### Request Validation
+
 - All request bodies validated using Bean Validation annotations
 - Invalid requests return `400 Bad Request` with field-level errors
 - Required fields enforced at API layer
 
 #### Response Guarantees
+
 - Successful operations return appropriate 2xx status codes
 - Failed operations return appropriate 4xx/5xx status codes
 - All responses include timestamp and trace ID for debugging
 
 #### Idempotency
+
 - POST operations with idempotency keys supported
 - PUT operations are naturally idempotent
 - DELETE operations are idempotent (deleting non-existent resource returns 404)
@@ -411,16 +431,19 @@ public record CustomerCreatedEvent(
 ### Domain Event Contracts
 
 #### Event Schema Stability
+
 - Event schemas are versioned
 - New fields added as optional to maintain backward compatibility
 - Breaking changes require new event type
 
 #### Delivery Guarantees
+
 - **At-least-once delivery**: Events may be delivered multiple times
 - **Ordering**: Events from same aggregate are ordered
 - **Durability**: Events are persisted before publishing
 
 #### Event Handling
+
 - Handlers must be idempotent
 - Handlers must not throw exceptions (use dead letter queue)
 - Handlers process events asynchronously
@@ -430,12 +453,15 @@ public record CustomerCreatedEvent(
 ## API Versioning Strategy
 
 ### URL Versioning
+
 - Current version: `/api/v1/`
 - Future versions: `/api/v2/`, `/api/v3/`
 
 ### Deprecation Policy
+
 - Minimum 6 months notice before deprecation
 - Deprecation headers included in responses:
+
   ```http
   Deprecation: true
   Sunset: 2026-04-22T23:59:59Z
@@ -443,6 +469,7 @@ public record CustomerCreatedEvent(
   ```
 
 ### Backward Compatibility
+
 - Additive changes (new fields, new endpoints) in same version
 - Breaking changes require new version
 - Old versions supported for at least 12 months
@@ -461,6 +488,7 @@ public record CustomerCreatedEvent(
 | Search endpoints | 50 requests | per minute |
 
 ### Rate Limit Headers
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -468,6 +496,7 @@ X-RateLimit-Reset: 1640000000
 ```
 
 ### Rate Limit Exceeded Response
+
 ```http
 HTTP/1.1 429 Too Many Requests
 Retry-After: 60
@@ -500,6 +529,7 @@ Retry-After: 60
 ### Error Response Examples
 
 #### Validation Error
+
 ```json
 {
   "error": {
@@ -526,6 +556,7 @@ Retry-After: 60
 ```
 
 #### Business Rule Violation
+
 ```json
 {
   "error": {
@@ -551,24 +582,28 @@ Retry-After: 60
 ### Synchronous Integration (REST API)
 
 **When to Use**:
+
 - Real-time queries requiring immediate response
 - User-initiated operations
 - Operations within same bounded context
 
 **Example**:
-```
+
+```text
 Customer → Shopping Cart API → Product API (get product details)
 ```
 
 ### Asynchronous Integration (Domain Events)
 
 **When to Use**:
+
 - Cross-context workflows
 - Operations that can be eventually consistent
 - Notification and audit trails
 
 **Example**:
-```
+
+```text
 Order Context publishes OrderSubmittedEvent
   → Inventory Context reserves stock
   → Payment Context processes payment
@@ -580,6 +615,7 @@ Order Context publishes OrderSubmittedEvent
 Some workflows use both patterns:
 
 **Example: Order Submission**:
+
 1. **Synchronous**: Customer submits order via REST API
 2. **Asynchronous**: Order publishes events for inventory, payment, delivery
 3. **Synchronous**: Customer polls order status via REST API
@@ -599,6 +635,7 @@ Some workflows use both patterns:
 **Location**: `docs/api/rest/postman/ecommerce-api.json`
 
 **Import Instructions**:
+
 1. Open Postman
 2. Click "Import"
 3. Select `ecommerce-api.json`
@@ -609,6 +646,7 @@ Some workflows use both patterns:
 **Location**: `docs/api/rest/examples/`
 
 **Languages**:
+
 - cURL
 - JavaScript/TypeScript
 - Java
@@ -619,16 +657,19 @@ Some workflows use both patterns:
 ## Security Considerations
 
 ### Authentication
+
 - JWT tokens with 1-hour expiration
 - Refresh tokens with 24-hour expiration
 - Token rotation on refresh
 
 ### Authorization
+
 - Role-based access control (RBAC)
 - Resource-level permissions
 - Admin, Seller, Customer roles
 
 ### Data Protection
+
 - Sensitive data encrypted in transit (TLS 1.3)
 - Sensitive data encrypted at rest (AES-256)
 - PII masked in logs and error messages
@@ -640,16 +681,19 @@ Some workflows use both patterns:
 ## Performance Considerations
 
 ### Response Time Targets
+
 - **Critical APIs** (auth, payment): ≤ 500ms (95th percentile)
 - **Business APIs** (orders, customers): ≤ 1000ms (95th percentile)
 - **Search APIs**: ≤ 2000ms (95th percentile)
 
 ### Caching Strategy
+
 - Product catalog: 15 minutes TTL
 - Customer profile: 5 minutes TTL
 - Inventory levels: 1 minute TTL
 
 ### Pagination
+
 - Default page size: 20 items
 - Maximum page size: 100 items
 - Cursor-based pagination for large datasets

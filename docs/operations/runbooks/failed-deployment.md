@@ -142,11 +142,13 @@ kubectl get deployment ecommerce-backend -n ${NAMESPACE} -o yaml | grep -A 10 "l
 ### Immediate Actions
 
 1. **Pause rollout** to prevent further issues:
+
 ```bash
 kubectl rollout pause deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-2. **Assess impact**:
+1. **Assess impact**:
+
 ```bash
 # Check how many pods are healthy
 kubectl get pods -n ${NAMESPACE} -l app=ecommerce-backend | grep "Running.*1/1" | wc -l
@@ -155,22 +157,24 @@ kubectl get pods -n ${NAMESPACE} -l app=ecommerce-backend | grep "Running.*1/1" 
 curl https://${ENVIRONMENT}.ecommerce.example.com/actuator/health
 ```
 
-3. **Decide on action**:
+1. **Decide on action**:
    - If enough healthy pods: Fix and resume
    - If service degraded: Rollback immediately
 
 ### Root Cause Fixes
 
-#### If caused by image pull failure:
+#### If caused by image pull failure
 
 1. **Verify image exists**:
+
 ```bash
 aws ecr describe-images \
   --repository-name ecommerce-backend \
   --image-ids imageTag=${VERSION}
 ```
 
-2. **Update image pull secret** if expired:
+1. **Update image pull secret** if expired:
+
 ```bash
 # Get new ECR token
 TOKEN=$(aws ecr get-login-password --region ${AWS_REGION})
@@ -187,23 +191,26 @@ kubectl create secret docker-registry ecr-registry-secret \
 kubectl rollout restart deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-3. **Fix image tag** if incorrect:
+1. **Fix image tag** if incorrect:
+
 ```bash
 kubectl set image deployment/ecommerce-backend \
   ecommerce-backend=${ECR_REGISTRY}/ecommerce-backend:${CORRECT_VERSION} \
   -n ${NAMESPACE}
 ```
 
-#### If caused by application startup failure:
+#### If caused by application startup failure
 
 1. **Check application logs** for startup errors:
+
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE} | grep -i "error\|exception\|failed"
 ```
 
-2. **Common startup issues**:
+1. **Common startup issues**:
 
 **Database connection failure**:
+
 ```bash
 # Verify database connectivity
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
@@ -218,6 +225,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 ```
 
 **Missing environment variables**:
+
 ```bash
 # Check required env vars
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- env | sort
@@ -229,6 +237,7 @@ kubectl set env deployment/ecommerce-backend \
 ```
 
 **Configuration file issues**:
+
 ```bash
 # Check ConfigMap
 kubectl get configmap ecommerce-config -n ${NAMESPACE} -o yaml
@@ -243,9 +252,10 @@ kubectl create configmap ecommerce-config \
 kubectl rollout restart deployment/ecommerce-backend -n ${NAMESPACE}
 ```
 
-#### If caused by health check failure:
+#### If caused by health check failure
 
 1. **Adjust health check timing**:
+
 ```yaml
 # Increase initialDelaySeconds if app needs more time to start
 livenessProbe:
@@ -267,7 +277,8 @@ readinessProbe:
   failureThreshold: 3
 ```
 
-2. **Fix health check endpoint**:
+1. **Fix health check endpoint**:
+
 ```java
 @Component
 public class CustomHealthIndicator implements HealthIndicator {
@@ -292,14 +303,16 @@ public class CustomHealthIndicator implements HealthIndicator {
 }
 ```
 
-#### If caused by resource constraints:
+#### If caused by resource constraints
 
 1. **Check node capacity**:
+
 ```bash
 kubectl describe nodes | grep -A 5 "Allocated resources"
 ```
 
-2. **Scale cluster** if needed:
+1. **Scale cluster** if needed:
+
 ```bash
 # Add more nodes
 eksctl scale nodegroup \
@@ -310,7 +323,8 @@ eksctl scale nodegroup \
   --nodes-max=10
 ```
 
-3. **Adjust resource requests**:
+1. **Adjust resource requests**:
+
 ```yaml
 resources:
   requests:
@@ -321,14 +335,16 @@ resources:
     cpu: "500m"
 ```
 
-#### If caused by database migration failure:
+#### If caused by database migration failure
 
 1. **Check migration status**:
+
 ```bash
 kubectl logs ${POD_NAME} -n ${NAMESPACE} | grep -i "flyway\|migration"
 ```
 
-2. **Fix migration**:
+1. **Fix migration**:
+
 ```bash
 # Connect to database
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
@@ -453,22 +469,29 @@ readinessProbe:
 
 ```yaml
 # CI/CD pipeline checks
+
 - name: Build and test
+
   run: ./gradlew build test
 
 - name: Build Docker image
+
   run: docker build -t ${IMAGE}:${TAG} .
 
 - name: Scan image for vulnerabilities
+
   run: trivy image ${IMAGE}:${TAG}
 
 - name: Deploy to staging
+
   run: kubectl apply -f k8s/staging/
 
 - name: Run smoke tests
+
   run: ./scripts/smoke-test.sh staging
 
 - name: Run integration tests
+
   run: ./scripts/integration-test.sh staging
 ```
 
@@ -476,11 +499,14 @@ readinessProbe:
 
 ```yaml
 # Set up deployment monitoring
+
 - alert: DeploymentStuck
+
   expr: kube_deployment_status_replicas_updated{deployment="ecommerce-backend"} < kube_deployment_spec_replicas{deployment="ecommerce-backend"}
   for: 10m
   
 - alert: PodCrashLooping
+
   expr: rate(kube_pod_container_status_restarts_total{pod=~"ecommerce-backend.*"}[15m]) > 0
   for: 5m
 ```

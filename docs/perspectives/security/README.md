@@ -18,6 +18,7 @@ The Security Perspective ensures the system is protected from malicious attacks 
 ## Quality Attribute Scenarios
 
 ### Scenario 1: SQL Injection Attack
+
 - **Source**: Malicious user
 - **Stimulus**: Attempts SQL injection on customer search
 - **Environment**: Production with normal load

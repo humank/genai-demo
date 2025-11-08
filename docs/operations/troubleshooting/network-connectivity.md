@@ -6,7 +6,8 @@ This document provides comprehensive troubleshooting procedures for network and 
 
 **Target Audience**: DevOps engineers, SREs, network administrators  
 **Prerequisites**: Access to AWS Console, kubectl, network debugging tools  
-**Related Documents**: 
+**Related Documents**:
+
 - [Deployment Architecture](../../viewpoints/deployment/physical-architecture.md)
 - [Network Architecture](../../viewpoints/deployment/network-architecture.md)
 - [Service Outage Runbook](../runbooks/service-outage.md)
@@ -99,11 +100,13 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- cat /etc/resolv.conf
 #### Issue: CoreDNS Pods Not Running
 
 **Diagnosis**:
+
 ```bash
 kubectl describe pods -n kube-system -l k8s-app=kube-dns
 ```
 
 **Solution**:
+
 ```bash
 # Restart CoreDNS
 kubectl rollout restart deployment/coredns -n kube-system
@@ -115,6 +118,7 @@ kubectl top nodes
 #### Issue: DNS Queries Timing Out
 
 **Diagnosis**:
+
 ```bash
 # Check CoreDNS metrics
 kubectl port-forward -n kube-system svc/kube-dns 9153:9153
@@ -122,6 +126,7 @@ curl http://localhost:9153/metrics | grep coredns_dns_request_duration_seconds
 ```
 
 **Solution**:
+
 ```bash
 # Scale CoreDNS replicas
 kubectl scale deployment/coredns -n kube-system --replicas=3
@@ -134,6 +139,7 @@ kubectl edit configmap coredns -n kube-system
 #### Issue: External DNS Resolution Failures
 
 **Diagnosis**:
+
 ```bash
 # Check if external DNS is configured
 kubectl exec -it ${POD_NAME} -- cat /etc/resolv.conf | grep nameserver
@@ -143,6 +149,7 @@ kubectl exec -it ${POD_NAME} -- nslookup google.com 8.8.8.8
 ```
 
 **Solution**:
+
 ```yaml
 # Update CoreDNS ConfigMap to forward external queries
 apiVersion: v1
@@ -171,6 +178,7 @@ data:
 #### Issue: Service DNS Not Resolving
 
 **Diagnosis**:
+
 ```bash
 # Check service exists
 kubectl get svc ${SERVICE_NAME} -n ${NAMESPACE}
@@ -183,6 +191,7 @@ kubectl exec -it ${POD_NAME} -- nslookup ${SERVICE_NAME}.${NAMESPACE}.svc.cluste
 ```
 
 **Solution**:
+
 ```bash
 # If no endpoints, check pod labels
 kubectl get pods -n ${NAMESPACE} --show-labels
@@ -203,11 +212,17 @@ spec:
   dnsPolicy: ClusterFirst
   dnsConfig:
     options:
+
       - name: ndots
+
         value: "2"  # Reduce from default 5
+
       - name: timeout
+
         value: "2"
+
       - name: attempts
+
         value: "2"
 ```
 
@@ -294,6 +309,7 @@ kubectl get gateway -n ${NAMESPACE}
 **Symptoms**: 503 errors, "upstream connect error or disconnect/reset before headers"
 
 **Diagnosis**:
+
 ```bash
 # Check mTLS status
 istioctl authn tls-check ${POD_NAME}.${NAMESPACE}
@@ -303,6 +319,7 @@ kubectl get peerauthentication -n ${NAMESPACE}
 ```
 
 **Solution**:
+
 ```yaml
 # Enable permissive mode temporarily
 apiVersion: security.istio.io/v1beta1
@@ -318,6 +335,7 @@ spec:
 #### Issue: Traffic Not Routing Correctly
 
 **Diagnosis**:
+
 ```bash
 # Check virtual service configuration
 kubectl describe virtualservice ${VS_NAME} -n ${NAMESPACE}
@@ -330,6 +348,7 @@ istioctl proxy-config route ${POD_NAME}.${NAMESPACE} -o json | jq '.[] | select(
 ```
 
 **Solution**:
+
 ```yaml
 # Fix virtual service routing
 apiVersion: networking.istio.io/v1beta1
@@ -338,18 +357,26 @@ metadata:
   name: ecommerce-backend
 spec:
   hosts:
+
   - ecommerce-backend
+
   http:
+
   - match:
     - headers:
+
         version:
           exact: v2
     route:
+
     - destination:
+
         host: ecommerce-backend
         subset: v2
+
   - route:
     - destination:
+
         host: ecommerce-backend
         subset: v1
 ```
@@ -357,12 +384,14 @@ spec:
 #### Issue: Circuit Breaker Not Working
 
 **Diagnosis**:
+
 ```bash
 # Check destination rule outlier detection
 kubectl get destinationrule ${DR_NAME} -n ${NAMESPACE} -o yaml | grep -A 10 outlierDetection
 ```
 
 **Solution**:
+
 ```yaml
 # Configure circuit breaker
 apiVersion: networking.istio.io/v1beta1
@@ -480,6 +509,7 @@ aws ec2 describe-network-acls \
 #### Issue: Health Checks Timing Out
 
 **Diagnosis**:
+
 ```bash
 # Check health check timeout settings
 aws elbv2 describe-target-groups \
@@ -491,6 +521,7 @@ time curl -v http://${POD_IP}:8080/actuator/health
 ```
 
 **Solution**:
+
 ```bash
 # Increase health check timeout
 aws elbv2 modify-target-group \
@@ -505,6 +536,7 @@ aws elbv2 modify-target-group \
 #### Issue: Wrong Health Check Path
 
 **Diagnosis**:
+
 ```bash
 # Check configured path
 aws elbv2 describe-target-groups \
@@ -516,6 +548,7 @@ curl -v http://${POD_IP}:8080/health
 ```
 
 **Solution**:
+
 ```bash
 # Update health check path
 aws elbv2 modify-target-group \
@@ -526,6 +559,7 @@ aws elbv2 modify-target-group \
 #### Issue: Unhealthy Threshold Too Low
 
 **Diagnosis**:
+
 ```bash
 # Check thresholds
 aws elbv2 describe-target-groups \
@@ -534,6 +568,7 @@ aws elbv2 describe-target-groups \
 ```
 
 **Solution**:
+
 ```bash
 # Adjust thresholds
 aws elbv2 modify-target-group \
@@ -545,6 +580,7 @@ aws elbv2 modify-target-group \
 #### Issue: Deregistration Delay Too Long
 
 **Diagnosis**:
+
 ```bash
 # Check deregistration delay
 aws elbv2 describe-target-group-attributes \
@@ -553,6 +589,7 @@ aws elbv2 describe-target-group-attributes \
 ```
 
 **Solution**:
+
 ```bash
 # Reduce deregistration delay
 aws elbv2 modify-target-group-attributes \
@@ -619,6 +656,7 @@ kubectl run -it --rm debug --image=curlimages/curl --restart=Never -- \
 #### Issue: Ingress Not Getting External IP
 
 **Diagnosis**:
+
 ```bash
 # Check ingress status
 kubectl get ingress ${INGRESS_NAME} -n ${NAMESPACE}
@@ -631,6 +669,7 @@ aws elbv2 describe-load-balancers --region ${REGION}
 ```
 
 **Solution**:
+
 ```bash
 # Verify service type is LoadBalancer
 kubectl get svc -n ingress-nginx ingress-nginx-controller -o yaml | grep type
@@ -642,6 +681,7 @@ kubectl describe svc -n ingress-nginx ingress-nginx-controller | grep Annotation
 #### Issue: 404 Not Found Errors
 
 **Diagnosis**:
+
 ```bash
 # Check ingress rules
 kubectl get ingress ${INGRESS_NAME} -n ${NAMESPACE} -o yaml
@@ -654,6 +694,7 @@ kubectl exec -n ingress-nginx ${NGINX_POD} -- cat /etc/nginx/nginx.conf | grep -
 ```
 
 **Solution**:
+
 ```yaml
 # Fix ingress path configuration
 apiVersion: networking.k8s.io/v1
@@ -665,10 +706,14 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+
   - host: api.ecommerce.com
+
     http:
       paths:
+
       - path: /api
+
         pathType: Prefix
         backend:
           service:
@@ -680,6 +725,7 @@ spec:
 #### Issue: 502 Bad Gateway Errors
 
 **Diagnosis**:
+
 ```bash
 # Check backend service health
 kubectl get endpoints ${SERVICE_NAME} -n ${NAMESPACE}
@@ -693,6 +739,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/name=ingress-nginx | grep "up
 ```
 
 **Solution**:
+
 ```bash
 # Verify service selector matches pods
 kubectl get svc ${SERVICE_NAME} -n ${NAMESPACE} -o yaml | grep selector -A 5
@@ -705,6 +752,7 @@ kubectl get pods -n ${NAMESPACE} -o wide
 #### Issue: SSL/TLS Certificate Problems
 
 **Diagnosis**:
+
 ```bash
 # Check TLS secret
 kubectl get secret ${TLS_SECRET_NAME} -n ${NAMESPACE}
@@ -717,6 +765,7 @@ kubectl get secret ${TLS_SECRET_NAME} -n ${NAMESPACE} -o jsonpath='{.data.tls\.c
 ```
 
 **Solution**:
+
 ```bash
 # Renew certificate with cert-manager
 kubectl delete certificaterequest ${CERT_REQUEST_NAME} -n ${NAMESPACE}
@@ -795,6 +844,7 @@ openssl s_client -connect ${HOST}:443 -showcerts
 #### Issue: Certificate Expired
 
 **Diagnosis**:
+
 ```bash
 # Check expiration date
 kubectl get secret ${TLS_SECRET_NAME} -n ${NAMESPACE} \
@@ -805,6 +855,7 @@ kubectl describe certificate ${CERT_NAME} -n ${NAMESPACE} | grep "Not After"
 ```
 
 **Solution**:
+
 ```bash
 # Trigger certificate renewal with cert-manager
 kubectl delete certificaterequest -n ${NAMESPACE} -l cert-manager.io/certificate-name=${CERT_NAME}
@@ -820,6 +871,7 @@ kubectl get certificaterequest -n ${NAMESPACE} -w
 #### Issue: Certificate Name Mismatch
 
 **Diagnosis**:
+
 ```bash
 # Check certificate CN and SANs
 kubectl get secret ${TLS_SECRET_NAME} -n ${NAMESPACE} \
@@ -831,6 +883,7 @@ kubectl get ingress ${INGRESS_NAME} -n ${NAMESPACE} -o yaml | grep host
 ```
 
 **Solution**:
+
 ```yaml
 # Update certificate with correct SANs
 apiVersion: cert-manager.io/v1
@@ -841,9 +894,11 @@ metadata:
 spec:
   secretName: ecommerce-tls-secret
   dnsNames:
+
   - api.ecommerce.com
   - www.ecommerce.com
   - ecommerce.com
+
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
@@ -852,6 +907,7 @@ spec:
 #### Issue: Certificate Chain Incomplete
 
 **Diagnosis**:
+
 ```bash
 # Check certificate chain
 openssl s_client -connect ${HOST}:443 -showcerts | grep "Certificate chain"
@@ -861,6 +917,7 @@ openssl s_client -connect ${HOST}:443 -showcerts | grep "Certificate chain"
 ```
 
 **Solution**:
+
 ```bash
 # Ensure cert-manager includes full chain
 kubectl get clusterissuer letsencrypt-prod -o yaml | grep -A 5 "acme"
@@ -876,6 +933,7 @@ kubectl create secret tls ${TLS_SECRET_NAME} \
 #### Issue: mTLS Certificate Validation Failures
 
 **Diagnosis**:
+
 ```bash
 # Check Istio mTLS configuration
 kubectl get peerauthentication -n ${NAMESPACE}
@@ -888,6 +946,7 @@ kubectl logs ${POD_NAME} -n ${NAMESPACE} -c istio-proxy | grep certificate
 ```
 
 **Solution**:
+
 ```yaml
 # Configure mTLS properly
 apiVersion: security.istio.io/v1beta1
@@ -977,6 +1036,7 @@ kubectl get networkpolicy ${POLICY_NAME} -n ${NAMESPACE} \
 #### Issue: Default Deny Blocking Traffic
 
 **Diagnosis**:
+
 ```bash
 # Check for default deny policies
 kubectl get networkpolicy -n ${NAMESPACE} -o yaml | grep "podSelector: {}"
@@ -987,6 +1047,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 ```
 
 **Solution**:
+
 ```yaml
 # Add explicit allow policy
 apiVersion: networking.k8s.io/v1
@@ -999,36 +1060,51 @@ spec:
     matchLabels:
       app: ecommerce-backend
   policyTypes:
+
   - Ingress
   - Egress
+
   ingress:
+
   - from:
     - podSelector:
+
         matchLabels:
           app: ecommerce-frontend
     ports:
+
     - protocol: TCP
+
       port: 8080
   egress:
+
   - to:
     - podSelector:
+
         matchLabels:
           app: postgres
     ports:
+
     - protocol: TCP
+
       port: 5432
+
   - to:  # Allow DNS
     - namespaceSelector:
+
         matchLabels:
           name: kube-system
     ports:
+
     - protocol: UDP
+
       port: 53
 ```
 
 #### Issue: Missing DNS Egress Rule
 
 **Diagnosis**:
+
 ```bash
 # Test DNS resolution
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- nslookup kubernetes.default
@@ -1038,6 +1114,7 @@ kubectl get networkpolicy -n ${NAMESPACE} -o yaml | grep -A 10 "port: 53"
 ```
 
 **Solution**:
+
 ```yaml
 # Add DNS egress rule
 apiVersion: networking.k8s.io/v1
@@ -1048,22 +1125,31 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
+
   - Egress
+
   egress:
+
   - to:
     - namespaceSelector:
+
         matchLabels:
           name: kube-system
     ports:
+
     - protocol: UDP
+
       port: 53
+
     - protocol: TCP
+
       port: 53
 ```
 
 #### Issue: Namespace Selector Not Matching
 
 **Diagnosis**:
+
 ```bash
 # Check namespace labels
 kubectl get namespace ${NAMESPACE} --show-labels
@@ -1074,6 +1160,7 @@ kubectl get networkpolicy ${POLICY_NAME} -n ${NAMESPACE} \
 ```
 
 **Solution**:
+
 ```bash
 # Add required label to namespace
 kubectl label namespace ${NAMESPACE} name=${NAMESPACE}
@@ -1085,6 +1172,7 @@ kubectl edit networkpolicy ${POLICY_NAME} -n ${NAMESPACE}
 #### Issue: Pod Selector Not Matching
 
 **Diagnosis**:
+
 ```bash
 # Check pod labels
 kubectl get pods -n ${NAMESPACE} --show-labels
@@ -1098,6 +1186,7 @@ kubectl get pods -n ${NAMESPACE} -l app=ecommerce-backend
 ```
 
 **Solution**:
+
 ```bash
 # Add required labels to pods
 kubectl label pod ${POD_NAME} -n ${NAMESPACE} app=ecommerce-backend
@@ -1193,6 +1282,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 #### Issue: High Latency Between Regions
 
 **Diagnosis**:
+
 ```bash
 # Measure round-trip time
 kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
@@ -1208,6 +1298,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 ```
 
 **Solution**:
+
 ```bash
 # Use AWS Global Accelerator for optimized routing
 aws globalaccelerator create-accelerator \
@@ -1224,6 +1315,7 @@ aws cloudfront create-distribution \
 #### Issue: VPC Peering Route Not Propagating
 
 **Diagnosis**:
+
 ```bash
 # Check route table entries
 aws ec2 describe-route-tables \
@@ -1238,6 +1330,7 @@ aws ec2 describe-vpc-peering-connections \
 ```
 
 **Solution**:
+
 ```bash
 # Add route to peering connection
 aws ec2 create-route \
@@ -1255,6 +1348,7 @@ aws ec2 describe-route-tables \
 #### Issue: Security Groups Blocking Cross-Region Traffic
 
 **Diagnosis**:
+
 ```bash
 # Check security group rules
 aws ec2 describe-security-groups \
@@ -1268,6 +1362,7 @@ kubectl exec -it ${POD_NAME} -n ${NAMESPACE} -- \
 ```
 
 **Solution**:
+
 ```bash
 # Add ingress rule for remote VPC CIDR
 aws ec2 authorize-security-group-ingress \
@@ -1281,6 +1376,7 @@ aws ec2 authorize-security-group-ingress \
 #### Issue: Database Replication Lag
 
 **Diagnosis**:
+
 ```bash
 # Check replication lag
 aws rds describe-db-instances \
@@ -1301,6 +1397,7 @@ aws cloudwatch get-metric-statistics \
 ```
 
 **Solution**:
+
 ```bash
 # Increase replica instance size
 aws rds modify-db-instance \
@@ -1384,6 +1481,7 @@ aws ec2 search-transit-gateway-routes \
 #### Issue: Peering Connection Pending Acceptance
 
 **Diagnosis**:
+
 ```bash
 # Check peering status
 aws ec2 describe-vpc-peering-connections \
@@ -1392,6 +1490,7 @@ aws ec2 describe-vpc-peering-connections \
 ```
 
 **Solution**:
+
 ```bash
 # Accept peering connection (from accepter account)
 aws ec2 accept-vpc-peering-connection \
@@ -1402,6 +1501,7 @@ aws ec2 accept-vpc-peering-connection \
 #### Issue: Overlapping CIDR Blocks
 
 **Diagnosis**:
+
 ```bash
 # Check VPC CIDR blocks
 aws ec2 describe-vpcs \
@@ -1410,17 +1510,21 @@ aws ec2 describe-vpcs \
 ```
 
 **Solution**:
+
 ```text
 Cannot peer VPCs with overlapping CIDR blocks.
 Options:
+
 1. Use Transit Gateway with NAT
 2. Create new VPC with non-overlapping CIDR
 3. Use AWS PrivateLink for specific services
+
 ```
 
 #### Issue: Routes Not Propagating to VPC Route Tables
 
 **Diagnosis**:
+
 ```bash
 # Check if routes exist
 aws ec2 describe-route-tables \
@@ -1430,6 +1534,7 @@ aws ec2 describe-route-tables \
 ```
 
 **Solution**:
+
 ```bash
 # Add routes to both VPC route tables
 # In VPC A
@@ -1452,6 +1557,7 @@ aws ec2 create-route \
 #### Issue: Transit Gateway Attachment Not Available
 
 **Diagnosis**:
+
 ```bash
 # Check attachment state
 aws ec2 describe-transit-gateway-vpc-attachments \
@@ -1465,6 +1571,7 @@ aws ec2 describe-transit-gateway-vpc-attachments \
 ```
 
 **Solution**:
+
 ```bash
 # Delete and recreate attachment if stuck
 aws ec2 delete-transit-gateway-vpc-attachment \
@@ -1482,6 +1589,7 @@ aws ec2 create-transit-gateway-vpc-attachment \
 #### Issue: Transit Gateway Routes Not Propagating
 
 **Diagnosis**:
+
 ```bash
 # Check route propagation
 aws ec2 get-transit-gateway-route-table-propagations \
@@ -1495,6 +1603,7 @@ aws ec2 get-transit-gateway-route-table-associations \
 ```
 
 **Solution**:
+
 ```bash
 # Enable route propagation
 aws ec2 enable-transit-gateway-route-table-propagation \
@@ -1512,6 +1621,7 @@ aws ec2 associate-transit-gateway-route-table \
 #### Issue: Blackhole Routes in Transit Gateway
 
 **Diagnosis**:
+
 ```bash
 # Search for blackhole routes
 aws ec2 search-transit-gateway-routes \
@@ -1521,6 +1631,7 @@ aws ec2 search-transit-gateway-routes \
 ```
 
 **Solution**:
+
 ```bash
 # Delete blackhole route
 aws ec2 delete-transit-gateway-route \
@@ -1683,4 +1794,3 @@ openssl s_client -connect ${HOST}:443 -servername ${HOST}
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  
 **Review Cycle**: Quarterly
-

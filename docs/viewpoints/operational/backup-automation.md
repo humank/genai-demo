@@ -20,7 +20,7 @@ This document describes the automated backup infrastructure, including scripts, 
 
 ### High-Level Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                   Backup Orchestration Layer                     │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
@@ -77,12 +77,15 @@ This document describes the automated backup infrastructure, including scripts, 
 #### Production Database Backup Plan
 
 **Configuration**:
+
 ```yaml
 BackupPlan:
   Name: ecommerce-production-database-backup
   
   Rules:
+
     - RuleName: continuous-backup
+
       TargetBackupVault: ecommerce-production-vault
       ScheduleExpression: "cron(0 */6 * * ? *)"  # Every 6 hours
       StartWindowMinutes: 60
@@ -96,6 +99,7 @@ BackupPlan:
         Criticality: high
         
     - RuleName: daily-backup
+
       TargetBackupVault: ecommerce-production-vault
       ScheduleExpression: "cron(0 3 * * ? *)"  # Daily at 3 AM UTC
       StartWindowMinutes: 60
@@ -109,6 +113,7 @@ BackupPlan:
         Criticality: high
         
     - RuleName: weekly-backup
+
       TargetBackupVault: ecommerce-long-term-vault
       ScheduleExpression: "cron(0 2 ? * SUN *)"  # Weekly on Sunday at 2 AM UTC
       StartWindowMinutes: 120
@@ -124,6 +129,7 @@ BackupPlan:
 ```
 
 **CDK Implementation**:
+
 ```typescript
 // infrastructure/lib/stacks/backup-stack.ts
 import * as backup from 'aws-cdk-lib/aws-backup';
@@ -217,22 +223,31 @@ export class BackupStack extends Stack {
 ### Backup Vault Configuration
 
 **Production Vault**:
+
 ```yaml
 VaultName: ecommerce-production-vault
 Encryption: AWS KMS
 KMSKeyId: arn:aws:kms:us-east-1:123456789012:key/backup-key
 AccessPolicy:
+
   - Effect: Allow
+
     Principal:
       Service: backup.amazonaws.com
     Action:
+
       - backup:StartBackupJob
       - backup:StartRestoreJob
+
     Resource: "*"
+
   - Effect: Deny
+
     Principal: "*"
     Action:
+
       - backup:DeleteRecoveryPoint
+
     Resource: "*"
     Condition:
       StringNotEquals:
@@ -240,16 +255,19 @@ AccessPolicy:
 
 Notifications:
   BackupVaultEvents:
+
     - BACKUP_JOB_STARTED
     - BACKUP_JOB_COMPLETED
     - BACKUP_JOB_FAILED
     - RESTORE_JOB_STARTED
     - RESTORE_JOB_COMPLETED
     - RESTORE_JOB_FAILED
+
   SNSTopic: arn:aws:sns:us-east-1:123456789012:backup-notifications
 ```
 
 **Long-Term Vault**:
+
 ```yaml
 VaultName: ecommerce-long-term-vault
 Encryption: AWS KMS
@@ -260,17 +278,25 @@ LockConfiguration:
   ChangeableForDays: 3
 
 AccessPolicy:
+
   - Effect: Allow
+
     Principal:
       Service: backup.amazonaws.com
     Action:
+
       - backup:StartBackupJob
+
     Resource: "*"
+
   - Effect: Deny
+
     Principal: "*"
     Action:
+
       - backup:DeleteRecoveryPoint
       - backup:UpdateRecoveryPointLifecycle
+
     Resource: "*"
 ```
 
@@ -279,6 +305,7 @@ AccessPolicy:
 ### EventBridge Rules
 
 **Scheduled Backup Triggers**:
+
 ```yaml
 # RDS Snapshot Export Rule
 RDSSnapshotExportRule:
@@ -286,16 +313,26 @@ RDSSnapshotExportRule:
   Description: Trigger RDS snapshot export to S3 after automated backup
   EventPattern:
     source:
+
       - aws.backup
+
     detail-type:
+
       - Backup Job State Change
+
     detail:
       state:
+
         - COMPLETED
+
       resourceType:
+
         - RDS
+
   Targets:
+
     - Arn: arn:aws:lambda:us-east-1:123456789012:function:rds-snapshot-exporter
+
       Id: rds-exporter-lambda
       RetryPolicy:
         MaximumRetryAttempts: 3
@@ -307,7 +344,9 @@ RedisSnapshotReplicationRule:
   Description: Replicate Redis snapshots to DR region
   ScheduleExpression: "cron(0 5 * * ? *)"  # Daily at 5 AM UTC
   Targets:
+
     - Arn: arn:aws:states:us-east-1:123456789012:stateMachine:redis-replication-workflow
+
       Id: redis-replication-sfn
       RoleArn: arn:aws:iam::123456789012:role/eventbridge-sfn-role
 
@@ -317,7 +356,9 @@ KafkaArchiveRule:
   Description: Archive Kafka topics to S3
   ScheduleExpression: "cron(0 6 * * ? *)"  # Daily at 6 AM UTC
   Targets:
+
     - Arn: arn:aws:ecs:us-east-1:123456789012:cluster/backup-cluster
+
       Id: kafka-archive-task
       EcsParameters:
         TaskDefinitionArn: arn:aws:ecs:us-east-1:123456789012:task-definition/kafka-archiver:1
@@ -325,10 +366,14 @@ KafkaArchiveRule:
         NetworkConfiguration:
           AwsvpcConfiguration:
             Subnets:
+
               - subnet-12345678
               - subnet-87654321
+
             SecurityGroups:
+
               - sg-backup-tasks
+
             AssignPublicIp: DISABLED
 
 # Configuration Backup Rule
@@ -337,7 +382,9 @@ ConfigBackupRule:
   Description: Backup Kubernetes configurations
   ScheduleExpression: "cron(0 4 * * ? *)"  # Daily at 4 AM UTC
   Targets:
+
     - Arn: arn:aws:lambda:us-east-1:123456789012:function:k8s-config-backup
+
       Id: config-backup-lambda
 ```
 
@@ -346,6 +393,7 @@ ConfigBackupRule:
 #### Comprehensive Backup Orchestration Workflow
 
 **State Machine Definition**:
+
 ```json
 {
   "Comment": "Comprehensive backup orchestration workflow",
@@ -1155,11 +1203,17 @@ BackupSuccessTopic:
   Name: ecommerce-backup-success
   DisplayName: Backup Success Notifications
   Subscriptions:
+
     - Protocol: email
+
       Endpoint: ops-team@ecommerce-platform.com
+
     - Protocol: sms
+
       Endpoint: +1-555-0100  # On-call engineer
+
     - Protocol: lambda
+
       Endpoint: arn:aws:lambda:us-east-1:123456789012:function:backup-metrics-collector
 
 # Backup Failure Topic
@@ -1167,13 +1221,21 @@ BackupFailureTopic:
   Name: ecommerce-backup-failure
   DisplayName: Backup Failure Alerts
   Subscriptions:
+
     - Protocol: email
+
       Endpoint: ops-team@ecommerce-platform.com
+
     - Protocol: sms
+
       Endpoint: +1-555-0100  # On-call engineer
+
     - Protocol: https
+
       Endpoint: https://events.pagerduty.com/integration/xxx/enqueue
+
     - Protocol: lambda
+
       Endpoint: arn:aws:lambda:us-east-1:123456789012:function:backup-failure-handler
 
 # Backup Verification Topic
@@ -1181,15 +1243,20 @@ BackupVerificationTopic:
   Name: ecommerce-backup-verification
   DisplayName: Backup Verification Reports
   Subscriptions:
+
     - Protocol: email
+
       Endpoint: ops-team@ecommerce-platform.com
+
     - Protocol: lambda
+
       Endpoint: arn:aws:lambda:us-east-1:123456789012:function:verification-report-processor
 ```
 
 ### Email Notification Templates
 
 **Success Notification Template**:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -1239,6 +1306,7 @@ BackupVerificationTopic:
 ```
 
 **Failure Notification Template**:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -1301,6 +1369,7 @@ RetryPolicy:
   IntervalSeconds: 300  # 5 minutes
   
   RetryableErrors:
+
     - ThrottlingException
     - ServiceUnavailableException
     - InternalServerError
@@ -1308,10 +1377,12 @@ RetryPolicy:
     - NetworkError
     
   NonRetryableErrors:
+
     - InvalidParameterException
     - ResourceNotFoundException
     - AccessDeniedException
     - InsufficientStorageException
+
 ```
 
 ### Failure Handling Lambda
@@ -1484,62 +1555,90 @@ def trigger_alternative_backup(details):
 ### CloudWatch Metrics
 
 **Custom Metrics Published**:
+
 ```yaml
 Namespace: ECommerce/Backups
 
 Metrics:
+
   - MetricName: BackupDuration
+
     Unit: Seconds
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
+
       - Name: BackupType
+
         Value: [Automated, Manual]
     
   - MetricName: BackupSize
+
     Unit: Bytes
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
     
   - MetricName: BackupSuccess
+
     Unit: Count
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
     
   - MetricName: BackupFailure
+
     Unit: Count
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
+
       - Name: ErrorCode
+
         Value: [Dynamic based on error]
     
   - MetricName: VerificationStatus
+
     Unit: None
     Value: [0=Failed, 1=Passed]
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
     
   - MetricName: BackupAge
+
     Unit: Hours
     Dimensions:
+
       - Name: Component
+
         Value: [RDS, Redis, Kafka, K8sConfig]
     
   - MetricName: StorageCost
+
     Unit: None
     Value: Estimated daily cost
     Dimensions:
+
       - Name: StorageClass
+
         Value: [Standard, IntelligentTiering, Glacier, DeepArchive]
 ```
 
 ### Grafana Dashboard Configuration
 
 **Backup Overview Dashboard**:
+
 ```json
 {
   "dashboard": {
@@ -1773,8 +1872,11 @@ Metrics:
 
 ```yaml
 ComplianceStandards:
+
   - Standard: SOC 2 Type II
+
     Requirements:
+
       - Daily backups with 30-day retention
       - Encrypted backups at rest and in transit
       - Backup verification within 24 hours
@@ -1782,7 +1884,9 @@ ComplianceStandards:
       - Quarterly DR testing
     
   - Standard: GDPR
+
     Requirements:
+
       - Data retention policies enforced
       - Backup data encrypted
       - Access controls and audit logs
@@ -1790,7 +1894,9 @@ ComplianceStandards:
       - Cross-border data transfer compliance
     
   - Standard: PCI DSS
+
     Requirements:
+
       - Daily backups of cardholder data
       - Encrypted backups
       - Quarterly backup restoration testing
@@ -1798,12 +1904,15 @@ ComplianceStandards:
       - Secure backup storage
     
   - Standard: HIPAA (if applicable)
+
     Requirements:
+
       - Daily backups with encryption
       - Access controls and audit trails
       - Backup integrity verification
       - Documented backup procedures
       - Business associate agreements
+
 ```
 
 ### Compliance Report Generator

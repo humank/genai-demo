@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance"]
 Active-active multi-region architecture (ADR-037) requires robust failover and failback mechanisms to handle regional failures:
 
 **Failure Scenarios**:
+
 - **Complete Regional Failure**: War, natural disaster, power outage
 - **Partial Service Degradation**: Database failure, network issues
 - **Planned Maintenance**: Software updates, infrastructure changes
@@ -30,6 +31,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - **Cascading Failures**: Multiple component failures
 
 **Challenges**:
+
 - **Detection Speed**: Quickly identify regional failures
 - **Failover Time**: Minimize RTO (Recovery Time Objective)
 - **Data Loss**: Minimize RPO (Recovery Point Objective)
@@ -38,6 +40,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - **Data Reconciliation**: Handle data divergence during outage
 
 **Business Impact**:
+
 - Revenue loss during downtime
 - Customer trust erosion
 - Data inconsistency
@@ -47,6 +50,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 ### Business Context
 
 **Business Drivers**:
+
 - Minimize downtime (RTO < 5 minutes)
 - Minimize data loss (RPO < 1 minute)
 - Automatic failover for critical scenarios
@@ -55,6 +59,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - Business continuity during geopolitical crises
 
 **Constraints**:
+
 - Budget: $100,000/year for failover infrastructure
 - Must support both automatic and manual failover
 - Zero data loss for Tier 1 data (orders, payments)
@@ -64,6 +69,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 ### Technical Context
 
 **Current State**:
+
 - Active-active architecture deployed
 - Basic health checks in place
 - Manual failover procedures
@@ -71,6 +77,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - No failback procedures
 
 **Requirements**:
+
 - Automatic failover for critical failures
 - Manual failover capability
 - Health check system
@@ -78,7 +85,6 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - Data reconciliation procedures
 - Failback automation
 - Comprehensive monitoring and alerting
-
 
 ## Decision Drivers
 
@@ -98,6 +104,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 **Description**: Automatic failover for clear failures, manual for complex scenarios
 
 **Automatic Failover Triggers**:
+
 - Complete regional failure (all health checks fail)
 - Database master failure (cannot connect)
 - Critical service failures (> 50% pods down)
@@ -105,6 +112,7 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - Error rate spike (> 10% for 5 minutes)
 
 **Manual Failover Scenarios**:
+
 - Partial degradation (unclear root cause)
 - Planned maintenance
 - Geopolitical events (war warning)
@@ -112,7 +120,8 @@ Active-active multi-region architecture (ADR-037) requires robust failover and f
 - Complex multi-component failures
 
 **Failover Process**:
-```
+
+```text
 Detection → Validation → Decision → Execution → Verification
    ↓           ↓           ↓          ↓            ↓
 Health      Multiple    Auto/      Route 53    Monitor
@@ -120,6 +129,7 @@ Checks      Checks      Manual     Update      Metrics
 ```
 
 **Pros**:
+
 - ✅ Fast automatic failover for clear failures (< 5 min)
 - ✅ Human judgment for complex scenarios
 - ✅ Prevents false positive failovers
@@ -128,6 +138,7 @@ Checks      Checks      Manual     Update      Metrics
 - ✅ Supports both emergency and planned scenarios
 
 **Cons**:
+
 - ⚠️ Requires 24/7 on-call team
 - ⚠️ Complex decision logic
 - ⚠️ Manual failover slower (10-15 min)
@@ -141,11 +152,13 @@ Checks      Checks      Manual     Update      Metrics
 **Description**: All failovers automated based on health checks
 
 **Pros**:
+
 - ✅ Fastest failover (< 3 minutes)
 - ✅ No human intervention needed
 - ✅ Consistent behavior
 
 **Cons**:
+
 - ❌ Risk of false positive failovers
 - ❌ No human judgment for complex scenarios
 - ❌ Potential for cascading failures
@@ -160,11 +173,13 @@ Checks      Checks      Manual     Update      Metrics
 **Description**: All failovers require manual approval
 
 **Pros**:
+
 - ✅ Full human control
 - ✅ No false positives
 - ✅ Careful decision making
 
 **Cons**:
+
 - ❌ Slow failover (15-30 minutes)
 - ❌ Requires immediate human response
 - ❌ Fails RTO target
@@ -192,6 +207,7 @@ Hybrid approach provides optimal balance:
 ### Failover Architecture
 
 **Health Check System**:
+
 ```typescript
 // Multi-layer health check system
 interface HealthCheck {
@@ -268,6 +284,7 @@ const healthChecks: HealthCheck[] = [
 ```
 
 **Automatic Failover Decision Logic**:
+
 ```typescript
 class FailoverDecisionEngine {
   
@@ -360,6 +377,7 @@ class FailoverDecisionEngine {
 ```
 
 **Route 53 Failover Configuration**:
+
 ```typescript
 // Primary Taiwan record with health check
 const taiwanRecord = new route53.ARecord(this, 'TaiwanPrimary', {
@@ -413,6 +431,7 @@ const tokyoFailoverRecord = new route53.ARecord(this, 'TokyoFailover', {
 ### Automatic Failover Execution
 
 **Failover Orchestration Lambda**:
+
 ```python
 import boto3
 import json
@@ -586,6 +605,7 @@ class FailoverOrchestrator:
 ### Manual Failover Procedures
 
 **Manual Failover Runbook**:
+
 ```markdown
 # Manual Regional Failover Procedure
 
@@ -606,9 +626,10 @@ class FailoverOrchestrator:
 aws route53 change-resource-record-sets \
   --hosted-zone-id Z1234567890ABC \
   --change-batch file://reduce-ttl.json
-```
+```text
 
 ### Step 2: Verify Target Region
+
 ```bash
 # Run health check script
 ./scripts/verify-region-health.sh tokyo
@@ -619,9 +640,10 @@ aws route53 change-resource-record-sets \
 # ✅ Kafka: Healthy
 # ✅ Application Services: Healthy
 # ✅ Replication Lag: 2.3 seconds
-```
+```text
 
 ### Step 3: Execute Failover
+
 ```bash
 # Run failover script
 ./scripts/execute-failover.sh \
@@ -635,9 +657,10 @@ aws route53 change-resource-record-sets \
 # 2. Adjust load balancer weights
 # 3. Verify traffic shift
 # 4. Send notifications
-```
+```text
 
 ### Step 4: Monitor Traffic Shift (5-10 minutes)
+
 ```bash
 # Monitor traffic metrics
 watch -n 10 './scripts/check-traffic-distribution.sh'
@@ -645,9 +668,10 @@ watch -n 10 './scripts/check-traffic-distribution.sh'
 # Expected progression:
 # Taiwan: 100% → 75% → 50% → 25% → 0%
 # Tokyo:  0%   → 25% → 50% → 75% → 100%
-```
+```text
 
 ### Step 5: Verify Application Health
+
 ```bash
 # Check error rates
 ./scripts/check-error-rates.sh tokyo
@@ -657,9 +681,10 @@ watch -n 10 './scripts/check-traffic-distribution.sh'
 
 # Check business metrics
 ./scripts/check-business-metrics.sh tokyo
-```
+```text
 
 ### Step 6: Post-Failover Validation
+
 - [ ] Verify 100% traffic to Tokyo
 - [ ] Error rate < 1%
 - [ ] Response time < 200ms (p95)
@@ -677,13 +702,15 @@ If issues detected within 30 minutes:
   --target taiwan \
   --reason "Failover issues detected" \
   --mode emergency
-```
+```text
+
 ```
 
 
 ### Failback Strategy
 
 **Failback Principles**:
+
 1. **Non-Urgent**: Failback is not time-critical (can wait hours/days)
 2. **Data Reconciliation**: Ensure data consistency before failback
 3. **Gradual**: Canary failback with traffic percentage
@@ -691,11 +718,13 @@ If issues detected within 30 minutes:
 5. **Reversible**: Can abort and stay in failover region
 
 **Failback Process**:
-```
+```text
+
 Data Reconciliation → Canary Failback → Validation → Full Failback
         ↓                    ↓              ↓            ↓
    Sync Data          10% Traffic    Monitor      100% Traffic
    Resolve Conflicts   Validate      Metrics      Complete
+
 ```
 
 **Failback Orchestration**:
@@ -807,6 +836,7 @@ class FailbackOrchestrator:
 ```
 
 **Data Reconciliation Procedures**:
+
 ```java
 public class DataReconciliationService {
     
@@ -896,34 +926,40 @@ public class DataReconciliationService {
 **Quarterly Failover Drill Schedule**:
 
 **Q1 Drill - Planned Failover**:
+
 - Scenario: Planned maintenance in Taiwan
 - Type: Manual failover
 - Duration: 4 hours
 - Objectives: Validate manual procedures, team coordination
 
 **Q2 Drill - Database Failure**:
+
 - Scenario: Taiwan database master failure
 - Type: Automatic failover
 - Duration: 2 hours
 - Objectives: Validate automatic failover, RTO/RPO
 
 **Q3 Drill - Complete Regional Failure**:
+
 - Scenario: Taiwan region complete outage (war simulation)
 - Type: Automatic failover
 - Duration: 8 hours
 - Objectives: Validate business continuity, data reconciliation
 
 **Q4 Drill - Failback Procedures**:
+
 - Scenario: Return to Taiwan after Tokyo failover
 - Type: Manual failback
 - Duration: 6 hours
 - Objectives: Validate failback procedures, data reconciliation
 
 **Drill Execution Checklist**:
+
 ```markdown
 # Failover Drill Checklist
 
 ## Pre-Drill (1 week before)
+
 - [ ] Schedule drill with all stakeholders
 - [ ] Notify customers (if production drill)
 - [ ] Prepare monitoring dashboards
@@ -932,6 +968,7 @@ public class DataReconciliationService {
 - [ ] Set up communication channels
 
 ## During Drill
+
 - [ ] Start time: ___________
 - [ ] Trigger failover: ___________
 - [ ] DNS propagation complete: ___________
@@ -942,11 +979,13 @@ public class DataReconciliationService {
 - [ ] Actual RPO: ___________ (target: < 1 min)
 
 ## Post-Drill (within 24 hours)
+
 - [ ] Conduct retrospective meeting
 - [ ] Document lessons learned
 - [ ] Update runbooks
 - [ ] Create action items for improvements
 - [ ] Share report with stakeholders
+
 ```
 
 ## Impact Analysis
@@ -966,6 +1005,7 @@ public class DataReconciliationService {
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All application services
 - All data stores
 - DNS routing
@@ -990,11 +1030,13 @@ Affects:
 ### Phase 1: Health Check System (Month 1)
 
 **Objectives**:
+
 - Deploy comprehensive health check system
 - Configure Route 53 health checks
 - Set up monitoring and alerting
 
 **Tasks**:
+
 - [ ] Implement multi-layer health checks
 - [ ] Configure Route 53 health checks
 - [ ] Deploy health check endpoints
@@ -1003,6 +1045,7 @@ Affects:
 - [ ] Test health check system
 
 **Success Criteria**:
+
 - Health checks operational
 - Alerts triggering correctly
 - Dashboards showing real-time status
@@ -1010,11 +1053,13 @@ Affects:
 ### Phase 2: Automatic Failover (Month 2)
 
 **Objectives**:
+
 - Implement automatic failover logic
 - Deploy failover orchestration
 - Test automatic failover
 
 **Tasks**:
+
 - [ ] Implement failover decision engine
 - [ ] Deploy failover orchestration Lambda
 - [ ] Configure automatic DNS updates
@@ -1023,6 +1068,7 @@ Affects:
 - [ ] Validate RTO < 5 minutes
 
 **Success Criteria**:
+
 - Automatic failover working
 - RTO < 5 minutes achieved
 - Notifications sent correctly
@@ -1030,11 +1076,13 @@ Affects:
 ### Phase 3: Manual Failover (Month 3)
 
 **Objectives**:
+
 - Create manual failover procedures
 - Develop failover scripts
 - Train operations team
 
 **Tasks**:
+
 - [ ] Write manual failover runbooks
 - [ ] Develop failover scripts
 - [ ] Create training materials
@@ -1043,6 +1091,7 @@ Affects:
 - [ ] Update documentation
 
 **Success Criteria**:
+
 - Runbooks complete and tested
 - Team trained and confident
 - Manual failover successful
@@ -1050,11 +1099,13 @@ Affects:
 ### Phase 4: Failback Procedures (Month 4)
 
 **Objectives**:
+
 - Implement failback automation
 - Create data reconciliation procedures
 - Test failback scenarios
 
 **Tasks**:
+
 - [ ] Implement failback orchestration
 - [ ] Develop data reconciliation tools
 - [ ] Create failback runbooks
@@ -1063,6 +1114,7 @@ Affects:
 - [ ] Document lessons learned
 
 **Success Criteria**:
+
 - Failback automation working
 - Data reconciliation successful
 - Failback drill completed
@@ -1070,11 +1122,13 @@ Affects:
 ### Phase 5: Production Readiness (Month 5-6)
 
 **Objectives**:
+
 - Validate all procedures
 - Conduct comprehensive drills
 - Achieve production readiness
 
 **Tasks**:
+
 - [ ] Conduct Q1 failover drill
 - [ ] Validate RTO/RPO targets
 - [ ] Fine-tune automation
@@ -1083,6 +1137,7 @@ Affects:
 - [ ] Obtain stakeholder approval
 
 **Success Criteria**:
+
 - All drills successful
 - RTO < 5 min, RPO < 1 min validated
 - Team fully trained
@@ -1093,6 +1148,7 @@ Affects:
 **Not Applicable** - Failover/failback is the rollback mechanism itself
 
 **Continuous Improvement**:
+
 - Quarterly drills
 - Regular runbook updates
 - Automation improvements
@@ -1141,6 +1197,7 @@ const failoverMetrics = {
 ### Monitoring Dashboards
 
 **Failover Status Dashboard**:
+
 - Current active region
 - Health check status (all regions)
 - Recent failover events
@@ -1148,6 +1205,7 @@ const failoverMetrics = {
 - On-call team status
 
 **Regional Health Dashboard**:
+
 - Infrastructure health (per region)
 - Application health (per region)
 - Replication lag
@@ -1155,6 +1213,7 @@ const failoverMetrics = {
 - Response times
 
 **Drill Results Dashboard**:
+
 - Drill history
 - RTO/RPO trends
 - Success rate
@@ -1193,12 +1252,14 @@ const failoverMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual data reconciliation for some scenarios
 2. Basic health check logic (no ML prediction)
 3. Limited automated testing of failover
 4. Manual drill coordination
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated data reconciliation for all scenarios
 - **Q3 2026**: ML-powered failure prediction
 - **Q4 2026**: Fully automated failover testing (chaos engineering)
@@ -1238,7 +1299,8 @@ const failoverMetrics = {
 ### Communication Templates
 
 **Failover Notification (Internal)**:
-```
+
+```text
 🚨 REGIONAL FAILOVER INITIATED
 
 Source Region: Taiwan (ap-northeast-3)
@@ -1260,7 +1322,8 @@ Incident Channel: #incident-failover-20251025
 ```
 
 **Customer Communication (if needed)**:
-```
+
+```text
 We are currently performing a planned regional failover to ensure 
 optimal service availability. You may experience brief interruptions 
 (< 1 minute) during this process. All data is safe and secure.

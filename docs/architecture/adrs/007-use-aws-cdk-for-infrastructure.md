@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 ### Business Context
 
 **Business Drivers**:
+
 - Need for repeatable, consistent infrastructure deployments
 - Requirement for disaster recovery and environment replication
 - Compliance requirements for infrastructure audit trails
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - Cost optimization through infrastructure as code
 
 **Constraints**:
+
 - AWS cloud platform (already decided)
 - Team has strong Java/TypeScript experience
 - Limited DevOps/infrastructure experience
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 ### Technical Context
 
 **Current State**:
+
 - AWS cloud infrastructure
 - Spring Boot application (Java 21)
 - PostgreSQL on RDS (ADR-001)
@@ -59,6 +62,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - Multiple environments needed (dev, staging, production)
 
 **Requirements**:
+
 - Provision VPC, subnets, security groups
 - Manage RDS PostgreSQL instances
 - Configure EKS clusters
@@ -86,6 +90,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 **Description**: Infrastructure as Code using TypeScript/Python/Java with AWS constructs
 
 **Pros**:
+
 - ✅ Type-safe infrastructure code (TypeScript/Java)
 - ✅ Full IDE support (autocomplete, refactoring)
 - ✅ Familiar programming language for team
@@ -98,6 +103,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - ✅ Can use npm packages for extensions
 
 **Cons**:
+
 - ⚠️ Learning curve for CDK concepts
 - ⚠️ Generates CloudFormation (inherits CF limitations)
 - ⚠️ Younger than Terraform (less mature ecosystem)
@@ -112,6 +118,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 **Description**: HashiCorp's infrastructure as code tool with HCL language
 
 **Pros**:
+
 - ✅ Multi-cloud support (not AWS-specific)
 - ✅ Mature ecosystem and community
 - ✅ Large module library
@@ -120,6 +127,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - ✅ Wide industry adoption
 
 **Cons**:
+
 - ❌ HCL is new language to learn
 - ❌ No type safety or IDE support
 - ❌ Limited testing capabilities
@@ -137,6 +145,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 **Description**: AWS native IaC using YAML or JSON templates
 
 **Pros**:
+
 - ✅ Native AWS service
 - ✅ No additional tools needed
 - ✅ Direct AWS integration
@@ -144,6 +153,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - ✅ Rollback support
 
 **Cons**:
+
 - ❌ YAML/JSON is verbose and error-prone
 - ❌ No type safety
 - ❌ Limited IDE support
@@ -161,6 +171,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 **Description**: Infrastructure as Code using general-purpose programming languages
 
 **Pros**:
+
 - ✅ Use TypeScript/Python/Go/C#
 - ✅ Type safety and IDE support
 - ✅ Multi-cloud support
@@ -168,6 +179,7 @@ The Enterprise E-Commerce Platform requires a robust Infrastructure as Code (IaC
 - ✅ Familiar programming paradigms
 
 **Cons**:
+
 - ❌ Requires Pulumi Cloud for state management
 - ❌ Smaller community than Terraform
 - ❌ Additional service dependency
@@ -199,13 +211,15 @@ AWS CDK was selected for the following reasons:
 **Implementation Strategy**:
 
 **Language Choice**: TypeScript
+
 - Team has TypeScript experience (Next.js)
 - Best CDK documentation and examples
 - Strong type safety
 - Excellent IDE support
 
 **Project Structure**:
-```
+
+```text
 infrastructure/
 ├── bin/
 │   └── app.ts              # CDK app entry point
@@ -247,6 +261,7 @@ infrastructure/
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All AWS infrastructure provisioning
 - Deployment processes
 - Environment management
@@ -271,12 +286,14 @@ Affects:
 ### Phase 1: Setup and Training (Week 1-2)
 
 - [x] Install AWS CDK CLI
+
   ```bash
   npm install -g aws-cdk
   cdk --version
   ```
 
 - [x] Create CDK project structure
+
   ```bash
   mkdir infrastructure && cd infrastructure
   cdk init app --language typescript
@@ -289,6 +306,7 @@ Affects:
 ### Phase 2: Network Infrastructure (Week 2-3)
 
 - [ ] Create VPC stack
+
   ```typescript
   export class NetworkStack extends Stack {
     public readonly vpc: ec2.Vpc;
@@ -325,6 +343,7 @@ Affects:
 ### Phase 3: Database Infrastructure (Week 3-4)
 
 - [ ] Create RDS stack
+
   ```typescript
   export class DatabaseStack extends Stack {
     public readonly database: rds.DatabaseInstance;
@@ -361,6 +380,7 @@ Affects:
 ### Phase 4: Compute Infrastructure (Week 4-5)
 
 - [ ] Create EKS cluster stack
+
   ```typescript
   export class ComputeStack extends Stack {
     public readonly cluster: eks.Cluster;
@@ -400,6 +420,7 @@ Affects:
 ### Phase 6: Monitoring and Observability (Week 6-7)
 
 - [ ] Create monitoring stack
+
   ```typescript
   export class MonitoringStack extends Stack {
     constructor(scope: Construct, id: string, props: MonitoringStackProps) {
@@ -427,6 +448,7 @@ Affects:
 ### Phase 7: CI/CD Integration (Week 7-8)
 
 - [ ] Create CDK pipeline
+
   ```typescript
   export class PipelineStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -457,12 +479,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - CDK deployment failures > 50%
 - Team unable to manage infrastructure
 - CloudFormation limitations blocking progress
 - Infrastructure drift issues
 
 **Rollback Steps**:
+
 1. Export current infrastructure to Terraform
 2. Migrate state management
 3. Update CI/CD pipelines
@@ -488,12 +512,14 @@ Affects:
 ### Monitoring Plan
 
 **CDK Deployment Metrics**:
+
 - Deployment success/failure rates
 - Deployment duration
 - Stack drift detection
 - Resource creation/update/delete counts
 
 **CloudFormation Monitoring**:
+
 ```typescript
 // Add custom metrics
 new cloudwatch.Metric({
@@ -504,12 +530,14 @@ new cloudwatch.Metric({
 ```
 
 **Alerts**:
+
 - Deployment failures
 - Stack drift detected
 - CloudFormation stack in ROLLBACK state
 - Resource creation failures
 
 **Review Schedule**:
+
 - Daily: Check deployment status
 - Weekly: Review infrastructure changes
 - Monthly: Infrastructure cost optimization
@@ -539,12 +567,14 @@ new cloudwatch.Metric({
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No infrastructure testing yet (acceptable for MVP)
 2. Manual drift detection (can be automated)
 3. Limited custom constructs (will grow over time)
 4. No multi-region deployment yet (future requirement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Implement comprehensive infrastructure testing
 - **Q2 2026**: Automate drift detection and remediation
 - **Q3 2026**: Create library of custom constructs
@@ -560,6 +590,7 @@ new cloudwatch.Metric({
 ### CDK Best Practices
 
 **1. Use L2/L3 Constructs**:
+
 ```typescript
 // ✅ Good: Use L2 construct
 const vpc = new ec2.Vpc(this, 'VPC', {
@@ -573,6 +604,7 @@ const vpc = new ec2.CfnVPC(this, 'VPC', {
 ```
 
 **2. Create Reusable Constructs**:
+
 ```typescript
 export class DatabaseConstruct extends Construct {
   public readonly database: rds.DatabaseInstance;
@@ -593,6 +625,7 @@ export class DatabaseConstruct extends Construct {
 ```
 
 **3. Use Environment-Specific Configuration**:
+
 ```typescript
 const app = new cdk.App();
 
@@ -608,6 +641,7 @@ new MyStack(app, 'Prod', {
 ```
 
 **4. Test Infrastructure Code**:
+
 ```typescript
 import { Template } from 'aws-cdk-lib/assertions';
 

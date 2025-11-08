@@ -14,12 +14,14 @@ This document provides practical guidelines for optimizing performance across th
 #### Use Specific Columns
 
 ❌ **Bad**: SELECT * queries
+
 ```java
 @Query("SELECT * FROM customers WHERE status = :status")
 List<Customer> findByStatus(@Param("status") String status);
 ```
 
 ✅ **Good**: Select only needed columns
+
 ```java
 @Query("SELECT c.id, c.name, c.email FROM Customer c WHERE c.status = :status")
 List<CustomerSummary> findByStatus(@Param("status") CustomerStatus status);
@@ -30,6 +32,7 @@ List<CustomerSummary> findByStatus(@Param("status") CustomerStatus status);
 #### Avoid N+1 Query Problem
 
 ❌ **Bad**: Lazy loading in loops
+
 ```java
 List<Order> orders = orderRepository.findAll();
 for (Order order : orders) {
@@ -40,6 +43,7 @@ for (Order order : orders) {
 ```
 
 ✅ **Good**: Use JOIN FETCH
+
 ```java
 @Query("SELECT o FROM Order o JOIN FETCH o.items WHERE o.customerId = :customerId")
 List<Order> findByCustomerIdWithItems(@Param("customerId") String customerId);
@@ -50,12 +54,14 @@ List<Order> findByCustomerIdWithItems(@Param("customerId") String customerId);
 #### Implement Pagination
 
 ❌ **Bad**: Loading all results
+
 ```java
 @Query("SELECT o FROM Order o WHERE o.customerId = :customerId")
 List<Order> findByCustomerId(@Param("customerId") String customerId);
 ```
 
 ✅ **Good**: Use pagination
+
 ```java
 @Query("SELECT o FROM Order o WHERE o.customerId = :customerId ORDER BY o.orderDate DESC")
 Page<Order> findByCustomerId(@Param("customerId") String customerId, Pageable pageable);
@@ -70,6 +76,7 @@ Page<Order> orders = orderRepository.findByCustomerId(customerId,
 #### Use Batch Operations
 
 ❌ **Bad**: Individual updates
+
 ```java
 for (String customerId : customerIds) {
     Customer customer = customerRepository.findById(customerId).get();
@@ -79,6 +86,7 @@ for (String customerId : customerIds) {
 ```
 
 ✅ **Good**: Batch update
+
 ```java
 @Modifying
 @Query("UPDATE Customer c SET c.lastLoginDate = :loginDate WHERE c.id IN :customerIds")
@@ -113,12 +121,14 @@ INCLUDE (total_amount, status);
 #### Index Selection Guidelines
 
 **When to Create Index**:
+
 - Columns used in WHERE clauses frequently
 - Columns used in JOIN conditions
 - Columns used in ORDER BY clauses
 - Foreign key columns
 
 **When NOT to Create Index**:
+
 - Small tables (< 1000 rows)
 - Columns with low cardinality (few distinct values)
 - Columns that are frequently updated
@@ -171,7 +181,7 @@ spring:
 
 #### Pool Sizing Formula
 
-```
+```text
 connections = ((core_count * 2) + effective_spindle_count)
 
 Example for 4-core CPU with SSD:
@@ -181,6 +191,7 @@ Add buffer for spikes: 9 * 1.5 = 13-15 connections
 ```
 
 **Guidelines**:
+
 - Start with formula-based size
 - Monitor actual usage
 - Adjust based on workload characteristics
@@ -202,6 +213,7 @@ LIMIT 20;
 ```
 
 **Look for**:
+
 - Sequential scans (should use indexes)
 - High cost estimates
 - Large row counts
@@ -222,6 +234,7 @@ spring:
 ```
 
 **Review Process**:
+
 1. Collect slow queries weekly
 2. Analyze query plans
 3. Add missing indexes
@@ -252,11 +265,13 @@ public class CacheConfiguration {
 ```
 
 **Use Cases**:
+
 - Hot data accessed very frequently
 - Small data sets (< 100MB)
 - Low latency requirements (< 1ms)
 
 **Benefits**:
+
 - No network latency
 - Very fast access (< 1ms)
 - Automatic memory management
@@ -289,11 +304,13 @@ public class RedisCacheConfiguration {
 ```
 
 **Use Cases**:
+
 - Data shared across service instances
 - Medium-sized data sets (< 1GB per key)
 - Moderate latency requirements (< 10ms)
 
 **Benefits**:
+
 - Shared across instances
 - Persistent across restarts
 - Supports complex data structures
@@ -359,12 +376,14 @@ public class CacheWarmer {
 #### Cache Key Design
 
 ✅ **Good**: Descriptive, hierarchical keys
+
 ```java
 String cacheKey = String.format("product:%s:details", productId);
 String cacheKey = String.format("customer:%s:orders:page:%d", customerId, pageNumber);
 ```
 
 ❌ **Bad**: Generic, flat keys
+
 ```java
 String cacheKey = productId;  // Too generic
 String cacheKey = "data";     // Not descriptive
@@ -438,6 +457,7 @@ public class NotificationService {
 ```
 
 **Benefits**:
+
 - Reduces API response time by 200-300ms
 - Improves user experience
 - Enables independent scaling
@@ -518,6 +538,7 @@ public class ObjectPoolConfiguration {
 ### String Optimization
 
 ❌ **Bad**: String concatenation in loops
+
 ```java
 String result = "";
 for (String item : items) {
@@ -526,6 +547,7 @@ for (String item : items) {
 ```
 
 ✅ **Good**: Use StringBuilder
+
 ```java
 StringBuilder result = new StringBuilder();
 for (String item : items) {
@@ -552,6 +574,7 @@ Map<String, Customer> customerMap = new HashMap<>();  // Fast key lookup
 ### Bundle Size Optimization
 
 **Code Splitting**:
+
 ```typescript
 // Lazy load routes
 const ProductCatalog = lazy(() => import('./pages/ProductCatalog'));
@@ -562,6 +585,7 @@ const HeavyComponent = lazy(() => import('./components/HeavyComponent'));
 ```
 
 **Tree Shaking**:
+
 ```javascript
 // Import only what you need
 import { debounce } from 'lodash-es';  // ✅ Good

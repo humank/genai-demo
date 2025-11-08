@@ -18,6 +18,7 @@ The Evolution Perspective ensures the system can adapt to future changes in requ
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Adding New Payment Method
+
 - **Source**: Product owner
 - **Stimulus**: Request to add new payment provider
 - **Environment**: Production system with existing payment methods

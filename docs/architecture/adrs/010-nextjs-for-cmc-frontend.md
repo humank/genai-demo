@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 ### Business Context
 
 **Business Drivers**:
+
 - Need for efficient internal operations management
 - Requirement for fast page loads and SEO (for help documentation)
 - Team growth requiring scalable frontend architecture
@@ -41,6 +42,7 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 - Support for multiple languages (English, Chinese)
 
 **Constraints**:
+
 - Team has React experience
 - Must integrate with existing REST API
 - Budget: No additional frontend infrastructure costs
@@ -50,12 +52,14 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 ### Technical Context
 
 **Current State**:
+
 - RESTful API with OpenAPI 3.0 (ADR-009)
 - Spring Boot backend
 - AWS infrastructure (ADR-007)
 - TypeScript preference for type safety
 
 **Requirements**:
+
 - Server-side rendering (SSR) for performance
 - Static site generation (SSG) for documentation
 - API routes for BFF pattern
@@ -83,6 +87,7 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 **Description**: React framework with SSR, SSG, and API routes
 
 **Pros**:
+
 - ✅ Excellent performance (SSR, SSG, ISR)
 - ✅ Built-in TypeScript support
 - ✅ API routes for BFF pattern
@@ -95,6 +100,7 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 - ✅ App Router with React Server Components
 
 **Cons**:
+
 - ⚠️ Learning curve for App Router
 - ⚠️ Server infrastructure needed for SSR
 
@@ -107,11 +113,13 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 **Description**: Client-side React application
 
 **Pros**:
+
 - ✅ Simple setup
 - ✅ Team knows React
 - ✅ No server needed
 
 **Cons**:
+
 - ❌ No SSR (poor initial load)
 - ❌ No built-in routing
 - ❌ No API routes
@@ -127,11 +135,13 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 **Description**: Vue framework with SSR
 
 **Pros**:
+
 - ✅ Good performance
 - ✅ SSR support
 - ✅ Good developer experience
 
 **Cons**:
+
 - ❌ Team lacks Vue experience
 - ❌ Smaller ecosystem than React
 - ❌ Learning curve
@@ -145,11 +155,13 @@ The Enterprise E-Commerce Platform requires a Content Management Console (CMC) f
 **Description**: Use Angular for both CMC and consumer app
 
 **Pros**:
+
 - ✅ Single framework for both apps
 - ✅ Strong TypeScript support
 - ✅ Comprehensive framework
 
 **Cons**:
+
 - ❌ Heavier than needed for CMC
 - ❌ Steeper learning curve
 - ❌ Less flexible than Next.js
@@ -179,7 +191,8 @@ Next.js was selected for the CMC frontend for the following reasons:
 **Implementation Strategy**:
 
 **Architecture**:
-```
+
+```text
 Next.js App (CMC)
 ├── App Router
 ├── React Server Components
@@ -189,6 +202,7 @@ Next.js App (CMC)
 ```
 
 **Key Features**:
+
 - Server-side rendering for dashboard pages
 - Static generation for help documentation
 - API routes for authentication and data aggregation
@@ -217,6 +231,7 @@ Next.js App (CMC)
 **Selected Impact Radius**: **Bounded Context**
 
 Affects:
+
 - CMC frontend application
 - Deployment infrastructure
 - Development workflow
@@ -238,11 +253,13 @@ Affects:
 ### Phase 1: Project Setup (Week 1)
 
 - [ ] Create Next.js project
+
   ```bash
   npx create-next-app@latest cmc-frontend --typescript --tailwind --app
   ```
 
 - [ ] Configure TypeScript
+
   ```json
   {
     "compilerOptions": {
@@ -260,6 +277,7 @@ Affects:
   ```
 
 - [ ] Set up project structure
+
   ```
   cmc-frontend/
   ├── src/
@@ -288,11 +306,13 @@ Affects:
 ### Phase 2: UI Component Library (Week 1-2)
 
 - [ ] Install shadcn/ui
+
   ```bash
   npx shadcn-ui@latest init
   ```
 
 - [ ] Add core components
+
   ```bash
   npx shadcn-ui@latest add button
   npx shadcn-ui@latest add form
@@ -302,6 +322,7 @@ Affects:
   ```
 
 - [ ] Create custom components
+
   ```typescript
   // src/components/ui/data-table.tsx
   export function DataTable<TData, TValue>({
@@ -330,6 +351,7 @@ Affects:
 ### Phase 3: Authentication (Week 2-3)
 
 - [ ] Implement NextAuth.js
+
   ```typescript
   // src/app/api/auth/[...nextauth]/route.ts
   import NextAuth from "next-auth";
@@ -381,6 +403,7 @@ Affects:
   ```
 
 - [ ] Create protected routes
+
   ```typescript
   // src/app/(dashboard)/layout.tsx
   import { getServerSession } from "next-auth";
@@ -409,6 +432,7 @@ Affects:
 ### Phase 4: API Integration (Week 3-4)
 
 - [ ] Set up React Query
+
   ```typescript
   // src/app/providers.tsx
   'use client';
@@ -435,6 +459,7 @@ Affects:
   ```
 
 - [ ] Create API client
+
   ```typescript
   // src/lib/api/client.ts
   import { getSession } from 'next-auth/react';
@@ -497,6 +522,7 @@ Affects:
   ```
 
 - [ ] Create API hooks
+
   ```typescript
   // src/lib/api/hooks/useCustomers.ts
   import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -533,6 +559,7 @@ Affects:
 ### Phase 5: Feature Implementation (Week 4-8)
 
 - [ ] Implement Customer Management
+
   ```typescript
   // src/app/(dashboard)/customers/page.tsx
   import { DataTable } from '@/components/ui/data-table';
@@ -560,6 +587,7 @@ Affects:
 ### Phase 6: Testing and Optimization (Week 8-9)
 
 - [ ] Set up testing
+
   ```bash
   npm install -D @testing-library/react @testing-library/jest-dom jest
   ```
@@ -572,12 +600,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Performance issues with SSR
 - Team unable to adopt Next.js
 - Deployment complexity too high
 - Development velocity decreases > 30%
 
 **Rollback Steps**:
+
 1. Migrate to Vite + React
 2. Use client-side rendering only
 3. Simplify deployment
@@ -599,12 +629,14 @@ Affects:
 ### Monitoring Plan
 
 **Performance Metrics**:
+
 - Core Web Vitals (LCP, FID, CLS)
 - Page load times
 - API response times
 - Bundle size
 
 **Review Schedule**:
+
 - Weekly: Performance review
 - Monthly: Dependency updates
 - Quarterly: Architecture review
@@ -630,11 +662,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No E2E tests initially (acceptable for MVP)
 2. Limited accessibility testing (future enhancement)
 3. No internationalization yet (future requirement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Implement comprehensive E2E tests
 - **Q2 2026**: Add accessibility testing and improvements
 - **Q3 2026**: Implement internationalization
@@ -649,7 +683,7 @@ Affects:
 
 ### Next.js App Router Structure
 
-```
+```text
 app/
 ├── (auth)/
 │   ├── login/

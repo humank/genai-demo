@@ -37,7 +37,7 @@ Each decision tree follows this format:
 - **L1 Support**: DevOps Team (Slack: #devops-support)
 - **L2 Support**: Backend Engineering Team (Slack: #backend-eng)
 - **L3 Support**: Architecture Team (Slack: #architecture)
-- **Security Team**: security@company.com (PagerDuty: Security On-Call)
+- **Security Team**: <security@company.com> (PagerDuty: Security On-Call)
 - **On-Call Engineer**: PagerDuty rotation
 - **AWS Support**: Premium support portal
 
@@ -62,7 +62,7 @@ Each decision tree follows this format:
 
 ### Initial Symptom: Service Unreachable or Down
 
-```
+```text
 Service Unreachable/Down Alert
 │
 ├─ Can you access the service endpoint?
@@ -187,7 +187,7 @@ kubectl rollout undo deployment/ecommerce-backend -n production
 
 ### Initial Symptom: Slow Response Times or High Latency
 
-```
+```text
 Performance Degradation Alert
 │
 ├─ What is the response time?
@@ -361,7 +361,7 @@ curl http://localhost:8080/actuator/metrics/cache.gets | jq
 
 ### Initial Symptom: Users Cannot Login or Access Resources
 
-```
+```text
 Authentication/Authorization Failure
 │
 ├─ What type of failure?
@@ -515,7 +515,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 
 ### Initial Symptom: Database Errors or Slow Queries
 
-```
+```text
 Database Issue Detected
 │
 ├─ Can you connect to the database?
@@ -736,7 +736,7 @@ psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'i
 
 ### Initial Symptom: Connection Timeouts or Network Errors
 
-```
+```text
 Network Connectivity Issue
 │
 ├─ What is failing to connect?
@@ -970,7 +970,7 @@ aws elbv2 describe-target-health --target-group-arn ${TG_ARN}
 
 ### Initial Symptom: Security Alert or Suspicious Activity
 
-```
+```text
 Security Incident Detected
 │
 ├─ What type of security event?
@@ -1230,7 +1230,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 
 ### Incident Response Team
 
-- **Security Team**: security@company.com (PagerDuty: Security On-Call)
+- **Security Team**: <security@company.com> (PagerDuty: Security On-Call)
 - **CTO**: For P0 incidents
 - **Legal**: For data breach incidents
 - **AWS Support**: For infrastructure attacks
@@ -1241,7 +1241,7 @@ kubectl logs -l app=ecommerce-backend -n production | \
 
 ### Initial Symptom: Deployment Not Completing Successfully
 
-```
+```text
 Deployment Failure
 │
 ├─ What is the deployment status?
@@ -1348,7 +1348,7 @@ kubectl rollout history deployment/${NAME} -n production
 
 ### Initial Symptom: Cache Performance Problems
 
-```
+```text
 Cache Issue Detected
 │
 ├─ What is the cache hit rate?
@@ -1428,7 +1428,7 @@ kubectl exec -it redis-0 -n production -- redis-cli FLUSHDB
 
 ### Initial Symptom: Message Processing Problems
 
-```
+```text
 Message Queue Issue
 │
 ├─ Is Kafka/MSK accessible?
@@ -1507,7 +1507,7 @@ kubectl scale deployment/consumer --replicas=5
 
 ### Initial Symptom: Resource Limits Reached
 
-```
+```text
 Resource Exhaustion
 │
 ├─ What resource is exhausted?
@@ -1577,6 +1577,7 @@ Resource Exhaustion
 ### Documentation Requirements
 
 For every incident, document:
+
 - Initial symptom and alert
 - Decision tree path followed
 - Commands executed and results
@@ -1602,5 +1603,4 @@ For every incident, document:
 **Last Updated**: 2025-10-26  
 **Owner**: DevOps Team  
 **Review Cycle**: Quarterly  
-**Feedback**: devops@company.com
-
+**Feedback**: <devops@company.com>

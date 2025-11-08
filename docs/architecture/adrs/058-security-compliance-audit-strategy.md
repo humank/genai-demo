@@ -29,6 +29,7 @@ The Enterprise E-Commerce Platform must maintain compliance with multiple securi
 - **SOC 2**: Service Organization Control (for enterprise customers)
 
 Compliance challenges:
+
 - Multiple overlapping requirements
 - Continuous compliance monitoring needed
 - Regular audits and assessments
@@ -39,6 +40,7 @@ Compliance challenges:
 ### Business Context
 
 **Business Drivers**:
+
 - Legal requirement for payment processing (PCI-DSS)
 - Customer trust and platform reputation
 - Enterprise customer requirements (SOC 2)
@@ -47,6 +49,7 @@ Compliance challenges:
 - Risk mitigation and insurance
 
 **Constraints**:
+
 - Must maintain PCI-DSS Level 1 compliance
 - Annual external audits required
 - Quarterly internal assessments
@@ -56,6 +59,7 @@ Compliance challenges:
 ### Technical Context
 
 **Current State**:
+
 - No formal compliance program
 - Ad-hoc security controls
 - No compliance monitoring
@@ -64,6 +68,7 @@ Compliance challenges:
 - Limited compliance documentation
 
 **Requirements**:
+
 - Automated compliance monitoring
 - Continuous evidence collection
 - Audit trail management
@@ -89,6 +94,7 @@ Compliance challenges:
 **Description**: Integrated compliance management with automated monitoring, evidence collection, and continuous assessment
 
 **Components**:
+
 - **Compliance Framework**: Unified framework covering PCI-DSS, GDPR, Taiwan PDPA, ISO 27001
 - **Automated Monitoring**: AWS Config, Security Hub for continuous compliance
 - **Evidence Collection**: Automated evidence collection and retention
@@ -98,6 +104,7 @@ Compliance challenges:
 - **Training Program**: Security awareness and compliance training
 
 **Pros**:
+
 - ✅ Comprehensive coverage of all requirements
 - ✅ Automated compliance monitoring
 - ✅ Continuous compliance vs point-in-time
@@ -107,6 +114,7 @@ Compliance challenges:
 - ✅ Scalable to additional frameworks
 
 **Cons**:
+
 - ⚠️ Implementation complexity
 - ⚠️ Requires compliance expertise
 - ⚠️ Ongoing maintenance effort
@@ -120,11 +128,13 @@ Compliance challenges:
 **Description**: Manual compliance tracking and evidence collection
 
 **Pros**:
+
 - ✅ Simple to start
 - ✅ Full control
 - ✅ Low initial cost
 
 **Cons**:
+
 - ❌ Labor-intensive
 - ❌ Error-prone
 - ❌ No real-time visibility
@@ -140,11 +150,13 @@ Compliance challenges:
 **Description**: Outsource compliance management to third-party provider
 
 **Pros**:
+
 - ✅ Expert compliance management
 - ✅ Comprehensive coverage
 - ✅ No internal expertise needed
 
 **Cons**:
+
 - ❌ Very high cost ($200,000+/year)
 - ❌ Less control
 - ❌ Vendor dependency
@@ -175,84 +187,104 @@ Comprehensive compliance management program was selected for the following reaso
 **PCI-DSS Requirements** (12 Requirements, 78 Sub-Requirements):
 
 **Requirement 1**: Install and maintain firewall configuration
+
 - ADR-048: DDoS Protection Strategy
 - ADR-049: WAF Rules and Policies
 - ADR-056: Network Segmentation
 
 **Requirement 2**: Do not use vendor-supplied defaults
+
 - ADR-052: Authentication Security Hardening
 - ADR-055: Vulnerability Management
 
 **Requirement 3**: Protect stored cardholder data
+
 - ADR-016: Data Encryption Strategy
 - ADR-054: Data Loss Prevention
 
 **Requirement 4**: Encrypt transmission of cardholder data
+
 - ADR-016: Data Encryption Strategy
 
 **Requirement 5**: Protect all systems against malware
+
 - ADR-055: Vulnerability Management
 
 **Requirement 6**: Develop and maintain secure systems
+
 - ADR-055: Vulnerability Management
 - ADR-057: Penetration Testing
 
 **Requirement 7**: Restrict access to cardholder data
+
 - ADR-015: RBAC Implementation
 - ADR-054: Data Loss Prevention
 
 **Requirement 8**: Identify and authenticate access
+
 - ADR-014: JWT Authentication
 - ADR-052: Authentication Security Hardening
 
 **Requirement 9**: Restrict physical access (N/A for cloud)
 
 **Requirement 10**: Track and monitor all access
+
 - ADR-053: Security Monitoring
 - ADR-054: Data Loss Prevention
 
 **Requirement 11**: Regularly test security systems
+
 - ADR-057: Penetration Testing
 - ADR-055: Vulnerability Management
 
 **Requirement 12**: Maintain information security policy
+
 - This ADR (058)
 
 **GDPR Requirements**:
 
 **Article 5**: Principles of data processing
+
 - ADR-054: Data Loss Prevention
 - ADR-016: Data Encryption
 
 **Article 25**: Data protection by design and by default
+
 - ADR-015: RBAC Implementation
 - ADR-054: Data Loss Prevention
 
 **Article 32**: Security of processing
+
 - ADR-016: Data Encryption
 - ADR-053: Security Monitoring
 
 **Article 33**: Breach notification
+
 - ADR-053: Security Monitoring
 
 **Article 35**: Data protection impact assessment
+
 - This ADR (058)
 
 **Taiwan PDPA Requirements**:
 
 **Article 6**: Collection of personal data
+
 - ADR-054: Data Loss Prevention
 
 **Article 27**: Security measures
+
 - ADR-016: Data Encryption
 - ADR-053: Security Monitoring
 
 **Article 28**: Incident notification
+
 - ADR-053: Security Monitoring
 
 ### Automated Compliance Monitoring
 
 **AWS Config Rules**:
+
 ```typescript
 // CDK Configuration for compliance monitoring
 import * as config from 'aws-cdk-lib/aws-config';
@@ -333,6 +365,7 @@ const gdprRules = [
 ```
 
 **AWS Security Hub Standards**:
+
 ```typescript
 // Enable Security Hub with compliance standards
 const securityHub = new securityhub.CfnHub(this, 'SecurityHub', {
@@ -354,6 +387,7 @@ new securityhub.CfnStandard(this, 'CISStandard', {
 ### Evidence Collection and Management
 
 **Automated Evidence Collection**:
+
 ```python
 # Lambda function for evidence collection
 import boto3
@@ -431,6 +465,7 @@ def collect_compliance_evidence(event, context):
 ```
 
 **Evidence Retention**:
+
 ```typescript
 // S3 bucket for compliance evidence
 const evidenceBucket = new s3.Bucket(this, 'ComplianceEvidenceBucket', {
@@ -469,6 +504,7 @@ const evidenceBucket = new s3.Bucket(this, 'ComplianceEvidenceBucket', {
 ### Audit Trail Management
 
 **Comprehensive Audit Logging**:
+
 ```typescript
 // CloudTrail for API audit logging
 const auditTrail = new cloudtrail.Trail(this, 'AuditTrail', {
@@ -516,6 +552,7 @@ const dbAuditLog = new rds.ParameterGroup(this, 'DBAuditLog', {
 ### Compliance Dashboard
 
 **Real-Time Compliance Status**:
+
 ```typescript
 // CloudWatch Dashboard for compliance monitoring
 const complianceDashboard = new cloudwatch.Dashboard(this, 'ComplianceDashboard', {
@@ -594,10 +631,12 @@ complianceDashboard.addWidgets(
 8. **Vendor Management Policy** (PCI-DSS Req 12)
 
 **Policy Management**:
+
 ```markdown
 # Information Security Policy
 
 ## Document Control
+
 - **Version**: 1.0
 - **Effective Date**: 2025-10-25
 - **Review Date**: 2026-10-25
@@ -611,11 +650,13 @@ This policy establishes the framework for protecting information assets...
 This policy applies to all employees, contractors, and third parties...
 
 ## Policy Statements
+
 1. All information assets must be classified...
 2. Access to information must be based on least privilege...
 3. All systems must be protected with appropriate security controls...
 
 ## Roles and Responsibilities
+
 - **CISO**: Overall responsibility for information security
 - **IT Manager**: Implementation of security controls
 - **Employees**: Compliance with security policies
@@ -624,9 +665,11 @@ This policy applies to all employees, contractors, and third parties...
 Failure to comply with this policy may result in disciplinary action...
 
 ## Related Documents
+
 - Access Control Policy
 - Data Protection Policy
 - Incident Response Policy
+
 ```
 
 ### Security Awareness Training
@@ -634,6 +677,7 @@ Failure to comply with this policy may result in disciplinary action...
 **Training Program**:
 
 **New Employee Onboarding** (Day 1):
+
 - Information security overview
 - Acceptable use policy
 - Password security
@@ -641,6 +685,7 @@ Failure to comply with this policy may result in disciplinary action...
 - Data protection basics
 
 **Annual Security Training** (All employees):
+
 - Security threats and trends
 - Social engineering awareness
 - Data protection and privacy
@@ -648,12 +693,14 @@ Failure to comply with this policy may result in disciplinary action...
 - Compliance requirements
 
 **Role-Specific Training**:
+
 - **Developers**: Secure coding, OWASP Top 10
 - **Operations**: Security monitoring, incident response
 - **Customer Support**: Data privacy, PCI-DSS
 - **Management**: Compliance requirements, risk management
 
 **Training Tracking**:
+
 ```python
 # Training completion tracking
 class TrainingRecord:
@@ -704,26 +751,31 @@ def generate_training_compliance_report():
 ### Audit Management
 
 **Internal Audit Schedule**:
+
 - **Quarterly**: Self-assessment against PCI-DSS requirements
 - **Semi-Annual**: Internal security audit
 - **Annual**: Comprehensive compliance review
 
 **External Audit Schedule**:
+
 - **Annual**: PCI-DSS QSA audit (mandatory)
 - **Bi-Annual**: ISO 27001 certification audit (optional)
 - **Annual**: SOC 2 Type II audit (optional)
 
 **Audit Process**:
+
 ```yaml
 # Audit workflow
 audit_process:
   pre_audit:
+
     - evidence_collection
     - documentation_review
     - gap_analysis
     - remediation_planning
   
   audit_execution:
+
     - opening_meeting
     - evidence_review
     - interviews
@@ -731,10 +783,12 @@ audit_process:
     - findings_discussion
   
   post_audit:
+
     - audit_report_review
     - remediation_plan
     - corrective_actions
     - follow_up_audit
+
 ```
 
 ## Impact Analysis
@@ -754,6 +808,7 @@ audit_process:
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All systems and applications
 - All employees and contractors
 - All business processes
@@ -811,6 +866,7 @@ Affects:
 **Not Applicable** - Compliance is ongoing requirement
 
 **Continuous Improvement**:
+
 - Regular policy reviews
 - Continuous monitoring
 - Proactive remediation
@@ -831,6 +887,7 @@ Affects:
 ### Monitoring Plan
 
 **Compliance Metrics**:
+
 - `compliance.pci_dss.score` (percentage)
 - `compliance.gdpr.score` (percentage)
 - `compliance.config_rules.compliant` (count)
@@ -838,6 +895,7 @@ Affects:
 - `compliance.training.completion` (percentage)
 
 **Reporting**:
+
 - Daily: Compliance dashboard review
 - Weekly: Non-compliance alerts
 - Monthly: Compliance status report
@@ -845,6 +903,7 @@ Affects:
 - Annual: External audit report
 
 **Review Schedule**:
+
 - Monthly: Compliance metrics review
 - Quarterly: Policy review
 - Annual: Compliance program review
@@ -871,12 +930,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual policy management (acceptable initially)
 2. Basic compliance dashboard
 3. Limited automated remediation
 4. Manual evidence review
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated policy management
 - **Q3 2026**: Enhanced compliance dashboard with AI insights
 - **Q4 2026**: Automated remediation for common findings

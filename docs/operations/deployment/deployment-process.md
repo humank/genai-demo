@@ -155,6 +155,7 @@ kubectl get services -n production
 ### Step 2: Create Deployment Plan
 
 Document the following:
+
 - Deployment window (date and time)
 - Expected downtime (if any)
 - Rollback plan
@@ -360,27 +361,34 @@ name: Deploy to Production
 on:
   push:
     tags:
+
       - 'v*'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Build application
+
         run: ./gradlew build
       
       - name: Build Docker image
+
         run: docker build -t ecommerce-backend:${GITHUB_REF_NAME} .
       
       - name: Push to ECR
+
         run: |
           aws ecr get-login-password | docker login --username AWS --password-stdin
           docker push ${ECR_REGISTRY}/ecommerce-backend:${GITHUB_REF_NAME}
       
       - name: Deploy to EKS
+
         run: |
           kubectl set image deployment/ecommerce-backend \
             ecommerce-backend=${ECR_REGISTRY}/ecommerce-backend:${GITHUB_REF_NAME}

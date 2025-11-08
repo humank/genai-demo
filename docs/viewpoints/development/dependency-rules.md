@@ -16,7 +16,7 @@ The fundamental principle of Hexagonal Architecture is:
 
 > **Dependencies point inward. Inner layers know nothing about outer layers.**
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Interfaces Layer                      │
 │                    (Outer Layer)                         │
@@ -56,6 +56,7 @@ The fundamental principle of Hexagonal Architecture is:
 #### Allowed Dependencies
 
 ✅ **Java Standard Library**
+
 ```java
 import java.util.*;
 import java.time.*;
@@ -63,23 +64,27 @@ import java.math.BigDecimal;
 ```
 
 ✅ **Domain-Specific Libraries**
+
 ```java
 import javax.money.*;  // Money API (if used)
 ```
 
 ✅ **Other Domain Packages** (within same bounded context)
+
 ```java
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
 ```
 
 ✅ **Shared Kernel**
+
 ```java
 import solid.humank.genaidemo.domain.shared.valueobject.Money;
 import solid.humank.genaidemo.domain.shared.exception.DomainException;
 ```
 
 ✅ **Minimal Spring Annotations** (for domain services only)
+
 ```java
 import org.springframework.stereotype.Component;  // For domain services only
 ```
@@ -87,12 +92,14 @@ import org.springframework.stereotype.Component;  // For domain services only
 #### Prohibited Dependencies
 
 ❌ **NO Application Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.application.customer.CustomerApplicationService;
 ```
 
 ❌ **NO Infrastructure Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.infrastructure.customer.persistence.entity.CustomerEntity;
@@ -100,12 +107,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 ```
 
 ❌ **NO Interfaces Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.interfaces.rest.customer.controller.CustomerController;
 ```
 
 ❌ **NO JPA Annotations**
+
 ```java
 // ❌ WRONG - Domain objects should NOT have JPA annotations
 @Entity
@@ -114,6 +123,7 @@ public class Customer { }
 ```
 
 ❌ **NO Spring Framework** (except @Component for services)
+
 ```java
 // ❌ WRONG
 @Service
@@ -122,6 +132,7 @@ public class Customer { }
 ```
 
 ❌ **NO HTTP/REST Libraries**
+
 ```java
 // ❌ WRONG
 import org.springframework.web.bind.annotation.*;
@@ -178,6 +189,7 @@ static final ArchRule domainShouldNotUseJPA = noClasses()
 #### Allowed Dependencies
 
 ✅ **Domain Layer**
+
 ```java
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.repository.CustomerRepository;
@@ -185,12 +197,14 @@ import solid.humank.genaidemo.domain.customer.events.CustomerCreatedEvent;
 ```
 
 ✅ **Spring Framework** (for transactions and dependency injection)
+
 ```java
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 ```
 
 ✅ **Java Standard Library**
+
 ```java
 import java.util.*;
 import java.time.*;
@@ -199,6 +213,7 @@ import java.time.*;
 #### Prohibited Dependencies
 
 ❌ **NO Infrastructure Layer**
+
 ```java
 // ❌ WRONG - Application should not depend on infrastructure implementations
 import solid.humank.genaidemo.infrastructure.customer.persistence.entity.CustomerEntity;
@@ -206,12 +221,14 @@ import solid.humank.genaidemo.infrastructure.customer.persistence.repository.Jpa
 ```
 
 ❌ **NO Interfaces Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.interfaces.rest.customer.controller.CustomerController;
 ```
 
 ❌ **NO JPA/Hibernate**
+
 ```java
 // ❌ WRONG
 import javax.persistence.*;
@@ -219,6 +236,7 @@ import org.hibernate.*;
 ```
 
 ❌ **NO HTTP/REST**
+
 ```java
 // ❌ WRONG
 import org.springframework.web.bind.annotation.*;
@@ -268,12 +286,14 @@ static final ArchRule applicationServicesShouldBeTransactional = classes()
 #### Allowed Dependencies
 
 ✅ **Domain Layer** (interfaces only)
+
 ```java
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.repository.CustomerRepository;
 ```
 
 ✅ **Spring Framework**
+
 ```java
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Component;
@@ -281,12 +301,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 ```
 
 ✅ **JPA/Hibernate**
+
 ```java
 import javax.persistence.*;
 import org.hibernate.*;
 ```
 
 ✅ **External Libraries**
+
 ```java
 import com.fasterxml.jackson.databind.*;
 import org.apache.kafka.clients.*;
@@ -294,6 +316,7 @@ import redis.clients.jedis.*;
 ```
 
 ✅ **Java Standard Library**
+
 ```java
 import java.util.*;
 import java.time.*;
@@ -302,12 +325,14 @@ import java.time.*;
 #### Prohibited Dependencies
 
 ❌ **NO Application Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.application.customer.CustomerApplicationService;
 ```
 
 ❌ **NO Interfaces Layer**
+
 ```java
 // ❌ WRONG
 import solid.humank.genaidemo.interfaces.rest.customer.controller.CustomerController;
@@ -362,30 +387,35 @@ static final ArchRule repositoryImplementationsShouldImplementDomainInterfaces =
 #### Allowed Dependencies
 
 ✅ **Application Layer**
+
 ```java
 import solid.humank.genaidemo.application.customer.CustomerApplicationService;
 import solid.humank.genaidemo.application.customer.command.CreateCustomerCommand;
 ```
 
 ✅ **Domain Layer**
+
 ```java
 import solid.humank.genaidemo.domain.customer.model.aggregate.Customer;
 import solid.humank.genaidemo.domain.customer.model.valueobject.CustomerId;
 ```
 
 ✅ **Spring Web**
+
 ```java
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 ```
 
 ✅ **Validation**
+
 ```java
 import javax.validation.*;
 import org.springframework.validation.annotation.*;
 ```
 
 ✅ **Java Standard Library**
+
 ```java
 import java.util.*;
 import java.time.*;
@@ -394,6 +424,7 @@ import java.time.*;
 #### Prohibited Dependencies
 
 ❌ **NO Infrastructure Layer** (except via dependency injection)
+
 ```java
 // ❌ WRONG - Direct dependency on infrastructure
 import solid.humank.genaidemo.infrastructure.customer.persistence.entity.CustomerEntity;
@@ -607,7 +638,7 @@ static final ArchRule noCircularDependencies = slices()
 
 ### Test Location
 
-```
+```text
 app/src/test/java/solid/humank/genaidemo/architecture/
 ├── ArchitectureTest.java              # Main architecture tests
 ├── LayerDependencyTest.java           # Layer dependency tests
@@ -638,6 +669,7 @@ public class ArchitectureTest {
 ### Example 1: Domain Depending on Infrastructure
 
 ❌ **WRONG**:
+
 ```java
 // domain/customer/model/aggregate/Customer.java
 package solid.humank.genaidemo.domain.customer.model.aggregate;
@@ -652,6 +684,7 @@ public class Customer {
 ```
 
 ✅ **CORRECT**:
+
 ```java
 // domain/customer/model/aggregate/Customer.java
 package solid.humank.genaidemo.domain.customer.model.aggregate;
@@ -681,6 +714,7 @@ public class CustomerEntity {
 ### Example 2: Application Depending on Infrastructure
 
 ❌ **WRONG**:
+
 ```java
 // application/customer/CustomerApplicationService.java
 package solid.humank.genaidemo.application.customer;
@@ -694,6 +728,7 @@ public class CustomerApplicationService {
 ```
 
 ✅ **CORRECT**:
+
 ```java
 // application/customer/CustomerApplicationService.java
 package solid.humank.genaidemo.application.customer;
@@ -713,6 +748,7 @@ public class CustomerApplicationService {
 ### Example 3: Cross-Context Dependencies
 
 ❌ **WRONG**:
+
 ```java
 // domain/order/model/aggregate/Order.java
 package solid.humank.genaidemo.domain.order.model.aggregate;
@@ -725,6 +761,7 @@ public class Order {
 ```
 
 ✅ **CORRECT**:
+
 ```java
 // domain/order/model/aggregate/Order.java
 package solid.humank.genaidemo.domain.order.model.aggregate;
@@ -841,4 +878,3 @@ public class OrderSubmittedEventHandler {
 ---
 
 **Previous**: [← Module Organization](module-organization.md) | **Next**: [Build Process →](build-process.md)
-

@@ -66,11 +66,13 @@ grep "runnable" thread-dump.txt | sort | uniq -c | sort -rn
 ### Immediate Actions
 
 1. **Scale horizontally** to distribute load:
+
 ```bash
 kubectl scale deployment/ecommerce-backend --replicas=8 -n production
 ```
 
-2. **Monitor impact**:
+1. **Monitor impact**:
+
 ```bash
 # Watch CPU usage
 watch kubectl top pods -n production -l app=ecommerce-backend
@@ -78,24 +80,26 @@ watch kubectl top pods -n production -l app=ecommerce-backend
 
 ### Root Cause Fix
 
-#### If caused by inefficient code:
+#### If caused by inefficient code
 
 1. Identify CPU-intensive code from profiling
 2. Optimize algorithm or query
 3. Deploy fix through normal deployment process
 
-#### If caused by increased load:
+#### If caused by increased load
 
 1. Verify load is legitimate (not attack)
 2. Adjust HPA settings:
+
 ```bash
 kubectl edit hpa ecommerce-backend-hpa -n production
 # Increase maxReplicas if needed
 ```
 
-#### If caused by resource limits:
+#### If caused by resource limits
 
 1. Review and adjust resource requests/limits:
+
 ```yaml
 resources:
   requests:

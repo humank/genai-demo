@@ -27,6 +27,7 @@
 > **📊 圖表標準**: 完整的圖表生成和管理標準請參考 [Diagram Generation Standards](diagram-generation-standards.md)
 
 **快速參考**:
+
 - **主要格式**: PNG (GitHub 文檔推薦)
 - **生成命令**: `./scripts/generate-diagrams.sh --format=png`
 - **PlantUML**: 複雜 UML 圖表和詳細系統架構
@@ -37,6 +38,7 @@
 > **⚠️ CRITICAL**: All documentation files MUST use the current actual date when created or updated.
 
 **Mandatory Requirements**:
+
 - **ALWAYS** execute `date +%Y-%m-%d` to get the current date before creating/updating any documentation
 - **NEVER** use placeholder dates like "YYYY-MM-DD", "2025-01-XX", or hardcoded dates
 - **ALWAYS** update the following fields with the current date:
@@ -47,6 +49,7 @@
   - Any timestamp fields
 
 **Example - Correct Usage**:
+
 ```bash
 # Get current date first
 CURRENT_DATE=$(date +%Y-%m-%d)
@@ -60,6 +63,7 @@ last_updated: "2025-10-22"  # ✅ Actual current date
 ```
 
 **Example - Incorrect Usage**:
+
 ```markdown
 ---
 last_updated: "2025-01-22"  # ❌ Hardcoded old date
@@ -69,6 +73,7 @@ last_updated: "2025-01-22"  # ❌ Hardcoded old date
 ```
 
 **Rationale**: Accurate timestamps are essential for:
+
 - Tracking documentation freshness
 - Identifying outdated content
 - Audit trails and compliance
@@ -180,7 +185,7 @@ log.error("Payment processing failed",
 
 #### URL Naming Standards
 
-```
+```text
 GET    /../api/v1/customers                    # List customers
 GET    /api/v1/customers/{id}               # Get customer by ID
 POST   /api/v1/customers                    # Create customer
@@ -263,7 +268,7 @@ public record ErrorResponse(
 
 ### Layer Dependency Rules
 
-```
+```text
 interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
@@ -545,12 +550,14 @@ public @interface SmokeTest {}
 > **🧪 Test Performance Standards**: For comprehensive test performance monitoring, resource management, and optimization, see [Test Performance Standards](test-performance-standards.md)
 
 **Quick Reference:**
+
 - Use `@TestPerformanceExtension` for automatic performance monitoring
 - Integration tests: < 500ms, < 50MB
 - E2E tests: < 3s, < 500MB
 - Generate reports: `./gradlew generatePerformanceReport`
 
 **Key Features:**
+
 - Automatic test execution time and memory tracking
 - Performance regression detection
 - Resource cleanup and memory management
@@ -618,7 +625,7 @@ public class TestExternalServiceConfiguration {
 ./gradlew integrationTest        # Integration tests (~50MB, ~500ms each)
 ./gradlew e2eTest               # End-to-end tests (~500MB, ~3s each)
 ./gradlew cucumber              # BDD Cucumber tests
-```
+```text
 
 > **🧪 Advanced Test Configuration**: For detailed Gradle test task configuration, JVM tuning, memory management, and performance report generation, see [Test Performance Standards](test-performance-standards.md)
 
@@ -646,7 +653,7 @@ Feature: Customer Registration
     When they submit the registration form
     Then they should receive a confirmation email
     And their account should be created
-```
+```text
 
 ### TDD Principles
 
@@ -718,7 +725,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback { }
 
 @TestConfiguration
 public class TestPerformanceConfiguration { }
-```
+```text
 
 **Test Utility Naming Standards:**
 
@@ -751,7 +758,7 @@ class DatabaseConfigurationTest { ... }
 // ✅ Correct: Use unit tests
 @ExtendWith(MockitoExtension.class)
 class DatabaseConfigurationUnitTest { ... }
-```
+```text
 
 ## Quality Standards
 
@@ -785,4 +792,4 @@ class DatabaseConfigurationUnitTest { ... }
 ./gradlew unitTest               # Pre-commit full verification (11s)
 ./gradlew integrationTest        # PR integration test check
 ./gradlew test                   # Pre-release full test
-```
+```text

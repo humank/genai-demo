@@ -7,10 +7,12 @@ last_updated: "2025-10-24"
 version: "1.0"
 status: "active"
 related_docs:
+
   - "overview.md"
   - "data-residency.md"
   - "latency-optimization.md"
   - "../../viewpoints/deployment/README.md"
+
 tags: ["multi-region", "aws", "deployment", "infrastructure"]
 ---
 
@@ -31,6 +33,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 **User Base**: North America (US, Canada, Mexico)
 
 **Infrastructure**:
+
 - **Compute**: EKS cluster with 10-50 nodes (auto-scaling)
 - **Database**: RDS PostgreSQL Multi-AZ (primary)
 - **Cache**: ElastiCache Redis cluster (3 nodes)
@@ -39,6 +42,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 - **Message Queue**: MSK Kafka cluster (3 brokers)
 
 **Characteristics**:
+
 - Handles all write operations
 - Primary source of truth for data
 - Highest resource allocation
@@ -51,6 +55,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 **User Base**: Europe (EU, UK, Middle East, Africa)
 
 **Infrastructure**:
+
 - **Compute**: EKS cluster with 5-30 nodes (auto-scaling)
 - **Database**: RDS PostgreSQL read replica
 - **Cache**: ElastiCache Redis cluster (3 nodes)
@@ -59,6 +64,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 - **Message Queue**: MSK Kafka cluster (3 brokers)
 
 **Characteristics**:
+
 - Read-heavy workload
 - GDPR-compliant data storage
 - EU data residency enforcement
@@ -71,6 +77,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 **User Base**: Asia Pacific (Singapore, Australia, Japan, India)
 
 **Infrastructure**:
+
 - **Compute**: EKS cluster with 3-20 nodes (auto-scaling)
 - **Database**: RDS PostgreSQL read replica
 - **Cache**: ElastiCache Redis cluster (2 nodes)
@@ -79,6 +86,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 - **Message Queue**: MSK Kafka cluster (3 brokers)
 
 **Characteristics**:
+
 - Read-heavy workload
 - Lower resource allocation
 - Business hours operations support
@@ -86,7 +94,7 @@ This document details the multi-region deployment strategy for the Enterprise E-
 
 ### Regional Deployment Topology
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────┐
 │                         Global Layer                                 │
 ├─────────────────────────────────────────────────────────────────────┤
@@ -139,13 +147,15 @@ This document details the multi-region deployment strategy for the Enterprise E-
 ### Active-Active Configuration (US-EAST-1 and EU-WEST-1)
 
 **Characteristics**:
+
 - Both regions actively serve traffic
 - Writes go to US-EAST-1 (primary)
 - Reads served from local region
 - Automatic failover between regions
 
 **Traffic Distribution**:
-```
+
+```text
 User Location → Routing Decision
 ─────────────────────────────────
 North America → US-EAST-1 (primary)
@@ -154,6 +164,7 @@ Asia Pacific  → AP-SE-1 (local reads, remote writes)
 ```
 
 **Write Path**:
+
 1. User submits write request (e.g., place order)
 2. Request routed to nearest region
 3. If not US-EAST-1, forward to US-EAST-1
@@ -162,6 +173,7 @@ Asia Pacific  → AP-SE-1 (local reads, remote writes)
 6. Response returned to user
 
 **Read Path**:
+
 1. User submits read request (e.g., view products)
 2. Request routed to nearest region
 3. Region serves from local read replica
@@ -170,12 +182,14 @@ Asia Pacific  → AP-SE-1 (local reads, remote writes)
 ### Active-Passive Configuration (AP-SE-1)
 
 **Characteristics**:
+
 - AP-SE-1 serves read traffic only
 - All writes forwarded to US-EAST-1
 - Can be promoted to active if needed
 - Lower operational overhead
 
 **Promotion Criteria**:
+
 - Traffic exceeds 30% of global traffic
 - Latency requirements demand local writes
 - Business expansion in APAC region
@@ -187,7 +201,8 @@ Asia Pacific  → AP-SE-1 (local reads, remote writes)
 **Technology**: PostgreSQL Streaming Replication
 
 **Configuration**:
-```
+
+```text
 Primary (US-EAST-1)
     ├─► Read Replica (EU-WEST-1)
     │   └─► Replication Lag Target: < 1 second
@@ -197,11 +212,13 @@ Primary (US-EAST-1)
 ```
 
 **Replication Monitoring**:
+
 - CloudWatch metric: `ReplicaLag`
 - Alert threshold: > 5 seconds
 - Critical threshold: > 30 seconds
 
 **Failover Procedure**:
+
 1. Detect primary failure
 2. Promote read replica to primary
 3. Update DNS to point to new primary
@@ -213,7 +230,8 @@ Primary (US-EAST-1)
 **Technology**: S3 Cross-Region Replication (CRR)
 
 **Configuration**:
-```
+
+```text
 Source: s3://ecommerce-assets-us-east-1
     ├─► Destination: s3://ecommerce-assets-eu-west-1
     │   └─► Replication Time: < 15 minutes
@@ -223,6 +241,7 @@ Source: s3://ecommerce-assets-us-east-1
 ```
 
 **Replication Rules**:
+
 - Replicate all objects
 - Replicate delete markers
 - Replicate object metadata
@@ -233,12 +252,14 @@ Source: s3://ecommerce-assets-us-east-1
 **Technology**: Redis Global Datastore (for critical data)
 
 **Configuration**:
+
 - Primary cluster: US-EAST-1
 - Secondary clusters: EU-WEST-1, AP-SE-1
 - Replication lag: < 1 second
 - Automatic failover enabled
 
 **Cache Strategy**:
+
 - Session data: Replicated globally
 - Product catalog: Replicated globally
 - User preferences: Replicated globally
@@ -249,7 +270,8 @@ Source: s3://ecommerce-assets-us-east-1
 **Technology**: MSK MirrorMaker 2.0
 
 **Configuration**:
-```
+
+```text
 Source Cluster: US-EAST-1
     ├─► Mirror: EU-WEST-1
     │   └─► Topics: order-events, customer-events
@@ -259,6 +281,7 @@ Source Cluster: US-EAST-1
 ```
 
 **Replication Strategy**:
+
 - Critical events: Replicated to all regions
 - Regional events: Stay in region
 - Replication lag: < 5 seconds
@@ -272,6 +295,7 @@ Source Cluster: US-EAST-1
 **Steps**:
 
 1. **Preparation** (T-1 hour):
+
    ```bash
    # Build and test new version
    ./gradlew clean build test
@@ -284,6 +308,7 @@ Source Cluster: US-EAST-1
    ```
 
 2. **Deploy to US-EAST-1** (T+0):
+
    ```bash
    # Deploy to blue environment
    kubectl apply -f k8s/blue-deployment.yaml
@@ -299,30 +324,36 @@ Source Cluster: US-EAST-1
    ```
 
 3. **Monitor US-EAST-1** (T+15 minutes):
+
    ```bash
    # Monitor error rates
    ./scripts/monitor-deployment.sh us-east-1
    
    # Check key metrics
+
    - Error rate < 0.1%
    - Latency < 200ms (p95)
    - CPU < 70%
    - Memory < 80%
+
    ```
 
 4. **Deploy to EU-WEST-1** (T+30 minutes):
+
    ```bash
    # Repeat steps 2-3 for EU-WEST-1
    ./scripts/deploy-region.sh eu-west-1 v2.0.0
    ```
 
 5. **Deploy to AP-SE-1** (T+60 minutes):
+
    ```bash
    # Repeat steps 2-3 for AP-SE-1
    ./scripts/deploy-region.sh ap-southeast-1 v2.0.0
    ```
 
 6. **Cleanup** (T+120 minutes):
+
    ```bash
    # Remove old green deployment
    kubectl delete deployment app-green
@@ -331,6 +362,7 @@ Source Cluster: US-EAST-1
 ### Emergency Rollback
 
 **Trigger Conditions**:
+
 - Error rate > 1%
 - Latency > 500ms (p95)
 - Critical functionality broken
@@ -339,18 +371,21 @@ Source Cluster: US-EAST-1
 **Rollback Steps**:
 
 1. **Immediate** (< 5 minutes):
+
    ```bash
    # Switch traffic back to green
    kubectl patch service app-service -p '{"spec":{"selector":{"version":"v1.9.0"}}}'
    ```
 
 2. **Verify** (< 10 minutes):
+
    ```bash
    # Verify metrics return to normal
    ./scripts/verify-rollback.sh
    ```
 
 3. **Investigate** (< 30 minutes):
+
    ```bash
    # Collect logs and metrics
    ./scripts/collect-diagnostics.sh
@@ -366,12 +401,14 @@ Source Cluster: US-EAST-1
 **Failover Steps**:
 
 1. **Detect Failure** (< 1 minute):
+
    ```bash
    # Automated health checks detect failure
    # PagerDuty alert triggered
    ```
 
 2. **Promote EU-WEST-1** (< 5 minutes):
+
    ```bash
    # Promote read replica to primary
    aws rds promote-read-replica \
@@ -384,6 +421,7 @@ Source Cluster: US-EAST-1
    ```
 
 3. **Reconfigure Replication** (< 10 minutes):
+
    ```bash
    # Configure AP-SE-1 to replicate from EU-WEST-1
    aws rds modify-db-instance \
@@ -392,6 +430,7 @@ Source Cluster: US-EAST-1
    ```
 
 4. **Verify** (< 15 minutes):
+
    ```bash
    # Verify all services operational
    ./scripts/verify-failover.sh
@@ -405,31 +444,38 @@ Source Cluster: US-EAST-1
 ### VPC Peering
 
 **Configuration**:
-```
+
+```text
 US-EAST-1 VPC (10.0.0.0/16)
     ├─► Peering Connection ─► EU-WEST-1 VPC (10.1.0.0/16)
     └─► Peering Connection ─► AP-SE-1 VPC (10.2.0.0/16)
 ```
 
 **Route Tables**:
-```
+
+```text
 US-EAST-1:
+
   - 10.1.0.0/16 → pcx-us-to-eu
   - 10.2.0.0/16 → pcx-us-to-ap
 
 EU-WEST-1:
+
   - 10.0.0.0/16 → pcx-eu-to-us
   - 10.2.0.0/16 → pcx-eu-to-ap (via US)
 
 AP-SE-1:
+
   - 10.0.0.0/16 → pcx-ap-to-us
   - 10.1.0.0/16 → pcx-ap-to-eu (via US)
+
 ```
 
 ### Transit Gateway (Future)
 
 **Planned Configuration**:
-```
+
+```text
 ┌─────────────────────────────────────────┐
 │       AWS Transit Gateway               │
 │       (Global Network Hub)              │
@@ -444,6 +490,7 @@ AP-SE-1:
 ```
 
 **Benefits**:
+
 - Simplified routing
 - Centralized network management
 - Better scalability for additional regions
@@ -451,15 +498,19 @@ AP-SE-1:
 ### Security Groups
 
 **Cross-Region Access**:
-```
+
+```text
 Application Security Group:
+
   - Inbound: 443 from CloudFront
   - Inbound: 8080 from VPC CIDR (all regions)
   - Outbound: All
 
 Database Security Group:
+
   - Inbound: 5432 from Application SG (all regions)
   - Outbound: 5432 to Replica SGs
+
 ```
 
 ## Monitoring and Alerting
@@ -467,8 +518,10 @@ Database Security Group:
 ### Regional Health Checks
 
 **CloudWatch Synthetics**:
-```
+
+```text
 Canary: ecommerce-health-check
+
   - Frequency: Every 1 minute
   - Regions: US-EAST-1, EU-WEST-1, AP-SE-1
   - Checks:
@@ -476,9 +529,11 @@ Canary: ecommerce-health-check
     - API health endpoint
     - Database connectivity
     - Cache connectivity
+
 ```
 
 **Alert Thresholds**:
+
 - Health check failure: 2 consecutive failures
 - Latency > 500ms: 5 minutes
 - Error rate > 1%: 2 minutes
@@ -486,23 +541,29 @@ Canary: ecommerce-health-check
 ### Replication Monitoring
 
 **Key Metrics**:
-```
+
+```text
 Database Replication:
+
   - ReplicaLag (seconds)
   - ReplicationSlotDiskUsage (MB)
   - OldestReplicationSlotLag (seconds)
 
 S3 Replication:
+
   - ReplicationLatency (seconds)
   - BytesPendingReplication (bytes)
   - OperationsPendingReplication (count)
 
 Cache Replication:
+
   - ReplicationLag (milliseconds)
   - ReplicationBytes (bytes/second)
+
 ```
 
 **Alerts**:
+
 - Database lag > 5 seconds: Warning
 - Database lag > 30 seconds: Critical
 - S3 replication > 1 hour: Warning
@@ -511,6 +572,7 @@ Cache Replication:
 ### Regional Performance Dashboard
 
 **Metrics by Region**:
+
 - Request rate (requests/second)
 - Error rate (%)
 - Latency (p50, p95, p99)
@@ -524,8 +586,10 @@ Cache Replication:
 ### Regional Cost Allocation
 
 **Monthly Cost Breakdown** (Estimated):
-```
+
+```text
 US-EAST-1 (Primary):
+
   - Compute (EKS): $5,000
   - Database (RDS): $3,000
   - Cache (Redis): $1,000
@@ -534,6 +598,7 @@ US-EAST-1 (Primary):
   - Total: $11,000
 
 EU-WEST-1 (Secondary):
+
   - Compute (EKS): $3,000
   - Database (RDS): $1,500
   - Cache (Redis): $600
@@ -542,6 +607,7 @@ EU-WEST-1 (Secondary):
   - Total: $6,400
 
 AP-SE-1 (Tertiary):
+
   - Compute (EKS): $2,000
   - Database (RDS): $1,000
   - Cache (Redis): $400
@@ -550,6 +616,7 @@ AP-SE-1 (Tertiary):
   - Total: $4,400
 
 Global Services:
+
   - CloudFront CDN: $2,000
   - Route 53: $100
   - Total: $2,100
@@ -583,6 +650,7 @@ Grand Total: $23,900/month
 ### Adding a New Region
 
 **Prerequisites**:
+
 - Business justification (traffic > 15% from region)
 - Compliance requirements identified
 - Budget approved
@@ -590,12 +658,14 @@ Grand Total: $23,900/month
 **Steps**:
 
 1. **Infrastructure Setup** (Week 1):
+
    ```bash
    # Deploy CDK stack to new region
    cdk deploy --region ap-northeast-1 --all
    ```
 
 2. **Data Replication** (Week 2):
+
    ```bash
    # Configure database replication
    aws rds create-db-instance-read-replica \
@@ -609,12 +679,14 @@ Grand Total: $23,900/month
    ```
 
 3. **Application Deployment** (Week 3):
+
    ```bash
    # Deploy application to new region
    ./scripts/deploy-region.sh ap-northeast-1 v2.0.0
    ```
 
 4. **Testing** (Week 4):
+
    ```bash
    # Run integration tests
    ./scripts/test-region.sh ap-northeast-1
@@ -624,6 +696,7 @@ Grand Total: $23,900/month
    ```
 
 5. **Traffic Migration** (Week 5):
+
    ```bash
    # Update Route 53 to include new region
    aws route53 change-resource-record-sets \
@@ -637,6 +710,7 @@ Grand Total: $23,900/month
 ### Removing a Region
 
 **Trigger Conditions**:
+
 - Traffic < 5% from region
 - Cost exceeds benefit
 - Compliance requirements change
@@ -644,6 +718,7 @@ Grand Total: $23,900/month
 **Steps**:
 
 1. **Traffic Migration** (Week 1):
+
    ```bash
    # Redirect traffic to other regions
    aws route53 change-resource-record-sets \
@@ -652,6 +727,7 @@ Grand Total: $23,900/month
    ```
 
 2. **Data Migration** (Week 2):
+
    ```bash
    # Stop replication
    aws rds delete-db-instance-read-replica \
@@ -662,6 +738,7 @@ Grand Total: $23,900/month
    ```
 
 3. **Infrastructure Teardown** (Week 3):
+
    ```bash
    # Destroy CDK stack
    cdk destroy --region ap-northeast-1 --all

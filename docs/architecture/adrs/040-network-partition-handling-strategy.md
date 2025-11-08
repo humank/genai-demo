@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance"]
 Active-active multi-region architecture faces the risk of network partitions where regions cannot communicate:
 
 **Network Partition Scenarios**:
+
 - **Submarine Cable Cut**: Taiwan-Japan undersea cables damaged
 - **DDoS Attack**: Cross-region connectivity disrupted
 - **AWS Network Issue**: Inter-region VPC peering failure
@@ -31,6 +32,7 @@ Active-active multi-region architecture faces the risk of network partitions whe
 
 **Split-Brain Problem**:
 When regions cannot communicate but both remain operational, they may:
+
 - Accept conflicting writes
 - Diverge in data state
 - Create irreconcilable conflicts
@@ -38,6 +40,7 @@ When regions cannot communicate but both remain operational, they may:
 - Cause data corruption
 
 **Business Impact**:
+
 - Data inconsistency and conflicts
 - Duplicate orders or payments
 - Inventory overselling
@@ -48,6 +51,7 @@ When regions cannot communicate but both remain operational, they may:
 ### Business Context
 
 **Business Drivers**:
+
 - Prevent split-brain scenarios
 - Maintain data consistency
 - Ensure availability during partitions
@@ -56,6 +60,7 @@ When regions cannot communicate but both remain operational, they may:
 - Clear operational procedures
 
 **Constraints**:
+
 - CAP theorem: Cannot have all three (Consistency, Availability, Partition tolerance)
 - Network latency: 40-60ms between Taiwan-Tokyo
 - Budget: $50,000/year for partition handling infrastructure
@@ -65,6 +70,7 @@ When regions cannot communicate but both remain operational, they may:
 ### Technical Context
 
 **Current State**:
+
 - Active-active multi-region deployed
 - Basic health checks in place
 - No partition detection mechanism
@@ -72,13 +78,13 @@ When regions cannot communicate but both remain operational, they may:
 - No partition recovery procedures
 
 **Requirements**:
+
 - Detect network partitions quickly (< 30 seconds)
 - Prevent split-brain scenarios
 - Maintain availability where possible
 - Minimize data conflicts
 - Automated partition recovery
 - Clear consistency guarantees per bounded context
-
 
 ## Decision Drivers
 
@@ -100,12 +106,14 @@ When regions cannot communicate but both remain operational, they may:
 **CAP Trade-offs by Bounded Context**:
 
 **CP (Consistency + Partition Tolerance) - Sacrifice Availability**:
+
 - **Orders**: Require quorum (majority) for writes
 - **Payments**: Require quorum for writes
 - **Inventory**: Require quorum for writes
 - **Strategy**: During partition, minority partition becomes read-only
 
 **AP (Availability + Partition Tolerance) - Sacrifice Consistency**:
+
 - **Product Catalog**: Accept writes in both partitions
 - **Customer Profiles**: Accept writes in both partitions
 - **Reviews**: Accept writes in both partitions
@@ -113,18 +121,21 @@ When regions cannot communicate but both remain operational, they may:
 - **Strategy**: Resolve conflicts after partition heals
 
 **Partition Detection**:
+
 - Cross-region heartbeat (every 10 seconds)
 - Multi-path health checks
 - External monitoring (third-party service)
 - Consensus on partition state
 
 **Split-Brain Prevention**:
+
 - Quorum requirement for critical operations
 - Fencing mechanism (disable minority partition)
 - Third-party arbitrator (AWS service in neutral region)
 - Automatic read-only mode for minority
 
 **Pros**:
+
 - ✅ Prevents split-brain for critical data
 - ✅ Maintains availability for non-critical data
 - ✅ Clear consistency guarantees per context
@@ -133,6 +144,7 @@ When regions cannot communicate but both remain operational, they may:
 - ✅ Balances consistency and availability
 
 **Cons**:
+
 - ⚠️ Complexity in managing different strategies
 - ⚠️ Minority partition becomes read-only (CP contexts)
 - ⚠️ Conflict resolution needed (AP contexts)
@@ -146,11 +158,13 @@ When regions cannot communicate but both remain operational, they may:
 **Description**: All data requires quorum, minority partition becomes fully read-only
 
 **Pros**:
+
 - ✅ Strong consistency everywhere
 - ✅ No data conflicts
 - ✅ Simple to understand
 
 **Cons**:
+
 - ❌ Minority partition completely unavailable for writes
 - ❌ Poor user experience during partitions
 - ❌ Unnecessary for non-critical data
@@ -164,10 +178,12 @@ When regions cannot communicate but both remain operational, they may:
 **Description**: All partitions accept writes, resolve conflicts later
 
 **Pros**:
+
 - ✅ Full availability during partitions
 - ✅ Good user experience
 
 **Cons**:
+
 - ❌ Data conflicts for critical data
 - ❌ Complex conflict resolution
 - ❌ Risk of data corruption
@@ -209,6 +225,7 @@ Context-specific CAP trade-offs provide optimal balance:
 ### Partition Detection Architecture
 
 **Multi-Layer Partition Detection**:
+
 ```typescript
 interface PartitionDetector {
   // Layer 1: Direct connectivity check
@@ -299,6 +316,7 @@ class NetworkPartitionDetector implements PartitionDetector {
 ```
 
 **Heartbeat Implementation**:
+
 ```java
 @Component
 @Scheduled(fixedRate = 10000) // Every 10 seconds
@@ -354,6 +372,7 @@ public class CrossRegionHeartbeat {
 ### Quorum-Based Write Strategy
 
 **Quorum Configuration**:
+
 ```java
 public class QuorumConfiguration {
     
@@ -432,6 +451,7 @@ public class QuorumWriteService {
 ### Split-Brain Prevention
 
 **Fencing Mechanism**:
+
 ```java
 @Component
 public class PartitionFencingService {
@@ -492,6 +512,7 @@ public class PartitionFencingService {
 ```
 
 **Third-Party Arbitrator**:
+
 ```typescript
 // Use AWS service in neutral region (Singapore) as arbitrator
 class ThirdPartyArbitrator {
@@ -539,6 +560,7 @@ class ThirdPartyArbitrator {
 ### Conflict Resolution for AP Contexts
 
 **Conflict Detection**:
+
 ```java
 public class ConflictDetector {
     
@@ -586,6 +608,7 @@ public class ConflictDetector {
 ```
 
 **Conflict Resolution Strategies**:
+
 ```java
 public class ConflictResolver {
     
@@ -655,10 +678,10 @@ public class ConflictResolver {
 }
 ```
 
-
 ### Partition Recovery
 
 **Automatic Recovery Process**:
+
 ```java
 @Component
 public class PartitionRecoveryService {
@@ -747,6 +770,7 @@ public class PartitionRecoveryService {
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All application services
 - All data stores
 - Write operations (CP contexts)
@@ -771,11 +795,13 @@ Affects:
 ### Phase 1: Partition Detection (Month 1)
 
 **Objectives**:
+
 - Implement multi-layer partition detection
 - Deploy heartbeat system
 - Set up external monitoring
 
 **Tasks**:
+
 - [ ] Implement partition detector
 - [ ] Deploy heartbeat system
 - [ ] Configure external monitoring
@@ -783,6 +809,7 @@ Affects:
 - [ ] Test partition detection
 
 **Success Criteria**:
+
 - Partition detection < 30 seconds
 - False positive rate < 1%
 - Monitoring operational
@@ -790,11 +817,13 @@ Affects:
 ### Phase 2: Split-Brain Prevention (Month 2)
 
 **Objectives**:
+
 - Implement quorum-based writes
 - Deploy fencing mechanism
 - Set up third-party arbitrator
 
 **Tasks**:
+
 - [ ] Implement quorum write service
 - [ ] Deploy fencing service
 - [ ] Configure DynamoDB arbitrator
@@ -802,6 +831,7 @@ Affects:
 - [ ] Test split-brain prevention
 
 **Success Criteria**:
+
 - Quorum writes working
 - Fencing mechanism operational
 - No split-brain in tests
@@ -809,11 +839,13 @@ Affects:
 ### Phase 3: Conflict Resolution (Month 3)
 
 **Objectives**:
+
 - Implement conflict detection
 - Deploy conflict resolution
 - Test AP context behavior
 
 **Tasks**:
+
 - [ ] Implement conflict detector
 - [ ] Deploy conflict resolver
 - [ ] Test Last-Write-Wins
@@ -821,6 +853,7 @@ Affects:
 - [ ] Validate AP contexts
 
 **Success Criteria**:
+
 - Conflict detection working
 - Resolution automated
 - AP contexts operational
@@ -828,11 +861,13 @@ Affects:
 ### Phase 4: Partition Recovery (Month 4)
 
 **Objectives**:
+
 - Implement automated recovery
 - Test recovery procedures
 - Validate end-to-end flow
 
 **Tasks**:
+
 - [ ] Implement recovery service
 - [ ] Test automatic recovery
 - [ ] Create manual procedures
@@ -840,6 +875,7 @@ Affects:
 - [ ] Document procedures
 
 **Success Criteria**:
+
 - Automated recovery working
 - Manual procedures documented
 - Drills successful
@@ -847,11 +883,13 @@ Affects:
 ### Phase 5: Production Readiness (Month 5-6)
 
 **Objectives**:
+
 - Comprehensive testing
 - Team training
 - Production deployment
 
 **Tasks**:
+
 - [ ] Conduct partition simulation drills
 - [ ] Train operations team
 - [ ] Update monitoring
@@ -859,6 +897,7 @@ Affects:
 - [ ] Monitor for 30 days
 
 **Success Criteria**:
+
 - All tests passing
 - Team trained
 - Production stable
@@ -866,12 +905,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Excessive false positives
 - Split-brain scenarios
 - Data corruption
 - Operational issues
 
 **Rollback Steps**:
+
 1. **Immediate**: Disable partition detection
 2. **Revert**: Return to basic health checks
 3. **Manual**: Manual partition handling
@@ -921,6 +962,7 @@ const partitionMetrics = {
 ### Monitoring Dashboards
 
 **Partition Status Dashboard**:
+
 - Current partition state
 - Heartbeat status
 - Quorum status
@@ -928,6 +970,7 @@ const partitionMetrics = {
 - Recent partition events
 
 **Conflict Resolution Dashboard**:
+
 - Conflicts detected
 - Conflicts resolved
 - Resolution success rate
@@ -965,12 +1008,14 @@ const partitionMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Basic conflict resolution (Last-Write-Wins only)
 2. Manual intervention for complex conflicts
 3. Limited partition simulation testing
 4. Basic arbitrator (DynamoDB only)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Advanced conflict resolution (CRDTs, vector clocks)
 - **Q3 2026**: Automated complex conflict resolution
 - **Q4 2026**: Chaos engineering for partition testing
@@ -988,23 +1033,27 @@ const partitionMetrics = {
 ### CAP Theorem Refresher
 
 **CAP Theorem**: In a distributed system, you can only guarantee 2 out of 3:
+
 - **C**onsistency: All nodes see the same data
 - **A**vailability: Every request receives a response
 - **P**artition Tolerance: System continues despite network partitions
 
 **Our Choices**:
+
 - **CP (Orders, Payments, Inventory)**: Sacrifice availability for consistency
 - **AP (Catalog, Profiles, Reviews)**: Sacrifice consistency for availability
 
 ### Partition vs Failover
 
 **Network Partition**:
+
 - Both regions operational
 - Cannot communicate
 - Risk of split-brain
 - Requires quorum/fencing
 
 **Regional Failure**:
+
 - One region down
 - Clear failure
 - No split-brain risk
@@ -1013,6 +1062,7 @@ const partitionMetrics = {
 ### Submarine Cable Risks
 
 **Taiwan's Internet Connectivity**:
+
 - 99% via undersea cables
 - 14 cables connecting Taiwan
 - Vulnerable to:
@@ -1022,6 +1072,7 @@ const partitionMetrics = {
   - Military action
 
 **Historical Incidents**:
+
 - 2006: Hengchun earthquake cut 8 cables
 - 2008: Multiple cable cuts
 - Regular maintenance disruptions
@@ -1031,6 +1082,7 @@ const partitionMetrics = {
 ### Testing Partition Scenarios
 
 **Partition Simulation**:
+
 ```bash
 # Simulate partition by blocking cross-region traffic
 # Taiwan region

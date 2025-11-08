@@ -65,38 +65,44 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Immediate Actions
 
 1. **Notify stakeholders**:
+
 ```bash
 # Send critical incident notification
 # Subject: P0 - Service Outage
 # All services are currently unavailable. Team is investigating.
 ```
 
-2. **Check pod logs**:
+1. **Check pod logs**:
+
 ```bash
 kubectl logs -f deployment/ecommerce-backend -n production --tail=100
 ```
 
-3. **Restart pods if needed**:
+1. **Restart pods if needed**:
+
 ```bash
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
 ### Root Cause Fixes
 
-#### If caused by failed deployment:
+#### If caused by failed deployment
+
 ```bash
 # Rollback to previous version
 kubectl rollout undo deployment/ecommerce-backend -n production
 ```
 
-#### If caused by configuration issue:
+#### If caused by configuration issue
+
 ```bash
 # Restore previous configuration
 kubectl apply -f previous-config.yaml
 kubectl rollout restart deployment/ecommerce-backend -n production
 ```
 
-#### If caused by dependency failure:
+#### If caused by dependency failure
+
 ```bash
 # Check and fix database/Redis/Kafka
 # See respective runbooks

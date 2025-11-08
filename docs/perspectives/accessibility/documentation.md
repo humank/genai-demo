@@ -37,7 +37,7 @@ This document defines the standards for creating clear, accessible, and effectiv
 
 **Use simple, clear language**:
 
-```
+```text
 ✅ GOOD:
 "Click the Save button to save your changes."
 "The API returns an error if the email format is invalid."
@@ -53,7 +53,7 @@ This document defines the standards for creating clear, accessible, and effectiv
 
 **Use active voice instead of passive voice**:
 
-```
+```text
 ✅ GOOD (Active):
 "The system sends a confirmation email."
 "You can update your profile at any time."
@@ -69,7 +69,7 @@ This document defines the standards for creating clear, accessible, and effectiv
 
 **Use present tense for current actions**:
 
-```
+```text
 ✅ GOOD:
 "The button opens a dialog."
 "The API returns a JSON response."
@@ -85,7 +85,7 @@ This document defines the standards for creating clear, accessible, and effectiv
 
 **Address the reader directly**:
 
-```
+```text
 ✅ GOOD:
 "You can create an order by sending a POST request."
 "To update your profile, click the Edit button."
@@ -242,9 +242,9 @@ Follow these steps to create an order:
    ```
 
 2. **Prepare the order data**
-   
+
    Create a JSON object with the order details:
-   
+
    ```json
    {
      "customerId": "cust_123",
@@ -258,9 +258,9 @@ Follow these steps to create an order:
    ```
 
 3. **Send the create order request**
-   
+
    Use the token from step 1 to authenticate:
-   
+
    ```bash
    curl -X POST https://api.example.com/api/v1/orders \
      -H "Authorization: Bearer YOUR_TOKEN" \
@@ -269,13 +269,15 @@ Follow these steps to create an order:
    ```
 
 4. **Verify the response**
-   
+
    You should receive a 201 Created response with the order details.
 
 ❌ BAD:
+
 ## Creating Your First Order
 
 You need to get a token and then create an order with it.
+
 ```
 
 ### Code Examples
@@ -332,9 +334,10 @@ async function createOrder() {
 
 // Run the function
 createOrder();
-```
+```text
 
 **Expected Output**:
+
 ```json
 {
   "data": {
@@ -346,15 +349,17 @@ createOrder();
     }
   }
 }
-```
+```text
 
 ❌ BAD:
+
 ### Example
 
 ```javascript
 // Create order
 api.createOrder(data);
-```
+```text
+
 ```
 
 ### Tables
@@ -434,7 +439,7 @@ sequenceDiagram
     API->>AuthServer: 4. Validate token
     AuthServer->>API: 5. Token valid
     API->>Client: 6. Return response
-```
+```text
 
 **Steps**:
 
@@ -444,6 +449,7 @@ sequenceDiagram
 4. API validates token with auth server
 5. Auth server confirms token is valid
 6. API returns the requested data
+
 ```
 
 ### Screenshots
@@ -514,25 +520,28 @@ Learn more [here](./quickstart.md).
 **Request**:
 ```bash
 curl -X GET https://api.example.com/api/v1/products
-```
+```text
 
 **Response**:
+
 ```json
 {
   "data": [...]
 }
-```
+```text
 
 ❌ BAD:
+
 ```bash
 curl -X GET https://api.example.com/api/v1/products
-```
+```text
 
 ```json
 {
   "data": [...]
 }
-```
+```text
+
 ```
 
 ---
@@ -571,6 +580,7 @@ curl -X GET https://api.example.com/api/v1/products
 **Purpose**: Comprehensive reference for all API endpoints
 
 **Structure**:
+
 ```markdown
 # API Reference
 
@@ -602,9 +612,10 @@ Creates a new order for the authenticated customer.
     }
   ]
 }
-```
+```text
 
 **Response**: `201 Created`
+
 ```json
 {
   "data": {
@@ -612,12 +623,14 @@ Creates a new order for the authenticated customer.
     "status": "string"
   }
 }
-```
+```text
 
 **Errors**:
+
 - `400 Bad Request`: Invalid request data
 - `401 Unauthorized`: Missing or invalid token
 - `409 Conflict`: Insufficient inventory
+
 ```
 
 ### Tutorial
@@ -632,6 +645,7 @@ Creates a new order for the authenticated customer.
 [Description of the end result]
 
 ## What You'll Learn
+
 - Concept 1
 - Concept 2
 - Concept 3
@@ -660,6 +674,7 @@ Creates a new order for the authenticated customer.
 **Purpose**: Solve a specific problem
 
 **Structure**:
+
 ```markdown
 # How to Handle Rate Limiting
 
@@ -684,6 +699,7 @@ Creates a new order for the authenticated customer.
 **Purpose**: Help users diagnose and fix problems
 
 **Structure**:
+
 ```markdown
 # Troubleshooting
 
@@ -692,10 +708,12 @@ Creates a new order for the authenticated customer.
 ### Error: "Invalid token"
 
 **Symptoms**:
+
 - API returns 401 Unauthorized
 - Error message: "Invalid token"
 
 **Possible Causes**:
+
 1. Token has expired
 2. Token is malformed
 3. Token was revoked
@@ -703,21 +721,26 @@ Creates a new order for the authenticated customer.
 **Solutions**:
 
 **If token expired**:
+
 1. Request a new token
 2. Implement automatic token refresh
 
 **If token malformed**:
+
 1. Check token format (should be JWT)
 2. Ensure no extra spaces or characters
 
 **If token revoked**:
+
 1. Generate a new API key
 2. Update your application configuration
 
 **Prevention**:
+
 - Implement token refresh before expiration
 - Store tokens securely
 - Monitor token expiration times
+
 ```
 
 ---
@@ -727,6 +750,7 @@ Creates a new order for the authenticated customer.
 ### Keeping Documentation Current
 
 **Update triggers**:
+
 - Code changes that affect behavior
 - New features added
 - Bugs fixed that change expected behavior
@@ -734,6 +758,7 @@ Creates a new order for the authenticated customer.
 - Deprecations
 
 **Review schedule**:
+
 - **Weekly**: Check for broken links
 - **Monthly**: Review most-viewed pages
 - **Quarterly**: Comprehensive content audit
@@ -742,16 +767,20 @@ Creates a new order for the authenticated customer.
 ### Version Control
 
 **Track changes**:
+
 ```markdown
 ## Changelog
 
 ### 2025-10-24
+
 - Added section on rate limiting
 - Updated authentication examples
 - Fixed broken links to API reference
 
 ### 2025-10-01
+
 - Initial version
+
 ```
 
 ### Deprecation Notices
@@ -771,6 +800,7 @@ Creates a new order for the authenticated customer.
 ### Search Optimization
 
 **Use descriptive titles**:
+
 ```markdown
 ✅ GOOD:
 # How to Authenticate API Requests with Bearer Tokens
@@ -780,6 +810,7 @@ Creates a new order for the authenticated customer.
 ```
 
 **Include keywords**:
+
 ```markdown
 ✅ GOOD:
 # Creating Orders: POST /api/v1/orders
@@ -796,7 +827,8 @@ This guide explains the process.
 ### Navigation Structure
 
 **Logical hierarchy**:
-```
+
+```text
 Documentation/
 ├── Getting Started/
 │   ├── Quickstart
@@ -889,27 +921,33 @@ name: Documentation Validation
 on:
   pull_request:
     paths:
+
       - 'docs/**'
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Check links
+
         uses: gaurav-nelson/github-action-markdown-link-check@v1
       
       - name: Lint markdown
+
         uses: avto-dev/markdown-lint@v1
       
       - name: Check spelling
+
         uses: rojopolis/spellcheck-github-actions@v0
 ```
 
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Accessibility perspective introduction
 - [UI Accessibility](ui-accessibility.md) - User interface accessibility
 - [API Usability](api-usability.md) - API design and usability

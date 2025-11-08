@@ -6,7 +6,8 @@ The Product API provides endpoints for managing the product catalog, including p
 
 **Base Path**: `/api/v1/products`
 
-**Authentication**: 
+**Authentication**:
+
 - Read operations: Not required (public)
 - Write operations: ADMIN or SELLER role required
 
@@ -21,6 +22,7 @@ Retrieve a paginated list of products with filtering and search.
 **Authentication**: Not required
 
 **Query Parameters**:
+
 - `page`: Page number (0-based, default: 0)
 - `size`: Page size (default: 20, max: 100)
 - `sort`: Sort field and direction (default: `createdAt,desc`)
@@ -33,6 +35,7 @@ Retrieve a paginated list of products with filtering and search.
 - `brand`: Filter by brand name
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -75,6 +78,7 @@ Retrieve a paginated list of products with filtering and search.
 ```
 
 **curl Example**:
+
 ```bash
 # Basic list
 curl -X GET "https://api.ecommerce.com/api/v1/products?page=0&size=20"
@@ -97,9 +101,11 @@ Retrieve detailed information about a specific product.
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `id`: Product ID (e.g., `prod-456`)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -152,9 +158,11 @@ Retrieve detailed information about a specific product.
 ```
 
 **Error Responses**:
+
 - `404 Not Found`: Product not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/products/prod-456
 ```
@@ -170,6 +178,7 @@ Advanced product search with full-text search capabilities.
 **Authentication**: Not required
 
 **Query Parameters**:
+
 - `q`: Search query (required)
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
@@ -177,6 +186,7 @@ Advanced product search with full-text search capabilities.
   - Example: `{"category": "cat-123", "brand": "TechBrand"}`
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -217,6 +227,7 @@ Advanced product search with full-text search capabilities.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/search?q=wireless+mouse&page=0&size=20"
 ```
@@ -232,12 +243,15 @@ Retrieve products in a specific category.
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `categoryId`: Category ID
 
 **Query Parameters**:
+
 - `page`, `size`, `sort`: Standard pagination parameters
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -266,6 +280,7 @@ Retrieve products in a specific category.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/category/cat-123?page=0&size=20"
 ```
@@ -283,6 +298,7 @@ Create a new product (Admin/Seller only).
 **Authorization**: ADMIN or SELLER role required
 
 **Request Body**:
+
 ```json
 {
   "sku": "WM-2025-002",
@@ -311,6 +327,7 @@ Create a new product (Admin/Seller only).
 ```
 
 **Validation Rules**:
+
 - `sku`: Required, unique
 - `name`: Required, 2-200 characters
 - `description`: Required, 10-5000 characters
@@ -319,6 +336,7 @@ Create a new product (Admin/Seller only).
 - `stockQuantity`: Required, must be >= 0
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -341,12 +359,14 @@ Create a new product (Admin/Seller only).
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `409 Conflict`: SKU already exists
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/products \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -375,11 +395,13 @@ Update product information (Admin/Seller only).
 **Authorization**: ADMIN or SELLER role required
 
 **Path Parameters**:
+
 - `id`: Product ID
 
 **Request Body**: Same as Create Product
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -392,6 +414,7 @@ Update product information (Admin/Seller only).
 ```
 
 **curl Example**:
+
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/products/prod-456 \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -415,9 +438,11 @@ Update product inventory (Admin/Seller only).
 **Authorization**: ADMIN or SELLER role required
 
 **Path Parameters**:
+
 - `id`: Product ID
 
 **Request Body**:
+
 ```json
 {
   "quantity": 200,
@@ -426,11 +451,13 @@ Update product inventory (Admin/Seller only).
 ```
 
 **Operations**:
+
 - `SET`: Set absolute quantity
 - `ADD`: Add to current quantity
 - `SUBTRACT`: Subtract from current quantity
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -443,6 +470,7 @@ Update product inventory (Admin/Seller only).
 ```
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/products/prod-456/stock \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN" \
@@ -466,17 +494,20 @@ Delete a product (Admin only).
 **Authorization**: ADMIN role required
 
 **Path Parameters**:
+
 - `id`: Product ID
 
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Product not found
 - `409 Conflict`: Product has active orders
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/products/prod-456 \
   -H "Authorization: Bearer ADMIN_JWT_TOKEN"
@@ -493,14 +524,17 @@ Retrieve reviews for a product.
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `id`: Product ID
 
 **Query Parameters**:
+
 - `page`, `size`: Standard pagination
 - `sort`: Sort by `rating,desc`, `createdAt,desc`, `helpful,desc`
 - `rating`: Filter by rating (1-5)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -539,6 +573,7 @@ Retrieve reviews for a product.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/reviews?page=0&size=20&sort=helpful,desc"
 ```
@@ -554,12 +589,15 @@ Get products related to a specific product.
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `id`: Product ID
 
 **Query Parameters**:
+
 - `limit`: Number of related products (default: 10, max: 20)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -578,6 +616,7 @@ Get products related to a specific product.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/products/prod-456/related?limit=10"
 ```

@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 ### Business Context
 
 **Business Drivers**:
+
 - Need for scalable consumer web application
 - Requirement for complex user workflows (product browsing, cart, checkout)
 - Expected high traffic (10K+ concurrent users)
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 - Long-term maintainability (5+ years)
 
 **Constraints**:
+
 - Must integrate with REST API (ADR-009)
 - Budget: No additional frontend infrastructure costs
 - Timeline: 6 months to production
@@ -51,12 +53,14 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 ### Technical Context
 
 **Current State**:
+
 - RESTful API with OpenAPI 3.0 (ADR-009)
 - Next.js for CMC (ADR-010)
 - Spring Boot backend
 - AWS infrastructure
 
 **Requirements**:
+
 - Complex state management
 - Form handling and validation
 - Real-time updates (cart, inventory)
@@ -84,6 +88,7 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 **Description**: Comprehensive TypeScript framework with full-featured tooling
 
 **Pros**:
+
 - ✅ Comprehensive framework (routing, forms, HTTP, etc.)
 - ✅ Strong TypeScript support (built with TypeScript)
 - ✅ Opinionated structure (consistency across team)
@@ -96,6 +101,7 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 - ✅ Standalone components (modern approach)
 
 **Cons**:
+
 - ⚠️ Steeper learning curve
 - ⚠️ Larger bundle size than React
 - ⚠️ More verbose than React
@@ -109,12 +115,14 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 **Description**: Use Next.js for both CMC and consumer app
 
 **Pros**:
+
 - ✅ Single framework for both apps
 - ✅ Team already learning Next.js
 - ✅ Flexible and lightweight
 - ✅ Large ecosystem
 
 **Cons**:
+
 - ❌ Less structure (need to choose state management, forms, etc.)
 - ❌ More decisions to make
 - ❌ Less opinionated
@@ -129,11 +137,13 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 **Description**: Progressive JavaScript framework
 
 **Pros**:
+
 - ✅ Easy to learn
 - ✅ Good performance
 - ✅ Composition API
 
 **Cons**:
+
 - ❌ Team lacks Vue experience
 - ❌ Smaller ecosystem than React/Angular
 - ❌ Less enterprise adoption
@@ -147,11 +157,13 @@ The Enterprise E-Commerce Platform requires a consumer-facing web application th
 **Description**: Compiler-based framework
 
 **Pros**:
+
 - ✅ Excellent performance
 - ✅ Small bundle size
 - ✅ Simple syntax
 
 **Cons**:
+
 - ❌ Smaller ecosystem
 - ❌ Less enterprise adoption
 - ❌ Team lacks experience
@@ -182,7 +194,8 @@ Angular was selected for the consumer frontend for the following reasons:
 **Implementation Strategy**:
 
 **Architecture**:
-```
+
+```text
 Angular App (Consumer)
 ├── Standalone Components
 ├── Signals for State
@@ -192,6 +205,7 @@ Angular App (Consumer)
 ```
 
 **Key Features**:
+
 - Standalone components (no NgModules)
 - Signals for reactive state management
 - Angular Material for UI components
@@ -219,6 +233,7 @@ Angular App (Consumer)
 **Selected Impact Radius**: **Bounded Context**
 
 Affects:
+
 - Consumer frontend application
 - Deployment infrastructure
 - Development workflow
@@ -240,12 +255,14 @@ Affects:
 ### Phase 1: Project Setup (Week 1)
 
 - [ ] Create Angular project
+
   ```bash
   npm install -g @angular/cli
   ng new consumer-app --standalone --routing --style=scss
   ```
 
 - [ ] Configure TypeScript
+
   ```json
   {
     "compilerOptions": {
@@ -261,6 +278,7 @@ Affects:
   ```
 
 - [ ] Set up project structure
+
   ```
   consumer-app/
   ├── src/
@@ -287,6 +305,7 @@ Affects:
 ### Phase 2: Core Services (Week 1-2)
 
 - [ ] Create API service
+
   ```typescript
   // src/app/core/services/api.service.ts
   import { Injectable, inject } from '@angular/core';
@@ -320,6 +339,7 @@ Affects:
   ```
 
 - [ ] Create authentication service
+
   ```typescript
   // src/app/core/services/auth.service.ts
   import { Injectable, inject, signal } from '@angular/core';
@@ -359,6 +379,7 @@ Affects:
   ```
 
 - [ ] Create HTTP interceptor
+
   ```typescript
   // src/app/core/interceptors/auth.interceptor.ts
   import { HttpInterceptorFn } from '@angular/common/http';
@@ -380,6 +401,7 @@ Affects:
 ### Phase 3: State Management (Week 2-3)
 
 - [ ] Create cart service with signals
+
   ```typescript
   // src/app/core/services/cart.service.ts
   import { Injectable, inject, computed, signal } from '@angular/core';
@@ -456,11 +478,13 @@ Affects:
 ### Phase 4: UI Components (Week 3-5)
 
 - [ ] Install Angular Material
+
   ```bash
   ng add @angular/material
   ```
 
 - [ ] Create product list component
+
   ```typescript
   // src/app/features/products/product-list.component.ts
   import { Component, inject, OnInit, signal } from '@angular/core';
@@ -530,11 +554,13 @@ Affects:
 ### Phase 5: PWA Setup (Week 5-6)
 
 - [ ] Add PWA support
+
   ```bash
   ng add @angular/pwa
   ```
 
 - [ ] Configure service worker
+
   ```json
   {
     "index": "/index.html",
@@ -581,6 +607,7 @@ Affects:
 ### Phase 6: Testing (Week 6-8)
 
 - [ ] Set up testing
+
   ```typescript
   // src/app/features/products/product-list.component.spec.ts
   import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -626,12 +653,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Team unable to adopt Angular
 - Performance issues
 - Development velocity decreases > 30%
 - Bundle size too large
 
 **Rollback Steps**:
+
 1. Migrate to Next.js (same as CMC)
 2. Reuse components where possible
 3. Simplify state management
@@ -653,12 +682,14 @@ Affects:
 ### Monitoring Plan
 
 **Performance Metrics**:
+
 - Core Web Vitals
 - Bundle size
 - API response times
 - Error rates
 
 **Review Schedule**:
+
 - Weekly: Performance review
 - Monthly: Dependency updates
 - Quarterly: Architecture review
@@ -684,11 +715,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No E2E tests initially (acceptable for MVP)
 2. Limited accessibility testing (future enhancement)
 3. No internationalization yet (future requirement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Implement comprehensive E2E tests
 - **Q2 2026**: Add accessibility testing
 - **Q3 2026**: Implement internationalization

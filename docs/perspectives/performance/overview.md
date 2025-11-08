@@ -8,9 +8,11 @@ version: "1.0"
 status: "active"
 owner: "Performance Engineering Team"
 related_docs:
+
   - "../../viewpoints/functional/overview.md"
   - "../../viewpoints/deployment/overview.md"
   - "../../viewpoints/concurrency/overview.md"
+
 tags: ["performance", "scalability", "optimization", "caching", "load-testing"]
 ---
 
@@ -29,6 +31,7 @@ Performance and scalability are achieved through multiple strategies including e
 ## Purpose
 
 This perspective ensures:
+
 - **Responsiveness**: Fast response times for all user interactions
 - **Throughput**: High transaction processing capacity
 - **Scalability**: Ability to handle growing user base and data volume
@@ -39,12 +42,14 @@ This perspective ensures:
 ## Stakeholders
 
 ### Primary Stakeholders
+
 - **End Users**: Expect fast, responsive application
 - **Business Owners**: Concerned about conversion rates and customer satisfaction
 - **Development Team**: Responsible for implementing performance optimizations
 - **Operations Team**: Manages infrastructure scaling and monitoring
 
 ### Secondary Stakeholders
+
 - **Product Managers**: Define performance requirements based on business needs
 - **Marketing Team**: Plans campaigns that may cause traffic spikes
 - **Finance Team**: Concerned about infrastructure costs
@@ -53,12 +58,14 @@ This perspective ensures:
 ## Contents
 
 ### 📄 Documents
+
 - [Requirements](requirements.md) - Performance targets and quality attribute scenarios
 - [Scalability](scalability.md) - Horizontal and vertical scaling strategies
 - [Optimization](optimization.md) - Performance optimization techniques
 - [Verification](verification.md) - Load testing and performance validation
 
 ### 📊 Diagrams
+
 - [Caching Architecture](../../diagrams/perspectives/performance/caching-architecture.puml) - Multi-layer caching strategy
 - [Scaling Strategy](../../diagrams/perspectives/performance/scaling-strategy.puml) - Auto-scaling configuration
 - [Database Optimization](../../diagrams/perspectives/performance/database-optimization.puml) - Query optimization and indexing
@@ -132,7 +139,8 @@ This perspective ensures:
 
 **Description**: All API endpoints must respond within specified time limits under normal and peak load conditions.
 
-**Target**: 
+**Target**:
+
 - Critical APIs (product search, checkout): ≤ 500ms (95th percentile)
 - Standard APIs (product details, cart operations): ≤ 1000ms (95th percentile)
 - Background APIs (order history, analytics): ≤ 2000ms (95th percentile)
@@ -146,6 +154,7 @@ This perspective ensures:
 **Description**: System must handle specified number of concurrent users and transactions per second.
 
 **Target**:
+
 - Concurrent users: 10,000 simultaneous users
 - Transactions per second: 1,000 TPS sustained, 2,000 TPS peak
 - Order processing: 500 orders per minute
@@ -160,6 +169,7 @@ This perspective ensures:
 **Description**: Database queries must execute within acceptable time limits to avoid bottlenecks.
 
 **Target**:
+
 - Simple queries (single table, indexed): ≤ 10ms (95th percentile)
 - Complex queries (joins, aggregations): ≤ 100ms (95th percentile)
 - Reporting queries: ≤ 1000ms (95th percentile)
@@ -174,6 +184,7 @@ This perspective ensures:
 **Description**: System must scale horizontally to handle 10x traffic increase within acceptable time.
 
 **Target**:
+
 - Auto-scale from 2 to 20 instances
 - Scale-up time: ≤ 5 minutes
 - Scale-down time: ≤ 10 minutes
@@ -189,6 +200,7 @@ This perspective ensures:
 **Description**: Caching must effectively reduce database load and improve response times.
 
 **Target**:
+
 - Product catalog cache hit rate: ≥ 90%
 - User session cache hit rate: ≥ 95%
 - API response cache hit rate: ≥ 80%
@@ -213,6 +225,7 @@ This perspective ensures:
 **Response**: System auto-scales to handle increased load, maintains response times
 
 **Response Measure**:
+
 - Auto-scaling triggers within 2 minutes
 - Additional instances deployed within 5 minutes
 - API response time remains ≤ 1000ms (95th percentile)
@@ -236,6 +249,7 @@ This perspective ensures:
 **Response**: System executes queries efficiently using indexes and caching
 
 **Response Measure**:
+
 - Query response time ≤ 100ms (95th percentile)
 - Database CPU utilization ≤ 70%
 - Cache hit rate ≥ 90%
@@ -258,6 +272,7 @@ This perspective ensures:
 **Response**: System processes checkout quickly with all validations
 
 **Response Measure**:
+
 - Total checkout time ≤ 3 seconds
 - Payment processing ≤ 2 seconds
 - Order confirmation ≤ 1 second
@@ -280,6 +295,7 @@ This perspective ensures:
 **Response**: System invalidates cache and updates all instances
 
 **Response Measure**:
+
 - Cache invalidation propagates within 1 second
 - No stale data served after 2 seconds
 - Zero impact on ongoing user sessions
@@ -302,6 +318,7 @@ This perspective ensures:
 **Response**: System processes report asynchronously without blocking
 
 **Response Measure**:
+
 - Request accepted immediately (≤ 100ms)
 - Report generated within 5 minutes
 - User notified when complete
@@ -320,6 +337,7 @@ This perspective ensures:
 **Decision**: Implement Redis as distributed cache for session data, product catalog, and API responses.
 
 **Rationale**:
+
 - In-memory performance (sub-millisecond latency)
 - Distributed architecture supports horizontal scaling
 - Rich data structures (strings, hashes, sets, sorted sets)
@@ -327,6 +345,7 @@ This perspective ensures:
 - Proven at scale in e-commerce applications
 
 **Trade-offs**:
+
 - ✅ Gained: Excellent performance, scalability, flexibility
 - ❌ Sacrificed: Additional infrastructure component, cache consistency complexity
 
@@ -341,6 +360,7 @@ This perspective ensures:
 **Decision**: Deploy application on AWS EKS with Horizontal Pod Autoscaler (HPA) based on CPU and custom metrics.
 
 **Rationale**:
+
 - Automatic scaling based on actual demand
 - Cost-effective (pay only for resources used)
 - Fast scaling (new pods in minutes)
@@ -348,6 +368,7 @@ This perspective ensures:
 - Supports custom metrics (request rate, queue depth)
 
 **Trade-offs**:
+
 - ✅ Gained: Cost efficiency, automatic scaling, flexibility
 - ❌ Sacrificed: Complexity in configuration, cold start time
 
@@ -362,12 +383,14 @@ This perspective ensures:
 **Decision**: Implement PostgreSQL read replicas with read/write splitting at application layer.
 
 **Rationale**:
+
 - Distributes read load across multiple database instances
 - Reduces load on primary database
 - Improves read query performance
 - Maintains data consistency (eventual consistency acceptable for reads)
 
 **Trade-offs**:
+
 - ✅ Gained: Better read performance, higher throughput, fault tolerance
 - ❌ Sacrificed: Replication lag (typically <1 second), increased complexity
 
@@ -382,6 +405,7 @@ This perspective ensures:
 **Decision**: Use Apache Kafka (AWS MSK) for asynchronous event processing with consumer groups.
 
 **Rationale**:
+
 - Decouples event producers from consumers
 - High throughput (millions of events per second)
 - Durable message storage
@@ -389,6 +413,7 @@ This perspective ensures:
 - Enables event-driven architecture
 
 **Trade-offs**:
+
 - ✅ Gained: Better responsiveness, scalability, resilience
 - ❌ Sacrificed: Eventual consistency, increased complexity
 
@@ -492,13 +517,15 @@ public class OrderService {
 
 **Purpose**: Verify system meets performance requirements under expected load
 
-**Approach**: 
+**Approach**:
+
 - Simulate 10,000 concurrent users
 - Mix of operations (browse, search, checkout)
 - Ramp-up period of 10 minutes
 - Sustained load for 30 minutes
 
 **Success Criteria**:
+
 - Response time ≤ 1000ms (95th percentile)
 - Throughput ≥ 1000 TPS
 - Error rate < 0.1%
@@ -511,11 +538,13 @@ public class OrderService {
 **Purpose**: Identify system breaking points and failure modes
 
 **Approach**:
+
 - Gradually increase load beyond capacity
 - Monitor system behavior and failure points
 - Identify bottlenecks and limits
 
 **Success Criteria**:
+
 - Graceful degradation under extreme load
 - No data corruption
 - Quick recovery after load reduction
@@ -544,12 +573,14 @@ public class OrderService {
 All functional capabilities must be implemented with performance in mind, using efficient algorithms and appropriate caching strategies.
 
 **Specific concerns**:
+
 - API endpoint performance
 - Search functionality performance
 - Checkout process speed
 - Product catalog browsing
 
 **Implementation guidance**:
+
 - Use caching for frequently accessed data
 - Implement pagination for large result sets
 - Optimize database queries with proper indexes
@@ -561,12 +592,14 @@ All functional capabilities must be implemented with performance in mind, using 
 Data models and access patterns must be optimized for performance, with proper indexing and efficient queries.
 
 **Specific concerns**:
+
 - Database query performance
 - Data access patterns
 - Index strategy
 - Data volume growth
 
 **Implementation guidance**:
+
 - Create indexes on frequently queried fields
 - Use database query optimization techniques
 - Implement read replicas for read-heavy workloads
@@ -578,12 +611,14 @@ Data models and access patterns must be optimized for performance, with proper i
 Concurrent operations must be handled efficiently without blocking or resource contention.
 
 **Specific concerns**:
+
 - Thread pool configuration
 - Async processing
 - Lock contention
 - Resource pooling
 
 **Implementation guidance**:
+
 - Use appropriate thread pool sizes
 - Implement async processing for long operations
 - Minimize lock contention
@@ -595,12 +630,14 @@ Concurrent operations must be handled efficiently without blocking or resource c
 Infrastructure must be configured for optimal performance and scalability.
 
 **Specific concerns**:
+
 - Auto-scaling configuration
 - Load balancing
 - Resource allocation
 - Network performance
 
 **Implementation guidance**:
+
 - Configure HPA with appropriate metrics
 - Use Application Load Balancer
 - Allocate sufficient resources per pod
@@ -612,12 +649,14 @@ Infrastructure must be configured for optimal performance and scalability.
 Operations must include performance monitoring, alerting, and optimization procedures.
 
 **Specific concerns**:
+
 - Performance monitoring
 - Alert configuration
 - Performance troubleshooting
 - Capacity planning
 
 **Implementation guidance**:
+
 - Implement comprehensive APM monitoring
 - Configure alerts for performance degradation
 - Establish performance troubleshooting procedures
@@ -626,21 +665,25 @@ Operations must include performance monitoring, alerting, and optimization proce
 ## Related Documentation
 
 ### Related Perspectives
+
 - [Availability Perspective](../availability/overview.md) - Performance impacts availability
 - [Cost Perspective](../cost/overview.md) - Performance optimization affects costs
 - [Scalability Perspective](scalability.md) - Detailed scaling strategies
 
 ### Related Architecture Decisions
+
 - [ADR-004: Use Redis for Distributed Caching](../../architecture/adrs/ADR-004-redis-caching.md)
 - [ADR-005: Use Apache Kafka for Event Streaming](../../architecture/adrs/ADR-005-kafka-messaging.md)
 - [ADR-016: Kubernetes Auto-Scaling Strategy](../../architecture/adrs/ADR-016-k8s-autoscaling.md)
 - [ADR-017: Database Read Replica Strategy](../../architecture/adrs/ADR-017-db-read-replicas.md)
 
 ### Related Standards and Guidelines
+
 - [Performance Standards](../../.kiro/steering/performance-standards.md) - Detailed performance standards
 - [Test Performance Standards](../../.kiro/steering/test-performance-standards.md) - Test performance guidelines
 
 ### Related Tools
+
 - JMeter: Load testing tool
 - Gatling: Performance testing framework
 - New Relic / DataDog: APM monitoring
@@ -650,11 +693,13 @@ Operations must include performance monitoring, alerting, and optimization proce
 ## Known Issues and Limitations
 
 ### Current Limitations
+
 - **Cold Start Time**: New pod instances take 30-60 seconds to become ready
 - **Cache Warm-up**: Cache needs time to reach optimal hit rate after restart
 - **Database Connection Limits**: Maximum 100 connections per database instance
 
 ### Technical Debt
+
 - **Query Optimization**: Some complex reporting queries need optimization
 - **Cache Strategy**: Need to implement cache warming for critical data
 - **Monitoring Gaps**: Some custom metrics not yet implemented
@@ -671,6 +716,7 @@ Operations must include performance monitoring, alerting, and optimization proce
 ## Future Considerations
 
 ### Planned Improvements
+
 - **Predictive Auto-Scaling**: Use ML to predict traffic and scale proactively (Q2 2025)
 - **Edge Caching**: Implement CloudFront for static content (Q2 2025)
 - **Database Sharding**: Horizontal database partitioning for massive scale (Q3 2025)
@@ -679,12 +725,14 @@ Operations must include performance monitoring, alerting, and optimization proce
 ### Evolution Strategy
 
 The performance perspective will evolve to address growing scale and emerging technologies:
+
 - Continuous performance optimization based on production metrics
 - Adoption of new caching technologies (e.g., Memcached, Hazelcast)
 - Implementation of advanced scaling strategies
 - Integration of AI/ML for performance prediction and optimization
 
 ### Emerging Technologies
+
 - **Serverless Computing**: AWS Lambda for specific workloads
 - **Edge Computing**: CloudFront Functions for edge processing
 - **In-Memory Databases**: Redis Enterprise for ultra-low latency
@@ -700,6 +748,7 @@ The performance perspective will evolve to address growing scale and emerging te
 ## Appendix
 
 ### Glossary
+
 - **Response Time**: Time from request to response
 - **Throughput**: Number of transactions per second
 - **Latency**: Delay in processing
@@ -710,10 +759,11 @@ The performance perspective will evolve to address growing scale and emerging te
 - **HPA**: Horizontal Pod Autoscaler
 
 ### References
-- Performance Testing Guide: https://martinfowler.com/articles/performance-testing.html
-- AWS Performance Best Practices: https://aws.amazon.com/architecture/performance-efficiency/
-- Redis Best Practices: https://redis.io/docs/manual/patterns/
-- Kubernetes HPA: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+
+- Performance Testing Guide: <https://martinfowler.com/articles/performance-testing.html>
+- AWS Performance Best Practices: <https://aws.amazon.com/architecture/performance-efficiency/>
+- Redis Best Practices: <https://redis.io/docs/manual/patterns/>
+- Kubernetes HPA: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>
 
 ### Change History
 

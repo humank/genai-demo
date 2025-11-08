@@ -21,6 +21,7 @@ affected_perspectives: ["security", "availability"]
 ### Problem Statement
 
 The Enterprise E-Commerce Platform requires secure management of sensitive configuration data including:
+
 - Database credentials (PostgreSQL, Redis)
 - API keys (payment gateways, email services, SMS providers)
 - Encryption keys (JWT signing keys, data encryption keys)
@@ -29,6 +30,7 @@ The Enterprise E-Commerce Platform requires secure management of sensitive confi
 - Certificate private keys
 
 We need a secrets management solution that:
+
 - Stores secrets securely with encryption at rest
 - Provides fine-grained access control
 - Enables automatic secret rotation
@@ -40,6 +42,7 @@ We need a secrets management solution that:
 ### Business Context
 
 **Business Drivers**:
+
 - Security compliance (PCI-DSS, GDPR, SOC 2)
 - Prevent credential leakage and data breaches
 - Regulatory audit requirements
@@ -47,6 +50,7 @@ We need a secrets management solution that:
 - Expected growth from 10K to 1M+ users
 
 **Constraints**:
+
 - Must integrate with AWS infrastructure
 - Must support Kubernetes (EKS) workloads
 - Performance: Secret retrieval < 100ms
@@ -56,12 +60,14 @@ We need a secrets management solution that:
 ### Technical Context
 
 **Current State**:
+
 - AWS EKS for container orchestration
 - Spring Boot microservices
 - AWS CDK for infrastructure as code
 - Multiple environments (dev, staging, production)
 
 **Requirements**:
+
 - Centralized secrets storage
 - Encryption at rest and in transit
 - Fine-grained IAM-based access control
@@ -88,6 +94,7 @@ We need a secrets management solution that:
 **Description**: Fully managed secrets management service by AWS
 
 **Pros**:
+
 - ✅ Fully managed (no infrastructure to maintain)
 - ✅ Native AWS integration (RDS, EKS, Lambda)
 - ✅ Automatic rotation for RDS, Redshift, DocumentDB
@@ -100,6 +107,7 @@ We need a secrets management solution that:
 - ✅ Kubernetes integration via External Secrets Operator
 
 **Cons**:
+
 - ⚠️ Cost: $0.40 per secret per month + $0.05 per 10K API calls
 - ⚠️ AWS vendor lock-in
 - ⚠️ Limited to 65,536 bytes per secret
@@ -113,6 +121,7 @@ We need a secrets management solution that:
 **Description**: Hierarchical storage for configuration data and secrets
 
 **Pros**:
+
 - ✅ Free for standard parameters (up to 10K)
 - ✅ Native AWS integration
 - ✅ KMS encryption for SecureString
@@ -122,6 +131,7 @@ We need a secrets management solution that:
 - ✅ Parameter hierarchies
 
 **Cons**:
+
 - ❌ No automatic rotation (manual implementation required)
 - ❌ Limited to 8KB per parameter (standard) or 4KB (advanced)
 - ❌ Advanced parameters cost $0.05 per parameter per month
@@ -137,6 +147,7 @@ We need a secrets management solution that:
 **Description**: Self-managed secrets management platform
 
 **Pros**:
+
 - ✅ Cloud-agnostic (no vendor lock-in)
 - ✅ Advanced features (dynamic secrets, PKI, encryption as a service)
 - ✅ Fine-grained policies
@@ -146,6 +157,7 @@ We need a secrets management solution that:
 - ✅ Active community
 
 **Cons**:
+
 - ❌ Self-managed infrastructure (high operational overhead)
 - ❌ High availability setup complex
 - ❌ Requires dedicated team for operations
@@ -162,11 +174,13 @@ We need a secrets management solution that:
 **Description**: Built-in Kubernetes secrets management
 
 **Pros**:
+
 - ✅ No additional cost
 - ✅ Native Kubernetes integration
 - ✅ Simple to use
 
 **Cons**:
+
 - ❌ Base64 encoding only (not encrypted by default)
 - ❌ No automatic rotation
 - ❌ Limited access control
@@ -197,7 +211,7 @@ AWS Secrets Manager was selected for the following reasons:
 
 **Architecture**:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     AWS Secrets Manager                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
@@ -244,6 +258,7 @@ AWS Secrets Manager was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All microservices (secret retrieval)
 - Infrastructure code (CDK)
 - Kubernetes deployments (External Secrets)
@@ -312,12 +327,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Secret retrieval failures > 5%
 - Performance degradation > 200ms
 - Rotation failures causing outages
 - Cost exceeding budget by > 50%
 
 **Rollback Steps**:
+
 1. Revert to environment variables (temporary)
 2. Investigate and fix Secrets Manager integration
 3. Re-deploy with fixes
@@ -339,6 +356,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `secrets.retrieval.time` (histogram)
 - `secrets.retrieval.success` (count)
 - `secrets.retrieval.failure` (count)
@@ -347,6 +365,7 @@ Affects:
 - `secrets.cache.hit_rate` (gauge)
 
 **Alerts**:
+
 - Secret retrieval failure rate > 1% for 5 minutes
 - Secret retrieval latency > 200ms for 5 minutes
 - Rotation failures
@@ -354,6 +373,7 @@ Affects:
 - Cost exceeding budget
 
 **Security Monitoring**:
+
 - Secret access patterns (CloudTrail)
 - Unauthorized access attempts
 - Secret version changes
@@ -361,6 +381,7 @@ Affects:
 - Rotation failures
 
 **Review Schedule**:
+
 - Daily: Check secret access metrics
 - Weekly: Review CloudTrail audit logs
 - Monthly: Secret rotation verification
@@ -389,11 +410,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No multi-cloud secrets management (acceptable for AWS-only deployment)
 2. Manual rotation for some secrets (acceptable initially)
 3. No secrets scanning in CI/CD (should be added)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement secrets scanning in CI/CD pipeline
 - **Q3 2026**: Automate rotation for all secrets
 - **Q4 2026**: Evaluate multi-cloud secrets management if needed
@@ -515,11 +538,15 @@ spec:
     name: database-credentials
     creationPolicy: Owner
   data:
+
     - secretKey: username
+
       remoteRef:
         key: prod/database/credentials
         property: username
+
     - secretKey: password
+
       remoteRef:
         key: prod/database/credentials
         property: password
@@ -626,6 +653,7 @@ def handler(event, context):
 Format: `{environment}/{service}/{secret-type}`
 
 Examples:
+
 - `prod/database/credentials` - Production database credentials
 - `prod/jwt/signing-key` - JWT signing key
 - `prod/api/payment-gateway` - Payment gateway API key

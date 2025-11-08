@@ -37,11 +37,13 @@ Code review is a critical part of our development process. This guide provides c
 git diff develop...feature/JIRA-123-new-feature
 
 # Check for common issues
+
 - Commented-out code
 - Debug statements
 - TODO comments
 - Hardcoded values
 - Missing tests
+
 ```
 
 **2. Run All Checks**
@@ -70,6 +72,7 @@ git diff develop...feature/JIRA-123-new-feature
 **4. Prepare PR Description**
 
 Use the PR template and provide:
+
 - Clear description of changes
 - Context and motivation
 - Testing performed
@@ -199,17 +202,20 @@ git rebase develop
 **1. Initial Review (15-30 minutes)**
 
 ```markdown
+
 1. Read PR description and understand context
 2. Review changed files list
 3. Check test coverage report
 4. Review tests first
 5. Review implementation
 6. Check for architectural issues
+
 ```
 
 **2. Detailed Review**
 
 **Start with Tests:**
+
 ```java
 // Check test quality
 @Test
@@ -221,6 +227,7 @@ void should_create_customer_when_valid_data_provided() {
 ```
 
 **Review Implementation:**
+
 ```java
 // Check for common issues
 public class CustomerService {
@@ -423,6 +430,7 @@ the internal structure.
 ### Pattern 1: Long Methods
 
 **Issue:**
+
 ```java
 public void processOrder(Order order) {
     // 50+ lines of mixed concerns
@@ -430,6 +438,7 @@ public void processOrder(Order order) {
 ```
 
 **Feedback:**
+
 ```markdown
 suggestion: This method is quite long and handles multiple concerns.
 Consider breaking it down:
@@ -451,7 +460,8 @@ private void validateOrder(Order order) {
 private void calculateTotal(Order order) {
     // Calculation logic
 }
-```
+```text
+
 ```
 
 ### Pattern 2: Missing Error Handling
@@ -464,6 +474,7 @@ public Customer findById(String id) {
 ```
 
 **Feedback:**
+
 ```markdown
 issue: This will throw NoSuchElementException if customer not found.
 Use orElseThrow with a specific exception:
@@ -474,7 +485,8 @@ public Customer findById(String id) {
         .orElseThrow(() -> new CustomerNotFoundException(
             "Customer not found with ID: " + id));
 }
-```
+```text
+
 ```
 
 ### Pattern 3: Insufficient Tests
@@ -489,8 +501,10 @@ void testCreateCustomer() {
 ```
 
 **Feedback:**
+
 ```markdown
 suggestion: This test is too weak. Consider testing:
+
 - Actual customer properties
 - Email validation
 - Duplicate email handling
@@ -513,7 +527,8 @@ void should_create_customer_with_correct_properties() {
     assertThat(customer.getEmail()).isEqualTo("john@example.com");
     assertThat(customer.getStatus()).isEqualTo(CustomerStatus.ACTIVE);
 }
-```
+```text
+
 ```
 
 ## Review Metrics
@@ -550,18 +565,23 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Run Tests
+
         run: ./gradlew test
       
       - name: Check Code Style
+
         run: ./gradlew checkstyleMain
       
       - name: Run Static Analysis
+
         run: ./gradlew pmdMain spotbugsMain
       
       - name: Check Coverage
+
         run: ./gradlew jacocoTestCoverageVerification
 ```
 
@@ -577,6 +597,7 @@ jobs:
 ### For Authors
 
 ✅ **Do:**
+
 - Keep PRs small and focused
 - Provide context in PR description
 - Respond to feedback promptly
@@ -584,6 +605,7 @@ jobs:
 - Thank reviewers for their time
 
 ❌ **Don't:**
+
 - Create large PRs (>500 lines)
 - Mix multiple concerns in one PR
 - Take feedback personally
@@ -593,6 +615,7 @@ jobs:
 ### For Reviewers
 
 ✅ **Do:**
+
 - Review promptly
 - Be constructive and specific
 - Ask questions when unclear
@@ -600,6 +623,7 @@ jobs:
 - Suggest alternatives
 
 ❌ **Don't:**
+
 - Be overly critical
 - Nitpick on style (use automated tools)
 - Block on personal preferences

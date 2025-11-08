@@ -19,6 +19,7 @@ Retrieve all currently active promotions.
 **Authentication**: Not required
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `type`: Filter by type (PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING)
@@ -26,6 +27,7 @@ Retrieve all currently active promotions.
 - `active`: Filter by active status (default: true)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -69,6 +71,7 @@ Retrieve all currently active promotions.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/promotions?type=PERCENTAGE&active=true"
 ```
@@ -84,9 +87,11 @@ Retrieve a specific promotion by ID.
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `id`: Promotion ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -115,9 +120,11 @@ Retrieve a specific promotion by ID.
 ```
 
 **Error Responses**:
+
 - `404 Not Found`: Promotion not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/promotions/promo-001
 ```
@@ -133,6 +140,7 @@ Validate a promotion code for a specific cart or order.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "code": "SAVE10",
@@ -150,6 +158,7 @@ Validate a promotion code for a specific cart or order.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -167,6 +176,7 @@ Validate a promotion code for a specific cart or order.
 ```
 
 **Validation Failed Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -181,10 +191,12 @@ Validate a promotion code for a specific cart or order.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid request format
 - `404 Not Found`: Promotion code not found
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/promotions/validate \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -209,6 +221,7 @@ Create a new promotion.
 **Authorization**: ADMIN or MARKETING role required
 
 **Request Body**:
+
 ```json
 {
   "code": "SUMMER2025",
@@ -229,6 +242,7 @@ Create a new promotion.
 ```
 
 **Validation Rules**:
+
 - `code`: Required, unique, 4-20 characters, alphanumeric
 - `name`: Required, 3-100 characters
 - `type`: Required, one of: PERCENTAGE, FIXED_AMOUNT, BUY_X_GET_Y, FREE_SHIPPING
@@ -237,6 +251,7 @@ Create a new promotion.
 - `endDate`: Required, must be after startDate
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -261,11 +276,13 @@ Create a new promotion.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `403 Forbidden`: Insufficient permissions
 - `409 Conflict`: Promotion code already exists
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/promotions \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -293,9 +310,11 @@ Update an existing promotion.
 **Authorization**: ADMIN or MARKETING role required
 
 **Path Parameters**:
+
 - `id`: Promotion ID
 
 **Request Body**:
+
 ```json
 {
   "name": "Summer Sale 2025 - Extended",
@@ -307,6 +326,7 @@ Update an existing promotion.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -322,16 +342,19 @@ Update an existing promotion.
 ```
 
 **Business Rules**:
+
 - Cannot change promotion code after creation
 - Cannot change type after creation
 - Cannot reduce usage limit below current usage count
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Promotion not found
 
 **curl Example**:
+
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/promotions/promo-003 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -355,15 +378,18 @@ Deactivate a promotion (soft delete).
 **Authorization**: ADMIN or MARKETING role required
 
 **Path Parameters**:
+
 - `id`: Promotion ID
 
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Promotion not found
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/promotions/promo-003 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -382,9 +408,11 @@ Get usage statistics for a promotion.
 **Authorization**: ADMIN or MARKETING role required
 
 **Path Parameters**:
+
 - `id`: Promotion ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -416,6 +444,7 @@ Get usage statistics for a promotion.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/promotions/promo-001/statistics \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -432,10 +461,12 @@ Get promotion usage history for the authenticated customer.
 **Authentication**: Required
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -460,6 +491,7 @@ Get promotion usage history for the authenticated customer.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/promotions/me/history \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"

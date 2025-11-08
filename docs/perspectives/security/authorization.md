@@ -12,6 +12,7 @@ This document describes the authorization mechanisms used in the e-commerce plat
 ### Role-Based Access Control (RBAC)
 
 The system uses RBAC where:
+
 - **Users** are assigned one or more **Roles**
 - **Roles** have associated **Permissions**
 - **Permissions** define access to specific resources and operations
@@ -19,19 +20,22 @@ The system uses RBAC where:
 ### Roles
 
 #### ADMIN
+
 - **Description**: System administrators with full access
 - **Permissions**: All operations on all resources
 - **Use Cases**: System management, user management, configuration
 
 #### CUSTOMER
+
 - **Description**: Regular customers who purchase products
-- **Permissions**: 
+- **Permissions**:
   - Read own profile and orders
   - Create orders and reviews
   - Update own profile
   - Cannot access other customers' data
 
 #### SELLER
+
 - **Description**: Sellers who list and manage products
 - **Permissions**:
   - Manage own products and inventory
@@ -39,6 +43,7 @@ The system uses RBAC where:
   - Cannot access other sellers' data
 
 #### GUEST
+
 - **Description**: Unauthenticated users
 - **Permissions**:
   - Browse products
@@ -52,6 +57,7 @@ The system uses RBAC where:
 Permissions follow the format: `resource:operation`
 
 Examples:
+
 - `customer:read` - Read customer data
 - `order:create` - Create orders
 - `product:update` - Update products
@@ -114,7 +120,9 @@ public class MethodSecurityConfiguration {
 public class CustomerController {
     
     /**
+
      * Admin can access any customer, users can only access their own data
+
      */
     @GetMapping("/{customerId}")
     @PreAuthorize("hasRole('ADMIN') or #customerId == authentication.principal.customerId")
@@ -126,7 +134,9 @@ public class CustomerController {
     }
     
     /**
+
      * Only admins can list all customers
+
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -138,7 +148,9 @@ public class CustomerController {
     }
     
     /**
+
      * Users can update their own profile
+
      */
     @PutMapping("/{customerId}")
     @PreAuthorize("#customerId == authentication.principal.customerId")
@@ -267,7 +279,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 public class OrderController {
     
     /**
+
      * Check permission on loaded domain object
+
      */
     @GetMapping("/{orderId}")
     @PreAuthorize("hasPermission(#orderId, 'Order', 'READ')")
@@ -277,7 +291,9 @@ public class OrderController {
     }
     
     /**
+
      * Check permission after loading object
+
      */
     @PostMapping("/{orderId}/cancel")
     public ResponseEntity<Void> cancelOrder(@PathVariable String orderId) {
@@ -305,7 +321,9 @@ public class OrderService {
     private final SecurityContext securityContext;
     
     /**
+
      * Enforce authorization at service level
+
      */
     public Order findById(String orderId) {
         Order order = orderRepository.findById(orderId)
@@ -324,7 +342,9 @@ public class OrderService {
     }
     
     /**
+
      * Filter results based on user permissions
+
      */
     public Page<Order> findOrders(Pageable pageable) {
         String currentUserId = securityContext.getCurrentUserId();
@@ -349,7 +369,9 @@ public class OrderService {
 public class DataFilteringAspect {
     
     /**
+
      * Automatically filter query results based on user permissions
+
      */
     @Around("@annotation(FilterByUser)")
     public Object filterResults(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -391,7 +413,9 @@ public class DataFilteringAspect {
 public class FieldMaskingService {
     
     /**
+
      * Mask sensitive fields based on user role
+
      */
     public CustomerDto maskSensitiveFields(Customer customer, String userRole) {
         CustomerDto dto = CustomerDto.from(customer);
@@ -419,9 +443,11 @@ public class FieldMaskingService {
         }
         
         return localPart.charAt(0) 
+
             + "*".repeat(localPart.length() - 2) 
             + localPart.charAt(localPart.length() - 1) 
             + "@" + domain;
+
     }
 }
 ```
@@ -506,7 +532,9 @@ public enum Permission {
 public class SecurityContextService {
     
     /**
+
      * Get current authenticated user ID
+
      */
     public String getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext()
@@ -520,7 +548,9 @@ public class SecurityContextService {
     }
     
     /**
+
      * Get current user details
+
      */
     public UserDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext()
@@ -534,7 +564,9 @@ public class SecurityContextService {
     }
     
     /**
+
      * Check if current user has role
+
      */
     public boolean hasRole(String role) {
         Authentication authentication = SecurityContextHolder.getContext()
@@ -549,7 +581,9 @@ public class SecurityContextService {
     }
     
     /**
+
      * Check if current user has permission
+
      */
     public boolean hasPermission(String permission) {
         Authentication authentication = SecurityContextHolder.getContext()
@@ -726,6 +760,6 @@ public class AuthorizationEventLogger {
 
 ## References
 
-- Spring Security Authorization: https://docs.spring.io/spring-security/reference/servlet/authorization/index.html
-- OWASP Authorization Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html
-- RBAC: https://en.wikipedia.org/wiki/Role-based_access_control
+- Spring Security Authorization: <https://docs.spring.io/spring-security/reference/servlet/authorization/index.html>
+- OWASP Authorization Cheat Sheet: <https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html>
+- RBAC: <https://en.wikipedia.org/wiki/Role-based_access_control>

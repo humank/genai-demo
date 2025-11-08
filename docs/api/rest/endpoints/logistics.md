@@ -21,6 +21,7 @@ Create a new shipment for an order.
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Request Body**:
+
 ```json
 {
   "orderId": "order-456",
@@ -61,6 +62,7 @@ Create a new shipment for an order.
 ```
 
 **Validation Rules**:
+
 - `orderId`: Required, must exist
 - `shippingMethod`: Required, one of: STANDARD, EXPRESS, SAME_DAY
 - `carrier`: Required, one of: CHUNGHWA_POST, KERRY_TJ, SF_EXPRESS, BLACK_CAT
@@ -68,6 +70,7 @@ Create a new shipment for an order.
 - `items`: Required, at least one item
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -102,12 +105,14 @@ Create a new shipment for an order.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Order not found
 - `409 Conflict`: Shipment already exists for order
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/logistics/shipments \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -133,9 +138,11 @@ Retrieve shipment details by ID.
 **Authorization**: User can view own shipments, or ADMIN/WAREHOUSE role required
 
 **Path Parameters**:
+
 - `shipmentId`: Shipment ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -180,10 +187,12 @@ Retrieve shipment details by ID.
 ```
 
 **Error Responses**:
+
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Shipment not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/logistics/shipments/ship-123 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -200,9 +209,11 @@ Track a shipment by tracking number (public endpoint).
 **Authentication**: Not required
 
 **Path Parameters**:
+
 - `trackingNumber`: Tracking number
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -236,9 +247,11 @@ Track a shipment by tracking number (public endpoint).
 ```
 
 **Error Responses**:
+
 - `404 Not Found`: Tracking number not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/logistics/track/TW1234567890
 ```
@@ -256,9 +269,11 @@ Update shipment status and add tracking event.
 **Authorization**: ADMIN, WAREHOUSE, or CARRIER role required
 
 **Path Parameters**:
+
 - `shipmentId`: Shipment ID
 
 **Request Body**:
+
 ```json
 {
   "status": "DELIVERED",
@@ -270,6 +285,7 @@ Update shipment status and add tracking event.
 ```
 
 **Status Values**:
+
 - `PENDING`: Shipment created, awaiting pickup
 - `PICKED_UP`: Picked up by carrier
 - `IN_TRANSIT`: In transit to destination
@@ -280,6 +296,7 @@ Update shipment status and add tracking event.
 - `CANCELLED`: Shipment cancelled
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -299,11 +316,13 @@ Update shipment status and add tracking event.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid status transition
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Shipment not found
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/logistics/shipments/ship-123/events \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -328,9 +347,11 @@ Get all shipments for an order.
 **Authorization**: User can view own order shipments, or ADMIN role required
 
 **Path Parameters**:
+
 - `orderId`: Order ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": [
@@ -349,6 +370,7 @@ Get all shipments for an order.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/logistics/orders/order-456/shipments \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -367,6 +389,7 @@ List shipments with filters (admin).
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `status`: Filter by status
@@ -376,6 +399,7 @@ List shipments with filters (admin).
 - `endDate`: Filter to date (ISO 8601)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -403,6 +427,7 @@ List shipments with filters (admin).
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/logistics/shipments?status=IN_TRANSIT&carrier=CHUNGHWA_POST" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -419,6 +444,7 @@ Calculate shipping cost for an order.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "shippingMethod": "STANDARD",
@@ -441,6 +467,7 @@ Calculate shipping cost for an order.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -459,6 +486,7 @@ Calculate shipping cost for an order.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/logistics/calculate-shipping \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -481,10 +509,12 @@ Get available carriers for a destination.
 **Authentication**: Not required
 
 **Query Parameters**:
+
 - `country`: Destination country code (e.g., TW)
 - `city`: Destination city (optional)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": [
@@ -529,6 +559,7 @@ Get available carriers for a destination.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/logistics/carriers?country=TW"
 ```
@@ -544,6 +575,7 @@ Request a return shipment for an order.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "orderId": "order-456",
@@ -560,6 +592,7 @@ Request a return shipment for an order.
 ```
 
 **Reason Codes**:
+
 - `DEFECTIVE`: Product defective
 - `WRONG_ITEM`: Wrong item received
 - `NOT_AS_DESCRIBED`: Not as described
@@ -567,6 +600,7 @@ Request a return shipment for an order.
 - `OTHER`: Other reason
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -594,6 +628,7 @@ Request a return shipment for an order.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/logistics/returns \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \

@@ -6,7 +6,8 @@ This document provides comprehensive troubleshooting procedures for Kubernetes-s
 
 **Target Audience**: DevOps engineers, SREs, Kubernetes administrators  
 **Prerequisites**: Access to Kubernetes cluster, kubectl, cluster admin permissions  
-**Related Documents**: 
+**Related Documents**:
+
 - [Common Issues](common-issues.md)
 - [Application Debugging Guide](application-debugging.md)
 - [Network and Connectivity Guide](network-connectivity.md)
@@ -40,7 +41,6 @@ Pod scheduling failures occur when the Kubernetes scheduler cannot find a suitab
 - "No nodes available" errors
 - Pods not starting after deployment
 
-
 ### Diagnostic Procedures
 
 #### Step 1: Check Pod Status and Events
@@ -60,6 +60,7 @@ kubectl get events -n production --field-selector reason=FailedScheduling
 ```
 
 **Common Event Messages**:
+
 - `0/3 nodes are available: 3 Insufficient cpu.`
 - `0/3 nodes are available: 3 node(s) didn't match node selector.`
 - `0/3 nodes are available: 3 node(s) had taint {key: value}, that the pod didn't tolerate.`
@@ -77,7 +78,6 @@ kubectl describe nodes | grep -A 5 "Allocated resources"
 # Get node capacity and allocatable resources
 kubectl get nodes -o custom-columns=NAME:.metadata.name,CPU-CAPACITY:.status.capacity.cpu,CPU-ALLOCATABLE:.status.allocatable.cpu,MEMORY-CAPACITY:.status.capacity.memory,MEMORY-ALLOCATABLE:.status.allocatable.memory
 ```
-
 
 #### Step 3: Check Node Affinity and Selectors
 
@@ -121,7 +121,6 @@ kubectl get priorityclasses
 kubectl get events -n production --field-selector reason=Preempted
 ```
 
-
 ### Common Scheduling Issues and Solutions
 
 #### Issue 1: Insufficient CPU/Memory
@@ -129,6 +128,7 @@ kubectl get events -n production --field-selector reason=Preempted
 **Problem**: Nodes don't have enough resources to schedule the pod
 
 **Diagnosis**:
+
 ```bash
 # Check total cluster resources
 kubectl top nodes
@@ -143,6 +143,7 @@ kubectl describe nodes | grep -A 5 "Allocated resources:" | grep -E "cpu|memory"
 **Solutions**:
 
 **Option 1: Reduce Resource Requests**
+
 ```yaml
 # deployment.yaml
 resources:
@@ -155,6 +156,7 @@ resources:
 ```
 
 **Option 2: Add More Nodes**
+
 ```bash
 # For EKS with cluster autoscaler
 # Increase max size in node group configuration
@@ -169,6 +171,7 @@ kubectl scale deployment cluster-autoscaler \
 ```
 
 **Option 3: Use Cluster Autoscaler**
+
 ```yaml
 # Enable cluster autoscaler
 apiVersion: apps/v1
@@ -180,21 +183,25 @@ spec:
   template:
     spec:
       containers:
+
       - name: cluster-autoscaler
+
         image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.27.0
         command:
+
           - ./cluster-autoscaler
           - --cloud-provider=aws
           - --namespace=kube-system
           - --node-group-auto-discovery=asg:tag=k8s.io/cluster-autoscaler/enabled,k8s.io/cluster-autoscaler/ecommerce-cluster
-```
 
+```
 
 #### Issue 2: Node Selector Mismatch
 
 **Problem**: Pod requires specific node labels that don't exist
 
 **Diagnosis**:
+
 ```bash
 # Check pod node selector
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 5 nodeSelector
@@ -206,6 +213,7 @@ kubectl get nodes --show-labels | grep -i "environment\|workload"
 **Solutions**:
 
 **Option 1: Add Labels to Nodes**
+
 ```bash
 # Add missing label to node
 kubectl label nodes ${NODE_NAME} environment=production
@@ -215,6 +223,7 @@ kubectl label nodes ${NODE_NAME} workload-type=compute-intensive tier=backend
 ```
 
 **Option 2: Remove or Modify Node Selector**
+
 ```yaml
 # deployment.yaml - Remove node selector
 spec:
@@ -223,10 +232,13 @@ spec:
       # nodeSelector:  # Commented out
       #   environment: production
       containers:
+
       - name: app
+
 ```
 
 **Option 3: Use Node Affinity (More Flexible)**
+
 ```yaml
 spec:
   template:
@@ -234,21 +246,27 @@ spec:
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:  # Soft requirement
+
           - weight: 100
+
             preference:
               matchExpressions:
+
               - key: environment
+
                 operator: In
                 values:
-                - production
-```
 
+                - production
+
+```
 
 #### Issue 3: Taint/Toleration Mismatch
 
 **Problem**: Nodes have taints that pods don't tolerate
 
 **Diagnosis**:
+
 ```bash
 # Check node taints
 kubectl describe node ${NODE_NAME} | grep -A 3 "Taints:"
@@ -260,23 +278,29 @@ kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 10 tolerations
 **Solutions**:
 
 **Option 1: Add Toleration to Pod**
+
 ```yaml
 # deployment.yaml
 spec:
   template:
     spec:
       tolerations:
+
       - key: "dedicated"
+
         operator: "Equal"
         value: "backend"
         effect: "NoSchedule"
+
       - key: "node.kubernetes.io/not-ready"
+
         operator: "Exists"
         effect: "NoExecute"
         tolerationSeconds: 300
 ```
 
 **Option 2: Remove Taint from Node**
+
 ```bash
 # Remove specific taint
 kubectl taint nodes ${NODE_NAME} dedicated=backend:NoSchedule-
@@ -286,21 +310,24 @@ kubectl taint nodes ${NODE_NAME} dedicated-
 ```
 
 **Option 3: Use Taint-Based Eviction**
+
 ```yaml
 # For temporary taints during maintenance
 tolerations:
+
 - key: "node.kubernetes.io/unreachable"
+
   operator: "Exists"
   effect: "NoExecute"
   tolerationSeconds: 30
 ```
-
 
 #### Issue 4: Pod Affinity/Anti-Affinity Rules
 
 **Problem**: Pod affinity rules prevent scheduling
 
 **Diagnosis**:
+
 ```bash
 # Check pod affinity rules
 kubectl get pod ${POD_NAME} -n production -o yaml | grep -A 20 affinity
@@ -312,6 +339,7 @@ kubectl get pods -n production -o wide --show-labels
 **Solutions**:
 
 **Option 1: Use Preferred Instead of Required**
+
 ```yaml
 # Change from required to preferred
 spec:
@@ -320,45 +348,61 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:  # Soft rule
+
           - weight: 100
+
             podAffinityTerm:
               labelSelector:
                 matchExpressions:
+
                 - key: app
+
                   operator: In
                   values:
+
                   - ecommerce-backend
+
               topologyKey: kubernetes.io/hostname
 ```
 
 **Option 2: Adjust Topology Key**
+
 ```yaml
 # Use zone instead of hostname for more flexibility
 affinity:
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
+
     - labelSelector:
+
         matchExpressions:
+
         - key: app
+
           operator: In
           values:
+
           - ecommerce-backend
+
       topologyKey: topology.kubernetes.io/zone  # More flexible
 ```
 
 **Option 3: Increase Replica Count**
+
 ```bash
 # If anti-affinity requires more nodes than available
 kubectl scale deployment ecommerce-backend --replicas=3 -n production
 ```
 
-
 ### Prevention and Monitoring
 
 **Set up Scheduling Alerts**:
+
 ```yaml
 # Prometheus alert rule
+
 - alert: PodsPendingTooLong
+
   expr: kube_pod_status_phase{phase="Pending"} > 0
   for: 5m
   labels:
@@ -368,6 +412,7 @@ kubectl scale deployment ecommerce-backend --replicas=3 -n production
     description: "Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been pending for more than 5 minutes"
 
 - alert: FailedScheduling
+
   expr: increase(kube_pod_failed_scheduling_total[5m]) > 0
   labels:
     severity: critical
@@ -376,6 +421,7 @@ kubectl scale deployment ecommerce-backend --replicas=3 -n production
 ```
 
 **Resource Quota Monitoring**:
+
 ```bash
 # Check namespace resource quotas
 kubectl get resourcequota -n production
@@ -403,7 +449,6 @@ PersistentVolumeClaim (PVC) issues prevent pods from accessing persistent storag
 - "Multi-Attach error" for volumes
 - Slow pod startup times
 
-
 ### Diagnostic Procedures
 
 #### Step 1: Check PVC Status
@@ -423,6 +468,7 @@ kubectl get pv | grep ${PVC_NAME}
 ```
 
 **PVC Status States**:
+
 - `Pending`: Waiting for PV to be created or bound
 - `Bound`: Successfully bound to a PV
 - `Lost`: PV no longer exists
@@ -459,7 +505,6 @@ kubectl get csidrivers
 kubectl get csinodes
 ```
 
-
 #### Step 4: Check Pod Volume Mounts
 
 ```bash
@@ -480,6 +525,7 @@ kubectl get events -n production --field-selector involvedObject.name=${POD_NAME
 **Problem**: PVC cannot find or create a suitable PV
 
 **Diagnosis**:
+
 ```bash
 # Check PVC status
 kubectl describe pvc ${PVC_NAME} -n production
@@ -494,6 +540,7 @@ kubectl get storageclass
 **Common Causes and Solutions**:
 
 **Cause 1: No Storage Class**
+
 ```yaml
 # Add storage class to PVC
 apiVersion: v1
@@ -502,7 +549,9 @@ metadata:
   name: data-pvc
 spec:
   accessModes:
+
     - ReadWriteOnce
+
   storageClassName: gp3  # Add this
   resources:
     requests:
@@ -510,6 +559,7 @@ spec:
 ```
 
 **Cause 2: No Matching PV**
+
 ```bash
 # Create PV manually (if not using dynamic provisioning)
 kubectl apply -f - <<EOF
@@ -521,7 +571,9 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
+
     - ReadWriteOnce
+
   persistentVolumeReclaimPolicy: Retain
   storageClassName: manual
   hostPath:
@@ -530,6 +582,7 @@ EOF
 ```
 
 **Cause 3: Insufficient Storage**
+
 ```bash
 # Check available storage
 kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage,STATUS:.status.phase
@@ -538,12 +591,12 @@ kubectl get pv -o custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.sto
 kubectl patch pvc ${PVC_NAME} -n production -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
 ```
 
-
 #### Issue 2: Multi-Attach Error
 
 **Problem**: Volume cannot be attached to multiple nodes (ReadWriteOnce)
 
 **Diagnosis**:
+
 ```bash
 # Check volume attachment
 kubectl get volumeattachment | grep ${PV_NAME}
@@ -558,6 +611,7 @@ kubectl get pod ${POD_NAME} -n production -o jsonpath='{.spec.nodeName}'
 **Solutions**:
 
 **Option 1: Use ReadWriteMany (if supported)**
+
 ```yaml
 # Change access mode
 apiVersion: v1
@@ -566,7 +620,9 @@ metadata:
   name: shared-data
 spec:
   accessModes:
+
     - ReadWriteMany  # Changed from ReadWriteOnce
+
   storageClassName: efs  # Use EFS for RWX
   resources:
     requests:
@@ -574,6 +630,7 @@ spec:
 ```
 
 **Option 2: Force Detach and Reattach**
+
 ```bash
 # Delete the pod to force detach
 kubectl delete pod ${POD_NAME} -n production --grace-period=0 --force
@@ -585,6 +642,7 @@ kubectl get volumeattachment --watch
 ```
 
 **Option 3: Use Pod Affinity to Same Node**
+
 ```yaml
 # Ensure pods using same volume run on same node
 spec:
@@ -593,21 +651,27 @@ spec:
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
+
           - labelSelector:
+
               matchExpressions:
+
               - key: app
+
                 operator: In
                 values:
+
                 - ecommerce-backend
+
             topologyKey: kubernetes.io/hostname
 ```
-
 
 #### Issue 3: Volume Mount Failures
 
 **Problem**: Volume cannot be mounted to pod
 
 **Diagnosis**:
+
 ```bash
 # Check mount errors
 kubectl describe pod ${POD_NAME} -n production | grep -A 20 "Events:"
@@ -622,6 +686,7 @@ kubectl logs -n kube-system -l app=ebs-csi-controller
 **Solutions**:
 
 **Option 1: Fix Permissions**
+
 ```yaml
 # Add security context
 spec:
@@ -631,13 +696,18 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       containers:
+
       - name: app
+
         volumeMounts:
+
         - name: data
+
           mountPath: /data
 ```
 
 **Option 2: Recreate PVC**
+
 ```bash
 # Backup data if needed
 kubectl exec ${POD_NAME} -n production -- tar czf /tmp/backup.tar.gz /data
@@ -651,6 +721,7 @@ kubectl exec ${POD_NAME} -n production -- tar xzf /tmp/backup.tar.gz -C /
 ```
 
 **Option 3: Check Node Kubelet**
+
 ```bash
 # Check kubelet logs on node
 ssh ${NODE_IP}
@@ -660,10 +731,10 @@ journalctl -u kubelet -f | grep -i volume
 systemctl restart kubelet
 ```
 
-
 ### Volume Expansion
 
 **Enable Volume Expansion**:
+
 ```yaml
 # Storage class with expansion enabled
 apiVersion: storage.k8s.io/v1
@@ -679,6 +750,7 @@ parameters:
 ```
 
 **Expand PVC**:
+
 ```bash
 # Edit PVC to increase size
 kubectl patch pvc ${PVC_NAME} -n production -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
@@ -705,7 +777,6 @@ ConfigMaps and Secrets provide configuration and sensitive data to pods. Mountin
 - Application configuration not loading
 - Environment variables missing
 - File mounts empty or incorrect
-
 
 ### Diagnostic Procedures
 
@@ -760,7 +831,6 @@ kubectl exec ${POD_NAME} -n production -- cat /etc/config/application.yml
 kubectl exec ${POD_NAME} -n production -- printenv | sort
 ```
 
-
 ### Common ConfigMap/Secret Issues and Solutions
 
 #### Issue 1: ConfigMap/Secret Not Found
@@ -768,6 +838,7 @@ kubectl exec ${POD_NAME} -n production -- printenv | sort
 **Problem**: Referenced ConfigMap or Secret doesn't exist
 
 **Diagnosis**:
+
 ```bash
 # Check if ConfigMap exists
 kubectl get configmap ${CONFIGMAP_NAME} -n production
@@ -779,6 +850,7 @@ kubectl describe pod ${POD_NAME} -n production | grep -i "configmap\|secret"
 **Solutions**:
 
 **Option 1: Create Missing ConfigMap**
+
 ```bash
 # Create from literal values
 kubectl create configmap app-config -n production \
@@ -795,6 +867,7 @@ kubectl create configmap app-config -n production \
 ```
 
 **Option 2: Create Missing Secret**
+
 ```bash
 # Create from literal values
 kubectl create secret generic db-credentials -n production \
@@ -814,24 +887,29 @@ kubectl create secret docker-registry ecr-secret -n production \
 ```
 
 **Option 3: Fix Reference in Deployment**
+
 ```yaml
 # Correct the ConfigMap name
 spec:
   template:
     spec:
       containers:
+
       - name: app
+
         envFrom:
+
         - configMapRef:
+
             name: app-config  # Ensure this matches actual ConfigMap name
 ```
-
 
 #### Issue 2: ConfigMap/Secret Not Updating
 
 **Problem**: Changes to ConfigMap/Secret not reflected in running pods
 
 **Diagnosis**:
+
 ```bash
 # Check ConfigMap version
 kubectl get configmap ${CONFIGMAP_NAME} -n production -o yaml | grep resourceVersion
@@ -846,6 +924,7 @@ kubectl get pod ${POD_NAME} -n production -o yaml | grep subPath
 **Solutions**:
 
 **Option 1: Restart Pods**
+
 ```bash
 # Rolling restart
 kubectl rollout restart deployment/${DEPLOYMENT_NAME} -n production
@@ -859,6 +938,7 @@ kubectl scale deployment/${DEPLOYMENT_NAME} --replicas=3 -n production
 ```
 
 **Option 2: Use Reloader (Automatic Restart)**
+
 ```bash
 # Install Reloader
 kubectl apply -f https://raw.githubusercontent.com/stakater/Reloader/master/deployments/kubernetes/reloader.yaml
@@ -869,15 +949,19 @@ kubectl annotate deployment ${DEPLOYMENT_NAME} -n production \
 ```
 
 **Option 3: Avoid subPath**
+
 ```yaml
 # Instead of subPath, mount entire ConfigMap
 volumeMounts:
+
 - name: config
+
   mountPath: /etc/config
   # Don't use subPath - it prevents updates
 ```
 
 **Option 4: Use Immutable ConfigMaps**
+
 ```yaml
 # Create new ConfigMap with version
 apiVersion: v1
@@ -894,17 +978,19 @@ spec:
   template:
     spec:
       volumes:
+
       - name: config
+
         configMap:
           name: app-config-v2  # Updated reference
 ```
-
 
 #### Issue 3: Permission Denied on Mounted Files
 
 **Problem**: Application cannot read mounted ConfigMap/Secret files
 
 **Diagnosis**:
+
 ```bash
 # Check file permissions
 kubectl exec ${POD_NAME} -n production -- ls -la /etc/config
@@ -919,21 +1005,26 @@ kubectl exec ${POD_NAME} -n production -- id
 **Solutions**:
 
 **Option 1: Set Default Mode**
+
 ```yaml
 # Set file permissions
 volumes:
+
 - name: config
+
   configMap:
     name: app-config
     defaultMode: 0644  # rw-r--r--
 
 - name: secret
+
   secret:
     secretName: db-credentials
     defaultMode: 0400  # r--------
 ```
 
 **Option 2: Set Security Context**
+
 ```yaml
 # Run as specific user
 spec:
@@ -944,27 +1035,36 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
       containers:
+
       - name: app
+
 ```
 
 **Option 3: Use Init Container to Fix Permissions**
+
 ```yaml
 # Copy and fix permissions
 initContainers:
+
 - name: fix-permissions
+
   image: busybox
   command: ['sh', '-c', 'cp /tmp/config/* /etc/config/ && chmod 644 /etc/config/*']
   volumeMounts:
+
   - name: config-source
+
     mountPath: /tmp/config
+
   - name: config-writable
+
     mountPath: /etc/config
 ```
-
 
 ### Best Practices
 
 **ConfigMap Management**:
+
 ```yaml
 # Use labels for versioning
 apiVersion: v1
@@ -981,6 +1081,7 @@ data:
 ```
 
 **Secret Management**:
+
 ```bash
 # Use external secret management
 # Install External Secrets Operator
@@ -1015,7 +1116,9 @@ spec:
   target:
     name: db-credentials
   data:
+
   - secretKey: password
+
     remoteRef:
       key: prod/database/password
 EOF
@@ -1036,7 +1139,6 @@ Service discovery issues prevent pods from communicating with each other through
 - "Service not found" errors
 - Intermittent connectivity issues
 - Load balancing not working
-
 
 ### Diagnostic Procedures
 
@@ -1090,6 +1192,7 @@ kubectl logs -n kube-system -l k8s-app=kube-dns
 **Problem**: Service has no endpoints (no pods match selector)
 
 **Solution**:
+
 ```bash
 # Fix pod labels to match service selector
 kubectl label pods -l app=backend app=ecommerce-backend -n production --overwrite
@@ -1103,6 +1206,7 @@ kubectl patch svc ${SERVICE_NAME} -n production -p '{"spec":{"selector":{"app":"
 **Problem**: Cannot resolve service names
 
 **Solution**:
+
 ```bash
 # Restart CoreDNS
 kubectl rollout restart deployment/coredns -n kube-system
@@ -1128,7 +1232,6 @@ HPA automatically scales pods based on metrics. Issues can cause under or over-p
 - Excessive scaling (flapping)
 - "unable to get metrics" errors
 - HPA showing "unknown" status
-
 
 ### Diagnostic Procedures
 
@@ -1156,6 +1259,7 @@ kubectl get events -n production --field-selector involvedObject.name=${HPA_NAME
 #### Issue 1: Metrics Server Not Available
 
 **Solution**:
+
 ```bash
 # Install metrics server
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
@@ -1167,13 +1271,16 @@ kubectl patch deployment metrics-server -n kube-system --type='json' -p='[{"op":
 #### Issue 2: Resource Requests Not Set
 
 **Solution**:
+
 ```yaml
 # Add resource requests (required for HPA)
 spec:
   template:
     spec:
       containers:
+
       - name: app
+
         resources:
           requests:
             cpu: 500m
@@ -1186,6 +1293,7 @@ spec:
 #### Issue 3: HPA Flapping
 
 **Solution**:
+
 ```yaml
 # Adjust HPA behavior
 apiVersion: autoscaling/v2
@@ -1200,7 +1308,9 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
@@ -1210,13 +1320,17 @@ spec:
     scaleDown:
       stabilizationWindowSeconds: 300  # Wait 5 min before scaling down
       policies:
+
       - type: Percent
+
         value: 50
         periodSeconds: 60
     scaleUp:
       stabilizationWindowSeconds: 0
       policies:
+
       - type: Percent
+
         value: 100
         periodSeconds: 15
 ```
@@ -1235,7 +1349,6 @@ Cluster Autoscaler automatically adjusts the number of nodes. Issues can cause r
 - Nodes not scaling up
 - Empty nodes not scaling down
 - "scale up failed" errors
-
 
 ### Diagnostic Procedures
 
@@ -1258,6 +1371,7 @@ kubectl get nodes -o custom-columns=NAME:.metadata.name,INSTANCE-TYPE:.metadata.
 #### Issue 1: Autoscaler Not Scaling Up
 
 **Diagnosis**:
+
 ```bash
 # Check autoscaler logs for scale-up decisions
 kubectl logs -n kube-system -l app=cluster-autoscaler | grep -i "scale up"
@@ -1267,6 +1381,7 @@ aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names ${ASG_NA
 ```
 
 **Solutions**:
+
 ```bash
 # Increase max size
 aws autoscaling update-auto-scaling-group \
@@ -1281,6 +1396,7 @@ kubectl edit deployment cluster-autoscaler -n kube-system
 #### Issue 2: Nodes Not Scaling Down
 
 **Diagnosis**:
+
 ```bash
 # Check why nodes aren't scaling down
 kubectl logs -n kube-system -l app=cluster-autoscaler | grep -i "scale down"
@@ -1290,6 +1406,7 @@ kubectl describe node ${NODE_NAME} | grep -i "scale-down"
 ```
 
 **Solutions**:
+
 ```bash
 # Remove scale-down prevention annotation
 kubectl annotate node ${NODE_NAME} cluster-autoscaler.kubernetes.io/scale-down-disabled-
@@ -1327,7 +1444,6 @@ Nodes in NotReady state cannot run pods, reducing cluster capacity and potential
 - "node not found" errors
 - Kubelet not responding
 
-
 ### Diagnostic Procedures
 
 ```bash
@@ -1354,6 +1470,7 @@ kubectl top node ${NODE_NAME}
 #### Issue 1: Disk Pressure
 
 **Diagnosis**:
+
 ```bash
 # Check disk usage on node
 ssh ${NODE_IP}
@@ -1363,6 +1480,7 @@ du -sh /var/lib/kubelet/* | sort -rh | head -10
 ```
 
 **Solutions**:
+
 ```bash
 # Clean up Docker images
 docker system prune -a -f
@@ -1381,6 +1499,7 @@ aws ec2 modify-volume --volume-id ${VOLUME_ID} --size 100
 #### Issue 2: Memory Pressure
 
 **Diagnosis**:
+
 ```bash
 # Check memory usage
 ssh ${NODE_IP}
@@ -1392,6 +1511,7 @@ dmesg | grep -i "out of memory"
 ```
 
 **Solutions**:
+
 ```bash
 # Add more nodes
 kubectl scale deployment cluster-autoscaler --replicas=1 -n kube-system
@@ -1406,6 +1526,7 @@ kubectl drain ${NODE_NAME} --ignore-daemonsets --delete-emptydir-data
 #### Issue 3: Kubelet Not Running
 
 **Diagnosis**:
+
 ```bash
 # Check kubelet status
 ssh ${NODE_IP}
@@ -1414,6 +1535,7 @@ journalctl -u kubelet --no-pager | tail -100
 ```
 
 **Solutions**:
+
 ```bash
 # Restart kubelet
 systemctl restart kubelet
@@ -1444,7 +1566,6 @@ etcd is the key-value store for Kubernetes cluster state. Performance issues can
 - High etcd latency
 - Cluster state inconsistencies
 - Leader election failures
-
 
 ### Diagnostic Procedures
 
@@ -1477,6 +1598,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
 #### Issue 1: High Latency
 
 **Diagnosis**:
+
 ```bash
 # Check etcd latency
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1492,6 +1614,7 @@ iostat -x 1 10
 ```
 
 **Solutions**:
+
 ```bash
 # Use faster disks (SSD/NVMe)
 # For AWS, use io2 or gp3 volumes
@@ -1521,6 +1644,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
 #### Issue 2: Database Size Too Large
 
 **Diagnosis**:
+
 ```bash
 # Check etcd database size
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1540,6 +1664,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
 ```
 
 **Solutions**:
+
 ```bash
 # Enable automatic compaction
 kubectl edit pod etcd-${MASTER_NODE} -n kube-system
@@ -1560,6 +1685,7 @@ ETCDCTL_API=3 etcdctl snapshot restore /tmp/etcd-backup.db --data-dir=/var/lib/e
 #### Issue 3: Split Brain / Quorum Loss
 
 **Diagnosis**:
+
 ```bash
 # Check member list
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1579,6 +1705,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
 ```
 
 **Solutions**:
+
 ```bash
 # Remove unhealthy member
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1600,6 +1727,7 @@ kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
 ### etcd Backup and Restore
 
 **Backup**:
+
 ```bash
 # Create snapshot
 kubectl exec -n kube-system etcd-${MASTER_NODE} -- etcdctl \
@@ -1614,6 +1742,7 @@ kubectl cp kube-system/etcd-${MASTER_NODE}:/tmp/etcd-backup-*.db ./etcd-backup.d
 ```
 
 **Restore**:
+
 ```bash
 # Stop API server
 systemctl stop kube-apiserver
@@ -1642,9 +1771,13 @@ systemctl start kube-apiserver
 ```yaml
 # Prometheus alert rules
 groups:
+
 - name: kubernetes-alerts
+
   rules:
+
   - alert: PodsPendingTooLong
+
     expr: kube_pod_status_phase{phase="Pending"} > 0
     for: 5m
     labels:
@@ -1653,6 +1786,7 @@ groups:
       summary: "Pods pending for more than 5 minutes"
 
   - alert: NodeNotReady
+
     expr: kube_node_status_condition{condition="Ready",status="true"} == 0
     for: 5m
     labels:
@@ -1661,6 +1795,7 @@ groups:
       summary: "Node {{ $labels.node }} is not ready"
 
   - alert: PVCPending
+
     expr: kube_persistentvolumeclaim_status_phase{phase="Pending"} > 0
     for: 10m
     labels:
@@ -1669,6 +1804,7 @@ groups:
       summary: "PVC {{ $labels.persistentvolumeclaim }} pending for 10+ minutes"
 
   - alert: HPAMaxedOut
+
     expr: kube_horizontalpodautoscaler_status_current_replicas >= kube_horizontalpodautoscaler_spec_max_replicas
     for: 15m
     labels:
@@ -1677,6 +1813,7 @@ groups:
       summary: "HPA {{ $labels.horizontalpodautoscaler }} at max replicas"
 
   - alert: etcdHighLatency
+
     expr: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[5m])) > 0.5
     for: 10m
     labels:
@@ -1701,4 +1838,3 @@ groups:
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  
 **Review Cycle**: Monthly
-

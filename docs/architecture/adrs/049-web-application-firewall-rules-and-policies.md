@@ -43,18 +43,21 @@ The platform needs a Web Application Firewall (WAF) that can:
 ### Business Context
 
 **Business Drivers**:
+
 - **Data Protection**: Protect customer PII and payment information
 - **Regulatory Compliance**: PCI-DSS, GDPR requirements
 - **Brand Reputation**: Security breaches damage customer trust
 - **Revenue Protection**: Prevent bot-driven inventory hoarding
 
 **Taiwan-Specific Context**:
+
 - **Frequent Web Attacks**: Taiwan experiences high volume of application-layer attacks
 - **E-Commerce Targeting**: Online shopping platforms are prime targets
 - **Bot Activity**: High bot traffic from automated scraping and fraud attempts
 - **Credential Stuffing**: Frequent attempts using leaked credentials
 
 **Constraints**:
+
 - Budget: ~$500/month for WAF (included in DDoS protection budget)
 - Must not impact legitimate user experience
 - Must integrate with CloudFront and ALB
@@ -63,6 +66,7 @@ The platform needs a Web Application Firewall (WAF) that can:
 ### Technical Context
 
 **Current State**:
+
 - CloudFront distribution configured
 - AWS Shield Advanced enabled
 - No WAF rules configured
@@ -70,6 +74,7 @@ The platform needs a Web Application Firewall (WAF) that can:
 - No bot protection
 
 **Attack Vectors**:
+
 - **SQL Injection**: Login, search, product filters
 - **XSS**: Product reviews, user profiles, comments
 - **CSRF**: State-changing operations (checkout, profile updates)
@@ -95,6 +100,7 @@ The platform needs a Web Application Firewall (WAF) that can:
 **Description**: AWS WAF with combination of AWS Managed Rules and custom rules
 
 **Rule Sets**:
+
 - AWS Managed Rules (Core Rule Set, Known Bad Inputs, SQL Database, OWASP Top 10)
 - Custom rate limiting rules
 - Custom geo-blocking rules
@@ -102,6 +108,7 @@ The platform needs a Web Application Firewall (WAF) that can:
 - Custom application-specific rules
 
 **Pros**:
+
 - ✅ **Comprehensive Protection**: Covers OWASP Top 10 and common attacks
 - ✅ **Managed Rules**: AWS maintains and updates rules automatically
 - ✅ **Custom Flexibility**: Can add application-specific rules
@@ -112,6 +119,7 @@ The platform needs a Web Application Firewall (WAF) that can:
 - ✅ **Logging**: Comprehensive logging to S3 and CloudWatch
 
 **Cons**:
+
 - ⚠️ **Rule Tuning**: Requires initial tuning to minimize false positives
 - ⚠️ **Complexity**: Multiple rule sets to manage
 - ⚠️ **Learning Curve**: Team needs training on WAF configuration
@@ -125,11 +133,13 @@ The platform needs a Web Application Firewall (WAF) that can:
 **Description**: Use only AWS Managed Rules without custom rules
 
 **Pros**:
+
 - ✅ **Simple Setup**: Minimal configuration required
 - ✅ **Automatic Updates**: AWS maintains rules
 - ✅ **Lower Cost**: Fewer rules = lower cost
 
 **Cons**:
+
 - ❌ **Limited Protection**: No application-specific rules
 - ❌ **No Rate Limiting**: Cannot implement custom rate limits
 - ❌ **No Geo-Blocking**: Cannot block specific countries
@@ -144,11 +154,13 @@ The platform needs a Web Application Firewall (WAF) that can:
 **Description**: Use third-party WAF service
 
 **Pros**:
+
 - ✅ **Advanced Features**: Bot management, DDoS protection, CDN
 - ✅ **Specialized Protection**: WAF is core business
 - ✅ **Global Network**: Large edge network
 
 **Cons**:
+
 - ❌ **Higher Cost**: $1,000-5,000/month
 - ❌ **Vendor Lock-In**: Difficult to migrate
 - ❌ **Integration Complexity**: Requires DNS changes
@@ -163,10 +175,12 @@ The platform needs a Web Application Firewall (WAF) that can:
 **Description**: Self-hosted open-source WAF
 
 **Pros**:
+
 - ✅ **No Licensing Cost**: Open-source
 - ✅ **Full Control**: Complete customization
 
 **Cons**:
+
 - ❌ **Operational Overhead**: Requires dedicated team
 - ❌ **Maintenance Burden**: Manual rule updates
 - ❌ **Scalability Challenges**: Difficult to scale
@@ -195,6 +209,7 @@ AWS WAF with managed and custom rules was selected for the following reasons:
 **WAF Rule Architecture**:
 
 **Rule Priority Order** (evaluated in order):
+
 1. **Allow List** (Priority 1-100): Whitelist known good IPs/User-Agents
 2. **Block List** (Priority 101-200): Blacklist known malicious IPs
 3. **Rate Limiting** (Priority 201-300): Prevent abuse
@@ -224,6 +239,7 @@ AWS WAF with managed and custom rules was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All public-facing endpoints (web, mobile, API)
 - CloudFront distribution
 - Application Load Balancer
@@ -303,12 +319,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - False positive rate > 1% (legitimate traffic blocked)
 - Performance degradation > 10ms latency
 - Service outage caused by WAF rules
 - Cost overrun > 50% of budget
 
 **Rollback Steps**:
+
 1. Change rule actions from Block to Count (monitoring mode)
 2. Disable specific rules causing issues
 3. Remove WAF association from CloudFront
@@ -331,6 +349,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `AllowedRequests` (count)
 - `BlockedRequests` (count)
 - `CountedRequests` (count)
@@ -338,6 +357,7 @@ Affects:
 - `SampledRequests` (sample of blocked requests)
 
 **Custom Metrics**:
+
 - Block rate by rule
 - Block rate by country
 - Block rate by IP
@@ -345,12 +365,14 @@ Affects:
 - Rate limiting triggers
 
 **Alerts**:
+
 - **P0 Critical**: Block rate > 50% (potential false positives or major attack)
 - **P1 High**: Block rate > 10% (investigate for false positives)
 - **P2 Medium**: Unusual traffic patterns
 - **P3 Low**: New attack patterns detected
 
 **Security Monitoring**:
+
 - Real-time WAF log analysis (Kinesis + Lambda)
 - Attack pattern analysis (Athena queries on S3 logs)
 - Geo-location analysis of blocked requests
@@ -359,6 +381,7 @@ Affects:
 - XSS attempt analysis
 
 **Review Schedule**:
+
 - **Real-Time**: 24/7 monitoring dashboard
 - **Daily**: Review blocked requests and false positives
 - **Weekly**: Analyze attack patterns and tune rules
@@ -388,11 +411,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual rule tuning (acceptable initially)
 2. No automated false positive detection
 3. Limited bot detection (basic User-Agent filtering)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated rule tuning based on traffic patterns
 - **Q3 2026**: Implement advanced bot detection (AWS WAF Bot Control)
 - **Q4 2026**: Implement machine learning-based anomaly detection
@@ -409,29 +434,35 @@ Affects:
 ### AWS Managed Rule Groups
 
 **Core Rule Set (CRS)**:
+
 - General web application protection
 - Covers common vulnerabilities
 - Recommended for all applications
 
 **Known Bad Inputs**:
+
 - Blocks requests with known malicious patterns
 - Protects against common exploits
 
 **SQL Database Protection**:
+
 - Protects against SQL injection attacks
 - Covers MySQL, PostgreSQL, Oracle, SQL Server
 
 **Linux/Windows Operating System**:
+
 - Protects against OS-specific exploits
 - Blocks command injection attempts
 
 **PHP/WordPress Application**:
+
 - Protects against PHP and WordPress vulnerabilities
 - Blocks common CMS exploits
 
 ### Rate Limiting Configuration
 
 **Global Rate Limiting**:
+
 ```json
 {
   "Name": "GlobalRateLimit",
@@ -449,6 +480,7 @@ Affects:
 ```
 
 **Per-IP Rate Limiting**:
+
 ```json
 {
   "Name": "PerIPRateLimit",
@@ -466,6 +498,7 @@ Affects:
 ```
 
 **Endpoint-Specific Rate Limiting (Login)**:
+
 ```json
 {
   "Name": "LoginRateLimit",
@@ -494,6 +527,7 @@ Affects:
 ### Geo-Blocking Configuration
 
 **Block High-Risk Countries** (Optional):
+
 ```json
 {
   "Name": "GeoBlockHighRisk",
@@ -514,6 +548,7 @@ Affects:
 ### Custom Rule Examples
 
 **Block Known Malicious IPs**:
+
 ```json
 {
   "Name": "BlockMaliciousIPs",
@@ -530,6 +565,7 @@ Affects:
 ```
 
 **Block Bad User-Agents**:
+
 ```json
 {
   "Name": "BlockBadUserAgents",
@@ -554,17 +590,20 @@ Affects:
 ### WAF Logging Configuration
 
 **S3 Logging**:
+
 - Bucket: `waf-logs-{account-id}-{region}`
 - Prefix: `AWSLogs/{account-id}/WAFLogs/{region}/`
 - Retention: 90 days
 - Format: JSON
 
 **CloudWatch Logs**:
+
 - Log Group: `/aws/waf/cloudfront`
 - Retention: 30 days
 - Metrics: Extracted from logs
 
 **Kinesis Data Firehose**:
+
 - Real-time log streaming
 - Lambda processing for alerts
 - S3 backup
@@ -572,6 +611,7 @@ Affects:
 ### Cost Breakdown
 
 **Monthly Costs** (for 100M requests):
+
 - Web ACL: $5/month
 - Rules: $1/rule/month × 20 rules = $20/month
 - Requests: $0.60/million requests × 100M = $60/month
@@ -580,6 +620,7 @@ Affects:
 - **Total**: ~$185/month (well within $500 budget)
 
 **Cost Optimization**:
+
 - Use Count mode for non-critical rules (no charge)
 - Optimize rule order (evaluate cheaper rules first)
 - Use sampling for logging (reduce log volume)
@@ -587,6 +628,7 @@ Affects:
 ### Emergency Procedures
 
 **During Active Attack**:
+
 1. **Immediate**: Verify WAF is blocking malicious requests
 2. **5 minutes**: Analyze attack patterns in WAF logs
 3. **10 minutes**: Adjust rate limits if needed
@@ -595,6 +637,7 @@ Affects:
 6. **Post-Attack**: Conduct post-mortem and update rules
 
 **False Positive Response**:
+
 1. **Immediate**: Identify affected rule
 2. **5 minutes**: Change rule action from Block to Count
 3. **10 minutes**: Analyze blocked requests

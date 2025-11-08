@@ -19,6 +19,7 @@ Our API follows REST (Representational State Transfer) architectural principles:
 ### Design Guidelines
 
 **URL Naming Conventions**:
+
 - Use nouns, not verbs: `/customers` not `/getCustomers`
 - Use plural nouns: `/customers` not `/customer`
 - Use kebab-case: `/order-items` not `/orderItems`
@@ -26,6 +27,7 @@ Our API follows REST (Representational State Transfer) architectural principles:
 - Keep URLs simple and intuitive
 
 **HTTP Methods**:
+
 - `GET`: Retrieve resource(s) - Safe and idempotent
 - `POST`: Create new resource - Not idempotent
 - `PUT`: Update entire resource - Idempotent
@@ -33,6 +35,7 @@ Our API follows REST (Representational State Transfer) architectural principles:
 - `DELETE`: Remove resource - Idempotent
 
 **HTTP Status Codes**:
+
 - `200 OK`: Successful GET, PUT, PATCH
 - `201 Created`: Successful POST
 - `204 No Content`: Successful DELETE
@@ -49,17 +52,20 @@ Our API follows REST (Representational State Transfer) architectural principles:
 ### Base URLs
 
 **Production**:
-```
+
+```yaml
 https://api.ecommerce.com
 ```
 
 **Staging**:
-```
+
+```yaml
 https://api-staging.ecommerce.com
 ```
 
 **Development**:
-```
+
+```yaml
 http://localhost:8080
 ```
 
@@ -67,18 +73,20 @@ http://localhost:8080
 
 The API uses URL-based versioning to ensure backward compatibility:
 
-```
+```text
 /api/v1/customers
 /api/v2/customers
 ```
 
 **Versioning Strategy**:
+
 - Major version in URL path (`v1`, `v2`)
 - Backward compatibility maintained for at least 2 versions
 - Deprecation warnings provided 6 months before removal
 - Breaking changes require new major version
 
 **Deprecation Headers**:
+
 ```http
 Deprecation: true
 Sunset: 2026-12-31T23:59:59Z
@@ -108,6 +116,7 @@ The API is organized around the following bounded contexts:
 All API responses follow a consistent format:
 
 **Success Response**:
+
 ```json
 {
   "data": {
@@ -124,6 +133,7 @@ All API responses follow a consistent format:
 ```
 
 **Error Response**:
+
 ```json
 {
   "errors": [
@@ -147,11 +157,13 @@ All API responses follow a consistent format:
 List endpoints support pagination using query parameters:
 
 **Request**:
+
 ```http
 GET /api/v1/customers?page=0&size=20&sort=createdAt,desc
 ```
 
 **Response**:
+
 ```json
 {
   "data": {
@@ -179,6 +191,7 @@ GET /api/v1/customers?page=0&size=20&sort=createdAt,desc
 ```
 
 **Pagination Parameters**:
+
 - `page`: Page number (0-based, default: 0)
 - `size`: Page size (default: 20, max: 100)
 - `sort`: Sort field and direction (e.g., `createdAt,desc`)
@@ -190,12 +203,14 @@ GET /api/v1/customers?page=0&size=20&sort=createdAt,desc
 Access interactive API documentation at:
 
 **Development**:
-```
+
+```yaml
 http://localhost:8080/swagger-ui.html
 ```
 
 **Production**:
-```
+
+```yaml
 https://api.ecommerce.com/swagger-ui.html
 ```
 
@@ -204,12 +219,14 @@ https://api.ecommerce.com/swagger-ui.html
 Download the OpenAPI 3.0 specification:
 
 **JSON Format**:
-```
+
+```yaml
 http://localhost:8080/v3/api-docs
 ```
 
 **YAML Format**:
-```
+
+```yaml
 http://localhost:8080/v3/api-docs.yaml
 ```
 
@@ -243,6 +260,7 @@ http://localhost:8080/v3/api-docs.yaml
 ### Quick Start
 
 1. **Obtain Authentication Token**:
+
    ```bash
    curl -X POST https://api.ecommerce.com/api/v1/auth/login \
      -H "Content-Type: application/json" \
@@ -253,12 +271,14 @@ http://localhost:8080/v3/api-docs.yaml
    ```
 
 2. **Make Authenticated Request**:
+
    ```bash
    curl -X GET https://api.ecommerce.com/api/v1/customers/me \
      -H "Authorization: Bearer YOUR_JWT_TOKEN"
    ```
 
 3. **Create a Resource**:
+
    ```bash
    curl -X POST https://api.ecommerce.com/api/v1/customers \
      -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -277,13 +297,16 @@ http://localhost:8080/v3/api-docs.yaml
 ### Testing Tools
 
 **Postman Collection**:
+
 - Download: [Postman Collection](postman/ecommerce-api.json)
 - Import into Postman for easy testing
 
 **curl Examples**:
+
 - See individual endpoint documentation for curl examples
 
 **Client SDKs**:
+
 - Generate client SDKs from OpenAPI specification
 - Supported languages: Java, JavaScript, Python, Go
 
@@ -292,11 +315,13 @@ http://localhost:8080/v3/api-docs.yaml
 API requests are rate-limited to ensure fair usage:
 
 **Limits**:
+
 - Authenticated users: 1000 requests per hour
 - Unauthenticated users: 100 requests per hour
 - Burst limit: 20 requests per second
 
 **Rate Limit Headers**:
+
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 999
@@ -304,6 +329,7 @@ X-RateLimit-Reset: 1635789600
 ```
 
 **Rate Limit Exceeded Response**:
+
 ```http
 HTTP/1.1 429 Too Many Requests
 Retry-After: 3600
@@ -323,14 +349,17 @@ Retry-After: 3600
 Cross-Origin Resource Sharing (CORS) is configured to allow requests from approved origins:
 
 **Allowed Origins**:
+
 - `https://www.ecommerce.com`
 - `https://admin.ecommerce.com`
 - `http://localhost:3000` (development)
 
 **Allowed Methods**:
+
 - GET, POST, PUT, PATCH, DELETE, OPTIONS
 
 **Allowed Headers**:
+
 - Authorization, Content-Type, X-Request-ID
 
 ## Best Practices
@@ -364,10 +393,10 @@ Cross-Origin Resource Sharing (CORS) is configured to allow requests from approv
 
 ### Support Channels
 
-- **Email**: api-support@ecommerce.com
-- **Documentation**: https://docs.ecommerce.com
-- **Status Page**: https://status.ecommerce.com
-- **GitHub Issues**: https://github.com/ecommerce/api/issues
+- **Email**: <api-support@ecommerce.com>
+- **Documentation**: <https://docs.ecommerce.com>
+- **Status Page**: <https://status.ecommerce.com>
+- **GitHub Issues**: <https://github.com/ecommerce/api/issues>
 
 ### Related Documentation
 

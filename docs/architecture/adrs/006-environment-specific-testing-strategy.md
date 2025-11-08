@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a comprehensive testing strategy tha
 ### Business Context
 
 **Business Drivers**:
+
 - Need for high-quality, reliable software (99.9% uptime SLA)
 - Rapid feature development without breaking existing functionality
 - Regulatory compliance requiring thorough testing
@@ -41,6 +42,7 @@ The Enterprise E-Commerce Platform requires a comprehensive testing strategy tha
 - Need for fast feedback loops (< 5 minutes for pre-commit tests)
 
 **Constraints**:
+
 - Development team has strong Java/JUnit experience
 - Limited experience with BDD/Cucumber
 - CI/CD pipeline must complete in < 15 minutes
@@ -50,6 +52,7 @@ The Enterprise E-Commerce Platform requires a comprehensive testing strategy tha
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture with clear layer boundaries (ADR-002)
 - Domain-Driven Design tactical patterns
@@ -57,6 +60,7 @@ The Enterprise E-Commerce Platform requires a comprehensive testing strategy tha
 - PostgreSQL database (ADR-001)
 
 **Requirements**:
+
 - Test pyramid approach (80% unit, 15% integration, 5% E2E)
 - Fast unit tests (< 50ms, < 5MB per test)
 - Moderate integration tests (< 500ms, < 50MB per test)
@@ -83,32 +87,39 @@ The Enterprise E-Commerce Platform requires a comprehensive testing strategy tha
 **Description**: Layered testing approach with different test types optimized for different purposes
 
 **Test Types**:
-```
+
+```text
 Unit Tests (80%):
+
 - @ExtendWith(MockitoExtension.class)
 - No Spring context
 - Test domain logic in isolation
 - < 50ms, < 5MB per test
 
 Integration Tests (15%):
+
 - @DataJpaTest, @WebMvcTest, @JsonTest
 - Partial Spring context
 - Test infrastructure components
 - < 500ms, < 50MB per test
 
 E2E Tests (5%):
+
 - @SpringBootTest(webEnvironment = RANDOM_PORT)
 - Full Spring context
 - Test complete workflows
 - < 3s, < 500MB per test
 
 BDD Tests:
+
 - Cucumber with Gherkin scenarios
 - Business-readable specifications
 - Executable documentation
+
 ```
 
 **Pros**:
+
 - ✅ Fast feedback (unit tests run in seconds)
 - ✅ Comprehensive coverage at all levels
 - ✅ Aligns with test pyramid best practices
@@ -119,6 +130,7 @@ BDD Tests:
 - ✅ Works well with Hexagonal Architecture
 
 **Cons**:
+
 - ⚠️ Multiple test frameworks to learn
 - ⚠️ Need to maintain test performance standards
 - ⚠️ BDD learning curve for team
@@ -132,11 +144,13 @@ BDD Tests:
 **Description**: Focus primarily on integration tests with full Spring context
 
 **Pros**:
+
 - ✅ Tests real system behavior
 - ✅ Simpler test setup
 - ✅ Catches integration issues
 
 **Cons**:
+
 - ❌ Slow feedback (minutes instead of seconds)
 - ❌ Difficult to isolate failures
 - ❌ High resource usage
@@ -152,10 +166,12 @@ BDD Tests:
 **Description**: Focus on end-to-end tests through UI/API
 
 **Pros**:
+
 - ✅ Tests complete user journeys
 - ✅ High confidence in system behavior
 
 **Cons**:
+
 - ❌ Very slow feedback (minutes to hours)
 - ❌ Brittle and hard to maintain
 - ❌ Difficult to debug failures
@@ -171,10 +187,12 @@ BDD Tests:
 **Description**: Rely primarily on manual QA testing
 
 **Pros**:
+
 - ✅ No test automation effort
 - ✅ Flexible exploratory testing
 
 **Cons**:
+
 - ❌ No fast feedback
 - ❌ Not repeatable
 - ❌ Expensive and slow
@@ -205,24 +223,28 @@ The environment-specific testing strategy with test pyramid was selected for the
 **Implementation Strategy**:
 
 **Unit Tests (80% of tests)**:
+
 - Test domain logic without any infrastructure
 - Use Mockito for dependencies
 - Run in milliseconds
 - No Spring context overhead
 
 **Integration Tests (15% of tests)**:
+
 - Test repository implementations with @DataJpaTest
 - Test REST controllers with @WebMvcTest
 - Test JSON serialization with @JsonTest
 - Use partial Spring context for efficiency
 
 **E2E Tests (5% of tests)**:
+
 - Test critical user journeys
 - Use full Spring context
 - Focus on smoke tests and happy paths
 - Run less frequently (pre-release)
 
 **BDD Tests (Cross-cutting)**:
+
 - Cucumber scenarios for business requirements
 - Executable specifications
 - Living documentation
@@ -249,6 +271,7 @@ The environment-specific testing strategy with test pyramid was selected for the
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (testing approach)
 - Development workflow (TDD/BDD)
 - CI/CD pipeline (test execution)
@@ -282,6 +305,7 @@ Affects:
   - Test utilities
 
 - [x] Configure Gradle test tasks
+
   ```bash
   ./gradlew quickTest        # Unit tests only (< 2 min)
   ./gradlew preCommitTest    # Unit + Integration (< 5 min)
@@ -357,12 +381,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Test execution time > 15 minutes
 - Developer productivity decreases > 30%
 - Test maintenance overhead > 20% of development time
 - Team unable to adopt after 8 weeks
 
 **Rollback Steps**:
+
 1. Simplify to integration tests only for critical paths
 2. Reduce BDD scope to essential scenarios
 3. Relax performance standards temporarily
@@ -387,6 +413,7 @@ Affects:
 ### Monitoring Plan
 
 **Test Performance Monitoring**:
+
 ```java
 @TestPerformanceExtension(maxExecutionTimeMs = 50, maxMemoryIncreaseMB = 5)
 @ExtendWith(MockitoExtension.class)
@@ -396,6 +423,7 @@ class CustomerUnitTest {
 ```
 
 **Metrics Tracked**:
+
 - Test execution time per test
 - Memory usage per test
 - Test success/failure rates
@@ -403,12 +431,14 @@ class CustomerUnitTest {
 - Flaky test detection
 
 **Alerts**:
+
 - Test execution time exceeds threshold
 - Coverage drops below 80%
 - Flaky tests detected
 - Performance regression detected
 
 **Review Schedule**:
+
 - Daily: Check test execution times in CI/CD
 - Weekly: Review test coverage reports
 - Monthly: Test strategy retrospective
@@ -437,12 +467,14 @@ class CustomerUnitTest {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some legacy code lacks unit tests (acceptable during migration)
 2. BDD scenarios not yet complete for all features (ongoing work)
 3. E2E test coverage limited to critical paths (acceptable trade-off)
 4. Test data management could be improved (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Achieve 90%+ unit test coverage
 - **Q2 2026**: Complete BDD scenarios for all user stories
 - **Q3 2026**: Improve test data management with builders
@@ -458,6 +490,7 @@ class CustomerUnitTest {
 ### Test Classification
 
 **Unit Tests**:
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class OrderTest {
@@ -480,6 +513,7 @@ class OrderTest {
 ```
 
 **Integration Tests**:
+
 ```java
 @DataJpaTest
 @ActiveProfiles("test")
@@ -505,6 +539,7 @@ class OrderRepositoryTest extends BaseIntegrationTest {
 ```
 
 **E2E Tests**:
+
 ```java
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -524,6 +559,7 @@ class OrderE2ETest extends BaseIntegrationTest {
 ```
 
 **BDD Tests**:
+
 ```gherkin
 Feature: Order Submission
   
@@ -646,14 +682,20 @@ jobs:
   quick-test:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
+
       - name: Run quick tests
+
         run: ./gradlew quickTest
+
       - name: Upload test results
+
         uses: actions/upload-artifact@v3
         with:
           name: test-results
@@ -663,30 +705,44 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
+
       - uses: actions/checkout@v3
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
+
       - name: Run pre-commit tests
+
         run: ./gradlew preCommitTest
+
       - name: Generate coverage report
+
         run: ./gradlew jacocoTestReport
+
       - name: Upload coverage to Codecov
+
         uses: codecov/codecov-action@v3
 
   full-test:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
+
       - uses: actions/checkout@v3
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
+
       - name: Run full test suite
+
         run: ./gradlew fullTest
+
       - name: Generate performance report
+
         run: ./gradlew generatePerformanceReport
 ```
 

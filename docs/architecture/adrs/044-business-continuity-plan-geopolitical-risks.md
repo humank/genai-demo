@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "security", "location"]
 Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical risks that could impact business continuity:
 
 **Geopolitical Risk Scenarios**:
+
 - **Taiwan Strait Tensions**: Military conflict or blockade
 - **Regional Conflicts**: Escalation affecting multiple regions
 - **Cyber Warfare**: State-sponsored attacks on infrastructure
@@ -31,6 +32,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 - **Political Instability**: Government changes affecting operations
 
 **Business Impact**:
+
 - Complete region unavailability (days to months)
 - Data access restrictions
 - Supply chain disruptions
@@ -39,6 +41,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 - Revenue loss
 
 **Current Gaps**:
+
 - No geopolitical risk assessment
 - No contingency plans for extended outages
 - Limited geographic diversity
@@ -48,6 +51,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 ### Business Context
 
 **Business Drivers**:
+
 - Business continuity (mandatory)
 - Customer trust and reliability
 - Regulatory compliance
@@ -55,6 +59,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 - Market expansion opportunities
 
 **Constraints**:
+
 - Budget: $100,000/year for BCP infrastructure
 - Must maintain 99.9% availability
 - Data sovereignty requirements
@@ -64,6 +69,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 ### Technical Context
 
 **Current State**:
+
 - Active-active in Taiwan and Tokyo
 - No third region
 - No geopolitical monitoring
@@ -71,6 +77,7 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 - Manual failover procedures
 
 **Requirements**:
+
 - Third region capability
 - Automated failover
 - Data sovereignty compliance
@@ -96,23 +103,29 @@ Active-active multi-region architecture in Taiwan and Tokyo faces geopolitical r
 **Description**: Add third region (Singapore) with geopolitical risk monitoring and automated response
 
 **Architecture**:
-```
+
+```text
 Primary Regions (Active-Active):
+
 - Taiwan (ap-northeast-1)
 - Tokyo (ap-northeast-1)
 
 Contingency Region (Warm Standby):
+
 - Singapore (ap-southeast-1)
 
 Geopolitical Monitoring:
+
 - Real-time risk assessment
 - Automated escalation
 - Failover automation
+
 ```
 
 **Risk Scenarios and Response**:
 
 **Scenario 1: Taiwan Region Unavailable (High Risk)**
+
 - **Trigger**: Military conflict, natural disaster, cyber attack
 - **Impact**: 50% capacity loss
 - **Response**:
@@ -123,6 +136,7 @@ Geopolitical Monitoring:
   5. Monitor situation and plan recovery
 
 **Scenario 2: Both Taiwan and Tokyo Unavailable (Low Risk)**
+
 - **Trigger**: Regional conflict, massive natural disaster
 - **Impact**: Complete primary region loss
 - **Response**:
@@ -133,6 +147,7 @@ Geopolitical Monitoring:
   5. Communicate with all stakeholders
 
 **Scenario 3: Cyber Warfare (Medium Risk)**
+
 - **Trigger**: State-sponsored DDoS, infrastructure attacks
 - **Impact**: Service degradation or outage
 - **Response**:
@@ -143,6 +158,7 @@ Geopolitical Monitoring:
   5. Coordinate with authorities
 
 **Scenario 4: Trade Restrictions (Low Risk)**
+
 - **Trigger**: Sanctions, embargoes
 - **Impact**: Operational restrictions
 - **Response**:
@@ -153,6 +169,7 @@ Geopolitical Monitoring:
   5. Explore alternative arrangements
 
 **Geopolitical Risk Monitoring**:
+
 ```typescript
 interface GeopoliticalRiskMonitor {
   sources: {
@@ -216,6 +233,7 @@ class GeopoliticalRiskAssessor {
 ```
 
 **Singapore Warm Standby Configuration**:
+
 ```typescript
 interface WarmStandbyConfig {
   infrastructure: {
@@ -245,6 +263,7 @@ interface WarmStandbyConfig {
 ```
 
 **BCP Activation Procedures**:
+
 ```typescript
 interface BCPActivation {
   phases: {
@@ -296,6 +315,7 @@ interface BCPActivation {
 ```
 
 **Communication Plan**:
+
 ```typescript
 interface CommunicationPlan {
   stakeholders: {
@@ -333,6 +353,7 @@ interface CommunicationPlan {
 ```
 
 **Pros**:
+
 - ✅ Geographic diversity
 - ✅ Automated risk monitoring
 - ✅ Fast failover capability
@@ -341,6 +362,7 @@ interface CommunicationPlan {
 - ✅ Compliance-ready
 
 **Cons**:
+
 - ⚠️ Additional region costs
 - ⚠️ Complexity
 - ⚠️ Maintenance overhead
@@ -354,10 +376,12 @@ interface CommunicationPlan {
 **Description**: Maintain current two regions with manual BCP procedures
 
 **Pros**:
+
 - ✅ Lower cost
 - ✅ Simpler operations
 
 **Cons**:
+
 - ❌ No geographic diversity
 - ❌ Manual procedures
 - ❌ Slower response
@@ -372,10 +396,12 @@ interface CommunicationPlan {
 **Description**: Deploy across AWS, Azure, and GCP
 
 **Pros**:
+
 - ✅ Maximum diversity
 - ✅ Cloud provider independence
 
 **Cons**:
+
 - ❌ Very high cost ($300,000/year)
 - ❌ Extreme complexity
 - ❌ Operational burden
@@ -393,6 +419,7 @@ interface CommunicationPlan {
 Three-region architecture with automated monitoring provides optimal balance of risk mitigation, cost, and operational feasibility.
 
 **Data Replication Strategy for Singapore**:
+
 ```typescript
 interface SingaporeReplicationStrategy {
   data: {
@@ -424,6 +451,7 @@ interface SingaporeReplicationStrategy {
 ```
 
 **Backup Region Strategy (Seoul/Mumbai)**:
+
 ```typescript
 interface BackupRegionStrategy {
   regions: {
@@ -454,6 +482,7 @@ interface BackupRegionStrategy {
 ```
 
 **Disaster Recovery Tiers**:
+
 ```typescript
 interface DisasterRecoveryTiers {
   tier1_critical: {
@@ -480,6 +509,7 @@ interface DisasterRecoveryTiers {
 ```
 
 **Pros**:
+
 - ✅ Geographic diversity (3 regions)
 - ✅ Automated risk monitoring
 - ✅ Fast failover capability (< 30 minutes)
@@ -490,6 +520,7 @@ interface DisasterRecoveryTiers {
 - ✅ Cost-effective ($100K/year)
 
 **Cons**:
+
 - ⚠️ Additional region costs
 - ⚠️ Operational complexity
 - ⚠️ Maintenance overhead
@@ -505,11 +536,13 @@ interface DisasterRecoveryTiers {
 **Description**: Maintain current two regions with manual BCP procedures
 
 **Pros**:
+
 - ✅ Lower cost ($30K/year)
 - ✅ Simpler operations
 - ✅ No additional regions
 
 **Cons**:
+
 - ❌ No geographic diversity
 - ❌ Manual procedures (slow)
 - ❌ Slower response (> 2 hours)
@@ -525,11 +558,13 @@ interface DisasterRecoveryTiers {
 **Description**: Deploy across AWS, Azure, and GCP
 
 **Pros**:
+
 - ✅ Maximum diversity
 - ✅ Cloud provider independence
 - ✅ Ultimate resilience
 
 **Cons**:
+
 - ❌ Very high cost ($300,000/year)
 - ❌ Extreme operational complexity
 - ❌ Multi-cloud expertise required
@@ -574,6 +609,7 @@ Three-region architecture with automated monitoring provides optimal balance of:
 **Selected Impact Radius**: **Enterprise**
 
 Affects:
+
 - All regions and services
 - Infrastructure architecture
 - Data replication strategy
@@ -600,12 +636,14 @@ Affects:
 ### Phase 1: Singapore Region Setup (Month 1-3)
 
 **Objectives**:
+
 - Deploy Singapore infrastructure
 - Configure warm standby
 - Set up data replication
 - Test failover procedures
 
 **Tasks**:
+
 - [ ] Deploy EKS cluster in Singapore
 - [ ] Set up RDS read replicas
 - [ ] Configure ElastiCache
@@ -616,6 +654,7 @@ Affects:
 - [ ] Perform initial failover test
 
 **Success Criteria**:
+
 - Singapore infrastructure operational
 - Data replication working
 - Failover test successful (< 30 minutes)
@@ -624,12 +663,14 @@ Affects:
 ### Phase 2: Geopolitical Monitoring (Month 4-5)
 
 **Objectives**:
+
 - Implement risk monitoring system
 - Configure automated alerts
 - Define escalation procedures
 - Train response teams
 
 **Tasks**:
+
 - [ ] Integrate news feeds (Reuters, Bloomberg)
 - [ ] Set up government alert monitoring
 - [ ] Configure threat intelligence feeds
@@ -641,6 +682,7 @@ Affects:
 - [ ] Train BCP response team
 
 **Success Criteria**:
+
 - Risk monitoring operational
 - Alerts configured and tested
 - Escalation procedures documented
@@ -649,12 +691,14 @@ Affects:
 ### Phase 3: BCP Procedures (Month 6-7)
 
 **Objectives**:
+
 - Document all procedures
 - Create runbooks
 - Establish communication plans
 - Train all teams
 
 **Tasks**:
+
 - [ ] Document BCP activation procedures
 - [ ] Create runbooks for each scenario
 - [ ] Define communication templates
@@ -665,6 +709,7 @@ Affects:
 - [ ] Conduct tabletop exercises
 
 **Success Criteria**:
+
 - All procedures documented
 - Runbooks complete and tested
 - Communication plans established
@@ -673,12 +718,14 @@ Affects:
 ### Phase 4: Testing & Validation (Month 8-12)
 
 **Objectives**:
+
 - Quarterly BCP drills
 - Annual full-scale test
 - Update procedures
 - Continuous improvement
 
 **Tasks**:
+
 - [ ] Q1 Drill: Taiwan region failure
 - [ ] Q2 Drill: Tokyo region failure
 - [ ] Q3 Drill: Cyber attack scenario
@@ -689,6 +736,7 @@ Affects:
 - [ ] Improve monitoring
 
 **Success Criteria**:
+
 - All drills completed successfully
 - RTO < 30 minutes achieved
 - RPO < 5 minutes achieved
@@ -697,11 +745,13 @@ Affects:
 ### Phase 5: Backup Region Preparation (Month 13-15)
 
 **Objectives**:
+
 - Prepare Seoul as backup region
 - Test cold standby activation
 - Validate backup restoration
 
 **Tasks**:
+
 - [ ] Create IaC templates for Seoul
 - [ ] Set up backup storage in Seoul
 - [ ] Configure backup replication
@@ -711,6 +761,7 @@ Affects:
 - [ ] Train team on Seoul activation
 
 **Success Criteria**:
+
 - Seoul can be activated < 2 hours
 - Backup restoration tested
 - Team trained on procedures
@@ -718,12 +769,14 @@ Affects:
 ### Phase 6: Continuous Improvement (Ongoing)
 
 **Objectives**:
+
 - Regular testing and updates
 - Monitor geopolitical situation
 - Refine procedures
 - Maintain readiness
 
 **Tasks**:
+
 - [ ] Monthly risk assessment review
 - [ ] Quarterly BCP drills
 - [ ] Annual full-scale test
@@ -733,6 +786,7 @@ Affects:
 - [ ] Maintain team training
 
 **Success Criteria**:
+
 - Continuous readiness maintained
 - Procedures up-to-date
 - Team confidence high
@@ -741,12 +795,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - BCP activation causes more issues than it solves
 - Data integrity concerns
 - Compliance violations
 - Cost overruns
 
 **Rollback Steps**:
+
 1. **Immediate**: Stop BCP activation
 2. **Assess**: Evaluate current state
 3. **Stabilize**: Return to previous stable state
@@ -808,6 +864,7 @@ const bcpSuccessMetrics = {
 ### Monitoring Dashboards
 
 **BCP Readiness Dashboard**:
+
 - Current risk levels by region
 - Team training status
 - Infrastructure readiness
@@ -815,6 +872,7 @@ const bcpSuccessMetrics = {
 - Drill schedule and results
 
 **BCP Activation Dashboard**:
+
 - Active incidents
 - Activation status
 - Regional health
@@ -857,6 +915,7 @@ const bcpSuccessMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual risk assessment (not fully automated)
 2. Basic geopolitical monitoring (no AI/ML)
 3. Limited scenario coverage in drills
@@ -864,6 +923,7 @@ const bcpSuccessMetrics = {
 5. Basic backup region preparation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: AI-powered geopolitical risk assessment
 - **Q3 2026**: Automated communication workflows
 - **Q4 2026**: Expanded drill scenarios
@@ -882,7 +942,6 @@ const bcpSuccessMetrics = {
 **Last Reviewed**: 2025-10-25  
 **Next Review**: 2026-01-25 (Quarterly)
 
-
 ## Notes
 
 ### Geopolitical Risk Assessment Framework
@@ -890,6 +949,7 @@ const bcpSuccessMetrics = {
 **Risk Indicators by Category**:
 
 **Military Activity**:
+
 - Troop movements near Taiwan
 - Naval exercises in Taiwan Strait
 - Air defense zone incursions
@@ -897,6 +957,7 @@ const bcpSuccessMetrics = {
 - Defense readiness levels
 
 **Political Stability**:
+
 - Government stability
 - Policy changes
 - International relations
@@ -904,6 +965,7 @@ const bcpSuccessMetrics = {
 - Diplomatic incidents
 
 **Cyber Threats**:
+
 - State-sponsored attacks
 - Critical infrastructure targeting
 - DDoS campaigns
@@ -911,6 +973,7 @@ const bcpSuccessMetrics = {
 - Ransomware incidents
 
 **Natural Disasters**:
+
 - Earthquake activity
 - Typhoon forecasts
 - Tsunami warnings
@@ -918,6 +981,7 @@ const bcpSuccessMetrics = {
 - Infrastructure damage
 
 **Economic Factors**:
+
 - Trade restrictions
 - Sanctions
 - Currency instability
@@ -936,7 +1000,8 @@ const bcpSuccessMetrics = {
 ### Communication Templates
 
 **Initial Incident Notification**:
-```
+
+```text
 Subject: [URGENT] System Status Update - [Region] Incident
 
 Dear Valued Customer,
@@ -944,11 +1009,13 @@ Dear Valued Customer,
 We are currently experiencing [brief description of situation] affecting our [region] region. 
 
 Current Status:
+
 - Services Affected: [list]
 - Impact: [description]
 - Estimated Resolution: [time]
 
 Actions Taken:
+
 - [action 1]
 - [action 2]
 
@@ -962,7 +1029,8 @@ Thank you for your patience.
 ```
 
 **Resolution Notification**:
-```
+
+```text
 Subject: [RESOLVED] System Status Update - [Region] Incident
 
 Dear Valued Customer,
@@ -970,11 +1038,13 @@ Dear Valued Customer,
 The incident affecting our [region] region has been resolved.
 
 Incident Summary:
+
 - Duration: [time]
 - Services Affected: [list]
 - Root Cause: [brief description]
 
 Resolution:
+
 - [resolution steps]
 
 All services are now operating normally. We apologize for any inconvenience.
@@ -989,6 +1059,7 @@ Thank you for your patience and understanding.
 ### Drill Scenarios
 
 **Scenario 1: Taiwan Region Complete Failure**
+
 - **Trigger**: Simulated military conflict
 - **Duration**: 4 hours
 - **Objectives**:
@@ -1002,6 +1073,7 @@ Thank you for your patience and understanding.
   - Customer notification < 15 minutes
 
 **Scenario 2: Cyber Attack on Both Primary Regions**
+
 - **Trigger**: Simulated DDoS + ransomware
 - **Duration**: 6 hours
 - **Objectives**:
@@ -1015,6 +1087,7 @@ Thank you for your patience and understanding.
   - No data compromise
 
 **Scenario 3: Natural Disaster (Earthquake)**
+
 - **Trigger**: Simulated major earthquake in Taiwan
 - **Duration**: 8 hours
 - **Objectives**:
@@ -1030,18 +1103,21 @@ Thank you for your patience and understanding.
 ### Legal and Compliance Considerations
 
 **Data Sovereignty During Crisis**:
+
 - Customer PII remains in home region unless consent obtained
 - Emergency data transfer procedures documented
 - Legal basis for emergency transfers established
 - Compliance team notified immediately
 
 **Regulatory Notifications**:
+
 - Financial regulators (if applicable)
 - Data protection authorities
 - Industry regulators
 - Government agencies (as required)
 
 **Insurance and Liability**:
+
 - Business interruption insurance
 - Cyber insurance
 - Force majeure clauses
@@ -1050,18 +1126,21 @@ Thank you for your patience and understanding.
 ### Partner Coordination
 
 **Cloud Provider (AWS)**:
+
 - Enterprise support escalation
 - Regional account team contacts
 - Emergency support procedures
 - Service health dashboard monitoring
 
 **Third-Party Services**:
+
 - Payment processors
 - Shipping providers
 - Email services
 - CDN providers
 
 **Government Agencies**:
+
 - Local emergency services
 - Cybersecurity agencies
 - Trade offices
@@ -1070,21 +1149,25 @@ Thank you for your patience and understanding.
 ### Cost Breakdown
 
 **Singapore Warm Standby** ($15,000/month):
+
 - Compute: $8,000 (20% capacity)
 - Database: $4,000 (read replicas)
 - Storage: $2,000 (replicated data)
 - Network: $1,000 (connectivity)
 
 **Geopolitical Monitoring** ($3,000/month):
+
 - News feeds: $1,000
 - Threat intelligence: $1,500
 - Monitoring tools: $500
 
 **Backup Region Preparation** ($2,000/month):
+
 - Backup storage: $1,500
 - Network: $500
 
 **Testing and Drills** ($5,000/quarter):
+
 - Drill execution: $3,000
 - Team time: $2,000
 
@@ -1093,11 +1176,13 @@ Thank you for your patience and understanding.
 ### Success Stories and Lessons Learned
 
 **Industry Examples**:
+
 - **2011 Japan Earthquake**: Companies with multi-region architecture maintained operations
 - **2020 COVID-19**: Remote work and geographic distribution proved critical
 - **2021 Texas Freeze**: Multi-region cloud deployments avoided outages
 
 **Key Lessons**:
+
 1. **Test Regularly**: Untested plans fail when needed
 2. **Automate**: Manual procedures are error-prone under stress
 3. **Communicate**: Clear communication reduces panic
@@ -1107,12 +1192,14 @@ Thank you for your patience and understanding.
 ### Future Enhancements
 
 **Phase 2 (2026)**:
+
 - AI-powered risk prediction
 - Automated failover for all scenarios
 - Real-time geopolitical intelligence
 - Advanced simulation capabilities
 
 **Phase 3 (2027)**:
+
 - Multi-cloud BCP strategy
 - Quantum-safe encryption for crisis scenarios
 - Autonomous BCP activation

@@ -33,6 +33,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 ### Business Context
 
 **Business Drivers**:
+
 - Multi-channel access (web, mobile, API partners)
 - Expected 100K+ concurrent users at peak
 - 24/7 availability requirement
@@ -40,6 +41,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 - Regulatory compliance (GDPR, data protection)
 
 **Constraints**:
+
 - Must support stateless authentication for horizontal scaling
 - Token expiration must balance security and user experience
 - Must integrate with existing Spring Security framework
@@ -48,12 +50,14 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 with Spring Security
 - Microservices architecture with multiple services
 - AWS EKS deployment with auto-scaling
 - No existing authentication system (greenfield)
 
 **Requirements**:
+
 - Stateless authentication (no server-side sessions)
 - Support for role-based access control (RBAC)
 - Token expiration and refresh mechanism
@@ -79,6 +83,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 **Description**: Stateless tokens signed with RSA asymmetric keys
 
 **Pros**:
+
 - ✅ Truly stateless - no database lookup needed
 - ✅ Horizontal scaling friendly
 - ✅ Industry standard (RFC 7519)
@@ -90,6 +95,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 - ✅ No licensing costs
 
 **Cons**:
+
 - ⚠️ Token revocation requires additional mechanism
 - ⚠️ Larger token size than session IDs
 - ⚠️ Cannot update permissions until token expires
@@ -104,6 +110,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 **Description**: Traditional session cookies with centralized session store
 
 **Pros**:
+
 - ✅ Easy to implement
 - ✅ Immediate session invalidation
 - ✅ Smaller cookie size
@@ -111,6 +118,7 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 - ✅ Familiar pattern
 
 **Cons**:
+
 - ❌ Requires session affinity or shared session store
 - ❌ Additional Redis dependency for sessions
 - ❌ Database lookup on every request
@@ -127,12 +135,14 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 **Description**: Delegate authentication to third-party provider
 
 **Pros**:
+
 - ✅ Managed service (less operational overhead)
 - ✅ Advanced features (MFA, social login)
 - ✅ Compliance certifications
 - ✅ Professional support
 
 **Cons**:
+
 - ❌ Monthly licensing costs ($500-2000/month)
 - ❌ Vendor lock-in
 - ❌ External dependency
@@ -149,11 +159,13 @@ The Enterprise E-Commerce Platform requires a secure, scalable, and stateless au
 **Description**: Simple API keys for authentication
 
 **Pros**:
+
 - ✅ Very simple to implement
 - ✅ Low overhead
 - ✅ Good for service-to-service
 
 **Cons**:
+
 - ❌ Not suitable for user authentication
 - ❌ No expiration mechanism
 - ❌ Difficult to rotate
@@ -182,6 +194,7 @@ JWT with RS256 was selected for the following reasons:
 8. **Standards-Based**: RFC 7519 standard, widely supported
 
 **Token Structure**:
+
 ```json
 {
   "header": {
@@ -225,6 +238,7 @@ JWT with RS256 was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All API endpoints (authentication required)
 - All microservices (token verification)
 - Frontend applications (token storage and transmission)
@@ -284,12 +298,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical security vulnerability discovered
 - Performance degradation > 50ms per request
 - Token validation failures > 1%
 - Key management issues
 
 **Rollback Steps**:
+
 1. Enable temporary session-based authentication
 2. Investigate and fix JWT implementation
 3. Re-deploy with fixes
@@ -311,6 +327,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `auth.login.success` (count)
 - `auth.login.failure` (count)
 - `auth.token.validation.time` (histogram)
@@ -319,18 +336,21 @@ Affects:
 - `auth.refresh.success` (count)
 
 **Alerts**:
+
 - Authentication failure rate > 5% for 5 minutes
 - Token validation latency > 20ms for 5 minutes
 - Suspicious authentication patterns (brute force)
 - Key rotation failures
 
 **Security Monitoring**:
+
 - Failed login attempts per IP
 - Token validation failures
 - Refresh token usage patterns
 - Anomalous authentication times/locations
 
 **Review Schedule**:
+
 - Daily: Check authentication metrics
 - Weekly: Review failed authentication logs
 - Monthly: Security audit of JWT implementation
@@ -360,11 +380,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No token blacklist implemented (acceptable for 15-min expiration)
 2. Manual key rotation process (acceptable initially)
 3. No token compression (acceptable for current size)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement Redis-based token blacklist for critical revocations
 - **Q3 2026**: Automate key rotation with AWS KMS
 - **Q4 2026**: Implement token compression if size becomes issue

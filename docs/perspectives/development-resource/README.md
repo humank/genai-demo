@@ -18,14 +18,17 @@ The Development Resource Perspective ensures efficient use of development resour
 ## Team Structure
 
 ### Backend Team (5 developers)
+
 - **Skills**: Java 21, Spring Boot, PostgreSQL, AWS
 - **Responsibilities**: API development, business logic
 
 ### Frontend Team (3 developers)
+
 - **Skills**: React, TypeScript, Next.js, Angular
 - **Responsibilities**: UI/UX implementation
 
 ### DevOps Team (2 engineers)
+
 - **Skills**: AWS, Kubernetes, CDK, CI/CD
 - **Responsibilities**: Infrastructure, deployment
 

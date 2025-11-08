@@ -20,7 +20,7 @@ This document describes the continuous integration and continuous deployment (CI
 
 ### Pipeline Stages
 
-```
+```text
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
 │   Source    │ -> │    Build    │ -> │    Test     │ -> │   Deploy    │ -> │   Monitor   │
 │   Control   │    │  & Package  │    │  & Scan     │    │   to Env    │    │  & Verify   │
@@ -71,10 +71,13 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Set up JDK 21
+
         uses: actions/setup-java@v3
         with:
           java-version: '21'
@@ -82,23 +85,29 @@ jobs:
           cache: 'gradle'
       
       - name: Run unit tests
+
         run: ./gradlew test
       
       - name: Run integration tests
+
         run: ./gradlew integrationTest
       
       - name: Generate test coverage report
+
         run: ./gradlew jacocoTestReport
       
       - name: Upload coverage to Codecov
+
         uses: codecov/codecov-action@v3
         with:
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
       
       - name: Build application
+
         run: ./gradlew build -x test
       
       - name: Archive build artifacts
+
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
@@ -109,16 +118,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: SonarQube Scan
+
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       
       - name: Check Quality Gate
+
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
         env:
@@ -128,18 +141,23 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-test
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Run Snyk security scan
+
         uses: snyk/actions/gradle@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       
       - name: Build Docker image
+
         run: docker build -t temp-image:${{ github.sha }} .
       
       - name: Run Trivy vulnerability scanner
+
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: temp-image:${{ github.sha }}
@@ -147,6 +165,7 @@ jobs:
           output: 'trivy-results.sarif'
       
       - name: Upload Trivy results to GitHub Security
+
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
@@ -159,16 +178,20 @@ jobs:
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Download build artifacts
+
         uses: actions/download-artifact@v3
         with:
           name: build-artifacts
           path: build/libs
       
       - name: Configure AWS credentials
+
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -176,10 +199,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Login to Amazon ECR
+
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
       
       - name: Extract metadata for Docker
+
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -190,6 +215,7 @@ jobs:
             type=semver,pattern={{version}}
       
       - name: Build and push Docker image
+
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -208,10 +234,13 @@ jobs:
       name: development
       url: https://dev.ecommerce-platform.com
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Configure AWS credentials
+
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -219,10 +248,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Update kubeconfig
+
         run: |
           aws eks update-kubeconfig --name ecommerce-platform-dev --region ${{ env.AWS_REGION }}
       
       - name: Deploy to Development
+
         run: |
           helm upgrade --install ecommerce-platform ./helm/ecommerce-platform \
             --namespace development \
@@ -232,6 +263,7 @@ jobs:
             --wait --timeout 10m
       
       - name: Verify deployment
+
         run: |
           kubectl rollout status deployment/order-service -n development
           kubectl rollout status deployment/customer-service -n development
@@ -245,10 +277,13 @@ jobs:
       name: staging
       url: https://staging.ecommerce-platform.com
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Configure AWS credentials
+
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -256,10 +291,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Update kubeconfig
+
         run: |
           aws eks update-kubeconfig --name ecommerce-platform-staging --region ${{ env.AWS_REGION }}
       
       - name: Deploy to Staging
+
         run: |
           helm upgrade --install ecommerce-platform ./helm/ecommerce-platform \
             --namespace staging \
@@ -269,6 +306,7 @@ jobs:
             --wait --timeout 10m
       
       - name: Run smoke tests
+
         run: |
           ./scripts/smoke-tests.sh staging
 
@@ -281,10 +319,13 @@ jobs:
       name: production
       url: https://api.ecommerce-platform.com
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
       
       - name: Configure AWS credentials
+
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -292,10 +333,12 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Update kubeconfig
+
         run: |
           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
       
       - name: Deploy Canary (10%)
+
         run: |
           helm upgrade --install ecommerce-platform-canary ./helm/ecommerce-platform \
             --namespace production \
@@ -307,10 +350,12 @@ jobs:
             --wait --timeout 10m
       
       - name: Monitor canary metrics
+
         run: |
           ./scripts/monitor-canary.sh 300  # Monitor for 5 minutes
       
       - name: Promote to full deployment
+
         run: |
           helm upgrade --install ecommerce-platform ./helm/ecommerce-platform \
             --namespace production \
@@ -321,15 +366,18 @@ jobs:
             --wait --timeout 15m
       
       - name: Verify production deployment
+
         run: |
           kubectl rollout status deployment/order-service -n production
           kubectl rollout status deployment/customer-service -n production
       
       - name: Run production smoke tests
+
         run: |
           ./scripts/smoke-tests.sh production
       
       - name: Notify deployment success
+
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
@@ -346,6 +394,7 @@ jobs:
 **Use Case**: Standard deployments with low risk
 
 **Configuration**:
+
 ```yaml
 # Kubernetes Deployment
 apiVersion: apps/v1
@@ -362,7 +411,9 @@ spec:
   template:
     spec:
       containers:
+
       - name: order-service
+
         image: order-service:v2.0.0
         readinessProbe:
           httpGet:
@@ -373,17 +424,20 @@ spec:
 ```
 
 **Process**:
+
 1. Create 1 new pod with new version
 2. Wait for new pod to be ready
 3. Terminate 1 old pod
 4. Repeat until all pods are updated
 
 **Advantages**:
+
 - Zero downtime
 - Gradual rollout
 - Automatic rollback on failure
 
 **Disadvantages**:
+
 - Slower deployment
 - Mixed versions during rollout
 
@@ -394,6 +448,7 @@ spec:
 **Use Case**: Major updates requiring instant rollback capability
 
 **Configuration**:
+
 ```yaml
 # Blue Deployment (Current)
 apiVersion: apps/v1
@@ -435,10 +490,13 @@ spec:
     app: order-service
     version: blue  # Change to 'green' to switch
   ports:
+
   - port: 8080
+
 ```
 
 **Process**:
+
 1. Deploy new version to green environment
 2. Test green environment thoroughly
 3. Switch service selector from blue to green
@@ -446,11 +504,13 @@ spec:
 5. Keep blue environment for quick rollback
 
 **Advantages**:
+
 - Instant traffic switch
 - Easy rollback
 - Full testing before switch
 
 **Disadvantages**:
+
 - Requires double resources
 - Database migration complexity
 
@@ -461,6 +521,7 @@ spec:
 **Use Case**: High-risk changes requiring gradual validation
 
 **Configuration**:
+
 ```yaml
 # Stable Deployment (90% traffic)
 apiVersion: apps/v1
@@ -497,10 +558,13 @@ spec:
   selector:
     app: order-service  # Matches both stable and canary
   ports:
+
   - port: 8080
+
 ```
 
 **Process**:
+
 1. Deploy canary with 10% traffic (1 pod)
 2. Monitor metrics for 5-10 minutes
 3. If successful, increase to 25% (3 pods)
@@ -509,11 +573,13 @@ spec:
 6. Remove stable deployment
 
 **Advantages**:
+
 - Gradual risk mitigation
 - Real user validation
 - Easy rollback at any stage
 
 **Disadvantages**:
+
 - Complex traffic management
 - Longer deployment time
 - Requires sophisticated monitoring
@@ -523,6 +589,7 @@ spec:
 ### Automatic Rollback
 
 **Triggers**:
+
 ```yaml
 # Kubernetes Deployment with automatic rollback
 apiVersion: apps/v1
@@ -538,6 +605,7 @@ spec:
 ```
 
 **Conditions**:
+
 - Readiness probe fails for > 3 minutes
 - Error rate > 5% for > 5 minutes
 - Response time (p95) > 3s for > 5 minutes
@@ -546,6 +614,7 @@ spec:
 ### Manual Rollback
 
 **Using kubectl**:
+
 ```bash
 # View deployment history
 kubectl rollout history deployment/order-service -n production
@@ -561,6 +630,7 @@ kubectl rollout status deployment/order-service -n production
 ```
 
 **Using Helm**:
+
 ```bash
 # View release history
 helm history ecommerce-platform -n production
@@ -581,6 +651,7 @@ helm rollback ecommerce-platform 5 -n production
 **Deployment Frequency**: Automatic on merge to `develop`
 
 **Configuration**:
+
 ```yaml
 # values-dev.yaml
 replicaCount: 1
@@ -611,6 +682,7 @@ kafka:
 **Deployment Frequency**: Manual approval required
 
 **Configuration**:
+
 ```yaml
 # values-staging.yaml
 replicaCount: 2
@@ -643,6 +715,7 @@ kafka:
 **Deployment Frequency**: Manual approval + canary deployment
 
 **Configuration**:
+
 ```yaml
 # values-prod.yaml
 replicaCount: 5
@@ -684,6 +757,7 @@ podDisruptionBudget:
 ### Health Checks
 
 **Liveness Probe**:
+
 ```yaml
 livenessProbe:
   httpGet:
@@ -696,6 +770,7 @@ livenessProbe:
 ```
 
 **Readiness Probe**:
+
 ```yaml
 readinessProbe:
   httpGet:
@@ -739,17 +814,20 @@ echo "All smoke tests passed!"
 ### Key Metrics
 
 **Application Metrics**:
+
 - Request rate (requests/second)
 - Error rate (%)
 - Response time (p50, p95, p99)
 - Active connections
 
 **Infrastructure Metrics**:
+
 - Pod CPU/memory usage
 - Pod restart count
 - Node resource utilization
 
 **Business Metrics**:
+
 - Order creation rate
 - Payment success rate
 - User login rate
@@ -757,12 +835,14 @@ echo "All smoke tests passed!"
 ### Alerts
 
 **Critical Alerts** (immediate action):
+
 - Error rate > 5%
 - Response time (p95) > 3s
 - Pod crash loop
 - Database connection failures
 
 **Warning Alerts** (investigate):
+
 - Error rate > 1%
 - Response time (p95) > 2s
 - High memory usage (> 80%)

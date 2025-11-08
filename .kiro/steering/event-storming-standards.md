@@ -4,14 +4,15 @@
 
 This document provides comprehensive guidelines for conducting Event Storming workshops and documenting the results in our DDD + Hexagonal Architecture project. Event Storming is a collaborative workshop technique for exploring complex business domains through domain events.
 
-> **🔗 Related Standards**: 
+> **🔗 Related Standards**:
+>
 > - [Domain Events](domain-events.md) - Implementation of discovered events
 > - [Development Standards](development-standards.md) - Architecture and coding standards
 > - [Diagram Generation Standards](diagram-generation-standards.md) - Visual documentation
 
 ## Event Storming Fundamentals
 
-### What is Event Storming?
+### What is Event Storming
 
 Event Storming is a rapid, lightweight, and often fun workshop technique for collaborative exploration of complex business domains. It was invented by Alberto Brandolini and focuses on domain events as the primary building blocks.
 
@@ -82,7 +83,7 @@ Event Storming is a rapid, lightweight, and often fun workshop technique for col
 
 #### Example Output Structure
 
-```
+```json
 [Customer] --RegisterCustomer--> [CustomerRegistered] 
     --> [WelcomeEmailSent]
     --> [CustomerProfileCreated]
@@ -139,7 +140,7 @@ Event Storming is a rapid, lightweight, and often fun workshop technique for col
 
 #### Example Output Structure
 
-```
+```json
 [Customer] 
     --reads--> [ProductCatalog]
     --executes--> [AddToCart]
@@ -148,10 +149,12 @@ Event Storming is a rapid, lightweight, and often fun workshop technique for col
                 --> [DiscountApplied]
     
 [ShoppingCart Aggregate]
+
     - AddToCart
     - RemoveFromCart
     - ApplyDiscount
     - Checkout
+
 ```
 
 ### Phase 3: Design Level Event Storming
@@ -243,6 +246,7 @@ public record ItemAddedToCart(
 ### Recommended Approach: Mermaid for Event Storming
 
 **Why Mermaid?**
+
 - Native GitHub rendering
 - Easy to update and maintain
 - Collaborative editing
@@ -250,6 +254,7 @@ public record ItemAddedToCart(
 - Quick iterations
 
 **When to Use PlantUML?**
+
 - Final documentation requiring precise layout
 - Complex aggregate diagrams
 - Professional presentations
@@ -335,55 +340,75 @@ For Phase 3, use PlantUML for detailed aggregate design:
 package "Shopping Cart Aggregate" <<Rectangle>> {
     
     class ShoppingCart <<AggregateRoot>> AGGREGATE_ROOT_COLOR {
+
         - id: CartId
         - customerId: CustomerId
         - items: List<CartItem>
         - totalAmount: Money
         - status: CartStatus
+
         --
+
         + addItem(command: AddItemCommand): void
         + removeItem(command: RemoveItemCommand): void
         + applyDiscount(discount: Discount): void
         + checkout(): void
+
         --
+
         - validateItem(command: AddItemCommand): void
         - calculateTotal(): Money
         - collectEvent(event: DomainEvent): void
+
     }
     
     class CartItem <<Entity>> ENTITY_COLOR {
+
         - id: CartItemId
         - productId: ProductId
         - quantity: int
         - price: Money
         - subtotal: Money
+
         --
+
         + updateQuantity(quantity: int): void
         + calculateSubtotal(): Money
+
     }
     
     class CartId <<ValueObject>> VALUE_OBJECT_COLOR {
+
         - value: String
+
         --
+
         + {static} generate(): CartId
         + {static} of(value: String): CartId
+
     }
     
     class Money <<ValueObject>> VALUE_OBJECT_COLOR {
+
         - amount: BigDecimal
         - currency: Currency
+
         --
+
         + add(other: Money): Money
         + multiply(factor: int): Money
+
     }
     
     class ItemAddedToCart <<DomainEvent>> DOMAIN_EVENT_COLOR {
+
         + cartId: CartId
         + productId: ProductId
         + quantity: int
         + price: Money
         + eventId: UUID
         + occurredOn: LocalDateTime
+
     }
     
     ShoppingCart "1" *-- "many" CartItem
@@ -406,7 +431,7 @@ package "Shopping Cart Aggregate" <<Rectangle>> {
 
 Create a dedicated directory for each Event Storming session:
 
-```
+```text
 docs/event-storming/
 ├── sessions/
 │   ├── 2025-01-20-big-picture/
@@ -531,7 +556,7 @@ status: "completed|in-progress|planned"
 
 ```mermaid
 [Include Mermaid diagram here]
-```
+```text
 
 ## Next Steps
 
@@ -550,6 +575,7 @@ status: "completed|in-progress|planned"
 
 **Session Notes**: [Link to detailed notes if available]
 **Recording**: [Link to session recording if available]
+
 ```
 
 ## Best Practices

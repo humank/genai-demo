@@ -13,6 +13,7 @@ This document describes the extensibility mechanisms built into the Enterprise E
 ### 1. Domain Event Extensions
 
 #### Purpose
+
 Add new behavior by listening to domain events without modifying the event publisher.
 
 #### How It Works
@@ -77,6 +78,7 @@ public class LoyaltyPointsEventHandler
 ### 2. Strategy Pattern Extensions
 
 #### Purpose
+
 Plug in different algorithms or behaviors at runtime.
 
 #### Pricing Strategy Example
@@ -191,6 +193,7 @@ public class PricingService {
 ### 3. Repository Pattern Extensions
 
 #### Purpose
+
 Switch data sources or add new storage mechanisms without changing business logic.
 
 #### Implementation
@@ -315,6 +318,7 @@ public class CachedOrderRepository implements OrderRepository {
 ### 4. Plugin Architecture
 
 #### Purpose
+
 Load and execute external plugins at runtime.
 
 #### Plugin Interface
@@ -444,6 +448,7 @@ public class PluginManager {
 ### 5. Dependency Injection Extensions
 
 #### Purpose
+
 Configure different implementations based on environment or feature flags.
 
 #### Configuration-Based Extension
@@ -511,6 +516,7 @@ public class CacheConfiguration {
 ### 6. API Extension Points
 
 #### Purpose
+
 Extend API functionality without breaking existing clients.
 
 #### Custom Headers
@@ -577,6 +583,7 @@ public ResponseEntity<Page<OrderResponse>> getOrders(
 ### When to Create Extension Points
 
 ✅ **Create extension points when**:
+
 - Multiple implementations are likely (payment gateways, shipping providers)
 - Behavior varies by customer segment or region
 - Third-party integrations are needed
@@ -584,6 +591,7 @@ public ResponseEntity<Page<OrderResponse>> getOrders(
 - Gradual rollout of new features
 
 ❌ **Don't create extension points when**:
+
 - Only one implementation will ever exist
 - Behavior is core to the domain and unlikely to change
 - Complexity outweighs benefits
@@ -663,6 +671,7 @@ To request a new extension point:
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Evolution perspective introduction
 - [Technology Evolution](technology-evolution.md) - Framework upgrade strategies
 - [API Versioning](api-versioning.md) - API compatibility and versioning

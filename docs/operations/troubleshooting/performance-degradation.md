@@ -43,7 +43,6 @@ kubectl logs deployment/ecommerce-backend -n production --tail=1000 | \
   grep "duration" | awk '{print $NF, $0}' | sort -rn | head -20
 ```
 
-
 #### Step 2: Check Resource Utilization
 
 ```bash
@@ -102,7 +101,6 @@ fields @timestamp, endpoint, statusCode
 | sort errorCount desc
 ```
 
-
 ##### Query 3: Request Volume Patterns
 
 ```sql
@@ -159,7 +157,6 @@ aws xray batch-get-traces --trace-ids ${TRACE_ID} --output json | \
   jq '.Traces[0].Segments[] | {Name: .Document.name, Duration: .Document.end_time - .Document.start_time}'
 ```
 
-
 ##### Identify Subsegment Bottlenecks
 
 ```bash
@@ -206,7 +203,6 @@ curl http://localhost:8080/actuator/metrics/cache.size | jq
 curl http://localhost:8080/actuator/metrics/cache.evictions | jq
 ```
 
-
 #### Redis Cache Analysis
 
 ```bash
@@ -243,6 +239,7 @@ redis-cli MONITOR | head -100
 #### Cache Optimization Strategies
 
 **Low Hit Rate (< 70%)**:
+
 ```bash
 # Identify frequently accessed keys that aren't cached
 kubectl logs deployment/ecommerce-backend -n production --tail=5000 | \
@@ -255,6 +252,7 @@ curl -X POST http://localhost:8080/admin/cache/warm \
 ```
 
 **High Eviction Rate**:
+
 ```bash
 # Increase cache size
 kubectl set env deployment/ecommerce-backend \
@@ -265,7 +263,6 @@ kubectl set env deployment/ecommerce-backend \
 kubectl edit statefulset redis -n production
 # Update resources.limits.memory
 ```
-
 
 ### Phase 4: Database Query Optimization Workflow (15-30 minutes)
 
@@ -331,7 +328,6 @@ JOIN pg_catalog.pg_locks blocking_locks
 JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid = blocking_locks.pid
 WHERE NOT blocked_locks.granted;
 ```
-
 
 #### Step 2: Analyze Query Execution Plans
 
@@ -404,7 +400,6 @@ WHERE created_at > NOW() - INTERVAL '7 days'
   AND status = 'ACTIVE';
 ```
 
-
 #### Step 4: Connection Pool Analysis
 
 ```bash
@@ -465,7 +460,6 @@ VACUUM ANALYZE customers;
 -- Reindex if needed
 REINDEX TABLE CONCURRENTLY orders;
 ```
-
 
 ### Phase 5: API Response Time Analysis (10-15 minutes)
 
@@ -529,7 +523,6 @@ aws cloudwatch get-metric-statistics \
   --statistics Average,Maximum
 ```
 
-
 ### Phase 6: Resource Contention Identification (10-15 minutes)
 
 #### CPU Contention Analysis
@@ -579,7 +572,6 @@ kubectl exec -it ${POD_NAME} -n production -- \
 # Copy heap dump locally
 kubectl cp production/${POD_NAME}:/tmp/heap.hprof ./heap.hprof
 ```
-
 
 #### I/O Contention Analysis
 
@@ -652,7 +644,6 @@ WHERE l.relation IS NOT NULL
 ORDER BY l.granted, a.query_start;
 ```
 
-
 ### Phase 7: External Dependency Performance Issues (10-15 minutes)
 
 #### Identify External Dependencies
@@ -717,7 +708,6 @@ kubectl logs deployment/ecommerce-backend -n production --tail=5000 | \
   awk '{sum+=$1; count++} END {print "Average:", sum/count, "ms"}'
 ```
 
-
 #### Kafka/MSK Performance Analysis
 
 ```bash
@@ -779,7 +769,6 @@ kubectl exec -it ${POD_NAME} -n production -- \
   curl -w "@curl-format.txt" -o /dev/null -s https://payment-gateway.example.com/health
 ```
 
-
 ## Resolution Strategies
 
 ### Immediate Actions (0-15 minutes)
@@ -838,7 +827,6 @@ kubectl rollout restart statefulset/redis -n production
 # Restart specific pod
 kubectl delete pod ${POD_NAME} -n production
 ```
-
 
 ### Short-term Fixes (15 minutes - 4 hours)
 
@@ -910,7 +898,6 @@ public class PaymentService {
 }
 ```
 
-
 #### 4. Connection Pool Tuning
 
 ```yaml
@@ -971,7 +958,6 @@ public CompletableFuture<Void> sendOrderConfirmation(Order order) {
 - Add request queuing for burst traffic
 - Implement database sharding for large tables
 
-
 #### 3. Infrastructure Optimization
 
 ```bash
@@ -1002,13 +988,17 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
@@ -1048,7 +1038,6 @@ watch -n 5 'kubectl logs deployment/ecommerce-backend -n production --tail=100 |
 watch -n 5 'kubectl top pods -n production -l app=ecommerce-backend'
 ```
 
-
 ## Prevention Strategies
 
 ### 1. Continuous Monitoring
@@ -1056,9 +1045,13 @@ watch -n 5 'kubectl top pods -n production -l app=ecommerce-backend'
 ```yaml
 # Set up comprehensive alerts
 groups:
+
   - name: performance-degradation
+
     rules:
+
       - alert: ResponseTimeDegrading
+
         expr: |
           rate(http_request_duration_seconds_sum[5m]) / 
           rate(http_request_duration_seconds_count[5m]) > 1.5
@@ -1069,6 +1062,7 @@ groups:
           summary: "API response time degrading"
           
       - alert: CacheHitRateLow
+
         expr: |
           rate(cache_gets_total{result="hit"}[5m]) / 
           rate(cache_gets_total[5m]) < 0.7
@@ -1077,6 +1071,7 @@ groups:
           severity: warning
           
       - alert: DatabaseQuerySlow
+
         expr: pg_stat_statements_mean_exec_time_seconds > 0.1
         for: 10m
         labels:
@@ -1124,10 +1119,9 @@ psql -c "REINDEX DATABASE ecommerce_production CONCURRENTLY;"
 - Regular load testing with projected traffic
 - Quarterly infrastructure review
 
-
 ## Troubleshooting Decision Tree
 
-```
+```text
 Performance Degradation Detected
 │
 ├─ Response Time > 5s?
@@ -1183,29 +1177,32 @@ Performance Degradation Detected
 **Symptoms**: Performance slowly degrading over several days
 
 **Common Causes**:
+
 - Memory leak
 - Database bloat
 - Cache pollution
 - Log file growth
 
 **Solution**:
+
 1. Analyze memory trends
 2. Run database maintenance
 3. Clear and rebuild cache
 4. Implement log rotation
-
 
 ### Pattern 2: Sudden Performance Drop
 
 **Symptoms**: Immediate performance degradation after deployment or change
 
 **Common Causes**:
+
 - New code with performance issues
 - Configuration change
 - Database migration
 - Infrastructure change
 
 **Solution**:
+
 1. Rollback recent changes
 2. Compare before/after metrics
 3. Review deployment logs
@@ -1216,12 +1213,14 @@ Performance Degradation Detected
 **Symptoms**: Performance issues at specific times (e.g., daily at 2 AM)
 
 **Common Causes**:
+
 - Scheduled jobs
 - Batch processing
 - Backup operations
 - Maintenance windows
 
 **Solution**:
+
 1. Identify scheduled tasks
 2. Optimize batch jobs
 3. Reschedule non-critical tasks
@@ -1232,12 +1231,14 @@ Performance Degradation Detected
 **Symptoms**: Performance degrades during high traffic
 
 **Common Causes**:
+
 - Insufficient capacity
 - Connection pool exhaustion
 - Cache overwhelmed
 - Database overload
 
 **Solution**:
+
 1. Implement auto-scaling
 2. Increase connection pools
 3. Optimize cache strategy
@@ -1246,28 +1247,31 @@ Performance Degradation Detected
 ## Escalation Path
 
 ### Level 1: DevOps Team (0-30 minutes)
+
 - Initial assessment
 - Resource scaling
 - Cache clearing
 - Service restarts
 
 ### Level 2: Backend Engineering (30 minutes - 2 hours)
+
 - Code analysis
 - Query optimization
 - Cache strategy review
 - External API investigation
 
 ### Level 3: Architecture Team (2-4 hours)
+
 - Architecture review
 - Infrastructure optimization
 - Long-term solutions
 - Capacity planning
 
 ### Level 4: Vendor Support (> 4 hours)
+
 - AWS Support
 - Database vendor
 - External service providers
-
 
 ## Tools and Resources
 
@@ -1316,7 +1320,7 @@ Performance Degradation Detected
 
 Create this file for detailed curl timing:
 
-```
+```yaml
      time_namelookup:  %{time_namelookup}s\n
         time_connect:  %{time_connect}s\n
      time_appconnect:  %{time_appconnect}s\n
@@ -1364,4 +1368,3 @@ echo "Hit rate: $(echo "scale=2; $HIT / ($HIT + $MISS) * 100" | bc)%"
 **Owner**: DevOps Team  
 **Review Cycle**: Quarterly  
 **Related Runbooks**: slow-api-responses, high-cpu-usage, high-memory-usage, database-connection-issues
-

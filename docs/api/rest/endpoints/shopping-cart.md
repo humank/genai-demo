@@ -19,6 +19,7 @@ Retrieve the authenticated user's shopping cart.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -64,10 +65,12 @@ Retrieve the authenticated user's shopping cart.
 ```
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `404 Not Found`: Cart not found (empty cart)
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/carts/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -84,6 +87,7 @@ Add a product to the shopping cart.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "productId": "prod-456",
@@ -92,10 +96,12 @@ Add a product to the shopping cart.
 ```
 
 **Validation Rules**:
+
 - `productId`: Required, must exist
 - `quantity`: Required, positive integer, max 99
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -121,11 +127,13 @@ Add a product to the shopping cart.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `404 Not Found`: Product not found
 - `409 Conflict`: Insufficient inventory
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/items \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -147,9 +155,11 @@ Update the quantity of an item in the cart.
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `itemId`: Cart item ID
 
 **Request Body**:
+
 ```json
 {
   "quantity": 3
@@ -157,9 +167,11 @@ Update the quantity of an item in the cart.
 ```
 
 **Validation Rules**:
+
 - `quantity`: Required, positive integer (0 to remove), max 99
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -185,11 +197,13 @@ Update the quantity of an item in the cart.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `404 Not Found`: Item not found
 - `409 Conflict`: Insufficient inventory
 
 **curl Example**:
+
 ```bash
 curl -X PATCH https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -210,15 +224,18 @@ Remove an item from the shopping cart.
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `itemId`: Cart item ID
 
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 - `404 Not Found`: Item not found
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/items/item-1 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -237,9 +254,11 @@ Remove all items from the shopping cart.
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Missing or invalid token
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -256,6 +275,7 @@ Apply a promotion code to the cart.
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "promotionCode": "SAVE10"
@@ -263,6 +283,7 @@ Apply a promotion code to the cart.
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -285,10 +306,12 @@ Apply a promotion code to the cart.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid promotion code
 - `409 Conflict`: Promotion not applicable or expired
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/promotions \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -309,9 +332,11 @@ Remove a promotion code from the cart.
 **Authentication**: Required
 
 **Path Parameters**:
+
 - `promotionId`: Promotion ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -327,6 +352,7 @@ Remove a promotion code from the cart.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X DELETE https://api.ecommerce.com/api/v1/carts/me/promotions/promo-001 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -343,6 +369,7 @@ Merge anonymous cart with authenticated user's cart (used after login).
 **Authentication**: Required
 
 **Request Body**:
+
 ```json
 {
   "anonymousCartId": "cart-anon-456"
@@ -350,6 +377,7 @@ Merge anonymous cart with authenticated user's cart (used after login).
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -374,11 +402,13 @@ Merge anonymous cart with authenticated user's cart (used after login).
 ```
 
 **Business Rules**:
+
 - Duplicate items are merged (quantities added)
 - Anonymous cart is deleted after merge
 - Promotions from anonymous cart are validated
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/merge \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -399,6 +429,7 @@ Validate cart items and calculate final totals before checkout.
 **Authentication**: Required
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -424,6 +455,7 @@ Validate cart items and calculate final totals before checkout.
 ```
 
 **Validation Response with Issues** (200 OK):
+
 ```json
 {
   "data": {
@@ -449,6 +481,7 @@ Validate cart items and calculate final totals before checkout.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/carts/me/validate \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"

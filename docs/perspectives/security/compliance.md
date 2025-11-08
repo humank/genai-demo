@@ -32,7 +32,9 @@ The General Data Protection Regulation (GDPR) is a comprehensive data protection
 public class GDPRDataAccessService {
     
     /**
+
      * Provide customer with all their personal data
+
      */
     public CustomerDataExport exportCustomerData(String customerId) {
         Customer customer = customerRepository.findById(customerId)
@@ -76,7 +78,9 @@ public class GDPRDataAccessService {
 public class GDPRDataRectificationService {
     
     /**
+
      * Allow customer to correct their personal data
+
      */
     @Transactional
     public Customer rectifyCustomerData(
@@ -119,7 +123,9 @@ public class GDPRDataRectificationService {
 public class GDPRDataErasureService {
     
     /**
+
      * Anonymize customer data (right to be forgotten)
+
      */
     @Transactional
     public void eraseCustomerData(String customerId) {
@@ -191,7 +197,9 @@ public class GDPRDataErasureService {
 public class GDPRDataPortabilityService {
     
     /**
+
      * Export customer data in machine-readable format
+
      */
     public byte[] exportDataInMachineReadableFormat(
             String customerId,
@@ -225,7 +233,9 @@ public class GDPRDataPortabilityService {
 public class GDPRProcessingRestrictionService {
     
     /**
+
      * Restrict processing of customer data
+
      */
     @Transactional
     public void restrictProcessing(String customerId, RestrictionReason reason) {
@@ -243,7 +253,9 @@ public class GDPRProcessingRestrictionService {
     }
     
     /**
+
      * Lift processing restriction
+
      */
     @Transactional
     public void liftRestriction(String customerId) {
@@ -269,7 +281,9 @@ public class GDPRProcessingRestrictionService {
 public class ConsentManagementService {
     
     /**
+
      * Record customer consent
+
      */
     @Transactional
     public void recordConsent(String customerId, ConsentType type) {
@@ -286,7 +300,9 @@ public class ConsentManagementService {
     }
     
     /**
+
      * Withdraw customer consent
+
      */
     @Transactional
     public void withdrawConsent(String customerId, ConsentType type) {
@@ -329,7 +345,9 @@ public class DataRetentionService {
     private static final int ANONYMIZED_DATA_RETENTION = 365; // 1 year after anonymization
     
     /**
+
      * Enforce data retention policy
+
      */
     @Scheduled(cron = "0 0 3 * * *") // Daily at 3 AM
     public void enforceRetentionPolicy() {
@@ -401,13 +419,17 @@ SecurityGroup:
     VpcId: !Ref VPC
     SecurityGroupIngress:
       # Allow HTTPS only
+
       - IpProtocol: tcp
+
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
     SecurityGroupEgress:
       # Allow outbound to payment gateway only
+
       - IpProtocol: tcp
+
         FromPort: 443
         ToPort: 443
         DestinationSecurityGroupId: !Ref PaymentGatewaySecurityGroup
@@ -447,9 +469,11 @@ public class SecurityDefaultsConfiguration {
 public class PCIDSSPaymentService {
     
     /**
+
      * NEVER store full PAN (Primary Account Number)
      * NEVER store CVV/CVC
      * NEVER store PIN
+
      */
     @Transactional
     public PaymentResult processPayment(PaymentRequest request) {
@@ -503,8 +527,10 @@ server:
     protocol: TLS
     enabled-protocols: TLSv1.3
     ciphers:
+
       - TLS_AES_256_GCM_SHA384
       - TLS_AES_128_GCM_SHA256
+
 ```
 
 #### Requirement 5: Protect All Systems Against Malware
@@ -515,9 +541,11 @@ security-scanning:
   enabled: true
   schedule: "0 0 2 * * *" # Daily at 2 AM
   tools:
+
     - dependency-check
     - spotbugs
     - sonarqube
+
 ```
 
 #### Requirement 6: Develop and Maintain Secure Systems
@@ -551,7 +579,9 @@ public class PaymentController {
 public class PaymentProcessingService {
     
     /**
+
      * Only authorized personnel can access payment processing
+
      */
     @AuditDataAccess
     public PaymentResult processPayment(PaymentRequest request) {
@@ -569,7 +599,9 @@ public class PaymentProcessingService {
 public class PaymentAuthenticationService {
     
     /**
+
      * Require MFA for payment processing access
+
      */
     public boolean authenticatePaymentProcessor(String userId, String mfaCode) {
         User user = userRepository.findById(userId)
@@ -599,7 +631,9 @@ public class PaymentAuthenticationService {
 public class PaymentAuditLogger {
     
     /**
+
      * Log all payment-related activities
+
      */
     public void logPaymentAccess(String userId, String action, String details) {
         AuditLogEntry entry = AuditLogEntry.builder()
@@ -741,7 +775,7 @@ public class ComplianceMonitoringService {
 
 ## References
 
-- GDPR Official Text: https://gdpr.eu/
-- PCI-DSS Standards: https://www.pcisecuritystandards.org/
-- GDPR Compliance Checklist: https://gdpr.eu/checklist/
-- PCI-DSS Self-Assessment: https://www.pcisecuritystandards.org/document_library
+- GDPR Official Text: <https://gdpr.eu/>
+- PCI-DSS Standards: <https://www.pcisecuritystandards.org/>
+- GDPR Compliance Checklist: <https://gdpr.eu/checklist/>
+- PCI-DSS Self-Assessment: <https://www.pcisecuritystandards.org/document_library>

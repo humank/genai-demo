@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "evolution"]
 The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy to:
 
 **Business Requirements**:
+
 - **Zero Downtime**: Maintain 99.9% availability during deployments
 - **Risk Mitigation**: Minimize impact of faulty releases
 - **Fast Rollback**: Quick recovery from deployment failures (< 5 minutes)
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 - **Compliance**: Meet audit and compliance requirements
 
 **Technical Challenges**:
+
 - Complex microservices architecture (13 bounded contexts)
 - High traffic volume (10,000+ requests/minute)
 - Database schema changes
@@ -40,6 +42,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 - Monitoring and validation complexity
 
 **Current State**:
+
 - All-at-once deployments
 - Significant downtime during releases
 - High risk of widespread failures
@@ -50,6 +53,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 ### Business Context
 
 **Business Drivers**:
+
 - Enable continuous delivery
 - Reduce deployment risk
 - Improve time-to-market
@@ -58,6 +62,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 - Support A/B testing
 
 **Constraints**:
+
 - Budget: $50,000 for implementation
 - Timeline: 2 months
 - Team: 3 DevOps engineers
@@ -67,6 +72,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 ### Technical Context
 
 **Current Deployment**:
+
 - Manual kubectl apply
 - All pods updated simultaneously
 - No traffic shifting
@@ -74,6 +80,7 @@ The Enterprise E-Commerce Platform requires a safe, reliable deployment strategy
 - Long deployment windows
 
 **Target Deployment**:
+
 - Automated progressive rollout
 - Traffic-based validation
 - Automatic rollback on failures
@@ -159,8 +166,11 @@ spec:
     port: 80
     targetPort: 8080
     gateways:
+
     - public-gateway
+
     hosts:
+
     - api.ecommerce.example.com
   
   # Canary analysis
@@ -179,24 +189,30 @@ spec:
     
     # Metrics for validation
     metrics:
+
     - name: request-success-rate
+
       thresholdRange:
         min: 99
       interval: 1m
     
     - name: request-duration
+
       thresholdRange:
         max: 2000
       interval: 1m
     
     - name: error-rate
+
       thresholdRange:
         max: 0.1
       interval: 1m
     
     # Webhooks for custom validation
     webhooks:
+
     - name: load-test
+
       url: http://flagger-loadtester/
       timeout: 5s
       metadata:
@@ -204,6 +220,7 @@ spec:
         cmd: "hey -z 1m -q 10 -c 2 http://ecommerce-api-canary/health"
     
     - name: acceptance-test
+
       url: http://flagger-loadtester/
       timeout: 30s
       metadata:
@@ -225,7 +242,9 @@ metadata:
   namespace: production
 data:
   metrics.yaml: |
+
     - name: request-success-rate
+
       query: |
         sum(
           rate(
@@ -245,9 +264,11 @@ data:
             }[1m]
           )
         )
+
         * 100
     
     - name: request-duration
+
       query: |
         histogram_quantile(
           0.95,
@@ -260,9 +281,11 @@ data:
             )
           ) by (le)
         )
+
         * 1000
     
     - name: error-rate
+
       query: |
         sum(
           rate(
@@ -282,7 +305,9 @@ data:
             }[1m]
           )
         )
+
         * 100
+
 ```
 
 **Rolling Update Configuration**:
@@ -327,7 +352,9 @@ spec:
         version: v1.2.0
     spec:
       containers:
+
       - name: api
+
         image: ecommerce-api:v1.2.0
         
         # Readiness probe - pod receives traffic only when ready
@@ -387,20 +414,24 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
       
       - name: Build and Push Image
+
         run: |
           docker build -t ecommerce-api:${{ github.sha }} .
           docker push $ECR_REPO/ecommerce-api:${{ github.sha }}
       
       - name: Update Kubernetes Manifests
+
         run: |
           kubectl set image deployment/ecommerce-api \
             api=$ECR_REPO/ecommerce-api:${{ github.sha }} \
             --namespace=production
       
       - name: Monitor Canary Deployment
+
         run: |
           # Wait for Flagger to complete canary analysis
           kubectl wait canary/ecommerce-api \
@@ -409,6 +440,7 @@ jobs:
             --namespace=production
       
       - name: Verify Deployment
+
         run: |
           # Check rollout status
           kubectl rollout status deployment/ecommerce-api \
@@ -419,6 +451,7 @@ jobs:
           ./scripts/smoke-tests.sh
       
       - name: Rollback on Failure
+
         if: failure()
         run: |
           # Automatic rollback
@@ -529,6 +562,7 @@ interface DatabaseMigrationStrategy {
 ```
 
 **Pros**:
+
 - ✅ Zero downtime deployments
 - ✅ Automatic validation with real traffic
 - ✅ Fast rollback (< 5 minutes)
@@ -538,6 +572,7 @@ interface DatabaseMigrationStrategy {
 - ✅ Database migration safety
 
 **Cons**:
+
 - ⚠️ Longer deployment time (30-45 minutes)
 - ⚠️ Requires additional infrastructure (Flagger)
 - ⚠️ Complex configuration
@@ -552,11 +587,13 @@ interface DatabaseMigrationStrategy {
 **Description**: Maintain two identical environments, switch traffic between them
 
 **Pros**:
+
 - ✅ Instant rollback
 - ✅ Full environment testing
 - ✅ Simple concept
 
 **Cons**:
+
 - ❌ Double infrastructure cost
 - ❌ No gradual validation
 - ❌ Complex for databases
@@ -571,11 +608,13 @@ interface DatabaseMigrationStrategy {
 **Description**: Stop all old pods, then start new pods
 
 **Pros**:
+
 - ✅ Simplest approach
 - ✅ No version overlap
 - ✅ Easy to understand
 
 **Cons**:
+
 - ❌ Downtime during deployment
 - ❌ High risk
 - ❌ No gradual validation
@@ -610,6 +649,7 @@ Combining canary deployment for validation with rolling update for full rollout 
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All application deployments
 - CI/CD pipeline
 - Monitoring systems
@@ -634,6 +674,7 @@ Affects:
 ### Phase 1: Infrastructure Setup (Week 1-2)
 
 **Tasks**:
+
 - [ ] Install Flagger in EKS clusters
 - [ ] Configure Prometheus metrics
 - [ ] Set up Grafana dashboards
@@ -641,6 +682,7 @@ Affects:
 - [ ] Test in development environment
 
 **Success Criteria**:
+
 - Flagger operational
 - Metrics collection working
 - Dashboards configured
@@ -648,6 +690,7 @@ Affects:
 ### Phase 2: Pilot Service (Week 3-4)
 
 **Tasks**:
+
 - [ ] Select pilot service
 - [ ] Create Canary resource
 - [ ] Configure metrics and thresholds
@@ -656,6 +699,7 @@ Affects:
 - [ ] Document process
 
 **Success Criteria**:
+
 - Successful canary deployment
 - Automatic rollback tested
 - Team comfortable with process
@@ -663,6 +707,7 @@ Affects:
 ### Phase 3: Rollout to All Services (Week 5-6)
 
 **Tasks**:
+
 - [ ] Create Canary resources for all services
 - [ ] Update CI/CD pipelines
 - [ ] Configure service-specific metrics
@@ -670,6 +715,7 @@ Affects:
 - [ ] Update documentation
 
 **Success Criteria**:
+
 - All services using progressive deployment
 - CI/CD pipelines updated
 - Team trained
@@ -677,6 +723,7 @@ Affects:
 ### Phase 4: Database Migration Strategy (Week 7-8)
 
 **Tasks**:
+
 - [ ] Document migration process
 - [ ] Create migration templates
 - [ ] Test backward compatible migrations
@@ -684,6 +731,7 @@ Affects:
 - [ ] Train team
 
 **Success Criteria**:
+
 - Migration process documented
 - Templates available
 - Team trained
@@ -691,11 +739,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Flagger failures
 - Metric collection issues
 - Team concerns
 
 **Rollback Steps**:
+
 1. Disable Flagger
 2. Use standard rolling update
 3. Fix issues
@@ -744,12 +794,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some services lack comprehensive metrics
 2. Manual metric threshold tuning
 3. Basic rollback procedures
 4. Limited A/B testing capabilities
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Comprehensive metrics for all services
 - **Q3 2026**: Automated threshold tuning
 - **Q4 2026**: Advanced A/B testing features
@@ -789,6 +841,7 @@ Affects:
 ### Best Practices
 
 **Canary Deployment**:
+
 - Start with small traffic percentage (10%)
 - Monitor comprehensive metrics
 - Use automated validation
@@ -796,6 +849,7 @@ Affects:
 - Test rollback procedures regularly
 
 **Rolling Update**:
+
 - Set maxUnavailable to 0 for zero downtime
 - Use appropriate maxSurge for faster rollout
 - Implement proper health checks
@@ -803,6 +857,7 @@ Affects:
 - Monitor pod startup times
 
 **Database Migrations**:
+
 - Always use backward compatible changes
 - Test migrations in staging
 - Have rollback plan
@@ -810,9 +865,9 @@ Affects:
 - Use feature flags for code changes
 
 **Monitoring**:
+
 - Track deployment progress
 - Compare canary vs stable metrics
 - Alert on anomalies
 - Log all deployment events
 - Create deployment dashboards
-

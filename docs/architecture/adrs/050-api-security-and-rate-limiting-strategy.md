@@ -42,6 +42,7 @@ The platform needs multi-layer API security that includes:
 ### Business Context
 
 **Business Drivers**:
+
 - **Revenue Protection**: Prevent bot-driven inventory hoarding ($50K/month loss)
 - **Data Protection**: Protect customer PII and business data
 - **Competitive Advantage**: Prevent price scraping by competitors
@@ -49,12 +50,14 @@ The platform needs multi-layer API security that includes:
 - **Regulatory Compliance**: PCI-DSS, GDPR requirements
 
 **Taiwan-Specific Context**:
+
 - **High Bot Activity**: 30-40% of traffic is bot-driven
 - **Credential Stuffing**: Frequent attempts using leaked databases
 - **Price Competition**: Aggressive price scraping by competitors
 - **Fraud Attempts**: High rate of fraudulent account creation
 
 **Constraints**:
+
 - Must not impact legitimate user experience
 - Must support high traffic volumes (10K req/s peak)
 - Must integrate with existing JWT authentication
@@ -63,6 +66,7 @@ The platform needs multi-layer API security that includes:
 ### Technical Context
 
 **Current State**:
+
 - JWT-based authentication (ADR-014)
 - No rate limiting implemented
 - No bot detection
@@ -70,6 +74,7 @@ The platform needs multi-layer API security that includes:
 - Basic input validation
 
 **Attack Vectors**:
+
 - **Login Endpoint**: Credential stuffing, brute force
 - **Search Endpoint**: Price scraping, inventory checking
 - **Checkout Endpoint**: Inventory hoarding, fraud attempts
@@ -94,16 +99,19 @@ The platform needs multi-layer API security that includes:
 **Description**: Comprehensive API security with multiple protection layers
 
 **Architecture**:
-```
+
+```text
 Request → CloudFront → WAF (Layer 1) → API Gateway (Layer 2) → Application (Layer 3)
 ```
 
 **Protection Layers**:
+
 - **Layer 1 - WAF**: Global and per-IP rate limiting
 - **Layer 2 - API Gateway**: Per-user and per-API-key rate limiting
 - **Layer 3 - Application**: Endpoint-specific rate limiting and CAPTCHA
 
 **Pros**:
+
 - ✅ **Comprehensive Protection**: Multiple layers of defense
 - ✅ **Flexible Rate Limits**: Different limits per endpoint and user type
 - ✅ **Bot Detection**: CAPTCHA for suspicious requests
@@ -113,6 +121,7 @@ Request → CloudFront → WAF (Layer 1) → API Gateway (Layer 2) → Applicati
 - ✅ **Scalability**: Handles high traffic volumes
 
 **Cons**:
+
 - ⚠️ **Complexity**: Multiple rate limiting layers to manage
 - ⚠️ **CAPTCHA UX**: May impact user experience for suspicious requests
 
@@ -125,10 +134,12 @@ Request → CloudFront → WAF (Layer 1) → API Gateway (Layer 2) → Applicati
 **Description**: Use only WAF for rate limiting
 
 **Pros**:
+
 - ✅ **Simple**: Single layer of rate limiting
 - ✅ **Low Cost**: No additional infrastructure
 
 **Cons**:
+
 - ❌ **Limited Flexibility**: Cannot differentiate by user type
 - ❌ **No Bot Detection**: No CAPTCHA or advanced bot detection
 - ❌ **No API Key Support**: Cannot manage third-party API keys
@@ -142,10 +153,12 @@ Request → CloudFront → WAF (Layer 1) → API Gateway (Layer 2) → Applicati
 **Description**: Use third-party bot management service
 
 **Pros**:
+
 - ✅ **Advanced Bot Detection**: Machine learning-based detection
 - ✅ **Managed Service**: Less operational overhead
 
 **Cons**:
+
 - ❌ **High Cost**: $1,000-5,000/month
 - ❌ **Vendor Lock-In**: Difficult to migrate
 - ❌ **Integration Complexity**: Requires significant changes
@@ -173,16 +186,19 @@ Multi-layer rate limiting was selected for the following reasons:
 **Rate Limiting Strategy**:
 
 **Layer 1 - WAF (Global Limits)**:
+
 - Global: 10,000 req/min (all traffic)
 - Per-IP: 2,000 req/min (per source IP)
 - Purpose: Prevent volumetric attacks
 
 **Layer 2 - API Gateway (User-Based Limits)**:
+
 - Per-User (Authenticated): 100 req/min
 - Per-API-Key (Third-Party): 1,000 req/min
 - Purpose: Prevent abuse by authenticated users
 
 **Layer 3 - Application (Endpoint-Specific Limits)**:
+
 - Login: 10 req/min per IP (prevent credential stuffing)
 - Search: 100 req/min per IP (prevent scraping)
 - Checkout: 20 req/min per user (prevent inventory hoarding)
@@ -190,6 +206,7 @@ Multi-layer rate limiting was selected for the following reasons:
 - Purpose: Protect sensitive endpoints
 
 **Authentication Security**:
+
 - JWT with 15-minute expiration (ADR-014)
 - Refresh token rotation
 - Multi-factor authentication (MFA) for admin accounts
@@ -197,6 +214,7 @@ Multi-layer rate limiting was selected for the following reasons:
 - Account lockout: 5 failed attempts = 15-min lockout
 
 **Bot Detection**:
+
 - CAPTCHA for suspicious login attempts (> 3 failures)
 - Device fingerprinting
 - Behavioral analysis (request patterns, timing)
@@ -250,11 +268,13 @@ Multi-layer rate limiting was selected for the following reasons:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - False positive rate > 1% (legitimate users blocked)
 - Performance degradation > 10ms
 - Service outage caused by rate limiting
 
 **Rollback Steps**:
+
 1. Increase rate limits temporarily
 2. Disable specific rate limiting rules
 3. Investigate and fix issues
@@ -276,6 +296,7 @@ Multi-layer rate limiting was selected for the following reasons:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `api.rate_limit.exceeded` (count by endpoint)
 - `api.authentication.failed` (count)
 - `api.captcha.triggered` (count)
@@ -283,12 +304,14 @@ Multi-layer rate limiting was selected for the following reasons:
 - `api.bot.detected` (count)
 
 **Alerts**:
+
 - **P0 Critical**: Rate limit exceeded > 1000/min (potential attack)
 - **P1 High**: Failed authentication > 100/min (credential stuffing)
 - **P2 Medium**: CAPTCHA solve rate < 80% (potential false positives)
 - **P3 Low**: Unusual traffic patterns
 
 **Review Schedule**:
+
 - **Real-Time**: 24/7 monitoring dashboard
 - **Daily**: Review rate limiting metrics
 - **Weekly**: Analyze attack patterns
@@ -315,11 +338,13 @@ Multi-layer rate limiting was selected for the following reasons:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual rate limit tuning (acceptable initially)
 2. Basic bot detection (User-Agent only)
 3. No machine learning-based anomaly detection
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement automated rate limit tuning
 - **Q3 2026**: Implement advanced bot detection (device fingerprinting, behavioral analysis)
 - **Q4 2026**: Implement machine learning-based anomaly detection
@@ -337,6 +362,7 @@ Multi-layer rate limiting was selected for the following reasons:
 ### Rate Limiting Configuration
 
 **Spring Boot Rate Limiting (Bucket4j)**:
+
 ```java
 @Configuration
 public class RateLimitingConfiguration {
@@ -358,6 +384,7 @@ public class RateLimitingConfiguration {
 ```
 
 **Redis-Based Distributed Rate Limiting**:
+
 ```java
 @Component
 public class RedisRateLimiter {
@@ -380,6 +407,7 @@ public class RedisRateLimiter {
 ### CAPTCHA Configuration
 
 **Google reCAPTCHA v3**:
+
 ```yaml
 # application.yml
 recaptcha:
@@ -389,6 +417,7 @@ recaptcha:
 ```
 
 **CAPTCHA Trigger Logic**:
+
 ```java
 @Service
 public class CaptchaService {
@@ -409,6 +438,7 @@ public class CaptchaService {
 ### API Key Management
 
 **API Key Generation**:
+
 ```java
 @Service
 public class ApiKeyService {
@@ -431,6 +461,7 @@ public class ApiKeyService {
 ### Cost Breakdown
 
 **Monthly Costs**:
+
 - WAF Rate Limiting: $0 (included in WAF cost)
 - Application Rate Limiting: $0 (using existing Redis)
 - CAPTCHA: $0 (free tier: 1M assessments/month)

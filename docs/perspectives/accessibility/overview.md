@@ -32,7 +32,7 @@ This perspective addresses accessibility across three dimensions:
 
 ### POUR Principles (WCAG 2.1)
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              POUR Accessibility Principles              │
 ├─────────────────────────────────────────────────────────┤
@@ -126,7 +126,7 @@ This perspective addresses accessibility across three dimensions:
 
 ### Multi-Layered Strategy
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │         Accessibility Implementation Layers             │
 ├─────────────────────────────────────────────────────────┤
@@ -202,7 +202,7 @@ This perspective addresses accessibility across three dimensions:
 
 ### Testing Strategy
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │           Accessibility Testing Pyramid                 │
 ├─────────────────────────────────────────────────────────┤
@@ -263,14 +263,17 @@ This perspective addresses accessibility across three dimensions:
 ## Related Documentation
 
 ### Viewpoints
+
 - [Functional Viewpoint](../../viewpoints/functional/overview.md) - User interface capabilities
 - [Development Viewpoint](../../viewpoints/development/overview.md) - Development practices
 
 ### Other Perspectives
+
 - [Evolution Perspective](../evolution/overview.md) - Maintaining accessibility during changes
 - [Performance Perspective](../performance/overview.md) - Performance for assistive technologies
 
 ### Implementation Guides
+
 - [UI Accessibility](ui-accessibility.md) - WCAG compliance and implementation
 - [API Usability](api-usability.md) - Developer-friendly API design
 - [Documentation Clarity](documentation.md) - Clear documentation standards

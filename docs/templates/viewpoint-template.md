@@ -8,8 +8,10 @@ version: "1.0"
 status: "draft|active|deprecated"
 owner: "Team/Person Name"
 related_docs:
+
   - "path/to/related/doc1.md"
   - "path/to/related/doc2.md"
+
 tags: ["tag1", "tag2", "tag3"]
 ---
 
@@ -26,6 +28,7 @@ tags: ["tag1", "tag2", "tag3"]
 ## Purpose
 
 This viewpoint answers the following key questions:
+
 - Question 1?
 - Question 2?
 - Question 3?
@@ -34,21 +37,25 @@ This viewpoint answers the following key questions:
 ## Stakeholders
 
 ### Primary Stakeholders
+
 - **Stakeholder 1**: Their concerns and interests
 - **Stakeholder 2**: Their concerns and interests
 
 ### Secondary Stakeholders
+
 - **Stakeholder 3**: Their concerns and interests
 - **Stakeholder 4**: Their concerns and interests
 
 ## Contents
 
 ### 📄 Documents
+
 - [Document 1](document1.md) - Description
 - [Document 2](document2.md) - Description
 - [Document 3](document3.md) - Description
 
 ### 📊 Diagrams
+
 - [Diagram 1](../../diagrams/viewpoints/{category}/diagram1.puml) - Description
 - [Diagram 2](../../diagrams/viewpoints/{category}/diagram2.puml) - Description
 
@@ -84,11 +91,12 @@ This viewpoint answers the following key questions:
 
 [Describe the architectural model, include diagrams if applicable]
 
-```
+```json
 [Include diagram or code representation if applicable]
 ```
 
 **Key Elements**:
+
 - Element 1: Description
 - Element 2: Description
 - Element 3: Description
@@ -124,22 +132,27 @@ This viewpoint answers the following key questions:
 ## Key Concepts
 
 ### Concept 1
+
 [Explain key concept relevant to this viewpoint]
 
 ### Concept 2
+
 [Explain key concept relevant to this viewpoint]
 
 ### Concept 3
+
 [Explain key concept relevant to this viewpoint]
 
 ## Constraints and Assumptions
 
 ### Constraints
+
 - Constraint 1: Description
 - Constraint 2: Description
 - Constraint 3: Description
 
 ### Assumptions
+
 - Assumption 1: Description
 - Assumption 2: Description
 - Assumption 3: Description
@@ -147,64 +160,78 @@ This viewpoint answers the following key questions:
 ## Related Documentation
 
 ### Related Viewpoints
+
 - [Viewpoint 1](../viewpoint1/README.md) - How they relate
 - [Viewpoint 2](../viewpoint2/README.md) - How they relate
 - [Viewpoint 3](../viewpoint3/README.md) - How they relate
 
 ### Related Perspectives
+
 - [Perspective 1](../../perspectives/perspective1/README.md) - How it applies
 - [Perspective 2](../../perspectives/perspective2/README.md) - How it applies
 - [Perspective 3](../../perspectives/perspective3/README.md) - How it applies
 
 ### Related Architecture Decisions
+
 - [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
 - [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
 
 ### Related Guides
+
 - [Guide 1](../../guide1/README.md) - Description
 - [Guide 2](../../guide2/README.md) - Description
 
 ## Implementation Guidelines
 
 ### For Developers
+
 [Provide specific guidance for developers implementing features related to this viewpoint]
 
 ### For Architects
+
 [Provide specific guidance for architects making decisions related to this viewpoint]
 
 ### For Operations
+
 [Provide specific guidance for operations team managing systems related to this viewpoint]
 
 ## Verification and Validation
 
 ### How to Verify
+
 [Describe how to verify that the system conforms to this viewpoint]
 
 ### Validation Criteria
+
 - Criterion 1: Description
 - Criterion 2: Description
 - Criterion 3: Description
 
 ### Testing Approach
+
 [Describe testing strategies relevant to this viewpoint]
 
 ## Known Issues and Limitations
 
 ### Current Limitations
+
 - Limitation 1: Description and mitigation plan
 - Limitation 2: Description and mitigation plan
 
 ### Technical Debt
+
 - Debt Item 1: Description and plan to address
 - Debt Item 2: Description and plan to address
 
 ## Future Considerations
 
 ### Planned Improvements
+
 - Improvement 1: Description and timeline
 - Improvement 2: Description and timeline
 
 ### Evolution Strategy
+
 [Describe how this viewpoint is expected to evolve]
 
 ## Quick Links
@@ -216,11 +243,13 @@ This viewpoint answers the following key questions:
 ## Appendix
 
 ### Glossary
+
 - **Term 1**: Definition
 - **Term 2**: Definition
 - **Term 3**: Definition
 
 ### References
+
 - Reference 1: [Title](URL)
 - Reference 2: [Title](URL)
 

@@ -26,7 +26,7 @@ This guide provides comprehensive debugging workflows, diagnostic procedures, an
 
 ### General Debugging Decision Tree
 
-```
+```text
 Issue Detected
     ↓
 Is it a memory issue? → YES → [Memory Issues Section](#memory-issues)
@@ -41,6 +41,7 @@ Check application logs and metrics → [Common Issues](common-issues.md)
 ### Initial Diagnostic Steps
 
 **Step 1: Gather Basic Information**
+
 ```bash
 # Get pod status
 kubectl get pods -n production -l app=ecommerce-backend
@@ -53,6 +54,7 @@ kubectl top pod -n production -l app=ecommerce-backend
 ```
 
 **Step 2: Check Application Health**
+
 ```bash
 # Health endpoint
 POD_NAME=$(kubectl get pod -n production -l app=ecommerce-backend -o jsonpath='{.items[0].metadata.name}')
@@ -63,6 +65,7 @@ kubectl exec -n production ${POD_NAME} -- curl -s http://localhost:8080/actuator
 ```
 
 **Step 3: Review Application Logs**
+
 ```bash
 # Recent logs
 kubectl logs -n production ${POD_NAME} --tail=100
@@ -80,7 +83,7 @@ kubectl logs -n production ${POD_NAME} --previous
 
 ### Memory Issue Decision Tree
 
-```
+```text
 High Memory Usage Detected
     ↓
 Is memory increasing continuously? → YES → Memory Leak Investigation
@@ -95,6 +98,7 @@ Is memory usage stable but high? → YES → Heap Size Optimization
 #### Step 1: Confirm Memory Leak
 
 **Monitor Memory Trend**
+
 ```bash
 # Watch memory usage over time
 watch -n 5 'kubectl top pod -n production ${POD_NAME}'
@@ -104,6 +108,7 @@ kubectl exec -n production ${POD_NAME} -- jcmd 1 VM.native_memory summary
 ```
 
 **Check for OOMKilled Events**
+
 ```bash
 kubectl get events -n production --field-selector reason=OOMKilled
 ```
@@ -111,6 +116,7 @@ kubectl get events -n production --field-selector reason=OOMKilled
 #### Step 2: Generate Heap Dump
 
 **Using jmap (Recommended)**
+
 ```bash
 # Get Java process ID
 kubectl exec -n production ${POD_NAME} -- jps -l
@@ -123,6 +129,7 @@ kubectl cp production/${POD_NAME}:/tmp/heap.hprof ./heap-$(date +%Y%m%d-%H%M%S).
 ```
 
 **Automatic Heap Dump on OOM**
+
 ```bash
 # Add JVM flags to deployment
 -XX:+HeapDumpOnOutOfMemoryError
@@ -130,6 +137,7 @@ kubectl cp production/${POD_NAME}:/tmp/heap.hprof ./heap-$(date +%Y%m%d-%H%M%S).
 ```
 
 **Using jcmd (Alternative)**
+
 ```bash
 kubectl exec -n production ${POD_NAME} -- jcmd 1 GC.heap_dump /tmp/heap.hprof
 ```
@@ -137,6 +145,7 @@ kubectl exec -n production ${POD_NAME} -- jcmd 1 GC.heap_dump /tmp/heap.hprof
 #### Step 3: Analyze Heap Dump
 
 **Using jhat (Built-in)**
+
 ```bash
 # Start jhat server
 jhat -J-Xmx4g heap.hprof
@@ -146,6 +155,7 @@ open http://localhost:7000
 ```
 
 **Key Analysis Points in jhat**:
+
 1. **Histogram**: Shows object counts and sizes
    - Look for unexpected large object counts
    - Identify objects consuming most memory
@@ -153,6 +163,7 @@ open http://localhost:7000
 3. **Reference Chains**: Find what's holding references
 
 **Using Eclipse MAT (Recommended)**
+
 ```bash
 # Download Eclipse Memory Analyzer
 # https://www.eclipse.org/mat/
@@ -162,6 +173,7 @@ open http://localhost:7000
 ```
 
 **MAT Analysis Steps**:
+
 1. **Leak Suspects Report**: Automatic leak detection
 2. **Dominator Tree**: Shows retained heap by object
 3. **Histogram**: Object instance counts
@@ -169,6 +181,7 @@ open http://localhost:7000
 5. **OQL Console**: Advanced queries
 
 **Common Memory Leak Patterns**:
+
 ```java
 // Pattern 1: Static collections growing unbounded
 public class CacheManager {
@@ -196,6 +209,7 @@ button.addActionListener(listener); // LEAK if not removed!
 #### Step 4: Identify Root Cause
 
 **Using VisualVM**
+
 ```bash
 # Install VisualVM
 # https://visualvm.github.io/
@@ -214,12 +228,14 @@ kubectl port-forward -n production ${POD_NAME} 9010:9010
 ```
 
 **VisualVM Analysis**:
+
 1. **Monitor Tab**: Real-time heap, threads, classes
 2. **Sampler**: CPU and memory sampling
 3. **Profiler**: Detailed profiling (use cautiously in production)
 4. **Heap Dump**: Load and analyze heap dumps
 
 **OQL Queries for Common Leaks**:
+
 ```javascript
 // Find all instances of a class
 select s from java.lang.String s
@@ -237,7 +253,9 @@ select t from java.lang.ThreadLocal t
 #### Step 5: Fix and Verify
 
 **Common Fixes**:
+
 1. **Add resource cleanup**
+
    ```java
    try (Connection conn = dataSource.getConnection()) {
        // Use connection
@@ -245,6 +263,7 @@ select t from java.lang.ThreadLocal t
    ```
 
 2. **Implement cache eviction**
+
    ```java
    @Bean
    public CacheManager cacheManager() {
@@ -256,6 +275,7 @@ select t from java.lang.ThreadLocal t
    ```
 
 3. **Clean ThreadLocal**
+
    ```java
    try {
        threadLocal.set(value);
@@ -266,6 +286,7 @@ select t from java.lang.ThreadLocal t
    ```
 
 **Verification**:
+
 ```bash
 # Monitor memory after fix
 kubectl top pod -n production ${POD_NAME} --watch
@@ -279,6 +300,7 @@ kubectl get events -n production --field-selector reason=OOMKilled --watch
 #### Step 1: Enable GC Logging
 
 **Add GC Logging Flags**
+
 ```bash
 # For Java 11+
 -Xlog:gc*:file=/tmp/gc.log:time,uptime,level,tags
@@ -304,6 +326,7 @@ kubectl exec -n production ${POD_NAME} -- tail -f /tmp/gc.log
 #### Step 3: Analyze GC Logs
 
 **Using GCViewer**
+
 ```bash
 # Download GCViewer
 # https://github.com/chewiebug/GCViewer
@@ -313,13 +336,15 @@ java -jar gcviewer.jar gc.log
 ```
 
 **Key Metrics to Check**:
+
 - **GC Pause Time**: Should be < 100ms for young GC, < 1s for full GC
 - **GC Frequency**: Full GC should be rare (< 1 per hour)
 - **Heap Usage After GC**: Should drop significantly
 - **Promotion Rate**: Objects moving to old generation
 
 **GC Log Analysis Patterns**:
-```
+
+```text
 # Good pattern - Young GC
 [GC (Allocation Failure) 512M->64M(1024M), 0.0234567 secs]
 # Heap dropped from 512M to 64M in 23ms - GOOD
@@ -336,6 +361,7 @@ java -jar gcviewer.jar gc.log
 #### Step 4: Tune GC
 
 **G1GC Tuning (Recommended for Java 11+)**
+
 ```bash
 # Basic G1GC configuration
 -XX:+UseG1GC
@@ -348,6 +374,7 @@ java -jar gcviewer.jar gc.log
 ```
 
 **ZGC Tuning (For low-latency requirements)**
+
 ```bash
 # ZGC configuration (Java 15+)
 -XX:+UseZGC
@@ -370,7 +397,7 @@ java -jar gcviewer.jar gc.log
 
 ### Thread Issue Decision Tree
 
-```
+```text
 Thread Issue Detected
     ↓
 Are threads blocked? → YES → Deadlock Investigation
@@ -387,6 +414,7 @@ High CPU usage? → YES → CPU Profiling
 #### Step 1: Generate Thread Dump
 
 **Using jstack**
+
 ```bash
 # Generate thread dump
 kubectl exec -n production ${POD_NAME} -- jstack 1 > thread-dump-$(date +%Y%m%d-%H%M%S).txt
@@ -399,11 +427,13 @@ done
 ```
 
 **Using jcmd**
+
 ```bash
 kubectl exec -n production ${POD_NAME} -- jcmd 1 Thread.print > thread-dump.txt
 ```
 
 **Using kill signal (if tools unavailable)**
+
 ```bash
 kubectl exec -n production ${POD_NAME} -- kill -3 1
 # Thread dump will appear in application logs
@@ -413,6 +443,7 @@ kubectl logs -n production ${POD_NAME} | tail -1000 > thread-dump.txt
 #### Step 2: Analyze Thread States
 
 **Thread State Reference**:
+
 - **RUNNABLE**: Thread is executing or ready to execute
 - **BLOCKED**: Thread is blocked waiting for a monitor lock
 - **WAITING**: Thread is waiting indefinitely for another thread
@@ -421,11 +452,14 @@ kubectl logs -n production ${POD_NAME} | tail -1000 > thread-dump.txt
 - **TERMINATED**: Thread has completed execution
 
 **Thread Dump Format**:
-```
+
+```text
 "http-nio-8080-exec-1" #23 daemon prio=5 os_prio=0 tid=0x00007f8c4c001000 nid=0x1234 waiting on condition [0x00007f8c3ffff000]
    java.lang.Thread.State: TIMED_WAITING (parking)
         at sun.misc.Unsafe.park(Native Method)
+
         - parking to wait for  <0x00000000e0a12345> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+
         at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
         at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
 ```
@@ -433,13 +467,15 @@ kubectl logs -n production ${POD_NAME} | tail -1000 > thread-dump.txt
 #### Step 3: Identify Issues
 
 **Deadlock Detection**
+
 ```bash
 # jstack automatically detects deadlocks
 grep -A 20 "Found one Java-level deadlock" thread-dump.txt
 ```
 
 **Deadlock Example**:
-```
+
+```text
 Found one Java-level deadlock:
 =============================
 "Thread-1":
@@ -451,6 +487,7 @@ Found one Java-level deadlock:
 ```
 
 **Blocked Threads Analysis**
+
 ```bash
 # Count threads by state
 grep "java.lang.Thread.State:" thread-dump.txt | sort | uniq -c
@@ -463,6 +500,7 @@ grep -A 10 "State: BLOCKED" thread-dump.txt | grep "waiting to lock"
 ```
 
 **Thread Contention Hotspots**
+
 ```bash
 # Find most contended locks
 grep "waiting to lock" thread-dump.txt | sort | uniq -c | sort -rn | head -10
@@ -474,12 +512,14 @@ grep "locked <" thread-dump.txt | sort | uniq -c | sort -rn | head -10
 #### Step 4: Resolve Thread Issues
 
 **Deadlock Resolution**:
+
 1. **Identify lock ordering**: Ensure consistent lock acquisition order
 2. **Use timeout**: Use `tryLock(timeout)` instead of `lock()`
 3. **Reduce lock scope**: Hold locks for minimal time
 4. **Use higher-level concurrency utilities**: `ConcurrentHashMap`, `AtomicInteger`
 
 **Example Fix**:
+
 ```java
 // BAD: Inconsistent lock ordering
 synchronized(lockA) {
@@ -501,6 +541,7 @@ synchronized(lockA) {
 ```
 
 **Thread Pool Exhaustion**:
+
 ```bash
 # Check thread pool metrics
 kubectl exec -n production ${POD_NAME} -- curl -s http://localhost:8080/actuator/metrics/executor.active | jq
@@ -508,6 +549,7 @@ kubectl exec -n production ${POD_NAME} -- curl -s http://localhost:8080/actuator
 ```
 
 **Thread Pool Tuning**:
+
 ```yaml
 # application.yml
 server:
@@ -522,11 +564,13 @@ server:
 ### Thread Leak Investigation
 
 **Symptoms**:
+
 - Thread count continuously increasing
 - Eventually hitting OS thread limit
 - Application becomes unresponsive
 
 **Detection**:
+
 ```bash
 # Monitor thread count
 kubectl exec -n production ${POD_NAME} -- jcmd 1 Thread.print | grep "^\"" | wc -l
@@ -536,11 +580,13 @@ watch -n 5 'kubectl exec -n production ${POD_NAME} -- jcmd 1 Thread.print | grep
 ```
 
 **Common Causes**:
+
 1. **Executor not shutdown**: Thread pools not properly closed
 2. **Timer threads**: Timers created but not cancelled
 3. **Thread creation in loops**: Creating threads without pooling
 
 **Example Fixes**:
+
 ```java
 // BAD: Thread leak
 public void processData() {
@@ -567,7 +613,7 @@ public void processData() {
 
 ### Performance Debugging Decision Tree
 
-```
+```text
 Slow Performance Detected
     ↓
 Is CPU high? → YES → CPU Profiling
@@ -597,6 +643,7 @@ kubectl exec -n production ${POD_NAME} -- jcmd 1 Thread.print | grep "cpu="
 #### Step 2: Generate CPU Profile
 
 **Using async-profiler (Recommended)**
+
 ```bash
 # Download async-profiler
 wget https://github.com/jvm-profiling-tools/async-profiler/releases/download/v2.9/async-profiler-2.9-linux-x64.tar.gz
@@ -613,6 +660,7 @@ kubectl cp production/${POD_NAME}:/tmp/cpu-profile.html ./cpu-profile-$(date +%Y
 ```
 
 **Using JProfiler**
+
 ```bash
 # Add JProfiler agent to JVM
 -agentpath:/path/to/libjprofilerti.so=port=8849,nowait
@@ -624,6 +672,7 @@ kubectl port-forward -n production ${POD_NAME} 8849:8849
 ```
 
 **Using YourKit**
+
 ```bash
 # Add YourKit agent
 -agentpath:/path/to/libyjpagent.so=port=10001
@@ -637,11 +686,13 @@ kubectl port-forward -n production ${POD_NAME} 10001:10001
 #### Step 3: Analyze CPU Profile
 
 **Flame Graph Analysis**:
+
 - **Width**: Represents time spent in function
 - **Height**: Call stack depth
 - **Color**: Different colors for different packages
 
 **Key Areas to Check**:
+
 1. **Hot methods**: Methods consuming most CPU
 2. **Unexpected loops**: Tight loops or recursion
 3. **Regex compilation**: Repeated pattern compilation
@@ -649,6 +700,7 @@ kubectl port-forward -n production ${POD_NAME} 10001:10001
 5. **Reflection**: Heavy reflection usage
 
 **Common CPU Hotspots**:
+
 ```java
 // Pattern 1: Regex in loop
 for (String s : list) {
@@ -713,12 +765,14 @@ psql -c "SELECT query, calls, mean_time, max_time FROM pg_stat_statements ORDER 
 #### Step 3: Analyze Query Performance
 
 **N+1 Query Detection**:
+
 ```bash
 # Look for repeated similar queries
 kubectl logs -n production ${POD_NAME} | grep "SELECT" | sort | uniq -c | sort -rn | head -20
 ```
 
 **N+1 Query Example**:
+
 ```sql
 -- Initial query
 SELECT * FROM orders WHERE customer_id = 123;
@@ -731,6 +785,7 @@ SELECT * FROM order_items WHERE order_id = 3;
 ```
 
 **Fix with JOIN FETCH**:
+
 ```java
 // BAD: N+1 query
 @Query("SELECT o FROM Order o WHERE o.customerId = :customerId")
@@ -742,6 +797,7 @@ List<Order> findByCustomerIdWithItems(@Param("customerId") String customerId);
 ```
 
 **Missing Index Detection**:
+
 ```sql
 -- Check query execution plan
 EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 123;
@@ -758,6 +814,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ### Heap Size Tuning
 
 **Initial Sizing Guidelines**:
+
 ```bash
 # For applications with < 2GB memory requirement
 -Xms512m -Xmx1g
@@ -782,6 +839,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 | Low heap usage | Any | Decrease heap to save resources |
 
 **Heap Ratio Tuning**:
+
 ```bash
 # Young generation sizing
 -XX:NewRatio=2              # Old:Young = 2:1
@@ -805,6 +863,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 | Shenandoah | Very Low | Medium | > 8GB | Low-latency requirements |
 
 **G1GC Tuning (Recommended)**:
+
 ```bash
 -XX:+UseG1GC
 -XX:MaxGCPauseMillis=200           # Target pause time
@@ -818,6 +877,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ```
 
 **ZGC Tuning (Low Latency)**:
+
 ```bash
 -XX:+UseZGC
 -XX:+ZGenerational                 # Enable generational ZGC (Java 21+)
@@ -829,6 +889,7 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ### JVM Flags for Production
 
 **Essential Production Flags**:
+
 ```bash
 # Heap settings
 -Xms2g -Xmx2g                      # Set min=max for predictable behavior
@@ -858,10 +919,13 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ```
 
 **Complete Production Configuration**:
+
 ```yaml
 # deployment.yaml
 env:
+
   - name: JAVA_OPTS
+
     value: >-
       -Xms2g -Xmx2g
       -XX:+UseG1GC
@@ -883,6 +947,7 @@ env:
 ### Container-Specific Tuning
 
 **Container Memory Awareness**:
+
 ```bash
 # Java 11+ automatically detects container limits
 # No flags needed
@@ -894,6 +959,7 @@ env:
 ```
 
 **CPU Awareness**:
+
 ```bash
 # Java 11+ automatically detects container CPU limits
 # No flags needed
@@ -909,6 +975,7 @@ env:
 ### Sampling vs Instrumentation
 
 **Sampling Profiling**:
+
 - **How**: Periodically samples thread stacks
 - **Overhead**: Low (1-5%)
 - **Accuracy**: Statistical approximation
@@ -916,6 +983,7 @@ env:
 - **Tools**: async-profiler, VisualVM sampler
 
 **Instrumentation Profiling**:
+
 - **How**: Instruments bytecode to track every method call
 - **Overhead**: High (10-50%)
 - **Accuracy**: Exact
@@ -925,6 +993,7 @@ env:
 ### async-profiler (Recommended for Production)
 
 **Installation**:
+
 ```bash
 # Download
 wget https://github.com/jvm-profiling-tools/async-profiler/releases/download/v2.9/async-profiler-2.9-linux-x64.tar.gz
@@ -935,6 +1004,7 @@ kubectl cp async-profiler-2.9-linux-x64 production/${POD_NAME}:/tmp/async-profil
 ```
 
 **CPU Profiling**:
+
 ```bash
 # Profile for 60 seconds, generate flame graph
 kubectl exec -n production ${POD_NAME} -- \
@@ -946,6 +1016,7 @@ kubectl exec -n production ${POD_NAME} -- \
 ```
 
 **Allocation Profiling**:
+
 ```bash
 # Profile memory allocations
 kubectl exec -n production ${POD_NAME} -- \
@@ -953,6 +1024,7 @@ kubectl exec -n production ${POD_NAME} -- \
 ```
 
 **Lock Profiling**:
+
 ```bash
 # Profile lock contention
 kubectl exec -n production ${POD_NAME} -- \
@@ -962,6 +1034,7 @@ kubectl exec -n production ${POD_NAME} -- \
 ### JProfiler (Development/Staging)
 
 **Setup**:
+
 ```bash
 # Add JProfiler agent to JVM
 -agentpath:/path/to/libjprofilerti.so=port=8849,nowait,config=/path/to/config.xml
@@ -971,12 +1044,14 @@ kubectl port-forward -n staging ${POD_NAME} 8849:8849
 ```
 
 **Profiling Sessions**:
+
 1. **CPU Profiling**: Identify hot methods
 2. **Memory Profiling**: Track object allocations
 3. **Thread Profiling**: Analyze thread states and contention
 4. **Database Profiling**: Monitor JDBC calls
 
 **Key Features**:
+
 - **Call Tree**: Hierarchical view of method calls
 - **Hot Spots**: Methods consuming most resources
 - **Call Graph**: Visual representation of call relationships
@@ -985,6 +1060,7 @@ kubectl port-forward -n staging ${POD_NAME} 8849:8849
 ### YourKit (Development/Staging)
 
 **Setup**:
+
 ```bash
 # Add YourKit agent
 -agentpath:/path/to/libyjpagent.so=port=10001,listen=all
@@ -994,11 +1070,13 @@ kubectl port-forward -n staging ${POD_NAME} 10001:10001
 ```
 
 **Profiling Modes**:
+
 1. **Sampling**: Low overhead, statistical
 2. **Tracing**: High overhead, exact
 3. **Adaptive**: Automatic mode switching
 
 **Analysis Views**:
+
 - **CPU**: Method execution time
 - **Memory**: Object allocation and retention
 - **Threads**: Thread states and synchronization
@@ -1007,6 +1085,7 @@ kubectl port-forward -n staging ${POD_NAME} 10001:10001
 ### VisualVM (Free Alternative)
 
 **Setup**:
+
 ```bash
 # Add JMX flags
 -Dcom.sun.management.jmxremote
@@ -1021,6 +1100,7 @@ kubectl port-forward -n production ${POD_NAME} 9010:9010
 ```
 
 **Features**:
+
 - **Monitor**: Real-time CPU, memory, threads, classes
 - **Sampler**: CPU and memory sampling (low overhead)
 - **Profiler**: CPU and memory profiling (high overhead)
@@ -1093,11 +1173,13 @@ jstat -gcold <pid>
 ### Native Memory Tracking
 
 **Enable NMT**:
+
 ```bash
 -XX:NativeMemoryTracking=summary  # or =detail for more info
 ```
 
 **Check Native Memory**:
+
 ```bash
 # Summary
 jcmd <pid> VM.native_memory summary
@@ -1323,4 +1405,3 @@ echo "4. Check database slow query log"
 **Owner**: DevOps Team  
 **Review Cycle**: Quarterly  
 **Contributors**: Backend Engineering Team, SRE Team
-

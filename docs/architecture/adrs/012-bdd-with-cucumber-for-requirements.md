@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 ### Business Context
 
 **Business Drivers**:
+
 - Need for clear, unambiguous requirements
 - Requirement for business stakeholder involvement in development
 - Compliance requirements for documented business rules
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 - Support for agile development with clear acceptance criteria
 
 **Constraints**:
+
 - Team has limited BDD experience
 - Business stakeholders have limited technical knowledge
 - Must integrate with existing testing strategy (ADR-006)
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 + Java 21
 - JUnit 5 for testing (ADR-006)
 - Domain-Driven Design approach (ADR-002)
@@ -58,6 +61,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 - Event-driven architecture (ADR-003)
 
 **Requirements**:
+
 - Business-readable specifications
 - Executable specifications
 - Integration with CI/CD pipeline
@@ -84,6 +88,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 **Description**: BDD framework using Gherkin syntax for business-readable specifications
 
 **Pros**:
+
 - ✅ Business-readable Gherkin syntax (Given-When-Then)
 - ✅ Excellent Java integration (Cucumber-JVM)
 - ✅ Supports multiple languages
@@ -96,6 +101,7 @@ The Enterprise E-Commerce Platform requires a methodology that:
 - ✅ Living documentation generation
 
 **Cons**:
+
 - ⚠️ Learning curve for Gherkin syntax
 - ⚠️ Can be verbose for simple scenarios
 - ⚠️ Requires discipline to maintain
@@ -109,11 +115,13 @@ The Enterprise E-Commerce Platform requires a methodology that:
 **Description**: Java BDD framework similar to Cucumber
 
 **Pros**:
+
 - ✅ Java-native BDD framework
 - ✅ Similar to Cucumber
 - ✅ Good Spring integration
 
 **Cons**:
+
 - ❌ Smaller community than Cucumber
 - ❌ Less active development
 - ❌ Fewer IDE plugins
@@ -128,11 +136,13 @@ The Enterprise E-Commerce Platform requires a methodology that:
 **Description**: Groovy-based testing framework with BDD-style syntax
 
 **Pros**:
+
 - ✅ Expressive syntax
 - ✅ Good for unit tests
 - ✅ Data-driven testing
 
 **Cons**:
+
 - ❌ Requires Groovy knowledge
 - ❌ Not business-readable
 - ❌ Less suitable for collaboration with non-technical stakeholders
@@ -147,11 +157,13 @@ The Enterprise E-Commerce Platform requires a methodology that:
 **Description**: Use JUnit with very descriptive test method names
 
 **Pros**:
+
 - ✅ No additional framework
 - ✅ Team already knows JUnit
 - ✅ Simple
 
 **Cons**:
+
 - ❌ Not business-readable
 - ❌ No living documentation
 - ❌ No collaboration with business stakeholders
@@ -182,6 +194,7 @@ Cucumber with Gherkin was selected for the following reasons:
 **Implementation Strategy**:
 
 **Gherkin Structure**:
+
 ```gherkin
 Feature: Order Submission
   As a customer
@@ -216,6 +229,7 @@ Feature: Order Submission
 ```
 
 **Step Definitions**:
+
 ```java
 @SpringBootTest
 @CucumberContextConfiguration
@@ -332,6 +346,7 @@ public class OrderStepDefinitions {
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - Requirements gathering process
 - Development workflow (TDD/BDD)
 - Testing strategy
@@ -356,6 +371,7 @@ Affects:
 ### Phase 1: Setup and Training (Week 1-2)
 
 - [ ] Add Cucumber dependencies
+
   ```xml
   <dependency>
     <groupId>io.cucumber</groupId>
@@ -378,6 +394,7 @@ Affects:
   ```
 
 - [ ] Configure Cucumber
+
   ```java
   @Suite
   @IncludeEngines("cucumber")
@@ -391,6 +408,7 @@ Affects:
   ```
 
 - [ ] Create project structure
+
   ```
   src/test/
   ├── java/
@@ -425,6 +443,7 @@ Affects:
 ### Phase 2: Core Step Definitions (Week 2-3)
 
 - [ ] Create base configuration
+
   ```java
   @SpringBootTest
   @CucumberContextConfiguration
@@ -447,6 +466,7 @@ Affects:
   ```
 
 - [ ] Create scenario context
+
   ```java
   @Component
   @Scope("cucumber-glue")
@@ -470,6 +490,7 @@ Affects:
   ```
 
 - [ ] Create common step definitions
+
   ```java
   public class CommonSteps {
       
@@ -502,6 +523,7 @@ Affects:
 ### Phase 3: Feature Implementation (Week 3-6)
 
 - [ ] Write Customer features
+
   ```gherkin
   # customer-registration.feature
   Feature: Customer Registration
@@ -539,6 +561,7 @@ Affects:
   ```
 
 - [ ] Write Order features
+
   ```gherkin
   # order-submission.feature
   Feature: Order Submission
@@ -615,6 +638,7 @@ Affects:
   - Regular refinement sessions
 
 - [ ] Create scenario templates
+
   ```gherkin
   # Template for CRUD operations
   Feature: [Entity] Management
@@ -638,6 +662,7 @@ Affects:
 ### Phase 5: CI/CD Integration (Week 8-9)
 
 - [ ] Configure Gradle task
+
   ```gradle
   tasks.register('cucumber', JavaExec) {
       dependsOn assemble, testClasses
@@ -655,12 +680,16 @@ Affects:
   ```
 
 - [ ] Add to CI/CD pipeline
+
   ```yaml
   # .github/workflows/test.yml
+
   - name: Run BDD Tests
+
     run: ./gradlew cucumber
     
   - name: Generate Cucumber Report
+
     if: always()
     uses: actions/upload-artifact@v3
     with:
@@ -669,6 +698,7 @@ Affects:
   ```
 
 - [ ] Set up Allure reporting
+
   ```xml
   <dependency>
     <groupId>io.qameta.allure</groupId>
@@ -686,6 +716,7 @@ Affects:
   - Common pitfalls to avoid
 
 - [ ] Create living documentation
+
   ```bash
   # Generate living documentation from feature files
   ./gradlew cucumber
@@ -701,12 +732,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Business stakeholders not engaged after 3 months
 - Scenario maintenance overhead > 30% of development time
 - Team unable to adopt BDD practices
 - Scenarios become out of sync with implementation
 
 **Rollback Steps**:
+
 1. Archive feature files for reference
 2. Convert critical scenarios to JUnit tests
 3. Simplify to plain JUnit with descriptive names
@@ -730,6 +763,7 @@ Affects:
 ### Monitoring Plan
 
 **BDD Metrics**:
+
 - Number of scenarios per feature
 - Scenario pass/fail rates
 - Scenario execution time
@@ -737,12 +771,14 @@ Affects:
 - Business stakeholder engagement
 
 **Quality Metrics**:
+
 - Requirements coverage by scenarios
 - Defects found by BDD tests
 - Time to write scenarios vs implementation
 - Scenario maintenance effort
 
 **Review Schedule**:
+
 - Weekly: Scenario review sessions
 - Monthly: BDD practice retrospective
 - Quarterly: Business stakeholder feedback
@@ -771,12 +807,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Not all features have BDD scenarios yet (gradual adoption)
 2. Some step definitions have duplication (needs refactoring)
 3. Limited Chinese language scenarios (future requirement)
 4. No automated scenario generation from requirements (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Achieve 100% scenario coverage for all features
 - **Q2 2026**: Refactor step definitions to eliminate duplication
 - **Q3 2026**: Add Chinese language scenario support
@@ -792,6 +830,7 @@ Affects:
 ### Gherkin Best Practices
 
 **DO**:
+
 - Use business language, not technical jargon
 - Keep scenarios focused on business value
 - Use Background for common setup
@@ -800,6 +839,7 @@ Affects:
 - Use descriptive scenario names
 
 **DON'T**:
+
 - Include technical implementation details
 - Make scenarios dependent on each other
 - Use UI-specific language (unless testing UI)
@@ -809,6 +849,7 @@ Affects:
 ### Step Definition Patterns
 
 **Parameter Types**:
+
 ```java
 @ParameterType("CUST-\\d+")
 public CustomerId customerId(String id) {
@@ -822,6 +863,7 @@ public Money money(String amount) {
 ```
 
 **Data Tables**:
+
 ```java
 @Given("the following products exist:")
 public void theFollowingProductsExist(List<Product> products) {
@@ -841,7 +883,7 @@ public Product productEntry(Map<String, String> entry) {
 
 ### Scenario Organization
 
-```
+```text
 features/
 ├── customer/
 │   ├── registration.feature
@@ -862,7 +904,7 @@ features/
 
 ### Example Report Output
 
-```
+```text
 Feature: Order Submission
   ✓ Submit order with single item (1.2s)
   ✓ Submit order with multiple items (1.5s)

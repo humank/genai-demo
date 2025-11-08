@@ -24,7 +24,7 @@ This document describes the synchronization mechanisms used to coordinate concur
 
 Our synchronization strategy operates at multiple levels:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Distributed Level                        │
 │  ├── Kafka Event Ordering (Partition-based)                │
@@ -360,6 +360,7 @@ public OrderReport generateReport(String orderId) {
 ### Lock Metrics
 
 **Key Metrics to Monitor**:
+
 - Lock acquisition time
 - Lock hold duration
 - Lock contention rate
@@ -367,6 +368,7 @@ public OrderReport generateReport(String orderId) {
 - Lock timeout rate
 
 **Monitoring Implementation**:
+
 ```java
 @Aspect
 @Component
@@ -400,14 +402,17 @@ public class LockMonitoringAspect {
 ### Troubleshooting Common Issues
 
 **Issue 1: High Lock Contention**
+
 - **Symptom**: Slow response times, high lock wait times
 - **Solution**: Reduce lock scope, use optimistic locking, partition data
 
 **Issue 2: Deadlocks**
+
 - **Symptom**: Threads blocked indefinitely
 - **Solution**: Implement lock ordering, use timeouts, review lock acquisition patterns
 
 **Issue 3: Lock Timeouts**
+
 - **Symptom**: Frequent lock acquisition failures
 - **Solution**: Increase timeout, optimize locked operations, scale horizontally
 

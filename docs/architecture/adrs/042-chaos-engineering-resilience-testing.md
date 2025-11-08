@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance"]
 Active-active multi-region architecture requires systematic resilience testing to ensure system reliability:
 
 **Resilience Challenges**:
+
 - **Complex Failure Modes**: Multiple failure scenarios in distributed systems
 - **Unknown Weaknesses**: Hidden vulnerabilities in system design
 - **Cascading Failures**: Failures that propagate across components
@@ -30,6 +31,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 - **Confidence Gap**: Uncertainty about system behavior under stress
 
 **Testing Gaps**:
+
 - Traditional testing doesn't cover distributed system failures
 - Manual testing is time-consuming and incomplete
 - Production incidents reveal unknown weaknesses
@@ -37,6 +39,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 - No systematic approach to resilience validation
 
 **Business Impact**:
+
 - Unexpected downtime (target: 99.9% availability)
 - Revenue loss during outages
 - Customer trust erosion
@@ -46,6 +49,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 ### Business Context
 
 **Business Drivers**:
+
 - Availability SLO: 99.9% (8.76 hours downtime/year)
 - RTO: 5 minutes for critical services
 - RPO: 1 minute for transactional data
@@ -53,6 +57,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 - Competitive advantage (reliability)
 
 **Constraints**:
+
 - Budget: $50,000/year for chaos engineering tools
 - Cannot disrupt production during business hours
 - Must maintain customer experience
@@ -62,6 +67,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 ### Technical Context
 
 **Current State**:
+
 - Active-active architecture in Taiwan and Tokyo
 - Manual failover testing (quarterly)
 - No systematic chaos testing
@@ -69,6 +75,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 - Reactive incident response
 
 **Requirements**:
+
 - Automated chaos experiments
 - Comprehensive failure scenario coverage
 - Production-safe testing
@@ -95,6 +102,7 @@ Active-active multi-region architecture requires systematic resilience testing t
 **Chaos Engineering Approach**:
 
 **1. Chaos Experiment Framework**:
+
 ```typescript
 // Chaos experiment definition
 interface ChaosExperiment {
@@ -178,6 +186,7 @@ const regionFailureExperiment: ChaosExperiment = {
 **2. Failure Injection Scenarios**:
 
 **Infrastructure Failures**:
+
 - Region failure (complete region unavailable)
 - AZ failure (single availability zone down)
 - Network partition (split-brain scenarios)
@@ -185,6 +194,7 @@ const regionFailureExperiment: ChaosExperiment = {
 - DNS failure (DNS resolution issues)
 
 **Service Failures**:
+
 - Pod termination (random pod kills)
 - Service degradation (CPU/memory pressure)
 - Database failure (primary database down)
@@ -192,6 +202,7 @@ const regionFailureExperiment: ChaosExperiment = {
 - Message queue failure (Kafka broker down)
 
 **Application Failures**:
+
 - API errors (inject 500 errors)
 - Timeout injection (slow responses)
 - Exception injection (application errors)
@@ -199,6 +210,7 @@ const regionFailureExperiment: ChaosExperiment = {
 - Dependency failures (external service down)
 
 **Data Failures**:
+
 - Data corruption (invalid data injection)
 - Replication lag (delayed replication)
 - Consistency violations (conflicting updates)
@@ -207,6 +219,7 @@ const regionFailureExperiment: ChaosExperiment = {
 **3. Chaos Tools Integration**:
 
 **Chaos Mesh** (Kubernetes-native):
+
 ```yaml
 # Network chaos experiment
 apiVersion: chaos-mesh.org/v1alpha1
@@ -219,7 +232,9 @@ spec:
   mode: all
   selector:
     namespaces:
+
       - production
+
     labelSelectors:
       region: taiwan
   direction: both
@@ -229,27 +244,37 @@ spec:
 ```
 
 **AWS Fault Injection Simulator**:
+
 ```yaml
 # RDS failover experiment
 experiment:
   name: rds-failover-test
   description: Test RDS automatic failover
   actions:
+
     - name: failover-rds
+
       actionId: aws:rds:reboot-db-instances
       parameters:
         dbInstanceIdentifier: ecommerce-taiwan-primary
         forceFailover: true
   stopConditions:
+
     - source: aws:cloudwatch:alarm
+
       value: HighErrorRate
   targets:
+
     - resourceType: aws:rds:db
+
       resourceArns:
+
         - arn:aws:rds:ap-northeast-1:*:db:ecommerce-taiwan-primary
+
 ```
 
 **Litmus Chaos**:
+
 ```yaml
 # Pod delete chaos
 apiVersion: litmuschaos.io/v1alpha1
@@ -264,21 +289,30 @@ spec:
     appkind: deployment
   chaosServiceAccount: litmus-admin
   experiments:
+
     - name: pod-delete
+
       spec:
         components:
           env:
+
             - name: TOTAL_CHAOS_DURATION
+
               value: '60'
+
             - name: CHAOS_INTERVAL
+
               value: '10'
+
             - name: FORCE
+
               value: 'false'
 ```
 
 **4. Observability Integration**:
 
 **Experiment Monitoring**:
+
 ```typescript
 // Real-time experiment monitoring
 class ChaosExperimentMonitor {
@@ -354,6 +388,7 @@ class ChaosExperimentMonitor {
 ```
 
 **Metrics Collection**:
+
 ```typescript
 const chaosMetrics = {
   // Experiment execution
@@ -377,6 +412,7 @@ const chaosMetrics = {
 **5. Game Days and Disaster Recovery Drills**:
 
 **Quarterly Game Day Schedule**:
+
 ```typescript
 interface GameDay {
   id: string;
@@ -448,6 +484,7 @@ const q1GameDay: GameDay = {
 **6. Resilience Scoring**:
 
 **Resilience Score Calculation**:
+
 ```typescript
 interface ResilienceScore {
   overall: number; // 0-100
@@ -509,6 +546,7 @@ class ResilienceScoreCalculator {
 ```
 
 **Pros**:
+
 - ✅ Comprehensive resilience validation
 - ✅ Automated continuous testing
 - ✅ Production-safe experiments
@@ -517,6 +555,7 @@ class ResilienceScoreCalculator {
 - ✅ Proactive weakness discovery
 
 **Cons**:
+
 - ⚠️ Initial setup complexity
 - ⚠️ Requires cultural change
 - ⚠️ Tool integration effort
@@ -531,11 +570,13 @@ class ResilienceScoreCalculator {
 **Description**: Manual disaster recovery drills quarterly
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low cost
 - ✅ Controlled testing
 
 **Cons**:
+
 - ❌ Infrequent testing
 - ❌ Limited coverage
 - ❌ Manual effort
@@ -550,10 +591,12 @@ class ResilienceScoreCalculator {
 **Description**: Rely on production monitoring without chaos testing
 
 **Pros**:
+
 - ✅ No testing overhead
 - ✅ Minimal cost
 
 **Cons**:
+
 - ❌ Reactive approach
 - ❌ Unknown weaknesses
 - ❌ Customer impact
@@ -581,7 +624,8 @@ Comprehensive chaos engineering provides:
 ### Implementation Architecture
 
 **Chaos Engineering Stack**:
-```
+
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                  Chaos Control Plane                     │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
@@ -610,6 +654,7 @@ Comprehensive chaos engineering provides:
 ### Experiment Catalog
 
 **Phase 1 Experiments (Month 1-3)**:
+
 1. Pod termination (random pod kills)
 2. Network latency injection
 3. CPU stress testing
@@ -617,25 +662,28 @@ Comprehensive chaos engineering provides:
 5. Database connection exhaustion
 
 **Phase 2 Experiments (Month 4-6)**:
-6. AZ failure simulation
-7. Database failover testing
-8. Cache cluster failure
-9. Message queue failure
-10. API error injection
+
+1. AZ failure simulation
+2. Database failover testing
+3. Cache cluster failure
+4. Message queue failure
+5. API error injection
 
 **Phase 3 Experiments (Month 7-9)**:
-11. Region failure simulation
-12. Network partition (split-brain)
-13. Data replication lag
-14. DNS failure simulation
-15. Cross-region latency
+
+1. Region failure simulation
+2. Network partition (split-brain)
+3. Data replication lag
+4. DNS failure simulation
+5. Cross-region latency
 
 **Phase 4 Experiments (Month 10-12)**:
-16. Cascading failure scenarios
-17. Resource exhaustion
-18. Security incident simulation
-19. Compliance violation scenarios
-20. Full disaster recovery drill
+
+1. Cascading failure scenarios
+2. Resource exhaustion
+3. Security incident simulation
+4. Compliance violation scenarios
+5. Full disaster recovery drill
 
 ## Impact Analysis
 
@@ -654,6 +702,7 @@ Comprehensive chaos engineering provides:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All services and components
 - Infrastructure layer
 - Monitoring and alerting
@@ -677,11 +726,13 @@ Affects:
 ### Phase 1: Foundation (Month 1-2)
 
 **Objectives**:
+
 - Set up chaos engineering platform
 - Define experiment framework
 - Establish safety guardrails
 
 **Tasks**:
+
 - [ ] Deploy Chaos Mesh on EKS
 - [ ] Configure AWS FIS
 - [ ] Implement experiment scheduler
@@ -689,6 +740,7 @@ Affects:
 - [ ] Set up monitoring integration
 
 **Success Criteria**:
+
 - Platform operational
 - Safety checks working
 - First experiment executed
@@ -696,11 +748,13 @@ Affects:
 ### Phase 2: Basic Experiments (Month 3-4)
 
 **Objectives**:
+
 - Execute basic failure scenarios
 - Validate system resilience
 - Build team confidence
 
 **Tasks**:
+
 - [ ] Pod termination experiments
 - [ ] Network latency experiments
 - [ ] Resource pressure experiments
@@ -708,6 +762,7 @@ Affects:
 - [ ] Fix discovered issues
 
 **Success Criteria**:
+
 - 5 experiments executed
 - Issues identified and fixed
 - Team trained
@@ -715,11 +770,13 @@ Affects:
 ### Phase 3: Advanced Experiments (Month 5-6)
 
 **Objectives**:
+
 - Test complex failure scenarios
 - Validate recovery procedures
 - Improve automation
 
 **Tasks**:
+
 - [ ] AZ failure experiments
 - [ ] Database failover experiments
 - [ ] Cache failure experiments
@@ -727,6 +784,7 @@ Affects:
 - [ ] Update runbooks
 
 **Success Criteria**:
+
 - 10 experiments executed
 - Recovery procedures validated
 - Automation improved
@@ -734,11 +792,13 @@ Affects:
 ### Phase 4: Multi-Region Testing (Month 7-8)
 
 **Objectives**:
+
 - Test region-level failures
 - Validate cross-region failover
 - Conduct game days
 
 **Tasks**:
+
 - [ ] Region failure experiments
 - [ ] Network partition experiments
 - [ ] First game day
@@ -746,6 +806,7 @@ Affects:
 - [ ] Measure resilience score
 
 **Success Criteria**:
+
 - Region failover validated
 - Game day successful
 - Resilience score > 80
@@ -753,11 +814,13 @@ Affects:
 ### Phase 5: Continuous Improvement (Month 9-12)
 
 **Objectives**:
+
 - Establish continuous testing
 - Optimize experiments
 - Build resilience culture
 
 **Tasks**:
+
 - [ ] Weekly automated experiments
 - [ ] Monthly game days
 - [ ] Quarterly DR drills
@@ -765,6 +828,7 @@ Affects:
 - [ ] Team training program
 
 **Success Criteria**:
+
 - Automated testing operational
 - Resilience score > 90
 - Team confidence high
@@ -772,12 +836,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Customer impact detected
 - Safety check failures
 - Experiment out of control
 - Business critical incident
 
 **Rollback Steps**:
+
 1. **Immediate**: Stop all chaos experiments
 2. **Restore**: Execute automated rollback
 3. **Verify**: Confirm system stability
@@ -855,12 +921,14 @@ const resilienceMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual experiment creation
 2. Limited blast radius control
 3. Basic safety checks
 4. Manual result analysis
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated experiment generation
 - **Q3 2026**: Advanced blast radius control
 - **Q4 2026**: AI-powered safety checks
@@ -886,6 +954,7 @@ const resilienceMetrics = {
 ### Safety Guidelines
 
 **Pre-Experiment Checks**:
+
 - No active incidents
 - No deployment freeze
 - Outside business hours (for high-risk experiments)
@@ -893,6 +962,7 @@ const resilienceMetrics = {
 - Rollback procedures ready
 
 **During Experiment**:
+
 - Real-time monitoring
 - Automatic safety checks
 - Manual abort capability
@@ -900,6 +970,7 @@ const resilienceMetrics = {
 - Team availability
 
 **Post-Experiment**:
+
 - Result analysis
 - Issue documentation
 - Runbook updates
@@ -909,6 +980,7 @@ const resilienceMetrics = {
 ### Experiment Design Best Practices
 
 **Good Experiment**:
+
 - Clear hypothesis
 - Measurable steady state
 - Realistic failure scenario
@@ -916,6 +988,7 @@ const resilienceMetrics = {
 - Safety guardrails
 
 **Bad Experiment**:
+
 - Vague hypothesis
 - Unmeasurable outcomes
 - Unrealistic scenario

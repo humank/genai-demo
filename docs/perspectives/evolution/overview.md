@@ -42,7 +42,7 @@ This perspective ensures the system can:
 
 ### Evolution Strategy
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              Evolution Strategy Layers                  │
 ├─────────────────────────────────────────────────────────┤
@@ -84,7 +84,7 @@ This perspective ensures the system can:
 
 Our hexagonal architecture provides natural extension points:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    Domain Core                          │
 │              (Stable, Rarely Changes)                   │
@@ -141,7 +141,7 @@ Our hexagonal architecture provides natural extension points:
 
 We adopt technologies based on maturity:
 
-```
+```text
 Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionment
                                                               ↓
                                                     Slope of Enlightenment
@@ -152,6 +152,7 @@ Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionme
 ```
 
 **Adoption Criteria**:
+
 - Technology reaches "Slope of Enlightenment" or "Plateau of Productivity"
 - Active community and commercial support
 - Clear migration path from current technology
@@ -162,7 +163,7 @@ Innovation Trigger → Peak of Inflated Expectations → Trough of Disillusionme
 
 ### API Versioning
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │              API Version Lifecycle                      │
 ├─────────────────────────────────────────────────────────┤
@@ -253,6 +254,7 @@ public class OrderService {
 ### Quality Gates
 
 Before merging changes:
+
 - ✅ All tests pass
 - ✅ Code coverage maintained or improved
 - ✅ No new critical security vulnerabilities
@@ -263,14 +265,17 @@ Before merging changes:
 ## Related Documentation
 
 ### Viewpoints
+
 - [Development Viewpoint](../../viewpoints/development/overview.md) - Module organization and dependencies
 - [Functional Viewpoint](../../viewpoints/functional/overview.md) - System capabilities and extension points
 
 ### Other Perspectives
+
 - [Performance & Scalability Perspective](../performance/overview.md) - Performance during evolution
 - [Security Perspective](../security/overview.md) - Security during changes
 
 ### Implementation Guides
+
 - [Extensibility Points](extensibility.md) - Plugin architecture and extension mechanisms
 - [Technology Evolution](technology-evolution.md) - Framework upgrade strategies
 - [API Versioning](api-versioning.md) - Versioning and deprecation policies

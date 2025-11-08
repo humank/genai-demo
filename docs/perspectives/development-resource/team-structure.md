@@ -10,7 +10,7 @@ This document provides detailed information about the engineering team structure
 
 ## Organizational Chart
 
-```
+```text
                     ┌─────────────────────┐
                     │   VP Engineering    │
                     │   (1 person)        │
@@ -46,6 +46,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 1 person
 
 **Key Responsibilities**:
+
 - Define engineering strategy and vision
 - Resource allocation and budget management
 - Stakeholder management (C-level, board)
@@ -55,6 +56,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Cross-functional collaboration
 
 **Required Qualifications**:
+
 - 10+ years of software engineering experience
 - 5+ years in engineering leadership roles
 - Experience scaling engineering teams (20+ people)
@@ -63,6 +65,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Excellent communication and stakeholder management
 
 **Success Metrics**:
+
 - Team productivity and velocity
 - System reliability and uptime
 - Time-to-market for new features
@@ -76,6 +79,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 1 person
 
 **Key Responsibilities**:
+
 - Day-to-day team management and coordination
 - Sprint planning and delivery oversight
 - Performance management and career development
@@ -85,6 +89,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Hiring and onboarding
 
 **Required Qualifications**:
+
 - 7+ years of software engineering experience
 - 3+ years in engineering management
 - Strong understanding of agile methodologies
@@ -93,6 +98,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Technical background in backend or full-stack development
 
 **Success Metrics**:
+
 - Sprint completion rate
 - Team velocity and predictability
 - Employee satisfaction scores
@@ -106,6 +112,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 1 person
 
 **Key Responsibilities**:
+
 - System architecture design and evolution
 - Technical decision-making and ADRs
 - Code review and quality standards
@@ -115,6 +122,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Cross-team technical coordination
 
 **Required Qualifications**:
+
 - 8+ years of software engineering experience
 - Deep expertise in Java, Spring Boot, microservices
 - Strong understanding of DDD and hexagonal architecture
@@ -123,6 +131,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Strong communication and documentation skills
 
 **Success Metrics**:
+
 - Architecture quality and maintainability
 - Technical debt ratio
 - System performance and scalability
@@ -136,6 +145,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 1 person
 
 **Key Responsibilities**:
+
 - Product vision and roadmap
 - Requirements gathering and prioritization
 - User story creation and acceptance criteria
@@ -145,6 +155,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Product metrics and KPIs
 
 **Required Qualifications**:
+
 - 4+ years of product management experience
 - E-commerce or marketplace experience preferred
 - Strong analytical and data-driven decision making
@@ -153,6 +164,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - User-centric mindset
 
 **Success Metrics**:
+
 - Feature adoption rate
 - User satisfaction scores
 - Business KPIs (conversion, revenue)
@@ -170,6 +182,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Senior Backend Engineer (2 people)
 
 **Key Responsibilities**:
+
 - Design and implement complex features
 - Architecture decisions for bounded contexts
 - Code review and mentoring
@@ -179,6 +192,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Interview and evaluate candidates
 
 **Required Skills**:
+
 - 5+ years Java development experience
 - Expert in Spring Boot 3.x ecosystem
 - Strong DDD and hexagonal architecture knowledge
@@ -189,6 +203,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Strong testing practices (TDD/BDD)
 
 **Daily Activities**:
+
 - Feature design and implementation (60%)
 - Code reviews and mentoring (20%)
 - Architecture discussions (10%)
@@ -199,6 +214,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Mid-level Backend Engineer (3 people)
 
 **Key Responsibilities**:
+
 - Implement features based on design
 - Write comprehensive tests
 - Participate in code reviews
@@ -207,6 +223,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Learn and apply best practices
 
 **Required Skills**:
+
 - 3-5 years Java development experience
 - Solid Spring Boot knowledge
 - Understanding of DDD concepts
@@ -216,6 +233,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Git and CI/CD workflows
 
 **Daily Activities**:
+
 - Feature implementation (70%)
 - Testing and bug fixing (15%)
 - Code reviews (10%)
@@ -226,6 +244,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Junior Backend Engineer (2 people)
 
 **Key Responsibilities**:
+
 - Implement small to medium features
 - Write unit tests
 - Fix bugs
@@ -234,6 +253,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Documentation
 
 **Required Skills**:
+
 - 1-3 years Java development experience
 - Basic Spring Boot knowledge
 - Understanding of OOP principles
@@ -242,6 +262,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Willingness to learn
 
 **Daily Activities**:
+
 - Feature implementation (60%)
 - Testing (15%)
 - Learning and pair programming (20%)
@@ -258,6 +279,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Senior Frontend Engineer (1 person)
 
 **Key Responsibilities**:
+
 - Frontend architecture decisions
 - Complex UI component development
 - Performance optimization
@@ -267,6 +289,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Build and deployment pipeline
 
 **Required Skills**:
+
 - 5+ years frontend development experience
 - Expert in React 18 and Next.js 14
 - Expert in Angular 18
@@ -277,6 +300,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Testing (Jest, Cypress)
 
 **Daily Activities**:
+
 - Complex feature development (50%)
 - Architecture and design (20%)
 - Code reviews and mentoring (20%)
@@ -287,6 +311,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Mid-level Frontend Engineer (2 people)
 
 **Key Responsibilities**:
+
 - UI component development
 - Feature implementation
 - Responsive design
@@ -295,6 +320,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Documentation
 
 **Required Skills**:
+
 - 3-5 years frontend development experience
 - Strong React or Angular knowledge
 - TypeScript proficiency
@@ -303,6 +329,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Git workflows
 
 **Daily Activities**:
+
 - Feature implementation (70%)
 - Testing and bug fixing (15%)
 - Code reviews (10%)
@@ -313,6 +340,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Junior Frontend Engineer (1 person)
 
 **Key Responsibilities**:
+
 - Simple UI component development
 - Bug fixing
 - Testing
@@ -320,6 +348,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Documentation
 
 **Required Skills**:
+
 - 1-3 years frontend development experience
 - Basic React or Angular knowledge
 - HTML, CSS, JavaScript fundamentals
@@ -327,6 +356,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Willingness to learn
 
 **Daily Activities**:
+
 - Feature implementation (60%)
 - Testing (15%)
 - Learning and pair programming (20%)
@@ -343,6 +373,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Senior QA Engineer (1 person)
 
 **Key Responsibilities**:
+
 - Test strategy and planning
 - Test automation framework
 - Quality metrics and reporting
@@ -352,6 +383,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - CI/CD test integration
 
 **Required Skills**:
+
 - 5+ years QA experience
 - Test automation expertise (Selenium, Playwright)
 - API testing (Postman, REST Assured)
@@ -361,6 +393,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Programming skills (Java or JavaScript)
 
 **Daily Activities**:
+
 - Test strategy and planning (30%)
 - Test automation development (40%)
 - Code reviews and mentoring (20%)
@@ -371,6 +404,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### QA Engineer (2 people)
 
 **Key Responsibilities**:
+
 - Test case design and execution
 - Test automation development
 - Bug reporting and tracking
@@ -379,6 +413,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Documentation
 
 **Required Skills**:
+
 - 2-4 years QA experience
 - Test automation skills
 - API testing knowledge
@@ -387,6 +422,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Basic programming skills
 
 **Daily Activities**:
+
 - Test execution (50%)
 - Test automation (30%)
 - Bug reporting and verification (15%)
@@ -403,6 +439,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Senior DevOps Engineer (1 person)
 
 **Key Responsibilities**:
+
 - Infrastructure architecture (AWS)
 - Infrastructure as Code (AWS CDK)
 - Kubernetes cluster management
@@ -412,6 +449,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Disaster recovery planning
 
 **Required Skills**:
+
 - 5+ years DevOps experience
 - AWS expertise (EKS, RDS, ElastiCache, MSK)
 - Kubernetes and Docker
@@ -421,6 +459,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Security best practices
 
 **Daily Activities**:
+
 - Infrastructure development (50%)
 - Incident response (20%)
 - Automation and optimization (20%)
@@ -431,6 +470,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 #### Mid-level DevOps Engineer (1 person)
 
 **Key Responsibilities**:
+
 - CI/CD pipeline maintenance
 - Infrastructure monitoring
 - Deployment automation
@@ -439,6 +479,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - On-call support
 
 **Required Skills**:
+
 - 3-5 years DevOps experience
 - AWS services knowledge
 - Docker and Kubernetes basics
@@ -447,6 +488,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Monitoring tools
 
 **Daily Activities**:
+
 - Pipeline maintenance (40%)
 - Monitoring and alerting (30%)
 - Incident response (20%)
@@ -459,6 +501,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 1 person
 
 **Key Responsibilities**:
+
 - UI/UX design for all applications
 - User research and testing
 - Design system maintenance
@@ -467,6 +510,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Collaboration with frontend team
 
 **Required Skills**:
+
 - 3+ years UX design experience
 - Figma or Sketch expertise
 - User research methodologies
@@ -481,6 +525,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 0.5 FTE (Part-time or shared resource)
 
 **Key Responsibilities**:
+
 - API documentation
 - User guides and tutorials
 - Architecture documentation
@@ -488,6 +533,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Documentation maintenance
 
 **Required Skills**:
+
 - 2+ years technical writing experience
 - Understanding of software development
 - Markdown and documentation tools
@@ -500,6 +546,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 **Headcount**: 0.5 FTE (Part-time or consultant)
 
 **Key Responsibilities**:
+
 - Security reviews and audits
 - Penetration testing
 - Security training
@@ -507,6 +554,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 - Incident response support
 
 **Required Skills**:
+
 - 4+ years security experience
 - Application security expertise
 - Cloud security (AWS)
@@ -519,7 +567,7 @@ Backend Team   Frontend    QA   DevOps Team    UX      Security
 
 For major features, we form temporary cross-functional squads:
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         Feature Squad Example           │
 ├─────────────────────────────────────────┤
@@ -557,7 +605,7 @@ For major features, we form temporary cross-functional squads:
 
 ### Engineering Career Ladder
 
-```
+```text
 Junior Engineer (Level 1-2)
     ↓ 2-3 years
 Mid-level Engineer (Level 3-4)

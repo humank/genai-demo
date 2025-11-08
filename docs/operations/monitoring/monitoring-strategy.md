@@ -102,6 +102,7 @@ This document describes the comprehensive monitoring strategy for the Enterprise
 **Purpose**: High-level system health for management
 
 **Metrics**:
+
 - System availability (uptime percentage)
 - Total requests per minute
 - Error rate
@@ -116,6 +117,7 @@ This document describes the comprehensive monitoring strategy for the Enterprise
 **Purpose**: Real-time operational monitoring
 
 **Panels**:
+
 1. **System Health**
    - Service status (up/down)
    - Pod health
@@ -146,6 +148,7 @@ This document describes the comprehensive monitoring strategy for the Enterprise
 **Purpose**: Application-specific metrics
 
 **Panels**:
+
 1. **API Endpoints**
    - Response time by endpoint
    - Request count by endpoint
@@ -169,6 +172,7 @@ This document describes the comprehensive monitoring strategy for the Enterprise
 **Purpose**: Database performance monitoring
 
 **Panels**:
+
 1. **Connections**
    - Active connections
    - Idle connections
@@ -276,21 +280,33 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
+
   - job_name: 'ecommerce-backend'
+
     kubernetes_sd_configs:
+
       - role: pod
+
         namespaces:
           names:
+
             - production
+
     relabel_configs:
+
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+
         action: keep
         regex: true
+
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+
         action: replace
         target_label: __metrics_path__
         regex: (.+)
+
       - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+
         action: replace
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
@@ -341,14 +357,22 @@ public class StructuredLogger {
 ```yaml
 # Filebeat configuration
 filebeat.inputs:
+
   - type: container
+
     paths:
+
       - '/var/log/containers/*.log'
+
     processors:
+
       - add_kubernetes_metadata:
+
           host: ${NODE_NAME}
           matchers:
+
             - logs_path:
+
                 logs_path: "/var/log/containers/"
 
 output.elasticsearch:

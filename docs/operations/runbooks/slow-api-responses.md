@@ -18,7 +18,7 @@
 
 - **Alert**: `SlowAPIResponseTime` alert fires
 - **Monitoring Dashboard**: Operations Dashboard > Performance > API Response Times
-- **Log Patterns**: 
+- **Log Patterns**:
   - `Request took longer than expected`
   - `Slow query detected`
   - `Timeout waiting for response`
@@ -162,11 +162,13 @@ kubectl exec -it ${POD_NAME} -n production -- \
 ### Immediate Actions
 
 1. **Scale horizontally** if resource-constrained:
+
 ```bash
 kubectl scale deployment/ecommerce-backend --replicas=8 -n production
 ```
 
-2. **Clear cache** if stale data causing issues:
+1. **Clear cache** if stale data causing issues:
+
 ```bash
 # Clear application cache
 curl -X POST http://localhost:8080/actuator/caches/products -d '{"action":"clear"}'
@@ -175,7 +177,8 @@ curl -X POST http://localhost:8080/actuator/caches/products -d '{"action":"clear
 kubectl exec -it redis-0 -n production -- redis-cli FLUSHDB
 ```
 
-3. **Kill slow queries** if blocking others:
+1. **Kill slow queries** if blocking others:
+
 ```bash
 kubectl exec -it ${POD_NAME} -n production -- \
   psql -h ${DB_HOST} -U ${DB_USER} -d ${DB_NAME} -c \
@@ -187,9 +190,10 @@ kubectl exec -it ${POD_NAME} -n production -- \
 
 ### Root Cause Fixes
 
-#### If caused by slow database queries:
+#### If caused by slow database queries
 
 1. **Identify slow queries**:
+
 ```sql
 -- Get slowest queries
 SELECT query, calls, total_time, mean_time, max_time,
@@ -199,7 +203,8 @@ ORDER BY mean_time DESC
 LIMIT 20;
 ```
 
-2. **Analyze query execution plan**:
+1. **Analyze query execution plan**:
+
 ```sql
 EXPLAIN ANALYZE
 SELECT o.*, c.name, c.email
@@ -208,7 +213,8 @@ JOIN customers c ON o.customer_id = c.id
 WHERE o.created_at > NOW() - INTERVAL '7 days';
 ```
 
-3. **Add missing indexes**:
+1. **Add missing indexes**:
+
 ```sql
 -- Create index on frequently queried columns
 CREATE INDEX CONCURRENTLY idx_orders_created_at 
@@ -221,7 +227,8 @@ ON orders(customer_id, created_at);
 EXPLAIN ANALYZE [your query];
 ```
 
-4. **Optimize query**:
+1. **Optimize query**:
+
 ```java
 // Before: N+1 query problem
 public List<OrderDTO> getOrders() {
@@ -239,9 +246,10 @@ public List<OrderDTO> getOrders() {
 List<Order> findRecentOrdersWithCustomer(@Param("date") LocalDateTime date);
 ```
 
-#### If caused by inefficient caching:
+#### If caused by inefficient caching
 
 1. **Implement caching for frequently accessed data**:
+
 ```java
 @Service
 public class ProductService {
@@ -264,19 +272,23 @@ public class ProductService {
 }
 ```
 
-2. **Configure cache TTL**:
+1. **Configure cache TTL**:
+
 ```yaml
 spring:
   cache:
     redis:
       time-to-live: 1800000  # 30 minutes
     cache-names:
+
       - products
       - customers
       - categories
+
 ```
 
-3. **Implement cache warming**:
+1. **Implement cache warming**:
+
 ```java
 @Component
 public class CacheWarmer {
@@ -292,9 +304,10 @@ public class CacheWarmer {
 }
 ```
 
-#### If caused by external API slowness:
+#### If caused by external API slowness
 
 1. **Implement timeout and circuit breaker**:
+
 ```java
 @Service
 public class PaymentService {
@@ -319,7 +332,8 @@ public class PaymentService {
 }
 ```
 
-2. **Configure resilience4j**:
+1. **Configure resilience4j**:
+
 ```yaml
 resilience4j:
   circuitbreaker:
@@ -343,9 +357,10 @@ resilience4j:
         timeoutDuration: 5s
 ```
 
-#### If caused by inefficient code:
+#### If caused by inefficient code
 
 1. **Profile application**:
+
 ```bash
 # Get CPU profile
 kubectl exec -it ${POD_NAME} -n production -- \
@@ -355,7 +370,8 @@ kubectl exec -it ${POD_NAME} -n production -- \
 kubectl cp production/${POD_NAME}:/tmp/profile.html ./profile.html
 ```
 
-2. **Optimize hot paths**:
+1. **Optimize hot paths**:
+
 ```java
 // Before: Inefficient
 public List<OrderDTO> getOrders() {
@@ -374,7 +390,8 @@ List<OrderDTO> findAllOrderDTOs();
 List<OrderSummaryDTO> findOrderSummaries();
 ```
 
-3. **Implement pagination**:
+1. **Implement pagination**:
+
 ```java
 @GetMapping("/orders")
 public Page<OrderDTO> getOrders(
@@ -386,9 +403,10 @@ public Page<OrderDTO> getOrders(
 }
 ```
 
-#### If caused by connection pool exhaustion:
+#### If caused by connection pool exhaustion
 
 1. **Increase connection pool size**:
+
 ```yaml
 spring:
   datasource:
@@ -399,7 +417,8 @@ spring:
       idle-timeout: 300000
 ```
 
-2. **Fix connection leaks**:
+1. **Fix connection leaks**:
+
 ```java
 // Ensure proper resource cleanup
 @Transactional
@@ -471,11 +490,14 @@ ORDER BY schemaname, tablename;
 
 ```yaml
 # Set up performance alerts
+
 - alert: APIResponseTimeDegrading
+
   expr: rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m]) > 1
   for: 10m
   
 - alert: DatabaseQuerySlow
+
   expr: rate(pg_stat_statements_mean_exec_time_seconds[5m]) > 0.5
   for: 5m
 ```

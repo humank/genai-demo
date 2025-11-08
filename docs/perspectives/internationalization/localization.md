@@ -24,6 +24,7 @@ This document focuses on the localization aspects - how we adapt our platform fo
 **Scope**: All UI labels, buttons, messages, navigation
 
 **Localization Approach**:
+
 - Professional translation
 - Native speaker review
 - Context-aware translation
@@ -32,6 +33,7 @@ This document focuses on the localization aspects - how we adapt our platform fo
 **Update Frequency**: Every release
 
 **Example**:
+
 ```json
 // en-US
 {
@@ -57,12 +59,13 @@ This document focuses on the localization aspects - how we adapt our platform fo
 **Scope**: Product names, descriptions, specifications
 
 **Localization Approach**:
-- **Product Names**: 
+
+- **Product Names**:
   - Keep original brand names
   - Add local phonetic translation if needed
   - Example: "iPhone" → "iPhone" (same) + "愛鳳" (phonetic, optional)
   
-- **Descriptions**: 
+- **Descriptions**:
   - Professional translation
   - Adapt to local preferences
   - Maintain SEO keywords
@@ -75,7 +78,8 @@ This document focuses on the localization aspects - how we adapt our platform fo
 **Update Frequency**: Weekly batch updates
 
 **Example**:
-```
+
+```text
 Product: Wireless Headphones
 
 en-US:
@@ -98,6 +102,7 @@ Specs: 重量: 240 克, 藍牙 5.0
 **Scope**: Banners, promotions, campaigns, email marketing
 
 **Localization Approach**:
+
 - Transcreation (creative adaptation)
 - Cultural relevance
 - Local holidays and events
@@ -120,6 +125,7 @@ Specs: 重量: 240 克, 藍牙 5.0
 **Scope**: Terms of service, privacy policy, return policy
 
 **Localization Approach**:
+
 - Legal translation by certified translators
 - Local legal review
 - Compliance with local regulations
@@ -143,6 +149,7 @@ Specs: 重量: 240 克, 藍牙 5.0
 **Scope**: FAQs, help articles, tutorials, error messages
 
 **Localization Approach**:
+
 - Professional translation
 - Local customer service review
 - Include local examples
@@ -151,6 +158,7 @@ Specs: 重量: 240 克, 藍牙 5.0
 **Update Frequency**: Monthly
 
 **Error Message Localization**:
+
 ```java
 // Backend error messages
 messages_en_US.properties:
@@ -189,6 +197,7 @@ error.product.outofstock=此商品目前缺貨。
 #### Implementation Example
 
 **Backend (Java)**:
+
 ```java
 @Service
 public class DateTimeFormattingService {
@@ -210,6 +219,7 @@ public class DateTimeFormattingService {
 ```
 
 **Frontend (TypeScript)**:
+
 ```typescript
 export const formatDate = (date: Date, locale: string): string => {
   return new Intl.DateTimeFormat(locale, {
@@ -276,11 +286,13 @@ formatNumber(1234.56, 'de-DE');  // "1.234,56"
 #### Currency Formatting Rules
 
 **Decimal Places**:
+
 - Most currencies: 2 decimal places
 - Japanese Yen (JPY): 0 decimal places
 - Korean Won (KRW): 0 decimal places
 
 **Symbol Position**:
+
 - US: Symbol before amount ($100)
 - Taiwan: Symbol before amount (NT$100)
 - China: Symbol before amount (¥100)
@@ -289,6 +301,7 @@ formatNumber(1234.56, 'de-DE');  // "1.234,56"
 #### Implementation
 
 **Backend (Java)**:
+
 ```java
 @Service
 public class CurrencyFormattingService {
@@ -312,6 +325,7 @@ public class CurrencyFormattingService {
 ```
 
 **Frontend (TypeScript)**:
+
 ```typescript
 export const formatCurrency = (
   amount: number, 
@@ -342,7 +356,8 @@ formatCurrency(1234.56, 'ja-JP', 'JPY');  // "¥1,235"
 #### Address Formats by Region
 
 **United States**:
-```
+
+```json
 [Name]
 [Street Address]
 [City], [State] [ZIP Code]
@@ -356,7 +371,8 @@ United States
 ```
 
 **Taiwan**:
-```
+
+```json
 [Postal Code]
 [City][District]
 [Street Address]
@@ -370,7 +386,8 @@ Example:
 ```
 
 **China**:
-```
+
+```json
 [Name]
 [Province][City][District]
 [Street Address]
@@ -384,7 +401,8 @@ Example:
 ```
 
 **Japan**:
-```
+
+```text
 〒[Postal Code]
 [Prefecture][City][District]
 [Street Address]
@@ -473,12 +491,14 @@ export const formatPhoneNumber = (phone: string, locale: string): string => {
 **Purpose**: Reuse previous translations for consistency and efficiency
 
 **Implementation**:
+
 - Use Translation Management System (TMS) with translation memory
 - Store approved translations
 - Suggest matches for similar content
 - Maintain glossary of terms
 
 **Benefits**:
+
 - Consistency across platform
 - Faster translation
 - Cost reduction
@@ -502,7 +522,8 @@ export const formatPhoneNumber = (phone: string, locale: string): string => {
 ### Content Versioning
 
 **Version Control for Translations**:
-```
+
+```text
 translations/
 ├── en-US/
 │   ├── v1.0/
@@ -518,6 +539,7 @@ translations/
 ```
 
 **Benefits**:
+
 - Track translation changes
 - Rollback if needed
 - A/B testing different translations
@@ -528,6 +550,7 @@ translations/
 ### Linguistic QA
 
 **Checklist**:
+
 - [ ] Grammar and spelling correct
 - [ ] Terminology consistent
 - [ ] Tone appropriate for audience
@@ -538,6 +561,7 @@ translations/
 ### Functional QA
 
 **Checklist**:
+
 - [ ] All strings translated
 - [ ] No truncated text
 - [ ] UI layout correct
@@ -550,6 +574,7 @@ translations/
 ### Visual QA
 
 **Checklist**:
+
 - [ ] Text fits in UI elements
 - [ ] No text overflow
 - [ ] Proper line breaks
@@ -563,6 +588,7 @@ translations/
 ### Translation Loading Strategy
 
 **Lazy Loading**:
+
 ```typescript
 // Load only needed translations
 const loadTranslations = async (locale: string, namespace: string) => {
@@ -575,6 +601,7 @@ await loadTranslations('zh-TW', 'checkout');
 ```
 
 **Caching**:
+
 ```typescript
 // Cache translations in browser
 const CACHE_KEY = 'translations';

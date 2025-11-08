@@ -12,12 +12,14 @@ This document describes the data protection mechanisms used in the e-commerce pl
 ### Sensitivity Levels
 
 #### Highly Sensitive (Level 1)
+
 - **Payment card data** (PAN, CVV, expiration date)
 - **Authentication credentials** (passwords, API keys)
 - **Personal identification numbers** (SSN, passport numbers)
 - **Financial information** (bank account numbers)
 
 **Protection Requirements**:
+
 - ✅ Encryption at rest (AES-256)
 - ✅ Encryption in transit (TLS 1.3)
 - ✅ Access logging
@@ -25,12 +27,14 @@ This document describes the data protection mechanisms used in the e-commerce pl
 - ✅ Strict access control
 
 #### Sensitive (Level 2)
+
 - **Personally Identifiable Information (PII)**: Email, phone number, address
 - **Order history and purchase data**
 - **User preferences and behavior data**
 - **Business confidential data**
 
 **Protection Requirements**:
+
 - ✅ Encryption at rest
 - ✅ Encryption in transit
 - ✅ Data masking in non-production
@@ -38,22 +42,26 @@ This document describes the data protection mechanisms used in the e-commerce pl
 - ✅ Access control
 
 #### Internal (Level 3)
+
 - **Product catalog data**
 - **Public reviews and ratings**
 - **Aggregated analytics data**
 - **System logs (non-sensitive)**
 
 **Protection Requirements**:
+
 - ✅ Encryption in transit
 - ✅ Access control
 - ⚠️ Encryption at rest (optional)
 
 #### Public (Level 4)
+
 - **Product descriptions and images**
 - **Public marketing content**
 - **Public API documentation**
 
 **Protection Requirements**:
+
 - ✅ Integrity protection
 - ⚠️ Encryption (optional)
 
@@ -65,7 +73,9 @@ This document describes the data protection mechanisms used in the e-commerce pl
 
 ```java
 /**
+
  * JPA Converter for encrypting sensitive fields
+
  */
 @Converter
 public class EncryptedStringConverter implements AttributeConverter<String, String> {
@@ -153,7 +163,9 @@ public class AESEncryptionService {
     }
     
     /**
+
      * Encrypt data using AES-256-GCM
+
      */
     public String encrypt(String plaintext) throws Exception {
         byte[] iv = generateIV();
@@ -173,7 +185,9 @@ public class AESEncryptionService {
     }
     
     /**
+
      * Decrypt data using AES-256-GCM
+
      */
     public String decrypt(String encrypted) throws Exception {
         byte[] combined = Base64.getDecoder().decode(encrypted);
@@ -243,7 +257,9 @@ public class KeyRotationService {
     private final CustomerRepository customerRepository;
     
     /**
+
      * Rotate encryption keys for all encrypted data
+
      */
     @Scheduled(cron = "0 0 2 1 */3 *") // Every 3 months at 2 AM
     public void rotateKeys() {
@@ -374,8 +390,10 @@ public class SecurityHeadersConfiguration {
 public class DataMaskingService {
     
     /**
+
      * Mask email address
      * Example: john.doe@example.com -> j*******e@example.com
+
      */
     public String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
@@ -391,14 +409,18 @@ public class DataMaskingService {
         }
         
         return localPart.charAt(0) 
+
             + "*".repeat(localPart.length() - 2) 
             + localPart.charAt(localPart.length() - 1) 
             + "@" + domain;
+
     }
     
     /**
+
      * Mask phone number
      * Example: +1-555-123-4567 -> +1-***-***-4567
+
      */
     public String maskPhoneNumber(String phoneNumber) {
         if (phoneNumber == null || phoneNumber.length() < 4) {
@@ -411,8 +433,10 @@ public class DataMaskingService {
     }
     
     /**
+
      * Mask credit card number
      * Example: 4532-1234-5678-9010 -> ****-****-****-9010
+
      */
     public String maskCreditCard(String cardNumber) {
         if (cardNumber == null || cardNumber.length() < 4) {
@@ -426,8 +450,10 @@ public class DataMaskingService {
     }
     
     /**
+
      * Mask address
      * Example: 123 Main Street, Apt 4B -> *** Main Street, ***
+
      */
     public String maskAddress(String address) {
         if (address == null) {
@@ -450,7 +476,9 @@ public class DataMaskingAspect {
     private final DataMaskingService maskingService;
     
     /**
+
      * Automatically mask sensitive data in non-production environments
+
      */
     @Around("@annotation(MaskSensitiveData)")
     public Object maskData(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -479,7 +507,9 @@ public class DataAnonymizationService {
     private final OrderRepository orderRepository;
     
     /**
+
      * Anonymize customer data for GDPR compliance
+
      */
     @Transactional
     public void anonymizeCustomer(String customerId) {
@@ -510,7 +540,9 @@ public class DataAnonymizationService {
     }
     
     /**
+
      * Check if customer can be anonymized
+
      */
     public boolean canAnonymize(String customerId) {
         // Cannot anonymize if there are pending orders
@@ -548,7 +580,9 @@ public class InputSanitizationService {
     }
     
     /**
+
      * Sanitize HTML input to prevent XSS
+
      */
     public String sanitizeHtml(String input) {
         if (input == null) {
@@ -558,7 +592,9 @@ public class InputSanitizationService {
     }
     
     /**
+
      * Escape special characters for SQL
+
      */
     public String escapeSql(String input) {
         if (input == null) {
@@ -571,7 +607,9 @@ public class InputSanitizationService {
     }
     
     /**
+
      * Remove potentially dangerous characters
+
      */
     public String sanitizeFilename(String filename) {
         if (filename == null) {
@@ -590,7 +628,9 @@ public class InputSanitizationService {
 public class OutputEncodingService {
     
     /**
+
      * Encode for HTML context
+
      */
     public String encodeForHtml(String input) {
         if (input == null) {
@@ -600,7 +640,9 @@ public class OutputEncodingService {
     }
     
     /**
+
      * Encode for JavaScript context
+
      */
     public String encodeForJavaScript(String input) {
         if (input == null) {
@@ -610,7 +652,9 @@ public class OutputEncodingService {
     }
     
     /**
+
      * Encode for JSON context
+
      */
     public String encodeForJson(String input) {
         if (input == null) {
@@ -634,7 +678,9 @@ public class DataRetentionService {
     private static final int LOG_RETENTION_DAYS = 90; // 90 days
     
     /**
+
      * Delete data that exceeds retention period
+
      */
     @Scheduled(cron = "0 0 3 * * *") // Daily at 3 AM
     public void enforceRetentionPolicy() {
@@ -688,7 +734,9 @@ public class DataRetentionService {
 public class GDPRComplianceService {
     
     /**
+
      * Handle GDPR data subject access request
+
      */
     public CustomerDataExport exportCustomerData(String customerId) {
         Customer customer = customerRepository.findById(customerId)
@@ -706,7 +754,9 @@ public class GDPRComplianceService {
     }
     
     /**
+
      * Handle GDPR right to rectification
+
      */
     public void rectifyCustomerData(String customerId, CustomerDataUpdate update) {
         Customer customer = customerRepository.findById(customerId)
@@ -719,7 +769,9 @@ public class GDPRComplianceService {
     }
     
     /**
+
      * Handle GDPR right to erasure
+
      */
     public void eraseCustomerData(String customerId) {
         if (!dataAnonymizationService.canAnonymize(customerId)) {
@@ -741,7 +793,9 @@ public class GDPRComplianceService {
 public class PCIDSSComplianceService {
     
     /**
+
      * Ensure payment card data is never stored
+
      */
     public PaymentResult processPayment(PaymentRequest request) {
         // Validate card data format
@@ -790,7 +844,9 @@ public class DataAccessAuditAspect {
     private final AuditLogRepository auditLogRepository;
     
     /**
+
      * Log all access to sensitive data
+
      */
     @Around("@annotation(AuditDataAccess)")
     public Object auditDataAccess(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -894,7 +950,7 @@ class EncryptionTest {
 
 ## References
 
-- GDPR: https://gdpr.eu/
-- PCI-DSS: https://www.pcisecuritystandards.org/
-- OWASP Cryptographic Storage: https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html
-- AWS Encryption: https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/
+- GDPR: <https://gdpr.eu/>
+- PCI-DSS: <https://www.pcisecuritystandards.org/>
+- OWASP Cryptographic Storage: <https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html>
+- AWS Encryption: <https://docs.aws.amazon.com/encryption-sdk/latest/developer-guide/>

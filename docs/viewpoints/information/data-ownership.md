@@ -4,9 +4,11 @@ viewpoint: "Information"
 status: "Active"
 last_updated: "2025-10-23"
 related_documents:
+
   - "overview.md"
   - "domain-models.md"
   - "data-flow.md"
+
 ---
 
 # Data Ownership
@@ -76,6 +78,7 @@ Cross-context consistency is achieved asynchronously:
 ### Customer Context
 
 **Owns**:
+
 - Customer profiles (name, email, phone)
 - Customer addresses (billing, shipping)
 - Customer preferences (language, currency, notifications)
@@ -83,18 +86,21 @@ Cross-context consistency is achieved asynchronously:
 - Customer authentication credentials
 
 **Responsibilities**:
+
 - Validate customer information
 - Manage customer lifecycle (registration, suspension, deletion)
 - Publish customer events for other contexts
 - Maintain customer audit trail
 
 **Data Shared Via Events**:
+
 - `CustomerRegisteredEvent` → All contexts
 - `CustomerProfileUpdatedEvent` → Order, Notification
 - `CustomerAddressAddedEvent` → Order, Shipping
 - `CustomerMembershipUpgradedEvent` → Promotion, Pricing
 
 **Data Cached by Other Contexts**:
+
 - Customer name (Order, Review, Notification)
 - Customer email (Notification, Payment)
 - Shipping address (Order, Shipping)
@@ -104,12 +110,14 @@ Cross-context consistency is achieved asynchronously:
 ### Order Context
 
 **Owns**:
+
 - Order details (order date, status, totals)
 - Order items (product references, quantities, prices)
 - Order addresses (shipping, billing - snapshots)
 - Order history and audit trail
 
 **Responsibilities**:
+
 - Validate order business rules
 - Calculate order totals
 - Manage order lifecycle (creation, submission, fulfillment, cancellation)
@@ -117,17 +125,20 @@ Cross-context consistency is achieved asynchronously:
 - Publish order events for other contexts
 
 **Data Shared Via Events**:
+
 - `OrderCreatedEvent` → Customer, Inventory
 - `OrderSubmittedEvent` → Inventory, Payment, Notification
 - `OrderConfirmedEvent` → Shipping, Customer
 - `OrderCancelledEvent` → Inventory, Payment, Customer
 
 **Data Cached from Other Contexts**:
+
 - Product name and price (from Product context)
 - Customer name and email (from Customer context)
 - Promotion details (from Promotion context)
 
 **Data Synchronization**:
+
 - Product prices are snapshotted at order creation time
 - Customer addresses are snapshotted at order submission time
 - Inventory reservations are created via events
@@ -137,6 +148,7 @@ Cross-context consistency is achieved asynchronously:
 ### Product Context
 
 **Owns**:
+
 - Product catalog (name, description, category)
 - Product specifications and attributes
 - Product images and media
@@ -144,6 +156,7 @@ Cross-context consistency is achieved asynchronously:
 - Product status (active, discontinued)
 
 **Responsibilities**:
+
 - Maintain product catalog
 - Validate product information
 - Manage product lifecycle
@@ -151,17 +164,20 @@ Cross-context consistency is achieved asynchronously:
 - Provide product search and filtering
 
 **Data Shared Via Events**:
+
 - `ProductCreatedEvent` → Inventory, Pricing
 - `ProductUpdatedEvent` → Order, Shopping Cart
 - `ProductPriceChangedEvent` → Pricing, Order
 - `ProductDiscontinuedEvent` → Inventory, Order
 
 **Data Cached by Other Contexts**:
+
 - Product name (Order, Shopping Cart, Review)
 - Product price (Order, Shopping Cart, Pricing)
 - Product images (Order, Shopping Cart)
 
 **Data Synchronization**:
+
 - Product availability depends on Inventory context
 - Product reviews are managed by Review context
 - Product pricing rules are managed by Pricing context
@@ -171,6 +187,7 @@ Cross-context consistency is achieved asynchronously:
 ### Inventory Context
 
 **Owns**:
+
 - Inventory levels (on-hand, reserved, available)
 - Inventory reservations (for pending orders)
 - Warehouse locations
@@ -178,6 +195,7 @@ Cross-context consistency is achieved asynchronously:
 - Inventory movements (receipts, adjustments)
 
 **Responsibilities**:
+
 - Track stock levels across warehouses
 - Reserve inventory for orders
 - Release expired reservations
@@ -185,16 +203,19 @@ Cross-context consistency is achieved asynchronously:
 - Manage inventory replenishment
 
 **Data Shared Via Events**:
+
 - `InventoryReservedEvent` → Order
 - `InventoryReservationExpiredEvent` → Order
 - `InventoryFulfilledEvent` → Order, Shipping
 - `LowStockAlertEvent` → Product, Seller
 
 **Data Cached by Other Contexts**:
+
 - Available quantity (Product context for display)
 - Reservation status (Order context for tracking)
 
 **Data Synchronization**:
+
 - Reservations are created when orders are submitted
 - Reservations expire after 15 minutes if not fulfilled
 - Inventory is decremented when orders are shipped
@@ -204,6 +225,7 @@ Cross-context consistency is achieved asynchronously:
 ### Payment Context
 
 **Owns**:
+
 - Payment transactions (authorizations, captures, refunds)
 - Payment methods (credit cards, PayPal, etc.)
 - Payment status and history
@@ -211,6 +233,7 @@ Cross-context consistency is achieved asynchronously:
 - Sensitive payment data (PCI-compliant storage)
 
 **Responsibilities**:
+
 - Process payments securely
 - Manage payment methods
 - Handle payment failures and retries
@@ -218,21 +241,25 @@ Cross-context consistency is achieved asynchronously:
 - Maintain PCI-DSS compliance
 
 **Data Shared Via Events**:
+
 - `PaymentAuthorizedEvent` → Order
 - `PaymentCapturedEvent` → Order, Customer
 - `PaymentFailedEvent` → Order, Notification
 - `PaymentRefundedEvent` → Order, Customer
 
 **Data Cached by Other Contexts**:
+
 - Payment status (Order context)
 - Last 4 digits of card (Customer context for display)
 
 **Data Synchronization**:
+
 - Payment is initiated when order is submitted
 - Payment is captured when order is confirmed
 - Refunds are processed when orders are cancelled
 
 **Security Considerations**:
+
 - Full card numbers are never stored
 - Payment tokens are used for recurring payments
 - All payment data is encrypted at rest and in transit
@@ -242,12 +269,14 @@ Cross-context consistency is achieved asynchronously:
 ### Shopping Cart Context
 
 **Owns**:
+
 - Active shopping carts
 - Cart items (product references, quantities)
 - Cart expiration and abandonment tracking
 - Cart conversion to orders
 
 **Responsibilities**:
+
 - Manage cart lifecycle
 - Calculate cart totals
 - Handle cart abandonment
@@ -255,16 +284,19 @@ Cross-context consistency is achieved asynchronously:
 - Track cart analytics
 
 **Data Shared Via Events**:
+
 - `ItemAddedToCartEvent` → Product, Pricing
 - `CartAbandonedEvent` → Notification, Promotion
 - `CartConvertedToOrderEvent` → Order
 
 **Data Cached from Other Contexts**:
+
 - Product name and price (from Product context)
 - Customer information (from Customer context)
 - Promotion details (from Promotion context)
 
 **Data Synchronization**:
+
 - Product prices are refreshed on cart load
 - Carts expire after 7 days of inactivity
 - Cart is deleted after conversion to order
@@ -274,6 +306,7 @@ Cross-context consistency is achieved asynchronously:
 ### Promotion Context
 
 **Owns**:
+
 - Promotion campaigns and rules
 - Discount calculations
 - Coupon codes and usage tracking
@@ -281,6 +314,7 @@ Cross-context consistency is achieved asynchronously:
 - Promotion analytics
 
 **Responsibilities**:
+
 - Define promotion rules
 - Validate coupon codes
 - Calculate discounts
@@ -288,15 +322,18 @@ Cross-context consistency is achieved asynchronously:
 - Manage promotion lifecycle
 
 **Data Shared Via Events**:
+
 - `PromotionActivatedEvent` → Order, Pricing
 - `PromotionExpiredEvent` → Order, Pricing
 - `PromotionAppliedEvent` → Order, Customer
 
 **Data Cached by Other Contexts**:
+
 - Active promotions (Order, Pricing contexts)
 - Coupon code validity (Order context)
 
 **Data Synchronization**:
+
 - Promotions are applied during order submission
 - Usage counts are updated when promotions are applied
 - Expired promotions are automatically deactivated
@@ -306,6 +343,7 @@ Cross-context consistency is achieved asynchronously:
 ### Review Context
 
 **Owns**:
+
 - Product reviews and ratings
 - Review comments and replies
 - Review moderation status
@@ -313,6 +351,7 @@ Cross-context consistency is achieved asynchronously:
 - Review analytics (average ratings, counts)
 
 **Responsibilities**:
+
 - Manage review lifecycle
 - Moderate reviews
 - Calculate aggregate ratings
@@ -320,15 +359,18 @@ Cross-context consistency is achieved asynchronously:
 - Prevent review fraud
 
 **Data Shared Via Events**:
+
 - `ReviewSubmittedEvent` → Product, Customer
 - `ReviewApprovedEvent` → Product
 - `ReviewRejectedEvent` → Customer
 
 **Data Cached by Other Contexts**:
+
 - Average rating (Product context)
 - Review count (Product context)
 
 **Data Synchronization**:
+
 - Reviews are linked to verified purchases
 - Aggregate ratings are updated when reviews are approved
 - Review summaries are cached in Product context
@@ -338,6 +380,7 @@ Cross-context consistency is achieved asynchronously:
 ### Notification Context
 
 **Owns**:
+
 - Notification templates
 - Notification logs and history
 - Notification preferences
@@ -345,6 +388,7 @@ Cross-context consistency is achieved asynchronously:
 - Notification analytics
 
 **Responsibilities**:
+
 - Send notifications (email, SMS, push)
 - Manage notification templates
 - Track delivery status
@@ -352,15 +396,18 @@ Cross-context consistency is achieved asynchronously:
 - Respect user preferences
 
 **Data Shared Via Events**:
+
 - `NotificationSentEvent` → Customer
 - `NotificationFailedEvent` → Customer
 
 **Data Cached from Other Contexts**:
+
 - Customer email and phone (from Customer context)
 - Customer notification preferences (from Customer context)
 - Order details (from Order context)
 
 **Data Synchronization**:
+
 - Notifications are triggered by events from other contexts
 - Delivery status is tracked asynchronously
 - Failed notifications are retried with exponential backoff
@@ -400,7 +447,7 @@ Never duplicate:
 
 #### 1. Event-Driven Synchronization
 
-```
+```text
 Context A → State Change → Domain Event → Context B Event Handler → Update Local Cache
 ```
 
@@ -410,7 +457,7 @@ Context A → State Change → Domain Event → Context B Event Handler → Upda
 
 #### 2. Snapshot Pattern
 
-```
+```text
 Context A → Create Snapshot → Store in Context B → Never Update
 ```
 
@@ -420,7 +467,7 @@ Context A → Create Snapshot → Store in Context B → Never Update
 
 #### 3. Query Pattern
 
-```
+```text
 Context A → Query Context B API → Get Latest Data → Cache Locally (optional)
 ```
 

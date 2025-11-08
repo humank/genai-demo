@@ -30,6 +30,7 @@ The Enterprise E-Commerce Platform handles sensitive customer data that requires
 - Unauthorized data sharing
 
 Taiwan's regulatory environment and cyber threat landscape require:
+
 - Compliance with Taiwan Personal Data Protection Act
 - Protection against state-sponsored data theft
 - Secure handling of payment card data (PCI-DSS)
@@ -39,6 +40,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 ### Business Context
 
 **Business Drivers**:
+
 - Protect customer trust and platform reputation
 - Comply with data protection regulations
 - Prevent financial losses from data breaches
@@ -46,6 +48,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 - Enable secure business operations
 
 **Constraints**:
+
 - Must not impact system performance significantly
 - Cannot block legitimate business operations
 - Must support data analytics and reporting
@@ -54,6 +57,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 ### Technical Context
 
 **Current State**:
+
 - Basic encryption at rest and in transit (ADR-016)
 - RBAC for access control (ADR-015)
 - No data classification system
@@ -62,6 +66,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 - Manual data access auditing
 
 **Requirements**:
+
 - Sensitive data identification and classification
 - Data exfiltration prevention
 - Data masking for non-production environments
@@ -87,6 +92,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 **Description**: Multi-layered data loss prevention with classification, monitoring, masking, and access control
 
 **Components**:
+
 - **Data Classification**: Identify and tag sensitive data (PII, PCI, confidential)
 - **Database Activity Monitoring**: Monitor all database access and queries
 - **API Call Auditing**: Track all API calls accessing sensitive data
@@ -96,6 +102,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 - **Audit Logging**: Comprehensive audit trails for compliance
 
 **Pros**:
+
 - ✅ Defense-in-depth data protection
 - ✅ Compliance-ready (GDPR, PCI-DSS, Taiwan PDPA)
 - ✅ Automated policy enforcement
@@ -105,6 +112,7 @@ Taiwan's regulatory environment and cyber threat landscape require:
 - ✅ Cost-effective ($3,000/month)
 
 **Cons**:
+
 - ⚠️ Implementation complexity
 - ⚠️ Requires data classification effort
 - ⚠️ Potential false positives
@@ -119,11 +127,13 @@ Taiwan's regulatory environment and cyber threat landscape require:
 **Description**: Rely on encryption and basic access control
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Low operational overhead
 - ✅ Low cost
 
 **Cons**:
+
 - ❌ No data exfiltration detection
 - ❌ No data masking
 - ❌ Limited audit capabilities
@@ -139,11 +149,13 @@ Taiwan's regulatory environment and cyber threat landscape require:
 **Description**: Deploy enterprise DLP solution
 
 **Pros**:
+
 - ✅ Advanced DLP features
 - ✅ Proven enterprise solution
 - ✅ Professional support
 
 **Cons**:
+
 - ❌ Very high cost ($10,000-20,000/month)
 - ❌ Complex deployment
 - ❌ Performance overhead
@@ -174,6 +186,7 @@ Comprehensive DLP strategy was selected for the following reasons:
 **Sensitivity Tiers**:
 
 **Tier 1: Highly Sensitive (PII, PCI)**
+
 - Customer names, addresses, phone numbers
 - Email addresses
 - Payment card numbers (PAN)
@@ -182,6 +195,7 @@ Comprehensive DLP strategy was selected for the following reasons:
 - Passwords and authentication credentials
 
 **Tier 2: Sensitive (Business Data)**
+
 - Order details and history
 - Inventory levels and pricing
 - Customer purchase patterns
@@ -189,11 +203,13 @@ Comprehensive DLP strategy was selected for the following reasons:
 - Internal communications
 
 **Tier 3: Public (Non-Sensitive)**
+
 - Product catalog
 - Public marketing content
 - General system information
 
 **Classification Implementation**:
+
 ```java
 @Entity
 @Table(name = "customers")
@@ -227,6 +243,7 @@ public class Customer {
 ### Database Activity Monitoring
 
 **Monitoring Approach**:
+
 - Enable PostgreSQL audit logging
 - Monitor all SELECT, INSERT, UPDATE, DELETE operations
 - Track query patterns and data volumes
@@ -234,6 +251,7 @@ public class Customer {
 - Alert on suspicious activity
 
 **Implementation**:
+
 ```sql
 -- Enable PostgreSQL audit logging
 ALTER SYSTEM SET log_statement = 'all';
@@ -270,6 +288,7 @@ FOR EACH ROW EXECUTE FUNCTION audit_sensitive_data();
 ```
 
 **Anomaly Detection**:
+
 ```python
 # Detect anomalous database queries
 def detect_anomalous_queries():
@@ -306,6 +325,7 @@ def detect_anomalous_queries():
 ### API Call Auditing
 
 **Monitoring Approach**:
+
 - Log all API calls accessing sensitive data
 - Track request/response payloads (sanitized)
 - Monitor data volume per user/IP
@@ -313,6 +333,7 @@ def detect_anomalous_queries():
 - Alert on suspicious activity
 
 **Implementation**:
+
 ```java
 @Aspect
 @Component
@@ -387,22 +408,26 @@ public class DataAccessAuditAspect {
 **Production Environment**: No masking (encrypted data)
 
 **Staging Environment**: Partial masking
+
 - Email: `j***@example.com`
 - Phone: `+886-9**-***-123`
 - Credit Card: `****-****-****-1234`
 - Name: `John D***`
 
 **Development Environment**: Full masking
+
 - Email: `user{id}@example.com`
 - Phone: `+886-900-000-{id}`
 - Credit Card: `4111-1111-1111-{id}`
 - Name: `Test User {id}`
 
 **Test Environment**: Synthetic data
+
 - Generated fake data using Faker library
 - Realistic but not real customer data
 
 **Implementation**:
+
 ```java
 @Service
 public class DataMaskingService {
@@ -468,6 +493,7 @@ public class DataMaskingService {
 ### Access Control
 
 **Least Privilege Principle**:
+
 - Users have minimum permissions required for their role
 - Temporary elevated access for specific tasks
 - Automatic permission expiration
@@ -484,6 +510,7 @@ public class DataMaskingService {
 | Analyst | Masked data | No access | Read all | Read all |
 
 **Implementation**:
+
 ```java
 @Service
 public class DataAccessControlService {
@@ -562,12 +589,14 @@ public class DataAccessControlService {
 ### AWS Macie Integration
 
 **Sensitive Data Discovery**:
+
 - Automatically scan S3 buckets for sensitive data
 - Identify PII, PCI, and confidential data
 - Generate data classification reports
 - Alert on unencrypted sensitive data
 
 **Implementation**:
+
 ```python
 # Enable Macie via CDK
 macie = aws_macie.CfnSession(
@@ -612,6 +641,7 @@ classification_job = aws_macie.CfnClassificationJob(
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All databases and data stores
 - All API endpoints accessing sensitive data
 - All non-production environments
@@ -668,12 +698,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical performance degradation (> 10% overhead)
 - Data masking errors exposing real data
 - Access control blocking legitimate operations
 - Excessive false positive alerts
 
 **Rollback Steps**:
+
 1. Disable anomaly detection alerts
 2. Relax access control policies
 3. Disable data masking temporarily
@@ -697,6 +729,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `dlp.data.access.count` (count by data tier)
 - `dlp.anomaly.detected` (count by type)
 - `dlp.access.denied` (count by reason)
@@ -704,6 +737,7 @@ Affects:
 - `dlp.masking.errors` (count)
 
 **Alerts**:
+
 - Anomalous data access detected
 - Large data export (> 10,000 rows)
 - Unusual access time (3-6 AM)
@@ -711,6 +745,7 @@ Affects:
 - Data masking error
 
 **Review Schedule**:
+
 - Daily: Review anomalous access alerts
 - Weekly: Analyze data access patterns
 - Monthly: Permission review
@@ -738,12 +773,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual data classification (acceptable initially)
 2. Basic anomaly detection (rule-based)
 3. No ML-powered threat detection
 4. Limited data lineage tracking
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement ML-powered anomaly detection
 - **Q3 2026**: Automate data classification with Macie
 - **Q4 2026**: Implement data lineage tracking

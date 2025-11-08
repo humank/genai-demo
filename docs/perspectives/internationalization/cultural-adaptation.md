@@ -20,7 +20,7 @@ This document details the cultural adaptation strategies for the Enterprise E-Co
 
 ### Adaptation Levels
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │           Cultural Adaptation Pyramid                    │
 ├─────────────────────────────────────────────────────────┤
@@ -55,6 +55,7 @@ This document details the cultural adaptation strategies for the Enterprise E-Co
 ### United States
 
 #### Market Characteristics
+
 - **Population**: 331 million
 - **E-commerce Penetration**: 80%+
 - **Mobile Commerce**: 45% of transactions
@@ -64,6 +65,7 @@ This document details the cultural adaptation strategies for the Enterprise E-Co
 #### Cultural Preferences
 
 **Shopping Behavior**:
+
 - Value convenience and fast shipping
 - Expect free returns
 - Read reviews before purchasing
@@ -71,6 +73,7 @@ This document details the cultural adaptation strategies for the Enterprise E-Co
 - Comparison shopping common
 
 **Design Preferences**:
+
 - Clean, minimalist design
 - Large product images
 - Clear call-to-action buttons
@@ -88,6 +91,7 @@ This document details the cultural adaptation strategies for the Enterprise E-Co
 | **Buy Now Pay Later** | 8% | Medium | Affirm, Klarna |
 
 **Implementation**:
+
 ```java
 @Service
 public class USPaymentService {
@@ -116,6 +120,7 @@ public class USPaymentService {
 **Free Shipping Threshold**: $35-50 (industry standard)
 
 #### Legal Requirements
+
 - **ADA Compliance**: Website accessibility
 - **CCPA**: California Consumer Privacy Act
 - **Sales Tax**: Collect based on buyer location
@@ -126,6 +131,7 @@ public class USPaymentService {
 ### Taiwan
 
 #### Market Characteristics
+
 - **Population**: 23.5 million
 - **E-commerce Penetration**: 75%
 - **Mobile Commerce**: 65% of transactions
@@ -135,6 +141,7 @@ public class USPaymentService {
 #### Cultural Preferences
 
 **Shopping Behavior**:
+
 - Heavy mobile usage
 - Prefer convenience store pickup
 - Value customer service
@@ -142,6 +149,7 @@ public class USPaymentService {
 - Group buying popular
 
 **Design Preferences**:
+
 - Information-dense layouts
 - Bright colors acceptable
 - Detailed product information
@@ -149,6 +157,7 @@ public class USPaymentService {
 - Social proof important
 
 **Color Meanings**:
+
 - **Red**: Good luck, prosperity (positive)
 - **White**: Mourning (avoid for celebrations)
 - **Gold**: Wealth, premium
@@ -166,16 +175,20 @@ public class USPaymentService {
 | **Apple Pay** | 10% | Medium | Apple Pay API |
 
 **Convenience Store Payment Flow**:
-```
+
+```text
+
 1. Customer selects CVS payment
 2. System generates payment code
 3. Customer goes to 7-11/FamilyMart
 4. Pays at kiosk with code
 5. System receives payment confirmation
 6. Order processed
+
 ```
 
 **Implementation**:
+
 ```java
 @Service
 public class TaiwanPaymentService {
@@ -207,18 +220,21 @@ public class TaiwanPaymentService {
 | **Same-Day Delivery** | 5% | Same day | NT$200 |
 
 **Store Pickup Benefits**:
+
 - 24/7 pickup availability
 - No need to wait at home
 - Secure package storage
 - Very popular in Taiwan
 
 #### Legal Requirements
+
 - **Personal Data Protection Act**: Data privacy
 - **Consumer Protection Law**: 7-day cooling-off period
 - **E-commerce Guidelines**: Clear product information
 - **Invoice Requirements**: Electronic invoice (電子發票)
 
 **Electronic Invoice Implementation**:
+
 ```java
 @Service
 public class TaiwanInvoiceService {
@@ -242,6 +258,7 @@ public class TaiwanInvoiceService {
 ### China
 
 #### Market Characteristics
+
 - **Population**: 1.4 billion
 - **E-commerce Penetration**: 85%
 - **Mobile Commerce**: 80% of transactions
@@ -251,6 +268,7 @@ public class TaiwanInvoiceService {
 #### Cultural Preferences
 
 **Shopping Behavior**:
+
 - Mobile-first, mobile-only for many
 - Live streaming commerce huge
 - Social commerce (WeChat, Xiaohongshu)
@@ -258,6 +276,7 @@ public class TaiwanInvoiceService {
 - Group buying and flash sales popular
 
 **Design Preferences**:
+
 - Very information-dense
 - Bright, bold colors
 - Animated elements
@@ -265,12 +284,14 @@ public class TaiwanInvoiceService {
 - Social sharing prominent
 
 **Lucky Numbers**:
+
 - **8**: Prosperity (八 sounds like 發 "wealth")
 - **6**: Smooth, lucky
 - **9**: Longevity
 - **Avoid 4**: Death (四 sounds like 死 "death")
 
 **Color Meanings**:
+
 - **Red**: Luck, celebration, prosperity
 - **Gold**: Wealth, premium
 - **Yellow**: Imperial, prestigious
@@ -286,12 +307,14 @@ public class TaiwanInvoiceService {
 | **Credit Cards** | 5% | Low | Limited use |
 
 **Mobile Payment Dominance**:
+
 - QR code payments standard
 - Integrated with social apps
 - Instant transfers
 - Red envelope (红包) feature
 
 **Implementation**:
+
 ```java
 @Service
 public class ChinaPaymentService {
@@ -328,6 +351,7 @@ public class ChinaPaymentService {
 | **Same-Day** | Express | Same day | ¥25 |
 
 #### Legal Requirements
+
 - **Cybersecurity Law**: Data localization
 - **ICP License**: Required for website operation
 - **Real-Name Verification**: User identity verification
@@ -335,6 +359,7 @@ public class ChinaPaymentService {
 - **Cross-Border E-commerce**: Special regulations
 
 **Data Localization**:
+
 ```java
 @Configuration
 public class ChinaDataConfiguration {
@@ -355,6 +380,7 @@ public class ChinaDataConfiguration {
 ### Japan
 
 #### Market Characteristics
+
 - **Population**: 125 million
 - **E-commerce Penetration**: 70%
 - **Mobile Commerce**: 50% of transactions
@@ -364,6 +390,7 @@ public class ChinaDataConfiguration {
 #### Cultural Preferences
 
 **Shopping Behavior**:
+
 - Quality over price
 - Detailed product information expected
 - Packaging important
@@ -371,6 +398,7 @@ public class ChinaDataConfiguration {
 - Customer service excellence expected
 
 **Design Preferences**:
+
 - Clean, organized layouts
 - Attention to detail
 - Subtle colors
@@ -378,6 +406,7 @@ public class ChinaDataConfiguration {
 - Respect for white space
 
 **Cultural Considerations**:
+
 - **Politeness**: Formal language (敬語)
 - **Gift Wrapping**: Important for gifts
 - **Seasonal**: Seasonal products and themes
@@ -394,6 +423,7 @@ public class ChinaDataConfiguration {
 | **Rakuten Pay** | 15% | Medium | Rakuten Pay API |
 
 **Konbini Payment** (similar to Taiwan CVS):
+
 - Very popular in Japan
 - Pay at convenience stores
 - No credit card needed
@@ -408,12 +438,14 @@ public class ChinaDataConfiguration {
 | **Japan Post** | Yu-Pack | 2-3 days | Affordable |
 
 **Time-Slot Delivery**:
+
 - Morning (8-12)
 - Afternoon (12-14, 14-16, 16-18)
 - Evening (18-20, 19-21)
 - Very important in Japan
 
 #### Legal Requirements
+
 - **Act on Protection of Personal Information**: Data privacy
 - **Specified Commercial Transaction Act**: E-commerce regulations
 - **Consumer Contract Act**: Consumer protection
@@ -424,6 +456,7 @@ public class ChinaDataConfiguration {
 ### South Korea
 
 #### Market Characteristics
+
 - **Population**: 51 million
 - **E-commerce Penetration**: 85%
 - **Mobile Commerce**: 70% of transactions
@@ -433,6 +466,7 @@ public class ChinaDataConfiguration {
 #### Cultural Preferences
 
 **Shopping Behavior**:
+
 - Highly connected, tech-savvy
 - Social commerce important
 - Live streaming popular
@@ -440,6 +474,7 @@ public class ChinaDataConfiguration {
 - Brand-conscious
 
 **Design Preferences**:
+
 - Modern, trendy design
 - K-pop/K-beauty influence
 - Video content
@@ -457,6 +492,7 @@ public class ChinaDataConfiguration {
 | **Bank Transfer** | 10% | Low | Virtual account |
 
 **Local Payment Platforms**:
+
 - Naver Pay (네이버페이)
 - Kakao Pay (카카오페이)
 - Toss (토스)
@@ -472,11 +508,13 @@ public class ChinaDataConfiguration {
 | **Same-Day** | Express | Same day | ₩6,000 |
 
 **Dawn Delivery** (새벽배송):
+
 - Delivery before 7 AM
 - Very popular for fresh products
 - Premium service
 
 #### Legal Requirements
+
 - **Personal Information Protection Act**: Strong data protection
 - **E-commerce Consumer Protection Act**: Consumer rights
 - **Electronic Financial Transactions Act**: Payment security
@@ -487,6 +525,7 @@ public class ChinaDataConfiguration {
 ### Important Dates by Region
 
 #### United States
+
 - **January 1**: New Year's Day
 - **February 14**: Valentine's Day
 - **May (2nd Sunday)**: Mother's Day
@@ -498,6 +537,7 @@ public class ChinaDataConfiguration {
 - **December 25**: Christmas
 
 #### Taiwan
+
 - **Lunar New Year** (春節): January/February - Biggest holiday
 - **February 28**: Peace Memorial Day
 - **April 4-5**: Tomb Sweeping Day (清明節)
@@ -510,6 +550,7 @@ public class ChinaDataConfiguration {
 - **December 12**: Double 12
 
 #### China
+
 - **Lunar New Year** (春节): January/February - Spring Festival
 - **February 14**: Valentine's Day (情人节)
 - **March 8**: Women's Day (妇女节)
@@ -523,6 +564,7 @@ public class ChinaDataConfiguration {
 - **December 12**: Double 12 (双12)
 
 #### Japan
+
 - **January 1-3**: New Year (正月)
 - **February 14**: Valentine's Day
 - **March 3**: Hinamatsuri (Girls' Day)
@@ -537,6 +579,7 @@ public class ChinaDataConfiguration {
 - **December 31**: New Year's Eve
 
 #### South Korea
+
 - **Lunar New Year** (설날): January/February
 - **March 1**: Independence Movement Day
 - **March 14**: White Day
@@ -555,7 +598,8 @@ public class ChinaDataConfiguration {
 ### Campaign Localization
 
 **Holiday Campaigns**:
-```
+
+```text
 US: "Black Friday Sale - Up to 70% Off!"
 Taiwan: "雙11購物節 - 全館5折起！"
 China: "双11狂欢节 - 全场五折！"
@@ -564,6 +608,7 @@ Korea: "블랙프라이데이 - 최대 70% 할인!"
 ```
 
 **Tone and Style**:
+
 - **US**: Direct, benefit-focused
 - **Taiwan**: Friendly, community-oriented
 - **China**: Energetic, promotional
@@ -595,6 +640,7 @@ Korea: "블랙프라이데이 - 최대 70% 할인!"
 ### A/B Testing
 
 **Test cultural variations**:
+
 - Color schemes
 - Layout density
 - Call-to-action wording

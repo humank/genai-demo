@@ -7,10 +7,12 @@ last_updated: "2025-10-24"
 version: "1.0"
 status: "active"
 related_docs:
+
   - "overview.md"
   - "multi-region.md"
   - "../../perspectives/security/README.md"
   - "../../viewpoints/information/README.md"
+
 tags: ["compliance", "gdpr", "data-residency", "privacy", "regulations"]
 ---
 
@@ -85,6 +87,7 @@ This document details the data residency requirements, compliance strategies, an
 **Definition**: Data that can be freely shared without restrictions
 
 **Examples**:
+
 - Product catalog
 - Public blog posts
 - Marketing materials
@@ -99,6 +102,7 @@ This document details the data residency requirements, compliance strategies, an
 **Definition**: Data for internal use only, not sensitive
 
 **Examples**:
+
 - Internal documentation
 - System logs (non-PII)
 - Performance metrics
@@ -113,6 +117,7 @@ This document details the data residency requirements, compliance strategies, an
 **Definition**: Sensitive business data requiring protection
 
 **Examples**:
+
 - Customer orders
 - Business contracts
 - Financial reports
@@ -127,6 +132,7 @@ This document details the data residency requirements, compliance strategies, an
 **Definition**: Personally Identifiable Information requiring strict protection
 
 **Examples**:
+
 - Customer names and addresses
 - Email addresses
 - Phone numbers
@@ -142,6 +148,7 @@ This document details the data residency requirements, compliance strategies, an
 **Definition**: Highly sensitive data with legal/regulatory requirements
 
 **Examples**:
+
 - Payment card information (PCI-DSS)
 - Health information (HIPAA)
 - Biometric data
@@ -153,7 +160,7 @@ This document details the data residency requirements, compliance strategies, an
 
 ### Data Classification Matrix
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Data Classification                           │
 ├─────────────────────────────────────────────────────────────────┤
@@ -192,6 +199,7 @@ This document details the data residency requirements, compliance strategies, an
 ### Data Tagging
 
 **Metadata Tags**:
+
 ```json
 {
   "dataClassification": "restricted",
@@ -205,6 +213,7 @@ This document details the data residency requirements, compliance strategies, an
 ```
 
 **Database Implementation**:
+
 ```sql
 CREATE TABLE customers (
     id UUID PRIMARY KEY,
@@ -230,7 +239,8 @@ CREATE INDEX idx_customers_regulatory_framework ON customers(regulatory_framewor
 #### EU Data Isolation
 
 **Architecture**:
-```
+
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                    EU Data Boundary                      │
 ├─────────────────────────────────────────────────────────┤
@@ -256,6 +266,7 @@ CREATE INDEX idx_customers_regulatory_framework ON customers(regulatory_framewor
 ```
 
 **Implementation**:
+
 ```java
 @Service
 public class CustomerService {
@@ -295,12 +306,14 @@ public class CustomerService {
 **When Required**: Transferring EU personal data outside EU
 
 **Implementation**:
+
 1. **Legal Agreement**: Execute SCCs with data processor
 2. **Technical Measures**: Implement encryption and access controls
 3. **Documentation**: Maintain transfer records
 4. **Monitoring**: Audit cross-border transfers
 
 **Example SCC Implementation**:
+
 ```java
 @Service
 public class CrossBorderTransferService {
@@ -331,6 +344,7 @@ public class CrossBorderTransferService {
 #### Adequacy Decisions
 
 **Countries with EU Adequacy Decision**:
+
 - Andorra
 - Argentina
 - Canada (commercial organizations)
@@ -347,6 +361,7 @@ public class CrossBorderTransferService {
 - Uruguay
 
 **Implementation**:
+
 ```java
 public boolean canTransferWithoutSCC(String sourceRegion, String destRegion) {
     Set<String> adequacyCountries = Set.of(
@@ -367,6 +382,7 @@ public boolean canTransferWithoutSCC(String sourceRegion, String destRegion) {
 ### Automated Compliance Checks
 
 **Daily Checks**:
+
 ```bash
 #!/bin/bash
 # scripts/verify-data-residency.sh
@@ -392,6 +408,7 @@ aws s3api get-bucket-encryption --bucket ecommerce-data-eu-west-1
 ```
 
 **Weekly Audits**:
+
 ```sql
 -- Audit cross-border data transfers
 SELECT 
@@ -420,11 +437,13 @@ GROUP BY data_classification;
 ### Compliance Reporting
 
 **Monthly Compliance Report**:
-```
+
+```text
 Data Residency Compliance Report
 Month: October 2025
 
 1. Data Residency Status
+
    ✅ EU Data: 100% in EU-WEST-1
    ✅ US Data: 100% in US-EAST-1
    ✅ APAC Data: 100% in AP-SE-1
@@ -443,6 +462,7 @@ Month: October 2025
    - SLA Compliance: 100%
 
 4. Encryption Status
+
    ✅ Data at Rest: 100% encrypted
    ✅ Data in Transit: 100% encrypted
    ✅ Backup Encryption: 100% encrypted
@@ -457,6 +477,7 @@ Month: October 2025
    - Update data retention policies
    - Review SCC agreements
    - Conduct DPIA for new features
+
 ```
 
 ## Data Subject Rights
@@ -464,6 +485,7 @@ Month: October 2025
 ### Right to Access (GDPR Article 15)
 
 **Implementation**:
+
 ```java
 @RestController
 @RequestMapping("/api/v1/data-subject-requests")
@@ -495,6 +517,7 @@ public class DataSubjectRequestController {
 ### Right to Erasure (GDPR Article 17)
 
 **Implementation**:
+
 ```java
 @Service
 public class DataErasureService {
@@ -538,6 +561,7 @@ public class DataErasureService {
 ### Right to Data Portability (GDPR Article 20)
 
 **Implementation**:
+
 ```java
 @Service
 public class DataPortabilityService {
@@ -563,40 +587,53 @@ public class DataPortabilityService {
 **Procedure**:
 
 1. **Detection** (T+0):
+
    ```bash
    # Automated detection
+
    - Security monitoring alerts
    - Anomaly detection
    - User reports
+
    ```
 
 2. **Assessment** (T+1 hour):
+
    ```bash
    # Determine severity
+
    - Number of affected users
    - Type of data exposed
    - Potential harm
    - Likelihood of misuse
+
    ```
 
 3. **Containment** (T+2 hours):
+
    ```bash
    # Stop the breach
+
    - Isolate affected systems
    - Revoke compromised credentials
    - Block unauthorized access
+
    ```
 
 4. **Notification** (T+72 hours):
+
    ```bash
    # Notify authorities
+
    - Notify supervisory authority (DPA)
    - Notify affected data subjects
    - Document notification
+
    ```
 
 **Notification Template**:
-```
+
+```text
 To: [Data Protection Authority]
 Subject: Personal Data Breach Notification
 
@@ -621,6 +658,7 @@ Subject: Personal Data Breach Notification
 5. Contact Information:
    - DPO: [name, email, phone]
    - Organization: [details]
+
 ```
 
 ## Best Practices

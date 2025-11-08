@@ -23,6 +23,7 @@ affected_perspectives: ["availability", "performance", "evolution"]
 Multi-region active-active architecture requires seamless regional mobility, but stateful components create barriers:
 
 **Stateful Architecture Challenges**:
+
 - **Session Affinity**: Users tied to specific regions
 - **In-Memory State**: Lost during failover
 - **Local Caching**: Inconsistent across regions
@@ -31,6 +32,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 - **Scheduled Jobs**: Duplicate execution across regions
 
 **Impact on Regional Mobility**:
+
 - Slow failover (need to migrate state)
 - User session loss during failover
 - Inconsistent user experience
@@ -39,6 +41,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 - Difficult testing and deployment
 
 **Current State Issues**:
+
 - Some services maintain in-memory session state
 - Local file storage for uploads
 - Region-specific caching
@@ -48,6 +51,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 ### Business Context
 
 **Business Drivers**:
+
 - Seamless failover (< 5 minutes)
 - Consistent user experience
 - Global load balancing
@@ -56,6 +60,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 - Scalability
 
 **Constraints**:
+
 - Cannot break existing functionality
 - Must maintain performance
 - Minimize refactoring effort
@@ -65,6 +70,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 ### Technical Context
 
 **Current State**:
+
 - Mix of stateful and stateless services
 - Session state in application memory
 - Local file storage
@@ -72,6 +78,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 - Manual failover procedures
 
 **Requirements**:
+
 - All services must be stateless
 - Externalized session management
 - Distributed caching
@@ -99,6 +106,7 @@ Multi-region active-active architecture requires seamless regional mobility, but
 **Architecture Principles**:
 
 **1. Stateless Application Services**:
+
 ```typescript
 // ❌ BAD: Stateful service with in-memory session
 @Service
@@ -127,6 +135,7 @@ class OrderService {
 ```
 
 **2. Externalized Session Management**:
+
 ```typescript
 interface SessionManagementStrategy {
   storage: {
@@ -182,6 +191,7 @@ class SessionConfiguration {
 ```
 
 **3. Distributed Caching Strategy**:
+
 ```typescript
 interface DistributedCachingStrategy {
   architecture: {
@@ -253,6 +263,7 @@ class CacheConfiguration {
 ```
 
 **4. Shared File Storage**:
+
 ```typescript
 interface SharedFileStorageStrategy {
   storage: {
@@ -332,6 +343,7 @@ class FileStorageService(
 ```
 
 **5. Idempotent Operations**:
+
 ```typescript
 interface IdempotencyStrategy {
   implementation: {
@@ -400,6 +412,7 @@ fun createOrder(
 ```
 
 **6. Stateless Background Jobs**:
+
 ```typescript
 interface StatelessJobStrategy {
   scheduler: {
@@ -483,6 +496,7 @@ class DistributedLockService(
 ```
 
 **7. Stateless WebSocket Connections**:
+
 ```typescript
 interface StatelessWebSocketStrategy {
   architecture: {
@@ -559,6 +573,7 @@ class WebSocketConnectionService(
 ```
 
 **Benefits of Stateless Architecture**:
+
 ```typescript
 const statelessBenefits = {
   regionalMobility: {
@@ -591,6 +606,7 @@ const statelessBenefits = {
 ```
 
 **Migration Strategy**:
+
 ```typescript
 interface MigrationStrategy {
   phases: {
@@ -663,6 +679,7 @@ interface MigrationStrategy {
 ```
 
 **Pros**:
+
 - ✅ Seamless regional failover (< 5 minutes)
 - ✅ Unlimited horizontal scalability
 - ✅ Simplified operations
@@ -673,6 +690,7 @@ interface MigrationStrategy {
 - ✅ Better resource utilization
 
 **Cons**:
+
 - ⚠️ Refactoring effort (16 weeks)
 - ⚠️ External dependencies (Redis, S3, DynamoDB)
 - ⚠️ Network latency for state access
@@ -687,10 +705,12 @@ interface MigrationStrategy {
 **Description**: Keep some stateful components, externalize critical state only
 
 **Pros**:
+
 - ✅ Lower refactoring effort
 - ✅ Faster implementation
 
 **Cons**:
+
 - ❌ Limited regional mobility
 - ❌ Complex failover
 - ❌ Inconsistent architecture
@@ -704,10 +724,12 @@ interface MigrationStrategy {
 **Description**: Use sticky sessions with background state replication
 
 **Pros**:
+
 - ✅ Minimal refactoring
 - ✅ Familiar pattern
 
 **Cons**:
+
 - ❌ Slow failover
 - ❌ Session loss on failure
 - ❌ Limited scalability
@@ -742,6 +764,7 @@ Fully stateless architecture provides optimal regional mobility, scalability, an
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All application services
 - Session management
 - Caching layer
@@ -767,6 +790,7 @@ Affects:
 ### Phase 1: Assessment & Planning (Week 1-2)
 
 **Tasks**:
+
 - [ ] Audit all services for stateful components
 - [ ] Identify dependencies and migration order
 - [ ] Create detailed migration plan
@@ -774,6 +798,7 @@ Affects:
 - [ ] Allocate resources
 
 **Success Criteria**:
+
 - Complete inventory of stateful components
 - Migration plan approved
 - Resources allocated
@@ -781,6 +806,7 @@ Affects:
 ### Phase 2: Infrastructure Setup (Week 3-4)
 
 **Tasks**:
+
 - [ ] Deploy Redis Global Datastore
 - [ ] Configure S3 cross-region replication
 - [ ] Set up DynamoDB Global Tables
@@ -789,6 +815,7 @@ Affects:
 - [ ] Set up monitoring
 
 **Success Criteria**:
+
 - All infrastructure operational
 - Replication working
 - Monitoring configured
@@ -796,6 +823,7 @@ Affects:
 ### Phase 3: Session Management Migration (Week 5-6)
 
 **Tasks**:
+
 - [ ] Implement Spring Session with Redis
 - [ ] Migrate session data structure
 - [ ] Update authentication flow
@@ -804,6 +832,7 @@ Affects:
 - [ ] Gradual production rollout
 
 **Success Criteria**:
+
 - Sessions externalized
 - No session loss during failover
 - Performance maintained
@@ -811,6 +840,7 @@ Affects:
 ### Phase 4: Caching Migration (Week 7-8)
 
 **Tasks**:
+
 - [ ] Configure distributed caching
 - [ ] Migrate cache keys
 - [ ] Update cache access patterns
@@ -818,6 +848,7 @@ Affects:
 - [ ] Deploy to production
 
 **Success Criteria**:
+
 - Distributed caching operational
 - Cache hit rates maintained
 - Cross-region consistency
@@ -825,6 +856,7 @@ Affects:
 ### Phase 5: File Storage Migration (Week 9-10)
 
 **Tasks**:
+
 - [ ] Set up S3 buckets with replication
 - [ ] Migrate existing files
 - [ ] Update file upload/download logic
@@ -833,6 +865,7 @@ Affects:
 - [ ] Deploy to production
 
 **Success Criteria**:
+
 - All files in S3
 - Cross-region replication working
 - File access performance acceptable
@@ -840,6 +873,7 @@ Affects:
 ### Phase 6: Idempotency Implementation (Week 11-12)
 
 **Tasks**:
+
 - [ ] Implement idempotency framework
 - [ ] Add idempotency to critical operations
 - [ ] Test duplicate request handling
@@ -847,6 +881,7 @@ Affects:
 - [ ] Deploy to production
 
 **Success Criteria**:
+
 - Idempotency working for all critical operations
 - No duplicate processing
 - API clients updated
@@ -854,6 +889,7 @@ Affects:
 ### Phase 7: Background Jobs Migration (Week 13-14)
 
 **Tasks**:
+
 - [ ] Migrate to EventBridge scheduling
 - [ ] Implement distributed locks
 - [ ] Update job implementations
@@ -861,6 +897,7 @@ Affects:
 - [ ] Deploy to production
 
 **Success Criteria**:
+
 - Jobs running stateless
 - No duplicate execution
 - Proper failover
@@ -868,6 +905,7 @@ Affects:
 ### Phase 8: Testing & Validation (Week 15-16)
 
 **Tasks**:
+
 - [ ] Integration testing
 - [ ] Failover testing
 - [ ] Performance testing
@@ -876,6 +914,7 @@ Affects:
 - [ ] Documentation updates
 
 **Success Criteria**:
+
 - All tests passing
 - Failover < 5 minutes
 - Performance maintained
@@ -884,11 +923,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Critical performance degradation
 - Data consistency issues
 - Failover failures
 
 **Rollback Steps**:
+
 1. Revert to previous version
 2. Restore stateful components
 3. Investigate issues
@@ -938,12 +979,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Some legacy components still stateful
 2. Manual state migration scripts
 3. Basic monitoring
 4. Limited automation
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Complete legacy migration
 - **Q3 2026**: Advanced monitoring
 - **Q4 2026**: Full automation
@@ -986,24 +1029,28 @@ Affects:
 ### Best Practices
 
 **Session Management**:
+
 - Use short TTL (24 hours)
 - Compress session data
 - Encrypt sensitive data
 - Monitor session count
 
 **Caching**:
+
 - Use appropriate TTL
 - Implement cache warming
 - Monitor hit rates
 - Handle cache failures gracefully
 
 **File Storage**:
+
 - Use pre-signed URLs
 - Implement CDN for public files
 - Monitor storage costs
 - Implement lifecycle policies
 
 **Idempotency**:
+
 - Use UUID v4 for keys
 - Store for 24 hours
 - Return same result for duplicate requests

@@ -12,13 +12,15 @@ This document defines the fundamental principles that guide all development work
 ## Architecture Principles
 
 ### Must Follow
+
 - [ ] **DDD + Hexagonal Architecture**: Domain-Driven Design with ports and adapters
 - [ ] **Event-Driven Design**: Use domain events for cross-context communication
 - [ ] **Bounded Context Isolation**: Each context is independent and self-contained
 - [ ] **Dependency Rule**: Domain layer has no dependencies on infrastructure
 
 ### Architecture Layers
-```
+
+```text
 interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
@@ -29,18 +31,21 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Domain Model Principles
 
 ### Aggregate Roots
+
 - [ ] Extend `AggregateRoot` base class
 - [ ] Use `@AggregateRoot` annotation
 - [ ] Aggregates collect events, application services publish them
 - [ ] No direct repository access from domain layer
 
 ### Domain Events
+
 - [ ] Use Record implementation for immutability
 - [ ] Implement `DomainEvent` interface
 - [ ] Use factory method with `createEventMetadata()`
 - [ ] Events are immutable and contain all necessary data
 
 ### Value Objects
+
 - [ ] Use Record for immutability
 - [ ] Validate in constructor
 - [ ] No setters
@@ -53,6 +58,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Code Quality Principles
 
 ### SOLID Principles
+
 - [ ] **Single Responsibility**: One class, one reason to change
 - [ ] **Open/Closed**: Open for extension, closed for modification
 - [ ] **Liskov Substitution**: Subtypes must be substitutable
@@ -60,6 +66,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 - [ ] **Dependency Inversion**: Depend on abstractions, not concretions
 
 ### Clean Code Standards
+
 - [ ] **Meaningful Names**: Clear, descriptive naming
 - [ ] **Small Functions**: < 20 lines per method
 - [ ] **Single Level of Abstraction**: One abstraction level per function
@@ -74,12 +81,14 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Test-First Development
 
 ### BDD/TDD Approach
+
 - [ ] Write Gherkin scenarios before implementation
 - [ ] Write failing tests first (Red)
 - [ ] Write minimal code to pass (Green)
 - [ ] Refactor for quality (Refactor)
 
 ### Test Pyramid
+
 - **Unit Tests (80%)**: < 50ms, < 5MB
 - **Integration Tests (15%)**: < 500ms, < 50MB
 - **E2E Tests (5%)**: < 3s, < 500MB
@@ -91,21 +100,25 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Technology Stack
 
 ### Backend
+
 - Spring Boot 3.4.5 + Java 21 + Gradle 8.x
 - Spring Data JPA + Hibernate + Flyway
 - H2 (dev/test) + PostgreSQL (prod)
 - SpringDoc OpenAPI 3 + Swagger UI
 
 ### Frontend
+
 - CMC Management: Next.js 14 + React 18 + TypeScript
 - Consumer App: Angular 18 + TypeScript
 
 ### Testing
+
 - JUnit 5 + Mockito + AssertJ
 - Cucumber 7 (BDD) + Gherkin
 - ArchUnit (Architecture Testing)
 
 ### Infrastructure
+
 - AWS EKS + RDS + ElastiCache + MSK
 - AWS CDK for Infrastructure as Code
 - CloudWatch + X-Ray + Grafana for Observability
@@ -115,6 +128,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Development Workflow
 
 ### Daily Development
+
 ```bash
 ./gradlew quickTest              # Fast feedback (< 2 min)
 ./gradlew preCommitTest          # Pre-commit verification (< 5 min)
@@ -122,6 +136,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
 ### Code Review
+
 - [ ] All tests pass
 - [ ] Code coverage > 80%
 - [ ] ArchUnit rules pass
@@ -135,11 +150,13 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ## Validation Commands
 
 ### Architecture Compliance
+
 ```bash
 ./gradlew archUnit               # Verify architecture rules
 ```
 
 ### Code Quality
+
 ```bash
 ./gradlew test jacocoTestReport  # Check test coverage
 ./gradlew pmdMain                # Check code smells
@@ -147,6 +164,7 @@ interfaces/ → application/ → domain/ ← infrastructure/
 ```
 
 ### Documentation
+
 ```bash
 ./scripts/validate-diagrams.sh   # Validate diagrams
 ./scripts/validate-links.sh      # Check broken links

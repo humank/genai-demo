@@ -224,10 +224,12 @@ SHOW work_mem;
 
 ```yaml
 # CloudWatch alarms
+
 - DatabaseCPUHigh: CPU > 80% for 10 minutes
 - DatabaseMemoryLow: Free memory < 10% for 5 minutes
 - DatabaseConnectionsHigh: Connections > 90% for 5 minutes
 - ReplicationLagHigh: Lag > 5 seconds for 5 minutes
+
 ```
 
 ## Troubleshooting

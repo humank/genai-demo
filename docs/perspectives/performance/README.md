@@ -18,6 +18,7 @@ The Performance & Scalability Perspective ensures the system meets response time
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Peak Load Handling
+
 - **Source**: Marketing campaign
 - **Stimulus**: User load increases from 100 to 1000 concurrent users
 - **Environment**: Current system at 60% capacity

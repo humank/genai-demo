@@ -19,7 +19,7 @@ This documentation describes the domain events published by the e-commerce platf
 
 ### Event Publishing Flow
 
-```
+```text
 Aggregate Root → collectEvent()
     ↓
 Application Service → publishEventsFromAggregate()

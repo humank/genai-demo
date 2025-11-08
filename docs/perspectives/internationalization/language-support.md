@@ -13,6 +13,7 @@ This document details the implementation of multi-language support in the Enterp
 ### Current Languages (Phase 1)
 
 #### English (United States) - en-US
+
 - **Status**: ✅ Active (Default)
 - **Launch Date**: 2024-01-01
 - **Coverage**: 100%
@@ -20,6 +21,7 @@ This document details the implementation of multi-language support in the Enterp
 - **Notes**: Base language for all translations
 
 #### Traditional Chinese (Taiwan) - zh-TW
+
 - **Status**: ✅ Active
 - **Launch Date**: 2024-06-01
 - **Coverage**: 98%
@@ -31,6 +33,7 @@ This document details the implementation of multi-language support in the Enterp
   - Taiwan-specific terminology
 
 #### Simplified Chinese (China) - zh-CN
+
 - **Status**: 🚧 In Progress
 - **Target Launch**: 2025-Q2
 - **Coverage**: 75%
@@ -58,6 +61,7 @@ This document details the implementation of multi-language support in the Enterp
 ### 1. String Extraction
 
 **Backend (Spring Boot)**:
+
 ```bash
 # Extract messages from code
 ./gradlew extractMessages
@@ -66,6 +70,7 @@ This document details the implementation of multi-language support in the Enterp
 ```
 
 **Frontend (React)**:
+
 ```bash
 # Extract translation keys
 npm run i18n:extract
@@ -78,6 +83,7 @@ npm run i18n:extract
 **Using Crowdin (Recommended)**:
 
 1. **Setup**:
+
    ```bash
    # Install Crowdin CLI
    npm install -g @crowdin/cli
@@ -87,31 +93,37 @@ npm run i18n:extract
    ```
 
 2. **Upload Source Files**:
+
    ```bash
    crowdin upload sources
    ```
 
 3. **Download Translations**:
+
    ```bash
    crowdin download
    ```
 
 **Configuration** (`crowdin.yml`):
+
 ```yaml
 project_id: "your-project-id"
 api_token_env: CROWDIN_API_TOKEN
 
 files:
+
   - source: /public/locales/en-US/**/*.json
+
     translation: /public/locales/%locale%/**/%original_file_name%
   
   - source: /src/main/resources/i18n/messages.properties
+
     translation: /src/main/resources/i18n/messages_%locale%.properties
 ```
 
 ### 3. Translation Process
 
-```
+```text
 Developer → Add String → Extract → Upload to TMS
                                          ↓
                                     Translator
@@ -124,6 +136,7 @@ Developer → Add String → Extract → Upload to TMS
 ```
 
 **Timeline**:
+
 - **Extraction**: Automated (daily)
 - **Translation**: 2-3 days
 - **Review**: 1-2 days
@@ -135,6 +148,7 @@ Developer → Add String → Extract → Upload to TMS
 ### Backend Implementation (Spring Boot)
 
 **Message Source Configuration**:
+
 ```java
 @Configuration
 public class I18nConfiguration {
@@ -169,6 +183,7 @@ public class I18nConfiguration {
 ```
 
 **Usage in Services**:
+
 ```java
 @Service
 public class NotificationService {
@@ -200,6 +215,7 @@ public class NotificationService {
 ### Frontend Implementation (React + i18next)
 
 **i18n Configuration**:
+
 ```typescript
 // src/i18n/config.ts
 import i18n from 'i18next';
@@ -237,6 +253,7 @@ export default i18n;
 ```
 
 **Usage in Components**:
+
 ```typescript
 import { useTranslation } from 'react-i18next';
 
@@ -265,6 +282,7 @@ function CheckoutPage() {
 ```
 
 **Translation Files** (`public/locales/en-US/checkout.json`):
+
 ```json
 {
   "title": "Checkout",
@@ -283,6 +301,7 @@ function CheckoutPage() {
 ### Frontend Implementation (Angular)
 
 **Configuration**:
+
 ```typescript
 // app.module.ts
 import { LOCALE_ID, NgModule } from '@angular/core';
@@ -332,6 +351,7 @@ export class AppModule { }
 ### Translation Guidelines
 
 **Style Guide**:
+
 - **Tone**: Professional but friendly
 - **Formality**: Appropriate to culture
 - **Terminology**: Consistent across platform
@@ -339,6 +359,7 @@ export class AppModule { }
 - **Context**: Provide context for translators
 
 **Common Pitfalls to Avoid**:
+
 - ❌ Literal translations
 - ❌ Ignoring cultural context
 - ❌ Inconsistent terminology
@@ -350,6 +371,7 @@ export class AppModule { }
 Different languages have different pluralization rules:
 
 **English** (2 forms):
+
 ```json
 {
   "items": {
@@ -360,6 +382,7 @@ Different languages have different pluralization rules:
 ```
 
 **Chinese** (1 form):
+
 ```json
 {
   "items": "{{count}} 個商品"
@@ -367,6 +390,7 @@ Different languages have different pluralization rules:
 ```
 
 **Implementation**:
+
 ```typescript
 t('items', { count: 1 });  // "1 item" (en-US) / "1 個商品" (zh-TW)
 t('items', { count: 5 });  // "5 items" (en-US) / "5 個商品" (zh-TW)
@@ -377,6 +401,7 @@ t('items', { count: 5 });  // "5 items" (en-US) / "5 個商品" (zh-TW)
 ### Lazy Loading
 
 **Load translations on demand**:
+
 ```typescript
 i18n.init({
   backend: {
@@ -393,6 +418,7 @@ i18n.loadNamespaces(['checkout', 'product']);
 ### Caching
 
 **Browser caching**:
+
 ```typescript
 i18n.init({
   backend: {
@@ -405,6 +431,7 @@ i18n.init({
 ```
 
 **CDN caching**:
+
 - Serve translation files from CDN
 - Set appropriate cache headers
 - Version translation files for cache busting
@@ -425,6 +452,7 @@ i18n.init({
 ### Monitoring
 
 **Track missing translations**:
+
 ```typescript
 i18n.on('missingKey', (lngs, namespace, key, res) => {
   // Log to monitoring system

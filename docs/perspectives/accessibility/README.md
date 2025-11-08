@@ -18,6 +18,7 @@ The Accessibility Perspective ensures the system is usable by all users, includi
 ## Quality Attribute Scenarios
 
 ### Scenario 1: Screen Reader Navigation
+
 - **Source**: Visually impaired user
 - **Stimulus**: Navigate checkout process using screen reader
 - **Environment**: Web browser with screen reader enabled

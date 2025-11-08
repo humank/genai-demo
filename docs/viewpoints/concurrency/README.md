@@ -11,6 +11,7 @@ The Concurrency Viewpoint describes how the system handles concurrent and parall
 ## Purpose
 
 This viewpoint answers:
+
 - What operations can run in parallel?
 - How is concurrency managed?
 - What are the synchronization mechanisms?
@@ -24,12 +25,14 @@ This viewpoint answers:
 ## Contents
 
 ### 📄 Documents
+
 - [Overview](overview.md) - Concurrency model and strategies
 - [Sync vs Async Operations](sync-async-operations.md) - Operation classification
 - [Synchronization Mechanisms](synchronization.md) - Locking and coordination
 - [State Management](state-management.md) - Stateless vs stateful components
 
 ### 📊 Diagrams
+
 - Concurrency model diagram
 - Thread pool configuration
 - Distributed locking sequence diagrams
@@ -37,11 +40,13 @@ This viewpoint answers:
 ## Key Concepts
 
 ### Concurrency Model
+
 - **Synchronous**: Customer registration, payment processing
 - **Asynchronous**: Email notifications, analytics collection
 - **Parallel**: Product search, inventory checks
 
 ### Synchronization
+
 - **Distributed Locking**: Redis-based locks for critical sections
 - **Optimistic Locking**: JPA version fields
 - **Transaction Boundaries**: Spring @Transactional
@@ -49,10 +54,12 @@ This viewpoint answers:
 ## Related Documentation
 
 ### Related Viewpoints
+
 - [Information Viewpoint](../information/README.md) - Data consistency
 - [Deployment Viewpoint](../deployment/README.md) - Distributed system considerations
 
 ### Related Perspectives
+
 - [Performance Perspective](../../perspectives/performance/README.md) - Concurrency and performance
 - [Availability Perspective](../../perspectives/availability/README.md) - Fault tolerance
 

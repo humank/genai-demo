@@ -35,6 +35,7 @@ This viewpoint addresses the following concerns:
 The E-Commerce Platform is deployed as a **cloud-native application** on AWS, leveraging managed services for scalability, reliability, and operational efficiency.
 
 **Key Characteristics**:
+
 - **Containerized Microservices**: Applications run in Docker containers on EKS
 - **Managed Databases**: PostgreSQL on RDS for relational data
 - **Managed Caching**: Redis on ElastiCache for distributed caching
@@ -46,7 +47,7 @@ The E-Commerce Platform is deployed as a **cloud-native application** on AWS, le
 
 The platform maintains three environments with progressive deployment:
 
-```
+```text
 Development → Staging → Production
     ↓           ↓           ↓
   Feature    Integration  Live
@@ -68,14 +69,16 @@ Development → Staging → Production
 **Purpose**: Run containerized microservices with automatic scaling
 
 **Configuration**:
+
 - **Cluster**: Multi-AZ EKS cluster with managed node groups
-- **Node Groups**: 
+- **Node Groups**:
   - General purpose (t3.large): 3-10 nodes
   - Memory optimized (r5.xlarge): 2-5 nodes for data-intensive services
 - **Auto-scaling**: Cluster Autoscaler + Horizontal Pod Autoscaler
 - **Namespaces**: Logical separation by bounded context
 
 **Key Features**:
+
 - Rolling updates with zero downtime
 - Pod disruption budgets for high availability
 - Resource quotas and limits per namespace
@@ -86,6 +89,7 @@ Development → Staging → Production
 **Purpose**: Persistent storage for transactional data
 
 **Configuration**:
+
 - **Engine**: PostgreSQL 15.x
 - **Instance**: db.r5.xlarge (primary), db.r5.large (replicas)
 - **Deployment**: Multi-AZ with automatic failover
@@ -94,6 +98,7 @@ Development → Staging → Production
 - **Backup**: Automated daily backups with 7-day retention
 
 **Key Features**:
+
 - Automatic failover in < 2 minutes
 - Point-in-time recovery up to 7 days
 - Encryption at rest (AES-256)
@@ -104,6 +109,7 @@ Development → Staging → Production
 **Purpose**: Distributed caching and session storage
 
 **Configuration**:
+
 - **Engine**: Redis 7.x
 - **Cluster Mode**: Enabled with 3 shards
 - **Nodes**: cache.r5.large (3 primary + 3 replicas)
@@ -111,6 +117,7 @@ Development → Staging → Production
 - **Persistence**: AOF (Append-Only File) enabled
 
 **Key Features**:
+
 - Sub-millisecond latency
 - Automatic failover and recovery
 - Data encryption at rest and in transit
@@ -121,6 +128,7 @@ Development → Staging → Production
 **Purpose**: Event streaming and asynchronous communication
 
 **Configuration**:
+
 - **Kafka Version**: 3.5.x
 - **Brokers**: 3 brokers across 3 AZs
 - **Instance**: kafka.m5.large
@@ -128,6 +136,7 @@ Development → Staging → Production
 - **Replication**: Factor of 3 for durability
 
 **Key Features**:
+
 - High throughput (MB/s per broker)
 - Automatic broker replacement
 - Topic-level encryption
@@ -138,6 +147,7 @@ Development → Staging → Production
 **Purpose**: Distribute traffic and provide SSL termination
 
 **Configuration**:
+
 - **Type**: Application Load Balancer (Layer 7)
 - **Deployment**: Multi-AZ for high availability
 - **SSL/TLS**: ACM-managed certificates with auto-renewal
@@ -145,6 +155,7 @@ Development → Staging → Production
 - **Stickiness**: Session affinity for stateful operations
 
 **Key Features**:
+
 - Path-based routing to microservices
 - Host-based routing for multi-tenant support
 - WebSocket support for real-time features
@@ -156,7 +167,7 @@ Development → Staging → Production
 
 All critical components are deployed across **3 Availability Zones** in the same region:
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                         Region: us-east-1                    │
 ├─────────────────────────────────────────────────────────────┤
@@ -186,6 +197,7 @@ All critical components are deployed across **3 Availability Zones** in the same
 ### Horizontal Scaling
 
 **Application Layer (EKS)**:
+
 - **Cluster Autoscaler**: Adds/removes nodes based on pending pods
 - **Horizontal Pod Autoscaler (HPA)**: Scales pods based on CPU/memory/custom metrics
 - **Target Metrics**:
@@ -194,16 +206,19 @@ All critical components are deployed across **3 Availability Zones** in the same
   - Request rate: 1000 req/s per pod
 
 **Database Layer (RDS)**:
+
 - **Read Scaling**: Add read replicas (up to 5)
 - **Write Scaling**: Vertical scaling of primary instance
 - **Connection Pooling**: HikariCP with max 20 connections per service
 
 **Caching Layer (ElastiCache)**:
+
 - **Horizontal Scaling**: Add shards to cluster
 - **Vertical Scaling**: Upgrade node types
 - **Read Scaling**: Add replicas per shard
 
 **Messaging Layer (MSK)**:
+
 - **Broker Scaling**: Add brokers to cluster
 - **Partition Scaling**: Increase partitions per topic
 - **Consumer Scaling**: Add consumer instances
@@ -224,13 +239,17 @@ spec:
   minReplicas: 3
   maxReplicas: 20
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
@@ -240,13 +259,17 @@ spec:
     scaleUp:
       stabilizationWindowSeconds: 60
       policies:
+
       - type: Percent
+
         value: 50
         periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300
       policies:
+
       - type: Percent
+
         value: 10
         periodSeconds: 60
 ```
@@ -256,12 +279,14 @@ spec:
 ### Network Security
 
 **Defense in Depth**:
+
 1. **Perimeter**: WAF on ALB for application-layer protection
 2. **Network**: Security groups for fine-grained access control
 3. **Application**: JWT authentication and RBAC authorization
 4. **Data**: Encryption at rest and in transit
 
 **Security Groups**:
+
 - **ALB Security Group**: Allow HTTPS (443) from internet
 - **EKS Node Security Group**: Allow traffic from ALB and within cluster
 - **RDS Security Group**: Allow PostgreSQL (5432) from EKS nodes only
@@ -271,12 +296,14 @@ spec:
 ### Data Encryption
 
 **At Rest**:
+
 - RDS: AWS KMS encryption with customer-managed keys
 - ElastiCache: Encryption enabled with AWS-managed keys
 - EBS Volumes: Encrypted with AWS-managed keys
 - S3 Buckets: Server-side encryption (SSE-S3)
 
 **In Transit**:
+
 - ALB to Clients: TLS 1.2+ with ACM certificates
 - ALB to EKS: TLS 1.2+ with internal certificates
 - Application to RDS: TLS 1.2+ with RDS certificates
@@ -288,30 +315,36 @@ spec:
 ### Backup Strategy
 
 **RDS Backups**:
+
 - **Automated Backups**: Daily snapshots with 7-day retention
 - **Manual Snapshots**: Before major changes, retained indefinitely
 - **Point-in-Time Recovery**: Up to 7 days
 - **Cross-Region Replication**: Snapshots copied to secondary region
 
 **ElastiCache Backups**:
+
 - **Automated Backups**: Daily snapshots with 7-day retention
 - **Manual Snapshots**: Before major changes
 
 **MSK Backups**:
+
 - **Topic Retention**: 7 days for all topics
 - **Offset Backups**: Consumer group offsets backed up
 
 **Application State**:
+
 - **Configuration**: Stored in Git and AWS Systems Manager Parameter Store
 - **Secrets**: Stored in AWS Secrets Manager with automatic rotation
 
 ### Recovery Procedures
 
 **RTO/RPO Targets**:
+
 - **RTO (Recovery Time Objective)**: < 1 hour
 - **RPO (Recovery Point Objective)**: < 5 minutes
 
 **Recovery Scenarios**:
+
 1. **Service Failure**: Automatic pod restart and rescheduling
 2. **Database Failure**: Automatic failover to standby
 3. **AZ Failure**: Traffic routed to healthy AZs
@@ -322,16 +355,19 @@ spec:
 ### Resource Optimization
 
 **Compute**:
+
 - Use Spot Instances for non-critical workloads (up to 70% savings)
 - Right-size instances based on actual usage
 - Use Savings Plans for predictable workloads
 
 **Storage**:
+
 - Use GP3 instead of GP2 for EBS volumes (20% savings)
 - Enable S3 Intelligent-Tiering for infrequently accessed data
 - Clean up old snapshots and unused volumes
 
 **Networking**:
+
 - Use VPC endpoints to avoid NAT Gateway costs
 - Optimize data transfer between AZs
 - Use CloudFront CDN for static content
@@ -339,11 +375,13 @@ spec:
 ### Cost Monitoring
 
 **Tools**:
+
 - AWS Cost Explorer for cost analysis
 - AWS Budgets for cost alerts
 - Custom CloudWatch dashboards for resource utilization
 
 **Monthly Cost Estimate** (Production):
+
 - EKS Cluster: $150 (control plane) + $800 (nodes) = $950
 - RDS: $600 (primary) + $400 (replicas) = $1,000
 - ElastiCache: $450
@@ -357,6 +395,7 @@ spec:
 ### CI/CD Pipeline
 
 **Stages**:
+
 1. **Build**: Compile code, run unit tests, build Docker images
 2. **Test**: Run integration tests, security scans
 3. **Deploy to Dev**: Automatic deployment on merge to `develop`
@@ -364,6 +403,7 @@ spec:
 5. **Deploy to Production**: Manual approval + canary deployment
 
 **Deployment Strategies**:
+
 - **Rolling Deployment**: Default for most services (zero downtime)
 - **Blue-Green Deployment**: For major updates (instant rollback)
 - **Canary Deployment**: For high-risk changes (gradual rollout)
@@ -371,11 +411,13 @@ spec:
 ### Rollback Procedures
 
 **Automatic Rollback Triggers**:
+
 - Error rate > 5% for 5 minutes
 - Response time > 3s (p95) for 5 minutes
 - Health check failures > 50%
 
 **Manual Rollback**:
+
 - One-click rollback to previous version
 - Rollback time: < 5 minutes
 
@@ -384,17 +426,20 @@ spec:
 ### Key Metrics
 
 **Infrastructure Metrics**:
+
 - EKS: Node CPU/memory, pod count, cluster health
 - RDS: CPU/memory, connections, replication lag
 - ElastiCache: CPU/memory, cache hit rate, evictions
 - MSK: Broker CPU/memory, partition count, consumer lag
 
 **Application Metrics**:
+
 - Request rate, error rate, response time
 - Business metrics (orders, revenue, conversions)
 - Custom metrics via Prometheus
 
 **Dashboards**:
+
 - CloudWatch dashboards for AWS resources
 - Grafana dashboards for application metrics
 - Custom dashboards for business metrics

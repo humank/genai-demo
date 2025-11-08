@@ -23,6 +23,7 @@ affected_perspectives: ["performance", "evolution"]
 Active-active multi-region architecture incurs significant costs that must be optimized:
 
 **Cost Challenges**:
+
 - **Compute Costs**: Duplicate infrastructure across regions
 - **Data Transfer**: Cross-region data transfer fees
 - **Storage Costs**: Replicated data storage
@@ -31,6 +32,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 - **Operational Costs**: Increased operational complexity
 
 **Current Cost Structure** (Estimated Annual):
+
 - Compute (EKS): $180,000/year
 - Database (RDS): $120,000/year
 - Data Transfer: $60,000/year
@@ -40,6 +42,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 - **Total**: $500,000/year
 
 **Optimization Targets**:
+
 - Reduce costs by 20-30% ($100,000-$150,000/year)
 - Maintain 99.9% availability SLO
 - No performance degradation
@@ -48,6 +51,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 ### Business Context
 
 **Business Drivers**:
+
 - Cost efficiency and profitability
 - Competitive pricing
 - Resource optimization
@@ -55,6 +59,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 - ROI improvement
 
 **Constraints**:
+
 - Cannot compromise availability (99.9% SLO)
 - Cannot compromise performance (< 2s response time)
 - Cannot compromise security or compliance
@@ -64,6 +69,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 ### Technical Context
 
 **Current State**:
+
 - Full active-active in Taiwan and Tokyo
 - No cost optimization measures
 - Over-provisioned resources
@@ -71,6 +77,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 - No reserved instances
 
 **Requirements**:
+
 - Cost visibility and tracking
 - Automated cost optimization
 - Right-sizing recommendations
@@ -99,6 +106,7 @@ Active-active multi-region architecture incurs significant costs that must be op
 **1. Compute Optimization**:
 
 **Right-Sizing**:
+
 ```typescript
 // Automated right-sizing recommendations
 interface RightSizingStrategy {
@@ -143,6 +151,7 @@ const nodeGroupOptimization = {
 ```
 
 **Reserved Instances & Savings Plans**:
+
 ```typescript
 interface ReservedCapacityStrategy {
   analysis: {
@@ -172,6 +181,7 @@ interface ReservedCapacityStrategy {
 ```
 
 **Spot Instances for Non-Critical Workloads**:
+
 ```typescript
 interface SpotInstanceStrategy {
   workloads: {
@@ -197,6 +207,7 @@ interface SpotInstanceStrategy {
 **2. Data Transfer Optimization**:
 
 **Cross-Region Transfer Reduction**:
+
 ```typescript
 interface DataTransferOptimization {
   strategies: {
@@ -234,6 +245,7 @@ interface DataTransferOptimization {
 **3. Database Optimization**:
 
 **RDS Cost Optimization**:
+
 ```typescript
 interface DatabaseOptimization {
   strategies: {
@@ -270,6 +282,7 @@ interface DatabaseOptimization {
 **4. Storage Optimization**:
 
 **S3 Lifecycle Policies**:
+
 ```typescript
 interface StorageOptimization {
   lifecyclePolicies: {
@@ -307,6 +320,7 @@ interface StorageOptimization {
 **5. Monitoring Cost Optimization**:
 
 **Observability Cost Reduction**:
+
 ```typescript
 interface MonitoringOptimization {
   strategies: {
@@ -339,6 +353,7 @@ interface MonitoringOptimization {
 **6. Automated Cost Optimization**:
 
 **AWS Cost Optimization Tools**:
+
 ```typescript
 interface AutomatedOptimization {
   tools: {
@@ -372,6 +387,7 @@ interface AutomatedOptimization {
 ```
 
 **Cost Allocation and Tagging**:
+
 ```typescript
 interface CostAllocation {
   taggingStrategy: {
@@ -398,6 +414,7 @@ interface CostAllocation {
 ```
 
 **Total Cost Optimization Summary**:
+
 ```typescript
 const costOptimizationSummary = {
   current: {
@@ -430,6 +447,7 @@ const costOptimizationSummary = {
 ```
 
 **Pros**:
+
 - ✅ Significant cost savings (41.6%)
 - ✅ Maintains availability and performance
 - ✅ Automated optimization
@@ -437,6 +455,7 @@ const costOptimizationSummary = {
 - ✅ Sustainable long-term
 
 **Cons**:
+
 - ⚠️ Initial implementation effort
 - ⚠️ Requires ongoing monitoring
 - ⚠️ Some manual decisions needed
@@ -452,10 +471,12 @@ const costOptimizationSummary = {
 **Description**: Basic cost optimization (RI only)
 
 **Pros**:
+
 - ✅ Simple implementation
 - ✅ Low effort
 
 **Cons**:
+
 - ❌ Limited savings (15%)
 - ❌ Misses opportunities
 - ❌ Not sustainable
@@ -469,9 +490,11 @@ const costOptimizationSummary = {
 **Description**: Maximum cost cutting including availability compromises
 
 **Pros**:
+
 - ✅ Maximum savings (50%)
 
 **Cons**:
+
 - ❌ Compromises availability
 - ❌ Performance degradation
 - ❌ Business risk
@@ -505,6 +528,7 @@ Comprehensive optimization achieves significant savings (41.6%) while maintainin
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All infrastructure components
 - Compute resources (EKS, EC2)
 - Database resources (RDS, ElastiCache)
@@ -530,12 +554,14 @@ Affects:
 ### Phase 1: Analysis & Planning (Month 1)
 
 **Objectives**:
+
 - Comprehensive cost analysis
 - Identify optimization opportunities
 - Create detailed implementation roadmap
 - Set up cost tracking infrastructure
 
 **Tasks**:
+
 - [ ] Analyze current costs by service, region, team
 - [ ] Identify top cost drivers
 - [ ] Benchmark against industry standards
@@ -547,6 +573,7 @@ Affects:
 - [ ] Define success metrics
 
 **Success Criteria**:
+
 - Complete cost analysis documented
 - Optimization opportunities identified
 - Roadmap approved by management
@@ -555,11 +582,13 @@ Affects:
 ### Phase 2: Quick Wins (Month 2-3)
 
 **Objectives**:
+
 - Implement high-impact, low-risk optimizations
 - Achieve initial cost savings
 - Build momentum for larger changes
 
 **Tasks**:
+
 - [ ] Purchase 1-year Reserved Instances for baseline compute
 - [ ] Purchase 1-year RDS Reserved Instances
 - [ ] Right-size obviously over-provisioned instances
@@ -570,6 +599,7 @@ Affects:
 - [ ] Measure initial savings
 
 **Success Criteria**:
+
 - Reserved Instances purchased (60% coverage)
 - 10-15% cost reduction achieved
 - All resources tagged
@@ -580,11 +610,13 @@ Affects:
 ### Phase 3: Compute Optimization (Month 4-5)
 
 **Objectives**:
+
 - Optimize EKS node groups
 - Implement Spot instances
 - Fine-tune auto-scaling
 
 **Tasks**:
+
 - [ ] Analyze EKS node utilization
 - [ ] Right-size node groups
 - [ ] Implement Spot instances for non-critical workloads
@@ -596,6 +628,7 @@ Affects:
 - [ ] Measure savings
 
 **Success Criteria**:
+
 - Node utilization > 70%
 - Spot instance coverage > 30% for eligible workloads
 - Auto-scaling working correctly
@@ -606,11 +639,13 @@ Affects:
 ### Phase 4: Data Transfer Optimization (Month 6-7)
 
 **Objectives**:
+
 - Reduce cross-region data transfer
 - Implement caching strategies
 - Optimize routing
 
 **Tasks**:
+
 - [ ] Analyze data transfer patterns
 - [ ] Implement CloudFront for static content
 - [ ] Deploy regional Redis caches
@@ -622,6 +657,7 @@ Affects:
 - [ ] Measure transfer reduction
 
 **Success Criteria**:
+
 - Cross-region transfer reduced by 50%
 - Cache hit rate > 80%
 - API payload sizes reduced by 30%
@@ -632,11 +668,13 @@ Affects:
 ### Phase 5: Database Optimization (Month 8-9)
 
 **Objectives**:
+
 - Optimize RDS instances
 - Implement storage optimization
 - Optimize read replicas
 
 **Tasks**:
+
 - [ ] Analyze database utilization
 - [ ] Right-size RDS instances
 - [ ] Purchase 3-year RDS Reserved Instances
@@ -649,6 +687,7 @@ Affects:
 - [ ] Measure savings
 
 **Success Criteria**:
+
 - Database utilization > 60%
 - Storage costs reduced by 40%
 - Read replica costs reduced by 50%
@@ -659,11 +698,13 @@ Affects:
 ### Phase 6: Storage Optimization (Month 10-11)
 
 **Objectives**:
+
 - Implement S3 lifecycle policies
 - Optimize storage classes
 - Reduce storage footprint
 
 **Tasks**:
+
 - [ ] Analyze S3 storage patterns
 - [ ] Implement lifecycle policies
 - [ ] Configure Intelligent-Tiering
@@ -675,6 +716,7 @@ Affects:
 - [ ] Measure savings
 
 **Success Criteria**:
+
 - 60% of data in lower-cost tiers
 - Storage costs reduced by 40%
 - No data access issues
@@ -685,11 +727,13 @@ Affects:
 ### Phase 7: Monitoring Optimization (Month 12)
 
 **Objectives**:
+
 - Optimize observability costs
 - Implement intelligent sampling
 - Reduce log volume
 
 **Tasks**:
+
 - [ ] Analyze monitoring costs
 - [ ] Filter low-value metrics
 - [ ] Implement log sampling
@@ -700,6 +744,7 @@ Affects:
 - [ ] Measure savings
 
 **Success Criteria**:
+
 - Monitoring costs reduced by 40%
 - No visibility loss
 - Query performance maintained
@@ -710,11 +755,13 @@ Affects:
 ### Phase 8: Automation & Continuous Optimization (Ongoing)
 
 **Objectives**:
+
 - Automate cost optimization
 - Establish continuous improvement
 - Maintain savings
 
 **Tasks**:
+
 - [ ] Implement AWS Compute Optimizer recommendations
 - [ ] Configure automated right-sizing
 - [ ] Set up cost anomaly detection
@@ -725,6 +772,7 @@ Affects:
 - [ ] Train teams on cost awareness
 
 **Success Criteria**:
+
 - Automated optimization operational
 - Monthly cost reviews established
 - Team cost awareness high
@@ -733,12 +781,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Performance degradation > 10%
 - Availability SLO breach
 - Customer complaints
 - Cost savings not realized
 
 **Rollback Steps**:
+
 1. **Immediate**: Revert recent changes
 2. **Scale Up**: Increase resources if needed
 3. **Analyze**: Identify root cause
@@ -809,6 +859,7 @@ const costOptimizationMetrics = {
 ### Cost Dashboards
 
 **Executive Cost Dashboard**:
+
 - Total monthly cost trend
 - Cost savings achieved
 - Cost by category (pie chart)
@@ -817,6 +868,7 @@ const costOptimizationMetrics = {
 - ROI calculation
 
 **Operations Cost Dashboard**:
+
 - Cost by service
 - Cost by team
 - Cost by environment
@@ -825,6 +877,7 @@ const costOptimizationMetrics = {
 - Anomaly alerts
 
 **FinOps Dashboard**:
+
 - Reserved Instance coverage
 - Spot Instance usage
 - Right-sizing recommendations
@@ -868,6 +921,7 @@ const costOptimizationMetrics = {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual cost analysis and reporting
 2. Basic right-sizing recommendations
 3. Limited automated optimization
@@ -875,6 +929,7 @@ const costOptimizationMetrics = {
 5. Basic cost allocation tagging
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: AI-powered cost optimization recommendations
 - **Q3 2026**: Automated right-sizing and scaling
 - **Q4 2026**: Predictive cost forecasting
@@ -893,12 +948,12 @@ const costOptimizationMetrics = {
 **Last Reviewed**: 2025-10-25  
 **Next Review**: 2026-01-25 (Quarterly)
 
-
 ## Notes
 
 ### Cost Optimization Best Practices
 
 **FinOps Principles**:
+
 1. **Teams need to collaborate**: Engineering, Finance, Operations
 2. **Everyone takes ownership**: Cost is everyone's responsibility
 3. **Decisions are driven by business value**: Not just cost reduction
@@ -906,6 +961,7 @@ const costOptimizationMetrics = {
 5. **A centralized team drives FinOps**: Dedicated FinOps team
 
 **Cost Optimization Hierarchy**:
+
 1. **Eliminate**: Remove unused resources
 2. **Right-size**: Match resources to actual needs
 3. **Reserve**: Commit to long-term usage
@@ -915,17 +971,20 @@ const costOptimizationMetrics = {
 ### Reserved Instance Strategy
 
 **Coverage Targets by Service**:
+
 - **EC2/EKS**: 60% Reserved, 30% Spot, 10% On-Demand
 - **RDS**: 80% Reserved, 20% On-Demand
 - **ElastiCache**: 70% Reserved, 30% On-Demand
 - **OpenSearch**: 60% Reserved, 40% On-Demand
 
 **Term Selection**:
+
 - **1-Year**: For predictable baseline workload
 - **3-Year**: For stable, long-term workload (maximum savings)
 - **Payment**: All Upfront for maximum discount
 
 **Flexibility**:
+
 - Use Convertible RIs for flexibility
 - Regional RIs for multi-AZ flexibility
 - Size flexibility for instance family
@@ -933,6 +992,7 @@ const costOptimizationMetrics = {
 ### Spot Instance Best Practices
 
 **Suitable Workloads**:
+
 - Batch processing
 - Data analysis
 - CI/CD pipelines
@@ -941,12 +1001,14 @@ const costOptimizationMetrics = {
 - Fault-tolerant applications
 
 **Not Suitable**:
+
 - Databases (primary)
 - Stateful applications
 - Real-time processing
 - Customer-facing critical services
 
 **Implementation**:
+
 - Use multiple instance types
 - Implement graceful shutdown
 - Use Spot Instance interruption notices
@@ -955,12 +1017,14 @@ const costOptimizationMetrics = {
 ### Data Transfer Cost Optimization
 
 **Cost Structure**:
+
 - **Inbound**: Free
 - **Outbound to Internet**: $0.09/GB
 - **Cross-Region**: $0.02/GB
 - **Same Region**: Free
 
 **Optimization Strategies**:
+
 1. **Minimize Cross-Region**: Use regional caching
 2. **Compress Data**: Reduce transfer size
 3. **Batch Transfers**: Reduce transfer count
@@ -970,6 +1034,7 @@ const costOptimizationMetrics = {
 ### Storage Cost Optimization
 
 **S3 Storage Classes**:
+
 | Class | Cost/GB | Use Case | Retrieval |
 |-------|---------|----------|-----------|
 | Standard | $0.023 | Hot data | Instant |
@@ -979,6 +1044,7 @@ const costOptimizationMetrics = {
 | Glacier Deep Archive | $0.00099 | Long-term archive | Hours |
 
 **Lifecycle Policy Example**:
+
 ```json
 {
   "Rules": [
@@ -1007,6 +1073,7 @@ const costOptimizationMetrics = {
 ### Database Cost Optimization
 
 **RDS Optimization Checklist**:
+
 - [ ] Right-size instance based on actual usage
 - [ ] Use Reserved Instances for baseline
 - [ ] Migrate to GP3 storage
@@ -1017,6 +1084,7 @@ const costOptimizationMetrics = {
 - [ ] Configure automated backups efficiently
 
 **ElastiCache Optimization**:
+
 - [ ] Right-size nodes
 - [ ] Use Reserved Nodes
 - [ ] Optimize cluster configuration
@@ -1027,6 +1095,7 @@ const costOptimizationMetrics = {
 ### Monitoring Cost Optimization
 
 **CloudWatch Optimization**:
+
 - Filter low-value metrics
 - Use metric math for derived metrics
 - Optimize log retention
@@ -1034,12 +1103,14 @@ const costOptimizationMetrics = {
 - Implement log filtering
 
 **X-Ray Optimization**:
+
 - Use adaptive sampling
 - Filter health check traces
 - Optimize trace retention
 - Compress trace data
 
 **Cost Allocation Tags**:
+
 ```typescript
 const requiredTags = {
   Environment: 'prod|staging|dev',
@@ -1054,12 +1125,14 @@ const requiredTags = {
 ### Cost Anomaly Detection
 
 **Anomaly Types**:
+
 1. **Spike**: Sudden cost increase
 2. **Trend**: Gradual cost increase
 3. **Seasonal**: Expected periodic changes
 4. **Unexpected**: Unusual patterns
 
 **Alert Configuration**:
+
 - Threshold: > 20% increase
 - Evaluation: Daily
 - Notification: Slack + Email
@@ -1068,7 +1141,8 @@ const requiredTags = {
 ### ROI Calculation
 
 **Cost Optimization ROI**:
-```
+
+```text
 Initial Investment: $50,000 (implementation effort)
 Annual Savings: $208,000
 Payback Period: 2.9 months
@@ -1079,6 +1153,7 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 ```
 
 **Business Impact**:
+
 - Improved profit margins
 - Competitive pricing capability
 - Increased R&D budget
@@ -1087,6 +1162,7 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 ### Continuous Optimization Process
 
 **Monthly Review Checklist**:
+
 - [ ] Review cost trends
 - [ ] Identify anomalies
 - [ ] Check RI/Spot coverage
@@ -1096,6 +1172,7 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 - [ ] Report to stakeholders
 
 **Quarterly Optimization**:
+
 - [ ] Comprehensive cost analysis
 - [ ] Strategy review and adjustment
 - [ ] RI renewal planning
@@ -1106,6 +1183,7 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 ### Tools and Resources
 
 **AWS Native Tools**:
+
 - AWS Cost Explorer
 - AWS Budgets
 - AWS Cost Anomaly Detection
@@ -1114,12 +1192,14 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 - AWS Cost and Usage Report
 
 **Third-Party Tools** (Optional):
+
 - CloudHealth
 - CloudCheckr
 - Spot.io
 - ProsperOps
 
 **FinOps Resources**:
+
 - FinOps Foundation
 - AWS Well-Architected Framework (Cost Optimization Pillar)
 - Cloud FinOps Book
@@ -1128,11 +1208,13 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 ### Success Stories
 
 **Industry Benchmarks**:
+
 - Average cloud cost optimization: 20-30%
 - Best-in-class: 40-50%
 - Our achievement: 41.6%
 
 **Key Success Factors**:
+
 1. Executive support and commitment
 2. Cross-functional collaboration
 3. Automated optimization
@@ -1142,12 +1224,14 @@ ROI = ($624,000 - $50,000) / $50,000 × 100 = 1,148%
 ### Future Enhancements
 
 **Phase 2 (2026)**:
+
 - AI-powered cost optimization
 - Predictive cost forecasting
 - Automated resource scheduling
 - Advanced anomaly detection
 
 **Phase 3 (2027)**:
+
 - Fully automated FinOps platform
 - Real-time cost optimization
 - Multi-cloud cost optimization

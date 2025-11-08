@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2025-10-25
 
-## Welcome!
+## Welcome
 
 Welcome to the Enterprise E-Commerce Platform development team! This guide will help you get up to speed quickly and become a productive member of the team.
 
@@ -18,6 +18,7 @@ Welcome to the Enterprise E-Commerce Platform development team! This guide will 
 ### Goals
 
 By the end of your onboarding, you should be able to:
+
 - Set up and run the application locally
 - Understand the system architecture
 - Follow our development workflow
@@ -42,12 +43,14 @@ Before your first day, ensure you have:
 #### Morning: Team Introduction
 
 **9:00 AM - Welcome Meeting**
+
 - Meet your manager and team lead
 - Get overview of the project
 - Understand team structure and roles
 - Review this onboarding guide
 
 **10:00 AM - Team Introductions**
+
 - Meet team members
 - Understand who does what
 - Learn communication channels
@@ -72,12 +75,14 @@ Follow these guides in order:
    - Configure run configurations
 
 **Expected Outcome:**
+
 - [ ] All software installed
 - [ ] Application runs locally
 - [ ] Tests pass
 - [ ] IDE configured
 
 **If you get stuck:**
+
 - Check the troubleshooting sections in the setup guides
 - Ask in #dev-support Slack channel
 - Reach out to your onboarding buddy
@@ -173,6 +178,7 @@ git push origin feature/onboarding-update-readme
 ```
 
 **Expected Outcome:**
+
 - [ ] Understand system architecture
 - [ ] Familiar with codebase structure
 - [ ] Created first PR
@@ -268,6 +274,7 @@ class OrderTest {
 ```
 
 **Expected Outcome:**
+
 - [ ] Understand coding standards
 - [ ] Familiar with DDD patterns
 - [ ] Written first test
@@ -334,6 +341,7 @@ curl -X POST http://localhost:8080/api/v1/orders \
 ```
 
 **Expected Outcome:**
+
 - [ ] Understand bounded contexts
 - [ ] Familiar with domain events
 - [ ] Explored APIs
@@ -348,6 +356,7 @@ curl -X POST http://localhost:8080/api/v1/orders \
 With your mentor, select a "good first issue":
 
 Criteria for first task:
+
 - Well-defined requirements
 - Limited scope
 - Touches multiple layers
@@ -355,6 +364,7 @@ Criteria for first task:
 - Estimated at 1-2 days
 
 Example first tasks:
+
 - Add validation to existing endpoint
 - Implement new query method
 - Add new field to existing aggregate
@@ -367,6 +377,7 @@ Example first tasks:
 Follow TDD approach:
 
 1. **Write Test First**
+
 ```java
 @Test
 void should_validate_email_format() {
@@ -374,14 +385,16 @@ void should_validate_email_format() {
 }
 ```
 
-2. **Implement Feature**
+1. **Implement Feature**
+
 ```java
 public void validateEmail(String email) {
     // Implementation
 }
 ```
 
-3. **Refactor**
+1. **Refactor**
+
 ```java
 public void validateEmail(String email) {
     // Improved implementation
@@ -389,6 +402,7 @@ public void validateEmail(String email) {
 ```
 
 **Expected Outcome:**
+
 - [ ] Selected first task
 - [ ] Started implementation
 - [ ] Following TDD approach
@@ -399,17 +413,20 @@ public void validateEmail(String email) {
 ### Day 6-7: Complete First Task
 
 **Goals:**
+
 - Complete implementation
 - Write comprehensive tests
 - Create pull request
 - Address review feedback
 
 **Daily Standup:**
+
 - Share progress
 - Ask for help
 - Unblock issues
 
 **Pair Programming:**
+
 - Schedule pair programming sessions
 - Learn from experienced developers
 - Get real-time feedback
@@ -434,6 +451,7 @@ public void validateEmail(String email) {
    - Monitoring and observability
 
 **Activities:**
+
 - Architecture review session
 - Infrastructure walkthrough
 - Deployment demo
@@ -465,17 +483,20 @@ public void validateEmail(String email) {
 ### Activities
 
 **Feature Development:**
+
 - Pick tasks from backlog
 - Implement features end-to-end
 - Write comprehensive tests
 - Create quality PRs
 
 **Code Reviews:**
+
 - Review others' PRs
 - Provide constructive feedback
 - Learn from others' code
 
 **Team Participation:**
+
 - Attend all team meetings
 - Participate in planning
 - Share knowledge
@@ -486,22 +507,24 @@ public void validateEmail(String email) {
 ### Documentation
 
 **Must Read:**
+
 - [System Architecture](../../architecture/README.md)
 - [Coding Standards](../coding-standards/java-standards.md)
 - [Testing Strategy](../testing/testing-strategy.md)
 - [Git Workflow](../workflows/git-workflow.md)
 
 **Recommended Reading:**
+
 - [Domain-Driven Design](https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215) by Eric Evans
 - [Clean Code](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882) by Robert C. Martin
 - [Refactoring](https://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672) by Martin Fowler
 
 ### Online Resources
 
-- **Spring Boot**: https://spring.io/guides
-- **Domain-Driven Design**: https://www.domainlanguage.com/
-- **Hexagonal Architecture**: https://alistair.cockburn.us/hexagonal-architecture/
-- **Test-Driven Development**: https://www.jamesshore.com/v2/books/aoad1/test-driven-development
+- **Spring Boot**: <https://spring.io/guides>
+- **Domain-Driven Design**: <https://www.domainlanguage.com/>
+- **Hexagonal Architecture**: <https://alistair.cockburn.us/hexagonal-architecture/>
+- **Test-Driven Development**: <https://www.jamesshore.com/v2/books/aoad1/test-driven-development>
 
 ### Internal Resources
 
@@ -538,13 +561,15 @@ public void validateEmail(String email) {
 ### Communication Guidelines
 
 **Good Questions:**
-```
+
+```text
 "I'm trying to implement X feature. I've looked at Y similar implementation,
 but I'm not sure how to handle Z case. Could you point me in the right
 direction?"
 ```
 
 **Include Context:**
+
 - What you're trying to do
 - What you've tried
 - Specific error messages
@@ -553,6 +578,7 @@ direction?"
 ## Onboarding Checklist
 
 ### Week 1
+
 - [ ] Environment set up and working
 - [ ] IDE configured
 - [ ] Made first commit
@@ -564,6 +590,7 @@ direction?"
 - [ ] Started first real task
 
 ### Week 2
+
 - [ ] Completed first task
 - [ ] Created first PR
 - [ ] Addressed review feedback
@@ -574,6 +601,7 @@ direction?"
 - [ ] Participated in code reviews
 
 ### Week 3-4
+
 - [ ] Working independently on features
 - [ ] Providing code reviews
 - [ ] Participating in team discussions
@@ -582,6 +610,7 @@ direction?"
 - [ ] Understanding business domain
 
 ### Month 2+
+
 - [ ] Full team member
 - [ ] Leading features
 - [ ] Mentoring new developers
@@ -605,14 +634,16 @@ direction?"
 ### Continuous Improvement
 
 Your feedback helps improve this onboarding process:
+
 - What worked well?
 - What was confusing?
 - What was missing?
 - What could be better?
 
-## Welcome to the Team!
+## Welcome to the Team
 
 Remember:
+
 - Everyone was new once
 - Questions are encouraged
 - Learning takes time

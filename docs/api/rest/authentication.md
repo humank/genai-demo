@@ -11,6 +11,7 @@ The Enterprise E-Commerce Platform API uses JWT (JSON Web Token) based authentic
 **Endpoint**: `POST /api/v1/auth/login`
 
 **Request**:
+
 ```http
 POST /api/v1/auth/login HTTP/1.1
 Host: api.ecommerce.com
@@ -23,6 +24,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -65,6 +67,7 @@ When the access token expires, use the refresh token to obtain a new access toke
 **Endpoint**: `POST /api/v1/auth/refresh`
 
 **Request**:
+
 ```http
 POST /api/v1/auth/refresh HTTP/1.1
 Host: api.ecommerce.com
@@ -76,6 +79,7 @@ Content-Type: application/json
 ```
 
 **Response**:
+
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -95,6 +99,7 @@ Content-Type: application/json
 **Endpoint**: `POST /api/v1/auth/logout`
 
 **Request**:
+
 ```http
 POST /api/v1/auth/logout HTTP/1.1
 Host: api.ecommerce.com
@@ -102,6 +107,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9...
 ```
 
 **Response**:
+
 ```http
 HTTP/1.1 204 No Content
 ```
@@ -113,6 +119,7 @@ HTTP/1.1 204 No Content
 The access token is a JWT with the following structure:
 
 **Header**:
+
 ```json
 {
   "alg": "HS512",
@@ -121,6 +128,7 @@ The access token is a JWT with the following structure:
 ```
 
 **Payload**:
+
 ```json
 {
   "sub": "user@example.com",
@@ -134,6 +142,7 @@ The access token is a JWT with the following structure:
 ```
 
 **Claims Explanation**:
+
 - `sub`: Subject (user email)
 - `userId`: User unique identifier
 - `roles`: User roles (e.g., USER, ADMIN, CUSTOMER)
@@ -147,6 +156,7 @@ The access token is a JWT with the following structure:
 The refresh token has a longer expiration time and is used only for obtaining new access tokens:
 
 **Payload**:
+
 ```json
 {
   "sub": "user@example.com",
@@ -172,6 +182,7 @@ The refresh token has a longer expiration time and is used only for obtaining ne
 The API uses role-based access control to manage permissions:
 
 **Roles**:
+
 - `USER`: Basic authenticated user
 - `CUSTOMER`: Customer with shopping privileges
 - `ADMIN`: Administrative access
@@ -179,7 +190,8 @@ The API uses role-based access control to manage permissions:
 - `SUPPORT`: Customer support access
 
 **Role Hierarchy**:
-```
+
+```text
 ADMIN > SELLER > SUPPORT > CUSTOMER > USER
 ```
 
@@ -188,12 +200,14 @@ ADMIN > SELLER > SUPPORT > CUSTOMER > USER
 Endpoints may require specific roles or permissions:
 
 **Example - Admin Only**:
+
 ```http
 GET /api/v1/admin/users
 Authorization: Bearer <admin-token>
 ```
 
 **Response (Forbidden)**:
+
 ```http
 HTTP/1.1 403 Forbidden
 
@@ -212,6 +226,7 @@ HTTP/1.1 403 Forbidden
 Some endpoints enforce resource-level authorization:
 
 **Example - Own Resource Access**:
+
 ```http
 GET /api/v1/customers/cust-123
 Authorization: Bearer <user-token>
@@ -227,6 +242,7 @@ Authorization: Bearer <user-token>
 **Endpoint**: `POST /api/v1/auth/login`
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com",
@@ -235,10 +251,12 @@ Authorization: Bearer <user-token>
 ```
 
 **Validation Rules**:
+
 - Email: Required, valid email format
 - Password: Required, minimum 8 characters
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -257,6 +275,7 @@ Authorization: Bearer <user-token>
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid email or password format
 - `401 Unauthorized`: Invalid credentials
 - `429 Too Many Requests`: Too many failed login attempts
@@ -266,6 +285,7 @@ Authorization: Bearer <user-token>
 **Endpoint**: `POST /api/v1/auth/register`
 
 **Request Body**:
+
 ```json
 {
   "name": "John Doe",
@@ -276,12 +296,14 @@ Authorization: Bearer <user-token>
 ```
 
 **Validation Rules**:
+
 - Name: Required, 2-100 characters
 - Email: Required, valid email format, unique
 - Password: Required, minimum 8 characters, must contain uppercase, lowercase, and number
 - Confirm Password: Must match password
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -300,6 +322,7 @@ Authorization: Bearer <user-token>
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `409 Conflict`: Email already registered
 
@@ -308,6 +331,7 @@ Authorization: Bearer <user-token>
 **Endpoint**: `POST /api/v1/auth/refresh`
 
 **Request Body**:
+
 ```json
 {
   "refreshToken": "eyJhbGciOiJIUzUxMiJ9..."
@@ -315,6 +339,7 @@ Authorization: Bearer <user-token>
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -327,6 +352,7 @@ Authorization: Bearer <user-token>
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Missing refresh token
 - `401 Unauthorized`: Invalid or expired refresh token
 
@@ -335,6 +361,7 @@ Authorization: Bearer <user-token>
 **Endpoint**: `POST /api/v1/auth/logout`
 
 **Headers**:
+
 ```http
 Authorization: Bearer <access-token>
 ```
@@ -342,6 +369,7 @@ Authorization: Bearer <access-token>
 **Success Response** (204 No Content)
 
 **Error Responses**:
+
 - `401 Unauthorized`: Invalid or missing token
 
 ### Password Reset Request
@@ -349,6 +377,7 @@ Authorization: Bearer <access-token>
 **Endpoint**: `POST /api/v1/auth/password-reset/request`
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com"
@@ -356,6 +385,7 @@ Authorization: Bearer <access-token>
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -371,6 +401,7 @@ Authorization: Bearer <access-token>
 **Endpoint**: `POST /api/v1/auth/password-reset/confirm`
 
 **Request Body**:
+
 ```json
 {
   "token": "reset-token-from-email",
@@ -380,6 +411,7 @@ Authorization: Bearer <access-token>
 ```
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -389,6 +421,7 @@ Authorization: Bearer <access-token>
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid token or password validation failed
 - `401 Unauthorized`: Expired reset token
 
@@ -585,12 +618,14 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 ### Token Storage
 
 **✅ Recommended**:
+
 - Store tokens in memory (JavaScript variables)
 - Use HttpOnly cookies for web applications
 - Use secure storage APIs on mobile (Keychain, KeyStore)
 - Use session storage for single-tab applications
 
 **❌ Not Recommended**:
+
 - localStorage (vulnerable to XSS attacks)
 - Cookies without HttpOnly flag
 - Plain text files
@@ -599,11 +634,13 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 ### Token Transmission
 
 **✅ Always**:
+
 - Use HTTPS in production
 - Include tokens in Authorization header
 - Validate SSL certificates
 
 **❌ Never**:
+
 - Send tokens in URL parameters
 - Send tokens over HTTP
 - Log tokens in application logs
@@ -612,6 +649,7 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 ### Token Lifecycle
 
 **Best Practices**:
+
 1. **Short-Lived Access Tokens**: 1 hour expiration
 2. **Longer Refresh Tokens**: 7 days expiration
 3. **Token Rotation**: Issue new refresh token on refresh
@@ -621,6 +659,7 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 ### Password Security
 
 **Requirements**:
+
 - Minimum 8 characters
 - At least one uppercase letter
 - At least one lowercase letter
@@ -629,6 +668,7 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 - No common passwords (checked against dictionary)
 
 **Best Practices**:
+
 - Use password managers
 - Enable two-factor authentication (2FA)
 - Change passwords regularly
@@ -639,14 +679,17 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 ### Common Issues
 
 **401 Unauthorized**:
+
 - **Cause**: Invalid or expired token
 - **Solution**: Refresh token or re-authenticate
 
 **403 Forbidden**:
+
 - **Cause**: Insufficient permissions
 - **Solution**: Check required roles/permissions
 
 **429 Too Many Requests**:
+
 - **Cause**: Rate limit exceeded
 - **Solution**: Implement exponential backoff
 

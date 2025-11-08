@@ -34,6 +34,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 ### Business Context
 
 **Business Drivers**:
+
 - Need for web and mobile client applications
 - Future requirement for third-party integrations
 - API marketplace potential
@@ -42,6 +43,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - Compliance with industry standards
 
 **Constraints**:
+
 - Team has REST API experience
 - Spring Boot framework (ADR-002)
 - Need for backward compatibility
@@ -51,6 +53,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 ### Technical Context
 
 **Current State**:
+
 - Spring Boot 3.4.5 + Java 21
 - Hexagonal Architecture (ADR-002)
 - Multiple bounded contexts
@@ -58,6 +61,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - Next.js and Angular frontends
 
 **Requirements**:
+
 - RESTful API design
 - API documentation generation
 - Request/response validation
@@ -85,6 +89,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 **Description**: REST API following OpenAPI 3.0 specification with SpringDoc for documentation
 
 **Pros**:
+
 - ✅ Industry-standard REST principles
 - ✅ OpenAPI 3.0 widely supported
 - ✅ SpringDoc auto-generates documentation from code
@@ -96,6 +101,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - ✅ Free and open source
 
 **Cons**:
+
 - ⚠️ REST can be verbose for complex operations
 - ⚠️ Need to maintain API versioning discipline
 - ⚠️ Over-fetching/under-fetching possible
@@ -109,6 +115,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 **Description**: GraphQL API with schema-first design
 
 **Pros**:
+
 - ✅ Flexible querying (no over/under-fetching)
 - ✅ Strong typing
 - ✅ Single endpoint
@@ -116,6 +123,7 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 - ✅ Introspection
 
 **Cons**:
+
 - ❌ Team lacks GraphQL experience
 - ❌ More complex to implement
 - ❌ Caching more difficult
@@ -132,12 +140,14 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 **Description**: gRPC with Protocol Buffers
 
 **Pros**:
+
 - ✅ High performance (binary protocol)
 - ✅ Strong typing
 - ✅ Bi-directional streaming
 - ✅ Code generation
 
 **Cons**:
+
 - ❌ Not browser-friendly (needs gRPC-Web)
 - ❌ Team lacks gRPC experience
 - ❌ Limited tooling for debugging
@@ -153,10 +163,12 @@ The Enterprise E-Commerce Platform needs a well-defined API strategy that:
 **Description**: REST API without formal specification
 
 **Pros**:
+
 - ✅ Simple to start
 - ✅ Flexible
 
 **Cons**:
+
 - ❌ No auto-generated documentation
 - ❌ Manual documentation maintenance
 - ❌ No contract testing
@@ -187,6 +199,7 @@ RESTful API with OpenAPI 3.0 was selected for the following reasons:
 **Implementation Strategy**:
 
 **API Design Principles**:
+
 - RESTful resource-based URLs
 - Standard HTTP methods (GET, POST, PUT, DELETE, PATCH)
 - Consistent response formats
@@ -194,12 +207,14 @@ RESTful API with OpenAPI 3.0 was selected for the following reasons:
 - HATEOAS for discoverability (optional)
 
 **OpenAPI Documentation**:
+
 - SpringDoc annotations on controllers
 - Auto-generated OpenAPI 3.0 specification
 - Swagger UI for interactive testing
 - API documentation versioned with code
 
 **Versioning Strategy**:
+
 - URL-based versioning: `/api/v1/`, `/api/v2/`
 - Maintain backward compatibility for at least 2 versions
 - Deprecation headers for old versions
@@ -225,6 +240,7 @@ RESTful API with OpenAPI 3.0 was selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All client applications
 - API documentation
 - Testing strategy
@@ -249,6 +265,7 @@ Affects:
 ### Phase 1: Setup and Standards (Week 1)
 
 - [x] Add SpringDoc dependency
+
   ```xml
   <dependency>
     <groupId>org.springdoc</groupId>
@@ -258,6 +275,7 @@ Affects:
   ```
 
 - [x] Configure SpringDoc
+
   ```java
   @Configuration
   public class OpenApiConfiguration {
@@ -289,6 +307,7 @@ Affects:
 ### Phase 2: API Design Patterns (Week 1-2)
 
 - [ ] Implement standard response wrapper
+
   ```java
   public record ApiResponse<T>(
       T data,
@@ -320,6 +339,7 @@ Affects:
   ```
 
 - [ ] Implement error response format
+
   ```java
   public record ApiError(
       String code,
@@ -353,6 +373,7 @@ Affects:
   ```
 
 - [ ] Create pagination support
+
   ```java
   public record PageResponse<T>(
       List<T> content,
@@ -383,6 +404,7 @@ Affects:
 ### Phase 3: Customer API Implementation (Week 2-3)
 
 - [ ] Implement Customer API endpoints
+
   ```java
   @RestController
   @RequestMapping("/api/v1/customers")
@@ -465,6 +487,7 @@ Affects:
   ```
 
 - [ ] Add request/response DTOs with validation
+
   ```java
   public record CreateCustomerRequest(
       @NotBlank(message = "Name is required")
@@ -534,6 +557,7 @@ Affects:
 ### Phase 5: API Versioning (Week 6-7)
 
 - [ ] Implement versioning strategy
+
   ```java
   @RestController
   @RequestMapping("/api/v1/customers")
@@ -549,6 +573,7 @@ Affects:
   ```
 
 - [ ] Add deprecation headers
+
   ```java
   @GetMapping("/{id}")
   public ResponseEntity<CustomerResponse> getCustomer(@PathVariable String id) {
@@ -563,6 +588,7 @@ Affects:
 ### Phase 6: Testing and Documentation (Week 7-8)
 
 - [ ] Generate OpenAPI specification
+
   ```bash
   # Access at http://localhost:8080/v3/api-docs
   # Swagger UI at http://localhost:8080/swagger-ui.html
@@ -570,6 +596,7 @@ Affects:
 
 - [ ] Create Postman collection from OpenAPI spec
 - [ ] Implement contract tests
+
   ```java
   @SpringBootTest(webEnvironment = RANDOM_PORT)
   class CustomerApiContractTest {
@@ -586,12 +613,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - API design inconsistencies causing client issues
 - OpenAPI documentation drift > 20%
 - Team unable to maintain API standards
 - Performance issues with SpringDoc
 
 **Rollback Steps**:
+
 1. Remove SpringDoc dependency
 2. Create manual API documentation
 3. Simplify API design
@@ -613,17 +642,20 @@ Affects:
 ### Monitoring Plan
 
 **API Metrics**:
+
 - Request rate per endpoint
 - Response time per endpoint
 - Error rate per endpoint
 - API version usage distribution
 
 **Documentation Metrics**:
+
 - OpenAPI spec generation success
 - Documentation page views
 - API usage examples accessed
 
 **Review Schedule**:
+
 - Weekly: API design review
 - Monthly: API versioning review
 - Quarterly: API strategy review
@@ -651,12 +683,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No HATEOAS implementation yet (acceptable for MVP)
 2. Limited API rate limiting (future enhancement)
 3. No API gateway yet (future requirement)
 4. Manual Postman collection creation (can be automated)
 
 **Debt Repayment Plan**:
+
 - **Q1 2026**: Implement API rate limiting
 - **Q2 2026**: Add HATEOAS for discoverability
 - **Q3 2026**: Evaluate API gateway (Kong, AWS API Gateway)
@@ -672,12 +706,14 @@ Affects:
 ### API Design Guidelines
 
 **URL Naming**:
+
 - Use nouns, not verbs: `/customers` not `/getCustomers`
 - Use plural nouns: `/customers` not `/customer`
 - Use kebab-case: `/order-items` not `/orderItems`
 - Nest resources: `/customers/{id}/orders`
 
 **HTTP Methods**:
+
 - GET: Retrieve resource(s)
 - POST: Create new resource
 - PUT: Update entire resource
@@ -685,6 +721,7 @@ Affects:
 - DELETE: Remove resource
 
 **HTTP Status Codes**:
+
 - 200 OK: Successful GET, PUT, PATCH
 - 201 Created: Successful POST
 - 204 No Content: Successful DELETE
@@ -718,15 +755,21 @@ paths:
   /api/v1/customers:
     get:
       tags:
+
         - Customer
+
       summary: List customers
       parameters:
+
         - name: page
+
           in: query
           schema:
             type: integer
             default: 0
+
         - name: size
+
           in: query
           schema:
             type: integer

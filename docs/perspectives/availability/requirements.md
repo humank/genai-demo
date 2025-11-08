@@ -15,12 +15,14 @@ This document defines the specific availability and resilience requirements for 
 **Target**: 99.9% uptime
 
 **Calculation**:
+
 - **Annual downtime budget**: 8.76 hours (365 days × 24 hours × 0.1%)
 - **Monthly downtime budget**: 43.8 minutes (30 days × 24 hours × 60 minutes × 0.1%)
 - **Weekly downtime budget**: 10.1 minutes (7 days × 24 hours × 60 minutes × 0.1%)
 - **Daily downtime budget**: 1.44 minutes (24 hours × 60 minutes × 0.1%)
 
 **Measurement**:
+
 - Measured as the percentage of successful health check responses
 - Calculated over rolling 30-day windows
 - Excludes planned maintenance windows (with 7-day advance notice)
@@ -83,6 +85,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Order processing service and customer data service  
 **Response**: System automatically fails over to Multi-AZ standby database  
 **Response Measure**:
+
 - Failover completes within 2 minutes
 - Zero data loss (synchronous replication)
 - All in-flight transactions are preserved
@@ -102,6 +105,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Order processing service  
 **Response**: Kubernetes detects failure and restarts pod; load balancer routes traffic to healthy pods  
 **Response Measure**:
+
 - Pod restart completes within 30 seconds
 - No requests are lost (retry mechanism)
 - Users experience automatic retry with < 2 second delay
@@ -121,6 +125,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: All services in affected AZ  
 **Response**: Traffic automatically routes to healthy AZs; auto-scaling increases capacity  
 **Response Measure**:
+
 - Service continues without interruption
 - Response time increases by < 20%
 - Auto-scaling completes within 5 minutes
@@ -140,6 +145,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Product catalog and session management  
 **Response**: System fails over to replica node; application falls back to database for cache misses  
 **Response Measure**:
+
 - Failover completes within 3 minutes
 - Session data is preserved (replicated)
 - Response time increases by < 50% during failover
@@ -159,6 +165,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Payment processing service  
 **Response**: Circuit breaker opens; system queues payment for retry; user receives acknowledgment  
 **Response Measure**:
+
 - Circuit breaker opens after 3 consecutive timeouts
 - Payment is queued for retry (max 3 attempts)
 - User receives "processing" status within 5 seconds
@@ -178,6 +185,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: All database-dependent services  
 **Response**: Services detect partition; read-only mode activated; cached data served  
 **Response Measure**:
+
 - Partition detected within 10 seconds
 - Read operations continue from cache
 - Write operations are queued or rejected with clear error
@@ -197,6 +205,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Order processing service calling inventory service  
 **Response**: Circuit breaker opens; order service uses cached inventory; graceful degradation  
 **Response Measure**:
+
 - Circuit breaker opens after 5 slow responses
 - Orders continue with "pending inventory check" status
 - Inventory is verified asynchronously
@@ -216,6 +225,7 @@ This document defines the specific availability and resilience requirements for 
 **Artifact**: Entire system infrastructure  
 **Response**: DNS failover to DR region; services activate from standby  
 **Response Measure**:
+
 - DNS failover completes within 5 minutes
 - Services are operational within 30 minutes
 - Data loss < 5 minutes (RPO)
@@ -291,6 +301,7 @@ When SLO is breached:
 ### Internal Service Dependencies
 
 Critical path dependencies that affect overall availability:
+
 - Authentication Service → All services
 - Order Service → Payment, Inventory, Customer services
 - Payment Service → External payment gateway
@@ -316,6 +327,7 @@ Critical path dependencies that affect overall availability:
 ---
 
 **Related Documents**:
+
 - [Overview](overview.md) - Availability perspective introduction
 - [Fault Tolerance](fault-tolerance.md) - Implementation patterns
 - [High Availability](high-availability.md) - Infrastructure design

@@ -27,6 +27,7 @@ This directory contains Architecture Decision Records (ADRs) documenting signifi
 ## ADR Format
 
 Each ADR follows a standard template:
+
 - **Status**: Proposed | Accepted | Deprecated | Superseded
 - **Context**: Problem statement and background
 - **Decision Drivers**: Key factors influencing the decision
@@ -67,46 +68,58 @@ Each ADR follows a standard template:
 ## ADRs by Category
 
 ### Data Storage
+
 - [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md)
 
 ### Architecture Patterns
+
 - [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md)
 - [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md)
 - [ADR-047: Stateless Architecture for Regional Mobility](047-stateless-architecture-regional-mobility.md)
 
 ### Caching
+
 - [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md)
 
 ### Messaging
+
 - [ADR-005: Use Apache Kafka (MSK) for Event Streaming](005-use-kafka-for-event-streaming.md)
 
 ### Testing
+
 - [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md)
 
 ### Infrastructure
+
 - [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-with-aws-eks.md)
 
 ### Deployment
+
 - [ADR-019: Progressive Deployment Strategy (Canary + Rolling Update)](019-progressive-deployment-strategy.md)
 
 ### Observability
+
 - [ADR-008: Use CloudWatch + X-Ray + Grafana for Observability](008-use-cloudwatch-xray-grafana-for-observability.md)
 
 ### API Design
+
 - [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md)
 
 ### Frontend
+
 - [ADR-010: Use Next.js for CMC Management Frontend](010-nextjs-for-cmc-frontend.md)
 - [ADR-011: Use Angular for Consumer Frontend](011-angular-for-consumer-frontend.md)
 
 ### Testing & Development
+
 - [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md)
 - [ADR-012: BDD with Cucumber for Requirements](012-bdd-with-cucumber-for-requirements.md)
 - [ADR-013: DDD Tactical Patterns Implementation](013-ddd-tactical-patterns-implementation.md)
 
 ### Security
+
 - [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md)
 - [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md)
 - [ADR-016: Data Encryption Strategy (At Rest and In Transit)](016-data-encryption-strategy.md)
@@ -116,6 +129,7 @@ Each ADR follows a standard template:
 - [ADR-055: Vulnerability Management and Patching Strategy](055-vulnerability-management-patching-strategy.md)
 
 ### Resilience & Multi-Region
+
 - [ADR-046: Third Region Disaster Recovery (Singapore/Seoul)](046-third-region-disaster-recovery-singapore-seoul.md)
 - [ADR-047: Stateless Architecture for Regional Mobility](047-stateless-architecture-regional-mobility.md)
 
@@ -124,21 +138,27 @@ Each ADR follows a standard template:
 See [ADR Roadmap](ADR-ROADMAP.md) for detailed planning of 51 additional ADRs covering:
 
 ### ADR-000 Series: Foundational Methodology (10 ADRs)
+
 - ADR-000 to ADR-000-10: Architecture methodology and design philosophy
 
 ### Network Security & Defense (11 ADRs)
+
 - ADR-048 to ADR-058: DDoS protection, WAF, API security, authentication hardening, security monitoring, DLP, vulnerability management, network segmentation, penetration testing, compliance
 
 ### Resilience & Multi-Region (9 ADRs)
+
 - ADR-037 to ADR-047: Active-active multi-region, cross-region replication, failover strategy, network partition handling, data residency, chaos engineering, observability, BCP, cost optimization
 
 ### Infrastructure & Data Management (7 ADRs)
+
 - ADR-017 to ADR-021, ADR-025 to ADR-026: Multi-region deployment, EKS, progressive deployment, Flyway, event sourcing, saga pattern, CQRS
 
 ### Performance & Operations (9 ADRs)
+
 - ADR-022 to ADR-024, ADR-027, ADR-032 to ADR-035, ADR-042 to ADR-045: Distributed locking, rate limiting, search, cache invalidation, log aggregation, disaster recovery, chaos engineering
 
 ### Storage & Integration (5 ADRs)
+
 - ADR-028 to ADR-031, ADR-036: File storage, background jobs, API gateway, inter-service communication, third-party integration
 
 ## Superseded ADRs
@@ -159,7 +179,7 @@ See [ADR Roadmap](ADR-ROADMAP.md) for detailed planning of 51 additional ADRs co
 
 ### ADR Status Transitions
 
-```
+```text
 Proposed → Accepted → [Deprecated | Superseded]
 ```
 
@@ -178,28 +198,35 @@ Example: `001-use-postgresql-for-primary-database.md`
 ## Implementation Priority
 
 ### Phase 1: Foundational ADRs (Q1 2026)
+
 - ADR-000 Series: Methodology foundation (10 ADRs)
 - Critical Security: ADR-033 (Secrets Management)
 
 ### Phase 2: Network Security & Defense (Q1-Q2 2026)
+
 - P0 Critical Defense: ADR-048 to ADR-051 (4 ADRs)
 - P1 Important Defense: ADR-052 to ADR-055 (4 ADRs)
 
 ### Phase 3: Multi-Region Resilience (Q2 2026)
+
 - P0 Critical Resilience: ADR-037 to ADR-041 (5 ADRs)
 
 ### Phase 4: Infrastructure & Data (Q2-Q3 2026)
+
 - Infrastructure: ADR-017 to ADR-019 (3 ADRs)
 - Data Management: ADR-020, ADR-025, ADR-026, ADR-021 (4 ADRs)
 
 ### Phase 5: Performance & Operations (Q3 2026)
+
 - Performance: ADR-022, ADR-023, ADR-027, ADR-032 (4 ADRs)
 - Operations: ADR-034, ADR-035, ADR-042, ADR-043, ADR-044 (5 ADRs)
 
 ### Phase 6: Advanced Features (Q4 2026)
+
 - Storage & Integration: ADR-028 to ADR-031, ADR-036, ADR-024 (6 ADRs)
 
 ### Phase 7: Advanced Security & Resilience (Q4 2026)
+
 - Advanced Security: ADR-056 to ADR-058 (3 ADRs)
 - Advanced Resilience: ADR-045 to ADR-047 (3 ADRs)
 

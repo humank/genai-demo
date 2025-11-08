@@ -21,12 +21,14 @@ affected_perspectives: ["security", "performance", "availability"]
 ### Problem Statement
 
 The Enterprise E-Commerce Platform handles sensitive data including:
+
 - Customer personal information (PII)
 - Payment card data (PCI-DSS compliance required)
 - Authentication credentials
 - Business confidential data
 
 We need a comprehensive encryption strategy that:
+
 - Protects data at rest in databases and file storage
 - Secures data in transit between services and clients
 - Meets regulatory compliance (GDPR, PCI-DSS, Taiwan Personal Data Protection Act)
@@ -37,6 +39,7 @@ We need a comprehensive encryption strategy that:
 ### Business Context
 
 **Business Drivers**:
+
 - PCI-DSS Level 1 compliance required for payment processing
 - GDPR compliance for EU customers
 - Taiwan Personal Data Protection Act compliance
@@ -44,6 +47,7 @@ We need a comprehensive encryption strategy that:
 - Regulatory penalties avoidance (up to 4% of annual revenue)
 
 **Constraints**:
+
 - Must encrypt payment card data (PCI-DSS Requirement 3)
 - Must encrypt PII (GDPR Article 32)
 - Performance impact < 10ms per operation
@@ -53,6 +57,7 @@ We need a comprehensive encryption strategy that:
 ### Technical Context
 
 **Current State**:
+
 - PostgreSQL database on AWS RDS
 - S3 for file storage
 - Redis for caching
@@ -60,6 +65,7 @@ We need a comprehensive encryption strategy that:
 - Spring Boot microservices
 
 **Requirements**:
+
 - Encrypt sensitive data at rest
 - Encrypt all data in transit (TLS 1.3)
 - Secure key management
@@ -85,6 +91,7 @@ We need a comprehensive encryption strategy that:
 **Description**: Use AWS KMS for key management, envelope encryption for data
 
 **Pros**:
+
 - ✅ Managed key lifecycle (rotation, auditing)
 - ✅ FIPS 140-2 Level 2 validated
 - ✅ Integrated with AWS services (RDS, S3, EBS)
@@ -95,6 +102,7 @@ We need a comprehensive encryption strategy that:
 - ✅ Multi-region key replication
 
 **Cons**:
+
 - ⚠️ AWS vendor lock-in
 - ⚠️ API rate limits (1200 req/sec per CMK)
 - ⚠️ Cost per API call ($0.03 per 10K requests)
@@ -109,6 +117,7 @@ We need a comprehensive encryption strategy that:
 **Description**: Self-managed encryption and key management
 
 **Pros**:
+
 - ✅ Cloud-agnostic (no vendor lock-in)
 - ✅ Advanced features (dynamic secrets, PKI)
 - ✅ Fine-grained access control
@@ -116,6 +125,7 @@ We need a comprehensive encryption strategy that:
 - ✅ Multi-cloud support
 
 **Cons**:
+
 - ❌ Self-managed infrastructure (operational overhead)
 - ❌ High availability setup complex
 - ❌ Additional infrastructure costs
@@ -131,11 +141,13 @@ We need a comprehensive encryption strategy that:
 **Description**: Encrypt in application code, manage keys manually
 
 **Pros**:
+
 - ✅ Full control over encryption
 - ✅ No external dependencies
 - ✅ Low cost
 
 **Cons**:
+
 - ❌ Manual key management (high risk)
 - ❌ No automatic key rotation
 - ❌ Difficult to audit
@@ -152,11 +164,13 @@ We need a comprehensive encryption strategy that:
 **Description**: Rely on RDS encryption, no application-level encryption
 
 **Pros**:
+
 - ✅ Easy to enable
 - ✅ Transparent to application
 - ✅ Low cost
 
 **Cons**:
+
 - ❌ Coarse-grained (encrypts entire database)
 - ❌ No field-level encryption
 - ❌ Keys accessible to DBAs
@@ -181,6 +195,7 @@ We will implement a multi-layer encryption strategy:
 4. **Key Management**: AWS KMS for centralized key management
 
 **Why AWS KMS**:
+
 - Managed service reduces operational overhead
 - FIPS 140-2 Level 2 compliance
 - Integrated with AWS services
@@ -189,6 +204,7 @@ We will implement a multi-layer encryption strategy:
 - Cost-effective for our scale
 
 **Why Multi-Layer**:
+
 - Defense in depth
 - Compliance requirements (PCI-DSS requires field-level encryption)
 - Granular control over sensitive data
@@ -224,6 +240,7 @@ We will implement a multi-layer encryption strategy:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All services handling sensitive data
 - Database schema (encrypted columns)
 - File storage (S3 encryption)
@@ -294,12 +311,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Performance degradation > 20ms per operation
 - KMS availability issues
 - Data corruption during encryption
 - Compliance audit failures
 
 **Rollback Steps**:
+
 1. Disable application-level encryption
 2. Revert to infrastructure-level encryption only
 3. Investigate and fix issues
@@ -322,6 +341,7 @@ Affects:
 ### Monitoring Plan
 
 **CloudWatch Metrics**:
+
 - `kms.encrypt.time` (histogram)
 - `kms.decrypt.time` (histogram)
 - `kms.api.errors` (count)
@@ -330,6 +350,7 @@ Affects:
 - `key.rotation.success` (count)
 
 **Alerts**:
+
 - KMS API error rate > 1% for 5 minutes
 - Encryption latency > 20ms for 5 minutes
 - Key rotation failures
@@ -337,12 +358,14 @@ Affects:
 - Encryption cache hit rate < 80%
 
 **Security Monitoring**:
+
 - KMS key usage patterns
 - Unauthorized key access attempts
 - Key policy changes
 - Encryption/decryption failures
 
 **Review Schedule**:
+
 - Daily: Check encryption metrics
 - Weekly: Review KMS audit logs
 - Monthly: Key rotation verification
@@ -372,11 +395,13 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No client-side encryption for highly sensitive data (acceptable for now)
 2. Manual encryption key selection (acceptable with clear guidelines)
 3. No homomorphic encryption for searchable encrypted data (not needed yet)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Evaluate client-side encryption for payment data
 - **Q3 2026**: Implement automated encryption key selection
 - **Q4 2026**: Evaluate searchable encryption if needed
@@ -470,8 +495,10 @@ server:
     protocol: TLS
     enabled-protocols: TLSv1.3
     ciphers:
+
       - TLS_AES_256_GCM_SHA384
       - TLS_AES_128_GCM_SHA256
+
     key-store: ${SSL_KEYSTORE_PATH}
     key-store-password: ${SSL_KEYSTORE_PASSWORD}
     key-store-type: PKCS12
@@ -513,12 +540,14 @@ spring:
 ### Compliance Mapping
 
 **PCI-DSS Requirements**:
+
 - Requirement 3.4: Render PAN unreadable ✅ (AES-256 encryption)
 - Requirement 3.5: Protect keys ✅ (AWS KMS)
 - Requirement 3.6: Key management ✅ (Automated rotation)
 - Requirement 4.1: Encrypt transmission ✅ (TLS 1.3)
 
 **GDPR Requirements**:
+
 - Article 32: Security of processing ✅ (Encryption at rest and in transit)
 - Article 33: Breach notification ✅ (Monitoring and alerting)
 

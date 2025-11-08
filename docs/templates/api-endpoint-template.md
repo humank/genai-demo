@@ -33,12 +33,14 @@ Create a new {resource} in the system.
 **Endpoint**: `/api/v1/{resources}`
 
 **Headers**:
+
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
 ```
 
 **Request Body**:
+
 ```json
 {
   "field1": "string",
@@ -65,6 +67,7 @@ Authorization: Bearer {access_token}
 #### Response
 
 **Success Response** (201 Created):
+
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -101,6 +104,7 @@ Location: /api/v1/{resources}/{id}
 #### Error Responses
 
 **400 Bad Request** - Invalid input:
+
 ```json
 {
   "errorCode": "INVALID_INPUT",
@@ -118,6 +122,7 @@ Location: /api/v1/{resources}/{id}
 ```
 
 **401 Unauthorized** - Missing or invalid authentication:
+
 ```json
 {
   "errorCode": "UNAUTHORIZED",
@@ -128,6 +133,7 @@ Location: /api/v1/{resources}/{id}
 ```
 
 **409 Conflict** - Resource already exists:
+
 ```json
 {
   "errorCode": "RESOURCE_EXISTS",
@@ -141,6 +147,7 @@ Location: /api/v1/{resources}/{id}
 ```
 
 **429 Too Many Requests** - Rate limit exceeded:
+
 ```json
 {
   "errorCode": "RATE_LIMIT_EXCEEDED",
@@ -152,6 +159,7 @@ Location: /api/v1/{resources}/{id}
 ```
 
 **500 Internal Server Error** - Server error:
+
 ```json
 {
   "errorCode": "INTERNAL_ERROR",
@@ -164,6 +172,7 @@ Location: /api/v1/{resources}/{id}
 #### Examples
 
 **cURL**:
+
 ```bash
 curl -X POST https://api.example.com/api/v1/{resources} \
   -H "Content-Type: application/json" \
@@ -179,6 +188,7 @@ curl -X POST https://api.example.com/api/v1/{resources} \
 ```
 
 **JavaScript (fetch)**:
+
 ```javascript
 const response = await fetch('https://api.example.com/api/v1/{resources}', {
   method: 'POST',
@@ -201,6 +211,7 @@ console.log(data);
 ```
 
 **Java (Spring RestTemplate)**:
+
 ```java
 RestTemplate restTemplate = new RestTemplate();
 HttpHeaders headers = new HttpHeaders();
@@ -222,6 +233,7 @@ ResponseEntity<ResourceResponse> response = restTemplate.postForEntity(
 ```
 
 **Python (requests)**:
+
 ```python
 import requests
 
@@ -257,6 +269,7 @@ Retrieve a specific {resource} by ID.
 **Endpoint**: `/api/v1/{resources}/{id}`
 
 **Headers**:
+
 ```http
 Authorization: Bearer {access_token}
 ```
@@ -270,6 +283,7 @@ Authorization: Bearer {access_token}
 #### Response
 
 **Success Response** (200 OK):
+
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -288,6 +302,7 @@ Content-Type: application/json
 #### Error Responses
 
 **404 Not Found** - Resource not found:
+
 ```json
 {
   "errorCode": "RESOURCE_NOT_FOUND",
@@ -300,6 +315,7 @@ Content-Type: application/json
 #### Examples
 
 **cURL**:
+
 ```bash
 curl -X GET https://api.example.com/api/v1/{resources}/resource-123 \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -318,6 +334,7 @@ Retrieve a paginated list of {resources}.
 **Endpoint**: `/api/v1/{resources}`
 
 **Headers**:
+
 ```http
 Authorization: Bearer {access_token}
 ```
@@ -334,6 +351,7 @@ Authorization: Bearer {access_token}
 #### Response
 
 **Success Response** (200 OK):
+
 ```json
 {
   "content": [
@@ -355,6 +373,7 @@ Authorization: Bearer {access_token}
 #### Examples
 
 **cURL**:
+
 ```bash
 curl -X GET "https://api.example.com/api/v1/{resources}?page=0&size=20&sort=createdAt,desc" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
@@ -373,6 +392,7 @@ Update an existing {resource}.
 **Endpoint**: `/api/v1/{resources}/{id}`
 
 **Headers**:
+
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
@@ -401,12 +421,14 @@ Partially update an existing {resource}.
 **Endpoint**: `/api/v1/{resources}/{id}`
 
 **Headers**:
+
 ```http
 Content-Type: application/json
 Authorization: Bearer {access_token}
 ```
 
 **Request Body**:
+
 ```json
 {
   "field1": "updated value"
@@ -430,6 +452,7 @@ Delete a {resource}.
 **Endpoint**: `/api/v1/{resources}/{id}`
 
 **Headers**:
+
 ```http
 Authorization: Bearer {access_token}
 ```
@@ -437,6 +460,7 @@ Authorization: Bearer {access_token}
 #### Response
 
 **Success Response** (204 No Content):
+
 ```http
 HTTP/1.1 204 No Content
 ```
@@ -460,6 +484,7 @@ HTTP/1.1 204 No Content
 ## Pagination
 
 All list endpoints support pagination:
+
 - Default page size: 20
 - Maximum page size: 100
 - Page numbers are 0-indexed
@@ -467,12 +492,16 @@ All list endpoints support pagination:
 ## Filtering and Sorting
 
 ### Sorting
+
 Use the `sort` parameter: `sort=field,direction`
+
 - Example: `sort=createdAt,desc`
 - Multiple sorts: `sort=field1,asc&sort=field2,desc`
 
 ### Filtering
+
 Use the `filter` parameter with format: `field:operator:value`
+
 - Operators: `eq`, `ne`, `gt`, `lt`, `gte`, `lte`, `like`, `in`
 - Example: `filter=status:eq:active`
 - Multiple filters: `filter=status:eq:active&filter=createdAt:gt:2025-01-01`

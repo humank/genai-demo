@@ -12,6 +12,7 @@ This document provides a comprehensive checklist for code quality standards. Use
 ## Naming Conventions
 
 ### Must Follow
+
 - [ ] Classes: PascalCase (e.g., `OrderService`, `CustomerRepository`)
 - [ ] Methods: camelCase with verb-noun pattern (e.g., `findCustomerById`, `calculateTotal`)
 - [ ] Variables: camelCase, descriptive names (e.g., `customerEmail`, `orderTotal`)
@@ -20,6 +21,7 @@ This document provides a comprehensive checklist for code quality standards. Use
 - [ ] Test methods: should_expectedBehavior_when_condition
 
 ### Must Avoid
+
 - [ ] ❌ Abbreviations (e.g., `cust` instead of `customer`)
 - [ ] ❌ Single letter variables (except loop counters)
 - [ ] ❌ Hungarian notation (e.g., `strName`, `intCount`)
@@ -30,6 +32,7 @@ This document provides a comprehensive checklist for code quality standards. Use
 ## Error Handling
 
 ### Must Follow
+
 - [ ] Use specific exception types
 - [ ] Include error context in exceptions
 - [ ] Log errors with structured data
@@ -37,12 +40,14 @@ This document provides a comprehensive checklist for code quality standards. Use
 - [ ] Handle errors at appropriate level
 
 ### Must Avoid
+
 - [ ] ❌ Empty catch blocks
 - [ ] ❌ Generic `catch (Exception e)`
 - [ ] ❌ Swallowing exceptions
 - [ ] ❌ Using exceptions for control flow
 
 ### Quick Check
+
 ```java
 // ✅ GOOD: Specific exception with context
 throw new CustomerNotFoundException(
@@ -61,6 +66,7 @@ throw new RuntimeException("Error");
 ## API Design
 
 ### Must Follow
+
 - [ ] RESTful URL conventions (`/api/v1/customers`)
 - [ ] Proper HTTP methods (GET, POST, PUT, DELETE)
 - [ ] Consistent response format
@@ -68,6 +74,7 @@ throw new RuntimeException("Error");
 - [ ] Proper HTTP status codes
 
 ### HTTP Status Codes
+
 - **200 OK**: Successful GET, PUT, PATCH
 - **201 Created**: Successful POST
 - **204 No Content**: Successful DELETE
@@ -83,6 +90,7 @@ throw new RuntimeException("Error");
 ## Security
 
 ### Must Follow
+
 - [ ] Input validation on all endpoints
 - [ ] Parameterized queries (no string concatenation)
 - [ ] Output encoding to prevent XSS
@@ -91,12 +99,14 @@ throw new RuntimeException("Error");
 - [ ] Sensitive data encryption
 
 ### Must Avoid
+
 - [ ] ❌ SQL injection vulnerabilities
 - [ ] ❌ XSS vulnerabilities
 - [ ] ❌ Hardcoded credentials
 - [ ] ❌ Sensitive data in logs
 
 ### Quick Check
+
 ```java
 // ✅ GOOD: Parameterized query
 @Query("SELECT c FROM Customer c WHERE c.email = :email")
@@ -113,6 +123,7 @@ String query = "SELECT * FROM customers WHERE email = '" + email + "'";
 ## Performance
 
 ### Must Follow
+
 - [ ] Database query optimization
 - [ ] Proper indexing on frequently queried fields
 - [ ] Use pagination for large result sets
@@ -121,6 +132,7 @@ String query = "SELECT * FROM customers WHERE email = '" + email + "'";
 - [ ] Avoid N+1 query problems
 
 ### Quick Check
+
 ```java
 // ✅ GOOD: Use JOIN FETCH to avoid N+1
 @Query("SELECT o FROM Order o JOIN FETCH o.items WHERE o.id = :id")
@@ -138,16 +150,19 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 ## Code Structure
 
 ### Method Length
+
 - [ ] Methods < 20 lines
 - [ ] Single level of abstraction per method
 - [ ] Extract complex logic into separate methods
 
 ### Class Size
+
 - [ ] Classes < 200 lines
 - [ ] Single responsibility per class
 - [ ] Split large classes into focused ones
 
 ### Parameter Lists
+
 - [ ] Methods with ≤ 3 parameters
 - [ ] Use parameter objects for > 3 parameters
 - [ ] Use builder pattern for complex objects
@@ -157,20 +172,24 @@ orders.forEach(order -> order.getItems().size()); // N+1!
 ## Documentation
 
 ### Must Follow
+
 - [ ] Public APIs have Javadoc
 - [ ] Complex logic has inline comments
 - [ ] README updated for significant changes
 - [ ] API documentation updated
 
 ### Javadoc Standards
+
 ```java
 /**
+
  * Submits an order for processing.
  * 
  * @param command the order submission command
  * @return the submitted order
  * @throws OrderNotFoundException if order not found
  * @throws BusinessRuleViolationException if business rules violated
+
  */
 public Order submitOrder(SubmitOrderCommand command) {
     // Implementation
@@ -182,36 +201,42 @@ public Order submitOrder(SubmitOrderCommand command) {
 ## Code Review Checklist
 
 ### Functionality
+
 - [ ] Code correctly implements requirements
 - [ ] Edge cases handled properly
 - [ ] Error conditions handled
 - [ ] Business rules validated
 
 ### Design
+
 - [ ] Follows SOLID principles
 - [ ] Follows Tell, Don't Ask
 - [ ] No Law of Demeter violations
 - [ ] Appropriate use of design patterns
 
 ### Testing
+
 - [ ] Unit tests for business logic
 - [ ] Integration tests for infrastructure
 - [ ] Test coverage > 80%
 - [ ] Tests are clear and maintainable
 
 ### Security
+
 - [ ] Input validation implemented
 - [ ] No security vulnerabilities
 - [ ] Sensitive data protected
 - [ ] Authentication/authorization correct
 
 ### Performance
+
 - [ ] No obvious performance issues
 - [ ] Database queries optimized
 - [ ] Caching used appropriately
 - [ ] No memory leaks
 
 ### Maintainability
+
 - [ ] Code is readable and clear
 - [ ] Naming is descriptive
 - [ ] No code duplication
@@ -224,6 +249,7 @@ public Order submitOrder(SubmitOrderCommand command) {
 ## Validation Commands
 
 ### Code Quality
+
 ```bash
 ./gradlew test jacocoTestReport  # Check test coverage
 ./gradlew pmdMain                # Check code smells
@@ -232,11 +258,13 @@ public Order submitOrder(SubmitOrderCommand command) {
 ```
 
 ### Architecture
+
 ```bash
 ./gradlew archUnit               # Verify architecture rules
 ```
 
 ### Security
+
 ```bash
 ./gradlew dependencyCheckAnalyze # Check dependencies
 ```

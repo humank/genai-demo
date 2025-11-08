@@ -9,6 +9,7 @@
 ### 1. Hooks Cleanup ✅
 
 #### Removed Unnecessary Hooks
+
 ```bash
 # Deleted these hooks (were adding complexity without sufficient value)
 ❌ .kiro/hooks/diagram-validation.kiro.hook
@@ -17,6 +18,7 @@
 ```
 
 #### Kept Essential Hook
+
 ```bash
 # Kept this hook (solves real pain point)
 ✅ .kiro/hooks/diagram-auto-generation.kiro.hook
@@ -25,12 +27,14 @@
 ### 2. Documentation Updates ✅
 
 #### Updated README
+
 - Removed all missing/non-existent hooks from documentation
 - Simplified workflow diagrams
 - Added alternatives section
 - Added decision criteria for future hooks
 
 #### Created New Documentation
+
 - `hooks-necessity-analysis.md` - Detailed analysis of hook necessity
 - `hooks-audit-report.md` - Complete audit of existing hooks
 - `hooks-cleanup-plan.md` - Implementation plan
@@ -39,18 +43,21 @@
 ### 3. Alternative Solutions ✅
 
 #### Git Hooks Setup Script
+
 ```bash
 # Created script to set up Git hooks as alternatives
 ./scripts/setup-git-hooks.sh
 ```
 
 **Features**:
+
 - Pre-commit hook for diagram validation
 - Commit message format validation
 - Pre-push hook for comprehensive checks
 - Easy setup and removal
 
 #### Makefile Commands
+
 ```bash
 # Created convenient make commands
 make validate     # Validate diagrams
@@ -61,12 +68,14 @@ make status       # Check project status
 ```
 
 #### GitHub Actions Workflow
+
 ```yaml
 # Created CI/CD workflow for validation
 .github/workflows/validate-documentation.yml
 ```
 
 **Features**:
+
 - Validates PlantUML syntax
 - Checks diagram references
 - Verifies documentation structure
@@ -76,46 +85,56 @@ make status       # Check project status
 ## Before vs After
 
 ### Before Cleanup
-```
+
+```text
 📊 Hook Status:
+
 - 9 hooks documented in README
 - 4 hooks actually implemented  
 - 5 hooks missing (causing confusion)
 - Complex dependency relationships
 - High maintenance overhead
 - Documentation mismatch with reality
+
 ```
 
 ### After Cleanup
-```
+
+```text
 📊 Hook Status:
+
 - 1 hook documented in README
 - 1 hook actually implemented
 - 0 hooks missing
 - No dependencies
 - Minimal maintenance overhead
 - Documentation matches reality
+
 ```
 
 ## Value Delivered
 
 ### 1. Simplified System ✅
+
 - Reduced from 9 documented hooks to 1 essential hook
 - Eliminated complex dependencies
 - Clear, maintainable architecture
 
 ### 2. Better Alternatives ✅
+
 - Git hooks for validation (better than Kiro hooks for this use case)
 - CI/CD for comprehensive checks
 - Make commands for manual operations
 - Scripts available for all functionality
 
 ### 3. Clear Decision Framework ✅
+
 - Documented criteria for when to add new hooks
 - Emphasis on ROI and practical value
 - "Automate pain, not process" principle
 
 ### 4. Maintained Functionality ✅
+
 - All original functionality still available
 - Better separation of concerns
 - More appropriate tools for each task
@@ -123,6 +142,7 @@ make status       # Check project status
 ## What Each Alternative Provides
 
 ### Git Pre-commit Hook
+
 ```bash
 # Replaces: diagram-validation.kiro.hook
 # Advantage: Runs before commit, can't be forgotten
@@ -130,6 +150,7 @@ make status       # Check project status
 ```
 
 ### GitHub Actions
+
 ```yaml
 # Replaces: All quality assurance hooks
 # Advantage: Can't be bypassed, runs on all PRs
@@ -137,6 +158,7 @@ make status       # Check project status
 ```
 
 ### Make Commands
+
 ```makefile
 # Replaces: Manual hook execution
 # Advantage: Explicit, no surprises, easy to remember
@@ -144,6 +166,7 @@ make status       # Check project status
 ```
 
 ### Scripts
+
 ```bash
 # Replaces: Hook functionality when needed manually
 # Advantage: Available anytime, no automation overhead
@@ -153,22 +176,26 @@ make status       # Check project status
 ## Lessons Learned
 
 ### 1. Start Simple
+
 - Don't create hooks "just in case"
 - Add automation only when pain is real
 - Manual processes are often sufficient
 
 ### 2. Right Tool for the Job
+
 - Kiro hooks: For frequent, automatic tasks
 - Git hooks: For commit-time validation
 - CI/CD: For comprehensive, mandatory checks
 - Scripts: For manual, as-needed operations
 
 ### 3. Maintenance Matters
+
 - Every hook has ongoing maintenance cost
 - Complex systems are harder to debug
 - Simple systems are more reliable
 
 ### 4. Documentation Accuracy
+
 - Keep documentation in sync with reality
 - Remove outdated information promptly
 - Provide clear alternatives
@@ -178,6 +205,7 @@ make status       # Check project status
 ### For Developers
 
 #### Daily Development
+
 ```bash
 # 1. Edit PlantUML files
 vim docs/diagrams/viewpoints/system-context.puml
@@ -196,6 +224,7 @@ git push
 ```
 
 #### Manual Validation (when needed)
+
 ```bash
 # Quick validation
 make validate
@@ -213,6 +242,7 @@ make status
 ### For New Team Members
 
 #### Setup
+
 ```bash
 # 1. Clone repository
 git clone <repo>
@@ -263,6 +293,7 @@ make dev-setup
 ### When to Add New Hooks
 
 Only add hooks when ALL of these are true:
+
 1. ✅ Task frequency > 10 times per day
 2. ✅ Significant pain when done manually  
 3. ✅ Cannot be caught in code review
@@ -279,6 +310,7 @@ Only add hooks when ALL of these are true:
 ### Monitoring
 
 Keep an eye on:
+
 - How often manual validation is needed
 - Whether Git hooks are being bypassed frequently
 - If new pain points emerge that might justify automation
@@ -288,6 +320,7 @@ Keep an eye on:
 ### What We Learned
 
 **The minimalist approach works better**:
+
 - 1 essential hook > 9 complex hooks
 - Scripts + manual > automatic everything
 - Simple > complex
@@ -302,7 +335,7 @@ Keep an eye on:
 
 ### Final State
 
-```
+```text
 ✅ 1 essential Kiro hook (diagram-auto-generation)
 ✅ Git hooks for validation
 ✅ CI/CD for comprehensive checks  

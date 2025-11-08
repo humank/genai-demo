@@ -32,6 +32,7 @@ The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to 
 ### Business Context
 
 **Business Drivers**:
+
 - Need for independent development and deployment of bounded contexts
 - Requirement for audit trails and compliance (GDPR, PCI-DSS)
 - Expected high transaction volume (1000+ orders/second at peak)
@@ -39,6 +40,7 @@ The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to 
 - Support for eventual consistency in distributed system
 
 **Constraints**:
+
 - Must integrate with existing AWS infrastructure
 - Team has limited experience with event-driven architecture
 - Need to maintain data consistency across contexts
@@ -47,12 +49,14 @@ The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to 
 ### Technical Context
 
 **Current State**:
+
 - Hexagonal Architecture adopted (ADR-002)
 - PostgreSQL for primary database (ADR-001)
 - 13 bounded contexts identified
 - Spring Boot 3.4.5 + Java 21
 
 **Requirements**:
+
 - Loose coupling between bounded contexts
 - Eventual consistency support
 - Event replay capability
@@ -78,7 +82,8 @@ The Enterprise E-Commerce Platform consists of 13 bounded contexts that need to 
 **Description**: Use domain events published through an in-process event bus (Spring ApplicationEventPublisher) with optional external messaging
 
 **Architecture**:
-```
+
+```text
 Aggregate → collectEvent()
     ↓
 Application Service → publishEventsFromAggregate()
@@ -89,6 +94,7 @@ Event Handlers (same JVM) + External Message Broker (async)
 ```
 
 **Pros**:
+
 - ✅ Aligns perfectly with DDD tactical patterns
 - ✅ Events are first-class domain concepts
 - ✅ Loose coupling between bounded contexts
@@ -99,6 +105,7 @@ Event Handlers (same JVM) + External Message Broker (async)
 - ✅ Event sourcing ready
 
 **Cons**:
+
 - ⚠️ Requires external message broker for cross-service events
 - ⚠️ Need to handle event versioning
 - ⚠️ Eventual consistency complexity
@@ -112,11 +119,13 @@ Event Handlers (same JVM) + External Message Broker (async)
 **Description**: Bounded contexts communicate via synchronous REST API calls
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Immediate consistency
 - ✅ Easy to debug
 
 **Cons**:
+
 - ❌ Tight coupling between contexts
 - ❌ Cascading failures
 - ❌ Poor scalability
@@ -133,10 +142,12 @@ Event Handlers (same JVM) + External Message Broker (async)
 **Description**: Multiple contexts share the same database tables
 
 **Pros**:
+
 - ✅ Immediate consistency
 - ✅ Simple queries across contexts
 
 **Cons**:
+
 - ❌ Violates bounded context boundaries
 - ❌ Tight coupling at data level
 - ❌ Cannot deploy contexts independently
@@ -153,11 +164,13 @@ Event Handlers (same JVM) + External Message Broker (async)
 **Description**: Direct publishing to message queue without domain events
 
 **Pros**:
+
 - ✅ Loose coupling
 - ✅ Asynchronous processing
 - ✅ Scalable
 
 **Cons**:
+
 - ❌ Events not part of domain model
 - ❌ Violates DDD principles
 - ❌ Harder to test
@@ -186,6 +199,7 @@ Domain Events were selected for the following reasons:
 8. **Hexagonal Architecture Fit**: Events flow through ports and adapters naturally
 
 **Implementation Strategy**:
+
 - Aggregates collect events during business operations
 - Application services publish events after successful transactions
 - Spring ApplicationEventPublisher for in-process events
@@ -213,6 +227,7 @@ Domain Events were selected for the following reasons:
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts (event publishing and handling)
 - Application services (event publishing)
 - Infrastructure layer (event handlers)
@@ -267,12 +282,14 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Eventual consistency causes critical business issues
 - Event processing lag > 5 minutes consistently
 - Event loss > 0.1%
 - Team unable to manage complexity
 
 **Rollback Steps**:
+
 1. Switch to synchronous REST calls for critical paths
 2. Keep events for audit trail only
 3. Simplify event handlers
@@ -294,6 +311,7 @@ Affects:
 ### Monitoring Plan
 
 **Event Metrics**:
+
 ```java
 @Component
 public class EventMetrics {
@@ -307,12 +325,14 @@ public class EventMetrics {
 ```
 
 **Alerts**:
+
 - Event processing lag > 5 seconds
 - Event failure rate > 1%
 - Dead letter queue size > 100
 - Event handler execution time > 1 second
 
 **Review Schedule**:
+
 - Daily: Check event processing metrics
 - Weekly: Review failed events
 - Monthly: Event schema evolution review
@@ -342,11 +362,13 @@ public class EventMetrics {
 ### Technical Debt
 
 **Identified Debt**:
+
 1. No event store yet (acceptable for MVP)
 2. Manual event versioning (can be improved with schema registry)
 3. Limited event replay capability (future enhancement)
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Implement event store for event sourcing
 - **Q3 2026**: Add schema registry for event versioning
 - **Q4 2026**: Implement event replay and CQRS patterns
@@ -424,6 +446,7 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
 ### Event Versioning Strategy
 
 **Schema Evolution Pattern**:
+
 ```java
 // V1: Original event
 public record CustomerCreatedEvent(

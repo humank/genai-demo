@@ -71,11 +71,13 @@ Use asynchronous (non-blocking) operations when:
 ### Customer Management
 
 #### User Registration
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate confirmation of account creation
 
 **Flow**:
-```
+
+```text
 User → Submit Registration → Validate Data → Create Account → Return Success
                                     ↓
                               (Async) Send Welcome Email
@@ -87,11 +89,13 @@ User → Submit Registration → Validate Data → Create Account → Return Suc
 ---
 
 #### User Login
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate authentication result
 
 **Flow**:
-```
+
+```text
 User → Submit Credentials → Validate → Generate JWT → Return Token
 ```
 
@@ -101,11 +105,13 @@ User → Submit Credentials → Validate → Generate JWT → Return Token
 ---
 
 #### Profile Update
+
 **Type**: Synchronous  
 **Rationale**: User expects immediate confirmation of changes
 
 **Flow**:
-```
+
+```text
 User → Submit Changes → Validate → Update Database → Return Success
                                           ↓
                                   (Async) Sync to Analytics
@@ -119,11 +125,13 @@ User → Submit Changes → Validate → Update Database → Return Success
 ### Product Catalog
 
 #### Product Search
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate search results
 
 **Flow**:
-```
+
+```text
 User → Search Query → Query Database/Cache → Return Results
 ```
 
@@ -133,11 +141,13 @@ User → Search Query → Query Database/Cache → Return Results
 ---
 
 #### Product Details
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate product information
 
 **Flow**:
-```
+
+```text
 User → Request Product → Query Database → Return Product Details
 ```
 
@@ -149,11 +159,13 @@ User → Request Product → Query Database → Return Product Details
 ### Shopping Cart
 
 #### Add to Cart
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate confirmation
 
 **Flow**:
-```
+
+```text
 User → Add Item → Validate Availability → Update Cart → Return Updated Cart
 ```
 
@@ -163,11 +175,13 @@ User → Add Item → Validate Availability → Update Cart → Return Updated C
 ---
 
 #### Update Cart Quantity
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate cart update
 
 **Flow**:
-```
+
+```text
 User → Update Quantity → Validate → Update Cart → Recalculate Total → Return Cart
 ```
 
@@ -179,11 +193,13 @@ User → Update Quantity → Validate → Update Cart → Recalculate Total → 
 ### Order Management
 
 #### Order Submission
+
 **Type**: Synchronous (with async follow-up)  
 **Rationale**: User needs immediate order confirmation
 
 **Flow**:
-```
+
+```text
 User → Submit Order → Validate → Reserve Inventory → Create Order → Return Order ID
                                                             ↓
                                                     (Async) Process Payment
@@ -197,11 +213,13 @@ User → Submit Order → Validate → Reserve Inventory → Create Order → Re
 ---
 
 #### Order Status Query
+
 **Type**: Synchronous  
 **Rationale**: User needs current order status
 
 **Flow**:
-```
+
+```text
 User → Query Order → Fetch from Database → Return Status
 ```
 
@@ -213,11 +231,13 @@ User → Query Order → Fetch from Database → Return Status
 ### Payment Processing
 
 #### Payment Authorization
+
 **Type**: Synchronous  
 **Rationale**: Must confirm payment before order completion
 
 **Flow**:
-```
+
+```text
 User → Submit Payment → Call Payment Gateway → Wait for Response → Return Result
 ```
 
@@ -229,11 +249,13 @@ User → Submit Payment → Call Payment Gateway → Wait for Response → Retur
 ---
 
 #### Payment Status Check
+
 **Type**: Synchronous  
 **Rationale**: User needs current payment status
 
 **Flow**:
-```
+
+```text
 User → Check Status → Query Database → Return Status
 ```
 
@@ -245,11 +267,13 @@ User → Check Status → Query Database → Return Status
 ### Inventory Management
 
 #### Inventory Check
+
 **Type**: Synchronous  
 **Rationale**: User needs immediate availability information
 
 **Flow**:
-```
+
+```text
 User → Check Availability → Query Inventory → Return Stock Level
 ```
 
@@ -259,11 +283,13 @@ User → Check Availability → Query Inventory → Return Stock Level
 ---
 
 #### Inventory Reservation
+
 **Type**: Synchronous  
 **Rationale**: Must confirm reservation before order creation
 
 **Flow**:
-```
+
+```text
 Order Service → Reserve Items → Lock Inventory → Update Stock → Return Confirmation
 ```
 
@@ -277,11 +303,13 @@ Order Service → Reserve Items → Lock Inventory → Update Stock → Return C
 ### Notification Services
 
 #### Email Notifications
+
 **Type**: Asynchronous  
 **Rationale**: User doesn't need to wait for email delivery
 
 **Flow**:
-```
+
+```text
 Event → Publish to Kafka → Email Service Consumes → Send via SendGrid
                                                             ↓
                                                     (Webhook) Delivery Status
@@ -291,6 +319,7 @@ Event → Publish to Kafka → Email Service Consumes → Send via SendGrid
 **Error Handling**: Retry with exponential backoff, dead letter queue
 
 **Email Types**:
+
 - Order confirmation
 - Shipping notification
 - Password reset
@@ -300,11 +329,13 @@ Event → Publish to Kafka → Email Service Consumes → Send via SendGrid
 ---
 
 #### SMS Notifications
+
 **Type**: Asynchronous  
 **Rationale**: User doesn't need to wait for SMS delivery
 
 **Flow**:
-```
+
+```text
 Event → Publish to Kafka → SMS Service Consumes → Send via Twilio
                                                          ↓
                                                  (Webhook) Delivery Status
@@ -314,6 +345,7 @@ Event → Publish to Kafka → SMS Service Consumes → Send via Twilio
 **Error Handling**: Retry 3 times, fallback to email
 
 **SMS Types**:
+
 - Order status updates
 - Delivery notifications
 - Verification codes (time-sensitive)
@@ -323,11 +355,13 @@ Event → Publish to Kafka → SMS Service Consumes → Send via Twilio
 ### Analytics and Reporting
 
 #### User Behavior Tracking
+
 **Type**: Asynchronous  
 **Rationale**: Analytics don't affect user experience
 
 **Flow**:
-```
+
+```text
 User Action → Publish Event → Analytics Service → Process → Store in Data Warehouse
 ```
 
@@ -337,11 +371,13 @@ User Action → Publish Event → Analytics Service → Process → Store in Dat
 ---
 
 #### Sales Reports
+
 **Type**: Asynchronous  
 **Rationale**: Reports can be generated in background
 
 **Flow**:
-```
+
+```text
 User Request → Queue Report Job → Generate Report → Store Result → Notify User
 ```
 
@@ -351,11 +387,13 @@ User Request → Queue Report Job → Generate Report → Store Result → Notif
 ---
 
 #### Business Intelligence
+
 **Type**: Asynchronous (Batch)  
 **Rationale**: BI processing is resource-intensive
 
 **Flow**:
-```
+
+```text
 Scheduled Job → Extract Data → Transform → Load to Data Warehouse → Update Dashboards
 ```
 
@@ -367,11 +405,13 @@ Scheduled Job → Extract Data → Transform → Load to Data Warehouse → Upda
 ### Inventory Synchronization
 
 #### Warehouse Inventory Sync
+
 **Type**: Asynchronous  
 **Rationale**: External system sync doesn't need to be immediate
 
 **Flow**:
-```
+
+```text
 Inventory Change → Publish Event → Sync Service → Call Warehouse API → Update Status
 ```
 
@@ -381,11 +421,13 @@ Inventory Change → Publish Event → Sync Service → Call Warehouse API → U
 ---
 
 #### Supplier Inventory Updates
+
 **Type**: Asynchronous (Batch)  
 **Rationale**: Supplier updates are periodic
 
 **Flow**:
-```
+
+```text
 Scheduled Job → Fetch from Supplier API → Validate → Update Inventory → Publish Events
 ```
 
@@ -397,11 +439,13 @@ Scheduled Job → Fetch from Supplier API → Validate → Update Inventory → 
 ### Order Processing
 
 #### Order Fulfillment Workflow
+
 **Type**: Asynchronous (Event-Driven)  
 **Rationale**: Multi-step process with external dependencies
 
 **Flow**:
-```
+
+```text
 OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed → ShippingScheduled
 ```
 
@@ -411,11 +455,13 @@ OrderCreated → InventoryReserved → PaymentProcessed → OrderConfirmed → S
 ---
 
 #### Shipping Label Generation
+
 **Type**: Asynchronous  
 **Rationale**: External shipping API call
 
 **Flow**:
-```
+
+```text
 OrderConfirmed → Queue Label Job → Call Shipping API → Generate Label → Store PDF
 ```
 
@@ -427,11 +473,13 @@ OrderConfirmed → Queue Label Job → Call Shipping API → Generate Label → 
 ### Data Processing
 
 #### Image Processing
+
 **Type**: Asynchronous  
 **Rationale**: CPU-intensive operation
 
 **Flow**:
-```
+
+```text
 Image Upload → Queue Processing Job → Resize/Optimize → Store in S3 → Update Database
 ```
 
@@ -441,11 +489,13 @@ Image Upload → Queue Processing Job → Resize/Optimize → Store in S3 → Up
 ---
 
 #### Data Export
+
 **Type**: Asynchronous  
 **Rationale**: Large data volumes
 
 **Flow**:
-```
+
+```text
 User Request → Queue Export Job → Generate CSV/Excel → Upload to S3 → Send Download Link
 ```
 
@@ -455,11 +505,13 @@ User Request → Queue Export Job → Generate CSV/Excel → Upload to S3 → Se
 ---
 
 #### Data Import
+
 **Type**: Asynchronous (Batch)  
 **Rationale**: Large data volumes, validation required
 
 **Flow**:
-```
+
+```text
 File Upload → Queue Import Job → Validate → Process → Update Database → Generate Report
 ```
 
@@ -471,11 +523,13 @@ File Upload → Queue Import Job → Validate → Process → Update Database �
 ### Cache Management
 
 #### Cache Warming
+
 **Type**: Asynchronous  
 **Rationale**: Background optimization
 
 **Flow**:
-```
+
+```text
 Scheduled Job → Identify Popular Items → Fetch from Database → Populate Cache
 ```
 
@@ -485,11 +539,13 @@ Scheduled Job → Identify Popular Items → Fetch from Database → Populate Ca
 ---
 
 #### Cache Invalidation
+
 **Type**: Asynchronous (Event-Driven)  
 **Rationale**: Eventual consistency acceptable
 
 **Flow**:
-```
+
+```text
 Data Update → Publish Event → Cache Service → Invalidate Cache Keys
 ```
 
@@ -505,6 +561,7 @@ Some operations use both synchronous and asynchronous patterns:
 ### Order Submission (Hybrid)
 
 **Synchronous Part**:
+
 - Validate order data
 - Check inventory availability
 - Reserve inventory
@@ -512,6 +569,7 @@ Some operations use both synchronous and asynchronous patterns:
 - Return order ID to user
 
 **Asynchronous Part**:
+
 - Process payment
 - Send confirmation email
 - Notify warehouse
@@ -525,12 +583,14 @@ Some operations use both synchronous and asynchronous patterns:
 ### Product Review Submission (Hybrid)
 
 **Synchronous Part**:
+
 - Validate review data
 - Check user eligibility
 - Save review (pending approval)
 - Return success to user
 
 **Asynchronous Part**:
+
 - Content moderation
 - Spam detection
 - Sentiment analysis
@@ -544,11 +604,13 @@ Some operations use both synchronous and asynchronous patterns:
 ### Password Reset (Hybrid)
 
 **Synchronous Part**:
+
 - Validate email
 - Generate reset token
 - Return success message
 
 **Asynchronous Part**:
+
 - Send reset email
 - Log security event
 
@@ -561,6 +623,7 @@ Some operations use both synchronous and asynchronous patterns:
 ### Synchronous Implementation
 
 **Spring MVC Controller**:
+
 ```java
 @RestController
 @RequestMapping("/api/v1/products")
@@ -576,6 +639,7 @@ public class ProductController {
 ```
 
 **Characteristics**:
+
 - Request thread blocks until completion
 - Direct return of result
 - Immediate error handling
@@ -586,6 +650,7 @@ public class ProductController {
 ### Asynchronous Implementation
 
 **Spring Async Method**:
+
 ```java
 @Service
 public class EmailService {
@@ -605,6 +670,7 @@ public class EmailService {
 ```
 
 **Characteristics**:
+
 - Returns immediately
 - Executes in separate thread
 - Result available via Future
@@ -615,6 +681,7 @@ public class EmailService {
 ### Event-Driven Implementation
 
 **Event Publisher**:
+
 ```java
 @Service
 @Transactional
@@ -632,6 +699,7 @@ public class OrderApplicationService {
 ```
 
 **Event Consumer**:
+
 ```java
 @Component
 public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<OrderCreatedEvent> {
@@ -646,6 +714,7 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 ```
 
 **Characteristics**:
+
 - Decoupled components
 - Eventual consistency
 - Scalable processing
@@ -658,18 +727,21 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 ### Synchronous Operations
 
 **Advantages**:
+
 - Simple to understand and debug
 - Immediate error feedback
 - Strong consistency
 - Predictable behavior
 
 **Disadvantages**:
+
 - Blocks request thread
 - Limited scalability
 - Timeout risks
 - Resource contention
 
 **Best For**:
+
 - User-facing operations
 - Critical path operations
 - Operations requiring immediate feedback
@@ -679,18 +751,21 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 ### Asynchronous Operations
 
 **Advantages**:
+
 - Better resource utilization
 - Higher throughput
 - Non-blocking
 - Improved scalability
 
 **Disadvantages**:
+
 - Complex error handling
 - Eventual consistency
 - Harder to debug
 - Requires monitoring
 
 **Best For**:
+
 - Background processing
 - External service calls
 - Batch operations

@@ -4,7 +4,7 @@
 
 This directory contains operational runbooks for common issues and procedures in the Enterprise E-Commerce Platform.
 
-## What is a Runbook?
+## What is a Runbook
 
 A runbook is a step-by-step guide for diagnosing and resolving specific operational issues. Each runbook follows a standard format:
 
@@ -127,20 +127,23 @@ Use this template when creating new runbooks:
 ### Step 1: [Diagnostic Step]
 ```bash
 # Commands
-```
+```text
 
 ### Step 2: [Diagnostic Step]
+
 ```bash
 # Commands
-```
+```text
 
 ## Resolution
 
 ### Immediate Actions
+
 1. Action 1
 2. Action 2
 
 ### Root Cause Fix
+
 1. Fix step 1
 2. Fix step 2
 
@@ -165,6 +168,7 @@ Use this template when creating new runbooks:
 
 - [Related Runbook 1]
 - [Related Documentation]
+
 ```
 
 ## Emergency Contacts

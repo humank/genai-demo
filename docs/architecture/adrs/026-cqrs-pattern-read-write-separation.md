@@ -23,6 +23,7 @@ affected_perspectives: ["performance", "scalability", "evolution"]
 The Enterprise E-Commerce Platform requires optimized read and write operations with different characteristics:
 
 **Business Requirements**:
+
 - **Read Performance**: Fast product searches and catalog browsing
 - **Write Consistency**: Strong consistency for orders and payments
 - **Scalability**: Scale reads independently from writes
@@ -31,6 +32,7 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 - **Flexibility**: Different data models for reads and writes
 
 **Technical Challenges**:
+
 - Read-heavy workload (90% reads, 10% writes)
 - Complex queries spanning multiple aggregates
 - Different performance requirements for reads vs writes
@@ -39,6 +41,7 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 - Search functionality
 
 **Current Issues**:
+
 - Single model for reads and writes
 - Complex queries impact write performance
 - Difficult to optimize for both use cases
@@ -48,6 +51,7 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 ### Business Context
 
 **Business Drivers**:
+
 - Improve customer experience (fast searches)
 - Support business intelligence and reporting
 - Enable real-time dashboards
@@ -55,6 +59,7 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 - Reduce infrastructure costs
 
 **Constraints**:
+
 - Budget: $70,000 for implementation
 - Timeline: 3 months
 - Team: 3 senior developers
@@ -65,12 +70,14 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 ### Technical Context
 
 **Current Approach**:
+
 - Single database model
 - JPA entities for all operations
 - Complex queries on write model
 - Performance bottlenecks
 
 **Target Approach**:
+
 - Separate read and write models
 - Optimized read models for queries
 - Event-driven synchronization
@@ -95,7 +102,7 @@ The Enterprise E-Commerce Platform requires optimized read and write operations 
 
 **Architecture Overview**:
 
-```
+```text
 Write Side (Commands)          Read Side (Queries)
 ┌─────────────────┐           ┌─────────────────┐
 │  Command API    │           │   Query API     │
@@ -659,6 +666,7 @@ public class CQRSMetrics {
 ```
 
 **Pros**:
+
 - ✅ Optimized read and write performance
 - ✅ Independent scaling
 - ✅ Flexible data models
@@ -667,6 +675,7 @@ public class CQRSMetrics {
 - ✅ Supports multiple read models (SQL + ElasticSearch)
 
 **Cons**:
+
 - ⚠️ Eventual consistency
 - ⚠️ Increased complexity
 - ⚠️ Data duplication
@@ -682,11 +691,13 @@ public class CQRSMetrics {
 **Description**: Use database read replicas for read scaling
 
 **Pros**:
+
 - ✅ Simple to implement
 - ✅ Strong consistency
 - ✅ No code changes
 
 **Cons**:
+
 - ❌ Same data model for reads and writes
 - ❌ Limited optimization
 - ❌ Replication lag
@@ -701,11 +712,13 @@ public class CQRSMetrics {
 **Description**: Use database materialized views for complex queries
 
 **Pros**:
+
 - ✅ Database-level optimization
 - ✅ No application changes
 - ✅ Familiar to DBAs
 
 **Cons**:
+
 - ❌ Database-specific
 - ❌ Limited flexibility
 - ❌ Refresh overhead
@@ -740,6 +753,7 @@ CQRS provides the flexibility and performance optimization needed for our read-h
 **Selected Impact Radius**: **System**
 
 Affects:
+
 - All bounded contexts
 - API design
 - Database architecture
@@ -763,6 +777,7 @@ Affects:
 ### Phase 1: Framework Setup (Month 1)
 
 **Tasks**:
+
 - [ ] Design CQRS infrastructure
 - [ ] Implement projection framework
 - [ ] Set up monitoring
@@ -770,6 +785,7 @@ Affects:
 - [ ] Document patterns
 
 **Success Criteria**:
+
 - Framework operational
 - Monitoring working
 - Documentation complete
@@ -777,6 +793,7 @@ Affects:
 ### Phase 2: Pilot Implementation (Month 2)
 
 **Tasks**:
+
 - [ ] Implement Order CQRS
 - [ ] Create read models
 - [ ] Build projections
@@ -784,6 +801,7 @@ Affects:
 - [ ] Gather feedback
 
 **Success Criteria**:
+
 - Order CQRS working
 - Performance improved
 - Team comfortable
@@ -791,6 +809,7 @@ Affects:
 ### Phase 3: Expansion (Month 3)
 
 **Tasks**:
+
 - [ ] Implement Product CQRS with ElasticSearch
 - [ ] Implement Customer CQRS
 - [ ] Add consistency checks
@@ -798,6 +817,7 @@ Affects:
 - [ ] Update documentation
 
 **Success Criteria**:
+
 - All critical entities using CQRS
 - Performance targets met
 - Team trained
@@ -805,11 +825,13 @@ Affects:
 ### Rollback Strategy
 
 **Trigger Conditions**:
+
 - Unacceptable consistency issues
 - Performance degradation
 - Team cannot maintain
 
 **Rollback Steps**:
+
 1. Disable read models
 2. Use write model for queries
 3. Fix issues
@@ -857,12 +879,14 @@ Affects:
 ### Technical Debt
 
 **Identified Debt**:
+
 1. Manual projection rebuild
 2. Limited consistency monitoring
 3. Basic error handling
 4. No projection versioning
 
 **Debt Repayment Plan**:
+
 - **Q2 2026**: Automated projection rebuild
 - **Q3 2026**: Comprehensive consistency monitoring
 - **Q4 2026**: Advanced error handling
@@ -885,6 +909,7 @@ Affects:
 ### CQRS Best Practices
 
 **DO**:
+
 - ✅ Use for read-heavy workloads
 - ✅ Optimize read models for queries
 - ✅ Monitor projection lag
@@ -893,6 +918,7 @@ Affects:
 - ✅ Keep write model normalized
 
 **DON'T**:
+
 - ❌ Apply to all entities
 - ❌ Ignore eventual consistency
 - ❌ Over-denormalize
@@ -902,12 +928,14 @@ Affects:
 ### When to Use CQRS
 
 **Good Candidates**:
+
 - ✅ Read-heavy entities (products, catalog)
 - ✅ Complex query requirements
 - ✅ Different scaling needs
 - ✅ Multiple read models needed
 
 **Poor Candidates**:
+
 - ❌ Simple CRUD entities
 - ❌ Low traffic entities
 - ❌ Strong consistency required

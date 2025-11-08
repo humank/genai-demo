@@ -21,13 +21,16 @@ Check stock availability for a product.
 **Authentication**: Not required (public endpoint)
 
 **Path Parameters**:
+
 - `productId`: Product ID
 
 **Query Parameters**:
+
 - `quantity`: Requested quantity (default: 1)
 - `warehouseId`: Specific warehouse (optional)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -57,6 +60,7 @@ Check stock availability for a product.
 ```
 
 **Out of Stock Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -72,9 +76,11 @@ Check stock availability for a product.
 ```
 
 **Error Responses**:
+
 - `404 Not Found`: Product not found
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/inventory/products/prod-456/availability?quantity=2"
 ```
@@ -92,9 +98,11 @@ Get detailed inventory information for a product.
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Path Parameters**:
+
 - `productId`: Product ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -133,10 +141,12 @@ Get detailed inventory information for a product.
 ```
 
 **Error Responses**:
+
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Product not found
 
 **curl Example**:
+
 ```bash
 curl -X GET https://api.ecommerce.com/api/v1/inventory/products/prod-456 \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -155,6 +165,7 @@ Reserve inventory for an order (internal use).
 **Authorization**: SYSTEM or ADMIN role required
 
 **Request Body**:
+
 ```json
 {
   "orderId": "order-456",
@@ -175,12 +186,14 @@ Reserve inventory for an order (internal use).
 ```
 
 **Validation Rules**:
+
 - `orderId`: Required, unique
 - `items`: Required, at least one item
 - `quantity`: Required, positive integer
 - `expiresAt`: Optional, default 15 minutes from now
 
 **Success Response** (201 Created):
+
 ```json
 {
   "data": {
@@ -208,6 +221,7 @@ Reserve inventory for an order (internal use).
 ```
 
 **Partial Reservation Response** (207 Multi-Status):
+
 ```json
 {
   "data": {
@@ -236,11 +250,13 @@ Reserve inventory for an order (internal use).
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Validation errors
 - `403 Forbidden`: Insufficient permissions
 - `409 Conflict`: Insufficient stock for all items
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -270,9 +286,11 @@ Confirm a reservation and deduct from available stock.
 **Authorization**: SYSTEM or ADMIN role required
 
 **Path Parameters**:
+
 - `reservationId`: Reservation ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -293,11 +311,13 @@ Confirm a reservation and deduct from available stock.
 ```
 
 **Error Responses**:
+
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Reservation not found
 - `409 Conflict`: Reservation expired or already confirmed
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations/res-123/confirm \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -316,9 +336,11 @@ Cancel a reservation and release reserved stock.
 **Authorization**: SYSTEM or ADMIN role required
 
 **Path Parameters**:
+
 - `reservationId`: Reservation ID
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -339,6 +361,7 @@ Cancel a reservation and release reserved stock.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X POST https://api.ecommerce.com/api/v1/inventory/reservations/res-123/cancel \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -357,10 +380,12 @@ Update stock level for a product in a warehouse.
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Path Parameters**:
+
 - `productId`: Product ID
 - `warehouseId`: Warehouse ID
 
 **Request Body**:
+
 ```json
 {
   "quantity": 150,
@@ -371,11 +396,13 @@ Update stock level for a product in a warehouse.
 ```
 
 **Operation Types**:
+
 - `SET`: Set absolute quantity
 - `ADD`: Add to current quantity
 - `SUBTRACT`: Subtract from current quantity
 
 **Reason Codes**:
+
 - `RESTOCK`: Inventory replenishment
 - `ADJUSTMENT`: Inventory adjustment
 - `DAMAGE`: Damaged goods
@@ -383,6 +410,7 @@ Update stock level for a product in a warehouse.
 - `TRANSFER`: Warehouse transfer
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -399,11 +427,13 @@ Update stock level for a product in a warehouse.
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid operation or quantity
 - `403 Forbidden`: Insufficient permissions
 - `404 Not Found`: Product or warehouse not found
 
 **curl Example**:
+
 ```bash
 curl -X PUT https://api.ecommerce.com/api/v1/inventory/products/prod-456/warehouses/wh-taipei \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
@@ -428,11 +458,13 @@ Get products with stock below reorder point.
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `warehouseId`: Filter by warehouse (optional)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -471,6 +503,7 @@ Get products with stock below reorder point.
 ```
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/inventory/low-stock?warehouseId=wh-taipei" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
@@ -489,9 +522,11 @@ Get inventory movement history for a product.
 **Authorization**: ADMIN or WAREHOUSE role required
 
 **Path Parameters**:
+
 - `productId`: Product ID
 
 **Query Parameters**:
+
 - `page`: Page number (default: 0)
 - `size`: Page size (default: 20)
 - `startDate`: Filter from date (ISO 8601)
@@ -500,6 +535,7 @@ Get inventory movement history for a product.
 - `type`: Filter by movement type (optional)
 
 **Success Response** (200 OK):
+
 ```json
 {
   "data": {
@@ -540,6 +576,7 @@ Get inventory movement history for a product.
 ```
 
 **Movement Types**:
+
 - `RESTOCK`: Inventory replenishment
 - `SALE`: Order fulfillment
 - `RETURN`: Customer return
@@ -549,6 +586,7 @@ Get inventory movement history for a product.
 - `TRANSFER_OUT`: Transfer to another warehouse
 
 **curl Example**:
+
 ```bash
 curl -X GET "https://api.ecommerce.com/api/v1/inventory/products/prod-456/movements?startDate=2025-10-01T00:00:00Z" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"

@@ -6,6 +6,7 @@
 ## 🎯 Quick Summary
 
 Your MCP configuration has:
+
 - ✅ **5 working project servers** (time, aws-docs, aws-cdk, aws-pricing, excalidraw)
 - ✅ **6 working global servers** (github, aws-docs, cdk, pricing, lambda, iam)
 - ⚠️ **2 duplicates** (aws-docs, time)
@@ -34,7 +35,8 @@ cp .kiro/settings/mcp.json .kiro/settings/mcp.json.backup.$(date +%Y%m%d)
 
 **Why**: Project-level config takes precedence, so these global entries are unused.
 
-**Note about Time Server**: 
+**Note about Time Server**:
+
 - The `time` MCP server provides timezone conversions and time formatting
 - However, Kiro can also get current time via system commands (`date`)
 - **Recommendation**: Keep `time` server in project config for advanced time operations
@@ -60,18 +62,21 @@ cp .kiro/settings/mcp.json .kiro/settings/mcp.json.backup.$(date +%Y%m%d)
 | `ppt-automation` | Depends on external project |
 
 **Keep these disabled servers if you might use them later:**
+
 - `kubernetes`, `docker`, `sqlite` - Useful for infrastructure management
 - `awslabs.ec2-mcp-server` - Useful for AWS EC2 management
 
 ### Step 4: Fix GitHub Token (If Using GitHub MCP)
 
 The GitHub token in global config may be expired:
+
 ```json
 "Bearer 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"
 ```
 
 **Action**:
-1. Generate new token: https://github.com/settings/tokens
+
+1. Generate new token: <https://github.com/settings/tokens>
 2. Update in `~/.kiro/settings/mcp.json`
 3. Or disable the server if not needed
 
@@ -101,6 +106,7 @@ Remove duplicates AND all disabled servers.
 **Edit `~/.kiro/settings/mcp.json`:**
 
 Remove these entries:
+
 - `aws-docs`
 - `time`
 - `aws-knowledge-mcp-server`
@@ -287,11 +293,14 @@ After cleanup:
    - Verify all servers show "Connected"
 
 3. **Test Key Servers**
+
    ```
    Ask Kiro to:
+
    - "What time is it?" (tests time server)
    - "Search AWS docs for Lambda" (tests aws-docs)
    - "Create a simple diagram" (tests excalidraw)
+
    ```
 
 ---
@@ -299,18 +308,21 @@ After cleanup:
 ## 📈 Expected Results
 
 **Before Cleanup:**
+
 - Total servers: 21
 - Active: 11
 - Disabled: 10
 - Duplicates: 2
 
 **After Conservative Cleanup:**
+
 - Total servers: 19
 - Active: 11
 - Disabled: 8
 - Duplicates: 0
 
 **After Aggressive Cleanup:**
+
 - Total servers: 11
 - Active: 11
 - Disabled: 0

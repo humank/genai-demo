@@ -4,9 +4,11 @@ viewpoint: "Information"
 status: "Active"
 last_updated: "2025-10-23"
 related_documents:
+
   - "overview.md"
   - "domain-models.md"
   - "data-ownership.md"
+
 ---
 
 # Data Flow
@@ -21,7 +23,7 @@ This document describes how data flows through the system, including synchronous
 
 The primary pattern for state changes in the system:
 
-```
+```text
 User Request → REST API → Command → Application Service → Aggregate → Domain Event → Event Handlers
 ```
 
@@ -36,7 +38,7 @@ User Request → REST API → Command → Application Service → Aggregate → 
 
 **Example: Order Submission**
 
-```
+```text
 POST /api/v1/orders/{orderId}/submit
     ↓
 SubmitOrderCommand
@@ -50,9 +52,11 @@ DomainEventApplicationService.publishEventsFromAggregate()
 OrderSubmittedEvent published to Kafka
     ↓
 Event Handlers:
+
   - InventoryService.reserveItems()
   - PaymentService.processPayment()
   - NotificationService.sendOrderConfirmation()
+
 ```
 
 ---
@@ -61,7 +65,7 @@ Event Handlers:
 
 Optimized read operations without side effects:
 
-```
+```text
 User Request → REST API → Query → Application Service → Repository → Read Model → Response
 ```
 
@@ -76,7 +80,7 @@ User Request → REST API → Query → Application Service → Repository → R
 
 **Example: Get Customer Orders**
 
-```
+```text
 GET /api/v1/customers/{customerId}/orders
     ↓
 GetCustomerOrdersQuery
@@ -96,7 +100,7 @@ HTTP 200 OK with order list
 
 Asynchronous communication between bounded contexts:
 
-```
+```text
 Context A → Domain Event → Kafka Topic → Context B Event Handler → Context B Aggregate
 ```
 
@@ -111,7 +115,7 @@ Context A → Domain Event → Kafka Topic → Context B Event Handler → Conte
 
 **Example: Inventory Reservation**
 
-```
+```text
 Order Context:
   OrderSubmittedEvent published
     ↓
@@ -425,6 +429,7 @@ public class OrderApplicationService {
 ```
 
 **Characteristics**:
+
 - Immediate consistency
 - Higher latency
 - Tight coupling
@@ -459,6 +464,7 @@ public class CustomerProfileUpdatedEventHandler
 ```
 
 **Characteristics**:
+
 - Eventual consistency (seconds to minutes)
 - Lower latency
 - Loose coupling
@@ -493,6 +499,7 @@ public class OrderItem {
 ```
 
 **Characteristics**:
+
 - Point-in-time consistency
 - No synchronization needed
 - Immune to source changes
@@ -527,6 +534,7 @@ public class ProductCacheService {
 ```
 
 **Characteristics**:
+
 - Fast reads from cache
 - Eventual consistency
 - Cache invalidation via events
@@ -538,14 +546,14 @@ public class ProductCacheService {
 
 ### Event Publication
 
-```
+```text
 Aggregate → collectEvent() → Application Service → publishEventsFromAggregate() → 
 Event Publisher → Kafka Producer → Kafka Topic
 ```
 
 ### Event Consumption
 
-```
+```text
 Kafka Topic → Kafka Consumer → Event Listener → Event Handler → 
 Idempotency Check → Business Logic → Local State Update
 ```

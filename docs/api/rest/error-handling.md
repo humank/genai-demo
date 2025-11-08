@@ -29,6 +29,7 @@ All error responses follow this consistent structure:
 ```
 
 **Fields**:
+
 - `errors`: Array of error objects
 - `code`: Machine-readable error code
 - `message`: Human-readable error description
@@ -114,6 +115,7 @@ When multiple validation errors occur, all errors are returned:
 | `AUTH_EMAIL_NOT_VERIFIED` | 401 | Email not verified | Verify email |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -134,6 +136,7 @@ When multiple validation errors occur, all errors are returned:
 | `AUTHZ_ROLE_REQUIRED` | 403 | Specific role required | Contact administrator |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -159,6 +162,7 @@ When multiple validation errors occur, all errors are returned:
 | `VALIDATION_INVALID_DATE` | 400 | Invalid date format | Use ISO 8601 format |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -184,6 +188,7 @@ When multiple validation errors occur, all errors are returned:
 | `BUSINESS_ORDER_CANNOT_BE_CANCELLED` | 409 | Order cannot be cancelled | Check order status |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -206,6 +211,7 @@ When multiple validation errors occur, all errors are returned:
 | `RESOURCE_DELETED` | 410 | Resource has been deleted | Cannot be recovered |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -225,6 +231,7 @@ When multiple validation errors occur, all errors are returned:
 | `RATE_LIMIT_QUOTA_EXCEEDED` | 429 | Daily quota exceeded | Wait until reset |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -237,6 +244,7 @@ When multiple validation errors occur, all errors are returned:
 ```
 
 **Response Headers**:
+
 ```http
 HTTP/1.1 429 Too Many Requests
 X-RateLimit-Limit: 1000
@@ -256,6 +264,7 @@ Retry-After: 3600
 | `SYSTEM_TIMEOUT` | 504 | Request timeout | Retry with smaller payload |
 
 **Example**:
+
 ```json
 {
   "errors": [
@@ -276,6 +285,7 @@ Retry-After: 3600
 ### Client-Side Error Handling
 
 **1. Check HTTP Status Code**:
+
 ```javascript
 async function makeRequest() {
   const response = await fetch('/api/v1/customers');
@@ -322,6 +332,7 @@ function handleError(status, error) {
 ```
 
 **2. Display User-Friendly Messages**:
+
 ```javascript
 function showValidationErrors(errors) {
   errors.forEach(error => {
@@ -338,6 +349,7 @@ function showValidationErrors(errors) {
 ```
 
 **3. Implement Retry Logic**:
+
 ```javascript
 async function fetchWithRetry(url, options, maxRetries = 3) {
   for (let i = 0; i < maxRetries; i++) {
@@ -367,6 +379,7 @@ async function fetchWithRetry(url, options, maxRetries = 3) {
 ```
 
 **4. Log Errors with Request ID**:
+
 ```javascript
 function logError(error, requestId) {
   console.error('API Error:', {
@@ -386,6 +399,7 @@ function logError(error, requestId) {
 ### Server-Side Error Handling
 
 **Java Example**:
+
 ```java
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -469,16 +483,19 @@ public class GlobalExceptionHandler {
 #### Scenario 1: 401 Unauthorized
 
 **Symptoms**:
+
 - API returns 401 status code
 - Error code: `AUTH_TOKEN_EXPIRED` or `AUTH_TOKEN_INVALID`
 
 **Diagnosis**:
+
 1. Check if token is included in Authorization header
 2. Verify token format: `Bearer <token>`
 3. Check token expiration time
 4. Verify token signature
 
 **Solution**:
+
 ```javascript
 // Check token expiration
 function isTokenExpired(token) {
@@ -495,16 +512,19 @@ if (isTokenExpired(accessToken)) {
 #### Scenario 2: 400 Bad Request with Validation Errors
 
 **Symptoms**:
+
 - API returns 400 status code
 - Multiple validation errors in response
 
 **Diagnosis**:
+
 1. Check all required fields are provided
 2. Verify field formats (email, phone, date)
 3. Check field length constraints
 4. Verify data types
 
 **Solution**:
+
 ```javascript
 // Validate before sending
 function validateCustomer(customer) {
@@ -525,15 +545,18 @@ function validateCustomer(customer) {
 #### Scenario 3: 409 Conflict - Business Rule Violation
 
 **Symptoms**:
+
 - API returns 409 status code
 - Error code: `BUSINESS_RULE_VIOLATION`
 
 **Diagnosis**:
+
 1. Check current resource state
 2. Verify business rule constraints
 3. Check for duplicate resources
 
 **Solution**:
+
 - Read error message for specific constraint
 - Adjust request to satisfy business rules
 - Check resource state before operation
@@ -541,15 +564,18 @@ function validateCustomer(customer) {
 #### Scenario 4: 429 Too Many Requests
 
 **Symptoms**:
+
 - API returns 429 status code
 - Error code: `RATE_LIMIT_EXCEEDED`
 
 **Diagnosis**:
+
 1. Check rate limit headers
 2. Count recent requests
 3. Verify rate limit tier
 
 **Solution**:
+
 ```javascript
 // Implement exponential backoff
 async function retryWithBackoff(fn, maxRetries = 3) {
@@ -571,15 +597,18 @@ async function retryWithBackoff(fn, maxRetries = 3) {
 #### Scenario 5: 500 Internal Server Error
 
 **Symptoms**:
+
 - API returns 500 status code
 - Error code: `SYSTEM_INTERNAL_ERROR`
 
 **Diagnosis**:
+
 1. Note the request ID from error response
 2. Check if error is reproducible
 3. Verify request payload
 
 **Solution**:
+
 - Contact support with request ID
 - Retry request after some time
 - Check API status page
@@ -587,6 +616,7 @@ async function retryWithBackoff(fn, maxRetries = 3) {
 ### Debugging Tips
 
 **1. Enable Request/Response Logging**:
+
 ```javascript
 // Log all API requests
 fetch = new Proxy(fetch, {
@@ -608,6 +638,7 @@ fetch = new Proxy(fetch, {
 ```
 
 **2. Include Request ID in All Logs**:
+
 ```javascript
 function generateRequestId() {
   return `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -635,11 +666,13 @@ async function apiCall(url, options = {}) {
 ```
 
 **3. Use Browser DevTools**:
+
 - Network tab: Inspect request/response
 - Console: Check for JavaScript errors
 - Application tab: Verify token storage
 
 **4. Test with curl**:
+
 ```bash
 # Add verbose output
 curl -v -X GET https://api.ecommerce.com/api/v1/customers/me \
@@ -660,16 +693,19 @@ curl -s -o /dev/null -w "%{http_code}" \
 ### Getting Help
 
 **1. Check Documentation**:
+
 - [API Reference](endpoints/) - Endpoint documentation
 - [Authentication Guide](authentication.md) - Authentication issues
 - [FAQ](#frequently-asked-questions) - Common questions
 
 **2. Check API Status**:
-- Status Page: https://status.ecommerce.com
-- Incident History: https://status.ecommerce.com/history
+
+- Status Page: <https://status.ecommerce.com>
+- Incident History: <https://status.ecommerce.com/history>
 
 **3. Contact Support**:
-- Email: api-support@ecommerce.com
+
+- Email: <api-support@ecommerce.com>
 - Include: Request ID, timestamp, error code
 - Response Time: 24 hours
 

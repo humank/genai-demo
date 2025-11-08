@@ -15,6 +15,7 @@ This document describes the build process, test execution strategy, and continuo
 **Version**: 8.x (via Gradle Wrapper)
 
 **Why Gradle?**
+
 - Flexible and powerful build automation
 - Excellent multi-project support
 - Rich plugin ecosystem
@@ -182,6 +183,7 @@ tasks.register('quickTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew quickTest
 ```
@@ -208,6 +210,7 @@ tasks.register('unitTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew unitTest
 ```
@@ -242,6 +245,7 @@ tasks.register('integrationTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew integrationTest
 ```
@@ -274,6 +278,7 @@ tasks.register('e2eTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew e2eTest
 ```
@@ -298,6 +303,7 @@ tasks.register('cucumber', JavaExec) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew cucumber
 ```
@@ -312,6 +318,7 @@ tasks.register('preCommitTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew preCommitTest
 ```
@@ -326,6 +333,7 @@ tasks.register('fullTest', Test) {
 ```
 
 **Usage**:
+
 ```bash
 ./gradlew fullTest
 ```
@@ -371,6 +379,7 @@ jacocoTestCoverageVerification {
 ```
 
 **Usage**:
+
 ```bash
 # Generate coverage report
 ./gradlew test jacocoTestReport
@@ -401,6 +410,7 @@ tasks.named('pmdMain') {
 ```
 
 **Usage**:
+
 ```bash
 # Run PMD analysis
 ./gradlew pmdMain
@@ -426,6 +436,7 @@ tasks.named('checkstyleMain') {
 ```
 
 **Usage**:
+
 ```bash
 # Run Checkstyle
 ./gradlew checkstyleMain
@@ -452,6 +463,7 @@ tasks.register('archUnit', Test) {
 ```
 
 **Usage**:
+
 ```bash
 # Run architecture tests
 ./gradlew archUnit
@@ -704,6 +716,7 @@ test {
 **Problem**: `java.lang.OutOfMemoryError: Java heap space`
 
 **Solution**:
+
 ```bash
 # Increase heap size
 ./gradlew test -Xmx4g
@@ -717,6 +730,7 @@ org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
 **Problem**: Tests fail intermittently
 
 **Solution**:
+
 ```bash
 # Run with more verbose output
 ./gradlew test --info
@@ -733,6 +747,7 @@ org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
 **Problem**: Build takes too long
 
 **Solution**:
+
 ```bash
 # Enable parallel execution
 ./gradlew build --parallel
@@ -750,6 +765,7 @@ org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g
 **Problem**: Dependency resolution failures
 
 **Solution**:
+
 ```bash
 # View dependency tree
 ./gradlew dependencies
@@ -820,4 +836,3 @@ Always use `./gradlew` instead of `gradle` to ensure consistent builds across en
 ---
 
 **Previous**: [← Dependency Rules](dependency-rules.md) | **Next**: [Development Viewpoint Diagrams →](README.md)
-
