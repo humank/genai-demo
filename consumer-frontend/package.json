@@ -20,7 +20,7 @@
     "@angular/router": "^18.2.14",
     "chart.js": "^4.5.0",
     "primeicons": "^7.0.0",
-    "primeng": "^18.0.2",
+    "primeng": "^20.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "web-vitals": "^4.2.4",
