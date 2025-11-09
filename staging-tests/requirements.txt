@@ -4,11 +4,11 @@
 # Core Testing Framework
 pytest==7.4.3
 pytest-asyncio==0.21.1
-pytest-mock==3.12.0
+pytest-mock==3.15.1
 pytest-cov==4.1.0
-pytest-timeout==2.2.0
+pytest-timeout==2.4.0
 pytest-html==4.1.1
-pytest-xdist==3.5.0  # Parallel test execution
+pytest-xdist==3.8.0  # Parallel test execution
 
 # HTTP Client and API Testing
 requests==2.32.4
