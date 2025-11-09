@@ -32,7 +32,7 @@ confluent-kafka==2.3.0  # Alternative Kafka client
 
 # Test Data Generation
 faker==22.0.0
-factory-boy==3.3.0
+factory-boy==3.3.3
 
 # Performance Testing
 locust==2.20.0  # Alternative to K6 for Python-based load testing
