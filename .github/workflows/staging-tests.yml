@@ -119,7 +119,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
@@ -183,7 +183,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
@@ -264,7 +264,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
@@ -327,7 +327,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
@@ -387,7 +387,7 @@ jobs:
           pip install -r requirements.txt
       
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: ${{ secrets.AWS_STAGING_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
