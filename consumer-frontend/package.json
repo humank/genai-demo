@@ -30,7 +30,7 @@
     "@angular-devkit/build-angular": "^18.2.0",
     "@angular/cli": "^20.3.9",
     "@angular/compiler-cli": "^18.2.14",
-    "@types/jasmine": "~5.1.0",
+    "@types/jasmine": "~5.1.12",
     "autoprefixer": "^10.4.21",
     "jasmine-core": "~5.12.1",
     "karma": "~6.4.0",
