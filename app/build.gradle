@@ -217,8 +217,8 @@ dependencies {
     testImplementation('org.junit.platform:junit-platform-launcher:1.10.2')
     
     // Mockito
-    testImplementation 'org.mockito:mockito-core:5.8.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
     
     // Spring Test
