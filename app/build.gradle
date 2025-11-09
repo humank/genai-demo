@@ -180,12 +180,12 @@ dependencies {
     
     // Unified HttpComponents5 dependencies with consistent versions
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
-    implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
-    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.4'
+    implementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
+    implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.3.6'
     
     // Test-specific HTTP client dependencies
     testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
-    testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.2.4'
+    testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
     testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1'
     
     // Logback encoder for structured logging
