@@ -50,7 +50,7 @@ pyyaml==6.0.1
 
 # Data Validation and Serialization
 pydantic==2.5.3
-dataclasses-json==0.6.1
+dataclasses-json==0.6.7
 marshmallow==3.20.1
 
 # Utilities
