@@ -50,40 +50,59 @@ The Rozanski & Woods methodology is a comprehensive approach to software archite
 The Rozanski & Woods methodology uses a two-dimensional model to comprehensively describe software architecture:
 
 ```mermaid
-graph TB
-    subgraph VP["📐 VIEWPOINTS - Structure Dimension"]
-        V1[Functional<br/>What system does]
-        V2[Information<br/>Data organization]
-        V3[Concurrency<br/>Parallel processing]
-        V4[Development<br/>Code organization]
-        V5[Deployment<br/>How to deploy]
-        V6[Operational<br/>How to operate]
+graph LR
+    subgraph VIEWPOINTS["📐 VIEWPOINTS - Structure Dimension"]
+        direction TB
+        V1["Functional Viewpoint<br/><br/>What the system does<br/>Functional capabilities"]
+        V2["Information Viewpoint<br/><br/>Data organization<br/>Information flow"]
+        V3["Concurrency Viewpoint<br/><br/>Parallel processing<br/>Thread management"]
+        V4["Development Viewpoint<br/><br/>Code organization<br/>Module structure"]
+        V5["Deployment Viewpoint<br/><br/>How to deploy<br/>Infrastructure"]
+        V6["Operational Viewpoint<br/><br/>How to operate<br/>Monitoring & maintenance"]
     end
     
-    subgraph PS["🎯 PERSPECTIVES - Quality Dimension"]
-        P1[Security<br/>Protection]
-        P2[Performance<br/>Speed]
-        P3[Availability<br/>Reliability]
-        P4[Evolution<br/>Changeability]
-        P5[Scalability<br/>Growth]
+    subgraph PERSPECTIVES["🎯 PERSPECTIVES - Quality Dimension"]
+        direction TB
+        P1["Security Perspective<br/><br/>Protection & Authentication<br/>Data encryption"]
+        P2["Performance Perspective<br/><br/>Speed & Throughput<br/>Response time"]
+        P3["Availability Perspective<br/><br/>Reliability & Uptime<br/>Fault tolerance"]
+        P4["Evolution Perspective<br/><br/>Changeability<br/>Maintainability"]
+        P5["Scalability Perspective<br/><br/>Growth capability<br/>Load handling"]
     end
     
-    P1 -.Applied to.-> V1
-    P1 -.Applied to.-> V2
-    P1 -.Applied to.-> V3
-    P1 -.Applied to.-> V4
-    P1 -.Applied to.-> V5
-    P1 -.Applied to.-> V6
+    P1 -.->|"Applied across all viewpoints"| V1
+    P1 -.-> V2
+    P1 -.-> V3
+    P1 -.-> V4
+    P1 -.-> V5
+    P1 -.-> V6
     
-    P2 -.Applied to.-> V1
-    P2 -.Applied to.-> V2
-    P2 -.Applied to.-> V3
+    P2 -.->|"Applied to relevant viewpoints"| V1
+    P2 -.-> V2
+    P2 -.-> V3
     
-    P3 -.Applied to.-> V5
-    P3 -.Applied to.-> V6
+    P3 -.->|"Applied to operational aspects"| V5
+    P3 -.-> V6
     
-    style VP fill:#e1f5ff
-    style PS fill:#fff4e1
+    P4 -.->|"Applied to development aspects"| V4
+    P4 -.-> V1
+    
+    P5 -.->|"Applied to deployment aspects"| V5
+    P5 -.-> V3
+    
+    style VIEWPOINTS fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style PERSPECTIVES fill:#fff4e1,stroke:#ff9900,stroke-width:3px
+    style V1 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style V2 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style V3 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style V4 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style V5 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style V6 fill:#b3d9ff,stroke:#0066cc,stroke-width:2px
+    style P1 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
+    style P2 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
+    style P3 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
+    style P4 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
+    style P5 fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
 ```
 
 ### Viewpoints vs Perspectives: Core Differences
@@ -150,18 +169,25 @@ Security Perspective applied to:
 
 ```mermaid
 graph LR
-    A[Functional Viewpoint<br/>Define login feature] --> B[Security Perspective<br/>Ensure login security]
-    B --> C[Implementation<br/>JWT + MFA + Encryption]
+    A["📐 Functional Viewpoint<br/><br/>Define login feature<br/>User authentication flow<br/>Session management"] 
+    B["🎯 Security Perspective<br/><br/>Ensure login security<br/>Protect credentials<br/>Prevent attacks"]
+    C["✅ Implementation Solution<br/><br/>JWT tokens for sessions<br/>Multi-Factor Authentication<br/>Password encryption bcrypt<br/>Rate limiting"]
     
-    D[Deployment Viewpoint<br/>Define deployment arch] --> E[Availability Perspective<br/>Ensure high availability]
-    E --> F[Implementation<br/>Multi-region + Load balancing]
+    D["📐 Deployment Viewpoint<br/><br/>Define deployment architecture<br/>Infrastructure setup<br/>Service distribution"]
+    E["🎯 Availability Perspective<br/><br/>Ensure high availability<br/>Minimize downtime<br/>Fault tolerance"]
+    F["✅ Implementation Solution<br/><br/>Multi-region deployment<br/>Load balancing ALB/NLB<br/>Auto-scaling groups<br/>Health checks"]
     
-    style A fill:#e1f5ff
-    style D fill:#e1f5ff
-    style B fill:#fff4e1
-    style E fill:#fff4e1
-    style C fill:#d4edda
-    style F fill:#d4edda
+    A -->|"Apply quality concerns"| B
+    B -->|"Results in"| C
+    D -->|"Apply quality concerns"| E
+    E -->|"Results in"| F
+    
+    style A fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style D fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style B fill:#fff4e1,stroke:#ff9900,stroke-width:3px
+    style E fill:#fff4e1,stroke:#ff9900,stroke-width:3px
+    style C fill:#d4edda,stroke:#28a745,stroke-width:3px
+    style F fill:#d4edda,stroke:#28a745,stroke-width:3px
 ```
 
 #### 📋 Complementary Examples
@@ -177,27 +203,28 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    participant A as Architect
-    participant V as Viewpoints<br/>(Structure Design)
-    participant P as Perspectives<br/>(Quality Check)
-    participant D as Design Decisions
+    participant A as 👤 Architect
+    participant V as 📐 Viewpoints<br/>Structure Design
+    participant P as 🎯 Perspectives<br/>Quality Check
+    participant D as ✅ Design Decisions
     
-    A->>V: 1. Design system structure
-    Note over V: Define functional modules<br/>Data models<br/>Deployment architecture
+    A->>V: Step 1: Design system structure
+    Note over V: Define functional modules<br/>Create data models<br/>Plan deployment architecture<br/>Organize code structure
     
-    A->>P: 2. Apply quality perspectives
-    Note over P: Check security<br/>Performance<br/>Availability
+    A->>P: Step 2: Apply quality perspectives
+    Note over P: Check security requirements<br/>Validate performance targets<br/>Ensure availability goals<br/>Assess scalability needs
     
-    P->>V: 3. Identify issues
-    Note over P,V: Performance bottlenecks<br/>Security vulnerabilities<br/>Scalability limits
+    P->>V: Step 3: Identify issues and gaps
+    Note over P,V: Performance bottlenecks found<br/>Security vulnerabilities detected<br/>Scalability limits identified<br/>Availability risks discovered
     
-    V->>D: 4. Adjust design
-    Note over D: Add caching<br/>Encryption mechanisms<br/>Load balancing
+    V->>D: Step 4: Adjust design based on findings
+    Note over D: Add caching layer for performance<br/>Implement encryption mechanisms<br/>Configure load balancing<br/>Add circuit breakers
     
-    D->>P: 5. Validate quality
-    Note over P: Confirm quality<br/>targets met
+    D->>P: Step 5: Validate quality improvements
+    Note over P: Confirm quality targets met<br/>Verify security measures<br/>Test performance benchmarks<br/>Validate availability SLAs
     
-    P->>A: 6. Complete design
+    P->>A: Step 6: Complete architectural design
+    Note over A: Architecture documented<br/>Quality goals achieved<br/>Ready for implementation
 ```
 
 ---
