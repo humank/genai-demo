@@ -23,7 +23,7 @@ psycopg2-binary==2.9.11
 sqlalchemy==2.0.44
 
 # Cache Integration Tests  
-redis==5.0.1
+redis==7.0.1
 hiredis==2.3.2  # Performance improvement for redis
 
 # Messaging Integration Tests
