@@ -1,112 +1,220 @@
 #!/bin/bash
-#
-# Merge Dependabot PRs that pass CI checks
-#
-# Usage: ./scripts/merge-dependabot-prs.sh [--dry-run]
-#
+
+# Dependabot PR Merge Script
+# This script helps merge Dependabot PRs in phases based on risk level
 
 set -e
 
-DRY_RUN=false
-if [ "$1" == "--dry-run" ]; then
-    DRY_RUN=true
-    echo "🔍 DRY RUN MODE - No PRs will be merged"
-    echo ""
-fi
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-REPO="humank/genai-demo"
+# Function to print colored output
+print_status() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-echo "📋 Fetching open Dependabot PRs..."
-echo ""
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
 
-# Get all open Dependabot PRs
-PRS=$(gh pr list --repo "$REPO" --author "app/dependabot" --state open --json number,title,statusCheckRollup --limit 100)
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
 
-# Count total PRs
-TOTAL=$(echo "$PRS" | jq '. | length')
-echo "Found $TOTAL Dependabot PRs"
-echo ""
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
 
-if [ "$TOTAL" -eq 0 ]; then
-    echo "✅ No Dependabot PRs to process"
-    exit 0
-fi
-
-MERGED=0
-SKIPPED=0
-FAILED=0
-
-# Process each PR
-echo "$PRS" | jq -c '.[]' | while read -r pr; do
-    PR_NUMBER=$(echo "$pr" | jq -r '.number')
-    PR_TITLE=$(echo "$pr" | jq -r '.title')
-    
-    echo "---"
-    echo "PR #$PR_NUMBER: $PR_TITLE"
-    
-    # Check if all required checks passed
-    CHECKS=$(echo "$pr" | jq -r '.statusCheckRollup')
-    
-    if [ "$CHECKS" == "null" ] || [ "$CHECKS" == "[]" ]; then
-        echo "⏳ No checks completed yet, skipping"
-        ((SKIPPED++))
-        continue
+# Function to check if gh CLI is installed
+check_gh_cli() {
+    if ! command -v gh &> /dev/null; then
+        print_error "GitHub CLI (gh) is not installed"
+        print_status "Install it from: https://cli.github.com/"
+        exit 1
     fi
     
-    # Check for any failures (excluding staging tests which are skipped)
-    FAILURES=$(echo "$CHECKS" | jq '[.[] | select(.conclusion == "FAILURE" and (.name | contains("Staging") | not))] | length')
-    
-    if [ "$FAILURES" -gt 0 ]; then
-        echo "❌ Has $FAILURES failing checks, skipping"
-        ((FAILED++))
-        continue
+    # Check if authenticated
+    if ! gh auth status &> /dev/null; then
+        print_error "GitHub CLI is not authenticated"
+        print_status "Run: gh auth login"
+        exit 1
     fi
     
-    # Check if all non-staging checks are successful
-    SUCCESS=$(echo "$CHECKS" | jq '[.[] | select(.name | contains("Staging") | not) | select(.conclusion == "SUCCESS")] | length')
-    PENDING=$(echo "$CHECKS" | jq '[.[] | select(.status == "IN_PROGRESS" or .status == "QUEUED")] | length')
+    print_success "GitHub CLI is ready"
+}
+
+# Function to merge a PR
+merge_pr() {
+    local pr_number=$1
+    local description=$2
     
-    if [ "$PENDING" -gt 0 ]; then
-        echo "⏳ Has $PENDING pending checks, skipping"
-        ((SKIPPED++))
-        continue
-    fi
+    print_status "Merging PR #${pr_number}: ${description}"
     
-    if [ "$SUCCESS" -eq 0 ]; then
-        echo "⚠️  No successful checks found, skipping"
-        ((SKIPPED++))
-        continue
-    fi
-    
-    # Merge the PR
-    if [ "$DRY_RUN" == "true" ]; then
-        echo "🔍 [DRY RUN] Would merge PR #$PR_NUMBER"
-        ((MERGED++))
+    if gh pr merge "$pr_number" --squash --auto; then
+        print_success "PR #${pr_number} merged successfully"
+        return 0
     else
-        echo "✅ Merging PR #$PR_NUMBER..."
-        if gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --auto; then
-            echo "✅ Successfully merged PR #$PR_NUMBER"
-            ((MERGED++))
-        else
-            echo "❌ Failed to merge PR #$PR_NUMBER"
-            ((FAILED++))
-        fi
+        print_error "Failed to merge PR #${pr_number}"
+        return 1
+    fi
+}
+
+# Function to check PR status
+check_pr_status() {
+    local pr_number=$1
+    
+    local status=$(gh pr view "$pr_number" --json state,statusCheckRollup --jq '.state')
+    
+    if [ "$status" != "OPEN" ]; then
+        print_warning "PR #${pr_number} is not open (status: ${status})"
+        return 1
     fi
     
-    # Rate limiting
-    sleep 2
-done
+    return 0
+}
 
-echo ""
-echo "================================"
-echo "📊 Summary"
-echo "================================"
-echo "Total PRs: $TOTAL"
-echo "Merged: $MERGED"
-echo "Skipped: $SKIPPED"
-echo "Failed: $FAILED"
-echo ""
+# Main script
+main() {
+    echo "================================================"
+    echo "  Dependabot PR Merge Script"
+    echo "================================================"
+    echo ""
+    
+    check_gh_cli
+    
+    # Ask user which phase to execute
+    echo ""
+    echo "Select merge phase:"
+    echo "  1) Phase 1: Security Updates (HIGH PRIORITY)"
+    echo "  2) Phase 2: Low-Risk Updates"
+    echo "  3) Phase 3: Test Major Updates (Manual)"
+    echo "  4) Phase 4: Bulk Merge Remaining"
+    echo "  5) Dry Run (Show what would be merged)"
+    echo "  6) Exit"
+    echo ""
+    read -p "Enter choice [1-6]: " choice
+    
+    case $choice in
+        1)
+            echo ""
+            print_status "=== Phase 1: Security Updates ==="
+            echo ""
+            
+            merge_pr 109 "Jinja2 3.1.2 → 3.1.6 (Security)"
+            merge_pr 108 "Requests 2.31.0 → 2.32.4 (Security)"
+            merge_pr 106 "urllib3 2.1.0 → 2.5.0 (Security)"
+            merge_pr 121 "AWS SDK BOM 2.21.29 → 2.36.2"
+            
+            print_success "Phase 1 complete!"
+            ;;
+            
+        2)
+            echo ""
+            print_status "=== Phase 2: Low-Risk Updates ==="
+            echo ""
+            
+            print_status "Merging GitHub Actions updates..."
+            merge_pr 76 "actions/checkout 4 → 5"
+            merge_pr 75 "actions/github-script 7 → 8"
+            merge_pr 74 "dorny/test-reporter 1 → 2"
+            
+            print_status "Merging infrastructure updates..."
+            merge_pr 123 "aws-cdk 2.1029.2 → 2.1031.0"
+            merge_pr 115 "cdk-nag 2.37.34 → 2.37.55"
+            
+            print_status "Merging minor dependency updates..."
+            merge_pr 120 "vite 5.4.20 → 5.4.21"
+            merge_pr 114 "zod 4.1.8 → 4.1.12"
+            merge_pr 91 "jest 30.1.3 → 30.2.0"
+            merge_pr 78 "next 14.2.32 → 14.2.33"
+            
+            print_success "Phase 2 complete!"
+            ;;
+            
+        3)
+            echo ""
+            print_warning "=== Phase 3: Major Updates (Requires Testing) ==="
+            echo ""
+            print_warning "These PRs require manual testing before merging:"
+            echo ""
+            echo "  PR #119: Node 24 → 25 (Consumer Frontend)"
+            echo "  PR #118: Node 24 → 25 (CMC Frontend)"
+            echo "  PR #97:  Eclipse Temurin 21 → 25 (Docker)"
+            echo "  PR #96:  PrimeNG 18.0.2 → 20.2.0"
+            echo "  PR #88:  Zone.js 0.14.10 → 0.15.1"
+            echo ""
+            print_status "To test a PR:"
+            echo "  1. gh pr checkout <PR_NUMBER>"
+            echo "  2. Run tests: ./gradlew test"
+            echo "  3. Test manually in staging"
+            echo "  4. gh pr merge <PR_NUMBER> --squash"
+            echo ""
+            ;;
+            
+        4)
+            echo ""
+            print_status "=== Phase 4: Bulk Merge Remaining ==="
+            echo ""
+            print_warning "This will merge all remaining low-risk PRs"
+            read -p "Are you sure? (yes/no): " confirm
+            
+            if [ "$confirm" != "yes" ]; then
+                print_status "Cancelled"
+                exit 0
+            fi
+            
+            print_status "Merging frontend dependencies..."
+            merge_pr 122 "tailwindcss 3.4.17 → 4.1.16"
+            merge_pr 117 "playwright updates"
+            merge_pr 103 "typescript 5.5.4 → 5.9.3 (consumer)"
+            merge_pr 101 "typescript 5.6.3 → 5.9.3 (infra)"
+            merge_pr 99 "jasmine-core 5.10.0 → 5.12.0"
+            merge_pr 83 "@types/node 24.3.1 → 24.5.2"
+            merge_pr 80 "@tanstack/react-query-devtools"
+            merge_pr 79 "lucide-react 0.424.0 → 0.544.0"
+            
+            print_status "Merging backend dependencies..."
+            merge_pr 107 "black 23.12.1 → 24.3.0"
+            merge_pr 84 "httpcore5 5.2.4 → 5.3.6"
+            merge_pr 82 "httpclient5-fluent 5.3.1 → 5.5.1"
+            merge_pr 81 "allure-java-commons 2.22.1 → 2.30.0"
+            merge_pr 77 "mockito-core 5.8.0 → 5.20.0"
+            
+            print_success "Phase 4 complete!"
+            ;;
+            
+        5)
+            echo ""
+            print_status "=== Dry Run: Showing PR Status ==="
+            echo ""
+            
+            gh pr list --limit 50 --json number,title,state,statusCheckRollup \
+                --jq '.[] | "PR #\(.number): \(.title) - \(.state)"'
+            
+            echo ""
+            print_status "No PRs were merged (dry run mode)"
+            ;;
+            
+        6)
+            print_status "Exiting..."
+            exit 0
+            ;;
+            
+        *)
+            print_error "Invalid choice"
+            exit 1
+            ;;
+    esac
+    
+    echo ""
+    echo "================================================"
+    print_success "Script completed successfully!"
+    echo "================================================"
+}
 
-if [ "$DRY_RUN" == "true" ]; then
-    echo "🔍 This was a dry run. Run without --dry-run to actually merge PRs."
-fi
+# Run main function
+main
