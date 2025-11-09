@@ -19,7 +19,7 @@ boto3==1.40.69
 botocore==1.40.69
 
 # Database Integration Tests
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.11
 sqlalchemy==2.0.44
 
 # Cache Integration Tests  
