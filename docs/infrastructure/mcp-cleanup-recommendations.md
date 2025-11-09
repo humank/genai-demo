@@ -71,13 +71,15 @@ cp .kiro/settings/mcp.json .kiro/settings/mcp.json.backup.$(date +%Y%m%d)
 The GitHub token in global config may be expired:
 
 ```json
-"Bearer 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"
+"Bearer ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 **Action**:
 
 1. Generate new token: <https://github.com/settings/tokens>
 2. Update in `~/.kiro/settings/mcp.json`
+
+**⚠️ SECURITY NOTE**: Never commit actual tokens to the repository. Use placeholders like above.
 3. Or disable the server if not needed
 
 ---
