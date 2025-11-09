@@ -225,9 +225,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     // Allure 依賴
-    testImplementation 'io.qameta.allure:allure-junit5:2.22.1'
-    testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.22.1'
-    testImplementation 'io.qameta.allure:allure-java-commons:2.22.1'
+    testImplementation 'io.qameta.allure:allure-junit5:2.30.0'
+    testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.30.0'
+    testImplementation 'io.qameta.allure:allure-java-commons:2.30.0'
     
     // ArchUnit for architecture testing
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
