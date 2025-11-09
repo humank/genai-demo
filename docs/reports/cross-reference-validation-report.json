@@ -1,0 +1,3762 @@
+{
+  "summary": {
+    "total_files": 245,
+    "total_links": 1495,
+    "valid_links": 1206,
+    "broken_links": 289,
+    "total_images": 15,
+    "valid_images": 9,
+    "broken_images": 6,
+    "success_rate": 80.46
+  },
+  "files": [
+    {
+      "file": "docs/README.md",
+      "total_links": 95,
+      "valid_links": 56,
+      "broken_links": [
+        {
+          "link": "getting-started/README.md",
+          "line": 9,
+          "target": "/Users/yikaikao/git/genai-demo/docs/getting-started/README.md"
+        },
+        {
+          "link": "api/README.md",
+          "line": 11,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "development/README.md",
+          "line": 20,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "development/setup/README.md",
+          "line": 20,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/setup/README.md"
+        },
+        {
+          "link": "development/testing/README.md",
+          "line": 20,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/README.md"
+        },
+        {
+          "link": "api/README.md",
+          "line": 20,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "architecture/patterns/README.md",
+          "line": 21,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/README.md"
+        },
+        {
+          "link": "operations/README.md",
+          "line": 22,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/README.md"
+        },
+        {
+          "link": "operations/deployment/README.md",
+          "line": 22,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/README.md"
+        },
+        {
+          "link": "operations/monitoring/README.md",
+          "line": 22,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/monitoring/README.md"
+        },
+        {
+          "link": "development/testing/README.md",
+          "line": 24,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/README.md"
+        },
+        {
+          "link": "development/testing/bdd-testing.md",
+          "line": 24,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/bdd-testing.md"
+        },
+        {
+          "link": "architecture/README.md",
+          "line": 32,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": "development/README.md",
+          "line": 37,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "api/README.md",
+          "line": 38,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "operations/README.md",
+          "line": 45,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/README.md"
+        },
+        {
+          "link": "architecture/patterns/README.md",
+          "line": 84,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/README.md"
+        },
+        {
+          "link": "architecture/principles/README.md",
+          "line": 85,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/principles/README.md"
+        },
+        {
+          "link": "api/integration/README.md",
+          "line": 91,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/integration/README.md"
+        },
+        {
+          "link": "development/setup/README.md",
+          "line": 95,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/setup/README.md"
+        },
+        {
+          "link": "development/coding-standards/README.md",
+          "line": 96,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/coding-standards/README.md"
+        },
+        {
+          "link": "development/testing/README.md",
+          "line": 97,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/README.md"
+        },
+        {
+          "link": "development/workflows/README.md",
+          "line": 98,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/workflows/README.md"
+        },
+        {
+          "link": "operations/deployment/README.md",
+          "line": 102,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/README.md"
+        },
+        {
+          "link": "operations/monitoring/README.md",
+          "line": 103,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/monitoring/README.md"
+        },
+        {
+          "link": "operations/troubleshooting/README.md",
+          "line": 105,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/README.md"
+        },
+        {
+          "link": "api/README.md",
+          "line": 114,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "development/testing/README.md",
+          "line": 115,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/README.md"
+        },
+        {
+          "link": "operations/troubleshooting/README.md",
+          "line": 116,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/README.md"
+        },
+        {
+          "link": "development/README.md",
+          "line": 120,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "operations/troubleshooting/README.md",
+          "line": 121,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/README.md"
+        },
+        {
+          "link": "development/README.md",
+          "line": 121,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "operations/deployment/README.md",
+          "line": 122,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/README.md"
+        },
+        {
+          "link": "architecture/README.md",
+          "line": 123,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": "api/README.md",
+          "line": 124,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "diagrams/viewpoints/README.md",
+          "line": 130,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/README.md"
+        },
+        {
+          "link": "diagrams/perspectives/README.md",
+          "line": 131,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/README.md"
+        },
+        {
+          "link": "diagrams/generated/README.md",
+          "line": 132,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/generated/README.md"
+        },
+        {
+          "link": "templates/README.md",
+          "line": 141,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/rozanski-woods-methodology-guide.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/REVIEW-COORDINATOR-QUICK-START.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/STAKEHOLDER-REVIEW-PLAN.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/METRICS.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/STYLE-GUIDE.md",
+      "total_links": 16,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../architecture/README.md",
+          "line": 231,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/README.md"
+        },
+        {
+          "link": "../api/rest/README.md",
+          "line": 232,
+          "target": "/Users/yikaikao/git/genai-demo/api/rest/README.md"
+        },
+        {
+          "link": "link",
+          "line": 346,
+          "target": "/Users/yikaikao/git/genai-demo/docs/link"
+        },
+        {
+          "link": "link",
+          "line": 347,
+          "target": "/Users/yikaikao/git/genai-demo/docs/link"
+        },
+        {
+          "link": "../architecture/README.md",
+          "line": 395,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/README.md"
+        },
+        {
+          "link": "../api/rest/README.md",
+          "line": 396,
+          "target": "/Users/yikaikao/git/genai-demo/api/rest/README.md"
+        },
+        {
+          "link": "../operations/deployment/README.md",
+          "line": 397,
+          "target": "/Users/yikaikao/git/genai-demo/operations/deployment/README.md"
+        },
+        {
+          "link": "../diagrams/generated/architecture-overview.png",
+          "line": 457,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/generated/architecture-overview.png"
+        },
+        {
+          "link": "architecture.png",
+          "line": 645,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture.png"
+        },
+        {
+          "link": "deployment.md",
+          "line": 654,
+          "target": "/Users/yikaikao/git/genai-demo/docs/deployment.md"
+        },
+        {
+          "link": "deployment.md",
+          "line": 659,
+          "target": "/Users/yikaikao/git/genai-demo/docs/deployment.md"
+        },
+        {
+          "link": "authentication.md",
+          "line": 843,
+          "target": "/Users/yikaikao/git/genai-demo/docs/authentication.md"
+        },
+        {
+          "link": "errors.md",
+          "line": 844,
+          "target": "/Users/yikaikao/git/genai-demo/docs/errors.md"
+        },
+        {
+          "link": "diagrams/README.md",
+          "line": 872,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/README.md"
+        }
+      ],
+      "total_images": 2,
+      "valid_images": 0,
+      "broken_images": [
+        {
+          "image": "../diagrams/generated/architecture-overview.png",
+          "line": 457,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/generated/architecture-overview.png"
+        },
+        {
+          "image": "architecture.png",
+          "line": 645,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture.png"
+        }
+      ]
+    },
+    {
+      "file": "docs/MAINTENANCE.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/README-UPDATE-LOG.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/README.md",
+      "total_links": 8,
+      "valid_links": 8,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/feedback-forms/developer-feedback-form.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/feedback-forms/README.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/feedback-forms/operations-feedback-form.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/feedback-forms/architecture-feedback-form.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/feedback-forms/business-stakeholder-feedback-form.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/templates/api-endpoint-template.md",
+      "total_links": 5,
+      "valid_links": 0,
+      "broken_links": [
+        {
+          "link": "../authentication.md",
+          "line": 19,
+          "target": "/Users/yikaikao/git/genai-demo/docs/authentication.md"
+        },
+        {
+          "link": "../authentication.md",
+          "line": 517,
+          "target": "/Users/yikaikao/git/genai-demo/docs/authentication.md"
+        },
+        {
+          "link": "../error-handling.md",
+          "line": 518,
+          "target": "/Users/yikaikao/git/genai-demo/docs/error-handling.md"
+        },
+        {
+          "link": "../rate-limiting.md",
+          "line": 519,
+          "target": "/Users/yikaikao/git/genai-demo/docs/rate-limiting.md"
+        },
+        {
+          "link": "../versioning.md",
+          "line": 520,
+          "target": "/Users/yikaikao/git/genai-demo/docs/versioning.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/templates/runbook-template.md",
+      "total_links": 11,
+      "valid_links": 0,
+      "broken_links": [
+        {
+          "link": "dashboard-link",
+          "line": 88,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/dashboard-link"
+        },
+        {
+          "link": "dashboard-link",
+          "line": 90,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/dashboard-link"
+        },
+        {
+          "link": "../../viewpoints/README.md",
+          "line": 518,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/README.md"
+        },
+        {
+          "link": "../monitoring/monitoring-strategy.md",
+          "line": 519,
+          "target": "/Users/yikaikao/git/genai-demo/docs/monitoring/monitoring-strategy.md"
+        },
+        {
+          "link": "../deployment/deployment-process.md",
+          "line": 520,
+          "target": "/Users/yikaikao/git/genai-demo/docs/deployment/deployment-process.md"
+        },
+        {
+          "link": "./related-runbook-1.md",
+          "line": 521,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/related-runbook-1.md"
+        },
+        {
+          "link": "./related-runbook-2.md",
+          "line": 522,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/related-runbook-2.md"
+        },
+        {
+          "link": "link",
+          "line": 544,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/link"
+        },
+        {
+          "link": "link",
+          "line": 545,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/link"
+        },
+        {
+          "link": "link",
+          "line": 546,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/link"
+        },
+        {
+          "link": "link",
+          "line": 547,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/link"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/templates/perspective-template.md",
+      "total_links": 20,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "concerns.md",
+          "line": 53,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/concerns.md"
+        },
+        {
+          "link": "requirements.md",
+          "line": 54,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/requirements.md"
+        },
+        {
+          "link": "design-decisions.md",
+          "line": 55,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/design-decisions.md"
+        },
+        {
+          "link": "implementation.md",
+          "line": 56,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/implementation.md"
+        },
+        {
+          "link": "verification.md",
+          "line": 57,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/verification.md"
+        },
+        {
+          "link": "../../diagrams/perspectives/{category}/diagram1.puml",
+          "line": 61,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/perspectives/{category}/diagram1.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/{category}/diagram2.puml",
+          "line": 62,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/perspectives/{category}/diagram2.puml"
+        },
+        {
+          "link": "../../viewpoints/viewpoint1/README.md",
+          "line": 282,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/viewpoint1/README.md"
+        },
+        {
+          "link": "../../viewpoints/viewpoint2/README.md",
+          "line": 295,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/viewpoint2/README.md"
+        },
+        {
+          "link": "../../viewpoints/viewpoint3/README.md",
+          "line": 308,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/viewpoint3/README.md"
+        },
+        {
+          "link": "../perspective1/README.md",
+          "line": 325,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspective1/README.md"
+        },
+        {
+          "link": "../perspective2/README.md",
+          "line": 326,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspective2/README.md"
+        },
+        {
+          "link": "../../architecture/adrs/YYYYMMDD-XXX-decision-title.md",
+          "line": 330,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/adrs/YYYYMMDD-XXX-decision-title.md"
+        },
+        {
+          "link": "../../architecture/adrs/YYYYMMDD-YYY-decision-title.md",
+          "line": 331,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/adrs/YYYYMMDD-YYY-decision-title.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 380,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/README.md"
+        },
+        {
+          "link": "URL",
+          "line": 393,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        },
+        {
+          "link": "URL",
+          "line": 394,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        },
+        {
+          "link": "URL",
+          "line": 395,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/templates/viewpoint-template.md",
+      "total_links": 20,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "document1.md",
+          "line": 53,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/document1.md"
+        },
+        {
+          "link": "document2.md",
+          "line": 54,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/document2.md"
+        },
+        {
+          "link": "document3.md",
+          "line": 55,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/document3.md"
+        },
+        {
+          "link": "../../diagrams/viewpoints/{category}/diagram1.puml",
+          "line": 59,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/viewpoints/{category}/diagram1.puml"
+        },
+        {
+          "link": "../../diagrams/viewpoints/{category}/diagram2.puml",
+          "line": 60,
+          "target": "/Users/yikaikao/git/genai-demo/diagrams/viewpoints/{category}/diagram2.puml"
+        },
+        {
+          "link": "../viewpoint1/README.md",
+          "line": 164,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoint1/README.md"
+        },
+        {
+          "link": "../viewpoint2/README.md",
+          "line": 165,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoint2/README.md"
+        },
+        {
+          "link": "../viewpoint3/README.md",
+          "line": 166,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoint3/README.md"
+        },
+        {
+          "link": "../../perspectives/perspective1/README.md",
+          "line": 170,
+          "target": "/Users/yikaikao/git/genai-demo/perspectives/perspective1/README.md"
+        },
+        {
+          "link": "../../perspectives/perspective2/README.md",
+          "line": 171,
+          "target": "/Users/yikaikao/git/genai-demo/perspectives/perspective2/README.md"
+        },
+        {
+          "link": "../../perspectives/perspective3/README.md",
+          "line": 172,
+          "target": "/Users/yikaikao/git/genai-demo/perspectives/perspective3/README.md"
+        },
+        {
+          "link": "../../architecture/adrs/YYYYMMDD-XXX-decision-title.md",
+          "line": 176,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/adrs/YYYYMMDD-XXX-decision-title.md"
+        },
+        {
+          "link": "../../architecture/adrs/YYYYMMDD-YYY-decision-title.md",
+          "line": 177,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/adrs/YYYYMMDD-YYY-decision-title.md"
+        },
+        {
+          "link": "../../guide1/README.md",
+          "line": 181,
+          "target": "/Users/yikaikao/git/genai-demo/guide1/README.md"
+        },
+        {
+          "link": "../../guide2/README.md",
+          "line": 182,
+          "target": "/Users/yikaikao/git/genai-demo/guide2/README.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 240,
+          "target": "/Users/yikaikao/git/genai-demo/architecture/README.md"
+        },
+        {
+          "link": "URL",
+          "line": 253,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        },
+        {
+          "link": "URL",
+          "line": 254,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/templates/adr-template.md",
+      "total_links": 11,
+      "valid_links": 0,
+      "broken_links": [
+        {
+          "link": "YYYYMMDD-YYY-title.md",
+          "line": 18,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/YYYYMMDD-YYY-title.md"
+        },
+        {
+          "link": "YYYYMMDD-XXX-title.md",
+          "line": 382,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/YYYYMMDD-XXX-title.md"
+        },
+        {
+          "link": "YYYYMMDD-YYY-title.md",
+          "line": 386,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/YYYYMMDD-YYY-title.md"
+        },
+        {
+          "link": "YYYYMMDD-AAA-title.md",
+          "line": 390,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/YYYYMMDD-AAA-title.md"
+        },
+        {
+          "link": "YYYYMMDD-BBB-title.md",
+          "line": 391,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/YYYYMMDD-BBB-title.md"
+        },
+        {
+          "link": "../../viewpoints/viewpoint1/README.md",
+          "line": 395,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/viewpoint1/README.md"
+        },
+        {
+          "link": "../../viewpoints/viewpoint2/README.md",
+          "line": 396,
+          "target": "/Users/yikaikao/git/genai-demo/viewpoints/viewpoint2/README.md"
+        },
+        {
+          "link": "../../perspectives/perspective1/README.md",
+          "line": 400,
+          "target": "/Users/yikaikao/git/genai-demo/perspectives/perspective1/README.md"
+        },
+        {
+          "link": "../../perspectives/perspective2/README.md",
+          "line": 401,
+          "target": "/Users/yikaikao/git/genai-demo/perspectives/perspective2/README.md"
+        },
+        {
+          "link": "URL",
+          "line": 427,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        },
+        {
+          "link": "URL",
+          "line": 428,
+          "target": "/Users/yikaikao/git/genai-demo/docs/templates/URL"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/README.md",
+      "total_links": 23,
+      "valid_links": 22,
+      "broken_links": [
+        {
+          "link": "../operations/README.md",
+          "line": 144,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-cleanup-report.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-aws-servers-troubleshooting.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-pricing-timeout-fix.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-cleanup-recommendations.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-final-status.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/time-capabilities-comparison.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/infrastructure/mcp-server-analysis.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/information/overview.md",
+      "total_links": 17,
+      "valid_links": 17,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/information/data-ownership.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/information/README.md",
+      "total_links": 11,
+      "valid_links": 10,
+      "broken_links": [
+        {
+          "link": "data-lifecycle.md",
+          "line": 33,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoints/information/data-lifecycle.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/information/domain-models.md",
+      "total_links": 13,
+      "valid_links": 13,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/information/data-flow.md",
+      "total_links": 8,
+      "valid_links": 8,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/context/overview.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 3,
+      "valid_images": 3,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/context/scope-and-boundaries.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/context/stakeholders.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/context/README.md",
+      "total_links": 11,
+      "valid_links": 10,
+      "broken_links": [
+        {
+          "link": "../../api/integration/README.md",
+          "line": 86,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/integration/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/context/external-systems.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/development/overview.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/development/module-organization.md",
+      "total_links": 10,
+      "valid_links": 10,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/development/dependency-rules.md",
+      "total_links": 8,
+      "valid_links": 7,
+      "broken_links": [
+        {
+          "link": "../../development/testing/architecture-testing.md",
+          "line": 862,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/architecture-testing.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/development/build-process.md",
+      "total_links": 9,
+      "valid_links": 8,
+      "broken_links": [
+        {
+          "link": "../../development/workflows/ci-cd.md",
+          "line": 834,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/workflows/ci-cd.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/development/README.md",
+      "total_links": 11,
+      "valid_links": 9,
+      "broken_links": [
+        {
+          "link": "../../development/README.md",
+          "line": 82,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "../../development/coding-standards/README.md",
+          "line": 83,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/coding-standards/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/concurrency/overview.md",
+      "total_links": 13,
+      "valid_links": 13,
+      "broken_links": [],
+      "total_images": 3,
+      "valid_images": 3,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/concurrency/state-management.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/concurrency/README.md",
+      "total_links": 10,
+      "valid_links": 10,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/concurrency/synchronization.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 1,
+      "valid_images": 1,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/concurrency/sync-async-operations.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/deployment/overview.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/deployment/README.md",
+      "total_links": 12,
+      "valid_links": 11,
+      "broken_links": [
+        {
+          "link": "../../operations/deployment/README.md",
+          "line": 78,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/deployment/physical-architecture.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 1,
+      "valid_images": 1,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/deployment/deployment-process.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../operational/overview.md",
+          "line": 858,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operational/overview.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/deployment/network-architecture.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/database-backup-procedures.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/overview.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/backup-automation.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "../deployment/disaster-recovery.md",
+          "line": 2564,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoints/deployment/disaster-recovery.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/backup-recovery.md",
+      "total_links": 8,
+      "valid_links": 8,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/procedures.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/README.md",
+      "total_links": 13,
+      "valid_links": 11,
+      "broken_links": [
+        {
+          "link": "../../operations/README.md",
+          "line": 74,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/README.md"
+        },
+        {
+          "link": "../../operations/troubleshooting/README.md",
+          "line": 76,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/detailed-restore-procedures.md",
+      "total_links": 1,
+      "valid_links": 1,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/backup-testing-procedures.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/monitoring-alerting.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/postgresql-performance-tuning.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/operational/index-management-procedures.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/functional/overview.md",
+      "total_links": 22,
+      "valid_links": 15,
+      "broken_links": [
+        {
+          "link": "../../architecture/adrs/ADR-002-adopt-hexagonal-architecture.md",
+          "line": 204,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-002-adopt-hexagonal-architecture.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-003-domain-events-communication.md",
+          "line": 226,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-003-domain-events-communication.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-002-adopt-hexagonal-architecture.md",
+          "line": 278,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-002-adopt-hexagonal-architecture.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-003-domain-events-communication.md",
+          "line": 279,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-003-domain-events-communication.md"
+        },
+        {
+          "link": "../../development/README.md",
+          "line": 283,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "../../api/README.md",
+          "line": 284,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 371,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/functional/bounded-contexts.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 1,
+      "valid_images": 1,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/functional/README.md",
+      "total_links": 20,
+      "valid_links": 13,
+      "broken_links": [
+        {
+          "link": "functional-elements.md",
+          "line": 32,
+          "target": "/Users/yikaikao/git/genai-demo/docs/viewpoints/functional/functional-elements.md"
+        },
+        {
+          "link": "../../diagrams/viewpoints/functional/customer-context.puml",
+          "line": 38,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/customer-context.puml"
+        },
+        {
+          "link": "../../diagrams/viewpoints/functional/order-context.puml",
+          "line": 39,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/order-context.puml"
+        },
+        {
+          "link": "../../diagrams/viewpoints/functional/product-context.puml",
+          "line": 40,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/product-context.puml"
+        },
+        {
+          "link": "../../api/README.md",
+          "line": 84,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/README.md"
+        },
+        {
+          "link": "../../development/README.md",
+          "line": 85,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/README.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 90,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/functional/interfaces.md",
+      "total_links": 27,
+      "valid_links": 19,
+      "broken_links": [
+        {
+          "link": "../../api/rest/endpoints/carts.md",
+          "line": 172,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/carts.md"
+        },
+        {
+          "link": "../../api/rest/endpoints/deliveries.md",
+          "line": 193,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/deliveries.md"
+        },
+        {
+          "link": "../../api/rest/endpoints/reviews.md",
+          "line": 228,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/reviews.md"
+        },
+        {
+          "link": "../../api/rest/endpoints/sellers.md",
+          "line": 240,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/sellers.md"
+        },
+        {
+          "link": "../../api/events/contexts/delivery-events.md",
+          "line": 362,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/delivery-events.md"
+        },
+        {
+          "link": "../../api/events/contexts/promotion-events.md",
+          "line": 374,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/promotion-events.md"
+        },
+        {
+          "link": "../../api/events/contexts/review-events.md",
+          "line": 385,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/review-events.md"
+        },
+        {
+          "link": "../../api/events/contexts/seller-events.md",
+          "line": 396,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/seller-events.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/viewpoints/functional/use-cases.md",
+      "total_links": 5,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "../../development/testing/bdd-testing.md",
+          "line": 792,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/bdd-testing.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/README.md",
+      "total_links": 21,
+      "valid_links": 14,
+      "broken_links": [
+        {
+          "link": "contexts/promotion-events.md",
+          "line": 69,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/promotion-events.md"
+        },
+        {
+          "link": "contexts/notification-events.md",
+          "line": 70,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/notification-events.md"
+        },
+        {
+          "link": "contexts/review-events.md",
+          "line": 71,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/review-events.md"
+        },
+        {
+          "link": "contexts/shopping-cart-events.md",
+          "line": 72,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/shopping-cart-events.md"
+        },
+        {
+          "link": "contexts/pricing-events.md",
+          "line": 73,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/pricing-events.md"
+        },
+        {
+          "link": "contexts/seller-events.md",
+          "line": 74,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/seller-events.md"
+        },
+        {
+          "link": "contexts/delivery-events.md",
+          "line": 75,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/delivery-events.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/event-catalog.md",
+      "total_links": 28,
+      "valid_links": 14,
+      "broken_links": [
+        {
+          "link": "contexts/promotion-events.md",
+          "line": 138,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/promotion-events.md"
+        },
+        {
+          "link": "contexts/notification-events.md",
+          "line": 152,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/notification-events.md"
+        },
+        {
+          "link": "contexts/review-events.md",
+          "line": 167,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/review-events.md"
+        },
+        {
+          "link": "contexts/shopping-cart-events.md",
+          "line": 183,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/shopping-cart-events.md"
+        },
+        {
+          "link": "contexts/pricing-events.md",
+          "line": 197,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/pricing-events.md"
+        },
+        {
+          "link": "contexts/seller-events.md",
+          "line": 213,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/seller-events.md"
+        },
+        {
+          "link": "contexts/delivery-events.md",
+          "line": 229,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/delivery-events.md"
+        },
+        {
+          "link": "contexts/promotion-events.md",
+          "line": 334,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/promotion-events.md"
+        },
+        {
+          "link": "contexts/notification-events.md",
+          "line": 335,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/notification-events.md"
+        },
+        {
+          "link": "contexts/review-events.md",
+          "line": 336,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/review-events.md"
+        },
+        {
+          "link": "contexts/shopping-cart-events.md",
+          "line": 337,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/shopping-cart-events.md"
+        },
+        {
+          "link": "contexts/pricing-events.md",
+          "line": 338,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/pricing-events.md"
+        },
+        {
+          "link": "contexts/seller-events.md",
+          "line": 339,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/seller-events.md"
+        },
+        {
+          "link": "contexts/delivery-events.md",
+          "line": 340,
+          "target": "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/delivery-events.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/authentication.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "../../architecture/adrs/014-jwt-authentication-strategy.md",
+          "line": 712,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/014-jwt-authentication-strategy.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/README.md",
+      "total_links": 19,
+      "valid_links": 19,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/error-handling.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/notifications.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/inventory.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/customers.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/shopping-cart.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/payments.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/promotions.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/orders.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/products.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/rest/endpoints/logistics.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/inventory-events.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/shipping-events.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/payment-events.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/product-events.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/customer-events.md",
+      "total_links": 1,
+      "valid_links": 1,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/order-events.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/contexts/remaining-contexts-events.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/api/events/schemas/README.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/003-use-domain-events-for-cross-context-communication.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/021-event-sourcing-critical-aggregates.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/011-angular-for-consumer-frontend.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/045-cost-optimization-multi-region-active-active.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/039-regional-failover-failback-strategy.md",
+      "total_links": 5,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "043-observability-multi-region.md",
+          "line": 1293,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/043-observability-multi-region.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/027-search-strategy-elasticsearch-vs-opensearch-vs-postgresql.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/056-network-segmentation-isolation-strategy.md",
+      "total_links": 4,
+      "valid_links": 1,
+      "broken_links": [
+        {
+          "link": "018-container-orchestration-eks.md",
+          "line": 885,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/018-container-orchestration-eks.md"
+        },
+        {
+          "link": "049-waf-rules-policies.md",
+          "line": 887,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/049-waf-rules-policies.md"
+        },
+        {
+          "link": "050-api-security-rate-limiting.md",
+          "line": 888,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/050-api-security-rate-limiting.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/050-api-security-and-rate-limiting-strategy.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/013-ddd-tactical-patterns-implementation.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/030-api-gateway-pattern.md",
+      "total_links": 10,
+      "valid_links": 10,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/008-use-cloudwatch-xray-grafana-for-observability.md",
+      "total_links": 1,
+      "valid_links": 1,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/046-third-region-disaster-recovery-singapore-seoul.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/022-distributed-locking-with-redis.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/024-monorepo-vs-multi-repo-strategy.md",
+      "total_links": 8,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "20250117-002-adopt-hexagonal-architecture.md",
+          "line": 540,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-002-adopt-hexagonal-architecture.md"
+        },
+        {
+          "link": "20250117-007-aws-cdk-for-infrastructure.md",
+          "line": 541,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-007-aws-cdk-for-infrastructure.md"
+        },
+        {
+          "link": "20250117-018-container-orchestration-eks.md",
+          "line": 542,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-018-container-orchestration-eks.md"
+        },
+        {
+          "link": "20250117-019-progressive-deployment-strategy.md",
+          "line": 543,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-019-progressive-deployment-strategy.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/038-cross-region-data-replication-strategy.md",
+      "total_links": 6,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "001-postgresql-primary-database.md",
+          "line": 459,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/001-postgresql-primary-database.md"
+        },
+        {
+          "link": "004-redis-distributed-caching.md",
+          "line": 460,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/004-redis-distributed-caching.md"
+        },
+        {
+          "link": "005-kafka-event-streaming.md",
+          "line": 461,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/005-kafka-event-streaming.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/049-web-application-firewall-rules-and-policies.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "053-security-monitoring-and-incident-response.md",
+          "line": 430,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/053-security-monitoring-and-incident-response.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/020-database-migration-strategy-flyway.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/014-jwt-based-authentication-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/010-nextjs-for-cmc-frontend.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/002-adopt-hexagonal-architecture.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/036-third-party-integration-pattern.md",
+      "total_links": 10,
+      "valid_links": 10,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/054-data-loss-prevention-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/033-secrets-management-strategy.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/ADR-ROADMAP.md",
+      "total_links": 5,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "../templates/adr-template.md",
+          "line": 356,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/templates/adr-template.md"
+        },
+        {
+          "link": "../README.md",
+          "line": 357,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/005-use-apache-kafka-for-event-streaming.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/017-multi-region-deployment-strategy.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/README.md",
+      "total_links": 36,
+      "valid_links": 34,
+      "broken_links": [
+        {
+          "link": "../README.md",
+          "line": 25,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": "../README.md",
+          "line": 200,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/043-observability-multi-region-operations.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "044-business-continuity-plan.md",
+          "line": 1126,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/044-business-continuity-plan.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/018-container-orchestration-with-aws-eks.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/055-vulnerability-management-patching-strategy.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "018-container-orchestration-eks.md",
+          "line": 830,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/018-container-orchestration-eks.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/058-security-compliance-audit-strategy.md",
+      "total_links": 6,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "014-jwt-authentication-strategy.md",
+          "line": 948,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/014-jwt-authentication-strategy.md"
+        },
+        {
+          "link": "015-rbac-implementation.md",
+          "line": 949,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/015-rbac-implementation.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/053-security-monitoring-incident-response.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/041-data-residency-sovereignty-strategy.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/023-api-rate-limiting-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/025-saga-pattern-distributed-transactions.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/016-data-encryption-strategy.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/004-use-redis-for-distributed-caching.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/037-active-active-multi-region-architecture.md",
+      "total_links": 7,
+      "valid_links": 6,
+      "broken_links": [
+        {
+          "link": "018-container-orchestration-eks.md",
+          "line": 722,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/018-container-orchestration-eks.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/048-ddos-protection-strategy.md",
+      "total_links": 4,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "053-security-monitoring-and-incident-response.md",
+          "line": 476,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/053-security-monitoring-and-incident-response.md"
+        },
+        {
+          "link": "056-network-segmentation-and-isolation-strategy.md",
+          "line": 477,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/056-network-segmentation-and-isolation-strategy.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/007-use-aws-cdk-for-infrastructure.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/031-inter-service-communication-protocol.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/006-environment-specific-testing-strategy.md",
+      "total_links": 2,
+      "valid_links": 1,
+      "broken_links": [
+        {
+          "link": "004-event-store-implementation.md",
+          "line": 486,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/004-event-store-implementation.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/001-use-postgresql-for-primary-database.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/005-use-kafka-for-event-streaming.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/047-stateless-architecture-regional-mobility.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/029-background-job-processing-strategy.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/035-disaster-recovery-strategy.md",
+      "total_links": 10,
+      "valid_links": 5,
+      "broken_links": [
+        {
+          "link": "20250117-017-multi-region-deployment-strategy.md",
+          "line": 545,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-017-multi-region-deployment-strategy.md"
+        },
+        {
+          "link": "20250117-037-active-active-multi-region-architecture.md",
+          "line": 546,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-037-active-active-multi-region-architecture.md"
+        },
+        {
+          "link": "20250117-038-cross-region-data-replication-strategy.md",
+          "line": 547,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-038-cross-region-data-replication-strategy.md"
+        },
+        {
+          "link": "20250117-039-regional-failover-failback-strategy.md",
+          "line": 548,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-039-regional-failover-failback-strategy.md"
+        },
+        {
+          "link": "20250117-044-business-continuity-plan-geopolitical-risks.md",
+          "line": 549,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-044-business-continuity-plan-geopolitical-risks.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/040-network-partition-handling-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/032-cache-invalidation-strategy.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/052-authentication-security-hardening.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/026-cqrs-pattern-read-write-separation.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/034-log-aggregation-and-analysis-strategy.md",
+      "total_links": 7,
+      "valid_links": 5,
+      "broken_links": [
+        {
+          "link": "20250117-008-observability-platform.md",
+          "line": 494,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-008-observability-platform.md"
+        },
+        {
+          "link": "20250117-043-multi-region-observability.md",
+          "line": 495,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/20250117-043-multi-region-observability.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/028-file-storage-strategy-with-s3.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "011-aws-cloud-infrastructure.md",
+          "line": 451,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/011-aws-cloud-infrastructure.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/015-role-based-access-control-implementation.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/044-business-continuity-plan-geopolitical-risks.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/019-progressive-deployment-strategy.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/042-chaos-engineering-resilience-testing.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/057-penetration-testing-red-team-exercises.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/009-restful-api-design-with-openapi.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/051-input-validation-and-sanitization-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/architecture/adrs/012-bdd-with-cucumber-for-requirements.md",
+      "total_links": 2,
+      "valid_links": 2,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/backup-restore.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/high-cpu-usage.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/slow-api-responses.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "cache-issues.md",
+          "line": 527,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/cache-issues.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/scaling-operations.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/high-memory-usage.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "pod-restart-loop.md",
+          "line": 384,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/pod-restart-loop.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/README.md",
+      "total_links": 19,
+      "valid_links": 14,
+      "broken_links": [
+        {
+          "link": "slow-queries.md",
+          "line": 34,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/slow-queries.md"
+        },
+        {
+          "link": "replication-lag.md",
+          "line": 35,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/replication-lag.md"
+        },
+        {
+          "link": "pod-restart-loop.md",
+          "line": 42,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/pod-restart-loop.md"
+        },
+        {
+          "link": "cache-issues.md",
+          "line": 50,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/cache-issues.md"
+        },
+        {
+          "link": "ddos-attack.md",
+          "line": 57,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/ddos-attack.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/data-inconsistency.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/database-connection-issues.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "slow-queries.md",
+          "line": 150,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/slow-queries.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/service-outage.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/failed-deployment.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "pod-restart-loop.md",
+          "line": 538,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/pod-restart-loop.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/runbooks/security-incident.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "ddos-attack.md",
+          "line": 453,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/ddos-attack.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/kubernetes-issues.md",
+      "total_links": 9,
+      "valid_links": 9,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/common-issues.md",
+      "total_links": 17,
+      "valid_links": 17,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/decision-trees.md",
+      "total_links": 7,
+      "valid_links": 7,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/security-incidents.md",
+      "total_links": 8,
+      "valid_links": 5,
+      "broken_links": [
+        {
+          "link": "../runbooks/authentication-failure.md",
+          "line": 56,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/authentication-failure.md"
+        },
+        {
+          "link": "../runbooks/security-incident-response.md",
+          "line": 1075,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/runbooks/security-incident-response.md"
+        },
+        {
+          "link": "../../perspectives/security/audit-logging.md",
+          "line": 1076,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/security/audit-logging.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/network-connectivity.md",
+      "total_links": 8,
+      "valid_links": 8,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/database-issues.md",
+      "total_links": 7,
+      "valid_links": 5,
+      "broken_links": [
+        {
+          "link": "../../.kiro/steering/performance-standards.md",
+          "line": 13,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/performance-standards.md"
+        },
+        {
+          "link": "../../.kiro/steering/performance-standards.md",
+          "line": 2112,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/performance-standards.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/application-debugging.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/distributed-system-issues.md",
+      "total_links": 6,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "performance-issues.md",
+          "line": 1497,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/performance-issues.md"
+        },
+        {
+          "link": "../monitoring/monitoring-alerting.md",
+          "line": 1498,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/monitoring/monitoring-alerting.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/troubleshooting/performance-degradation.md",
+      "total_links": 7,
+      "valid_links": 7,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/deployment/environments.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/deployment/deployment-process.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/deployment/rollback.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/maintenance/backup-restore.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/maintenance/disaster-recovery-ha.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/maintenance/database-maintenance.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/maintenance/security-compliance.md",
+      "total_links": 4,
+      "valid_links": 1,
+      "broken_links": [
+        {
+          "link": "backup-recovery.md",
+          "line": 1702,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/maintenance/backup-recovery.md"
+        },
+        {
+          "link": "../monitoring/monitoring-alerting.md",
+          "line": 1703,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/monitoring/monitoring-alerting.md"
+        },
+        {
+          "link": "../deployment/disaster-recovery.md",
+          "line": 1704,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/disaster-recovery.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/monitoring/monitoring-strategy.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/operations/monitoring/alerts.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/internationalization/overview.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/internationalization/localization.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/internationalization/README.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/internationalization/language-support.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/internationalization/cultural-adaptation.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/development-resource/toolchain.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/development-resource/overview.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/development-resource/required-skills.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/development-resource/team-structure.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/development-resource/README.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/data-protection.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/authentication.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../.kiro/steering/security-standards.md",
+          "line": 649,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/security-standards.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/overview.md",
+      "total_links": 25,
+      "valid_links": 14,
+      "broken_links": [
+        {
+          "link": "../../diagrams/perspectives/security/authentication-flow.puml",
+          "line": 71,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/security/authentication-flow.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/security/authorization-model.puml",
+          "line": 72,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/security/authorization-model.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/security/data-encryption.puml",
+          "line": 73,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/security/data-encryption.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/security/security-layers.puml",
+          "line": 74,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/security/security-layers.puml"
+        },
+        {
+          "link": "../regulation/overview.md",
+          "line": 724,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/regulation/overview.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-012-jwt-authentication.md",
+          "line": 728,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-012-jwt-authentication.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-013-authorization-model.md",
+          "line": 729,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-013-authorization-model.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-014-data-encryption.md",
+          "line": 730,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-014-data-encryption.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-015-tls-configuration.md",
+          "line": 731,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-015-tls-configuration.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 796,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": ".kiro/steering/security-standards.md",
+          "line": 798,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/security/.kiro/steering/security-standards.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/authorization.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../.kiro/steering/security-standards.md",
+          "line": 759,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/security-standards.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/README.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/verification.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/security/compliance.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/location/overview.md",
+      "total_links": 13,
+      "valid_links": 10,
+      "broken_links": [
+        {
+          "link": "../../architecture/adrs/015-multi-region-deployment.md",
+          "line": 416,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/015-multi-region-deployment.md"
+        },
+        {
+          "link": "../../architecture/adrs/016-data-residency-compliance.md",
+          "line": 417,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/016-data-residency-compliance.md"
+        },
+        {
+          "link": "../../architecture/adrs/017-cdn-strategy.md",
+          "line": 418,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/017-cdn-strategy.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/location/multi-region.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/location/latency-optimization.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/location/data-residency.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/location/README.md",
+      "total_links": 20,
+      "valid_links": 17,
+      "broken_links": [
+        {
+          "link": "../../architecture/adrs/015-multi-region-deployment.md",
+          "line": 141,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/015-multi-region-deployment.md"
+        },
+        {
+          "link": "../../architecture/adrs/016-data-residency-compliance.md",
+          "line": 142,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/016-data-residency-compliance.md"
+        },
+        {
+          "link": "../../architecture/adrs/017-cdn-strategy.md",
+          "line": 143,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/017-cdn-strategy.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/overview.md",
+      "total_links": 14,
+      "valid_links": 14,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/extensibility.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/api-versioning.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/README.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/technology-evolution.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/evolution/refactoring.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/requirements.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/overview.md",
+      "total_links": 15,
+      "valid_links": 15,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/fault-tolerance.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/README.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/disaster-recovery.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/availability/high-availability.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/requirements.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/scalability.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/overview.md",
+      "total_links": 26,
+      "valid_links": 13,
+      "broken_links": [
+        {
+          "link": "../../diagrams/perspectives/performance/caching-architecture.puml",
+          "line": 69,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/performance/caching-architecture.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/performance/scaling-strategy.puml",
+          "line": 70,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/performance/scaling-strategy.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/performance/database-optimization.puml",
+          "line": 71,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/performance/database-optimization.puml"
+        },
+        {
+          "link": "../../diagrams/perspectives/performance/load-distribution.puml",
+          "line": 72,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/perspectives/performance/load-distribution.puml"
+        },
+        {
+          "link": "../cost/overview.md",
+          "line": 670,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/cost/overview.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-004-redis-caching.md",
+          "line": 675,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-004-redis-caching.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-005-kafka-messaging.md",
+          "line": 676,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-005-kafka-messaging.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-016-k8s-autoscaling.md",
+          "line": 677,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-016-k8s-autoscaling.md"
+        },
+        {
+          "link": "../../architecture/adrs/ADR-017-db-read-replicas.md",
+          "line": 678,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/ADR-017-db-read-replicas.md"
+        },
+        {
+          "link": "../../.kiro/steering/performance-standards.md",
+          "line": 682,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/performance-standards.md"
+        },
+        {
+          "link": "../../.kiro/steering/test-performance-standards.md",
+          "line": 683,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/test-performance-standards.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 744,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": "../../.kiro/steering/performance-standards.md",
+          "line": 746,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/performance-standards.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/README.md",
+      "total_links": 6,
+      "valid_links": 6,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/verification.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/performance/optimization.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/accessibility/overview.md",
+      "total_links": 12,
+      "valid_links": 12,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/accessibility/README.md",
+      "total_links": 4,
+      "valid_links": 4,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/accessibility/documentation.md",
+      "total_links": 12,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "../images/api-keys-dashboard.png",
+          "line": 466,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-keys-dashboard.png"
+        },
+        {
+          "link": "../images/api-usage-dashboard.png",
+          "line": 497,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-usage-dashboard.png"
+        },
+        {
+          "link": "../images/api-usage-dashboard.png",
+          "line": 500,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-usage-dashboard.png"
+        },
+        {
+          "link": "./authentication.md",
+          "line": 508,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/authentication.md"
+        },
+        {
+          "link": "./quickstart.md#creating-an-order",
+          "line": 509,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/quickstart.md"
+        },
+        {
+          "link": "./authentication.md",
+          "line": 512,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/authentication.md"
+        },
+        {
+          "link": "./quickstart.md",
+          "line": 513,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/quickstart.md"
+        },
+        {
+          "link": "./api-v2.md#create-order",
+          "line": 791,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/api-v2.md"
+        },
+        {
+          "link": "./migration-v1-to-v2.md",
+          "line": 793,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/migration-v1-to-v2.md"
+        }
+      ],
+      "total_images": 4,
+      "valid_images": 0,
+      "broken_images": [
+        {
+          "image": "../images/api-keys-dashboard.png",
+          "line": 466,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-keys-dashboard.png"
+        },
+        {
+          "image": "../images/api-usage-dashboard.png",
+          "line": 497,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-usage-dashboard.png"
+        },
+        {
+          "image": "../images/api-usage-dashboard.png",
+          "line": 500,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-usage-dashboard.png"
+        },
+        {
+          "image": "../images/api-usage-dashboard.png",
+          "line": 501,
+          "target": "/Users/yikaikao/git/genai-demo/docs/perspectives/images/api-usage-dashboard.png"
+        }
+      ]
+    },
+    {
+      "file": "docs/perspectives/accessibility/api-usability.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/perspectives/accessibility/ui-accessibility.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/diagrams/mermaid/README.md",
+      "total_links": 8,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../.kiro/steering/diagram-generation-standards.md",
+          "line": 9,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/diagram-generation-standards.md"
+        },
+        {
+          "link": "../../.kiro/steering/event-storming-standards.md",
+          "line": 10,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/event-storming-standards.md"
+        },
+        {
+          "link": "../diagrams/mermaid/processes/order-fulfillment.md",
+          "line": 274,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/diagrams/mermaid/processes/order-fulfillment.md"
+        },
+        {
+          "link": "examples/state-example.md",
+          "line": 435,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/examples/state-example.md"
+        },
+        {
+          "link": "examples/class-example.md",
+          "line": 436,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/examples/class-example.md"
+        },
+        {
+          "link": "examples/er-example.md",
+          "line": 437,
+          "target": "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/examples/er-example.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/diagrams/mermaid/examples/flowchart-example.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/diagrams/mermaid/examples/sequence-example.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/coding-standards/java-standards.md",
+      "total_links": 4,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../architecture/principles/design-principles.md",
+          "line": 677,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/principles/design-principles.md"
+        },
+        {
+          "link": "../../architecture/patterns/ddd-patterns.md",
+          "line": 678,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/ddd-patterns.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/setup/ide-configuration.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/setup/local-environment.md",
+      "total_links": 5,
+      "valid_links": 5,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/setup/onboarding.md",
+      "total_links": 14,
+      "valid_links": 11,
+      "broken_links": [
+        {
+          "link": "../../architecture/README.md",
+          "line": 98,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        },
+        {
+          "link": "../../architecture/patterns/ddd-patterns.md",
+          "line": 200,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/ddd-patterns.md"
+        },
+        {
+          "link": "../../architecture/README.md",
+          "line": 511,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/workflows/git-workflow.md",
+      "total_links": 3,
+      "valid_links": 2,
+      "broken_links": [
+        {
+          "link": "../../operations/deployment/release-process.md",
+          "line": 693,
+          "target": "/Users/yikaikao/git/genai-demo/docs/operations/deployment/release-process.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/workflows/code-review.md",
+      "total_links": 4,
+      "valid_links": 3,
+      "broken_links": [
+        {
+          "link": "../../architecture/principles/design-principles.md",
+          "line": 654,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/principles/design-principles.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/testing/unit-testing-guide.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/testing/testing-strategy.md",
+      "total_links": 4,
+      "valid_links": 1,
+      "broken_links": [
+        {
+          "link": "bdd-testing.md",
+          "line": 735,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/bdd-testing.md"
+        },
+        {
+          "link": "unit-testing.md",
+          "line": 736,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/unit-testing.md"
+        },
+        {
+          "link": "integration-testing.md",
+          "line": 737,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/testing/integration-testing.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/hooks-cleanup-plan.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/diagram-hooks-design.md",
+      "total_links": 3,
+      "valid_links": 0,
+      "broken_links": [
+        {
+          "link": "../../.kiro/steering/diagram-generation-standards.md",
+          "line": 522,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/diagram-generation-standards.md"
+        },
+        {
+          "link": "../../.kiro/steering/event-storming-standards.md",
+          "line": 523,
+          "target": "/Users/yikaikao/git/genai-demo/docs/.kiro/steering/event-storming-standards.md"
+        },
+        {
+          "link": ".kiro/hooks/README.md",
+          "line": 524,
+          "target": "/Users/yikaikao/git/genai-demo/docs/development/hooks/.kiro/hooks/README.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/hooks-necessity-analysis.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/COMPLETION-REPORT.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/hooks-cleanup-summary.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/hooks/hooks-audit-report.md",
+      "total_links": 0,
+      "valid_links": 0,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/examples/adding-endpoint.md",
+      "total_links": 3,
+      "valid_links": 3,
+      "broken_links": [],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/examples/creating-aggregate.md",
+      "total_links": 6,
+      "valid_links": 4,
+      "broken_links": [
+        {
+          "link": "../../architecture/patterns/ddd-patterns.md",
+          "line": 13,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/ddd-patterns.md"
+        },
+        {
+          "link": "../../architecture/patterns/ddd-patterns.md",
+          "line": 683,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/ddd-patterns.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    },
+    {
+      "file": "docs/development/examples/implementing-event.md",
+      "total_links": 3,
+      "valid_links": 1,
+      "broken_links": [
+        {
+          "link": "../../architecture/patterns/domain-events.md",
+          "line": 598,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/domain-events.md"
+        },
+        {
+          "link": "../../architecture/patterns/event-driven.md",
+          "line": 600,
+          "target": "/Users/yikaikao/git/genai-demo/docs/architecture/patterns/event-driven.md"
+        }
+      ],
+      "total_images": 0,
+      "valid_images": 0,
+      "broken_images": []
+    }
+  ]
+}

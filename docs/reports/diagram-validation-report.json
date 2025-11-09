@@ -1,0 +1,389 @@
+{
+  "summary": {
+    "total_diagrams": 90,
+    "plantuml_files": 34,
+    "mermaid_files": 56,
+    "valid_plantuml": 0,
+    "invalid_plantuml": 34,
+    "generated": 1,
+    "not_generated": 33,
+    "referenced": 1,
+    "unreferenced": 89
+  },
+  "plantuml_validation": [
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-aggregate.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-processing-flow.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-registration-flow.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-aggregate.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-aggregate.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/shopping-cart-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/inventory-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/event-data-sync.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/payment-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-context-er.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/system-context.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/stakeholder-map.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/external-integrations.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/build-pipeline.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/layer-dependencies.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/package-structure.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/event-processing-concurrency.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/concurrency-model.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/thread-pool-configuration.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/distributed-locking.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/deployment-pipeline.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/network-topology.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/aws-infrastructure.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/backup-strategy.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/incident-response-flow.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/monitoring-architecture.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/order-context-detail.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/use-cases-overview.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/event-flow-overview.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/product-context-detail.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/bounded-contexts-overview.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    },
+    {
+      "file": "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/customer-context-detail.puml",
+      "valid": false,
+      "errors": [
+        "Missing @end directive"
+      ]
+    }
+  ],
+  "generated_diagrams": {
+    "generated": [
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/bounded-contexts-overview.puml"
+    ],
+    "not_generated": [
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-processing-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-registration-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/shopping-cart-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/inventory-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/event-data-sync.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/payment-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/system-context.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/stakeholder-map.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/external-integrations.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/build-pipeline.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/layer-dependencies.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/package-structure.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/event-processing-concurrency.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/concurrency-model.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/thread-pool-configuration.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/distributed-locking.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/deployment-pipeline.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/network-topology.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/aws-infrastructure.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/backup-strategy.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/incident-response-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/monitoring-architecture.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/order-context-detail.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/use-cases-overview.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/event-flow-overview.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/product-context-detail.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/customer-context-detail.puml"
+    ]
+  },
+  "diagram_references": {
+    "referenced": [
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/bounded-contexts-overview.puml"
+    ],
+    "unreferenced": [
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/order-processing-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-registration-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/customer-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-aggregate.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/shopping-cart-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/inventory-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/event-data-sync.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/payment-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/information/product-context-er.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/system-context.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/stakeholder-map.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/context/external-integrations.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/build-pipeline.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/layer-dependencies.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/development/package-structure.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/event-processing-concurrency.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/concurrency-model.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/thread-pool-configuration.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/concurrency/distributed-locking.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/deployment-pipeline.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/network-topology.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/deployment/aws-infrastructure.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/backup-strategy.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/incident-response-flow.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/operational/monitoring-architecture.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/order-context-detail.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/use-cases-overview.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/event-flow-overview.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/product-context-detail.puml",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/viewpoints/functional/customer-context-detail.puml",
+      "/Users/yikaikao/git/genai-demo/docs/MAINTENANCE.md",
+      "/Users/yikaikao/git/genai-demo/docs/templates/runbook-template.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/information/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/information/data-ownership.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/information/data-flow.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/context/scope-and-boundaries.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/context/external-systems.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/development/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/development/dependency-rules.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/concurrency/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/concurrency/state-management.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/concurrency/sync-async-operations.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/deployment/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/deployment/deployment-process.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/deployment/network-architecture.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/operational/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/operational/backup-recovery.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/operational/detailed-restore-procedures.md",
+      "/Users/yikaikao/git/genai-demo/docs/viewpoints/functional/interfaces.md",
+      "/Users/yikaikao/git/genai-demo/docs/api/events/README.md",
+      "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/payments.md",
+      "/Users/yikaikao/git/genai-demo/docs/api/rest/endpoints/orders.md",
+      "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/customer-events.md",
+      "/Users/yikaikao/git/genai-demo/docs/api/events/contexts/order-events.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/003-use-domain-events-for-cross-context-communication.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/039-regional-failover-failback-strategy.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/050-api-security-and-rate-limiting-strategy.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/008-use-cloudwatch-xray-grafana-for-observability.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/036-third-party-integration-pattern.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/005-use-apache-kafka-for-event-streaming.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/README.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/048-ddos-protection-strategy.md",
+      "/Users/yikaikao/git/genai-demo/docs/architecture/adrs/015-role-based-access-control-implementation.md",
+      "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/decision-trees.md",
+      "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/application-debugging.md",
+      "/Users/yikaikao/git/genai-demo/docs/operations/troubleshooting/performance-degradation.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/internationalization/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/internationalization/language-support.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/development-resource/toolchain.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/development-resource/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/development-resource/required-skills.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/development-resource/team-structure.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/location/multi-region.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/location/latency-optimization.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/evolution/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/evolution/technology-evolution.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/availability/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/availability/fault-tolerance.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/overview.md",
+      "/Users/yikaikao/git/genai-demo/docs/perspectives/accessibility/documentation.md",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/README.md",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/examples/flowchart-example.md",
+      "/Users/yikaikao/git/genai-demo/docs/diagrams/mermaid/examples/sequence-example.md",
+      "/Users/yikaikao/git/genai-demo/docs/development/setup/ide-configuration.md",
+      "/Users/yikaikao/git/genai-demo/docs/development/hooks/diagram-hooks-design.md",
+      "/Users/yikaikao/git/genai-demo/docs/development/hooks/hooks-audit-report.md"
+    ]
+  }
+}

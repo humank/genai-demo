@@ -1,0 +1,87 @@
+{
+  "viewpoints": {
+    "found": [
+      "functional",
+      "information",
+      "concurrency",
+      "development",
+      "deployment",
+      "operational",
+      "context"
+    ],
+    "missing": [],
+    "count": 7,
+    "total": 7
+  },
+  "perspectives": {
+    "found": [
+      "security",
+      "performance",
+      "availability",
+      "evolution",
+      "accessibility",
+      "development-resource",
+      "internationalization",
+      "location"
+    ],
+    "missing": [],
+    "count": 8,
+    "total": 8
+  },
+  "bounded_contexts": {
+    "found": [
+      "customer",
+      "order",
+      "product",
+      "inventory",
+      "payment",
+      "shipping",
+      "promotion",
+      "notification",
+      "review",
+      "shopping-cart",
+      "pricing",
+      "seller",
+      "delivery"
+    ],
+    "missing": [],
+    "count": 13,
+    "total": 13
+  },
+  "api_endpoints": {
+    "found": [
+      "customers",
+      "orders",
+      "products",
+      "payments",
+      "shopping-cart",
+      "promotions",
+      "inventory",
+      "logistics",
+      "notifications"
+    ],
+    "missing": [],
+    "count": 9,
+    "total": 9
+  },
+  "additional_docs": {
+    "Main README": true,
+    "API REST README": true,
+    "API Events README": true,
+    "Development Setup Guide": true,
+    "Testing Strategy": true,
+    "Deployment Process": true,
+    "Monitoring Strategy": true,
+    "Runbooks Index": true,
+    "Viewpoint Template": true,
+    "Perspective Template": true,
+    "ADR Template": true,
+    "Runbook Template": true
+  },
+  "summary": {
+    "total_checks": 49,
+    "passed_checks": 49,
+    "failed_checks": 0,
+    "completion_percentage": 100.0
+  }
+}
