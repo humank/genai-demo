@@ -205,7 +205,7 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-spring:7.31.0'
     
     // JUnit 5 - 與 Cucumber 7.20.1 兼容的版本
-    testImplementation(platform('org.junit:junit-bom:5.10.2'))
+    testImplementation(platform('org.junit:junit-bom:6.0.1'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.platform:junit-platform-suite')
     
