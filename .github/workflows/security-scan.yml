@@ -334,7 +334,7 @@ jobs:
       
       - name: Create security issue if critical vulnerabilities found
         if: needs.dependency-scan.result == 'failure' || needs.code-security-scan.result == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require('fs');
