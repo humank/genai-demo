@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@aws-cdk/lambda-layer-kubectl-v28": "^2.2.1",
-    "aws-cdk-lib": "^2.215.0",
+    "aws-cdk-lib": "^2.222.0",
     "constructs": "^10.4.3"
   },
   "engines": {
