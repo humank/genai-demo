@@ -54,7 +54,7 @@ jobs:
         java-version: '11'
     
     - name: Cache PlantUML
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: plantuml.jar
         key: plantuml-${{ hashFiles('scripts/generate-diagrams.sh') }}
