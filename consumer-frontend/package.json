@@ -16,7 +16,7 @@
     "@angular/core": "^18.2.14",
     "@angular/forms": "^18.2.14",
     "@angular/platform-browser": "^18.2.14",
-    "@angular/platform-browser-dynamic": "^18.2.0",
+    "@angular/platform-browser-dynamic": "^20.3.10",
     "@angular/router": "^18.2.14",
     "chart.js": "^4.5.1",
     "primeicons": "^7.0.0",
