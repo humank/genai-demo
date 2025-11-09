@@ -200,9 +200,9 @@ dependencies {
 
     
     // Cucumber for BDD testing - 使用最新穩定版本
-    testImplementation 'io.cucumber:cucumber-java:7.20.1'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.20.1'
-    testImplementation 'io.cucumber:cucumber-spring:7.20.1'
+    testImplementation 'io.cucumber:cucumber-java:7.31.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.31.0'
+    testImplementation 'io.cucumber:cucumber-spring:7.31.0'
     
     // JUnit 5 - 與 Cucumber 7.20.1 兼容的版本
     testImplementation(platform('org.junit:junit-bom:5.10.2'))
