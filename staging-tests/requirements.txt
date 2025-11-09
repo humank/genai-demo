@@ -15,8 +15,8 @@ requests==2.32.4
 urllib3==2.5.0
 
 # AWS SDK and Services
-boto3==1.34.0
-botocore==1.34.0
+boto3==1.40.69
+botocore==1.40.69
 
 # Database Integration Tests
 psycopg2-binary==2.9.7
