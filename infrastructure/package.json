@@ -48,7 +48,7 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.0",
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
     "@typescript-eslint/parser": "^8.43.0",
     "aws-cdk": "^2.1031.2",
     "cdk-nag": "^2.37.55",
