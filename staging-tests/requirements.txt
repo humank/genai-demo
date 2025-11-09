@@ -11,7 +11,7 @@ pytest-html==4.1.1
 pytest-xdist==3.5.0  # Parallel test execution
 
 # HTTP Client and API Testing
-requests==2.31.0
+requests==2.32.4
 urllib3==2.1.0
 
 # AWS SDK and Services
