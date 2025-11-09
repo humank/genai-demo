@@ -47,114 +47,114 @@ The Rozanski & Woods methodology is a comprehensive approach to software archite
 
 ### The Two-Dimensional Model
 
-Rozanski & Woods 方法論使用二維模型來完整描述軟體架構：
+The Rozanski & Woods methodology uses a two-dimensional model to comprehensively describe software architecture:
 
 ```mermaid
 graph TB
-    subgraph VP["📐 VIEWPOINTS (結構維度 - Structure Dimension)"]
-        V1[Functional<br/>功能視角<br/>系統做什麼]
-        V2[Information<br/>資訊視角<br/>資料如何組織]
-        V3[Concurrency<br/>並發視角<br/>並發處理]
-        V4[Development<br/>開發視角<br/>程式碼組織]
-        V5[Deployment<br/>部署視角<br/>如何部署]
-        V6[Operational<br/>運維視角<br/>如何運行]
+    subgraph VP["📐 VIEWPOINTS - Structure Dimension"]
+        V1[Functional<br/>What system does]
+        V2[Information<br/>Data organization]
+        V3[Concurrency<br/>Parallel processing]
+        V4[Development<br/>Code organization]
+        V5[Deployment<br/>How to deploy]
+        V6[Operational<br/>How to operate]
     end
     
-    subgraph PS["🎯 PERSPECTIVES (品質維度 - Quality Dimension)"]
-        P1[Security<br/>安全性<br/>如何保護]
-        P2[Performance<br/>效能<br/>多快]
-        P3[Availability<br/>可用性<br/>多穩定]
-        P4[Evolution<br/>演進性<br/>如何變更]
-        P5[Scalability<br/>擴展性<br/>如何擴展]
+    subgraph PS["🎯 PERSPECTIVES - Quality Dimension"]
+        P1[Security<br/>Protection]
+        P2[Performance<br/>Speed]
+        P3[Availability<br/>Reliability]
+        P4[Evolution<br/>Changeability]
+        P5[Scalability<br/>Growth]
     end
     
-    P1 -.應用於.-> V1
-    P1 -.應用於.-> V2
-    P1 -.應用於.-> V3
-    P1 -.應用於.-> V4
-    P1 -.應用於.-> V5
-    P1 -.應用於.-> V6
+    P1 -.Applied to.-> V1
+    P1 -.Applied to.-> V2
+    P1 -.Applied to.-> V3
+    P1 -.Applied to.-> V4
+    P1 -.Applied to.-> V5
+    P1 -.Applied to.-> V6
     
-    P2 -.應用於.-> V1
-    P2 -.應用於.-> V2
-    P2 -.應用於.-> V3
+    P2 -.Applied to.-> V1
+    P2 -.Applied to.-> V2
+    P2 -.Applied to.-> V3
     
-    P3 -.應用於.-> V5
-    P3 -.應用於.-> V6
+    P3 -.Applied to.-> V5
+    P3 -.Applied to.-> V6
     
     style VP fill:#e1f5ff
     style PS fill:#fff4e1
 ```
 
-### Viewpoints vs Perspectives：核心差異
+### Viewpoints vs Perspectives: Core Differences
 
-#### 📐 Viewpoints (視角) - "結構維度"
+#### 📐 Viewpoints - "Structure Dimension"
 
-**定義**：描述系統的**結構和組織方式**，回答"系統是什麼"和"如何構建"
+**Definition**: Describes the **structure and organization** of the system, answering "what the system is" and "how it's built"
 
-**特性**：
-- 🏗️ **結構性 (Structural)**：關注系統的靜態和動態結構
-- 📦 **模組化 (Modular)**：每個視角獨立描述系統的一個面向
-- 👥 **利害關係人導向 (Stakeholder-oriented)**：不同視角服務不同的利害關係人
-- 🎯 **具體 (Concrete)**：描述具體的元件、介面、部署等
+**Characteristics**:
+- 🏗️ **Structural**: Focuses on static and dynamic structure of the system
+- 📦 **Modular**: Each viewpoint independently describes one aspect of the system
+- 👥 **Stakeholder-oriented**: Different viewpoints serve different stakeholders
+- 🎯 **Concrete**: Describes specific components, interfaces, deployments, etc.
 
-**回答的問題**：
-- **Functional**: 系統提供什麼功能？
-- **Information**: 資料如何儲存和流動？
-- **Concurrency**: 如何處理並發？
-- **Development**: 程式碼如何組織？
-- **Deployment**: 如何部署到環境？
-- **Operational**: 如何監控和維運？
+**Questions Answered**:
+- **Functional**: What capabilities does the system provide?
+- **Information**: How is data stored and flows?
+- **Concurrency**: How is concurrency handled?
+- **Development**: How is code organized?
+- **Deployment**: How is it deployed to environments?
+- **Operational**: How is it monitored and operated?
 
-**範例**：
+**Example**:
 ```
-Functional Viewpoint 描述：
-- 客戶管理模組提供註冊、登入、個人資料管理功能
-- 訂單模組提供下單、查詢、取消功能
-- 這些模組透過 REST API 互動
-```
-
----
-
-#### 🎯 Perspectives (觀點) - "品質維度"
-
-**定義**：描述系統的**品質屬性**，回答"系統有多好"和"如何確保品質"
-
-**特性**：
-- 🌐 **橫切性 (Cross-cutting)**：跨越所有視角，影響整個系統
-- 📊 **品質導向 (Quality-oriented)**：關注非功能性需求
-- 🎚️ **可量化 (Measurable)**：通常有明確的指標和目標
-- 🔄 **持續性 (Continuous)**：需要在整個開發過程中持續關注
-
-**回答的問題**：
-- **Security**: 系統夠安全嗎？如何防護？
-- **Performance**: 系統夠快嗎？能承受多少負載？
-- **Availability**: 系統夠穩定嗎？故障如何恢復？
-- **Evolution**: 系統容易修改嗎？如何演進？
-- **Scalability**: 系統能擴展嗎？如何擴展？
-
-**範例**：
-```
-Security Perspective 應用：
-- Functional: 實作認證授權功能
-- Information: 加密敏感資料
-- Deployment: 配置防火牆和網路隔離
-- Operational: 監控安全事件和異常登入
+Functional Viewpoint describes:
+- Customer Management module provides registration, login, profile management
+- Order module provides order placement, query, cancellation
+- These modules interact via REST APIs
 ```
 
 ---
 
-### 互補關係：如何協同工作
+#### 🎯 Perspectives - "Quality Dimension"
 
-#### 🔄 Viewpoints 提供結構，Perspectives 確保品質
+**Definition**: Describes **quality attributes** of the system, answering "how good the system is" and "how to ensure quality"
+
+**Characteristics**:
+- 🌐 **Cross-cutting**: Spans across all viewpoints, affecting the entire system
+- 📊 **Quality-oriented**: Focuses on non-functional requirements
+- 🎚️ **Measurable**: Usually has clear metrics and targets
+- 🔄 **Continuous**: Requires continuous attention throughout development
+
+**Questions Answered**:
+- **Security**: Is the system secure enough? How to protect it?
+- **Performance**: Is the system fast enough? How much load can it handle?
+- **Availability**: Is the system stable enough? How to recover from failures?
+- **Evolution**: Is the system easy to modify? How to evolve?
+- **Scalability**: Can the system scale? How to scale?
+
+**Example**:
+```
+Security Perspective applied to:
+- Functional: Implement authentication and authorization
+- Information: Encrypt sensitive data
+- Deployment: Configure firewalls and network isolation
+- Operational: Monitor security events and anomalous logins
+```
+
+---
+
+### Complementary Relationship: How They Work Together
+
+#### 🔄 Viewpoints Provide Structure, Perspectives Ensure Quality
 
 ```mermaid
 graph LR
-    A[Functional Viewpoint<br/>定義登入功能] --> B[Security Perspective<br/>確保登入安全]
-    B --> C[實作方案<br/>JWT + MFA + 加密]
+    A[Functional Viewpoint<br/>Define login feature] --> B[Security Perspective<br/>Ensure login security]
+    B --> C[Implementation<br/>JWT + MFA + Encryption]
     
-    D[Deployment Viewpoint<br/>定義部署架構] --> E[Availability Perspective<br/>確保高可用]
-    E --> F[實作方案<br/>多區域 + 負載均衡]
+    D[Deployment Viewpoint<br/>Define deployment arch] --> E[Availability Perspective<br/>Ensure high availability]
+    E --> F[Implementation<br/>Multi-region + Load balancing]
     
     style A fill:#e1f5ff
     style D fill:#e1f5ff
@@ -164,114 +164,114 @@ graph LR
     style F fill:#d4edda
 ```
 
-#### 📋 互補性範例
+#### 📋 Complementary Examples
 
-| Viewpoint | + Perspective | = 實作決策 |
-|-----------|---------------|-----------|
-| **Functional**<br/>客戶註冊功能 | **Security**<br/>保護個資 | 密碼加密 (bcrypt)<br/>Email 驗證<br/>CAPTCHA 防機器人 |
-| **Information**<br/>訂單資料模型 | **Performance**<br/>快速查詢 | 資料庫索引<br/>快取策略<br/>讀寫分離 |
-| **Deployment**<br/>容器化部署 | **Scalability**<br/>自動擴展 | Kubernetes HPA<br/>服務網格<br/>無狀態設計 |
-| **Concurrency**<br/>並發處理 | **Availability**<br/>容錯處理 | 樂觀鎖<br/>重試機制<br/>斷路器模式 |
+| Viewpoint | + Perspective | = Implementation Decision |
+|-----------|---------------|---------------------------|
+| **Functional**<br/>Customer registration | **Security**<br/>Protect personal data | Password encryption (bcrypt)<br/>Email verification<br/>CAPTCHA anti-bot |
+| **Information**<br/>Order data model | **Performance**<br/>Fast queries | Database indexing<br/>Caching strategy<br/>Read-write separation |
+| **Deployment**<br/>Containerized deployment | **Scalability**<br/>Auto-scaling | Kubernetes HPA<br/>Service mesh<br/>Stateless design |
+| **Concurrency**<br/>Concurrent processing | **Availability**<br/>Fault tolerance | Optimistic locking<br/>Retry mechanism<br/>Circuit breaker pattern |
 
-#### 🎯 實際應用流程
+#### 🎯 Practical Application Flow
 
 ```mermaid
 sequenceDiagram
-    participant A as 架構師
-    participant V as Viewpoints<br/>(結構設計)
-    participant P as Perspectives<br/>(品質檢查)
-    participant D as 設計決策
+    participant A as Architect
+    participant V as Viewpoints<br/>(Structure Design)
+    participant P as Perspectives<br/>(Quality Check)
+    participant D as Design Decisions
     
-    A->>V: 1. 設計系統結構
-    Note over V: 定義功能模組<br/>資料模型<br/>部署架構
+    A->>V: 1. Design system structure
+    Note over V: Define functional modules<br/>Data models<br/>Deployment architecture
     
-    A->>P: 2. 應用品質觀點
-    Note over P: 檢查安全性<br/>效能<br/>可用性
+    A->>P: 2. Apply quality perspectives
+    Note over P: Check security<br/>Performance<br/>Availability
     
-    P->>V: 3. 發現問題
-    Note over P,V: 效能瓶頸<br/>安全漏洞<br/>擴展限制
+    P->>V: 3. Identify issues
+    Note over P,V: Performance bottlenecks<br/>Security vulnerabilities<br/>Scalability limits
     
-    V->>D: 4. 調整設計
-    Note over D: 加入快取<br/>加密機制<br/>負載均衡
+    V->>D: 4. Adjust design
+    Note over D: Add caching<br/>Encryption mechanisms<br/>Load balancing
     
-    D->>P: 5. 驗證品質
-    Note over P: 確認符合<br/>品質目標
+    D->>P: 5. Validate quality
+    Note over P: Confirm quality<br/>targets met
     
-    P->>A: 6. 完成設計
+    P->>A: 6. Complete design
 ```
 
 ---
 
-### 為什麼需要兩個維度？
+### Why Two Dimensions Are Needed
 
-#### ❌ 只用 Viewpoints 的問題
-
-```
-只描述結構 → 可能忽略品質屬性
-- 功能完整但效能差
-- 部署架構清楚但不安全
-- 程式碼組織良好但難以擴展
-```
-
-#### ❌ 只用 Perspectives 的問題
+#### ❌ Problems with Only Viewpoints
 
 ```
-只關注品質 → 缺乏具體實作指引
-- 知道要安全但不知道如何實作
-- 知道要高效能但不知道架構如何設計
-- 知道要可擴展但不知道如何部署
+Only describing structure → May overlook quality attributes
+- Complete functionality but poor performance
+- Clear deployment architecture but insecure
+- Well-organized code but difficult to scale
 ```
 
-#### ✅ 兩者結合的優勢
+#### ❌ Problems with Only Perspectives
 
 ```
-結構 + 品質 = 完整的架構設計
-- 清楚的系統結構
-- 明確的品質目標
-- 具體的實作方案
-- 可驗證的設計決策
+Only focusing on quality → Lacks concrete implementation guidance
+- Know need security but not how to implement
+- Know need high performance but not how to design architecture
+- Know need scalability but not how to deploy
+```
+
+#### ✅ Benefits of Combining Both
+
+```
+Structure + Quality = Complete architectural design
+- Clear system structure
+- Explicit quality goals
+- Concrete implementation solutions
+- Verifiable design decisions
 ```
 
 ---
 
-### 實務建議
+### Practical Recommendations
 
-#### 📝 文檔組織建議
+#### 📝 Documentation Organization
 
 ```
 docs/
 ├── viewpoints/
-│   ├── functional.md          # 功能視角
-│   ├── information.md         # 資訊視角
-│   ├── deployment.md          # 部署視角
+│   ├── functional.md          # Functional viewpoint
+│   ├── information.md         # Information viewpoint
+│   ├── deployment.md          # Deployment viewpoint
 │   └── ...
 ├── perspectives/
-│   ├── security.md            # 安全觀點
-│   ├── performance.md         # 效能觀點
+│   ├── security.md            # Security perspective
+│   ├── performance.md         # Performance perspective
 │   └── ...
 └── decisions/
-    ├── ADR-001-auth.md        # 結合兩者的決策
+    ├── ADR-001-auth.md        # Decisions combining both
     └── ADR-002-cache.md
 ```
 
-#### 🔍 審查檢查清單
+#### 🔍 Review Checklist
 
-**Viewpoint 檢查**：
-- [ ] 所有主要功能都有文檔？
-- [ ] 資料模型完整定義？
-- [ ] 部署架構清楚？
-- [ ] 開發指引明確？
+**Viewpoint Checks**:
+- [ ] All major functions documented?
+- [ ] Data models completely defined?
+- [ ] Deployment architecture clear?
+- [ ] Development guidelines explicit?
 
-**Perspective 檢查**：
-- [ ] 安全需求都滿足？
-- [ ] 效能目標都達成？
-- [ ] 可用性要求都實現？
-- [ ] 系統可演進和擴展？
+**Perspective Checks**:
+- [ ] Security requirements satisfied?
+- [ ] Performance targets achieved?
+- [ ] Availability requirements implemented?
+- [ ] System evolvable and scalable?
 
-**整合檢查**：
-- [ ] 每個 Viewpoint 都考慮了相關 Perspectives？
-- [ ] 每個 Perspective 都應用到了相關 Viewpoints？
-- [ ] 設計決策有明確的品質目標？
+**Integration Checks**:
+- [ ] Each Viewpoint considers relevant Perspectives?
+- [ ] Each Perspective applied to relevant Viewpoints?
+- [ ] Design decisions have clear quality goals?
 
 ---
 
