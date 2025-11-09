@@ -192,7 +192,7 @@ dependencies {
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
     
     // OpenAPI 3 (Swagger) 支援 - 使用與 Spring Boot 3.4.9 兼容的版本
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
     
     // Kotlin reflection for SpringDoc (required by SpringDoc 2.x) - 更新版本
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.25'
