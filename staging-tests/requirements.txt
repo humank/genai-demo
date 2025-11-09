@@ -39,7 +39,7 @@ locust==2.42.2  # Alternative to K6 for Python-based load testing
 
 # Security Testing
 python-owasp-zap-v2.4==0.0.22
-bandit==1.7.6
+bandit==1.8.6
 
 # Monitoring and Observability
 prometheus-client==0.19.0
