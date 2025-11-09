@@ -148,7 +148,7 @@ dependencies {
     implementation 'io.opentelemetry:opentelemetry-sdk:1.54.1'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.54.1'
     // Note: jaeger exporter is deprecated, use OTLP exporter instead
-    implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.21.0-alpha'
+    implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.37.0'
     
     // AWS X-Ray support for production
     implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.19.0') {
