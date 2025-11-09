@@ -35,7 +35,7 @@ faker==22.0.0
 factory-boy==3.3.3
 
 # Performance Testing
-locust==2.20.0  # Alternative to K6 for Python-based load testing
+locust==2.42.2  # Alternative to K6 for Python-based load testing
 
 # Security Testing
 python-owasp-zap-v2.4==0.0.22
