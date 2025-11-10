@@ -28,7 +28,7 @@ hiredis==2.3.2  # Performance improvement for redis
 
 # Messaging Integration Tests
 kafka-python==2.0.2
-confluent-kafka==2.3.0  # Alternative Kafka client
+confluent-kafka==2.12.2  # Alternative Kafka client
 
 # Test Data Generation
 faker==22.0.0
