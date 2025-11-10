@@ -70,4 +70,4 @@ mypy==1.18.2
 
 # Documentation
 sphinx==7.2.6
-sphinx-rtd-theme==2.0.0
+sphinx-rtd-theme==3.0.2
