@@ -69,5 +69,5 @@ flake8==7.0.0
 mypy==1.18.2
 
 # Documentation
-sphinx==7.2.6
+sphinx==8.2.3
 sphinx-rtd-theme==2.0.0
