@@ -176,7 +176,7 @@ dependencies {
     implementation 'org.redisson:redisson-spring-boot-starter:3.24.3'
     
     // Apache Commons Pool for Redis connection pooling
-    implementation 'org.apache.commons:commons-pool2:2.12.0'
+    implementation 'org.apache.commons:commons-pool2:2.12.1'
     
     // Unified HttpComponents5 dependencies with consistent versions
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
