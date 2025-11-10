@@ -24,7 +24,7 @@ sqlalchemy==2.0.44
 
 # Cache Integration Tests  
 redis==7.0.1
-hiredis==2.3.2  # Performance improvement for redis
+hiredis==3.3.0  # Performance improvement for redis
 
 # Messaging Integration Tests
 kafka-python==2.2.15
