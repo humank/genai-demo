@@ -27,7 +27,7 @@ redis==7.0.1
 hiredis==2.3.2  # Performance improvement for redis
 
 # Messaging Integration Tests
-kafka-python==2.0.2
+kafka-python==2.2.15
 confluent-kafka==2.12.2  # Alternative Kafka client
 
 # Test Data Generation
