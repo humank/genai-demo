@@ -133,9 +133,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     
     // Resilience4j for circuit breaker pattern
-    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.1.0'
-    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.1.0'
-    implementation 'io.github.resilience4j:resilience4j-retry:2.1.0'
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.3.0'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.3.0'
+    implementation 'io.github.resilience4j:resilience4j-retry:2.3.0'
     
     // Micrometer for metrics collection
     implementation 'io.micrometer:micrometer-core'
