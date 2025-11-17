@@ -31,7 +31,7 @@ kafka-python==2.2.15
 confluent-kafka==2.12.2  # Alternative Kafka client
 
 # Test Data Generation
-faker==22.0.0
+faker==38.0.0
 factory-boy==3.3.3
 
 # Performance Testing
