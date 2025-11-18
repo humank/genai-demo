@@ -65,28 +65,136 @@ This perspective applies to all system components and addresses:
 
 ### Multi-Layered Resilience Strategy
 
-Our availability and resilience approach follows a defense-in-depth strategy:
+Our availability and resilience approach follows a defense-in-depth strategy with four complementary layers:
 
 ```mermaid
 graph TD
-    N4["- Auto-scaling"]
-    N5["Layer 2: Application Resilience"]
-    N4 --> N5
-    N8["- Graceful degradation"]
-    N9["Layer 3: Data Protection"]
-    N8 --> N9
-    N12["- Cross-region replication"]
-    N13["Layer 4: Monitoring & Response"]
-    N12 --> N13
+    A[Layer 1: Infrastructure Resilience] --> B[Layer 2: Application Resilience]
+    B --> C[Layer 3: Data Protection]
+    C --> D[Layer 4: Monitoring & Response]
+    
+    A1[Multi-AZ deployment] --> A
+    A2[Auto-scaling] --> A
+    A3[Load balancing] --> A
+    
+    B1[Circuit breakers] --> B
+    B2[Retry mechanisms] --> B
+    B3[Graceful degradation] --> B
+    
+    C1[Automated backups] --> C
+    C2[Point-in-time recovery] --> C
+    C3[Cross-region replication] --> C
+    
+    D1[Real-time monitoring] --> D
+    D2[Automated alerting] --> D
+    D3[Incident response] --> D
 ```
+
+#### Layer 1: Infrastructure Resilience
+
+**Multi-AZ Deployment**:
+- All critical services deployed across 3 availability zones
+- Automatic failover between zones (< 60 seconds)
+- No single point of failure in infrastructure
+
+**Auto-Scaling**:
+- Horizontal pod autoscaling (HPA) for application tier
+- Cluster autoscaling for Kubernetes nodes
+- Database read replica scaling based on load
+
+**Load Balancing**:
+- Application Load Balancer (ALB) with health checks
+- Automatic traffic distribution across healthy targets
+- Connection draining during deployments
+
+#### Layer 2: Application Resilience
+
+**Circuit Breakers**:
+- Prevent cascading failures across services
+- Automatic circuit opening on failure threshold
+- Half-open state for recovery testing
+
+**Retry Mechanisms**:
+- Exponential backoff for transient failures
+- Maximum retry attempts to prevent infinite loops
+- Idempotent operations for safe retries
+
+**Graceful Degradation**:
+- Core functionality maintained during partial failures
+- Non-critical features disabled automatically
+- User-friendly error messages and fallback content
+
+#### Layer 3: Data Protection
+
+**Automated Backups**:
+- Continuous database snapshots (every 5 minutes)
+- Automated backup verification and testing
+- Multi-tier storage with lifecycle policies
+
+**Point-in-Time Recovery**:
+- 5-minute recovery granularity
+- 30-day retention period
+- Tested monthly for reliability
+
+**Cross-Region Replication**:
+- Asynchronous replication to DR region
+- Read replicas for disaster recovery
+- Automated failover procedures
+
+#### Layer 4: Monitoring & Response
+
+**Real-Time Monitoring**:
+- Comprehensive metrics collection (Prometheus)
+- Distributed tracing (AWS X-Ray)
+- Log aggregation and analysis (CloudWatch)
+
+**Automated Alerting**:
+- Proactive alerts before SLO breach
+- Escalation policies for critical incidents
+- Integration with PagerDuty for on-call
+
+**Incident Response**:
+- Documented runbooks for common scenarios
+- Automated remediation where possible
+- Post-incident reviews and improvements
 
 ### Key Principles
 
 1. **Design for Failure**: Assume components will fail and design accordingly
+   - Every component has a failure mode analysis
+   - Redundancy at every layer
+   - No single points of failure
+
 2. **Fail Fast**: Detect failures quickly and respond immediately
+   - Health checks every 10-30 seconds
+   - Automatic removal of unhealthy instances
+   - Circuit breakers trip within 3 failed attempts
+
 3. **Isolate Failures**: Prevent cascading failures across system boundaries
+   - Bulkhead pattern for resource isolation
+   - Separate thread pools for different services
+   - Timeout policies on all external calls
+
 4. **Automate Recovery**: Minimize manual intervention through automation
+   - Automatic failover for databases (60-120 seconds)
+   - Self-healing Kubernetes pods
+   - Automated rollback on deployment failures
+
 5. **Test Regularly**: Conduct regular DR drills and chaos engineering exercises
+   - Monthly chaos engineering tests
+   - Quarterly full DR drills
+   - Annual surprise failover tests
+
+### Failure Scenarios and Responses
+
+| Failure Scenario | Detection Time | Recovery Action | RTO | Impact |
+|------------------|----------------|-----------------|-----|--------|
+| Pod failure | 10-30 seconds | Kubernetes restarts pod | < 1 min | None (other pods handle traffic) |
+| Node failure | 30-60 seconds | Pods rescheduled to healthy nodes | < 2 min | Minimal (brief capacity reduction) |
+| AZ failure | 1-2 minutes | Traffic routed to other AZs | < 5 min | Reduced capacity, no downtime |
+| Database primary failure | 30-60 seconds | Automatic failover to standby | < 2 min | Brief read-only mode |
+| Region failure | 5-10 minutes | Manual failover to DR region | < 15 min | Service interruption |
+| Cache failure | 10-20 seconds | Rebuild cache from database | < 1 min | Performance degradation |
 
 ## Architecture Overview
 
@@ -163,24 +271,293 @@ This perspective is organized into the following documents:
 
 See [Operational Viewpoint - Monitoring](../../viewpoints/operational/monitoring-alerting.md) for detailed monitoring implementation.
 
+## Implementation Patterns
+
+### Circuit Breaker Pattern
+
+**Purpose**: Prevent cascading failures by stopping calls to failing services
+
+**Implementation**:
+```java
+@Service
+public class OrderService {
+    
+    @CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
+    public PaymentResponse processPayment(PaymentRequest request) {
+        return paymentClient.process(request);
+    }
+    
+    private PaymentResponse paymentFallback(PaymentRequest request, Exception ex) {
+        // Queue for later processing
+        paymentQueue.enqueue(request);
+        return PaymentResponse.queued("Payment queued for processing");
+    }
+}
+```
+
+**Configuration**:
+```yaml
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+```
+
+### Retry Pattern
+
+**Purpose**: Handle transient failures with exponential backoff
+
+**Implementation**:
+```java
+@Retryable(
+    value = {TransientException.class},
+    maxAttempts = 3,
+    backoff = @Backoff(delay = 1000, multiplier = 2, maxDelay = 10000)
+)
+public Order createOrder(CreateOrderCommand command) {
+    return orderRepository.save(command.toOrder());
+}
+```
+
+### Health Check Pattern
+
+**Purpose**: Enable automatic detection and removal of unhealthy instances
+
+**Implementation**:
+```java
+@Component
+public class DatabaseHealthIndicator implements HealthIndicator {
+    
+    @Override
+    public Health health() {
+        try {
+            // Check database connectivity
+            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
+            return Health.up()
+                .withDetail("database", "responsive")
+                .build();
+        } catch (Exception e) {
+            return Health.down()
+                .withDetail("database", "unreachable")
+                .withException(e)
+                .build();
+        }
+    }
+}
+```
+
+**Kubernetes Configuration**:
+```yaml
+livenessProbe:
+  httpGet:
+    path: /actuator/health/liveness
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health/readiness
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  failureThreshold: 3
+```
+
+## Testing and Validation
+
+### Availability Testing Strategy
+
+**Unit Tests**:
+- Test failure handling in individual components
+- Verify circuit breaker behavior
+- Validate retry logic
+
+**Integration Tests**:
+- Test failover between database replicas
+- Verify load balancer health check behavior
+- Test graceful degradation scenarios
+
+**Chaos Engineering Tests**:
+- Random pod termination
+- Network partition simulation
+- Resource exhaustion scenarios
+- Database failover testing
+
+### Monthly Testing Schedule
+
+```yaml
+Week 1: Infrastructure Resilience
+  - Pod failure recovery
+  - Node failure handling
+  - Auto-scaling behavior
+
+Week 2: Application Resilience
+  - Circuit breaker functionality
+  - Retry mechanism validation
+  - Graceful degradation testing
+
+Week 3: Data Protection
+  - Backup verification
+  - Point-in-time recovery
+  - Cross-region replication lag
+
+Week 4: End-to-End Scenarios
+  - Full failover drill
+  - Multi-component failure
+  - Performance under failure
+```
+
+### Quarterly DR Drills
+
+**Q1 (January)**: Tabletop Exercise
+- Review procedures with team
+- Identify gaps in documentation
+- Update runbooks
+
+**Q2 (April)**: Partial Failover
+- Test database failover
+- Verify application recovery
+- Measure actual RTO/RPO
+
+**Q3 (July)**: Full DR Simulation
+- Complete region failover
+- All services in DR region
+- Customer-facing validation
+
+**Q4 (October)**: Surprise Drill
+- Unannounced failover test
+- Test on-call response
+- Validate escalation procedures
+
 ## Continuous Improvement
 
 ### Regular Activities
 
-- **Monthly**: Review availability metrics and incident reports
-- **Quarterly**: Conduct disaster recovery drills
-- **Bi-annually**: Update and test failover procedures
-- **Annually**: Review and update availability targets
+**Monthly**:
+- Review availability metrics and incident reports
+- Analyze SLO compliance and trends
+- Update failure scenario documentation
+- Conduct chaos engineering tests
 
-### Chaos Engineering
+**Quarterly**:
+- Conduct disaster recovery drills
+- Review and update runbooks
+- Analyze incident patterns
+- Update availability targets if needed
+
+**Bi-annually**:
+- Update and test failover procedures
+- Review and optimize auto-scaling policies
+- Audit backup and recovery processes
+- Conduct architecture review
+
+**Annually**:
+- Review and update availability targets
+- Comprehensive DR plan review
+- Team training and certification
+- Third-party availability audit
+
+### Chaos Engineering Program
 
 We practice chaos engineering to proactively identify weaknesses:
 
+**Infrastructure Chaos**:
 - Random pod termination in Kubernetes
-- Network latency injection
+- Node failure simulation
+- AZ failure scenarios
+- Network partition testing
+
+**Application Chaos**:
+- Service dependency failures
+- API timeout injection
+- Memory pressure simulation
+- CPU throttling
+
+**Data Chaos**:
 - Database failover simulation
 - Cache failure scenarios
+- Replication lag injection
+- Backup corruption testing
+
+**Chaos Testing Tools**:
+- Chaos Mesh for Kubernetes
+- AWS Fault Injection Simulator
+- Custom chaos scripts
+- Gremlin (for advanced scenarios)
+
+### Incident Response Process
+
+**Detection** (0-5 minutes):
+- Automated monitoring alerts
+- Customer reports
+- Internal team discovery
+
+**Assessment** (5-10 minutes):
+- Determine severity and impact
+- Identify affected services
+- Estimate recovery time
+
+**Response** (10-30 minutes):
+- Execute appropriate runbook
+- Communicate with stakeholders
+- Implement workarounds if needed
+
+**Recovery** (varies by scenario):
+- Restore normal operations
+- Verify system health
+- Monitor for recurrence
+
+**Post-Incident** (within 48 hours):
+- Conduct blameless post-mortem
+- Document lessons learned
+- Create action items for improvements
+- Update runbooks and procedures
+
+## Success Metrics
+
+### Availability Metrics
+
+**Primary Metrics**:
+- **Uptime Percentage**: 99.9% target (measured monthly)
+- **MTBF**: > 720 hours (30 days)
+- **MTTR**: < 15 minutes
+- **Incident Count**: < 2 per month (P0/P1)
+
+**Secondary Metrics**:
+- **Failed Health Checks**: < 0.1% of total checks
+- **Failover Success Rate**: > 99%
+- **Backup Success Rate**: 100%
+- **DR Drill Success Rate**: > 95%
+
+### Quality Indicators
+
+**Leading Indicators** (predict future issues):
+- Increasing error rates
+- Growing replication lag
+- Rising resource utilization
+- Increasing incident frequency
+
+**Lagging Indicators** (measure past performance):
+- Actual uptime vs. target
+- Customer-reported incidents
+- SLO compliance percentage
+- Mean time to recovery
+
+### Reporting
+
+**Daily**: Automated availability dashboard
+**Weekly**: Availability summary email
+**Monthly**: Detailed availability report with trends
+**Quarterly**: Executive summary with recommendations
 
 ---
 
-**Next Steps**: Review [Requirements](requirements.md) for detailed availability targets and quality attribute scenarios.
+**Next Steps**: 
+- Review [Requirements](requirements.md) for detailed availability targets and quality attribute scenarios
+- See [High Availability Design](high-availability-design.md) for comprehensive HA architecture
+- Consult [Disaster Recovery](disaster-recovery.md) for DR procedures and runbooks

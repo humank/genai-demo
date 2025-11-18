@@ -259,23 +259,240 @@ This perspective is organized into the following documents:
 4. **[API Versioning](api-versioning.md)** - Versioning, compatibility, and deprecation
 5. **[Refactoring](refactoring.md)** - Technical debt management and code quality
 
+## Migration Strategies
+
+### Database Schema Evolution
+
+**Approach**: Expand-Contract Pattern
+
+**Phase 1: Expand** (Add new schema alongside old):
+```sql
+-- Add new column without removing old one
+ALTER TABLE orders ADD COLUMN customer_email VARCHAR(255);
+
+-- Dual-write to both old and new columns
+UPDATE orders SET customer_email = (
+    SELECT email FROM customers WHERE customers.id = orders.customer_id
+);
+```
+
+**Phase 2: Migrate** (Update application to use new schema):
+```java
+// Application reads from new column, falls back to old
+public String getCustomerEmail(Order order) {
+    if (order.getCustomerEmail() != null) {
+        return order.getCustomerEmail();  // New column
+    }
+    return customerRepository.findById(order.getCustomerId())
+        .map(Customer::getEmail)
+        .orElse(null);  // Old approach
+}
+```
+
+**Phase 3: Contract** (Remove old schema after migration):
+```sql
+-- After all data migrated and application updated
+ALTER TABLE orders DROP COLUMN customer_id;
+```
+
+### Service Decomposition
+
+**Strangler Fig Pattern**: Gradually replace monolith with microservices
+
+```text
+Phase 1: Identify Bounded Context
+┌─────────────────────────────┐
+│       Monolith              │
+│  ┌──────────────────────┐   │
+│  │  Order Context       │   │ ← Target for extraction
+│  │  (Well-defined)      │   │
+│  └──────────────────────┘   │
+│  │  Other Contexts      │   │
+│  └──────────────────────┘   │
+└─────────────────────────────┘
+
+Phase 2: Create Facade
+┌─────────────────────────────┐
+│       Monolith              │
+│  ┌──────────────────────┐   │
+│  │  Order Facade        │   │ ← Routes to new or old
+│  └──────────────────────┘   │
+└─────────────────────────────┘
+         │
+         ├─→ New Order Service (for new orders)
+         └─→ Old Order Code (for existing orders)
+
+Phase 3: Complete Migration
+┌─────────────────────────────┐
+│    Order Microservice       │ ← Fully independent
+└─────────────────────────────┘
+```
+
+### Framework Upgrade Process
+
+**Example: Spring Boot 3.3 → 3.4 Upgrade**
+
+**Step 1: Preparation**
+```bash
+# Check compatibility
+./gradlew dependencyUpdates
+
+# Review release notes
+# https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.4-Release-Notes
+```
+
+**Step 2: Update Dependencies**
+```gradle
+// build.gradle
+plugins {
+    id 'org.springframework.boot' version '3.4.5'
+}
+
+dependencies {
+    // Update Spring dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+```
+
+**Step 3: Fix Breaking Changes**
+```java
+// Example: Update deprecated APIs
+// Old (Spring Boot 3.3)
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) {
+    http.authorizeRequests()
+        .antMatchers("/api/**").authenticated();
+    return http.build();
+}
+
+// New (Spring Boot 3.4)
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) {
+    http.authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/**").authenticated());
+    return http.build();
+}
+```
+
+**Step 4: Test Thoroughly**
+```bash
+# Run all tests
+./gradlew test
+
+# Run integration tests
+./gradlew integrationTest
+
+# Performance benchmarks
+./gradlew performanceTest
+```
+
+**Step 5: Gradual Rollout**
+```yaml
+# Deploy to staging first
+kubectl apply -f k8s/overlays/staging/
+
+# Canary deployment to production (10% traffic)
+kubectl apply -f k8s/overlays/production/canary/
+
+# Full production rollout
+kubectl apply -f k8s/overlays/production/
+```
+
 ## Continuous Improvement
 
 ### Regular Activities
 
-- **Weekly**: Code quality metrics review
-- **Monthly**: Dependency update review
-- **Quarterly**: Architecture review and refactoring sprint
-- **Bi-annually**: Technology stack evaluation
-- **Annually**: Major framework upgrades
+**Weekly**:
+- Code quality metrics review
+- Dependency vulnerability scan
+- Feature flag cleanup review
+- Technical debt tracking
+
+**Monthly**:
+- Dependency update review and planning
+- Architecture decision records (ADR) review
+- Refactoring backlog grooming
+- Code quality trend analysis
+
+**Quarterly**:
+- Architecture review and refactoring sprint
+- Major dependency upgrades
+- Technical debt reduction sprint
+- Team retrospective on evolution practices
+
+**Bi-annually**:
+- Technology stack evaluation
+- Framework upgrade planning
+- Architecture fitness function review
+- Third-party library audit
+
+**Annually**:
+- Major framework upgrades (Spring Boot, Angular, etc.)
+- Programming language version upgrade (Java)
+- Infrastructure platform updates (AWS, Kubernetes)
+- Comprehensive architecture review
 
 ### Innovation Time
 
-- **20% Time**: Developers can spend 20% time on technical improvements
-- **Hackathons**: Quarterly hackathons for innovation
-- **Tech Talks**: Monthly tech talks on new technologies
-- **Proof of Concepts**: Evaluate new technologies through POCs
+**20% Time**:
+- Developers can spend 20% time on technical improvements
+- Focus on reducing technical debt
+- Experiment with new technologies
+- Improve developer tooling
+
+**Hackathons**:
+- Quarterly hackathons for innovation
+- Cross-team collaboration
+- Prototype new features or technologies
+- Present results to leadership
+
+**Tech Talks**:
+- Monthly tech talks on new technologies
+- Internal knowledge sharing
+- External speaker sessions
+- Conference attendance and sharing
+
+**Proof of Concepts**:
+- Evaluate new technologies through POCs
+- Time-boxed experiments (1-2 weeks)
+- Document findings and recommendations
+- Present to architecture team
+
+### Technical Debt Management
+
+**Debt Classification**:
+
+| Type | Priority | Action |
+|------|----------|--------|
+| **Critical Debt** | P0 | Fix immediately (blocks new features) |
+| **High Debt** | P1 | Address in next sprint |
+| **Medium Debt** | P2 | Schedule in quarterly refactoring sprint |
+| **Low Debt** | P3 | Address during 20% time |
+
+**Debt Tracking**:
+```yaml
+Technical Debt Item:
+  ID: TD-2024-001
+  Title: "Replace legacy pricing engine"
+  Type: Code Quality
+  Priority: P1
+  Estimated Effort: 3 weeks
+  Business Impact: Blocks new pricing features
+  Created: 2024-10-01
+  Target Resolution: 2024-12-01
+  Owner: Pricing Team
+```
+
+**Debt Reduction Goals**:
+- Reduce technical debt ratio by 1% per quarter
+- No new critical debt introduced
+- All P0/P1 debt resolved within 2 sprints
+- Quarterly refactoring sprint dedicated to debt reduction
 
 ---
 
-**Next Steps**: Review [Extensibility](extensibility.md) for detailed extension mechanisms and plugin architecture.
+**Next Steps**: 
+- Review [Extensibility](extensibility.md) for detailed extension mechanisms and plugin architecture
+- See [Technology Evolution](technology-evolution.md) for framework upgrade strategies
+- Consult [API Versioning](api-versioning.md) for versioning and deprecation policies
