@@ -61,7 +61,8 @@
       "autoApprove": [
         "aws___search_documentation",
         "aws___read_documentation",
-        "aws___list_regions"
+        "aws___list_regions",
+        "aws___get_regional_availability"
       ]
     },
     "aws-cdk": {
