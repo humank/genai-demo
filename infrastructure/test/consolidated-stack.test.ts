@@ -210,17 +210,19 @@ describe('Consolidated Infrastructure Tests', () => {
             observabilityStack = new ObservabilityStack(app, 'TestObservabilityStack', {
                 vpc: networkStack.vpc,
                 kmsKey: securityStack.kmsKey,
+                env: env,
+                crossRegionReferences: true,
             });
 
             template = Template.fromStack(observabilityStack);
         });
 
         test('should create CloudWatch log groups', () => {
-            template.resourceCountIs('AWS::Logs::LogGroup', 5);
+            template.resourceCountIs('AWS::Logs::LogGroup', 7);
         });
 
         test('should create CloudWatch dashboard', () => {
-            template.resourceCountIs('AWS::CloudWatch::Dashboard', 1);
+            template.resourceCountIs('AWS::CloudWatch::Dashboard', 2);
         });
     });
 

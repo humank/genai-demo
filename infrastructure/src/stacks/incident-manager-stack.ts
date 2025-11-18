@@ -88,101 +88,26 @@ export class IncidentManagerStack extends cdk.Stack {
 
     /**
      * Create Contacts for incident escalation
+     * Note: CfnContact is not yet available in AWS CDK
+     * TODO: Update when AWS CDK adds support for SSM Incidents Contacts
+     * 
+     * For now, contacts should be created manually in the AWS Console:
+     * https://console.aws.amazon.com/systems-manager/incidents/contacts
      */
-    private createContacts(oncallEmail?: string): ssmIncidents.CfnContact[] {
-        const contacts: ssmIncidents.CfnContact[] = [];
-
-        // L1 Support Contact
-        const l1Contact = new ssmIncidents.CfnContact(this, 'L1SupportContact', {
-            alias: 'l1-support',
-            displayName: 'L1 Support Team',
-            type: 'PERSONAL',
-            plan: {
-                stages: [
-                    {
-                        durationInMinutes: 5,
-                        targets: [
-                            {
-                                channelTargetInfo: {
-                                    contactChannelId: this.createEmailChannel(
-                                        'L1EmailChannel',
-                                        oncallEmail || 'l1-support@example.com'
-                                    ).ref,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
-
-        contacts.push(l1Contact);
-
-        // L2 Support Contact
-        const l2Contact = new ssmIncidents.CfnContact(this, 'L2SupportContact', {
-            alias: 'l2-support',
-            displayName: 'L2 Support Team',
-            type: 'PERSONAL',
-            plan: {
-                stages: [
-                    {
-                        durationInMinutes: 10,
-                        targets: [
-                            {
-                                channelTargetInfo: {
-                                    contactChannelId: this.createEmailChannel(
-                                        'L2EmailChannel',
-                                        oncallEmail || 'l2-support@example.com'
-                                    ).ref,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
-
-        contacts.push(l2Contact);
-
-        // L3 Engineering Contact
-        const l3Contact = new ssmIncidents.CfnContact(this, 'L3EngineeringContact', {
-            alias: 'l3-engineering',
-            displayName: 'L3 Engineering Team',
-            type: 'PERSONAL',
-            plan: {
-                stages: [
-                    {
-                        durationInMinutes: 15,
-                        targets: [
-                            {
-                                channelTargetInfo: {
-                                    contactChannelId: this.createEmailChannel(
-                                        'L3EmailChannel',
-                                        oncallEmail || 'engineering@example.com'
-                                    ).ref,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        });
-
-        contacts.push(l3Contact);
-
-        return contacts;
+    private createContacts(oncallEmail?: string): any[] {
+        // Return empty array - contacts must be created manually
+        // until AWS CDK adds CfnContact support
+        console.warn('SSM Incidents Contacts must be created manually in AWS Console');
+        return [];
     }
 
     /**
      * Create Email Contact Channel
+     * Note: Disabled until CfnContact is available in AWS CDK
      */
-    private createEmailChannel(id: string, email: string): ssmIncidents.CfnContact.ContactChannelProperty {
-        return {
-            channelName: `${id}-Email`,
-            channelAddress: email,
-            channelType: 'EMAIL',
-            deferActivation: false,
-        } as any;
+    private createEmailChannel(id: string, email: string): any {
+        // Placeholder - not used until CfnContact is available
+        return null;
     }
 
     /**
@@ -193,7 +118,7 @@ export class IncidentManagerStack extends cdk.Stack {
         projectName: string,
         environment: string,
         alertingTopic: sns.ITopic,
-        contacts: ssmIncidents.CfnContact[]
+        contacts: any[]
     ): ssmIncidents.CfnResponsePlan {
         return new ssmIncidents.CfnResponsePlan(this, 'CriticalResponsePlan', {
             name: `${projectName}-${environment}-critical`,
@@ -209,7 +134,7 @@ export class IncidentManagerStack extends cdk.Stack {
                     },
                 ],
             },
-            engagements: contacts.map(contact => contact.attrArn),
+            // engagements: contacts.map(contact => contact.attrArn), // Disabled until CfnContact is available
             actions: [
                 {
                     ssmAutomation: {
@@ -234,7 +159,7 @@ export class IncidentManagerStack extends cdk.Stack {
         projectName: string,
         environment: string,
         alertingTopic: sns.ITopic,
-        contacts: ssmIncidents.CfnContact[]
+        contacts: any[]
     ): ssmIncidents.CfnResponsePlan {
         return new ssmIncidents.CfnResponsePlan(this, 'HighResponsePlan', {
             name: `${projectName}-${environment}-high`,
@@ -250,7 +175,7 @@ export class IncidentManagerStack extends cdk.Stack {
                     },
                 ],
             },
-            engagements: [contacts[0].attrArn, contacts[1].attrArn], // L1 and L2
+            // engagements: [contacts[0].attrArn, contacts[1].attrArn], // L1 and L2 - Disabled until CfnContact is available
             chatChannel: {
                 chatbotSns: [alertingTopic.topicArn],
             },
@@ -265,7 +190,7 @@ export class IncidentManagerStack extends cdk.Stack {
         projectName: string,
         environment: string,
         alertingTopic: sns.ITopic,
-        contacts: ssmIncidents.CfnContact[]
+        contacts: any[]
     ): ssmIncidents.CfnResponsePlan {
         return new ssmIncidents.CfnResponsePlan(this, 'MediumResponsePlan', {
             name: `${projectName}-${environment}-medium`,
@@ -281,7 +206,7 @@ export class IncidentManagerStack extends cdk.Stack {
                     },
                 ],
             },
-            engagements: [contacts[0].attrArn], // L1 only
+            // engagements: [contacts[0].attrArn], // L1 only - Disabled until CfnContact is available
             chatChannel: {
                 chatbotSns: [alertingTopic.topicArn],
             },

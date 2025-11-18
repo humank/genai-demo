@@ -15,6 +15,24 @@
         "calculate_time_difference"
       ]
     },
+    "aws-api": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-api-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_REGION": "us-east-1",
+        "READ_OPERATIONS_ONLY": "false",
+        "REQUIRE_MUTATION_CONSENT": "true"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "call_aws",
+        "suggest_aws_commands",
+        "suggest_aws_commands"
+      ]
+    },
     "aws-docs": {
       "command": "uvx",
       "args": [
@@ -31,6 +49,20 @@
         "read_documentation"
       ]
     },
+    "aws-knowledge": {
+      "command": "uvx",
+      "args": [
+        "mcp-proxy",
+        "--transport",
+        "streamablehttp",
+        "https://knowledge-mcp.global.api.aws"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "aws___search_documentation",
+        "aws___read_documentation"
+      ]
+    },
     "aws-cdk": {
       "command": "uvx",
       "args": [
@@ -43,29 +75,17 @@
       "autoApprove": [
         "CDKGeneralGuidance",
         "ExplainCDKNagRule",
-        "CheckCDKNagSuppressions"
-      ]
-    },
-    "aws-pricing": {
-      "command": "uvx",
-      "args": [
-        "awslabs.aws-pricing-mcp-server@latest"
-      ],
-      "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      },
-      "disabled": true,
-      "autoApprove": [
-        "analyze_cdk_project",
-        "get_pricing",
-        "generate_cost_report",
-        "get_pricing_service_codes"
+        "CheckCDKNagSuppressions",
+        "GenerateBedrockAgentSchema",
+        "GetAwsSolutionsConstructPattern",
+        "SearchGenAICDKConstructs",
+        "LambdaLayerDocumentationProvider"
       ]
     },
     "excalidraw": {
       "command": "node",
       "args": [
-        "/Users/yikaikao/git/genai-demo/node_modules/mcp-excalidraw-server/src/index.js"
+        "node_modules/mcp-excalidraw-server/src/index.js"
       ],
       "env": {
         "ENABLE_CANVAS_SYNC": "false"

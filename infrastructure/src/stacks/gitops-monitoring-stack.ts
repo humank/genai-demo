@@ -50,7 +50,7 @@ export class GitOpsMonitoringStack extends cdk.Stack {
         this.dashboard = this.createGitOpsDashboard(projectName, environment);
 
         // Set up EventBridge rules for ArgoCD events (via Kubernetes events)
-        this.setupArgoCD EventRules(projectName, environment, alertingTopic);
+        this.setupArgoCDEventRules(projectName, environment, alertingTopic);
 
         // Create alarms for deployment failures
         this.createDeploymentAlarms(projectName, environment, alertingTopic);

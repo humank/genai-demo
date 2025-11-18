@@ -325,6 +325,7 @@ Perspectives describe **quality attributes** that affect the entire system:
 | **Orchestration** | Amazon EKS |
 | **CI/CD** | GitHub Actions + ArgoCD |
 | **Monitoring** | CloudWatch + X-Ray + Grafana |
+| **Lambda Functions** | Python 3.9+ with separate files |
 
 ### Frontend
 
@@ -352,6 +353,7 @@ Our documentation follows the **Rozanski & Woods** methodology with clear separa
 | **API Documentation** | REST API & Events | [🔌 API Docs](docs/api/README.md) |
 | **Operations** | Runbooks & procedures | [🔧 Operations](docs/operations/README.md) |
 | **Development** | Coding standards & guides | [💻 Development](docs/development/README.md) |
+| **Infrastructure** | Lambda & CDK improvements | [☁️ Infrastructure](docs/infrastructure/lambda-refactoring-and-test-improvements.md) |
 
 ### 📂 Documentation Structure
 

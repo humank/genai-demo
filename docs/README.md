@@ -104,6 +104,12 @@ Perspectives describe quality attributes that cut across viewpoints:
 - [Runbooks](operations/runbooks/README.md) - Operational procedures
 - [Troubleshooting](operations/troubleshooting/README.md) - Common issues and solutions
 
+### Infrastructure
+
+- [Lambda Refactoring & Test Improvements](infrastructure/lambda-refactoring-and-test-improvements.md) - Lambda function refactoring and CDK test fixes (2025-11-18)
+- [AWS Config Insights](infrastructure/aws-config-insights-implementation.md) - AWS Config implementation
+- [MCP Server Analysis](infrastructure/mcp-server-analysis.md) - MCP server troubleshooting and optimization
+
 ## 🔍 Finding Information
 
 ### By Topic
@@ -111,8 +117,10 @@ Perspectives describe quality attributes that cut across viewpoints:
 - **Authentication & Security**: [Security Perspective](perspectives/security/README.md)
 - **Performance Optimization**: [Performance Perspective](perspectives/performance/README.md)
 - **Deployment & Infrastructure**: [Deployment Viewpoint](viewpoints/deployment/README.md)
+- **Lambda Functions & CDK**: [Lambda Refactoring Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
 - **API Reference**: [API Documentation](api/README.md)
 - **Testing**: [Testing Guide](development/testing/README.md)
+- **CDK Testing**: [Lambda Refactoring Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
 - **Troubleshooting**: [Troubleshooting Guide](operations/troubleshooting/README.md)
 
 ### By Task

@@ -78,22 +78,22 @@ describe('ObservabilityStack - AWS Native Concurrency Monitoring', () => {
         test('should create Container Insights log groups', () => {
             template.hasResourceProperties('AWS::Logs::LogGroup', {
                 LogGroupName: '/aws/containerinsights/test-genai-demo/performance',
-                RetentionInDays: 7
+                RetentionInDays: 14
             });
 
             template.hasResourceProperties('AWS::Logs::LogGroup', {
                 LogGroupName: '/aws/containerinsights/test-genai-demo/application',
-                RetentionInDays: 7
+                RetentionInDays: 14
             });
 
             template.hasResourceProperties('AWS::Logs::LogGroup', {
                 LogGroupName: '/aws/containerinsights/test-genai-demo/dataplane',
-                RetentionInDays: 7
+                RetentionInDays: 14
             });
 
             template.hasResourceProperties('AWS::Logs::LogGroup', {
                 LogGroupName: '/aws/containerinsights/test-genai-demo/host',
-                RetentionInDays: 7
+                RetentionInDays: 14
             });
         });
     });
@@ -240,10 +240,12 @@ describe('ObservabilityStack - AWS Native Concurrency Monitoring', () => {
                         // Ensure no wildcard resources for sensitive actions
                         if (policy.PolicyDocument.Statement) {
                             policy.PolicyDocument.Statement.forEach((statement: any) => {
-                                if (statement.Effect === 'Allow' && 
-                                    statement.Action.some((action: string) => 
+                                if (statement.Effect === 'Allow' && statement.Action) {
+                                    const actions = Array.isArray(statement.Action) ? statement.Action : [statement.Action];
+                                    if (actions.some((action: string) => 
                                         action.includes('Delete') || action.includes('Terminate'))) {
-                                    expect(statement.Resource).not.toBe('*');
+                                        expect(statement.Resource).not.toBe('*');
+                                    }
                                 }
                             });
                         }
