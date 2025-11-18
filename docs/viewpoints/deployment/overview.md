@@ -74,12 +74,59 @@ graph TD
 
 **Purpose**: Run containerized microservices with automatic scaling
 
+```mermaid
+graph TB
+    subgraph "EKS Cluster - Multi-AZ"
+        subgraph "AZ-1"
+            N1[Node Group 1<br/>t3.large]
+            N2[Node Group 2<br/>r5.xlarge]
+        end
+        
+        subgraph "AZ-2"
+            N3[Node Group 1<br/>t3.large]
+            N4[Node Group 2<br/>r5.xlarge]
+        end
+        
+        subgraph "AZ-3"
+            N5[Node Group 1<br/>t3.large]
+            N6[Node Group 2<br/>r5.xlarge]
+        end
+    end
+    
+    subgraph "Auto-Scaling"
+        CA[Cluster Autoscaler]
+        HPA[Horizontal Pod Autoscaler]
+    end
+    
+    subgraph "Namespaces"
+        NS1[order-service]
+        NS2[payment-service]
+        NS3[inventory-service]
+        NS4[user-service]
+    end
+    
+    CA --> N1
+    CA --> N3
+    CA --> N5
+    HPA --> NS1
+    HPA --> NS2
+    HPA --> NS3
+    HPA --> NS4
+    
+    style N1 fill:#e1f5ff
+    style N3 fill:#e1f5ff
+    style N5 fill:#e1f5ff
+    style N2 fill:#fff3cd
+    style N4 fill:#fff3cd
+    style N6 fill:#fff3cd
+```
+
 **Configuration**:
 
 - **Cluster**: Multi-AZ EKS cluster with managed node groups
 - **Node Groups**:
-  - General purpose (t3.large): 3-10 nodes
-  - Memory optimized (r5.xlarge): 2-5 nodes for data-intensive services
+  - General purpose (t3.large): 3-10 nodes (blue)
+  - Memory optimized (r5.xlarge): 2-5 nodes for data-intensive services (yellow)
 - **Auto-scaling**: Cluster Autoscaler + Horizontal Pod Autoscaler
 - **Namespaces**: Logical separation by bounded context
 
@@ -93,6 +140,45 @@ graph TD
 ### 2. Database Layer (Amazon RDS)
 
 **Purpose**: Persistent storage for transactional data
+
+```mermaid
+graph TB
+    subgraph "Primary Region - us-east-1"
+        subgraph "AZ-1"
+            P[Primary DB<br/>db.r5.xlarge<br/>PostgreSQL 15.x]
+        end
+        
+        subgraph "AZ-2"
+            S[Standby DB<br/>db.r5.xlarge<br/>Synchronous Replication]
+        end
+        
+        subgraph "Read Replicas"
+            R1[Read Replica 1<br/>db.r5.large<br/>AZ-1]
+            R2[Read Replica 2<br/>db.r5.large<br/>AZ-2]
+        end
+    end
+    
+    subgraph "Backup & Recovery"
+        B1[Automated Backups<br/>Daily, 7-day retention]
+        B2[Point-in-Time Recovery<br/>Up to 7 days]
+    end
+    
+    APP[Application Services] --> P
+    APP --> R1
+    APP --> R2
+    P -.Sync Replication.-> S
+    P -.Async Replication.-> R1
+    P -.Async Replication.-> R2
+    P --> B1
+    P --> B2
+    
+    style P fill:#d4edda
+    style S fill:#fff3cd
+    style R1 fill:#e1f5ff
+    style R2 fill:#e1f5ff
+    style B1 fill:#f8d7da
+    style B2 fill:#f8d7da
+```
 
 **Configuration**:
 

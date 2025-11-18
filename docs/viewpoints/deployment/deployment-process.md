@@ -21,16 +21,61 @@ This document describes the continuous integration and continuous deployment (CI
 ### Pipeline Stages
 
 ```mermaid
-graph LR
-    N1["Source"]
-    N2["Build"]
-    N1 --> N2
-    N3["Test"]
-    N2 --> N3
-    N4["Deploy"]
-    N3 --> N4
-    N5["Monitor"]
-    N4 --> N5
+flowchart TD
+    A[Developer Push Code] --> B[GitHub Actions Triggered]
+    
+    subgraph "Stage 1: Build & Test"
+        B --> C[Checkout Code]
+        C --> D[Setup JDK 21]
+        D --> E[Run Unit Tests]
+        E --> F[Run Integration Tests]
+        F --> G[Generate Coverage Report]
+        G --> H{Coverage > 80%?}
+        H -->|No| Z1[❌ Fail Build]
+        H -->|Yes| I[Build Application]
+    end
+    
+    subgraph "Stage 2: Quality & Security"
+        I --> J[SonarQube Analysis]
+        J --> K{Quality Gate Pass?}
+        K -->|No| Z2[❌ Fail Build]
+        K -->|Yes| L[Build Docker Image]
+        L --> M[Scan Image with Trivy]
+        M --> N{Vulnerabilities Found?}
+        N -->|Critical| Z3[❌ Fail Build]
+        N -->|None/Low| O[Push to ECR]
+    end
+    
+    subgraph "Stage 3: Deploy"
+        O --> P{Target Environment?}
+        P -->|develop| Q1[Deploy to Dev]
+        P -->|staging| Q2[Deploy to Staging]
+        P -->|main| Q3[Deploy to Production]
+        
+        Q1 --> R1[Update Dev Cluster]
+        Q2 --> R2[Update Staging Cluster]
+        Q3 --> R3[Canary Deployment]
+        
+        R3 --> S[Monitor Canary 10%]
+        S --> T{Canary Healthy?}
+        T -->|No| U[Rollback]
+        T -->|Yes| V[Progressive Rollout]
+        V --> W[100% Traffic]
+    end
+    
+    subgraph "Stage 4: Verify"
+        R1 --> X[Health Checks]
+        R2 --> X
+        W --> X
+        X --> Y[Post-Deploy Tests]
+        Y --> AA[Update Monitoring]
+    end
+    
+    style Z1 fill:#ffebee
+    style Z2 fill:#ffebee
+    style Z3 fill:#ffebee
+    style U fill:#fff3cd
+    style AA fill:#d4edda
 ```
 
 ### Pipeline Tools

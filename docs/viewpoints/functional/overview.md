@@ -96,6 +96,61 @@ This viewpoint answers the following key questions:
 
 **Why it matters**: Tight coupling between contexts would negate the benefits of bounded context separation and make the system harder to evolve.
 
+**Context Integration Pattern**:
+
+```mermaid
+graph TB
+    subgraph "Customer Journey"
+        USER[User/Customer]
+        CART[Shopping Cart Context]
+        ORDER[Order Context]
+        PAYMENT[Payment Context]
+        DELIVERY[Delivery Context]
+        NOTIF[Notification Context]
+    end
+    
+    subgraph "Product Management"
+        PRODUCT[Product Context]
+        INVENTORY[Inventory Context]
+        PRICING[Pricing Context]
+        SELLER[Seller Context]
+    end
+    
+    subgraph "Customer Engagement"
+        CUSTOMER[Customer Context]
+        REVIEW[Review Context]
+        PROMO[Promotion Context]
+    end
+    
+    USER --> CART
+    CART --> ORDER
+    ORDER -.OrderCreated Event.-> PAYMENT
+    ORDER -.OrderCreated Event.-> INVENTORY
+    PAYMENT -.PaymentCompleted Event.-> ORDER
+    ORDER -.OrderConfirmed Event.-> DELIVERY
+    ORDER -.OrderConfirmed Event.-> NOTIF
+    
+    CART --> PRODUCT
+    CART --> PRICING
+    ORDER --> INVENTORY
+    
+    CUSTOMER --> ORDER
+    CUSTOMER --> REVIEW
+    CUSTOMER --> PROMO
+    
+    SELLER --> PRODUCT
+    SELLER --> INVENTORY
+    
+    REVIEW --> PRODUCT
+    PROMO --> PRICING
+    
+    style USER fill:#e1f5ff
+    style ORDER fill:#d4edda
+    style PAYMENT fill:#fff3cd
+    style DELIVERY fill:#f8d7da
+    style NOTIF fill:#e8f5e9
+```
+
 **How it's addressed**:
 
 - **Domain Events**: Asynchronous communication via domain events for cross-context workflows

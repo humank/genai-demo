@@ -51,27 +51,94 @@ IPv6: Not enabled
 
 The VPC is divided into **public** and **private** subnets across 3 Availability Zones for high availability.
 
+```mermaid
+graph TB
+    IGW[Internet Gateway]
+    
+    subgraph "VPC: 10.0.0.0/16"
+        subgraph "Availability Zone 1a"
+            PUB1[Public Subnet<br/>10.0.1.0/24<br/>ALB, NAT Gateway]
+            APP1[Private App Subnet<br/>10.0.10.0/23<br/>EKS Nodes]
+            DB1[Private DB Subnet<br/>10.0.20.0/24<br/>RDS Primary]
+            MSG1[Private MSG Subnet<br/>10.0.30.0/24<br/>MSK Broker 1]
+        end
+        
+        subgraph "Availability Zone 1b"
+            PUB2[Public Subnet<br/>10.0.2.0/24<br/>ALB, NAT Gateway]
+            APP2[Private App Subnet<br/>10.0.12.0/23<br/>EKS Nodes]
+            DB2[Private DB Subnet<br/>10.0.21.0/24<br/>RDS Standby]
+            MSG2[Private MSG Subnet<br/>10.0.31.0/24<br/>MSK Broker 2]
+        end
+        
+        subgraph "Availability Zone 1c"
+            PUB3[Public Subnet<br/>10.0.3.0/24<br/>ALB, NAT Gateway]
+            APP3[Private App Subnet<br/>10.0.14.0/23<br/>EKS Nodes]
+            DB3[Private DB Subnet<br/>10.0.22.0/24<br/>RDS Replica]
+            MSG3[Private MSG Subnet<br/>10.0.32.0/24<br/>MSK Broker 3]
+        end
+        
+        NAT1[NAT Gateway 1]
+        NAT2[NAT Gateway 2]
+        NAT3[NAT Gateway 3]
+    end
+    
+    IGW --> PUB1
+    IGW --> PUB2
+    IGW --> PUB3
+    
+    PUB1 --> NAT1
+    PUB2 --> NAT2
+    PUB3 --> NAT3
+    
+    NAT1 -.-> APP1
+    NAT2 -.-> APP2
+    NAT3 -.-> APP3
+    
+    APP1 --> DB1
+    APP2 --> DB2
+    APP3 --> DB3
+    
+    APP1 --> MSG1
+    APP2 --> MSG2
+    APP3 --> MSG3
+    
+    style PUB1 fill:#e1f5ff
+    style PUB2 fill:#e1f5ff
+    style PUB3 fill:#e1f5ff
+    style APP1 fill:#fff3cd
+    style APP2 fill:#fff3cd
+    style APP3 fill:#fff3cd
+    style DB1 fill:#d4edda
+    style DB2 fill:#d4edda
+    style DB3 fill:#d4edda
+    style MSG1 fill:#f8d7da
+    style MSG2 fill:#f8d7da
+    style MSG3 fill:#f8d7da
+```
+
+**Subnet Breakdown**:
+
 ```text
-VPC: 10.0.0.0/16
+VPC: 10.0.0.0/16 (65,536 IPs)
 ├── Public Subnets (for internet-facing resources)
-│   ├── us-east-1a: 10.0.1.0/24  (256 IPs)
-│   ├── us-east-1b: 10.0.2.0/24  (256 IPs)
-│   └── us-east-1c: 10.0.3.0/24  (256 IPs)
+│   ├── us-east-1a: 10.0.1.0/24  (256 IPs) - ALB, NAT Gateway
+│   ├── us-east-1b: 10.0.2.0/24  (256 IPs) - ALB, NAT Gateway
+│   └── us-east-1c: 10.0.3.0/24  (256 IPs) - ALB, NAT Gateway
 │
 ├── Private Subnets - Application (for EKS nodes)
-│   ├── us-east-1a: 10.0.10.0/23 (512 IPs)
-│   ├── us-east-1b: 10.0.12.0/23 (512 IPs)
-│   └── us-east-1c: 10.0.14.0/23 (512 IPs)
+│   ├── us-east-1a: 10.0.10.0/23 (512 IPs) - EKS Worker Nodes
+│   ├── us-east-1b: 10.0.12.0/23 (512 IPs) - EKS Worker Nodes
+│   └── us-east-1c: 10.0.14.0/23 (512 IPs) - EKS Worker Nodes
 │
 ├── Private Subnets - Database (for RDS, ElastiCache)
-│   ├── us-east-1a: 10.0.20.0/24 (256 IPs)
-│   ├── us-east-1b: 10.0.21.0/24 (256 IPs)
-│   └── us-east-1c: 10.0.22.0/24 (256 IPs)
+│   ├── us-east-1a: 10.0.20.0/24 (256 IPs) - RDS Primary, Redis
+│   ├── us-east-1b: 10.0.21.0/24 (256 IPs) - RDS Standby, Redis
+│   └── us-east-1c: 10.0.22.0/24 (256 IPs) - RDS Replica, Redis
 │
 └── Private Subnets - Messaging (for MSK)
-    ├── us-east-1a: 10.0.30.0/24 (256 IPs)
-    ├── us-east-1b: 10.0.31.0/24 (256 IPs)
-    └── us-east-1c: 10.0.32.0/24 (256 IPs)
+    ├── us-east-1a: 10.0.30.0/24 (256 IPs) - Kafka Broker 1
+    ├── us-east-1b: 10.0.31.0/24 (256 IPs) - Kafka Broker 2
+    └── us-east-1c: 10.0.32.0/24 (256 IPs) - Kafka Broker 3
 ```
 
 ### Public Subnets
