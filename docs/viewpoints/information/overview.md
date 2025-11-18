@@ -90,14 +90,90 @@ We ensure data quality through:
 
 Our system is organized into 13 bounded contexts, each owning specific data:
 
-| Bounded Context | Primary Data Owned | Key Aggregates |
-|----------------|-------------------|----------------|
-| Customer | Customer profiles, preferences | Customer |
-| Order | Order details, order items | Order |
-| Product | Product catalog, specifications | Product |
-| Inventory | Stock levels, reservations | InventoryItem |
-| Payment | Payment transactions, methods | Payment |
-| Shipping | Shipment tracking, addresses | Shipment |
+```mermaid
+graph TB
+    subgraph "Data Ownership by Bounded Context"
+        subgraph "Customer Context"
+            C1[(Customer DB)]
+            C2[Customer Aggregate]
+            C3[Customer Profile]
+            C4[Customer Preferences]
+        end
+        
+        subgraph "Order Context"
+            O1[(Order DB)]
+            O2[Order Aggregate]
+            O3[Order Items]
+            O4[Order History]
+        end
+        
+        subgraph "Product Context"
+            P1[(Product DB)]
+            P2[Product Aggregate]
+            P3[Product Catalog]
+            P4[Product Specs]
+        end
+        
+        subgraph "Inventory Context"
+            I1[(Inventory DB)]
+            I2[InventoryItem Aggregate]
+            I3[Stock Levels]
+            I4[Reservations]
+        end
+        
+        subgraph "Payment Context"
+            PAY1[(Payment DB)]
+            PAY2[Payment Aggregate]
+            PAY3[Transactions]
+            PAY4[Payment Methods]
+        end
+        
+        subgraph "Delivery Context"
+            D1[(Delivery DB)]
+            D2[Shipment Aggregate]
+            D3[Tracking Info]
+            D4[Delivery Address]
+        end
+    end
+    
+    subgraph "Event Bus - Kafka"
+        E1[Domain Events]
+        E2[OrderCreated]
+        E3[PaymentCompleted]
+        E4[InventoryReserved]
+        E5[ShipmentDispatched]
+    end
+    
+    O2 --> E2
+    PAY2 --> E3
+    I2 --> E4
+    D2 --> E5
+    
+    E2 -.-> PAY2
+    E2 -.-> I2
+    E3 -.-> O2
+    E4 -.-> O2
+    E5 -.-> O2
+    
+    style C1 fill:#e1f5ff
+    style O1 fill:#d4edda
+    style P1 fill:#fff3cd
+    style I1 fill:#f8d7da
+    style PAY1 fill:#e8f5e9
+    style D1 fill:#fce4ec
+    style E1 fill:#fff9c4
+```
+
+**Data Ownership Table**:
+
+| Bounded Context | Primary Data Owned | Key Aggregates | Database |
+|----------------|-------------------|----------------|----------|
+| Customer | Customer profiles, preferences | Customer | customer_db |
+| Order | Order details, order items | Order | order_db |
+| Product | Product catalog, specifications | Product | product_db |
+| Inventory | Stock levels, reservations | InventoryItem | inventory_db |
+| Payment | Payment transactions, methods | Payment | payment_db |
+| Delivery | Shipment tracking, addresses | Shipment | delivery_db |
 | Promotion | Discount rules, campaigns | Promotion |
 | Notification | Notification templates, logs | Notification |
 | Review | Product reviews, ratings | Review |

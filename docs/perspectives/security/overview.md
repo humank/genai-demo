@@ -99,6 +99,64 @@ This perspective ensures:
 
 **Description**: Protecting sensitive data both at rest and in transit through encryption, masking, and secure storage. This includes customer PII, payment information, and business data.
 
+**Defense-in-Depth Security Architecture**:
+
+```mermaid
+graph TB
+    subgraph "Layer 1: Network Security"
+        WAF[AWS WAF<br/>Web Application Firewall]
+        SG[Security Groups<br/>Network ACLs]
+        VPC[VPC Isolation<br/>Private Subnets]
+    end
+    
+    subgraph "Layer 2: Application Security"
+        ALB[Application Load Balancer<br/>TLS 1.3 Termination]
+        API[API Gateway<br/>Rate Limiting]
+        AUTH[Authentication<br/>JWT Tokens]
+        AUTHZ[Authorization<br/>RBAC + ABAC]
+    end
+    
+    subgraph "Layer 3: Data Security"
+        ENC1[Encryption in Transit<br/>TLS 1.3]
+        ENC2[Encryption at Rest<br/>AES-256]
+        MASK[Data Masking<br/>PII Protection]
+        VAULT[Secrets Management<br/>AWS Secrets Manager]
+    end
+    
+    subgraph "Layer 4: Monitoring & Response"
+        LOG[Centralized Logging<br/>CloudWatch Logs]
+        SIEM[Security Monitoring<br/>AWS Security Hub]
+        IDS[Intrusion Detection<br/>GuardDuty]
+        ALERT[Incident Response<br/>Automated Alerts]
+    end
+    
+    USER[External User] --> WAF
+    WAF --> ALB
+    ALB --> API
+    API --> AUTH
+    AUTH --> AUTHZ
+    
+    WAF -.-> SG
+    SG -.-> VPC
+    
+    AUTHZ --> ENC1
+    ENC1 --> ENC2
+    ENC2 --> MASK
+    MASK --> VAULT
+    
+    WAF -.-> LOG
+    API -.-> LOG
+    AUTH -.-> LOG
+    LOG --> SIEM
+    SIEM --> IDS
+    IDS --> ALERT
+    
+    style WAF fill:#ffebee
+    style AUTH fill:#e8f5e9
+    style ENC2 fill:#e1f5ff
+    style SIEM fill:#fff3cd
+```
+
 **Impact**: Unprotected data could be exposed through breaches, leading to regulatory fines, customer trust loss, and legal liability.
 
 **Priority**: High

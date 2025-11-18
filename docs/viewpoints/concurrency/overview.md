@@ -96,6 +96,52 @@ The system handles concurrency at multiple levels:
 
 **Problem**: Ensuring order processing steps execute in correct sequence without race conditions.
 
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant API as API Gateway
+    participant OS as Order Service
+    participant IS as Inventory Service
+    participant PS as Payment Service
+    participant REDIS as Redis Lock
+    participant KAFKA as Kafka Events
+    
+    Note over U,KAFKA: Concurrent Order Processing with Distributed Locking
+    
+    U->>API: POST /orders (Order Request)
+    API->>OS: Create Order
+    
+    OS->>REDIS: Acquire Lock (inventory-item-123)
+    REDIS-->>OS: Lock Acquired
+    
+    OS->>IS: Check Inventory
+    IS-->>OS: Available (Qty: 1)
+    
+    OS->>IS: Reserve Inventory
+    IS->>REDIS: Update Stock (Atomic)
+    REDIS-->>IS: Stock Updated
+    IS-->>OS: Reserved
+    
+    OS->>KAFKA: Publish OrderCreated Event
+    OS->>REDIS: Release Lock
+    REDIS-->>OS: Lock Released
+    
+    OS-->>API: Order Created (201)
+    API-->>U: Order Confirmation
+    
+    Note over KAFKA,PS: Asynchronous Payment Processing
+    
+    KAFKA->>PS: OrderCreated Event
+    PS->>PS: Process Payment
+    PS->>KAFKA: Publish PaymentCompleted Event
+    
+    KAFKA->>OS: PaymentCompleted Event
+    OS->>OS: Update Order Status
+    OS->>KAFKA: Publish OrderConfirmed Event
+    
+    Note over U,KAFKA: Total Time: ~500ms (Synchronous) + Background (Asynchronous)
+```
+
 **Solution**:
 
 - Saga pattern for distributed transactions

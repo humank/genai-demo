@@ -97,6 +97,71 @@ This perspective ensures:
 
 **Description**: Ability to add more application instances to handle increased load without code changes or architectural modifications.
 
+**Multi-Layer Performance Optimization Strategy**:
+
+```mermaid
+graph TB
+    subgraph "Layer 1: CDN & Edge Caching"
+        CDN[CloudFront CDN<br/>Static Assets<br/>TTL: 24h]
+        EDGE[Edge Locations<br/>Global Distribution]
+    end
+    
+    subgraph "Layer 2: Application Caching"
+        L1[L1 Cache<br/>In-Memory<br/>Caffeine<br/>TTL: 5min]
+        L2[L2 Cache<br/>Redis Cluster<br/>Distributed<br/>TTL: 1h]
+    end
+    
+    subgraph "Layer 3: Database Optimization"
+        RR[Read Replicas<br/>2x db.r5.large<br/>Read Scaling]
+        IDX[Indexes<br/>Query Optimization]
+        POOL[Connection Pool<br/>HikariCP<br/>Max: 20]
+    end
+    
+    subgraph "Layer 4: Async Processing"
+        KAFKA[Kafka Streams<br/>Event Processing]
+        ASYNC[Async Tasks<br/>Background Jobs]
+        QUEUE[Task Queue<br/>Priority-based]
+    end
+    
+    subgraph "Layer 5: Auto-Scaling"
+        HPA[Horizontal Pod Autoscaler<br/>CPU > 70%]
+        CA[Cluster Autoscaler<br/>Node Scaling]
+        ALB[Application Load Balancer<br/>Traffic Distribution]
+    end
+    
+    USER[User Request] --> CDN
+    CDN --> ALB
+    ALB --> L1
+    L1 -->|Cache Miss| L2
+    L2 -->|Cache Miss| RR
+    RR -->|Write| POOL
+    
+    POOL --> IDX
+    IDX --> KAFKA
+    KAFKA --> ASYNC
+    ASYNC --> QUEUE
+    
+    HPA -.-> ALB
+    CA -.-> HPA
+    
+    style CDN fill:#e1f5ff
+    style L1 fill:#fff3cd
+    style L2 fill:#d4edda
+    style RR fill:#f8d7da
+    style KAFKA fill:#e8f5e9
+    style HPA fill:#fce4ec
+```
+
+**Performance Targets**:
+
+| Metric | Target | Current | Status |
+|--------|--------|---------|--------|
+| API Response Time (P95) | < 500ms | 380ms | ✅ |
+| Database Query Time (P95) | < 100ms | 75ms | ✅ |
+| Cache Hit Rate | > 80% | 85% | ✅ |
+| Throughput | > 1000 req/s | 1250 req/s | ✅ |
+| Error Rate | < 0.1% | 0.05% | ✅ |
+
 **Impact**: Without horizontal scalability, the system cannot handle traffic spikes during sales events, leading to outages and lost revenue.
 
 **Priority**: High
