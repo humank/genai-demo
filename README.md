@@ -217,31 +217,58 @@ aws fis start-experiment --experiment-template-id taiwan-region-failure
 echo "✅ DR Drill Completed: All SLOs Met"
 ```
 
-### 💰 Cost-Benefit Analysis
+### 💰 Real Infrastructure Cost Analysis
 
-**Investment vs. Protection**:
-
+**Based on Actual CDK Configuration and AWS Pricing**:
 
 ```text
-Monthly Infrastructure Cost:
-├── Single Region:     $5,000/month
-├── Multi-Region:      $9,500/month
-└── Additional Cost:   $4,500/month (90% increase)
+Single Region (Taiwan Only):
+├── Infrastructure (CDK Verified):     $270/month
+│   ├── Observability:                 $201/month (19 log groups, X-Ray, metrics)
+│   ├── Security:                      $37/month (KMS, audit, CloudTrail)
+│   ├── Network:                       $32/month (VPC, ALB, Flow Logs)
+│
+├── Compute & Database (Estimated):    $809/month
+│   ├── EKS Control Plane:             $73/month (1 cluster × $0.10/hr)
+│   ├── EKS Worker Nodes:              $91/month (3 × t3.medium)
+│   ├── RDS Aurora:                    $400/month (2 instances for HA)
+│   ├── RDS Storage:                   $10/month (100GB)
+│   ├── ElastiCache:                   $50/month (cache.t3.medium)
+│   ├── MSK:                           $160/month (3 brokers)
+│   └── Data Transfer:                 $25/month (inter-AZ)
+│
+└── Total Single Region:               $1,079/month
 
-Revenue Protection (6 months actual):
-├── Downtime Cost:           $5,100/minute
-├── Break-Even:              < 1 minute prevented/month
-├── Actual Prevention:       47 minutes / 6 months
-├── Monthly Value:           $39,950 protected revenue
-└── ROI:                     889% ($39,950 / $4,500)
+Multi-Region (Taiwan + Japan Active-Active):
+├── Taiwan Region:                     $1,079/month
+├── Japan Region:                      $1,079/month
+├── Cross-Region Services:             $102/month
+│   ├── Data Transfer:                 $100/month (1TB × $0.09/GB)
+│   ├── Route 53:                      $2/month (health checks, hosted zone)
+│   └── Aurora Global DB:              $0 (no additional charge)
+│
+└── Total Multi-Region:                $2,260/month
 
-Intangible Benefits:
-├── ✅ Customer trust and brand reputation
-├── ✅ Competitive differentiation (99.99% SLA)
-├── ✅ Regulatory compliance (financial services)
-├── ✅ Peace of mind for leadership team
-└── ✅ Market leadership positioning
+Additional Investment for Resilience:
+├── Monthly:                           $1,181 (109% increase)
+├── Annual:                            $14,172
+└── Per Hour:                          $1.61
 ```
+
+**ROI Analysis by Business Size**:
+
+| Annual Revenue | Revenue/Min | Break-Even | 1-Hour Outage Cost | ROI Scenario |
+|----------------|-------------|------------|-------------------|--------------|
+| $10M | $19 | 62 min/month | $1,142 | Marginal |
+| $50M | $95 | 12 min/month | $5,708 | **+142% ROI** |
+| $100M | $190 | 6 min/month | $11,416 | **+444% ROI** |
+
+**Key Insights**:
+- **Break-Even**: Preventing just 6-62 minutes of downtime per month (depends on revenue)
+- **Positive ROI**: For companies with $50M+ annual revenue
+- **Intangibles**: Customer trust, compliance, competitive advantage (not quantified)
+
+📊 **[Complete Cost Analysis](docs/REAL-COST-ANALYSIS.md)** - Detailed breakdown with scenarios and recommendations         
 
 ### 🎯 Technical Implementation Highlights
 
