@@ -1,1 +1,0 @@
-# Translation system configuration package
