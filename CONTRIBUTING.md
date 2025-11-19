@@ -15,6 +15,55 @@ Thank you for your interest in contributing! This document provides guidelines a
 
 ---
 
+## 🎯 Development Standards Overview
+
+This project follows **strict development standards** defined in `.kiro/steering/`. These are **mandatory** for all contributions.
+
+### Core Standards (Must Read)
+
+| Standard | Purpose | When to Use |
+|----------|---------|-------------|
+| [development-standards.md](.kiro/steering/development-standards.md) | Primary development guide | **Daily coding** |
+| [testing-strategy.md](.kiro/steering/testing-strategy.md) | Testing requirements | **Writing tests** |
+| [code-quality-checklist.md](.kiro/steering/code-quality-checklist.md) | Quality checks | **Before commit** |
+| [code-review-standards.md](.kiro/steering/code-review-standards.md) | Review process | **Code reviews** |
+
+### Architecture & Design
+
+| Standard | Purpose |
+|----------|---------|
+| [core-principles.md](.kiro/steering/core-principles.md) | Fundamental principles |
+| [ddd-tactical-patterns.md](.kiro/steering/ddd-tactical-patterns.md) | DDD implementation |
+| [design-principles.md](.kiro/steering/design-principles.md) | Design guidelines |
+| [architecture-constraints.md](.kiro/steering/architecture-constraints.md) | Architecture rules |
+| [domain-events.md](.kiro/steering/domain-events.md) | Event patterns |
+
+### Quality Standards
+
+| Standard | Purpose |
+|----------|---------|
+| [security-standards.md](.kiro/steering/security-standards.md) | Security requirements |
+| [performance-standards.md](.kiro/steering/performance-standards.md) | Performance guidelines |
+| [test-performance-standards.md](.kiro/steering/test-performance-standards.md) | Test performance |
+
+### Documentation
+
+| Standard | Purpose |
+|----------|---------|
+| [diagram-standards.md](.kiro/steering/diagram-standards.md) | Diagram format selection |
+| [diagram-generation-standards.md](.kiro/steering/diagram-generation-standards.md) | PlantUML generation |
+
+### Methodology
+
+| Standard | Purpose |
+|----------|---------|
+| [rozanski-woods-architecture-methodology.md](.kiro/steering/rozanski-woods-architecture-methodology.md) | Architecture methodology |
+| [event-storming-standards.md](.kiro/steering/event-storming-standards.md) | Event storming process |
+
+**Navigation Guide**: See [.kiro/steering/README.md](.kiro/steering/README.md) for detailed navigation.
+
+---
+
 ## Code of Conduct
 
 ### Our Pledge
@@ -40,6 +89,16 @@ We are committed to providing a welcoming and inspiring community for all. Pleas
 ---
 
 ## Getting Started
+
+### 📚 Read This First: Development Standards
+
+**MANDATORY**: Before contributing, read these core standards:
+
+1. **[Development Standards](.kiro/steering/development-standards.md)** - Primary guide
+2. **[Core Principles](.kiro/steering/core-principles.md)** - Fundamental principles
+3. **[Testing Strategy](.kiro/steering/testing-strategy.md)** - Testing requirements
+
+**Quick Reference**: See [.kiro/steering/README.md](.kiro/steering/README.md) for navigation guide.
 
 ### Prerequisites
 
@@ -81,6 +140,8 @@ make setup-hooks                  # Set up Git hooks
 
 **Detailed Setup**: See [Development Setup Guide](docs/development/setup/README.md)
 
+**Development Standards**: All development must follow [.kiro/steering/](..kiro/steering/) guidelines
+
 ---
 
 ## Development Workflow
@@ -108,8 +169,10 @@ git checkout -b feature/your-feature-name
 Follow our coding standards and best practices:
 
 - Write clean, readable code
-- Follow [Coding Standards](docs/development/coding-standards/README.md)
-- Add tests for new functionality
+- Follow [Development Standards](.kiro/steering/development-standards.md)
+- Follow [Code Quality Checklist](.kiro/steering/code-quality-checklist.md)
+- Follow [DDD Tactical Patterns](.kiro/steering/ddd-tactical-patterns.md)
+- Add tests for new functionality (see [Testing Strategy](.kiro/steering/testing-strategy.md))
 - Update documentation as needed
 
 ### 3. Test Your Changes
@@ -293,7 +356,11 @@ public class CustomerApplicationService {
 }
 ```
 
-**Detailed Standards**: [Coding Standards](docs/development/coding-standards/README.md)
+**Detailed Standards**: 
+- [Development Standards](.kiro/steering/development-standards.md)
+- [Core Principles](.kiro/steering/core-principles.md)
+- [Design Principles](.kiro/steering/design-principles.md)
+- [Architecture Constraints](.kiro/steering/architecture-constraints.md)
 
 ---
 
@@ -374,7 +441,10 @@ static final ArchRule domainLayerRules = classes()
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-**Detailed Testing Guide**: [Testing Strategy](docs/development/testing/testing-strategy.md)
+**Detailed Testing Guide**: 
+- [Testing Strategy](.kiro/steering/testing-strategy.md)
+- [Test Performance Standards](.kiro/steering/test-performance-standards.md)
+- [BDD Testing Guide](docs/development/testing/bdd-testing.md)
 
 ---
 
@@ -393,12 +463,20 @@ When making changes, update relevant documentation:
 
 ```text
 docs/
-├── viewpoints/              # Architecture viewpoints
-├── perspectives/            # Quality perspectives
+├── viewpoints/              # Architecture viewpoints (Rozanski & Woods)
+├── perspectives/            # Quality perspectives (Security, Performance, etc.)
 ├── architecture/            # ADRs and patterns
 ├── api/                     # API documentation
 ├── development/             # Developer guides
-└── operations/              # Operational procedures
+├── operations/              # Operational procedures
+└── diagrams/                # PlantUML and Mermaid diagrams
+
+.kiro/steering/              # Development standards and guidelines (MANDATORY)
+├── development-standards.md # Primary development guide
+├── testing-strategy.md      # Testing requirements
+├── code-quality-checklist.md
+├── ddd-tactical-patterns.md
+└── ... (17 standard files)
 ```
 
 ### Writing Documentation
@@ -414,10 +492,19 @@ Follow our [Documentation Style Guide](docs/STYLE-GUIDE.md):
 
 #### Diagrams
 
-- Use PlantUML for architecture diagrams
-- Use Mermaid for simple flow diagrams
-- Store diagrams in `docs/diagrams/`
-- Generate diagrams: `make diagrams`
+Follow [Diagram Standards](.kiro/steering/diagram-standards.md):
+
+- **PlantUML**: Complex UML diagrams, architecture diagrams
+  - Source: `docs/diagrams/viewpoints/`
+  - Generated: `docs/diagrams/generated/`
+  - Generate: `./scripts/generate-diagrams.sh --format=png`
+- **Mermaid**: Simple flow diagrams, process flows
+  - Inline in markdown or standalone `.mmd` files
+  - Native GitHub rendering
+- **ASCII**: Directory structures, simple trees
+- **Excalidraw**: Whiteboard-style sketches
+
+See [Diagram Generation Standards](.kiro/steering/diagram-generation-standards.md) for details.
 
 #### Examples
 
@@ -439,7 +526,10 @@ Customer customer = service.findById("123");
 
 ```
 
-**Detailed Guide**: [Documentation Style Guide](docs/STYLE-GUIDE.md)
+**Detailed Guides**: 
+- [Documentation Style Guide](docs/STYLE-GUIDE.md)
+- [Diagram Standards](.kiro/steering/diagram-standards.md)
+- [Diagram Generation](.kiro/steering/diagram-generation-standards.md)
 
 ---
 
@@ -551,12 +641,39 @@ Contributors will be recognized in:
 
 ## Additional Resources
 
-### Documentation
+### Development Standards (MANDATORY)
 
-- [Development Guide](docs/development/README.md)
+**Primary References** - Read these first:
+- [Development Standards](.kiro/steering/development-standards.md) - **START HERE**
+- [Core Principles](.kiro/steering/core-principles.md)
+- [Testing Strategy](.kiro/steering/testing-strategy.md)
+- [Code Quality Checklist](.kiro/steering/code-quality-checklist.md)
+
+**Architecture & Design**:
+- [DDD Tactical Patterns](.kiro/steering/ddd-tactical-patterns.md)
+- [Design Principles](.kiro/steering/design-principles.md)
+- [Architecture Constraints](.kiro/steering/architecture-constraints.md)
+- [Domain Events](.kiro/steering/domain-events.md)
+
+**Quality Standards**:
+- [Code Review Standards](.kiro/steering/code-review-standards.md)
+- [Security Standards](.kiro/steering/security-standards.md)
+- [Performance Standards](.kiro/steering/performance-standards.md)
+- [Test Performance Standards](.kiro/steering/test-performance-standards.md)
+
+**Documentation**:
+- [Diagram Standards](.kiro/steering/diagram-standards.md)
+- [Diagram Generation](.kiro/steering/diagram-generation-standards.md)
+
+**Methodology**:
+- [Rozanski & Woods Methodology](.kiro/steering/rozanski-woods-architecture-methodology.md)
+- [Event Storming Standards](.kiro/steering/event-storming-standards.md)
+
+### Additional Documentation
+
 - [Architecture Guide](docs/rozanski-woods-methodology-guide.md)
-- [Testing Guide](docs/development/testing/testing-strategy.md)
 - [API Documentation](docs/api/README.md)
+- [Development Setup](docs/development/setup/README.md)
 
 ### External Resources
 
@@ -580,4 +697,25 @@ If you have questions about contributing:
 
 ---
 
-**Last Updated**: 2024-11-09
+**Last Updated**: 2024-11-19
+
+---
+
+## Recent Changes
+
+### 2024-11-19 Updates
+
+- ✅ Updated to reference `.kiro/steering/` standards (17 mandatory guidelines)
+- ✅ Added comprehensive development standards references
+- ✅ Updated diagram generation guidelines
+- ✅ Clarified testing requirements with new standards
+- ✅ Added architecture and design principle references
+- ✅ Updated documentation structure to reflect current organization
+
+### Key Changes
+
+1. **Mandatory Standards**: All development must follow `.kiro/steering/` guidelines
+2. **Testing**: Updated to reference new testing strategy and performance standards
+3. **Diagrams**: Added PlantUML, Mermaid, ASCII, and Excalidraw guidelines
+4. **Architecture**: Added DDD patterns and architecture constraints
+5. **Quality**: Added security, performance, and code review standards
