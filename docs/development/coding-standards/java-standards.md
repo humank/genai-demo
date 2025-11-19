@@ -672,14 +672,6 @@ Cmd+Alt+L (Mac) or Ctrl+Alt+L (Windows/Linux)
 Ctrl+Alt+O (Mac) or Ctrl+Alt+O (Windows/Linux)
 ```
 
-## Related Documentation
-
-- [Design Principles](../../architecture/principles/design-principles.md)
-- [DDD Tactical Patterns](../../architecture/patterns/ddd-patterns.md)
-- [Code Review Guide](../workflows/code-review.md)
-- [Testing Strategy](../testing/testing-strategy.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

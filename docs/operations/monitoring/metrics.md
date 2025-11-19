@@ -424,14 +424,6 @@ public class CloudWatchMetrics {
 
 ---
 
-## Related Documentation
-
-- [Monitoring Overview](README.md)
-- [Performance Standards](.kiro/steering/performance-standards.md)
-- [Troubleshooting Guide](../troubleshooting/debugging-guide.md)
-- [Operational Runbooks](../runbooks/README.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -125,9 +125,7 @@ Comprehensive DR procedures:
 ### Architecture Decisions
 
 - [ADR-018: Container Orchestration (EKS)](../architecture/adrs/018-container-orchestration-eks.md)
-- [ADR-019: Progressive Deployment Strategy](../architecture/adrs/019-progressive-deployment-strategy.md)
 - [ADR-035: Disaster Recovery Strategy](../architecture/adrs/035-disaster-recovery-strategy.md)
-- [ADR-037: Active-Active Multi-Region](../architecture/adrs/037-active-active-multi-region-architecture.md)
 
 ## Support and Escalation
 

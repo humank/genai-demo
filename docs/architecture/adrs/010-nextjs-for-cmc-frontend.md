@@ -677,7 +677,6 @@ Affects:
 ## Related Decisions
 
 - [ADR-009: RESTful API Design with OpenAPI](009-restful-api-design-with-openapi.md) - API integration
-- [ADR-011: Angular for Consumer Frontend](011-angular-for-consumer-frontend.md) - Consumer app frontend
 
 ## Notes
 

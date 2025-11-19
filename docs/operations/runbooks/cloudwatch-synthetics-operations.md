@@ -509,14 +509,6 @@ done
 | L3 | Engineering Manager | Phone | < 30 minutes |
 | L4 | CTO | Phone | < 1 hour |
 
-## Related Documentation
-
-- [CloudWatch Synthetics Proactive Monitoring](../monitoring/cloudwatch-synthetics-proactive-monitoring.md)
-- [Incident Response Procedures](../incident-response.md)
-- [Disaster Recovery Runbook](../disaster-recovery-runbook.md)
-- [Observability Stack Operations](../observability-operations.md)
-
----
 
 **Document Owner**: DevOps Team  
 **Review Cycle**: Quarterly  

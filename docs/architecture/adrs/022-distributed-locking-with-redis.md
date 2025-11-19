@@ -387,8 +387,6 @@ public class LockMetrics {
 
 ## Related Decisions
 
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Redisson uses same Redis infrastructure
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Events after lock release
 - [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md) - Locks coordinate saga steps
 
 ## Notes

@@ -808,7 +808,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-with-aws-eks.md)
 

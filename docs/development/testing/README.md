@@ -27,12 +27,5 @@ For testing standards, see:
 
 See [Testing Examples](../../examples/testing-examples.md) for runnable code examples.
 
-## Related Documentation
-
-- [Development Guide](../README.md)
-- [Testing Examples](../../examples/testing-examples.md)
-- [Performance Testing](../../perspectives/performance/verification.md)
-
----
 
 **Note**: This section is under active development. Please refer to the steering rules and examples for current guidance.

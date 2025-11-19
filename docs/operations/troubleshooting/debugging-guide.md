@@ -374,14 +374,6 @@ kubectl exec -it <pod-name> -n production -- \
 
 ---
 
-## Related Documentation
-
-- [Troubleshooting Overview](README.md)
-- [Monitoring Guide](../monitoring/README.md)
-- [Performance Tuning](../../perspectives/performance/overview.md)
-- [Runbooks](../runbooks/README.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -444,13 +444,6 @@ aws cloudwatch get-metric-statistics \
    - Review error logs
    - Verify SNS permissions
 
-## Related Documentation
-
-- [VPC Flow Logs Operations Runbook](../runbooks/vpc-flow-logs-operations.md)
-- [Security Incident Response](../../perspectives/security/incident-response.md)
-- [Network Architecture](../../viewpoints/infrastructure/network-architecture.md)
-- [CloudWatch Monitoring Guide](./cloudwatch-monitoring.md)
-
 ## References
 
 - [AWS VPC Flow Logs Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html)

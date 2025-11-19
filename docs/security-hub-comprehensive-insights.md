@@ -422,14 +422,6 @@ aws iam attach-role-policy \
 - [Automated Response and Remediation](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cloudwatch-events.html)
 - [Security Standards](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards.html)
 
-## Related Documentation
-
-- [Security Standards](../.kiro/steering/security-standards.md)
-- [AWS Config Insights](./aws-config-insights.md)
-- [VPC Flow Logs](./vpc-flow-logs-insights.md)
-- [Cost and Usage Reports](./cost-usage-reports-insights.md)
-
----
 
 **Implementation Date**: 2025-10-22  
 **Implemented By**: Kiro AI Assistant  

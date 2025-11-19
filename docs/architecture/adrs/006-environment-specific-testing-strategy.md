@@ -482,8 +482,6 @@ class CustomerUnitTest {
 
 ## Related Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Testing strategy aligns with architecture
-- [ADR-004: Event Store Implementation](004-event-store-implementation.md) - In-memory event store for testing
 
 ## Notes
 

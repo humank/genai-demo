@@ -403,9 +403,6 @@ public class CacheInvalidationMetrics {
 
 ## Related Decisions
 
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events trigger invalidation
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache infrastructure
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event infrastructure
 
 ## Notes
 

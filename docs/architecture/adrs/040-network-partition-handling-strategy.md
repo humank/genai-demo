@@ -1023,9 +1023,6 @@ const partitionMetrics = {
 
 ## Related Decisions
 
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication during partitions
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md) - Failover vs partition handling
 - [ADR-041: Data Residency and Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance during partitions
 
 ## Notes

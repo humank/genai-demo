@@ -393,10 +393,8 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Authorization model
 - [ADR-052: Authentication Security Hardening](052-authentication-security-hardening.md) - Additional security measures
 - [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - API authentication integration
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Key management infrastructure
 
 ## Notes
 

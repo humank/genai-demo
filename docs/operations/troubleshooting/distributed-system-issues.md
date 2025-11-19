@@ -1490,16 +1490,6 @@ aws cloudwatch put-metric-alarm \
 
 ---
 
-## Related Documentation
-
-- [Kubernetes Issues](kubernetes-issues.md)
-- [Database Issues](database-issues.md)
-- [Performance Issues](performance-issues.md)
-- [Monitoring Guide](../monitoring/monitoring-alerting.md)
-- [Deployment Viewpoint](../../viewpoints/deployment/overview.md)
-- [Operational Viewpoint](../../viewpoints/operational/overview.md)
-
----
 
 ## Escalation Procedures
 

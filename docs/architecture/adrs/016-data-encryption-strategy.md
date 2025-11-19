@@ -408,8 +408,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Database encryption
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Token security
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection integration
 
 ## Notes

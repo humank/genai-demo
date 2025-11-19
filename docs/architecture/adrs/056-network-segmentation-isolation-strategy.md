@@ -885,7 +885,6 @@ Affects:
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-eks.md) - EKS networking
 - [ADR-048: DDoS Protection Strategy](048-ddos-protection-strategy.md) - Network protection
 - [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-waf-rules-policies.md) - Application layer protection
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-rate-limiting.md) - API protection
 
 ## Notes
 

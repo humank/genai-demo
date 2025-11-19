@@ -359,14 +359,6 @@ open build/reports/jacoco/test/html/index.html
 
 ---
 
-## Related Documentation
-
-- [Testing Strategy](testing-strategy.md)
-- [Integration Testing](integration-testing.md)
-- [BDD Testing](bdd-testing.md)
-- [Test Performance Standards](.kiro/steering/test-performance-standards.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

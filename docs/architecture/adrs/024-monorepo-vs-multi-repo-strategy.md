@@ -537,10 +537,7 @@ The monorepo provides foundation for future platform evolution, enabling seamles
 
 ### Related ADRs
 
-- [ADR-002: Hexagonal Architecture](20250117-002-adopt-hexagonal-architecture.md) - Affects code organization in monorepo
-- [ADR-007: AWS CDK for Infrastructure](20250117-007-aws-cdk-for-infrastructure.md) - Infrastructure code in monorepo
 - [ADR-018: Container Orchestration with EKS](20250117-018-container-orchestration-eks.md) - Deployment from monorepo
-- [ADR-019: Progressive Deployment Strategy](20250117-019-progressive-deployment-strategy.md) - Independent deployment from monorepo
 
 ### Affected Viewpoints
 

@@ -378,14 +378,6 @@ public class DeprecationWarningService {
 
 ---
 
-## Related Documentation
-
-- [API Overview](../README.md)
-- [REST API Guidelines](README.md)
-- [API Security](../security/README.md)
-- [Migration Guides](../migration/)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

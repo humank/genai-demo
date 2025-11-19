@@ -401,14 +401,6 @@ Content-Type: application/json
 
 ---
 
-## Related Documentation
-
-- [API Overview](../README.md)
-- [API Security](../security/README.md)
-- [Integration Guide](README.md)
-- [API Best Practices](../best-practices.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -17,12 +17,5 @@ This section contains guides for setting up your development environment.
 
 For a quick start, see the main [Development Guide](../README.md).
 
-## Related Documentation
-
-- [Development Guide](../README.md)
-- [Coding Standards](../coding-standards/README.md)
-- [Testing Guide](../testing/README.md)
-
----
 
 **Note**: This section is under active development. Some documents may be incomplete or missing.

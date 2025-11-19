@@ -593,13 +593,6 @@ public void recover(TransientException ex, OrderShippedEvent event) {
 }
 ```
 
-## Related Documentation
-
-- [Domain Events Guide](../../architecture/patterns/domain-events.md)
-- [Creating Aggregate](creating-aggregate.md)
-- [Event-Driven Architecture](../../architecture/patterns/event-driven.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

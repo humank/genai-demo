@@ -506,14 +506,6 @@ void should_deny_user_to_delete_customer() throws Exception {
 
 ---
 
-## Related Documentation
-
-- [Security Overview](../../perspectives/security/overview.md)
-- [Security Standards](.kiro/steering/security-standards.md)
-- [API Overview](../README.md)
-- [Rate Limiting](../integration/rate-limiting.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

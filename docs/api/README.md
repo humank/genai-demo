@@ -274,19 +274,13 @@ Current API version: **v1**
 ### Postman Collection
 
 Download the complete Postman collection:
-- [Postman Collection](postman/genai-demo-api.postman_collection.json)
-- [Environment Variables](postman/genai-demo-environment.postman_environment.json)
 
 ### OpenAPI Specification
 
-- [OpenAPI 3.0 Spec](openapi/genai-demo-api-v1.yaml)
 - [Swagger UI](http://localhost:8080/swagger-ui.html) (when running locally)
 
 ### Code Examples
 
-- [Java Client Examples](examples/java/)
-- [JavaScript Client Examples](examples/javascript/)
-- [Python Client Examples](examples/python/)
 
 ## Related Documentation
 
@@ -304,9 +298,6 @@ Download the complete Postman collection:
 
 ### Architecture Decisions
 
-- [ADR-014: JWT Authentication Strategy](../architecture/adrs/014-jwt-authentication-strategy.md)
-- [ADR-015: RBAC Implementation](../architecture/adrs/015-rbac-implementation.md)
-- [ADR-050: API Security & Rate Limiting](../architecture/adrs/050-api-security-rate-limiting.md)
 
 ## Support
 

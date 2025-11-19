@@ -730,14 +730,6 @@ public class ResilientEventHandler {
 
 ---
 
-## Related Documentation
-
-- [Information Viewpoint Overview](overview.md)
-- [Domain Models](domain-models.md)
-- [Data Ownership](data-ownership.md)
-- [Domain Events Catalog](../../api/events/README.md)
-- [Concurrency Viewpoint](../concurrency/overview.md)
-
 ### Diagrams
 
 - [Order Processing Flow](../../diagrams/generated/information/order-processing-flow.png)

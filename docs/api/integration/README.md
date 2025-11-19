@@ -20,12 +20,5 @@ For API integration examples, see:
 - [API Usage Examples](../../examples/api-usage-examples.md) - Webhook integration
 - [API Documentation](../README.md) - API overview
 
-## Related Documentation
-
-- [API Documentation](../README.md)
-- [Context Viewpoint](../../viewpoints/context/README.md)
-- [External Systems](../../viewpoints/context/external-systems.md)
-
----
 
 **Note**: This section is under active development.

@@ -384,9 +384,6 @@ public class CacheMetrics {
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Cache reduces database load
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Cache in infrastructure layer
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event-based cache invalidation
 
 ## Notes
 

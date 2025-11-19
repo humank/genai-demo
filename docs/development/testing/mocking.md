@@ -459,13 +459,6 @@ when(service.getCustomer()).thenReturn(Optional.empty());
 
 ---
 
-## Related Documentation
-
-- [Unit Testing](unit-testing.md)
-- [Integration Testing](integration-testing.md)
-- [Testing Strategy](testing-strategy.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

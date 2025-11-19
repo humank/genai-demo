@@ -425,7 +425,6 @@ Affects:
 ## Related Decisions
 
 - [ADR-048: DDoS Protection Strategy (Multi-Layer Defense)](048-ddos-protection-strategy.md) - Overall DDoS protection
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Application-level protection
 - [ADR-051: Input Validation and Sanitization Strategy](051-input-validation-and-sanitization-strategy.md) - Application-level validation
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-and-incident-response.md) - Security operations
 

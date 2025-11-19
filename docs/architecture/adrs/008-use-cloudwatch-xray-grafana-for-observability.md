@@ -624,7 +624,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Monitoring infrastructure provisioning
 
 ## Notes
 

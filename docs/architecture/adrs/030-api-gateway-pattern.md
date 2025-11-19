@@ -562,8 +562,6 @@ Kong Gateway provides foundation for API management, enabling centralized securi
 
 - [ADR-009: RESTful API Design](009-restful-api-design-with-openapi.md) - API design standards
 - [ADR-023: API Rate Limiting Strategy](023-api-rate-limiting-strategy.md) - Rate limiting implementation
-- [ADR-014: JWT-Based Authentication](014-jwt-based-authentication-strategy.md) - Authentication mechanism
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Security requirements
 
 ### Affected Viewpoints
 

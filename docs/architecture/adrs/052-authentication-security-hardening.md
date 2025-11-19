@@ -613,8 +613,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Base authentication mechanism
-- [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Authorization integration
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection integration
 

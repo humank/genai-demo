@@ -729,14 +729,6 @@ jobs:
 - Ensure proper test isolation
 - Check for shared mutable state
 
-## Related Documentation
-
-- [Coding Standards](../coding-standards/java-standards.md)
-- [BDD Testing Guide](bdd-testing.md)
-- [Unit Testing Guide](unit-testing.md)
-- [Integration Testing Guide](integration-testing.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

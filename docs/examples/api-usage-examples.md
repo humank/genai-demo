@@ -841,14 +841,6 @@ function verifySignature(payload: string, signature: string): boolean {
 
 ---
 
-## Related Documentation
-
-- [REST API Reference](../api/rest/README.md)
-- [Authentication Guide](../perspectives/security/authentication.md)
-- [Domain Events](../api/events/README.md)
-- [Error Handling](../api/rest/error-handling.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

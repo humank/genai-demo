@@ -1287,10 +1287,7 @@ const failoverMetrics = {
 ## Related Decisions
 
 - [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated with failover
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Data replication for failover
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Split-brain prevention
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region.md) - Monitoring integration
 
 ## Notes
 

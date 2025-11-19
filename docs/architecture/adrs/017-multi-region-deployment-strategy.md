@@ -817,12 +817,7 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-with-aws-eks.md)
-- [ADR-019: Progressive Deployment Strategy](019-progressive-deployment-strategy.md)
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md)
 
 ---
 

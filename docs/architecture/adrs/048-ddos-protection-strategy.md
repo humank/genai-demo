@@ -472,7 +472,6 @@ Affects:
 ## Related Decisions
 
 - [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-web-application-firewall-rules-and-policies.md) - Detailed WAF configuration
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Application-level protection
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-and-incident-response.md) - Security operations
 - [ADR-056: Network Segmentation and Isolation Strategy](056-network-segmentation-and-isolation-strategy.md) - Network security
 

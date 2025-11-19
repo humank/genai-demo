@@ -707,14 +707,6 @@ const stopConditions = [
 4. **Learn**: Use findings to improve system resilience
 5. **Communicate**: Share results with entire team
 
-## Related Documentation
-
-- [Multi-Region Architecture](multi-region-architecture.md)
-- [Automated Failover](automated-failover.md)
-- [Disaster Recovery](disaster-recovery.md)
-- [High Availability Design](high-availability.md)
-
----
 
 **Next Steps**:
 1. Install Chaos Mesh in staging environment

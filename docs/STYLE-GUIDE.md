@@ -341,11 +341,6 @@ Content...
 
 Content...
 
-## Related Documentation
-
-- [Related Doc 1](link)
-- [Related Doc 2](link)
-
 ## Change History
 
 | Date | Version | Changes | Author |
@@ -389,13 +384,7 @@ Key topics include:
 
 Link to related documents at the end:
 
-```markdown
-## Related Documentation
-
-- [Architecture Overview](../architecture/README.md)
-- [API Documentation](../api/rest/README.md)
-- [Deployment Guide](../operations/deployment/README.md)
-```
+```markdown```
 
 ---
 
@@ -837,11 +826,6 @@ curl -X POST https://api.example.com/api/v1/customers \
   -H "Content-Type: application/json" \
   -d '{"name":"John Doe","email":"john@example.com"}'
 ```
-
-## Related Documentation
-
-- [Authentication Guide](authentication.md)
-- [Error Handling](errors.md)
 ```
 
 ---

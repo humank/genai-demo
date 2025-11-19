@@ -29,12 +29,5 @@ For operational procedures, see:
 - [Operational Viewpoint](../../viewpoints/operational/README.md)
 - [Runbooks](../runbooks/README.md)
 
-## Related Documentation
-
-- [Operations Guide](../README.md)
-- [Monitoring Guide](../monitoring/README.md)
-- [Database Operations Examples](../../examples/database-operations-examples.md)
-
----
 
 **Note**: Many troubleshooting guides are already available in this directory.

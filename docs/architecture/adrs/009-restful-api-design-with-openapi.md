@@ -698,8 +698,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - API in interfaces layer
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Internal vs external communication
 
 ## Notes
 

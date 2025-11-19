@@ -823,7 +823,6 @@ Affects:
 ## Related Decisions
 
 - [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md) - BDD as part of testing strategy
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Scenarios test through application layer
 
 ## Notes
 

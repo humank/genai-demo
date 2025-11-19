@@ -571,9 +571,6 @@ The Adapter Pattern provides foundation for flexible, maintainable third-party i
 
 ### Related ADRs
 
-- [ADR-002: Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Adapter pattern foundation
-- [ADR-003: Domain Events](003-use-domain-events-for-cross-context-communication.md) - Event-driven integration
-- [ADR-005: Apache Kafka](005-use-apache-kafka-for-event-streaming.md) - Async communication
 - [ADR-031: Inter-Service Communication](031-inter-service-communication-protocol.md) - Communication patterns
 
 ### Affected Viewpoints

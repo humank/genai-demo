@@ -20,12 +20,5 @@ For monitoring architecture, see:
 - [Operational Viewpoint](../../viewpoints/operational/README.md)
 - [Monitoring and Alerting](../../viewpoints/operational/monitoring-alerting.md)
 
-## Related Documentation
-
-- [Operations Guide](../README.md)
-- [Operational Viewpoint](../../viewpoints/operational/README.md)
-- [Performance Perspective](../../perspectives/performance/README.md)
-
----
 
 **Note**: This section is under active development.

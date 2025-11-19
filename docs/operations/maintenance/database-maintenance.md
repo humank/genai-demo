@@ -1703,13 +1703,6 @@ SELECT 'Post-upgrade validation completed successfully!' AS status;
 - [Recommendation 2]
 ```
 
-## Related Documentation
-
-- [Backup and Restore](backup-restore.md)
-- [Database Connection Issues Runbook](../runbooks/database-connection-issues.md)
-- [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
-
----
 
 **Last Updated**: 2025-11-08  
 **Owner**: Database Team  

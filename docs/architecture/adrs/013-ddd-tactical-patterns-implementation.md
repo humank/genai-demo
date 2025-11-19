@@ -816,8 +816,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - DDD in domain layer
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Events from aggregates
 - [ADR-012: BDD with Cucumber](012-bdd-with-cucumber-for-requirements.md) - BDD scenarios test aggregates
 
 ## Notes

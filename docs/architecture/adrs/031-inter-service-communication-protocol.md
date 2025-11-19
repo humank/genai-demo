@@ -556,9 +556,6 @@ The hybrid approach provides flexibility to evolve communication patterns while 
 
 ### Related ADRs
 
-- [ADR-002: Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Service boundaries
-- [ADR-003: Domain Events](003-use-domain-events-for-cross-context-communication.md) - Event-driven communication
-- [ADR-005: Apache Kafka](005-use-apache-kafka-for-event-streaming.md) - Message broker
 - [ADR-009: RESTful API Design](009-restful-api-design-with-openapi.md) - API standards
 - [ADR-025: Saga Pattern](025-saga-pattern-distributed-transactions.md) - Distributed transactions
 - [ADR-030: API Gateway Pattern](030-api-gateway-pattern.md) - External API access

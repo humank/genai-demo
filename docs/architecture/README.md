@@ -285,10 +285,7 @@ Architecture Decision Records document significant architectural decisions, incl
 
 ### Recent ADRs
 
-- [ADR-060: Cost Optimization Strategy](adrs/060-cost-optimization-strategy.md)
-- [ADR-059: Compliance Automation](adrs/059-compliance-automation-strategy.md)
 - [ADR-058: Security Compliance Audit](adrs/058-security-compliance-audit-strategy.md)
-- [ADR-057: Data Retention Policy](adrs/057-data-retention-policy-implementation.md)
 - [ADR-056: Network Segmentation](adrs/056-network-segmentation-isolation-strategy.md)
 
 [All ADRs](adrs/README.md)

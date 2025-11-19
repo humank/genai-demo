@@ -1120,10 +1120,7 @@ const observabilitySuccessMetrics = {
 
 ## Related Decisions
 
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
 - [ADR-042: Chaos Engineering and Resilience Testing](042-chaos-engineering-resilience-testing.md)
-- [ADR-044: Business Continuity Plan](044-business-continuity-plan.md)
 
 ---
 

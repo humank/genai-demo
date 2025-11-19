@@ -399,14 +399,6 @@ void should_create_order_with_valid_data() {
 
 ---
 
-## Related Documentation
-
-- [Testing Strategy](testing-strategy.md)
-- [Unit Testing](unit-testing.md)
-- [Integration Testing](integration-testing.md)
-- [E2E Testing](e2e-testing.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -709,7 +709,6 @@ curl -X POST https://api.ecommerce.com/api/v1/auth/refresh \
 - [Error Handling](error-handling.md) - Complete error code reference
 - [Customer API](endpoints/customers.md) - Customer profile management
 - [Security Perspective](../../perspectives/security/) - Security architecture
-- [ADR-014: JWT Authentication](../../architecture/adrs/014-jwt-authentication-strategy.md) - Authentication design decisions
 
 ---
 

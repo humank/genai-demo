@@ -148,7 +148,6 @@ The Location Perspective addresses how the Enterprise E-Commerce Platform serves
 
 ### Architecture Decisions
 
-- [ADR-015: Multi-Region Deployment Strategy](../../architecture/adrs/015-multi-region-deployment.md)
 - [ADR-016: Data Residency Compliance](../../architecture/adrs/016-data-residency-compliance.md)
 - [ADR-017: CDN Strategy](../../architecture/adrs/017-cdn-strategy.md)
 

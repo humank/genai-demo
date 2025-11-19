@@ -151,7 +151,6 @@ For questions or issues related to these changes:
 
 ## Previous Changes
 
-See [CHANGELOG-2024-12.md](CHANGELOG-2024-12.md) for December 2024 changes.
 
 ---
 

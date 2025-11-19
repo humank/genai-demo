@@ -117,14 +117,6 @@ For complete security architecture details, see [Security Overview](overview.md)
 
 ---
 
-## Related Documentation
-
-- [Security Overview](overview.md)
-- [API Security](../../api/security/README.md)
-- [Operational Security](../../viewpoints/operational/security-operations.md)
-- [Security Standards](.kiro/steering/security-standards.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

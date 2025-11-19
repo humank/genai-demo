@@ -491,13 +491,6 @@ public class EventFilter {
 
 ---
 
-## Related Documentation
-
-- [Event Catalog](event-catalog.md)
-- [Domain Events](.kiro/steering/domain-events.md)
-- [Event Storming Standards](.kiro/steering/event-storming-standards.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

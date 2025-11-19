@@ -265,13 +265,6 @@ new ConfigInsightsStack(app, 'ConfigInsights', {
 2. **Cost Optimization**: Resource right-sizing recommendations
 3. **Integration**: Connect with Security Hub and GuardDuty
 
-## Related Documentation
-
-- [AWS Config User Guide](https://docs.aws.amazon.com/config/)
-- [Cost Management Stack](../infrastructure/cost-management-stack.md)
-- [Security Standards](.kiro/steering/security-standards.md)
-- [Architecture Viewpoints Enhancement Tasks](.kiro/specs/architecture-viewpoints-enhancement/tasks.md)
-
 ## Outputs
 
 The stack exports the following outputs:

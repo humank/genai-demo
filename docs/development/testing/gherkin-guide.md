@@ -423,13 +423,6 @@ And filters by date range
 
 ---
 
-## Related Documentation
-
-- [BDD Testing](bdd-testing.md)
-- [Testing Strategy](testing-strategy.md)
-- [Unit Testing](unit-testing.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -931,10 +931,7 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
-- [ADR-019: Progressive Deployment Strategy](019-progressive-deployment-strategy.md)
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
 
 ---
 

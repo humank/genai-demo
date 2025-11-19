@@ -460,15 +460,6 @@ aws rds describe-db-snapshots \
 # 3. Contact AWS support if needed
 ```
 
-## Related Documentation
-
-- [Deployment Process](deployment-process.md)
-- [Environment Configuration](environments.md)
-- [Monitoring Guide](../monitoring/monitoring-strategy.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
-- [Incident Response](../runbooks/service-outage.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

@@ -513,14 +513,6 @@ After resolution, update:
 - [ ] Action 1: Description
 - [ ] Action 2: Description
 
-## Related Documentation
-
-- [Architecture Documentation](../../viewpoints/README.md)
-- [Monitoring Guide](../monitoring/monitoring-strategy.md)
-- [Deployment Guide](../deployment/deployment-process.md)
-- [Related Runbook 1](./related-runbook-1.md)
-- [Related Runbook 2](./related-runbook-2.md)
-
 ## Appendix
 
 ### Useful Commands Reference

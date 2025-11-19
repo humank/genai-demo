@@ -512,13 +512,6 @@ This API uses URL versioning. The current version is `v1`.
 
 When breaking changes are introduced, a new version will be released (e.g., `v2`).
 
-## Related Documentation
-
-- [Authentication Guide](../authentication.md)
-- [Error Handling](../error-handling.md)
-- [Rate Limiting](../rate-limiting.md)
-- [API Versioning](../versioning.md)
-
 ## Changelog
 
 | Date | Version | Changes |

@@ -646,14 +646,6 @@ jobs:
 3. **Compromise**: Find middle ground
 4. **Escalate**: Involve tech lead if needed
 
-## Related Documentation
-
-- [Git Workflow](git-workflow.md)
-- [Coding Standards](../coding-standards/java-standards.md)
-- [Testing Strategy](../testing/testing-strategy.md)
-- [Architecture Principles](../../architecture/principles/design-principles.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

@@ -945,8 +945,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-authentication-strategy.md) - Authentication compliance
-- [ADR-015: Role-Based Access Control (RBAC) Implementation](015-rbac-implementation.md) - Access control compliance
 - [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Data protection compliance
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Monitoring compliance
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection compliance

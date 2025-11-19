@@ -678,13 +678,6 @@ You've successfully created a new aggregate! The key steps were:
 - Update API documentation
 - Add to Swagger/OpenAPI spec
 
-## Related Documentation
-
-- [DDD Tactical Patterns](../../architecture/patterns/ddd-patterns.md)
-- [Adding REST Endpoint](adding-endpoint.md)
-- [Implementing Domain Event](implementing-event.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

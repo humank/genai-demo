@@ -442,14 +442,6 @@ public class CucumberTestRunner {
 
 ---
 
-## Related Documentation
-
-- [Testing Strategy](testing-strategy.md)
-- [Unit Testing](unit-testing.md)
-- [Integration Testing](integration-testing.md)
-- [Gherkin Guide](gherkin-guide.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

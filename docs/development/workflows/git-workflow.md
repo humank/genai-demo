@@ -686,13 +686,6 @@ git filter-branch --force --index-filter \
 git push origin --force --all
 ```
 
-## Related Documentation
-
-- [Code Review Guide](code-review.md)
-- [CI/CD Pipeline](../../operations/deployment/deployment-process.md)
-- [Release Process](../../operations/deployment/release-process.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  

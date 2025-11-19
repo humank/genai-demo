@@ -355,10 +355,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Repository pattern implementation
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Caching strategy to reduce database load
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Event sourcing considerations
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Database provisioning
 
 ## Notes
 

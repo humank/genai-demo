@@ -465,7 +465,6 @@ public class JobProcessingMetrics {
 
 ## Related Decisions
 
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - Kafka for event-driven jobs
 - [ADR-022: Distributed Locking with Redis](022-distributed-locking-with-redis.md) - Locking for job coordination
 - [ADR-028: File Storage Strategy with S3](028-file-storage-strategy-with-s3.md) - S3 for job artifacts
 

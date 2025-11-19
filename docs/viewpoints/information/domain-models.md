@@ -616,14 +616,6 @@ public record Email(String value) {
 - [Customer Aggregate](../../diagrams/generated/information/customer-aggregate.png)
 - [Product Aggregate](../../diagrams/generated/information/product-aggregate.png)
 
-## Related Documentation
-
-- [Information Viewpoint Overview](overview.md)
-- [Data Ownership](data-ownership.md)
-- [Data Flow](data-flow.md)
-- [Domain Events Catalog](../../api/events/README.md)
-
----
 
 **Document Status**: Active  
 **Last Review**: 2025-10-23  

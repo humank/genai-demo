@@ -27,12 +27,5 @@ PlantUML source files are located in the respective perspective directories.
 
 Generated PNG and SVG files are in the [generated](../generated/) directory.
 
-## Related Documentation
-
-- [All Perspectives](../../perspectives/README.md)
-- [Diagram Standards](../../.kiro/steering/diagram-standards.md)
-- [Diagram Generation](../../.kiro/steering/diagram-generation-standards.md)
-
----
 
 **Note**: Many diagrams are now embedded as Mermaid diagrams directly in the documentation.

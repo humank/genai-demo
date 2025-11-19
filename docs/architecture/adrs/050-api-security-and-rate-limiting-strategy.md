@@ -360,7 +360,6 @@ Multi-layer rate limiting was selected for the following reasons:
 
 ## Related Decisions
 
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - Authentication mechanism
 - [ADR-023: API Rate Limiting Strategy (Token Bucket vs Leaky Bucket)](023-api-rate-limiting-strategy.md) - Rate limiting algorithm
 - [ADR-048: DDoS Protection Strategy (Multi-Layer Defense)](048-ddos-protection-strategy.md) - Overall DDoS protection
 - [ADR-049: Web Application Firewall (WAF) Rules and Policies](049-web-application-firewall-rules-and-policies.md) - WAF configuration

@@ -541,14 +541,6 @@ graph LR
 - **Audit Logging**: All data access is logged
 - **PCI Compliance**: Payment context maintains PCI-DSS compliance
 
-## Related Documentation
-
-- [Information Viewpoint Overview](overview.md)
-- [Domain Models](domain-models.md)
-- [Data Flow](data-flow.md)
-- [Security Perspective](../../perspectives/security/overview.md)
-
----
 
 **Document Status**: Active  
 **Last Review**: 2025-10-23  

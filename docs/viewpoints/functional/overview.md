@@ -256,7 +256,6 @@ Order Context                    Inventory Context
 - Potential data duplication across contexts
 - Eventual consistency between contexts
 
-**Related ADR**: [ADR-002: Adopt Hexagonal Architecture](../../architecture/adrs/ADR-002-adopt-hexagonal-architecture.md)
 
 ### Decision 2: Event-Driven Architecture for Context Integration
 
@@ -278,7 +277,6 @@ Order Context                    Inventory Context
 - Requires robust event delivery guarantees
 - Debugging distributed workflows is more complex
 
-**Related ADR**: [ADR-003: Use Domain Events for Cross-Context Communication](../../architecture/adrs/ADR-003-domain-events-communication.md)
 
 ## Key Concepts
 
@@ -330,8 +328,6 @@ A use case represents a specific way a user interacts with the system to achieve
 
 ### Related Architecture Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](../../architecture/adrs/ADR-002-adopt-hexagonal-architecture.md)
-- [ADR-003: Use Domain Events for Cross-Context Communication](../../architecture/adrs/ADR-003-domain-events-communication.md)
 
 ### Related Guides
 

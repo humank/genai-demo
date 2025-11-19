@@ -584,14 +584,6 @@ aws cloudformation cancel-update-stack --stack-name EcommerceInfraStack
 
 ---
 
-## Related Documentation
-
-- [Deployment Viewpoint](../viewpoints/deployment/README.md)
-- [Deployment Process](../viewpoints/deployment/deployment-process.md)
-- [Operations Guide](../operations/deployment/README.md)
-- [CI/CD Pipeline](../viewpoints/deployment/deployment-process.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -580,7 +580,6 @@ brew install plantuml  # macOS
 - ⭐ Star the repository on GitHub
 - 👀 Watch for releases
 - 📧 Subscribe to discussions
-- 📰 Check [CHANGELOG.md](../CHANGELOG.md)
 
 ---
 

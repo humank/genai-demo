@@ -543,10 +543,6 @@ The active-active architecture provides foundation for future global expansion, 
 ### Related ADRs
 
 - [ADR-017: Multi-Region Deployment Strategy](20250117-017-multi-region-deployment-strategy.md) - Foundation for DR architecture
-- [ADR-037: Active-Active Multi-Region Architecture](20250117-037-active-active-multi-region-architecture.md) - Detailed active-active implementation
-- [ADR-038: Cross-Region Data Replication Strategy](20250117-038-cross-region-data-replication-strategy.md) - Data replication for DR
-- [ADR-039: Regional Failover and Failback Strategy](20250117-039-regional-failover-failback-strategy.md) - Failover procedures
-- [ADR-044: Business Continuity Plan for Geopolitical Risks](20250117-044-business-continuity-plan-geopolitical-risks.md) - BCP integration
 
 ### Affected Viewpoints
 

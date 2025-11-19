@@ -491,8 +491,6 @@ The structured logging format and correlation IDs provide foundation for future 
 
 ### Related ADRs
 
-- [ADR-008: Observability Platform](20250117-008-observability-platform.md) - CloudWatch Logs integrates with overall observability strategy
-- [ADR-043: Multi-Region Observability](20250117-043-multi-region-observability.md) - Cross-region log correlation requirements
 
 ### Affected Viewpoints
 

@@ -29,12 +29,5 @@ All templates follow:
 - Metadata frontmatter
 - Related documentation links
 
-## Related Documentation
-
-- [Style Guide](../STYLE-GUIDE.md)
-- [Maintenance Guide](../MAINTENANCE.md)
-- [Documentation Standards](../.kiro/steering/development-standards.md)
-
----
 
 **Note**: Templates help maintain consistency across documentation.

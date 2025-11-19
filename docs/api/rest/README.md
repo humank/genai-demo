@@ -389,7 +389,7 @@ Cross-Origin Resource Sharing (CORS) is configured to allow requests from approv
 - [API Reference](endpoints/) - Detailed endpoint documentation
 - [Authentication Guide](authentication.md) - Authentication and authorization
 - [Error Handling](error-handling.md) - Error codes and troubleshooting
-- [Postman Collection](postman/) - Ready-to-use API collection
+ - Ready-to-use API collection
 
 ### Support Channels
 

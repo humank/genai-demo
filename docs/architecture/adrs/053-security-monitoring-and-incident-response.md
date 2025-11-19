@@ -371,14 +371,6 @@ groups:
 
 ---
 
-## Related Documentation
-
-- [Security Overview](../../perspectives/security/overview.md)
-- [Security Standards](.kiro/steering/security-standards.md)
-- [Incident Response Runbook](../../operations/runbooks/security-incident-response.md)
-- [Monitoring Guide](../../operations/monitoring/README.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

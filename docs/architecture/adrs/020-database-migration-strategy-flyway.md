@@ -754,7 +754,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-019: Progressive Deployment Strategy](019-progressive-deployment-strategy.md)
 - [ADR-021: Event Sourcing for Critical Aggregates](021-event-sourcing-critical-aggregates.md)
 - [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md)
 

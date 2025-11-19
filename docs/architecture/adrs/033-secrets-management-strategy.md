@@ -423,9 +423,7 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md) - JWT key management
 - [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Encryption key management
-- [ADR-007: Use AWS CDK for Infrastructure](007-use-aws-cdk-for-infrastructure.md) - Infrastructure provisioning
 
 ## Notes
 

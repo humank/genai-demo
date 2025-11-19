@@ -582,8 +582,6 @@ new cloudwatch.Metric({
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - RDS provisioning
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - MSK provisioning
 
 ## Notes
 

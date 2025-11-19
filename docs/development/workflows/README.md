@@ -19,12 +19,5 @@ For workflow standards, see:
 - [Development Standards](../../.kiro/steering/development-standards.md)
 - [Code Review Standards](../../.kiro/steering/code-review-standards.md)
 
-## Related Documentation
-
-- [Development Guide](../README.md)
-- [Deployment Process](../../viewpoints/deployment/deployment-process.md)
-- [CI/CD Examples](../../examples/deployment-examples.md)
-
----
 
 **Note**: This section is under active development.

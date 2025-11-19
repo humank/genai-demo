@@ -487,14 +487,6 @@ readinessProbe:
 - [ ] Review monitoring coverage
 - [ ] Conduct monitoring retrospective
 
-## Related Documentation
-
-- [Alert Configuration](alerts.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
-- [Runbooks](../runbooks/README.md)
-- [Deployment Process](../deployment/deployment-process.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

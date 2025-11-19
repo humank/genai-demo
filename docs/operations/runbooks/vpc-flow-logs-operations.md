@@ -374,12 +374,6 @@ aws cloudwatch get-metric-statistics \
 - Network performance problems
 - Cross-region connectivity
 
-## Related Documentation
-
-- [VPC Flow Logs Monitoring Guide](../monitoring/vpc-flow-logs-monitoring.md)
-- [Security Incident Response](../../perspectives/security/incident-response.md)
-- [Network Architecture](../../viewpoints/infrastructure/network-architecture.md)
-
 ## Change Log
 
 | Date | Version | Changes | Author |

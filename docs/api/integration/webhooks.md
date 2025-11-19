@@ -395,14 +395,6 @@ Monitor webhook health:
 
 ---
 
-## Related Documentation
-
-- [API Overview](../README.md)
-- [Event Catalog](../events/event-catalog.md)
-- [Integration Guide](README.md)
-- [API Security](../security/README.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

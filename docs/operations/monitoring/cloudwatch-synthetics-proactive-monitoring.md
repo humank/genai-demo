@@ -460,14 +460,6 @@ Canary failures trigger SNS notifications:
 7. **Cost Awareness**: Monitor canary execution costs
 8. **Artifact Retention**: Balance storage costs with debugging needs
 
-## Related Documentation
-
-- [Container Insights Comprehensive Guide](container-insights-comprehensive-guide.md)
-- [RDS Performance Insights Deep Monitoring](rds-performance-insights-deep-monitoring.md)
-- [Lambda Insights Intelligent Monitoring](lambda-insights-intelligent-monitoring.md)
-- [Application Insights RUM Integration](application-insights-rum-integration.md)
-- [Observability Stack Architecture](../../architecture/observability-architecture.md)
-
 ## References
 
 - [AWS CloudWatch Synthetics Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html)

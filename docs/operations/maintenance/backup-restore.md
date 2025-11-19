@@ -122,13 +122,6 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 - Update documentation
 - Train team
 
-## Related Documentation
-
-- [Backup and Restore Runbook](../runbooks/backup-restore.md)
-- [Database Maintenance](database-maintenance.md)
-- [Deployment Process](../deployment/deployment-process.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

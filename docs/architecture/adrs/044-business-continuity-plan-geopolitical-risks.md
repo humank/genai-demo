@@ -931,10 +931,7 @@ const bcpSuccessMetrics = {
 
 ## Related Decisions
 
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md)
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md)
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region-operations.md)
 
 ---
 

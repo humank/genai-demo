@@ -413,14 +413,6 @@ kubectl get events -n ${NAMESPACE} --sort-by='.lastTimestamp'
 
 See [Rollback Procedures](rollback.md) for detailed rollback steps.
 
-## Related Documentation
-
-- [Environment Configuration](environments.md)
-- [Rollback Procedures](rollback.md)
-- [Monitoring Guide](../monitoring/monitoring-strategy.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

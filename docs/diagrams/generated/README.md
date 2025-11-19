@@ -33,11 +33,5 @@ Diagrams are generated from PlantUML source files using:
 - **Secondary Format**: SVG (for high-resolution)
 - **Source Location**: `docs/diagrams/viewpoints/` and `docs/diagrams/perspectives/`
 
-## Related Documentation
-
-- [Diagram Standards](../../.kiro/steering/diagram-standards.md)
-- [Diagram Generation Standards](../../.kiro/steering/diagram-generation-standards.md)
-
----
 
 **Note**: Many diagrams are now embedded as Mermaid diagrams directly in the documentation. This directory contains PlantUML-generated diagrams.

@@ -20,12 +20,5 @@ For architectural principles, see:
 - [Architecture Constraints](../../.kiro/steering/architecture-constraints.md)
 - [Rozanski & Woods Methodology](../../.kiro/steering/rozanski-woods-architecture-methodology.md)
 
-## Related Documentation
-
-- [Architecture Overview](../README.md)
-- [Architecture Decision Records](../adrs/README.md)
-- [All Viewpoints](../../viewpoints/README.md)
-
----
 
 **Note**: Please refer to the steering rules for current architectural principles.

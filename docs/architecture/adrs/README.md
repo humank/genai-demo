@@ -69,21 +69,16 @@ Each ADR follows a standard template:
 
 ### Data Storage
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md)
 
 ### Architecture Patterns
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md)
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md)
 - [ADR-047: Stateless Architecture for Regional Mobility](047-stateless-architecture-regional-mobility.md)
 
 ### Caching
 
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md)
 
 ### Messaging
 
-- [ADR-005: Use Apache Kafka (MSK) for Event Streaming](005-use-kafka-for-event-streaming.md)
 
 ### Testing
 
@@ -91,17 +86,14 @@ Each ADR follows a standard template:
 
 ### Infrastructure
 
-- [ADR-007: Use AWS CDK for Infrastructure as Code](007-use-aws-cdk-for-infrastructure.md)
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md)
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-with-aws-eks.md)
 
 ### Deployment
 
-- [ADR-019: Progressive Deployment Strategy (Canary + Rolling Update)](019-progressive-deployment-strategy.md)
 
 ### Observability
 
-- [ADR-008: Use CloudWatch + X-Ray + Grafana for Observability](008-use-cloudwatch-xray-grafana-for-observability.md)
 
 ### API Design
 
@@ -110,7 +102,6 @@ Each ADR follows a standard template:
 ### Frontend
 
 - [ADR-010: Use Next.js for CMC Management Frontend](010-nextjs-for-cmc-frontend.md)
-- [ADR-011: Use Angular for Consumer Frontend](011-angular-for-consumer-frontend.md)
 
 ### Testing & Development
 
@@ -120,8 +111,6 @@ Each ADR follows a standard template:
 
 ### Security
 
-- [ADR-014: JWT-Based Authentication Strategy](014-jwt-based-authentication-strategy.md)
-- [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md)
 - [ADR-016: Data Encryption Strategy (At Rest and In Transit)](016-data-encryption-strategy.md)
 - [ADR-052: Authentication Security Hardening](052-authentication-security-hardening.md)
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md)
@@ -193,12 +182,6 @@ graph LR
 Format: `{number}-{title-in-kebab-case}.md`
 
 Example: `001-use-postgresql-for-primary-database.md`
-
-## Related Documentation
-
-- [ADR Template](../../templates/adr-template.md)
-- [Architecture Overview](../README.md)
-- [Design Principles](../../viewpoints/development/README.md)
 
 ## Implementation Priority
 

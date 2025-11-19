@@ -351,15 +351,6 @@ All ADRs follow the comprehensive template defined in `docs/templates/adr-templa
 
 ---
 
-## Related Documentation
-
-- [ADR Template](../templates/adr-template.md)
-- [Architecture Overview](../README.md)
-- [Security Perspective](../../perspectives/security/README.md)
-- [Availability Perspective](../../perspectives/availability/README.md)
-- [Performance Perspective](../../perspectives/performance/README.md)
-
----
 
 **Document Status**: 📝 Living Document  
 **Last Updated**: 2025-10-25  

@@ -788,7 +788,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-015: Role-Based Access Control (RBAC) Implementation](015-role-based-access-control-implementation.md) - Access control foundation
 - [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Data encryption at rest and in transit
 - [ADR-053: Security Monitoring and Incident Response](053-security-monitoring-incident-response.md) - Security monitoring integration
 - [ADR-055: Vulnerability Management and Patching Strategy](055-vulnerability-management-patching-strategy.md) - Vulnerability management

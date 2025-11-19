@@ -24,12 +24,5 @@ For deployment architecture, see:
 
 See [Deployment Examples](../../examples/deployment-examples.md) for runnable deployment procedures.
 
-## Related Documentation
-
-- [Operations Guide](../README.md)
-- [Deployment Viewpoint](../../viewpoints/deployment/README.md)
-- [Deployment Examples](../../examples/deployment-examples.md)
-
----
 
 **Note**: For complete deployment examples, see the examples directory.

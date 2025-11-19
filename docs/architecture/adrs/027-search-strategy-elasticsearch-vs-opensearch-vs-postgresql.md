@@ -436,8 +436,6 @@ public class SearchMetrics {
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Source of truth for data
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Cache search results
 
 ## Notes
 

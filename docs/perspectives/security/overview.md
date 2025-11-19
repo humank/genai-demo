@@ -785,8 +785,6 @@ Development practices must include secure coding standards, security testing, an
 
 - [ADR-012: JWT Authentication Strategy](../../architecture/adrs/ADR-012-jwt-authentication.md)
 - [ADR-013: Authorization Model](../../architecture/adrs/ADR-013-authorization-model.md)
-- [ADR-014: Data Encryption Strategy](../../architecture/adrs/ADR-014-data-encryption.md)
-- [ADR-015: TLS Configuration](../../architecture/adrs/ADR-015-tls-configuration.md)
 
 ### Related Standards and Guidelines
 

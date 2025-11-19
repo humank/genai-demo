@@ -700,7 +700,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-020: Database Migration Strategy with Flyway](020-database-migration-strategy-flyway.md)
 - [ADR-021: Event Sourcing for Critical Aggregates](021-event-sourcing-critical-aggregates.md)
 - [ADR-026: CQRS Pattern for Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
 

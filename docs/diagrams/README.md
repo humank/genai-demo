@@ -47,12 +47,5 @@ For diagram standards, see:
 - [Diagram Standards](../.kiro/steering/diagram-standards.md)
 - [Diagram Generation Standards](../.kiro/steering/diagram-generation-standards.md)
 
-## Related Documentation
-
-- [Viewpoints](../viewpoints/README.md)
-- [Perspectives](../perspectives/README.md)
-- [Main README](../README.md)
-
----
 
 **Note**: We now use Mermaid for most diagrams (20+ diagrams added in Phase 3).

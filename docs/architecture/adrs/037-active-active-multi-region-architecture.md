@@ -721,8 +721,6 @@ const metrics = {
 - [ADR-017: Multi-Region Deployment Strategy](017-multi-region-deployment-strategy.md) - Superseded by this ADR
 - [ADR-018: Container Orchestration with AWS EKS](018-container-orchestration-eks.md) - EKS in both regions
 - [ADR-035: Disaster Recovery Strategy](035-disaster-recovery-strategy.md) - DR integrated with multi-region
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Detailed replication design
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md) - Failover procedures
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Split-brain prevention
 - [ADR-041: Data Residency and Sovereignty Strategy](041-data-residency-sovereignty-strategy.md) - Compliance requirements
 

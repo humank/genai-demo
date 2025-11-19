@@ -653,14 +653,6 @@ open report/index.html
 
 ---
 
-## Related Documentation
-
-- [Testing Strategy](../development/testing/testing-strategy.md)
-- [BDD Testing Guide](../development/testing/bdd-testing.md)
-- [Performance Testing](../perspectives/performance/verification.md)
-- [Test Performance Standards](../.kiro/steering/test-performance-standards.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -292,9 +292,6 @@ iam:
 
 ## Related Decisions
 
-- [ADR-015: Microservices Architecture](015-microservices-architecture.md)
-- [ADR-019: Service Mesh with Istio](019-service-mesh-istio.md)
-- [ADR-020: GitOps with ArgoCD](020-gitops-argocd.md)
 
 ---
 

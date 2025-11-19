@@ -523,14 +523,6 @@ curl -X POST https://events.pagerduty.com/v2/enqueue \
 - [ ] Update escalation policies
 - [ ] Conduct alert drills
 
-## Related Documentation
-
-- [Monitoring Strategy](monitoring-strategy.md)
-- [Runbooks](../runbooks/README.md)
-- [Incident Response](../runbooks/service-outage.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

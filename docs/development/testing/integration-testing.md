@@ -432,14 +432,6 @@ void should_cache_customer_lookups() {
 
 ---
 
-## Related Documentation
-
-- [Testing Strategy](testing-strategy.md)
-- [Unit Testing](unit-testing.md)
-- [E2E Testing](e2e-testing.md)
-- [Test Performance Standards](.kiro/steering/test-performance-standards.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

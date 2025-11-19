@@ -764,14 +764,6 @@ failover_success_rate:
 4. **Document Incidents**: Post-mortem for every failover event
 5. **Optimize Performance**: Minimize failover detection and response time
 
-## Related Documentation
-
-- [Multi-Region Architecture](multi-region-architecture.md)
-- [High Availability Design](high-availability.md)
-- [Disaster Recovery](disaster-recovery.md)
-- [Chaos Engineering](chaos-engineering.md)
-
----
 
 **Next Steps**:
 1. Review [Chaos Engineering](chaos-engineering.md) for proactive testing

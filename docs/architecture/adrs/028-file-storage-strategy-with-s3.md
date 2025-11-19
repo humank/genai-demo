@@ -447,8 +447,6 @@ public class FileStorageMetrics {
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Database stores file metadata
-- [ADR-011: AWS Cloud Infrastructure](011-aws-cloud-infrastructure.md) - S3 is part of AWS ecosystem
 - [ADR-029: Background Job Processing Strategy](029-background-job-processing-strategy.md) - Background jobs for file processing
 
 ## Notes

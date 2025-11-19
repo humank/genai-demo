@@ -419,10 +419,8 @@ public class RateLimitMetrics {
 
 ## Related Decisions
 
-- [ADR-004: Use Redis for Distributed Caching](004-use-redis-for-distributed-caching.md) - Redis stores rate limit state
 - [ADR-009: RESTful API Design with OpenAPI 3.0](009-restful-api-design-with-openapi.md) - Rate limits in API design
 - [ADR-022: Distributed Locking with Redis](022-distributed-locking-with-redis.md) - Redisson for distributed operations
-- [ADR-050: API Security and Rate Limiting Strategy](050-api-security-and-rate-limiting-strategy.md) - Overall API security
 
 ## Notes
 

@@ -1146,8 +1146,6 @@ const residencyMetrics = {
 ## Related Decisions
 
 - [ADR-016: Data Encryption Strategy](016-data-encryption-strategy.md) - Encryption for data protection
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md) - Multi-region foundation
-- [ADR-038: Cross-Region Data Replication Strategy](038-cross-region-data-replication-strategy.md) - Replication with residency controls
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md) - Partition handling with residency
 - [ADR-058: Security Compliance and Audit Strategy](058-security-compliance-audit-strategy.md) - Overall compliance framework
 

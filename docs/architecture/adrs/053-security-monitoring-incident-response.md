@@ -655,8 +655,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-008: Use CloudWatch + X-Ray + Grafana for Observability](008-use-cloudwatch-xray-grafana-for-observability.md) - Base monitoring infrastructure
-- [ADR-043: Observability for Multi-Region Operations](043-observability-multi-region-operations.md) - Multi-region monitoring
 - [ADR-052: Authentication Security Hardening](052-authentication-security-hardening.md) - Authentication security
 - [ADR-054: Data Loss Prevention (DLP) Strategy](054-data-loss-prevention-strategy.md) - Data protection monitoring
 

@@ -20,12 +20,5 @@ For quick reference, see:
 - [Design Principles](../../.kiro/steering/design-principles.md)
 - [DDD Tactical Patterns](../../.kiro/steering/ddd-tactical-patterns.md)
 
-## Related Documentation
-
-- [Development Guide](../README.md)
-- [Code Quality Checklist](../../.kiro/steering/code-quality-checklist.md)
-- [Code Review Standards](../../.kiro/steering/code-review-standards.md)
-
----
 
 **Note**: This section is under active development. Please refer to the steering rules in `.kiro/steering/` for current standards.

@@ -403,8 +403,6 @@ static final ArchRule repositoryRules = classes()
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Repository implementations
-- [ADR-003: Use Domain Events for Cross-Context Communication](003-use-domain-events-for-cross-context-communication.md) - Event-driven architecture
 - [ADR-006: Environment-Specific Testing Strategy](006-environment-specific-testing-strategy.md) - Testing approach
 
 ## Notes

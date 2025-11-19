@@ -456,11 +456,6 @@ const metrics = {
 
 ## Related Decisions
 
-- [ADR-001: Use PostgreSQL for Primary Database](001-postgresql-primary-database.md)
-- [ADR-004: Use Redis for Distributed Caching](004-redis-distributed-caching.md)
-- [ADR-005: Use Apache Kafka (MSK) for Event Streaming](005-kafka-event-streaming.md)
-- [ADR-037: Active-Active Multi-Region Architecture](037-active-active-multi-region-architecture.md)
-- [ADR-039: Regional Failover and Failback Strategy](039-regional-failover-failback-strategy.md)
 - [ADR-040: Network Partition Handling Strategy](040-network-partition-handling-strategy.md)
 
 ---

@@ -737,8 +737,6 @@ Operations must include performance monitoring, alerting, and optimization proce
 
 ### Related Architecture Decisions
 
-- [ADR-004: Use Redis for Distributed Caching](../../architecture/adrs/ADR-004-redis-caching.md)
-- [ADR-005: Use Apache Kafka for Event Streaming](../../architecture/adrs/ADR-005-kafka-messaging.md)
 - [ADR-016: Kubernetes Auto-Scaling Strategy](../../architecture/adrs/ADR-016-k8s-autoscaling.md)
 - [ADR-017: Database Read Replica Strategy](../../architecture/adrs/ADR-017-db-read-replicas.md)
 

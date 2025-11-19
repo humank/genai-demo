@@ -472,14 +472,6 @@ public class PaymentGatewayAdapter {
 
 ---
 
-## Related Documentation
-
-- [DDD Tactical Patterns](.kiro/steering/ddd-tactical-patterns.md)
-- [Domain Events](.kiro/steering/domain-events.md)
-- [Architecture Constraints](.kiro/steering/architecture-constraints.md)
-- [Design Principles](.kiro/steering/design-principles.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

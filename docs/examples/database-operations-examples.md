@@ -579,14 +579,6 @@ spring:
 
 ---
 
-## Related Documentation
-
-- [Database Maintenance Guide](../operations/maintenance/database-maintenance.md)
-- [Backup and Recovery](../viewpoints/operational/backup-and-recovery-comprehensive.md)
-- [Performance Tuning](../viewpoints/operational/postgresql-performance-tuning.md)
-- [Troubleshooting Database Issues](../operations/troubleshooting/database-issues.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

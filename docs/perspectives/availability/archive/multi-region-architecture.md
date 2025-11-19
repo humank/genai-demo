@@ -567,14 +567,6 @@ echo "DR Drill completed successfully!"
 4. **Data Consistency**: Monitor replication lag < 1 second
 5. **Incident Response**: Automated runbooks for common scenarios
 
-## Related Documentation
-
-- [High Availability Design](high-availability.md)
-- [Automated Failover](automated-failover.md)
-- [Disaster Recovery](disaster-recovery.md)
-- [Chaos Engineering](chaos-engineering.md)
-
----
 
 **Next Steps**:
 1. Review [Automated Failover](automated-failover.md) for intelligent routing details

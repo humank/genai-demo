@@ -23,12 +23,5 @@ For operational procedures, see:
 
 See [Database Operations Examples](../../examples/database-operations-examples.md) for database procedures.
 
-## Related Documentation
-
-- [Operations Guide](../README.md)
-- [Operational Viewpoint](../../viewpoints/operational/README.md)
-- [Availability Perspective](../../perspectives/availability/README.md)
-
----
 
 **Note**: This section is under active development.

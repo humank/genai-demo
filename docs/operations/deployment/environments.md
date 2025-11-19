@@ -554,14 +554,6 @@ kubectl exec -it ${POD_NAME} -- \
    - Verify security group rules
    - Check MSK cluster status
 
-## Related Documentation
-
-- [Deployment Process](deployment-process.md)
-- [Rollback Procedures](rollback.md)
-- [Monitoring Guide](../monitoring/monitoring-strategy.md)
-- [Troubleshooting Guide](../troubleshooting/common-issues.md)
-
----
 
 **Last Updated**: 2025-10-25  
 **Owner**: DevOps Team  

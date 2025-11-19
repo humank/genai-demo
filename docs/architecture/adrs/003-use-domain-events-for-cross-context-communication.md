@@ -380,9 +380,6 @@ public class EventMetrics {
 
 ## Related Decisions
 
-- [ADR-002: Adopt Hexagonal Architecture](002-adopt-hexagonal-architecture.md) - Events flow through ports and adapters
-- [ADR-005: Use Apache Kafka for Event Streaming](005-use-kafka-for-event-streaming.md) - External message broker
-- [ADR-001: Use PostgreSQL for Primary Database](001-use-postgresql-for-primary-database.md) - Event persistence
 
 ## Notes
 

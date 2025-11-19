@@ -777,7 +777,6 @@ Affects:
 
 ## Related Decisions
 
-- [ADR-020: Database Migration Strategy with Flyway](020-database-migration-strategy-flyway.md)
 - [ADR-025: Saga Pattern for Distributed Transactions](025-saga-pattern-distributed-transactions.md)
 - [ADR-026: CQRS Pattern for Read/Write Separation](026-cqrs-pattern-read-write-separation.md)
 

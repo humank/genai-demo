@@ -1696,14 +1696,6 @@ Compromised credentials from phishing attack
 - [ ] Review and update access policies (Due: 2025-01-30)
 ```
 
-## Related Documentation
-
-- [Database Maintenance](database-maintenance.md)
-- [Backup and Recovery](backup-recovery.md)
-- [Monitoring and Alerting](../monitoring/monitoring-alerting.md)
-- [Disaster Recovery](../deployment/disaster-recovery.md)
-
----
 
 **Last Updated**: 2025-01-15
 **Document Owner**: Security Team

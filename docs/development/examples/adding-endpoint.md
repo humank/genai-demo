@@ -401,13 +401,6 @@ You've successfully added a new REST endpoint! The key steps were:
 - Use pagination for lists
 - Return appropriate HTTP status codes
 
-## Related Documentation
-
-- [API Design Standards](../../api/rest/README.md)
-- [Creating Aggregate](creating-aggregate.md)
-- [Testing Strategy](../testing/testing-strategy.md)
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: 2025-10-25  
