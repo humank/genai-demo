@@ -1,5 +1,28 @@
 # Development Standards and Guidelines
 
+---
+
+## 🚨 CRITICAL REMINDER - DOCUMENTATION DATES 🚨
+
+**BEFORE creating or updating ANY documentation file:**
+
+```bash
+# MANDATORY FIRST STEP - Get current date
+date +%Y-%m-%d
+
+# Then use that ACTUAL date in ALL date fields
+```
+
+**📄 READ THE COMPLETE GUIDE:**
+- **[documentation-date-requirements.md](documentation-date-requirements.md)** - MANDATORY reading
+
+**Why this matters:**
+- ❌ Using wrong dates (2024 instead of 2025) causes confusion
+- ❌ Using placeholder dates (YYYY-MM-DD) is unprofessional
+- ✅ Accurate dates enable proper tracking and maintenance
+
+---
+
 ## Technology Stack Requirements
 
 ### Backend Technologies
@@ -35,18 +58,29 @@
 
 #### Documentation Date Standards
 
-> **⚠️ CRITICAL**: All documentation files MUST use the current actual date when created or updated.
+> **🚨 CRITICAL - MANDATORY READING 🚨**
+> 
+> **Complete documentation date requirements:**
+> 
+> **📄 [documentation-date-requirements.md](documentation-date-requirements.md)**
+> 
+> This is a **MANDATORY** standalone guide that MUST be followed.
 
-**Mandatory Requirements**:
+**Quick Summary**:
 
-- **ALWAYS** execute `date +%Y-%m-%d` to get the current date before creating/updating any documentation
-- **NEVER** use placeholder dates like "YYYY-MM-DD", "2025-01-XX", or hardcoded dates
-- **ALWAYS** update the following fields with the current date:
+- **🔴 ALWAYS FIRST**: Execute `date +%Y-%m-%d` to get the current date **BEFORE** creating/updating any documentation
+- **🔴 NEVER**: Use placeholder dates like "YYYY-MM-DD", "2025-01-XX", or hardcoded dates
+- **🔴 NEVER**: Copy dates from other files or use remembered dates
+- **🔴 ALWAYS**: Update the following fields with the **ACTUAL CURRENT DATE**:
   - Frontmatter `last_updated` field
   - Document header `Last Updated` field
   - Change History table entries
   - ADR date fields
   - Any timestamp fields
+  - Commit message dates
+
+**For complete requirements, examples, and checklist:**
+- **[documentation-date-requirements.md](documentation-date-requirements.md)** ← **READ THIS**
 
 **Example - Correct Usage**:
 

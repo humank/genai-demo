@@ -1,12 +1,32 @@
 # Steering Rules Guide
 
+---
+
+## 🚨 CRITICAL - READ THIS FIRST 🚨
+
+**BEFORE creating or updating ANY documentation:**
+
+### 📄 [documentation-date-requirements.md](documentation-date-requirements.md)
+
+**MANDATORY reading for ALL documentation work.**
+
+```bash
+# ALWAYS run this FIRST
+date +%Y-%m-%d
+```
+
+**Use that EXACT date in ALL date fields!**
+
+---
+
 ## 🚀 Quick Start
 
 ### I need to
 
+- **Write/Update documentation**: **FIRST** read [documentation-date-requirements.md](documentation-date-requirements.md) ← **MANDATORY**
 - **Write code**: Start with [Development Standards](development-standards.md)
 - **Review code**: Use [Code Review Standards](code-review-standards.md)
-- **Write documentation**: See [Development Standards](development-standards.md) and [Diagram Generation Standards](diagram-generation-standards.md)
+- **Create diagrams**: See [Diagram Standards](diagram-standards.md) and [Diagram Generation Standards](diagram-generation-standards.md)
 - **Design architecture**: Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md)
 - **Optimize performance**: Review [Performance Standards](performance-standards.md)
 - **Implement security**: Follow [Security Standards](security-standards.md)
@@ -19,6 +39,7 @@ Essential standards for daily development work.
 
 | Document | Purpose | When to Use |
 |----------|---------|-------------|
+| **[documentation-date-requirements.md](documentation-date-requirements.md)** | **Documentation date requirements** | **BEFORE any documentation work** |
 | [Development Standards](development-standards.md) | Primary development guide | Daily coding, testing, architecture |
 | [Code Review Standards](code-review-standards.md) | Review process and checklist | Before and during code reviews |
 
