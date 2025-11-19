@@ -49,8 +49,8 @@ This document provides detailed guidelines for implementing accessible user inte
 // ✅ Good: Semantic HTML
 <nav aria-label="Main navigation">
   <ul>
-    <li><a href="/products">Products</a></li>
-    <li><a href="/cart">Cart</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#cart">Cart</a></li>
   </ul>
 </nav>
 
@@ -249,9 +249,9 @@ function Modal({ isOpen, onClose, children }) {
 <nav aria-label="Main navigation">
   <ul>
     <li><Link href="/">Home</Link></li>
-    <li><Link href="/products">Products</Link></li>
-    <li><Link href="/cart">Cart</Link></li>
-    <li><Link href="/account">Account</Link></li>
+    <li><Link href="#products">Products</Link></li>
+    <li><Link href="#cart">Cart</Link></li>
+    <li><Link href="#account">Account</Link></li>
   </ul>
 </nav>
 ```

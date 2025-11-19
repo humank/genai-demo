@@ -12,9 +12,6 @@ This document provides implementation guidance for Domain-Driven Design (DDD) ta
 ## Quick Reference
 
 For complete DDD guidance, see:
-- [DDD Tactical Patterns](.kiro/steering/ddd-tactical-patterns.md) - Complete DDD standards
-- [Core Principles](.kiro/steering/core-principles.md) - Architecture principles
-- [Domain Events](.kiro/steering/domain-events.md) - Event implementation
 
 ---
 
@@ -471,7 +468,6 @@ public class PaymentGatewayAdapter {
 ```
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

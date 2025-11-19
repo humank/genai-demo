@@ -177,14 +177,9 @@ BaseOptimisticLockingEntity
 - [樂觀鎖遷移檢查清單](optimistic-locking-migration-checklist.md)
 
 ### 2. 遷移工具
-- [實體遷移腳本](../../scripts/migrate-entities-to-optimistic-locking.py)
-- [數據庫遷移腳本](../../scripts/database-migration-orders-optimistic-locking.sql)
 - [DDD 分析工具](../../scripts/analyze-ddd-code.py)
 
 ### 3. 圖表和視覺化
-- [訂單聚合詳細圖](../../docs/diagrams/generated/functional/order-aggregate-details.png)
-- [領域模型概覽圖](../../docs/diagrams/generated/functional/domain-model-overview.png)
-- [基礎設施層概覽圖](../../docs/diagrams/generated/functional/infrastructure-layer-overview.png)
 
 ## 🎯 下一步建議
 

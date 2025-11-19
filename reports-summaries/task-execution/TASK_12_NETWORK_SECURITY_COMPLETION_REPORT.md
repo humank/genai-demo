@@ -168,19 +168,16 @@ Internet → Web Tier SG → App Tier SG → {Cache SG, Database SG, Monitoring 
 
 ### New Documentation Files
 
-1. **[Security Perspective Implementation](docs/perspectives/security/security-perspective.md)**
    - Complete Rozanski & Woods Security Perspective implementation
    - Defense-in-depth strategy with 5-layer security architecture
    - Security risk assessment and mitigation strategies
    - Compliance framework (SOC 2, ISO 27001, PCI DSS)
 
-2. **[Security Quality Attribute Scenarios](docs/perspectives/security/security-quality-scenarios.md)**
    - 15 comprehensive QAS covering all security concerns
    - Implementation status tracking with 87% completion rate
    - Performance targets and testing strategies
    - Continuous improvement metrics
 
-3. **[Network Security Architecture (Updated)](docs/viewpoints/security/network-security-architecture.md)**
    - Enhanced with Rozanski & Woods methodology integration
    - Cross-viewpoint integration analysis
    - Security perspective cross-cutting concerns
@@ -188,7 +185,6 @@ Internet → Web Tier SG → App Tier SG → {Cache SG, Database SG, Monitoring 
 
 ### Updated Documentation
 
-4. **[Architecture Documentation Center](docs/README.md)**
    - Added Security Perspective documentation links
    - Updated security architecture navigation
    - Enhanced cross-reference system

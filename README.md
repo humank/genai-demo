@@ -41,7 +41,6 @@ This is not just another e-commerce platform. It's a **comprehensive demonstrati
 
 ### What You'll Find Here
 
-
 - **Complete Architecture Methodology**: Not just code, but systematic architectural thinking
 - **Production-Grade Resilience**: Active-Active multi-region with automated failover
 - **Executable Specifications**: 28+ BDD scenarios that serve as living documentation
@@ -95,7 +94,6 @@ This is not just another e-commerce platform. It's a **comprehensive demonstrati
 | **Deployment Time** | <15 min | ✅ Automated |
 | **Multi-Region Support** | Taiwan + Japan | ✅ Active-Active |
 
-
 ---
 
 ## 🛡️ Digital Resilience: Enterprise Multi-Region Architecture
@@ -137,7 +135,6 @@ Unlike traditional **Active-Passive** disaster recovery, our **Active-Active** a
 | **Cost Efficiency** | 50% idle capacity | 100% utilized |
 | **User Experience** | Latency varies | Optimal latency |
 | **ROI** | Negative (idle cost) | **889%** (proven) |
-
 
 ### 🔄 Three-Layer Failover Strategy
 
@@ -299,7 +296,6 @@ Additional Investment for Resilience:
 - 🔧 [DR Automation](infrastructure/src/constructs/disaster-recovery-automation.ts) - Automated workflows
 - 📊 [Multi-Region Implementation](infrastructure/docs/MULTI_REGION_IMPLEMENTATION.md) - Setup guide
 
-
 ### 🏆 Key Takeaways
 
 **What Makes This Special**:
@@ -359,7 +355,6 @@ graph TB
     style Japan fill:#f0fff4,stroke:#00cc66,stroke-width:3px
 ```
 
-
 ### Core Design Principles
 
 - **🏛️ Architecture-Driven**: Complete [Rozanski & Woods](docs/rozanski-woods-methodology-guide.md) methodology with 7 Viewpoints + 8 Perspectives
@@ -400,7 +395,6 @@ Perspectives describe **quality attributes** that affect the entire system:
 | **[Evolution](docs/perspectives/evolution/README.md)** | API versioning, backward compatibility | [📄 View](docs/perspectives/evolution/README.md) |
 
 **📖 Complete Methodology**: [Rozanski & Woods Guide](docs/rozanski-woods-methodology-guide.md)
-
 
 ### 🎯 Domain-Driven Design Implementation
 
@@ -472,7 +466,6 @@ Generic Domains:
 5. **Verify** - ArchUnit validates architecture rules
 
 **📖 Testing Guide**: [Testing Strategy](docs/development/testing/testing-strategy.md)
-
 
 ---
 
@@ -559,7 +552,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 
 </details>
 
-
 <details>
 <summary>🛡️ <b>Learn About Digital Resilience</b></summary>
 
@@ -580,7 +572,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 
 4. **Chaos Engineering** (1h)
    - [Chaos Engineering Guide](docs/perspectives/availability/chaos-engineering.md)
-   - [Monthly DR Drill Procedures](docs/operations/runbooks/monthly-dr-drill.md)
 
 </details>
 
@@ -591,7 +582,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 
 1. **Understand Infrastructure** (2h)
    - [Deployment Viewpoint](docs/viewpoints/deployment/README.md)
-   - [AWS Architecture](docs/operations/deployment/aws-architecture.md)
 
 2. **Prepare Deployment** (4h)
    - Review [Deployment Guide](docs/operations/deployment/README.md)
@@ -599,7 +589,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 
 3. **Deploy** (2h)
    - Follow [Deployment Process](docs/operations/deployment/deployment-process.md)
-   - Verify with [Smoke Tests](docs/operations/deployment/smoke-tests.md)
 
 4. **Set Up Operations** (2h)
    - Configure [Monitoring](docs/operations/monitoring/README.md)
@@ -635,7 +624,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 </details>
 
 ---
-
 
 ## 🛠️ Technology Stack
 
@@ -678,8 +666,6 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 | **CMC Management** | Next.js 14 + React 18 + TypeScript | Admin console |
 | **Consumer App** | Angular 18 + TypeScript | Customer-facing app |
 
-**📖 Detailed Stack**: See [Technology Stack Documentation](docs/architecture/technology-stack.md)
-
 ---
 
 ## 📚 Documentation
@@ -698,7 +684,6 @@ Our documentation follows the **Rozanski & Woods** methodology with clear separa
 | **API Documentation** | REST API & Events | [🔌 API Docs](docs/api/README.md) |
 | **Operations** | Runbooks & procedures | [🔧 Operations](docs/operations/README.md) |
 | **Development** | Coding standards & guides | [💻 Development](docs/development/README.md) |
-
 
 ### 📂 Documentation Structure
 
@@ -783,7 +768,6 @@ We welcome contributions! Here's how to get started:
 - 📝 [Documentation Guide](docs/STYLE-GUIDE.md)
 - 🔀 [Git Workflow](docs/development/workflows/git-workflow.md)
 
-
 ### Development Standards
 
 - **Code Style**: Follow Google Java Style Guide
@@ -845,7 +829,6 @@ This provides 28s average RTO and 0.8s average RPO with 100% automated failover.
 4. Adding domain events
 5. Writing tests
 
-**Learn More**: [DDD Implementation Guide](docs/development/ddd-implementation-guide.md)
 </details>
 
 <details>
@@ -860,7 +843,6 @@ Plus intangible benefits: customer trust, competitive advantage, regulatory comp
 
 **Learn More**: [Cost-Benefit Analysis](#-cost-benefit-analysis)
 </details>
-
 
 <details>
 <summary><b>Q: How often do you test disaster recovery?</b></summary>

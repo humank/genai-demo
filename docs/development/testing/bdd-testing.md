@@ -13,7 +13,6 @@ This guide provides comprehensive guidance for Behavior-Driven Development (BDD)
 
 For complete testing standards, see:
 - [Testing Strategy](testing-strategy.md) - Complete testing approach
-- [Testing Standards](.kiro/steering/testing-strategy.md) - Testing development standards
 - [Unit Testing](unit-testing.md) - Unit testing guide
 
 ---
@@ -441,7 +440,6 @@ public class CucumberTestRunner {
 - **Solution**: Use tags to run subsets, optimize database operations
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

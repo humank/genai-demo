@@ -542,8 +542,6 @@ The active-active architecture provides foundation for future global expansion, 
 
 ### Related ADRs
 
-- [ADR-017: Multi-Region Deployment Strategy](20250117-017-multi-region-deployment-strategy.md) - Foundation for DR architecture
-
 ### Affected Viewpoints
 
 - [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Multi-region deployment architecture

@@ -11,11 +11,9 @@ This section contains guides for setting up your development environment.
 
 - [Local Environment Setup](local-environment.md) - Set up your local development environment
 - [IDE Configuration](ide-configuration.md) - Configure your IDE for the project
-- [Docker Setup](docker-setup.md) - Set up Docker for local development
 
 ## Quick Start
 
 For a quick start, see the main [Development Guide](../README.md).
-
 
 **Note**: This section is under active development. Some documents may be incomplete or missing.

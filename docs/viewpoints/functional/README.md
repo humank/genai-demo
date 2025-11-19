@@ -29,15 +29,11 @@ This viewpoint answers:
 - [Overview](overview.md) - High-level functional description
 - [Bounded Contexts](bounded-contexts.md) - 13 bounded contexts and their responsibilities
 - [Use Cases](use-cases.md) - Key use cases and scenarios
-- [Functional Elements](functional-elements.md) - Functional components and their interactions
 - [Interfaces](interfaces.md) - External interfaces and APIs
 
 ### 📊 Diagrams
 
 - [Bounded Contexts Overview](../../diagrams/viewpoints/functional/bounded-contexts-overview.puml)
-- [Customer Context](../../diagrams/viewpoints/functional/customer-context.puml)
-- [Order Context](../../diagrams/viewpoints/functional/order-context.puml)
-- [Product Context](../../diagrams/viewpoints/functional/product-context.puml)
 
 ## Key Concepts
 

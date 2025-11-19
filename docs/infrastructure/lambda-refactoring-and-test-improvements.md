@@ -439,19 +439,10 @@ npm test
 ## 📚 Related Documentation
 
 ### Infrastructure Documentation
-- [AWS CDK Best Practices](../deployment/cdk-best-practices.md)
-- [Lambda Function Guidelines](../deployment/lambda-guidelines.md)
-- [Testing Strategy](../testing/cdk-testing-strategy.md)
 
 ### Operational Documentation
-- [Deployment Runbook](../../operations/runbooks/cdk-deployment.md)
-- [Monitoring Guide](../../operations/monitoring/lambda-monitoring.md)
-- [Troubleshooting Guide](../../operations/troubleshooting/lambda-issues.md)
 
 ### Architecture Documentation
-- [Deployment Viewpoint](../../viewpoints/deployment/README.md)
-- [Operational Viewpoint](../../viewpoints/operational/README.md)
-- [Cost Perspective](../../perspectives/cost/README.md)
 
 ## 🎯 Future Improvements
 

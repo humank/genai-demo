@@ -151,8 +151,6 @@ All architectural diagrams are organized by viewpoint and perspective:
 
 ### Feedback & Improvement
 
-- **Report Issues**: Use [GitHub issue templates](.github/ISSUE_TEMPLATE/) for documentation problems
-- **Request Content**: Submit a [documentation request](.github/ISSUE_TEMPLATE/documentation-request.md)
 - **Track Progress**: View the [Documentation Backlog](DOCUMENTATION-BACKLOG.md)
 - **Provide Feedback**: Use [feedback forms](feedback-forms/README.md)
 

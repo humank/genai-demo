@@ -330,5 +330,4 @@ Critical path dependencies that affect overall availability:
 
 - [Overview](overview.md) - Availability perspective introduction
 - [Fault Tolerance](fault-tolerance.md) - Implementation patterns
-- [High Availability](high-availability.md) - Infrastructure design
 - [Disaster Recovery](disaster-recovery.md) - DR procedures

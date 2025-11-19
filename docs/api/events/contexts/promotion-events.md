@@ -10,7 +10,6 @@ This document will contain domain events for the promotion context.
 For now, please see:
 - [Event Catalog](../event-catalog.md) - Complete event catalog
 - [Event Patterns](../event-patterns.md) - Event design patterns
-- [Domain Events](.kiro/steering/domain-events.md) - Event implementation standards
 
 ---
 

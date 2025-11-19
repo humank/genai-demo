@@ -15,8 +15,6 @@ decision_makers: ["person1", "person2"]
 
 ## Status
 
-**Status**: Proposed | Accepted | Deprecated | Superseded by [ADR-YYY](YYYYMMDD-YYY-title.md)
-
 **Date**: YYYY-MM-DD
 
 **Decision Makers**: Person 1, Person 2, Person 3
@@ -379,26 +377,13 @@ List the factors that influenced this decision:
 
 ### Supersedes
 
-- [ADR-XXX: Previous Decision](YYYYMMDD-XXX-title.md) - Why it's being replaced
-
 ### Superseded By
-
-- [ADR-YYY: New Decision](YYYYMMDD-YYY-title.md) - Why this decision is no longer valid
 
 ### Related ADRs
 
-- [ADR-AAA: Related Decision 1](YYYYMMDD-AAA-title.md) - How they relate
-- [ADR-BBB: Related Decision 2](YYYYMMDD-BBB-title.md) - How they relate
-
 ### Affected Viewpoints
 
-- [Viewpoint 1](../../viewpoints/viewpoint1/README.md) - How it's affected
-- [Viewpoint 2](../../viewpoints/viewpoint2/README.md) - How it's affected
-
 ### Affected Perspectives
-
-- [Perspective 1](../../perspectives/perspective1/README.md) - How it's affected
-- [Perspective 2](../../perspectives/perspective2/README.md) - How it's affected
 
 ## Notes
 
@@ -423,9 +408,6 @@ List the factors that influenced this decision:
 - [ ] Action 2: Description and owner
 
 ### References
-
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
 
 ## Appendix
 

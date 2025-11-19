@@ -10,7 +10,6 @@ This document provides comprehensive troubleshooting procedures for database-rel
 
 - [Database Maintenance](../maintenance/database-maintenance.md)
 - [Slow API Responses Runbook](../runbooks/slow-api-responses.md)
-- [Performance Standards](../../.kiro/steering/performance-standards.md)
 
 ---
 
@@ -2109,7 +2108,6 @@ FROM pg_statio_user_tables;
 
 - [Database Maintenance](../maintenance/database-maintenance.md) - Regular maintenance procedures
 - [Slow API Responses Runbook](../runbooks/slow-api-responses.md) - API performance troubleshooting
-- [Performance Standards](../../.kiro/steering/performance-standards.md) - Performance requirements and standards
 - [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Database monitoring setup
 
 ---

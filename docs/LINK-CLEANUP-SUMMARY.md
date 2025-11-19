@@ -43,29 +43,7 @@ Based on the principle that **"less is more"**, we performed an aggressive clean
 - High maintenance cost (every new doc requires updating related docs)
 - Users can discover content through search and table of contents
 
-**Example Before**:
-```markdown
-## Related Documentation
-
-- [Testing Strategy](testing-strategy.md)
-- [Unit Testing](unit-testing.md)
-- [Integration Testing](integration-testing.md)
-- [BDD Testing](bdd-testing.md)
-- [Test Performance Standards](.kiro/steering/test-performance-standards.md)
-- [Development Standards](.kiro/steering/development-standards.md)
-- [Code Quality Checklist](.kiro/steering/code-quality-checklist.md)
-
----
-
-**Document Version**: 1.0
-```
-
-**Example After**:
-```markdown
----
-
-**Document Version**: 1.0
-```
+**Example**: Removed sections like "Related Documentation" that contained 5-10 links to reduce maintenance burden and improve readability.
 
 ### 2. Removed Non-Existent Example Links
 

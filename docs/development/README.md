@@ -11,16 +11,12 @@ This section contains comprehensive development documentation for the GenAI Demo
 ### 🚀 Getting Started
 
 - [Development Setup](setup/README.md) - Environment setup and prerequisites
-- [Local Development](setup/local-development.md) - Running the application locally
 - [IDE Configuration](setup/ide-configuration.md) - IDE setup and plugins
 - [Onboarding Guide](setup/onboarding.md) - New developer onboarding
 
 ### 📝 Coding Standards
 
 - [Java Standards](coding-standards/java-standards.md) - Java coding conventions
-- [TypeScript Standards](coding-standards/typescript-standards.md) - TypeScript conventions
-- [Code Review Guidelines](coding-standards/code-review.md) - Code review process
-- [Git Commit Standards](coding-standards/git-standards.md) - Commit message format
 
 ### 🧪 Testing
 
@@ -28,26 +24,19 @@ This section contains comprehensive development documentation for the GenAI Demo
 - [Unit Testing](testing/unit-testing.md) - Unit test guidelines
 - [Integration Testing](testing/integration-testing.md) - Integration test guidelines
 - [BDD Testing](testing/bdd-testing.md) - Behavior-driven development
-- [Architecture Testing](testing/architecture-testing.md) - ArchUnit tests
 
 ### 🔄 Workflows
 
 - [Git Workflow](workflows/git-workflow.md) - Branching and merging strategy
 - [Code Review Process](workflows/code-review.md) - Review procedures
-- [CI/CD Pipeline](workflows/ci-cd.md) - Continuous integration and deployment
-- [Release Process](workflows/release-process.md) - Release management
 
 ### 💡 Examples
 
 - [Creating an Aggregate](examples/creating-aggregate.md) - DDD aggregate example
 - [Implementing Events](examples/implementing-event.md) - Domain event example
-- [Writing Tests](examples/writing-tests.md) - Test examples
-- [API Implementation](examples/api-implementation.md) - REST API example
 
 ### 🔧 Tools & Hooks
 
-- [Development Tools](tools/README.md) - Recommended development tools
-- [Kiro Hooks](hooks/README.md) - Automated development hooks
 - [Diagram Generation](hooks/diagram-hooks-design.md) - Diagram automation
 
 ## Development Environment
@@ -214,8 +203,6 @@ Our CI/CD pipeline includes:
 4. **Security**: Security scanning
 5. **Deploy**: Deploy to environment
 
-[CI/CD Guide](workflows/ci-cd.md)
-
 ## Development Best Practices
 
 ### DDD Best Practices
@@ -275,8 +262,6 @@ Our CI/CD pipeline includes:
 5. **Write Tests**: API tests
 6. **Document**: Update API docs
 
-[API Implementation Guide](examples/api-implementation.md)
-
 ## Troubleshooting
 
 ### Common Issues
@@ -324,10 +309,6 @@ rm -rf ~/.gradle/caches
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 
 ### Training Materials
-
-- [DDD Workshop Materials](training/ddd-workshop/)
-- [Testing Workshop](training/testing-workshop/)
-- [Architecture Patterns](training/architecture-patterns/)
 
 ## Contributing
 

@@ -15,7 +15,6 @@ This perspective is organized into comprehensive guides:
 
 1. **[README.md](README.md)** (this document) - Overview and navigation
 2. **[overview.md](overview.md)** - Detailed availability principles and architecture
-3. **[high-availability.md](high-availability.md)** - Multi-AZ and Active-Active design
 4. **[fault-tolerance.md](fault-tolerance.md)** - Resilience patterns and circuit breakers
 5. **[disaster-recovery.md](disaster-recovery.md)** - DR strategy and automated testing
 6. **[multi-region-architecture.md](multi-region-architecture.md)** - Active-Active dual-region design
@@ -192,8 +191,6 @@ See [Operational Viewpoint - Unified Dashboard](../../viewpoints/operational/mon
 
 ### Secondary Integration
 
-- **[Security Viewpoint](../../viewpoints/security/README.md)** - Secure failover and data protection
-- **[Performance Viewpoint](../../viewpoints/performance/README.md)** - Performance during failure scenarios
 - **[Information Viewpoint](../../viewpoints/information/README.md)** - Data consistency and replication
 
 ## Success Criteria (A+ Grade Achievement)
@@ -227,7 +224,6 @@ See [Operational Viewpoint - Unified Dashboard](../../viewpoints/operational/mon
 ### Internal Documentation
 
 - [Overview and Principles](overview.md)
-- [High Availability Design](high-availability.md)
 - [Fault Tolerance Patterns](fault-tolerance.md)
 - [Disaster Recovery Strategy](disaster-recovery.md)
 - [Multi-Region Architecture](multi-region-architecture.md)

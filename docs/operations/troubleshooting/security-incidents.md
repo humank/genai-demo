@@ -53,8 +53,6 @@ kubectl rollout restart deployment/ecommerce-backend -n production
 3. Add sliding session expiration
 4. Configure refresh token rotation
 
-**Related Runbook**: [Authentication Failure Runbook](../runbooks/authentication-failure.md)
-
 ---
 
 ### Issue: Invalid Token Signature
@@ -1072,8 +1070,6 @@ kubectl logs -l app=ecommerce-backend -n production | \
 - [Authentication Guide](../../perspectives/security/authentication.md) - Authentication mechanisms
 - [Authorization Guide](../../perspectives/security/authorization.md) - RBAC and permissions
 - [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Security monitoring setup
-- [Incident Response Plan](../runbooks/security-incident-response.md) - Detailed incident response procedures
-- [Audit Logging](../../perspectives/security/audit-logging.md) - Audit log configuration
 
 ---
 

@@ -20,7 +20,6 @@ The Security Perspective addresses security concerns across all architectural vi
 ### Related Documentation
 
 - [API Security](../../api/security/README.md) - API-specific security measures
-- [Security Standards](.kiro/steering/security-standards.md) - Security development standards
 
 ---
 
@@ -88,14 +87,10 @@ For complete security architecture details, see [Security Overview](overview.md)
 
 ### For Developers
 
-- [Security Standards](.kiro/steering/security-standards.md) - Development security standards
 - [API Security](../../api/security/README.md) - API security implementation
 - [Authentication Guide](authentication.md) - Authentication implementation
 
 ### For Operations
-
-- [Security Monitoring](../../operations/monitoring/security-monitoring.md) - Security monitoring setup
-- [Incident Response](../../operations/runbooks/security-incident-response.md) - Security incident procedures
 
 ---
 
@@ -116,7 +111,6 @@ For complete security architecture details, see [Security Overview](overview.md)
 - Regular security assessments
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

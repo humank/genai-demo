@@ -66,11 +66,6 @@ This perspective ensures:
 
 ### 📊 Diagrams
 
-- [Caching Architecture](../../diagrams/perspectives/performance/caching-architecture.puml) - Multi-layer caching strategy
-- [Scaling Strategy](../../diagrams/perspectives/performance/scaling-strategy.puml) - Auto-scaling configuration
-- [Database Optimization](../../diagrams/perspectives/performance/database-optimization.puml) - Query optimization and indexing
-- [Load Distribution](../../diagrams/perspectives/performance/load-distribution.puml) - Load balancing architecture
-
 ## Key Concerns
 
 ### Concern 1: API Response Time
@@ -732,18 +727,11 @@ Operations must include performance monitoring, alerting, and optimization proce
 ### Related Perspectives
 
 - [Availability Perspective](../availability/overview.md) - Performance impacts availability
-- [Cost Perspective](../cost/overview.md) - Performance optimization affects costs
 - [Scalability Perspective](scalability.md) - Detailed scaling strategies
 
 ### Related Architecture Decisions
 
-- [ADR-016: Kubernetes Auto-Scaling Strategy](../../architecture/adrs/ADR-016-k8s-autoscaling.md)
-- [ADR-017: Database Read Replica Strategy](../../architecture/adrs/ADR-017-db-read-replicas.md)
-
 ### Related Standards and Guidelines
-
-- [Performance Standards](../../.kiro/steering/performance-standards.md) - Detailed performance standards
-- [Test Performance Standards](../../.kiro/steering/test-performance-standards.md) - Test performance guidelines
 
 ### Related Tools
 
@@ -806,7 +794,6 @@ The performance perspective will evolve to address growing scale and emerging te
 - [Back to All Perspectives](../README.md)
 - [Architecture Overview](../../architecture/README.md)
 - [Main Documentation](../../README.md)
-- [Performance Standards](../../.kiro/steering/performance-standards.md)
 
 ## Appendix
 

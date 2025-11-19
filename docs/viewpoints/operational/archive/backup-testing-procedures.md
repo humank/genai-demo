@@ -246,7 +246,6 @@ aws rds delete-db-instance \
 
 echo "✓ Test 1 completed"
 
-
 # Test 2: Point-in-Time Recovery
 echo ""
 echo "Test 2: Point-in-time recovery test..."
@@ -1920,7 +1919,6 @@ if __name__ == '__main__':
 - [Backup and Recovery](backup-recovery.md) - Main backup and recovery procedures
 - [Backup Automation](backup-automation.md) - Automated backup procedures
 - [Detailed Restore Procedures](detailed-restore-procedures.md) - Step-by-step restore workflows
-- [Monitoring and Alerting](monitoring-alerting.md) - Monitoring strategies
 
 ---
 

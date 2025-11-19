@@ -11,8 +11,6 @@ This section contains deployment procedures and guides.
 
 - [Deployment Process](deployment-process.md) - Step-by-step deployment procedures
 - [Environment Configuration](environments.md) - Environment-specific configurations
-- [AWS Architecture](aws-architecture.md) - AWS infrastructure overview
-- [Smoke Tests](smoke-tests.md) - Post-deployment smoke tests
 
 ## Quick Reference
 
@@ -23,6 +21,5 @@ For deployment architecture, see:
 ## Practical Examples
 
 See [Deployment Examples](../../examples/deployment-examples.md) for runnable deployment procedures.
-
 
 **Note**: For complete deployment examples, see the examples directory.

@@ -20,12 +20,9 @@ This section contains testing guides and best practices.
 ## Quick Reference
 
 For testing standards, see:
-- [Testing Strategy](../../.kiro/steering/testing-strategy.md)
-- [Test Performance Standards](../../.kiro/steering/test-performance-standards.md)
 
 ## Practical Examples
 
 See [Testing Examples](../../examples/testing-examples.md) for runnable code examples.
-
 
 **Note**: This section is under active development. Please refer to the steering rules and examples for current guidance.

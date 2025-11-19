@@ -13,7 +13,6 @@ This document provides comprehensive API security guidance for the GenAI Demo pl
 
 For complete security documentation, see:
 - [Security Overview](../../perspectives/security/overview.md) - Complete security architecture
-- [Security Standards](.kiro/steering/security-standards.md) - Security development standards
 - [API Overview](../README.md) - API documentation
 
 ---
@@ -505,7 +504,6 @@ void should_deny_user_to_delete_customer() throws Exception {
 ```
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

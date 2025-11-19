@@ -6,8 +6,6 @@ This directory contains Mermaid diagrams for the project. Mermaid is a JavaScrip
 
 > **🔗 Related Standards**:
 >
-> - [Diagram Generation Standards](../../.kiro/steering/diagram-generation-standards.md) - Complete diagram standards
-> - [Event Storming Standards](../../.kiro/steering/event-storming-standards.md) - Event Storming diagram examples
 
 ## Why Mermaid
 
@@ -271,7 +269,6 @@ graph TB
 Then reference it in documentation:
 
 ```markdown
-See the [Order Fulfillment Process](../diagrams/mermaid/processes/order-fulfillment.md) for details.
 ```
 
 ## Styling and Customization
@@ -432,9 +429,6 @@ See the `examples/` directory for complete examples of each diagram type:
 
 - [Flowchart Example](examples/flowchart-example.md)
 - [Sequence Diagram Example](examples/sequence-example.md)
-- [State Diagram Example](examples/state-example.md)
-- [Class Diagram Example](examples/class-example.md)
-- [ER Diagram Example](examples/er-example.md)
 
 ## Resources
 

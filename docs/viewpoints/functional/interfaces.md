@@ -169,8 +169,6 @@ Authorization: Bearer {jwt_token}
 | DELETE | `/api/v1/carts/{customerId}` | Clear cart | Yes |
 | POST | `/api/v1/carts/{customerId}/checkout` | Checkout cart | Yes |
 
-**Detailed Documentation**: [Shopping Cart API Reference](../../api/rest/endpoints/carts.md)
-
 #### Payment Context APIs
 
 | Method | Endpoint | Description | Auth Required |
@@ -189,8 +187,6 @@ Authorization: Bearer {jwt_token}
 | GET | `/api/v1/deliveries/{orderId}` | Get delivery status | Yes |
 | GET | `/api/v1/deliveries/track/{trackingNumber}` | Track delivery | No |
 | POST | `/api/v1/deliveries/{id}/update-status` | Update status | Yes (Logistics) |
-
-**Detailed Documentation**: [Delivery API Reference](../../api/rest/endpoints/deliveries.md)
 
 #### Inventory Context APIs
 
@@ -225,8 +221,6 @@ Authorization: Bearer {jwt_token}
 | POST | `/api/v1/reviews/{id}/approve` | Approve review | Yes (Admin) |
 | POST | `/api/v1/reviews/{id}/reject` | Reject review | Yes (Admin) |
 
-**Detailed Documentation**: [Review API Reference](../../api/rest/endpoints/reviews.md)
-
 #### Seller Context APIs
 
 | Method | Endpoint | Description | Auth Required |
@@ -236,8 +230,6 @@ Authorization: Bearer {jwt_token}
 | PUT | `/api/v1/sellers/{id}` | Update seller profile | Yes (Seller) |
 | GET | `/api/v1/sellers/{id}/products` | List seller products | No |
 | POST | `/api/v1/sellers/{id}/approve` | Approve seller | Yes (Admin) |
-
-**Detailed Documentation**: [Seller API Reference](../../api/rest/endpoints/sellers.md)
 
 ---
 

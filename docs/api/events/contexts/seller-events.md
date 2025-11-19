@@ -9,7 +9,6 @@ This document will contain domain events for the seller context.
 
 For now, please see:
 - [Event Catalog](../event-catalog.md) - Complete event catalog
-- [Domain Events](.kiro/steering/domain-events.md) - Event implementation standards
 
 ---
 

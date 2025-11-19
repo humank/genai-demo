@@ -13,7 +13,6 @@ This document describes common event patterns and best practices for the GenAI D
 
 For complete event documentation, see:
 - [Event Catalog](event-catalog.md) - All available events
-- [Domain Events](.kiro/steering/domain-events.md) - Event implementation standards
 
 ---
 
@@ -490,7 +489,6 @@ public class EventFilter {
 - Implementation details
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

@@ -9,10 +9,6 @@ This section contains operational runbooks for common procedures and incident re
 
 ## Contents
 
-- [Incident Response](incident-response.md) - Incident response procedures
-- [Common Issues](common-issues.md) - Common issues and solutions
-- [Monthly DR Drill](monthly-dr-drill.md) - Disaster recovery drill procedures
-
 ## Quick Reference
 
 For operational procedures, see:
@@ -22,6 +18,5 @@ For operational procedures, see:
 ## Practical Examples
 
 See [Database Operations Examples](../../examples/database-operations-examples.md) for database procedures.
-
 
 **Note**: This section is under active development.

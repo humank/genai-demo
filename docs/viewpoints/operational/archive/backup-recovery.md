@@ -3551,10 +3551,6 @@ Audit Log Location: CloudWatch Logs + S3
 ## Related Documentation
 
 - [Detailed Restore Procedures](detailed-restore-procedures.md) - Comprehensive step-by-step restore workflows
-- [Operational Overview](overview.md) - Overall operational approach
-- [Monitoring and Alerting](monitoring-alerting.md) - Monitoring strategies
-- [Operational Procedures](procedures.md) - Step-by-step procedures
-- [Physical Architecture](../deployment/physical-architecture.md) - Infrastructure details
 
 ---
 

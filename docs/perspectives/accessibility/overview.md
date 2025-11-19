@@ -256,8 +256,8 @@ This perspective is organized into the following documents:
   <nav aria-label="Main navigation">
     <ul>
       <li><a href="/">Home</a></li>
-      <li><a href="/products">Products</a></li>
-      <li><a href="/cart">Cart</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#cart">Cart</a></li>
     </ul>
   </nav>
 </header>
@@ -282,7 +282,7 @@ This perspective is organized into the following documents:
 <div class="header">
   <div class="nav">
     <div class="link"><a href="/">Home</a></div>
-    <div class="link"><a href="/products">Products</a></div>
+    <div class="link"><a href="#products">Products</a></div>
   </div>
 </div>
 

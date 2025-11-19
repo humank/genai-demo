@@ -11,14 +11,10 @@ This section contains comprehensive operational documentation for the GenAI Demo
 ### 🚀 Deployment
 
 - [Deployment Overview](deployment/README.md) - Deployment strategies and procedures
-- [Environment Configuration](deployment/environment-configuration.md) - Environment-specific settings
-- [Release Process](deployment/release-process.md) - Release management procedures
 
 ### 📊 Monitoring & Alerting
 
 - [Monitoring Overview](monitoring/README.md) - Monitoring architecture and tools
-- [Alert Configuration](monitoring/alert-configuration.md) - Alert rules and thresholds
-- [Dashboard Setup](monitoring/dashboard-setup.md) - Monitoring dashboards
 
 ### 📖 Runbooks
 
@@ -35,17 +31,14 @@ This section contains comprehensive operational documentation for the GenAI Demo
 
 - [Troubleshooting Guide](troubleshooting/README.md) - Common issues and solutions
 - [Database Issues](troubleshooting/database-issues.md)
-- [Performance Issues](troubleshooting/performance-issues.md)
 - [Distributed System Issues](troubleshooting/distributed-system-issues.md)
 - [Security Incidents](troubleshooting/security-incidents.md)
 
 ### 🛠️ Maintenance
 
-- [Maintenance Procedures](maintenance/README.md) - Regular maintenance tasks
 - [Database Maintenance](maintenance/database-maintenance.md)
 - [Security & Compliance](maintenance/security-compliance.md)
 - [Disaster Recovery & HA](maintenance/disaster-recovery-ha.md)
-- [Backup & Recovery](maintenance/backup-recovery.md)
 
 ## Documentation Structure
 

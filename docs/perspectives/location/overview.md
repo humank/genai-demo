@@ -454,9 +454,6 @@ Key Features:
 
 ### Architecture Decisions
 
-- [ADR-016: Data Residency Compliance](../../architecture/adrs/016-data-residency-compliance.md)
-- [ADR-017: CDN Strategy](../../architecture/adrs/017-cdn-strategy.md)
-
 ## Next Steps
 
 1. Review [Multi-Region Deployment](multi-region.md) for detailed deployment strategy

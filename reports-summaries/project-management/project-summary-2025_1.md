@@ -248,7 +248,6 @@ graph TB
 
 ### 架構文檔
 
-- [系統架構概覽](../../docs/diagrams/architecture-overview.md)
 - \1
 - \1
 - <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: <!-- Kiro 配置連結: **Domain Event設計指南** (請參考專案內部文檔) --> --> --> --> -->

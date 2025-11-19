@@ -244,7 +244,6 @@ graph TD
 ### Implementation Guides
 
 - [Fault Tolerance Patterns](fault-tolerance.md) - Circuit breakers, retries, fallbacks
-- [High Availability Design](high-availability.md) - Multi-AZ, load balancing, health checks
 - [Disaster Recovery](disaster-recovery.md) - Backup, restore, and failover procedures
 
 ## Document Structure
@@ -254,7 +253,6 @@ This perspective is organized into the following documents:
 1. **[Overview](overview.md)** (this document) - Purpose, scope, and approach
 2. **[Requirements](requirements.md)** - SLOs, quality attribute scenarios, measurable targets
 3. **[Fault Tolerance](fault-tolerance.md)** - Patterns for handling failures
-4. **[High Availability](high-availability.md)** - Infrastructure and application HA design
 5. **[Disaster Recovery](disaster-recovery.md)** - DR strategy, backup, and restore procedures
 
 ## Metrics and Monitoring

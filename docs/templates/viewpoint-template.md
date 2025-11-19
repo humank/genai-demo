@@ -50,14 +50,7 @@ This viewpoint answers the following key questions:
 
 ### 📄 Documents
 
-- [Document 1](document1.md) - Description
-- [Document 2](document2.md) - Description
-- [Document 3](document3.md) - Description
-
 ### 📊 Diagrams
-
-- [Diagram 1](../../diagrams/viewpoints/{category}/diagram1.puml) - Description
-- [Diagram 2](../../diagrams/viewpoints/{category}/diagram2.puml) - Description
 
 ## Key Concerns
 
@@ -161,25 +154,11 @@ This viewpoint answers the following key questions:
 
 ### Related Viewpoints
 
-- [Viewpoint 1](../viewpoint1/README.md) - How they relate
-- [Viewpoint 2](../viewpoint2/README.md) - How they relate
-- [Viewpoint 3](../viewpoint3/README.md) - How they relate
-
 ### Related Perspectives
-
-- [Perspective 1](../../perspectives/perspective1/README.md) - How it applies
-- [Perspective 2](../../perspectives/perspective2/README.md) - How it applies
-- [Perspective 3](../../perspectives/perspective3/README.md) - How it applies
 
 ### Related Architecture Decisions
 
-- [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
-- [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
-
 ### Related Guides
-
-- [Guide 1](../../guide1/README.md) - Description
-- [Guide 2](../../guide2/README.md) - Description
 
 ## Implementation Guidelines
 
@@ -237,7 +216,6 @@ This viewpoint answers the following key questions:
 ## Quick Links
 
 - [Back to All Viewpoints](../README.md)
-- [Architecture Overview](../../architecture/README.md)
 - [Main Documentation](../../README.md)
 
 ## Appendix
@@ -249,9 +227,6 @@ This viewpoint answers the following key questions:
 - **Term 3**: Definition
 
 ### References
-
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
 
 ### Change History
 

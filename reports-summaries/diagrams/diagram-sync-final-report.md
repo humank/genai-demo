@@ -39,7 +39,6 @@ The intelligent diagram-documentation synchronization system has **successfully 
 
 **Fixed References**:
 ```markdown
-!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)
 !!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)
 ```
 
@@ -54,7 +53,6 @@ The intelligent diagram-documentation synchronization system has **successfully 
 !User Journey Overview
 
 # After  
-!!!!!![User Journey Overview](../../docs/diagrams/generated/functional/user-journey-overview.png)
 ```
 
 ### 3. Comprehensive Coverage ✅

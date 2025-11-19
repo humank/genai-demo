@@ -26,7 +26,6 @@ This comprehensive guide consolidates all high availability and fault tolerance 
 **Related Documents**:
 - [Disaster Recovery](disaster-recovery.md) - DR procedures and runbooks
 - [Backup and Recovery](../../viewpoints/operational/backup-and-recovery-comprehensive.md) - Backup strategies
-- [Performance Standards](../../.kiro/steering/performance-standards.md) - Performance requirements
 
 ---
 
@@ -576,7 +575,6 @@ kubectl scale deployment --all --replicas=10
 - **Active References**:
   - [Disaster Recovery](disaster-recovery.md) - DR runbooks
   - [Backup and Recovery](../../viewpoints/operational/backup-and-recovery-comprehensive.md)
-  - [Performance Standards](../../.kiro/steering/performance-standards.md)
 
 ---
 

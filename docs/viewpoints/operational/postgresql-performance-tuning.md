@@ -2205,7 +2205,6 @@ ORDER BY seq_tup_read DESC;
 
 - [Operational Procedures](procedures.md) - Routine maintenance procedures
 - [Monitoring and Alerting](monitoring-alerting.md) - Performance monitoring
-- [Backup and Recovery](backup-recovery.md) - Database backup strategies
 
 ---
 

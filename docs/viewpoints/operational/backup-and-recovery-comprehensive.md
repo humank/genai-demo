@@ -28,7 +28,6 @@ This comprehensive guide consolidates all backup and recovery documentation into
 **Related Documents**:
 - [Monitoring and Alerting](monitoring-alerting.md) - Backup monitoring and alerts
 - [Database Operations](postgresql-performance-tuning.md) - Database performance and maintenance
-- [Security Standards](../../.kiro/steering/security-standards.md) - Security requirements
 
 ---
 
@@ -46,7 +45,6 @@ This comprehensive guide consolidates all backup and recovery documentation into
 10. [Security and Compliance](#security-and-compliance)
 
 ---
-
 
 ## 1. Backup Architecture
 
@@ -146,7 +144,6 @@ graph TD
 
 ---
 
-
 ## 2. Recovery Objectives
 
 ### Service Level Targets
@@ -202,7 +199,6 @@ graph TD
 - Recovery priority: Medium (P2)
 
 ---
-
 
 ## 3. Database Backup Strategy
 
@@ -474,7 +470,6 @@ echo "Total RTO: ${TOTAL_RTO}s"
 ```
 
 ---
-
 
 ## 7. Restore Procedures
 
@@ -845,8 +840,6 @@ aws rds restore-db-instance-to-point-in-time \
 - **Active References**:
   - [Monitoring and Alerting](monitoring-alerting.md)
   - [PostgreSQL Performance Tuning](postgresql-performance-tuning.md)
-  - [Security Standards](../../.kiro/steering/security-standards.md)
-  - [Development Standards](../../.kiro/steering/development-standards.md)
 
 ---
 

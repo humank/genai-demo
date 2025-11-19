@@ -28,7 +28,6 @@ This viewpoint answers:
 
 - [Overview](overview.md) - Operational approach
 - [Monitoring & Alerting](monitoring-alerting.md) - Metrics, alerts, dashboards
-- [Backup & Recovery](backup-recovery.md) - Backup schedules and restore procedures
 - [Operational Procedures](procedures.md) - Startup, shutdown, upgrade procedures
 
 ### 📊 Diagrams

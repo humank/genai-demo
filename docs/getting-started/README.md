@@ -14,7 +14,6 @@ Welcome! This guide will help you get started with the Enterprise E-Commerce Pla
 1. **Read the Overview**: Start with the [Main README](../README.md)
 2. **Understand the Architecture**: Review [Architecture Overview](../architecture/README.md)
 3. **Set Up Your Environment**: Follow [Development Setup](../development/setup/README.md)
-4. **Learn the Standards**: Read [Development Standards](../.kiro/steering/development-standards.md)
 
 ### For Developers
 

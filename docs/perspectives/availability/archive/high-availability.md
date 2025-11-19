@@ -786,7 +786,4 @@ kubectl top pods
 
 **Related Documents**:
 
-- [Overview](overview.md) - Availability perspective introduction
-- [Requirements](requirements.md) - Availability targets and scenarios
 - [Fault Tolerance](fault-tolerance.md) - Application-level resilience
-- [Disaster Recovery](disaster-recovery.md) - DR procedures

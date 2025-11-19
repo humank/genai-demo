@@ -859,7 +859,6 @@ public class OrderSubmittedEventHandler {
 ### Development Guides
 
 - [Coding Standards](../../development/coding-standards/java-standards.md)
-- [Architecture Testing](../../development/testing/architecture-testing.md)
 
 ---
 

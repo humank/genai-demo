@@ -30,7 +30,6 @@ This viewpoint answers:
 - [Domain Models](domain-models.md) - Entity relationships by bounded context
 - [Data Ownership](data-ownership.md) - Data ownership and boundaries
 - [Data Flow](data-flow.md) - How data moves between contexts
-- [Data Lifecycle](data-lifecycle.md) - Creation, update, deletion policies
 
 ### 📊 Diagrams
 

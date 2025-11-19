@@ -407,9 +407,6 @@ aws glue get-crawler --name cost-usage-reports-crawler
 
 ## Related Documentation
 
-- [Cost Management Guide](cost-management-guide.md) - Task 22 implementation
-- [MCP Cost Analysis Integration](mcp-cost-analysis-integration.md) - MCP Pricing tools
-- [Cost Perspective README](perspectives/cost/README.md) - Cost perspective overview
 - [AWS Cost and Usage Reports Documentation](https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html)
 
 ## Success Criteria

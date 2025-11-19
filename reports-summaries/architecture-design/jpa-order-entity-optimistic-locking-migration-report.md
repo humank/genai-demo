@@ -101,14 +101,10 @@ void should_handle_optimistic_locking_for_order_updates() {
 ### 1. 遷移指南和工具
 - [樂觀鎖遷移檢查清單](optimistic-locking-migration-checklist.md)
 - [JPA 實體遷移計劃](jpa-entities-optimistic-locking-migration-plan.md)
-- [遷移自動化腳本](../../scripts/migrate-entities-to-optimistic-locking.py)
 
 ### 2. 數據庫遷移
-- [訂單表遷移腳本](../../scripts/database-migration-orders-optimistic-locking.sql)
-- [階段一遷移腳本](../../scripts/database-migration-phase1-optimistic-locking.sql)
 
 ### 3. 範例和文檔
-- [JpaOrderEntity 遷移範例](../../examples/JpaOrderEntity-migration-example.java)
 - [Aurora 樂觀鎖實作指南](../../app/src/main/java/solid/humank/genaidemo/infrastructure/common/persistence/README.md)
 
 ## 🚀 下一步行動

@@ -756,7 +756,6 @@ public class AuthorizationEventLogger {
 
 - [Authentication](authentication.md) - Authentication mechanisms
 - [Security Overview](overview.md) - Overall security perspective
-- [Security Standards](../../.kiro/steering/security-standards.md) - Detailed security standards
 
 ## References
 

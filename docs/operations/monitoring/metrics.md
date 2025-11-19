@@ -14,7 +14,6 @@ This document describes the metrics collection and monitoring strategy for the G
 For related operational guides, see:
 - [Monitoring Overview](README.md) - Monitoring index
 - [Troubleshooting](../troubleshooting/README.md) - Debugging guides
-- [Performance Standards](.kiro/steering/performance-standards.md) - Performance requirements
 
 ---
 
@@ -423,7 +422,6 @@ public class CloudWatchMetrics {
 - Create too many metrics
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

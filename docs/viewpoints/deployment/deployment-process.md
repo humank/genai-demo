@@ -900,7 +900,6 @@ echo "All smoke tests passed!"
 
 - [Deployment Overview](overview.md) - High-level deployment architecture
 - [Physical Architecture](physical-architecture.md) - Infrastructure details
-- [Operational Viewpoint](../../operational/overview.md) - Operations and monitoring
 
 ---
 

@@ -437,8 +437,6 @@ Customer customer = service.findById("123");
 
 ## Related Documentation
 
-- [Security Perspective](../perspectives/security/README.md)
-- [Authentication Guide](./authentication.md)
 ```
 
 **Detailed Guide**: [Documentation Style Guide](docs/STYLE-GUIDE.md)

@@ -646,7 +646,6 @@ class AuthenticationControllerTest {
 
 - [Authorization](authorization.md) - Role-based access control
 - [Security Overview](overview.md) - Overall security perspective
-- [Security Standards](../../.kiro/steering/security-standards.md) - Detailed security standards
 
 ## References
 

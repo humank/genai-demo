@@ -450,7 +450,6 @@ Contact: support@ecommerce.example.com
 
 ## Related
 
-- [DDoS Attack Response](ddos-attack.md)
 - [Backup and Restore](backup-restore.md)
 - [Service Outage](service-outage.md)
 

@@ -527,7 +527,6 @@ graph TD
 ## Related Documentation
 
 - [Monitoring and Alerting](monitoring-alerting.md) - Detailed monitoring configuration
-- [Backup and Recovery](backup-recovery.md) - Backup strategies and recovery procedures
 - [Operational Procedures](procedures.md) - Step-by-step operational procedures
 - [Deployment Viewpoint](../deployment/overview.md) - Infrastructure and deployment details
 

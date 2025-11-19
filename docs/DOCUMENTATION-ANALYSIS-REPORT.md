@@ -387,10 +387,6 @@ Set minimum content standards:
 ```markdown
 ## Authentication
 
-For authentication details, see [authentication.md](authentication.md).
-For authorization details, see [authorization.md](authorization.md).
-For security overview, see [overview.md](overview.md).
-
 ↑ This is NOT helpful - just include the content!
 ```
 
@@ -415,7 +411,6 @@ Include essential content inline:
 
 **Examples**:
 ```markdown
-![Bounded Contexts Overview](../../diagrams/generated/functional/bounded-contexts-overview.png)
 ↑ Does this diagram exist? Is it up-to-date?
 ```
 
@@ -538,16 +533,12 @@ Keep separate:
 [Complete security details - 100-200 lines]
 
 ### See Also
-- [Authorization](authorization.md) - Role-based access control
-- [Security Overview](overview.md) - Overall security strategy
 ```
 
 **NOT**:
 ```markdown
 ## Authentication
 
-For JWT details, see [jwt.md](jwt.md).
-For password security, see [passwords.md](passwords.md).
 ```
 
 ---

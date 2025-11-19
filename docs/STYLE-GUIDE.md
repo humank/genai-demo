@@ -228,8 +228,6 @@ app-deployment-abc123    1/1     Running   0          5m
 Use relative paths for internal documentation:
 
 ```markdown
-See [Architecture Overview](../architecture/README.md) for details.
-Refer to the [API Documentation](../api/rest/README.md).
 ```
 
 #### External Links
@@ -443,7 +441,6 @@ Use for:
 Always provide alt text and captions:
 
 ```markdown
-![Architecture Overview](../diagrams/generated/architecture-overview.png)
 *Figure 1: High-level system architecture showing major components and their interactions*
 ```
 
@@ -631,7 +628,6 @@ These don't need to be spelled out:
 Provide descriptive alt text for all images:
 
 ```markdown
-![System architecture diagram showing microservices communicating via message queue](architecture.png)
 ```
 
 ### Link Text
@@ -640,12 +636,10 @@ Use descriptive link text:
 
 ✅ **Good**:
 ```markdown
-See the [deployment guide](deployment.md) for instructions.
 ```
 
 ❌ **Avoid**:
 ```markdown
-Click [here](deployment.md) for instructions.
 ```
 
 ### Color

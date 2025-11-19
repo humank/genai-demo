@@ -524,7 +524,6 @@ ORDER BY schemaname, tablename;
 
 - [High CPU Usage](high-cpu-usage.md)
 - [Database Connection Issues](database-connection-issues.md)
-- [Cache Issues](cache-issues.md)
 - [Service Outage](service-outage.md)
 
 ---

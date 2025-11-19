@@ -325,5 +325,4 @@ Users now experience:
 **Owner**: Documentation Team
 
 **Related Documents**:
-- [Link Repair Summary](LINK-REPAIR-SUMMARY.md)
 - [Documentation Improvement Report](DOCUMENTATION-IMPROVEMENT-FINAL-REPORT.md)

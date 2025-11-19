@@ -183,7 +183,6 @@ Documentation:
 
 - 🏗️ [部署視圖](../docs/viewpoints/deployment/README.md)
 - ⚙️ [運維視圖](../docs/viewpoints/operational/README.md)
-- 💰 [成本視角](../docs/perspectives/cost/README.md)
 
 ## 🎯 驗證結果
 

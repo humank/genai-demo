@@ -381,7 +381,6 @@ watch -n 10 'kubectl top pods -n staging'
 ## Related
 
 - [High CPU Usage](high-cpu-usage.md)
-- [Pod Restart Loop](pod-restart-loop.md)
 - [Slow API Responses](slow-api-responses.md)
 - [Service Outage](service-outage.md)
 

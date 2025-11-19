@@ -16,7 +16,6 @@ The file contained duplicate image references at the end, with some pointing to:
 ### 2. Mixed Link Formats
 
 Some links were using different formats:
-- Correct: `!!!!!![Alt Text](../../docs/diagrams/generated/legacy/.png)`
 - Incorrect: `!Alt Text`
 
 ## Fixes Applied
@@ -44,21 +43,13 @@ Removed the following duplicate and incorrect references from the end of the fil
 The following correct references were preserved:
 
 #### Overview Sections
-- `!!!!!![功能架構概覽](../../docs/diagrams/generated/functional/functional-detailed.png)`
-- `!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)`
 - `!!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)`
 
 #### Use Case Analysis Links
-- `!!!!![業務流程概覽](../../docs/diagrams/generated/functional/business-process-flows.png)`
-- `!!!!![用戶旅程概覽](../../docs/diagrams/generated/functional/user-journey-overview.png)`
-- `!!!!![應用服務概覽](../../docs/diagrams/generated/functional/application-services-overview.png)`
 
 #### Architecture Overview Links
-- `!!!!![六角架構概覽 (PlantUML)](../../docs/diagrams/generated/functional/hexagonal-architecture-overview.png)`
 
 #### Domain Model Charts
-- `!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)`
-- `!!!!![界限上下文概念圖](../../docs/diagrams/generated/functional/bounded-contexts-concept.png)`
 - `!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)`
 
 ## Validation Results

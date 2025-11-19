@@ -1337,7 +1337,6 @@ watch -n 5 'kubectl get hpa --all-namespaces'
 
 - [Operational Overview](overview.md) - Overall operational approach
 - [Monitoring and Alerting](monitoring-alerting.md) - Monitoring strategies
-- [Backup and Recovery](backup-recovery.md) - Backup and recovery procedures
 - [Deployment Process](../deployment/deployment-process.md) - Deployment procedures
 
 ---

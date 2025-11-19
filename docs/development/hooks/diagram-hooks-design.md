@@ -519,9 +519,6 @@ cat .kiro/logs/hooks/diagram-auto-generation.log
 
 ## References
 
-- [Diagram Generation Standards](../../.kiro/steering/diagram-generation-standards.md)
-- [Event Storming Standards](../../.kiro/steering/event-storming-standards.md)
-- [Kiro Hooks Documentation](.kiro/hooks/README.md)
 - [PlantUML Documentation](https://plantuml.com/)
 
 ---

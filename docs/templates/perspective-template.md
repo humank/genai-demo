@@ -50,16 +50,7 @@ This perspective ensures:
 
 ### 📄 Documents
 
-- [Concerns](concerns.md) - Quality attribute concerns
-- [Requirements](requirements.md) - Quality attribute scenarios and requirements
-- [Design Decisions](design-decisions.md) - How concerns are addressed
-- [Implementation](implementation.md) - Implementation guidelines
-- [Verification](verification.md) - How to verify and test
-
 ### 📊 Diagrams
-
-- [Diagram 1](../../diagrams/perspectives/{category}/diagram1.puml) - Description
-- [Diagram 2](../../diagrams/perspectives/{category}/diagram2.puml) - Description
 
 ## Key Concerns
 
@@ -279,8 +270,6 @@ public class AnotherExample {
 
 ## Affected Viewpoints
 
-### [Viewpoint 1](../../viewpoints/viewpoint1/README.md)
-
 **How this perspective applies**:
 [Describe how this quality attribute affects this viewpoint]
 
@@ -292,8 +281,6 @@ public class AnotherExample {
 **Implementation guidance**:
 [Specific guidance for this viewpoint]
 
-### [Viewpoint 2](../../viewpoints/viewpoint2/README.md)
-
 **How this perspective applies**:
 [Describe how this quality attribute affects this viewpoint]
 
@@ -304,8 +291,6 @@ public class AnotherExample {
 
 **Implementation guidance**:
 [Specific guidance for this viewpoint]
-
-### [Viewpoint 3](../../viewpoints/viewpoint3/README.md)
 
 **How this perspective applies**:
 [Describe how this quality attribute affects this viewpoint]
@@ -322,13 +307,7 @@ public class AnotherExample {
 
 ### Related Perspectives
 
-- [Perspective 1](../perspective1/README.md) - How they interact
-- [Perspective 2](../perspective2/README.md) - How they interact
-
 ### Related Architecture Decisions
-
-- [ADR-XXX: Decision Title](../../architecture/adrs/YYYYMMDD-XXX-decision-title.md)
-- [ADR-YYY: Decision Title](../../architecture/adrs/YYYYMMDD-YYY-decision-title.md)
 
 ### Related Standards and Guidelines
 
@@ -377,7 +356,6 @@ public class AnotherExample {
 ## Quick Links
 
 - [Back to All Perspectives](../README.md)
-- [Architecture Overview](../../architecture/README.md)
 - [Main Documentation](../../README.md)
 
 ## Appendix
@@ -389,10 +367,6 @@ public class AnotherExample {
 - **Term 3**: Definition
 
 ### References
-
-- Reference 1: [Title](URL)
-- Reference 2: [Title](URL)
-- Reference 3: [Title](URL)
 
 ### Change History
 

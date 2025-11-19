@@ -23,7 +23,6 @@ This guide will help you quickly find what you need in our comprehensive documen
 **Setting up environment?**
 1. Follow [Development Setup](development/setup/local-environment.md)
 2. Configure [IDE](development/setup/ide-configuration.md)
-3. Run [Docker Setup](development/setup/docker-setup.md)
 
 **Writing code?**
 1. Review [Coding Standards](development/coding-standards/java-standards.md)

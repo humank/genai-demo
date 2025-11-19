@@ -12,13 +12,11 @@ This section contains monitoring and observability guides.
 - [Monitoring Strategy](monitoring-strategy.md) - Overall monitoring approach
 - [Metrics](metrics.md) - Key metrics and KPIs
 - [Alerts](alerts.md) - Alert configuration and management
-- [Dashboards](dashboards.md) - Monitoring dashboards
 
 ## Quick Reference
 
 For monitoring architecture, see:
 - [Operational Viewpoint](../../viewpoints/operational/README.md)
 - [Monitoring and Alerting](../../viewpoints/operational/monitoring-alerting.md)
-
 
 **Note**: This section is under active development.

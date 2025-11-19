@@ -147,7 +147,6 @@ aws rds modify-db-parameter-group \
 
 ## Related
 
-- [Slow Database Queries](slow-queries.md)
 - [High Memory Usage](high-memory-usage.md)
 - [Service Outage](service-outage.md)
 

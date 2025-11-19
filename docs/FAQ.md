@@ -166,8 +166,6 @@ Domain (Core) ← Application ← Infrastructure
 7. **Write Tests**: Unit, integration, and BDD tests
 8. **Update Documentation**: Functional viewpoint
 
-**Learn More**: [DDD Implementation Guide](development/ddd-implementation-guide.md)
-
 ---
 
 ### What coding standards should I follow?
@@ -460,8 +458,6 @@ docker-compose up -d
 # Check ArchUnit tests
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
-
-**Learn More**: [Testing Troubleshooting](development/testing/troubleshooting.md)
 
 ---
 

@@ -85,9 +85,7 @@ ERROR [timestamp] ServiceName: Error message pattern
 
 ### Monitoring Dashboards
 
-- **Primary Dashboard**: [Dashboard Name](dashboard-link)
   - Key metrics to check: Metric 1, Metric 2, Metric 3
-- **Secondary Dashboard**: [Dashboard Name](dashboard-link)
   - Key metrics to check: Metric 1, Metric 2
 
 ### Manual Detection
@@ -532,11 +530,6 @@ kubectl top pods -n production
 ```
 
 ### Useful Links
-
-- [Monitoring Dashboard](link)
-- [Log Aggregation](link)
-- [Deployment Pipeline](link)
-- [Configuration Management](link)
 
 ### Change History
 

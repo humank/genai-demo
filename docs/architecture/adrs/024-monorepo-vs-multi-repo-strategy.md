@@ -537,8 +537,6 @@ The monorepo provides foundation for future platform evolution, enabling seamles
 
 ### Related ADRs
 
-- [ADR-018: Container Orchestration with EKS](20250117-018-container-orchestration-eks.md) - Deployment from monorepo
-
 ### Affected Viewpoints
 
 - [Development Viewpoint](../../viewpoints/development/README.md) - Repository structure and build process

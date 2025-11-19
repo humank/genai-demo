@@ -707,7 +707,4 @@ class FaultToleranceTest {
 
 **Related Documents**:
 
-- [Overview](overview.md) - Availability perspective introduction
-- [Requirements](requirements.md) - Availability targets and scenarios
 - [High Availability](high-availability.md) - Infrastructure design
-- [Disaster Recovery](disaster-recovery.md) - DR procedures

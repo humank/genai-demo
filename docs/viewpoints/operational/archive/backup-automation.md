@@ -1299,7 +1299,7 @@ BackupVerificationTopic:
     <p><strong>Verification Status:</strong> All backups verified successfully</p>
   </div>
   <div class="footer">
-    <p>E-Commerce Platform Backup System | <a href="{{dashboard_url}}">View Dashboard</a></p>
+    <p>E-Commerce Platform Backup System | <a href="#dashboard">View Dashboard</a></p>
   </div>
 </body>
 </html>
@@ -1352,7 +1352,7 @@ BackupVerificationTopic:
     <p><strong>PagerDuty Incident:</strong> {{pagerduty_incident_id}}</p>
   </div>
   <div class="footer">
-    <p>E-Commerce Platform Backup System | <a href="{{runbook_url}}">View Runbook</a></p>
+    <p>E-Commerce Platform Backup System | <a href="#runbook">View Runbook</a></p>
   </div>
 </body>
 </html>
@@ -2560,8 +2560,6 @@ main "$@"
 
 - [Backup and Recovery](backup-recovery.md) - Comprehensive backup strategies and recovery procedures
 - [Detailed Restore Procedures](detailed-restore-procedures.md) - Step-by-step restore workflows
-- [Monitoring and Alerting](monitoring-alerting.md) - System monitoring and alerting configuration
-- [Disaster Recovery](../deployment/disaster-recovery.md) - Complete disaster recovery procedures
 
 ## Summary
 

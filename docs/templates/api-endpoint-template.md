@@ -16,8 +16,6 @@ All endpoints require authentication unless otherwise specified.
 Authorization: Bearer {access_token}
 ```
 
-See [Authentication Guide](../authentication.md) for details on obtaining access tokens.
-
 ## Endpoints
 
 ---

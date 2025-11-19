@@ -122,8 +122,6 @@ This section contains comprehensive API documentation for the GenAI Demo e-comme
 | PUT | `/shipping/shipments/{id}/track` | Update tracking |
 | GET | `/shipping/rates` | Calculate shipping rates |
 
-[Full Shipping API Documentation](rest/endpoints/shipping.md)
-
 ## Domain Events by Context
 
 ### Customer Events
@@ -281,7 +279,6 @@ Download the complete Postman collection:
 
 ### Code Examples
 
-
 ## Related Documentation
 
 ### Architecture Documentation
@@ -292,12 +289,7 @@ Download the complete Postman collection:
 
 ### Development Documentation
 
-- [API Development Guide](../development/api-development.md)
-- [Testing API Endpoints](../development/testing/api-testing.md)
-- [API Security](../perspectives/security/api-security.md)
-
 ### Architecture Decisions
-
 
 ## Support
 

@@ -44,8 +44,5 @@ Generate diagrams using:
 ## Standards
 
 For diagram standards, see:
-- [Diagram Standards](../.kiro/steering/diagram-standards.md)
-- [Diagram Generation Standards](../.kiro/steering/diagram-generation-standards.md)
-
 
 **Note**: We now use Mermaid for most diagrams (20+ diagrams added in Phase 3).

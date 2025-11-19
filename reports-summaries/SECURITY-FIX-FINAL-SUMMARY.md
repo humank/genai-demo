@@ -84,7 +84,6 @@ GitHub still shows 2 HIGH vulnerabilities. These are likely:
 ## 📚 Documentation
 
 - [Detailed Security Report](./security-vulnerabilities-fix-2025-11-18.md)
-- [Previous Security Fixes](./security-fixes-report.md)
 
 ## 🚀 Deployment Ready
 

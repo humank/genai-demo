@@ -13,7 +13,6 @@ This guide provides comprehensive guidance for writing effective unit tests in t
 
 For complete testing standards, see:
 - [Testing Strategy](testing-strategy.md) - Complete testing approach
-- [Testing Standards](.kiro/steering/testing-strategy.md) - Testing development standards
 - [BDD Testing](bdd-testing.md) - Behavior-driven development
 
 ---
@@ -358,7 +357,6 @@ open build/reports/jacoco/test/html/index.html
 - **Solution**: Use descriptive assertions, add context to error messages
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

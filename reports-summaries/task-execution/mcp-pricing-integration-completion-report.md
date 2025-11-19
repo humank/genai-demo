@@ -326,10 +326,6 @@ Successfully integrated MCP AWS Pricing tools into the GenAI Demo project's cost
 
 ### Documentation
 
-- [MCP Cost Analysis Integration Guide](../../docs/mcp-cost-analysis-integration.md)
-- [Cost Management Guide](../../docs/cost-management-guide.md)
-- [Cost Perspective README](../../docs/perspectives/cost/README.md)
-
 ### Scripts
 
 - [MCP TCO Calculator](../../infrastructure/scripts/mcp-tco-calculator.sh)

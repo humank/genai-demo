@@ -535,7 +535,6 @@ readinessProbe:
 - [Rollback Procedures](../deployment/rollback.md)
 - [Service Outage](service-outage.md)
 - [Database Connection Issues](database-connection-issues.md)
-- [Pod Restart Loop](pod-restart-loop.md)
 
 ---
 

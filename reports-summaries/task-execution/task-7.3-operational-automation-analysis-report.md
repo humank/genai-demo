@@ -517,11 +517,6 @@ The existing implementation is comprehensive and production-ready. However, cons
 
 ## Related Documentation
 
-- [Alerting Stack Implementation](../infrastructure/src/stacks/alerting-stack.ts)
-- [EKS Stack with Auto-Scaling](../infrastructure/src/stacks/eks-stack.ts)
-- [SSO Stack with CloudTrail](../infrastructure/src/stacks/sso-stack.ts)
-- [Core Infrastructure Stack](../infrastructure/src/stacks/core-infrastructure-stack.ts)
-
 ## Sign-off
 
 **Analysis**: Complete ✅  

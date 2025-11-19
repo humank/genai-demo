@@ -328,10 +328,6 @@ The deployment monitoring stack is production-ready and can be deployed immediat
 
 ## Related Documentation
 
-- [Deployment Monitoring Documentation](../infrastructure/DEPLOYMENT_MONITORING.md)
-- [AWS Code Services Deployment Guide](../infrastructure/AWS_CODE_SERVICES_DEPLOYMENT.md)
-- [Multi-Region Active-Active Spec](../.kiro/specs/multi-region-active-active/)
-
 ## Sign-off
 
 **Implementation**: Complete ✅  

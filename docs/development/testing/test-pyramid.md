@@ -13,7 +13,6 @@ This guide explains the test pyramid approach used in the GenAI Demo project.
 
 For complete testing guidance, see:
 - [Testing Strategy](testing-strategy.md) - Complete testing approach
-- [Testing Standards](.kiro/steering/testing-strategy.md) - Testing development standards
 
 ---
 
@@ -398,7 +397,6 @@ void should_create_order_with_valid_data() {
 ✅ **Good Distribution**: 80/15/5 ratio maintained
 
 ---
-
 
 **Document Version**: 1.0  
 **Last Updated**: 2024-11-19  

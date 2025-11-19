@@ -63,7 +63,6 @@ The system successfully fixed the broken references in the functional viewpoint 
 
 **After (Fixed)**:
 ```markdown
-!!!!!![領域模型概覽](../../docs/diagrams/generated/functional/domain-model-overview.png)
 !!!!!![界限上下文概覽](../../docs/diagrams/generated/functional/bounded-contexts-overview.png)
 ```
 

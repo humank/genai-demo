@@ -409,8 +409,6 @@ npm test -- deployment-monitoring-stack.test.ts
 ## Related Documentation
 
 - [AWS Code Services Deployment Guide](./AWS_CODE_SERVICES_DEPLOYMENT.md)
-- [Observability Stack Documentation](./docs/observability-stack.md)
-- [Multi-Region Active-Active Spec](../.kiro/specs/multi-region-active-active/)
 
 ## Support
 

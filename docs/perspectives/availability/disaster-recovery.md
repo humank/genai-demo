@@ -658,5 +658,3 @@ Track and visualize:
 - [Overview](overview.md) - Availability perspective introduction
 - [Requirements](requirements.md) - Recovery objectives and scenarios
 - [Fault Tolerance](fault-tolerance.md) - Application resilience patterns
-- [High Availability](high-availability.md) - HA infrastructure design
-- [Operational Viewpoint - Backup & Recovery](../../viewpoints/operational/backup-recovery.md)

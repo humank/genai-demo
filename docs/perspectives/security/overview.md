@@ -68,11 +68,6 @@ This perspective ensures:
 
 ### 📊 Diagrams
 
-- [Authentication Flow](../../diagrams/perspectives/security/authentication-flow.puml) - JWT authentication sequence
-- [Authorization Model](../../diagrams/perspectives/security/authorization-model.puml) - RBAC structure
-- [Data Encryption](../../diagrams/perspectives/security/data-encryption.puml) - Encryption at rest and in transit
-- [Security Layers](../../diagrams/perspectives/security/security-layers.puml) - Defense-in-depth architecture
-
 ## Key Concerns
 
 ### Concern 1: Authentication and Identity Management
@@ -779,12 +774,8 @@ Development practices must include secure coding standards, security testing, an
 
 - [Performance Perspective](../performance/overview.md) - Security controls impact performance
 - [Availability Perspective](../availability/overview.md) - Security incidents affect availability
-- [Compliance Perspective](../regulation/overview.md) - Security enables compliance
 
 ### Related Architecture Decisions
-
-- [ADR-012: JWT Authentication Strategy](../../architecture/adrs/ADR-012-jwt-authentication.md)
-- [ADR-013: Authorization Model](../../architecture/adrs/ADR-013-authorization-model.md)
 
 ### Related Standards and Guidelines
 
@@ -851,7 +842,6 @@ The security perspective will evolve to address emerging threats and adopt new s
 - [Back to All Perspectives](../README.md)
 - [Architecture Overview](../../architecture/README.md)
 - [Main Documentation](../../README.md)
-- [Security Standards](.kiro/steering/security-standards.md)
 
 ## Appendix
 

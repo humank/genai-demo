@@ -927,7 +927,6 @@ Examples:
 ## Related Documentation
 
 - [Operational Overview](overview.md) - Overall operational approach
-- [Backup and Recovery](backup-recovery.md) - Backup and recovery procedures
 - [Operational Procedures](procedures.md) - Step-by-step procedures
 - [Deployment Process](../deployment/deployment-process.md) - Deployment and rollback
 

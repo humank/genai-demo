@@ -463,8 +463,6 @@ sequenceDiagram
 2. Click on the **API Keys** tab
 3. Your API key is displayed in the **Active Keys** section
 
-![API Keys Dashboard](../images/api-keys-dashboard.png)
-
 *Figure 1: The API Keys dashboard showing active keys*
 
 **Note**: Keep your API key secure. Never share it publicly or commit it to version control.
@@ -494,23 +492,16 @@ sequenceDiagram
 
 ```markdown
 ✅ GOOD:
-![Dashboard showing API usage metrics with a line graph trending upward from January to December](../images/api-usage-dashboard.png)
 
 ❌ BAD:
-![Dashboard](../images/api-usage-dashboard.png)
-![](../images/api-usage-dashboard.png)
 ```
 
 ### Link Text
 
 ```markdown
 ✅ GOOD:
-For more information, see the [Authentication Guide](./authentication.md).
-Learn how to [create your first order](./quickstart.md#creating-an-order).
 
 ❌ BAD:
-For more information, click [here](./authentication.md).
-Learn more [here](./quickstart.md).
 ```
 
 ### Code Block Labels
@@ -788,9 +779,7 @@ Creates a new order for the authenticated customer.
 ```markdown
 > **⚠️ Deprecated**: This endpoint is deprecated and will be removed on 2025-12-31.
 > 
-> **Migration**: Use the new [v2 endpoint](./api-v2.md#create-order) instead.
 > 
-> **Migration Guide**: See the [v1 to v2 migration guide](./migration-v1-to-v2.md).
 ```
 
 ---
