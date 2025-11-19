@@ -99,23 +99,50 @@ This comprehensive guide consolidates all backup and recovery documentation into
 ### Data Flow
 
 **Backup Creation Flow**:
-1. Source System → Backup Trigger (Scheduled/Manual)
-2. Backup Service → Create Snapshot/Export
-3. Snapshot Storage → Native Service Storage (EBS/ElastiCache)
-4. Export Process → Copy to S3 (if applicable)
-5. S3 Lifecycle → Transition to appropriate storage class
-6. Cross-Region Replication → Copy to DR region
-7. Verification Service → Validate backup integrity
-8. Monitoring → Record metrics and send alerts
+
+```mermaid
+graph TD
+    A[Source System] --> B[Backup Trigger]
+    B --> C[Backup Service]
+    C --> D[Create Snapshot/Export]
+    D --> E[Snapshot Storage]
+    E --> F[Native Service Storage]
+    F --> G[Export Process]
+    G --> H[Copy to S3]
+    H --> I[S3 Lifecycle]
+    I --> J[Storage Class Transition]
+    J --> K[Cross-Region Replication]
+    K --> L[DR Region Copy]
+    L --> M[Verification Service]
+    M --> N[Validate Integrity]
+    N --> O[Monitoring]
+    O --> P[Record Metrics & Alerts]
+    
+    style A fill:#e1f5ff
+    style P fill:#d4edda
+```
 
 **Recovery Flow**:
-1. Recovery Request → Identify required backup
-2. Backup Location → Retrieve from storage tier
-3. Restore Service → Create new instance/cluster
-4. Data Validation → Verify integrity and completeness
-5. Application Update → Point to restored resource
-6. Health Check → Verify application functionality
-7. Monitoring → Track recovery metrics
+
+```mermaid
+graph TD
+    A[Recovery Request] --> B[Identify Required Backup]
+    B --> C[Backup Location]
+    C --> D[Retrieve from Storage Tier]
+    D --> E[Restore Service]
+    E --> F[Create New Instance/Cluster]
+    F --> G[Data Validation]
+    G --> H[Verify Integrity & Completeness]
+    H --> I[Application Update]
+    I --> J[Point to Restored Resource]
+    J --> K[Health Check]
+    K --> L[Verify Functionality]
+    L --> M[Monitoring]
+    M --> N[Track Recovery Metrics]
+    
+    style A fill:#fff3cd
+    style N fill:#d4edda
+```
 
 ---
 

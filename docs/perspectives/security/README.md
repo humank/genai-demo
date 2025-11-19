@@ -1,38 +1,131 @@
 # Security Perspective
 
-> **Status**: 📝 To be documented  
-> **Last Updated**: 2025-01-17  
-> **Owner**: Security Engineer
+> **Status**: ✅ Active  
+> **Last Updated**: 2024-11-19
 
 ## Overview
 
-The Security Perspective ensures the system is protected from malicious attacks and unauthorized access.
+The Security Perspective addresses security concerns across all architectural viewpoints. This section provides comprehensive security guidance for the GenAI Demo e-commerce platform.
 
-## Key Concerns
+---
 
-- Authentication and authorization
-- Data protection (encryption)
-- Security monitoring and incident response
-- Compliance (GDPR, PCI-DSS)
+## Contents
 
-## Quality Attribute Scenarios
+### Core Security Documentation
 
-### Scenario 1: SQL Injection Attack
+- [Security Overview](overview.md) - Complete security architecture and implementation
+- [Authentication](authentication.md) - Authentication mechanisms and JWT implementation
+- [Authorization](authorization.md) - Role-based access control (RBAC)
 
-- **Source**: Malicious user
-- **Stimulus**: Attempts SQL injection on customer search
-- **Environment**: Production with normal load
-- **Artifact**: Customer API service
-- **Response**: System detects and blocks attack, logs incident
-- **Response Measure**: Attack blocked within 100ms, no data exposure
+### Related Documentation
 
-## Affected Viewpoints
+- [API Security](../../api/security/README.md) - API-specific security measures
+- [Security Standards](.kiro/steering/security-standards.md) - Security development standards
 
-- [Functional Viewpoint](../../viewpoints/functional/README.md) - Authentication features
-- [Information Viewpoint](../../viewpoints/information/README.md) - Data encryption
-- [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Network security
+---
 
-## Quick Links
+## Quick Reference
 
-- [Back to All Perspectives](../README.md)
-- [Main Documentation](../../README.md)
+### Authentication
+- JWT token-based authentication
+- Multi-factor authentication (MFA)
+- OAuth 2.0 integration
+- Session management
+
+### Authorization
+- Role-Based Access Control (RBAC)
+- Attribute-Based Access Control (ABAC)
+- Resource-level permissions
+- API endpoint security
+
+### Data Protection
+- Encryption at rest (AES-256)
+- Encryption in transit (TLS 1.3)
+- Data masking and anonymization
+- Secure key management (AWS KMS)
+
+### Security Monitoring
+- Security event logging
+- Intrusion detection
+- Vulnerability scanning
+- Security metrics and alerts
+
+---
+
+## Security Architecture
+
+For complete security architecture details, see [Security Overview](overview.md).
+
+### Key Components
+
+1. **Authentication Layer**
+   - JWT token management
+   - Password hashing (BCrypt)
+   - MFA implementation
+   - OAuth 2.0 providers
+
+2. **Authorization Layer**
+   - RBAC implementation
+   - Permission management
+   - Resource access control
+   - API security
+
+3. **Data Protection**
+   - Encryption services
+   - Key management
+   - Data masking
+   - Secure storage
+
+4. **Security Monitoring**
+   - Event logging
+   - Threat detection
+   - Compliance monitoring
+   - Incident response
+
+---
+
+## Implementation Guides
+
+### For Developers
+
+- [Security Standards](.kiro/steering/security-standards.md) - Development security standards
+- [API Security](../../api/security/README.md) - API security implementation
+- [Authentication Guide](authentication.md) - Authentication implementation
+
+### For Operations
+
+- [Security Monitoring](../../operations/monitoring/security-monitoring.md) - Security monitoring setup
+- [Incident Response](../../operations/runbooks/security-incident-response.md) - Security incident procedures
+
+---
+
+## Compliance
+
+### Standards Compliance
+
+- **GDPR**: Data protection and privacy
+- **PCI DSS**: Payment card security
+- **SOC 2**: Security controls
+- **ISO 27001**: Information security management
+
+### Audit Requirements
+
+- Security event logging
+- Access control auditing
+- Compliance reporting
+- Regular security assessments
+
+---
+
+## Related Documentation
+
+- [Security Overview](overview.md)
+- [API Security](../../api/security/README.md)
+- [Operational Security](../../viewpoints/operational/security-operations.md)
+- [Security Standards](.kiro/steering/security-standards.md)
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: 2024-11-19  
+**Owner**: Security Team
