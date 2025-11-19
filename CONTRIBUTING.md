@@ -697,13 +697,13 @@ If you have questions about contributing:
 
 ---
 
-**Last Updated**: 2024-11-19
+**Last Updated**: 2025-11-19
 
 ---
 
 ## Recent Changes
 
-### 2024-11-19 Updates
+### 2025-11-19 Updates
 
 - ✅ Updated to reference `.kiro/steering/` standards (17 mandatory guidelines)
 - ✅ Added comprehensive development standards references
