@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
@@ -136,7 +137,8 @@ public class RegionDetector {
     
     private Optional<String> detectFromEC2Metadata() {
         try {
-            URL url = new URL(EC2_METADATA_URL);
+            URI uri = URI.create(EC2_METADATA_URL);
+            URL url = uri.toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(METADATA_TIMEOUT_MS);
@@ -160,7 +162,8 @@ public class RegionDetector {
     
     private Optional<String> detectFromAvailabilityZone() {
         try {
-            URL url = new URL(EC2_AZ_METADATA_URL);
+            URI uri = URI.create(EC2_AZ_METADATA_URL);
+            URL url = uri.toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(METADATA_TIMEOUT_MS);

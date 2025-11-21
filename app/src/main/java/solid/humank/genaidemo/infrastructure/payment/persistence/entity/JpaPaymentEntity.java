@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.payment.persistence.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import solid.humank.genaidemo.domain.common.valueobject.PaymentStatus;
 import solid.humank.genaidemo.domain.payment.model.valueobject.PaymentMethod;
 import solid.humank.genaidemo.infrastructure.common.persistence.BaseOptimisticLockingEntity;

@@ -2,6 +2,10 @@ package solid.humank.genaidemo.infrastructure.external.adapter;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import solid.humank.genaidemo.domain.common.valueobject.OrderId;
 import solid.humank.genaidemo.domain.delivery.model.aggregate.Delivery;
 import solid.humank.genaidemo.domain.delivery.model.valueobject.DeliveryId;
@@ -11,6 +15,8 @@ import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
 /** 配送服務適配器 用於適配新舊兩個配送服務 暫時禁用以解決啟動問題 */
 // @Service
 public class DeliveryServiceAdapter implements DeliveryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceAdapter.class);
 
     private final solid.humank.genaidemo.domain.delivery.service.DeliveryService deliveryService;
     private final DeliveryRepository deliveryRepository;
@@ -120,7 +126,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             // 保存更新
             deliveryRepository.save(delivery);
             // 記錄失敗（簡化實作）
-            System.out.println("記錄配送失敗: " + delivery.getOrderId() + ", 原因: " + reason);
+            logger.info("記錄配送失敗: {}, 原因: {}", delivery.getOrderId(), reason);
             return true;
         } catch (Exception e) {
             return false;
@@ -203,7 +209,7 @@ public class DeliveryServiceAdapter implements DeliveryService {
             // 保存更新
             deliveryRepository.save(delivery);
             // 安排重新配送（簡化實作）
-            System.out.println("安排重新配送: " + delivery.getOrderId());
+            logger.info("安排重新配送: {}", delivery.getOrderId());
             return true;
         } catch (Exception e) {
             return false;

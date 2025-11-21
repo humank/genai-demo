@@ -4,7 +4,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,6 +35,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @ConditionalOnBean(DynamoDbEnhancedClient.class)
 public class DynamoDBMonitoringConfiguration {
 
+    private static final Logger logger = LoggerFactory.getLogger(DynamoDBMonitoringConfiguration.class);
+
     private final MeterRegistry meterRegistry;
     private final DynamoDBSessionRepository sessionRepository;
     private final String currentRegion;
@@ -45,7 +48,6 @@ public class DynamoDBMonitoringConfiguration {
     private final AtomicLong activeSessions = new AtomicLong(0);
     private final AtomicLong crossRegionSessions = new AtomicLong(0);
 
-    @Autowired
     public DynamoDBMonitoringConfiguration(MeterRegistry meterRegistry,
                                          DynamoDBSessionRepository sessionRepository,
                                          @Value("${aws.region:us-east-1}") String currentRegion) {
@@ -130,7 +132,7 @@ public class DynamoDBMonitoringConfiguration {
 
         } catch (Exception e) {
             // Log error but don't fail the application
-            System.err.println("Error updating DynamoDB session metrics: " + e.getMessage());
+            logger.error("Error updating DynamoDB session metrics: {}", e.getMessage(), e);
         }
     }
 
@@ -147,7 +149,7 @@ public class DynamoDBMonitoringConfiguration {
                     .register(meterRegistry));
         } catch (Exception e) {
             dynamodbReplicationErrorCounter.increment();
-            System.err.println("Error cleaning up expired sessions: " + e.getMessage());
+            logger.error("Error cleaning up expired sessions: {}", e.getMessage(), e);
         }
     }
 

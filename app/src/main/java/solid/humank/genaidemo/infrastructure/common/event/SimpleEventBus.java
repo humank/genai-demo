@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.domain.common.event.EventBus;
@@ -13,6 +15,8 @@ import solid.humank.genaidemo.domain.common.event.EventHandler;
 /** 簡單事件總線實現 使用內存存儲事件處理器 */
 @Component
 public class SimpleEventBus implements EventBus {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleEventBus.class);
 
     private final Map<Class<?>, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 
@@ -31,8 +35,7 @@ public class SimpleEventBus implements EventBus {
                     invokeHandler(handler, event);
                 } catch (Exception e) {
                     // 記錄錯誤但不中斷處理
-                    System.err.println("Error handling event: " + e.getMessage());
-                    e.printStackTrace();
+                    logger.error("Error handling event: {}", e.getMessage(), e);
                 }
             }
         }

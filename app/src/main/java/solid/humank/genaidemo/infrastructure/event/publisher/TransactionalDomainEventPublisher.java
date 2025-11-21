@@ -3,6 +3,8 @@ package solid.humank.genaidemo.infrastructure.event.publisher;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -18,6 +20,8 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * 需求 6.4: 實現事務回滾時事件清理機制
  */
 public class TransactionalDomainEventPublisher implements DomainEventPublisher {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionalDomainEventPublisher.class);
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -116,8 +120,8 @@ public class TransactionalDomainEventPublisher implements DomainEventPublisher {
                     eventPublisher.publishEvent(new DomainEventPublisherAdapter.DomainEventWrapper(event));
                 } catch (Exception e) {
                     // 記錄錯誤但不影響其他事件的發布
-                    System.err.println("Failed to publish domain event: " + event.getClass().getSimpleName() +
-                            ", error: " + e.getMessage());
+                    logger.error("Failed to publish domain event: {}, error: {}",
+                            event.getClass().getSimpleName(), e.getMessage(), e);
                 }
             }
         }
@@ -129,7 +133,7 @@ public class TransactionalDomainEventPublisher implements DomainEventPublisher {
 
             if (status == STATUS_ROLLED_BACK) {
                 // 事務回滾，記錄日誌並清理事件
-                System.out.println("Transaction rolled back, cleared " + eventCount + " pending domain events");
+                logger.info("Transaction rolled back, cleared {} pending domain events", eventCount);
             }
 
             // 無論事務成功還是失敗，都清理待發布事件列表

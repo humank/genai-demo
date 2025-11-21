@@ -1,15 +1,19 @@
 package solid.humank.genaidemo.infrastructure.inventory.external;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import solid.humank.genaidemo.application.inventory.port.outgoing.ExternalWarehousePort;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import org.springframework.stereotype.Component;
-import solid.humank.genaidemo.application.inventory.port.outgoing.ExternalWarehousePort;
 
 /** 外部倉庫適配器 實現外部倉庫端口，與外部倉庫系統交互 */
 @Component
 public class ExternalWarehouseAdapter implements ExternalWarehousePort {
 
+    private static final Logger logger = LoggerFactory.getLogger(ExternalWarehouseAdapter.class);
     private final Random random = new Random();
 
     @Override
@@ -46,7 +50,7 @@ public class ExternalWarehouseAdapter implements ExternalWarehousePort {
     public boolean notifyLowStock(String productId, int currentQuantity, int threshold) {
         // 模擬通知庫存低於閾值
         // 實際應用中，這裡會調用外部API或服務
-        System.out.printf("低庫存警告: 產品 %s 當前庫存 %d，低於閾值 %d%n", productId, currentQuantity, threshold);
+        logger.warn("低庫存警告: 產品 {} 當前庫存 {}，低於閾值 {}", productId, currentQuantity, threshold);
         return true;
     }
 }

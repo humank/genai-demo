@@ -1,5 +1,8 @@
 package solid.humank.genaidemo.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** 虛擬線程示例類 展示 Java 21 的 Virtual Threads 功能 */
 public class VirtualThreadDemo {
 
+    private static final Logger logger = LoggerFactory.getLogger(VirtualThreadDemo.class);
     private static final AtomicInteger counter = new AtomicInteger(0);
 
     /**
@@ -47,7 +51,7 @@ public class VirtualThreadDemo {
                 try {
                     future.get();
                 } catch (Exception e) {
-                    System.err.println("任務執行錯誤: " + e.getMessage());
+                    logger.error("虛擬線程任務執行錯誤", e);
                 }
             }
         }
@@ -90,7 +94,7 @@ public class VirtualThreadDemo {
                 try {
                     future.get();
                 } catch (Exception e) {
-                    System.err.println("任務執行錯誤: " + e.getMessage());
+                    logger.error("平台線程任務執行錯誤", e);
                 }
             }
         }
@@ -145,11 +149,7 @@ public class VirtualThreadDemo {
         Thread thread = Thread.ofVirtual()
                 .name(name)
                 .uncaughtExceptionHandler(
-                        (t, e) -> System.err.println(
-                                "線程 "
-                                        + t.getName()
-                                        + " 發生未捕獲異常: "
-                                        + e.getMessage()))
+                        (t, e) -> logger.error("線程 {} 發生未捕獲異常", t.getName(), e))
                 .start(runnable);
 
         return thread;

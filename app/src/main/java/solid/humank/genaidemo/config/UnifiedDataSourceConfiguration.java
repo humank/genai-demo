@@ -4,8 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,7 +27,7 @@ public class UnifiedDataSourceConfiguration {
     private final SecretsManagerService secretsManagerService;
 
     public UnifiedDataSourceConfiguration(Environment environment,
-                                        @Autowired(required = false) SecretsManagerService secretsManagerService) {
+                                        SecretsManagerService secretsManagerService) {
         this.environment = environment;
         this.secretsManagerService = secretsManagerService;
     }

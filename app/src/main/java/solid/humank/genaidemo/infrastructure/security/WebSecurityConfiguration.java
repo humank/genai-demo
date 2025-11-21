@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Web Security Configuration
@@ -25,44 +24,41 @@ public class WebSecurityConfiguration {
         /**
          * Security configuration for development and test environments
          * Allows access to Swagger UI, actuator endpoints, and H2 console
-         * Uses AntPathRequestMatcher to avoid MVC dependency issues in test
-         * environments
          */
         @Bean
         @Profile({ "local", "test" })
         @Order(1)
         public SecurityFilterChain developmentSecurityFilterChain(HttpSecurity http) throws Exception {
                 return http
-                                .securityMatcher(new AntPathRequestMatcher("/**"))
+                                .securityMatcher("/**")
                                 .authorizeHttpRequests(authz -> authz
                                                 // Allow access to Swagger UI and OpenAPI docs
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/swagger-ui/**"),
-                                                                new AntPathRequestMatcher("/swagger-ui.html"),
-                                                                new AntPathRequestMatcher("/v3/api-docs/**"))
+                                                                "/swagger-ui/**",
+                                                                "/swagger-ui.html",
+                                                                "/v3/api-docs/**")
                                                 .permitAll()
                                                 // Allow access to actuator endpoints
                                                 .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                                                 // Allow access to H2 console
-                                                .requestMatchers(new AntPathRequestMatcher("/h2-console/**"))
+                                                .requestMatchers("/h2-console/**")
                                                 .permitAll()
                                                 // Allow access to static resources
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/css/**"),
-                                                                new AntPathRequestMatcher("/js/**"),
-                                                                new AntPathRequestMatcher("/images/**"),
-                                                                new AntPathRequestMatcher("/webjars/**"))
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/webjars/**")
                                                 .permitAll()
                                                 // Allow access to error pages
-                                                .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                                                .requestMatchers("/error").permitAll()
                                                 // Allow access to API endpoints for testing
-                                                .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
+                                                .requestMatchers("/api/**").permitAll()
                                                 // Require authentication for all other requests
                                                 .anyRequest().authenticated())
                                 .csrf(AbstractHttpConfigurer::disable)
                                 .headers(headers -> headers
-                                                .frameOptions(frameOptions -> frameOptions.sameOrigin())) // For H2
-                                                                                                          // console
+                                                .frameOptions(frameOptions -> frameOptions.sameOrigin())) // For H2 console
                                 .build();
         }
 
@@ -75,36 +71,35 @@ public class WebSecurityConfiguration {
         @Order(2)
         public SecurityFilterChain productionSecurityFilterChain(HttpSecurity http) throws Exception {
                 return http
-                                .securityMatcher(new AntPathRequestMatcher("/**"))
+                                .securityMatcher("/**")
                                 .authorizeHttpRequests(authz -> authz
                                                 // Allow access to health check endpoints (for load balancers)
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/actuator/health/**"),
-                                                                new AntPathRequestMatcher("/actuator/info"))
+                                                                "/actuator/health/**",
+                                                                "/actuator/info")
                                                 .permitAll()
-                                                // Allow access to Prometheus metrics (should be secured at network
-                                                // level)
-                                                .requestMatchers(new AntPathRequestMatcher("/actuator/prometheus"))
+                                                // Allow access to Prometheus metrics (should be secured at network level)
+                                                .requestMatchers("/actuator/prometheus")
                                                 .permitAll()
                                                 // Allow access to static resources
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/css/**"),
-                                                                new AntPathRequestMatcher("/js/**"),
-                                                                new AntPathRequestMatcher("/images/**"),
-                                                                new AntPathRequestMatcher("/webjars/**"))
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/webjars/**")
                                                 .permitAll()
                                                 // Allow access to error pages
-                                                .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                                                .requestMatchers("/error").permitAll()
                                                 // Require authentication for Swagger UI in production
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/swagger-ui/**"),
-                                                                new AntPathRequestMatcher("/swagger-ui.html"),
-                                                                new AntPathRequestMatcher("/v3/api-docs/**"))
+                                                                "/swagger-ui/**",
+                                                                "/swagger-ui.html",
+                                                                "/v3/api-docs/**")
                                                 .authenticated()
                                                 // Require authentication for sensitive actuator endpoints
                                                 .requestMatchers(EndpointRequest.toAnyEndpoint()).authenticated()
                                                 // Require authentication for API endpoints
-                                                .requestMatchers(new AntPathRequestMatcher("/api/**")).authenticated()
+                                                .requestMatchers("/api/**").authenticated()
                                                 // Require authentication for all other requests
                                                 .anyRequest().authenticated())
                                 .httpBasic(httpBasic -> {
@@ -116,7 +111,6 @@ public class WebSecurityConfiguration {
         /**
          * Default security configuration (fallback)
          * Used when no specific profile is active
-         * Uses AntPathRequestMatcher to avoid MVC dependency issues
          */
         @Bean
         @Order(3)
@@ -125,18 +119,18 @@ public class WebSecurityConfiguration {
                                 .authorizeHttpRequests(authz -> authz
                                                 // Allow access to health check endpoints
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/actuator/health/**"),
-                                                                new AntPathRequestMatcher("/actuator/info"))
+                                                                "/actuator/health/**",
+                                                                "/actuator/info")
                                                 .permitAll()
                                                 // Allow access to static resources
                                                 .requestMatchers(
-                                                                new AntPathRequestMatcher("/css/**"),
-                                                                new AntPathRequestMatcher("/js/**"),
-                                                                new AntPathRequestMatcher("/images/**"),
-                                                                new AntPathRequestMatcher("/webjars/**"))
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/images/**",
+                                                                "/webjars/**")
                                                 .permitAll()
                                                 // Allow access to error pages
-                                                .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
+                                                .requestMatchers("/error").permitAll()
                                                 // Require authentication for all other requests
                                                 .anyRequest().authenticated())
                                 .httpBasic(httpBasic -> {

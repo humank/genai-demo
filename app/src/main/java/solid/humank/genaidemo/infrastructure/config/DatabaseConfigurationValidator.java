@@ -12,7 +12,6 @@ import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -33,7 +32,7 @@ public class DatabaseConfigurationValidator {
 
     public DatabaseConfigurationValidator(DataSource dataSource,
             DatabaseConfigurationManager databaseConfigurationManager,
-            @Autowired(required = false) Flyway flyway) {
+            Flyway flyway) {
         this.dataSource = dataSource;
         this.databaseConfigurationManager = databaseConfigurationManager;
         this.flyway = flyway;

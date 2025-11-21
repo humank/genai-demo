@@ -25,9 +25,6 @@ public class ProfileConfiguration {
      */
     public boolean isTestProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
-            return false;
-        }
         for (String profile : activeProfiles) {
             if ("test".equals(profile)) {
                 return true;
@@ -38,9 +35,6 @@ public class ProfileConfiguration {
 
     public boolean isDevelopmentProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
-            return false;
-        }
         for (String profile : activeProfiles) {
             if ("dev".equals(profile) || "development".equals(profile)) {
                 return true;
@@ -51,9 +45,6 @@ public class ProfileConfiguration {
 
     public boolean isProductionProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
-            return false;
-        }
         for (String profile : activeProfiles) {
             if ("production".equals(profile) || "prod".equals(profile)) {
                 return true;

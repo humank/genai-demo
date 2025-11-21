@@ -1,9 +1,7 @@
 package solid.humank.genaidemo.infrastructure.config;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

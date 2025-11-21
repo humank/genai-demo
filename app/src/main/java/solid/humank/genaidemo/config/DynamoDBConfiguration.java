@@ -7,14 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.GlobalTable;
-import software.amazon.awssdk.services.dynamodb.model.GlobalTableDescription;
 import java.net.URI;
-import java.util.List;
 
 /**
  * DynamoDB Configuration for Cross-Region Global Tables
@@ -50,7 +45,7 @@ public class DynamoDBConfiguration {
     @Bean
     public DynamoDbClient dynamoDbClient() {
         var builder = DynamoDbClient.builder()
-                .credentialsProvider(DefaultCredentialsProvider.create())
+                .credentialsProvider(DefaultCredentialsProvider.builder().build())
                 .region(Region.of(primaryRegion));
 
         // Use custom endpoint if specified (for local development)

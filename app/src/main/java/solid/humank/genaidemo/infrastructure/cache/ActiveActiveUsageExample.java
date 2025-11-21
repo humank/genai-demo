@@ -1,6 +1,5 @@
 package solid.humank.genaidemo.infrastructure.cache;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +28,6 @@ public class ActiveActiveUsageExample {
 
     private final ActiveActiveRedisService redisService;
 
-    @Autowired
     public ActiveActiveUsageExample(ActiveActiveRedisService redisService) {
         this.redisService = redisService;
     }
@@ -47,7 +45,7 @@ public class ActiveActiveUsageExample {
         redisService.put(sessionKey, sessionData, Duration.ofHours(24));
 
         // Read session from local region (available due to Global Datastore)
-        Object retrievedSession = redisService.get(sessionKey, Object.class);
+        redisService.get(sessionKey, Object.class);
 
         // Session is available in all regions without additional code
     }
@@ -76,7 +74,7 @@ public class ActiveActiveUsageExample {
         String counterKey = "pageviews:" + pageId;
 
         // Increment in local region
-        long currentCount = redisService.increment(counterKey);
+        redisService.increment(counterKey);
 
         // Set expiration for daily counters
         redisService.expire(counterKey, Duration.ofDays(1));
@@ -125,7 +123,7 @@ public class ActiveActiveUsageExample {
      */
     public void invalidateCache(String cacheKey) {
         // Delete from local region
-        boolean deleted = redisService.delete(cacheKey);
+        redisService.delete(cacheKey);
 
         // Deletion is automatically propagated to other regions
         // No need for manual cross-region invalidation

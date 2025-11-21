@@ -154,11 +154,12 @@ public class GlobalExceptionHandler {
                                 request.getRequestURI(),
                                 ex.getName());
 
+                String typeName = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown";
                 StandardErrorResponse.FieldError detail = new StandardErrorResponse.FieldError(
                                 ex.getName(),
                                 String.format(
                                                 "參數 '%s' 的值 '%s' 無法轉換為 %s 類型",
-                                                ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName()),
+                                                ex.getName(), ex.getValue(), typeName),
                                 ex.getValue());
 
                 return new StandardErrorResponse(

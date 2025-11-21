@@ -1,5 +1,7 @@
 package solid.humank.genaidemo.infrastructure.event.handler.customer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,17 +18,18 @@ import solid.humank.genaidemo.infrastructure.event.handler.AbstractDomainEventHa
 @Component
 public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomerCreatedEventHandler.class);
+
     @Override
     @Transactional
     public void handle(CustomerCreatedEvent event) {
         // 跨聚合根業務邏輯：新客戶歡迎流程
 
         // 1. 記錄新客戶創建日誌
-        System.out.println(String.format(
-                "New customer created: %s (%s) with membership level: %s",
+        logger.info("New customer created: {} ({}) with membership level: {}",
                 event.customerName().getName(),
                 event.email().getEmail(),
-                event.membershipLevel()));
+                event.membershipLevel());
 
         // 2. 觸發歡迎郵件發送（模擬）
         sendWelcomeEmail(event);
@@ -48,10 +51,9 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
      */
     private void sendWelcomeEmail(CustomerCreatedEvent event) {
         // 在實際實現中，這裡會調用郵件服務或消息隊列
-        System.out.println(String.format(
-                "Sending welcome email to %s (%s)",
+        logger.info("Sending welcome email to {} ({})",
                 event.customerName().getName(),
-                event.email().getEmail()));
+                event.email().getEmail());
     }
 
     /**
@@ -59,9 +61,8 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
      */
     private void createCustomerStats(CustomerCreatedEvent event) {
         // 在實際實現中，這裡會調用統計服務創建客戶統計記錄
-        System.out.println(String.format(
-                "Creating customer stats record for customer: %s",
-                event.customerId().getValue()));
+        logger.info("Creating customer stats record for customer: {}",
+                event.customerId().getValue());
     }
 
     /**
@@ -69,8 +70,7 @@ public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<Cust
      */
     private void initializeCustomerPreferences(CustomerCreatedEvent event) {
         // 在實際實現中，這裡會設定客戶的預設偏好
-        System.out.println(String.format(
-                "Initializing default preferences for customer: %s",
-                event.customerId().getValue()));
+        logger.info("Initializing default preferences for customer: {}",
+                event.customerId().getValue());
     }
 }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import solid.humank.genaidemo.infrastructure.common.persistence.AuroraReadWriteConfiguration.DataSourceRouter;
-import solid.humank.genaidemo.infrastructure.common.persistence.AuroraReadWriteConfiguration.DataSourceType;
 
 /**
  * 只讀操作切面

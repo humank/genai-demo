@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -195,6 +197,8 @@ public class DataRetentionConfiguration {
 @Component
 class DataRetentionService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataRetentionService.class);
+
     private final DataRetentionConfiguration retentionConfig;
 
     public DataRetentionService(DataRetentionConfiguration retentionConfig) {
@@ -224,7 +228,7 @@ class DataRetentionService {
     private void performCleanup(String dataType, DataRetentionConfiguration.RetentionPolicy policy) {
         try {
             // Log cleanup operation
-            System.out.println("Starting cleanup for data type: " + dataType);
+            logger.info("Starting cleanup for data type: {}", dataType);
 
             // Calculate cutoff dates
             LocalDateTime hotCutoff = LocalDateTime.now().minus(policy.getHotStorageDuration());
@@ -242,16 +246,16 @@ class DataRetentionService {
                 case "personal-data" -> cleanupPersonalData(hotCutoff, warmCutoff, coldCutoff);
                 case "session-data" -> cleanupSessionData(hotCutoff, warmCutoff, coldCutoff);
                 case "temp-data" -> cleanupTempData(hotCutoff, warmCutoff, coldCutoff);
-                default -> System.out.println("Unknown data type for cleanup: " + dataType);
+                default -> logger.warn("Unknown data type for cleanup: {}", dataType);
             }
 
             // Update last cleanup timestamp
             policy.setLastCleanup(LocalDateTime.now());
 
-            System.out.println("Completed cleanup for data type: " + dataType);
+            logger.info("Completed cleanup for data type: {}", dataType);
 
         } catch (Exception e) {
-            System.err.println("Error during cleanup for data type " + dataType + ": " + e.getMessage());
+            logger.error("Error during cleanup for data type {}: {}", dataType, e.getMessage(), e);
         }
     }
 
@@ -260,55 +264,46 @@ class DataRetentionService {
         // Move logs older than hotCutoff to S3
         // Move logs older than warmCutoff to S3 IA
         // Delete logs older than coldCutoff
-        System.out.println(
-                "Cleaning up application logs - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up application logs - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupSecurityLogs(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Security logs require special handling for compliance
-        System.out.println(
-                "Cleaning up security logs - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up security logs - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupAuditLogs(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Audit logs have the longest retention for compliance
-        System.out.println(
-                "Cleaning up audit logs - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up audit logs - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupMetrics(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Cleanup CloudWatch metrics and Prometheus data
-        System.out
-                .println("Cleaning up metrics - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up metrics - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupTraces(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Cleanup X-Ray traces
-        System.out
-                .println("Cleaning up traces - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up traces - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupDomainEvents(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Cleanup domain events from event store
-        System.out.println(
-                "Cleaning up domain events - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up domain events - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupPersonalData(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Special handling for GDPR compliance - right to be forgotten
-        System.out.println(
-                "Cleaning up personal data - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up personal data - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupSessionData(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Cleanup session data from Redis/database
-        System.out.println(
-                "Cleaning up session data - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up session data - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 
     private void cleanupTempData(LocalDateTime hotCutoff, LocalDateTime warmCutoff, LocalDateTime coldCutoff) {
         // Cleanup temporary files and cache data
-        System.out.println(
-                "Cleaning up temporary data - Hot: " + hotCutoff + ", Warm: " + warmCutoff + ", Cold: " + coldCutoff);
+        logger.debug("Cleaning up temporary data - Hot: {}, Warm: {}, Cold: {}", hotCutoff, warmCutoff, coldCutoff);
     }
 }

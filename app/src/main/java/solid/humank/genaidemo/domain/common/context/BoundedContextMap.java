@@ -3,8 +3,14 @@ package solid.humank.genaidemo.domain.common.context;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** 界限上下文映射 用於定義和管理不同界限上下文之間的關係 */
 public class BoundedContextMap {
+    
+    private static final Logger logger = LoggerFactory.getLogger(BoundedContextMap.class);
+    
     private final Map<String, Map<String, ContextRelation>> contextRelations;
 
     public BoundedContextMap() {
@@ -176,7 +182,7 @@ public class BoundedContextMap {
         for (String sourceContext : contextRelations.keySet()) {
             Map<String, ContextRelation> relations = contextRelations.get(sourceContext);
             for (ContextRelation relation : relations.values()) {
-                System.out.println(relation);
+                logger.info("{}", relation);
             }
         }
     }

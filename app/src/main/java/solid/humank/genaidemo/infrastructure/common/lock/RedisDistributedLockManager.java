@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import solid.humank.genaidemo.domain.common.lock.DistributedLockManager;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -305,20 +304,6 @@ public class RedisDistributedLockManager implements DistributedLockManager {
         if (lockKey == null || lockKey.trim().isEmpty()) {
             throw new IllegalArgumentException("Lock key cannot be null or empty");
         }
-    }
-    
-    /**
-     * 記錄鎖操作指標 (待實現)
-     */
-    private void recordLockMetrics(String lockKey, String operation, boolean success) {
-        // TODO: 整合 CloudWatch 或 Micrometer 指標
-        /*
-        meterRegistry.counter("redis.lock.operations",
-            "key", lockKey,
-            "operation", operation,
-            "success", String.valueOf(success)
-        ).increment();
-        */
     }
     
     // === 便利方法實現 ===

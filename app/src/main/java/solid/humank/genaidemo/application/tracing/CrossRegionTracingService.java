@@ -2,7 +2,6 @@ package solid.humank.genaidemo.application.tracing;
 
 import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.entities.Segment;
-import com.amazonaws.xray.entities.Subsegment;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;

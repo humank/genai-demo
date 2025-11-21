@@ -81,7 +81,7 @@ public class SecurityEventLogger {
      * Log authorization denied events
      */
     @EventListener
-    public void handleAuthorizationDenied(AuthorizationDeniedEvent event) {
+    public void handleAuthorizationDenied(AuthorizationDeniedEvent<?> event) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         SecurityEvent securityEvent = SecurityEvent.builder()

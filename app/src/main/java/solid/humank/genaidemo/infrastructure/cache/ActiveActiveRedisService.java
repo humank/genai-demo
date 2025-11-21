@@ -2,7 +2,6 @@ package solid.humank.genaidemo.infrastructure.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,7 +41,6 @@ public class ActiveActiveRedisService {
     @Value("${redis.multiregion.enabled:false}")
     private boolean multiRegionEnabled;
 
-    @Autowired
     public ActiveActiveRedisService(RedisTemplate<String, Object> redisTemplate,
                                    @Qualifier("customStringRedisTemplate") RedisTemplate<String, String> customStringRedisTemplate) {
         this.redisTemplate = redisTemplate;

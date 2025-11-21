@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,8 @@ import solid.humank.genaidemo.domain.common.event.DomainEventHandler;
 @Component
 public class DomainEventHandlerRegistry {
 
+    private static final Logger logger = LoggerFactory.getLogger(DomainEventHandlerRegistry.class);
+
     private final Map<Class<? extends DomainEvent>, DomainEventHandler<? extends DomainEvent>> handlers = new HashMap<>();
 
     @Autowired
@@ -31,15 +35,12 @@ public class DomainEventHandlerRegistry {
             Class<? extends DomainEvent> eventType = handler.getSupportedEventType();
             handlers.put(eventType, handler);
 
-            System.out.println(String.format(
-                    "Registered domain event handler: %s for event type: %s",
+            logger.info("Registered domain event handler: {} for event type: {}",
                     handler.getHandlerName(),
-                    eventType.getSimpleName()));
+                    eventType.getSimpleName());
         }
 
-        System.out.println(String.format(
-                "Domain event handler registry initialized with %d handlers",
-                handlers.size()));
+        logger.info("Domain event handler registry initialized with {} handlers", handlers.size());
     }
 
     /**

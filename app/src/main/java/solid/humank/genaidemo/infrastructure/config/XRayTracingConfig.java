@@ -8,7 +8,6 @@ import com.amazonaws.xray.plugins.EC2Plugin;
 // ECS Plugin removed - using EKS only
 import com.amazonaws.xray.plugins.EKSPlugin;
 import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
-import com.amazonaws.xray.strategy.ContextMissingStrategy;
 import com.amazonaws.xray.strategy.LogErrorContextMissingStrategy;
 import com.amazonaws.xray.strategy.sampling.LocalizedSamplingStrategy;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -22,8 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import jakarta.annotation.PostConstruct;
 import java.net.URL;
@@ -49,7 +46,7 @@ import java.util.Map;
 @Profile({"staging", "production"})
 @ConditionalOnProperty(name = "aws.xray.enabled", havingValue = "true")
 @EnableAspectJAutoProxy
-public class XRayTracingConfig implements WebMvcConfigurer {
+public class XRayTracingConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(XRayTracingConfig.class);
 
