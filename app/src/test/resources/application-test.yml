@@ -29,6 +29,13 @@ spring:
   flyway:
     enabled: false  # Disable for faster test startup
 
+  # Disable Redis and Flyway auto-configuration
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+
 # Minimal Logging for Tests
 logging:
   level:

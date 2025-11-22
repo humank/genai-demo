@@ -18,6 +18,7 @@ import java.util.Map;
 @Component
 // @Endpoint(id = "secrets-manager")
 @ConditionalOnProperty(name = "aws.secretsmanager.enabled", havingValue = "true")
+@org.springframework.context.annotation.Profile({"staging", "production"})
 public class SecretsManagerEndpoint {
 
     private final SecretsManagerService secretsManagerService;

@@ -13,6 +13,7 @@ import org.flywaydb.core.api.MigrationInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,8 +21,11 @@ import org.springframework.stereotype.Component;
 /**
  * Database Configuration Validator
  * Validates database configuration, connectivity, and migration status
+ * 
+ * Note: This validator is disabled in test profile to avoid database validation issues.
  */
 @Component
+@Profile("!test")
 public class DatabaseConfigurationValidator {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseConfigurationValidator.class);

@@ -27,7 +27,7 @@ public class UnifiedDataSourceConfiguration {
     private final SecretsManagerService secretsManagerService;
 
     public UnifiedDataSourceConfiguration(Environment environment,
-                                        SecretsManagerService secretsManagerService) {
+                                        @org.springframework.beans.factory.annotation.Autowired(required = false) SecretsManagerService secretsManagerService) {
         this.environment = environment;
         this.secretsManagerService = secretsManagerService;
     }

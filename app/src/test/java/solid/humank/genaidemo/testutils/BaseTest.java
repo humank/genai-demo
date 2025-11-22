@@ -3,7 +3,9 @@ package solid.humank.genaidemo.testutils;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.context.annotation.Import;
 
+import solid.humank.genaidemo.config.TestApplicationConfiguration;
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
@@ -14,6 +16,7 @@ import solid.humank.genaidemo.domain.common.lifecycle.AggregateLifecycleAware;
  * 基礎測試類
  * 提供測試所需的基本設置
  */
+@Import(TestApplicationConfiguration.class)
 public abstract class BaseTest {
 
     private static boolean initialized = false;

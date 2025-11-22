@@ -18,6 +18,7 @@ import java.util.Map;
  */
 @Component
 @ConditionalOnProperty(name = "aws.secretsmanager.enabled", havingValue = "true")
+@org.springframework.context.annotation.Profile({"staging", "production"})
 public class SecretsManagerHealthIndicator /* implements HealthIndicator */ {
 
     private static final Logger logger = LoggerFactory.getLogger(SecretsManagerHealthIndicator.class);
