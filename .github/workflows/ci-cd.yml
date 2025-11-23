@@ -124,7 +124,7 @@ jobs:
       
       - name: Upload dependency scan results
         if: env.SECURITY_SCAN_ENABLED == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dependency-scan-results
           path: |
@@ -197,7 +197,7 @@ jobs:
       
       - name: Upload Test Results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: backend-test-results-${{ matrix.test-suite }}
           path: |
@@ -262,7 +262,7 @@ jobs:
       
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.app }}-test-results
           path: |
@@ -316,7 +316,7 @@ jobs:
       
       - name: Upload infrastructure test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: infrastructure-test-results
           path: |
@@ -358,7 +358,7 @@ jobs:
       
       - name: Upload security scan results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: security-scan-results
           path: |
@@ -445,7 +445,7 @@ jobs:
       
       - name: Upload container scan results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: container-scan-${{ matrix.component }}
           path: container-scan-${{ matrix.component }}.sarif
@@ -531,7 +531,7 @@ jobs:
           EOF
       
       - name: Upload quality report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: quality-report
           path: quality-report.md
@@ -717,7 +717,7 @@ jobs:
           EOF
       
       - name: Upload deployment summary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: gitops-deployment-summary
           path: deployment-summary.md
@@ -732,7 +732,7 @@ jobs:
           echo "deployment_branch=${{ github.ref_name }}" >> deployment-status.env
       
       - name: Upload deployment status
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: deployment-status
           path: deployment-status.env
@@ -834,7 +834,7 @@ jobs:
       
       - name: Upload pipeline summary
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pipeline-summary
           path: pipeline-summary.md
