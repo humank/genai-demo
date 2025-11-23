@@ -32,9 +32,7 @@ import solid.humank.genaidemo.infrastructure.event.sequence.EventSequenceTracker
  * 需求 9.5: 實現事件順序錯亂的檢測和處理機制
  */
 @Component
-public class ResilientEventHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(ResilientEventHandler.class);
+public class ResilientEventHandler {    private static final Logger logger = LoggerFactory.getLogger(ResilientEventHandler.class);
 
     private final EventProcessingMonitor monitor;
     private final EventRetryManager retryManager;

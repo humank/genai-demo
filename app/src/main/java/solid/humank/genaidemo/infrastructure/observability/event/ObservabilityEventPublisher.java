@@ -33,9 +33,7 @@ import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublishe
  * 需求: 2.2, 3.1, 3.2
  */
 @Component
-public class ObservabilityEventPublisher {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObservabilityEventPublisher.class);
+public class ObservabilityEventPublisher {    private static final Logger logger = LoggerFactory.getLogger(ObservabilityEventPublisher.class);
 
     private final ApplicationEventPublisher springEventPublisher;
 

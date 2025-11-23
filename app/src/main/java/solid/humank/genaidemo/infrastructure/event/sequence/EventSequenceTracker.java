@@ -15,9 +15,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEvent;
  * 需求 9.5: 實現事件順序錯亂的檢測和處理機制
  */
 @Component
-public class EventSequenceTracker {
-
-    private static final Logger logger = LoggerFactory.getLogger(EventSequenceTracker.class);
+public class EventSequenceTracker {    private static final Logger logger = LoggerFactory.getLogger(EventSequenceTracker.class);
 
     // 每個聚合根的事件序列號追蹤
     private final ConcurrentHashMap<String, AtomicLong> aggregateSequences = new ConcurrentHashMap<>();

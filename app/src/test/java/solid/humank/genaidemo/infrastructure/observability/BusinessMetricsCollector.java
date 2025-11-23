@@ -16,9 +16,7 @@ import io.micrometer.core.instrument.Timer;
  * Mock service for business metrics collection in tests
  */
 @Service
-public class BusinessMetricsCollector {
-
-    private static final Logger logger = LoggerFactory.getLogger(BusinessMetricsCollector.class);
+public class BusinessMetricsCollector {    private static final Logger logger = LoggerFactory.getLogger(BusinessMetricsCollector.class);
 
     @Autowired
     private MeterRegistry meterRegistry;

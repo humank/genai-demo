@@ -1,6 +1,6 @@
 # Tests Directory Analysis Report
 
-**Date**: 2024-11-19  
+**Date**: 2024-11-19
 **Status**: 📋 Analysis Complete
 
 ---
@@ -145,7 +145,7 @@ The tests directory is **completely separate** from the main Java/Spring Boot e-
 
 The **actual Java application tests** are located in:
 - `app/src/test/` - Java unit and integration tests
-- `staging-tests/` - Staging environment tests
+- `e2e-tests/` - End-to-end and staging environment tests (formerly `staging-tests/`)
 - **NOT** in `tests/` directory
 
 ---
@@ -324,7 +324,7 @@ Given that **all required dependencies are missing**, the recommended action is:
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2024-11-19  
-**Analyst**: Documentation Team  
+**Document Version**: 1.0
+**Last Updated**: 2024-11-19
+**Analyst**: Documentation Team
 **Status**: ⚠️ Awaiting Decision on Translation System Status

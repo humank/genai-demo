@@ -18,9 +18,7 @@ import org.springframework.stereotype.Component;
  * logging.
  */
 @Component
-public class ObservabilityTestValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObservabilityTestValidator.class);
+public class ObservabilityTestValidator {    private static final Logger logger = LoggerFactory.getLogger(ObservabilityTestValidator.class);
 
     /**
      * Validates that the metrics endpoint is accessible and returns valid data

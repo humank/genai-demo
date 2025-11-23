@@ -17,9 +17,7 @@ import solid.humank.genaidemo.config.ProfileValidationConfiguration.ProfileConfi
  * Provides clear error messages and fallback strategies
  */
 @Component
-public class ProfileConfigurationErrorHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(ProfileConfigurationErrorHandler.class);
+public class ProfileConfigurationErrorHandler {    private static final Logger logger = LoggerFactory.getLogger(ProfileConfigurationErrorHandler.class);
     private static final Set<String> SAFE_FALLBACK_PROFILES = Set.of("dev", "test");
 
     private final Environment environment;

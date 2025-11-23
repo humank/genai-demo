@@ -14,19 +14,19 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 
 /**
  * Domain Event Application Service
- * 
+ *
  * Provides centralized domain event publishing functionality for application
  * services.
  * Handles event collection from aggregates and coordinates with the appropriate
  * event publisher based on the active profile.
- * 
+ *
  * Features:
  * - Centralized event publishing coordination
  * - Aggregate event collection and management
  * - Correlation ID and tracing support
  * - Transactional event publishing
  * - Profile-aware event handling
- * 
+ *
  * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
 @Service
@@ -34,6 +34,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 public class DomainEventApplicationService {
 
     private static final Logger logger = LoggerFactory.getLogger(DomainEventApplicationService.class);
+    private static final String CORRELATION_ID_KEY = "correlationId";
 
     private final DomainEventPublisher domainEventPublisher;
 
@@ -46,7 +47,7 @@ public class DomainEventApplicationService {
     /**
      * Publish events from an aggregate root
      * Collects uncommitted events from the aggregate and publishes them
-     * 
+     *
      * @param aggregateRoot The aggregate root containing events to publish
      */
     public void publishEventsFromAggregate(AggregateRootInterface aggregateRoot) {
@@ -61,7 +62,7 @@ public class DomainEventApplicationService {
         }
 
         List<DomainEvent> events = aggregateRoot.getUncommittedEvents();
-        String correlationId = MDC.get("correlationId");
+        String correlationId = MDC.get(CORRELATION_ID_KEY);
 
         logger.debug("Publishing {} events from aggregate [correlationId: {}]",
                 events.size(), correlationId);
@@ -88,7 +89,7 @@ public class DomainEventApplicationService {
 
     /**
      * Publish a single domain event
-     * 
+     *
      * @param event The domain event to publish
      */
     public void publishEvent(DomainEvent event) {
@@ -97,7 +98,7 @@ public class DomainEventApplicationService {
             return;
         }
 
-        String correlationId = MDC.get("correlationId");
+        String correlationId = MDC.get(CORRELATION_ID_KEY);
         logger.debug("Publishing single event: {} [correlationId: {}]",
                 event.getEventType(), correlationId);
 
@@ -116,7 +117,7 @@ public class DomainEventApplicationService {
 
     /**
      * Publish multiple domain events
-     * 
+     *
      * @param events The list of domain events to publish
      */
     public void publishEvents(List<DomainEvent> events) {
@@ -125,7 +126,7 @@ public class DomainEventApplicationService {
             return;
         }
 
-        String correlationId = MDC.get("correlationId");
+        String correlationId = MDC.get(CORRELATION_ID_KEY);
         logger.debug("Publishing {} events [correlationId: {}]",
                 events.size(), correlationId);
 
@@ -145,7 +146,7 @@ public class DomainEventApplicationService {
     /**
      * Publish events from multiple aggregates
      * Useful for complex business operations involving multiple aggregates
-     * 
+     *
      * @param aggregateRoots The list of aggregate roots containing events to
      *                       publish
      */
@@ -155,7 +156,7 @@ public class DomainEventApplicationService {
             return;
         }
 
-        String correlationId = MDC.get("correlationId");
+        String correlationId = MDC.get(CORRELATION_ID_KEY);
         int totalEvents = 0;
 
         // Count total events
@@ -194,12 +195,12 @@ public class DomainEventApplicationService {
     /**
      * Set correlation ID for event tracing
      * Useful for maintaining trace context across service boundaries
-     * 
+     *
      * @param correlationId The correlation ID to set
      */
     public void setCorrelationId(String correlationId) {
         if (correlationId != null && !correlationId.trim().isEmpty()) {
-            MDC.put("correlationId", correlationId);
+            MDC.put(CORRELATION_ID_KEY, correlationId);
             logger.debug("Correlation ID set: {}", correlationId);
         }
     }
@@ -208,23 +209,23 @@ public class DomainEventApplicationService {
      * Clear correlation ID from MDC
      */
     public void clearCorrelationId() {
-        MDC.remove("correlationId");
+        MDC.remove(CORRELATION_ID_KEY);
         logger.debug("Correlation ID cleared");
     }
 
     /**
      * Get the current correlation ID
-     * 
+     *
      * @return The current correlation ID or null if not set
      */
     public String getCorrelationId() {
-        return MDC.get("correlationId");
+        return MDC.get(CORRELATION_ID_KEY);
     }
 
     /**
      * Publish events from an aggregate root synchronously (for testing)
      * Similar to publishEventsFromAggregate but without transaction handling
-     * 
+     *
      * @param aggregateRoot The aggregate root containing events to publish
      */
     public void publishEventsFromAggregateSync(
@@ -240,7 +241,7 @@ public class DomainEventApplicationService {
         }
 
         List<DomainEvent> events = aggregateRoot.getUncommittedEvents();
-        String correlationId = MDC.get("correlationId");
+        String correlationId = MDC.get(CORRELATION_ID_KEY);
 
         logger.debug("Publishing {} events from aggregate synchronously [correlationId: {}]",
                 events.size(), correlationId);
@@ -264,7 +265,7 @@ public class DomainEventApplicationService {
 
     /**
      * Check if events can be published (publisher is available)
-     * 
+     *
      * @return true if events can be published, false otherwise
      */
     public boolean canPublishEvents() {
@@ -273,7 +274,7 @@ public class DomainEventApplicationService {
 
     /**
      * Get information about the current event publisher
-     * 
+     *
      * @return Publisher class name for debugging
      */
     public String getPublisherInfo() {

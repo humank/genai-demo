@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.infrastructure.common.persistence.adapter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +13,7 @@ import solid.humank.genaidemo.domain.common.repository.Repository;
 /**
  * 基礎儲存庫適配器抽象類別
  * 提供通用的 Repository Pattern 實作，減少重複代碼
- * 
+ *
  * @param <T>   聚合根類型
  * @param <ID>  聚合根ID類型
  * @param <E>   JPA實體類型
@@ -35,7 +36,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
         }
 
         E entity = toJpaEntity(aggregateRoot);
-        jpaRepository.save(entity);
+        jpaRepository.save(Objects.requireNonNull(entity, "JPA entity cannot be null"));
 
         // Return the original aggregate root to maintain aggregate consistency
         // The aggregate root should be the single source of truth
@@ -45,7 +46,8 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
     @Override
     public Optional<T> findById(ID id) {
         JID jpaId = convertToJpaId(id);
-        return jpaRepository.findById(jpaId).map(this::toDomainModel);
+        return jpaRepository.findById(Objects.requireNonNull(jpaId, "JPA ID cannot be null"))
+                .map(this::toDomainModel);
     }
 
     @Override
@@ -72,7 +74,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
             throw new IllegalArgumentException("ID cannot be null");
         }
         JID jpaId = convertToJpaId(id);
-        jpaRepository.deleteById(jpaId);
+        jpaRepository.deleteById(Objects.requireNonNull(jpaId, "JPA ID cannot be null"));
     }
 
     @Override
@@ -83,12 +85,12 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
     @Override
     public boolean existsById(ID id) {
         JID jpaId = convertToJpaId(id);
-        return jpaRepository.existsById(jpaId);
+        return jpaRepository.existsById(Objects.requireNonNull(jpaId, "JPA ID cannot be null"));
     }
 
     /**
      * 將聚合根轉換為JPA實體
-     * 
+     *
      * @param aggregateRoot 聚合根
      * @return JPA實體
      */
@@ -96,7 +98,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
 
     /**
      * 將JPA實體轉換為聚合根
-     * 
+     *
      * @param entity JPA實體
      * @return 聚合根
      */
@@ -104,7 +106,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
 
     /**
      * 將領域ID轉換為JPA ID
-     * 
+     *
      * @param domainId 領域ID
      * @return JPA ID
      */
@@ -112,7 +114,7 @@ public abstract class BaseRepositoryAdapter<T, ID, E, JID> implements Repository
 
     /**
      * 從聚合根中提取ID
-     * 
+     *
      * @param aggregateRoot 聚合根
      * @return ID
      */

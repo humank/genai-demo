@@ -24,9 +24,7 @@ import org.slf4j.LoggerFactory;
  * 
  * Requirements: 5.1, 5.4
  */
-public class TestPerformanceReportGenerator {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestPerformanceReportGenerator.class);
+public class TestPerformanceReportGenerator {    private static final Logger logger = LoggerFactory.getLogger(TestPerformanceReportGenerator.class);
 
     private static final String REPORT_DIR = "build/reports/test-performance";
     private static final String HTML_TEMPLATE = """

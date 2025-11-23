@@ -168,9 +168,11 @@ class SecurityMetricsCollector {
         totalSecurityEvents.incrementAndGet();
 
         // Clear failed attempts on successful authentication
-        failedAttemptsByIp.remove(sourceIp);
-        lastFailureByIp.remove(sourceIp);
-        lockoutByIp.remove(sourceIp);
+        if (sourceIp != null) {
+            failedAttemptsByIp.remove(sourceIp);
+            lastFailureByIp.remove(sourceIp);
+            lockoutByIp.remove(sourceIp);
+        }
     }
 
     public void recordAuthenticationFailure(String sourceIp) {
@@ -194,6 +196,15 @@ class SecurityMetricsCollector {
     public void recordAuthorizationDenied(String sourceIp) {
         authorizationDeniedCounter.increment();
         totalSecurityEvents.incrementAndGet();
+
+        // Track authorization denials by IP for security monitoring
+        if (sourceIp != null && !sourceIp.equals("unknown")) {
+            Counter.builder("security.authorization.denied.by_ip")
+                    .tag("source_ip", sourceIp)
+                    .description("Authorization denied events by IP")
+                    .register(meterRegistry)
+                    .increment();
+        }
     }
 
     public void recordSuspiciousActivity(String activityType, String sourceIp) {
@@ -207,6 +218,16 @@ class SecurityMetricsCollector {
                 .description("Suspicious activity events by type")
                 .register(meterRegistry)
                 .increment();
+
+        // Track suspicious activity by IP for security monitoring
+        if (sourceIp != null && !sourceIp.equals("unknown")) {
+            Counter.builder("security.suspicious.activity.by_ip")
+                    .tag("source_ip", sourceIp)
+                    .tag("activity_type", activityType)
+                    .description("Suspicious activity events by IP and type")
+                    .register(meterRegistry)
+                    .increment();
+        }
     }
 
     public void recordPiiAccess(String piiType, String operation) {
@@ -320,6 +341,9 @@ class SecurityMetricsCollector {
 @Component
 class SecurityHealthIndicator implements HealthIndicator {
 
+    private static final String DETAIL_STATUS = "status";
+    private static final String DETAIL_REASON = "reason";
+
     private final SecurityMetricsCollector metricsCollector;
 
     public SecurityHealthIndicator(SecurityMetricsCollector metricsCollector) {
@@ -339,19 +363,19 @@ class SecurityHealthIndicator implements HealthIndicator {
         // Determine health status
         if (criticalEvents > 10) { // More than 10 critical events
             builder.down()
-                    .withDetail("status", "CRITICAL")
-                    .withDetail("reason", "Too many critical security events");
+                    .withDetail(DETAIL_STATUS, "CRITICAL")
+                    .withDetail(DETAIL_REASON, "Too many critical security events");
         } else if (highSeverityEvents > 50 || activeLockouts > 20) {
             builder.down()
-                    .withDetail("status", "WARNING")
-                    .withDetail("reason", "High number of security events or lockouts");
+                    .withDetail(DETAIL_STATUS, "WARNING")
+                    .withDetail(DETAIL_REASON, "High number of security events or lockouts");
         } else if (activeFailedAttempts > 100) {
             builder.outOfService()
-                    .withDetail("status", "DEGRADED")
-                    .withDetail("reason", "High number of failed authentication attempts");
+                    .withDetail(DETAIL_STATUS, "DEGRADED")
+                    .withDetail(DETAIL_REASON, "High number of failed authentication attempts");
         } else {
             builder.up()
-                    .withDetail("status", "HEALTHY");
+                    .withDetail(DETAIL_STATUS, "HEALTHY");
         }
 
         // Add security metrics to health details

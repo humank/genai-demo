@@ -18,9 +18,7 @@ import org.springframework.boot.test.context.TestComponent;
  * Requirements: 5.3, 5.5, 7.5
  */
 @TestComponent
-public class TestPerformanceResourceManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestPerformanceResourceManager.class);
+public class TestPerformanceResourceManager {    private static final Logger logger = LoggerFactory.getLogger(TestPerformanceResourceManager.class);
     private final MemoryMXBean memoryBean;
 
     public TestPerformanceResourceManager() {

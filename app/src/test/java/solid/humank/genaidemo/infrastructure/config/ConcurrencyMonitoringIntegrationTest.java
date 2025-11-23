@@ -54,7 +54,6 @@ class ConcurrencyMonitoringIntegrationTest {
         when(eventProcessingExecutor.getThreadPoolExecutor()).thenReturn(threadPoolExecutor);
         when(retryExecutor.getThreadPoolExecutor()).thenReturn(threadPoolExecutor);
         
-        // Setup default mock behavior - use lenient() to avoid UnnecessaryStubbingException
         org.mockito.Mockito.lenient().when(threadPoolExecutor.getActiveCount()).thenReturn(5);
         org.mockito.Mockito.lenient().when(threadPoolExecutor.getMaximumPoolSize()).thenReturn(10);
         org.mockito.Mockito.lenient().when(threadPoolExecutor.getQueue()).thenReturn(new java.util.concurrent.LinkedBlockingQueue<>());

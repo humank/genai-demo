@@ -11,11 +11,14 @@ import solid.humank.genaidemo.application.inventory.dto.response.InventoryRespon
 import solid.humank.genaidemo.application.inventory.port.incoming.InventoryManagementUseCase;
 import solid.humank.genaidemo.application.inventory.port.outgoing.InventoryPersistencePort;
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
+import solid.humank.genaidemo.exceptions.InsufficientInventoryException;
 
 /** 庫存應用服務 */
 @Service
 @Transactional
 public class InventoryApplicationService implements InventoryManagementUseCase {
+
+    private static final String PRODUCT_NOT_FOUND_MSG = "Product not found with ID: ";
 
     private final InventoryPersistencePort inventoryPersistencePort;
     private final DomainEventApplicationService domainEventApplicationService;
@@ -32,7 +35,7 @@ public class InventoryApplicationService implements InventoryManagementUseCase {
         Optional<Inventory> inventoryOpt = inventoryPersistencePort.findByProductId(command.getProductId());
 
         if (inventoryOpt.isEmpty()) {
-            throw new RuntimeException("找不到產品庫存: " + command.getProductId());
+            throw new RuntimeException(PRODUCT_NOT_FOUND_MSG + command.getProductId());
         }
 
         Inventory inventory = inventoryOpt.get();
@@ -67,7 +70,7 @@ public class InventoryApplicationService implements InventoryManagementUseCase {
         Optional<Inventory> inventoryOpt = inventoryPersistencePort.findByProductId(productId);
 
         if (inventoryOpt.isEmpty()) {
-            throw new RuntimeException("找不到產品庫存: " + productId);
+            throw new RuntimeException(PRODUCT_NOT_FOUND_MSG + productId);
         }
 
         return toResponse(inventoryOpt.get());
@@ -75,7 +78,7 @@ public class InventoryApplicationService implements InventoryManagementUseCase {
 
     /**
      * 預留庫存
-     * 
+     *
      * @param productId 商品ID
      * @param quantity  預留數量
      * @param orderId   訂單ID
@@ -84,14 +87,14 @@ public class InventoryApplicationService implements InventoryManagementUseCase {
         Optional<Inventory> inventoryOpt = inventoryPersistencePort.findByProductId(productId);
 
         if (inventoryOpt.isEmpty()) {
-            throw new RuntimeException("找不到產品庫存: " + productId);
+            throw new RuntimeException(PRODUCT_NOT_FOUND_MSG + productId);
         }
 
         Inventory inventory = inventoryOpt.get();
 
         // 檢查是否有足夠的可用庫存
         if (inventory.getAvailableQuantity() < quantity) {
-            throw new RuntimeException(String.format("庫存不足 - 商品ID: %s, 需要: %d, 可用: %d",
+            throw new InsufficientInventoryException(String.format("庫存不足 - 商品ID: %s, 需要: %d, 可用: %d",
                     productId, quantity, inventory.getAvailableQuantity()));
         }
 

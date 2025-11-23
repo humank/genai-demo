@@ -76,7 +76,7 @@ public class PaymentMapper implements DomainMapper<Payment, JpaPaymentEntity> {
                     boolean.class);
             constructor.setAccessible(true);
 
-            Payment payment = constructor.newInstance(
+            return constructor.newInstance(
                     paymentId,
                     orderId,
                     amount,
@@ -87,8 +87,6 @@ public class PaymentMapper implements DomainMapper<Payment, JpaPaymentEntity> {
                     jpaEntity.getCreatedAt(),
                     jpaEntity.getUpdatedAt(),
                     jpaEntity.isCanRetry());
-
-            return payment;
         } catch (Exception e) {
             // 如果反射失敗，使用備用方法
             return createPaymentAlternative(jpaEntity);

@@ -27,30 +27,30 @@ public class PaymentResponse {
     @Schema(
             description = "支付交易的唯一識別碼，UUID格式",
             example = "123e4567-e89b-12d3-a456-426614174000",
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 
     @Schema(
             description = "關聯的訂單唯一識別碼，UUID格式",
             example = "456e7890-e89b-12d3-a456-426614174001",
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private String orderId;
 
     @Schema(
             description = "支付金額，使用BigDecimal確保精度",
             example = "1299.99",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             type = "number",
             format = "decimal")
     private BigDecimal amount;
 
-    @Schema(description = "ISO 4217貨幣代碼", example = "TWD", required = true, pattern = "^[A-Z]{3}$")
+    @Schema(description = "ISO 4217貨幣代碼", example = "TWD", requiredMode = Schema.RequiredMode.REQUIRED, pattern = "^[A-Z]{3}$")
     private String currency;
 
     @Schema(
             description = "支付狀態，反映當前支付交易的處理狀態",
             example = "COMPLETED",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             allowableValues = {
                 "PENDING", // 待支付
                 "PROCESSING", // 處理中
@@ -89,7 +89,7 @@ public class PaymentResponse {
     @Schema(
             description = "支付記錄的創建時間，ISO 8601格式",
             example = "2024-01-15T10:30:00",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             type = "string",
             format = "date-time")
     private LocalDateTime createdAt;
@@ -97,12 +97,12 @@ public class PaymentResponse {
     @Schema(
             description = "支付記錄的最後更新時間，ISO 8601格式",
             example = "2024-01-15T10:35:00",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             type = "string",
             format = "date-time")
     private LocalDateTime updatedAt;
 
-    @Schema(description = "指示此支付是否允許重試，通常在支付失敗時為true", example = "true", required = true)
+    @Schema(description = "指示此支付是否允許重試，通常在支付失敗時為true", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean canRetry;
 
     // 默認構造函數

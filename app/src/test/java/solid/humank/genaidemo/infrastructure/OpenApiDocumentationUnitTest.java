@@ -23,10 +23,10 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 
 /**
  * 輕量級單元測試 - OpenAPI Documentation
- * 
+ *
  * 記憶體使用：~5MB (vs @SpringBootTest ~500MB)
  * 執行時間：~100ms (vs @SpringBootTest ~3s)
- * 
+ *
  * 測試 OpenAPI 文檔生成的邏輯，而不是實際的 Spring 端點
  */
 @ExtendWith(MockitoExtension.class)
@@ -42,8 +42,6 @@ class OpenApiDocumentationUnitTest {
           .enable(YAMLGenerator.Feature.INDENT_ARRAYS_WITH_INDICATOR));
 
   private static final String DOCS_API_DIR = "docs/api";
-  private static final String OPENAPI_JSON_FILE = "openapi-test.json";
-  private static final String OPENAPI_YAML_FILE = "openapi-test.yaml";
 
   @BeforeEach
   void setUp() throws IOException {

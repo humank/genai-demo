@@ -1,6 +1,7 @@
 package solid.humank.genaidemo.config;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -13,12 +14,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.NonNull;
 
 import jakarta.annotation.PostConstruct;
 
 /**
  * Profile Configuration Resolver
- * 
+ *
  * Handles profile activation conflicts and ensures proper test environment
  * setup.
  * This resolver detects and resolves conflicts between different Spring
@@ -27,7 +29,6 @@ import jakarta.annotation.PostConstruct;
  */
 @Configuration
 public class ProfileConfigurationResolver implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
-
     private static final Logger logger = LoggerFactory.getLogger(ProfileConfigurationResolver.class);
 
     private final Environment environment;
@@ -97,18 +98,20 @@ public class ProfileConfigurationResolver implements ApplicationListener<Applica
      * Handle application environment prepared event to validate profiles early
      */
     @Override
-    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
+    public void onApplicationEvent(@NonNull ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment env = event.getEnvironment();
         String[] activeProfiles = env.getActiveProfiles();
 
-        logger.info("Profile activation event received. Active profiles: {}", Arrays.toString(activeProfiles));
+        if (logger.isInfoEnabled()) {
+            logger.info("Profile activation event received. Active profiles: {}", Arrays.toString(activeProfiles));
+        }
 
         try {
             // Validate profile combinations early in the startup process
             profileValidator.validateProfileActivation(activeProfiles);
 
             // Resolve any profile conflicts
-            resolveProfileConflicts(env, activeProfiles);
+            resolveProfileConflicts(activeProfiles);
 
         } catch (Exception e) {
             logger.error("Profile validation failed during application startup", e);
@@ -125,8 +128,8 @@ public class ProfileConfigurationResolver implements ApplicationListener<Applica
     /**
      * Resolve profile conflicts by adjusting active profiles
      */
-    private void resolveProfileConflicts(ConfigurableEnvironment env, String[] activeProfiles) {
-        Set<String> profileSet = Set.of(activeProfiles);
+    private void resolveProfileConflicts(String[] activeProfiles) {
+        Set<String> profileSet = new HashSet<>(Arrays.asList(activeProfiles));
 
         // Handle test + openapi combination (common in tests)
         if (profileSet.contains("test") && profileSet.contains("openapi")) {

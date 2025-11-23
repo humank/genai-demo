@@ -34,9 +34,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  */
 @Component
 @Profile("local")
-public class InMemoryDomainEventPublisher implements DomainEventPublisher {
-
-    private static final Logger logger = LoggerFactory.getLogger(InMemoryDomainEventPublisher.class);
+public class InMemoryDomainEventPublisher implements DomainEventPublisher {    private static final Logger logger = LoggerFactory.getLogger(InMemoryDomainEventPublisher.class);
 
     private final ApplicationEventPublisher springEventPublisher;
     private final List<DomainEvent> publishedEvents = new CopyOnWriteArrayList<>();

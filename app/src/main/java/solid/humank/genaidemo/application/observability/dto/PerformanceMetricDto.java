@@ -5,9 +5,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 /**
  * 效能指標 DTO
- * 
+ *
  * 用於接收前端發送的效能指標數據，包括核心網頁指標和其他效能測量。
- * 
+ *
  * 需求: 1.3, 2.1
  */
 public record PerformanceMetricDto(
@@ -24,7 +24,7 @@ public record PerformanceMetricDto(
 
     /**
      * 創建效能指標 DTO
-     * 
+     *
      * @param metricId   指標 ID
      * @param metricType 指標類型
      * @param value      指標值
@@ -38,7 +38,7 @@ public record PerformanceMetricDto(
 
     /**
      * 檢查是否為核心網頁指標 (Core Web Vitals)
-     * 
+     *
      * @return 如果是核心網頁指標返回 true
      */
     public boolean isCoreWebVital() {
@@ -49,7 +49,7 @@ public record PerformanceMetricDto(
 
     /**
      * 檢查是否為載入時間指標
-     * 
+     *
      * @return 如果是載入時間指標返回 true
      */
     public boolean isLoadTimeMetric() {
@@ -59,7 +59,7 @@ public record PerformanceMetricDto(
 
     /**
      * 檢查是否為 API 相關指標
-     * 
+     *
      * @return 如果是 API 相關指標返回 true
      */
     public boolean isApiMetric() {
@@ -69,7 +69,7 @@ public record PerformanceMetricDto(
 
     /**
      * 獲取指標值的毫秒表示（如果適用）
-     * 
+     *
      * @return 毫秒值
      */
     public long getValueInMilliseconds() {
@@ -84,7 +84,7 @@ public record PerformanceMetricDto(
     /**
      * 檢查指標是否超過建議閾值
      * 基於 Google Core Web Vitals 建議
-     * 
+     *
      * @return 如果超過閾值返回 true
      */
     public boolean exceedsRecommendedThreshold() {
@@ -101,7 +101,7 @@ public record PerformanceMetricDto(
 
     /**
      * 獲取效能等級
-     * 
+     *
      * @return 效能等級 (good, needs-improvement, poor)
      */
     public String getPerformanceGrade() {

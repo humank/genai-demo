@@ -25,9 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 @ConditionalOnProperty(name = "aws.secretsmanager.enabled", havingValue = "true")
-public class SecretsManagerService {
-
-    private static final Logger logger = LoggerFactory.getLogger(SecretsManagerService.class);
+public class SecretsManagerService {    private static final Logger logger = LoggerFactory.getLogger(SecretsManagerService.class);
 
     private final SecretsManagerClient secretsManagerClient;
     private final SecretsManagerProperties properties;

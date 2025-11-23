@@ -33,9 +33,7 @@ import solid.humank.genaidemo.infrastructure.observability.tracing.Observability
  */
 @Service
 @Transactional
-public class ObservabilityEventService {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObservabilityEventService.class);
+public class ObservabilityEventService {    private static final Logger logger = LoggerFactory.getLogger(ObservabilityEventService.class);
 
     private final DomainEventApplicationService domainEventService;
     private final ObservabilityTraceContextManager traceContextManager;

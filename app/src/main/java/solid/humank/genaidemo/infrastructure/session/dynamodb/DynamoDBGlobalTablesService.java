@@ -1,36 +1,35 @@
 package solid.humank.genaidemo.infrastructure.session.dynamodb;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
-import software.amazon.awssdk.services.dynamodb.model.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.*;
+
 /**
  * DynamoDB Global Tables Service for Cross-Region Management
- * 
+ *
  * Provides operations for:
  * - Global Tables creation and management
  * - Cross-region replication monitoring
  * - Conflict resolution tracking
  * - Regional health checks
- * 
+ *
  * Requirements: 4.1.4 - Cross-region data synchronization
  */
 @Service
 public class DynamoDBGlobalTablesService {
 
     private final DynamoDbClient dynamoDbClient;
-    private final String currentRegion;
     private final List<String> replicationRegions;
 
     public DynamoDBGlobalTablesService(DynamoDbClient dynamoDbClient,
-                                     @Value("${aws.region:us-east-1}") String currentRegion,
-                                     @Value("${aws.dynamodb.global-tables.regions:us-east-1,us-west-2,eu-west-1}") List<String> replicationRegions) {
+            @Value("${aws.dynamodb.global-tables.regions:us-east-1,us-west-2,eu-west-1}") List<String> replicationRegions) {
         this.dynamoDbClient = dynamoDbClient;
-        this.currentRegion = currentRegion;
         this.replicationRegions = replicationRegions;
     }
 
@@ -95,8 +94,7 @@ public class DynamoDBGlobalTablesService {
             return description.replicationGroup().stream()
                     .collect(Collectors.toMap(
                             ReplicaDescription::regionName,
-                            replica -> replica.replicaStatus().toString()
-                    ));
+                            replica -> replica.replicaStatus().toString()));
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to get Global Table status: " + tableName, e);
@@ -228,11 +226,25 @@ public class DynamoDBGlobalTablesService {
         }
 
         // Getters
-        public String getTableName() { return tableName; }
-        public long getTotalReplicas() { return totalReplicas; }
-        public long getActiveReplicas() { return activeReplicas; }
-        public String getReplicationHealth() { return replicationHealth; }
-        public List<String> getRegions() { return regions; }
+        public String getTableName() {
+            return tableName;
+        }
+
+        public long getTotalReplicas() {
+            return totalReplicas;
+        }
+
+        public long getActiveReplicas() {
+            return activeReplicas;
+        }
+
+        public String getReplicationHealth() {
+            return replicationHealth;
+        }
+
+        public List<String> getRegions() {
+            return regions;
+        }
 
         public static class Builder {
             private String tableName;

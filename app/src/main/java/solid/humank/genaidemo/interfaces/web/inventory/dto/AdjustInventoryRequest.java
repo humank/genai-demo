@@ -14,7 +14,7 @@ public class AdjustInventoryRequest {
             example = "10",
             minimum = "1",
             maximum = "999999",
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "調整數量不能為空")
     @Min(value = 1, message = "調整數量必須大於0")
     private int quantity;
@@ -23,7 +23,7 @@ public class AdjustInventoryRequest {
             description = "調整原因，用於記錄庫存調整的業務原因，便於後續追蹤和審計",
             example = "補貨入庫",
             maxLength = 255,
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "調整原因不能為空")
     private String reason;
 
@@ -31,7 +31,7 @@ public class AdjustInventoryRequest {
             description = "調整類型，指定庫存調整的操作方式。INCREASE: 增加庫存，DECREASE: 減少庫存，SET: 設定庫存為指定數量",
             allowableValues = {"INCREASE", "DECREASE", "SET"},
             example = "INCREASE",
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "調整類型不能為空")
     @Pattern(regexp = "^(INCREASE|DECREASE|SET)$", message = "調整類型必須為 INCREASE、DECREASE 或 SET")
     private String type;

@@ -1,6 +1,6 @@
 # Config Directory Analysis Report
 
-**Date**: 2024-11-19  
+**Date**: 2024-11-19
 **Status**: 📋 Analysis Complete
 
 ---
@@ -40,17 +40,17 @@ sentinel parallel-syncs mymaster-dev 1
 ```
 
 **Used By**:
-- ✅ `docker-compose-redis-dev.yml` (3 sentinel instances)
-- ✅ `staging-tests/config/docker-compose-staging.yml` (3 sentinel instances)
+- ✅ `deployment/docker/docker-compose-redis-dev.yml` (3 sentinel instances)
+- ✅ `e2e-tests/config/docker-compose-staging.yml` (3 sentinel instances)
 
 **Usage Pattern**:
 ```yaml
-# docker-compose-redis-dev.yml
+# deployment/docker/docker-compose-redis-dev.yml
 redis-sentinel-1:
   image: redis:7-alpine
   command: redis-sentinel /etc/redis/sentinel.conf
   volumes:
-    - ./config/sentinel.conf:/etc/redis/sentinel.conf:ro
+    - ../../config/sentinel.conf:/etc/redis/sentinel.conf:ro
 ```
 
 **Status**: ✅ **Active and Required**
@@ -118,8 +118,8 @@ redis-sentinel-1:
 **✅ `sentinel.conf`**:
 ```bash
 # Used in 2 Docker Compose files:
-1. docker-compose-redis-dev.yml (3 references)
-2. staging-tests/config/docker-compose-staging.yml (3 references)
+1. deployment/docker/docker-compose-redis-dev.yml (3 references)
+2. e2e-tests/config/docker-compose-staging.yml (3 references)
 
 # Total: 6 active references
 ```
@@ -286,10 +286,10 @@ grep -r "config/__init__" --include="*.py"
 ### Test After Removal
 ```bash
 # Verify Docker Compose still works
-docker-compose -f docker-compose-redis-dev.yml config
+docker-compose -f deployment/docker/docker-compose-redis-dev.yml config
 
 # Verify staging config
-docker-compose -f staging-tests/config/docker-compose-staging.yml config
+docker-compose -f e2e-tests/config/docker-compose-staging.yml config
 ```
 
 ---
@@ -316,7 +316,7 @@ git rm config/__init__.py config/terminology.json
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2024-11-19  
-**Analyst**: Documentation Team  
+**Document Version**: 1.0
+**Last Updated**: 2024-11-19
+**Analyst**: Documentation Team
 **Status**: ✅ Ready for Cleanup

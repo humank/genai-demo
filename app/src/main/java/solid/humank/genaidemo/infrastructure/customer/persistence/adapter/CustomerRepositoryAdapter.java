@@ -40,7 +40,11 @@ public class CustomerRepositoryAdapter
 
     @Override
     public Optional<Customer> findById(CustomerId customerId) {
-        return jpaCustomerRepository.findById(customerId.getValue())
+        String id = customerId.getValue();
+        if (id == null) {
+            return Optional.empty();
+        }
+        return jpaCustomerRepository.findById(id)
                 .map(customerMapper::toDomainModel);
     }
 
@@ -77,13 +81,19 @@ public class CustomerRepositoryAdapter
     @Override
     public Customer save(Customer customer) {
         JpaCustomerEntity entity = customerMapper.toJpaEntity(customer);
+        if (entity == null) {
+            throw new IllegalStateException("Failed to convert customer to entity");
+        }
         JpaCustomerEntity savedEntity = jpaCustomerRepository.save(entity);
         return customerMapper.toDomainModel(savedEntity);
     }
 
     @Override
     public void delete(CustomerId customerId) {
-        jpaCustomerRepository.deleteById(customerId.getValue());
+        String id = customerId.getValue();
+        if (id != null) {
+            jpaCustomerRepository.deleteById(id);
+        }
     }
 
     @Override

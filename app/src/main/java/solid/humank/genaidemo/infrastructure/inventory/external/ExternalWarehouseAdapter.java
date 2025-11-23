@@ -11,9 +11,7 @@ import java.util.Random;
 
 /** 外部倉庫適配器 實現外部倉庫端口，與外部倉庫系統交互 */
 @Component
-public class ExternalWarehouseAdapter implements ExternalWarehousePort {
-
-    private static final Logger logger = LoggerFactory.getLogger(ExternalWarehouseAdapter.class);
+public class ExternalWarehouseAdapter implements ExternalWarehousePort {    private static final Logger logger = LoggerFactory.getLogger(ExternalWarehouseAdapter.class);
     private final Random random = new Random();
 
     @Override

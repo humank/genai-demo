@@ -4,11 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,16 +24,16 @@ import solid.humank.genaidemo.infrastructure.common.persistence.OptimisticLockin
 
 /**
  * Aurora 樂觀鎖機制測試
- * 
+ *
  * 測試樂觀鎖的各種場景，包含：
  * 1. 基礎樂觀鎖功能
  * 2. 衝突檢測機制
  * 3. 重試策略
  * 4. 並發處理
- * 
+ *
  * 建立日期: 2025年9月24日 上午10:18 (台北時間)
  * 需求: 1.1 - 並發控制機制全面重構
- * 
+ *
  * @author Kiro AI Assistant
  * @since 1.0
  */
@@ -95,7 +91,7 @@ class AuroraOptimisticLockingTest {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        
+
         entity.preUpdate(); // 模擬 @PreUpdate 調用
 
         assertThat(entity.getUpdatedAt()).isAfter(createdTime);
@@ -112,7 +108,7 @@ class AuroraOptimisticLockingTest {
         assertThat(detector.isOptimisticLockingException(new OptimisticLockException())).isTrue();
         assertThat(detector.isOptimisticLockingException(new OptimisticLockingFailureException("test"))).isTrue();
         assertThat(detector.isOptimisticLockingException(new RuntimeException())).isFalse();
-        
+
         // 測試嵌套異常
         RuntimeException nested = new RuntimeException(new OptimisticLockException());
         assertThat(detector.isOptimisticLockingException(nested)).isTrue();
@@ -123,25 +119,25 @@ class AuroraOptimisticLockingTest {
     void conflict_detector_should_analyze_and_suggest_retry_strategy() {
         // Given
         OptimisticLockingConflictDetector detector = new OptimisticLockingConflictDetector();
-        
+
         // 小版本差異的衝突
         ConflictInfo smallDiffConflict = new ConflictInfo("Customer", "123", 1L, 2L, "update");
-        
+
         // 中等版本差異的衝突
         ConflictInfo mediumDiffConflict = new ConflictInfo("Customer", "123", 1L, 4L, "update");
-        
+
         // 大版本差異的衝突
         ConflictInfo largeDiffConflict = new ConflictInfo("Customer", "123", 1L, 10L, "update");
 
         // When & Then
         assertThat(detector.analyzeAndSuggestRetryStrategy(smallDiffConflict))
-            .isEqualTo(RetryStrategy.IMMEDIATE_RETRY);
-        
+                .isEqualTo(RetryStrategy.IMMEDIATE_RETRY);
+
         assertThat(detector.analyzeAndSuggestRetryStrategy(mediumDiffConflict))
-            .isEqualTo(RetryStrategy.LINEAR_BACKOFF);
-        
+                .isEqualTo(RetryStrategy.LINEAR_BACKOFF);
+
         assertThat(detector.analyzeAndSuggestRetryStrategy(largeDiffConflict))
-            .isEqualTo(RetryStrategy.EXPONENTIAL_BACKOFF);
+                .isEqualTo(RetryStrategy.EXPONENTIAL_BACKOFF);
     }
 
     @Test
@@ -172,9 +168,9 @@ class AuroraOptimisticLockingTest {
 
         ConflictInfo conflictInfo = new ConflictInfo("Customer", "123", 1L, 2L, "test");
         when(conflictDetector.detectConflict(any(), anyString(), anyString(), anyString()))
-            .thenReturn(conflictInfo);
+                .thenReturn(conflictInfo);
         when(conflictDetector.analyzeAndSuggestRetryStrategy(any()))
-            .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
+                .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
 
         // When
         String result = retryService.executeWithRetry(operation, "Customer", "123", "test");
@@ -194,20 +190,20 @@ class AuroraOptimisticLockingTest {
         };
 
         ConflictInfo conflictInfo = new ConflictInfo("Customer", "123", 1L, 2L, "test");
-        OptimisticLockingConflictException enhancedException = 
-            new OptimisticLockingConflictException("Enhanced message", conflictInfo, RetryStrategy.IMMEDIATE_RETRY);
+        OptimisticLockingConflictException enhancedException = new OptimisticLockingConflictException(
+                "Enhanced message", conflictInfo, RetryStrategy.IMMEDIATE_RETRY);
 
         when(conflictDetector.detectConflict(any(), anyString(), anyString(), anyString()))
-            .thenReturn(conflictInfo);
+                .thenReturn(conflictInfo);
         when(conflictDetector.analyzeAndSuggestRetryStrategy(any()))
-            .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
+                .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
         when(conflictDetector.createEnhancedException(any(), any()))
-            .thenReturn(enhancedException);
+                .thenReturn(enhancedException);
 
         // When & Then
         assertThatThrownBy(() -> retryService.executeWithRetry(operation, "Customer", "123", "test"))
-            .isInstanceOf(OptimisticLockingConflictException.class)
-            .hasMessage("Enhanced message");
+                .isInstanceOf(OptimisticLockingConflictException.class)
+                .hasMessage("Enhanced message");
     }
 
     @Test
@@ -221,20 +217,20 @@ class AuroraOptimisticLockingTest {
         };
 
         ConflictInfo conflictInfo = new ConflictInfo("Customer", "123", 1L, 2L, "test");
-        OptimisticLockingConflictException enhancedException = 
-            new OptimisticLockingConflictException("Enhanced message", conflictInfo, RetryStrategy.IMMEDIATE_RETRY);
+        OptimisticLockingConflictException enhancedException = new OptimisticLockingConflictException(
+                "Enhanced message", conflictInfo, RetryStrategy.IMMEDIATE_RETRY);
 
         when(conflictDetector.detectConflict(any(), anyString(), anyString(), anyString()))
-            .thenReturn(conflictInfo);
+                .thenReturn(conflictInfo);
         when(conflictDetector.analyzeAndSuggestRetryStrategy(any()))
-            .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
+                .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
         when(conflictDetector.createEnhancedException(any(), any()))
-            .thenReturn(enhancedException);
+                .thenReturn(enhancedException);
 
         // When & Then
         assertThatThrownBy(() -> retryService.executeWithRetry(operation, "Customer", "123", "test", 2))
-            .isInstanceOf(OptimisticLockingConflictException.class);
-        
+                .isInstanceOf(OptimisticLockingConflictException.class);
+
         assertThat(attemptCount.get()).isEqualTo(2); // 只重試 2 次
     }
 
@@ -257,8 +253,8 @@ class AuroraOptimisticLockingTest {
     void optimistic_locking_conflict_exception_should_provide_retry_suggestions() {
         // Given
         ConflictInfo conflictInfo = new ConflictInfo("Customer", "123", 1L, 2L, "update");
-        OptimisticLockingConflictException exception = 
-            new OptimisticLockingConflictException("Conflict", conflictInfo, RetryStrategy.LINEAR_BACKOFF);
+        OptimisticLockingConflictException exception = new OptimisticLockingConflictException("Conflict", conflictInfo,
+                RetryStrategy.LINEAR_BACKOFF);
 
         // When & Then
         assertThat(exception.shouldRetry()).isTrue();
@@ -279,18 +275,18 @@ class AuroraOptimisticLockingTest {
         AtomicInteger successCount = new AtomicInteger(0);
         AtomicInteger conflictCount = new AtomicInteger(0);
         AtomicInteger attemptCount = new AtomicInteger(0);
-        
+
         // 設定 Mock 行為 - 確保會被使用
         ConflictInfo conflictInfo = new ConflictInfo("Customer", "123", 1L, 2L, "concurrent-update");
         when(conflictDetector.detectConflict(any(), anyString(), anyString(), anyString()))
-            .thenReturn(conflictInfo);
+                .thenReturn(conflictInfo);
         when(conflictDetector.analyzeAndSuggestRetryStrategy(any()))
-            .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
+                .thenReturn(RetryStrategy.IMMEDIATE_RETRY);
 
         // When - 順序執行以確保確定性結果
         for (int i = 0; i < threadCount; i++) {
             final int threadIndex = i;
-            
+
             // 模擬操作，前幾次會失敗，後面會成功
             Supplier<String> operation = () -> {
                 int attempt = attemptCount.incrementAndGet();
@@ -313,9 +309,10 @@ class AuroraOptimisticLockingTest {
         assertThat(successCount.get()).isGreaterThan(0);
         assertThat(conflictCount.get()).isGreaterThan(0);
         assertThat(attemptCount.get()).isGreaterThan(0);
-        
+
         // 驗證 Mock 互動
-        verify(conflictDetector, times(conflictCount.get())).detectConflict(any(), anyString(), anyString(), anyString());
+        verify(conflictDetector, times(conflictCount.get())).detectConflict(any(), anyString(), anyString(),
+                anyString());
     }
 
     /**

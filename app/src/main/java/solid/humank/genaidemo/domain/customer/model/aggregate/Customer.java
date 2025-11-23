@@ -506,7 +506,6 @@ public class Customer implements AggregateRootInterface {
 
         // 發布支付方式添加事件（需要創建相應的事件）
         // collectEvent(PaymentMethodAddedEvent.create(this.id, paymentMethod.getId(),
-        // paymentMethod.getType()));
 
         return paymentMethod.getId();
     }
@@ -923,8 +922,6 @@ public class Customer implements AggregateRootInterface {
         }
     }
 
-    // === 聚合根事件管理方法由 AggregateRoot interface 自動提供 ===
-    // 無需 override 任何方法！所有功能都由 interface default methods 提供：
     // - collectEvent(DomainEvent event)
     // - getUncommittedEvents()
     // - markEventsAsCommitted()

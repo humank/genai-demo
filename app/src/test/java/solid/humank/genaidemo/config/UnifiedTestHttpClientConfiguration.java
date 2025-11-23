@@ -34,9 +34,7 @@ import org.springframework.web.client.RestTemplate;
 @TestConfiguration
 @Profile("test")
 @ConditionalOnClass({ TestRestTemplate.class, RestTemplate.class })
-public class UnifiedTestHttpClientConfiguration {
-
-    private static final Logger logger = LoggerFactory.getLogger(UnifiedTestHttpClientConfiguration.class);
+public class UnifiedTestHttpClientConfiguration {    private static final Logger logger = LoggerFactory.getLogger(UnifiedTestHttpClientConfiguration.class);
 
     /**
      * Creates a properly configured ClientHttpRequestFactory.
@@ -135,7 +133,6 @@ public class UnifiedTestHttpClientConfiguration {
      */
     private ClientHttpRequestFactory createHttpComponents5Factory() {
         try {
-            // Use reflection to avoid compile-time dependency
             Class<?> factoryClass = Class
                     .forName("org.springframework.http.client.HttpComponentsClientHttpRequestFactory");
             Object factory = factoryClass.getDeclaredConstructor().newInstance();
@@ -176,9 +173,7 @@ public class UnifiedTestHttpClientConfiguration {
     /**
      * Validator class to verify HTTP client configuration
      */
-    public static class TestHttpClientValidator {
-
-        private static final Logger logger = LoggerFactory.getLogger(TestHttpClientValidator.class);
+    public static class TestHttpClientValidator {        private static final Logger logger = LoggerFactory.getLogger(TestHttpClientValidator.class);
 
         public boolean validateConfiguration(ClientHttpRequestFactory factory) {
             if (factory == null) {

@@ -52,9 +52,7 @@ public class ProductReviewMapper {
 
         ProductReview productReview = new ProductReview(reviewId, productId, reviewerId, rating);
 
-        // Set additional fields using reflection or package-private setters
         // Note: This is a simplified version. In a real implementation, you might need
-        // to use reflection or provide package-private setters in the aggregate root
 
         return productReview;
     }

@@ -25,9 +25,7 @@ import java.util.Optional;
  * enabling intelligent routing decisions based on the current deployment region.
  */
 @Component
-public class RegionDetector {
-    
-    private static final Logger logger = LoggerFactory.getLogger(RegionDetector.class);
+public class RegionDetector {    private static final Logger logger = LoggerFactory.getLogger(RegionDetector.class);
     
     private static final String EC2_METADATA_URL = "http://169.254.169.254/latest/meta-data/placement/region";
     private static final String EC2_AZ_METADATA_URL = "http://169.254.169.254/latest/meta-data/placement/availability-zone";

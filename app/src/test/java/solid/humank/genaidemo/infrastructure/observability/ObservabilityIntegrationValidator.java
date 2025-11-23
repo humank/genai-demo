@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
  * Validator for observability integration testing
  */
 @Component
-public class ObservabilityIntegrationValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObservabilityIntegrationValidator.class);
+public class ObservabilityIntegrationValidator {    private static final Logger logger = LoggerFactory.getLogger(ObservabilityIntegrationValidator.class);
 
     public boolean validateStructuredLogging() {
         logger.info("Validating structured logging");

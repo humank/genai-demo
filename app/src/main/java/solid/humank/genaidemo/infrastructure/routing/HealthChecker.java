@@ -24,9 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * - Error conditions
  */
 @Component
-public class HealthChecker {
-    
-    private static final Logger logger = LoggerFactory.getLogger(HealthChecker.class);
+public class HealthChecker {    private static final Logger logger = LoggerFactory.getLogger(HealthChecker.class);
     
     private final Map<String, EndpointHealth> healthCache = new ConcurrentHashMap<>();
     private final Map<String, DataSource> dataSourceRegistry = new ConcurrentHashMap<>();

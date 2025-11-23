@@ -19,9 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-public class BusinessLoggingAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(BusinessLoggingAspect.class);
+public class BusinessLoggingAspect {    private static final Logger logger = LoggerFactory.getLogger(BusinessLoggingAspect.class);
     private final LoggingContextManager loggingContextManager;
 
     public BusinessLoggingAspect(LoggingContextManager loggingContextManager) {
@@ -70,7 +68,7 @@ public class BusinessLoggingAspect {
             long duration = System.currentTimeMillis() - startTime;
             logger.error("Operation failed: {} (duration: {}ms) - Error: {}",
                     operation, duration, e.getMessage(), e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -102,7 +100,7 @@ public class BusinessLoggingAspect {
             long duration = System.currentTimeMillis() - startTime;
             logger.error("Domain operation failed: {} (duration: {}ms) - Error: {}",
                     operation, duration, e.getMessage(), e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 

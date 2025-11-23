@@ -29,13 +29,10 @@ import io.opentelemetry.context.Scope;
 public class TracingAspect {
 
     private static final Logger log = LoggerFactory.getLogger(TracingAspect.class);
-
-    private final OpenTelemetry openTelemetry;
     private final TraceContextManager traceContextManager;
     private final Tracer tracer;
 
     public TracingAspect(OpenTelemetry openTelemetry, TraceContextManager traceContextManager) {
-        this.openTelemetry = openTelemetry;
         this.traceContextManager = traceContextManager;
         this.tracer = openTelemetry.getTracer("genai-demo-tracer", "1.0.0");
     }
@@ -137,7 +134,6 @@ public class TracingAspect {
             for (int i = 0; i < args.length; i++) {
                 if (args[i] != null && !isSensitiveParameter(paramNames[i])) {
                     String paramValue = args[i].toString();
-                    // Limit parameter value length to avoid large spans
                     if (paramValue.length() > 100) {
                         paramValue = paramValue.substring(0, 100) + "...";
                     }

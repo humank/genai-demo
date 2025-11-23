@@ -8,24 +8,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.env.Environment;
 
 /**
  * 輕量級單元測試 - Multi-Environment Database Configuration
- * 
+ *
  * 記憶體使用：~5MB (vs @SpringBootTest ~500MB)
  * 執行時間：~50ms (vs @SpringBootTest ~2s)
- * 
+ *
  * 測試多環境數據庫配置邏輯，而不是實際的數據庫連接
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Multi-Environment Database Configuration Unit Tests")
 class MultiEnvironmentDatabaseConfigurationUnitTest {
-
-    @Mock
-    private Environment environment;
 
     @Nested
     @DisplayName("Development Profile Database Configuration Tests")

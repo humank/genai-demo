@@ -62,14 +62,13 @@ class SecurityEventLoggerTest {
     @Test
     void shouldLogSuspiciousActivity() {
         // Given
-        String activityType = "MULTIPLE_FAILED_LOGINS";
         String description = "Multiple failed login attempts detected";
         Map<String, Object> details = Map.of(
                 "attemptCount", 5,
                 "timeWindow", "5 minutes");
 
         // When
-        securityEventLogger.logSuspiciousActivity(activityType, description, details);
+        securityEventLogger.logSuspiciousActivity(description, details);
 
         // Then
         // In a real implementation, we would verify the log output and alert triggering
@@ -109,11 +108,9 @@ class SecurityEventLoggerTest {
     void shouldLogConfigurationChange() {
         // Given
         String configType = "SECURITY_POLICY";
-        String oldValue = "old_config";
-        String newValue = "new_config";
 
         // When
-        securityEventLogger.logConfigurationChange(configType, oldValue, newValue);
+        securityEventLogger.logConfigurationChange(configType);
 
         // Then
         // Verify method executes without error
@@ -122,11 +119,10 @@ class SecurityEventLoggerTest {
     @Test
     void shouldHandleNullAuthentication() {
         // Given
-        String activityType = "ANONYMOUS_ACCESS";
         String description = "Anonymous access attempt";
 
         // When
-        securityEventLogger.logSuspiciousActivity(activityType, description, null);
+        securityEventLogger.logSuspiciousActivity(description, null);
 
         // Then
         // Verify method executes without error even with null authentication

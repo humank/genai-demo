@@ -1,8 +1,5 @@
 package solid.humank.genaidemo.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,9 +8,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** 虛擬線程示例類 展示 Java 21 的 Virtual Threads 功能 */
 public class VirtualThreadDemo {
-
     private static final Logger logger = LoggerFactory.getLogger(VirtualThreadDemo.class);
     private static final AtomicInteger counter = new AtomicInteger(0);
 
@@ -146,12 +145,10 @@ public class VirtualThreadDemo {
      */
     public static Thread startVirtualThread(String name, Runnable runnable) {
         // 使用 Java 21 的 Thread.Builder API 創建虛擬線程
-        Thread thread = Thread.ofVirtual()
+        return Thread.ofVirtual()
                 .name(name)
                 .uncaughtExceptionHandler(
                         (t, e) -> logger.error("線程 {} 發生未捕獲異常", t.getName(), e))
                 .start(runnable);
-
-        return thread;
     }
 }

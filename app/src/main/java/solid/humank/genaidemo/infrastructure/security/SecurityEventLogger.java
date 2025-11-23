@@ -28,6 +28,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class SecurityEventLogger {
 
     private static final Logger securityLogger = LoggerFactory.getLogger("SECURITY");
+    private static final String SYSTEM_USER = "system";
+    private static final String SECURITY_EVENT_LOG_PREFIX = "SECURITY_EVENT: {}";
+    private static final String UNKNOWN = "unknown";
+
     private final ObjectMapper objectMapper;
 
     public SecurityEventLogger(ObjectMapper objectMapper) {
@@ -44,7 +48,7 @@ public class SecurityEventLogger {
                 .severity(SecuritySeverity.INFO)
                 .username(event.getAuthentication().getName())
                 .sourceIp(getSourceIp(event.getAuthentication()))
-                .userAgent(getUserAgent(event.getAuthentication()))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
                         "authenticationMethod", event.getAuthentication().getClass().getSimpleName(),
@@ -64,7 +68,7 @@ public class SecurityEventLogger {
                 .severity(SecuritySeverity.WARNING)
                 .username(event.getAuthentication().getName())
                 .sourceIp(getSourceIp(event.getAuthentication()))
-                .userAgent(getUserAgent(event.getAuthentication()))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
                         "failureReason", event.getException().getClass().getSimpleName(),
@@ -82,18 +86,18 @@ public class SecurityEventLogger {
      */
     @EventListener
     public void handleAuthorizationDenied(AuthorizationDeniedEvent<?> event) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = event.getAuthentication().get();
 
         SecurityEvent securityEvent = SecurityEvent.builder()
                 .eventType("AUTHORIZATION_DENIED")
                 .severity(SecuritySeverity.WARNING)
                 .username(auth != null ? auth.getName() : "anonymous")
                 .sourceIp(getSourceIp(auth))
-                .userAgent(getUserAgent(auth))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
-                        "resource", event.getAuthorizationDecision().toString(),
-                        "requiredAuthorities", event.getAuthorizationDecision().toString()))
+                        "resource", event.getSource() != null ? event.getSource().toString() : UNKNOWN,
+                        "authorizationResult", "denied"))
                 .build();
 
         logSecurityEvent(securityEvent);
@@ -102,7 +106,7 @@ public class SecurityEventLogger {
     /**
      * Log suspicious activity
      */
-    public void logSuspiciousActivity(String activityType, String description, Map<String, Object> details) {
+    public void logSuspiciousActivity(String description, Map<String, Object> details) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         SecurityEvent securityEvent = SecurityEvent.builder()
@@ -110,7 +114,7 @@ public class SecurityEventLogger {
                 .severity(SecuritySeverity.HIGH)
                 .username(auth != null ? auth.getName() : "anonymous")
                 .sourceIp(getSourceIp(auth))
-                .userAgent(getUserAgent(auth))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .description(description)
                 .details(details != null ? details : new HashMap<>())
@@ -131,9 +135,9 @@ public class SecurityEventLogger {
         SecurityEvent securityEvent = SecurityEvent.builder()
                 .eventType("DATA_ACCESS")
                 .severity(SecuritySeverity.INFO)
-                .username(auth != null ? auth.getName() : "system")
+                .username(auth != null ? auth.getName() : SYSTEM_USER)
                 .sourceIp(getSourceIp(auth))
-                .userAgent(getUserAgent(auth))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
                         "dataType", dataType,
@@ -153,9 +157,9 @@ public class SecurityEventLogger {
         SecurityEvent securityEvent = SecurityEvent.builder()
                 .eventType("PII_ACCESS")
                 .severity(SecuritySeverity.HIGH)
-                .username(auth != null ? auth.getName() : "system")
+                .username(auth != null ? auth.getName() : SYSTEM_USER)
                 .sourceIp(getSourceIp(auth))
-                .userAgent(getUserAgent(auth))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
                         "piiType", piiType,
@@ -173,15 +177,15 @@ public class SecurityEventLogger {
     /**
      * Log configuration changes
      */
-    public void logConfigurationChange(String configType, String oldValue, String newValue) {
+    public void logConfigurationChange(String configType) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         SecurityEvent securityEvent = SecurityEvent.builder()
                 .eventType("CONFIGURATION_CHANGE")
                 .severity(SecuritySeverity.MEDIUM)
-                .username(auth != null ? auth.getName() : "system")
+                .username(auth != null ? auth.getName() : SYSTEM_USER)
                 .sourceIp(getSourceIp(auth))
-                .userAgent(getUserAgent(auth))
+                .userAgent(getUserAgent())
                 .timestamp(LocalDateTime.now())
                 .details(Map.of(
                         "configType", configType,
@@ -204,12 +208,12 @@ public class SecurityEventLogger {
             String eventJson = objectMapper.writeValueAsString(event);
 
             switch (event.getSeverity()) {
-                case CRITICAL -> securityLogger.error("SECURITY_EVENT: {}", eventJson);
-                case HIGH -> securityLogger.warn("SECURITY_EVENT: {}", eventJson);
-                case MEDIUM -> securityLogger.warn("SECURITY_EVENT: {}", eventJson);
-                case WARNING -> securityLogger.warn("SECURITY_EVENT: {}", eventJson);
-                case INFO -> securityLogger.info("SECURITY_EVENT: {}", eventJson);
-                case LOW -> securityLogger.debug("SECURITY_EVENT: {}", eventJson);
+                case CRITICAL -> securityLogger.error(SECURITY_EVENT_LOG_PREFIX, eventJson);
+                case HIGH -> securityLogger.warn(SECURITY_EVENT_LOG_PREFIX, eventJson);
+                case MEDIUM -> securityLogger.warn(SECURITY_EVENT_LOG_PREFIX, eventJson);
+                case WARNING -> securityLogger.warn(SECURITY_EVENT_LOG_PREFIX, eventJson);
+                case INFO -> securityLogger.info(SECURITY_EVENT_LOG_PREFIX, eventJson);
+                case LOW -> securityLogger.debug(SECURITY_EVENT_LOG_PREFIX, eventJson);
             }
 
         } catch (Exception e) {
@@ -244,15 +248,15 @@ public class SecurityEventLogger {
     }
 
     private String getSourceIp(Authentication authentication) {
-        if (authentication != null && authentication.getDetails() instanceof WebAuthenticationDetails) {
-            return ((WebAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+        if (authentication != null && authentication.getDetails() instanceof WebAuthenticationDetails webAuthDetails) {
+            return webAuthDetails.getRemoteAddress();
         }
-        return "unknown";
+        return UNKNOWN;
     }
 
-    private String getUserAgent(Authentication authentication) {
+    private String getUserAgent() {
         // In a real implementation, this would extract user agent from request
-        return "unknown";
+        return UNKNOWN;
     }
 
     /**

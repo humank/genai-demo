@@ -33,9 +33,7 @@ import solid.humank.genaidemo.infrastructure.common.persistence.AuroraReadWriteC
 @Component
 @Order(1) // 確保在事務切面之前執行
 @ConditionalOnProperty(name = "aurora.read-write-separation.enabled", havingValue = "true", matchIfMissing = false)
-public class ReadOnlyOperationAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(ReadOnlyOperationAspect.class);
+public class ReadOnlyOperationAspect {    private static final Logger logger = LoggerFactory.getLogger(ReadOnlyOperationAspect.class);
 
     /**
      * 處理標記為 @ReadOnlyOperation 的方法

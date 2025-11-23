@@ -16,9 +16,7 @@ import solid.humank.genaidemo.infrastructure.event.handler.AbstractDomainEventHa
  * 需求 6.5: 建立跨聚合根事件通信的業務邏輯執行
  */
 @Component
-public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {
-
-    private static final Logger logger = LoggerFactory.getLogger(CustomerCreatedEventHandler.class);
+public class CustomerCreatedEventHandler extends AbstractDomainEventHandler<CustomerCreatedEvent> {    private static final Logger logger = LoggerFactory.getLogger(CustomerCreatedEventHandler.class);
 
     @Override
     @Transactional

@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
  * Validator for disaster recovery testing
  */
 @Component
-public class DisasterRecoveryValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(DisasterRecoveryValidator.class);
+public class DisasterRecoveryValidator {    private static final Logger logger = LoggerFactory.getLogger(DisasterRecoveryValidator.class);
 
     public boolean validateDrConfiguration() {
         logger.info("Validating DR configuration");

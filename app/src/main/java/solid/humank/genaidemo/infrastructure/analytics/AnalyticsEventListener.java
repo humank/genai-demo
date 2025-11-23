@@ -26,9 +26,7 @@ import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublishe
  * - 9.5: Provide payment success rates, processing times, and failure analysis
  */
 @Component
-public class AnalyticsEventListener {
-
-    private static final Logger logger = LoggerFactory.getLogger(AnalyticsEventListener.class);
+public class AnalyticsEventListener {    private static final Logger logger = LoggerFactory.getLogger(AnalyticsEventListener.class);
 
     private final AnalyticsEventPublisher analyticsPublisher;
 

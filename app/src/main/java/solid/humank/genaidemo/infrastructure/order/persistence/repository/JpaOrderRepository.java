@@ -3,10 +3,12 @@ package solid.humank.genaidemo.infrastructure.order.persistence.repository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import solid.humank.genaidemo.infrastructure.order.persistence.entity.JpaOrderEntity;
 
 /** JPA 訂單儲存庫 用於與資料庫交互的 Spring Data JPA 儲存庫 */
@@ -27,7 +29,8 @@ public interface JpaOrderRepository extends JpaRepository<JpaOrderEntity, String
      * @param id 訂單ID
      * @return 訂單
      */
-    Optional<JpaOrderEntity> findById(String id);
+    @Override
+    Optional<JpaOrderEntity> findById(@org.springframework.lang.NonNull String id);
 
     // ========== 統計查詢方法 ==========
 

@@ -1,7 +1,10 @@
 package solid.humank.genaidemo.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -9,25 +12,27 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 import solid.humank.genaidemo.infrastructure.routing.HealthChecker;
 import solid.humank.genaidemo.infrastructure.routing.RouteSelector;
 import solid.humank.genaidemo.infrastructure.routing.SmartRoutingDataSource;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * MultiRegionDataSourceConfiguration sets up dual-region database connectivity.
- * 
- * This configuration creates separate DataSource instances for Taiwan and Japan regions,
+ *
+ * This configuration creates separate DataSource instances for Taiwan and Japan
+ * regions,
  * then wraps them in a SmartRoutingDataSource for intelligent routing.
- * 
+ *
  * Activation:
  * - Enabled when spring.datasource.multi-region.enabled=true
  * - Requires taiwan and japan endpoint configurations
- * 
+ *
  * Configuration example:
+ *
  * <pre>
  * spring:
  *   datasource:
@@ -46,9 +51,8 @@ import java.util.Map;
 @Configuration
 @ConditionalOnProperty(name = "spring.datasource.multi-region.enabled", havingValue = "true")
 public class MultiRegionDataSourceConfiguration {
-    
     private static final Logger logger = LoggerFactory.getLogger(MultiRegionDataSourceConfiguration.class);
-    
+
     /**
      * Creates the Taiwan region DataSource.
      */
@@ -65,7 +69,7 @@ public class MultiRegionDataSourceConfiguration {
         config.setMaxLifetime(1200000);
         return new HikariDataSource(config);
     }
-    
+
     /**
      * Creates the Japan region DataSource.
      */
@@ -82,7 +86,7 @@ public class MultiRegionDataSourceConfiguration {
         config.setMaxLifetime(1200000);
         return new HikariDataSource(config);
     }
-    
+
     /**
      * Creates the primary SmartRoutingDataSource that intelligently routes
      * between Taiwan and Japan DataSources.
@@ -94,25 +98,26 @@ public class MultiRegionDataSourceConfiguration {
             DataSource japanDataSource,
             RouteSelector routeSelector,
             HealthChecker healthChecker) {
-        
+
         logger.info("Initializing SmartRoutingDataSource for multi-region support");
-        
+
         // Register DataSources with HealthChecker
         healthChecker.registerDataSource("taiwan-db", taiwanDataSource);
         healthChecker.registerDataSource("japan-db", japanDataSource);
-        
+
         // Create routing DataSource
         SmartRoutingDataSource routingDataSource = new SmartRoutingDataSource(routeSelector);
-        
+
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put("taiwan-db", taiwanDataSource);
         targetDataSources.put("japan-db", japanDataSource);
-        
+
         routingDataSource.setTargetDataSources(targetDataSources);
+        // Set Taiwan as default DataSource (Spring API accepts DataSource as Object)
         routingDataSource.setDefaultTargetDataSource(taiwanDataSource);
-        
+
         logger.info("SmartRoutingDataSource initialized with {} regions", targetDataSources.size());
-        
+
         return routingDataSource;
     }
 }

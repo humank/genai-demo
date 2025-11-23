@@ -29,7 +29,6 @@ import solid.humank.genaidemo.infrastructure.event.EventSequenceException;
 /** 全域例外處理器 統一處理各種例外情況，回傳標準化的錯誤回應 */
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
         private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
         /** 處理業務邏輯例外 */
@@ -154,7 +153,8 @@ public class GlobalExceptionHandler {
                                 request.getRequestURI(),
                                 ex.getName());
 
-                String typeName = ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown";
+                Class<?> requiredType = ex.getRequiredType();
+                String typeName = (requiredType != null) ? requiredType.getSimpleName() : "Unknown";
                 StandardErrorResponse.FieldError detail = new StandardErrorResponse.FieldError(
                                 ex.getName(),
                                 String.format(

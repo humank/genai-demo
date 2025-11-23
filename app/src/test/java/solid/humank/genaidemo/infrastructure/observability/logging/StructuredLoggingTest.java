@@ -21,9 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest
 @ActiveProfiles("test")
-class StructuredLoggingTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(StructuredLoggingTest.class);
+class StructuredLoggingTest {    private static final Logger logger = LoggerFactory.getLogger(StructuredLoggingTest.class);
     private LoggingContextManager loggingContextManager;
 
     @BeforeEach

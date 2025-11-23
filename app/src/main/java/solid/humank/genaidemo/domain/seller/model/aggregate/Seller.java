@@ -1,11 +1,7 @@
 package solid.humank.genaidemo.domain.seller.model.aggregate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import solid.humank.genaidemo.domain.common.annotations.AggregateRoot;
 import solid.humank.genaidemo.domain.seller.model.entity.ContactInfo;
@@ -16,11 +12,7 @@ import solid.humank.genaidemo.domain.seller.model.events.SellerProfileUpdatedEve
 import solid.humank.genaidemo.domain.seller.model.events.SellerRatingAddedEvent;
 import solid.humank.genaidemo.domain.seller.model.events.SellerRegisteredEvent;
 import solid.humank.genaidemo.domain.seller.model.events.SellerVerificationApprovedEvent;
-import solid.humank.genaidemo.domain.seller.model.valueobject.ContactInfoId;
-import solid.humank.genaidemo.domain.seller.model.valueobject.SellerId;
-import solid.humank.genaidemo.domain.seller.model.valueobject.SellerProfileId;
-import solid.humank.genaidemo.domain.seller.model.valueobject.SellerRatingId;
-import solid.humank.genaidemo.domain.seller.model.valueobject.SellerVerificationId;
+import solid.humank.genaidemo.domain.seller.model.valueobject.*;
 import solid.humank.genaidemo.domain.shared.valueobject.CustomerId;
 
 /** 賣家聚合根 - 重構後包含豐富的 Entity 結構 */
@@ -39,9 +31,10 @@ public class Seller extends solid.humank.genaidemo.domain.common.aggregate.Aggre
     private List<SellerRating> ratings; // 新 Entity 集合
     private SellerVerification verification; // 新 Entity
 
-    // Private constructor for JPA
-    @SuppressWarnings("unused")
-    private Seller() {
+    /**
+     * JPA required no-arg constructor
+     */
+    protected Seller() {
         this.sellerId = null;
         this.ratings = new ArrayList<>();
     }

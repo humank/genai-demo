@@ -9,15 +9,15 @@ import jakarta.validation.constraints.NotNull;
 @Schema(description = "創建庫存請求資料，用於為新產品建立庫存記錄")
 public class CreateInventoryRequest {
 
-    @Schema(description = "產品唯一識別碼", example = "PROD-001", required = true)
+    @Schema(description = "產品唯一識別碼", example = "PROD-001", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "產品ID不能為空")
     private String productId;
 
-    @Schema(description = "產品名稱", example = "iPhone 15 Pro", required = true)
+    @Schema(description = "產品名稱", example = "iPhone 15 Pro", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "產品名稱不能為空")
     private String productName;
 
-    @Schema(description = "初始庫存數量，必須為非負整數", example = "100", minimum = "0", required = true)
+    @Schema(description = "初始庫存數量，必須為非負整數", example = "100", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "初始庫存數量不能為空")
     @Min(value = 0, message = "初始庫存數量不能小於0")
     private Integer initialQuantity;

@@ -87,9 +87,7 @@ public class MetricsConfiguration {
      */
     // Temporarily disabled due to compilation issues
     // @Bean
-    // public BusinessMetricsCollector businessMetricsCollector(MeterRegistry
     // meterRegistry) {
-    // return new BusinessMetricsCollector(meterRegistry);
     // }
 
     /**
@@ -97,8 +95,6 @@ public class MetricsConfiguration {
      */
     // Temporarily disabled due to compilation issues
     // @Bean
-    // public DomainEventMetricsCollector domainEventMetricsCollector(MeterRegistry
     // meterRegistry) {
-    // return new DomainEventMetricsCollector(meterRegistry);
     // }
 }

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.LoggingEvent;
 
@@ -20,7 +19,6 @@ class PiiMaskingPatternLayoutTest {
 
     private PiiMaskingPatternLayout layout;
     private LoggerContext loggerContext;
-    private Logger logger;
 
     @BeforeEach
     void setUp() {
@@ -30,8 +28,6 @@ class PiiMaskingPatternLayoutTest {
         loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         layout.setContext(loggerContext);
         layout.start();
-
-        logger = loggerContext.getLogger("test");
     }
 
     @Test

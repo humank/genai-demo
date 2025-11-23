@@ -17,6 +17,5 @@ import org.springframework.context.annotation.Profile;
         KafkaAutoConfiguration.class // Completely disable Kafka in development
 })
 public class DevelopmentConfiguration {
-    // This class intentionally left empty
     // The @EnableAutoConfiguration exclusions are sufficient
 }

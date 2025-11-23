@@ -30,9 +30,10 @@ public class PricingRule extends solid.humank.genaidemo.domain.common.aggregate.
     private List<CommissionRate> commissionRates;
     private ProductCategory productCategory;
 
-    // Private constructor for JPA
-    @SuppressWarnings("unused")
-    private PricingRule() {
+    /**
+     * JPA required no-arg constructor
+     */
+    protected PricingRule() {
         this.commissionRates = new ArrayList<>();
     }
 

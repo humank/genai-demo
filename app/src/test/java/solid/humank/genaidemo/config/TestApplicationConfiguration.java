@@ -21,5 +21,4 @@ import org.springframework.context.annotation.Profile;
     TestDatabaseValidatorConfiguration.class
 })
 public class TestApplicationConfiguration {
-    // This class serves as an aggregator for all test configurations
 }

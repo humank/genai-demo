@@ -29,7 +29,7 @@ public class PaymentRequest {
     @Schema(
             description = "關聯的訂單唯一識別碼，必須是有效的UUID格式",
             example = "123e4567-e89b-12d3-a456-426614174000",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             pattern =
                     "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
     @NotBlank(message = "訂單ID不能為空")
@@ -43,7 +43,7 @@ public class PaymentRequest {
             description = "支付金額，使用BigDecimal確保精度，最小值為0.01",
             example = "1299.99",
             minimum = "0.01",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             type = "number",
             format = "decimal")
     @NotNull(message = "支付金額不能為空")

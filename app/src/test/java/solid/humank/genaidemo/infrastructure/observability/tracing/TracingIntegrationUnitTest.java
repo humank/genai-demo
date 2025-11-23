@@ -26,8 +26,7 @@ import io.opentelemetry.api.trace.Tracer;
 @DisplayName("Tracing Integration Unit Tests")
 class TracingIntegrationUnitTest {
 
-    @Mock
-    private OpenTelemetry openTelemetry;
+    @Mock    private OpenTelemetry openTelemetry;
 
     @Mock
     private Tracer tracer;
@@ -47,7 +46,6 @@ class TracingIntegrationUnitTest {
         // When: Getting tracer
         Tracer result = openTelemetry.getTracer("genai-demo", "1.0.0");
 
-        // Then: Should return tracer instance
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(tracer);
     }
@@ -63,7 +61,6 @@ class TracingIntegrationUnitTest {
         SpanBuilder builder = tracer.spanBuilder("test-span");
         Span result = builder.startSpan();
 
-        // Then: Should return span instance
         assertThat(builder).isNotNull();
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(span);

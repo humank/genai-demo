@@ -7,9 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** 界限上下文映射 用於定義和管理不同界限上下文之間的關係 */
-public class BoundedContextMap {
-    
-    private static final Logger logger = LoggerFactory.getLogger(BoundedContextMap.class);
+public class BoundedContextMap {    private static final Logger logger = LoggerFactory.getLogger(BoundedContextMap.class);
     
     private final Map<String, Map<String, ContextRelation>> contextRelations;
 

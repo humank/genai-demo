@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Profile;
  * Configuration for comprehensive health checks including database
  * connectivity,
  * external service availability, and system resource monitoring.
- * 
+ *
  * Implements requirement 8.1: Configure liveness and readiness probes
  * Implements requirement 8.2: Verify database connectivity and external service
  * availability
@@ -27,6 +27,12 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("!test") // Exclude this configuration when test profile is active
 public class HealthCheckConfig {
+
+    // String constants to avoid duplication
+    private static final String TIMESTAMP_KEY = "timestamp";
+    private static final String USAGE_RATIO_KEY = "usageRatio";
+    private static final String THRESHOLD_KEY = "threshold";
+    private static final String PERCENTAGE_FORMAT = "%.2f%%";
 
     /**
      * Database connectivity health indicator
@@ -76,7 +82,7 @@ public class HealthCheckConfig {
             } catch (Exception e) {
                 return Health.down()
                         .withDetail("error", e.getMessage())
-                        .withDetail("timestamp", Instant.now())
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             }
         }
@@ -95,14 +101,14 @@ public class HealthCheckConfig {
                             .withDetail("database", "Available")
                             .withDetail("responseTime", responseTime.toMillis() + "ms")
                             .withDetail("url", connection.getMetaData().getURL())
-                            .withDetail("timestamp", Instant.now())
+                            .withDetail(TIMESTAMP_KEY, Instant.now())
                             .build();
                 } else {
                     return Health.down()
                             .withDetail("database", "Slow response or timeout")
                             .withDetail("responseTime", responseTime.toMillis() + "ms")
                             .withDetail("timeout", TIMEOUT.toMillis() + "ms")
-                            .withDetail("timestamp", Instant.now())
+                            .withDetail(TIMESTAMP_KEY, Instant.now())
                             .build();
                 }
             }
@@ -133,12 +139,12 @@ public class HealthCheckConfig {
                         .withDetail("status", "Ready to serve traffic")
                         .withDetail("uptime", uptime.toSeconds() + "s")
                         .withDetail("startupTime", startupTime)
-                        .withDetail("timestamp", Instant.now())
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             } else {
                 return Health.down()
                         .withDetail("status", "Application not ready")
-                        .withDetail("timestamp", Instant.now())
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             }
         }
@@ -163,7 +169,7 @@ public class HealthCheckConfig {
             } catch (Exception e) {
                 return Health.down()
                         .withDetail("error", e.getMessage())
-                        .withDetail("timestamp", Instant.now())
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             }
         }
@@ -191,30 +197,30 @@ public class HealthCheckConfig {
                         .withDetail("memory", Map.of(
                                 "used", formatBytes(usedMemory),
                                 "max", formatBytes(maxMemory),
-                                "usageRatio", String.format("%.2f%%", memoryUsageRatio * 100),
-                                "threshold", String.format("%.2f%%", MEMORY_THRESHOLD * 100)))
+                                USAGE_RATIO_KEY, String.format(PERCENTAGE_FORMAT, memoryUsageRatio * 100),
+                                THRESHOLD_KEY, String.format(PERCENTAGE_FORMAT, MEMORY_THRESHOLD * 100)))
                         .withDetail("disk", Map.of(
                                 "used", formatBytes(usedSpace),
                                 "total", formatBytes(totalSpace),
                                 "free", formatBytes(freeSpace),
-                                "usageRatio", String.format("%.2f%%", diskUsageRatio * 100),
-                                "threshold", String.format("%.2f%%", DISK_THRESHOLD * 100)))
-                        .withDetail("timestamp", Instant.now())
+                                USAGE_RATIO_KEY, String.format(PERCENTAGE_FORMAT, diskUsageRatio * 100),
+                                THRESHOLD_KEY, String.format(PERCENTAGE_FORMAT, DISK_THRESHOLD * 100)))
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             } else {
                 return Health.up()
                         .withDetail("memory", Map.of(
                                 "used", formatBytes(usedMemory),
                                 "max", formatBytes(maxMemory),
-                                "usageRatio", String.format("%.2f%%", memoryUsageRatio * 100),
-                                "threshold", String.format("%.2f%%", MEMORY_THRESHOLD * 100)))
+                                USAGE_RATIO_KEY, String.format(PERCENTAGE_FORMAT, memoryUsageRatio * 100),
+                                THRESHOLD_KEY, String.format(PERCENTAGE_FORMAT, MEMORY_THRESHOLD * 100)))
                         .withDetail("disk", Map.of(
                                 "used", formatBytes(usedSpace),
                                 "total", formatBytes(totalSpace),
                                 "free", formatBytes(freeSpace),
-                                "usageRatio", String.format("%.2f%%", diskUsageRatio * 100),
-                                "threshold", String.format("%.2f%%", DISK_THRESHOLD * 100)))
-                        .withDetail("timestamp", Instant.now())
+                                USAGE_RATIO_KEY, String.format(PERCENTAGE_FORMAT, diskUsageRatio * 100),
+                                THRESHOLD_KEY, String.format(PERCENTAGE_FORMAT, DISK_THRESHOLD * 100)))
+                        .withDetail(TIMESTAMP_KEY, Instant.now())
                         .build();
             }
         }

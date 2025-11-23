@@ -9,8 +9,6 @@ public class RepositoryConfig {
     /** 配置客戶儲存庫使用 JPA 適配器 使用 @Primary 確保優先使用 JPA 實現 */
     // @Bean
     // @Primary
-    // public CustomerRepository customerRepository(JpaOrderRepository
     // orderRepository) {
-    // return new CustomerRepositoryJpaAdapter(orderRepository);
     // }
 }

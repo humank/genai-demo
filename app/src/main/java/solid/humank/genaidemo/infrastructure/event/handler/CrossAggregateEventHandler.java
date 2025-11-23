@@ -14,9 +14,7 @@ import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublishe
 
 /** 跨聚合根事件處理器 處理需要跨聚合根協調的業務邏輯 */
 @Component
-public class CrossAggregateEventHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(CrossAggregateEventHandler.class);
+public class CrossAggregateEventHandler {    private static final Logger logger = LoggerFactory.getLogger(CrossAggregateEventHandler.class);
 
     /** 處理客戶創建事件 在事務提交後發送歡迎通知 */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)

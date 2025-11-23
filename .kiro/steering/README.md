@@ -24,6 +24,7 @@ date +%Y-%m-%d
 ### I need to
 
 - **Write/Update documentation**: **FIRST** read [documentation-date-requirements.md](documentation-date-requirements.md) ← **MANDATORY**
+- **Setup IDE**: Configure [IDE Configuration Standards](ide-configuration-standards.md)
 - **Write code**: Start with [Development Standards](development-standards.md)
 - **Review code**: Use [Code Review Standards](code-review-standards.md)
 - **Create diagrams**: See [Diagram Standards](diagram-standards.md) and [Diagram Generation Standards](diagram-generation-standards.md)
@@ -40,6 +41,7 @@ Essential standards for daily development work.
 | Document | Purpose | When to Use |
 |----------|---------|-------------|
 | **[documentation-date-requirements.md](documentation-date-requirements.md)** | **Documentation date requirements** | **BEFORE any documentation work** |
+| [IDE Configuration Standards](ide-configuration-standards.md) | Kiro IDE setup and auto-checks | Initial setup, troubleshooting IDE |
 | [Development Standards](development-standards.md) | Primary development guide | Daily coding, testing, architecture |
 | [Code Review Standards](code-review-standards.md) | Review process and checklist | Before and during code reviews |
 
@@ -66,6 +68,12 @@ Detailed technical references for specific topics.
 | [Test Performance Standards](test-performance-standards.md) | Test performance deep dive | Troubleshooting test performance |
 
 ## 🎯 Common Scenarios
+
+### Setting Up Development Environment
+
+1. Install extensions from [IDE Configuration Standards](ide-configuration-standards.md)
+2. Configure automatic checks and fixes
+3. Verify setup with sample code
 
 ### Starting a New Feature
 
@@ -107,6 +115,7 @@ graph TD
 
 ## 🔄 Recent Changes
 
+- **2025-11-22**: Added IDE Configuration Standards for Kiro IDE
 - **2025-01-XX**: Consolidated language and documentation standards
 - **2025-01-XX**: Removed duplicate test performance content
 - **2025-01-XX**: Merged BDD/TDD principles into development standards
@@ -123,6 +132,6 @@ When updating steering rules:
 
 ---
 
-**Total Documents**: 17  
-**Last Updated**: 2025-11-08  
+**Total Documents**: 17
+**Last Updated**: 2025-11-08
 **Owner**: Development Team

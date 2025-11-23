@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 @Schema(description = "釋放庫存請求資料，用於釋放之前預留的庫存，使其重新可用於銷售")
 public class ReleaseInventoryRequest {
 
-    @Schema(description = "預留記錄唯一識別碼，用於識別要釋放的庫存預留", example = "RES-001", required = true)
+    @Schema(description = "預留記錄唯一識別碼，用於識別要釋放的庫存預留", example = "RES-001", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "預留ID不能為空")
     private String reservationId;
 

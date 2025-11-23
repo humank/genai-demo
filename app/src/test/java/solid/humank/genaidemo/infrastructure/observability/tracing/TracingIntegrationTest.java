@@ -38,8 +38,7 @@ import solid.humank.genaidemo.config.SimplifiedTracingConfiguration;
 @DisplayName("追蹤核心集成測試")
 class TracingIntegrationTest {
 
-    @Autowired
-    private OpenTelemetry openTelemetry;
+    @Autowired    private OpenTelemetry openTelemetry;
 
     @Autowired
     private Tracer tracer;

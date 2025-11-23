@@ -22,9 +22,7 @@ import java.time.Duration;
  * @see <a href="https://resilience4j.readme.io/">Resilience4j Documentation</a>
  */
 @Configuration
-public class ResilienceConfiguration {
-    
-    private static final Logger logger = LoggerFactory.getLogger(ResilienceConfiguration.class);
+public class ResilienceConfiguration {    private static final Logger logger = LoggerFactory.getLogger(ResilienceConfiguration.class);
     
     /**
      * Circuit Breaker Registry with custom configurations

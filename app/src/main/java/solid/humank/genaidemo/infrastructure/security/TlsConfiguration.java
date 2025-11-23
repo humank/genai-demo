@@ -29,8 +29,6 @@ public class TlsConfiguration {
     @Bean
     @Profile("production")
     public RestTemplate secureRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-
         // In production, the underlying HTTP client will use system TLS settings
         // Additional TLS configuration can be added through JVM system properties:
         // -Djavax.net.ssl.keyStore=path/to/keystore
@@ -39,7 +37,7 @@ public class TlsConfiguration {
         // -Djavax.net.ssl.trustStorePassword=password
         // -Dhttps.protocols=TLSv1.3
 
-        return restTemplate;
+        return new RestTemplate();
     }
 
     /**

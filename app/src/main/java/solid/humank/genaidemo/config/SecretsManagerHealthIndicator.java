@@ -2,8 +2,6 @@ package solid.humank.genaidemo.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-// import org.springframework.boot.actuator.health.Health;
-// import org.springframework.boot.actuator.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +17,7 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty(name = "aws.secretsmanager.enabled", havingValue = "true")
 @org.springframework.context.annotation.Profile({"staging", "production"})
-public class SecretsManagerHealthIndicator /* implements HealthIndicator */ {
-
-    private static final Logger logger = LoggerFactory.getLogger(SecretsManagerHealthIndicator.class);
+public class SecretsManagerHealthIndicator /* implements HealthIndicator */ {    private static final Logger logger = LoggerFactory.getLogger(SecretsManagerHealthIndicator.class);
 
     private final SecretsManagerService secretsManagerService;
 
@@ -92,7 +88,6 @@ public class SecretsManagerHealthIndicator /* implements HealthIndicator */ {
     private int getConfiguredSecretsCount() {
         try {
             // This would need to be implemented in SecretsManagerService
-            // For now, return a default count based on known secrets
             return 3; // database, api-keys, application
         } catch (Exception e) {
             logger.debug("Failed to get configured secrets count: {}", e.getMessage());

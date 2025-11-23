@@ -134,7 +134,7 @@ public class DatabaseConfigurationManager {
 
         } catch (DatabaseConfigurationException e) {
             log.error("Database configuration validation failed: {}", e.getMessage(), e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         } catch (Exception e) {
             log.error("Unexpected error during database configuration validation", e);
             throw new DatabaseConfigurationException("Database configuration validation failed", e);

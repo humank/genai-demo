@@ -16,7 +16,7 @@ public class UpdateCommissionRateRequest {
     @Schema(
             description = "一般佣金費率，以百分比表示 (0-100)，適用於日常銷售",
             example = "5",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             minimum = "0",
             maximum = "100",
             format = "percentage")
@@ -25,7 +25,7 @@ public class UpdateCommissionRateRequest {
     @Schema(
             description = "活動佣金費率，以百分比表示 (0-100)，適用於特殊促銷活動期間",
             example = "8",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             minimum = "0",
             maximum = "100",
             format = "percentage")

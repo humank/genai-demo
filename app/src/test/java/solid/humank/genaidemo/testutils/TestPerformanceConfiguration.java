@@ -17,23 +17,21 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 /**
  * Test Performance Configuration for ensuring proper test performance
  * monitoring.
- * 
+ *
  * This configuration provides:
  * - Performance monitoring setup
  * - Resource cleanup between tests
  * - Test execution isolation
  * - Performance metrics collection
- * 
+ *
  * This is distinct from the TestIsolationConfiguration in the isolation package
  * which focuses on general test isolation mechanisms.
- * 
+ *
  * Requirements: 5.3, 5.5, 7.5
  */
 @TestConfiguration
 @Profile("test")
 public class TestPerformanceConfiguration {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestPerformanceConfiguration.class);
 
     @Bean
     public TestPerformanceListener testPerformanceListener() {
@@ -45,7 +43,6 @@ public class TestPerformanceConfiguration {
      * isolation between tests.
      */
     public static class TestPerformanceListener extends AbstractTestExecutionListener {
-
         private static final Logger logger = LoggerFactory.getLogger(TestPerformanceListener.class);
 
         @Override
@@ -58,7 +55,7 @@ public class TestPerformanceConfiguration {
             clearTestData(testContext);
 
             // Reset application state
-            resetApplicationState(testContext);
+            resetApplicationState();
 
             // Clear caches
             clearCaches(testContext);
@@ -139,7 +136,7 @@ public class TestPerformanceConfiguration {
         /**
          * Reset application state.
          */
-        private void resetApplicationState(TestContext testContext) {
+        private void resetApplicationState() {
             // Clear any application-level state
             // This could include clearing static variables, resetting singletons, etc.
 
@@ -188,7 +185,8 @@ public class TestPerformanceConfiguration {
             try {
                 // This will reset all mocks created in the current test
                 org.mockito.Mockito.reset();
-                logger.debug("Mockito mocks reset completed");
+                logger.debug("Mockito mocks reset completed for: {}",
+                        testContext.getTestClass().getSimpleName());
             } catch (Exception e) {
                 logger.debug("Mockito not available or reset failed: {}", e.getMessage());
             }
@@ -203,7 +201,8 @@ public class TestPerformanceConfiguration {
             // Clear system properties set during test
             System.getProperties().entrySet().removeIf(entry -> entry.getKey().toString().startsWith("test.temp."));
 
-            logger.debug("Temporary resources cleared");
+            logger.debug("Temporary resources cleared for: {}",
+                    testContext.getTestClass().getSimpleName());
         }
 
         /**

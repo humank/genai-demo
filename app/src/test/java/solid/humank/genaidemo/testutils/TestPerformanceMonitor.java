@@ -13,32 +13,26 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.extension.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Test Performance Monitor for tracking test performance and resource usage.
- * 
+ *
  * This monitor provides:
  * - Test execution time monitoring
  * - Memory usage tracking during tests
  * - Detailed test execution reports
  * - Performance regression detection
- * 
+ *
  * This is distinct from the TestExecutionMonitor in the isolation package
  * which focuses on test isolation monitoring.
- * 
+ *
  * Requirements: 5.1, 5.4
  */
 public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallback,
         BeforeEachCallback, AfterEachCallback, TestWatcher {
-
     private static final Logger logger = LoggerFactory.getLogger(TestPerformanceMonitor.class);
 
     private final MemoryMXBean memoryBean;
@@ -259,7 +253,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
                         .filter(test -> test.getClassName().equals(classInfo.getClassName()))
                         .forEach(test -> {
                             try {
-                                writer.write(String.format("- %s: %s (%d ms, %d MB)\n",
+                                writer.write(String.format("- %s: %s (%d ms, %d MB)%n",
                                         test.getMethodName(),
                                         test.getStatus(),
                                         test.getExecutionTimeMs(),
@@ -344,7 +338,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
                         .limit(5)
                         .forEach(test -> {
                             try {
-                                writer.write(String.format("- %s: %d ms\n",
+                                writer.write(String.format("- %s: %d ms%n",
                                         test.getTestName(), test.getExecutionTimeMs()));
                             } catch (IOException e) {
                                 logger.error("Failed to write slow test to summary", e);
@@ -403,14 +397,17 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
             return methodName;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public Instant getStartTime() {
             return startTime;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public MemoryUsage getStartMemoryUsage() {
             return startMemoryUsage;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public Instant getEndTime() {
             return endTime;
         }
@@ -419,6 +416,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
             this.endTime = endTime;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public MemoryUsage getEndMemoryUsage() {
             return endMemoryUsage;
         }
@@ -473,6 +471,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
             return startTime;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public MemoryUsage getStartMemoryUsage() {
             return startMemoryUsage;
         }
@@ -485,6 +484,7 @@ public class TestPerformanceMonitor implements BeforeAllCallback, AfterAllCallba
             this.endTime = endTime;
         }
 
+        @SuppressWarnings("unused") // Used by external reporting tools
         public MemoryUsage getEndMemoryUsage() {
             return endMemoryUsage;
         }

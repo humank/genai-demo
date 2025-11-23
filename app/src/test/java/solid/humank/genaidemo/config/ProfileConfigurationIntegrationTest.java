@@ -41,8 +41,7 @@ class ProfileConfigurationIntegrationTest {
     @Autowired
     private ProfileConfiguration profileConfiguration;
 
-    @Autowired
-    private ProfileConfigurationProperties profileProperties;
+    @Autowired    private ProfileConfigurationProperties profileProperties;
 
     @Autowired
     private ProfileValidationConfiguration profileValidation;

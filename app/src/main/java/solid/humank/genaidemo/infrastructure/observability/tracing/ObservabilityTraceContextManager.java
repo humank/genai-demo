@@ -20,9 +20,7 @@ import org.springframework.stereotype.Component;
  * 需求: 1.1, 1.2, 2.1
  */
 @Component
-public class ObservabilityTraceContextManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(ObservabilityTraceContextManager.class);
+public class ObservabilityTraceContextManager {    private static final Logger logger = LoggerFactory.getLogger(ObservabilityTraceContextManager.class);
 
     // MDC 鍵常量
     private static final String CORRELATION_ID_KEY = "correlationId";

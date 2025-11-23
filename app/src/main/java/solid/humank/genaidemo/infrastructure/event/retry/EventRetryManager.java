@@ -22,9 +22,7 @@ import solid.humank.genaidemo.infrastructure.event.EventProcessingException;
  * 需求 9.1: 實現事件處理失敗的錯誤記錄和重試機制
  */
 @Component
-public class EventRetryManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(EventRetryManager.class);
+public class EventRetryManager {    private static final Logger logger = LoggerFactory.getLogger(EventRetryManager.class);
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
     private final ConcurrentHashMap<String, RetryContext> retryContexts = new ConcurrentHashMap<>();
@@ -84,9 +82,7 @@ public class EventRetryManager {
                 context.getEvent().getEventType(), context.getHandlerName(), delay.toMillis(),
                 context.getAttemptCount(), context.getRetryPolicy().getMaxAttempts());
 
-        scheduler.schedule(() -> {
-            executeWithRetryInternal(context, eventHandler);
-        }, delay.toMillis(), TimeUnit.MILLISECONDS);
+        scheduler.schedule(() -> executeWithRetryInternal(context, eventHandler), delay.toMillis(), TimeUnit.MILLISECONDS);
     }
 
     private void handleFinalFailure(RetryContext context, Exception e) {

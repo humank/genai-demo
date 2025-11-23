@@ -41,9 +41,7 @@ import solid.humank.genaidemo.infrastructure.observability.tracing.Observability
 @RequestMapping("/api/analytics")
 @Validated
 @Tag(name = "Analytics", description = "前端可觀測性分析事件 API")
-public class AnalyticsController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AnalyticsController.class);
+public class AnalyticsController {    private static final Logger logger = LoggerFactory.getLogger(AnalyticsController.class);
 
     private final ObservabilityEventService observabilityEventService;
     private final ObservabilityTraceContextManager traceContextManager;

@@ -15,13 +15,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import solid.humank.genaidemo.config.TestProfileConfiguration;
+import solid.humank.genaidemo.config.TestEnvironmentConfiguration;
 import solid.humank.genaidemo.config.UnifiedTestHttpClientConfiguration;
 import solid.humank.genaidemo.testutils.TestPerformanceConfiguration;
 
 /**
  * Enhanced Base class for integration tests
- * 
+ *
  * Provides common test setup, HTTP client configuration, and utility methods
  * for integration testing with proper resource management and cleanup.
  */
@@ -29,7 +29,7 @@ import solid.humank.genaidemo.testutils.TestPerformanceConfiguration;
 @ActiveProfiles("test")
 @Import({
         UnifiedTestHttpClientConfiguration.class,
-        TestProfileConfiguration.class,
+        TestEnvironmentConfiguration.class,
         TestPerformanceConfiguration.class
 })
 public abstract class BaseIntegrationTest {
@@ -40,10 +40,10 @@ public abstract class BaseIntegrationTest {
     protected TestRestTemplate restTemplate;
 
     @Autowired
-    protected TestProfileConfiguration.TestEnvironmentValidator environmentValidator;
+    protected TestEnvironmentConfiguration.TestEnvironmentValidator environmentValidator;
 
     @Autowired
-    protected TestProfileConfiguration.TestResourceManager resourceManager;
+    protected TestEnvironmentConfiguration.TestResourceManager resourceManager;
 
     @LocalServerPort
     protected int port;

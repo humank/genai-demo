@@ -20,9 +20,7 @@ import java.util.Optional;
  * optimal performance and automatic failover capabilities.
  */
 @Component
-public class RouteSelector {
-    
-    private static final Logger logger = LoggerFactory.getLogger(RouteSelector.class);
+public class RouteSelector {    private static final Logger logger = LoggerFactory.getLogger(RouteSelector.class);
     
     private final RegionDetector regionDetector;
     private final HealthChecker healthChecker;
@@ -61,7 +59,6 @@ public class RouteSelector {
             return fallbackEndpoint;
         }
         
-        // Strategy 3: Last resort - return first endpoint even if unhealthy
         String lastResort = endpoints.get(0);
         logger.error("No healthy endpoints available, using last resort: {}", lastResort);
         return Optional.of(lastResort);
@@ -95,9 +92,7 @@ public class RouteSelector {
     public String selectKafkaEndpoint() {
         List<String> kafkaEndpoints = List.of("taiwan-kafka", "japan-kafka");
         return selectEndpoint(kafkaEndpoints).orElse("taiwan-kafka");
-    }
-    
-    private Optional<String> selectLocalHealthyEndpoint(List<String> endpoints, String currentRegion) {
+    }    private Optional<String> selectLocalHealthyEndpoint(List<String> endpoints, String currentRegion) {
         return endpoints.stream()
             .filter(endpoint -> endpoint.contains(getRegionShortName(currentRegion)))
             .filter(healthChecker::isHealthy)

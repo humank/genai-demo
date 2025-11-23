@@ -17,9 +17,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEvent;
  * 需求 9.3: 實現事件處理超時的檢測和處理機制
  */
 @Component
-public class EventProcessingMonitor {
-
-    private static final Logger logger = LoggerFactory.getLogger(EventProcessingMonitor.class);
+public class EventProcessingMonitor {    private static final Logger logger = LoggerFactory.getLogger(EventProcessingMonitor.class);
 
     // 事件處理統計
     private final AtomicLong totalEventsProcessed = new AtomicLong(0);

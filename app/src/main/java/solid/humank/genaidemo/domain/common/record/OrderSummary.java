@@ -128,15 +128,13 @@ public record OrderSummary(
 
         // 使用 Java 21 的 Stream API 增強功能
         summaries.forEach(
-                summary -> {
-                    builder.append("- 訂單 ")
+                summary -> builder.append("- 訂單 ")
                             .append(summary.orderId())
                             .append(": ")
                             .append(summary.status().getDescription())
                             .append(", ")
                             .append(summary.totalAmount())
-                            .append("\n");
-                });
+                            .append("\n"));
 
         return builder.toString();
     }

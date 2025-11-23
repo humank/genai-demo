@@ -6,19 +6,19 @@ import solid.humank.genaidemo.application.inventory.dto.ReservationResult;
 /** 庫存預留響應對象 */
 @Schema(description = "庫存預留操作回應資料，包含預留結果和相關資訊")
 public class ReservationResponse {
-    @Schema(description = "產品唯一識別碼", example = "PROD-001", required = true)
+    @Schema(description = "產品唯一識別碼", example = "PROD-001", requiredMode = Schema.RequiredMode.REQUIRED)
     private String productId;
 
-    @Schema(description = "預留數量", example = "5", minimum = "1", required = true)
+    @Schema(description = "預留數量", example = "5", minimum = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private int quantity;
 
-    @Schema(description = "預留操作是否成功", example = "true", required = true)
+    @Schema(description = "預留操作是否成功", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean success;
 
     @Schema(description = "預留記錄唯一識別碼，成功時返回", example = "RES-001")
     private String reservationId;
 
-    @Schema(description = "操作結果訊息，包含成功或失敗的詳細說明", example = "庫存預留成功", required = true)
+    @Schema(description = "操作結果訊息，包含成功或失敗的詳細說明", example = "庫存預留成功", requiredMode = Schema.RequiredMode.REQUIRED)
     private String message;
 
     // 默認構造函數

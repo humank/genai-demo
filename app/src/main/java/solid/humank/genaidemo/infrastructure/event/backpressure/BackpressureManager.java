@@ -14,9 +14,7 @@ import org.springframework.stereotype.Component;
  * 需求 9.4: 建立系統負載過高時的背壓機制
  */
 @Component
-public class BackpressureManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(BackpressureManager.class);
+public class BackpressureManager {    private static final Logger logger = LoggerFactory.getLogger(BackpressureManager.class);
 
     // 配置參數
     private final int maxConcurrentEvents;

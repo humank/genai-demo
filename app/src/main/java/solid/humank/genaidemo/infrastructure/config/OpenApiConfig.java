@@ -28,9 +28,6 @@ public class OpenApiConfig {
         @Value("${server.port:8080}")
         private String serverPort;
 
-        @Value("${spring.application.name:genai-demo}")
-        private String applicationName;
-
         public OpenApiConfig(Environment environment) {
                 this.environment = environment;
         }

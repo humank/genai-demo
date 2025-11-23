@@ -27,9 +27,7 @@ import solid.humank.genaidemo.domain.observability.repository.AnalyticsDataRepos
  */
 @Service
 @ConditionalOnProperty(name = "genai-demo.observability.analytics.storage", havingValue = "database", matchIfMissing = false)
-public class DataRetentionService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DataRetentionService.class);
+public class DataRetentionService {    private static final Logger logger = LoggerFactory.getLogger(DataRetentionService.class);
 
     private final AnalyticsDataRepository analyticsDataRepository;
 
@@ -60,7 +58,7 @@ public class DataRetentionService {
 
         } catch (Exception e) {
             logger.error("Error during manual data retention cleanup", e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -80,7 +78,7 @@ public class DataRetentionService {
 
         } catch (Exception e) {
             logger.error("Error during manual data cleanup", e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -94,7 +92,7 @@ public class DataRetentionService {
             return analyticsDataRepository.getDataRetentionStats();
         } catch (Exception e) {
             logger.error("Error getting data retention stats", e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -121,7 +119,7 @@ public class DataRetentionService {
 
         } catch (Exception e) {
             logger.error("Error setting data retention policy to {} days", retentionDays, e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -157,7 +155,7 @@ public class DataRetentionService {
 
         } catch (Exception e) {
             logger.error("Error checking storage health", e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 
@@ -188,7 +186,7 @@ public class DataRetentionService {
 
         } catch (Exception e) {
             logger.error("Error predicting storage usage", e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         }
     }
 

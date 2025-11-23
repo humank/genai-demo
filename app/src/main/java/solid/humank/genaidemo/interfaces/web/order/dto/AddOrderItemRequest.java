@@ -24,7 +24,7 @@ public record AddOrderItemRequest(
         @Schema(
                         description = "目標訂單ID，指定要添加商品項目的訂單",
                         example = "order-123",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minLength = 1,
                         maxLength = 50)
                 @NotBlank(message = "訂單ID不能為空")
@@ -33,7 +33,7 @@ public record AddOrderItemRequest(
         @Schema(
                         description = "商品ID，要添加的商品唯一識別碼",
                         example = "product-456",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minLength = 1,
                         maxLength = 50)
                 @NotBlank(message = "商品ID不能為空")
@@ -42,7 +42,7 @@ public record AddOrderItemRequest(
         @Schema(
                         description = "商品名稱，用於顯示和確認",
                         example = "iPhone 15 Pro",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minLength = 1,
                         maxLength = 100)
                 @NotBlank(message = "商品名稱不能為空")
@@ -51,13 +51,13 @@ public record AddOrderItemRequest(
         @Schema(
                         description = "購買數量，必須為正整數",
                         example = "2",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minimum = "1",
                         maximum = "999")
                 @NotNull(message = "數量不能為空")
                 @Min(value = 1, message = "數量必須大於0")
                 int quantity,
-        @Schema(description = "商品單價", example = "500.00", required = true)
+        @Schema(description = "商品單價", example = "500.00", requiredMode = Schema.RequiredMode.REQUIRED)
                 @NotNull(message = "單價不能為空")
                 BigDecimal price) {
     public String getOrderId() {

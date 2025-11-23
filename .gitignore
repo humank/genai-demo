@@ -3,8 +3,14 @@
 
 # Log file
 *.log
+*.log.*
 
+# Logs directory (but keep structure)
 logs/
+!logs/.gitkeep
+!logs/mcp/.gitkeep
+!logs/app/.gitkeep
+!logs/scripts/.gitkeep
 
 # BlueJ files
 *.ctxt
@@ -164,3 +170,8 @@ excalidraw.log
 # Package lock files (keep only one version)
 package-lock.json
 !infrastructure/package-lock.json
+
+# E2E test reports and outputs
+e2e-tests/reports/
+e2e-tests/performance/results/
+e2e-tests/.pytest_cache/

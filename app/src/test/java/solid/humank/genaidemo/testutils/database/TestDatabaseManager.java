@@ -231,7 +231,6 @@ public class TestDatabaseManager implements TestResource {
             cleanupDatabase();
             isCleanedUp = true;
             // Don't remove ThreadLocal immediately to allow for proper cleanup verification
-            // INSTANCE.remove(); // This will be removed when a new instance is created
         }
     }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Profile Activation Validator
- * 
+ *
  * Validates Spring profile activation and detects conflicts between profiles.
  * This validator ensures that incompatible profiles are not activated
  * simultaneously
@@ -21,22 +21,27 @@ public class ProfileActivationValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(ProfileActivationValidator.class);
 
+    // Profile name constants
+    private static final String PROFILE_DEVELOPMENT = "development";
+    private static final String PROFILE_PRODUCTION = "production";
+    private static final String PROFILE_OPENAPI = "openapi";
+
     private final Environment environment;
 
     // Valid profiles that can be activated
     private static final Set<String> VALID_PROFILES = Set.of(
-            "test", "dev", "development", "prod", "production",
-            "openapi", "default", "k8s", "msk");
+            "test", "dev", PROFILE_DEVELOPMENT, "prod", PROFILE_PRODUCTION,
+            PROFILE_OPENAPI, "default", "k8s", "msk");
 
     // Profile combinations that are explicitly allowed
     private static final Set<Set<String>> ALLOWED_COMBINATIONS = Set.of(
-            Set.of("test", "openapi"), // Test with OpenAPI is allowed
-            Set.of("dev", "openapi"), // Development with OpenAPI is allowed
-            Set.of("development", "openapi"), // Development with OpenAPI is allowed
+            Set.of("test", PROFILE_OPENAPI), // Test with OpenAPI is allowed
+            Set.of("dev", PROFILE_OPENAPI), // Development with OpenAPI is allowed
+            Set.of(PROFILE_DEVELOPMENT, PROFILE_OPENAPI), // Development with OpenAPI is allowed
             Set.of("prod", "k8s"), // Production with Kubernetes is allowed
-            Set.of("production", "k8s"), // Production with Kubernetes is allowed
+            Set.of(PROFILE_PRODUCTION, "k8s"), // Production with Kubernetes is allowed
             Set.of("prod", "msk"), // Production with MSK is allowed
-            Set.of("production", "msk") // Production with MSK is allowed
+            Set.of(PROFILE_PRODUCTION, "msk") // Production with MSK is allowed
     );
 
     public ProfileActivationValidator(Environment environment) {
@@ -45,7 +50,7 @@ public class ProfileActivationValidator {
 
     /**
      * Validate profile activation for conflicts and security issues
-     * 
+     *
      * @param activeProfiles Array of active profile names
      * @throws ProfileValidationException if validation fails
      */

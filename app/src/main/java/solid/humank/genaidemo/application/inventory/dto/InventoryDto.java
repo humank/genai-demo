@@ -8,38 +8,38 @@ import solid.humank.genaidemo.domain.inventory.model.valueobject.InventoryStatus
 /** 庫存數據傳輸對象 */
 @Schema(description = "庫存數據傳輸對象，包含完整的庫存資訊和狀態")
 public class InventoryDto {
-    @Schema(description = "庫存記錄唯一識別碼", example = "INV-001", required = true)
+    @Schema(description = "庫存記錄唯一識別碼", example = "INV-001", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String id;
 
-    @Schema(description = "產品唯一識別碼", example = "PROD-001", required = true)
+    @Schema(description = "產品唯一識別碼", example = "PROD-001", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String productId;
 
-    @Schema(description = "產品名稱", example = "iPhone 15 Pro", required = true)
+    @Schema(description = "產品名稱", example = "iPhone 15 Pro", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String productName;
 
-    @Schema(description = "總庫存數量，包含可用庫存和預留庫存", example = "100", minimum = "0", required = true)
+    @Schema(description = "總庫存數量，包含可用庫存和預留庫存", example = "100", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
     private final int totalQuantity;
 
-    @Schema(description = "可用庫存數量，可以立即銷售的庫存", example = "80", minimum = "0", required = true)
+    @Schema(description = "可用庫存數量，可以立即銷售的庫存", example = "80", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
     private final int availableQuantity;
 
-    @Schema(description = "預留庫存數量，已被訂單預留但尚未出貨的庫存", example = "20", minimum = "0", required = true)
+    @Schema(description = "預留庫存數量，已被訂單預留但尚未出貨的庫存", example = "20", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
     private final int reservedQuantity;
 
-    @Schema(description = "庫存警戒閾值，當可用庫存低於此值時需要補貨", example = "10", minimum = "0", required = true)
+    @Schema(description = "庫存警戒閾值，當可用庫存低於此值時需要補貨", example = "10", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
     private final int threshold;
 
     @Schema(
             description = "庫存狀態",
             allowableValues = {"ACTIVE", "INACTIVE", "DISCONTINUED"},
             example = "ACTIVE",
-            required = true)
+            requiredMode = Schema.RequiredMode.REQUIRED)
     private final InventoryStatus status;
 
-    @Schema(description = "庫存記錄創建時間", example = "2024-01-15T10:30:00", required = true)
+    @Schema(description = "庫存記錄創建時間", example = "2024-01-15T10:30:00", requiredMode = Schema.RequiredMode.REQUIRED)
     private final LocalDateTime createdAt;
 
-    @Schema(description = "庫存記錄最後更新時間", example = "2024-01-15T14:45:00", required = true)
+    @Schema(description = "庫存記錄最後更新時間", example = "2024-01-15T14:45:00", requiredMode = Schema.RequiredMode.REQUIRED)
     private final LocalDateTime updatedAt;
 
     public InventoryDto(

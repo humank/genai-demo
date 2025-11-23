@@ -25,9 +25,7 @@ import org.springframework.boot.test.context.TestComponent;
  * Requirements: 5.1, 5.2, 5.4
  */
 @TestComponent
-public class TestResourceManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(TestResourceManager.class);
+public class TestResourceManager {    private static final Logger logger = LoggerFactory.getLogger(TestResourceManager.class);
 
     private final MemoryMXBean memoryBean;
     private final AtomicInteger activeTestResources;

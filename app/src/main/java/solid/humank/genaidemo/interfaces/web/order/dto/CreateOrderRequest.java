@@ -18,7 +18,7 @@ public record CreateOrderRequest(
         @Schema(
                         description = "客戶ID，用於識別下訂單的客戶",
                         example = "customer-123",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minLength = 1,
                         maxLength = 50)
                 @NotBlank(message = "客戶ID不能為空")
@@ -27,7 +27,7 @@ public record CreateOrderRequest(
         @Schema(
                         description = "配送地址，訂單商品的配送目的地",
                         example = "台北市信義區信義路五段7號",
-                        required = true,
+                        requiredMode = Schema.RequiredMode.REQUIRED,
                         minLength = 1,
                         maxLength = 200)
                 @NotBlank(message = "配送地址不能為空")

@@ -70,18 +70,15 @@ public class ProfileConfigurationValidator {
      */
     public boolean validateProfile(String profile) {
         try {
-            switch (profile.toLowerCase()) {
-                case "development":
-                case "dev":
-                    return validateDevelopmentProfile();
-                case "test":
-                    return validateTestProfile();
-                case "production":
-                    return validateProductionProfile();
-                default:
+            return switch (profile.toLowerCase()) {
+                case "development", "dev" -> validateDevelopmentProfile();
+                case "test" -> validateTestProfile();
+                case "production" -> validateProductionProfile();
+                default -> {
                     log.warn("Unknown profile: {}", profile);
-                    return true; // 允許未知 profile
-            }
+                    yield true; // 允許未知 profile
+                }
+            };
         } catch (Exception e) {
             log.error("Error validating profile: {}", profile, e);
             return false;
@@ -100,7 +97,7 @@ public class ProfileConfigurationValidator {
 
         // 驗證開發環境配置
         boolean hasH2Database = checkProperty("spring.datasource.url", "h2");
-        boolean hasDebugLogging = checkProperty("logging.level.solid.humank", "DEBUG");
+        checkProperty("logging.level.solid.humank", "DEBUG"); // Check but don't require
 
         return hasH2Database; // 開發環境必須使用 H2
     }
@@ -109,10 +106,8 @@ public class ProfileConfigurationValidator {
         log.info("Validating test profile configuration");
 
         // 驗證測試環境配置
-        boolean hasTestDatabase = checkProperty("spring.datasource.url", "mem");
-        boolean hasTestLogging = true; // 測試環境日誌配置較寬鬆
-
-        return hasTestDatabase;
+        // 測試環境日誌配置較寬鬆，不需要特定檢查
+        return checkProperty("spring.datasource.url", "mem");
     }
 
     private boolean validateProductionProfile() {

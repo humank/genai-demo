@@ -43,7 +43,6 @@ class ProfileConfigurationUnitTest {
         // When: Checking profile type
         boolean isTest = profileConfiguration.isTestProfile();
 
-        // Then: Should return true for test profile
         assertThat(isTest).isTrue();
         assertThat(profileConfiguration.isProductionProfile()).isFalse();
         assertThat(profileConfiguration.isDevelopmentProfile()).isFalse();
@@ -58,7 +57,6 @@ class ProfileConfigurationUnitTest {
         // When: Checking production profile
         boolean isProduction = profileConfiguration.isProductionProfile();
 
-        // Then: Should return true for production profile
         assertThat(isProduction).isTrue();
         assertThat(profileConfiguration.isTestProfile()).isFalse();
         assertThat(profileConfiguration.isDevelopmentProfile()).isFalse();
@@ -73,7 +71,6 @@ class ProfileConfigurationUnitTest {
         // When: Checking development profile
         boolean isDev = profileConfiguration.isDevelopmentProfile();
 
-        // Then: Should return true for development profile
         assertThat(isDev).isTrue();
         assertThat(profileConfiguration.isProductionProfile()).isFalse();
         assertThat(profileConfiguration.isTestProfile()).isFalse();
@@ -107,7 +104,6 @@ class ProfileConfigurationUnitTest {
         boolean isTest = profileConfiguration.isTestProfile();
         boolean isProduction = profileConfiguration.isProductionProfile();
 
-        // Then: All should return false
         assertThat(isDev).isFalse();
         assertThat(isTest).isFalse();
         assertThat(isProduction).isFalse();
@@ -276,7 +272,6 @@ class ProfileConfigurationUnitTest {
             boolean isDev = profileConfiguration.isDevelopmentProfile();
             boolean isProduction = profileConfiguration.isProductionProfile();
 
-            // Then: Should handle gracefully and return false
             assertThat(isTest).isFalse();
             assertThat(isDev).isFalse();
             assertThat(isProduction).isFalse();

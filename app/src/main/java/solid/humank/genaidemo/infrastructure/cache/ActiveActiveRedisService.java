@@ -1,5 +1,9 @@
 package solid.humank.genaidemo.infrastructure.cache;
 
+import java.time.Duration;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,28 +12,24 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Active-Active Redis Service
- * 
+ *
  * Provides Redis operations optimized for Active-Active multi-region setup:
  * - Local-first strategy for optimal performance
  * - Global Datastore handles cross-region synchronization automatically
  * - Simple interface that abstracts regional complexity
- * 
+ *
  * Key Principles:
  * 1. Always write to local region for best performance
  * 2. Read from local region (Global Datastore ensures consistency)
  * 3. Let infrastructure handle cross-region synchronization
- * 
+ *
  * Requirements: 4.4 - Cross-region cache synchronization in Active-Active mode
  */
 @Service
 @ConditionalOnProperty(name = "redis.enabled", havingValue = "true")
 public class ActiveActiveRedisService {
-
     private static final Logger logger = LoggerFactory.getLogger(ActiveActiveRedisService.class);
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -42,7 +42,7 @@ public class ActiveActiveRedisService {
     private boolean multiRegionEnabled;
 
     public ActiveActiveRedisService(RedisTemplate<String, Object> redisTemplate,
-                                   @Qualifier("customStringRedisTemplate") RedisTemplate<String, String> customStringRedisTemplate) {
+            @Qualifier("customStringRedisTemplate") RedisTemplate<String, String> customStringRedisTemplate) {
         this.redisTemplate = redisTemplate;
         this.customStringRedisTemplate = customStringRedisTemplate;
     }
@@ -52,6 +52,9 @@ public class ActiveActiveRedisService {
      * Always writes to local region for optimal performance
      */
     public void put(String key, Object value, Duration ttl) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(value, "Cache value cannot be null");
+        Objects.requireNonNull(ttl, "TTL cannot be null");
         logger.debug("Storing key '{}' in region '{}' with TTL {}", key, currentRegion, ttl);
         redisTemplate.opsForValue().set(key, value, ttl.toMillis(), TimeUnit.MILLISECONDS);
     }
@@ -61,6 +64,8 @@ public class ActiveActiveRedisService {
      * Always writes to local region for optimal performance
      */
     public void put(String key, Object value) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(value, "Cache value cannot be null");
         logger.debug("Storing key '{}' in region '{}'", key, currentRegion);
         redisTemplate.opsForValue().set(key, value);
     }
@@ -70,6 +75,8 @@ public class ActiveActiveRedisService {
      * Reads from local region (Global Datastore ensures data availability)
      */
     public <T> T get(String key, Class<T> type) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(type, "Type cannot be null");
         logger.debug("Reading key '{}' from region '{}'", key, currentRegion);
         Object value = redisTemplate.opsForValue().get(key);
         if (value != null && type.isInstance(value)) {
@@ -82,6 +89,9 @@ public class ActiveActiveRedisService {
      * Store string in cache with TTL
      */
     public void putString(String key, String value, Duration ttl) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(value, "Cache value cannot be null");
+        Objects.requireNonNull(ttl, "TTL cannot be null");
         logger.debug("Storing string key '{}' in region '{}' with TTL {}", key, currentRegion, ttl);
         customStringRedisTemplate.opsForValue().set(key, value, ttl.toMillis(), TimeUnit.MILLISECONDS);
     }
@@ -90,6 +100,8 @@ public class ActiveActiveRedisService {
      * Store string in cache without TTL
      */
     public void putString(String key, String value) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(value, "Cache value cannot be null");
         logger.debug("Storing string key '{}' in region '{}'", key, currentRegion);
         customStringRedisTemplate.opsForValue().set(key, value);
     }
@@ -98,6 +110,7 @@ public class ActiveActiveRedisService {
      * Get string from cache
      */
     public String getString(String key) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
         logger.debug("Reading string key '{}' from region '{}'", key, currentRegion);
         return customStringRedisTemplate.opsForValue().get(key);
     }
@@ -106,6 +119,7 @@ public class ActiveActiveRedisService {
      * Check if key exists
      */
     public boolean exists(String key) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
         Boolean exists = redisTemplate.hasKey(key);
         logger.debug("Key '{}' exists in region '{}': {}", key, currentRegion, exists);
         return Boolean.TRUE.equals(exists);
@@ -116,6 +130,7 @@ public class ActiveActiveRedisService {
      * Deletes from local region, Global Datastore will sync deletion
      */
     public boolean delete(String key) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
         logger.debug("Deleting key '{}' from region '{}'", key, currentRegion);
         Boolean deleted = redisTemplate.delete(key);
         return Boolean.TRUE.equals(deleted);
@@ -125,6 +140,8 @@ public class ActiveActiveRedisService {
      * Set TTL for existing key
      */
     public boolean expire(String key, Duration ttl) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
+        Objects.requireNonNull(ttl, "TTL cannot be null");
         logger.debug("Setting TTL for key '{}' in region '{}': {}", key, currentRegion, ttl);
         Boolean result = redisTemplate.expire(key, ttl.toMillis(), TimeUnit.MILLISECONDS);
         return Boolean.TRUE.equals(result);
@@ -135,6 +152,7 @@ public class ActiveActiveRedisService {
      * Uses local region for atomic operations
      */
     public long increment(String key) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
         logger.debug("Incrementing counter '{}' in region '{}'", key, currentRegion);
         Long result = customStringRedisTemplate.opsForValue().increment(key);
         return result != null ? result : 0;
@@ -144,6 +162,7 @@ public class ActiveActiveRedisService {
      * Increment counter by delta
      */
     public long increment(String key, long delta) {
+        Objects.requireNonNull(key, "Cache key cannot be null");
         logger.debug("Incrementing counter '{}' by {} in region '{}'", key, delta, currentRegion);
         Long result = customStringRedisTemplate.opsForValue().increment(key, delta);
         return result != null ? result : 0;
@@ -186,7 +205,7 @@ public class ActiveActiveRedisService {
         try {
             // Basic stats - could be enhanced with more metrics
             boolean healthy = isHealthy();
-            
+
             return CacheStats.builder()
                     .region(currentRegion)
                     .healthy(healthy)
@@ -223,10 +242,21 @@ public class ActiveActiveRedisService {
         }
 
         // Getters
-        public String getRegion() { return region; }
-        public boolean isHealthy() { return healthy; }
-        public boolean isMultiRegionEnabled() { return multiRegionEnabled; }
-        public String getError() { return error; }
+        public String getRegion() {
+            return region;
+        }
+
+        public boolean isHealthy() {
+            return healthy;
+        }
+
+        public boolean isMultiRegionEnabled() {
+            return multiRegionEnabled;
+        }
+
+        public String getError() {
+            return error;
+        }
 
         public static class Builder {
             private String region;

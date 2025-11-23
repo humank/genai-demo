@@ -77,7 +77,6 @@ public class XRayTracingAspect {
             // Add execution time
             subsegment.putAnnotation("execution_time_ms", executionTime);
             
-            // Add result type (not the actual value to avoid large traces)
             if (result != null) {
                 subsegment.putAnnotation("result_type", result.getClass().getSimpleName());
             }

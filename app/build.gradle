@@ -1,9 +1,10 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.7'
+    id 'org.springframework.boot' version '3.5.8'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'io.qameta.allure' version '3.0.1' // Allure 插件
     id 'jacoco' // JaCoCo 代碼覆蓋率插件
+    id 'org.sonarqube' version '4.4.1.3373' // SonarQube 插件
 }
 
 group = 'solid.humank'
@@ -45,13 +46,13 @@ jacoco {
 // JaCoCo 測試報告配置
 jacocoTestReport {
     dependsOn test
-    
+
     reports {
         xml.required = true
         html.required = true
         csv.required = false
     }
-    
+
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
@@ -68,29 +69,29 @@ jacocoTestReport {
 // JaCoCo 覆蓋率驗證配置
 jacocoTestCoverageVerification {
     dependsOn jacocoTestReport
-    
+
     violationRules {
         rule {
             enabled = true
             element = 'CLASS'
-            
+
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
                 minimum = 0.80
             }
-            
+
             limit {
                 counter = 'BRANCH'
                 value = 'COVEREDRATIO'
                 minimum = 0.75
             }
         }
-        
+
         rule {
             enabled = true
             element = 'PACKAGE'
-            
+
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
@@ -98,7 +99,7 @@ jacocoTestCoverageVerification {
             }
         }
     }
-    
+
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
@@ -121,35 +122,35 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.flywaydb:flyway-core'
     implementation 'com.h2database:h2'
-    
+
     // PostgreSQL driver for production profile
     runtimeOnly 'org.postgresql:postgresql'
-    
+
     // Kafka support removed for simplicity
     // implementation 'org.springframework.kafka:spring-kafka'
     // testImplementation 'org.springframework.kafka:spring-kafka-test'
-    
+
     // AOP support for logging aspects
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    
+
     // Resilience4j for circuit breaker pattern
     implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.3.0'
     implementation 'io.github.resilience4j:resilience4j-circuitbreaker:2.3.0'
     implementation 'io.github.resilience4j:resilience4j-retry:2.3.0'
-    
+
     // Micrometer for metrics collection
     implementation 'io.micrometer:micrometer-core'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.micrometer:micrometer-registry-cloudwatch2'
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    
+
     // OpenTelemetry for distributed tracing
     implementation 'io.opentelemetry:opentelemetry-api:1.56.0'
     implementation 'io.opentelemetry:opentelemetry-sdk:1.56.0'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.56.0'
     // Note: jaeger exporter is deprecated, use OTLP exporter instead
     implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.37.0'
-    
+
     // AWS X-Ray support for production
     implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.20.0') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
@@ -159,7 +160,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
-    
+
     // AWS SDK v2 for analytics and security
     implementation platform('software.amazon.awssdk:bom:2.38.7')
     implementation 'software.amazon.awssdk:firehose'
@@ -167,71 +168,71 @@ dependencies {
     implementation 'software.amazon.awssdk:cloudwatch'
     implementation 'software.amazon.awssdk:dynamodb'
     implementation 'software.amazon.awssdk:dynamodb-enhanced'
-    
+
     // Security dependencies
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    
+
     // Redis and Redisson for distributed locking
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson-spring-boot-starter:3.52.0'
-    
+
     // Apache Commons Pool for Redis connection pooling
     implementation 'org.apache.commons:commons-pool2:2.12.1'
-    
+
     // Unified HttpComponents5 dependencies with consistent versions
     implementation 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
     implementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
     implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.3.6'
-    
+
     // Test-specific HTTP client dependencies
     testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
     testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
     testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.5.1'
-    
+
     // Logback encoder for structured logging
     implementation 'net.logstash.logback:logstash-logback-encoder:9.0'
-    
+
     // OpenAPI 3 (Swagger) 支援 - 使用與 Spring Boot 3.4.9 兼容的版本
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
-    
+
     // Kotlin reflection for SpringDoc (required by SpringDoc 2.x) - 更新版本
     implementation 'org.jetbrains.kotlin:kotlin-reflect:2.2.21'
-    
 
-    
+
+
     // Cucumber for BDD testing - 使用最新穩定版本
     testImplementation 'io.cucumber:cucumber-java:7.31.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.31.0'
     testImplementation 'io.cucumber:cucumber-spring:7.31.0'
-    
+
     // JUnit 5 - 與 Cucumber 7.20.1 兼容的版本
     testImplementation(platform('org.junit:junit-bom:6.0.1'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testImplementation('org.junit.platform:junit-platform-suite')
-    
+
     // 確保 JUnit Platform 相關依賴版本一致 (與 Cucumber 7.20.1 匹配)
     testImplementation('org.junit.platform:junit-platform-commons:6.0.1')
     testImplementation('org.junit.platform:junit-platform-engine:6.0.1')
-    
+
     // 添加缺失的 JUnit Platform 支援類別
     testImplementation('org.junit.platform:junit-platform-launcher:6.0.1')
-    
+
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.20.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
-    
+
     // Spring Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    
+
     // Allure 依賴
     testImplementation 'io.qameta.allure:allure-junit5:2.31.0'
     testImplementation 'io.qameta.allure:allure-cucumber7-jvm:2.31.0'
     testImplementation 'io.qameta.allure:allure-java-commons:2.31.0'
-    
+
     // ArchUnit for architecture testing
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
-    
+
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
     testCompileOnly 'org.projectlombok:lombok:1.18.42'
@@ -245,7 +246,7 @@ tasks.withType(JavaCompile).configureEach {
     // 暫時關閉棄用警告，避免過多輸出
     // options.compilerArgs += '-Xlint:deprecation'
     options.release = 21
-    
+
     // 增加編譯器記憶體
     options.forkOptions.jvmArgs += [
         '-Xmx3g',
@@ -258,25 +259,25 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(Test).configureEach {
     jvmArgs += '--enable-preview'
-    
+
     // 基本記憶體配置
     maxHeapSize = '4g'
     minHeapSize = '1g'
-    
+
     // 基本JVM參數
     jvmArgs += [
         '-XX:MaxMetaspaceSize=1g',
         '-XX:+UseG1GC',
         '-Xshare:off'
     ]
-    
+
     // 測試執行配置
     maxParallelForks = 1
     forkEvery = 5
-    
+
     // 測試執行超時配置
     timeout = Duration.ofMinutes(15)
-    
+
     // 基本系統屬性
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
@@ -296,20 +297,20 @@ tasks.withType(JavaExec).configureEach {
 tasks.register('quickTest', Test) {
     description = 'Fast unit tests for immediate feedback during development (< 2 minutes)'
     group = 'verification'
-    
+
     useJUnitPlatform {
         excludeTags 'integration', 'end-to-end', 'slow', 'external'
         includeTags 'unit', 'fast'
     }
-    
+
     // 優化記憶體配置 - 快速測試
     maxHeapSize = '1g'
     minHeapSize = '256m'
-    
+
     // 最大並行執行
     maxParallelForks = Runtime.runtime.availableProcessors()
     forkEvery = 0  // 不重啟 JVM 以提高速度
-    
+
     // 效能優化 JVM 參數
     jvmArgs += [
         '-XX:+UseG1GC',
@@ -320,16 +321,16 @@ tasks.register('quickTest', Test) {
         '-Djunit.jupiter.execution.parallel.mode.default=concurrent',
         '-Djunit.jupiter.execution.parallel.config.strategy=dynamic'
     ]
-    
+
     // 快速測試超時設定
     timeout = Duration.ofMinutes(2)
-    
+
     testLogging {
         events "failed", "skipped"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
-    
+
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
     systemProperty 'junit.jupiter.execution.timeout.default', '30s'
@@ -339,20 +340,20 @@ tasks.register('quickTest', Test) {
 tasks.register('unitTest', Test) {
     description = 'Comprehensive unit tests for pre-commit validation (< 5 minutes)'
     group = 'verification'
-    
+
     useJUnitPlatform {
         excludeTags 'integration', 'slow'
         includeTags 'unit'
     }
-    
+
     // 優化記憶體配置 - 單元測試
     maxHeapSize = '2g'
     minHeapSize = '512m'
-    
+
     // 並行執行配置
     maxParallelForks = 2
     forkEvery = 0
-    
+
     // 效能優化 JVM 參數
     jvmArgs += [
         '-XX:+UseG1GC',
@@ -361,16 +362,16 @@ tasks.register('unitTest', Test) {
         '-XX:G1HeapRegionSize=16m',
         '-Djunit.jupiter.execution.parallel.enabled=true'
     ]
-    
+
     // 單元測試超時設定
     timeout = Duration.ofMinutes(5)
-    
+
     testLogging {
         events "passed", "failed", "skipped"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
-    
+
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
     systemProperty 'junit.jupiter.execution.timeout.default', '1m'
@@ -380,20 +381,20 @@ tasks.register('unitTest', Test) {
 tasks.register('integrationTest', Test) {
     description = 'Integration tests for pre-commit verification (~50MB, ~500ms each)'
     group = 'verification'
-    
+
     useJUnitPlatform {
         includeTags 'integration'
         excludeTags 'end-to-end', 'slow'
     }
-    
+
     // 集成測試記憶體配置
     maxHeapSize = '6g'
     minHeapSize = '2g'
-    
+
     // 串行執行以避免資源競爭
     maxParallelForks = 1
     forkEvery = 5
-    
+
     // 集成測試 JVM 優化參數
     jvmArgs += [
         '-XX:MaxMetaspaceSize=1g',
@@ -412,16 +413,16 @@ tasks.register('integrationTest', Test) {
         '-Dsun.net.useExclusiveBind=false',
         '-Djava.net.preferIPv4Stack=true'
     ]
-    
+
     // 集成測試超時設定
     timeout = Duration.ofMinutes(30)
-    
+
     testLogging {
         events "failed", "skipped"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
-    
+
     // 集成測試系統屬性
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
@@ -436,9 +437,9 @@ tasks.register('integrationTest', Test) {
 tasks.register('stagingTest', Exec) {
     description = 'Run comprehensive staging integration tests'
     group = 'verification'
-    
+
     workingDir file('../staging-tests')
-    
+
     // 檢查 staging-tests 目錄是否存在
     doFirst {
         if (!file('../staging-tests').exists()) {
@@ -448,19 +449,19 @@ tasks.register('stagingTest', Exec) {
             throw new GradleException('run-integration-tests.sh script not found in staging-tests/scripts/')
         }
     }
-    
+
     commandLine './scripts/run-integration-tests.sh'
-    
+
     environment 'TEST_ENVIRONMENT', 'staging'
     environment 'JAVA_HOME', System.getProperty('java.home')
-    
+
     // 設定超時
     timeout = Duration.ofMinutes(45)
-    
+
     // 標準輸出處理
     standardOutput = System.out
     errorOutput = System.err
-    
+
     doLast {
         println "✅ Staging integration tests completed successfully"
     }
@@ -471,19 +472,19 @@ tasks.register('stagingTest', Exec) {
 tasks.register('e2eTest', Test) {
     description = 'End-to-end tests for pre-release verification (~500MB, ~3s each)'
     group = 'verification'
-    
+
     useJUnitPlatform {
         includeTags 'end-to-end'
     }
-    
+
     // E2E 測試記憶體配置
     maxHeapSize = '8g'
     minHeapSize = '3g'
-    
+
     // 串行執行以確保穩定性
     maxParallelForks = 1
     forkEvery = 2
-    
+
     // E2E 測試專用 JVM 參數
     jvmArgs += [
         '-XX:MaxMetaspaceSize=2g',
@@ -495,16 +496,16 @@ tasks.register('e2eTest', Test) {
         '-XX:G1MaxNewSizePercent=30',
         '-Djava.security.egd=file:/dev/./urandom'
     ]
-    
+
     // E2E 測試超時設定
     timeout = Duration.ofHours(1)
-    
+
     testLogging {
         events "failed", "skipped", "passed"
         showStandardStreams = false
         exceptionFormat = 'full'
     }
-    
+
     // E2E 測試系統屬性
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'INFO'
@@ -518,18 +519,18 @@ tasks.register('e2eTest', Test) {
 // 標準測試任務 - 保持向後兼容
 tasks.named('test') {
     description = '運行所有測試'
-    
+
     useJUnitPlatform()
-    
+
     maxHeapSize = '4g'
     minHeapSize = '1g'
-    
+
     testLogging {
         events "failed"
         showStandardStreams = false
         exceptionFormat = 'short'
     }
-    
+
     systemProperty 'spring.profiles.active', 'test'
     systemProperty 'logging.level.root', 'ERROR'
 }
@@ -539,10 +540,10 @@ tasks.register('cucumber', JavaExec) {
     dependsOn assemble, testClasses
     getMainClass().set("io.cucumber.core.cli.Main")
     classpath = configurations.testRuntimeClasspath + sourceSets.main.output + sourceSets.test.output
-    
+
     maxHeapSize = '4g'
     jvmArgs += ['--enable-preview', '-Xshare:off']
-    
+
     args = [
         '--plugin', 'progress',
         '--plugin', 'html:build/reports/cucumber/cucumber-report.html',
@@ -550,7 +551,7 @@ tasks.register('cucumber', JavaExec) {
         '--glue', 'solid.humank.genaidemo.bdd',
         'src/test/resources/features'
     ]
-    
+
     systemProperty 'logging.level.root', 'ERROR'
 }
 
@@ -565,7 +566,7 @@ tasks.register('preCommitTest') {
     dependsOn unitTest, integrationTest
     description = '提交前測試 - 包含單元測試和集成測試 (< 5分鐘)'
     group = 'verification'
-    
+
     doLast {
         println "✅ 提交前測試完成 - 單元測試和集成測試通過"
     }
@@ -576,7 +577,7 @@ tasks.register('fullTest') {
     dependsOn unitTest, integrationTest, e2eTest, cucumber
     description = '完整測試 - 發布前使用，包含所有測試類型'
     group = 'verification'
-    
+
     doLast {
         println "✅ 完整測試完成 - 所有測試通過"
     }
@@ -587,11 +588,11 @@ tasks.register('runAllTests') {
     dependsOn test, cucumber, prepareAllureResults
     description = '運行所有測試並生成 Allure 報告（向後兼容）'
     group = 'verification'
-    
+
     doLast {
         println "所有測試已完成，包括單元測試和 Cucumber 測試"
     }
-    
+
     finalizedBy 'allureReport', 'generatePerformanceReport'
 }
 
@@ -599,16 +600,16 @@ tasks.register('runAllTests') {
 tasks.register('generatePerformanceReport', JavaExec) {
     description = 'Generate test performance reports with metrics and dashboards'
     group = 'reporting'
-    
+
     dependsOn testClasses
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'solid.humank.genaidemo.testutils.TestPerformanceReportGenerator'
-    
+
     // 確保報告目錄存在
     doFirst {
         mkdir "${buildDir}/reports/test-performance"
     }
-    
+
     doLast {
         println "✅ Test performance reports generated:"
         println "   - HTML Report: ${buildDir}/reports/test-performance/performance-report.html"
@@ -621,21 +622,21 @@ tasks.register('generatePerformanceReport', JavaExec) {
 tasks.register('generateTestMetrics') {
     description = 'Generate test execution metrics and monitoring data for CI/CD dashboards'
     group = 'reporting'
-    
+
     dependsOn test
-    
+
     doLast {
         def metricsDir = file("${buildDir}/reports/metrics")
         metricsDir.mkdirs()
-        
+
         def metricsFile = new File(metricsDir, "test-metrics.json")
         def testResults = file("${buildDir}/test-results/test")
-        
+
         def totalTests = 0
         def passedTests = 0
         def failedTests = 0
         def skippedTests = 0
-        
+
         if (testResults.exists()) {
             testResults.eachFileRecurse { file ->
                 if (file.name.endsWith('.xml')) {
@@ -647,7 +648,7 @@ tasks.register('generateTestMetrics') {
             }
             passedTests = totalTests - failedTests - skippedTests
         }
-        
+
         def metrics = [
             timestamp: new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'"),
             totalTests: totalTests,
@@ -658,9 +659,9 @@ tasks.register('generateTestMetrics') {
             buildNumber: System.getenv('BUILD_NUMBER') ?: 'local',
             branch: System.getenv('BRANCH_NAME') ?: 'unknown'
         ]
-        
+
         metricsFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(metrics))
-        
+
         println "✅ Test metrics generated: ${metricsFile.absolutePath}"
         println "   Total Tests: ${totalTests}"
         println "   Passed: ${passedTests}"
@@ -674,11 +675,11 @@ tasks.register('runAllTestsComplete') {
     dependsOn test, cucumber, prepareAllureResults
     description = '運行所有測試並生成 Allure 報告'
     group = 'verification'
-    
+
     doLast {
         println "所有測試已完成，包括單元測試、Cucumber 測試和性能測試"
     }
-    
+
     finalizedBy 'allureReport'
 }
 
@@ -687,7 +688,7 @@ tasks.register('runAllTestsWithReport') {
     dependsOn 'runAllTests'
     description = '運行所有測試並啟動 Allure 報告服務器'
     group = 'verification'
-    
+
     finalizedBy 'allureServe'
 }
 
@@ -702,7 +703,7 @@ tasks.register('cleanAllureResults', Delete) {
 tasks.register('createHeapDumpDir') {
     description = '創建堆轉儲目錄'
     group = 'build'
-    
+
     doLast {
         mkdir "${buildDir}/reports/heap-dumps"
         println "堆轉儲目錄已創建: ${buildDir}/reports/heap-dumps"
@@ -722,25 +723,25 @@ tasks.withType(Test) {
 tasks.register('prepareAllureResults') {
     description = '準備 Allure 報告數據'
     group = 'reporting'
-    
+
     doLast {
         // 確保 allure-results 目錄存在
         mkdir "${buildDir}/allure-results"
-        
+
         // 複製 Cucumber 測試結果
         copy {
             from "${buildDir}/reports/cucumber"
             into "${buildDir}/allure-results"
             include "**/*.json"
         }
-        
+
         // 複製 JUnit 測試結果
         copy {
             from "${buildDir}/test-results/test"
             into "${buildDir}/allure-results"
             include "**/*.xml"
         }
-        
+
         // 創建 executor.json 文件
         def executorFile = new File("${buildDir}/allure-results/executor.json")
         executorFile.text = """{
@@ -749,7 +750,7 @@ tasks.register('prepareAllureResults') {
             "buildName": "GenAI Demo Project",
             "reportName": "DDD 架構測試報告"
         }"""
-        
+
         println "Allure 報告數據準備完成，結果目錄: ${buildDir}/allure-results"
     }
 }
@@ -757,4 +758,93 @@ tasks.register('prepareAllureResults') {
 // 覆蓋 allureReport 任務
 tasks.named('allureReport') {
     dependsOn 'prepareAllureResults'
+}
+
+// ============================================================================
+// SonarQube 配置 - 程式碼品質分析
+// ============================================================================
+
+sonar {
+    properties {
+        // 專案識別
+        property "sonar.projectKey", "genai-demo"
+        property "sonar.projectName", "GenAI Demo - E-Commerce Platform"
+        property "sonar.projectVersion", "1.0.0"
+
+        // 源碼和測試目錄
+        property "sonar.sources", "src/main/java"
+        property "sonar.tests", "src/test/java"
+
+        // Java 版本
+        property "sonar.java.source", "21"
+        property "sonar.java.target", "21"
+
+        // 編碼
+        property "sonar.sourceEncoding", "UTF-8"
+
+        // 覆蓋率報告路徑
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+
+        // 排除不需要分析的檔案
+        property "sonar.exclusions", "**/config/**,**/dto/**,**/entity/**,**/exception/**,**/Application.java"
+
+        // 測試排除
+        property "sonar.test.exclusions", "**/test/**"
+
+        // ============================================================================
+        // 問題排除配置 - 排除誤報
+        // ============================================================================
+
+        property "sonar.issue.ignore.multicriteria", "e1,e2,e3,e4,e5"
+
+        // E1: 排除 @Pointcut 方法的空方法警告
+        property "sonar.issue.ignore.multicriteria.e1.ruleKey", "java:S1186"
+        property "sonar.issue.ignore.multicriteria.e1.resourceKey", "**/*Aspect.java"
+
+        // E2: 排除 AOP 配置類的空方法警告
+        property "sonar.issue.ignore.multicriteria.e2.ruleKey", "java:S1186"
+        property "sonar.issue.ignore.multicriteria.e2.resourceKey", "**/*Config.java"
+
+        // E3: 排除 Record 類的空方法警告（DTO）
+        property "sonar.issue.ignore.multicriteria.e3.ruleKey", "java:S1186"
+        property "sonar.issue.ignore.multicriteria.e3.resourceKey", "**/dto/**/*.java"
+
+        // E4: 排除 Record 類的空方法警告（domain value objects）
+        property "sonar.issue.ignore.multicriteria.e4.ruleKey", "java:S1186"
+        property "sonar.issue.ignore.multicriteria.e4.resourceKey", "**/valueobject/**/*.java"
+
+        // E5: 排除 Record 類的空方法警告（application DTOs）
+        property "sonar.issue.ignore.multicriteria.e5.ruleKey", "java:S1186"
+        property "sonar.issue.ignore.multicriteria.e5.resourceKey", "**/application/**/*Dto.java"
+
+        // ============================================================================
+        // 其他品質規則配置
+        // ============================================================================
+
+        // 重複字串閾值（預設 3 次，提高到 5 次）
+        property "sonar.java.duplicatedBlocks.minimumLines", "5"
+
+        // 方法長度限制（預設 20 行，允許 30 行）
+        property "sonar.java.maxMethodLines", "30"
+
+        // 參數數量限制（預設 7 個，允許 10 個）
+        property "sonar.java.maxParameters", "10"
+    }
+}
+
+// 確保 SonarQube 分析前先執行測試和覆蓋率報告
+tasks.named('sonar') {
+    dependsOn test, jacocoTestReport
+
+    doFirst {
+        println "🔍 開始 SonarQube 程式碼品質分析..."
+        println "   專案: GenAI Demo - E-Commerce Platform"
+        println "   版本: 1.0.0"
+        println "   Java: 21"
+    }
+
+    doLast {
+        println "✅ SonarQube 分析完成！"
+        println "   查看報告: http://localhost:9000/dashboard?id=genai-demo"
+    }
 }

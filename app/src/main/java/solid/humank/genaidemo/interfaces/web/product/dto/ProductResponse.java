@@ -62,19 +62,19 @@ import solid.humank.genaidemo.application.product.dto.ProductStatus;
         }
         """)
 public record ProductResponse(
-        @Schema(description = "產品唯一識別碼", example = "PROD-001", required = true) String id,
-        @Schema(description = "產品名稱", example = "iPhone 15 Pro", required = true) String name,
+        @Schema(description = "產品唯一識別碼", example = "PROD-001", requiredMode = Schema.RequiredMode.REQUIRED) String id,
+        @Schema(description = "產品名稱", example = "iPhone 15 Pro", requiredMode = Schema.RequiredMode.REQUIRED) String name,
         @Schema(description = "產品詳細描述", example = "最新款iPhone，配備A17 Pro晶片，支援USB-C接口，具備專業級攝影功能")
                 String description,
-        @Schema(description = "產品價格", example = "35900.00", required = true) BigDecimal price,
-        @Schema(description = "貨幣代碼", example = "TWD", required = true) String currency,
-        @Schema(description = "產品分類代碼", example = "ELECTRONICS", required = true) String category,
-        @Schema(description = "產品分類顯示名稱", example = "電子產品", required = true)
+        @Schema(description = "產品價格", example = "35900.00", requiredMode = Schema.RequiredMode.REQUIRED) BigDecimal price,
+        @Schema(description = "貨幣代碼", example = "TWD", requiredMode = Schema.RequiredMode.REQUIRED) String currency,
+        @Schema(description = "產品分類代碼", example = "ELECTRONICS", requiredMode = Schema.RequiredMode.REQUIRED) String category,
+        @Schema(description = "產品分類顯示名稱", example = "電子產品", requiredMode = Schema.RequiredMode.REQUIRED)
                 String categoryDisplayName,
-        @Schema(description = "產品狀態", example = "ACTIVE", required = true) ProductStatus status,
-        @Schema(description = "產品狀態顯示名稱", example = "活躍", required = true) String statusDisplayName,
-        @Schema(description = "是否有庫存", example = "true", required = true) boolean inStock,
-        @Schema(description = "庫存數量", example = "50", minimum = "0", required = true)
+        @Schema(description = "產品狀態", example = "ACTIVE", requiredMode = Schema.RequiredMode.REQUIRED) ProductStatus status,
+        @Schema(description = "產品狀態顯示名稱", example = "活躍", requiredMode = Schema.RequiredMode.REQUIRED) String statusDisplayName,
+        @Schema(description = "是否有庫存", example = "true", requiredMode = Schema.RequiredMode.REQUIRED) boolean inStock,
+        @Schema(description = "庫存數量", example = "50", minimum = "0", requiredMode = Schema.RequiredMode.REQUIRED)
                 int stockQuantity,
         @Schema(description = "產品SKU", example = "IPHONE15PRO-128GB-BLACK") String sku,
         @Schema(description = "產品品牌", example = "Apple") String brand,
@@ -94,14 +94,14 @@ public record ProductResponse(
                         example = "2024-01-15T10:30:00",
                         type = "string",
                         format = "date-time",
-                        required = true)
+                        requiredMode = Schema.RequiredMode.REQUIRED)
                 LocalDateTime createdAt,
         @Schema(
                         description = "產品最後更新時間",
                         example = "2024-01-15T10:30:00",
                         type = "string",
                         format = "date-time",
-                        required = true)
+                        requiredMode = Schema.RequiredMode.REQUIRED)
                 LocalDateTime updatedAt) {
 
     /** 產品尺寸資訊 */

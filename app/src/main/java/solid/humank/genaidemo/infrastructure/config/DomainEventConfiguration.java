@@ -10,10 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
 // Removed imports for deleted classes
-// import solid.humank.genaidemo.infrastructure.event.publisher.DeadLetterService;
 import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublisherAdapter;
 import solid.humank.genaidemo.infrastructure.event.publisher.InMemoryDomainEventPublisher;
-// import solid.humank.genaidemo.infrastructure.event.publisher.KafkaDomainEventPublisher;
 import solid.humank.genaidemo.infrastructure.event.publisher.TransactionalDomainEventPublisher;
 
 /**

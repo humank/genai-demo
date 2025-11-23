@@ -46,13 +46,9 @@ public class VoucherDomainService {
         }
 
         // 簡化實現 - 實際應該檢查客戶是否有權使用此優惠券
-        // if (!voucher.isApplicableToCustomer(customerId)) {
-        // return VoucherValidationResult.invalid("此優惠券不適用於該客戶");
         // }
 
         // 簡化實現 - 實際應該檢查最低消費金額
-        // if (!voucher.meetsMinimumAmount(orderAmount)) {
-        // return VoucherValidationResult.invalid("訂單金額未達到優惠券使用門檻");
         // }
 
         return VoucherValidationResult.valid(voucher.getValue());
@@ -150,7 +146,6 @@ public class VoucherDomainService {
         // 實際實現中需要從repository查詢使用記錄
         // 當前為模擬實現：返回0表示沒有異常使用
         // 在完整實現中，這裡會調用
-        // voucherUsageRepository.countByCustomerIdAndUsedTimeBetween(customerId,
         // startTime, LocalDateTime.now())
         return 0;
     }

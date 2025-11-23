@@ -137,7 +137,6 @@ public record BusinessMetricsDto(
             return 0.0;
         }
 
-        // 業務價值分數 = 業務事件數 * 轉換率 * 100
         Double conversionRate = businessConversionRate != null ? businessConversionRate : 0.0;
         return businessEvents * conversionRate * 100;
     }

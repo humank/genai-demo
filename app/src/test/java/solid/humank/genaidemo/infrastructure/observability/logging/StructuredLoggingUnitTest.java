@@ -110,8 +110,7 @@ class StructuredLoggingUnitTest {
     }
 
     // 簡單的 StructuredLogger 實現用於測試
-    private static class StructuredLogger {
-        private final Logger logger;
+    private static class StructuredLogger {        private final Logger logger;
 
         public StructuredLogger(Logger logger) {
             this.logger = logger;

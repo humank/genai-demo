@@ -1,9 +1,8 @@
 package solid.humank.genaidemo.config;
 
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Gauge;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,20 +12,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import solid.humank.genaidemo.infrastructure.session.dynamodb.DynamoDBSessionRepository;
+
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import solid.humank.genaidemo.infrastructure.session.dynamodb.DynamoDBSessionRepository;
 
 /**
  * DynamoDB Monitoring Configuration for Cross-Region Metrics
- * 
+ *
  * Provides monitoring and metrics for:
  * - Cross-region replication latency
  * - Conflict resolution statistics
  * - Session distribution across regions
  * - DynamoDB operation performance
- * 
+ *
  * Requirements: 4.1.4 - Cross-region data synchronization monitoring
  */
 @Configuration
@@ -36,6 +38,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DynamoDBMonitoringConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamoDBMonitoringConfiguration.class);
+    private static final String REGION_TAG = "region";
 
     private final MeterRegistry meterRegistry;
     private final DynamoDBSessionRepository sessionRepository;
@@ -49,8 +52,8 @@ public class DynamoDBMonitoringConfiguration {
     private final AtomicLong crossRegionSessions = new AtomicLong(0);
 
     public DynamoDBMonitoringConfiguration(MeterRegistry meterRegistry,
-                                         DynamoDBSessionRepository sessionRepository,
-                                         @Value("${aws.region:us-east-1}") String currentRegion) {
+            DynamoDBSessionRepository sessionRepository,
+            @Value("${aws.region:us-east-1}") String currentRegion) {
         this.meterRegistry = meterRegistry;
         this.sessionRepository = sessionRepository;
         this.currentRegion = currentRegion;
@@ -109,7 +112,7 @@ public class DynamoDBMonitoringConfiguration {
     public void updateSessionMetrics() {
         try {
             Map<String, Long> sessionStats = sessionRepository.getSessionStatsByRegion();
-            
+
             // Update active sessions count
             long totalActiveSessions = sessionStats.values().stream().mapToLong(Long::longValue).sum();
             activeSessions.set(totalActiveSessions);
@@ -123,10 +126,10 @@ public class DynamoDBMonitoringConfiguration {
             for (Map.Entry<String, Long> entry : sessionStats.entrySet()) {
                 String region = entry.getKey();
                 Long count = entry.getValue();
-                
-                Gauge.builder("dynamodb.sessions.by_region", () -> count.doubleValue())
+
+                Gauge.builder("dynamodb.sessions.by_region", count::doubleValue)
                         .description("Number of sessions by region")
-                        .tag("region", region)
+                        .tag(REGION_TAG, region)
                         .register(meterRegistry);
             }
 
@@ -160,7 +163,7 @@ public class DynamoDBMonitoringConfiguration {
         Timer.builder("dynamodb.operation.duration")
                 .tag("operation", operation)
                 .tag("success", String.valueOf(success))
-                .tag("region", currentRegion)
+                .tag(REGION_TAG, currentRegion)
                 .register(meterRegistry)
                 .record(durationMs, java.util.concurrent.TimeUnit.MILLISECONDS);
     }
@@ -172,7 +175,7 @@ public class DynamoDBMonitoringConfiguration {
         Counter.builder("dynamodb.conflicts.total")
                 .tag("table", table)
                 .tag("operation", operation)
-                .tag("region", currentRegion)
+                .tag(REGION_TAG, currentRegion)
                 .register(meterRegistry)
                 .increment();
     }
@@ -184,7 +187,7 @@ public class DynamoDBMonitoringConfiguration {
         Counter.builder("dynamodb.replication.errors.total")
                 .tag("table", table)
                 .tag("error_type", errorType)
-                .tag("region", currentRegion)
+                .tag(REGION_TAG, currentRegion)
                 .register(meterRegistry)
                 .increment();
     }

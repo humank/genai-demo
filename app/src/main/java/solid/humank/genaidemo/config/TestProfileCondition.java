@@ -5,17 +5,18 @@ import java.util.Arrays;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.lang.NonNull;
 
 /**
  * Condition for Test Profile Bean Creation
- * 
+ *
  * This condition ensures that test profile beans are only created when
  * the test profile is active and there are no conflicting profiles.
  */
 public class TestProfileCondition implements Condition {
 
     @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    public boolean matches(@NonNull ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
         String[] activeProfiles = context.getEnvironment().getActiveProfiles();
 
         // Check if test profile is active

@@ -14,9 +14,7 @@ import solid.humank.genaidemo.domain.common.event.EventHandler;
 
 /** 簡單事件總線實現 使用內存存儲事件處理器 */
 @Component
-public class SimpleEventBus implements EventBus {
-
-    private static final Logger logger = LoggerFactory.getLogger(SimpleEventBus.class);
+public class SimpleEventBus implements EventBus {    private static final Logger logger = LoggerFactory.getLogger(SimpleEventBus.class);
 
     private final Map<Class<?>, List<EventHandler<?>>> handlers = new ConcurrentHashMap<>();
 

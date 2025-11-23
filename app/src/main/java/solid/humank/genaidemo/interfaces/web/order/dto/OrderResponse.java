@@ -30,25 +30,25 @@ import java.util.List;
         }
         """)
 public class OrderResponse {
-    @Schema(description = "訂單唯一識別碼", example = "order-123", required = true)
+    @Schema(description = "訂單唯一識別碼", example = "order-123", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String orderId;
 
-    @Schema(description = "下訂單的客戶ID", example = "customer-456", required = true)
+    @Schema(description = "下訂單的客戶ID", example = "customer-456", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String customerId;
 
-    @Schema(description = "訂單配送地址", example = "台北市信義區信義路五段7號", required = true)
+    @Schema(description = "訂單配送地址", example = "台北市信義區信義路五段7號", requiredMode = Schema.RequiredMode.REQUIRED)
     private final String shippingAddress;
 
-    @Schema(description = "訂單項目列表，包含所有購買的商品", required = true)
+    @Schema(description = "訂單項目列表，包含所有購買的商品", requiredMode = Schema.RequiredMode.REQUIRED)
     private final List<WebOrderItemResponse> items;
 
-    @Schema(description = "訂單總金額，包含所有商品的總價", example = "1000.00", required = true)
+    @Schema(description = "訂單總金額，包含所有商品的總價", example = "1000.00", requiredMode = Schema.RequiredMode.REQUIRED)
     private final BigDecimal totalAmount;
 
     @Schema(
             description = "訂單當前狀態",
             example = "CREATED",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             allowableValues = {
                 "CREATED",
                 "SUBMITTED",
@@ -63,10 +63,10 @@ public class OrderResponse {
             })
     private final String status;
 
-    @Schema(description = "訂單創建時間", example = "2024-01-15T10:30:00", required = true)
+    @Schema(description = "訂單創建時間", example = "2024-01-15T10:30:00", requiredMode = Schema.RequiredMode.REQUIRED)
     private final LocalDateTime createdAt;
 
-    @Schema(description = "訂單最後更新時間", example = "2024-01-15T10:35:00", required = true)
+    @Schema(description = "訂單最後更新時間", example = "2024-01-15T10:35:00", requiredMode = Schema.RequiredMode.REQUIRED)
     private final LocalDateTime updatedAt;
 
     public OrderResponse(
@@ -157,19 +157,19 @@ public class OrderResponse {
             }
             """)
     public static class WebOrderItemResponse {
-        @Schema(description = "商品唯一識別碼", example = "product-789", required = true)
+        @Schema(description = "商品唯一識別碼", example = "product-789", requiredMode = Schema.RequiredMode.REQUIRED)
         private final String productId;
 
-        @Schema(description = "商品名稱", example = "iPhone 15 Pro", required = true)
+        @Schema(description = "商品名稱", example = "iPhone 15 Pro", requiredMode = Schema.RequiredMode.REQUIRED)
         private final String productName;
 
-        @Schema(description = "購買數量", example = "2", required = true, minimum = "1")
+        @Schema(description = "購買數量", example = "2", requiredMode = Schema.RequiredMode.REQUIRED, minimum = "1")
         private final int quantity;
 
-        @Schema(description = "商品單價", example = "500.00", required = true)
+        @Schema(description = "商品單價", example = "500.00", requiredMode = Schema.RequiredMode.REQUIRED)
         private final BigDecimal price;
 
-        @Schema(description = "該項目小計金額（單價 × 數量）", example = "1000.00", required = true)
+        @Schema(description = "該項目小計金額（單價 × 數量）", example = "1000.00", requiredMode = Schema.RequiredMode.REQUIRED)
         private final BigDecimal subtotal;
 
         public WebOrderItemResponse(

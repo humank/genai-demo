@@ -20,9 +20,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventHandler;
  * 需求 6.2: 建立事件處理器接收和處理事件的機制
  */
 @Component
-public class DomainEventHandlerRegistry {
-
-    private static final Logger logger = LoggerFactory.getLogger(DomainEventHandlerRegistry.class);
+public class DomainEventHandlerRegistry {    private static final Logger logger = LoggerFactory.getLogger(DomainEventHandlerRegistry.class);
 
     private final Map<Class<? extends DomainEvent>, DomainEventHandler<? extends DomainEvent>> handlers = new HashMap<>();
 

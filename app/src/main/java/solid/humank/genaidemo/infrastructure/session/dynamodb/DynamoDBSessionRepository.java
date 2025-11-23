@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 @ConditionalOnBean(DynamoDbEnhancedClient.class)
 public class DynamoDBSessionRepository {
 
-    private final DynamoDbTable<DynamoDBSessionEntity> sessionTable;
-    private final String currentRegion;
+    private final DynamoDbTable<DynamoDBSessionEntity> sessionTable;    private final String currentRegion;
 
     public DynamoDBSessionRepository(DynamoDbEnhancedClient enhancedClient, 
                                    @Value("${aws.region:us-east-1}") String currentRegion,

@@ -1,347 +1,284 @@
-# Documentation Quality Check Scripts
+# Code Quality Fix Scripts
 
-This directory contains comprehensive documentation quality assurance tools for the Viewpoints & Perspectives documentation structure.
+這些腳本用於自動修復常見的 SonarLint 和程式碼品質問題。
 
-## Overview
+## 📋 可用腳本
 
-The documentation quality check system implements **Requirement 6: 文件維護的自動化** from the documentation restructure specification. It provides automated validation for:
+### 1. 主要腳本
 
-- ✅ **Markdown syntax checking** using markdownlint
-- ✅ **Link validity verification** for internal and external links  
-- ✅ **Diagram rendering validation** for Mermaid, PlantUML, and Excalidraw
-- ✅ **Translation synchronization** between Chinese and English versions
-- ✅ **Document metadata validation** with YAML front matter checking
-- ✅ **Structure consistency** for Viewpoints & Perspectives organization
+#### `fix-all-issues.sh` - 一鍵修復所有問題
+執行所有修復腳本的主要入口點。
 
-## Scripts
-
-### Main Quality Check Script
-
-**`check-documentation-quality.sh`** - Comprehensive quality check runner
 ```bash
-# Run all quality checks
-bash scripts/check-documentation-quality.sh
-
-# Or use npm script
-npm run docs:quality
+./scripts/fix-all-issues.sh
 ```
 
-**Features:**
-- Runs all quality checks in sequence
-- Generates comprehensive reports in `build/reports/documentation-quality/`
-- Provides colored output with pass/fail status
-- Creates summary report with recommendations
+**功能**:
+- 自動備份原始碼
+- 執行所有修復腳本
+- 格式化程式碼
+- 執行品質檢查
+- 生成報告
 
-### Individual Quality Check Tools
+---
 
-#### 1. Advanced Link Checker
-**`check-links-advanced.js`** - Node.js-based link validation
+### 2. 個別修復腳本
+
+#### `fix-lambda-braces.py` - 修復 Lambda 大括號 (S1602)
+移除 lambda 表達式中不必要的大括號。
+
 ```bash
-# Check internal links only (fast)
-node scripts/check-links-advanced.js
-
-# Check internal and external links (slower)
-node scripts/check-links-advanced.js --external
-
-# Verbose output with progress
-node scripts/check-links-advanced.js --verbose
-
-# Custom output file
-node scripts/check-links-advanced.js --output reports/links.json
-
-# NPM scripts
-npm run docs:links          # Internal links only
-npm run docs:links:external # Include external links
+python3 scripts/fix-lambda-braces.py
 ```
 
-**Features:**
-- Validates markdown `\1` and HTML `<a href="">` links
-- Supports both internal file links and external HTTP/HTTPS links
-- Generates JSON and Markdown reports
-- Handles relative paths and anchor links
-- Configurable timeout and user agent
-- Excludes localhost and example domains
+**修復範例**:
+```java
+// 修復前
+return registry -> {
+    registry.config().meterFilter(...);
+};
 
-#### 2. Diagram Validator
-**`validate-diagrams.py`** - Python-based diagram syntax validation
+// 修復後
+return registry -> registry.config().meterFilter(...);
+```
+
+---
+
+#### `fix-string-constants.py` - 提取重複字串常量 (S1192)
+自動提取重複的字串字面值為常量。
+
 ```bash
-# Validate all diagrams
-python3 scripts/validate-diagrams.py
-
-# Verbose output
-python3 scripts/validate-diagrams.py --verbose
-
-# Custom output directory
-python3 scripts/validate-diagrams.py --output reports/
-
-# Validate specific directory
-python3 scripts/validate-diagrams.py docs/diagrams/
-
-# NPM script
-npm run docs:diagrams
+python3 scripts/fix-string-constants.py
 ```
 
-**Supported Formats:**
-- **Mermaid** (`.mmd`): Validates diagram types, syntax structure
-- **PlantUML** (`.puml`, `.plantuml`): Checks `@startuml`/`@enduml` tags, balance
-- **Excalidraw** (`.excalidraw`): Validates JSON structure, required fields
+**修復範例**:
+```java
+// 修復前
+subsegment.putAnnotation("operation", op1);
+subsegment.putAnnotation("operation", op2);
+subsegment.putAnnotation("operation", op3);
 
-**Features:**
-- Detects diagram types automatically
-- Validates syntax structure and common errors
-- Generates detailed reports with error locations
-- Supports metadata extraction from diagrams
+// 修復後
+private static final String METADATA_OPERATION = "operation";
 
-#### 3. Metadata Validator
-**`validate-metadata.py`** - YAML front matter validation
+subsegment.putAnnotation(METADATA_OPERATION, op1);
+subsegment.putAnnotation(METADATA_OPERATION, op2);
+subsegment.putAnnotation(METADATA_OPERATION, op3);
+```
+
+---
+
+#### `fix-null-safety.py` - 添加 Null Safety 導入
+為檔案添加 `@NonNull` 和 `@Nullable` 的導入語句。
+
 ```bash
-# Validate document metadata
-python3 scripts/validate-metadata.py
-
-# Verbose output
-python3 scripts/validate-metadata.py --verbose
-
-# Generate metadata templates
-python3 scripts/validate-metadata.py --generate-templates
-
-# NPM script
-npm run docs:metadata
+python3 scripts/fix-null-safety.py
 ```
 
-**Validation Rules:**
-- **Viewpoints**: Requires `title`, `viewpoint`, `description`, `stakeholders`
-- **Perspectives**: Requires `title`, `perspective`, `description`, `quality_attributes`
-- **Templates**: Requires `title`, `type`, `description`, `usage`
-- **General**: Requires `title`, `description`
+**注意**: 此腳本只添加導入，實際的註解需要使用 IDE 的快速修復功能手動添加。
 
-**Features:**
-- Validates YAML front matter syntax
-- Checks required fields by document type
-- Validates viewpoint/perspective values against standard lists
-- Generates metadata templates for missing documents
-- Cross-references related documents
+---
 
-#### 4. Translation Quality Checker
-**`check-translation-quality.sh`** - Enhanced translation synchronization
+#### `report-unused-code.py` - 報告未使用的程式碼
+生成未使用欄位和變數的報告。
+
 ```bash
-# Check translation quality
-bash scripts/check-translation-quality.sh
-
-# NPM script
-npm run docs:translation
+python3 scripts/report-unused-code.py
 ```
 
-**Features:**
-- Validates document structure and content
-- Validates Viewpoints & Perspectives structure
-- Supports new documentation organization
+**輸出範例**:
+```
+🔴 Unused Private Fields (5):
+📁 app/src/main/java/Example.java
+   - Logger logger
+   - String unusedField
 
-### Test and Validation Scripts
+🟡 Potentially Unused Variables (3):
+📁 app/src/main/java/Example.java
+   - String temp = "value"
+```
 
-#### System Test Runner
-**`test-documentation-quality.sh`** - Comprehensive system testing
+---
+
+#### `fix-sonar-issues.sh` - 修復其他 SonarLint 問題
+處理其他常見的 SonarLint 問題。
+
 ```bash
-# Test all quality check components
-bash scripts/test-documentation-quality.sh
+./scripts/fix-sonar-issues.sh
 ```
 
-**Features:**
-- Tests all quality check scripts
-- Creates test files with known issues
-- Validates script functionality
-- Generates test reports
+---
 
-## Configuration Files
+## 🚀 使用流程
 
-### Markdown Linting
-**`.markdownlint.json`** - Markdown syntax rules
-- Line length: 120 characters
-- Allows HTML elements: `br`, `sub`, `sup`, `kbd`, `details`, `summary`
-- Ordered list style enforcement
-- Heading structure validation
+### 快速開始
 
+1. **執行主腳本**:
+   ```bash
+   chmod +x scripts/*.sh
+   ./scripts/fix-all-issues.sh
+   ```
 
+2. **檢查備份**:
+   備份會自動建立在 `backup-YYYYMMDD-HHMMSS/` 目錄
 
-## NPM Scripts
+3. **審查變更**:
+   在 IDE 中檢查所有變更
 
-Add to your workflow:
+4. **手動修復**:
+   使用 IDE 的快速修復功能處理剩餘問題
+
+5. **執行測試**:
+   ```bash
+   ./gradlew test
+   ```
+
+6. **提交變更**:
+   ```bash
+   git add .
+   git commit -m "fix: resolve SonarLint issues"
+   ```
+
+---
+
+### 逐步執行
+
+如果你想更細緻地控制修復過程：
+
 ```bash
-# Individual checks
-npm run docs:quality      # Comprehensive quality check
-npm run docs:links        # Link validation (internal)
-npm run docs:links:external # Link validation (external)
-npm run docs:diagrams     # Diagram validation
-npm run docs:metadata     # Metadata validation
-npm run docs:translation  # Translation quality
+# 1. 修復 lambda 大括號
+python3 scripts/fix-lambda-braces.py
 
-# Combined validation
-npm run docs:validate     # Run all checks
+# 2. 提取字串常量
+python3 scripts/fix-string-constants.py
+
+# 3. 添加 null safety 導入
+python3 scripts/fix-null-safety.py
+
+# 4. 生成未使用程式碼報告
+python3 scripts/report-unused-code.py
+
+# 5. 格式化程式碼
+./gradlew spotlessApply
+
+# 6. 執行檢查
+./gradlew check
 ```
 
-## GitHub Actions Integration
+---
 
-**`.github/workflows/documentation-quality.yml`** - Automated CI/CD checks
+## 🔧 IDE 快速修復
 
-**Triggers:**
-- Push to `main`/`develop` branches
-- Pull requests affecting documentation
-- Manual workflow dispatch
+某些問題需要使用 IDE 的快速修復功能：
 
-**Features:**
-- Runs all quality checks automatically
-- Uploads reports as artifacts
-- Comments on PRs with quality summary
-- Supports external link checking option
+### IntelliJ IDEA / Kiro IDE
 
-## Reports and Output
+1. **顯示快速修復**: `Alt + Enter`
+2. **組織導入**: `Ctrl + Alt + O`
+3. **格式化程式碼**: `Ctrl + Alt + L`
+4. **安全刪除**: `Alt + Delete`
 
-### Report Structure
-```
-build/reports/documentation-quality/
-├── reports-summaries/frontend/documentation-quality-summary.md     # Main summary report
-├── markdown-lint-report.txt             # Markdown syntax issues
-├── link-check-report.txt                # Link validation results
-├── advanced-link-check.json             # Detailed link analysis
-├── advanced-link-check.md               # Link check summary
-├── diagram-validation-report.json       # Diagram validation data
-├── reports-summaries/diagrams/diagram-validation-report.md         # Diagram validation summary
-├── metadata-validation-report.json      # Metadata validation data
-├── metadata-validation-report.md        # Metadata validation summary
-└── translation-sync-report.txt          # Translation quality results
-```
+### 常見快速修復
 
-### Report Contents
-- **Pass/Fail Status**: Clear indicators for each check
-- **Error Details**: Specific file locations and error messages
-- **Recommendations**: Actionable steps to fix issues
-- **Statistics**: Coverage percentages and success rates
-- **Trends**: Historical comparison when available
+| 問題 | 快速修復 |
+|------|----------|
+| Null safety warnings | Add @NonNull annotation |
+| Unused variables | Remove unused variable |
+| Unused fields | Safe delete |
+| Missing @Override | Add @Override annotation |
+| Deprecated API | Replace with new API |
 
-## Prerequisites
+---
 
-### Required Tools
-- **Node.js 18+**: For link checking and npm scripts
-- **Python 3.8+**: For diagram and metadata validation
-- **Bash**: For shell scripts (macOS/Linux)
+## 📊 問題類型對照表
 
-### Python Dependencies
+| SonarLint 規則 | 描述 | 腳本 | 狀態 |
+|---------------|------|------|------|
+| S1192 | 重複字串字面值 | `fix-string-constants.py` | ✅ 自動 |
+| S1602 | Lambda 不必要的大括號 | `fix-lambda-braces.py` | ✅ 自動 |
+| S1068 | 未使用的私有欄位 | `report-unused-code.py` | 📋 報告 |
+| S1481 | 未使用的局部變數 | `report-unused-code.py` | 📋 報告 |
+| S1854 | 無用的賦值 | `report-unused-code.py` | 📋 報告 |
+| S125 | 註解掉的程式碼 | - | 🔧 手動 |
+| S1126 | 簡化 if-then-else | - | 🔧 手動 |
+| S2925 | Thread.sleep() | - | 🔧 手動 |
+| Null Safety | Null 安全警告 | `fix-null-safety.py` | ⚠️ 半自動 |
+
+---
+
+## ⚠️ 注意事項
+
+### 備份
+- 腳本會自動建立備份
+- 備份位置: `backup-YYYYMMDD-HHMMSS/`
+- 建議在執行前先提交到 Git
+
+### 審查變更
+- **務必審查所有自動變更**
+- 某些修復可能不適用於特定情況
+- 使用 `git diff` 檢查變更
+
+### 測試
+- 修復後務必執行測試
+- 確保沒有破壞現有功能
+- 檢查 Gradle 構建是否成功
+
+### 限制
+- 腳本使用正則表達式，不是完整的 AST 解析
+- 某些複雜情況可能無法正確處理
+- 建議在小範圍測試後再大規模應用
+
+---
+
+## 🐛 故障排除
+
+### Python 腳本無法執行
 ```bash
-# Install PyYAML for metadata validation
-pip3 install pyyaml
+# 確保 Python 3 已安裝
+python3 --version
 
-# Or use system package manager
-brew install python-yq  # macOS
+# 賦予執行權限
+chmod +x scripts/*.py
 ```
 
-### Node.js Dependencies
+### Gradle 命令失敗
 ```bash
-# Install markdownlint globally
-npm install -g markdownlint-cli
+# 清理並重新構建
+./gradlew clean build
 
-# Or install project dependencies
-npm ci
+# 檢查 Java 版本
+java -version  # 應該是 Java 21
 ```
 
-## Usage Examples
-
-### Daily Development Workflow
+### 腳本修改了不該修改的內容
 ```bash
-# Quick quality check before commit
-npm run docs:quality
+# 從備份恢復
+cp -r backup-YYYYMMDD-HHMMSS/src app/
 
-# Fix any issues found
-# Re-run specific checks
-npm run docs:links
-npm run docs:metadata
+# 或使用 Git 恢復
+git checkout -- app/src
 ```
 
-### Pre-Release Validation
-```bash
-# Comprehensive validation including external links
-npm run docs:links:external
-npm run docs:validate
+---
 
-# Review reports
-open build/reports/documentation-quality/reports-summaries/frontend/documentation-quality-summary.md
-```
+## 📝 貢獻
 
-### Continuous Integration
-```bash
-# In CI/CD pipeline
-npm ci
-npm run docs:validate
+如果你發現腳本的問題或有改進建議：
 
-# Upload reports for review
-# Fail build if critical issues found
-```
+1. 在專案中建立 Issue
+2. 描述問題和預期行為
+3. 提供範例程式碼
+4. 提交 Pull Request
 
-## Troubleshooting
+---
 
-### Common Issues
+## 📚 相關文件
 
-**1. PyYAML Not Available**
-```bash
-# Install PyYAML
-pip3 install --user pyyaml
-# Or use system package manager
-brew install python-yq
-```
+- [Development Standards](../.kiro/steering/development-standards.md)
+- [Code Quality Checklist](../.kiro/steering/code-quality-checklist.md)
+- [IDE Configuration Standards](../.kiro/steering/ide-configuration-standards.md)
 
-**2. Markdownlint Not Found**
-```bash
-# Install globally
-npm install -g markdownlint-cli
-# Or use npx
-npx markdownlint docs/**/*.md
-```
+---
 
-**3. Permission Denied**
-```bash
-# Make scripts executable
-chmod +x scripts/*.sh scripts/*.js scripts/*.py
-```
-
-**4. External Link Timeouts**
-```bash
-# Skip external links for faster checking
-node scripts/check-links-advanced.js  # Internal only
-```
-
-### Performance Optimization
-
-**For Large Documentation Sets:**
-- Use internal-only link checking for daily development
-- Run external link checking in CI/CD only
-- Use `--verbose` flag to monitor progress
-- Consider parallel execution for multiple directories
-
-**Memory Usage:**
-- Diagram validation: ~50MB for 100+ diagrams
-- Link checking: ~100MB for 300+ documents
-- Metadata validation: ~20MB for typical documentation
-
-## Integration with Development Workflow
-
-### Pre-Commit Hooks
-```bash
-# Add to .git/hooks/pre-commit
-#!/bin/bash
-npm run docs:quality
-if [ $? -ne 0 ]; then
-    echo "Documentation quality checks failed. Please fix issues before committing."
-    exit 1
-fi
-```
-
-### IDE Integration
-- Configure markdownlint extension for real-time syntax checking
-- Set up file watchers for automatic validation
-- Use task runners for integrated quality checks
-
-### Documentation Review Process
-1. **Author**: Run `npm run docs:quality` before creating PR
-2. **Reviewer**: Check quality reports in PR comments
-3. **Maintainer**: Ensure all quality checks pass before merge
-4. **Release**: Run comprehensive validation including external links
-
-This comprehensive quality check system ensures consistent, high-quality documentation that meets the requirements of the Viewpoints & Perspectives restructure specification.
+**最後更新**: 2025-11-22
+**維護者**: Development Team

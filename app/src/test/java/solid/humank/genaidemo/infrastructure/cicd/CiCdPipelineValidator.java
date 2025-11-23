@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
  * Validator for CI/CD pipeline testing
  */
 @Component
-public class CiCdPipelineValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(CiCdPipelineValidator.class);
+public class CiCdPipelineValidator {    private static final Logger logger = LoggerFactory.getLogger(CiCdPipelineValidator.class);
 
     public boolean validatePipelineConfiguration() {
         logger.info("Validating pipeline configuration");

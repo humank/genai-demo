@@ -1,16 +1,7 @@
 package solid.humank.genaidemo.infrastructure.config;
 
-import com.amazonaws.xray.AWSXRay;
-import com.amazonaws.xray.AWSXRayRecorderBuilder;
-import com.amazonaws.xray.entities.Segment;
-import com.amazonaws.xray.entities.Subsegment;
-import com.amazonaws.xray.plugins.EC2Plugin;
-// ECS Plugin removed - using EKS only
-import com.amazonaws.xray.plugins.EKSPlugin;
-import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
-import com.amazonaws.xray.strategy.LogErrorContextMissingStrategy;
-import com.amazonaws.xray.strategy.sampling.LocalizedSamplingStrategy;
-import org.aspectj.lang.ProceedingJoinPoint;
+import java.net.URL;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
@@ -22,16 +13,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Profile;
 
+import com.amazonaws.xray.AWSXRay;
+import com.amazonaws.xray.AWSXRayRecorderBuilder;
+import com.amazonaws.xray.entities.Segment;
+import com.amazonaws.xray.entities.Subsegment;
+import com.amazonaws.xray.plugins.EC2Plugin;
+// ECS Plugin removed - using EKS only
+import com.amazonaws.xray.plugins.EKSPlugin;
+import com.amazonaws.xray.spring.aop.AbstractXRayInterceptor;
+import com.amazonaws.xray.strategy.LogErrorContextMissingStrategy;
+import com.amazonaws.xray.strategy.sampling.LocalizedSamplingStrategy;
+
 import jakarta.annotation.PostConstruct;
-import java.net.URL;
-import java.util.Map;
 
 /**
  * AWS X-Ray Distributed Tracing Configuration
- * 
- * This configuration enables X-Ray distributed tracing for the GenAI Demo application
+ *
+ * This configuration enables X-Ray distributed tracing for the GenAI Demo
+ * application
  * running in EKS with comprehensive trace collection and analysis.
- * 
+ *
  * Features:
  * - Automatic trace collection for HTTP requests
  * - Service method tracing with annotations
@@ -39,15 +40,14 @@ import java.util.Map;
  * - External service call tracing
  * - Custom business logic tracing
  * - Integration with CloudWatch and Grafana
- * 
+ *
  * Created: 2025年9月24日 下午6:23 (台北時間)
  */
 @Configuration
-@Profile({"staging", "production"})
+@Profile({ "staging", "production" })
 @ConditionalOnProperty(name = "aws.xray.enabled", havingValue = "true")
 @EnableAspectJAutoProxy
 public class XRayTracingConfig {
-
     private static final Logger logger = LoggerFactory.getLogger(XRayTracingConfig.class);
 
     @Value("${aws.xray.tracing-name:genai-demo}")
@@ -58,9 +58,6 @@ public class XRayTracingConfig {
 
     @Value("${aws.xray.sampling.rate:0.1}")
     private double samplingRate;
-
-    @Value("${aws.xray.sampling.reservoir:1}")
-    private int samplingReservoir;
 
     @Value("${spring.profiles.active:development}")
     private String environment;
@@ -95,8 +92,8 @@ public class XRayTracingConfig {
             // Build and set global recorder
             AWSXRay.setGlobalRecorder(builder.build());
 
-            logger.info("X-Ray tracing initialized successfully for service: {}, environment: {}", 
-                       tracingName, environment);
+            logger.info("X-Ray tracing initialized successfully for service: {}, environment: {}",
+                    tracingName, environment);
 
         } catch (Exception e) {
             logger.error("Failed to initialize X-Ray tracing", e);
@@ -108,26 +105,26 @@ public class XRayTracingConfig {
      */
     @Aspect
     public static class XRayServiceInterceptor extends AbstractXRayInterceptor {
-        
-        @Override
-        protected Map<String, Map<String, Object>> generateMetadata(ProceedingJoinPoint pjp, Subsegment subsegment) {
-            return super.generateMetadata(pjp, subsegment);
-        }
 
         @Pointcut("@within(com.amazonaws.xray.spring.aop.XRayEnabled) && execution(* solid.humank.genaidemo.application..*(..))")
-        public void xrayEnabledClasses() {}
+        public void xrayEnabledClasses() {
+        }
 
         @Pointcut("execution(* solid.humank.genaidemo.application..*Service.*(..))")
-        public void serviceLayer() {}
+        public void serviceLayer() {
+        }
 
         @Pointcut("execution(* solid.humank.genaidemo.infrastructure..*Repository.*(..))")
-        public void repositoryLayer() {}
+        public void repositoryLayer() {
+        }
 
         @Pointcut("execution(* solid.humank.genaidemo.interfaces..*Controller.*(..))")
-        public void controllerLayer() {}
+        public void controllerLayer() {
+        }
 
         @Pointcut("xrayEnabledClasses() || serviceLayer() || repositoryLayer()")
-        public void xrayTrace() {}
+        public void xrayTrace() {
+        }
     }
 
     /**
@@ -150,7 +147,6 @@ public class XRayTracingConfig {
      * Utility class for custom X-Ray tracing
      */
     public static class XRayTracingUtils {
-
         private static final Logger logger = LoggerFactory.getLogger(XRayTracingUtils.class);
 
         /**

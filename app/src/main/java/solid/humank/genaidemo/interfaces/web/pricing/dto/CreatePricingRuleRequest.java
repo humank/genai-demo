@@ -25,7 +25,7 @@ public class CreatePricingRuleRequest {
     @Schema(
             description = "產品唯一識別碼",
             example = "PROD-001",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             pattern = "^PROD-[0-9]{3,}$")
     private String productId;
 
@@ -38,7 +38,7 @@ public class CreatePricingRuleRequest {
     @Schema(
             description = "最終價格，經過所有折扣計算後的實際售價",
             example = "899.99",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             minimum = "0.01",
             maximum = "999999.99")
     private double finalPrice;
@@ -46,7 +46,7 @@ public class CreatePricingRuleRequest {
     @Schema(
             description = "貨幣代碼，遵循 ISO 4217 標準",
             example = "TWD",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             allowableValues = {"TWD", "USD", "EUR", "JPY", "CNY"})
     private String currency;
 
@@ -64,21 +64,21 @@ public class CreatePricingRuleRequest {
     @Schema(
             description = "定價規則生效開始時間",
             example = "2024-01-01T00:00:00",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             format = "date-time")
     private LocalDateTime effectiveFrom;
 
     @Schema(
             description = "定價規則生效結束時間",
             example = "2024-12-31T23:59:59",
-            required = true,
+            requiredMode = Schema.RequiredMode.REQUIRED,
             format = "date-time")
     private LocalDateTime effectiveTo;
 
-    @Schema(description = "產品類別，用於分類管理和批量定價策略", example = "ELECTRONICS", required = true)
+    @Schema(description = "產品類別，用於分類管理和批量定價策略", example = "ELECTRONICS", requiredMode = Schema.RequiredMode.REQUIRED)
     private ProductCategoryDto productCategory;
 
-    @Schema(description = "定價策略類型，決定如何計算最終價格的邏輯", example = "PERCENTAGE_DISCOUNT", required = true)
+    @Schema(description = "定價策略類型，決定如何計算最終價格的邏輯", example = "PERCENTAGE_DISCOUNT", requiredMode = Schema.RequiredMode.REQUIRED)
     private PricingStrategyType pricingStrategy;
 
     // 無參構造函數，用於JSON反序列化

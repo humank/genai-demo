@@ -25,7 +25,6 @@ public class RecommendationEventHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RecommendationEventHandler.class);
 
     // 注意：這裡應該注入推薦應用服務，但目前專案中沒有推薦 bounded context
-    // private final RecommendationApplicationService
     // recommendationApplicationService;
 
     public RecommendationEventHandler() {
@@ -79,7 +78,6 @@ public class RecommendationEventHandler {
                 customerId, productId, quantity, unitPrice);
 
         // 實際調用推薦應用服務
-        // recommendationApplicationService.updateCustomerPreference(customerId,
         // productId, quantity, unitPrice);
 
         // 模擬實作：記錄推薦更新

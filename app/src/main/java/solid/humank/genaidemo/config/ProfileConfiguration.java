@@ -18,14 +18,13 @@ public class ProfileConfiguration {
 
     // Profile configuration properties are now handled by
     // ProfileConfigurationResolver
-    // to avoid bean conflicts and provide better conflict resolution
 
     /**
      * Profile validation configuration methods
      */
     public boolean isTestProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
+        if (activeProfiles == null || activeProfiles.length == 0) {
             return false;
         }
         for (String profile : activeProfiles) {
@@ -38,7 +37,7 @@ public class ProfileConfiguration {
 
     public boolean isDevelopmentProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
+        if (activeProfiles == null || activeProfiles.length == 0) {
             return false;
         }
         for (String profile : activeProfiles) {
@@ -51,7 +50,7 @@ public class ProfileConfiguration {
 
     public boolean isProductionProfile() {
         String[] activeProfiles = environment.getActiveProfiles();
-        if (activeProfiles == null) {
+        if (activeProfiles == null || activeProfiles.length == 0) {
             return false;
         }
         for (String profile : activeProfiles) {

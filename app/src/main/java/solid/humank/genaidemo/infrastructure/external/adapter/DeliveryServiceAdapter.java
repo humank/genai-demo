@@ -14,9 +14,7 @@ import solid.humank.genaidemo.domain.delivery.service.DeliveryService;
 
 /** 配送服務適配器 用於適配新舊兩個配送服務 暫時禁用以解決啟動問題 */
 // @Service
-public class DeliveryServiceAdapter implements DeliveryService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceAdapter.class);
+public class DeliveryServiceAdapter implements DeliveryService {    private static final Logger logger = LoggerFactory.getLogger(DeliveryServiceAdapter.class);
 
     private final solid.humank.genaidemo.domain.delivery.service.DeliveryService deliveryService;
     private final DeliveryRepository deliveryRepository;

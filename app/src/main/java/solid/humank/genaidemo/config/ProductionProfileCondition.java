@@ -5,17 +5,18 @@ import java.util.Arrays;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.lang.NonNull;
 
 /**
  * Condition for Production Profile Bean Creation
- * 
+ *
  * This condition ensures that production profile beans are only created when
  * the production profile is active and there are no conflicting profiles.
  */
 public class ProductionProfileCondition implements Condition {
 
     @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    public boolean matches(@NonNull ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
         String[] activeProfiles = context.getEnvironment().getActiveProfiles();
 
         // Check if production profile is active
@@ -31,12 +32,7 @@ public class ProductionProfileCondition implements Condition {
         boolean hasDevelopmentProfile = Arrays.stream(activeProfiles)
                 .anyMatch(profile -> "dev".equals(profile) || "development".equals(profile));
 
-        if (hasTestProfile || hasDevelopmentProfile) {
-            // Production cannot be combined with test or development profiles
-            return false;
-        }
-
-        // Production profile is active and no conflicts detected
-        return true;
+        // Production cannot be combined with test or development profiles
+        return !(hasTestProfile || hasDevelopmentProfile);
     }
 }

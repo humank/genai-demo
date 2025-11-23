@@ -1,0 +1,32 @@
+# Unused Code Suppression List
+# Add @SuppressWarnings("unused") to these locations
+
+## Unused Fields
+ProfileValidationConfiguration.java:13
+TestPerformanceConfiguration.java:34
+TracingAspect.java:31
+DynamoDBGlobalTablesService.java:25
+OpenApiDocumentationUnitTest.java:44 (both constants)
+InMemoryDistributedLockManager.java:34,37
+ResilientServiceWrapper.java:44
+
+## Unused Methods (Resilience4j fallbacks - keep these)
+ExampleResilientService.java:77
+ExampleResilientService.java:138
+ExampleResilientService.java:170
+ExampleResilientService.java:234
+ExampleResilientService.java:267
+
+## Unused Methods (Consider removing)
+ProfileValidationConfiguration.java:197
+FlywayDatabaseConfiguration.java:38
+FlywayDatabaseConfiguration.java:52
+TestPerformanceMonitor.java:404,408,412,420,474,486
+
+## Unused Variables (Fix by using or removing)
+SecretsManagerEndpoint.java:77 - cacheStats
+CrossRegionCacheMetrics.java - tags variables (10 locations)
+DistributedLockMetrics.java - tags variables (6 locations)
+CrossRegionCacheService.java:171 - duration
+ProfileConfigurationValidator.java:103,113 - boolean flags
+TestExecutionMonitor.java:75 - BiFunction parameters

@@ -19,9 +19,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEventPublisher;
  * 需求 6.3: 確保事件在事務提交後才被處理
  * 需求 6.4: 實現事務回滾時事件清理機制
  */
-public class TransactionalDomainEventPublisher implements DomainEventPublisher {
-
-    private static final Logger logger = LoggerFactory.getLogger(TransactionalDomainEventPublisher.class);
+public class TransactionalDomainEventPublisher implements DomainEventPublisher {    private static final Logger logger = LoggerFactory.getLogger(TransactionalDomainEventPublisher.class);
 
     private final ApplicationEventPublisher eventPublisher;
 

@@ -16,6 +16,5 @@ import solid.humank.genaidemo.GenAiDemoApplication;
 )
 @ActiveProfiles("test")
 public class CucumberSpringConfiguration {
-    // This class provides Spring context for Cucumber tests
     // No additional configuration needed - Spring Boot auto-configuration handles everything
 }

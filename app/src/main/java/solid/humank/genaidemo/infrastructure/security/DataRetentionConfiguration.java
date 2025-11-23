@@ -195,9 +195,7 @@ public class DataRetentionConfiguration {
  * Data retention service for automated cleanup
  */
 @Component
-class DataRetentionService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DataRetentionService.class);
+class DataRetentionService {    private static final Logger logger = LoggerFactory.getLogger(DataRetentionService.class);
 
     private final DataRetentionConfiguration retentionConfig;
 

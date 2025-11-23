@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
  * Mock business intelligence service for tests
  */
 @Service
-public class BusinessIntelligenceService {
-
-    private static final Logger logger = LoggerFactory.getLogger(BusinessIntelligenceService.class);
+public class BusinessIntelligenceService {    private static final Logger logger = LoggerFactory.getLogger(BusinessIntelligenceService.class);
 
     public void simulateEventPublishing(String eventType) {
         logger.info("Simulating event publishing for: {}", eventType);
@@ -63,7 +61,6 @@ public class BusinessIntelligenceService {
     }
 
     public double getDataProcessingLatency() {
-        // Mock implementation - would return actual latency
         return 2.5; // seconds
     }
 

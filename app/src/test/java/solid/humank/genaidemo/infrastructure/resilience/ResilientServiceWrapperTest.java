@@ -28,8 +28,7 @@ class ResilientServiceWrapperTest {
     
     private ResilientServiceWrapper resilientWrapper;
     private CircuitBreakerRegistry circuitBreakerRegistry;
-    private RetryRegistry retryRegistry;
-    private TimeLimiterRegistry timeLimiterRegistry;
+    private RetryRegistry retryRegistry;    private TimeLimiterRegistry timeLimiterRegistry;
     private MeterRegistry meterRegistry;
     
     @BeforeEach

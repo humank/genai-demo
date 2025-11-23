@@ -19,9 +19,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
  * The routing decision is made per database operation, allowing real-time
  * adaptation to changing health conditions.
  */
-public class SmartRoutingDataSource extends AbstractRoutingDataSource {
-    
-    private static final Logger logger = LoggerFactory.getLogger(SmartRoutingDataSource.class);
+public class SmartRoutingDataSource extends AbstractRoutingDataSource {    private static final Logger logger = LoggerFactory.getLogger(SmartRoutingDataSource.class);
     
     private final RouteSelector routeSelector;
     

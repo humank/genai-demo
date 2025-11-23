@@ -20,9 +20,7 @@ import solid.humank.genaidemo.domain.common.aggregate.AggregateRootInterface;
 @Aspect
 @Component
 @Order(100) // 確保在事務攔截器之後執行
-public class DomainEventPublishingAspect {
-
-    private static final Logger logger = LoggerFactory.getLogger(DomainEventPublishingAspect.class);
+public class DomainEventPublishingAspect {    private static final Logger logger = LoggerFactory.getLogger(DomainEventPublishingAspect.class);
 
     private final DomainEventApplicationService domainEventApplicationService;
 

@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
  * Validator for load testing and performance validation
  */
 @Component
-public class LoadTestingValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(LoadTestingValidator.class);
+public class LoadTestingValidator {    private static final Logger logger = LoggerFactory.getLogger(LoadTestingValidator.class);
 
     public boolean validatePerformanceUnderLoad() {
         logger.info("Validating performance under load");

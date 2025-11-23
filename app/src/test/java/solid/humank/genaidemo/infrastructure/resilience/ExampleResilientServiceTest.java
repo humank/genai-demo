@@ -223,13 +223,11 @@ class ExampleResilientServiceTest {
      */
     // @SpringBootTest
     // @Test
-    // void should_open_circuit_breaker_after_failure_threshold() {
     //     // Given: Circuit breaker is closed
     //     CircuitBreaker cb = circuitBreakerRegistry.circuitBreaker("exampleService");
     //     assertThat(cb.getState()).isEqualTo(CircuitBreaker.State.CLOSED);
     //     
     //     // When: Trigger failures to exceed threshold
-    //     for (int i = 0; i < 10; i++) {
     //         try {
     //             service.findById("fail-" + i);
     //         } catch (Exception e) {
@@ -246,9 +244,7 @@ class ExampleResilientServiceTest {
      */
     // @SpringBootTest
     // @Test
-    // void should_retry_on_transient_failures() {
     //     // Given: Service that fails first 2 times then succeeds
-    //     AtomicInteger attempts = new AtomicInteger(0);
     //     
     //     // When: Call service
     //     String result = service.save("test-data");

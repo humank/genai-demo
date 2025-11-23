@@ -2,9 +2,11 @@ package solid.humank.genaidemo.infrastructure.payment.persistence.repository;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
 import solid.humank.genaidemo.infrastructure.payment.persistence.entity.JpaPaymentEntity;
 
 /** JPA 支付儲存庫 用於與資料庫交互的 Spring Data JPA 儲存庫 */
@@ -25,7 +27,8 @@ public interface JpaPaymentRepository extends JpaRepository<JpaPaymentEntity, St
      * @param id 支付ID
      * @return 支付
      */
-    Optional<JpaPaymentEntity> findById(String id);
+    @Override
+    Optional<JpaPaymentEntity> findById(@org.springframework.lang.NonNull String id);
 
     // ========== 統計查詢方法 ==========
 

@@ -35,35 +35,8 @@ public class FlywayDatabaseConfiguration {
         };
     }
 
-    private void configureForH2(org.flywaydb.core.api.configuration.FluentConfiguration configuration) {
-        log.info("Applying H2-specific Flyway configuration");
-
-        configuration
-                .baselineOnMigrate(true)
-                .validateOnMigrate(true)
-                .cleanDisabled(false) // Allow clean in development
-                .outOfOrder(false)
-                .placeholderReplacement(true)
-                .placeholders(java.util.Map.of(
-                        "database.type", "h2",
-                        "environment", "development"));
-    }
-
-    private void configureForPostgreSQL(org.flywaydb.core.api.configuration.FluentConfiguration configuration) {
-        log.info("Applying PostgreSQL-specific Flyway configuration");
-
-        configuration
-                .baselineOnMigrate(false) // Don't baseline in production
-                .validateOnMigrate(true)
-                .cleanDisabled(true) // Never allow clean in production
-                .outOfOrder(false)
-                .placeholderReplacement(true)
-                .placeholders(java.util.Map.of(
-                        "database.type", "postgresql",
-                        "environment", "production"));
-    }
-
-    // Note: We don't create a custom Flyway bean to avoid circular dependency
     // Spring Boot's auto-configuration will handle Flyway creation
-    // Our FlywayConfigurationCustomizer will customize the configuration
+    // Database-specific configuration can be added via application.yml:
+    // spring.flyway.baseline-on-migrate=true (for H2)
+    // spring.flyway.clean-disabled=true (for PostgreSQL)
 }

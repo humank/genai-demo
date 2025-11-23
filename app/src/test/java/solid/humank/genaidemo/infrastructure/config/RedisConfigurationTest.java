@@ -80,20 +80,16 @@ class RedisConfigurationTest {
     class WhenMultiRegionEnabled {
 
         // @Autowired(required = false)
-        // private ActiveActiveRedisService activeActiveRedisService;
 
         @Test
         void should_configure_active_active_service() {
             // Temporarily disabled - ActiveActiveRedisService not implemented yet
-            // assertThat(activeActiveRedisService).isNotNull();
         }
 
         @Test
         void should_have_correct_region_configuration() {
             // Temporarily disabled - ActiveActiveRedisService not implemented yet
-            // if (activeActiveRedisService != null) {
             //     assertThat(activeActiveRedisService.getCurrentRegion()).isEqualTo("us-east-1");
-            //     assertThat(activeActiveRedisService.isMultiRegionEnabled()).isTrue();
             // }
         }
     }

@@ -117,9 +117,6 @@ public class ShoppingCartDomainService {
     public void cleanupExpiredCarts(CustomerId customerId) {
         // 簡化實現 - 假設沒有過期購物車需要清理
         // List<ShoppingCart> expiredCarts =
-        // shoppingCartRepository.findExpiredByCustomerId(customerId);
-        // for (ShoppingCart cart : expiredCarts) {
-        // shoppingCartRepository.delete(cart);
     }
 
     /**

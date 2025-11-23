@@ -23,8 +23,7 @@ import solid.humank.genaidemo.config.ProfileConfigurationProperties;
 @Tag(name = "Profile", description = "Profile information and configuration")
 public class ProfileInfoController {
 
-    private final Environment environment;
-    private final ProfileConfigurationProperties profileProperties;
+    private final Environment environment;    private final ProfileConfigurationProperties profileProperties;
 
     public ProfileInfoController(Environment environment,
             ProfileConfigurationProperties profileProperties) {

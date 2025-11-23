@@ -101,7 +101,6 @@ public record UserActivityStatsDto(
                     double views = pageViews instanceof Number ? ((Number) pageViews).doubleValue() : 0.0;
                     double userActions = actions instanceof Number ? ((Number) actions).doubleValue() : 0.0;
 
-                    // 活躍度分數 = 會話數 + 頁面瀏覽數 + 用戶操作數
                     return sessions + views + userActions;
                 })
                 .sum();

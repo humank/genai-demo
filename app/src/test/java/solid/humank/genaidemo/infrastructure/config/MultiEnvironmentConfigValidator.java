@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
  * Validator for multi-environment configuration testing
  */
 @Component
-public class MultiEnvironmentConfigValidator {
-
-    private static final Logger logger = LoggerFactory.getLogger(MultiEnvironmentConfigValidator.class);
+public class MultiEnvironmentConfigValidator {    private static final Logger logger = LoggerFactory.getLogger(MultiEnvironmentConfigValidator.class);
 
     public boolean validateTestEnvironmentConfig() {
         logger.info("Validating test environment configuration");

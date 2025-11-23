@@ -37,7 +37,6 @@ public class TestDatabaseValidatorConfiguration {
         
         log.info("Using test DatabaseConfigurationValidator - validation disabled");
         
-        // Create an anonymous subclass that overrides the validation method
         return new DatabaseConfigurationValidator(dataSource, databaseConfigurationManager, flyway) {
             @Override
             public void validateDatabaseOnStartup() {

@@ -13,9 +13,7 @@ import solid.humank.genaidemo.domain.common.event.DomainEvent;
  * making it suitable for development and testing environments where
  * analytics infrastructure is not available.
  */
-public class NoOpAnalyticsEventPublisher implements AnalyticsEventPublisher {
-
-    private static final Logger logger = LoggerFactory.getLogger(NoOpAnalyticsEventPublisher.class);
+public class NoOpAnalyticsEventPublisher implements AnalyticsEventPublisher {    private static final Logger logger = LoggerFactory.getLogger(NoOpAnalyticsEventPublisher.class);
 
     @Override
     public void publish(DomainEvent event) {

@@ -22,9 +22,7 @@ import solid.humank.genaidemo.infrastructure.event.publisher.DomainEventPublishe
  * Requirements: 2.3, 2.4
  */
 @Component
-public class TransactionalEventHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(TransactionalEventHandler.class);
+public class TransactionalEventHandler {    private static final Logger logger = LoggerFactory.getLogger(TransactionalEventHandler.class);
 
     /**
      * Handle events after successful transaction commit

@@ -70,7 +70,7 @@ public class DatabaseConfigurationValidator {
 
         } catch (DatabaseConfigurationException e) {
             log.error("Database validation failed: {}", e.getMessage(), e);
-            throw e;
+            throw new RuntimeException("Operation failed", e);
         } catch (Exception e) {
             log.error("Unexpected error during database validation", e);
             throw new DatabaseConfigurationException("Database validation failed", e);

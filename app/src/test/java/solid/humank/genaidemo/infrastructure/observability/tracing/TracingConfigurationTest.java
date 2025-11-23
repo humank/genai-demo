@@ -35,8 +35,7 @@ import solid.humank.genaidemo.config.TestObservabilityConfiguration;
 @DisplayName("追蹤配置測試")
 class TracingConfigurationTest {
 
-    @Autowired
-    private OpenTelemetry openTelemetry;
+    @Autowired    private OpenTelemetry openTelemetry;
 
     @Autowired
     private Tracer tracer;

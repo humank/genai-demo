@@ -25,9 +25,7 @@ import jakarta.persistence.OptimisticLockException;
  * @since 1.0
  */
 @Component
-public class OptimisticLockingConflictDetector {
-
-    private static final Logger logger = LoggerFactory.getLogger(OptimisticLockingConflictDetector.class);
+public class OptimisticLockingConflictDetector {    private static final Logger logger = LoggerFactory.getLogger(OptimisticLockingConflictDetector.class);
 
     /**
      * 衝突信息記錄

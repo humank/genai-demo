@@ -14,22 +14,22 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 /**
  * Aurora 讀寫分離配置
- * 
+ *
  * 提供 Aurora Global Database 的讀寫端點分離配置，包含：
  * 1. 寫入端點配置（主要端點）
  * 2. 讀取端點配置（只讀副本）
  * 3. 動態路由邏輯
  * 4. 事務感知的端點選擇
- * 
+ *
  * 配置說明：
  * - 寫入操作自動路由到寫入端點
  * - 只讀操作自動路由到讀取端點
  * - 事務中的操作統一使用寫入端點
  * - 支援手動指定端點類型
- * 
+ *
  * 建立日期: 2025年9月24日 上午10:18 (台北時間)
  * 需求: 1.1 - 並發控制機制全面重構
- * 
+ *
  * @author Kiro AI Assistant
  * @since 1.0
  */
@@ -82,18 +82,20 @@ public class AuroraReadWriteConfiguration {
     @Bean
     @Primary
     public DataSource routingDataSource(@Qualifier("writeDataSource") DataSource writeDataSource,
-                                       @Qualifier("readDataSource") DataSource readDataSource) {
+            @Qualifier("readDataSource") DataSource readDataSource) {
         AuroraRoutingDataSource routingDataSource = new AuroraRoutingDataSource();
-        
+
         // 設定目標數據源
-        routingDataSource.setTargetDataSources(java.util.Map.of(
-            DataSourceType.WRITE.getKey(), writeDataSource,
-            DataSourceType.READ.getKey(), readDataSource
-        ));
-        
+        java.util.Map<Object, Object> targetDataSources = new java.util.HashMap<>();
+        targetDataSources.put(DataSourceType.WRITE.getKey(), writeDataSource);
+        targetDataSources.put(DataSourceType.READ.getKey(), readDataSource);
+        routingDataSource.setTargetDataSources(targetDataSources);
+
         // 設定默認數據源為寫入數據源
+        // Spring framework API accepts DataSource as Object
+        // writeDataSource is guaranteed non-null by Spring's @Bean contract
         routingDataSource.setDefaultTargetDataSource(writeDataSource);
-        
+
         return routingDataSource;
     }
 
@@ -106,7 +108,7 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 設定當前線程使用的數據源類型
-         * 
+         *
          * @param dataSourceType 數據源類型
          */
         public static void setDataSourceType(DataSourceType dataSourceType) {
@@ -115,7 +117,7 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 獲取當前線程使用的數據源類型
-         * 
+         *
          * @return 數據源類型
          */
         public static DataSourceType getDataSourceType() {
@@ -162,15 +164,20 @@ public class AuroraReadWriteConfiguration {
      */
     public static class DataSourceRouter {
 
+        private DataSourceRouter() {
+            // Private constructor to prevent instantiation
+        }
+
         /**
          * 在指定的數據源類型下執行操作
-         * 
+         *
          * @param dataSourceType 數據源類型
-         * @param operation 要執行的操作
-         * @param <T> 返回類型
+         * @param operation      要執行的操作
+         * @param <T>            返回類型
          * @return 操作結果
          */
-        public static <T> T executeWithDataSource(DataSourceType dataSourceType, java.util.function.Supplier<T> operation) {
+        public static <T> T executeWithDataSource(DataSourceType dataSourceType,
+                java.util.function.Supplier<T> operation) {
             DataSourceType previousType = AuroraRoutingDataSource.getDataSourceType();
             try {
                 AuroraRoutingDataSource.setDataSourceType(dataSourceType);
@@ -186,9 +193,9 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 在讀取數據源下執行操作
-         * 
+         *
          * @param operation 要執行的操作
-         * @param <T> 返回類型
+         * @param <T>       返回類型
          * @return 操作結果
          */
         public static <T> T executeWithReadDataSource(java.util.function.Supplier<T> operation) {
@@ -197,9 +204,9 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 在寫入數據源下執行操作
-         * 
+         *
          * @param operation 要執行的操作
-         * @param <T> 返回類型
+         * @param <T>       返回類型
          * @return 操作結果
          */
         public static <T> T executeWithWriteDataSource(java.util.function.Supplier<T> operation) {
@@ -208,9 +215,9 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 在指定的數據源類型下執行無返回值操作
-         * 
+         *
          * @param dataSourceType 數據源類型
-         * @param operation 要執行的操作
+         * @param operation      要執行的操作
          */
         public static void executeWithDataSource(DataSourceType dataSourceType, Runnable operation) {
             executeWithDataSource(dataSourceType, () -> {
@@ -221,7 +228,7 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 在讀取數據源下執行無返回值操作
-         * 
+         *
          * @param operation 要執行的操作
          */
         public static void executeWithReadDataSource(Runnable operation) {
@@ -230,7 +237,7 @@ public class AuroraReadWriteConfiguration {
 
         /**
          * 在寫入數據源下執行無返回值操作
-         * 
+         *
          * @param operation 要執行的操作
          */
         public static void executeWithWriteDataSource(Runnable operation) {
