@@ -8,8 +8,8 @@ stakeholders: ["SRE Team", "Operations Team", "Architecture Team", "DevOps Team"
 
 # High Availability Design - Comprehensive Guide
 
-> **Perspective**: Availability  
-> **Purpose**: Complete high availability architecture, fault tolerance, automated failover, and resilience strategies  
+> **Perspective**: Availability
+> **Purpose**: Complete high availability architecture, fault tolerance, automated failover, and resilience strategies
 > **Audience**: SRE Team, Operations Team, Architecture Team, DevOps Team
 
 ## Document Overview
@@ -45,34 +45,42 @@ This comprehensive guide consolidates all high availability and fault tolerance 
 ### Multi-AZ Deployment
 
 **Architecture Overview**:
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    AWS Region (us-east-1)                    │
-│                                                              │
-│  ┌────────────────────────┐  ┌────────────────────────┐   │
-│  │   Availability Zone A   │  │   Availability Zone B   │   │
-│  │                         │  │                         │   │
-│  │  ┌──────────────────┐  │  │  ┌──────────────────┐  │   │
-│  │  │  EKS Node Group  │  │  │  │  EKS Node Group  │  │   │
-│  │  │  (3 nodes)       │  │  │  │  (3 nodes)       │  │   │
-│  │  └──────────────────┘  │  │  └──────────────────┘  │   │
-│  │                         │  │                         │   │
-│  │  ┌──────────────────┐  │  │  ┌──────────────────┐  │   │
-│  │  │  RDS Primary     │◄─┼──┼─►│  RDS Standby     │  │   │
-│  │  │  (Active)        │  │  │  │  (Sync Replica)  │  │   │
-│  │  └──────────────────┘  │  │  └──────────────────┘  │   │
-│  │                         │  │                         │   │
-│  │  ┌──────────────────┐  │  │  ┌──────────────────┐  │   │
-│  │  │  Redis Primary   │◄─┼──┼─►│  Redis Replica   │  │   │
-│  │  └──────────────────┘  │  │  └──────────────────┘  │   │
-│  └────────────────────────┘  └────────────────────────┘   │
-│                                                              │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │         Application Load Balancer (ALB)               │  │
-│  │         - Health checks every 30s                     │  │
-│  │         - Automatic traffic distribution              │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Region["AWS Region (us-east-1)"]
+        direction TB
+
+        ALB["Application Load Balancer (ALB)<br/>Health checks every 30s"]
+
+        subgraph AZ_A["Availability Zone A"]
+            NodeA["EKS Node Group<br/>(3 nodes)"]
+            DB_A[("RDS Primary<br/>(Active)")]
+            Redis_A[("Redis Primary")]
+        end
+
+        subgraph AZ_B["Availability Zone B"]
+            NodeB["EKS Node Group<br/>(3 nodes)"]
+            DB_B[("RDS Standby<br/>(Sync Replica)")]
+            Redis_B[("Redis Replica")]
+        end
+
+        ALB --> NodeA
+        ALB --> NodeB
+
+        NodeA --> DB_A
+        NodeA --> Redis_A
+        NodeB --> DB_A
+        NodeB --> Redis_A
+
+        DB_A <-->|Sync Replication| DB_B
+        Redis_A <-->|Replication| Redis_B
+    end
+
+    style Region fill:#f9f9f9,stroke:#333,stroke-width:2px
+    style AZ_A fill:#e1f5fe,stroke:#0277bd,stroke-width:1px
+    style AZ_B fill:#e1f5fe,stroke:#0277bd,stroke-width:1px
+    style DB_A fill:#fff3e0,stroke:#ef6c00
+    style DB_B fill:#fff3e0,stroke:#ef6c00
 ```
 
 **Key Components**:
@@ -106,13 +114,13 @@ This comprehensive guide consolidates all high availability and fault tolerance 
 ```yaml
 Service Level Objectives (SLOs):
   Overall System Availability: 99.9% (8.76 hours downtime/year)
-  
+
   Component Targets:
     Application Tier: 99.95%
     Database Tier: 99.99%
     Cache Tier: 99.9%
     Load Balancer: 99.99%
-    
+
   Recovery Objectives:
     RTO (Recovery Time Objective): < 5 minutes
     RPO (Recovery Point Objective): < 5 minutes
@@ -130,13 +138,13 @@ Service Level Objectives (SLOs):
 ```java
 @Service
 public class OrderService {
-    
+
     @CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
     @Retry(name = "paymentService", fallbackMethod = "paymentFallback")
     public PaymentResponse processPayment(PaymentRequest request) {
         return paymentClient.process(request);
     }
-    
+
     private PaymentResponse paymentFallback(PaymentRequest request, Exception ex) {
         // Queue payment for later processing
         paymentQueue.enqueue(request);
@@ -181,7 +189,7 @@ resilience4j:
       orderService:
         maxConcurrentCalls: 25
         maxWaitDuration: 100ms
-      
+
       inventoryService:
         maxConcurrentCalls: 10
         maxWaitDuration: 50ms
@@ -193,11 +201,11 @@ resilience4j:
 ```java
 @Service
 public class ExternalApiClient {
-    
+
     private final RestTemplate restTemplate;
-    
+
     public ExternalApiClient() {
-        HttpComponentsClientHttpRequestFactory factory = 
+        HttpComponentsClientHttpRequestFactory factory =
             new HttpComponentsClientHttpRequestFactory();
         factory.setConnectTimeout(5000);  // 5 seconds
         factory.setReadTimeout(10000);    // 10 seconds
@@ -222,28 +230,33 @@ public class ExternalApiClient {
 - Compute instance failure
 
 **Failover Process**:
-```text
-1. Failure Detection (30 seconds)
-   - Health checks fail
-   - Connection timeouts
-   - Replication lag monitoring
+```mermaid
+sequenceDiagram
+    participant Mon as Monitor
+    participant DB_Pri as RDS Primary
+    participant DB_Stby as RDS Standby
+    participant DNS as Route53
+    participant App as Application
 
-2. Failover Decision (10 seconds)
-   - Validate standby health
-   - Check replication status
-   - Verify data consistency
+    Note over Mon,DB_Pri: 1. Failure Detection (30s)
+    Mon->>DB_Pri: Health Check
+    DB_Pri--xMon: Timeout / Failure
+    Mon->>Mon: Confirm Failure (3 retries)
 
-3. DNS Update (30-60 seconds)
-   - Update CNAME record
-   - Point to standby instance
-   - Propagate DNS changes
+    Note over Mon,DB_Stby: 2. Failover Decision (10s)
+    Mon->>DB_Stby: Check Replication Status
+    DB_Stby-->>Mon: Synced (Lag=0)
+    Mon->>DB_Stby: Promote to Primary
 
-4. Standby Promotion (10-20 seconds)
-   - Promote standby to primary
-   - Accept write operations
-   - Resume normal operations
+    Note over DNS,App: 3. DNS Update (30-60s)
+    DB_Stby->>DNS: Update CNAME Record
+    DNS-->>App: Propagate New IP
 
-Total Failover Time: 60-120 seconds
+    Note over DB_Stby: 4. Standby Promotion (10-20s)
+    DB_Stby->>DB_Stby: Apply Pending Logs
+    DB_Stby->>DB_Stby: Open for Writes
+
+    App->>DB_Stby: Reconnect & Resume Writes
 ```
 
 **Monitoring Failover**:
@@ -275,7 +288,7 @@ spec:
     rollingUpdate:
       maxSurge: 2
       maxUnavailable: 1
-  
+
   template:
     spec:
       affinity:
@@ -288,11 +301,11 @@ spec:
                 values:
                 - order-service
             topologyKey: topology.kubernetes.io/zone
-      
+
       containers:
       - name: order-service
         image: order-service:latest
-        
+
         livenessProbe:
           httpGet:
             path: /actuator/health/liveness
@@ -301,7 +314,7 @@ spec:
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
-        
+
         readinessProbe:
           httpGet:
             path: /actuator/health/readiness
@@ -323,12 +336,12 @@ Redis Cluster:
   Replicas per Group: 2
   Automatic Failover: Enabled
   Failover Timeout: 15 seconds
-  
+
 Failover Process:
   1. Replica promotion (5-10 seconds)
   2. Cluster reconfiguration (3-5 seconds)
   3. Client reconnection (2-5 seconds)
-  
+
 Total Failover Time: 10-20 seconds
 ```
 
@@ -339,39 +352,43 @@ Total Failover Time: 10-20 seconds
 ### Global Distribution
 
 **Multi-Region Setup**:
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                    Primary Region (us-east-1)                │
-│  - Full application stack                                    │
-│  - RDS Primary database                                      │
-│  - Active-Active traffic handling                            │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              │ Cross-Region Replication
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       DR Region (us-west-2)                  │
-│  - Full application stack (standby)                          │
-│  - RDS Read Replica                                          │
-│  - Ready for promotion                                       │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Primary["Primary Region (us-east-1)"]
+        direction TB
+        App_Pri["Full Application Stack"]
+        DB_Pri[("RDS Primary")]
+        App_Pri --> DB_Pri
+    end
+
+    subgraph DR["DR Region (us-west-2)"]
+        direction TB
+        App_DR["Full Application Stack<br/>(Standby)"]
+        DB_DR[("RDS Read Replica")]
+        App_DR -.-> DB_DR
+    end
+
+    DB_Pri ==>|Cross-Region Replication| DB_DR
+
+    style Primary fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style DR fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
 ```
 
 **Traffic Routing**:
 ```yaml
 Route53 Configuration:
   Routing Policy: Failover
-  
+
   Primary Record:
     Region: us-east-1
     Health Check: Enabled
     Failover: Primary
-    
+
   Secondary Record:
     Region: us-west-2
     Health Check: Enabled
     Failover: Secondary
-    
+
   Health Check:
     Protocol: HTTPS
     Path: /health
@@ -478,17 +495,17 @@ Quarterly Tests:
 
 ```yaml
 Service Level Agreements:
-  
+
   Uptime SLA: 99.9%
     - Maximum downtime: 8.76 hours/year
     - Maximum downtime: 43.8 minutes/month
     - Measurement: Calendar month
-    
+
   Performance SLA:
     - API Response Time: < 2 seconds (95th percentile)
     - Page Load Time: < 3 seconds (95th percentile)
     - Error Rate: < 0.1%
-    
+
   Recovery SLA:
     - RTO: < 5 minutes
     - RPO: < 5 minutes
@@ -505,7 +522,7 @@ Availability Metrics:
   - Failed health checks
   - Failover events
   - Recovery time actual vs target
-  
+
 Alert Thresholds:
   - Availability < 99.9%: Critical
   - Failed health checks > 3: Warning
@@ -568,9 +585,6 @@ kubectl scale deployment --all --replicas=10
 - **Original Availability Documents** (Reference):
   - `high-availability.md` - Core HA architecture
   - `fault-tolerance.md` - Resilience patterns
-  - `automated-failover.md` - Failover procedures
-  - `multi-region-architecture.md` - Global distribution
-  - `chaos-engineering.md` - Resilience testing
 
 - **Active References**:
   - [Disaster Recovery](disaster-recovery.md) - DR runbooks
@@ -578,14 +592,13 @@ kubectl scale deployment --all --replicas=10
 
 ---
 
-**Document Version**: 1.0  
-**Consolidation Date**: 2024-11-19  
-**Last Updated**: 2024-11-19  
-**Owner**: SRE Team  
+**Document Version**: 1.0
+**Consolidation Date**: 2024-11-19
+**Last Updated**: 2024-11-19
+**Owner**: SRE Team
 **Next Review**: 2025-02-19
 
 **Change History**:
 - 2024-11-19: Initial consolidation of high availability documentation
 - Integrated: high-availability.md, fault-tolerance.md, automated-failover.md, multi-region-architecture.md, chaos-engineering.md
 - Maintained separate: disaster-recovery.md (DR-specific runbooks), requirements.md (detailed requirements)
-

@@ -1,7 +1,7 @@
 # Availability & Resilience Perspective
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Operations & Architecture Team
 
 ## Purpose
@@ -57,7 +57,7 @@ This perspective applies to all system components and addresses:
 
 - **RTO (Recovery Time Objective)**: 5 minutes
   - Time to restore service after failure
-  
+
 - **RPO (Recovery Point Objective)**: 1 minute
   - Maximum acceptable data loss
 
@@ -72,19 +72,19 @@ graph TD
     A[Layer 1: Infrastructure Resilience] --> B[Layer 2: Application Resilience]
     B --> C[Layer 3: Data Protection]
     C --> D[Layer 4: Monitoring & Response]
-    
+
     A1[Multi-AZ deployment] --> A
     A2[Auto-scaling] --> A
     A3[Load balancing] --> A
-    
+
     B1[Circuit breakers] --> B
     B2[Retry mechanisms] --> B
     B3[Graceful degradation] --> B
-    
+
     C1[Automated backups] --> C
     C2[Point-in-time recovery] --> C
     C3[Cross-region replication] --> C
-    
+
     D1[Real-time monitoring] --> D
     D2[Automated alerting] --> D
     D3[Incident response] --> D
@@ -243,7 +243,7 @@ graph TD
 
 ### Implementation Guides
 
-- [Fault Tolerance Patterns](fault-tolerance.md) - Circuit breakers, retries, fallbacks
+- [High Availability Design](high-availability-design.md) - Comprehensive HA patterns, failover, and resilience
 - [Disaster Recovery](disaster-recovery.md) - Backup, restore, and failover procedures
 
 ## Document Structure
@@ -252,8 +252,8 @@ This perspective is organized into the following documents:
 
 1. **[Overview](overview.md)** (this document) - Purpose, scope, and approach
 2. **[Requirements](requirements.md)** - SLOs, quality attribute scenarios, measurable targets
-3. **[Fault Tolerance](fault-tolerance.md)** - Patterns for handling failures
-5. **[Disaster Recovery](disaster-recovery.md)** - DR strategy, backup, and restore procedures
+3. **[High Availability Design](high-availability-design.md)** - Comprehensive HA architecture and patterns
+4. **[Disaster Recovery](disaster-recovery.md)** - DR strategy, backup, and restore procedures
 
 ## Metrics and Monitoring
 
@@ -279,12 +279,12 @@ See [Operational Viewpoint - Monitoring](../../viewpoints/operational/monitoring
 ```java
 @Service
 public class OrderService {
-    
+
     @CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
     public PaymentResponse processPayment(PaymentRequest request) {
         return paymentClient.process(request);
     }
-    
+
     private PaymentResponse paymentFallback(PaymentRequest request, Exception ex) {
         // Queue for later processing
         paymentQueue.enqueue(request);
@@ -328,7 +328,7 @@ public Order createOrder(CreateOrderCommand command) {
 ```java
 @Component
 public class DatabaseHealthIndicator implements HealthIndicator {
-    
+
     @Override
     public Health health() {
         try {
@@ -555,7 +555,7 @@ We practice chaos engineering to proactively identify weaknesses:
 
 ---
 
-**Next Steps**: 
+**Next Steps**:
 - Review [Requirements](requirements.md) for detailed availability targets and quality attribute scenarios
 - See [High Availability Design](high-availability-design.md) for comprehensive HA architecture
 - Consult [Disaster Recovery](disaster-recovery.md) for DR procedures and runbooks

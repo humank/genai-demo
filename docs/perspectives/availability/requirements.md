@@ -1,7 +1,7 @@
 # Availability Requirements
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Operations & Architecture Team
 
 ## Overview
@@ -79,11 +79,11 @@ This document defines the specific availability and resilience requirements for 
 
 ### Scenario 1: Database Primary Failure
 
-**Source**: Database server hardware failure  
-**Stimulus**: Primary RDS instance becomes unavailable  
-**Environment**: Production system during peak shopping hours (1000 concurrent users)  
-**Artifact**: Order processing service and customer data service  
-**Response**: System automatically fails over to Multi-AZ standby database  
+**Source**: Database server hardware failure
+**Stimulus**: Primary RDS instance becomes unavailable
+**Environment**: Production system during peak shopping hours (1000 concurrent users)
+**Artifact**: Order processing service and customer data service
+**Response**: System automatically fails over to Multi-AZ standby database
 **Response Measure**:
 
 - Failover completes within 2 minutes
@@ -92,18 +92,18 @@ This document defines the specific availability and resilience requirements for 
 - Users experience < 5 seconds of degraded performance
 - No manual intervention required
 
-**Priority**: Critical  
+**Priority**: Critical
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 2: Application Pod Crash
 
-**Source**: Application bug causing pod crash  
-**Stimulus**: Order service pod terminates unexpectedly  
-**Environment**: Normal operation with 500 concurrent users  
-**Artifact**: Order processing service  
-**Response**: Kubernetes detects failure and restarts pod; load balancer routes traffic to healthy pods  
+**Source**: Application bug causing pod crash
+**Stimulus**: Order service pod terminates unexpectedly
+**Environment**: Normal operation with 500 concurrent users
+**Artifact**: Order processing service
+**Response**: Kubernetes detects failure and restarts pod; load balancer routes traffic to healthy pods
 **Response Measure**:
 
 - Pod restart completes within 30 seconds
@@ -112,18 +112,18 @@ This document defines the specific availability and resilience requirements for 
 - Incident is logged and alerted
 - Service availability remains > 99.9%
 
-**Priority**: High  
+**Priority**: High
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 3: Availability Zone Failure
 
-**Source**: AWS availability zone outage  
-**Stimulus**: Complete AZ failure affecting 1/3 of infrastructure  
-**Environment**: Production system with 2000 concurrent users  
-**Artifact**: All services in affected AZ  
-**Response**: Traffic automatically routes to healthy AZs; auto-scaling increases capacity  
+**Source**: AWS availability zone outage
+**Stimulus**: Complete AZ failure affecting 1/3 of infrastructure
+**Environment**: Production system with 2000 concurrent users
+**Artifact**: All services in affected AZ
+**Response**: Traffic automatically routes to healthy AZs; auto-scaling increases capacity
 **Response Measure**:
 
 - Service continues without interruption
@@ -132,18 +132,18 @@ This document defines the specific availability and resilience requirements for 
 - No data loss
 - Availability remains > 99.9%
 
-**Priority**: Critical  
+**Priority**: Critical
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 4: Cache Cluster Failure
 
-**Source**: Redis cluster node failure  
-**Stimulus**: ElastiCache primary node becomes unavailable  
-**Environment**: High traffic period with 1500 concurrent users  
-**Artifact**: Product catalog and session management  
-**Response**: System fails over to replica node; application falls back to database for cache misses  
+**Source**: Redis cluster node failure
+**Stimulus**: ElastiCache primary node becomes unavailable
+**Environment**: High traffic period with 1500 concurrent users
+**Artifact**: Product catalog and session management
+**Response**: System fails over to replica node; application falls back to database for cache misses
 **Response Measure**:
 
 - Failover completes within 3 minutes
@@ -152,18 +152,18 @@ This document defines the specific availability and resilience requirements for 
 - Cache is rebuilt within 10 minutes
 - No user sessions are lost
 
-**Priority**: High  
+**Priority**: High
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 5: Payment Gateway Timeout
 
-**Source**: External payment gateway  
-**Stimulus**: Payment gateway response time exceeds 30 seconds  
-**Environment**: Checkout process with 100 concurrent payment attempts  
-**Artifact**: Payment processing service  
-**Response**: Circuit breaker opens; system queues payment for retry; user receives acknowledgment  
+**Source**: External payment gateway
+**Stimulus**: Payment gateway response time exceeds 30 seconds
+**Environment**: Checkout process with 100 concurrent payment attempts
+**Artifact**: Payment processing service
+**Response**: Circuit breaker opens; system queues payment for retry; user receives acknowledgment
 **Response Measure**:
 
 - Circuit breaker opens after 3 consecutive timeouts
@@ -172,18 +172,18 @@ This document defines the specific availability and resilience requirements for 
 - Payment completes within 5 minutes or fails gracefully
 - Order is held pending payment confirmation
 
-**Priority**: Critical  
+**Priority**: Critical
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 6: Network Partition
 
-**Source**: Network infrastructure  
-**Stimulus**: Network partition between application and database  
-**Environment**: Normal operation with 800 concurrent users  
-**Artifact**: All database-dependent services  
-**Response**: Services detect partition; read-only mode activated; cached data served  
+**Source**: Network infrastructure
+**Stimulus**: Network partition between application and database
+**Environment**: Normal operation with 800 concurrent users
+**Artifact**: All database-dependent services
+**Response**: Services detect partition; read-only mode activated; cached data served
 **Response Measure**:
 
 - Partition detected within 10 seconds
@@ -192,18 +192,18 @@ This document defines the specific availability and resilience requirements for 
 - Service recovers automatically when partition heals
 - No data corruption occurs
 
-**Priority**: High  
+**Priority**: High
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 7: Cascading Failure Prevention
 
-**Source**: Inventory service overload  
-**Stimulus**: Inventory service response time degrades to 10 seconds  
-**Environment**: Flash sale with 5000 concurrent users  
-**Artifact**: Order processing service calling inventory service  
-**Response**: Circuit breaker opens; order service uses cached inventory; graceful degradation  
+**Source**: Inventory service overload
+**Stimulus**: Inventory service response time degrades to 10 seconds
+**Environment**: Flash sale with 5000 concurrent users
+**Artifact**: Order processing service calling inventory service
+**Response**: Circuit breaker opens; order service uses cached inventory; graceful degradation
 **Response Measure**:
 
 - Circuit breaker opens after 5 slow responses
@@ -212,18 +212,18 @@ This document defines the specific availability and resilience requirements for 
 - No cascading failure to order service
 - User experience remains acceptable
 
-**Priority**: Critical  
+**Priority**: Critical
 **Related Requirements**: 3.3
 
 ---
 
 ### Scenario 8: Disaster Recovery Activation
 
-**Source**: Complete region failure  
-**Stimulus**: AWS region becomes unavailable  
-**Environment**: Production system with 3000 concurrent users  
-**Artifact**: Entire system infrastructure  
-**Response**: DNS failover to DR region; services activate from standby  
+**Source**: Complete region failure
+**Stimulus**: AWS region becomes unavailable
+**Environment**: Production system with 3000 concurrent users
+**Artifact**: Entire system infrastructure
+**Response**: DNS failover to DR region; services activate from standby
 **Response Measure**:
 
 - DNS failover completes within 5 minutes
@@ -232,7 +232,7 @@ This document defines the specific availability and resilience requirements for 
 - All critical services available
 - Users are notified of temporary service disruption
 
-**Priority**: Critical  
+**Priority**: Critical
 **Related Requirements**: 3.3
 
 ---
@@ -329,5 +329,5 @@ Critical path dependencies that affect overall availability:
 **Related Documents**:
 
 - [Overview](overview.md) - Availability perspective introduction
-- [Fault Tolerance](fault-tolerance.md) - Implementation patterns
+- [High Availability Design](high-availability-design.md) - Implementation patterns
 - [Disaster Recovery](disaster-recovery.md) - DR procedures

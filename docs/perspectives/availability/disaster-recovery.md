@@ -1,7 +1,7 @@
 # Disaster Recovery
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Operations & Infrastructure Team
 
 ## Overview
@@ -104,7 +104,7 @@ RDS Automated Backups:
   BackupRetentionPeriod: 7 days
   PreferredBackupWindow: "03:00-04:00 UTC"
   BackupType: Automated snapshot
-  
+
   Features:
 
     - Point-in-time recovery (PITR)
@@ -147,26 +147,26 @@ aws rds copy-db-snapshot \
 S3 Replication Configuration:
   SourceBucket: ecommerce-data-us-east-1
   DestinationBucket: ecommerce-data-us-west-2
-  
+
   ReplicationRule:
     Status: Enabled
     Priority: 1
-    
+
     Filter:
       Prefix: ""  # Replicate all objects
-    
+
     Destination:
       Bucket: arn:aws:s3:::ecommerce-data-us-west-2
       ReplicationTime:
         Status: Enabled
         Time:
           Minutes: 15  # Replicate within 15 minutes
-      
+
       Metrics:
         Status: Enabled
         EventThreshold:
           Minutes: 15
-    
+
     DeleteMarkerReplication:
       Status: Enabled
 ```
@@ -531,13 +531,13 @@ Alarms:
     Metric: ReplicaLag
     Threshold: 300 seconds
     Action: Alert DR team
-  
+
   - Name: DR-S3-Replication-Lag
 
     Metric: ReplicationLatency
     Threshold: 900 seconds
     Action: Alert DR team
-  
+
   - Name: DR-Region-Health-Check-Failed
 
     Metric: HealthCheckStatus
@@ -555,12 +555,12 @@ Alerts:
 
     Recipients: [leadership, ops-team, dev-team]
     Channel: [email, slack, pagerduty]
-  
+
   - Event: DNS failover completed
 
     Recipients: [ops-team]
     Channel: [slack]
-  
+
   - Event: DR services verified
 
     Recipients: [leadership, ops-team]
@@ -657,4 +657,4 @@ Track and visualize:
 
 - [Overview](overview.md) - Availability perspective introduction
 - [Requirements](requirements.md) - Recovery objectives and scenarios
-- [Fault Tolerance](fault-tolerance.md) - Application resilience patterns
+- [High Availability Design](high-availability-design.md) - Application resilience patterns

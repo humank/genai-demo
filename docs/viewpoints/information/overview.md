@@ -99,35 +99,35 @@ graph TB
             C3[Customer Profile]
             C4[Customer Preferences]
         end
-        
+
         subgraph "Order Context"
             O1[(Order DB)]
             O2[Order Aggregate]
             O3[Order Items]
             O4[Order History]
         end
-        
+
         subgraph "Product Context"
             P1[(Product DB)]
             P2[Product Aggregate]
             P3[Product Catalog]
             P4[Product Specs]
         end
-        
+
         subgraph "Inventory Context"
             I1[(Inventory DB)]
             I2[InventoryItem Aggregate]
             I3[Stock Levels]
             I4[Reservations]
         end
-        
+
         subgraph "Payment Context"
             PAY1[(Payment DB)]
             PAY2[Payment Aggregate]
             PAY3[Transactions]
             PAY4[Payment Methods]
         end
-        
+
         subgraph "Delivery Context"
             D1[(Delivery DB)]
             D2[Shipment Aggregate]
@@ -135,7 +135,7 @@ graph TB
             D4[Delivery Address]
         end
     end
-    
+
     subgraph "Event Bus - Kafka"
         E1[Domain Events]
         E2[OrderCreated]
@@ -143,18 +143,18 @@ graph TB
         E4[InventoryReserved]
         E5[ShipmentDispatched]
     end
-    
+
     O2 --> E2
     PAY2 --> E3
     I2 --> E4
     D2 --> E5
-    
+
     E2 -.-> PAY2
     E2 -.-> I2
     E3 -.-> O2
     E4 -.-> O2
     E5 -.-> O2
-    
+
     style C1 fill:#e1f5ff
     style O1 fill:#d4edda
     style P1 fill:#fff3cd
@@ -279,7 +279,7 @@ public class Order {
     private List<OrderItem> items;  // Owned entities
     private Money totalAmount;      // Calculated value
     private OrderStatus status;
-    
+
     // Business methods enforce invariants
     public void submit() {
         validateOrderSubmission();
@@ -425,7 +425,7 @@ public class JpaOrderRepository implements OrderRepository {
 
 - [Security Perspective](../../perspectives/security/overview.md) - Data protection
 - [Performance Perspective](../../perspectives/performance/overview.md) - Query optimization
-- [Evolution Perspective](../../perspectives/evolution/overview.md) - Schema evolution
+- [Evolution Perspective](../../perspectives/evolution/README.md) - Schema evolution
 
 ## Diagrams
 
@@ -447,7 +447,7 @@ public class JpaOrderRepository implements OrderRepository {
 
 ---
 
-**Document Status**: Active  
-**Last Review**: 2025-10-23  
-**Next Review**: 2026-01-23  
+**Document Status**: Active
+**Last Review**: 2025-10-23
+**Next Review**: 2026-01-23
 **Owner**: Architecture Team

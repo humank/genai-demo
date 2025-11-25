@@ -1,7 +1,7 @@
 # Internationalization Perspective
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Product & Engineering Team
 
 ## Purpose
@@ -105,7 +105,7 @@ graph TD
 ```java
 @Configuration
 public class I18nConfiguration {
-    
+
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -115,7 +115,7 @@ public class I18nConfiguration {
         messageSource.setCacheSeconds(3600);
         return messageSource;
     }
-    
+
     @Bean
     public LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
@@ -149,9 +149,9 @@ src/main/resources/i18n/
 ```java
 @Service
 public class OrderService {
-    
+
     private final MessageSource messageSource;
-    
+
     public String getOrderConfirmationMessage(Order order, Locale locale) {
         return messageSource.getMessage(
             "order.confirmation",
@@ -219,7 +219,7 @@ import { useTranslation } from 'react-i18next';
 
 function ProductCard({ product }) {
   const { t } = useTranslation('product');
-  
+
   return (
     <div>
       <h2>{product.name}</h2>
@@ -437,7 +437,7 @@ graph TD
 
 ### Other Perspectives
 
-- [Accessibility Perspective](../accessibility/overview.md) - Accessible in all languages
+- [Accessibility Perspective](../accessibility/README.md) - Accessible in all languages
 - [Location Perspective](../location/overview.md) - Geographic distribution
 
 ### Implementation Guides
@@ -467,8 +467,8 @@ This perspective is organized into the following documents:
 
 ### Expansion Strategy
 
-**Phase 1 (2024-2025)**: English, Traditional Chinese, Simplified Chinese  
-**Phase 2 (2025-2026)**: Japanese, Korean, Spanish  
+**Phase 1 (2024-2025)**: English, Traditional Chinese, Simplified Chinese
+**Phase 2 (2025-2026)**: Japanese, Korean, Spanish
 **Phase 3 (2026+)**: French, German, additional languages
 
 ---

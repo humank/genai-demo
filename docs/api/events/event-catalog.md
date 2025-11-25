@@ -32,7 +32,7 @@ All events follow these naming conventions:
 
 **Total**: 7 events
 
-**Details**: See [Customer Events Documentation](contexts/customer-events.md)
+**Details**: See [Customer Context Documentation](../../viewpoints/functional/contexts/customer.md)
 
 ---
 
@@ -54,7 +54,7 @@ All events follow these naming conventions:
 
 **Total**: 11 events
 
-**Details**: See [Order Events Documentation](contexts/order-events.md)
+**Details**: See [Order Context Documentation](../../viewpoints/functional/contexts/order.md)
 
 ---
 
@@ -72,7 +72,7 @@ All events follow these naming conventions:
 
 **Total**: 7 events
 
-**Details**: See [Product Events Documentation](contexts/product-events.md)
+**Details**: See [Product Context Documentation](../../viewpoints/functional/contexts/product.md)
 
 ---
 
@@ -88,7 +88,7 @@ All events follow these naming conventions:
 
 **Total**: 5 events
 
-**Details**: See [Payment Events Documentation](contexts/payment-events.md)
+**Details**: See [Payment Context Documentation](../../viewpoints/functional/contexts/payment.md)
 
 ---
 
@@ -103,7 +103,7 @@ All events follow these naming conventions:
 
 **Total**: 4 events
 
-**Details**: See [Inventory Events Documentation](contexts/inventory-events.md)
+**Details**: See [Inventory Context Documentation](../../viewpoints/functional/contexts/inventory.md)
 
 ---
 
@@ -120,7 +120,7 @@ All events follow these naming conventions:
 
 **Total**: 6 events
 
-**Details**: See [Shipping Events Documentation](contexts/shipping-events.md)
+**Details**: See [Delivery Context Documentation](../../viewpoints/functional/contexts/delivery.md)
 
 ---
 
@@ -135,7 +135,7 @@ All events follow these naming conventions:
 
 **Total**: 4 events
 
-**Details**: See [Promotion Events Documentation](contexts/promotion-events.md)
+**Details**: See [Promotion Context Documentation](../../viewpoints/functional/contexts/promotion.md)
 
 ---
 
@@ -149,7 +149,7 @@ All events follow these naming conventions:
 
 **Total**: 3 events
 
-**Details**: See [Notification Events Documentation](contexts/notification-events.md)
+**Details**: See [Notification Context Documentation](../../viewpoints/functional/contexts/notification.md)
 
 ---
 
@@ -164,7 +164,7 @@ All events follow these naming conventions:
 
 **Total**: 4 events
 
-**Details**: See [Review Events Documentation](contexts/review-events.md)
+**Details**: See [Review Context Documentation](../../viewpoints/functional/contexts/review.md)
 
 ---
 
@@ -180,7 +180,7 @@ All events follow these naming conventions:
 
 **Total**: 5 events
 
-**Details**: See [Shopping Cart Events Documentation](contexts/shopping-cart-events.md)
+**Details**: See [Shopping Cart Context Documentation](../../viewpoints/functional/contexts/shopping-cart.md)
 
 ---
 
@@ -194,7 +194,7 @@ All events follow these naming conventions:
 
 **Total**: 3 events
 
-**Details**: See [Pricing Events Documentation](contexts/pricing-events.md)
+**Details**: See [Pricing Context Documentation](../../viewpoints/functional/contexts/pricing.md)
 
 ---
 
@@ -210,7 +210,7 @@ All events follow these naming conventions:
 
 **Total**: 5 events
 
-**Details**: See [Seller Events Documentation](contexts/seller-events.md)
+**Details**: See [Seller Context Documentation](../../viewpoints/functional/contexts/seller.md)
 
 ---
 
@@ -226,7 +226,7 @@ All events follow these naming conventions:
 
 **Total**: 5 events
 
-**Details**: See [Delivery Events Documentation](contexts/delivery-events.md)
+**Details**: See [Delivery Context Documentation](../../viewpoints/functional/contexts/delivery.md)
 
 ---
 
@@ -325,22 +325,21 @@ No events are currently deprecated.
 
 ## Quick Navigation
 
-- [Customer Events](contexts/customer-events.md)
-- [Order Events](contexts/order-events.md)
-- [Product Events](contexts/product-events.md)
-- [Payment Events](contexts/payment-events.md)
-- [Inventory Events](contexts/inventory-events.md)
-- [Shipping Events](contexts/shipping-events.md)
-- [Promotion Events](contexts/promotion-events.md)
-- [Notification Events](contexts/notification-events.md)
-- [Review Events](contexts/review-events.md)
-- [Shopping Cart Events](contexts/shopping-cart-events.md)
-- [Pricing Events](contexts/pricing-events.md)
-- [Seller Events](contexts/seller-events.md)
-- [Delivery Events](contexts/delivery-events.md)
+- [Customer Events](../../viewpoints/functional/contexts/customer.md)
+- [Order Events](../../viewpoints/functional/contexts/order.md)
+- [Product Events](../../viewpoints/functional/contexts/product.md)
+- [Payment Events](../../viewpoints/functional/contexts/payment.md)
+- [Inventory Events](../../viewpoints/functional/contexts/inventory.md)
+- [Delivery Events](../../viewpoints/functional/contexts/delivery.md)
+- [Promotion Events](../../viewpoints/functional/contexts/promotion.md)
+- [Notification Events](../../viewpoints/functional/contexts/notification.md)
+- [Review Events](../../viewpoints/functional/contexts/review.md)
+- [Shopping Cart Events](../../viewpoints/functional/contexts/shopping-cart.md)
+- [Pricing Events](../../viewpoints/functional/contexts/pricing.md)
+- [Seller Events](../../viewpoints/functional/contexts/seller.md)
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: 2025-10-25  
+**Document Version**: 1.0
+**Last Updated**: 2025-10-25
 **Owner**: Architecture Team

@@ -1,8 +1,8 @@
 # Availability & Resilience Perspective
 
-> **Status**: ✅ **A+ Grade (95%)** - Advanced High Availability  
-> **Last Updated**: 2025-11-17  
-> **Owner**: SRE Lead & Architecture Team  
+> **Status**: ✅ **A+ Grade (95%)** - Advanced High Availability
+> **Last Updated**: 2025-11-17
+> **Owner**: SRE Lead & Architecture Team
 > **Target**: 99.99% Uptime with Active-Active Multi-Region
 
 ## Overview
@@ -15,11 +15,8 @@ This perspective is organized into comprehensive guides:
 
 1. **[README.md](README.md)** (this document) - Overview and navigation
 2. **[overview.md](overview.md)** - Detailed availability principles and architecture
-4. **[fault-tolerance.md](fault-tolerance.md)** - Resilience patterns and circuit breakers
-5. **[disaster-recovery.md](disaster-recovery.md)** - DR strategy and automated testing
-6. **[multi-region-architecture.md](multi-region-architecture.md)** - Active-Active dual-region design
-7. **[automated-failover.md](automated-failover.md)** - Intelligent failover mechanisms
-8. **[chaos-engineering.md](chaos-engineering.md)** - Proactive resilience testing
+3. **[high-availability-design.md](high-availability-design.md)** - Comprehensive HA design, patterns, and failover
+4. **[disaster-recovery.md](disaster-recovery.md)** - DR strategy and automated testing
 
 ## Key Concerns
 
@@ -48,8 +45,8 @@ This perspective is organized into comprehensive guides:
 | **Core Services** | 99.95% | 4.38 hours | 21.9 minutes | 2m | 1m |
 | **Standard Services** | 99.9% | 8.76 hours | 43.8 minutes | 5m | 5m |
 
-**Critical Services**: Order processing, Payment processing, Customer authentication  
-**Core Services**: Product catalog, Shopping cart, Inventory management  
+**Critical Services**: Order processing, Payment processing, Customer authentication
+**Core Services**: Product catalog, Shopping cart, Inventory management
 **Standard Services**: Reviews, Recommendations, Analytics
 
 ### Advanced Capabilities
@@ -224,11 +221,8 @@ See [Operational Viewpoint - Unified Dashboard](../../viewpoints/operational/mon
 ### Internal Documentation
 
 - [Overview and Principles](overview.md)
-- [Fault Tolerance Patterns](fault-tolerance.md)
+- [High Availability Design](high-availability-design.md)
 - [Disaster Recovery Strategy](disaster-recovery.md)
-- [Multi-Region Architecture](multi-region-architecture.md)
-- [Automated Failover](automated-failover.md)
-- [Chaos Engineering](chaos-engineering.md)
 
 ### Related Perspectives
 
@@ -244,7 +238,7 @@ See [Operational Viewpoint - Unified Dashboard](../../viewpoints/operational/mon
 
 ---
 
-**Next Steps**: 
+**Next Steps**:
 1. Review [Overview](overview.md) for detailed availability principles
-2. Study [Multi-Region Architecture](multi-region-architecture.md) for Active-Active design
-3. Implement [Chaos Engineering](chaos-engineering.md) for continuous resilience testing
+2. Study [High Availability Design](high-availability-design.md) for Active-Active design and failover
+3. Implement [Chaos Engineering](high-availability-design.md#chaos-engineering) for continuous resilience testing

@@ -18,8 +18,8 @@ tags: ["ddd", "bounded-contexts", "use-cases", "functional-capabilities"]
 
 # Functional Viewpoint
 
-> **Status**: ✅ Active  
-> **Last Updated**: 2025-10-22  
+> **Status**: ✅ Active
+> **Last Updated**: 2025-10-22
 > **Owner**: Architecture Team
 
 ## Overview
@@ -108,20 +108,20 @@ graph TB
         DELIVERY[Delivery Context]
         NOTIF[Notification Context]
     end
-    
+
     subgraph "Product Management"
         PRODUCT[Product Context]
         INVENTORY[Inventory Context]
         PRICING[Pricing Context]
         SELLER[Seller Context]
     end
-    
+
     subgraph "Customer Engagement"
         CUSTOMER[Customer Context]
         REVIEW[Review Context]
         PROMO[Promotion Context]
     end
-    
+
     USER --> CART
     CART --> ORDER
     ORDER -.OrderCreated Event.-> PAYMENT
@@ -129,21 +129,21 @@ graph TB
     PAYMENT -.PaymentCompleted Event.-> ORDER
     ORDER -.OrderConfirmed Event.-> DELIVERY
     ORDER -.OrderConfirmed Event.-> NOTIF
-    
+
     CART --> PRODUCT
     CART --> PRICING
     ORDER --> INVENTORY
-    
+
     CUSTOMER --> ORDER
     CUSTOMER --> REVIEW
     CUSTOMER --> PROMO
-    
+
     SELLER --> PRODUCT
     SELLER --> INVENTORY
-    
+
     REVIEW --> PRODUCT
     PROMO --> PRICING
-    
+
     style USER fill:#e1f5ff
     style ORDER fill:#d4edda
     style PAYMENT fill:#fff3cd
@@ -324,7 +324,7 @@ A use case represents a specific way a user interacts with the system to achieve
 
 - [Security Perspective](../../perspectives/security/overview.md) - Authentication and authorization across contexts
 - [Performance Perspective](../../perspectives/performance/overview.md) - Performance considerations for each context
-- [Evolution Perspective](../../perspectives/evolution/overview.md) - How contexts evolve independently
+- [Evolution Perspective](../../perspectives/evolution/README.md) - How contexts evolve independently
 
 ### Related Architecture Decisions
 
@@ -447,5 +447,5 @@ A use case represents a specific way a user interacts with the system to achieve
 
 ---
 
-**Template Version**: 1.0  
+**Template Version**: 1.0
 **Last Template Update**: 2025-01-17

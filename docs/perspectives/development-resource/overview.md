@@ -1,7 +1,7 @@
 # Development Resource Perspective
 
-> **Last Updated**: 2025-10-24  
-> **Status**: Active  
+> **Last Updated**: 2025-10-24
+> **Status**: Active
 > **Owner**: Engineering Management & HR
 
 ## Purpose
@@ -313,8 +313,8 @@ Conducted quarterly to identify training needs:
 
 ### Other Perspectives
 
-- [Evolution Perspective](../evolution/overview.md) - Technology evolution and skill requirements
-- [Accessibility Perspective](../accessibility/overview.md) - Accessibility skills and training
+- [Evolution Perspective](../evolution/README.md) - Technology evolution and skill requirements
+- [Accessibility Perspective](../accessibility/README.md) - Accessibility skills and training
 
 ### Implementation Guides
 

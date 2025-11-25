@@ -65,7 +65,7 @@ This guide will help you quickly find what you need in our comprehensive documen
 
 **High availability?**
 - [Availability Perspective](perspectives/availability/README.md)
-- [Fault Tolerance](perspectives/availability/fault-tolerance.md)
+- [High Availability Design](perspectives/availability/high-availability-design.md)
 - [Disaster Recovery](perspectives/availability/disaster-recovery.md)
 
 ## 📚 Documentation Structure
