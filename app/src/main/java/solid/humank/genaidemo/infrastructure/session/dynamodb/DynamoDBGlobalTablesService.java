@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -22,6 +23,7 @@ import software.amazon.awssdk.services.dynamodb.model.*;
  * Requirements: 4.1.4 - Cross-region data synchronization
  */
 @Service
+@ConditionalOnProperty(name = "aws.dynamodb.enabled", havingValue = "true", matchIfMissing = false)
 public class DynamoDBGlobalTablesService {
 
     private final DynamoDbClient dynamoDbClient;

@@ -72,7 +72,7 @@
     </appender>
 
     <!-- Profile-specific configurations -->
-    <springProfile name="dev,test">
+    <springProfile name="local,dev,test,docker">
         <root level="DEBUG">
             <appender-ref ref="CONSOLE" />
         </root>
@@ -85,8 +85,7 @@
         </root>
 
         <!-- Security logger -->
-        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO"
-            additivity="false">
+        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO" additivity="false">
             <appender-ref ref="SECURITY" />
             <appender-ref ref="JSON" />
         </logger>
@@ -99,8 +98,7 @@
         </root>
 
         <!-- Security logger -->
-        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO"
-            additivity="false">
+        <logger name="solid.humank.genaidemo.infrastructure.security" level="INFO" additivity="false">
             <appender-ref ref="SECURITY" />
             <appender-ref ref="JSON" />
         </logger>

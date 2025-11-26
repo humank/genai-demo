@@ -1,15 +1,15 @@
 'use client'
 
 import React from 'react'
-import { Navbar } from '@/components/layout/Navbar'
+
 import { OrderList } from '@/components/order/OrderList'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { useRouter } from 'next/navigation'
 import { useStats, useOrderStatusStats } from '@/hooks/useApi'
-import { 
-  ShoppingCart, 
-  Package, 
-  Clock, 
+import {
+  ShoppingCart,
+  Package,
+  Clock,
   CheckCircle,
   XCircle,
   TrendingUp,
@@ -117,7 +117,7 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* 導航欄 */}
-      <Navbar />
+
 
       {/* 主要內容 */}
       <main className="container-modern py-8 space-y-8">
@@ -127,11 +127,11 @@ export default function OrdersPage() {
             <ShoppingCart className="h-4 w-4" />
             <span>訂單管理中心</span>
           </div>
-          
+
           <h1 className="heading-modern text-gradient">
             訂單管理
           </h1>
-          
+
           <p className="subheading-modern mx-auto">
             全面管理您的訂單流程，從創建到完成的每個環節都在您的掌控之中。
             實時追蹤訂單狀態，優化客戶體驗。
@@ -165,7 +165,7 @@ export default function OrdersPage() {
                 管理和追蹤所有訂單，支持搜索、篩選和批量操作
               </p>
             </div>
-            
+
             <div className="p-6">
               <OrderList
                 onCreateOrder={handleCreateOrder}
@@ -183,16 +183,16 @@ export default function OrdersPage() {
               <Sparkles className="h-5 w-5" />
               <span className="font-medium">快速操作</span>
             </div>
-            
+
             <h3 className="text-lg font-semibold text-foreground">
               需要處理訂單？
             </h3>
             <p className="text-muted-foreground">
               快速創建新訂單，或查看待處理的訂單列表
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
+              <button
                 onClick={handleCreateOrder}
                 className="btn-primary"
               >

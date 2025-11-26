@@ -5,17 +5,25 @@ import { finalize, tap } from 'rxjs/operators';
 import { ApiMonitoringService } from '../services/api-monitoring.service';
 import { ObservabilityService } from '../services/observability.service';
 import { SessionService } from '../services/session.service';
+import { ObservabilityConfigService } from '../config/observability.config';
 
 @Injectable()
 export class ObservabilityTraceInterceptor implements HttpInterceptor {
-  
+
   constructor(
     private sessionService: SessionService,
     private observabilityService: ObservabilityService,
-    private apiMonitoringService: ApiMonitoringService
-  ) {}
+    private apiMonitoringService: ApiMonitoringService,
+    private configService: ObservabilityConfigService
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Skip tracking for analytics endpoints to prevent infinite loops
+    const endpoints = this.configService.getApiEndpoints();
+    if (req.url.includes(endpoints.analytics) || req.url.includes(endpoints.performance) || req.url.includes(endpoints.error)) {
+      return next.handle(req);
+    }
+
     // 生成或獲取追蹤 ID
     const traceId = this.sessionService.generateNewTraceId();
     const sessionId = this.sessionService.getSessionId();
@@ -54,7 +62,7 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
             // 追蹤成功響應
             const duration = performance.now() - startTime;
             const responseSize = this.getResponseSize(event);
-            
+
             // 記錄到 API 監控服務
             this.apiMonitoringService.recordApiCallComplete(
               apiCallId,
@@ -65,14 +73,14 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
               traceId,
               responseSize
             );
-            
+
             this.trackApiCallSuccess(tracedReq, event, duration, traceId);
           }
         },
         error: (error: HttpErrorResponse) => {
           // 追蹤錯誤響應
           const duration = performance.now() - startTime;
-          
+
           // 記錄到 API 監控服務
           this.apiMonitoringService.recordApiCallComplete(
             apiCallId,
@@ -84,7 +92,7 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
             undefined,
             error.message
           );
-          
+
           this.trackApiCallError(tracedReq, error, duration, traceId);
         }
       }),
@@ -108,9 +116,9 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
   }
 
   private trackApiCallSuccess(
-    req: HttpRequest<any>, 
-    response: HttpResponse<any>, 
-    duration: number, 
+    req: HttpRequest<any>,
+    response: HttpResponse<any>,
+    duration: number,
     traceId: string
   ): void {
     // 追蹤 API 效能指標
@@ -139,9 +147,9 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
   }
 
   private trackApiCallError(
-    req: HttpRequest<any>, 
-    error: HttpErrorResponse, 
-    duration: number, 
+    req: HttpRequest<any>,
+    error: HttpErrorResponse,
+    duration: number,
     traceId: string
   ): void {
     // 追蹤 API 錯誤
@@ -179,13 +187,13 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
   }
 
   private trackBusinessApiCall(
-    req: HttpRequest<any>, 
-    response: HttpResponse<any>, 
-    duration: number, 
+    req: HttpRequest<any>,
+    response: HttpResponse<any>,
+    duration: number,
     traceId: string
   ): void {
     const url = req.url.toLowerCase();
-    
+
     // 商品相關 API
     if (url.includes('/products')) {
       if (req.method === 'GET' && url.includes('/search')) {
@@ -260,7 +268,7 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
     if (contentLength) {
       return parseInt(contentLength, 10);
     }
-    
+
     // 估算響應大小
     if (response.body) {
       try {
@@ -269,7 +277,7 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
         return 0;
       }
     }
-    
+
     return 0;
   }
 
@@ -294,7 +302,7 @@ export class ObservabilityTraceInterceptor implements HttpInterceptor {
     if (!req.body) {
       return 0;
     }
-    
+
     try {
       if (typeof req.body === 'string') {
         return req.body.length;

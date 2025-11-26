@@ -1,8 +1,8 @@
 # Local Profile Configuration (Development + Testing)
 # This configuration is activated when SPRING_PROFILES_ACTIVE=local
 
+
 spring:
-  
   # H2 Database Configuration for Development
   datasource:
     url: jdbc:h2:mem:genaidemo;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -28,6 +28,11 @@ spring:
         use_sql_comments: true
         dialect: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+  
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-local.sql
 
   # H2 Console Configuration
   h2:
@@ -106,6 +111,14 @@ management:
 # Analytics Configuration for Development (Completely Disabled)
 analytics:
   enabled: false  # 完全禁用分析功能
+  firehose:
+    stream-name: "dummy-stream"
+  data-lake:
+    bucket-name: "dummy-bucket"
+  glue:
+    database-name: "dummy-db"
+  quicksight:
+    data-source-id: "dummy-source"
 
 # AWS Secrets Manager Configuration for Local Development (DISABLED)
 aws:
@@ -125,6 +138,9 @@ app:
       kafka-events: false
       redis-enabled: false
       analytics-enabled: false
+  
+  main:
+    web-application-type: servlet
   
   # Local Redis Configuration - Disabled (使用記憶體實現)
   redis:

@@ -27,7 +27,8 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
     private final Map<String, InMemoryAnalyticsEvent> events = new ConcurrentHashMap<>();
 
     @Override
-    public List<AnalyticsEventEntity> findByUserIdAndTimestampBetween(String userId, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<AnalyticsEventEntity> findByUserIdAndTimestampBetween(String userId, LocalDateTime startTime,
+            LocalDateTime endTime) {
         return events.values().stream()
                 .filter(e -> userId.equals(e.getUserId()))
                 .filter(e -> e.getTimestamp().isAfter(startTime) && e.getTimestamp().isBefore(endTime))
@@ -35,7 +36,8 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
     }
 
     @Override
-    public List<AnalyticsEventEntity> findPerformanceEventsByPageAndTimeRange(String page, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<AnalyticsEventEntity> findPerformanceEventsByPageAndTimeRange(String page, LocalDateTime startTime,
+            LocalDateTime endTime) {
         return events.values().stream()
                 .filter(e -> "performance_metric".equals(e.getFrontendEventType()))
                 .filter(e -> page.equals(e.getPagePath()))
@@ -52,7 +54,8 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
     }
 
     @Override
-    public List<AnalyticsEventEntity> findByFrontendEventTypeAndTimestampBetween(String eventType, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<AnalyticsEventEntity> findByFrontendEventTypeAndTimestampBetween(String eventType,
+            LocalDateTime startTime, LocalDateTime endTime) {
         return events.values().stream()
                 .filter(e -> eventType.equals(e.getFrontendEventType()))
                 .filter(e -> e.getTimestamp().isAfter(startTime) && e.getTimestamp().isBefore(endTime))
@@ -64,17 +67,19 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
         List<AnalyticsEventEntity> allEvents = new ArrayList<>(events.values());
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), allEvents.size());
-        
+
         if (start > allEvents.size()) {
             return new PageImpl<>(new ArrayList<>(), pageable, allEvents.size());
         }
-        
+
         List<AnalyticsEventEntity> pageContent = allEvents.subList(start, end);
-        return new PageImpl<>(pageContent, pageable, allEvents.size());
+        return new PageImpl<>(java.util.Objects.requireNonNull((List<AnalyticsEventEntity>) pageContent), pageable,
+                allEvents.size());
     }
 
     @Override
-    public List<AnalyticsQueryService.PopularPage> findPopularPages(LocalDateTime startTime, LocalDateTime endTime, int limit) {
+    public List<AnalyticsQueryService.PopularPage> findPopularPages(LocalDateTime startTime, LocalDateTime endTime,
+            int limit) {
         Map<String, Long> pageViews = events.values().stream()
                 .filter(e -> "page_view".equals(e.getFrontendEventType()))
                 .filter(e -> e.getTimestamp().isAfter(startTime) && e.getTimestamp().isBefore(endTime))
@@ -90,7 +95,8 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
     }
 
     @Override
-    public List<AnalyticsQueryService.ActivityTrend> findActivityTrends(LocalDateTime startTime, LocalDateTime endTime) {
+    public List<AnalyticsQueryService.ActivityTrend> findActivityTrends(LocalDateTime startTime,
+            LocalDateTime endTime) {
         Map<LocalDateTime, Long> hourlyActivity = events.values().stream()
                 .filter(e -> e.getTimestamp().isAfter(startTime) && e.getTimestamp().isBefore(endTime))
                 .collect(Collectors.groupingBy(
@@ -104,10 +110,10 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
     }
 
     // 用於添加事件的方法
-    public void addEvent(String eventId, String userId, String sessionId, String eventType, 
-                        String metricType, String metricValue, String pagePath, String actionType) {
+    public void addEvent(String eventId, String userId, String sessionId, String eventType,
+            String metricType, String metricValue, String pagePath, String actionType) {
         InMemoryAnalyticsEvent event = new InMemoryAnalyticsEvent(
-                eventId, userId, sessionId, eventType, metricType, metricValue, 
+                eventId, userId, sessionId, eventType, metricType, metricValue,
                 pagePath, actionType, LocalDateTime.now());
         events.put(eventId, event);
     }
@@ -125,8 +131,8 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
         private final LocalDateTime timestamp;
 
         public InMemoryAnalyticsEvent(String id, String userId, String sessionId, String frontendEventType,
-                                    String metricType, String metricValue, String pagePath, String actionType,
-                                    LocalDateTime timestamp) {
+                String metricType, String metricValue, String pagePath, String actionType,
+                LocalDateTime timestamp) {
             this.id = id;
             this.userId = userId;
             this.sessionId = sessionId;
@@ -139,30 +145,48 @@ public class InMemoryAnalyticsEventRepository implements AnalyticsEventRepositor
         }
 
         @Override
-        public String getId() { return id; }
+        public String getId() {
+            return id;
+        }
 
         @Override
-        public String getUserId() { return userId; }
+        public String getUserId() {
+            return userId;
+        }
 
         @Override
-        public String getSessionId() { return sessionId; }
+        public String getSessionId() {
+            return sessionId;
+        }
 
         @Override
-        public String getFrontendEventType() { return frontendEventType; }
+        public String getFrontendEventType() {
+            return frontendEventType;
+        }
 
         @Override
-        public String getMetricType() { return metricType; }
+        public String getMetricType() {
+            return metricType;
+        }
 
         @Override
-        public String getMetricValue() { return metricValue; }
+        public String getMetricValue() {
+            return metricValue;
+        }
 
         @Override
-        public LocalDateTime getTimestamp() { return timestamp; }
+        public LocalDateTime getTimestamp() {
+            return timestamp;
+        }
 
         @Override
-        public String getPagePath() { return pagePath; }
+        public String getPagePath() {
+            return pagePath;
+        }
 
         @Override
-        public String getActionType() { return actionType; }
+        public String getActionType() {
+            return actionType;
+        }
     }
 }

@@ -6,7 +6,7 @@ import { ArrowLeft, Package, DollarSign, Archive, Tag, AlertTriangle, CheckCircl
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Navbar } from '@/components/layout/Navbar'
+
 import { EditProductDialog } from '@/components/product/EditProductDialog'
 import { AdjustInventoryDialog } from '@/components/inventory/AdjustInventoryDialog'
 import { useProduct, useDeleteProduct, useInventory } from '@/hooks/useApi'
@@ -36,11 +36,11 @@ export default function ProductDetailPage() {
 
   const handleDeleteProduct = async () => {
     if (!product) return
-    
+
     const confirmed = window.confirm(
       `確定要刪除產品「${product.name}」嗎？此操作無法撤銷。`
     )
-    
+
     if (confirmed) {
       try {
         await deleteProductMutation.mutateAsync(product.id)
@@ -56,7 +56,7 @@ export default function ProductDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-8 bg-muted rounded w-64"></div>
@@ -73,7 +73,7 @@ export default function ProductDetailPage() {
   if (error || !product) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="text-center space-y-4">
             <h1 className="text-2xl font-bold text-foreground">商品不存在</h1>
@@ -94,14 +94,14 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
+
+
       <main className="container-modern py-8 space-y-6">
         {/* 頁面標題 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => router.back()}
             >
@@ -144,12 +144,12 @@ export default function ProductDetailPage() {
                   <label className="text-sm font-medium text-muted-foreground">商品名稱</label>
                   <p className="text-lg font-semibold text-foreground">{product.name}</p>
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">商品描述</label>
                   <p className="text-foreground">{product.description || '暫無描述'}</p>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">分類</label>
@@ -158,7 +158,7 @@ export default function ProductDetailPage() {
                       <Badge variant="outline">{product.category}</Badge>
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">商品 ID</label>
                     <p className="text-sm text-muted-foreground font-mono">{product.id}</p>
@@ -190,7 +190,7 @@ export default function ProductDetailPage() {
                     <p className="text-2xl font-bold text-foreground">{currentStock}</p>
                     <p className="text-sm text-muted-foreground">當前庫存</p>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-muted/30 rounded-lg">
                     <div className="flex items-center justify-center mb-2">
                       <Package className="h-6 w-6 text-blue-500" />
@@ -200,7 +200,7 @@ export default function ProductDetailPage() {
                     </p>
                     <p className="text-sm text-muted-foreground">庫存狀態</p>
                   </div>
-                  
+
                   <div className="text-center p-4 bg-muted/30 rounded-lg">
                     <div className="flex items-center justify-center mb-2">
                       <DollarSign className="h-6 w-6 text-purple-500" />
@@ -224,13 +224,13 @@ export default function ProductDetailPage() {
                     </span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-3">
-                    <div 
+                    <div
                       className={cn(
                         "h-3 rounded-full transition-all duration-300",
                         isOutOfStock ? "bg-red-500" : isLowStock ? "bg-yellow-500" : "bg-green-500"
                       )}
-                      style={{ 
-                        width: `${Math.min(100, Math.max(5, (currentStock / 50) * 100))}%` 
+                      style={{
+                        width: `${Math.min(100, Math.max(5, (currentStock / 50) * 100))}%`
                       }}
                     />
                   </div>
@@ -256,13 +256,13 @@ export default function ProductDetailPage() {
                     {formatMoney(product.price)}
                   </p>
                 </div>
-                
+
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">貨幣</span>
                     <span className="font-medium">{product.price.currency}</span>
                   </div>
-                  
+
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">單位</span>
                     <span className="font-medium">每件</span>
@@ -277,26 +277,26 @@ export default function ProductDetailPage() {
                 <CardTitle>操作</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button 
-                  className="w-full" 
+                <Button
+                  className="w-full"
                   variant="outline"
                   onClick={handleEditProduct}
                 >
                   <Package className="h-4 w-4 mr-2" />
                   編輯商品
                 </Button>
-                
-                <Button 
-                  className="w-full" 
+
+                <Button
+                  className="w-full"
                   variant="outline"
                   onClick={handleAdjustInventory}
                 >
                   <Archive className="h-4 w-4 mr-2" />
                   調整庫存
                 </Button>
-                
-                <Button 
-                  className="w-full" 
+
+                <Button
+                  className="w-full"
                   variant="destructive"
                   onClick={handleDeleteProduct}
                   disabled={deleteProductMutation.isPending}
@@ -315,7 +315,7 @@ export default function ProductDetailPage() {
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
         />
-        
+
         <AdjustInventoryDialog
           productId={product?.id || null}
           productName={product?.name || ''}

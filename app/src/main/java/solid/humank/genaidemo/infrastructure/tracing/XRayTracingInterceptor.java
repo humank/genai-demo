@@ -31,6 +31,7 @@ import com.amazonaws.xray.entities.Subsegment;
 public class XRayTracingInterceptor implements ClientHttpRequestInterceptor {
 
     @Override
+    @org.springframework.lang.NonNull
     public ClientHttpResponse intercept(
             @org.springframework.lang.NonNull HttpRequest request,
             @org.springframework.lang.NonNull byte[] body,

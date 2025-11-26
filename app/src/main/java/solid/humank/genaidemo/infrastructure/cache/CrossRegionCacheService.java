@@ -5,8 +5,8 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
+// import org.redisson.api.RBucket;
+// import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -45,17 +45,17 @@ public class CrossRegionCacheService {
     private static final Duration DEFAULT_TTL = Duration.ofHours(1);
     private static final Duration INVALIDATION_TTL = Duration.ofMinutes(5);
 
-    private final RedissonClient redissonClient;
+    // private final RedissonClient redissonClient;
     private final ObjectMapper objectMapper;
     private final DistributedLockService distributedLockService;
     private final CrossRegionCacheMetrics cacheMetrics;
 
     public CrossRegionCacheService(
-            RedissonClient redissonClient,
+            // RedissonClient redissonClient,
             ObjectMapper objectMapper,
             DistributedLockService distributedLockService,
             CrossRegionCacheMetrics cacheMetrics) {
-        this.redissonClient = redissonClient;
+        // this.redissonClient = redissonClient;
         this.objectMapper = objectMapper;
         this.distributedLockService = distributedLockService;
         this.cacheMetrics = cacheMetrics;
@@ -90,23 +90,27 @@ public class CrossRegionCacheService {
 
         try {
             // Check for cache invalidation marker first
-            if (isInvalidated(normalizedKey)) {
-                cacheMetrics.recordCacheInvalidationHit(normalizedKey);
-                logger.debug("Cache key {} is marked for invalidation, skipping cache", normalizedKey);
-                return loadAndCache(normalizedKey, dataSource, ttl, startTime);
-            }
-
-            // Try to get from cache
-            RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
-            String cachedJson = bucket.get();
-
-            if (cachedJson != null) {
-                Optional<T> deserializedValue = deserializeCachedValue(cachedJson, valueType, normalizedKey, startTime);
-                if (deserializedValue.isPresent()) {
-                    return deserializedValue;
-                }
-                // Deserialization failed, continue to load from data source
-            }
+            /*
+             * if (isInvalidated(normalizedKey)) {
+             * cacheMetrics.recordCacheInvalidationHit(normalizedKey);
+             * logger.debug("Cache key {} is marked for invalidation, skipping cache",
+             * normalizedKey);
+             * return loadAndCache(normalizedKey, dataSource, ttl, startTime);
+             * }
+             * 
+             * // Try to get from cache
+             * RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
+             * String cachedJson = bucket.get();
+             * 
+             * if (cachedJson != null) {
+             * Optional<T> deserializedValue = deserializeCachedValue(cachedJson, valueType,
+             * normalizedKey, startTime);
+             * if (deserializedValue.isPresent()) {
+             * return deserializedValue;
+             * }
+             * // Deserialization failed, continue to load from data source
+             * }
+             */
 
             // Cache miss - load from data source
             long duration = System.currentTimeMillis() - startTime;
@@ -154,18 +158,15 @@ public class CrossRegionCacheService {
         long startTime = System.currentTimeMillis();
 
         try {
-            String jsonValue = objectMapper.writeValueAsString(value);
-            RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
-            bucket.setAsync(jsonValue, Duration.ofMillis(ttl.toMillis()));
+            /*
+             * String jsonValue = objectMapper.writeValueAsString(value);
+             * RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
+             * bucket.setAsync(jsonValue, Duration.ofMillis(ttl.toMillis()));
+             */
 
             long duration = System.currentTimeMillis() - startTime;
             cacheMetrics.recordCachePut(normalizedKey, duration);
             logger.debug("Cached value for key: {} with TTL {} in {} ms", normalizedKey, ttl, duration);
-
-        } catch (JsonProcessingException e) {
-            cacheMetrics.recordCacheSerializationError(normalizedKey);
-            logger.error("Failed to serialize value for caching, key: {}", normalizedKey, e);
-            throw new CrossRegionCacheException("Failed to serialize value for caching", e);
 
         } catch (Exception e) {
             long duration = System.currentTimeMillis() - startTime;
@@ -188,14 +189,17 @@ public class CrossRegionCacheService {
             long startTime = System.currentTimeMillis();
 
             try {
-                // Set invalidation marker
-                String invalidationKey = INVALIDATION_KEY_PREFIX + normalizedKey;
-                RBucket<String> invalidationBucket = redissonClient.getBucket(invalidationKey);
-                invalidationBucket.setAsync(Instant.now().toString(), INVALIDATION_TTL);
-
-                // Remove the actual cache entry
-                RBucket<String> cacheBucket = redissonClient.getBucket(normalizedKey);
-                cacheBucket.delete();
+                /*
+                 * // Set invalidation marker
+                 * String invalidationKey = INVALIDATION_KEY_PREFIX + normalizedKey;
+                 * RBucket<String> invalidationBucket =
+                 * redissonClient.getBucket(invalidationKey);
+                 * invalidationBucket.setAsync(Instant.now().toString(), INVALIDATION_TTL);
+                 * 
+                 * // Remove the actual cache entry
+                 * RBucket<String> cacheBucket = redissonClient.getBucket(normalizedKey);
+                 * cacheBucket.delete();
+                 */
 
                 long duration = System.currentTimeMillis() - startTime;
                 cacheMetrics.recordCacheInvalidation(normalizedKey, duration);
@@ -259,8 +263,11 @@ public class CrossRegionCacheService {
                 return false;
             }
 
-            RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
-            return bucket.isExists();
+            /*
+             * RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
+             * return bucket.isExists();
+             */
+            return false;
 
         } catch (Exception e) {
             logger.warn("Failed to check cache existence for key: {}", normalizedKey, e);
@@ -278,8 +285,11 @@ public class CrossRegionCacheService {
         String normalizedKey = normalizeKey(key);
 
         try {
-            RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
-            return bucket.remainTimeToLive();
+            /*
+             * RBucket<String> bucket = redissonClient.getBucket(normalizedKey);
+             * return bucket.remainTimeToLive();
+             */
+            return -1;
 
         } catch (Exception e) {
             logger.warn("Failed to get TTL for cache key: {}", normalizedKey, e);
@@ -316,7 +326,7 @@ public class CrossRegionCacheService {
 
             if (value.isPresent()) {
                 // Cache the loaded value
-                put(normalizedKey.substring(CACHE_KEY_PREFIX.length()), value.get(), ttl);
+                // put(normalizedKey.substring(CACHE_KEY_PREFIX.length()), value.get(), ttl);
 
                 long totalDuration = System.currentTimeMillis() - startTime;
                 cacheMetrics.recordCacheLoadAndStore(normalizedKey, totalDuration);
@@ -339,24 +349,29 @@ public class CrossRegionCacheService {
     private int invalidateMatchingKeys(String normalizedPattern) {
         int count = 0;
         try {
-            // Suppress deprecation warning - getKeysByPattern is the most appropriate
-            // method
-            // for pattern-based key retrieval with controlled iteration
-            @SuppressWarnings("deprecation")
-            Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(normalizedPattern);
-
-            int processedCount = 0;
-            for (String key : keys) {
-                if (key.startsWith(CACHE_KEY_PREFIX)) {
-                    invalidateSingleKey(key);
-                    count++;
-                }
-                // Limit processing to avoid excessive memory usage
-                if (++processedCount >= 1000) {
-                    logger.warn("Reached maximum key processing limit (1000) for pattern: {}", normalizedPattern);
-                    break;
-                }
-            }
+            /*
+             * // Suppress deprecation warning - getKeysByPattern is the most appropriate
+             * // method
+             * // for pattern-based key retrieval with controlled iteration
+             * 
+             * @SuppressWarnings("deprecation")
+             * Iterable<String> keys =
+             * redissonClient.getKeys().getKeysByPattern(normalizedPattern);
+             * 
+             * int processedCount = 0;
+             * for (String key : keys) {
+             * if (key.startsWith(CACHE_KEY_PREFIX)) {
+             * invalidateSingleKey(key);
+             * count++;
+             * }
+             * // Limit processing to avoid excessive memory usage
+             * if (++processedCount >= 1000) {
+             * logger.warn("Reached maximum key processing limit (1000) for pattern: {}",
+             * normalizedPattern);
+             * break;
+             * }
+             * }
+             */
         } catch (Exception e) {
             logger.error("Error invalidating keys with pattern: {}", normalizedPattern, e);
             throw new CrossRegionCacheException("Failed to invalidate keys", e);
@@ -369,12 +384,15 @@ public class CrossRegionCacheService {
      */
     private void invalidateSingleKey(String key) {
         try {
-            String invalidationKey = INVALIDATION_KEY_PREFIX + key;
-            RBucket<String> invalidationBucket = redissonClient.getBucket(invalidationKey);
-            invalidationBucket.setAsync(Instant.now().toString(), INVALIDATION_TTL);
-
-            RBucket<String> cacheBucket = redissonClient.getBucket(key);
-            cacheBucket.delete();
+            /*
+             * String invalidationKey = INVALIDATION_KEY_PREFIX + key;
+             * RBucket<String> invalidationBucket =
+             * redissonClient.getBucket(invalidationKey);
+             * invalidationBucket.setAsync(Instant.now().toString(), INVALIDATION_TTL);
+             * 
+             * RBucket<String> cacheBucket = redissonClient.getBucket(key);
+             * cacheBucket.delete();
+             */
         } catch (Exception e) {
             logger.warn("Failed to invalidate single key: {}", key, e);
             throw new CrossRegionCacheException("Failed to invalidate key: " + key, e);
@@ -386,9 +404,13 @@ public class CrossRegionCacheService {
      */
     private boolean isInvalidated(String normalizedKey) {
         try {
-            String invalidationKey = INVALIDATION_KEY_PREFIX + normalizedKey;
-            RBucket<String> invalidationBucket = redissonClient.getBucket(invalidationKey);
-            return invalidationBucket.isExists();
+            /*
+             * String invalidationKey = INVALIDATION_KEY_PREFIX + normalizedKey;
+             * RBucket<String> invalidationBucket =
+             * redissonClient.getBucket(invalidationKey);
+             * return invalidationBucket.isExists();
+             */
+            return false;
         } catch (Exception e) {
             logger.warn("Failed to check invalidation status for key: {}", normalizedKey, e);
             return false;

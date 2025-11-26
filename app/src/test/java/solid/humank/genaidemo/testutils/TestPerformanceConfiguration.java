@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.lang.NonNull;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
@@ -46,7 +47,7 @@ public class TestPerformanceConfiguration {
         private static final Logger logger = LoggerFactory.getLogger(TestPerformanceListener.class);
 
         @Override
-        public void beforeTestMethod(TestContext testContext) throws Exception {
+        public void beforeTestMethod(@NonNull TestContext testContext) throws Exception {
             logger.debug("Setting up test performance monitoring for: {}.{}",
                     testContext.getTestClass().getSimpleName(),
                     testContext.getTestMethod().getName());
@@ -62,7 +63,7 @@ public class TestPerformanceConfiguration {
         }
 
         @Override
-        public void afterTestMethod(TestContext testContext) throws Exception {
+        public void afterTestMethod(@NonNull TestContext testContext) throws Exception {
             logger.debug("Cleaning up after performance test: {}.{}",
                     testContext.getTestClass().getSimpleName(),
                     testContext.getTestMethod().getName());
@@ -78,7 +79,7 @@ public class TestPerformanceConfiguration {
         }
 
         @Override
-        public void afterTestClass(TestContext testContext) throws Exception {
+        public void afterTestClass(@NonNull TestContext testContext) throws Exception {
             logger.debug("Final cleanup after performance test class: {}",
                     testContext.getTestClass().getSimpleName());
 
@@ -157,7 +158,8 @@ public class TestPerformanceConfiguration {
                             .getBean(org.springframework.cache.CacheManager.class);
 
                     cacheManager.getCacheNames().forEach(cacheName -> {
-                        org.springframework.cache.Cache cache = cacheManager.getCache(cacheName);
+                        org.springframework.cache.Cache cache = cacheManager
+                                .getCache(java.util.Objects.requireNonNull(cacheName));
                         if (cache != null) {
                             cache.clear();
                             logger.debug("Cleared cache: {}", cacheName);

@@ -34,7 +34,8 @@ import org.springframework.web.client.RestTemplate;
 @TestConfiguration
 @Profile("test")
 @ConditionalOnClass({ TestRestTemplate.class, RestTemplate.class })
-public class UnifiedTestHttpClientConfiguration {    private static final Logger logger = LoggerFactory.getLogger(UnifiedTestHttpClientConfiguration.class);
+public class UnifiedTestHttpClientConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(UnifiedTestHttpClientConfiguration.class);
 
     /**
      * Creates a properly configured ClientHttpRequestFactory.
@@ -71,7 +72,7 @@ public class UnifiedTestHttpClientConfiguration {    private static final Logger
     public RestTemplate testRestTemplate(ClientHttpRequestFactory testClientHttpRequestFactory) {
         try {
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.setRequestFactory(testClientHttpRequestFactory);
+            restTemplate.setRequestFactory(java.util.Objects.requireNonNull(testClientHttpRequestFactory));
 
             logger.debug("Created RestTemplate with factory: {}",
                     testClientHttpRequestFactory.getClass().getSimpleName());
@@ -123,8 +124,8 @@ public class UnifiedTestHttpClientConfiguration {    private static final Logger
      */
     private SimpleClientHttpRequestFactory createSimpleClientHttpRequestFactory() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(Duration.ofSeconds(5));
-        factory.setReadTimeout(Duration.ofSeconds(15));
+        factory.setConnectTimeout(java.util.Objects.requireNonNull(Duration.ofSeconds(5)));
+        factory.setReadTimeout(java.util.Objects.requireNonNull(Duration.ofSeconds(15)));
         return factory;
     }
 
@@ -173,7 +174,8 @@ public class UnifiedTestHttpClientConfiguration {    private static final Logger
     /**
      * Validator class to verify HTTP client configuration
      */
-    public static class TestHttpClientValidator {        private static final Logger logger = LoggerFactory.getLogger(TestHttpClientValidator.class);
+    public static class TestHttpClientValidator {
+        private static final Logger logger = LoggerFactory.getLogger(TestHttpClientValidator.class);
 
         public boolean validateConfiguration(ClientHttpRequestFactory factory) {
             if (factory == null) {

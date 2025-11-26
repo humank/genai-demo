@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
  * Configures H2 in-memory database for development and test environments
  */
 @Component
-@Profile({ "local", "test" })
+@Profile({ "local", "test", "docker" })
 public class DevelopmentDatabaseConfiguration implements DatabaseConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(DevelopmentDatabaseConfiguration.class);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.lang.NonNull;
 
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
 import solid.humank.genaidemo.domain.common.event.DomainEventBus;
@@ -19,7 +20,7 @@ public class TestApplicationContextInitializer
         implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
+    public void initialize(@NonNull ConfigurableApplicationContext applicationContext) {
         // 創建測試用的領域事件發布器
         DomainEventPublisher testEventPublisher = new DomainEventPublisher() {
             @Override

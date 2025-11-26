@@ -125,7 +125,7 @@ public class ProfileConfigurationValidator {
             return true; // Mock 環境總是返回 true
         }
 
-        String actualValue = environment.getProperty(propertyName);
+        String actualValue = environment.getProperty(java.util.Objects.requireNonNull(propertyName));
         if (actualValue == null) {
             return false;
         }
@@ -151,7 +151,8 @@ public class ProfileConfigurationValidator {
         boolean allPresent = true;
 
         for (String property : requiredProperties) {
-            boolean present = environment != null && environment.getProperty(property) != null;
+            boolean present = environment != null
+                    && environment.getProperty(java.util.Objects.requireNonNull(property)) != null;
             if (!present) {
                 log.warn("Required property missing: {}", property);
                 allPresent = false;

@@ -31,7 +31,7 @@ public class ProductMapper {
         // 對於庫存數量，我們需要從 inventory 表查詢，這裡先用默認值
         StockQuantity stockQuantity = new StockQuantity(0);
 
-        return new Product(productId, name, description, price, category, stockQuantity);
+        return new Product(productId, name, description, price, category, stockQuantity, entity.getImageUrl());
     }
 
     /** 將領域模型轉換為 JPA 實體 */
@@ -46,7 +46,8 @@ public class ProductMapper {
                 product.getDescription().getDescription(),
                 product.getPrice().getAmount(),
                 product.getPrice().getCurrency().getCurrencyCode(),
-                product.getCategory().getName());
+                product.getCategory().getName(),
+                product.getImageUrl());
     }
 
     /** 更新 JPA 實體 */
@@ -60,5 +61,6 @@ public class ProductMapper {
         entity.setPrice(product.getPrice().getAmount());
         entity.setCurrency(product.getPrice().getCurrency().getCurrencyCode());
         entity.setCategory(product.getCategory().getName());
+        entity.setImageUrl(product.getImageUrl());
     }
 }

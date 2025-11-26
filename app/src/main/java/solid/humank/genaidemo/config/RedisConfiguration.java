@@ -3,12 +3,12 @@ package solid.humank.genaidemo.config;
 import java.util.Arrays;
 import java.util.List;
 
-import org.redisson.Redisson;
-import org.redisson.api.RedissonClient;
-import org.redisson.config.ClusterServersConfig;
-import org.redisson.config.Config;
-import org.redisson.config.SentinelServersConfig;
-import org.redisson.config.SingleServerConfig;
+// import org.redisson.Redisson;
+// import org.redisson.api.RedissonClient;
+// import org.redisson.config.ClusterServersConfig;
+// import org.redisson.config.Config;
+// import org.redisson.config.SentinelServersConfig;
+// import org.redisson.config.SingleServerConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -71,123 +71,132 @@ public class RedisConfiguration {
     /**
      * Create RedissonClient based on the configured mode
      */
-    @Bean
-    public RedissonClient redissonClient() {
-        Config config = new Config();
-
-        switch (mode.toUpperCase()) {
-            case "CLUSTER":
-                configureClusterMode(config);
-                break;
-            case "SENTINEL":
-                configureSentinelMode(config);
-                break;
-            case "SINGLE":
-            default:
-                configureSingleMode(config);
-                break;
-        }
-
-        // Common configuration
-        config.setLockWatchdogTimeout(lockWatchdogTimeout);
-        config.setKeepPubSubOrder(true);
-        config.setUseScriptCache(true);
-
-        return Redisson.create(config);
-    }
+    /*
+     * @Bean
+     * public RedissonClient redissonClient() {
+     * Config config = new Config();
+     * 
+     * switch (mode.toUpperCase()) {
+     * case "CLUSTER":
+     * configureClusterMode(config);
+     * break;
+     * case "SENTINEL":
+     * configureSentinelMode(config);
+     * break;
+     * case "SINGLE":
+     * default:
+     * configureSingleMode(config);
+     * break;
+     * }
+     * 
+     * // Common configuration
+     * config.setLockWatchdogTimeout(lockWatchdogTimeout);
+     * config.setKeepPubSubOrder(true);
+     * config.setUseScriptCache(true);
+     * 
+     * return Redisson.create(config);
+     * }
+     */
 
     /**
      * Configure single server mode (development/testing)
      */
-    private void configureSingleMode(Config config) {
-        SingleServerConfig singleServerConfig = config.useSingleServer()
-                .setAddress(REDIS_PROTOCOL + host + ":" + port)
-                .setDatabase(database)
-                .setConnectTimeout(connectTimeout)
-                .setTimeout(timeout)
-                .setConnectionMinimumIdleSize(connectionMinimumIdleSize)
-                .setConnectionPoolSize(connectionPoolSize)
-                .setRetryAttempts(retryAttempts);
-
-        if (password != null && !password.isEmpty()) {
-            singleServerConfig.setPassword(password);
-        }
-
-        // High availability settings
-        if (highAvailability.isEnableFailover()) {
-            singleServerConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
-        }
-    }
+    /*
+     * private void configureSingleMode(Config config) {
+     * SingleServerConfig singleServerConfig = config.useSingleServer()
+     * .setAddress(REDIS_PROTOCOL + host + ":" + port)
+     * .setDatabase(database)
+     * .setConnectTimeout(connectTimeout)
+     * .setTimeout(timeout)
+     * .setConnectionMinimumIdleSize(connectionMinimumIdleSize)
+     * .setConnectionPoolSize(connectionPoolSize)
+     * .setRetryAttempts(retryAttempts);
+     * 
+     * if (password != null && !password.isEmpty()) {
+     * singleServerConfig.setPassword(password);
+     * }
+     * 
+     * // High availability settings
+     * if (highAvailability.isEnableFailover()) {
+     * singleServerConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
+     * }
+     * }
+     */
 
     /**
      * Configure cluster mode (production with sharding)
      */
-    private void configureClusterMode(Config config) {
-        ClusterServersConfig clusterConfig = config.useClusterServers()
-                .setConnectTimeout(connectTimeout)
-                .setTimeout(timeout)
-                .setRetryAttempts(retryAttempts)
-                .setScanInterval(cluster.getScanInterval())
-                .setSlaveConnectionMinimumIdleSize(connectionMinimumIdleSize)
-                .setSlaveConnectionPoolSize(cluster.getSlaveConnectionPoolSize())
-                .setMasterConnectionMinimumIdleSize(connectionMinimumIdleSize)
-                .setMasterConnectionPoolSize(cluster.getMasterConnectionPoolSize());
-
-        if (password != null && !password.isEmpty()) {
-            clusterConfig.setPassword(password);
-        }
-
-        // Add cluster nodes
-        if (cluster.getNodes() != null && !cluster.getNodes().isEmpty()) {
-            List<String> nodeAddresses = Arrays.asList(cluster.getNodes().split(","));
-            for (String node : nodeAddresses) {
-                clusterConfig.addNodeAddress(REDIS_PROTOCOL + node.trim());
-            }
-        }
-
-        // High availability settings for cluster
-        if (highAvailability.isEnableFailover()) {
-            clusterConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
-        }
-    }
+    /*
+     * private void configureClusterMode(Config config) {
+     * ClusterServersConfig clusterConfig = config.useClusterServers()
+     * .setConnectTimeout(connectTimeout)
+     * .setTimeout(timeout)
+     * .setRetryAttempts(retryAttempts)
+     * .setScanInterval(cluster.getScanInterval())
+     * .setSlaveConnectionMinimumIdleSize(connectionMinimumIdleSize)
+     * .setSlaveConnectionPoolSize(cluster.getSlaveConnectionPoolSize())
+     * .setMasterConnectionMinimumIdleSize(connectionMinimumIdleSize)
+     * .setMasterConnectionPoolSize(cluster.getMasterConnectionPoolSize());
+     * 
+     * if (password != null && !password.isEmpty()) {
+     * clusterConfig.setPassword(password);
+     * }
+     * 
+     * // Add cluster nodes
+     * if (cluster.getNodes() != null && !cluster.getNodes().isEmpty()) {
+     * List<String> nodeAddresses = Arrays.asList(cluster.getNodes().split(","));
+     * for (String node : nodeAddresses) {
+     * clusterConfig.addNodeAddress(REDIS_PROTOCOL + node.trim());
+     * }
+     * }
+     * 
+     * // High availability settings for cluster
+     * if (highAvailability.isEnableFailover()) {
+     * clusterConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
+     * }
+     * }
+     */
 
     /**
      * Configure sentinel mode (production with high availability)
      */
-    private void configureSentinelMode(Config config) {
-        SentinelServersConfig sentinelConfig = config.useSentinelServers()
-                .setMasterName(sentinel.getMasterName())
-                .setConnectTimeout(connectTimeout)
-                .setTimeout(timeout)
-                .setRetryAttempts(retryAttempts)
-                .setCheckSentinelsList(sentinel.isCheckSentinelsList())
-                .setScanInterval(sentinel.getScanInterval())
-                .setSlaveConnectionMinimumIdleSize(connectionMinimumIdleSize)
-                .setSlaveConnectionPoolSize(connectionPoolSize)
-                .setMasterConnectionMinimumIdleSize(connectionMinimumIdleSize)
-                .setMasterConnectionPoolSize(connectionPoolSize);
-
-        if (password != null && !password.isEmpty()) {
-            sentinelConfig.setPassword(password);
-        }
-
-        if (sentinel.getPassword() != null && !sentinel.getPassword().isEmpty()) {
-            sentinelConfig.setSentinelPassword(sentinel.getPassword());
-        }
-
-        // Add sentinel nodes
-        if (sentinel.getNodes() != null && !sentinel.getNodes().isEmpty()) {
-            List<String> sentinelAddresses = Arrays.asList(sentinel.getNodes().split(","));
-            for (String node : sentinelAddresses) {
-                sentinelConfig.addSentinelAddress(REDIS_PROTOCOL + node.trim());
-            }
-        }
-
-        // High availability settings for sentinel
-        if (highAvailability.isEnableFailover()) {
-            sentinelConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
-        }
-    }
+    /*
+     * private void configureSentinelMode(Config config) {
+     * SentinelServersConfig sentinelConfig = config.useSentinelServers()
+     * .setMasterName(sentinel.getMasterName())
+     * .setConnectTimeout(connectTimeout)
+     * .setTimeout(timeout)
+     * .setRetryAttempts(retryAttempts)
+     * .setCheckSentinelsList(sentinel.isCheckSentinelsList())
+     * .setScanInterval(sentinel.getScanInterval())
+     * .setSlaveConnectionMinimumIdleSize(connectionMinimumIdleSize)
+     * .setSlaveConnectionPoolSize(connectionPoolSize)
+     * .setMasterConnectionMinimumIdleSize(connectionMinimumIdleSize)
+     * .setMasterConnectionPoolSize(connectionPoolSize);
+     * 
+     * if (password != null && !password.isEmpty()) {
+     * sentinelConfig.setPassword(password);
+     * }
+     * 
+     * if (sentinel.getPassword() != null && !sentinel.getPassword().isEmpty()) {
+     * sentinelConfig.setSentinelPassword(sentinel.getPassword());
+     * }
+     * 
+     * // Add sentinel nodes
+     * if (sentinel.getNodes() != null && !sentinel.getNodes().isEmpty()) {
+     * List<String> sentinelAddresses =
+     * Arrays.asList(sentinel.getNodes().split(","));
+     * for (String node : sentinelAddresses) {
+     * sentinelConfig.addSentinelAddress(REDIS_PROTOCOL + node.trim());
+     * }
+     * }
+     * 
+     * // High availability settings for sentinel
+     * if (highAvailability.isEnableFailover()) {
+     * sentinelConfig.setKeepAlive(highAvailability.isTcpKeepAlive());
+     * }
+     * }
+     */
 
     // Getters and setters
     public boolean isEnabled() {

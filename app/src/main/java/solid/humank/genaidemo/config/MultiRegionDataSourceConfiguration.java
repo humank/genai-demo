@@ -113,8 +113,8 @@ public class MultiRegionDataSourceConfiguration {
         targetDataSources.put("japan-db", japanDataSource);
 
         routingDataSource.setTargetDataSources(targetDataSources);
-        // Set Taiwan as default DataSource (Spring API accepts DataSource as Object)
-        routingDataSource.setDefaultTargetDataSource(taiwanDataSource);
+        // Set Taiwan as default DataSource - explicit cast to Object for null safety
+        routingDataSource.setDefaultTargetDataSource((Object) java.util.Objects.requireNonNull(taiwanDataSource));
 
         logger.info("SmartRoutingDataSource initialized with {} regions", targetDataSources.size());
 

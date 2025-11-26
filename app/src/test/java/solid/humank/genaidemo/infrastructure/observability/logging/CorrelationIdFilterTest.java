@@ -62,7 +62,8 @@ class CorrelationIdFilterTest {
                 .thenReturn(existingCorrelationId);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(CorrelationIdFilter.CORRELATION_ID_HEADER, existingCorrelationId);
@@ -77,7 +78,8 @@ class CorrelationIdFilterTest {
                 .thenReturn(null);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -92,7 +94,8 @@ class CorrelationIdFilterTest {
                 .thenReturn("");
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -107,7 +110,8 @@ class CorrelationIdFilterTest {
                 .thenReturn("   ");
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -131,7 +135,8 @@ class CorrelationIdFilterTest {
         }).when(filterChain).doFilter(request, response);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(filterChain).doFilter(request, response);
@@ -153,7 +158,8 @@ class CorrelationIdFilterTest {
 
         // When & Then
         try {
-            correlationIdFilter.doFilterInternal(request, response, filterChain);
+            correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                    java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
         } catch (ServletException e) {
             // Expected exception
         }
@@ -189,7 +195,8 @@ class CorrelationIdFilterTest {
         // When - simulate concurrent processing
         Thread thread1 = new Thread(() -> {
             try {
-                filter1.doFilterInternal(request1, response1, filterChain1);
+                filter1.doFilterInternal(java.util.Objects.requireNonNull(request1),
+                        java.util.Objects.requireNonNull(response1), java.util.Objects.requireNonNull(filterChain1));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -197,7 +204,8 @@ class CorrelationIdFilterTest {
 
         Thread thread2 = new Thread(() -> {
             try {
-                filter2.doFilterInternal(request2, response2, filterChain2);
+                filter2.doFilterInternal(java.util.Objects.requireNonNull(request2),
+                        java.util.Objects.requireNonNull(response2), java.util.Objects.requireNonNull(filterChain2));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

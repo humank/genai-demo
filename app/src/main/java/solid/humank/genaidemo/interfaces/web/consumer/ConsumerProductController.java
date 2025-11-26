@@ -73,7 +73,7 @@ public class ConsumerProductController {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), products.size());
 
-        List<Map<String, Object>> pageContent = products.subList(start, end);
+        List<Map<String, Object>> pageContent = new ArrayList<>(products.subList(start, end));
         Page<Map<String, Object>> productPage = new PageImpl<>(pageContent, pageable, products.size());
 
         var response = new HashMap<String, Object>();
@@ -109,7 +109,7 @@ public class ConsumerProductController {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), searchResults.size());
 
-        List<Map<String, Object>> pageContent = searchResults.subList(start, end);
+        List<Map<String, Object>> pageContent = new ArrayList<>(searchResults.subList(start, end));
         Page<Map<String, Object>> productPage = new PageImpl<>(pageContent, pageable, searchResults.size());
 
         var response = new HashMap<String, Object>();

@@ -6,26 +6,27 @@ CREATE TABLE products (
     price DECIMAL(10,2) NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'TWD',
     category VARCHAR(100) NOT NULL,
+    image_url VARCHAR(500),
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 插入一些測試產品數據
-INSERT INTO products (product_id, name, description, price, currency, category, status) VALUES
-('PROD-001', 'iPhone 15 Pro', '最新款 iPhone，配備 A17 Pro 晶片', 35900.00, 'TWD', 'ELECTRONICS', 'ACTIVE'),
-('PROD-002', 'MacBook Air M3', '輕薄筆記型電腦，搭載 M3 晶片', 36900.00, 'TWD', 'ELECTRONICS', 'ACTIVE'),
-('PROD-003', 'AirPods Pro', '主動降噪無線耳機', 7490.00, 'TWD', 'ELECTRONICS', 'ACTIVE'),
-('PROD-004', '咖啡豆 - 藍山', '牙買加藍山咖啡豆 250g', 1200.00, 'TWD', 'FOOD', 'ACTIVE'),
-('PROD-005', '有機綠茶', '台灣高山有機綠茶 100g', 450.00, 'TWD', 'FOOD', 'ACTIVE'),
-('PROD-006', '運動鞋', '透氣運動跑鞋', 2890.00, 'TWD', 'CLOTHING', 'ACTIVE'),
-('PROD-007', 'T恤', '純棉短袖T恤', 590.00, 'TWD', 'CLOTHING', 'ACTIVE'),
-('PROD-008', '筆記本', 'A5 精裝筆記本', 280.00, 'TWD', 'STATIONERY', 'ACTIVE');
+INSERT INTO products (product_id, name, description, price, currency, category, image_url, status) VALUES
+('PROD-001', 'iPhone 15 Pro', '最新款 iPhone，配備 A17 Pro 晶片', 35900.00, 'TWD', 'ELECTRONICS', 'assets/images/products/iphone-15-pro-max.png', 'ACTIVE'),
+('PROD-002', 'MacBook Air M3', '輕薄筆記型電腦，搭載 M3 晶片', 36900.00, 'TWD', 'ELECTRONICS', 'assets/images/products/macbook-pro-14-m3.png', 'ACTIVE'),
+('PROD-003', 'AirPods Pro', '主動降噪無線耳機', 7490.00, 'TWD', 'ELECTRONICS', NULL, 'ACTIVE'),
+('PROD-004', '咖啡豆 - 藍山', '牙買加藍山咖啡豆 250g', 1200.00, 'TWD', 'FOOD', NULL, 'ACTIVE'),
+('PROD-005', '有機綠茶', '台灣高山有機綠茶 100g', 450.00, 'TWD', 'FOOD', NULL, 'ACTIVE'),
+('PROD-006', '運動鞋', '透氣運動跑鞋', 2890.00, 'TWD', 'CLOTHING', NULL, 'ACTIVE'),
+('PROD-007', 'T恤', '純棉短袖T恤', 590.00, 'TWD', 'CLOTHING', NULL, 'ACTIVE'),
+('PROD-008', '筆記本', 'A5 精裝筆記本', 280.00, 'TWD', 'STATIONERY', NULL, 'ACTIVE');
 
 -- 為現有的庫存記錄添加對應的產品數據
 -- 假設庫存表中的 product_id 對應產品表的 product_id
 -- H2 不支持 ON CONFLICT，所以使用 MERGE 語句
-MERGE INTO products (product_id, name, description, price, currency, category, status)
+MERGE INTO products (product_id, name, description, price, currency, category, image_url, status)
 KEY (product_id)
 SELECT DISTINCT 
     i.product_id,
@@ -34,6 +35,7 @@ SELECT DISTINCT
     100.00, -- 默認價格
     'TWD',
     'GENERAL',
+    NULL,
     'ACTIVE'
 FROM inventories i;
 

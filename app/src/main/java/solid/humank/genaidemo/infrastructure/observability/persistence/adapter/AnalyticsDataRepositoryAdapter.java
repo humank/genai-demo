@@ -55,7 +55,8 @@ public class AnalyticsDataRepositoryAdapter implements AnalyticsDataRepository {
     @Override
     public AnalyticsSession save(AnalyticsSession session) {
         JpaAnalyticsSessionEntity entity = sessionMapper.toEntity(session);
-        JpaAnalyticsSessionEntity savedEntity = sessionRepository.save(entity);
+        JpaAnalyticsSessionEntity savedEntity = sessionRepository
+                .save(java.util.Objects.requireNonNull((JpaAnalyticsSessionEntity) entity));
         return sessionMapper.toDomain(savedEntity);
     }
 
@@ -80,7 +81,7 @@ public class AnalyticsDataRepositoryAdapter implements AnalyticsDataRepository {
                     // 先刪除相關事件
                     eventRepository.deleteBySessionId(sessionId.value());
                     // 再刪除會話
-                    sessionRepository.delete(session);
+                    sessionRepository.delete(java.util.Objects.requireNonNull((JpaAnalyticsSessionEntity) session));
                 });
     }
 

@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // Modern Responsive Design System
 // Mobile-first approach with modern breakpoints
 
@@ -14,8 +16,8 @@ $breakpoints: (
 
 // Responsive Mixins
 @mixin respond-to($breakpoint) {
-    @if map-has-key($breakpoints, $breakpoint) {
-        $value: map-get($breakpoints, $breakpoint);
+    @if map.has-key($breakpoints, $breakpoint) {
+        $value: map.get($breakpoints, $breakpoint);
 
         @if $value ==0 {
             @content;
@@ -34,21 +36,21 @@ $breakpoints: (
 }
 
 @mixin respond-between($min, $max) {
-    $min-value: map-get($breakpoints, $min);
-    $max-value: map-get($breakpoints, $max);
+    $min-value: map.get($breakpoints, $min);
+    $max-value: map.get($breakpoints, $max);
 
     @if $min-value and $max-value {
-        @media (min-width: $min-value) and (max-width: $max-value - 1px) {
+        @media (min-width: $min-value) and (max-width: ($max-value - 1px)) {
             @content;
         }
     }
 }
 
 @mixin respond-below($breakpoint) {
-    $value: map-get($breakpoints, $breakpoint);
+    $value: map.get($breakpoints, $breakpoint);
 
     @if $value {
-        @media (max-width: $value - 1px) {
+        @media (max-width: ($value - 1px)) {
             @content;
         }
     }

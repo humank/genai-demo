@@ -1,28 +1,30 @@
-// === Modern Design System Imports ===
-
-// Design Tokens - Must be imported first
-@import 'styles/design-tokens';
-
-// Tailwind CSS
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@use "sass:meta";
 
 // Modern Typography - Google Fonts with display optimization
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
 
+// === Modern Design System Imports ===
+
+// Design Tokens - Must be imported first
+@include meta.load-css('styles/design-tokens');
+
+// Tailwind CSS v3
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 // Component Systems
-@import 'styles/components/buttons';
-@import 'styles/components/cards';
-@import 'styles/components/loading';
-@import 'styles/components/feedback';
+@include meta.load-css('styles/components/buttons');
+@include meta.load-css('styles/components/cards');
+@include meta.load-css('styles/components/loading');
+@include meta.load-css('styles/components/feedback');
 
 // Animation and Interaction Systems
-@import 'styles/animations';
-@import 'styles/interactions';
+@include meta.load-css('styles/animations');
+@include meta.load-css('styles/interactions');
 
 // Responsive System
-@import 'styles/responsive';
+@include meta.load-css('styles/responsive');
 
 // === Global Base Styles ===
 

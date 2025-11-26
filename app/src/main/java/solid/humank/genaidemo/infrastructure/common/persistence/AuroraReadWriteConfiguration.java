@@ -94,7 +94,7 @@ public class AuroraReadWriteConfiguration {
         // 設定默認數據源為寫入數據源
         // Spring framework API accepts DataSource as Object
         // writeDataSource is guaranteed non-null by Spring's @Bean contract
-        routingDataSource.setDefaultTargetDataSource(writeDataSource);
+        routingDataSource.setDefaultTargetDataSource((Object) java.util.Objects.requireNonNull(writeDataSource));
 
         return routingDataSource;
     }

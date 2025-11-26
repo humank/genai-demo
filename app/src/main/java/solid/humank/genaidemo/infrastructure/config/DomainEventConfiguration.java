@@ -44,7 +44,7 @@ public class DomainEventConfiguration {
      */
     @Bean("domainEventPublisher")
     @Primary
-    @Profile("local")
+    @Profile({ "local", "docker" })
     public DomainEventPublisher inMemoryDomainEventPublisher(ApplicationEventPublisher eventPublisher) {
         return new InMemoryDomainEventPublisher(eventPublisher);
     }

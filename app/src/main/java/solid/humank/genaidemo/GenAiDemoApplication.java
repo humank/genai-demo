@@ -3,10 +3,12 @@ package solid.humank.genaidemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /** GenAI Demo 應用程序入口點 */
 @SpringBootApplication
+@ConfigurationPropertiesScan
 @EnableJpaRepositories(basePackages = "solid.humank.genaidemo.infrastructure")
 @EntityScan(basePackages = {
         "solid.humank.genaidemo.infrastructure.inventory.persistence.entity",

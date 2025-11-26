@@ -103,7 +103,8 @@ public abstract class BaseIntegrationTest {
      */
     protected <T> ResponseEntity<T> performGet(String endpoint, Class<T> responseType, HttpHeaders headers) {
         String url = baseUrl + endpoint;
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        HttpEntity<Void> entity = new HttpEntity<>(
+                (org.springframework.util.MultiValueMap<String, String>) java.util.Objects.requireNonNull(headers));
         logger.debug("GET request to: {} with headers: {}", url, headers);
         return restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
     }

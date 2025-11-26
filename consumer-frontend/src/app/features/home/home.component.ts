@@ -1091,32 +1091,237 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading featured products:', error);
+        console.warn('Backend API not available, using mock data:', error);
+
+        // Use mock data when API is not available
+        this.featuredProducts = this.getMockProducts();
+        this.filteredProducts = this.featuredProducts;
         this.loading = false;
 
         // Enhanced error tracking
         this.errorTrackingService.trackUserOperationError({
           operation: 'load_featured_products',
           errorType: this.categorizeError(error),
-          message: error.message || 'Failed to load featured products'
+          message: error.message || 'Using mock data - backend not available'
         }, {
           component: 'HomeComponent',
-          action: 'load_data',
+          action: 'load_data_fallback',
           additionalData: {
             apiEndpoint: 'getFeaturedProducts',
             errorStatus: error.status,
-            errorStatusText: error.statusText
+            usingMockData: true
           }
         });
 
-        // Track network error if applicable
-        if (error.status === 0) {
-          this.trackNetworkError('/api/products/featured', 'Network connection failed');
-        }
-
-        this.toastService.quickError('載入商品失敗，請重新整理頁面');
+        // Show info message instead of error
+        this.toastService.info('展示範例商品資料', '後端服務未連接，正在顯示示範數據');
       }
     });
+  }
+
+  private getMockProducts(): any[] {
+    return [
+      {
+        id: 'mock-1',
+        name: 'iPhone 15 Pro Max',
+        description: '最新旗艦手機，配備 A17 Pro 晶片，鈦金屬邊框設計',
+        price: { amount: 39900, currency: 'TWD' },
+        originalPrice: 45900,
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/iphone/400/400', alt: 'iPhone 15 Pro Max' },
+          { url: 'https://picsum.photos/seed/iphone2/400/400', alt: 'iPhone 15 Pro Max - View 2' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 128
+      },
+      {
+        id: 'mock-2',
+        name: 'MacBook Pro 14"',
+        description: 'M3 Pro 晶片，16GB 記憶體，極致效能體驗',
+        price: { amount: 59900, currency: 'TWD' },
+        originalPrice: 64900,
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/macbook/400/400', alt: 'MacBook Pro' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: false,
+        onSale: true,
+        rating: 5,
+        reviewCount: 89
+      },
+      {
+        id: 'mock-3',
+        name: 'AirPods Pro (第二代)',
+        description: '主動式降噪，空間音訊，USB-C 充電',
+        price: { amount: 7490, currency: 'TWD' },
+        originalPrice: 8490,
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/airpods/400/400', alt: 'AirPods Pro' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 256
+      },
+      {
+        id: 'mock-4',
+        name: 'Nike Air Max 2024',
+        description: '經典氣墊科技，舒適透氣，運動時尚必備',
+        price: { amount: 4280, currency: 'TWD' },
+        category: 'FASHION',
+        images: [
+          { url: 'https://picsum.photos/seed/nike/400/400', alt: 'Nike Air Max' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: false,
+        onSale: false,
+        rating: 4,
+        reviewCount: 67
+      },
+      {
+        id: 'mock-5',
+        name: 'Sony WH-1000XM5',
+        description: '業界領先降噪耳機，30小時續航',
+        price: { amount: 9990, currency: 'TWD' },
+        originalPrice: 11990,
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/sony/400/400', alt: 'Sony Headphones' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 145
+      },
+      {
+        id: 'mock-6',
+        name: 'Dyson V15 吸塵器',
+        description: '雷射偵測灰塵，強大吸力，智能顯示',
+        price: { amount: 21900, currency: 'TWD' },
+        category: 'HOME',
+        images: [
+          { url: 'https://picsum.photos/seed/dyson/400/400', alt: 'Dyson V15' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: false,
+        onSale: false,
+        rating: 5,
+        reviewCount: 92
+      },
+      {
+        id: 'mock-7',
+        name: 'Samsung The Frame 電視',
+        description: '55吋 4K QLED，藝術模式，美學與科技結合',
+        price: { amount: 35900, currency: 'TWD' },
+        originalPrice: 42900,
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/samsung/400/400', alt: 'Samsung TV' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 78
+      },
+      {
+        id: 'mock-8',
+        name: 'Nespresso 咖啡機',
+        description: '膠囊咖啡機，19 bar 壓力，專業級萃取',
+        price: { amount: 5990, currency: 'TWD' },
+        category: 'HOME',
+        images: [
+          { url: 'https://picsum.photos/seed/nespresso/400/400', alt: 'Nespresso' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: false,
+        onSale: false,
+        rating: 4,
+        reviewCount: 134
+      },
+      {
+        id: 'mock-9',
+        name: 'Lululemon 瑜珈墊',
+        description: '5mm 厚度，防滑設計，環保材質',
+        price: { amount: 2480, currency: 'TWD' },
+        category: 'SPORTS',
+        images: [
+          { url: 'https://picsum.photos/seed/yoga/400/400', alt: 'Yoga Mat' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: false,
+        onSale: false,
+        rating: 5,
+        reviewCount: 45
+      },
+      {
+        id: 'mock-10',
+        name: 'The North Face 登山背包',
+        description: '35L 容量，防水設計，透氣背負系統',
+        price: { amount: 5680, currency: 'TWD' },
+        originalPrice: 6980,
+        category: 'SPORTS',
+        images: [
+          { url: 'https://picsum.photos/seed/backpack/400/400', alt: 'Backpack' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 67
+      },
+      {
+        id: 'mock-11',
+        name: 'Bose SoundLink 藍牙音箱',
+        description: '360度環繞音效，12小時續航，防水設計',
+        price: { amount: 6990, currency: 'TWD' },
+        category: 'ELECTRONICS',
+        images: [
+          { url: 'https://picsum.photos/seed/bose/400/400', alt: 'Bose Speaker' }
+        ],
+        inStock: true,
+        isNew: false,
+        isHot: false,
+        onSale: false,
+        rating: 4,
+        reviewCount: 98
+      },
+      {
+        id: 'mock-12',
+        name: 'Herman Miller 人體工學椅',
+        description: '12年保固，全網背設計，完美支撐',
+        price: { amount: 29900, currency: 'TWD' },
+        originalPrice: 35900,
+        category: 'HOME',
+        images: [
+          { url: 'https://picsum.photos/seed/chair/400/400', alt: 'Office Chair' }
+        ],
+        inStock: true,
+        isNew: true,
+        isHot: true,
+        onSale: true,
+        rating: 5,
+        reviewCount: 156
+      }
+    ];
   }
 
   loadWishlist() {

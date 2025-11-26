@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Navbar } from '@/components/layout/Navbar'
+
 import { ProductCard } from '@/components/product/ProductCard'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { Button } from '@/components/ui/button'
@@ -12,10 +12,10 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Loading } from '@/components/ui/loading'
 import { useProducts } from '@/hooks/useApi'
 import { Product } from '@/types/domain'
-import { 
-  Package, 
-  Plus, 
-  Search, 
+import {
+  Package,
+  Plus,
+  Search,
   Filter,
   RefreshCw,
   AlertTriangle,
@@ -49,19 +49,19 @@ export default function ProductsPage() {
 
   // 過濾產品
   const filteredProducts = products.filter(product => {
-    const matchesSearch = 
+    const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.category.toLowerCase().includes(searchTerm.toLowerCase())
-    
+
     const matchesCategory = categoryFilter === 'ALL' || product.category === categoryFilter
-    
-    const matchesStock = 
+
+    const matchesStock =
       stockFilter === 'ALL' ||
       (stockFilter === 'IN_STOCK' && product.inStock) ||
       (stockFilter === 'LOW_STOCK' && product.inStock && product.stockQuantity < 10) ||
       (stockFilter === 'OUT_OF_STOCK' && !product.inStock)
-    
+
     return matchesSearch && matchesCategory && matchesStock
   })
 
@@ -104,7 +104,7 @@ export default function ProductsPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <p className="text-red-500 mb-4">載入產品時發生錯誤</p>
@@ -120,8 +120,8 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Navbar />
-      
+
+
       <main className="container-modern py-8 space-y-8">
         {/* 頁面標題 */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -131,7 +131,7 @@ export default function ProductsPage() {
               管理商品資訊、庫存和定價策略
             </p>
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline" size="sm" onClick={handleRefresh}>
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -156,10 +156,10 @@ export default function ProductsPage() {
           <StatsCard
             title="有庫存"
             value={inStockProducts}
-            change={{ 
-              value: totalProducts > 0 ? `${Math.round((inStockProducts/totalProducts)*100)}%` : '0%', 
-              type: 'neutral', 
-              period: '佔比' 
+            change={{
+              value: totalProducts > 0 ? `${Math.round((inStockProducts / totalProducts) * 100)}%` : '0%',
+              type: 'neutral',
+              period: '佔比'
             }}
             icon={Archive}
             color="green"
@@ -168,10 +168,10 @@ export default function ProductsPage() {
           <StatsCard
             title="庫存不足"
             value={lowStockProducts}
-            change={{ 
-              value: lowStockProducts > 0 ? '需要補貨' : '狀況良好', 
-              type: lowStockProducts > 0 ? 'warning' : 'neutral', 
-              period: '' 
+            change={{
+              value: lowStockProducts > 0 ? '需要補貨' : '狀況良好',
+              type: lowStockProducts > 0 ? 'warning' : 'neutral',
+              period: ''
             }}
             icon={AlertTriangle}
             color="orange"
@@ -192,7 +192,7 @@ export default function ProductsPage() {
             <Filter className="h-5 w-5 text-primary" />
             <h3 className="font-semibold text-foreground">篩選和搜尋</h3>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -203,7 +203,7 @@ export default function ProductsPage() {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="選擇分類" />
@@ -217,7 +217,7 @@ export default function ProductsPage() {
                 ))}
               </SelectContent>
             </Select>
-            
+
             <Select value={stockFilter} onValueChange={setStockFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="庫存狀態" />
@@ -229,7 +229,7 @@ export default function ProductsPage() {
                 <SelectItem value="OUT_OF_STOCK">缺貨</SelectItem>
               </SelectContent>
             </Select>
-            
+
             <Button variant="outline" className="w-full" onClick={handleResetFilters}>
               <RefreshCw className="h-4 w-4 mr-2" />
               重置篩選
@@ -261,8 +261,8 @@ export default function ProductsPage() {
         ) : filteredProducts.length === 0 ? (
           <EmptyState
             icon={Package}
-            title={searchTerm || categoryFilter !== 'ALL' || stockFilter !== 'ALL' 
-              ? "沒有符合條件的商品" 
+            title={searchTerm || categoryFilter !== 'ALL' || stockFilter !== 'ALL'
+              ? "沒有符合條件的商品"
               : "還沒有任何商品"
             }
             description={searchTerm || categoryFilter !== 'ALL' || stockFilter !== 'ALL'
@@ -277,9 +277,9 @@ export default function ProductsPage() {
         ) : (
           <div className="grid-modern">
             {filteredProducts.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="animate-scale-in" 
+              <div
+                key={product.id}
+                className="animate-scale-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <ProductCard
@@ -304,11 +304,11 @@ export default function ProductsPage() {
             >
               上一頁
             </Button>
-            
+
             <span className="text-sm text-muted-foreground">
               第 {currentPage + 1} 頁，共 {productsResponse.totalPages} 頁
             </span>
-            
+
             <Button
               variant="outline"
               size="sm"

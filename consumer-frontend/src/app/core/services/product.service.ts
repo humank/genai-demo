@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Product, ProductListResponse, ProductSearchParams, ProductCategory } from '../models/product.model';
 
@@ -9,20 +10,22 @@ import { Product, ProductListResponse, ProductSearchParams, ProductCategory } fr
 export class ProductService {
   private readonly endpoint = '/api/products';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   /**
    * 獲取產品列表
    */
   getProducts(params?: ProductSearchParams): Observable<ProductListResponse> {
-    return this.apiService.get<ProductListResponse>(this.endpoint, params);
+    return this.apiService.get<{ data: ProductListResponse }>(this.endpoint, params)
+      .pipe(map(response => response.data));
   }
 
   /**
    * 根據ID獲取單個產品
    */
   getProduct(productId: string): Observable<Product> {
-    return this.apiService.get<Product>(`${this.endpoint}/${productId}`);
+    return this.apiService.get<{ data: Product }>(`${this.endpoint}/${productId}`)
+      .pipe(map(response => response.data));
   }
 
   /**

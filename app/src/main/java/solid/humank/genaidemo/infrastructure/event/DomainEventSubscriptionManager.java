@@ -11,6 +11,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.domain.common.event.DomainEvent;
@@ -26,12 +27,14 @@ public class DomainEventSubscriptionManager
     private final Map<Class<?>, Map<Object, Method>> subscriptions = new ConcurrentHashMap<>();
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) {
+    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) {
         // 掃描bean中的所有方法，查找帶有@EventSubscriber註解的方法
         for (Method method : bean.getClass().getDeclaredMethods()) {
-            EventSubscriber annotation = AnnotationUtils.findAnnotation(method, EventSubscriber.class);
-            if (annotation != null) {
-                registerSubscriber(bean, method, annotation);
+            if (method != null) {
+                EventSubscriber annotation = AnnotationUtils.findAnnotation(method, EventSubscriber.class);
+                if (annotation != null) {
+                    registerSubscriber(bean, method, annotation);
+                }
             }
         }
         return bean;
@@ -72,7 +75,7 @@ public class DomainEventSubscriptionManager
 
     /** 處理應用事件 */
     @Override
-    public void onApplicationEvent(ApplicationEvent springEvent) {
+    public void onApplicationEvent(@NonNull ApplicationEvent springEvent) {
         Object event = springEvent.getSource();
         // 只處理DomainEvent類型的事件
         if (!(event instanceof DomainEvent domainEvent)) {

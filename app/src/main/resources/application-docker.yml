@@ -1,0 +1,10 @@
+analytics:
+  enabled: false
+  firehose:
+    stream-name: dummy-stream
+  data-lake:
+    bucket-name: dummy-bucket
+  glue:
+    database-name: dummy-db
+  quicksight:
+    data-source-id: dummy-id

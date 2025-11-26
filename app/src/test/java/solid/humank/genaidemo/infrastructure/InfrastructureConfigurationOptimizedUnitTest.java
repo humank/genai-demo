@@ -96,18 +96,19 @@ class InfrastructureConfigurationOptimizedUnitTest {
     void shouldBeAbleToCheckAllRequiredRepositoryBeanConfiguration() {
         // Given
         for (String beanName : expectedRepositoryBeans) {
-            when(applicationContext.containsBean(beanName)).thenReturn(true);
+            when(applicationContext.containsBean(java.util.Objects.requireNonNull(beanName))).thenReturn(true);
         }
 
         // When & Then
         for (String beanName : expectedRepositoryBeans) {
-            boolean hasBeanConfiguration = applicationContext.containsBean(beanName);
+            boolean hasBeanConfiguration = applicationContext
+                    .containsBean(java.util.Objects.requireNonNull((String) beanName));
             assertTrue(hasBeanConfiguration, "Repository bean '" + beanName + "' configuration should be checkable");
         }
 
         // Verify all interactions
         for (String beanName : expectedRepositoryBeans) {
-            verify(applicationContext).containsBean(beanName);
+            verify(applicationContext).containsBean(java.util.Objects.requireNonNull((String) beanName));
         }
     }
 

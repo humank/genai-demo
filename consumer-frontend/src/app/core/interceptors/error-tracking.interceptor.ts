@@ -3,13 +3,23 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ErrorTrackingService } from '../services/error-tracking.service';
+import { ObservabilityConfigService } from '../config/observability.config';
 
 @Injectable()
 export class ErrorTrackingInterceptor implements HttpInterceptor {
 
-    constructor(private errorTrackingService: ErrorTrackingService) { }
+    constructor(
+        private errorTrackingService: ErrorTrackingService,
+        private configService: ObservabilityConfigService
+    ) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        // Skip tracking for analytics/error endpoints to prevent infinite loops
+        const endpoints = this.configService.getApiEndpoints();
+        if (req.url.includes(endpoints.analytics) || req.url.includes(endpoints.performance) || req.url.includes(endpoints.error)) {
+            return next.handle(req);
+        }
+
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 // Track the API error

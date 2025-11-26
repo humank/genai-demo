@@ -14,7 +14,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+// import { OverlayPanelModule } from 'primeng/overlaypanel'; // TODO: Fix import path for PrimeNG 20.x
 
 describe('HeaderComponent Observability Integration', () => {
     let component: HeaderComponent;
@@ -40,7 +40,7 @@ describe('HeaderComponent Observability Integration', () => {
                 InputTextModule,
                 BadgeModule,
                 MenuModule,
-                OverlayPanelModule,
+                // OverlayPanelModule, // Temporarily disabled
                 AutoCompleteModule
             ],
             providers: [

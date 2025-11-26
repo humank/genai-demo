@@ -20,6 +20,7 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
     private Money price;
     private final ProductCategory category;
     private StockQuantity stockQuantity;
+    private String imageUrl;
     private boolean inStock;
     private boolean isActive;
 
@@ -29,13 +30,15 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
             ProductDescription description,
             Money price,
             ProductCategory category,
-            StockQuantity stockQuantity) {
+            StockQuantity stockQuantity,
+            String imageUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
         this.stockQuantity = stockQuantity;
+        this.imageUrl = imageUrl;
         this.inStock = stockQuantity.getValue() > 0;
         this.isActive = true;
 
@@ -73,6 +76,10 @@ public class Product extends solid.humank.genaidemo.domain.common.aggregate.Aggr
 
     public boolean isActive() {
         return isActive;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     // 業務方法

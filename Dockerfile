@@ -2,7 +2,7 @@
 # 適用於 MacBook M4 Silicon 開發和 AWS Graviton3 EKS 部署
 
 # 第一階段：構建應用程式
-FROM --platform=linux/arm64/v8 eclipse-temurin:25-jdk-alpine AS builder
+FROM --platform=linux/arm64/v8 eclipse-temurin:21-jdk-alpine AS builder
 
 # 設定構建環境變數
 ENV GRADLE_OPTS="-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.configureondemand=true"
@@ -32,7 +32,7 @@ COPY app/ app/
 RUN ./gradlew :app:bootJar -x test --no-daemon --parallel --build-cache
 
 # 第二階段：運行時映像 - 使用 ARM64 JRE
-FROM --platform=linux/arm64/v8 eclipse-temurin:25-jre-alpine
+FROM --platform=linux/arm64/v8 eclipse-temurin:21-jre-alpine
 
 # 安裝必要工具 (最小化安裝)
 RUN apk add --no-cache wget tzdata && \

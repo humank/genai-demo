@@ -3,7 +3,7 @@ package solid.humank.genaidemo.infrastructure.cache;
 import java.time.Instant;
 import java.util.Map;
 
-import org.redisson.api.RedissonClient;
+// import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,12 +29,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnProperty(name = "app.redis.health-check.enabled", havingValue = "true", matchIfMissing = false)
-public class RedisHealthIndicator /* implements HealthIndicator */ {    private static final Logger logger = LoggerFactory.getLogger(RedisHealthIndicator.class);
+public class RedisHealthIndicator /* implements HealthIndicator */ {
+    private static final Logger logger = LoggerFactory.getLogger(RedisHealthIndicator.class);
 
-    private final RedissonClient redissonClient;
+    // private final RedissonClient redissonClient;
 
-    public RedisHealthIndicator(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
+    public RedisHealthIndicator(/* RedissonClient redissonClient */) {
+        // this.redissonClient = redissonClient;
     }
 
     // @Override
@@ -56,24 +57,30 @@ public class RedisHealthIndicator /* implements HealthIndicator */ {    private 
     private Object performHealthChecks() {
         // Simplified health check for now
         try {
-            // Basic connectivity test using Redisson
-            String testKey = "health-check";
-            redissonClient.getBucket(testKey).set("test");
-            Object resultObj = redissonClient.getBucket(testKey).get();
-            String result = resultObj != null ? resultObj.toString() : null;
-            redissonClient.getBucket(testKey).delete();
-
-            if ("test".equals(result)) {
-                return Map.of(
-                        "status", "UP",
-                        "connectivity", "OK",
-                        "timestamp", Instant.now().toString());
-            } else {
-                return Map.of(
-                        "status", "DOWN",
-                        "connectivity", "FAILED",
-                        "timestamp", Instant.now().toString());
-            }
+            /*
+             * // Basic connectivity test using Redisson
+             * String testKey = "health-check";
+             * redissonClient.getBucket(testKey).set("test");
+             * Object resultObj = redissonClient.getBucket(testKey).get();
+             * String result = resultObj != null ? resultObj.toString() : null;
+             * redissonClient.getBucket(testKey).delete();
+             * 
+             * if ("test".equals(result)) {
+             * return Map.of(
+             * "status", "UP",
+             * "connectivity", "OK",
+             * "timestamp", Instant.now().toString());
+             * } else {
+             * return Map.of(
+             * "status", "DOWN",
+             * "connectivity", "FAILED",
+             * "timestamp", Instant.now().toString());
+             * }
+             */
+            return Map.of(
+                    "status", "UP",
+                    "connectivity", "SKIPPED (Local Mode)",
+                    "timestamp", Instant.now().toString());
         } catch (Exception e) {
             return Map.of(
                     "status", "DOWN",

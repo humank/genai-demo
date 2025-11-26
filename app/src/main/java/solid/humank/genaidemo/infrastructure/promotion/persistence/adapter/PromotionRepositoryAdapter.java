@@ -33,7 +33,7 @@ public class PromotionRepositoryAdapter
     @Override
     public Promotion save(Promotion promotion) {
         JpaPromotionEntity entity = toEntity(promotion);
-        jpaRepository.save(entity);
+        jpaRepository.save(java.util.Objects.requireNonNull((JpaPromotionEntity) entity));
         return promotion; // Return original aggregate root to maintain consistency
     }
 
@@ -53,7 +53,7 @@ public class PromotionRepositoryAdapter
 
     @Override
     public void delete(PromotionId promotionId) {
-        jpaRepository.deleteById(promotionId.value());
+        jpaRepository.deleteById(java.util.Objects.requireNonNull((String) promotionId.value()));
     }
 
     @Override

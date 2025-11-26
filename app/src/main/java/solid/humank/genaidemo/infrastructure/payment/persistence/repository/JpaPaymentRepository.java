@@ -28,6 +28,7 @@ public interface JpaPaymentRepository extends JpaRepository<JpaPaymentEntity, St
      * @return 支付
      */
     @Override
+    @org.springframework.lang.NonNull
     Optional<JpaPaymentEntity> findById(@org.springframework.lang.NonNull String id);
 
     // ========== 統計查詢方法 ==========

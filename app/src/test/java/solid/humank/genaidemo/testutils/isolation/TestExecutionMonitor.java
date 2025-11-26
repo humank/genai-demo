@@ -72,7 +72,7 @@ public class TestExecutionMonitor {
      * 記錄資源使用
      */
     public void recordResourceUsage(String resourceType) {
-        resourceUsageStats.merge(resourceType, 1, Integer::sum);
+        resourceUsageStats.merge(resourceType, 1, (a, b) -> (int) a + (int) b);
     }
 
     /**

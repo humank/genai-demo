@@ -25,7 +25,7 @@ import solid.humank.genaidemo.domain.common.lock.DistributedLockManager;
  * - 自動清理過期鎖
  */
 @Component
-@Profile({ "local", "test" })
+@Profile({ "local", "test", "docker" })
 public class InMemoryDistributedLockManager implements DistributedLockManager {
     private static final Logger logger = LoggerFactory.getLogger(InMemoryDistributedLockManager.class);
 

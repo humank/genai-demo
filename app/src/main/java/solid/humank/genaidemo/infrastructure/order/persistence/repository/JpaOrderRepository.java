@@ -30,6 +30,7 @@ public interface JpaOrderRepository extends JpaRepository<JpaOrderEntity, String
      * @return 訂單
      */
     @Override
+    @org.springframework.lang.NonNull
     Optional<JpaOrderEntity> findById(@org.springframework.lang.NonNull String id);
 
     // ========== 統計查詢方法 ==========

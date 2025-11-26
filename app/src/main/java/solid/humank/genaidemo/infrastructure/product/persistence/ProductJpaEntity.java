@@ -31,6 +31,9 @@ public class ProductJpaEntity {
     @Column(name = "status")
     private String status = "ACTIVE";
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -38,7 +41,8 @@ public class ProductJpaEntity {
     private LocalDateTime updatedAt;
 
     // 預設建構子 (JPA 需要)
-    protected ProductJpaEntity() {}
+    protected ProductJpaEntity() {
+    }
 
     public ProductJpaEntity(
             String productId,
@@ -46,13 +50,15 @@ public class ProductJpaEntity {
             String description,
             BigDecimal price,
             String currency,
-            String category) {
+            String category,
+            String imageUrl) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.price = price;
         this.currency = currency;
         this.category = category;
+        this.imageUrl = imageUrl;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -112,6 +118,14 @@ public class ProductJpaEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public LocalDateTime getCreatedAt() {

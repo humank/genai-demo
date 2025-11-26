@@ -145,11 +145,14 @@ dependencies {
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
 
     // OpenTelemetry for distributed tracing
-    implementation 'io.opentelemetry:opentelemetry-api:1.56.0'
-    implementation 'io.opentelemetry:opentelemetry-sdk:1.56.0'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.56.0'
+    // OpenTelemetry for distributed tracing
+    implementation platform('io.opentelemetry:opentelemetry-bom:1.56.0')
+    implementation 'io.opentelemetry:opentelemetry-api'
+    implementation 'io.opentelemetry:opentelemetry-context'
+    implementation 'io.opentelemetry:opentelemetry-sdk'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
     // Note: jaeger exporter is deprecated, use OTLP exporter instead
-    implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.37.0'
+    implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.30.0'
 
     // AWS X-Ray support for production
     implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.20.0') {
@@ -174,7 +177,7 @@ dependencies {
 
     // Redis and Redisson for distributed locking
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.redisson:redisson-spring-boot-starter:3.52.0'
+    // implementation 'org.redisson:redisson-spring-boot-starter:3.52.0'
 
     // Apache Commons Pool for Redis connection pooling
     implementation 'org.apache.commons:commons-pool2:2.12.1'

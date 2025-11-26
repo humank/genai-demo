@@ -56,7 +56,7 @@ public class DeliveryRepositoryAdapter
 
     @Override
     public Optional<Delivery> findByUUID(UUID id) {
-        return ((JpaDeliveryRepository) jpaRepository).findById(id)
+        return ((JpaDeliveryRepository) jpaRepository).findById(java.util.Objects.requireNonNull((UUID) id))
                 .map(mapper::toDomainModel);
     }
 

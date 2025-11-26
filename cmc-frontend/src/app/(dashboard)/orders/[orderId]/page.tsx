@@ -6,7 +6,7 @@ import { ArrowLeft, Package, MapPin, Clock, CreditCard, User, Phone, Mail } from
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Navbar } from '@/components/layout/Navbar'
+
 import { useOrder } from '@/hooks/useApi'
 import { formatMoney, formatDate, getOrderStatusColor, getOrderStatusText } from '@/lib/utils'
 
@@ -20,7 +20,7 @@ export default function OrderDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-8 bg-muted rounded w-64"></div>
@@ -37,7 +37,7 @@ export default function OrderDetailPage() {
   if (error || !order) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="text-center space-y-4">
             <h1 className="text-2xl font-bold text-foreground">訂單不存在</h1>
@@ -54,14 +54,14 @@ export default function OrderDetailPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-      
+
+
       <main className="container-modern py-8 space-y-6">
         {/* 頁面標題 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => router.back()}
             >
@@ -150,14 +150,14 @@ export default function OrderDetailPage() {
                   <span className="text-muted-foreground">商品總額</span>
                   <span>{formatMoney(order.totalAmount)}</span>
                 </div>
-                
+
                 {order.effectiveAmount?.amount !== order.totalAmount?.amount && (
                   <div className="flex justify-between text-green-600">
                     <span>折扣後金額</span>
                     <span className="font-medium">{formatMoney(order.effectiveAmount)}</span>
                   </div>
                 )}
-                
+
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold">總計</span>
@@ -206,7 +206,7 @@ export default function OrderDetailPage() {
                       </p>
                     </div>
                   </div>
-                  
+
                   {order.updatedAt !== order.createdAt && (
                     <div className="flex items-center space-x-3">
                       <div className="w-2 h-2 bg-muted rounded-full"></div>

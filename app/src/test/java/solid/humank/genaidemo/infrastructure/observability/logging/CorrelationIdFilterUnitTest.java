@@ -60,7 +60,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn(existingCorrelationId);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(CorrelationIdFilter.CORRELATION_ID_HEADER, existingCorrelationId);
@@ -75,7 +76,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn(null);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -90,7 +92,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn("");
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -105,7 +108,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn("   ");
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -129,7 +133,8 @@ class CorrelationIdFilterUnitTest {
         }).when(filterChain).doFilter(request, response);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(filterChain).doFilter(request, response);
@@ -151,7 +156,8 @@ class CorrelationIdFilterUnitTest {
 
         // When & Then
         try {
-            correlationIdFilter.doFilterInternal(request, response, filterChain);
+            correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                    java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
         } catch (ServletException e) {
             // Expected exception
         }
@@ -168,7 +174,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn(null);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then
         verify(response).setHeader(eq(CorrelationIdFilter.CORRELATION_ID_HEADER), any(String.class));
@@ -184,7 +191,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn(invalidCorrelationId);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then - 應該使用提供的值，即使格式無效
         verify(response).setHeader(CorrelationIdFilter.CORRELATION_ID_HEADER, invalidCorrelationId);
@@ -199,7 +207,8 @@ class CorrelationIdFilterUnitTest {
         when(request.getHeader(CorrelationIdFilter.CORRELATION_ID_HEADER))
                 .thenReturn(validUuid);
 
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
         verify(response).setHeader(CorrelationIdFilter.CORRELATION_ID_HEADER, validUuid);
 
         // Reset mocks for next test
@@ -210,7 +219,8 @@ class CorrelationIdFilterUnitTest {
         when(request.getHeader(CorrelationIdFilter.CORRELATION_ID_HEADER))
                 .thenReturn(customString);
 
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
         verify(response).setHeader(CorrelationIdFilter.CORRELATION_ID_HEADER, customString);
     }
 
@@ -223,7 +233,8 @@ class CorrelationIdFilterUnitTest {
                 .thenReturn(correlationId);
 
         // When
-        correlationIdFilter.doFilterInternal(request, response, filterChain);
+        correlationIdFilter.doFilterInternal(java.util.Objects.requireNonNull(request),
+                java.util.Objects.requireNonNull(response), java.util.Objects.requireNonNull(filterChain));
 
         // Then - MDC should be clean after processing
         assertThat(MDC.get(CorrelationIdFilter.CORRELATION_ID_MDC_KEY)).isNull();

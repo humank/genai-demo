@@ -67,7 +67,7 @@ public class ProductRepositoryAdapter extends BaseRepositoryAdapter<Product, Pro
             entity = mapper.toEntity(product);
         }
 
-        productJpaRepository.save(entity);
+        productJpaRepository.save(java.util.Objects.requireNonNull((ProductJpaEntity) entity));
         return product; // Return original aggregate root to maintain consistency
     }
 

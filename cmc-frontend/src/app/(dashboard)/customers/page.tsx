@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Navbar } from '@/components/layout/Navbar'
+
 import { CustomerCard } from '@/components/customer/CustomerCard'
 import { StatsCard } from '@/components/dashboard/StatsCard'
 import { Button } from '@/components/ui/button'
@@ -10,10 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { EmptyState } from '@/components/ui/empty-state'
 import { useCustomers, useStats } from '@/hooks/useApi'
 import { Customer } from '@/types/domain'
-import { 
-  Users, 
-  Plus, 
-  Search, 
+import {
+  Users,
+  Plus,
+  Search,
   Filter,
   RefreshCw,
   UserPlus,
@@ -47,13 +47,13 @@ export default function CustomersPage() {
 
   // 過濾客戶
   const filteredCustomers = customers.filter(customer => {
-    const matchesSearch = 
+    const matchesSearch =
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.phone.includes(searchTerm)
-    
+
     const matchesMembership = membershipFilter === 'ALL' || customer.membershipLevel === membershipFilter
-    
+
     return matchesSearch && matchesMembership
   })
 
@@ -89,7 +89,7 @@ export default function CustomersPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <Navbar />
+
         <main className="container-modern py-8">
           <div className="flex flex-col items-center justify-center p-8 text-center">
             <p className="text-red-500 mb-4">載入客戶時發生錯誤</p>
@@ -105,8 +105,8 @@ export default function CustomersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Navbar />
-      
+
+
       <main className="container-modern py-8 space-y-8">
         {/* 頁面標題 */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -116,7 +116,7 @@ export default function CustomersPage() {
               管理客戶資料、會員等級和購買記錄
             </p>
           </div>
-          
+
           <div className="flex space-x-2">
             <Button variant="outline" size="sm" onClick={handleRefresh}>
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -142,10 +142,10 @@ export default function CustomersPage() {
           <StatsCard
             title="活躍客戶"
             value={activeCustomers}
-            change={{ 
-              value: totalCustomers > 0 ? `${Math.round((activeCustomers/totalCustomers)*100)}%` : '0%', 
-              type: 'neutral', 
-              period: '活躍率' 
+            change={{
+              value: totalCustomers > 0 ? `${Math.round((activeCustomers / totalCustomers) * 100)}%` : '0%',
+              type: 'neutral',
+              period: '活躍率'
             }}
             icon={TrendingUp}
             color="green"
@@ -154,10 +154,10 @@ export default function CustomersPage() {
           <StatsCard
             title="VIP 客戶"
             value={vipCustomers}
-            change={{ 
-              value: totalCustomers > 0 ? `${Math.round((vipCustomers/totalCustomers)*100)}%` : '0%', 
-              type: 'neutral', 
-              period: 'VIP 率' 
+            change={{
+              value: totalCustomers > 0 ? `${Math.round((vipCustomers / totalCustomers) * 100)}%` : '0%',
+              type: 'neutral',
+              period: 'VIP 率'
             }}
             icon={Crown}
             color="purple"
@@ -179,7 +179,7 @@ export default function CustomersPage() {
             <Filter className="h-5 w-5 text-primary" />
             <h3 className="font-semibold text-foreground">篩選和搜尋</h3>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative md:col-span-2">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -190,7 +190,7 @@ export default function CustomersPage() {
                 className="pl-10"
               />
             </div>
-            
+
             <Select value={membershipFilter} onValueChange={setMembershipFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="會員等級" />
@@ -236,8 +236,8 @@ export default function CustomersPage() {
         ) : filteredCustomers.length === 0 ? (
           <EmptyState
             icon={Users}
-            title={searchTerm || membershipFilter !== 'ALL' 
-              ? "沒有符合條件的客戶" 
+            title={searchTerm || membershipFilter !== 'ALL'
+              ? "沒有符合條件的客戶"
               : "還沒有任何客戶"
             }
             description={searchTerm || membershipFilter !== 'ALL'
@@ -258,11 +258,11 @@ export default function CustomersPage() {
                 totalSpent: Math.floor(Math.random() * 100000) + 5000,
                 lastOrderDate: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
               }
-              
+
               return (
-                <div 
-                  key={customer.id} 
-                  className="animate-scale-in" 
+                <div
+                  key={customer.id}
+                  className="animate-scale-in"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <CustomerCard
@@ -291,11 +291,11 @@ export default function CustomersPage() {
             >
               上一頁
             </Button>
-            
+
             <span className="text-sm text-muted-foreground">
               第 {currentPage + 1} 頁，共 {customersResponse.totalPages} 頁
             </span>
-            
+
             <Button
               variant="outline"
               size="sm"

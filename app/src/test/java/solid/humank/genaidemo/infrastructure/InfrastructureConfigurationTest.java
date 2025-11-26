@@ -72,7 +72,7 @@ class InfrastructureConfigurationTest extends BaseTest {
         };
 
         for (String beanName : expectedRepositoryBeans) {
-            assertTrue(applicationContext.containsBean(beanName),
+            assertTrue(applicationContext.containsBean(java.util.Objects.requireNonNull((String) beanName)),
                     "Repository bean '" + beanName + "' should be present");
         }
     }

@@ -1,5 +1,6 @@
 package solid.humank.genaidemo.config;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -33,11 +34,11 @@ public class TestDatabaseValidatorConfiguration {
     public DatabaseConfigurationValidator testDatabaseConfigurationValidator(
             DataSource dataSource,
             DatabaseConfigurationManager databaseConfigurationManager,
-            Flyway flyway) {
-        
+            ObjectProvider<Flyway> flywayProvider) {
+
         log.info("Using test DatabaseConfigurationValidator - validation disabled");
-        
-        return new DatabaseConfigurationValidator(dataSource, databaseConfigurationManager, flyway) {
+
+        return new DatabaseConfigurationValidator(dataSource, databaseConfigurationManager, flywayProvider) {
             @Override
             public void validateDatabaseOnStartup() {
                 log.debug("Database validation skipped in test environment");

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import solid.humank.genaidemo.domain.inventory.model.aggregate.Inventory;
@@ -37,16 +38,19 @@ public class InventoryRepositoryAdapter extends BaseRepositoryAdapter<Inventory,
     }
 
     @Override
+    public boolean exists(InventoryId inventoryId) {
+        UUID id = convertToJpaId(inventoryId);
+        return jpaInventoryRepository.existsById(id);
+    }
+
+    @Override
     public void delete(InventoryId inventoryId) {
-        jpaInventoryRepository.deleteById(inventoryId.getId());
+        UUID id = convertToJpaId(inventoryId);
+        jpaInventoryRepository.deleteById(id);
     }
 
     public void update(Inventory aggregateRoot) {
         save(aggregateRoot);
-    }
-
-    public boolean exists(InventoryId inventoryId) {
-        return jpaInventoryRepository.existsById(inventoryId.getId());
     }
 
     @Override
@@ -82,8 +86,9 @@ public class InventoryRepositoryAdapter extends BaseRepositoryAdapter<Inventory,
     }
 
     @Override
-    protected UUID convertToJpaId(InventoryId domainId) {
-        return domainId.getId();
+    protected @NonNull UUID convertToJpaId(InventoryId domainId) {
+        Object id = domainId.getId();
+        return java.util.Objects.requireNonNull((UUID) id);
     }
 
     @Override

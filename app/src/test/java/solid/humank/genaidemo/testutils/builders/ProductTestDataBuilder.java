@@ -18,6 +18,7 @@ public class ProductTestDataBuilder {
     private boolean available = true;
 
     private int stockQuantity = 100;
+    private String imageUrl = "https://placehold.co/600x400";
 
     /** 創建新的產品建構器 */
     public static ProductTestDataBuilder aProduct() {
@@ -99,30 +100,26 @@ public class ProductTestDataBuilder {
 
     /** 建構Product領域物件 */
     public Product build() {
-        solid.humank.genaidemo.domain.product.model.valueobject.ProductId productIdVO =
-                new solid.humank.genaidemo.domain.product.model.valueobject.ProductId(productId);
+        solid.humank.genaidemo.domain.product.model.valueobject.ProductId productIdVO = new solid.humank.genaidemo.domain.product.model.valueobject.ProductId(
+                productId);
         // 創建所需的值對象
-        solid.humank.genaidemo.domain.product.model.valueobject.ProductName productName =
-                new solid.humank.genaidemo.domain.product.model.valueobject.ProductName(name);
-        solid.humank.genaidemo.domain.product.model.valueobject.ProductDescription
-                productDescription =
-                        new solid.humank.genaidemo.domain.product.model.valueobject
-                                .ProductDescription(description);
-        solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory categoryVO =
-                new solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory(
-                        category, category);
-        solid.humank.genaidemo.domain.product.model.valueobject.StockQuantity stockQuantityVO =
-                new solid.humank.genaidemo.domain.product.model.valueobject.StockQuantity(
-                        this.stockQuantity);
+        solid.humank.genaidemo.domain.product.model.valueobject.ProductName productName = new solid.humank.genaidemo.domain.product.model.valueobject.ProductName(
+                name);
+        solid.humank.genaidemo.domain.product.model.valueobject.ProductDescription productDescription = new solid.humank.genaidemo.domain.product.model.valueobject.ProductDescription(
+                description);
+        solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory categoryVO = new solid.humank.genaidemo.domain.product.model.valueobject.ProductCategory(
+                category, category);
+        solid.humank.genaidemo.domain.product.model.valueobject.StockQuantity stockQuantityVO = new solid.humank.genaidemo.domain.product.model.valueobject.StockQuantity(
+                this.stockQuantity);
 
-        Product product =
-                new Product(
-                        productIdVO,
-                        productName,
-                        productDescription,
-                        Money.of(price),
-                        categoryVO,
-                        stockQuantityVO);
+        Product product = new Product(
+                productIdVO,
+                productName,
+                productDescription,
+                Money.of(price),
+                categoryVO,
+                stockQuantityVO,
+                this.imageUrl);
         // 注意：Product 類可能沒有 setter 方法，因為它遵循 DDD 原則
         // 如果需要設置這些值，應該通過構造函數或業務方法
         return product;

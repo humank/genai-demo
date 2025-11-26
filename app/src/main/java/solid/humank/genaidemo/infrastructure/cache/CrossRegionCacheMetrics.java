@@ -3,7 +3,7 @@ package solid.humank.genaidemo.infrastructure.cache;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.redisson.api.RedissonClient;
+// import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import io.micrometer.core.instrument.Counter;
@@ -55,10 +55,10 @@ public class CrossRegionCacheMetrics {
     private final AtomicLong cacheSize = new AtomicLong(0);
     private final AtomicLong cacheMemoryUsage = new AtomicLong(0);
 
-    private final RedissonClient redissonClient;
+    // private final RedissonClient redissonClient;
 
-    public CrossRegionCacheMetrics(MeterRegistry meterRegistry, RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
+    public CrossRegionCacheMetrics(MeterRegistry meterRegistry /* , RedissonClient redissonClient */) {
+        // this.redissonClient = redissonClient;
 
         // Initialize counters
         this.cacheHitCounter = Counter.builder("cache.requests")
@@ -250,10 +250,13 @@ public class CrossRegionCacheMetrics {
      */
     public double getCacheSize() {
         try {
-            // Try to get actual size from Redis if possible
-            long actualSize = redissonClient.getKeys().count();
-            cacheSize.set(actualSize);
-            return actualSize;
+            /*
+             * // Try to get actual size from Redis if possible
+             * long actualSize = redissonClient.getKeys().count();
+             * cacheSize.set(actualSize);
+             * return actualSize;
+             */
+            return cacheSize.get();
         } catch (Exception e) {
             // Fall back to estimate
             return Math.max(0, cacheSize.get());
@@ -267,11 +270,16 @@ public class CrossRegionCacheMetrics {
      */
     public double getCacheMemoryUsage() {
         try {
-            // Try to get actual memory usage from Redis if possible
-            // This is an approximation as Redis doesn't provide exact per-key memory usage
-            long memoryUsage = redissonClient.getKeys().count() * 1024; // Rough estimate: 1KB per key
-            cacheMemoryUsage.set(memoryUsage);
-            return memoryUsage;
+            /*
+             * // Try to get actual memory usage from Redis if possible
+             * // This is an approximation as Redis doesn't provide exact per-key memory
+             * usage
+             * long memoryUsage = redissonClient.getKeys().count() * 1024; // Rough
+             * estimate: 1KB per key
+             * cacheMemoryUsage.set(memoryUsage);
+             * return memoryUsage;
+             */
+            return cacheMemoryUsage.get();
         } catch (Exception e) {
             // Fall back to estimate
             return Math.max(0, cacheMemoryUsage.get());

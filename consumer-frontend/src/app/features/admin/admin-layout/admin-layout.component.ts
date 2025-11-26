@@ -3,21 +3,21 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { SidebarModule } from 'primeng/sidebar';
+// import { SidebarModule } from 'primeng/sidebar'; // TODO: Fix import path for PrimeNG 20.x
 
 @Component({
-    selector: 'app-admin-layout',
-    standalone: true,
-    imports: [
-        CommonModule,
-        RouterOutlet,
-        RouterLink,
-        RouterLinkActive,
-        ButtonModule,
-        SidebarModule,
-        MenuModule
-    ],
-    template: `
+  selector: 'app-admin-layout',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    ButtonModule,
+    // SidebarModule, // Temporarily disabled
+    MenuModule
+  ],
+  template: `
     <div class="admin-layout">
       <!-- Admin Header -->
       <header class="admin-header bg-white shadow-sm border-b border-gray-200 px-6 py-4">
@@ -74,7 +74,7 @@ import { SidebarModule } from 'primeng/sidebar';
       </main>
     </div>
   `,
-    styles: [`
+  styles: [`
     .admin-layout {
       min-height: 100vh;
       background-color: #f8fafc;
