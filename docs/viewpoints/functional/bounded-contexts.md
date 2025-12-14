@@ -8,8 +8,8 @@ version: "2.0"
 status: "active"
 owner: "Architecture Team"
 related_docs:
-  - "viewpoints/functional/overview.md"
-  - "viewpoints/information/overview.md"
+  - "viewpoin../functional/README.md"
+  - "viewpoin../information/README.md"
   - "perspectives/evolution/overview.md"
 tags: ["ddd", "bounded-contexts", "domain-model", "context-map"]
 ---
@@ -143,10 +143,10 @@ Minimal shared value objects in `domain/shared/`:
 
 ## Quick Links
 
-- [Back to Functional Viewpoint](overview.md)
+- [Back to Functional Viewpoint](README.md)
 - [Use Cases](use-cases.md)
 - [Functional Interfaces](interfaces.md)
-- [Information Viewpoint](../information/overview.md)
+- [Information Viewpoint](../information/README.md)
 - [Main Documentation](../../README.md)
 
 ## Change History

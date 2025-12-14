@@ -1,7 +1,7 @@
 # External Integrations
 
 > **Status**: 📝 Under Construction  
-> **Last Updated**: 2024-11-19
+> **Last Updated**: 2025-12-14
 
 ## Overview
 
@@ -17,7 +17,7 @@ This section documents integrations with external systems and third-party servic
 ## Quick Reference
 
 For API integration examples, see:
-- [API Usage Examples](../../examples/api-usage-examples.md) - Webhook integration
+- [API Usage Examples](../../viewpoints/development/examples/api-usage-examples.md) - Webhook integration
 - [API Documentation](../README.md) - API overview
 
 

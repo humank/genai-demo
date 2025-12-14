@@ -863,7 +863,7 @@ Alarms:
 
 - [Deployment Overview](overview.md) - High-level deployment architecture
 - [Physical Architecture](physical-architecture.md) - Infrastructure component details
-- [Security Perspective](../../perspectives/security/overview.md) - Security controls and policies
+- [Security Perspective](../../perspectives/security/README.md) - Security controls and policies
 
 ---
 

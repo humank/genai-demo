@@ -11,11 +11,11 @@
 [![Availability](https://img.shields.io/badge/Availability-99.97%25-success.svg)](docs/perspectives/availability/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## � Tablke of Contents
+## 📑 Table of Contents
 
-- [� Whact Makes This Project Special](#-what-makes-this-project-special)
-- [�️ Architecture by Numbers](#-architecture-by-numbers)
-- [�️ Digietal Resilience](#️-digital-resilience-enterprise-multi-region-architecture)
+- [🌟 What Makes This Project Special](#-what-makes-this-project-special)
+- [📊 Architecture by Numbers](#-architecture-by-numbers)
+- [🛡️ Digital Resilience](#️-digital-resilience-enterprise-multi-region-architecture)
 - [🎯 Project Overview](#-project-overview)
 - [🏛️ Architecture Highlights](#️-architecture-highlights)
 - [🚀 Quick Start](#-quick-start)
@@ -80,7 +80,7 @@ This is not just another e-commerce platform. It's a **comprehensive demonstrati
 | **Availability (6 months)** | 99.97% | 🟡 Target: 99.99% |
 | **RTO (Recovery Time)** | 28s avg | ✅ Target: <30s |
 | **RPO (Data Loss)** | 0.8s avg | ✅ Target: <1s |
-| **Prevented Downtime** | 47 min (6mo) | ✅ $235K protected |
+| **Prevented Downtime** | 47 min (6mo) | ✅ $239K protected |
 | **DR Drill Success** | 100% | ✅ Monthly tests |
 | **Automated Failover** | 100% success | ✅ Zero manual intervention |
 
@@ -265,7 +265,7 @@ Additional Investment for Resilience:
 - **Positive ROI**: For companies with $50M+ annual revenue
 - **Intangibles**: Customer trust, compliance, competitive advantage (not quantified)
 
-📊 **[Complete Cost Analysis](docs/REAL-COST-ANALYSIS.md)** - Detailed breakdown with scenarios and recommendations         
+📊 **[Complete Cost Analysis](docs/DIGITAL-RESILIENCE-DEEP-DIVE.md#cost-analysis)** - Detailed breakdown with scenarios and recommendations         
 
 ### 🎯 Technical Implementation Highlights
 
@@ -393,6 +393,10 @@ Perspectives describe **quality attributes** that affect the entire system:
 | **[Performance](docs/perspectives/performance/README.md)** | < 2s API response (p95), 1000 req/s throughput | [📄 View](docs/perspectives/performance/README.md) |
 | **[Availability](docs/perspectives/availability/README.md)** | 99.97% uptime, 28s RTO, 0.8s RPO | [📄 View](docs/perspectives/availability/README.md) |
 | **[Evolution](docs/perspectives/evolution/README.md)** | API versioning, backward compatibility | [📄 View](docs/perspectives/evolution/README.md) |
+| **[Accessibility](docs/perspectives/accessibility/README.md)** | UI accessibility, API usability | [📄 View](docs/perspectives/accessibility/README.md) |
+| **[Development Resource](docs/perspectives/development-resource/README.md)** | Team structure, skills, tools | [📄 View](docs/perspectives/development-resource/README.md) |
+| **[Internationalization](docs/perspectives/internationalization/README.md)** | Multi-language support, localization | [📄 View](docs/perspectives/internationalization/README.md) |
+| **[Location](docs/perspectives/location/README.md)** | Geographic distribution, data residency | [📄 View](docs/perspectives/location/README.md) |
 
 **📖 Complete Methodology**: [Rozanski & Woods Guide](docs/rozanski-woods-methodology-guide.md)
 
@@ -456,6 +460,7 @@ Generic Domains:
 - ✅ **28+ BDD Scenarios** (Cucumber)
 - ✅ **100% Architecture Compliance** (ArchUnit)
 - ✅ **103 Infrastructure Tests** (CDK)
+- ✅ **Property-Based Tests** (Hypothesis/pytest)
 - ✅ **Monthly Chaos Tests** (AWS FIS + Chaos Mesh)
 
 **BDD/TDD Workflow**:
@@ -465,7 +470,7 @@ Generic Domains:
 4. **Refactor** - Improve quality while maintaining tests
 5. **Verify** - ArchUnit validates architecture rules
 
-**📖 Testing Guide**: [Testing Strategy](docs/development/testing/testing-strategy.md)
+**📖 Testing Guide**: [Testing Strategy](docs/viewpoints/development/testing/testing-strategy.md)
 
 ---
 
@@ -478,7 +483,7 @@ Generic Domains:
 ### 1️⃣ Clone & Setup
 
 ```bash
-git clone https://github.com/yourusername/genai-demo.git
+git clone https://github.com/humank/genai-demo.git
 cd genai-demo
 make dev-setup  # One-command setup
 ```
@@ -496,7 +501,7 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 - 📚 **Swagger UI**: http://localhost:8080/swagger-ui.html
 - ✅ **Health Check**: http://localhost:8080/actuator/health
 
-**📖 Detailed Setup**: See [Development Setup Guide](docs/development/setup/README.md)
+**📖 Detailed Setup**: See [Development Setup Guide](docs/viewpoints/development/setup/README.md)
 
 ---
 
@@ -513,15 +518,15 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 
 2. **Set Up Environment** (30 min)
    - Follow [Quick Start](#-quick-start)
-   - Configure [IDE](docs/development/setup/ide-configuration.md)
+   - Configure [IDE](docs/viewpoints/development/setup/ide-configuration.md)
 
 3. **Learn the Codebase** (60 min)
    - Study [Development Viewpoint](docs/viewpoints/development/README.md)
-   - Review [Coding Standards](docs/development/coding-standards/README.md)
+   - Review [Coding Standards](docs/viewpoints/development/coding-standards/README.md)
 
 4. **Make Your First Contribution** (30 min)
    - Check [Contributing Guide](CONTRIBUTING.md)
-   - Pick a [good first issue](https://github.com/yourusername/genai-demo/labels/good%20first%20issue)
+   - Pick a [good first issue](https://github.com/humank/genai-demo/labels/good%20first%20issue)
 
 </details>
 
@@ -584,16 +589,16 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
    - [Deployment Viewpoint](docs/viewpoints/deployment/README.md)
 
 2. **Prepare Deployment** (4h)
-   - Review [Deployment Guide](docs/operations/deployment/README.md)
-   - Check [Environment Configuration](docs/operations/deployment/environments.md)
+   - Review [Deployment Guide](docs/viewpoints/operational/deployment/README.md)
+   - Check [Environment Configuration](docs/viewpoints/operational/deployment/environments.md)
 
 3. **Deploy** (2h)
-   - Follow [Deployment Process](docs/operations/deployment/deployment-process.md)
+   - Follow [Deployment Process](docs/viewpoints/operational/deployment/deployment-process.md)
 
 4. **Set Up Operations** (2h)
-   - Configure [Monitoring](docs/operations/monitoring/README.md)
-   - Review [Runbooks](docs/operations/runbooks/README.md)
-   - Set up [Alerts](docs/operations/monitoring/alerts.md)
+   - Configure [Monitoring](docs/viewpoints/operational/monitoring/README.md)
+   - Review [Runbooks](docs/viewpoints/operational/runbooks/README.md)
+   - Set up [Alerts](docs/viewpoints/operational/monitoring/alerts.md)
 
 </details>
 
@@ -603,16 +608,16 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 ### Testing Guide
 
 1. **Understand Testing Strategy** (30 min)
-   - [Testing Strategy](docs/development/testing/testing-strategy.md)
-   - [Test Pyramid](docs/development/testing/test-pyramid.md)
+   - [Testing Strategy](docs/viewpoints/development/testing/testing-strategy.md)
+   - [Test Pyramid](docs/viewpoints/development/testing/test-pyramid.md)
 
 2. **Write Unit Tests** (1h)
-   - [Unit Testing Guide](docs/development/testing/unit-testing.md)
-   - [Mocking Guidelines](docs/development/testing/mocking.md)
+   - [Unit Testing Guide](docs/viewpoints/development/testing/unit-testing.md)
+   - [Mocking Guidelines](docs/viewpoints/development/testing/mocking.md)
 
 3. **Write BDD Tests** (1h)
-   - [BDD Testing Guide](docs/development/testing/bdd-testing.md)
-   - [Gherkin Best Practices](docs/development/testing/gherkin-guide.md)
+   - [BDD Testing Guide](docs/viewpoints/development/testing/bdd-testing.md)
+   - [Gherkin Best Practices](docs/viewpoints/development/testing/gherkin-guide.md)
 
 4. **Run Tests**
    ```bash
@@ -676,14 +681,14 @@ Our documentation follows the **Rozanski & Woods** methodology with clear separa
 
 | Category | Description | Link |
 |----------|-------------|------|
-| **Getting Started** | New developer onboarding | [🚀 Start Here](docs/getting-started/README.md) |
+| **Getting Started** | New developer onboarding | [🚀 Start Here](docs/viewpoints/development/getting-started/README.md) |
 | **Digital Resilience** | Multi-region architecture deep dive | [🛡️ Technical Deep Dive](docs/DIGITAL-RESILIENCE-DEEP-DIVE.md) |
 | **Architecture** | Complete methodology guide | [🏛️ Architecture](docs/rozanski-woods-methodology-guide.md) |
 | **Viewpoints** | All 7 viewpoints overview | [📐 Viewpoints](docs/viewpoints/README.md) |
 | **Perspectives** | All 8 perspectives overview | [🎯 Perspectives](docs/perspectives/README.md) |
 | **API Documentation** | REST API & Events | [🔌 API Docs](docs/api/README.md) |
-| **Operations** | Runbooks & procedures | [🔧 Operations](docs/operations/README.md) |
-| **Development** | Coding standards & guides | [💻 Development](docs/development/README.md) |
+| **Operations** | Runbooks & procedures | [🔧 Operations](docs/viewpoints/operational/README.md) |
+| **Development** | Coding standards & guides | [💻 Development](docs/viewpoints/development/README.md) |
 
 ### 📂 Documentation Structure
 
@@ -694,9 +699,17 @@ docs/
 │   ├── functional/         # Business capabilities
 │   ├── information/        # Data models
 │   ├── concurrency/        # Parallel processing
-│   ├── development/        # Code organization
+│   ├── development/        # Code organization, developer guides
+│   │   ├── coding-standards/   # Coding standards
+│   │   ├── getting-started/    # New developer onboarding
+│   │   ├── setup/              # Development environment setup
+│   │   ├── testing/            # Testing strategy & guides
+│   │   └── workflows/          # Git workflow & processes
 │   ├── deployment/         # Infrastructure
-│   └── operational/        # Operations
+│   └── operational/        # Operations, monitoring, runbooks
+│       ├── deployment/         # Deployment procedures
+│       ├── monitoring/         # Monitoring & alerts
+│       └── runbooks/           # Operational runbooks
 ├── perspectives/            # Quality Attributes (8 Perspectives)
 │   ├── security/           # Authentication, encryption
 │   ├── performance/        # Response times, throughput
@@ -704,8 +717,10 @@ docs/
 │   └── evolution/          # Extensibility, versioning
 ├── architecture/            # ADRs & Design Patterns
 ├── api/                     # API Documentation
-├── development/             # Developer Guides
-├── operations/              # Operational Procedures
+├── diagrams/                # All diagrams (PlantUML, Mermaid, generated)
+│   ├── generated/          # Auto-generated diagram images
+│   ├── mermaid/            # Mermaid diagram sources
+│   └── viewpoints/         # PlantUML sources by viewpoint
 └── DIGITAL-RESILIENCE-DEEP-DIVE.md  # Multi-region technical analysis
 ```
 
@@ -755,7 +770,7 @@ We welcome contributions! Here's how to get started:
 
 1. **Fork & Clone**: Fork the repo and clone locally
 2. **Create Branch**: `git checkout -b feature/your-feature`
-3. **Make Changes**: Follow our [Coding Standards](docs/development/coding-standards/README.md)
+3. **Make Changes**: Follow our [Coding Standards](docs/viewpoints/development/coding-standards/README.md)
 4. **Write Tests**: Maintain 80%+ coverage
 5. **Run Checks**: `make pre-commit`
 6. **Submit PR**: Create a pull request with clear description
@@ -763,10 +778,10 @@ We welcome contributions! Here's how to get started:
 ### Detailed Guides
 
 - 📖 [Contributing Guide](CONTRIBUTING.md)
-- 🎨 [Code Style Guide](docs/development/coding-standards/README.md)
-- 🧪 [Testing Guide](docs/development/testing/README.md)
+- 🎨 [Code Style Guide](docs/viewpoints/development/coding-standards/README.md)
+- 🧪 [Testing Guide](docs/viewpoints/development/testing/README.md)
 - 📝 [Documentation Guide](docs/STYLE-GUIDE.md)
-- 🔀 [Git Workflow](docs/development/workflows/git-workflow.md)
+- 🔀 [Git Workflow](docs/viewpoints/development/workflows/git-workflow.md)
 
 ### Development Standards
 
@@ -778,8 +793,8 @@ We welcome contributions! Here's how to get started:
 
 ### Need Help?
 
-- 💬 [GitHub Discussions](https://github.com/yourusername/genai-demo/discussions)
-- 🐛 [Report Issues](https://github.com/yourusername/genai-demo/issues)
+- 💬 [GitHub Discussions](https://github.com/humank/genai-demo/discussions)
+- 🐛 [Report Issues](https://github.com/humank/genai-demo/issues)
 - 📧 Email: yikaikao@gmail.com
 
 ---
@@ -816,7 +831,7 @@ This provides 28s average RTO and 0.8s average RPO with 100% automated failover.
 ./gradlew :app:bootRun --args='--spring.profiles.active=local'
 ```
 
-**Learn More**: [Local Development Setup](docs/development/setup/local-environment.md)
+**Learn More**: [Local Development Setup](docs/viewpoints/development/setup/local-environment.md)
 </details>
 
 <details>
@@ -841,7 +856,7 @@ This provides 28s average RTO and 0.8s average RPO with 100% automated failover.
 
 Plus intangible benefits: customer trust, competitive advantage, regulatory compliance.
 
-**Learn More**: [Cost-Benefit Analysis](#-cost-benefit-analysis)
+**Learn More**: [Digital Resilience Deep Dive](docs/DIGITAL-RESILIENCE-DEEP-DIVE.md#cost-analysis)
 </details>
 
 <details>
@@ -861,7 +876,7 @@ All tests are automated with AWS Fault Injection Simulator and Chaos Mesh, with 
 
 **More Questions?** 
 - Check our [Full FAQ](docs/FAQ.md)
-- Ask in [GitHub Discussions](https://github.com/yourusername/genai-demo/discussions)
+- Ask in [GitHub Discussions](https://github.com/humank/genai-demo/discussions)
 - Email: yikaikao@gmail.com
 
 ---
@@ -918,13 +933,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 - **Project Maintainer**: yikaikao@gmail.com
-- **GitHub Issues**: [Report a bug](https://github.com/yourusername/genai-demo/issues)
-- **Discussions**: [Ask questions](https://github.com/yourusername/genai-demo/discussions)
+- **GitHub Issues**: [Report a bug](https://github.com/humank/genai-demo/issues)
+- **Discussions**: [Ask questions](https://github.com/humank/genai-demo/discussions)
 - **Documentation**: [docs/README.md](docs/README.md)
 
 ---
 
 **Built with ❤️ using modern software engineering practices and battle-tested in production**
 
-**Last Updated**: 2025-11-18
+**Last Updated**: 2025-12-14
 

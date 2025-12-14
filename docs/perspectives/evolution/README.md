@@ -1,8 +1,21 @@
 # Evolution Perspective
 
-> **Last Updated**: 2025-10-24
-> **Status**: Active
-> **Owner**: Architecture & Development Team
+> **Status**: ✅ Active  
+> **Last Updated**: 2025-12-14  
+> **Owner**: Architecture Team
+
+## Overview
+
+The Evolution Perspective addresses the system's ability to adapt to changing requirements, technologies, and business needs over time. For an e-commerce platform operating in a rapidly evolving market, the ability to extend functionality, adopt new technologies, and maintain backward compatibility is critical for long-term success.
+
+## Key Concerns
+
+- **Extensibility**: Adding new features without major architectural changes
+- **Technology Adoption**: Safely upgrading frameworks and libraries
+- **Backward Compatibility**: Supporting existing integrations during evolution
+- **Technical Debt Management**: Balancing new development with code quality
+- **API Versioning**: Managing API lifecycle and deprecation
+- **Migration Strategies**: Safe database and service migrations
 
 ## Purpose
 
@@ -239,26 +252,44 @@ Before merging changes:
 - **Environment**: Production system with existing payment methods
 - **Artifact**: Payment processing module
 - **Response**: New payment method added via plugin interface
-- **Response Measure**: Implementation time ≤ 2 days, no changes to existing code
+- **Response Measure**: Implementation time ≤ 2 days, no changes to existing code, 0 regression test failures
+
+### Scenario 2: Framework Version Upgrade
+
+- **Source**: Development team
+- **Stimulus**: Spring Boot major version upgrade (e.g., 3.3 to 3.4)
+- **Environment**: Production system with existing codebase
+- **Artifact**: Application framework and dependencies
+- **Response**: Framework upgraded with minimal code changes
+- **Response Measure**: Upgrade completed within 1 week, ≤ 5% of codebase modified, 100% test pass rate
+
+### Scenario 3: API Deprecation and Migration
+
+- **Source**: Architecture team
+- **Stimulus**: Deprecate API v1 in favor of v2
+- **Environment**: Production system with active API consumers
+- **Artifact**: REST API endpoints
+- **Response**: Graceful deprecation with migration support
+- **Response Measure**: 6-month deprecation notice, ≥ 95% of consumers migrated before sunset, 0 service disruptions
+
+## Affected Viewpoints
+
+- [Development Viewpoint](../../viewpoints/development/README.md) - Module organization, dependencies, and build processes
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - System capabilities and extension points
+- [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Deployment strategies for evolution
+- [Information Viewpoint](../../viewpoints/information/README.md) - Data migration and schema evolution
 
 ## Related Documentation
 
 ### Viewpoints
 
-- [Development Viewpoint](../../viewpoints/development/overview.md) - Module organization and dependencies
-- [Functional Viewpoint](../../viewpoints/functional/overview.md) - System capabilities and extension points
+- [Development Viewpoint](../../viewpoints/development/README.md) - Module organization and dependencies
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - System capabilities and extension points
 
 ### Other Perspectives
 
-- [Performance & Scalability Perspective](../performance/overview.md) - Performance during evolution
-- [Security Perspective](../security/overview.md) - Security during changes
-
-### Implementation Guides
-
-- [Extensibility Points](extensibility.md) - Plugin architecture and extension mechanisms
-- [Technology Evolution](technology-evolution.md) - Framework upgrade strategies
-- [API Versioning](api-versioning.md) - Versioning and deprecation policies
-- [Refactoring Strategy](refactoring.md) - Technical debt management
+- [Performance & Scalability Perspective](../performance/README.md) - Performance during evolution
+- [Security Perspective](../security/README.md) - Security during changes
 
 ## Document Structure
 

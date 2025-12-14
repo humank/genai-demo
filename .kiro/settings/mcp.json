@@ -41,7 +41,7 @@
       "env": {
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
-      "disabled": false,
+      "disabled": true,
       "autoApprove": [
         "search_aws_documentation",
         "get_aws_service_info",
@@ -107,6 +107,17 @@
         "unlock_elements",
         "batch_create_elements"
       ]
+    },
+    "powerpoint-automation": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/Users/yikaikao/powerpoint-automation-mcp",
+        "mcp-ppt-server"
+      ],
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }

@@ -265,7 +265,7 @@ Current API version: **v1**
 1. **Understand Architecture**: Review [Functional Viewpoint](../viewpoints/functional/README.md)
 2. **Learn Event Patterns**: Study [Domain Events](events/README.md)
 3. **Follow Standards**: Use [API Design Standards](rest/README.md)
-4. **Implement Endpoints**: Follow [Development Guide](../development/README.md)
+4. **Implement Endpoints**: Follow [Development Guide](../viewpoints/development/README.md)
 
 ## Tools and Resources
 
@@ -302,7 +302,7 @@ Download the complete Postman collection:
 
 ### Reporting Issues
 
-1. Check [troubleshooting guide](../operations/troubleshooting/README.md)
+1. Check [troubleshooting guide](../viewpoints/operational/troubleshooting/README.md)
 2. Search existing issues
 3. Create new issue with details
 4. Include API request/response examples

@@ -141,7 +141,7 @@ Viewpoints are different perspectives on the system structure that help us under
 
 - Focus on [Deployment Viewpoint](deployment/README.md) for infrastructure
 - Review [Operational Viewpoint](operational/README.md) for procedures
-- Check [Operations Guide](../operations/README.md) for runbooks
+- Check [Runbooks](operational/runbooks/README.md) for operational procedures
 
 ## Viewpoint Relationships
 

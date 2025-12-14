@@ -24,8 +24,8 @@ diagrams/
 Most diagrams are now embedded directly in documentation as Mermaid code blocks. See:
 - [Deployment Overview](../viewpoints/deployment/overview.md)
 - [Functional Overview](../viewpoints/functional/overview.md)
-- [Security Overview](../perspectives/security/overview.md)
-- [Performance Overview](../perspectives/performance/overview.md)
+- [Security Overview](../perspectives/security/README.md)
+- [Performance Overview](../perspectives/performance/README.md)
 
 ### PlantUML Diagrams (Generated)
 Complex UML diagrams are generated from PlantUML sources:

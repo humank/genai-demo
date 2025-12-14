@@ -1290,7 +1290,7 @@ graph LR
 - [Database Issues Guide](database-issues.md) - Comprehensive database troubleshooting
 - [Application Debugging Guide](application-debugging.md) - Detailed debugging workflows
 - [Monitoring Strategy](../monitoring/monitoring-strategy.md) - Monitoring setup and best practices
-- [Performance Standards](../../perspectives/performance/overview.md) - Performance requirements and targets
+- [Performance Standards](../../perspectives/performance/README.md) - Performance requirements and targets
 
 ## Appendix: Useful Scripts
 

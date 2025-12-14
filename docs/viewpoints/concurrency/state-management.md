@@ -810,8 +810,8 @@ public class StateMetrics {
 - [Concurrency Viewpoint Overview](overview.md) - Overall concurrency model ←
 - [Synchronous vs Asynchronous Operations](sync-async-operations.md) - Operation classification ←
 - [Synchronization Mechanisms](synchronization.md) - Locking and coordination ←
-- [Information Viewpoint](../information/overview.md) - Data management
-- [Performance Perspective](../../perspectives/performance/overview.md) - Performance optimization
+- [Information Viewpoint](../information/README.md) - Data management
+- [Performance Perspective](../../perspectives/performance/README.md) - Performance optimization
 
 ---
 

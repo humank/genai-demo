@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "name": "Figma Component Code Connect",
+  "description": "Check if UI component should be connected to Figma design",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/cmc-frontend/src/components/**/*.tsx",
+      "**/cmc-frontend/src/components/**/*.jsx",
+      "**/consumer-frontend/src/app/**/*.ts",
+      "**/consumer-frontend/src/app/**/*.component.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "When a new component file is created or updated, ask the user if they would like to confirm if the code has been correctly attached to the Figma component of the same name. If the user approves: first run the get code connect map tool for the last Figma URL provided by the user. You can prompt them to provide it again if it's unavailable. If the response is empty, run the add code connect map tool, otherwise tell the user they already have code mapped to that component. If the user rejects: Do not run any additional tools."
+  },
+  "shortName": "figma-code-connect"
+}

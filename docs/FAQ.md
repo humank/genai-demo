@@ -149,7 +149,7 @@ Domain (Core) ← Application ← Infrastructure
 - Unit testing
 - Quick experimentation
 
-**Learn More**: [Local Development Setup](development/setup/local-environment.md)
+**Learn More**: [Local Development Setup](viewpoints/development/setup/local-environment.md)
 
 ---
 
@@ -183,7 +183,7 @@ Domain (Core) ← Application ← Infrastructure
 - ArchUnit for architecture rules
 - JaCoCo for coverage
 
-**Learn More**: [Coding Standards](development/coding-standards/README.md)
+**Learn More**: [Coding Standards](viewpoints/development/coding-standards/README.md)
 
 ---
 
@@ -201,7 +201,7 @@ Domain (Core) ← Application ← Infrastructure
 3. Configure code style
 4. Set up run configurations
 
-**Learn More**: [IDE Configuration](development/setup/ide-configuration.md)
+**Learn More**: [IDE Configuration](viewpoints/development/setup/ide-configuration.md)
 
 ---
 
@@ -226,7 +226,7 @@ Domain (Core) ← Application ← Infrastructure
 - **Staging**: Integration tests with real AWS services
 - **Production**: E2E tests and monitoring
 
-**Learn More**: [Testing Strategy](development/testing/testing-strategy.md)
+**Learn More**: [Testing Strategy](viewpoints/development/testing/testing-strategy.md)
 
 ---
 
@@ -258,7 +258,7 @@ Domain (Core) ← Application ← Infrastructure
 make pre-commit
 ```
 
-**Learn More**: [Testing Guide](development/testing/README.md)
+**Learn More**: [Testing Guide](viewpoints/development/testing/README.md)
 
 ---
 
@@ -290,7 +290,7 @@ public void aNewCustomerWithValidInformation() {
 ./gradlew :app:cucumber
 ```
 
-**Learn More**: [BDD Testing Guide](development/testing/bdd-testing.md)
+**Learn More**: [BDD Testing Guide](viewpoints/development/testing/bdd-testing.md)
 
 ---
 
@@ -310,7 +310,7 @@ public void aNewCustomerWithValidInformation() {
 - Application services
 - Critical paths
 
-**Learn More**: [Testing Strategy](development/testing/testing-strategy.md)
+**Learn More**: [Testing Strategy](viewpoints/development/testing/testing-strategy.md)
 
 ---
 
@@ -346,7 +346,7 @@ npm run deploy:staging
 npm run deploy:production
 ```
 
-**Learn More**: [Deployment Guide](operations/deployment/README.md)
+**Learn More**: [Deployment Guide](viewpoints/operational/deployment/README.md)
 
 ---
 
@@ -386,7 +386,7 @@ npm run deploy:production
 - Cache hit rates
 - Business metrics (orders, revenue)
 
-**Learn More**: [Monitoring Guide](operations/monitoring/monitoring-strategy.md)
+**Learn More**: [Monitoring Guide](viewpoints/operational/monitoring/monitoring-strategy.md)
 
 ---
 
@@ -394,14 +394,14 @@ npm run deploy:production
 
 **Incident Response**:
 
-1. **Check Runbooks**: [Operations Runbooks](operations/runbooks/README.md)
+1. **Check Runbooks**: [Operations Runbooks](viewpoints/operational/runbooks/README.md)
 2. **Review Dashboards**: Grafana dashboards
 3. **Check Logs**: CloudWatch Logs
 4. **Follow Procedures**: Incident response runbook
 
 **Common Issues**:
-- [Troubleshooting Guide](operations/troubleshooting/common-issues.md)
-- [Debugging Guide](operations/troubleshooting/debugging-guide.md)
+- [Troubleshooting Guide](viewpoints/operational/troubleshooting/common-issues.md)
+- [Debugging Guide](viewpoints/operational/troubleshooting/debugging-guide.md)
 
 **Get Help**: yikaikao@gmail.com
 
@@ -433,7 +433,7 @@ docker-compose up -d
 ./gradlew clean build
 ```
 
-**Learn More**: [Troubleshooting Guide](operations/troubleshooting/common-issues.md)
+**Learn More**: [Troubleshooting Guide](viewpoints/operational/troubleshooting/common-issues.md)
 
 ---
 
@@ -525,7 +525,7 @@ brew install plantuml  # macOS
 
 1. Fork the repository
 2. Create a feature branch
-3. Make changes following [Coding Standards](development/coding-standards/README.md)
+3. Make changes following [Coding Standards](viewpoints/development/coding-standards/README.md)
 4. Write tests (80%+ coverage)
 5. Run `make pre-commit`
 6. Submit pull request

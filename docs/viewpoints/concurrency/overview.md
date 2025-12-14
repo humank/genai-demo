@@ -586,14 +586,14 @@ Inventory findByProductIdForUpdate(@Param("productId") String productId);
 
 ### Related Viewpoints
 
-- [Functional Viewpoint](../functional/overview.md) - System capabilities
-- [Information Viewpoint](../information/overview.md) - Data management
+- [Functional Viewpoint](../functional/README.md) - System capabilities
+- [Information Viewpoint](../information/README.md) - Data management
 - [Deployment Viewpoint](../deployment/overview.md) - Infrastructure
 - [Operational Viewpoint](../operational/overview.md) - Operations
 
 ### Related Perspectives
 
-- [Performance Perspective](../../perspectives/performance/overview.md) - Performance requirements
+- [Performance Perspective](../../perspectives/performance/README.md) - Performance requirements
 - [Availability Perspective](../../perspectives/availability/overview.md) - Reliability requirements
 - [Scalability Perspective](../../perspectives/performance/scalability.md) - Scaling strategies
 

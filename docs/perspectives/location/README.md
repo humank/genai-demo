@@ -1,7 +1,7 @@
 # Location Perspective
 
 > **Status**: ✅ Complete  
-> **Last Updated**: 2025-10-24  
+> **Last Updated**: 2025-12-14  
 > **Owner**: Infrastructure Architect
 
 ## Overview
@@ -37,6 +37,42 @@ The Location Perspective addresses how the Enterprise E-Commerce Platform serves
    - Monitoring and troubleshooting
 
 ## Key Concerns
+
+- **Geographic Distribution**: Multi-region deployment across US, EU, and APAC
+- **Data Residency**: GDPR, CCPA, and regional data compliance
+- **Latency Optimization**: CDN, caching, and database read replicas
+- **Operational Complexity**: Coordinated deployments and regional monitoring
+- **Disaster Recovery**: Cross-region failover and data replication
+- **Cost Optimization**: Regional resource allocation and traffic management
+
+## Quality Attribute Scenarios
+
+### Scenario 1: Regional Latency
+
+- **Source**: User in Taiwan
+- **Stimulus**: User accesses product catalog
+- **Environment**: Normal operation
+- **Artifact**: Taiwan regional deployment
+- **Response**: Request served from nearest region
+- **Response Measure**: Response time < 100ms (95th percentile)
+
+### Scenario 2: Cross-Region Failover
+
+- **Source**: Infrastructure failure
+- **Stimulus**: Primary region becomes unavailable
+- **Environment**: Production system
+- **Artifact**: Multi-region deployment
+- **Response**: Traffic automatically routed to secondary region
+- **Response Measure**: Failover time < 30 seconds, zero data loss
+
+### Scenario 3: Data Residency Compliance
+
+- **Source**: EU user
+- **Stimulus**: User creates account with personal data
+- **Environment**: GDPR-regulated environment
+- **Artifact**: Data storage system
+- **Response**: Data stored in EU region only
+- **Response Measure**: 100% compliance with data residency requirements
 
 ### Geographic Distribution
 
@@ -131,6 +167,13 @@ The Location Perspective addresses how the Enterprise E-Commerce Platform serves
 1. Review [Overview](overview.md) for architectural approach
 2. Check data classification guidelines
 3. Implement region-aware code patterns
+
+## Affected Viewpoints
+
+- [Deployment Viewpoint](../../viewpoints/deployment/README.md) - Multi-region infrastructure and deployment
+- [Information Viewpoint](../../viewpoints/information/README.md) - Data replication and residency
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Regional operations and monitoring
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - Region-aware functionality
 
 ## Related Documentation
 

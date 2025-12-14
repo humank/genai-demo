@@ -175,3 +175,6 @@ package-lock.json
 e2e-tests/reports/
 e2e-tests/performance/results/
 e2e-tests/.pytest_cache/
+
+# Kiro IDE settings (contains API tokens)
+.kiro/settings/

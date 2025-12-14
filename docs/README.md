@@ -87,10 +87,10 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 
 ### Common Tasks
 
-- **New to the project?** Start with [Getting Started](getting-started/README.md)
-- **Setting up locally?** See [Local Environment Setup](development/setup/local-environment.md)
+- **New to the project?** Start with [Getting Started](viewpoints/development/getting-started/README.md)
+- **Setting up locally?** See [Local Environment Setup](viewpoints/development/setup/local-environment.md)
 - **Looking for APIs?** Check [API Documentation](api/README.md)
-- **Need to deploy?** See [Deployment Guide](operations/deployment/deployment-process.md)
+- **Need to deploy?** See [Deployment Guide](viewpoints/operational/deployment/deployment-process.md)
 - **Reviewing documentation?** See [Stakeholder Review Plan](STAKEHOLDER-REVIEW-PLAN.md)
 - **Contributing docs?** Read [Style Guide](STYLE-GUIDE.md) and [Maintenance Guide](MAINTENANCE.md)
 
@@ -98,11 +98,11 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 
 | Role | Primary Documentation | Quick Actions |
 |------|----------------------|---------------|
-| **Developer** | [Development Guide](development/README.md) | [Setup](development/setup/README.md) • [Testing](development/testing/README.md) • [API Docs](api/README.md) |
+| **Developer** | [Development Viewpoint](viewpoints/development/README.md) | [Setup](viewpoints/development/setup/README.md) • [Testing](viewpoints/development/testing/README.md) • [API Docs](api/README.md) |
 | **Architect** | [Viewpoints](viewpoints/README.md) | [ADRs](architecture/adrs/README.md) • [Patterns](architecture/patterns/README.md) • [Perspectives](perspectives/README.md) |
-| **Operations** | [Operations Guide](operations/README.md) | [Deploy](operations/deployment/README.md) • [Monitor](operations/monitoring/README.md) • [Runbooks](operations/runbooks/README.md) |
+| **Operations** | [Operational Viewpoint](viewpoints/operational/README.md) | [Deploy](viewpoints/operational/deployment/README.md) • [Monitor](viewpoints/operational/monitoring/README.md) • [Runbooks](viewpoints/operational/runbooks/README.md) |
 | **Business** | [Functional View](viewpoints/functional/README.md) | [Context](viewpoints/context/README.md) • [Use Cases](viewpoints/functional/use-cases.md) |
-| **QA/Test** | [Testing Guide](development/testing/README.md) | [Test Strategy](development/testing/testing-strategy.md) • [BDD](development/testing/bdd-testing.md) |
+| **QA/Test** | [Testing Guide](viewpoints/development/testing/README.md) | [Test Strategy](viewpoints/development/testing/testing-strategy.md) • [BDD](viewpoints/development/testing/bdd-testing.md) |
 
 ## 📖 Documentation by Stakeholder
 
@@ -115,16 +115,14 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 ### For Developers
 
 - [Development Viewpoint](viewpoints/development/README.md) - Code organization and structure
-- [Development Guide](development/README.md) - How to develop and contribute
 - [API Documentation](api/README.md) - REST APIs and domain events
-- [Testing Guide](development/testing/testing-strategy.md) - Testing approach and guidelines
+- [Testing Guide](viewpoints/development/testing/testing-strategy.md) - Testing approach and guidelines
 
 ### For Operations & SRE
 
 - [Deployment Viewpoint](viewpoints/deployment/README.md) - Infrastructure and deployment
-- [Operational Viewpoint](viewpoints/operational/README.md) - Operations and monitoring
-- [Operations Guide](operations/README.md) - Runbooks and procedures
-- [Monitoring Guide](operations/monitoring/monitoring-strategy.md) - Monitoring and alerting
+- [Operational Viewpoint](viewpoints/operational/README.md) - Operations, monitoring, and runbooks
+- [Monitoring Guide](viewpoints/operational/monitoring/monitoring-strategy.md) - Monitoring and alerting
 
 ### For Architects
 
@@ -169,26 +167,26 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 
 ### Development
 
-- [Setup Guide](development/setup/README.md) - Environment setup
-- [Coding Standards](development/coding-standards/README.md) - Code style and conventions
-- [Testing Guide](development/testing/README.md) - Testing strategy and practices
-- [Workflows](development/workflows/README.md) - Git workflow, code review, CI/CD
+- [Setup Guide](viewpoints/development/setup/README.md) - Environment setup
+- [Coding Standards](viewpoints/development/coding-standards/README.md) - Code style and conventions
+- [Testing Guide](viewpoints/development/testing/README.md) - Testing strategy and practices
+- [Workflows](viewpoints/development/workflows/README.md) - Git workflow, code review, CI/CD
 
 ### Operations
 
-- [Deployment](operations/deployment/README.md) - Deployment procedures
-- [Monitoring](operations/monitoring/README.md) - Monitoring and alerting
-- [Runbooks](operations/runbooks/README.md) - Operational procedures
-- [Troubleshooting](operations/troubleshooting/README.md) - Common issues and solutions
+- [Deployment](viewpoints/operational/deployment/README.md) - Deployment procedures
+- [Monitoring](viewpoints/operational/monitoring/README.md) - Monitoring and alerting
+- [Runbooks](viewpoints/operational/runbooks/README.md) - Operational procedures
+- [Troubleshooting](viewpoints/operational/troubleshooting/README.md) - Common issues and solutions
 
 ### Technical Deep Dives & Reports
 - [Digital Resilience Deep Dive](perspectives/availability/digital-resilience.md) - Availability and resilience analysis
 - [Security Hub Insights](perspectives/security/security-hub-insights.md) - Security posture analysis
 - [Real Cost Analysis](viewpoints/deployment/cost-analysis.md) - Infrastructure cost breakdown
 - [Well-Architected Insights](architecture/well-architected-insights.md) - AWS Well-Architected review
-- [Lambda Refactoring](infrastructure/lambda-refactoring-and-test-improvements.md) - Lambda function improvements
-- [AWS Config Insights](infrastructure/aws-config-insights-implementation.md) - Configuration compliance
-- [MCP Server Analysis](infrastructure/mcp-server-analysis.md) - MCP server troubleshooting
+- [Lambda Refactoring](viewpoints/deployment/infrastructure/lambda-refactoring-and-test-improvements.md) - Lambda function improvements
+- [AWS Config Insights](viewpoints/deployment/infrastructure/aws-config-insights-implementation.md) - Configuration compliance
+- [MCP Server Analysis](viewpoints/deployment/infrastructure/mcp-server-analysis.md) - MCP server troubleshooting
 
 ## 🔍 Finding Information
 
@@ -197,17 +195,17 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 - **Authentication & Security**: [Security Perspective](perspectives/security/README.md)
 - **Performance Optimization**: [Performance Perspective](perspectives/performance/README.md)
 - **Deployment & Infrastructure**: [Deployment Viewpoint](viewpoints/deployment/README.md)
-- **Lambda Functions & CDK**: [Lambda Refactoring Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
+- **Lambda Functions & CDK**: [Lambda Refactoring Guide](viewpoints/deployment/infrastructure/lambda-refactoring-and-test-improvements.md)
 - **API Reference**: [API Documentation](api/README.md)
-- **Testing**: [Testing Guide](development/testing/README.md)
-- **CDK Testing**: [Lambda Refactoring Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
-- **Troubleshooting**: [Troubleshooting Guide](operations/troubleshooting/README.md)
+- **Testing**: [Testing Guide](viewpoints/development/testing/README.md)
+- **CDK Testing**: [Lambda Refactoring Guide](viewpoints/deployment/infrastructure/lambda-refactoring-and-test-improvements.md)
+- **Troubleshooting**: [Troubleshooting Guide](viewpoints/operational/troubleshooting/README.md)
 
 ### By Task
 
-- **I want to add a new feature**: [Development Guide](development/README.md) → [Functional Viewpoint](viewpoints/functional/README.md)
-- **I need to fix a bug**: [Troubleshooting Guide](operations/troubleshooting/README.md) → [Development Guide](development/README.md)
-- **I need to deploy**: [Deployment Guide](operations/deployment/README.md)
+- **I want to add a new feature**: [Development Viewpoint](viewpoints/development/README.md) → [Functional Viewpoint](viewpoints/functional/README.md)
+- **I need to fix a bug**: [Troubleshooting Guide](viewpoints/operational/troubleshooting/README.md) → [Development Viewpoint](viewpoints/development/README.md)
+- **I need to deploy**: [Deployment Guide](viewpoints/operational/deployment/README.md)
 - **I need to understand the architecture**: [Architecture Overview](architecture/README.md) → [Viewpoints](viewpoints/README.md)
 - **I need to integrate with an API**: [API Documentation](api/README.md)
 

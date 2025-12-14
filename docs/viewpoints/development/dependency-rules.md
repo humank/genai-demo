@@ -858,7 +858,7 @@ public class OrderSubmittedEventHandler {
 
 ### Development Guides
 
-- [Coding Standards](../../development/coding-standards/java-standards.md)
+- [Coding Standards](coding-standards/java-standards.md)
 
 ---
 

@@ -402,7 +402,7 @@ Cross-Origin Resource Sharing (CORS) is configured to allow requests from approv
 
 - [Architecture Decision Records](../../architecture/adrs/) - API design decisions
 - [Domain Events](../events/) - Event-driven architecture
-- [Development Guide](../../development/) - Developer resources
+- [Development Guide](../../viewpoints/development/) - Developer resources
 
 ---
 

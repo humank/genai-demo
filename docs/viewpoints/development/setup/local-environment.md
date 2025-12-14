@@ -543,7 +543,7 @@ docker-compose restart redis
 
 If you encounter issues not covered here:
 
-1. Check the [Troubleshooting Guide](../../operations/troubleshooting/common-issues.md)
+1. Check the [Troubleshooting Guide](../../operational/troubleshooting/common-issues.md)
 2. Search existing issues in the project repository
 3. Ask in the team Slack channel: `#dev-support`
 4. Create a new issue with detailed error messages and steps to reproduce

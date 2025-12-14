@@ -440,7 +440,7 @@ public class LockMonitoringAspect {
 - [Concurrency Viewpoint Overview](overview.md) - Overall concurrency model ←
 - [Synchronous vs Asynchronous Operations](sync-async-operations.md) - Operation classification ←
 - [State Management](state-management.md) - State handling strategies →
-- [Performance Perspective](../../perspectives/performance/overview.md) - Performance requirements
+- [Performance Perspective](../../perspectives/performance/README.md) - Performance requirements
 
 ---
 

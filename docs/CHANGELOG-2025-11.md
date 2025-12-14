@@ -5,7 +5,7 @@
 ### 🎯 Major Updates
 
 #### Infrastructure Documentation
-- **NEW**: [Lambda Refactoring and Test Improvements Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
+- **NEW**: [Lambda Refactoring and Test Improvements Guide](viewpoints/deployment/infrastructure/lambda-refactoring-and-test-improvements.md)
   - Comprehensive guide for Lambda function refactoring from inline code to separate files
   - CDK test improvements achieving 100% test pass rate (362/362 tests)
   - Best practices for Lambda function development and testing
@@ -103,10 +103,12 @@
 
 ```text
 docs/
-├── infrastructure/
-│   ├── lambda-refactoring-and-test-improvements.md  [NEW]
-│   ├── aws-config-insights-implementation.md
-│   └── mcp-server-analysis.md
+├── viewpoints/
+│   └── deployment/
+│       └── infrastructure/
+│           ├── lambda-refactoring-and-test-improvements.md  [NEW]
+│           ├── aws-config-insights-implementation.md
+│           └── mcp-server-analysis.md
 ├── README.md  [UPDATED]
 └── CHANGELOG-2025-01.md  [NEW]
 
@@ -142,7 +144,7 @@ README.md  [UPDATED]
 ### 📞 Support
 
 For questions or issues related to these changes:
-- **Documentation**: Check the [Lambda Refactoring Guide](infrastructure/lambda-refactoring-and-test-improvements.md)
+- **Documentation**: Check the [Lambda Refactoring Guide](viewpoints/deployment/infrastructure/lambda-refactoring-and-test-improvements.md)
 - **Issues**: Create GitHub issue with `infrastructure` label
 - **Slack**: #infrastructure-support channel
 - **Email**: infrastructure-team@example.com

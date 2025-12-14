@@ -12,7 +12,7 @@ This document provides comprehensive API security guidance for the GenAI Demo pl
 ## Quick Reference
 
 For complete security documentation, see:
-- [Security Overview](../../perspectives/security/overview.md) - Complete security architecture
+- [Security Overview](../../perspectives/security/README.md) - Complete security architecture
 - [API Overview](../README.md) - API documentation
 
 ---

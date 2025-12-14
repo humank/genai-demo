@@ -23,6 +23,6 @@ For testing standards, see:
 
 ## Practical Examples
 
-See [Testing Examples](../../examples/testing-examples.md) for runnable code examples.
+See [Testing Examples](../examples/testing-examples.md) for runnable code examples.
 
 **Note**: This section is under active development. Please refer to the steering rules and examples for current guidance.

@@ -386,9 +386,9 @@ Before merging code:
 
 ### Development Guides
 
-- [Local Environment Setup](../../development/setup/local-environment.md)
-- [Coding Standards](../../development/coding-standards/java-standards.md)
-- [Testing Strategy](../../development/testing/testing-strategy.md)
+- [Local Environment Setup](setup/local-environment.md)
+- [Coding Standards](coding-standards/java-standards.md)
+- [Testing Strategy](testing/testing-strategy.md)
 
 ---
 

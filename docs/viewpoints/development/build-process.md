@@ -829,8 +829,8 @@ Always use `./gradlew` instead of `gradle` to ensure consistent builds across en
 
 ### Development Guides
 
-- [Local Environment Setup](../../development/setup/local-environment.md)
-- [Testing Strategy](../../development/testing/testing-strategy.md)
+- [Local Environment Setup](setup/local-environment.md)
+- [Testing Strategy](testing/testing-strategy.md)
 
 ---
 

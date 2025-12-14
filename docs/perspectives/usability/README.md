@@ -1,7 +1,7 @@
 # Usability Perspective
 
-> **Status**: 🚧 In Progress  
-> **Last Updated**: 2025-11-17  
+> **Status**: ✅ Active  
+> **Last Updated**: 2025-12-14  
 > **Owner**: UX Architect & Product Team
 
 ## Overview
@@ -43,6 +43,13 @@ The Usability Perspective addresses how the Enterprise E-Commerce Platform deliv
    - Continuous improvement process
 
 ## Key Concerns
+
+- **User Experience Monitoring**: Real User Monitoring (RUM) and Core Web Vitals
+- **Accessibility Compliance**: WCAG 2.1 Level AA compliance
+- **User Journey Optimization**: Critical path analysis and conversion optimization
+- **Continuous Improvement**: User feedback and iterative design improvements
+- **Multi-Device Experience**: Consistent experience across desktop, tablet, and mobile
+- **Error Recovery**: Clear error messages and user guidance
 
 ### User Experience Monitoring
 
@@ -268,6 +275,13 @@ The Usability Perspective addresses how the Enterprise E-Commerce Platform deliv
 1. Review [Accessibility Compliance](accessibility-compliance.md) for testing procedures
 2. Check [Usability Testing](usability-testing.md) for test scenarios
 3. Implement automated accessibility tests
+
+## Affected Viewpoints
+
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - User-facing functionality and features
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Monitoring, support, and user feedback
+- [Context Viewpoint](../../viewpoints/context/README.md) - User interactions and system boundaries
+- [Development Viewpoint](../../viewpoints/development/README.md) - Frontend development practices
 
 ## Related Documentation
 

@@ -9,7 +9,7 @@ status: "active"
 owner: "Product Team"
 related_docs:
 
-  - "viewpoints/functional/overview.md"
+  - "viewpoin../functional/README.md"
   - "viewpoints/functional/bounded-contexts.md"
   - "development/testing/bdd-testing.md"
 
@@ -786,10 +786,10 @@ Feature: Customer Registration
 
 ## Quick Links
 
-- [Back to Functional Viewpoint](overview.md)
+- [Back to Functional Viewpoint](README.md)
 - [Bounded Contexts](bounded-contexts.md)
 - [Functional Interfaces](interfaces.md)
-- [BDD Testing Guide](../../development/testing/bdd-testing.md)
+- [BDD Testing Guide](../development/testing/bdd-testing.md)
 - [Main Documentation](../../README.md)
 
 ## Change History

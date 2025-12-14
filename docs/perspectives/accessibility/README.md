@@ -1,8 +1,21 @@
 # Accessibility Perspective
 
-> **Last Updated**: 2025-10-24
-> **Status**: Active
-> **Owner**: UX & Development Team
+> **Status**: ✅ Active  
+> **Last Updated**: 2025-12-14  
+> **Owner**: Architecture Team
+
+## Overview
+
+The Accessibility Perspective ensures that the Enterprise E-Commerce Platform is usable by all people, including those with disabilities. Accessibility is not just a legal requirement but a fundamental aspect of inclusive design that expands our market reach and improves user experience for everyone.
+
+## Key Concerns
+
+- **WCAG 2.1 AA Compliance**: Meeting web content accessibility guidelines
+- **Screen Reader Support**: Full compatibility with assistive technologies
+- **Keyboard Navigation**: Complete keyboard accessibility for all features
+- **Visual Design**: Color contrast, text sizing, and visual indicators
+- **API Usability**: Developer-friendly APIs with clear documentation
+- **Documentation Clarity**: Accessible and understandable documentation
 
 ## Purpose
 
@@ -227,25 +240,43 @@ graph TD
 - **Environment**: Web browser with screen reader enabled
 - **Artifact**: Checkout UI
 - **Response**: All elements properly labeled, logical navigation order
-- **Response Measure**: Task completion without assistance
+- **Response Measure**: Task completion rate ≥ 95% without assistance, navigation time ≤ 5 minutes
+
+### Scenario 2: Keyboard-Only Navigation
+
+- **Source**: User with motor impairment
+- **Stimulus**: Complete product search and add to cart using only keyboard
+- **Environment**: Web browser without mouse input
+- **Artifact**: Product catalog and shopping cart UI
+- **Response**: All interactive elements accessible via Tab/Enter keys, visible focus indicators
+- **Response Measure**: All features accessible via keyboard, focus indicator visible with contrast ratio ≥ 3:1
+
+### Scenario 3: Color Contrast Compliance
+
+- **Source**: User with low vision
+- **Stimulus**: Read product descriptions and prices
+- **Environment**: Standard display settings
+- **Artifact**: Product detail pages
+- **Response**: Text is readable with sufficient contrast
+- **Response Measure**: All text meets WCAG 2.1 AA contrast ratio ≥ 4.5:1 for normal text, ≥ 3:1 for large text
+
+## Affected Viewpoints
+
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - User interface capabilities and accessibility features
+- [Development Viewpoint](../../viewpoints/development/README.md) - Development practices for accessibility
+- [Operational Viewpoint](../../viewpoints/operational/README.md) - Accessibility monitoring and support
 
 ## Related Documentation
 
 ### Viewpoints
 
-- [Functional Viewpoint](../../viewpoints/functional/overview.md) - User interface capabilities
-- [Development Viewpoint](../../viewpoints/development/overview.md) - Development practices
+- [Functional Viewpoint](../../viewpoints/functional/README.md) - User interface capabilities
+- [Development Viewpoint](../../viewpoints/development/README.md) - Development practices
 
 ### Other Perspectives
 
 - [Evolution Perspective](../evolution/README.md) - Maintaining accessibility during changes
-- [Performance Perspective](../performance/overview.md) - Performance for assistive technologies
-
-### Implementation Guides
-
-- [UI Accessibility](ui-accessibility.md) - WCAG compliance and implementation
-- [API Usability](api-usability.md) - Developer-friendly API design
-- [Documentation Clarity](documentation.md) - Clear documentation standards
+- [Performance Perspective](../performance/README.md) - Performance for assistive technologies
 
 ## Document Structure
 

@@ -730,7 +730,7 @@ Provide cloud infrastructure for compute, storage, networking, and managed servi
 - [Context Viewpoint Overview](overview.md) - System context
 - [System Scope and Boundaries](scope-and-boundaries.md) - What's in/out of scope
 - [Stakeholders](stakeholders.md) - Stakeholder concerns
-- [Security Perspective](../../perspectives/security/overview.md) - Security requirements
+- [Security Perspective](../../perspectives/security/README.md) - Security requirements
 - [Operational Viewpoint](../operational/overview.md) - Operations procedures
 
 ---

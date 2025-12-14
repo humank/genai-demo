@@ -375,15 +375,15 @@ domain/ (Business Logic) ← infrastructure/ (Technical Implementations)
 
 ### Development Documentation
 
-- [Development Guide](../development/README.md)
-- [Coding Standards](../development/coding-standards/README.md)
-- [Testing Strategy](../development/testing/README.md)
+- [Development Guide](../viewpoints/development/README.md)
+- [Coding Standards](../viewpoints/development/coding-standards/README.md)
+- [Testing Strategy](../viewpoints/development/testing/README.md)
 
 ### Operations Documentation
 
-- [Operations Guide](../operations/README.md)
-- [Deployment Procedures](../operations/deployment/README.md)
-- [Runbooks](../operations/runbooks/README.md)
+- [Operations Guide](../viewpoints/operational/README.md)
+- [Deployment Procedures](../viewpoints/operational/deployment/README.md)
+- [Runbooks](../viewpoints/operational/runbooks/README.md)
 
 ### API Documentation
 

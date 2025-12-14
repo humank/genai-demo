@@ -564,9 +564,9 @@ Dependencies are enforced through:
 
 ### Development Guides
 
-- [Coding Standards](../../development/coding-standards/java-standards.md)
-- [Creating Aggregates](../../development/examples/creating-aggregate.md)
-- [Adding Endpoints](../../development/examples/adding-endpoint.md)
+- [Coding Standards](coding-standards/java-standards.md)
+- [Creating Aggregates](examples/creating-aggregate.md)
+- [Adding Endpoints](examples/adding-endpoint.md)
 
 ---
 

@@ -1,0 +1,156 @@
+# Implementation Plan
+
+- [x] 1. Consolidate operations/ into viewpoints/operational/
+  - [x] 1.1 Move `docs/operations/deployment/` to `docs/viewpoints/operational/deployment/`
+    - Copy all files from source to target
+    - Preserve directory structure
+    - _Requirements: 1.1_
+  - [x] 1.2 Move `docs/operations/monitoring/` to `docs/viewpoints/operational/monitoring/`
+    - Copy all files from source to target
+    - _Requirements: 1.1_
+  - [x] 1.3 Move `docs/operations/runbooks/` to `docs/viewpoints/operational/runbooks/`
+    - Copy all files from source to target
+    - _Requirements: 1.1_
+  - [x] 1.4 Move `docs/operations/troubleshooting/` to `docs/viewpoints/operational/troubleshooting/`
+    - Copy all files from source to target
+    - _Requirements: 1.1_
+  - [x] 1.5 Move `docs/operations/maintenance/` to `docs/viewpoints/operational/maintenance/`
+    - Copy all files from source to target
+    - _Requirements: 1.1_
+  - [x] 1.6 Merge `docs/operations/README.md` content into `docs/viewpoints/operational/README.md`
+    - Preserve unique content from both files
+    - _Requirements: 1.2_
+  - [x] 1.7 Delete `docs/operations/` directory
+    - Verify all content has been moved
+    - Remove the directory
+    - _Requirements: 1.3_
+
+- [x] 2. Consolidate development/ into viewpoints/development/
+  - [x] 2.1 Move `docs/development/coding-standards/` to `docs/viewpoints/development/coding-standards/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.2 Move `docs/development/testing/` to `docs/viewpoints/development/testing/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.3 Move `docs/development/workflows/` to `docs/viewpoints/development/workflows/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.4 Move `docs/development/examples/` to `docs/viewpoints/development/examples/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.5 Move `docs/development/setup/` to `docs/viewpoints/development/setup/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.6 Move `docs/development/hooks/` to `docs/viewpoints/development/hooks/`
+    - Copy all files from source to target
+    - _Requirements: 2.1_
+  - [x] 2.7 Merge `docs/development/README.md` content into `docs/viewpoints/development/README.md`
+    - Preserve unique content from both files
+    - _Requirements: 2.2_
+  - [x] 2.8 Delete `docs/development/` directory
+    - Verify all content has been moved
+    - Remove the directory
+    - _Requirements: 2.3_
+
+- [x] 3. Consolidate infrastructure/ into viewpoints/deployment/
+  - [x] 3.1 Create `docs/viewpoints/deployment/infrastructure/` directory
+    - Create the target directory
+    - _Requirements: 3.1_
+  - [x] 3.2 Move all files from `docs/infrastructure/` to `docs/viewpoints/deployment/infrastructure/`
+    - Copy all .md files
+    - _Requirements: 3.1_
+  - [x] 3.3 Delete `docs/infrastructure/` directory
+    - Verify all content has been moved
+    - Remove the directory
+    - _Requirements: 3.2_
+
+- [x] 4. Consolidate auxiliary directories
+  - [x] 4.1 Move `docs/getting-started/` to `docs/viewpoints/development/getting-started/`
+    - Copy all files
+    - _Requirements: 4.1_
+  - [x] 4.2 Delete `docs/getting-started/` directory
+    - _Requirements: 4.1_
+  - [x] 4.3 Move `docs/examples/` content to `docs/viewpoints/development/examples/`
+    - Merge with existing examples if any
+    - _Requirements: 4.2_
+  - [x] 4.4 Delete `docs/examples/` directory
+    - _Requirements: 4.2_
+  - [x] 4.5 Verify `docs/generated/` content exists in `docs/diagrams/generated/`
+    - Compare directory contents
+    - _Requirements: 4.3_
+  - [x] 4.6 Delete `docs/generated/` directory
+    - _Requirements: 4.4_
+
+- [x] 5. Update docs/README.md cross-references
+  - [x] 5.1 Update all `operations/` references to `viewpoints/operational/`
+    - Find and replace all occurrences
+    - _Requirements: 1.4, 5.1_
+  - [x] 5.2 Update all `development/` references to `viewpoints/development/`
+    - Find and replace all occurrences
+    - _Requirements: 2.4, 5.1_
+  - [x] 5.3 Update all `infrastructure/` references to `viewpoints/deployment/infrastructure/`
+    - Find and replace all occurrences
+    - _Requirements: 3.3, 5.1_
+  - [x] 5.4 Update `getting-started/` references to `viewpoints/development/getting-started/`
+    - Find and replace all occurrences
+    - _Requirements: 5.1_
+  - [x] 5.5 Remove or update any references to deleted directories
+    - Verify no broken links remain
+    - _Requirements: 5.2_
+
+- [x] 6. Fix remaining broken cross-references in other docs files
+  - [x] 6.1 Fix `docs/viewpoints/README.md` - update `../operations/` reference
+  - [x] 6.2 Fix `docs/viewpoints/operational/README.md` - update `../../operations/` references
+  - [x] 6.3 Fix `docs/viewpoints/deployment/README.md` - update broken references
+  - [x] 6.4 Fix `docs/viewpoints/development/README.md` - update `../../development/` references
+  - [x] 6.5 Fix `docs/viewpoints/development/getting-started/README.md` - update `../development/` references
+  - [x] 6.6 Fix `docs/api/README.md` - update `../development/` and `../operations/` references
+  - [x] 6.7 Fix `docs/api/rest/README.md` - update `../../development/` reference
+  - [x] 6.8 Fix `docs/api/integration/README.md` - update `../../examples/` reference
+  - [x] 6.9 Fix `docs/viewpoints/functional/use-cases.md` - update `../../development/` reference
+  - [x] 6.10 Fix `docs/viewpoints/operational/runbooks/README.md` - update `../../examples/` reference
+  - [x] 6.11 Fix `docs/viewpoints/operational/deployment/README.md` - update `../../examples/` reference
+  - [x] 6.12 Fix `docs/viewpoints/development/setup/local-environment.md` - update `../../operations/troubleshooting/` reference
+  - [x] 6.13 Fix `docs/architecture/README.md` - update `../development/` and `../operations/` references
+  - [x] 6.14 Fix `docs/viewpoints/development/build-process.md` - update `../../development/` references
+  - [x] 6.15 Fix `docs/viewpoints/development/dependency-rules.md` - update `../../development/` references
+  - [x] 6.16 Fix `docs/viewpoints/development/module-organization.md` - update `../../development/` references
+  - [x] 6.17 Fix `docs/viewpoints/development/overview.md` - update `../../development/` references
+  - [x] 6.18 Fix `docs/viewpoints/development/testing/README.md` - update `../../examples/` references
+  - [x] 6.19 Fix `docs/FAQ.md` - update all `development/`, `operations/` references to `viewpoints/development/`, `viewpoints/operational/`
+  - [x] 6.20 Fix `docs/QUICK-START-GUIDE.md` - update all `development/`, `operations/` references
+  - [x] 6.21 Fix `docs/CHANGELOG-2025-11.md` - update `infrastructure/` references to `viewpoints/deployment/infrastructure/`
+
+- [x] 7. Checkpoint - Verify all changes (2025-12-14)
+  - All active documentation links verified
+  - Archive folder (`docs/archive/`) contains historical documents with links valid at time of writing
+  - No broken links to deleted directories in active documentation
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 7. Write property tests for documentation reorganization
+  - [x] 7.1 Write property test for content preservation
+    - **Property 1: Content Preservation After Move**
+    - **Validates: Requirements 1.1, 2.1, 3.1, 4.1, 4.2**
+  - [x] 7.2 Write property test for source directory deletion
+    - **Property 2: Source Directory Deletion**
+    - **Validates: Requirements 1.3, 2.3, 3.2, 4.4**
+  - [x] 7.3 Write property test for link validity
+    - **Property 3: Link Validity After Update**
+    - **Validates: Requirements 1.4, 2.4, 3.3, 5.1, 5.3**
+  - [x] 7.4 Write property test for no references to deleted directories
+    - **Property 4: No References to Deleted Directories**
+    - **Validates: Requirements 5.2**
+  - [x] 7.5 Write property test for generated diagrams single location
+    - **Property 5: Generated Diagrams Single Location**
+    - **Validates: Requirements 4.3, 4.4**
+
+- [x] 8. Final Checkpoint - Verify documentation structure (2025-12-14)
+  - All consolidation tasks completed
+  - All cross-references updated
+  - Documentation structure verified:
+    - `docs/operations/` → `docs/viewpoints/operational/`
+    - `docs/development/` → `docs/viewpoints/development/`
+    - `docs/infrastructure/` → `docs/viewpoints/deployment/infrastructure/`
+    - `docs/examples/` → `docs/viewpoints/development/examples/`
+    - `docs/getting-started/` → `docs/viewpoints/development/getting-started/`
+    - `docs/generated/` → `docs/diagrams/generated/`

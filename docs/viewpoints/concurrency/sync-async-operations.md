@@ -1041,7 +1041,7 @@ public class OrderConfirmationEmailHandler extends AbstractDomainEventHandler<Or
 - [Concurrency Viewpoint Overview](overview.md) - Overall concurrency model ←
 - [Synchronization Mechanisms](synchronization.md) - Locking and coordination →
 - [State Management](state-management.md) - State handling strategies →
-- [Performance Perspective](../../perspectives/performance/overview.md) - Performance requirements
+- [Performance Perspective](../../perspectives/performance/README.md) - Performance requirements
 
 ---
 

@@ -752,7 +752,7 @@ This document identifies all stakeholders of the E-Commerce Platform, their role
 - [Context Viewpoint Overview](overview.md) - System context
 - [System Scope and Boundaries](scope-and-boundaries.md) - System scope
 - [External Systems](external-systems.md) - External integrations
-- [Functional Viewpoint](../functional/overview.md) - System capabilities
+- [Functional Viewpoint](../functional/README.md) - System capabilities
 - [All Perspectives](../../perspectives/) - Quality attribute concerns
 
 ---

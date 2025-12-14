@@ -9,7 +9,7 @@ status: "active"
 owner: "API Team"
 related_docs:
 
-  - "viewpoints/functional/overview.md"
+  - "viewpoin../functional/README.md"
   - "viewpoints/functional/bounded-contexts.md"
   - "api/rest/README.md"
   - "api/events/README.md"
@@ -290,7 +290,6 @@ graph TD
 | `RewardPointsEarnedEvent` | Order completed | Notification |
 | `RewardPointsRedeemedEvent` | Points used | Notification, Pricing |
 
-**Detailed Documentation**: [Customer Events Reference](../../api/events/contexts/customer-events.md)
 
 #### Order Context Events
 
@@ -304,7 +303,6 @@ graph TD
 | `OrderDeliveredEvent` | Order delivered | Review, Customer, Notification |
 | `OrderCompletedEvent` | Order completed | Customer, Seller, Observability |
 
-**Detailed Documentation**: [Order Events Reference](../../api/events/contexts/order-events.md)
 
 #### Product Context Events
 
@@ -316,7 +314,6 @@ graph TD
 | `ProductStatusChangedEvent` | Status changed | Shopping Cart, Inventory |
 | `ProductDiscontinuedEvent` | Product discontinued | Shopping Cart, Inventory |
 
-**Detailed Documentation**: [Product Events Reference](../../api/events/contexts/product-events.md)
 
 #### Inventory Context Events
 
@@ -328,7 +325,6 @@ graph TD
 | `InventoryDepletedEvent` | Stock depleted | Product, Shopping Cart, Notification |
 | `StockLevelChangedEvent` | Stock level changed | Product, Observability |
 
-**Detailed Documentation**: [Inventory Events Reference](../../api/events/contexts/inventory-events.md)
 
 #### Payment Context Events
 
@@ -339,7 +335,6 @@ graph TD
 | `PaymentFailedEvent` | Payment failed | Order, Notification |
 | `RefundProcessedEvent` | Refund completed | Customer, Notification |
 
-**Detailed Documentation**: [Payment Events Reference](../../api/events/contexts/payment-events.md)
 
 #### Delivery Context Events
 
@@ -351,7 +346,6 @@ graph TD
 | `DeliveryDeliveredEvent` | Delivered | Order, Review, Customer, Notification |
 | `DeliveryFailedEvent` | Delivery failed | Order, Notification |
 
-**Detailed Documentation**: [Delivery Events Reference](../../api/events/contexts/delivery-events.md)
 
 #### Promotion Context Events
 
@@ -363,7 +357,6 @@ graph TD
 | `CouponAppliedEvent` | Coupon applied | Pricing, Observability |
 | `CouponRedeemedEvent` | Coupon redeemed | Pricing, Observability |
 
-**Detailed Documentation**: [Promotion Events Reference](../../api/events/contexts/promotion-events.md)
 
 #### Review Context Events
 
@@ -374,7 +367,6 @@ graph TD
 | `ReviewRejectedEvent` | Review rejected | Notification |
 | `ReviewUpdatedEvent` | Review updated | Product, Observability |
 
-**Detailed Documentation**: [Review Events Reference](../../api/events/contexts/review-events.md)
 
 #### Seller Context Events
 
@@ -385,7 +377,6 @@ graph TD
 | `SellerSuspendedEvent` | Seller suspended | Product, Notification |
 | `SellerRatingUpdatedEvent` | Rating updated | Observability |
 
-**Detailed Documentation**: [Seller Events Reference](../../api/events/contexts/seller-events.md)
 
 ---
 
@@ -662,7 +653,7 @@ Some workflows use both patterns:
 - Sensitive data encrypted at rest (AES-256)
 - PII masked in logs and error messages
 
-**Detailed Documentation**: [Security Perspective](../../perspectives/security/overview.md)
+**Detailed Documentation**: [Security Perspective](../../perspectives/security/README.md)
 
 ---
 
@@ -686,13 +677,13 @@ Some workflows use both patterns:
 - Maximum page size: 100 items
 - Cursor-based pagination for large datasets
 
-**Detailed Documentation**: [Performance Perspective](../../perspectives/performance/overview.md)
+**Detailed Documentation**: [Performance Perspective](../../perspectives/performance/README.md)
 
 ---
 
 ## Quick Links
 
-- [Back to Functional Viewpoint](overview.md)
+- [Back to Functional Viewpoint](README.md)
 - [Bounded Contexts](bounded-contexts.md)
 - [Use Cases](use-cases.md)
 - [REST API Documentation](../../api/rest/README.md)

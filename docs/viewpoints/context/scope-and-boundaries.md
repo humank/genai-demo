@@ -473,7 +473,7 @@ The following capabilities may be added to the system scope in future releases:
 - [Context Viewpoint Overview](overview.md) - System context and relationships
 - [External Systems](external-systems.md) - External system integrations
 - [Stakeholders](stakeholders.md) - Stakeholder concerns and requirements
-- [Functional Viewpoint](../functional/overview.md) - System capabilities
+- [Functional Viewpoint](../functional/README.md) - System capabilities
 - [Bounded Contexts](../functional/bounded-contexts.md) - Context details
 
 ---
