@@ -195,19 +195,4 @@ public class ProfileValidationConfiguration {
         }
     }
 
-    /**
-     * Check for invalid profile combinations
-     * This method is used internally for profile validation
-     */
-    @SuppressWarnings("unused")
-    private boolean hasInvalidProfileCombination(String[] profiles) {
-        java.util.Set<String> profileSet = java.util.Set.of(profiles);
-
-        // test + production is not allowed
-        // dev + production is not allowed
-        // test + dev is not allowed
-        return (profileSet.contains("test") && profileSet.contains(PROFILE_PRODUCTION)) ||
-                (profileSet.contains("dev") && profileSet.contains(PROFILE_PRODUCTION)) ||
-                (profileSet.contains("test") && profileSet.contains("dev"));
-    }
 }

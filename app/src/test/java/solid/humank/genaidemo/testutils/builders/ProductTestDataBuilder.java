@@ -14,7 +14,8 @@ public class ProductTestDataBuilder {
     private BigDecimal price = new BigDecimal("1000");
     private String category = "電子產品";
 
-    @SuppressWarnings("unused") // 保留供未來使用，目前通過 stockQuantity > 0 來判斷可用性
+    // 用於 Builder 模式，通過 withAvailability/asUnavailable 方法設置
+    // 注意：目前在 build() 方法中未使用，因為 Product 類通過 stockQuantity > 0 判斷可用性
     private boolean available = true;
 
     private int stockQuantity = 100;

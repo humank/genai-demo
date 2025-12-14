@@ -32,19 +32,14 @@ public class InMemoryDistributedLockManager implements DistributedLockManager {
     /**
      * 鎖資訊內部類別
      */
-    @SuppressWarnings("unused")
     private static class LockInfo {
-        private final String lockKey;
         private final Thread ownerThread;
         private final Instant expirationTime;
-        private final ReentrantLock lock;
         private int reentrantCount;
 
-        public LockInfo(String lockKey, Thread ownerThread, Instant expirationTime) {
-            this.lockKey = lockKey;
+        public LockInfo(Thread ownerThread, Instant expirationTime) {
             this.ownerThread = ownerThread;
             this.expirationTime = expirationTime;
-            this.lock = new ReentrantLock();
             this.reentrantCount = 1;
         }
 
@@ -117,7 +112,7 @@ public class InMemoryDistributedLockManager implements DistributedLockManager {
 
             // 獲取新鎖
             Instant expirationTime = Instant.now().plusMillis(leaseTimeMillis);
-            LockInfo newLock = new LockInfo(lockKey, Thread.currentThread(), expirationTime);
+            LockInfo newLock = new LockInfo(Thread.currentThread(), expirationTime);
             locks.put(lockKey, newLock);
 
             return true;

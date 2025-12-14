@@ -11,14 +11,11 @@ public class CustomerTestDataBuilder {
     private String name = "測試客戶";
     private String email = "test@example.com";
 
-    // 注意：以下字段暫時保留供未來擴展使用，當 Customer 類支持這些屬性時會被使用
-    @SuppressWarnings("unused") // 保留供未來使用
+    // 以下字段用於 Builder 模式，通過 with* 方法設置
+    // 注意：這些字段目前在 build() 方法中未使用，因為 Customer 類尚未支持這些屬性
+    // 但它們被 with* 方法修改，所以不是真正的 unused
     private LocalDate birthDate = LocalDate.of(1990, 1, 15);
-
-    @SuppressWarnings("unused") // 保留供未來使用
     private LocalDate registrationDate = LocalDate.now().minusDays(30);
-
-    @SuppressWarnings("unused") // 保留供未來使用
     private int rewardPoints = 0;
 
     /** 創建新的客戶建構器 */

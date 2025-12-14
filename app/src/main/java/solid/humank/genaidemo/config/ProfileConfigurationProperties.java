@@ -1,13 +1,15 @@
 package solid.humank.genaidemo.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
-
 /**
  * Profile configuration properties
- * Defines configuration properties for different profiles
+ * Defines configuration properties for different profiles.
+ * 
+ * Note: This record is NOT annotated with @ConfigurationProperties because
+ * the beans are created manually in ProfileConfigurationResolver with
+ * profile-specific defaults. Using @ConfigurationProperties would cause
+ * NoUniqueBeanDefinitionException due to @ConfigurationPropertiesScan
+ * in the main application class.
  */
-@ConfigurationProperties(prefix = "app.profile")
 public record ProfileConfigurationProperties(
         String name,
         String description,
