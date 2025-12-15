@@ -43,7 +43,7 @@
     "@types/react-dom": "^18.3.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^8.43.0",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.23",
     "eslint": "^8.57.0",
     "eslint-config-next": "15.5.3",
     "jest": "^30.1.3",
