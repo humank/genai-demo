@@ -42,53 +42,53 @@ jobs:
   validate-diagrams:
     name: Validate Diagrams and Documentation
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Java
       uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: '11'
-    
+
     - name: Cache PlantUML
       uses: actions/cache@v4
       with:
         path: plantuml.jar
         key: plantuml-${{ hashFiles('scripts/generate-diagrams.sh') }}
-    
+
     - name: Make scripts executable
       run: |
         chmod +x scripts/validate-diagrams.sh
         chmod +x scripts/generate-diagrams.sh
-    
+
     - name: Validate PlantUML syntax
       run: |
         echo "🔍 Validating PlantUML syntax..."
         ./scripts/validate-diagrams.sh --check-syntax
-    
+
     - name: Check diagram references
       run: |
         echo "🔗 Checking diagram references in documentation..."
         ./scripts/validate-diagrams.sh --check-references
-    
+
     - name: Check for missing diagrams
       run: |
         echo "📊 Checking for missing generated diagrams..."
         ./scripts/validate-diagrams.sh --check-missing
-    
+
     - name: Generate missing diagrams
       run: |
         echo "🎨 Generating any missing diagrams..."
         ./scripts/generate-diagrams.sh --format=png
-    
+
     - name: Verify generation success
       run: |
         echo "✅ Verifying all diagrams are generated..."
         ./scripts/validate-diagrams.sh --check-missing
-    
+
     - name: Upload generated diagrams (if any)
       if: failure()
       uses: actions/upload-artifact@v3
@@ -100,25 +100,25 @@ jobs:
   validate-documentation-structure:
     name: Validate Documentation Structure
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Check documentation structure
       run: |
         echo "📁 Validating documentation structure..."
-        
+
         # Check required directories exist
         required_dirs=(
           "docs/viewpoints"
-          "docs/perspectives" 
+          "docs/perspectives"
           "docs/templates"
           "docs/diagrams/viewpoints"
           "docs/diagrams/mermaid"
           ".kiro/steering"
         )
-        
+
         for dir in "${required_dirs[@]}"; do
           if [ ! -d "$dir" ]; then
             echo "❌ Missing required directory: $dir"
@@ -127,18 +127,18 @@ jobs:
             echo "✅ Found: $dir"
           fi
         done
-    
+
     - name: Check template consistency
       run: |
         echo "📝 Checking template files..."
-        
+
         # Check if template files exist
         templates=(
           "docs/templates/viewpoint-template.md"
           "docs/templates/perspective-template.md"
           "docs/templates/adr-template.md"
         )
-        
+
         for template in "${templates[@]}"; do
           if [ ! -f "$template" ]; then
             echo "❌ Missing template: $template"
@@ -147,27 +147,27 @@ jobs:
             echo "✅ Found: $template"
           fi
         done
-    
+
     - name: Check for broken internal links
       run: |
         echo "🔗 Checking for broken internal links..."
-        
+
         # Find all markdown files
         find docs -name "*.md" -type f | while read -r file; do
           echo "Checking: $file"
-          
+
           # Extract internal links (relative paths)
           grep -o '\[.*\](\..*\.md)' "$file" 2>/dev/null | while read -r link; do
             # Extract the path part
             path=$(echo "$link" | sed 's/.*](\(.*\))/\1/')
-            
+
             # Resolve relative path
             dir=$(dirname "$file")
             full_path="$dir/$path"
-            
+
             # Normalize path
             normalized_path=$(realpath -m "$full_path" 2>/dev/null || echo "$full_path")
-            
+
             # Check if file exists
             if [ ! -f "$normalized_path" ]; then
               echo "❌ Broken link in $file: $link -> $normalized_path"
@@ -175,25 +175,25 @@ jobs:
             fi
           done
         done
-        
+
         echo "✅ All internal links are valid"
 
   lint-markdown:
     name: Lint Markdown Files
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-    
+
     - name: Install markdownlint
       run: npm install -g markdownlint-cli
-    
+
     - name: Create markdownlint config
       run: |
         cat > .markdownlint.json << 'EOF'
@@ -204,7 +204,7 @@ jobs:
           "MD001": false
         }
         EOF
-    
+
     - name: Lint markdown files
       run: |
         echo "📝 Linting markdown files..."
@@ -213,34 +213,33 @@ jobs:
   validate-links:
     name: Validate Links
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-    
+
     - name: Install dependencies
-      run: npm ci
-    
+      run: npm install || echo "No package.json in root, skipping"
+
     - name: Make scripts executable
       run: chmod +x scripts/check-links-advanced.js
-    
+
     - name: Validate internal links
       run: |
         echo "🔗 Validating internal links..."
         node scripts/check-links-advanced.js --internal-only
-    
+
     - name: Validate external links
       if: github.event.inputs.check_external_links == 'true' || github.event.inputs.full_validation == 'true'
       run: |
         echo "🔗 Validating external links..."
         node scripts/check-links-advanced.js --external
-    
+
     - name: Upload link validation report
       if: always()
       uses: actions/upload-artifact@v4
@@ -252,19 +251,19 @@ jobs:
   validate-spelling:
     name: Validate Spelling and Grammar
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-    
+
     - name: Install cspell
       run: npm install -g cspell
-    
+
     - name: Create cspell config
       run: |
         cat > .cspell.json << 'EOF'
@@ -308,7 +307,7 @@ jobs:
           ]
         }
         EOF
-    
+
     - name: Run spell check
       run: |
         echo "📝 Running spell check..."
@@ -317,20 +316,20 @@ jobs:
   validate-template-compliance:
     name: Validate Template Compliance
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Check viewpoint documentation
       run: |
         echo "📋 Checking viewpoint documentation..."
-        
+
         viewpoints=(
           "functional"
           "information"
@@ -340,7 +339,7 @@ jobs:
           "operational"
           "context"
         )
-        
+
         for viewpoint in "${viewpoints[@]}"; do
           if [ ! -f "docs/viewpoints/$viewpoint/overview.md" ]; then
             echo "❌ Missing overview for viewpoint: $viewpoint"
@@ -349,11 +348,11 @@ jobs:
             echo "✅ Found overview for: $viewpoint"
           fi
         done
-    
+
     - name: Check perspective documentation
       run: |
         echo "📋 Checking perspective documentation..."
-        
+
         perspectives=(
           "security"
           "performance"
@@ -364,7 +363,7 @@ jobs:
           "internationalization"
           "location"
         )
-        
+
         for perspective in "${perspectives[@]}"; do
           if [ ! -f "docs/perspectives/$perspective/overview.md" ]; then
             echo "❌ Missing overview for perspective: $perspective"
@@ -373,11 +372,11 @@ jobs:
             echo "✅ Found overview for: $perspective"
           fi
         done
-    
+
     - name: Check template files
       run: |
         echo "📋 Checking template files..."
-        
+
         templates=(
           "docs/templates/viewpoint-template.md"
           "docs/templates/perspective-template.md"
@@ -385,7 +384,7 @@ jobs:
           "docs/templates/runbook-template.md"
           "docs/templates/api-endpoint-template.md"
         )
-        
+
         for template in "${templates[@]}"; do
           if [ ! -f "$template" ]; then
             echo "❌ Missing template: $template"
@@ -398,24 +397,24 @@ jobs:
   validate-metadata:
     name: Validate Document Metadata
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyyaml
-    
+
     - name: Make scripts executable
       run: chmod +x scripts/validate-metadata.py
-    
+
     - name: Validate metadata
       run: |
         echo "📋 Validating document metadata..."
@@ -425,26 +424,26 @@ jobs:
     name: Detect Outdated Content
     runs-on: ubuntu-latest
     if: github.event.inputs.full_validation == 'true'
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
       with:
         fetch-depth: 0  # Need full history
-    
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Make scripts executable
       run: chmod +x scripts/detect-outdated-content.py
-    
+
     - name: Detect outdated documentation
       run: |
         echo "🔍 Detecting outdated documentation..."
         python3 scripts/detect-outdated-content.py --verbose || echo "Outdated content detected"
-    
+
     - name: Upload outdated content report
       if: always()
       uses: actions/upload-artifact@v4
@@ -458,36 +457,35 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate-diagrams, validate-documentation-structure, lint-markdown, validate-links, validate-template-compliance, validate-metadata]
     if: always()
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-    
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
       run: |
-        npm ci
+        npm install || echo "No package.json in root, skipping"
         python -m pip install --upgrade pip
         pip install pyyaml
-    
+
     - name: Make scripts executable
       run: chmod +x scripts/check-documentation-quality.sh
-    
+
     - name: Run comprehensive quality check
       run: |
         echo "📋 Running comprehensive documentation quality check..."
         bash scripts/check-documentation-quality.sh || echo "Quality issues found"
-    
+
     - name: Upload quality reports
       if: always()
       uses: actions/upload-artifact@v4
@@ -495,13 +493,13 @@ jobs:
         name: documentation-quality-reports
         path: build/reports/documentation-quality/
         retention-days: 30
-    
+
     - name: Generate validation summary
       if: always()
       run: |
         echo "## Documentation Validation Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        
+
         # Check job statuses
         echo "### Job Results" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
@@ -512,7 +510,7 @@ jobs:
         echo "- Template Compliance: ${{ needs.validate-template-compliance.result }}" >> $GITHUB_STEP_SUMMARY
         echo "- Metadata Validation: ${{ needs.validate-metadata.result }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        
+
         # Overall status
         if [ "${{ needs.validate-diagrams.result }}" == "success" ] && \
            [ "${{ needs.validate-documentation-structure.result }}" == "success" ] && \
@@ -526,7 +524,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Please check the individual job logs for details." >> $GITHUB_STEP_SUMMARY
         fi
-    
+
     - name: Fail if critical validations failed
       if: needs.validate-diagrams.result == 'failure' || needs.validate-documentation-structure.result == 'failure' || needs.validate-links.result == 'failure'
       run: |
@@ -536,18 +534,18 @@ jobs:
   check-hook-status:
     name: Check Hook Status
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v5
-    
+
     - name: Verify hook configuration
       run: |
         echo "🔧 Checking hook configuration..."
-        
+
         # Check if only essential hook exists
         hook_count=$(find .kiro/hooks -name "*.kiro.hook" | wc -l)
-        
+
         if [ "$hook_count" -eq 1 ]; then
           echo "✅ Correct number of hooks: $hook_count"
         else
@@ -556,7 +554,7 @@ jobs:
           find .kiro/hooks -name "*.kiro.hook"
           exit 1
         fi
-        
+
         # Check if the correct hook exists
         if [ -f ".kiro/hooks/diagram-auto-generation.kiro.hook" ]; then
           echo "✅ Essential hook exists: diagram-auto-generation.kiro.hook"
@@ -564,7 +562,7 @@ jobs:
           echo "❌ Missing essential hook: diagram-auto-generation.kiro.hook"
           exit 1
         fi
-        
+
         # Check if README is updated
         if grep -q "diagram-auto-generation.kiro.hook" .kiro/hooks/README.md; then
           echo "✅ README mentions the correct hook"
@@ -572,5 +570,5 @@ jobs:
           echo "❌ README doesn't mention diagram-auto-generation.kiro.hook"
           exit 1
         fi
-        
+
         echo "🎉 Hook configuration is correct!"
