@@ -183,14 +183,14 @@ dependencies {
     implementation 'org.apache.commons:commons-pool2:2.12.1'
 
     // Unified HttpComponents5 dependencies with consistent versions
-    implementation 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.6'
     implementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
     implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.3.6'
 
     // Test-specific HTTP client dependencies
-    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.5.1'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5:5.6'
     testImplementation 'org.apache.httpcomponents.core5:httpcore5:5.3.6'
-    testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.5.1'
+    testImplementation 'org.apache.httpcomponents.client5:httpclient5-fluent:5.6'
 
     // Logback encoder for structured logging
     implementation 'net.logstash.logback:logstash-logback-encoder:9.0'
