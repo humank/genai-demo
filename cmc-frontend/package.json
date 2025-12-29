@@ -41,7 +41,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.3",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.43.0",
     "autoprefixer": "^10.4.23",
     "eslint": "^8.57.0",
