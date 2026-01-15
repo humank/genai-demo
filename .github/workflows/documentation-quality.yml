@@ -103,7 +103,7 @@ jobs:
         bash scripts/check-documentation-quality.sh || echo "Quality issues found - see reports"
 
     - name: Upload quality reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: always()
       with:
         name: documentation-quality-reports

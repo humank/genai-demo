@@ -91,7 +91,7 @@ jobs:
     
     - name: Upload generated diagrams as artifact (PR)
       if: steps.check_changes.outputs.changes == 'true' && github.event_name == 'pull_request'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: generated-diagrams
         path: docs/diagrams/generated/

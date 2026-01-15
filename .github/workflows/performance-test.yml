@@ -216,7 +216,7 @@ jobs:
           EOF
       
       - name: Upload performance results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: performance-test-results
           path: |
@@ -285,7 +285,7 @@ jobs:
           EOF
       
       - name: Upload database performance results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: database-performance-results
           path: |
@@ -354,7 +354,7 @@ jobs:
           lhci autorun || echo "Lighthouse CI completed with warnings"
       
       - name: Upload Lighthouse results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: lighthouse-results-${{ matrix.frontend }}
           path: |
@@ -422,7 +422,7 @@ jobs:
           EOF
       
       - name: Upload comprehensive report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: comprehensive-performance-report
           path: comprehensive-performance-report.md

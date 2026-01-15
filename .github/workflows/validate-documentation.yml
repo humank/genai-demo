@@ -94,7 +94,7 @@ jobs:
 
     - name: Upload generated diagrams (if any)
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: generated-diagrams
         path: docs/diagrams/generated/
@@ -245,7 +245,7 @@ jobs:
 
     - name: Upload link validation report
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: link-validation-report
         path: build/reports/links-*.json
@@ -449,7 +449,7 @@ jobs:
 
     - name: Upload outdated content report
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: outdated-content-report
         path: build/reports/outdated-content.json
@@ -491,7 +491,7 @@ jobs:
 
     - name: Upload quality reports
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: documentation-quality-reports
         path: build/reports/documentation-quality/

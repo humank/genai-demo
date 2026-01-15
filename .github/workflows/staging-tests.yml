@@ -141,7 +141,7 @@ jobs:
       
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: integration-test-results-${{ matrix.test-group }}
           path: e2e-tests/reports/
@@ -221,7 +221,7 @@ jobs:
       
       - name: Upload security test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: security-test-results
           path: e2e-tests/reports/
@@ -282,7 +282,7 @@ jobs:
       
       - name: Upload performance test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: performance-test-results
           path: e2e-tests/reports/
@@ -343,7 +343,7 @@ jobs:
       
       - name: Upload DR test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dr-test-results
           path: e2e-tests/reports/
@@ -399,7 +399,7 @@ jobs:
       
       - name: Upload cleanup report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cleanup-report
           path: e2e-tests/reports/cleanup-*.json
