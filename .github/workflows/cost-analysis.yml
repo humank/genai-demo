@@ -184,7 +184,7 @@ jobs:
       
       - name: Send Slack notification (if threshold exceeded)
         if: steps.budget_check.outputs.alert_needed == 'true'
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
           payload: |
