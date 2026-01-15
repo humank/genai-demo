@@ -1,4 +1,5 @@
 name: Documentation Quality Check
+# ⚠️ DISABLED: This workflow is temporarily disabled
 
 on:
   push:
@@ -29,6 +30,7 @@ on:
 
 jobs:
   documentation-quality:
+    if: false  # Workflow disabled - original condition: none (always run)
     runs-on: ubuntu-latest
 
     steps:

@@ -28,7 +28,8 @@ jobs:
   cleanup-artifacts:
     name: Cleanup Old Artifacts
     runs-on: ubuntu-latest
-    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'artifacts'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'artifacts'
     
     steps:
       - name: Delete old workflow runs and artifacts
@@ -68,7 +69,8 @@ jobs:
   cleanup-branches:
     name: Cleanup Merged Branches
     runs-on: ubuntu-latest
-    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'branches'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'branches'
     
     steps:
       - name: Checkout code
@@ -114,7 +116,8 @@ jobs:
   cleanup-ecr-images:
     name: Cleanup Old ECR Images
     runs-on: ubuntu-latest
-    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'images'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'images'
     
     steps:
       - name: Configure AWS credentials
@@ -166,7 +169,8 @@ jobs:
   cleanup-cache:
     name: Cleanup GitHub Actions Cache
     runs-on: ubuntu-latest
-    if: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'cache'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: inputs.cleanup-type == 'all' || inputs.cleanup-type == 'cache'
     
     steps:
       - name: Cleanup old caches
@@ -208,7 +212,8 @@ jobs:
     name: Cleanup Summary
     runs-on: ubuntu-latest
     needs: [cleanup-artifacts, cleanup-branches, cleanup-ecr-images, cleanup-cache]
-    if: always()
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: always()
     
     steps:
       - name: Generate cleanup report

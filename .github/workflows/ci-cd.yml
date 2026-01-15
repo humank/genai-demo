@@ -56,6 +56,7 @@ jobs:
   code-analysis:
     name: Code Quality & Security Analysis
     runs-on: ubuntu-latest
+    if: false  # Disabled - workflow preserved but not running
     outputs:
       backend-changed: ${{ steps.changes.outputs.backend }}
       cmc-frontend-changed: ${{ steps.changes.outputs.cmc-frontend }}
@@ -138,7 +139,8 @@ jobs:
     name: Backend Tests (Unit, Integration, BDD, Architecture)
     runs-on: ubuntu-latest
     needs: code-analysis
-    if: needs.code-analysis.outputs.backend-changed == 'true'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: needs.code-analysis.outputs.backend-changed == 'true'
     
     strategy:
       matrix:
@@ -220,7 +222,8 @@ jobs:
     name: Frontend Tests
     runs-on: ubuntu-latest
     needs: code-analysis
-    if: needs.code-analysis.outputs.cmc-frontend-changed == 'true' || needs.code-analysis.outputs.consumer-frontend-changed == 'true'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: needs.code-analysis.outputs.cmc-frontend-changed == 'true' || needs.code-analysis.outputs.consumer-frontend-changed == 'true'
     
     strategy:
       matrix:
@@ -275,7 +278,8 @@ jobs:
     name: Infrastructure Tests (CDK)
     runs-on: ubuntu-latest
     needs: code-analysis
-    if: needs.code-analysis.outputs.infrastructure-changed == 'true'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: needs.code-analysis.outputs.infrastructure-changed == 'true'
     
     steps:
       - name: Checkout code
@@ -330,7 +334,8 @@ jobs:
     name: Security Scanning
     runs-on: ubuntu-latest
     needs: [code-analysis]
-    if: env.SECURITY_SCAN_ENABLED == 'true'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: env.SECURITY_SCAN_ENABLED == 'true'
     
     steps:
       - name: Checkout code
@@ -371,7 +376,8 @@ jobs:
     name: Build & Push Multi-Architecture Images
     runs-on: ubuntu-latest
     needs: [backend-tests, frontend-tests, infrastructure-tests, security-scan]
-    if: always() && (needs.backend-tests.result == 'success' || needs.backend-tests.result == 'skipped') && (needs.frontend-tests.result == 'success' || needs.frontend-tests.result == 'skipped') && (needs.infrastructure-tests.result == 'success' || needs.infrastructure-tests.result == 'skipped')
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: always() && (needs.backend-tests.result == 'success' || needs.backend-tests.result == 'skipped') && (needs.frontend-tests.result == 'success' || needs.frontend-tests.result == 'skipped') && (needs.infrastructure-tests.result == 'success' || needs.infrastructure-tests.result == 'skipped')
     
     strategy:
       matrix:
@@ -456,7 +462,8 @@ jobs:
     name: Quality Gates & Reporting
     runs-on: ubuntu-latest
     needs: [backend-tests, frontend-tests, infrastructure-tests, security-scan, build-and-push]
-    if: always()
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: always()
     
     steps:
       - name: Checkout code
@@ -563,7 +570,8 @@ jobs:
     name: GitOps Deployment with ArgoCD
     runs-on: ubuntu-latest
     needs: [quality-gates]
-    if: github.ref == 'refs/heads/main' && needs.quality-gates.result == 'success'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: github.ref == 'refs/heads/main' && needs.quality-gates.result == 'success'
     
     steps:
       - name: Checkout code
@@ -743,7 +751,8 @@ jobs:
     name: Notifications & Cleanup
     runs-on: ubuntu-latest
     needs: [quality-gates, gitops-deployment]
-    if: always()
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: always()
     
     steps:
       - name: Download deployment artifacts

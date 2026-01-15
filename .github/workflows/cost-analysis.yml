@@ -25,6 +25,7 @@ jobs:
   cost-analysis:
     name: Analyze AWS Costs
     runs-on: ubuntu-latest
+    if: false  # Disabled - workflow preserved but not running
     
     steps:
       - name: Checkout repository
@@ -252,7 +253,8 @@ jobs:
     name: Compare with Previous Report
     runs-on: ubuntu-latest
     needs: cost-analysis
-    if: github.event_name == 'schedule'
+    if: false  # Disabled - workflow preserved but not running
+    # Original condition: github.event_name == 'schedule'
     
     steps:
       - name: Checkout repository

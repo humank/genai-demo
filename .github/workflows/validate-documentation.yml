@@ -1,5 +1,8 @@
 name: Validate Documentation
 
+# ⚠️ DISABLED: This workflow is temporarily disabled
+# To re-enable, remove the 'if: false' conditions from all jobs below
+
 on:
   pull_request:
     branches: [ main, develop ]
