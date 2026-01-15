@@ -281,7 +281,7 @@ jobs:
     
     steps:
       - name: Download all scan results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           path: security-results/
       
