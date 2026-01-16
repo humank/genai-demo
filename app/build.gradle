@@ -146,7 +146,7 @@ dependencies {
 
     // OpenTelemetry for distributed tracing
     // OpenTelemetry for distributed tracing
-    implementation platform('io.opentelemetry:opentelemetry-bom:1.57.0')
+    implementation platform('io.opentelemetry:opentelemetry-bom:1.58.0')
     implementation 'io.opentelemetry:opentelemetry-api'
     implementation 'io.opentelemetry:opentelemetry-context'
     implementation 'io.opentelemetry:opentelemetry-sdk'
