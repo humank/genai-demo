@@ -49,7 +49,7 @@ Deploy multi-region infrastructure for GenAI Demo
 OPTIONS:
     -e, --environment ENVIRONMENT    Environment (development|staging|production) [default: production]
     -p, --project-name PROJECT       Project name [default: genai-demo]
-    -d, --domain DOMAIN             Domain name (e.g., kimkao.io)
+    -d, --domain DOMAIN             Domain name (e.g., example.com)
     --primary-region REGION         Primary region [default: ap-east-2]
     --secondary-region REGION       Secondary region [default: ap-northeast-1]
     --disable-dr                    Disable disaster recovery deployment
@@ -59,7 +59,7 @@ OPTIONS:
 
 EXAMPLES:
     # Deploy production multi-region infrastructure
-    $0 --environment production --domain kimkao.io
+    $0 --environment production --domain example.com
 
     # Deploy with custom regions
     $0 --primary-region us-east-1 --secondary-region us-west-2
@@ -68,7 +68,7 @@ EXAMPLES:
     $0 --dry-run --domain example.com
 
     # Deploy all stacks without confirmation
-    $0 --deploy-all --domain kimkao.io
+    $0 --deploy-all --domain example.com
 EOF
 }
 
@@ -171,28 +171,28 @@ CDK_CONTEXT="$CDK_CONTEXT --context genai-demo:multi-region.enable-dr=$ENABLE_DR
 # Function to deploy stacks
 deploy_stacks() {
     local deployment_type=$1
-    
+
     print_status "Starting $deployment_type deployment..."
-    
+
     # Build the project first
     print_status "Building CDK project..."
     npm run build
-    
+
     if [[ "$DRY_RUN" == "true" ]]; then
         print_status "Performing dry run (cdk diff)..."
         cdk diff $CDK_CONTEXT --app "node bin/multi-region-deployment.js" --all
         return 0
     fi
-    
+
     # Bootstrap CDK in both regions if needed
     print_status "Bootstrapping CDK in primary region ($PRIMARY_REGION)..."
     cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$PRIMARY_REGION
-    
+
     if [[ "$ENABLE_DR" == "true" ]]; then
         print_status "Bootstrapping CDK in secondary region ($SECONDARY_REGION)..."
         cdk bootstrap aws://$(aws sts get-caller-identity --query Account --output text)/$SECONDARY_REGION
     fi
-    
+
     # Deploy stacks
     if [[ "$DEPLOY_ALL" == "true" ]]; then
         print_status "Deploying all stacks..."
@@ -239,8 +239,6 @@ if [[ -n "$DOMAIN" ]]; then
         echo "Latency-based Endpoint:  https://api-latency.$DOMAIN"
     fi
 fi
-
-echo
 print_status "Next Steps"
 echo "=========="
 echo "1. Configure your application to use the deployed infrastructure"

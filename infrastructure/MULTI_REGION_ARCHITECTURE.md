@@ -36,7 +36,9 @@ if (environment === 'production' && multiRegionConfig['enable-dr']) {
 
 - Complete network infrastructure (VPC, subnets, security groups)
 - Application Load Balancer with SSL termination
-- ACM certificates for DR domain (`dr.kimkao.io`)
+- ACM certificates for DR domain (`dr.<your-domain>`)
+
+> **注意**: `kimkao.io` 域名已停用。以下範例中的域名請替換為您的實際域名。
 - CloudWatch monitoring dashboard
 - Systems Manager parameter store for configuration
 - Cross-region replication setup
@@ -161,7 +163,7 @@ Multi-Region Stack (ap-east-2)
 ```bash
 # Deploy to production with multi-region DR
 cdk deploy --context genai-demo:environment=production \
-           --context genai-demo:domain=kimkao.io \
+           --context genai-demo:domain=example.com \
            --all
 ```
 
@@ -169,14 +171,14 @@ cdk deploy --context genai-demo:environment=production \
 
 ### Primary Endpoints
 
-- `api.kimkao.io` - Failover endpoint (PRIMARY)
-- `api-latency.kimkao.io` - Latency-based routing
+- `api.<your-domain>` - Failover endpoint (PRIMARY)
+- `api-latency.<your-domain>` - Latency-based routing
 
 ### DR Endpoints
 
-- `api.kimkao.io` - Failover endpoint (SECONDARY)
-- `dr.kimkao.io` - Direct DR access
-- `api-dr.kimkao.io` - DR-specific endpoint
+- `api.<your-domain>` - Failover endpoint (SECONDARY)
+- `dr.<your-domain>` - Direct DR access
+- `api-dr.<your-domain>` - DR-specific endpoint
 
 ### Failover Behavior
 
@@ -291,10 +293,10 @@ cdk deploy --context genai-demo:environment=production \
 
 ```bash
 # Test primary region health check
-curl -k https://api.kimkao.io/actuator/health
+curl -k https://api.example.com/actuator/health
 
 # Test DR region health check
-curl -k https://api-dr.kimkao.io/actuator/health
+curl -k https://api-dr.example.com/actuator/health
 ```
 
 ### Failover Testing
@@ -308,10 +310,10 @@ curl -k https://api-dr.kimkao.io/actuator/health
 
 ```bash
 # Test failover DNS resolution
-dig api.kimkao.io
+dig api.example.com
 
 # Test latency-based DNS resolution
-dig api-latency.kimkao.io
+dig api-latency.example.com
 ```
 
 ## Troubleshooting

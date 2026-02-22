@@ -40,16 +40,16 @@ describe('Certificate Stack', () => {
         beforeEach(() => {
             app = new cdk.App({
                 context: {
-                    'hosted-zone:account=123456789012:domainName=kimkao.io:region=ap-east-2': {
-                        'Id': '/hostedzone/Z2KTO3AQUJG1DT',
-                        'Name': 'kimkao.io.'
+                    'hosted-zone:account=123456789012:domainName=example.com:region=ap-east-2': {
+                        'Id': '/hostedzone/ZEXAMPLEZONEID',
+                        'Name': 'example.com.'
                     }
                 }
             });
             stack = new CertificateStack(app, 'TestCertificateStackWithDomain', {
                 environment: 'test',
                 projectName: 'genai-demo-test',
-                domain: 'test.kimkao.io',
+                domain: 'test.example.com',
                 env: {
                     account: '123456789012',
                     region: 'ap-east-2'
@@ -61,22 +61,22 @@ describe('Certificate Stack', () => {
         test('ACM certificates are created with DNS validation', () => {
             // Main certificate
             template.hasResourceProperties('AWS::CertificateManager::Certificate', {
-                DomainName: 'test.kimkao.io',
+                DomainName: 'test.example.com',
                 ValidationMethod: 'DNS',
                 SubjectAlternativeNames: [
-                    'api.test.kimkao.io',
-                    'cmc.test.kimkao.io',
-                    'shop.test.kimkao.io',
-                    'grafana.test.kimkao.io',
-                    'logs.test.kimkao.io'
+                    'api.test.example.com',
+                    'cmc.test.example.com',
+                    'shop.test.example.com',
+                    'grafana.test.example.com',
+                    'logs.test.example.com'
                 ]
             });
 
             // Wildcard certificate
             template.hasResourceProperties('AWS::CertificateManager::Certificate', {
-                DomainName: '*.kimkao.io',
+                DomainName: '*.example.com',
                 ValidationMethod: 'DNS',
-                SubjectAlternativeNames: ['kimkao.io']
+                SubjectAlternativeNames: ['example.com']
             });
         });
 

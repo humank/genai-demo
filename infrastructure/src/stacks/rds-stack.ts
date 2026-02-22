@@ -97,8 +97,8 @@ export class RdsStack extends cdk.Stack {
 
         // Create conflict resolution Lambda function for Active-Active mode
         this.conflictResolutionLambda = this.createConflictResolutionLambda(
-            projectName, 
-            environment, 
+            projectName,
+            environment,
             alertingTopic,
             conflictResolutionStrategy
         );
@@ -134,14 +134,16 @@ export class RdsStack extends cdk.Stack {
                 );
             }
         } else {
-            // Create standard RDS PostgreSQL instance for non-production or single-region
-            this.database = this.createRdsInstance(
+            // All environments use Aurora PostgreSQL (single-region, no Global cluster)
+            // This enables DataCatalog integration and provides better performance
+            this.auroraCluster = this.createAuroraCluster(
                 vpc,
                 rdsSecurityGroup,
                 projectName,
                 environment,
                 envConfig,
-                retentionPolicies
+                retentionPolicies,
+                'primary'
             );
         }
 
@@ -184,7 +186,7 @@ export class RdsStack extends cdk.Stack {
         const globalCluster = new rds.CfnGlobalCluster(this, 'AuroraGlobalCluster', {
             globalClusterIdentifier: `${projectName}-${environment}-global`,
             engine: 'aurora-postgresql',
-            engineVersion: '15.4',
+            engineVersion: '15.10',
             storageEncrypted: true,
             deletionProtection: true,
             // Global write forwarding is configured at cluster level in CDK v2
@@ -215,37 +217,24 @@ export class RdsStack extends cdk.Stack {
         const instanceType = envConfig['rds-instance-type'] || 'db.r6g.large';
         const backupRetention = retentionPolicies['backups'] || 30;
 
-        // Create Aurora cluster parameter group with Active-Active optimizations
+        // Create Aurora cluster parameter group (cluster-level parameters only)
         const clusterParameterGroup = new rds.ParameterGroup(this, 'AuroraClusterParameterGroup', {
             description: `Aurora PostgreSQL cluster parameter group for ${projectName} ${environment}`,
             engine: rds.DatabaseClusterEngine.auroraPostgres({
-                version: rds.AuroraPostgresEngineVersion.VER_15_4
+                version: rds.AuroraPostgresEngineVersion.VER_15_10
             }),
             parameters: {
-                // Basic monitoring and performance
-                'shared_preload_libraries': 'pg_stat_statements,aurora_stat_utils',
-                'log_statement': 'all',
-                'log_duration': '1',
-                'log_min_duration_statement': '1000',
-                'track_activity_query_size': '2048',
-                'pg_stat_statements.track': 'all',
-                'pg_stat_statements.max': '10000',
-                
-                // Active-Active optimizations
-                'aurora_global_db.enable_global_write_forwarding': '1',
-                'max_connections': '1000',
-                'shared_buffers': '256MB',
-                'effective_cache_size': '1GB',
-                
-                // Conflict resolution and replication
-                'aurora_global_db.conflict_resolution': 'last-writer-wins',
-                'wal_level': 'logical',
+                // Cluster-level parameters (validated against aurora-postgresql15 family)
+                'synchronous_commit': 'local',
                 'max_replication_slots': '10',
                 'max_wal_senders': '10',
-                
-                // Low latency optimizations
-                'synchronous_commit': 'local',
-                'checkpoint_completion_target': '0.9'
+                'wal_sender_timeout': '60000',
+                'rds.force_ssl': '1',
+
+                // Global DB write forwarding (only for clusters in a global database)
+                ...(globalClusterIdentifier ? {
+                    'apg_write_forward.consistency_mode': 'eventual',
+                } : {}),
             }
         });
 
@@ -253,7 +242,7 @@ export class RdsStack extends cdk.Stack {
         const cluster = new rds.DatabaseCluster(this, 'AuroraCluster', {
             clusterIdentifier: `${projectName}-${environment}-${regionType}-aurora`,
             engine: rds.DatabaseClusterEngine.auroraPostgres({
-                version: rds.AuroraPostgresEngineVersion.VER_15_4
+                version: rds.AuroraPostgresEngineVersion.VER_15_10
             }),
 
             // Network configuration
@@ -318,15 +307,17 @@ export class RdsStack extends cdk.Stack {
             cloudwatchLogsRetention: logs.RetentionDays.ONE_MONTH,
 
             // Removal policy
-            removalPolicy: cdk.RemovalPolicy.SNAPSHOT,
-            deletionProtection: true
+            removalPolicy: environment === 'production'
+                ? cdk.RemovalPolicy.SNAPSHOT
+                : cdk.RemovalPolicy.DESTROY,
+            deletionProtection: environment === 'production'
         });
 
         // If this is part of a global cluster, we need to modify the underlying CFN resource
         if (globalClusterIdentifier) {
             const cfnCluster = cluster.node.defaultChild as rds.CfnDBCluster;
             cfnCluster.globalClusterIdentifier = globalClusterIdentifier;
-            
+
             // ✅ OPTIMIZATION: Enable global write forwarding for Active-Active mode
             // This allows writes to be forwarded from secondary regions to primary
             // Reduces RPO by enabling multi-region writes
@@ -361,7 +352,7 @@ export class RdsStack extends cdk.Stack {
         const parameterGroup = new rds.ParameterGroup(this, 'DatabaseParameterGroup', {
             description: `PostgreSQL parameter group for ${projectName} ${environment}`,
             engine: rds.DatabaseInstanceEngine.postgres({
-                version: rds.PostgresEngineVersion.VER_15_4
+                version: rds.PostgresEngineVersion.VER_15_10
             }),
             parameters: {
                 // Connection and authentication
@@ -410,7 +401,7 @@ export class RdsStack extends cdk.Stack {
     private createDatabaseSecret(projectName: string, environment: string): secretsmanager.Secret {
         // Use AWS managed Secrets Manager key for encryption
         const secretsManagerKey = kms.Alias.fromAliasName(this, 'SecretsManagerKey', 'alias/aws/secretsmanager');
-        
+
         const secret = new secretsmanager.Secret(this, 'DatabaseSecret', {
             secretName: `${projectName}/${environment}/database/credentials`,
             description: `Database credentials for ${projectName} ${environment}`,
@@ -468,7 +459,7 @@ export class RdsStack extends cdk.Stack {
         const database = new rds.DatabaseInstance(this, 'PostgresDatabase', {
             instanceIdentifier: `${projectName}-${environment}-postgres`,
             engine: rds.DatabaseInstanceEngine.postgres({
-                version: rds.PostgresEngineVersion.VER_15_4
+                version: rds.PostgresEngineVersion.VER_15_10
             }),
             instanceType: ec2.InstanceType.of(
                 this.getInstanceClass(instanceType),
@@ -771,6 +762,28 @@ export class RdsStack extends cdk.Stack {
 
             dataIntegrityFailureAlarm.addAlarmAction(new cloudwatchActions.SnsAction(alertTopic));
 
+            // Aurora PostgreSQL Deadlock Alarm
+            const deadlockAlarm = new cloudwatch.Alarm(this, 'AuroraDeadlockAlarm', {
+                alarmName: `${projectName}-${environment}-aurora-deadlocks`,
+                alarmDescription: 'Aurora PostgreSQL deadlocks detected',
+                metric: new cloudwatch.Metric({
+                    namespace: 'AWS/RDS',
+                    metricName: 'Deadlocks',
+                    dimensionsMap: {
+                        DBClusterIdentifier: this.auroraCluster.clusterIdentifier
+                    },
+                    statistic: 'Sum',
+                    period: cdk.Duration.minutes(5),
+                }),
+                threshold: 1,
+                comparisonOperator: cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+                evaluationPeriods: 1,
+                datapointsToAlarm: 1,
+                treatMissingData: cloudwatch.TreatMissingData.NOT_BREACHING,
+            });
+
+            deadlockAlarm.addAlarmAction(new cloudwatchActions.SnsAction(alertTopic));
+
             // Create auto-retry mechanism for conflict resolution failures
             this.createAutoRetryMechanism(projectName, environment, alertTopic);
         }
@@ -783,8 +796,8 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createConflictResolutionLambda(
-        projectName: string, 
-        environment: string, 
+        projectName: string,
+        environment: string,
         alertingTopic?: sns.ITopic,
         conflictResolutionStrategy: string = 'last-writer-wins'
     ): lambda.Function {
@@ -838,11 +851,11 @@ export class RdsStack extends cdk.Stack {
                 const AWS = require('aws-sdk');
                 const rdsData = new AWS.RDSDataService();
                 const sns = new AWS.SNS();
-                
+
                 exports.handler = async (event) => {
                     console.log('Conflict resolution event:', JSON.stringify(event, null, 2));
                     const { entityType, entityId, conflictingVersions, clusterArn, secretArn } = event.detail;
-                    
+
                     try {
                         let resolvedVersion;
                         switch (entityType) {
@@ -858,13 +871,13 @@ export class RdsStack extends cdk.Stack {
                             default:
                                 resolvedVersion = await resolveGenericConflict(conflictingVersions);
                         }
-                        
+
                         // Apply resolved version to database
                         await applyResolvedVersion(clusterArn, secretArn, entityType, entityId, resolvedVersion);
-                        
+
                         // Log conflict resolution
                         await logConflictResolution(entityType, entityId, conflictingVersions, resolvedVersion);
-                        
+
                         return {
                             statusCode: 200,
                             body: JSON.stringify({
@@ -876,7 +889,7 @@ export class RdsStack extends cdk.Stack {
                         };
                     } catch (error) {
                         console.error('Conflict resolution failed:', error);
-                        
+
                         // Send alert for failed conflict resolution
                         if (process.env.ALERT_TOPIC_ARN) {
                             await sns.publish({
@@ -890,16 +903,16 @@ export class RdsStack extends cdk.Stack {
                                 })
                             }).promise();
                         }
-                        
+
                         throw error;
                     }
                 };
-                
+
                 // User conflict resolution - Last Writer Wins + Merge strategy
                 async function resolveUserConflict(versions) {
                     const sortedVersions = versions.sort((a, b) => b.timestamp - a.timestamp);
                     const latestVersion = sortedVersions[0];
-                    
+
                     // Merge non-conflicting fields
                     const mergedVersion = { ...latestVersion };
                     if (versions.length > 1) {
@@ -908,15 +921,15 @@ export class RdsStack extends cdk.Stack {
                             return { ...acc, ...version.preferences };
                         }, {});
                         mergedVersion.preferences = allPreferences;
-                        
+
                         // Tags use union
                         const allTags = [...new Set(versions.flatMap(v => v.tags || []))];
                         mergedVersion.tags = allTags;
                     }
-                    
+
                     return mergedVersion;
                 }
-                
+
                 // Content conflict resolution - Version control strategy
                 async function resolveContentConflict(versions) {
                     const baseVersion = versions.find(v => v.isBase) || versions[0];
@@ -934,18 +947,18 @@ export class RdsStack extends cdk.Stack {
                         }
                     };
                 }
-                
+
                 // Preference conflict resolution - Smart merge
                 async function resolvePreferenceConflict(versions) {
                     const mergedPreferences = {};
                     const allKeys = [...new Set(versions.flatMap(v => Object.keys(v.preferences || {})))];
-                    
+
                     for (const key of allKeys) {
                         const values = versions
                             .map(v => ({ value: v.preferences?.[key], timestamp: v.timestamp, region: v.region }))
                             .filter(item => item.value !== undefined)
                             .sort((a, b) => b.timestamp - a.timestamp);
-                            
+
                         if (values.length > 0) {
                             mergedPreferences[key] = {
                                 value: values[0].value,
@@ -955,19 +968,19 @@ export class RdsStack extends cdk.Stack {
                             };
                         }
                     }
-                    
+
                     return {
                         ...versions[0],
                         preferences: mergedPreferences,
                         lastConflictResolution: Date.now()
                     };
                 }
-                
+
                 // Generic conflict resolution - Last Writer Wins
                 async function resolveGenericConflict(versions) {
                     return versions.sort((a, b) => b.timestamp - a.timestamp)[0];
                 }
-                
+
                 // Apply resolved version to database
                 async function applyResolvedVersion(clusterArn, secretArn, entityType, entityId, resolvedVersion) {
                     const params = {
@@ -980,10 +993,10 @@ export class RdsStack extends cdk.Stack {
                             { name: 'id', value: { stringValue: entityId } }
                         ]
                     };
-                    
+
                     await rdsData.executeStatement(params).promise();
                 }
-                
+
                 // Log conflict resolution for audit
                 async function logConflictResolution(entityType, entityId, conflictingVersions, resolvedVersion) {
                     console.log('Conflict resolved:', {
@@ -1016,8 +1029,8 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createCustomEndpoints(
-        cluster: rds.DatabaseCluster, 
-        projectName: string, 
+        cluster: rds.DatabaseCluster,
+        projectName: string,
         environment: string
     ): void {
         // Create reader endpoint for read-only workloads
@@ -1052,8 +1065,8 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createCrossRegionMonitoring(
-        cluster: rds.DatabaseCluster, 
-        projectName: string, 
+        cluster: rds.DatabaseCluster,
+        projectName: string,
         environment: string
     ): void {
         // ✅ OPTIMIZATION: P99 replication lag monitoring for RPO < 1s target
@@ -1183,8 +1196,8 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createDataIntegrityValidation(
-        cluster: rds.DatabaseCluster, 
-        projectName: string, 
+        cluster: rds.DatabaseCluster,
+        projectName: string,
         environment: string
     ): void {
         // Create Lambda function for data integrity validation
@@ -1195,24 +1208,24 @@ export class RdsStack extends cdk.Stack {
                 const AWS = require('aws-sdk');
                 const rdsData = new AWS.RDSDataService();
                 const cloudwatch = new AWS.CloudWatch();
-                
+
                 exports.handler = async (event) => {
                     console.log('Data integrity validation started');
-                    
+
                     try {
                         // Validate data consistency across regions
                         const consistencyResults = await validateDataConsistency();
-                        
+
                         // Report metrics to CloudWatch
                         await reportConsistencyMetrics(consistencyResults);
-                        
+
                         // Check for data corruption
                         const corruptionResults = await checkDataCorruption();
-                        
+
                         if (corruptionResults.hasCorruption) {
                             throw new Error('Data corruption detected');
                         }
-                        
+
                         return {
                             statusCode: 200,
                             body: JSON.stringify({
@@ -1226,7 +1239,7 @@ export class RdsStack extends cdk.Stack {
                         throw error;
                     }
                 };
-                
+
                 async function validateDataConsistency() {
                     // Implementation for cross-region data consistency validation
                     return {
@@ -1235,7 +1248,7 @@ export class RdsStack extends cdk.Stack {
                         inconsistentRecords: 0
                     };
                 }
-                
+
                 async function checkDataCorruption() {
                     // Implementation for data corruption detection
                     return {
@@ -1244,7 +1257,7 @@ export class RdsStack extends cdk.Stack {
                         corruptedTables: 0
                     };
                 }
-                
+
                 async function reportConsistencyMetrics(results) {
                     await cloudwatch.putMetricData({
                         Namespace: '${projectName}/DataIntegrity',
@@ -1554,8 +1567,8 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createAutoRetryMechanism(
-        projectName: string, 
-        environment: string, 
+        projectName: string,
+        environment: string,
         alertTopic: sns.Topic
     ): void {
         // Create Lambda function for automatic retry of failed conflict resolutions
@@ -1567,28 +1580,28 @@ export class RdsStack extends cdk.Stack {
                 const lambda = new AWS.Lambda();
                 const cloudwatch = new AWS.CloudWatch();
                 const sns = new AWS.SNS();
-                
+
                 exports.handler = async (event) => {
                     console.log('Auto-retry mechanism triggered:', JSON.stringify(event, null, 2));
-                    
+
                     try {
                         // Parse CloudWatch alarm event
                         const message = JSON.parse(event.Records[0].Sns.Message);
                         const alarmName = message.AlarmName;
-                        
+
                         if (alarmName.includes('conflict-resolution-errors')) {
                             await handleConflictResolutionRetry();
                         } else if (alarmName.includes('data-sync-failure')) {
                             await handleDataSyncRetry();
                         }
-                        
+
                         return {
                             statusCode: 200,
                             body: JSON.stringify({ message: 'Auto-retry completed successfully' })
                         };
                     } catch (error) {
                         console.error('Auto-retry failed:', error);
-                        
+
                         // Send escalation alert
                         await sns.publish({
                             TopicArn: process.env.ALERT_TOPIC_ARN,
@@ -1599,14 +1612,14 @@ export class RdsStack extends cdk.Stack {
                                 requiresManualIntervention: true
                             })
                         }).promise();
-                        
+
                         throw error;
                     }
                 };
-                
+
                 async function handleConflictResolutionRetry() {
                     console.log('Handling conflict resolution retry...');
-                    
+
                     // Get recent failed conflict resolution events
                     const params = {
                         FunctionName: process.env.CONFLICT_RESOLUTION_LAMBDA_NAME,
@@ -1617,9 +1630,9 @@ export class RdsStack extends cdk.Stack {
                             timestamp: Date.now()
                         })
                     };
-                    
+
                     await lambda.invoke(params).promise();
-                    
+
                     // Record retry attempt
                     await cloudwatch.putMetricData({
                         Namespace: '${projectName}/ConflictResolution',
@@ -1631,10 +1644,10 @@ export class RdsStack extends cdk.Stack {
                         }]
                     }).promise();
                 }
-                
+
                 async function handleDataSyncRetry() {
                     console.log('Handling data sync retry...');
-                    
+
                     // Trigger data integrity validation
                     const params = {
                         FunctionName: process.env.DATA_INTEGRITY_LAMBDA_NAME,
@@ -1645,9 +1658,9 @@ export class RdsStack extends cdk.Stack {
                             timestamp: Date.now()
                         })
                     };
-                    
+
                     await lambda.invoke(params).promise();
-                    
+
                     // Record sync retry attempt
                     await cloudwatch.putMetricData({
                         Namespace: '${projectName}/DataSync',

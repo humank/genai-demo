@@ -308,12 +308,12 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: ${CERTIFICATE_ARN}
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/certificate-arn: ${CERTIFICATE_ARN}  # 無自訂域名，暫不啟用 HTTPS
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
   rules:
-    - host: prometheus.kimkao.io
+    - # host: prometheus.kimkao.io  # TODO: 待設定新域名（kimkao.io 已停用）
       http:
         paths:
           - path: /

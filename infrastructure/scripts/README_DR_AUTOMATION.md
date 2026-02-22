@@ -47,7 +47,7 @@ node scripts/dr-automation-test.js test-failover \
   --global-cluster-id genai-demo-global-cluster \
   --secondary-cluster-id genai-demo-secondary-cluster \
   --hosted-zone-id Z1234567890ABC \
-  --domain-name api.kimkao.io \
+  --domain-name api.example.com \
   --secondary-alb-dns genai-demo-alb-dr-123456789.ap-northeast-1.elb.amazonaws.com \
   --notification-topic-arn arn:aws:sns:ap-northeast-1:123456789012:genai-demo-dr-alerts
 ```

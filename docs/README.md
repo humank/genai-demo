@@ -52,7 +52,10 @@ graph TB
 
 ### Technology Stack
 - **Core**: Java 21, Spring Boot 3.4, Gradle
-- **Frontend**: Next.js 14, React 18, TypeScript
+- **Frontend (Monorepo)**: Turborepo + pnpm, Next.js 16/15, React 19, TypeScript
+  - CMC 管理後台: Next.js 16 + React 19 (port 3002)
+  - Consumer 消費者應用: Next.js 15 + React 19 (port 3000)
+  - 共用套件: @repo/ui, @repo/api-client, @repo/config
 - **Data**: PostgreSQL (Aurora Global), Redis (Global Datastore), Kafka (MSK)
 - **Infrastructure**: AWS EKS, CDK (IaC), Multi-Region Active-Active
 
@@ -188,6 +191,21 @@ Cross-cutting concerns ensure that resilience is baked into every component, not
 - [AWS Config Insights](viewpoints/deployment/infrastructure/aws-config-insights-implementation.md) - Configuration compliance
 - [MCP Server Analysis](viewpoints/deployment/infrastructure/mcp-server-analysis.md) - MCP server troubleshooting
 
+## 🖥️ Frontend Monorepo
+
+前端已遷移至 Turborepo + pnpm Monorepo 架構，位於 `frontend/` 目錄。
+
+| 應用/套件 | 說明 | 文件 |
+|-----------|------|------|
+| **CMC 管理後台** | Next.js 16 + React 19 管理儀表板 | [frontend/apps/cmc/](../frontend/apps/cmc/) |
+| **Consumer 應用** | Next.js 15 + React 19 消費者介面 | [frontend/apps/consumer/](../frontend/apps/consumer/) |
+| **@repo/ui** | 共用 UI 元件 (shadcn/ui + Radix UI) | [frontend/packages/ui/](../frontend/packages/ui/) |
+| **@repo/api-client** | 共用 API 客戶端 (Axios + React Query) | [frontend/packages/api-client/](../frontend/packages/api-client/) |
+| **@repo/config** | 共用設定 (TypeScript, Tailwind, ESLint) | [frontend/packages/config/](../frontend/packages/config/) |
+| **E2E 測試** | Playwright 端對端測試 | [frontend/e2e/](../frontend/e2e/) |
+
+📖 **完整文件**: [frontend/README.md](../frontend/README.md)
+
 ## 🔍 Finding Information
 
 ### By Topic
@@ -273,7 +291,7 @@ Current documentation status:
 
 See [Documentation Metrics](METRICS.md) for detailed metrics and trends.
 
-Last updated: 2025-11-25
+Last updated: 2026-02-21
 
 ---
 
@@ -336,6 +354,6 @@ Last updated: 2025-11-25
 
 **Built with ❤️ following Rozanski & Woods Software Architecture Methodology**
 
-**Documentation Version**: 1.0
-**Last Major Update**: 2025-11-25
-**Next Review**: 2024-12-09
+**Documentation Version**: 1.1
+**Last Major Update**: 2026-02-21
+**Next Review**: 2026-03-21

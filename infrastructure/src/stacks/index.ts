@@ -1,6 +1,6 @@
 // Export all modular stacks for easy importing
-export { AnalyticsStack } from './analytics-stack';
 export { AlertingStack } from './alerting-stack';
+export { AnalyticsStack } from './analytics-stack';
 export { CertificateStack } from './certificate-stack';
 export { CoreInfrastructureStack } from './core-infrastructure-stack';
 export { CostOptimizationStack } from './cost-optimization-stack';
@@ -8,16 +8,17 @@ export { CrossRegionObservabilityStack } from './cross-region-observability-stac
 export { DataCatalogStack } from './data-catalog-stack';
 export { DataRetentionStack } from './data-retention-stack';
 export { DisasterRecoveryStack } from './disaster-recovery-stack';
-export { EKSStack } from './eks-stack';
 export { EKSIRSAStack } from './eks-irsa-stack';
+export { EKSStack } from './eks-stack';
 export { ElastiCacheStack } from './elasticache-stack';
+export { FrontendStack } from './frontend-stack';
 export { IAMStack } from './iam-stack';
 export { KmsStack } from './kms-stack';
 export { MSKCrossRegionStack } from './msk-cross-region-stack';
 export { MSKStack } from './msk-stack';
 export { MultiRegionStack } from './multi-region-stack';
-export { NetworkStack } from './network-stack';
 export { NetworkSecurityStack } from './network-security-stack';
+export { NetworkStack } from './network-stack';
 export { ObservabilityStack } from './observability-stack';
 export { RdsStack } from './rds-stack';
 export { Route53FailoverStack } from './route53-failover-stack';
@@ -34,16 +35,17 @@ export type { CrossRegionObservabilityStackProps } from './cross-region-observab
 export type { DataCatalogStackProps } from './data-catalog-stack';
 export type { DataRetentionStackProps } from './data-retention-stack';
 export type { DisasterRecoveryStackProps } from './disaster-recovery-stack';
-export type { EKSStackProps } from './eks-stack';
 export type { EKSIRSAStackProps } from './eks-irsa-stack';
+export type { EKSStackProps } from './eks-stack';
 export type { ElastiCacheStackProps } from './elasticache-stack';
+export type { FrontendStackProps } from './frontend-stack';
 export type { IAMStackProps } from './iam-stack';
 export type { KmsStackProps } from './kms-stack';
 export type { MSKCrossRegionStackProps } from './msk-cross-region-stack';
 export type { MSKStackProps } from './msk-stack';
 export type { MultiRegionStackProps } from './multi-region-stack';
-export type { NetworkStackProps } from './network-stack';
 export type { NetworkSecurityStackProps } from './network-security-stack';
+export type { NetworkStackProps } from './network-stack';
 export type { ObservabilityStackProps } from './observability-stack';
 export type { RdsStackProps } from './rds-stack';
 export type { Route53FailoverStackProps } from './route53-failover-stack';
@@ -51,4 +53,3 @@ export type { Route53GlobalRoutingStackProps } from './route53-global-routing-st
 export type { SecretsStackProps } from './secrets-stack';
 export type { SecurityStackProps } from './security-stack';
 export type { SSOStackProps } from './sso-stack';
-

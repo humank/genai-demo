@@ -107,7 +107,8 @@ Before you begin, ensure you have:
 - Java 21 or higher
 - Gradle 8.x (included via wrapper)
 - Docker and Docker Compose
-- Node.js 18+ (for CDK)
+- Node.js 20+ (for CDK and Frontend)
+- pnpm 9.x (透過 corepack 啟用: `corepack enable`)
 - Git
 
 ### Fork and Clone
@@ -136,9 +137,16 @@ make dev-setup
 docker-compose up -d              # Start dependencies
 ./gradlew :app:build              # Build application
 make setup-hooks                  # Set up Git hooks
+
+# Frontend setup
+cd frontend
+pnpm install                      # Install frontend dependencies
+pnpm build                        # Build all frontend packages
 ```
 
 **Detailed Setup**: See [Development Setup Guide](docs/development/setup/README.md)
+
+**Frontend Guide**: See [frontend/README.md](frontend/README.md)
 
 **Development Standards**: All development must follow [.kiro/steering/](..kiro/steering/) guidelines
 
@@ -278,19 +286,19 @@ package solid.humank.genaidemo.domain.customer;
 public class Order {
     // 1. Static fields
     private static final Logger logger = LoggerFactory.getLogger(Order.class);
-    
+
     // 2. Instance fields
     private final OrderId id;
     private OrderStatus status;
-    
+
     // 3. Constructors
     public Order(OrderId id) {
         this.id = id;
     }
-    
+
     // 4. Public methods
     public void submit() { }
-    
+
     // 5. Private methods
     private void validate() { }
 }
@@ -342,21 +350,21 @@ public record CustomerCreatedEvent(
 public class CustomerApplicationService {
     private final CustomerRepository customerRepository;
     private final DomainEventApplicationService eventService;
-    
+
     public void createCustomer(CreateCustomerCommand command) {
         // 1. Create aggregate
         Customer customer = new Customer(command.name(), command.email());
-        
+
         // 2. Save aggregate
         customerRepository.save(customer);
-        
+
         // 3. Publish events
         eventService.publishEventsFromAggregate(customer);
     }
 }
 ```
 
-**Detailed Standards**: 
+**Detailed Standards**:
 - [Development Standards](.kiro/steering/development-standards.md)
 - [Core Principles](.kiro/steering/core-principles.md)
 - [Design Principles](.kiro/steering/design-principles.md)
@@ -379,21 +387,21 @@ public class CustomerApplicationService {
 ```java
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
-    
+
     @Mock
     private CustomerRepository customerRepository;
-    
+
     @InjectMocks
     private CustomerService customerService;
-    
+
     @Test
     void should_create_customer_when_valid_data_provided() {
         // Given
         CreateCustomerCommand command = new CreateCustomerCommand("John", "john@example.com");
-        
+
         // When
         Customer customer = customerService.createCustomer(command);
-        
+
         // Then
         assertThat(customer).isNotNull();
         assertThat(customer.getName()).isEqualTo("John");
@@ -406,7 +414,7 @@ class CustomerServiceTest {
 
 ```gherkin
 Feature: Customer Registration
-  
+
   Scenario: Successful customer registration
     Given a new customer with valid information
     When they submit the registration form
@@ -441,7 +449,7 @@ static final ArchRule domainLayerRules = classes()
 ./gradlew :app:test --tests "*ArchitectureTest"
 ```
 
-**Detailed Testing Guide**: 
+**Detailed Testing Guide**:
 - [Testing Strategy](.kiro/steering/testing-strategy.md)
 - [Test Performance Standards](.kiro/steering/test-performance-standards.md)
 - [BDD Testing Guide](docs/development/testing/bdd-testing.md)
@@ -526,10 +534,86 @@ Customer customer = service.findById("123");
 
 ```
 
-**Detailed Guides**: 
+**Detailed Guides**:
 - [Documentation Style Guide](docs/STYLE-GUIDE.md)
 - [Diagram Standards](.kiro/steering/diagram-standards.md)
 - [Diagram Generation](.kiro/steering/diagram-generation-standards.md)
+
+---
+
+## Frontend Development (Monorepo)
+
+前端使用 Turborepo + pnpm Monorepo 架構，位於 `frontend/` 目錄。
+
+### 前端開發流程
+
+```bash
+cd frontend
+
+# 安裝依賴
+pnpm install
+
+# 開發模式
+pnpm dev                          # 啟動所有應用
+pnpm dev --filter @repo/cmc      # 僅 CMC (port 3002)
+pnpm dev --filter @repo/consumer  # 僅 Consumer (port 3000)
+
+# 建置
+pnpm build                        # 建置所有套件與應用
+pnpm build --filter @repo/cmc...  # 僅 CMC 及其依賴
+
+# 型別檢查
+pnpm type-check
+
+# E2E 測試
+pnpm e2e
+```
+
+### 前端程式碼規範
+
+- 使用 TypeScript strict mode
+- 共用元件放在 `packages/ui/`，透過 `@repo/ui` 引入
+- API 呼叫使用 `packages/api-client/`，透過 `@repo/api-client` 引入
+- 遵循 shadcn/ui 元件模式
+- 使用 Tailwind CSS 進行樣式設計
+- 確保 CMC 與 Consumer 不直接互相引用
+
+### 新增共用元件
+
+1. 在 `frontend/packages/ui/src/components/` 建立元件
+2. 從 `frontend/packages/ui/src/index.ts` 匯出
+3. 在應用中透過 `import { Component } from '@repo/ui'` 使用
+
+### 前端 Docker 建置驗證
+
+提交前請確認 Docker 建置成功：
+
+```bash
+cd frontend
+docker build -f Dockerfile.cmc -t cmc-test .
+docker build -f Dockerfile.consumer -t consumer-test .
+```
+
+### 前端部署
+
+前端部署使用專案根目錄的 `deploy-frontend.sh` 腳本：
+
+```bash
+# 部署至開發環境
+./deploy-frontend.sh -e development
+
+# 預覽部署指令
+./deploy-frontend.sh --dry-run
+```
+
+首次部署前需先透過 CDK 建立 ECR 儲存庫：
+
+```bash
+cd infrastructure
+npx cdk deploy '*-FrontendStack' -c environment=development
+```
+
+**詳細文件**: [frontend/README.md](frontend/README.md)
 
 ---
 
@@ -697,11 +781,18 @@ If you have questions about contributing:
 
 ---
 
-**Last Updated**: 2025-11-19
+**Last Updated**: 2026-02-21
 
 ---
 
 ## Recent Changes
+
+### 2026-02-21 Updates
+
+- ✅ 新增前端 Monorepo 開發指南 (Turborepo + pnpm)
+- ✅ 更新前置需求：Node.js 20+、pnpm 9.x
+- ✅ 新增前端程式碼規範與共用元件開發流程
+- ✅ 新增前端 Docker 建置驗證步驟
 
 ### 2025-11-19 Updates
 

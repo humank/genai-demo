@@ -18,7 +18,8 @@ This document provides step-by-step deployment procedures for the Enterprise E-C
 - kubectl v1.28+
 - Docker v24.x+
 - Gradle 8.x
-- Node.js 18.x+ (for frontend deployments)
+- Node.js 20.x+ (for frontend deployments)
+- pnpm 9.x (frontend monorepo package manager)
 
 ### Required Access
 
@@ -287,37 +288,112 @@ kubectl delete -f infrastructure/k8s/maintenance-mode.yaml
 
 ## Frontend Deployment
 
-### CMC Frontend (Next.js)
+### 前端一鍵部署腳本
+
+推薦使用專案根目錄的 `deploy-frontend.sh` 腳本，整合建置、推送、部署全流程：
 
 ```bash
-# Build frontend
-cd cmc-frontend
-npm run build
+# 部署兩個前端至開發環境
+./deploy-frontend.sh -e development
 
-# Deploy to S3 + CloudFront
-aws s3 sync out/ s3://cmc-frontend-${ENV}/
+# 部署至 Staging
+./deploy-frontend.sh -e staging
 
-# Invalidate CloudFront cache
-aws cloudfront create-invalidation \
-  --distribution-id ${DISTRIBUTION_ID} \
-  --paths "/*"
+# 僅部署 CMC 至 Production（指定映像標籤）
+./deploy-frontend.sh -e production -a cmc -t v1.2.0
+
+# 預覽部署指令
+./deploy-frontend.sh -e production --dry-run
 ```
 
-### Consumer Frontend (Angular)
+腳本自動處理：AWS Account ID 偵測、ECR 登入、Docker 多平台建置（linux/amd64）、映像推送、K8s manifest 佔位符替換、Argo Rollouts Canary 觸發。
+
+#### 前置條件
+
+1. CDK `FrontendStack` 已部署（ECR 儲存庫已建立）：
+   ```bash
+   cd infrastructure
+   npx cdk deploy '*-FrontendStack' -c environment=development
+   ```
+2. AWS CLI 已設定正確認證
+3. kubectl 已連線至目標 EKS 叢集
+4. Docker 已安裝並執行
+
+### 前端 Monorepo 手動建置與部署
+
+前端已遷移至 Turborepo + pnpm Monorepo 架構（`frontend/` 目錄），兩個應用皆使用 Next.js + React 19，透過 Docker 多階段建置部署至 EKS。
+
+#### 建置 Docker 映像
 
 ```bash
-# Build frontend
-cd consumer-frontend
-npm run build:${ENV}
+# 進入前端 Monorepo 目錄
+cd frontend
 
-# Deploy to S3 + CloudFront
-aws s3 sync dist/ s3://consumer-frontend-${ENV}/
+# 建置 CMC 管理後台映像（Next.js 16 + React 19，port 3002）
+docker build -f Dockerfile.cmc -t genai-demo/cmc-frontend:${VERSION} .
 
-# Invalidate CloudFront cache
-aws cloudfront create-invalidation \
-  --distribution-id ${DISTRIBUTION_ID} \
-  --paths "/*"
+# 建置 Consumer 消費者應用映像（Next.js 15 + React 19，port 3000）
+docker build -f Dockerfile.consumer -t genai-demo/consumer-frontend:${VERSION} .
 ```
+
+#### 推送至 ECR
+
+```bash
+# 標記映像
+docker tag genai-demo/cmc-frontend:${VERSION} \
+  ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/cmc-frontend:${VERSION}
+
+docker tag genai-demo/consumer-frontend:${VERSION} \
+  ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/consumer-frontend:${VERSION}
+
+# 推送映像
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/cmc-frontend:${VERSION}
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/consumer-frontend:${VERSION}
+```
+
+#### 部署至 EKS（Canary 策略）
+
+```bash
+# 更新 CMC 前端 Rollout 映像（port 3002）
+kubectl argo rollouts set image genai-demo-cmc-frontend \
+  genai-demo-cmc-frontend=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/cmc-frontend:${VERSION} \
+  -n genai-demo
+
+# 更新 Consumer 前端 Rollout 映像（port 3000）
+kubectl argo rollouts set image genai-demo-consumer-frontend \
+  genai-demo-consumer-frontend=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/genai-demo/consumer-frontend:${VERSION} \
+  -n genai-demo
+
+# 監控 Canary 部署進度
+kubectl argo rollouts get rollout genai-demo-cmc-frontend -n genai-demo --watch
+kubectl argo rollouts get rollout genai-demo-consumer-frontend -n genai-demo --watch
+```
+
+#### 驗證前端部署
+
+```bash
+# 檢查 Pod 狀態
+kubectl get pods -n genai-demo -l app=genai-demo-cmc-frontend
+kubectl get pods -n genai-demo -l app=genai-demo-consumer-frontend
+
+# 驗證健康檢查端點
+# TODO: kimkao.io 域名已停用，部署後替換為實際 LoadBalancer URL
+curl https://<your-cmc-domain>/api/health
+curl https://<your-consumer-domain>/api/health
+
+# 檢查 Pod 日誌
+kubectl logs -f deployment/genai-demo-cmc-frontend -n genai-demo
+kubectl logs -f deployment/genai-demo-consumer-frontend -n genai-demo
+```
+
+#### 前端環境變數
+
+| 變數 | CMC (port 3002) | Consumer (port 3000) |
+|------|-----------------|---------------------|
+| `NODE_ENV` | production | production |
+| `PORT` | 3002 | 3000 |
+| `NEXT_PUBLIC_API_URL` | http://localhost:8080 | http://localhost:8080 |
+| `NEXT_PUBLIC_APP_ENV` | production | production |
 
 ## Deployment Checklist
 
@@ -372,21 +448,21 @@ jobs:
       - name: Checkout code
 
         uses: actions/checkout@v3
-      
+
       - name: Build application
 
         run: ./gradlew build
-      
+
       - name: Build Docker image
 
         run: docker build -t ecommerce-backend:${GITHUB_REF_NAME} .
-      
+
       - name: Push to ECR
 
         run: |
           aws ecr get-login-password | docker login --username AWS --password-stdin
           docker push ${ECR_REGISTRY}/ecommerce-backend:${GITHUB_REF_NAME}
-      
+
       - name: Deploy to EKS
 
         run: |
@@ -414,6 +490,6 @@ kubectl get events -n ${NAMESPACE} --sort-by='.lastTimestamp'
 See [Rollback Procedures](rollback.md) for detailed rollback steps.
 
 
-**Last Updated**: 2025-10-25  
-**Owner**: DevOps Team  
+**Last Updated**: 2026-02-21
+**Owner**: DevOps Team
 **Review Cycle**: Quarterly

@@ -312,9 +312,9 @@ export class StackTestHelper {
                     'metrics-retention-days': 30,
                     'trace-sampling-rate': 0.1
                 },
-                'hosted-zone:account=123456789012:domainName=kimkao.io:region=ap-east-2': {
-                    'Id': '/hostedzone/Z2KTO3AQUJG1DT',
-                    'Name': 'kimkao.io.'
+                'hosted-zone:account=123456789012:domainName=example.com:region=ap-east-2': {
+                    'Id': '/hostedzone/ZEXAMPLEZONEID',
+                    'Name': 'example.com.'
                 },
                 ...additionalContext
             }

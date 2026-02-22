@@ -102,15 +102,17 @@ spec:
         image: ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/genai-demo/consumer-frontend:latest
         ports:
         - name: http
-          containerPort: 4200
+          containerPort: 3000
           protocol: TCP
         env:
         - name: NODE_ENV
           value: "production"
-        - name: API_URL
-          value: "https://api.kimkao.io"
-        - name: APP_ENV
+        - name: NEXT_PUBLIC_API_URL
+          value: "http://localhost:8080"  # TODO: 待設定實際 API 端點（kimkao.io 域名已停用）
+        - name: NEXT_PUBLIC_APP_ENV
           value: "production"
+        - name: PORT
+          value: "3000"
         resources:
           limits:
             cpu: 500m
@@ -120,7 +122,7 @@ spec:
             memory: 256Mi
         livenessProbe:
           httpGet:
-            path: /health
+            path: /api/health
             port: http
           initialDelaySeconds: 30
           periodSeconds: 30
@@ -128,7 +130,7 @@ spec:
           failureThreshold: 3
         readinessProbe:
           httpGet:
-            path: /health
+            path: /api/health
             port: http
           initialDelaySeconds: 15
           periodSeconds: 10
@@ -136,7 +138,7 @@ spec:
           failureThreshold: 3
         startupProbe:
           httpGet:
-            path: /health
+            path: /api/health
             port: http
           initialDelaySeconds: 10
           periodSeconds: 5
@@ -239,11 +241,11 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'  # 無自訂域名，暫不啟用 HTTPS
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
     alb.ingress.kubernetes.io/backend-protocol: HTTP
-    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
     alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
     alb.ingress.kubernetes.io/healthy-threshold-count: '2'
@@ -269,7 +271,7 @@ metadata:
       }
 spec:
   rules:
-  - host: shop.kimkao.io
+  - # host: shop.kimkao.io  # TODO: 待設定新域名（kimkao.io 已停用）
     http:
       paths:
       - path: /

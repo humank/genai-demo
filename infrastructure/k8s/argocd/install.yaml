@@ -29,18 +29,19 @@ metadata:
     app.kubernetes.io/name: argocd-server-config
     app.kubernetes.io/part-of: argocd
 data:
-  # URL configuration for ALB
-  url: "https://argocd.kimkao.io"
-  
+  # URL configuration for ALB — 無自訂域名，部署後替換為 ALB DNS 名稱
+  url: "http://localhost:8080"
+
   # OIDC configuration (placeholder for future integration)
   oidc.config: |
     name: OIDC
-    issuer: https://argocd.kimkao.io/api/dex
+    # TODO: 部署後替換為實際 ALB DNS 名稱
+    issuer: http://localhost:8080/api/dex
     clientId: argocd
     clientSecret: $oidc.clientSecret
     requestedScopes: ["openid", "profile", "email", "groups"]
     requestedIDTokenClaims: {"groups": {"essential": true}}
-  
+
   # Repository configuration
   repositories: |
     - type: git
@@ -49,10 +50,10 @@ data:
     - type: git
       url: https://github.com/humank/genai-demo-gitops
       name: genai-demo-gitops
-  
+
   # Application configuration
   application.instanceLabelKey: argocd.argoproj.io/instance
-  
+
   # Resource customizations for better health checks
   resource.customizations: |
     argoproj.io/Rollout:
@@ -104,19 +105,19 @@ data:
     p, role:admin, applications, *, */*, allow
     p, role:admin, clusters, *, *, allow
     p, role:admin, repositories, *, *, allow
-    
+
     # Developer role
     p, role:developer, applications, get, */*, allow
     p, role:developer, applications, sync, */*, allow
     p, role:developer, applications, action/*, */*, allow
     p, role:developer, logs, get, */*, allow
     p, role:developer, exec, create, */*, allow
-    
+
     # DevOps role
     p, role:devops, applications, *, */*, allow
     p, role:devops, repositories, *, *, allow
     p, role:devops, clusters, get, *, allow
-    
+
     # Group mappings (for future OIDC integration)
     g, genai-demo:admin, role:admin
     g, genai-demo:developer, role:developer
@@ -138,19 +139,19 @@ data:
     username: ArgoCD
     channel: genai-demo-deployments
     iconEmoji: ":rocket:"
-  
+
   template.app-deployed: |
     message: |
       {{if eq .serviceType "slack"}}:white_check_mark:{{end}} Application {{.app.metadata.name}} is now running new version.
       {{if ne .serviceType "slack"}}
       Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
       {{end}}
-  
+
   template.app-health-degraded: |
     message: |
       {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} has degraded.
       Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
-  
+
   template.app-sync-failed: |
     message: |
       {{if eq .serviceType "slack"}}:exclamation:{{end}} Application {{.app.metadata.name}} sync is failed.
@@ -160,19 +161,19 @@ data:
           * {{$c.message}}
       {{end}}
       {{end}}
-  
+
   trigger.on-deployed: |
     - description: Application is synced and healthy
       send:
       - app-deployed
       when: app.status.operationState.phase in ['Succeeded'] and app.status.health.status == 'Healthy'
-  
+
   trigger.on-health-degraded: |
     - description: Application has degraded
       send:
       - app-health-degraded
       when: app.status.health.status == 'Degraded'
-  
+
   trigger.on-sync-failed: |
     - description: Application syncing has failed
       send:
@@ -193,17 +194,17 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"  # 無自訂域名，暫不啟用 HTTPS
+    # service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"  # 無自訂域名
 spec:
   type: LoadBalancer
   ports:
-  - name: https
-    port: 443
+  - name: http
+    port: 80
     protocol: TCP
     targetPort: 8080
   - name: grpc
-    port: 443
+    port: 8080
     protocol: TCP
     targetPort: 8080
   selector:
@@ -223,9 +224,9 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'  # 無自訂域名，暫不啟用 HTTPS
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERT_ID"  # 無自訂域名
     alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
@@ -234,8 +235,8 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
 spec:
   rules:
-  - host: argocd.kimkao.io
-    http:
+  # 無自訂域名，使用 ALB 自動產生的 DNS 名稱存取
+  - http:
       paths:
       - path: /
         pathType: Prefix

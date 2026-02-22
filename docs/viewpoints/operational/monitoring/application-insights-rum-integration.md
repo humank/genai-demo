@@ -1,7 +1,7 @@
 # Application Insights Real User Monitoring (RUM) Integration Guide
 
-**Last Updated**: 2025-10-22  
-**Status**: Active  
+**Last Updated**: 2026-02-21
+**Status**: Active
 **Owner**: Frontend Team + DevOps Team
 
 ## Overview
@@ -19,11 +19,12 @@ This guide provides comprehensive instructions for integrating AWS CloudWatch RU
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Frontend Applications                     │
+│              (Turborepo + pnpm Monorepo)                    │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌──────────────────────┐    ┌──────────────────────────┐  │
 │  │  Consumer Frontend   │    │    CMC Frontend          │  │
-│  │  (Angular 18)        │    │    (Next.js 14)          │  │
-│  │                      │    │                          │  │
+│  │  (Next.js 15)        │    │    (Next.js 16)          │  │
+│  │  Port: 3000          │    │    Port: 3002            │  │
 │  │  - RUM Web Client    │    │  - RUM Web Client        │  │
 │  │  - Error Tracking    │    │  - Error Tracking        │  │
 │  │  - Core Web Vitals   │    │  - Core Web Vitals       │  │
@@ -84,245 +85,187 @@ Install the AWS RUM Web Client:
 npm install --save aws-rum-web
 ```
 
-## Consumer Frontend Integration (Angular 18)
+## Consumer Frontend Integration (Next.js 15)
 
-### Step 1: Create RUM Service
+> **注意**: Consumer 前端已從 Angular 18 遷移至 Next.js 15 + React 19，並整合至 `frontend/apps/consumer/` Monorepo 架構。
 
-Create `src/app/services/rum.service.ts`:
+### Step 1: Create RUM Utility
+
+RUM 工具函式與 CMC 前端共用相同的 Next.js 整合模式。建立 `src/lib/rum.ts`：
 
 ```typescript
-import { Injectable } from '@angular/core';
 import { AwsRum, AwsRumConfig } from 'aws-rum-web';
-import { environment } from '../../environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class RumService {
-  private awsRum: AwsRum | null = null;
+let awsRum: AwsRum | null = null;
 
-  constructor() {
-    this.initializeRum();
+export interface RumConfig {
+  enabled: boolean;
+  applicationId: string;
+  applicationVersion: string;
+  region: string;
+  identityPoolId: string;
+  sessionSampleRate: number;
+}
+
+export function initializeRum(config: RumConfig): void {
+  if (!config.enabled || typeof window === 'undefined') {
+    return;
   }
 
-  private initializeRum(): void {
-    if (!environment.rum.enabled) {
-      console.log('RUM is disabled in this environment');
-      return;
-    }
-
-    try {
-      const config: AwsRumConfig = {
-        sessionSampleRate: environment.rum.sessionSampleRate,
-        identityPoolId: environment.rum.identityPoolId,
-        endpoint: `https://dataplane.rum.${environment.rum.region}.amazonaws.com`,
-        telemetries: ['errors', 'performance', 'http'],
-        allowCookies: true,
-        enableXRay: true,
-      };
-
-      this.awsRum = new AwsRum(
-        environment.rum.applicationId,
-        environment.rum.applicationVersion,
-        environment.rum.region,
-        config
-      );
-
-      console.log('AWS RUM initialized successfully');
-    } catch (error) {
-      console.error('Failed to initialize AWS RUM:', error);
-    }
+  if (awsRum) {
+    return;
   }
 
-  /**
-   * Record a custom event
-   */
-  recordEvent(eventType: string, eventData: Record<string, any>): void {
-    if (this.awsRum) {
-      this.awsRum.recordEvent(eventType, eventData);
-    }
-  }
+  try {
+    const rumConfig: AwsRumConfig = {
+      sessionSampleRate: config.sessionSampleRate,
+      identityPoolId: config.identityPoolId,
+      endpoint: `https://dataplane.rum.${config.region}.amazonaws.com`,
+      telemetries: ['errors', 'performance', 'http'],
+      allowCookies: true,
+      enableXRay: true,
+    };
 
-  /**
-   * Record an error
-   */
-  recordError(error: Error): void {
-    if (this.awsRum) {
-      this.awsRum.recordError(error);
-    }
+    awsRum = new AwsRum(
+      config.applicationId,
+      config.applicationVersion,
+      config.region,
+      rumConfig
+    );
+  } catch (error) {
+    console.error('Failed to initialize AWS RUM:', error);
   }
+}
 
-  /**
-   * Add session attributes
-   */
-  addSessionAttributes(attributes: Record<string, string>): void {
-    if (this.awsRum) {
-      this.awsRum.addSessionAttributes(attributes);
-    }
-  }
+export function recordEvent(eventType: string, eventData: Record<string, any>): void {
+  awsRum?.recordEvent(eventType, eventData);
+}
 
-  /**
-   * Record page view
-   */
-  recordPageView(pageId: string): void {
-    if (this.awsRum) {
-      this.awsRum.recordPageView(pageId);
-    }
-  }
+export function recordError(error: Error): void {
+  awsRum?.recordError(error);
+}
+
+export function addSessionAttributes(attributes: Record<string, string>): void {
+  awsRum?.addSessionAttributes(attributes);
+}
+
+export function recordPageView(pageId: string): void {
+  awsRum?.recordPageView(pageId);
 }
 ```
 
-### Step 2: Update Environment Configuration
+### Step 2: Create RUM Provider Component
 
-Update `src/environments/environment.ts`:
+建立 `src/components/RumProvider.tsx`：
 
 ```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api',
-  rum: {
-    enabled: true,
-    applicationId: 'CONSUMER_RUM_APP_MONITOR_ID', // From CDK output
-    applicationVersion: '1.0.0',
-    region: 'ap-northeast-1',
-    identityPoolId: 'CONSUMER_RUM_IDENTITY_POOL_ID', // From CDK output
-    sessionSampleRate: 0.5, // 50% sampling in development
-  },
+'use client';
+
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { initializeRum, recordPageView, addSessionAttributes } from '@/lib/rum';
+
+const rumConfig = {
+  enabled: process.env.NEXT_PUBLIC_RUM_ENABLED === 'true',
+  applicationId: process.env.NEXT_PUBLIC_RUM_APP_MONITOR_ID || '',
+  applicationVersion: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+  region: process.env.NEXT_PUBLIC_RUM_REGION || 'ap-northeast-1',
+  identityPoolId: process.env.NEXT_PUBLIC_RUM_IDENTITY_POOL_ID || '',
+  sessionSampleRate: parseFloat(process.env.NEXT_PUBLIC_RUM_SAMPLE_RATE || '0.1'),
 };
-```
 
-Update `src/environments/environment.prod.ts`:
+export function RumProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
 
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://api.genai-demo.com',
-  rum: {
-    enabled: true,
-    applicationId: 'CONSUMER_RUM_APP_MONITOR_ID', // From CDK output
-    applicationVersion: '1.0.0',
-    region: 'ap-northeast-1',
-    identityPoolId: 'CONSUMER_RUM_IDENTITY_POOL_ID', // From CDK output
-    sessionSampleRate: 0.1, // 10% sampling in production
-  },
-};
-```
-
-### Step 3: Initialize RUM in App Component
-
-Update `src/app/app.component.ts`:
-
-```typescript
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { RumService } from './services/rum.service';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
-})
-export class AppComponent implements OnInit {
-  title = 'consumer-frontend';
-
-  constructor(
-    private router: Router,
-    private rumService: RumService
-  ) {}
-
-  ngOnInit(): void {
-    // Track page views
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.rumService.recordPageView(event.urlAfterRedirects);
-      });
-
-    // Add session attributes
-    this.rumService.addSessionAttributes({
+  useEffect(() => {
+    initializeRum(rumConfig);
+    addSessionAttributes({
       userType: 'consumer',
-      appVersion: '1.0.0',
+      appVersion: rumConfig.applicationVersion,
     });
-  }
+  }, []);
+
+  useEffect(() => {
+    if (pathname) {
+      recordPageView(pathname);
+    }
+  }, [pathname]);
+
+  return <>{children}</>;
 }
 ```
 
-### Step 4: Create Global Error Handler
+### Step 3: Update Root Layout
 
-Create `src/app/services/global-error-handler.service.ts`:
+在 `src/app/layout.tsx` 中加入 RumProvider：
 
 ```typescript
-import { ErrorHandler, Injectable } from '@angular/core';
-import { RumService } from './rum.service';
+import { RumProvider } from '@/components/RumProvider';
 
-@Injectable()
-export class GlobalErrorHandler implements ErrorHandler {
-  constructor(private rumService: RumService) {}
-
-  handleError(error: Error): void {
-    // Log to console
-    console.error('Global error:', error);
-
-    // Record error in RUM
-    this.rumService.recordError(error);
-
-    // You can also send to your backend logging service here
-  }
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <RumProvider>
+          {children}
+        </RumProvider>
+      </body>
+    </html>
+  );
 }
 ```
 
-Register in `src/app/app.module.ts`:
+### Step 4: Environment Variables
 
-```typescript
-import { ErrorHandler, NgModule } from '@angular/core';
-import { GlobalErrorHandler } from './services/global-error-handler.service';
+建立 `.env.local`：
 
-@NgModule({
-  // ... other configuration
-  providers: [
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
-  ],
-})
-export class AppModule {}
+```bash
+NEXT_PUBLIC_RUM_ENABLED=true
+NEXT_PUBLIC_RUM_APP_MONITOR_ID=CONSUMER_RUM_APP_MONITOR_ID
+NEXT_PUBLIC_RUM_IDENTITY_POOL_ID=CONSUMER_RUM_IDENTITY_POOL_ID
+NEXT_PUBLIC_RUM_REGION=ap-northeast-1
+NEXT_PUBLIC_RUM_SAMPLE_RATE=0.5
+NEXT_PUBLIC_APP_VERSION=1.0.0
 ```
 
 ### Step 5: Track Custom Events
 
-Example usage in components:
-
 ```typescript
-import { Component } from '@angular/core';
-import { RumService } from '../services/rum.service';
+'use client';
 
-@Component({
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-})
-export class ProductListComponent {
-  constructor(private rumService: RumService) {}
+import { recordEvent } from '@/lib/rum';
 
-  onProductClick(productId: string): void {
-    // Record custom event
-    this.rumService.recordEvent('product_clicked', {
-      productId,
+export function ProductCard({ product }: { product: Product }) {
+  const handleClick = () => {
+    recordEvent('product_viewed', {
+      productId: product.id,
+      productName: product.name,
       timestamp: new Date().toISOString(),
     });
-  }
+  };
 
-  onAddToCart(productId: string): void {
-    this.rumService.recordEvent('add_to_cart', {
-      productId,
-      source: 'product_list',
+  const handleAddToCart = () => {
+    recordEvent('add_to_cart', {
+      productId: product.id,
+      source: 'product_card',
     });
-  }
+  };
+
+  return (
+    <div onClick={handleClick}>
+      {/* Product card content */}
+    </div>
+  );
 }
 ```
 
-## CMC Frontend Integration (Next.js 14)
+## CMC Frontend Integration (Next.js 16)
+
+> **注意**: CMC 前端已從獨立的 `cmc-frontend/` 目錄（Next.js 14 + React 18）遷移至 `frontend/apps/cmc/`（Next.js 16 + React 19）Monorepo 架構。
 
 ### Step 1: Create RUM Utility
 
@@ -530,7 +473,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('Error caught by boundary:', error, errorInfo);
-    
+
     // Record error in RUM
     recordError(error);
   }
@@ -742,7 +685,7 @@ For 10,000 daily active users with 10% sampling:
 - [AWS CloudWatch RUM Documentation](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM.html)
 - [AWS RUM Web Client GitHub](https://github.com/aws-observability/aws-rum-web)
 - [Core Web Vitals](https://web.dev/vitals/)
-- [Angular Error Handling](https://angular.io/api/core/ErrorHandler)
+- [Angular Error Handling](https://angular.dev/api/core/ErrorHandler) (legacy reference)
 - [Next.js Error Handling](https://nextjs.org/docs/advanced-features/error-handling)
 
 ## Support
@@ -754,6 +697,6 @@ For issues or questions:
 
 ---
 
-**Document Version**: 1.0  
-**Last Reviewed**: 2025-10-22  
-**Next Review**: 2025-11-22
+**Document Version**: 2.0
+**Last Reviewed**: 2026-02-21
+**Next Review**: 2026-05-21

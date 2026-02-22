@@ -257,9 +257,9 @@ metadata:
     kubernetes.io/ingress.class: "alb"
     alb.ingress.kubernetes.io/scheme: "internet-facing"
     alb.ingress.kubernetes.io/target-type: "ip"
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERTIFICATE_ID"
-    alb.ingress.kubernetes.io/ssl-redirect: "443"
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-1:ACCOUNT_ID:certificate/CERTIFICATE_ID"  # 無自訂域名，暫不啟用 HTTPS
+    # alb.ingress.kubernetes.io/ssl-redirect: "443"  # 無自訂域名，暫不啟用 HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/healthcheck-path: "/actuator/health"
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: "30"
     alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
@@ -267,7 +267,7 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "3"
 spec:
   rules:
-  - host: api.kimkao.io
+  - # host: api.kimkao.io  # TODO: 待設定新域名（kimkao.io 已停用）
     http:
       paths:
       - path: /
@@ -277,6 +277,6 @@ spec:
             name: genai-demo-service
             port:
               number: 80
-  tls:
-  - hosts:
-    - api.kimkao.io
+  # tls:  # TODO: 待設定新域名後啟用 TLS
+  # - hosts:
+  #   - api.kimkao.io

@@ -308,25 +308,25 @@ jobs:
           script: |
             const fs = require('fs');
             const path = './infrastructure/cost-estimation-report.json';
-            
+
             if (fs.existsSync(path)) {
               const costReport = JSON.parse(fs.readFileSync(path, 'utf8'));
               const monthlyCost = costReport.totalMonthlyCost.toFixed(2);
               const annualCost = (costReport.totalMonthlyCost * 12).toFixed(2);
-              
+
               const comment = `## 💰 Infrastructure Cost Estimation
-              
+
               **Monthly Cost**: $${monthlyCost}
               **Annual Cost**: $${annualCost}
-              
+
               ### Cost Breakdown by Stack:
-              ${Object.entries(costReport.stacks).map(([stack, data]) => 
+              ${Object.entries(costReport.stacks).map(([stack, data]) =>
                 `- **${stack}**: $${data.totalMonthlyCost.toFixed(2)}/month`
               ).join('\n')}
-              
+
               > 📊 Detailed cost report available in build artifacts
               `;
-              
+
               github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
@@ -410,7 +410,7 @@ jobs:
           npx cdk deploy --all --require-approval never \
             --context environment=${{ github.event.inputs.environment || 'development' }} \
             --context projectName=genai-demo-${{ github.event.inputs.environment || 'development' }} \
-            ${{ github.event.inputs.environment == 'production' && '--context domain=kimkao.io' || '' }}
+            ${{ '' }}
 
       - name: Post-deployment validation
         working-directory: infrastructure
@@ -418,7 +418,7 @@ jobs:
           # Validate stack deployment
           aws cloudformation describe-stacks \
             --stack-name genai-demo-${{ github.event.inputs.environment || 'development' }}-NetworkStack
-          
+
           # Test basic connectivity (if ALB is deployed)
           if aws elbv2 describe-load-balancers --names genai-demo-${{ github.event.inputs.environment || 'development' }}-alb 2>/dev/null; then
             ALB_DNS=$(aws elbv2 describe-load-balancers --names genai-demo-${{ github.event.inputs.environment || 'development' }}-alb --query 'LoadBalancers[0].DNSName' --output text)
@@ -517,21 +517,21 @@ jobs:
         with:
           script: |
             const comment = `## ⚠️ Infrastructure Drift Detected
-            
+
             This PR introduces changes to the infrastructure templates that differ from the current snapshots.
-            
+
             **What this means:**
             - The CDK synthesis output has changed
             - This could indicate intentional infrastructure changes or unintended drift
-            
+
             **Next steps:**
             1. Review the drift report in the build artifacts
             2. If changes are intentional, update snapshots with: \`npm run test:update-snapshots\`
             3. If changes are unintended, investigate and fix the root cause
-            
+
             > 📊 Detailed drift report available in build artifacts
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -627,7 +627,7 @@ jobs:
           # Count successful jobs
           SUCCESSFUL_JOBS=0
           TOTAL_JOBS=11
-          
+
           if [ "${{ needs.code-quality.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
           if [ "${{ needs.unit-tests.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
           if [ "${{ needs.integration-tests.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
@@ -639,9 +639,9 @@ jobs:
           if [ "${{ needs.comprehensive-validation.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
           if [ "${{ needs.drift-detection.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
           if [ "${{ needs.deploy.result }}" = "success" ]; then SUCCESSFUL_JOBS=$((SUCCESSFUL_JOBS + 1)); fi
-          
+
           SUCCESS_RATE=$((SUCCESSFUL_JOBS * 100 / TOTAL_JOBS))
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## 📈 Pipeline Metrics" >> $GITHUB_STEP_SUMMARY
           echo "- Success Rate: ${SUCCESS_RATE}% (${SUCCESSFUL_JOBS}/${TOTAL_JOBS})" >> $GITHUB_STEP_SUMMARY
@@ -656,12 +656,12 @@ jobs:
             const title = '❌ CDK Infrastructure Pipeline Failed';
             const body = `
             The CDK infrastructure validation pipeline has failed.
-            
+
             **Branch**: ${context.ref}
             **Commit**: ${context.sha.substring(0, 7)}
             **Workflow**: ${context.workflow}
             **Run ID**: ${context.runId}
-            
+
             **Failed Jobs:**
             - Code Quality: ${{ needs.code-quality.result }}
             - Unit Tests: ${{ needs.unit-tests.result }}
@@ -674,10 +674,10 @@ jobs:
             - Comprehensive Validation: ${{ needs.comprehensive-validation.result }}
             - Drift Detection: ${{ needs.drift-detection.result }}
             - Deployment: ${{ needs.deploy.result }}
-            
+
             Please check the workflow logs and artifacts for details.
             `;
-            
+
             // Create an issue for pipeline failures on main branch
             if (context.ref === 'refs/heads/main') {
               github.rest.issues.create({

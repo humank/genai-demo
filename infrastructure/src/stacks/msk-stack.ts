@@ -23,7 +23,7 @@ export interface MSKStackProps extends cdk.StackProps {
 
 /**
  * MSK Stack for Data Flow Tracking with Cross-Region Replication
- * 
+ *
  * Features:
  * - Multi-AZ MSK cluster with 3 brokers
  * - Auto-scaling and encryption at rest/transit
@@ -33,7 +33,7 @@ export interface MSKStackProps extends cdk.StackProps {
  * - Comprehensive security configuration
  * - MirrorMaker 2.0 for cross-region topic replication
  * - Message ordering guarantees and replication lag monitoring
- * 
+ *
  * Created: 2025年9月24日 下午2:34 (台北時間)
  * Updated: 2025年9月30日 下午2:34 (台北時間)
  * Task: 4.2 - MSK Cross-Region Message Synchronization
@@ -52,12 +52,12 @@ export class MSKStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: MSKStackProps) {
         super(scope, id, props);
 
-        const { 
-            environment, 
-            projectName, 
-            vpc, 
-            kmsKey, 
-            region, 
+        const {
+            environment,
+            projectName,
+            vpc,
+            kmsKey,
+            region,
             isPrimaryRegion = true,
             targetRegions = [],
             eksCluster,
@@ -99,9 +99,9 @@ export class MSKStack extends cdk.Stack {
 
         // Create MSK Cluster
         this.mskCluster = this.createMSKCluster(
-            vpc, 
-            environment, 
-            kmsKey, 
+            vpc,
+            environment,
+            kmsKey,
             isPrimaryRegion
         );
 
@@ -111,10 +111,10 @@ export class MSKStack extends cdk.Stack {
         // Create MirrorMaker 2.0 for cross-region replication if enabled
         if (crossRegionSyncEnabled && targetRegions.length > 0 && eksCluster) {
             this.setupMirrorMaker2(
-                environment, 
-                targetRegions, 
-                eksCluster, 
-                kmsKey, 
+                environment,
+                targetRegions,
+                eksCluster,
+                kmsKey,
                 isPrimaryRegion
             );
         }
@@ -190,9 +190,6 @@ export class MSKStack extends cdk.Stack {
         const role = new iam.Role(this, 'MSKServiceRole', {
             assumedBy: new iam.ServicePrincipal('kafka.amazonaws.com'),
             description: `MSK Service Role for ${environment} environment`,
-            managedPolicies: [
-                iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/MSKServiceRolePolicy'),
-            ],
         });
 
         // Add custom permissions for CloudWatch and X-Ray
@@ -261,10 +258,15 @@ export class MSKStack extends cdk.Stack {
      * Create MSK Configuration for optimal performance
      */
     private createMSKConfiguration(environment: string): msk.CfnConfiguration {
+        // Adjust replication factors based on environment broker count
+        const isDev = environment === 'development';
+        const replicationFactor = isDev ? 2 : 3;
+        const minInsyncReplicas = isDev ? 1 : 2;
+
         const configurationProperties = [
             'auto.create.topics.enable=false',
-            'default.replication.factor=3',
-            'min.insync.replicas=2',
+            `default.replication.factor=${replicationFactor}`,
+            `min.insync.replicas=${minInsyncReplicas}`,
             'num.partitions=12',
             'log.retention.hours=168', // 7 days
             'log.retention.bytes=1073741824', // 1GB per partition
@@ -275,14 +277,14 @@ export class MSKStack extends cdk.Stack {
             'replica.fetch.max.bytes=1048576', // 1MB
             'group.initial.rebalance.delay.ms=3000',
             'offsets.retention.minutes=10080', // 7 days
-            'transaction.state.log.replication.factor=3',
-            'transaction.state.log.min.isr=2',
+            `transaction.state.log.replication.factor=${replicationFactor}`,
+            `transaction.state.log.min.isr=${minInsyncReplicas}`,
         ].join('\n');
 
         return new msk.CfnConfiguration(this, 'MSKConfiguration', {
             name: `${this.stackName}-msk-config`,
             description: `MSK Configuration for ${environment} environment - Data Flow Tracking`,
-            kafkaVersionsList: ['2.8.1'],
+            kafkaVersionsList: ['3.7.x'],
             serverProperties: configurationProperties,
         });
     }
@@ -296,23 +298,33 @@ export class MSKStack extends cdk.Stack {
         kmsKey: kms.IKey,
         isPrimaryRegion: boolean
     ): msk.CfnCluster {
-        
-        // Get private subnets across AZs
-        const privateSubnets = vpc.privateSubnets.slice(0, 3);
-        
+
+        // Get environment-specific MSK configuration from context
+        const envConfig = this.node.tryGetContext('genai-demo:environments')?.[environment];
+        const mskConfig = envConfig?.msk || {};
+        const brokerInstanceType = mskConfig['broker-instance-type'] || 'kafka.t3.small';
+        const numberOfBrokers = mskConfig['number-of-brokers'] || 1;
+        const storageSize = mskConfig['storage-size'] || 20;
+
+        // Get private subnets — MSK requires at least 2 subnets (2 or 3 AZs)
+        const privateSubnets = vpc.privateSubnets.slice(0, 3); // Use up to 3 AZs
+        // MSK requires numberOfBrokerNodes to be a multiple of the number of AZs
+        const numAZs = privateSubnets.length;
+        const adjustedBrokerCount = Math.max(numberOfBrokers, numAZs);
+
         const cluster = new msk.CfnCluster(this, 'MSKCluster', {
             clusterName: `${this.stackName}-msk-cluster`,
-            kafkaVersion: '2.8.1',
-            numberOfBrokerNodes: 3,
-            
+            kafkaVersion: '3.7.x',
+            numberOfBrokerNodes: adjustedBrokerCount,
+
             // Broker node configuration
             brokerNodeGroupInfo: {
-                instanceType: 'kafka.m5.xlarge',
+                instanceType: brokerInstanceType,
                 clientSubnets: privateSubnets.map(subnet => subnet.subnetId),
                 securityGroups: [this.mskSecurityGroup.securityGroupId],
                 storageInfo: {
                     ebsStorageInfo: {
-                        volumeSize: 1000, // 1TB per broker
+                        volumeSize: storageSize,
                     },
                 },
             },
@@ -395,7 +407,7 @@ export class MSKStack extends cdk.Stack {
         // MSK Cluster Health Alarms
         // Note: CloudWatch alarms will be created in the observability stack
         // This is a placeholder for MSK-specific alarm configuration
-        
+
         // We'll extend the existing ObservabilityStack to include MSK alarms
         // rather than creating them here to maintain centralized monitoring
     }
@@ -415,8 +427,8 @@ export class MSKStack extends cdk.Stack {
 
         // Create MirrorMaker 2.0 configuration
         const mirrorMakerConfig = this.createMirrorMakerConfiguration(
-            environment, 
-            targetRegions, 
+            environment,
+            targetRegions,
             isPrimaryRegion
         );
 
@@ -773,17 +785,17 @@ checkpoints.interval.ms = 60000
                                     `
                                     # Download configuration from SSM
                                     aws ssm get-parameter --name "/msk/mirrormaker/${environment}/config" --query "Parameter.Value" --output text > /tmp/mirrormaker2.properties
-                                    
+
                                     # Wait for Kafka Connect to be ready
                                     while ! curl -f http://localhost:8083/connectors; do
                                         echo "Waiting for Kafka Connect to be ready..."
                                         sleep 10
                                     done
-                                    
+
                                     # Submit MirrorMaker 2.0 connectors
                                     echo "Submitting MirrorMaker 2.0 configuration..."
                                     # Configuration submission logic would go here
-                                    
+
                                     # Keep container running for monitoring
                                     tail -f /dev/null
                                     `,

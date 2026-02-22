@@ -51,7 +51,7 @@ export class CertificateStack extends cdk.Stack {
     }
 
     private lookupHostedZone(domain: string): route53.IHostedZone {
-        // Extract the root domain (e.g., kimkao.io from dev.kimkao.io)
+        // Extract the root domain (e.g., example.com from dev.example.com)
         const domainParts = domain.split('.');
         const rootDomain = domainParts.length > 2 ? domainParts.slice(-2).join('.') : domain;
 

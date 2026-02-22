@@ -11,7 +11,7 @@ graph TB
         MAIN[main branch]
         PR[Pull Requests]
     end
-    
+
     subgraph "CI Pipeline"
         BUILD[Build & Test]
         SECURITY[Security Scan]
@@ -19,27 +19,27 @@ graph TB
         PUSH[Push to ECR]
         UPDATE[Update Manifests]
     end
-    
+
     subgraph "GitOps"
         ARGOCD[ArgoCD Controller]
         SYNC[Auto Sync]
         APPS[Applications]
     end
-    
+
     subgraph "Deployment Strategies"
         BG[Blue-Green<br/>Backend]
         CANARY[Canary<br/>Frontends]
         ANALYSIS[Automated Analysis]
         ROLLBACK[Auto Rollback]
     end
-    
+
     subgraph "Target Environment"
         EKS[Amazon EKS]
         BACKEND[Backend Pods]
         CMC[CMC Frontend Pods]
         CONSUMER[Consumer Frontend Pods]
     end
-    
+
     GH --> BUILD
     BUILD --> DOCKER
     DOCKER --> PUSH
@@ -238,7 +238,7 @@ The system automatically triggers rollback when:
 
 #### ArgoCD Dashboard
 
-- **URL**: <https://argocd.kimkao.io> (or localhost:8080 with port-forward)
+- **URL**: https://localhost:8080 (使用 port-forward 存取，kimkao.io 域名已停用)
 - **Username**: admin
 - **Password**: Retrieved using setup script
 
@@ -323,7 +323,7 @@ sequenceDiagram
     participant Git as Git Repository
     participant ArgoCD as ArgoCD
     participant K8s as Kubernetes
-    
+
     Dev->>GH: Push to main branch
     GH->>CI: Trigger CI/CD pipeline
     CI->>CI: Run tests & security scans

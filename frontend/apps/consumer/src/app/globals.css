@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/*
+ * Consumer Design System — Soft Modern
+ * Primary: Indigo 600 (#4F46E5)
+ * Accent: Amber 500 (#F59E0B)
+ * Neutrals: Stone
+ * Border Radius: 12px (0.75rem)
+ * Light mode only — NO dark mode
+ */
+
+:root {
+    /* Primary: Indigo 600 */
+    --primary: 239 84% 67%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Accent: Amber 500 */
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 9%;
+
+    /* Neutrals: Stone */
+    --background: 60 9% 98%;
+    --foreground: 24 10% 10%;
+    --muted: 60 5% 96%;
+    --muted-foreground: 25 5% 45%;
+    --border: 20 6% 90%;
+    --input: 20 6% 90%;
+    --ring: 239 84% 67%;
+
+    /* Card */
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+
+    /* Secondary */
+    --secondary: 60 5% 96%;
+    --secondary-foreground: 24 10% 10%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border Radius: 12px */
+    --radius: 0.75rem;
+}
+
+* {
+    border-color: hsl(var(--border));
+}
+
+body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Soft Modern Utilities */
+.container-shop {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.soft-card {
+    @apply bg-white rounded-xl shadow-sm border border-stone-100 p-6;
+}
+
+.soft-card-hover {
+    @apply hover:shadow-md transition-shadow duration-200 cursor-pointer;
+}
+
+/* Animations */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+    animation: slide-up 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .animate-fade-in,
+    .animate-slide-up {
+        animation: none;
+    }
+}

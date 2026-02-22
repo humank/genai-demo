@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib';
+import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as elasticache from 'aws-cdk-lib/aws-elasticache';
 import * as logs from 'aws-cdk-lib/aws-logs';
-import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
 
@@ -21,7 +21,7 @@ export interface ElastiCacheStackProps extends cdk.StackProps {
 
 /**
  * ElastiCache Redis Cluster Stack with Global Datastore Support
- * 
+ *
  * This stack creates a Multi-AZ Redis Cluster with:
  * - High availability across multiple AZs
  * - Cross-region replication via Global Datastore
@@ -30,7 +30,7 @@ export interface ElastiCacheStackProps extends cdk.StackProps {
  * - Security groups and subnet groups
  * - CloudWatch monitoring and alerting
  * - Cache consistency monitoring
- * 
+ *
  * Requirements: 4.1.4 - Cross-region cache synchronization
  */
 export class ElastiCacheStack extends cdk.Stack {
@@ -79,7 +79,7 @@ export class ElastiCacheStack extends cdk.Stack {
 
     // Create parameter group for Redis optimization with Global Datastore support
     const redisParameterGroup = new elasticache.CfnParameterGroup(this, 'RedisParameterGroup', {
-      cacheParameterGroupFamily: 'redis7.x',
+      cacheParameterGroupFamily: 'redis7',
       description: 'Parameter group for Redis cluster with Global Datastore optimization',
       properties: {
         // Memory optimization
@@ -87,18 +87,8 @@ export class ElastiCacheStack extends cdk.Stack {
         'timeout': '300',
         // Connection optimization
         'tcp-keepalive': '60',
-        'tcp-backlog': '511',
-        // Persistence optimization for distributed locks and cross-region sync
-        'save': globalDatastoreEnabled ? '900 1 300 10 60 10000' : '900 1 300 10 60 10000',
-        'stop-writes-on-bgsave-error': 'no',
         // Replication optimization for Global Datastore
-        'repl-backlog-size': globalDatastoreEnabled ? '16mb' : '1mb',
-        'repl-timeout': '60',
-        // Global Datastore specific optimizations
-        ...(globalDatastoreEnabled && {
-          'replica-read-only': 'no', // Allow writes to replicas in Global Datastore
-          'cluster-enabled': 'no', // Global Datastore doesn't support cluster mode
-        }),
+        'repl-backlog-size': globalDatastoreEnabled ? '16777216' : '1048576',
       },
     });
 
@@ -114,7 +104,7 @@ export class ElastiCacheStack extends cdk.Stack {
       this.globalDatastore = new elasticache.CfnGlobalReplicationGroup(this, 'RedisGlobalDatastore', {
         globalReplicationGroupDescription: `Global Redis datastore for cross-region caching - ${props.environment}`,
         globalReplicationGroupIdSuffix: `global-redis-${props.environment}`,
-        
+
         // Primary region configuration
         members: [
           {
@@ -123,16 +113,16 @@ export class ElastiCacheStack extends cdk.Stack {
             role: 'PRIMARY',
           },
         ],
-        
+
         // Engine configuration
         engineVersion: '7.0',
-        cacheNodeType: 'cache.t3.micro',
-        
+        cacheNodeType: 'cache.t4g.micro',
+
         // Security configuration (encryption settings handled at cluster level)
-        
+
         // Automatic failover configuration
         automaticFailoverEnabled: true,
-        
+
         // Regional configurations will be added when secondary regions are deployed
       });
     }
@@ -141,44 +131,44 @@ export class ElastiCacheStack extends cdk.Stack {
     this.redisCluster = new elasticache.CfnReplicationGroup(this, 'RedisCluster', {
       replicationGroupDescription: `Redis cluster for distributed locking - ${props.environment}`,
       replicationGroupId: `redis-cluster-${props.environment}-${props.region}`,
-      
+
       // Global Datastore configuration
       ...(globalDatastoreEnabled && props.globalDatastoreId && !isPrimaryRegion && {
         globalReplicationGroupId: props.globalDatastoreId,
       }),
-      
+
       // Node configuration
-      cacheNodeType: 'cache.t3.micro', // Start with small instance, can be scaled up
+      cacheNodeType: 'cache.t4g.micro', // Smallest available in ap-east-2
       numCacheClusters: globalDatastoreEnabled ? 2 : 3, // Fewer nodes for Global Datastore to reduce costs
-      
+
       // Engine configuration
       engine: 'redis',
       engineVersion: '7.0',
       port: 6379,
-      
+
       // High availability configuration
       multiAzEnabled: true,
       automaticFailoverEnabled: true,
-      
+
       // Security configuration
       atRestEncryptionEnabled: true,
       transitEncryptionEnabled: true,
       authToken: globalDatastoreEnabled ? undefined : 'temp-auth-token-change-in-production', // Global Datastore manages auth
-      
+
       // Network configuration
       cacheSubnetGroupName: this.redisSubnetGroup.ref,
       securityGroupIds: [this.redisSecurityGroup.securityGroupId],
-      
+
       // Parameter group
       cacheParameterGroupName: redisParameterGroup.ref,
-      
+
       // Backup configuration (only for primary region in Global Datastore)
       ...((!globalDatastoreEnabled || isPrimaryRegion) && {
         snapshotRetentionLimit: 7,
         snapshotWindow: '03:00-05:00',
         preferredMaintenanceWindow: 'sun:05:00-sun:07:00',
       }),
-      
+
       // Logging configuration
       logDeliveryConfigurations: [
         {
@@ -192,10 +182,10 @@ export class ElastiCacheStack extends cdk.Stack {
           logType: 'slow-log',
         },
       ],
-      
+
       // Notification configuration
       notificationTopicArn: props.alertingTopic?.topicArn,
-      
+
       // Tags
       tags: [
         {

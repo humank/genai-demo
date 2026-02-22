@@ -1,7 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as elbv2 from 'aws-cdk-lib/aws-elasticloadbalancingv2';
-import * as elbv2Targets from 'aws-cdk-lib/aws-elasticloadbalancingv2-targets';
 import { Construct } from 'constructs';
 
 export interface ALBHealthCheckStackProps extends cdk.StackProps {
@@ -12,15 +11,15 @@ export interface ALBHealthCheckStackProps extends cdk.StackProps {
 
 /**
  * Application Load Balancer Health Check Stack
- * 
+ *
  * Configures ALB with health checks for EKS applications
- * 
+ *
  * Health Check Flow:
  * 1. ALB sends HTTP GET to /actuator/health
  * 2. Application responds with 200 OK if healthy
  * 3. ALB marks target as healthy/unhealthy based on response
  * 4. ALB routes traffic only to healthy targets
- * 
+ *
  * This is the THIRD layer of health checks:
  * - Layer 1: Spring Boot health indicators (application internal state)
  * - Layer 2: Kubernetes probes (container/pod health)
@@ -68,22 +67,22 @@ export class ALBHealthCheckStack extends cdk.Stack {
             targetType: elbv2.TargetType.IP, // For EKS pods
             targetGroupName: `genai-demo-${environment}-backend-tg`,
             deregistrationDelay: cdk.Duration.seconds(30), // Faster deregistration for faster deployments
-            
+
             // Health Check Configuration
             healthCheck: {
                 enabled: true,
                 path: '/actuator/health', // Spring Boot Actuator health endpoint
                 protocol: elbv2.Protocol.HTTP,
                 port: '8080',
-                
+
                 // Timing Configuration
                 interval: cdk.Duration.seconds(30), // Check every 30 seconds
                 timeout: cdk.Duration.seconds(5),   // Timeout after 5 seconds
-                
+
                 // Threshold Configuration
                 healthyThresholdCount: 2,   // 2 consecutive successes = healthy
                 unhealthyThresholdCount: 2, // 2 consecutive failures = unhealthy
-                
+
                 // Success Criteria
                 healthyHttpCodes: '200',    // Only 200 is considered healthy
             },
@@ -99,31 +98,33 @@ export class ALBHealthCheckStack extends cdk.Stack {
 
     /**
      * Create Frontend Target Group with Health Check
+     * Note: This target group is for the Consumer frontend (Next.js 15, port 3000).
+     * CMC frontend (Next.js 16, port 3002) uses a separate K8s Rollout with its own target group.
      */
     private createFrontendTargetGroup(vpc: ec2.IVpc, environment: string): elbv2.ApplicationTargetGroup {
         const targetGroup = new elbv2.ApplicationTargetGroup(this, 'FrontendTargetGroup', {
             vpc,
-            port: 3000, // Next.js default port
+            port: 3000, // Consumer frontend (Next.js 15)
             protocol: elbv2.ApplicationProtocol.HTTP,
             targetType: elbv2.TargetType.IP,
             targetGroupName: `genai-demo-${environment}-frontend-tg`,
             deregistrationDelay: cdk.Duration.seconds(30),
-            
+
             // Health Check Configuration
             healthCheck: {
                 enabled: true,
-                path: '/health', // Frontend health endpoint
+                path: '/api/health', // Next.js API health endpoint
                 protocol: elbv2.Protocol.HTTP,
                 port: '3000',
-                
+
                 // Timing Configuration
                 interval: cdk.Duration.seconds(30),
                 timeout: cdk.Duration.seconds(5),
-                
+
                 // Threshold Configuration
                 healthyThresholdCount: 2,
                 unhealthyThresholdCount: 2,
-                
+
                 // Success Criteria
                 healthyHttpCodes: '200',
             },
@@ -131,7 +132,7 @@ export class ALBHealthCheckStack extends cdk.Stack {
 
         cdk.Tags.of(targetGroup).add('Environment', environment);
         cdk.Tags.of(targetGroup).add('Application', 'frontend');
-        cdk.Tags.of(targetGroup).add('HealthCheckPath', '/health');
+        cdk.Tags.of(targetGroup).add('HealthCheckPath', '/api/health');
 
         return targetGroup;
     }
@@ -206,7 +207,7 @@ export class ALBHealthCheckStack extends cdk.Stack {
                     unhealthyThreshold: 2,
                 },
                 frontend: {
-                    path: '/health',
+                    path: '/api/health',
                     port: 3000,
                     interval: 30,
                     timeout: 5,

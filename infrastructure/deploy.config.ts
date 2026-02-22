@@ -11,22 +11,26 @@ export const deploymentConfigs: Record<string, DeploymentConfig> = {
     development: {
         environment: 'development',
         region: 'ap-east-2',
-        domain: 'dev.kimkao.io'
+        account: '584518143473',
+        // domain: 'dev.kimkao.io' — kimkao.io 域名已停用，待取得新域名後再啟用
     },
     staging: {
         environment: 'staging',
         region: 'ap-east-2',
-        domain: 'staging.kimkao.io'
+        account: '584518143473',
+        // domain: 'staging.kimkao.io' — kimkao.io 域名已停用
     },
     production: {
         environment: 'production',
         region: 'ap-east-2',
-        domain: 'kimkao.io'
+        account: '584518143473',
+        // domain: 'kimkao.io' — kimkao.io 域名已停用
     },
     'production-dr': {
         environment: 'production-dr',
         region: 'ap-northeast-1',
-        domain: 'dr.kimkao.io'
+        account: '584518143473',
+        // domain: 'dr.kimkao.io' — kimkao.io 域名已停用
     }
 };
 

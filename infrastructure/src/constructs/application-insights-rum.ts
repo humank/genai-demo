@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
-import * as rum from 'aws-cdk-lib/aws-rum';
-import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as rum from 'aws-cdk-lib/aws-rum';
 import { Construct } from 'constructs';
 
 export interface ApplicationInsightsRumProps {
@@ -41,7 +41,7 @@ export interface ApplicationInsightsRumProps {
 
 /**
  * Construct for AWS CloudWatch RUM (Real User Monitoring)
- * 
+ *
  * This construct creates:
  * - CloudWatch RUM App Monitor for frontend monitoring
  * - Cognito Identity Pool for unauthenticated access
@@ -121,35 +121,35 @@ export class ApplicationInsightsRum extends Construct {
     this.appMonitor = new rum.CfnAppMonitor(this, 'AppMonitor', {
       name: props.appMonitorName,
       domain: props.domain,
-      
+
       // App Monitor Configuration
       appMonitorConfiguration: {
         // Allow cookies for session tracking
         allowCookies: true,
-        
+
         // Enable session recording
         enableXRay: enableXRay,
-        
+
         // Session sample rate (10% by default for cost optimization)
         sessionSampleRate: sessionSampleRate,
-        
+
         // Telemetry configuration
         telemetries: [
           'errors',      // JavaScript errors
           'performance', // Core Web Vitals and performance metrics
           'http',        // HTTP requests
         ],
-        
+
         // Identity pool configuration
         identityPoolId: this.identityPool.ref,
         guestRoleArn: this.unauthenticatedRole.roleArn,
-        
+
         // Excluded pages (optional - can be configured later)
         excludedPages: [],
-        
+
         // Included pages (optional - can be configured later)
         includedPages: [],
-        
+
         // Favorite pages for detailed monitoring
         favoritePages: [
           '/',
@@ -158,18 +158,18 @@ export class ApplicationInsightsRum extends Construct {
           '/checkout',
           '/orders',
         ],
-        
+
         // Session recording configuration
         ...(enableSessionRecording && {
           sessionSampleRate: sessionSampleRate,
         }),
       },
-      
+
       // Custom events configuration
       customEvents: {
         status: 'ENABLED',
       },
-      
+
       // Tags
       tags: props.tags ? Object.entries(props.tags).map(([key, value]) => ({
         key,
@@ -177,23 +177,23 @@ export class ApplicationInsightsRum extends Construct {
       })) : undefined,
     });
 
-    // Output the App Monitor ID and configuration
+    // Output the App Monitor ID and configuration (use id in export name to avoid duplicates)
     new cdk.CfnOutput(this, 'AppMonitorId', {
       value: this.appMonitor.ref,
       description: 'CloudWatch RUM App Monitor ID',
-      exportName: `${cdk.Stack.of(this).stackName}-RumAppMonitorId`,
+      exportName: `${cdk.Stack.of(this).stackName}-${id}-RumAppMonitorId`,
     });
 
     new cdk.CfnOutput(this, 'IdentityPoolId', {
       value: this.identityPool.ref,
       description: 'Cognito Identity Pool ID for RUM',
-      exportName: `${cdk.Stack.of(this).stackName}-RumIdentityPoolId`,
+      exportName: `${cdk.Stack.of(this).stackName}-${id}-RumIdentityPoolId`,
     });
 
     new cdk.CfnOutput(this, 'GuestRoleArn', {
       value: this.unauthenticatedRole.roleArn,
       description: 'IAM Role ARN for unauthenticated RUM access',
-      exportName: `${cdk.Stack.of(this).stackName}-RumGuestRoleArn`,
+      exportName: `${cdk.Stack.of(this).stackName}-${id}-RumGuestRoleArn`,
     });
 
     // Add tags to all resources

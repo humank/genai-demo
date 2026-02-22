@@ -13,7 +13,7 @@ import { Construct } from 'constructs';
 /**
  * Stack for creating CloudWatch alarms and SNS topics for health check alerting.
  * Enhanced with multi-region alerting support for Active-Active architecture.
- * 
+ *
  * Implements requirement 8.3: Set up CloudWatch alarms for critical metrics
  * Implements requirement 8.4: Create SNS topics and subscriptions for alerting
  * Implements requirement 4.1.5: Multi-region alerting system with intelligent deduplication
@@ -63,11 +63,11 @@ export class AlertingStack extends cdk.Stack {
 
       // Create alert deduplication Lambda function
       this.alertDeduplicationFunction = this.createAlertDeduplicationLambda(
-        environment, 
-        applicationName, 
+        environment,
+        applicationName,
         multiRegionConfig
       );
-      
+
       this.setupMultiRegionAlerting(environment, applicationName, multiRegionConfig);
     }
 
@@ -80,8 +80,9 @@ export class AlertingStack extends cdk.Stack {
     // Create CloudWatch Alarms for infrastructure metrics
     this.createInfrastructureAlarms(environment, applicationName);
 
-    // Create CloudWatch Alarms for Aurora PostgreSQL deadlock monitoring
-    this.createAuroraDeadlockAlarms(environment, applicationName);
+    // NOTE: Aurora deadlock alarms are created in RdsStack.createMonitoringAndAlarms()
+    // where the actual Aurora cluster identifier is available.
+    // This avoids EarlyValidation failures from referencing non-existent DB instances.
 
     // Create CloudWatch Dashboard
     this.createHealthCheckDashboard(environment, applicationName);
@@ -104,8 +105,8 @@ export class AlertingStack extends cdk.Stack {
    * Set up multi-region alerting system with intelligent deduplication
    */
   private setupMultiRegionAlerting(
-    environment: string, 
-    applicationName: string, 
+    environment: string,
+    applicationName: string,
     multiRegionConfig: MultiRegionAlertingConfig
   ): void {
     // Resources are now created in constructor
@@ -179,12 +180,12 @@ def handler(event, context):
         else:
             # Direct invocation
             process_alert(event, None)
-            
+
         return {
             'statusCode': 200,
             'body': json.dumps('Alert deduplication completed successfully')
         }
-        
+
     except Exception as e:
         print(f"Error in alert deduplication: {str(e)}")
         return {
@@ -194,20 +195,20 @@ def handler(event, context):
 
 def process_alert(alert_data, sns_data):
     """Process individual alert for deduplication"""
-    
+
     # Extract alert information
     alert_type = alert_data.get('AlarmName', 'Unknown')
     region = alert_data.get('Region', 'Unknown')
     metric_name = alert_data.get('MetricName', 'Unknown')
     namespace = alert_data.get('Namespace', 'Unknown')
-    
+
     # Create alert key for deduplication
     alert_key = create_alert_key(alert_type, region, metric_name, namespace)
-    
+
     # Check for existing similar alerts
     current_time = int(time.time())
     cutoff_time = current_time - (time_window * 60)
-    
+
     try:
         # Query for similar alerts in time window
         response = table.query(
@@ -218,9 +219,9 @@ def process_alert(alert_data, sns_data):
                 ':cutoff': cutoff_time
             }
         )
-        
+
         existing_alerts = response.get('Items', [])
-        
+
         if existing_alerts:
             # Alert already exists, update count
             update_alert_count(alert_key, current_time, alert_data)
@@ -228,11 +229,11 @@ def process_alert(alert_data, sns_data):
         else:
             # New alert, store and potentially escalate
             store_new_alert(alert_key, current_time, alert_data)
-            
+
             # Check if this requires cross-region escalation
             if should_escalate_to_global(alert_data, region):
                 escalate_to_global_alert(alert_data, region)
-                
+
     except Exception as e:
         print(f"Error processing alert {alert_key}: {str(e)}")
         # If deduplication fails, let the alert through
@@ -246,7 +247,7 @@ def create_alert_key(alert_type, region, metric_name, namespace):
 def store_new_alert(alert_key, timestamp, alert_data):
     """Store new alert in deduplication table"""
     ttl = timestamp + (24 * 60 * 60)  # 24 hours TTL
-    
+
     table.put_item(
         Item={
             'alertKey': alert_key,
@@ -268,25 +269,25 @@ def update_alert_count(alert_key, timestamp, alert_data):
 
 def should_escalate_to_global(alert_data, region):
     """Determine if alert should be escalated to global level"""
-    
+
     # Escalate if it's a regional failure
     if 'regional-health' in alert_data.get('AlarmName', '').lower():
         return True
-        
+
     # Escalate if it's a cross-region sync failure
     if 'cross-region' in alert_data.get('AlarmName', '').lower():
         return True
-        
+
     # Escalate if multiple regions are affected
     affected_regions = count_affected_regions(alert_data.get('AlarmName', ''))
     if affected_regions >= 2:
         return True
-        
+
     return False
 
 def escalate_to_global_alert(alert_data, region):
     """Escalate alert to global level"""
-    
+
     global_message = {
         'AlertType': 'GLOBAL_ESCALATION',
         'OriginalAlert': alert_data,
@@ -295,13 +296,13 @@ def escalate_to_global_alert(alert_data, region):
         'Severity': 'CRITICAL',
         'Message': f"Regional alert escalated to global level from {region}"
     }
-    
+
     sns.publish(
         TopicArn=global_topic_arn,
         Subject=f"GLOBAL ALERT: Regional Issue in {region}",
         Message=json.dumps(global_message, indent=2)
     )
-    
+
     # Send custom metric for global escalation
     cloudwatch.put_metric_data(
         Namespace='GenAIDemo/MultiRegion/Alerting',
@@ -444,7 +445,7 @@ import os
     multiRegionConfig: MultiRegionAlertingConfig
   ): void {
     const primaryRegion = multiRegionConfig.primaryRegion;
-    
+
     multiRegionConfig.regions.forEach(targetRegion => {
       if (targetRegion !== primaryRegion) {
         // Aurora Global Database replication lag alarm
@@ -545,15 +546,15 @@ def handler(event, context):
     try:
         # Check current alarm states across regions
         failed_regions = check_regional_health()
-        
+
         if len(failed_regions) >= failure_threshold:
             escalate_to_global(failed_regions)
-            
+
         # Check for cross-region sync failures
         sync_failures = check_cross_region_sync()
         if sync_failures:
             escalate_sync_failures(sync_failures)
-            
+
         return {
             'statusCode': 200,
             'body': json.dumps({
@@ -562,7 +563,7 @@ def handler(event, context):
                 'escalated': len(failed_regions) >= failure_threshold
             })
         }
-        
+
     except Exception as e:
         print(f"Error in alert escalation: {str(e)}")
         return {
@@ -573,31 +574,31 @@ def handler(event, context):
 def check_regional_health():
     """Check health status of all regions"""
     failed_regions = []
-    
+
     for region in regions:
         try:
             # Check regional health alarms
             regional_cloudwatch = boto3.client('cloudwatch', region_name=region)
-            
+
             response = regional_cloudwatch.describe_alarms(
                 AlarmNamePrefix=f'genai-demo-regional-health-{region}',
                 StateValue='ALARM'
             )
-            
+
             if response['MetricAlarms']:
                 failed_regions.append(region)
-                
+
         except Exception as e:
             print(f"Error checking region {region}: {str(e)}")
             # Assume region is failed if we can't check it
             failed_regions.append(region)
-            
+
     return failed_regions
 
 def check_cross_region_sync():
     """Check cross-region synchronization status"""
     sync_failures = []
-    
+
     for region in regions:
         if region != primary_region:
             try:
@@ -606,22 +607,22 @@ def check_cross_region_sync():
                     AlarmNamePrefix=f'genai-demo-aurora-replication-lag-{primary_region}-to-{region}',
                     StateValue='ALARM'
                 )
-                
+
                 if response['MetricAlarms']:
                     sync_failures.append({
                         'source': primary_region,
                         'target': region,
                         'type': 'replication_lag'
                     })
-                    
+
             except Exception as e:
                 print(f"Error checking sync for {region}: {str(e)}")
-                
+
     return sync_failures
 
 def escalate_to_global(failed_regions):
     """Escalate regional failures to global alert"""
-    
+
     escalation_message = {
         'AlertType': 'GLOBAL_REGIONAL_FAILURE',
         'FailedRegions': failed_regions,
@@ -636,13 +637,13 @@ def escalate_to_global(failed_regions):
             'Consider traffic rerouting'
         ]
     }
-    
+
     sns.publish(
         TopicArn=global_topic_arn,
         Subject=f"CRITICAL: Multiple Regional Failures Detected ({len(failed_regions)}/{len(regions)} regions)",
         Message=json.dumps(escalation_message, indent=2)
     )
-    
+
     # Send custom metric
     cloudwatch.put_metric_data(
         Namespace='GenAIDemo/MultiRegion/Alerting',
@@ -660,7 +661,7 @@ def escalate_to_global(failed_regions):
 
 def escalate_sync_failures(sync_failures):
     """Escalate cross-region sync failures"""
-    
+
     escalation_message = {
         'AlertType': 'GLOBAL_SYNC_FAILURE',
         'SyncFailures': sync_failures,
@@ -673,7 +674,7 @@ def escalate_sync_failures(sync_failures):
             'Consider manual failover if needed'
         ]
     }
-    
+
     sns.publish(
         TopicArn=global_topic_arn,
         Subject=f"HIGH: Cross-Region Synchronization Failures Detected",

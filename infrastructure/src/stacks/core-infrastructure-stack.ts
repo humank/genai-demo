@@ -30,9 +30,15 @@ export class CoreInfrastructureStack extends cdk.Stack {
         super(scope, id, props);
 
         const { environment, projectName, region, isPrimaryRegion = true } = props;
-        
+
+        // Abbreviate environment name for AWS resources with 32-char name limits
+        const envShort: Record<string, string> = { development: 'dev', staging: 'stg', production: 'prd', 'production-dr': 'dr' };
+        const envAbbr = envShort[environment] || environment.substring(0, 3);
+
         // Store region and primary region flag for cross-region configuration
         this.region = region || 'ap-east-2';
+        // Abbreviate region for resource names (ap-east-2 → ape2)
+        const regionShort = this.region.replace(/^(.).*-(.).*-(\d)$/, '$1$2$3');
         this.isPrimaryRegion = isPrimaryRegion;
 
         // Apply common tags for cross-region identification
@@ -49,7 +55,7 @@ export class CoreInfrastructureStack extends cdk.Stack {
         // Create cross-region target groups with intelligent routing
         // Primary target group for local region traffic
         this.primaryTargetGroup = new elbv2.ApplicationTargetGroup(this, 'PrimaryTargetGroup', {
-            targetGroupName: `${projectName}-${environment}-pri-${this.region}`,
+            targetGroupName: `${projectName}-${envAbbr}-pri-${regionShort}`,
             vpc: props.vpc,
             port: 8080,
             protocol: elbv2.ApplicationProtocol.HTTP,
@@ -68,7 +74,7 @@ export class CoreInfrastructureStack extends cdk.Stack {
 
         // Secondary target group for failover scenarios
         this.secondaryTargetGroup = new elbv2.ApplicationTargetGroup(this, 'SecondaryTargetGroup', {
-            targetGroupName: `${projectName}-${environment}-sec-${this.region}`,
+            targetGroupName: `${projectName}-${envAbbr}-sec-${regionShort}`,
             vpc: props.vpc,
             port: 8080,
             protocol: elbv2.ApplicationProtocol.HTTP,
@@ -87,7 +93,7 @@ export class CoreInfrastructureStack extends cdk.Stack {
 
         // Cross-region target group for inter-region traffic
         this.crossRegionTargetGroup = new elbv2.ApplicationTargetGroup(this, 'CrossRegionTargetGroup', {
-            targetGroupName: `${projectName}-${environment}-xr-${this.region}`,
+            targetGroupName: `${projectName}-${envAbbr}-xr-${regionShort}`,
             vpc: props.vpc,
             port: 8080,
             protocol: elbv2.ApplicationProtocol.HTTP,
@@ -150,8 +156,11 @@ export class CoreInfrastructureStack extends cdk.Stack {
      * Create enhanced ALB with cross-region support
      */
     private createCrossRegionALB(props: CoreInfrastructureStackProps, projectName: string, environment: string): elbv2.ApplicationLoadBalancer {
+        const envShortMap: Record<string, string> = { development: 'dev', staging: 'stg', production: 'prd', 'production-dr': 'dr' };
+        const ea = envShortMap[environment] || environment.substring(0, 3);
+        const rs = this.region.replace(/^(.).*-(.).*-(\d)$/, '$1$2$3');
         const loadBalancer = new elbv2.ApplicationLoadBalancer(this, 'ApplicationLoadBalancer', {
-            loadBalancerName: `${projectName}-${environment}-alb-${this.region}`,
+            loadBalancerName: `${projectName}-${ea}-alb-${rs}`,
             vpc: props.vpc,
             internetFacing: true,
             securityGroup: props.securityGroups.alb,
@@ -422,7 +431,7 @@ export class CoreInfrastructureStack extends cdk.Stack {
         });
 
         // Create CloudWatch alarms for traffic overflow detection
-        
+
         // Alarm 1: High request count indicating potential overflow
         const highRequestCountAlarm = new cdk.aws_cloudwatch.Alarm(this, 'HighRequestCountAlarm', {
             alarmName: `${projectName}-${environment}-high-request-count-${this.region}`,

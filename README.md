@@ -1,8 +1,8 @@
 # Enterprise E-Commerce Platform
 
 > **A Living Example of Software Architecture Excellence with Production-Grade Digital Resilience**
-> 
-> Demonstrating Rozanski & Woods Methodology, Domain-Driven Design, 
+>
+> Demonstrating Rozanski & Woods Methodology, Domain-Driven Design,
 > and Active-Active Multi-Region Architecture in a Battle-Tested System
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://openjdk.java.net/)
@@ -88,7 +88,7 @@ This is not just another e-commerce platform. It's a **comprehensive demonstrati
 
 | Category | Metric | Status |
 |----------|--------|--------|
-| **CDK Stacks** | 18 stacks | ✅ Coordinated |
+| **CDK Stacks** | 19 stacks | ✅ Coordinated |
 | **Infrastructure Tests** | 103 tests | ✅ 15.8s execution |
 | **Test Coverage** | 100% core infra | ✅ Validated |
 | **Deployment Time** | <15 min | ✅ Automated |
@@ -265,12 +265,12 @@ Additional Investment for Resilience:
 - **Positive ROI**: For companies with $50M+ annual revenue
 - **Intangibles**: Customer trust, compliance, competitive advantage (not quantified)
 
-📊 **[Complete Cost Analysis](docs/DIGITAL-RESILIENCE-DEEP-DIVE.md#cost-analysis)** - Detailed breakdown with scenarios and recommendations         
+📊 **[Complete Cost Analysis](docs/DIGITAL-RESILIENCE-DEEP-DIVE.md#cost-analysis)** - Detailed breakdown with scenarios and recommendations
 
 ### 🎯 Technical Implementation Highlights
 
 **Infrastructure as Code (AWS CDK)**:
-- **18 Coordinated Stacks** for complete multi-region deployment
+- **19 Coordinated Stacks** for complete multi-region deployment (含 Frontend ECR)
 - **103 Infrastructure Tests** ensuring deployment quality (15.8s execution)
 - **100% Test Coverage** on core infrastructure components
 - **Automated Deployment** with rollback capabilities
@@ -328,19 +328,19 @@ graph TB
     subgraph Global["🌐 Global Layer"]
         DNS["Route 53 DNS<br/>Intelligent Traffic Management"]
     end
-    
+
     subgraph Taiwan["🇹🇼 Taiwan Region (ap-east-2)<br/>Primary - 60% Traffic"]
         TW_APP["EKS Cluster<br/>5 nodes × 3 AZs"]
         TW_DB["Aurora Global DB<br/>Primary Writer"]
         TW_CACHE["ElastiCache Global"]
     end
-    
+
     subgraph Japan["🇯🇵 Japan Region (ap-northeast-1)<br/>Secondary - 40% Traffic"]
         JP_APP["EKS Cluster<br/>5 nodes × 3 AZs"]
         JP_DB["Aurora Global DB<br/>Write Forwarding"]
         JP_CACHE["ElastiCache Global"]
     end
-    
+
     DNS --> TW_APP
     DNS --> JP_APP
     TW_APP --> TW_DB
@@ -349,7 +349,7 @@ graph TB
     JP_APP --> JP_CACHE
     TW_DB -.->|"< 1s Replication"| JP_DB
     TW_CACHE -.->|"< 1s Replication"| JP_CACHE
-    
+
     style Global fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
     style Taiwan fill:#fff4e1,stroke:#ff9900,stroke-width:3px
     style Japan fill:#f0fff4,stroke:#00cc66,stroke-width:3px
@@ -478,7 +478,7 @@ Generic Domains:
 
 ### Prerequisites
 
-- Java 21+, Gradle 8.x, Docker, Node.js 18+
+- Java 21+, Gradle 8.x, Docker, Node.js 20+, pnpm 9.x
 
 ### 1️⃣ Clone & Setup
 
@@ -488,18 +488,28 @@ cd genai-demo
 make dev-setup  # One-command setup
 ```
 
-### 2️⃣ Start Services
+### 2️⃣ Start Backend Services
 
 ```bash
 docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 ./gradlew :app:bootRun      # Start application
 ```
 
-### 3️⃣ Verify
+### 3️⃣ Start Frontend (Monorepo)
 
-- 🌐 **API**: http://localhost:8080
+```bash
+cd frontend
+pnpm install                # Install dependencies
+pnpm dev                    # Start all frontend apps
+```
+
+### 4️⃣ Verify
+
+- 🌐 **Backend API**: http://localhost:8080
 - 📚 **Swagger UI**: http://localhost:8080/swagger-ui.html
 - ✅ **Health Check**: http://localhost:8080/actuator/health
+- 🖥️ **CMC 管理後台**: http://localhost:3002
+- 🛒 **Consumer 應用**: http://localhost:3000
 
 **📖 Detailed Setup**: See [Development Setup Guide](docs/viewpoints/development/setup/README.md)
 
@@ -658,18 +668,24 @@ docker-compose up -d        # Start dependencies (PostgreSQL, Redis)
 | Category | Technology | Purpose |
 |----------|-----------|---------|
 | **Cloud Provider** | AWS | Cloud infrastructure |
-| **IaC** | AWS CDK (TypeScript) | Infrastructure as code |
+| **IaC** | AWS CDK (TypeScript) | Infrastructure as code (含 Frontend ECR Stack) |
 | **Orchestration** | Amazon EKS | Kubernetes management |
 | **CI/CD** | GitHub Actions + ArgoCD | Continuous deployment |
 | **Monitoring** | CloudWatch + X-Ray + Grafana | Observability |
 | **Chaos Engineering** | AWS FIS + Chaos Mesh | Resilience testing |
 
-### Frontend
+### Frontend (Monorepo)
 
 | Application | Technology | Purpose |
 |-------------|-----------|---------|
-| **CMC Management** | Next.js 14 + React 18 + TypeScript | Admin console |
-| **Consumer App** | Angular 18 + TypeScript | Customer-facing app |
+| **Monorepo 工具** | Turborepo 2.x + pnpm 9.x | 建置管理與快取 |
+| **CMC 管理後台** | Next.js 16 + React 19 + TypeScript | 管理儀表板 (port 3002) |
+| **Consumer 消費者應用** | Next.js 15 + React 19 + TypeScript | 消費者購物介面 (port 3000) |
+| **共用 UI 元件** | shadcn/ui + Radix UI + Tailwind CSS 4 | @repo/ui 共用元件庫 |
+| **共用 API 客戶端** | Axios + TanStack React Query 5 | @repo/api-client |
+| **E2E 測試** | Playwright | 端對端測試 |
+
+> 📖 前端 Monorepo 詳細文件請參考 [frontend/README.md](frontend/README.md)
 
 ---
 
@@ -743,21 +759,35 @@ docs/
 ### Common Development Tasks
 
 ```bash
-# Run tests
+# Backend tests
 ./gradlew :app:test              # Unit tests
 ./gradlew :app:cucumber          # BDD tests
 ./gradlew :app:jacocoTestReport  # Coverage report
 
-# Run application
+# Backend application
 ./gradlew :app:bootRun           # Start application
 
-# Build
+# Backend build
 ./gradlew :app:build             # Build application
+
+# Frontend (from frontend/ directory)
+cd frontend
+pnpm install                     # Install dependencies
+pnpm dev                         # Start all frontend apps
+pnpm build                       # Build all packages & apps
+pnpm type-check                  # Type checking
+pnpm e2e                         # E2E tests
 
 # Deploy
 cd infrastructure
 npm run deploy:staging           # Deploy to staging
 npm run deploy:production        # Deploy to production
+
+# Frontend Deploy (建置 Docker → 推送 ECR → EKS Canary 部署)
+./deploy-frontend.sh -e development          # 部署至開發環境
+./deploy-frontend.sh -e staging              # 部署至 Staging
+./deploy-frontend.sh -e production -a cmc    # 僅部署 CMC 至 Production
+./deploy-frontend.sh --dry-run               # 預覽部署指令
 ```
 
 ---
@@ -874,7 +904,7 @@ All tests are automated with AWS Fault Injection Simulator and Chaos Mesh, with 
 **Learn More**: [Chaos Engineering Guide](docs/perspectives/availability/chaos-engineering.md)
 </details>
 
-**More Questions?** 
+**More Questions?**
 - Check our [Full FAQ](docs/FAQ.md)
 - Ask in [GitHub Discussions](https://github.com/humank/genai-demo/discussions)
 - Email: yikaikao@gmail.com
@@ -896,12 +926,25 @@ All tests are automated with AWS Fault Injection Simulator and Chaos Mesh, with 
 │       └── resources/features/  # BDD feature files (28+)
 │
 ├── infrastructure/              # AWS CDK infrastructure
-│   ├── src/stacks/             # 18 CDK stack definitions
+│   ├── src/stacks/             # 19 CDK stack definitions (含 Frontend ECR)
 │   ├── test/                   # 103 infrastructure tests
 │   └── docs/                   # Infrastructure documentation
 │
-├── cmc-frontend/               # Customer management console (Next.js)
-├── consumer-frontend/          # Consumer app (Angular)
+├── cmc-frontend/               # (Legacy) 原 CMC 前端，已遷移至 frontend/apps/cmc/
+├── consumer-frontend/          # (Legacy) 原 Consumer 前端，已遷移至 frontend/apps/consumer/
+│
+├── frontend/                   # 🆕 前端 Monorepo (Turborepo + pnpm)
+│   ├── apps/cmc/              # CMC 管理後台 (Next.js 16 + React 19)
+│   ├── apps/consumer/         # Consumer 消費者應用 (Next.js 15 + React 19)
+│   ├── packages/ui/           # @repo/ui 共用 UI 元件
+│   ├── packages/api-client/   # @repo/api-client 共用 API 客戶端
+│   ├── packages/config/       # @repo/config 共用設定
+│   ├── e2e/                   # Playwright E2E 測試
+│   ├── Dockerfile.cmc         # CMC Docker 多階段建置
+│   └── Dockerfile.consumer    # Consumer Docker 多階段建置
+│
+├── deploy-frontend.sh          # 🆕 前端一鍵部署腳本 (建置→ECR→EKS Canary)
+│
 ├── docs/                       # Documentation
 │   ├── viewpoints/             # 7 architecture viewpoints
 │   ├── perspectives/           # 8 quality perspectives
@@ -941,5 +984,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Built with ❤️ using modern software engineering practices and battle-tested in production**
 
-**Last Updated**: 2025-12-14
-
+**Last Updated**: 2026-02-21

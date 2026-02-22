@@ -1,11 +1,10 @@
-import * as cdk from 'aws-cdk-lib';
-import * as eks from 'aws-cdk-lib/aws-eks';
-import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as logs from 'aws-cdk-lib/aws-logs';
-import { CfnOutput } from 'aws-cdk-lib';
 import { KubectlV28Layer } from '@aws-cdk/lambda-layer-kubectl-v28';
+import * as cdk from 'aws-cdk-lib';
+import { CfnOutput } from 'aws-cdk-lib';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as eks from 'aws-cdk-lib/aws-eks';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 export interface EKSStackProps extends cdk.StackProps {
@@ -18,10 +17,10 @@ export interface EKSStackProps extends cdk.StackProps {
 
 /**
  * Complete EKS Stack for Multi-Region Active-Active Architecture
- * 
+ *
  * Primary Region: Taipei (ap-east-2)
  * Secondary Region: Tokyo (ap-northeast-1)
- * 
+ *
  * Features:
  * - EKS Cluster with managed node groups
  * - KEDA for event-driven autoscaling
@@ -42,7 +41,7 @@ export class EKSStack extends cdk.Stack {
         super(scope, id, props);
 
         const { environment, projectName, vpc, region, isPrimaryRegion = true } = props;
-        
+
         // Store region and primary region flag for cross-region configuration
         this.region = region || 'ap-east-2';
         this.isPrimaryRegion = isPrimaryRegion;
@@ -64,13 +63,44 @@ export class EKSStack extends cdk.Stack {
         // this.createApplicationServiceAccount(projectName, environment, region);
 
         // Install KEDA for event-driven autoscaling with cross-region support
-        this.installKEDA();
+        this.installKEDA(environment);
 
         // Configure Cluster Autoscaler with cross-region awareness
         this.configureClusterAutoscaler(projectName, environment);
 
-        // Configure cross-region service mesh networking
-        this.configureCrossRegionNetworking(projectName, environment);
+        // Cross-region features (Istio, service mesh, intelligent routing) are only
+        // enabled for staging/production environments. Development doesn't need them
+        // and they require CRDs that must be installed in a specific order.
+        const enableCrossRegion = environment !== 'development';
+        if (enableCrossRegion) {
+            // Configure cross-region service mesh networking
+            this.configureCrossRegionNetworking(projectName, environment);
+        }
+
+        // Always create stack outputs (moved out of configureCrossRegionNetworking)
+        new CfnOutput(this, 'EKSClusterName', {
+            value: this.cluster.clusterName,
+            description: 'EKS Cluster Name',
+            exportName: `${projectName}-${environment}-eks-cluster-name-${this.region}`,
+        });
+
+        new CfnOutput(this, 'EKSClusterArn', {
+            value: this.cluster.clusterArn,
+            description: 'EKS Cluster ARN',
+            exportName: `${projectName}-${environment}-eks-cluster-arn-${this.region}`,
+        });
+
+        new CfnOutput(this, 'EKSClusterEndpoint', {
+            value: this.cluster.clusterEndpoint,
+            description: 'EKS Cluster Endpoint',
+            exportName: `${projectName}-${environment}-eks-cluster-endpoint-${this.region}`,
+        });
+
+        new CfnOutput(this, 'EKSClusterSecurityGroupId', {
+            value: this.cluster.clusterSecurityGroupId,
+            description: 'EKS Cluster Security Group ID',
+            exportName: `${projectName}-${environment}-eks-cluster-sg-${this.region}`,
+        });
 
         // Integrate with Observability Stack for resource utilization monitoring
         // this.integrateObservabilityStack(projectName, environment); // Method not implemented
@@ -85,9 +115,9 @@ export class EKSStack extends cdk.Stack {
         // this.createOutputs(projectName, environment, region);
     }
 
-    private createEKSCluster(projectName: string, environment: string, vpc: ec2.IVpc, 
-                            region?: string, isPrimaryRegion: boolean = true): eks.Cluster {
-        
+    private createEKSCluster(projectName: string, environment: string, vpc: ec2.IVpc,
+        region?: string, isPrimaryRegion: boolean = true): eks.Cluster {
+
         // Create EKS service role
         const clusterRole = new iam.Role(this, 'EKSClusterRole', {
             assumedBy: new iam.ServicePrincipal('eks.amazonaws.com'),
@@ -113,7 +143,7 @@ export class EKSStack extends cdk.Stack {
             vpcSubnets: [{ subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS }],
             role: clusterRole,
             kubectlLayer: kubectlLayer,
-            
+
             // Enable logging
             clusterLogging: [
                 eks.ClusterLoggingTypes.API,
@@ -183,9 +213,12 @@ export class EKSStack extends cdk.Stack {
         }));
 
         // Create launch template for node group
+        // NOTE: Do NOT specify instanceType here — it's set via instanceTypes in addNodegroupCapacity.
+        // Specifying both causes "Cannot specify instance types in launch template and API request" error.
+        // NOTE: Do NOT specify userData here — EKS managed node groups handle bootstrap automatically.
+        // Providing empty or non-MIME-multipart userData causes "User data was not in the MIME multipart format" error.
         const launchTemplate = new ec2.LaunchTemplate(this, 'NodeGroupLaunchTemplate', {
             launchTemplateName: `${projectName}-${environment}-node-template`,
-            instanceType: new ec2.InstanceType('t3.medium'),
             blockDevices: [{
                 deviceName: '/dev/xvda',
                 volume: ec2.BlockDeviceVolume.ebs(50, {
@@ -193,24 +226,23 @@ export class EKSStack extends cdk.Stack {
                     encrypted: true,
                 }),
             }],
-            userData: ec2.UserData.forLinux(),
         });
+
+        // Get environment-specific node sizing from context
+        const envConfig = this.node.tryGetContext('genai-demo:environments')?.[environment];
+        const minNodes = envConfig?.['eks-min-nodes'] || 1;
+        const maxNodes = envConfig?.['eks-max-nodes'] || 3;
+        const desiredNodes = minNodes;
 
         // Create optimized node group with traffic pattern-based scaling configuration
         const nodeGroup = this.cluster.addNodegroupCapacity('ManagedNodeGroup', {
             nodegroupName: `${projectName}-${environment}-nodes-${this.region}`,
             instanceTypes: [
-                // Optimized instance types for different traffic patterns
-                new ec2.InstanceType('t3.medium'),   // Baseline for low traffic
-                new ec2.InstanceType('t3.large'),    // Standard traffic
-                new ec2.InstanceType('c5.large'),    // CPU-intensive workloads
-                new ec2.InstanceType('m5.large'),    // Balanced workloads
-                new ec2.InstanceType('r5.large'),    // Memory-intensive workloads
+                new ec2.InstanceType(envConfig?.['eks-node-type'] || 't3.medium'),
             ],
-            // Enhanced scaling configuration for cross-region traffic patterns
-            minSize: isPrimaryRegion ? 3 : 2,        // Primary region handles more base load
-            maxSize: isPrimaryRegion ? 20 : 15,      // Higher max capacity for primary region
-            desiredSize: isPrimaryRegion ? 4 : 3,    // Start with more capacity in primary region
+            minSize: minNodes,
+            maxSize: maxNodes,
+            desiredSize: desiredNodes,
             launchTemplateSpec: {
                 id: launchTemplate.launchTemplateId!,
                 version: launchTemplate.latestVersionNumber,
@@ -238,8 +270,8 @@ export class EKSStack extends cdk.Stack {
             },
         });
 
-        // Create additional spot instance node group for cost optimization
-        if (isPrimaryRegion) {
+        // Create additional spot instance node group for cost optimization (skip for development)
+        if (isPrimaryRegion && environment !== 'development') {
             this.createSpotNodeGroup(projectName, environment, nodeGroupRole);
         }
 
@@ -252,7 +284,7 @@ export class EKSStack extends cdk.Stack {
     private createOptimizedLaunchTemplate(projectName: string, environment: string, isPrimaryRegion: boolean): string {
         const launchTemplate = new ec2.LaunchTemplate(this, 'OptimizedLaunchTemplate', {
             launchTemplateName: `${projectName}-${environment}-optimized-${this.region}`,
-            userData: ec2.UserData.forLinux(),
+            // NOTE: Do NOT specify userData — EKS managed node groups handle bootstrap automatically.
             // Enhanced instance metadata options for security
             requireImdsv2: true,
             httpTokens: ec2.LaunchTemplateHttpTokens.REQUIRED,
@@ -260,28 +292,6 @@ export class EKSStack extends cdk.Stack {
             // Instance monitoring for intelligent scaling
             detailedMonitoring: true,
         });
-
-        // Add user data for cross-region optimization
-        launchTemplate.userData?.addCommands(
-            '#!/bin/bash',
-            '/etc/eks/bootstrap.sh ' + this.cluster.clusterName,
-            // Install CloudWatch agent for enhanced monitoring
-            'yum install -y amazon-cloudwatch-agent',
-            // Configure cross-region networking optimizations
-            'echo "net.core.rmem_max = 134217728" >> /etc/sysctl.conf',
-            'echo "net.core.wmem_max = 134217728" >> /etc/sysctl.conf',
-            'echo "net.ipv4.tcp_rmem = 4096 87380 134217728" >> /etc/sysctl.conf',
-            'echo "net.ipv4.tcp_wmem = 4096 65536 134217728" >> /etc/sysctl.conf',
-            'sysctl -p',
-            // Install and configure Istio sidecar for service mesh
-            'curl -L https://istio.io/downloadIstio | sh -',
-            'export PATH="$PATH:/root/istio-1.19.0/bin"',
-            // Configure region-specific optimizations
-            `echo "REGION=${this.region}" >> /etc/environment`,
-            `echo "REGION_TYPE=${isPrimaryRegion ? 'primary' : 'secondary'}" >> /etc/environment`,
-            // Start CloudWatch agent
-            '/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-linux',
-        );
 
         return launchTemplate.launchTemplateId!;
     }
@@ -319,7 +329,7 @@ export class EKSStack extends cdk.Stack {
         });
     }
 
-    private installKEDA(): void {
+    private installKEDA(environment: string): void {
         // Install KEDA via Helm
         this.cluster.addHelmChart('KEDA', {
             chart: 'keda',
@@ -363,8 +373,11 @@ export class EKSStack extends cdk.Stack {
             },
         });
 
-        // Install Istio Service Mesh for cross-region communication
-        this.installIstioServiceMesh();
+        // Install Istio Service Mesh for cross-region communication (skip for development —
+        // Istio CRDs are installed async via Helm and cannot be referenced immediately)
+        if (environment !== 'development') {
+            this.installIstioServiceMesh();
+        }
 
         // Create enhanced HPA configuration with cross-region intelligent routing
         this.cluster.addManifest('HPA', {
@@ -505,90 +518,96 @@ export class EKSStack extends cdk.Stack {
             },
         });
 
-        // Create KEDA ScaledObject for thread pool monitoring with cross-region metrics
-        this.cluster.addManifest('KEDAScaledObject', {
-            apiVersion: 'keda.sh/v1alpha1',
-            kind: 'ScaledObject',
-            metadata: {
-                name: 'genai-demo-thread-pool-scaler',
-                namespace: 'default',
-                labels: {
-                    'istio-injection': 'enabled',
-                    'cross-region': 'true',
-                },
-            },
-            spec: {
-                scaleTargetRef: {
-                    name: 'genai-demo-app',
-                },
-                minReplicaCount: 1,
-                maxReplicaCount: 8,
-                triggers: [
-                    {
-                        type: 'prometheus',
-                        metadata: {
-                            serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
-                            metricName: 'thread_pool_active_threads',
-                            threshold: '70',
-                            query: 'avg(thread_pool_active_threads{job="genai-demo-app"})',
-                        },
+        // KEDA ScaledObjects require KEDA CRDs to be installed first.
+        // Since KEDA Helm chart installs CRDs asynchronously, these ScaledObjects
+        // cannot be created in the same CloudFormation deployment.
+        // Skip for development — also depends on Prometheus and Istio which aren't installed.
+        if (environment !== 'development') {
+            // Create KEDA ScaledObject for thread pool monitoring with cross-region metrics
+            this.cluster.addManifest('KEDAScaledObject', {
+                apiVersion: 'keda.sh/v1alpha1',
+                kind: 'ScaledObject',
+                metadata: {
+                    name: 'genai-demo-thread-pool-scaler',
+                    namespace: 'default',
+                    labels: {
+                        'istio-injection': 'enabled',
+                        'cross-region': 'true',
                     },
-                    // Cross-region load balancing trigger
-                    {
-                        type: 'prometheus',
-                        metadata: {
-                            serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
-                            metricName: 'cross_region_load_ratio',
-                            threshold: '0.8',
-                            query: 'avg(istio_request_total{destination_service_name="genai-demo-app"}) / avg(istio_request_total{destination_service_name="genai-demo-app",source_region!="local"})',
-                        },
+                },
+                spec: {
+                    scaleTargetRef: {
+                        name: 'genai-demo-app',
                     },
-                ],
-            },
-        });
+                    minReplicaCount: 1,
+                    maxReplicaCount: 8,
+                    triggers: [
+                        {
+                            type: 'prometheus',
+                            metadata: {
+                                serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
+                                metricName: 'thread_pool_active_threads',
+                                threshold: '70',
+                                query: 'avg(thread_pool_active_threads{job="genai-demo-app"})',
+                            },
+                        },
+                        // Cross-region load balancing trigger
+                        {
+                            type: 'prometheus',
+                            metadata: {
+                                serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
+                                metricName: 'cross_region_load_ratio',
+                                threshold: '0.8',
+                                query: 'avg(istio_request_total{destination_service_name="genai-demo-app"}) / avg(istio_request_total{destination_service_name="genai-demo-app",source_region!="local"})',
+                            },
+                        },
+                    ],
+                },
+            });
 
-        // Create cross-region KEDA ScaledObject for intelligent routing
-        this.cluster.addManifest('KEDACrossRegionScaler', {
-            apiVersion: 'keda.sh/v1alpha1',
-            kind: 'ScaledObject',
-            metadata: {
-                name: 'genai-demo-cross-region-scaler',
-                namespace: 'default',
-                labels: {
-                    'istio-injection': 'enabled',
-                    'cross-region': 'true',
-                },
-            },
-            spec: {
-                scaleTargetRef: {
-                    name: 'genai-demo-app',
-                },
-                minReplicaCount: 2, // Ensure minimum replicas for cross-region availability
-                maxReplicaCount: 20, // Higher max for cross-region load handling
-                triggers: [
-                    // Regional latency-based scaling
-                    {
-                        type: 'prometheus',
-                        metadata: {
-                            serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
-                            metricName: 'regional_response_time_p95',
-                            threshold: '200', // 200ms P95 threshold
-                            query: 'histogram_quantile(0.95, rate(istio_request_duration_milliseconds_bucket{destination_service_name="genai-demo-app"}[5m]))',
-                        },
+            // Create cross-region KEDA ScaledObject for intelligent routing
+            this.cluster.addManifest('KEDACrossRegionScaler', {
+                apiVersion: 'keda.sh/v1alpha1',
+                kind: 'ScaledObject',
+                metadata: {
+                    name: 'genai-demo-cross-region-scaler',
+                    namespace: 'default',
+                    labels: {
+                        'istio-injection': 'enabled',
+                        'cross-region': 'true',
                     },
-                    // Cross-region traffic volume
-                    {
-                        type: 'prometheus',
-                        metadata: {
-                            serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
-                            metricName: 'cross_region_traffic_rate',
-                            threshold: '100', // requests per second
-                            query: 'sum(rate(istio_requests_total{destination_service_name="genai-demo-app",source_region!="local"}[5m]))',
-                        },
+                },
+                spec: {
+                    scaleTargetRef: {
+                        name: 'genai-demo-app',
                     },
-                ],
-            },
-        });
+                    minReplicaCount: 2, // Ensure minimum replicas for cross-region availability
+                    maxReplicaCount: 20, // Higher max for cross-region load handling
+                    triggers: [
+                        // Regional latency-based scaling
+                        {
+                            type: 'prometheus',
+                            metadata: {
+                                serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
+                                metricName: 'regional_response_time_p95',
+                                threshold: '200', // 200ms P95 threshold
+                                query: 'histogram_quantile(0.95, rate(istio_request_duration_milliseconds_bucket{destination_service_name="genai-demo-app"}[5m]))',
+                            },
+                        },
+                        // Cross-region traffic volume
+                        {
+                            type: 'prometheus',
+                            metadata: {
+                                serverAddress: 'http://prometheus-server.monitoring.svc.cluster.local:80',
+                                metricName: 'cross_region_traffic_rate',
+                                threshold: '100', // requests per second
+                                query: 'sum(rate(istio_requests_total{destination_service_name="genai-demo-app",source_region!="local"}[5m]))',
+                            },
+                        },
+                    ],
+                },
+            });
+        }
     }
 
     /**
@@ -1478,32 +1497,35 @@ data:
         });
 
         // Create ServiceMonitor for Prometheus monitoring
-        this.cluster.addManifest('ClusterAutoscalerServiceMonitor', {
-            apiVersion: 'monitoring.coreos.com/v1',
-            kind: 'ServiceMonitor',
-            metadata: {
-                name: 'cluster-autoscaler',
-                namespace: 'kube-system',
-                labels: {
-                    app: 'cluster-autoscaler',
-                    'cross-region': 'enabled',
-                },
-            },
-            spec: {
-                selector: {
-                    matchLabels: {
+        // (requires Prometheus Operator CRDs — skip for development)
+        if (environment !== 'development') {
+            this.cluster.addManifest('ClusterAutoscalerServiceMonitor', {
+                apiVersion: 'monitoring.coreos.com/v1',
+                kind: 'ServiceMonitor',
+                metadata: {
+                    name: 'cluster-autoscaler',
+                    namespace: 'kube-system',
+                    labels: {
                         app: 'cluster-autoscaler',
+                        'cross-region': 'enabled',
                     },
                 },
-                endpoints: [
-                    {
-                        port: 'http',
-                        interval: '30s',
-                        path: '/metrics',
+                spec: {
+                    selector: {
+                        matchLabels: {
+                            app: 'cluster-autoscaler',
+                        },
                     },
-                ],
-            },
-        });
+                    endpoints: [
+                        {
+                            port: 'http',
+                            interval: '30s',
+                            path: '/metrics',
+                        },
+                    ],
+                },
+            });
+        }
 
         // Create Service for Cluster Autoscaler metrics
         this.cluster.addManifest('ClusterAutoscalerService', {
@@ -1544,7 +1566,7 @@ data:
     private enableContainerInsights(projectName: string, environment: string, region?: string): void {
         // Enable CloudWatch Container Insights for the EKS cluster
         // This is done by deploying the CloudWatch agent as a DaemonSet
-        
+
         // Create service account for CloudWatch agent
         const cloudWatchAgentServiceAccount = this.cluster.addServiceAccount('CloudWatchAgentServiceAccount', {
             name: 'cloudwatch-agent',
@@ -2592,30 +2614,7 @@ meshNetworks:
             },
         });
 
-        // Add stack outputs
-        new CfnOutput(this, 'EKSClusterName', {
-            value: this.cluster.clusterName,
-            description: 'EKS Cluster Name',
-            exportName: `${projectName}-${environment}-eks-cluster-name-${this.region}`,
-        });
-
-        new CfnOutput(this, 'EKSClusterArn', {
-            value: this.cluster.clusterArn,
-            description: 'EKS Cluster ARN',
-            exportName: `${projectName}-${environment}-eks-cluster-arn-${this.region}`,
-        });
-
-        new CfnOutput(this, 'EKSClusterEndpoint', {
-            value: this.cluster.clusterEndpoint,
-            description: 'EKS Cluster Endpoint',
-            exportName: `${projectName}-${environment}-eks-cluster-endpoint-${this.region}`,
-        });
-
-        new CfnOutput(this, 'EKSClusterSecurityGroupId', {
-            value: this.cluster.clusterSecurityGroupId,
-            description: 'EKS Cluster Security Group ID',
-            exportName: `${projectName}-${environment}-eks-cluster-sg-${this.region}`,
-        });
+        // Note: CfnOutputs are created in the constructor to ensure they exist regardless of environment
     }
 
 }

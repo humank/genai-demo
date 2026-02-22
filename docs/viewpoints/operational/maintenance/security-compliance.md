@@ -68,15 +68,16 @@ dependencies {
 # Run tests after updates
 ./gradlew clean test
 
-# Check for npm vulnerabilities (frontend)
-cd cmc-frontend
-npm audit
+# Check for npm vulnerabilities (frontend monorepo)
+cd frontend
+pnpm audit
 
 # Fix vulnerabilities automatically
-npm audit fix
+pnpm audit --fix
 
-# For breaking changes, update manually
-npm audit fix --force
+# Audit specific workspace
+pnpm --filter @repo/cmc audit
+pnpm --filter @repo/consumer audit
 ```
 
 #### Operating System Patching
@@ -407,7 +408,7 @@ BEGIN
         current_query(),
         true
     );
-    
+
     IF TG_OP = 'DELETE' THEN
         RETURN OLD;
     ELSE
@@ -494,7 +495,7 @@ ORDER BY daily_modifications DESC, event_time DESC;
 @Configuration
 @EnableJpaAuditing
 public class AuditConfiguration {
-    
+
     @Bean
     public AuditorAware<String> auditorProvider() {
         return () -> Optional.ofNullable(SecurityContextHolder.getContext())
@@ -507,19 +508,19 @@ public class AuditConfiguration {
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class AuditableEntity {
-    
+
     @CreatedBy
     @Column(name = "created_by", updatable = false)
     private String createdBy;
-    
+
     @CreatedDate
     @Column(name = "created_date", updatable = false)
     private Instant createdDate;
-    
+
     @LastModifiedBy
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
-    
+
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
@@ -527,9 +528,9 @@ public class AuditableEntity {
 
 @Component
 public class SecurityAuditLogger {
-    
+
     private final Logger auditLogger = LoggerFactory.getLogger("SECURITY_AUDIT");
-    
+
     public void logAuthenticationSuccess(String username, String ipAddress) {
         auditLogger.info("Authentication successful",
             kv("event", "AUTH_SUCCESS"),
@@ -537,7 +538,7 @@ public class SecurityAuditLogger {
             kv("ipAddress", ipAddress),
             kv("timestamp", Instant.now()));
     }
-    
+
     public void logAuthenticationFailure(String username, String ipAddress, String reason) {
         auditLogger.warn("Authentication failed",
             kv("event", "AUTH_FAILURE"),
@@ -546,7 +547,7 @@ public class SecurityAuditLogger {
             kv("reason", reason),
             kv("timestamp", Instant.now()));
     }
-    
+
     public void logAuthorizationFailure(String username, String resource, String action) {
         auditLogger.warn("Authorization failed",
             kv("event", "AUTHZ_FAILURE"),
@@ -555,7 +556,7 @@ public class SecurityAuditLogger {
             kv("action", action),
             kv("timestamp", Instant.now()));
     }
-    
+
     public void logDataAccess(String username, String resource, String action) {
         auditLogger.info("Data access",
             kv("event", "DATA_ACCESS"),
@@ -714,13 +715,13 @@ BEGIN
             ORDER BY id
             LIMIT batch_size OFFSET offset_val
         );
-        
+
         GET DIAGNOSTICS rows_updated = ROW_COUNT;
         EXIT WHEN rows_updated = 0;
-        
+
         offset_val := offset_val + batch_size;
         COMMIT;
-        
+
         -- Add delay to avoid overwhelming the database
         PERFORM pg_sleep(1);
     END LOOP;
@@ -891,9 +892,9 @@ aws inspector2 list-findings \
 -- Database compliance checks
 
 -- 1. Verify encryption at rest
-SELECT datname, 
+SELECT datname,
        CASE WHEN EXISTS (
-         SELECT 1 FROM pg_settings 
+         SELECT 1 FROM pg_settings
          WHERE name = 'ssl' AND setting = 'on'
        ) THEN 'ENABLED' ELSE 'DISABLED' END AS ssl_status
 FROM pg_database
@@ -925,7 +926,7 @@ WHERE event_time > NOW() - INTERVAL '90 days';
 
 ```sql
 -- Right to Access: Export all personal data for a customer
-SELECT 
+SELECT
     'customers' AS table_name,
     json_build_object(
         'id', id,
@@ -936,7 +937,7 @@ SELECT
     ) AS data
 FROM customers WHERE id = 'CUST-123'
 UNION ALL
-SELECT 
+SELECT
     'orders' AS table_name,
     json_agg(json_build_object(
         'order_id', id,
@@ -946,7 +947,7 @@ SELECT
     )) AS data
 FROM orders WHERE customer_id = 'CUST-123'
 UNION ALL
-SELECT 
+SELECT
     'addresses' AS table_name,
     json_agg(json_build_object(
         'address_id', id,
@@ -992,14 +993,14 @@ COPY (
 -- Generate GDPR compliance report
 
 -- 1. Data retention compliance
-SELECT 
+SELECT
     'customers' AS table_name,
     COUNT(*) AS total_records,
     COUNT(CASE WHEN created_at < NOW() - INTERVAL '7 years' THEN 1 END) AS records_exceeding_retention,
     COUNT(CASE WHEN anonymized_at IS NOT NULL THEN 1 END) AS anonymized_records
 FROM customers
 UNION ALL
-SELECT 
+SELECT
     'orders' AS table_name,
     COUNT(*) AS total_records,
     COUNT(CASE WHEN order_date < NOW() - INTERVAL '7 years' THEN 1 END) AS records_exceeding_retention,
@@ -1007,7 +1008,7 @@ SELECT
 FROM orders;
 
 -- 2. Data subject requests tracking
-SELECT request_type, 
+SELECT request_type,
        COUNT(*) AS total_requests,
        COUNT(CASE WHEN processed_at IS NOT NULL THEN 1 END) AS processed,
        COUNT(CASE WHEN processed_at IS NULL AND requested_at < NOW() - INTERVAL '30 days' THEN 1 END) AS overdue
@@ -1063,7 +1064,7 @@ aws rds describe-db-snapshots \
 -- Generate SOC 2 compliance metrics
 
 -- 1. System availability
-SELECT 
+SELECT
     DATE(timestamp) AS date,
     COUNT(*) AS total_checks,
     COUNT(CASE WHEN status = 'UP' THEN 1 END) AS successful_checks,
@@ -1074,7 +1075,7 @@ GROUP BY DATE(timestamp)
 ORDER BY date DESC;
 
 -- 2. Security incident tracking
-SELECT 
+SELECT
     incident_type,
     COUNT(*) AS total_incidents,
     AVG(EXTRACT(EPOCH FROM (resolved_at - detected_at))/3600) AS avg_resolution_hours,
@@ -1084,7 +1085,7 @@ WHERE detected_at > NOW() - INTERVAL '90 days'
 GROUP BY incident_type;
 
 -- 3. Access review compliance
-SELECT 
+SELECT
     review_period,
     COUNT(*) AS total_users_reviewed,
     COUNT(CASE WHEN access_modified THEN 1 END) AS access_changes,
@@ -1167,12 +1168,12 @@ aws ecr describe-image-scan-findings \
 # Review report
 open build/reports/dependency-check-report.html
 
-# Scan npm dependencies
-cd cmc-frontend
-npm audit
+# Scan npm dependencies (frontend monorepo)
+cd frontend
+pnpm audit
 
 # Generate detailed report
-npm audit --json > npm-audit-report.json
+pnpm audit --json > npm-audit-report.json
 
 # Scan with Snyk
 snyk test --severity-threshold=high
@@ -1272,7 +1273,7 @@ INSERT INTO vulnerabilities (cve_id, severity, cvss_score, affected_component, d
 VALUES ('CVE-2024-1234', 'HIGH', 8.5, 'spring-boot-starter-web:3.1.0', 'Remote code execution vulnerability', 'IN_PROGRESS', 'security-team');
 
 -- Query open vulnerabilities
-SELECT cve_id, severity, affected_component, 
+SELECT cve_id, severity, affected_component,
        NOW() - discovered_date AS days_open,
        assigned_to
 FROM vulnerabilities
@@ -1288,7 +1289,7 @@ SELECT severity,
 FROM vulnerabilities
 WHERE discovered_date > NOW() - INTERVAL '90 days'
 GROUP BY severity
-ORDER BY 
+ORDER BY
     CASE severity
         WHEN 'CRITICAL' THEN 1
         WHEN 'HIGH' THEN 2
@@ -1305,7 +1306,7 @@ ORDER BY
 
 ```sql
 -- Generate access review report
-SELECT 
+SELECT
     u.usename AS username,
     u.valuntil AS password_expiry,
     ARRAY_AGG(DISTINCT r.rolname) AS roles,
@@ -1320,7 +1321,7 @@ GROUP BY u.usename, u.valuntil
 ORDER BY inactive_duration DESC NULLS FIRST;
 
 -- Identify inactive users (no activity in 90 days)
-SELECT usename, valuntil, 
+SELECT usename, valuntil,
        NOW() - MAX(query_start) AS days_inactive
 FROM pg_user u
 LEFT JOIN pg_stat_activity a ON u.usename = a.usename
@@ -1337,7 +1338,7 @@ ORDER BY usename;
 
 -- Check for users with expired passwords
 SELECT usename, valuntil,
-       CASE 
+       CASE
            WHEN valuntil IS NULL THEN 'NO_EXPIRY'
            WHEN valuntil < NOW() THEN 'EXPIRED'
            WHEN valuntil < NOW() + INTERVAL '30 days' THEN 'EXPIRING_SOON'
@@ -1398,7 +1399,7 @@ DO $$
 DECLARE
     inactive_user RECORD;
 BEGIN
-    FOR inactive_user IN 
+    FOR inactive_user IN
         SELECT usename
         FROM pg_user u
         LEFT JOIN pg_stat_activity a ON u.usename = a.usename
@@ -1408,7 +1409,7 @@ BEGIN
     LOOP
         EXECUTE format('ALTER USER %I WITH NOLOGIN', inactive_user.usename);
         RAISE NOTICE 'Disabled user: %', inactive_user.usename;
-        
+
         -- Log the action
         INSERT INTO user_audit_log (username, action, performed_by, timestamp)
         VALUES (inactive_user.usename, 'USER_DISABLED_INACTIVE', current_user, NOW());
@@ -1417,8 +1418,8 @@ END $$;
 
 -- Revoke excessive privileges
 -- Review and revoke superuser privileges if not needed
-SELECT usename FROM pg_user 
-WHERE usesuper = true 
+SELECT usename FROM pg_user
+WHERE usesuper = true
   AND usename NOT IN ('postgres', 'rdsadmin', 'admin');
 
 -- Force password reset for users with expired passwords
@@ -1570,21 +1571,21 @@ FROM security_incidents
 WHERE resolved_at > NOW() - INTERVAL '90 days';
 
 -- 3. Vulnerability remediation rate
-SELECT 
+SELECT
     COUNT(CASE WHEN remediation_status = 'RESOLVED' THEN 1 END)::FLOAT / COUNT(*) * 100 AS remediation_rate
 FROM vulnerabilities
 WHERE discovered_date > NOW() - INTERVAL '90 days';
 
 -- 4. Failed authentication rate
-SELECT 
-    COUNT(CASE WHEN event_type = 'LOGIN_FAILED' THEN 1 END)::FLOAT / 
+SELECT
+    COUNT(CASE WHEN event_type = 'LOGIN_FAILED' THEN 1 END)::FLOAT /
     COUNT(*) * 100 AS failed_auth_rate
 FROM audit_log
 WHERE event_time > NOW() - INTERVAL '30 days';
 
 -- 5. Compliance score
-SELECT 
-    COUNT(CASE WHEN status = 'COMPLIANT' THEN 1 END)::FLOAT / 
+SELECT
+    COUNT(CASE WHEN status = 'COMPLIANT' THEN 1 END)::FLOAT /
     COUNT(*) * 100 AS compliance_score
 FROM compliance_checks
 WHERE check_date > NOW() - INTERVAL '30 days';
@@ -1599,15 +1600,15 @@ WHERE check_date > NOW() - INTERVAL '30 days';
 - **Critical (P1)**: Active breach, data exfiltration, ransomware
   - Response time: Immediate (< 15 minutes)
   - Escalation: CISO, Executive team
-  
+
 - **High (P2)**: Attempted breach, vulnerability exploitation, DDoS
   - Response time: < 1 hour
   - Escalation: Security team, IT management
-  
+
 - **Medium (P3)**: Suspicious activity, policy violations, failed attacks
   - Response time: < 4 hours
   - Escalation: Security team
-  
+
 - **Low (P4)**: Security warnings, minor policy violations
   - Response time: < 24 hours
   - Escalation: Security analyst

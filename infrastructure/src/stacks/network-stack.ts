@@ -6,10 +6,9 @@ import * as events from 'aws-cdk-lib/aws-events';
 import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as logs from 'aws-cdk-lib/aws-logs';
 import * as sns from 'aws-cdk-lib/aws-sns';
-import { Construct } from 'constructs';
 import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 export interface NetworkStackProps extends cdk.StackProps {
     readonly environment: string;
@@ -76,7 +75,13 @@ export class NetworkStack extends cdk.Stack {
     }
 
     private createVpc(projectName: string, environment: string): ec2.Vpc {
-        // Use different CIDR blocks per region to avoid conflicts
+        // 10.0.0.0/16 — 最大化 VPC，3 AZ 完整配置
+        // CIDR 規劃（CDK 按 subnetConfiguration 順序分配）：
+        //   Public:   /20 × 3 AZ = 12,288 IPs (4,096 each)
+        //   Private:  /19 × 3 AZ = 24,576 IPs (8,192 each)
+        //   Database: /22 × 3 AZ =  3,072 IPs (1,024 each)
+        //   Transit:  /24 × 3 AZ =    768 IPs (256 each)
+        //   Total:   40,704 / 65,536 (62% 使用率，留有擴展空間)
         const cidr = this.getCidrForRegion(this.region);
 
         const vpc = new ec2.Vpc(this, 'VPC', {
@@ -87,27 +92,26 @@ export class NetworkStack extends cdk.Stack {
             enableDnsSupport: true,
             subnetConfiguration: [
                 {
-                    cidrMask: 24,
+                    cidrMask: 20,
                     name: 'Public',
                     subnetType: ec2.SubnetType.PUBLIC,
                 },
                 {
-                    cidrMask: 24,
+                    cidrMask: 19,
                     name: 'Private',
                     subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
                 },
                 {
-                    cidrMask: 26,
+                    cidrMask: 22,
                     name: 'Database',
                     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
                 },
                 {
-                    cidrMask: 28,
+                    cidrMask: 24,
                     name: 'Transit',
                     subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
                 }
             ],
-            // Enable VPC Flow Logs for cross-region traffic monitoring
             flowLogs: {
                 'CrossRegionFlowLogs': {
                     destination: ec2.FlowLogDestination.toCloudWatchLogs(),
@@ -117,7 +121,7 @@ export class NetworkStack extends cdk.Stack {
             }
         });
 
-        // Tag VPC for cross-region identification
+        // Tag VPC
         cdk.Tags.of(vpc).add('Name', `${projectName}-${environment}-vpc`);
         cdk.Tags.of(vpc).add('Environment', environment);
         cdk.Tags.of(vpc).add('Project', projectName);
@@ -128,15 +132,16 @@ export class NetworkStack extends cdk.Stack {
     }
 
     private getCidrForRegion(region: string): string {
-        // Assign different CIDR blocks per region to avoid conflicts
+        // 每個 region 獨立 /16 CIDR，避免跨區衝突
         const regionCidrs: { [key: string]: string } = {
-            'ap-northeast-1': '10.0.0.0/16',  // Tokyo
-            'us-west-2': '10.1.0.0/16',       // Oregon
-            'eu-west-1': '10.2.0.0/16',       // Ireland
-            'ap-southeast-1': '10.3.0.0/16',  // Singapore
-            'us-east-1': '10.4.0.0/16'        // N. Virginia
+            'ap-east-2': '10.0.0.0/16',       // Taipei (primary)
+            'ap-northeast-1': '10.1.0.0/16',  // Tokyo (DR)
+            'us-west-2': '10.2.0.0/16',       // Oregon
+            'eu-west-1': '10.3.0.0/16',       // Ireland
+            'ap-southeast-1': '10.4.0.0/16',  // Singapore
+            'us-east-1': '10.5.0.0/16',       // N. Virginia
         };
-        return regionCidrs[region] || '10.9.0.0/16'; // Default CIDR
+        return regionCidrs[region] || '10.9.0.0/16';
     }
 
     private createTransitGateway(projectName: string, environment: string): ec2.CfnTransitGateway {
@@ -320,7 +325,7 @@ export class NetworkStack extends cdk.Stack {
         );
 
         // Cross-region security group rules
-        const peerCidrs = ['10.0.0.0/16', '10.1.0.0/16', '10.2.0.0/16', '10.3.0.0/16', '10.4.0.0/16'];
+        const peerCidrs = ['10.0.0.0/16', '10.1.0.0/16', '10.2.0.0/16', '10.3.0.0/16', '10.4.0.0/16', '10.5.0.0/16'];
         const currentCidr = this.getCidrForRegion(this.region);
 
         peerCidrs.forEach((cidr, index) => {
@@ -360,8 +365,8 @@ export class NetworkStack extends cdk.Stack {
     }
 
     private createNetworkLatencyMonitor(
-        projectName: string, 
-        environment: string, 
+        projectName: string,
+        environment: string,
         alertingTopic?: sns.ITopic
     ): lambda.Function {
         // Create IAM role for network monitoring Lambda
@@ -398,15 +403,15 @@ export class NetworkStack extends cdk.Stack {
                 const AWS = require('aws-sdk');
                 const https = require('https');
                 const cloudwatch = new AWS.CloudWatch();
-                
+
                 exports.handler = async (event) => {
                     console.log('Network latency monitoring started');
                     const regions = ['ap-northeast-1', 'us-west-2', 'eu-west-1'];
                     const currentRegion = process.env.AWS_REGION;
-                    
+
                     try {
                         const latencyResults = [];
-                        
+
                         for (const targetRegion of regions) {
                             if (targetRegion !== currentRegion) {
                                 const latency = await measureLatency(targetRegion);
@@ -415,12 +420,12 @@ export class NetworkStack extends cdk.Stack {
                                     target: targetRegion,
                                     latency: latency
                                 });
-                                
+
                                 // Report latency metrics to CloudWatch
                                 await reportLatencyMetric(currentRegion, targetRegion, latency);
                             }
                         }
-                        
+
                         return {
                             statusCode: 200,
                             body: JSON.stringify({
@@ -433,7 +438,7 @@ export class NetworkStack extends cdk.Stack {
                         throw error;
                     }
                 };
-                
+
                 async function measureLatency(targetRegion) {
                     const startTime = Date.now();
                     try {
@@ -447,7 +452,7 @@ export class NetworkStack extends cdk.Stack {
                         return -1; // Indicate failure
                     }
                 }
-                
+
                 async function reportLatencyMetric(source, target, latency) {
                     const params = {
                         Namespace: '${projectName}/Network',
@@ -470,7 +475,7 @@ export class NetworkStack extends cdk.Stack {
                             }
                         ]
                     };
-                    
+
                     await cloudwatch.putMetricData(params).promise();
                 }
             `),
@@ -503,8 +508,8 @@ export class NetworkStack extends cdk.Stack {
     }
 
     private createNetworkPartitionDetection(
-        projectName: string, 
-        environment: string, 
+        projectName: string,
+        environment: string,
         alertingTopic?: sns.ITopic
     ): void {
         // Create network partition detection alarm

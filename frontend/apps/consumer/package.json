@@ -1,0 +1,42 @@
+{
+    "name": "@repo/consumer",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev -p 3000",
+        "build": "next build",
+        "start": "next start -p 3000",
+        "lint": "next lint",
+        "type-check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@repo/ui": "workspace:*",
+        "@repo/api-client": "workspace:*",
+        "@repo/config": "workspace:*",
+        "@hookform/resolvers": "^5.2.2",
+        "@radix-ui/react-slot": "^1.2.4",
+        "@tanstack/react-query": "^5.90.15",
+        "axios": "^1.13.2",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "date-fns": "^3.6.0",
+        "lucide-react": "^0.562.0",
+        "next": "^15.3.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-hook-form": "^7.69.0",
+        "tailwind-merge": "^3.4.0",
+        "zod": "^4.2.1",
+        "zustand": "^5.0.9"
+    },
+    "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.18",
+        "@types/node": "^24.10.1",
+        "@types/react": "^19.0.0",
+        "@types/react-dom": "^19.0.0",
+        "autoprefixer": "^10.4.23",
+        "postcss": "^8.4.41",
+        "tailwindcss": "^4.1.18",
+        "typescript": "^5.5.4"
+    }
+}

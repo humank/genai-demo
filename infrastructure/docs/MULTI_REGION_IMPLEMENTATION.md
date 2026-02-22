@@ -74,9 +74,11 @@ The multi-region infrastructure implements:
 
 **DNS Routing Policies:**
 
-- **Failover Routing:** `api.kimkao.io` (PRIMARY/SECONDARY)
-- **Latency-based Routing:** `api-latency.kimkao.io`
-- **Direct Access:** `api-dr.kimkao.io` (secondary region)
+- **Failover Routing:** `api.<your-domain>` (PRIMARY/SECONDARY)
+- **Latency-based Routing:** `api-latency.<your-domain>`
+- **Direct Access:** `api-dr.<your-domain>` (secondary region)
+
+> **注意**: `kimkao.io` 域名已停用。部署時請替換為您的實際域名。
 
 **Failover Behavior:**
 
@@ -126,7 +128,7 @@ cd genai-demo/infrastructure
 npm install
 
 # Deploy multi-region infrastructure
-./scripts/deploy-multi-region.sh --environment production --domain kimkao.io
+./scripts/deploy-multi-region.sh --environment production --domain example.com
 ```
 
 ### Custom Deployment
@@ -150,7 +152,7 @@ npm install
 
 ```bash
 # Set CDK context
-export CDK_CONTEXT="--context genai-demo:environment=production --context genai-demo:domain=kimkao.io"
+export CDK_CONTEXT="--context genai-demo:environment=production --context genai-demo:domain=example.com"
 
 # Bootstrap both regions
 cdk bootstrap aws://ACCOUNT/ap-east-2
@@ -170,7 +172,7 @@ export CDK_DEFAULT_ACCOUNT="123456789012"
 export AWS_DEFAULT_REGION="ap-east-2"
 
 # Optional
-export GENAI_DEMO_DOMAIN="kimkao.io"
+export GENAI_DEMO_DOMAIN="example.com"
 export GENAI_DEMO_ENVIRONMENT="production"
 ```
 
@@ -368,8 +370,8 @@ Grand Total: ~$1,850/month
 
    ```bash
    # Check application health
-   curl -k https://api.kimkao.io/actuator/health
-   
+   curl -k https://api.example.com/actuator/health
+
    # Check Route 53 health check status
    aws route53 get-health-check --health-check-id HCHECKID
    ```
@@ -379,7 +381,7 @@ Grand Total: ~$1,850/month
    ```bash
    # Check Aurora replication status
    aws rds describe-db-clusters --db-cluster-identifier genai-demo-production-primary-aurora
-   
+
    # Monitor replication metrics
    aws cloudwatch get-metric-statistics --namespace AWS/RDS --metric-name AuroraReplicaLag
    ```
@@ -389,7 +391,7 @@ Grand Total: ~$1,850/month
    ```bash
    # Check MirrorMaker service status
    aws ecs describe-services --cluster genai-demo-production-mirrormaker
-   
+
    # View MirrorMaker logs
    aws logs tail /aws/ecs/mirrormaker/genai-demo-production --follow
    ```
@@ -404,11 +406,11 @@ cdk list --app "node bin/multi-region-deployment.js"
 aws cloudformation describe-stacks --stack-name genai-demo-production-primary-core
 
 # Test connectivity
-telnet api.kimkao.io 443
-telnet api-dr.kimkao.io 443
+telnet api.example.com 443
+telnet api-dr.example.com 443
 
 # Monitor failover
-watch -n 5 'dig api.kimkao.io'
+watch -n 5 'dig api.example.com'
 ```
 
 ## Maintenance

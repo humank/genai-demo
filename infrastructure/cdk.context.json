@@ -6,7 +6,7 @@
       "eks-node-type": "t3.medium",
       "eks-min-nodes": 1,
       "eks-max-nodes": 3,
-      "rds-instance-type": "db.t3.micro",
+      "rds-instance-type": "db.r6g.large",
       "rds-storage": 20,
       "rds-multi-az": false,
       "msk": {

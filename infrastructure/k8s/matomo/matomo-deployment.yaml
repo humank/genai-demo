@@ -23,19 +23,19 @@ data:
   MATOMO_DATABASE_TABLES_PREFIX: "matomo_"
   MATOMO_DATABASE_USERNAME: "matomo_user"
   MATOMO_DATABASE_DBNAME: "matomo"
-  
+
   # Redis 快取配置 (使用現有 ElastiCache)
   MATOMO_REDIS_HOST: "genai-demo-redis.xxx.cache.amazonaws.com"
   MATOMO_REDIS_PORT: "6379"
   MATOMO_REDIS_TIMEOUT: "0.0"
   MATOMO_REDIS_DATABASE: "2"
-  
+
   # Matomo 應用配置
   MATOMO_GENERAL_SALT: "random_salt_here"
   MATOMO_GENERAL_TRUSTED_HOSTS: "matomo.genai-demo.com,*.genai-demo.com"
   MATOMO_GENERAL_ASSUME_SECURE_PROTOCOL: "1"
   MATOMO_GENERAL_FORCE_SSL: "1"
-  
+
   # 效能優化配置
   MATOMO_GENERAL_ENABLE_BROWSER_ARCHIVING_TRIGGERING: "0"
   MATOMO_GENERAL_ARCHIVING_RANGE_FORCE_ON_BROWSER_REQUEST: "0"
@@ -181,9 +181,9 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-east-2:ACCOUNT:certificate/CERT-ID
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-east-2:ACCOUNT:certificate/CERT-ID  # 無自訂域名，暫不啟用 HTTPS
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'  # 無自訂域名，暫不啟用 HTTPS
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
     alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
@@ -191,7 +191,7 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '3'
 spec:
   rules:
-  - host: matomo.genai-demo.com
+  - # host: matomo.genai-demo.com  # 無自訂域名，使用 ALB DNS
     http:
       paths:
       - path: /

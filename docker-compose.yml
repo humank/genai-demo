@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 主應用程式
+  # 主應用程式（後端）
   genai-demo:
     build:
       context: .
@@ -27,6 +27,56 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  # CMC 管理後台
+  cmc-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.cmc
+      args:
+        - NEXT_PUBLIC_API_URL=http://genai-demo:8080
+    container_name: cmc-frontend
+    ports:
+      - "0.0.0.0:3002:3002"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - genai-network
+    restart: unless-stopped
+    depends_on:
+      genai-demo:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3002 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Consumer 消費者應用
+  consumer-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.consumer
+      args:
+        - NEXT_PUBLIC_API_URL=http://genai-demo:8080
+    container_name: consumer-frontend
+    ports:
+      - "0.0.0.0:3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - genai-network
+    restart: unless-stopped
+    depends_on:
+      genai-demo:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
 # volumes:
 #   # 移除不需要的 volumes

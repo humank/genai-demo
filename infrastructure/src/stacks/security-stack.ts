@@ -1,14 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import * as kms from 'aws-cdk-lib/aws-kms';
-import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as config from 'aws-cdk-lib/aws-config';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as events from 'aws-cdk-lib/aws-events';
 import * as targets from 'aws-cdk-lib/aws-events-targets';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as kms from 'aws-cdk-lib/aws-kms';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
-import { Construct } from 'constructs';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import { NagSuppressions } from 'cdk-nag';
+import { Construct } from 'constructs';
 
 export interface SecurityStackProps extends cdk.StackProps {
     readonly environment: string;
@@ -24,13 +24,13 @@ export interface SecurityStackProps extends cdk.StackProps {
 
 /**
  * Enhanced Security Stack with Cross-Region Data Encryption and Compliance Support
- * 
+ *
  * This stack implements:
  * 1. Cross-region data encryption with KMS key management
  * 2. Compliance monitoring (SOC2, ISO27001, GDPR)
  * 3. Data sovereignty checks and privacy protection
  * 4. Security configuration management
- * 
+ *
  * Requirements: 4.3.1 - Multi-Region Security and Compliance
  */
 export class SecurityStack extends cdk.Stack {
@@ -45,12 +45,12 @@ export class SecurityStack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: SecurityStackProps) {
         super(scope, id, props);
 
-        const { 
-            environment, 
-            projectName, 
-            region, 
-            primaryRegion, 
-            secondaryRegions, 
+        const {
+            environment,
+            projectName,
+            region,
+            primaryRegion,
+            secondaryRegions,
             crossRegionEnabled,
             complianceStandards = ['SOC2', 'ISO27001'],
             dataClassification = 'internal'
@@ -61,7 +61,7 @@ export class SecurityStack extends cdk.Stack {
         cdk.Tags.of(this).add('Project', projectName);
         cdk.Tags.of(this).add('Stack', 'Security');
         cdk.Tags.of(this).add('DataClassification', dataClassification);
-        cdk.Tags.of(this).add('ComplianceStandards', complianceStandards.join(','));
+        cdk.Tags.of(this).add('ComplianceStandards', complianceStandards.join('/'));
 
         // Create enhanced KMS Key for encryption with cross-region support
         this.kmsKey = new kms.Key(this, 'EnhancedApplicationKey', {
@@ -93,7 +93,7 @@ export class SecurityStack extends cdk.Stack {
 
         // Create data classification bucket with encryption and compliance features
         this.dataClassificationBucket = new s3.Bucket(this, 'DataClassificationBucket', {
-            bucketName: `${projectName}-${environment}-data-classification-${this.account}-${this.region}`,
+            bucketName: `${projectName}-${environment}-data-cls-${this.account}-${this.region}`,
             encryption: s3.BucketEncryption.KMS,
             encryptionKey: this.kmsKey,
             blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
@@ -215,7 +215,7 @@ export class SecurityStack extends cdk.Stack {
             description: `Compliance monitoring role for ${complianceStandards.join(', ')} standards`,
             managedPolicies: [
                 iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
-                iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/ConfigRole')
+                iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWS_ConfigRole')
             ],
             inlinePolicies: {
                 'CompliancePolicy': new iam.PolicyDocument({
@@ -286,11 +286,11 @@ def lambda_handler(event, context):
             'data_classification': '${dataClassification}',
             'checks': []
         }
-        
+
         # Initialize AWS clients
         s3_client = boto3.client('s3')
         kms_client = boto3.client('kms')
-        
+
         # Check encryption compliance
         encryption_check = {
             'check_name': 'Encryption Compliance',
@@ -299,7 +299,7 @@ def lambda_handler(event, context):
             'timestamp': datetime.utcnow().isoformat()
         }
         compliance_results['checks'].append(encryption_check)
-        
+
         # Check data retention compliance
         retention_check = {
             'check_name': 'Data Retention Compliance',
@@ -308,19 +308,19 @@ def lambda_handler(event, context):
             'timestamp': datetime.utcnow().isoformat()
         }
         compliance_results['checks'].append(retention_check)
-        
+
         # Calculate overall compliance score
         total_checks = len(compliance_results['checks'])
         passed_checks = sum(1 for check in compliance_results['checks'] if check['status'] == 'COMPLIANT')
         compliance_results['overall_score'] = (passed_checks / total_checks) * 100 if total_checks > 0 else 0
-        
+
         logger.info(f"Compliance monitoring completed. Score: {compliance_results['overall_score']}%")
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps(compliance_results, default=str)
         }
-        
+
     except Exception as e:
         logger.error(f"Compliance monitoring failed: {str(e)}")
         return {
@@ -348,15 +348,24 @@ def lambda_handler(event, context):
 
         complianceScheduleRule.addTarget(new targets.LambdaFunction(this.complianceMonitoringFunction));
 
-        // Create AWS Config rules for compliance monitoring
-        this.securityConfigRule = new config.CfnConfigRule(this, 'SecurityComplianceRule', {
-            configRuleName: `${projectName}-${environment}-security-compliance`,
-            description: `Security compliance rule for ${complianceStandards.join(', ')} standards`,
-            source: {
-                owner: 'AWS_LAMBDA',
-                sourceIdentifier: this.complianceMonitoringFunction.functionArn
-            }
-        });
+        // Create AWS Config rules for compliance monitoring (production only — requires Config recorder)
+        if (environment === 'production') {
+            this.securityConfigRule = new config.CfnConfigRule(this, 'SecurityComplianceRule', {
+                configRuleName: `${projectName}-${environment}-security-compliance`,
+                description: `Security compliance rule for ${complianceStandards.join(', ')} standards`,
+                source: {
+                    owner: 'CUSTOM_LAMBDA',
+                    sourceIdentifier: this.complianceMonitoringFunction.functionArn,
+                    sourceDetails: [
+                        {
+                            eventSource: 'aws.config',
+                            messageType: 'ScheduledNotification',
+                            maximumExecutionFrequency: 'TwentyFour_Hours'
+                        }
+                    ]
+                }
+            });
+        }
 
         // Configure GDPR privacy protection if required
         if (complianceStandards.includes('GDPR')) {
@@ -406,8 +415,8 @@ def lambda_handler(event, context):
      * Configure Data Sovereignty Checks
      */
     private configureDataSovereigntyChecks(
-        projectName: string, 
-        environment: string, 
+        projectName: string,
+        environment: string,
         region?: string,
         secondaryRegions?: string[]
     ): void {
@@ -433,21 +442,21 @@ def lambda_handler(event, context):
     try:
         approved_regions = ['${region}']
         ${secondaryRegions ? `approved_regions.extend(${JSON.stringify(secondaryRegions)})` : ''}
-        
+
         sovereignty_results = {
             'timestamp': datetime.utcnow().isoformat(),
             'approved_regions': approved_regions,
             'violations': [],
             'compliant': True
         }
-        
+
         logger.info(f"Data sovereignty check completed for regions: {approved_regions}")
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps(sovereignty_results, default=str)
         }
-        
+
     except Exception as e:
         logger.error(f"Data sovereignty check failed: {str(e)}")
         return {
@@ -541,11 +550,14 @@ def lambda_handler(event, context):
         });
 
         // Config rule outputs
-        new cdk.CfnOutput(this, 'SecurityConfigRuleName', {
-            value: this.securityConfigRule.configRuleName || `${projectName}-${environment}-security-compliance`,
-            exportName: `${this.stackName}-SecurityConfigRuleName`,
-            description: 'Security compliance Config rule name'
-        });
+        // Config rule outputs (production only)
+        if (this.securityConfigRule) {
+            new cdk.CfnOutput(this, 'SecurityConfigRuleName', {
+                value: this.securityConfigRule.configRuleName || `${projectName}-${environment}-security-compliance`,
+                exportName: `${this.stackName}-SecurityConfigRuleName`,
+                description: 'Security compliance Config rule name'
+            });
+        }
 
         // Security summary output
         new cdk.CfnOutput(this, 'SecurityStackSummary', {
@@ -616,7 +628,7 @@ def lambda_handler(event, context):
                     reason: 'Compliance role uses AWS managed policies for Lambda execution and Config service access',
                     appliesTo: [
                         'Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
-                        'Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/ConfigRole'
+                        'Policy::arn:<AWS::Partition>:iam::aws:policy/service-role/AWS_ConfigRole'
                     ]
                 }
             ]

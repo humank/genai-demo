@@ -1,0 +1,20 @@
+{
+    "name": "frontend-monorepo",
+    "private": true,
+    "scripts": {
+        "dev": "turbo dev",
+        "build": "turbo build",
+        "lint": "turbo lint",
+        "test": "turbo test",
+        "type-check": "turbo type-check",
+        "e2e": "playwright test --config e2e/playwright.config.ts",
+        "e2e:consumer": "playwright test --config e2e/playwright.config.ts --project=consumer",
+        "e2e:cmc": "playwright test --config e2e/playwright.config.ts --project=cmc"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.58.2",
+        "turbo": "^2.3.0",
+        "typescript": "^5.5.0"
+    },
+    "packageManager": "pnpm@9.15.9"
+}

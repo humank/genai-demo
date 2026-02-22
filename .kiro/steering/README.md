@@ -1,125 +1,68 @@
 # Steering Rules Guide
 
----
-
-## 🚨 CRITICAL - READ THIS FIRST 🚨
-
-**BEFORE creating or updating ANY documentation:**
-
-### 📄 [documentation-date-requirements.md](documentation-date-requirements.md)
-
-**MANDATORY reading for ALL documentation work.**
-
-```bash
-# ALWAYS run this FIRST
-date +%Y-%m-%d
-```
-
-**Use that EXACT date in ALL date fields!**
-
----
-
 ## 🚀 Quick Start
 
 ### I need to
 
-- **Write/Update documentation**: **FIRST** read [documentation-date-requirements.md](documentation-date-requirements.md) ← **MANDATORY**
-- **Setup IDE**: Configure [IDE Configuration Standards](ide-configuration-standards.md)
-- **Write code**: Start with [Development Standards](development-standards.md)
+- **Write code**: Start with [Development Guide](development-guide.md)
+- **Design architecture**: Check [Architecture Guide](architecture-guide.md)
 - **Review code**: Use [Code Review Standards](code-review-standards.md)
-- **Create diagrams**: See [Diagram Standards](diagram-standards.md) and [Diagram Generation Standards](diagram-generation-standards.md)
-- **Design architecture**: Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md)
-- **Optimize performance**: Review [Performance Standards](performance-standards.md)
-- **Implement security**: Follow [Security Standards](security-standards.md)
+- **Optimize performance**: Review [Performance Guide](performance-guide.md)
+- **Implement security**: Follow [Security Guide](security-guide.md)
+- **Create diagrams**: See [Diagram Standards](diagram-standards.md)
+- **Design UI/UX**: Use [UI-UX Pro Max](ui-ux-pro-max/SKILL.md)
 
-## 📚 Document Categories
+---
 
-### Core Standards (Read First)
+## 📚 Core Guides (Read First)
 
-Essential standards for daily development work.
+Essential guides for daily development work.
+
+| Guide | Purpose | When to Use |
+|-------|---------|-------------|
+| **[Development Guide](development-guide.md)** | Testing, BDD/TDD, code quality | Daily coding and testing |
+| **[Architecture Guide](architecture-guide.md)** | DDD patterns, hexagonal architecture | Designing system architecture |
+| **[Performance Guide](performance-guide.md)** | Performance optimization | Optimizing system performance |
+| **[Security Guide](security-guide.md)** | Security implementation | Implementing auth, encryption |
+
+---
+
+## 📖 Specialized Standards
+
+Domain-specific standards for specific areas.
 
 | Document | Purpose | When to Use |
 |----------|---------|-------------|
-| **[documentation-date-requirements.md](documentation-date-requirements.md)** | **Documentation date requirements** | **BEFORE any documentation work** |
-| [IDE Configuration Standards](ide-configuration-standards.md) | Kiro IDE setup and auto-checks | Initial setup, troubleshooting IDE |
-| [Development Standards](development-standards.md) | Primary development guide | Daily coding, testing, architecture |
 | [Code Review Standards](code-review-standards.md) | Review process and checklist | Before and during code reviews |
-
-### Specialized Standards (Domain-Specific)
-
-Deep-dive standards for specific areas.
-
-| Document | Purpose | When to Use |
-|----------|---------|-------------|
-| [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md) | Architecture viewpoints | Designing system architecture |
+| [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md) | Architecture viewpoints | Comprehensive architecture analysis |
 | [Event Storming Standards](event-storming-standards.md) | Collaborative domain modeling | Conducting Event Storming workshops |
-| [Security Standards](security-standards.md) | Security implementation | Implementing auth, encryption, etc. |
-| [Performance Standards](performance-standards.md) | Performance optimization | Optimizing system performance |
 | [Domain Events](domain-events.md) | DDD event patterns | Implementing domain events |
-| [Diagram Standards](diagram-standards.md) | When to use ASCII/Mermaid/PlantUML/Excalidraw | Creating any diagram |
+| [Diagram Standards](diagram-standards.md) | When to use ASCII/Mermaid/PlantUML | Creating any diagram |
 | [Diagram Generation](diagram-generation-standards.md) | PlantUML generation details | Generating PlantUML diagrams |
 
-### Reference Standards (Deep Dive)
-
-Detailed technical references for specific topics.
-
-| Document | Purpose | When to Use |
-|----------|---------|-------------|
-| [Test Performance Standards](test-performance-standards.md) | Test performance deep dive | Troubleshooting test performance |
+---
 
 ## 🎯 Common Scenarios
 
-### Setting Up Development Environment
-
-1. Install extensions from [IDE Configuration Standards](ide-configuration-standards.md)
-2. Configure automatic checks and fixes
-3. Verify setup with sample code
-
 ### Starting a New Feature
 
-1. Review [Development Standards](development-standards.md) - Architecture and testing
-2. Check [Rozanski & Woods Methodology](rozanski-woods-architecture-methodology.md) - Viewpoint analysis
-3. Conduct [Event Storming](event-storming-standards.md) - For domain discovery
-4. Follow [Domain Events](domain-events.md) - If using DDD patterns
-5. Create diagrams using [Diagram Standards](diagram-standards.md) - Choose right format
+1. Review [Development Guide](development-guide.md) - Testing and code quality
+2. Check [Architecture Guide](architecture-guide.md) - DDD patterns
+3. Follow [Domain Events](domain-events.md) - If using events
+4. Create diagrams using [Diagram Standards](diagram-standards.md)
 
 ### Fixing Performance Issues
 
-1. Start with [Performance Standards](performance-standards.md) - General optimization
-2. For test performance: [Test Performance Standards](test-performance-standards.md)
-3. Review [Development Standards](development-standards.md) - Database and caching patterns
+1. Start with [Performance Guide](performance-guide.md) - General optimization
+2. Review [Development Guide](development-guide.md) - Database and caching patterns
 
 ### Writing Documentation
 
-1. Follow [Development Standards](development-standards.md) - Documentation guidelines
-2. Choose diagram format with [Diagram Standards](diagram-standards.md) - ASCII/Mermaid/PlantUML/Excalidraw
-3. Generate PlantUML with [Diagram Generation Standards](diagram-generation-standards.md) - For complex UML
-4. Document [Event Storming Sessions](event-storming-standards.md) - For workshop results
+1. Follow [Development Guide](development-guide.md) - Documentation guidelines
+2. Choose diagram format with [Diagram Standards](diagram-standards.md)
+3. Generate PlantUML with [Diagram Generation Standards](diagram-generation-standards.md)
 
-## 📖 Document Relationships
-
-```mermaid
-graph TD
-    A[Development Standards] --> B[Test Performance Standards]
-    A --> C[Performance Standards]
-    A --> D[Security Standards]
-    A --> J[Diagram Generation]
-    G[Rozanski & Woods] --> A
-    K[Event Storming] --> H
-    H[Domain Events] --> A
-    I[Code Review Standards] --> A
-    I --> D
-    I --> C
-    K --> J
-```
-
-## 🔄 Recent Changes
-
-- **2025-11-22**: Added IDE Configuration Standards for Kiro IDE
-- **2025-01-XX**: Consolidated language and documentation standards
-- **2025-01-XX**: Removed duplicate test performance content
-- **2025-01-XX**: Merged BDD/TDD principles into development standards
-- **2025-01-XX**: Redesigned README for better navigation
+---
 
 ## 📝 Contributing
 
@@ -132,6 +75,7 @@ When updating steering rules:
 
 ---
 
-**Total Documents**: 17
-**Last Updated**: 2025-11-08
+**Total Guides**: 11 (consolidated from 44 files)
+**Last Updated**: 2026-02-21
 **Owner**: Development Team
+

@@ -3,8 +3,8 @@ import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as cloudwatch_actions from 'aws-cdk-lib/aws-cloudwatch-actions';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as events from 'aws-cdk-lib/aws-events';
-import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as eventsTargets from 'aws-cdk-lib/aws-events-targets';
+import * as targets from 'aws-cdk-lib/aws-events-targets';
 import * as grafana from 'aws-cdk-lib/aws-grafana';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as kms from 'aws-cdk-lib/aws-kms';
@@ -12,9 +12,9 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
-import { LambdaInsightsMonitoring } from '../constructs/lambda-insights-monitoring';
 import { ApplicationInsightsRum } from '../constructs/application-insights-rum';
 import { CloudWatchSyntheticsMonitoring } from '../constructs/cloudwatch-synthetics-monitoring';
+import { LambdaInsightsMonitoring } from '../constructs/lambda-insights-monitoring';
 import { VpcFlowLogsMonitoring } from '../constructs/vpc-flow-logs-monitoring';
 
 export interface ObservabilityStackProps extends cdk.StackProps {
@@ -61,6 +61,13 @@ export class ObservabilityStack extends cdk.Stack {
 
         const environment = props.environment || 'development';
 
+        // Regions that do NOT support Grafana, RUM, or Cognito Identity Pool
+        const UNSUPPORTED_GRAFANA_REGIONS = ['ap-east-2', 'me-south-1', 'af-south-1', 'ap-southeast-3'];
+        const UNSUPPORTED_RUM_REGIONS = ['ap-east-2', 'me-south-1', 'af-south-1', 'ap-southeast-3'];
+        const currentRegion = cdk.Stack.of(this).region;
+        const grafanaSupported = !UNSUPPORTED_GRAFANA_REGIONS.includes(currentRegion);
+        const rumSupported = !UNSUPPORTED_RUM_REGIONS.includes(currentRegion);
+
         // Create CloudWatch Log Group
         this.logGroup = new logs.LogGroup(this, 'ApplicationLogGroup', {
             logGroupName: `/aws/genai-demo/application`,
@@ -87,7 +94,7 @@ export class ObservabilityStack extends cdk.Stack {
         // Add basic widgets to dashboard
         this.dashboard.addWidgets(
             new cloudwatch.TextWidget({
-                markdown: `# GenAI Demo Monitoring Dashboard\n\nEnvironment: ${environment}\n\n## AWS Native Concurrency Monitoring System\n\n- **CloudWatch Container Insights**: EKS cluster monitoring\n- **X-Ray Distributed Tracing**: Request chain tracking\n- **Amazon Managed Grafana**: Unified monitoring dashboard\n- **Spring Boot Actuator**: Application metrics export`,
+                markdown: `# GenAI Demo Monitoring Dashboard\n\nEnvironment: ${environment}\n\n## AWS Native Concurrency Monitoring System\n\n- **CloudWatch Container Insights**: EKS cluster monitoring\n- **X-Ray Distributed Tracing**: Request chain tracking\n- **Amazon Managed Grafana**: ${grafanaSupported ? 'Unified monitoring dashboard' : 'Not available in ' + currentRegion}\n- **Spring Boot Actuator**: Application metrics export`,
                 width: 24,
                 height: 4,
             })
@@ -99,8 +106,13 @@ export class ObservabilityStack extends cdk.Stack {
         // Configure X-Ray distributed tracing
         this.configureXRayTracing(environment);
 
-        // Set up Amazon Managed Grafana
-        this.setupManagedGrafana(environment);
+        // Set up Amazon Managed Grafana (skip in unsupported regions)
+        if (grafanaSupported) {
+            this.setupManagedGrafana(environment);
+        } else {
+            // Still create Prometheus workspace (supported in ap-east-2)
+            this.setupPrometheusOnly(environment);
+        }
 
         // Add concurrency monitoring widgets
         this.addConcurrencyMonitoringWidgets(environment);
@@ -117,8 +129,10 @@ export class ObservabilityStack extends cdk.Stack {
         // Add Lambda Insights intelligent monitoring (Requirements 13.7, 13.8, 13.9)
         this.addLambdaInsightsMonitoring(environment);
 
-        // Add Application Insights RUM monitoring (Requirements 13.10, 13.11, 13.12)
-        this.addApplicationInsightsRumMonitoring(environment);
+        // Add Application Insights RUM monitoring (skip in unsupported regions — requires Cognito + RUM)
+        if (rumSupported) {
+            this.addApplicationInsightsRumMonitoring(environment);
+        }
 
         // Add CloudWatch Synthetics proactive monitoring (Requirements 13.13, 13.14, 13.15)
         if (props.enableSyntheticsMonitoring && props.apiEndpoint) {
@@ -241,11 +255,11 @@ export class ObservabilityStack extends cdk.Stack {
         this.dashboard.addWidgets(
             new cloudwatch.TextWidget({
                 markdown: `## Performance Insights
-                
+
 **Aurora PostgreSQL Performance Insights** provides detailed database performance monitoring:
 
 - **Lock Analysis**: View lock trees and blocked sessions
-- **Wait Events**: Monitor Lock:transactionid, Lock:relation, Lock:tuple events  
+- **Wait Events**: Monitor Lock:transactionid, Lock:relation, Lock:tuple events
 - **Top SQL**: Identify queries causing deadlocks
 - **Database Load**: Track db.Concurrency.deadlocks metric
 
@@ -278,9 +292,9 @@ from datetime import datetime, timedelta
 def handler(event, context):
     logs_client = boto3.client('logs')
     cloudwatch = boto3.client('cloudwatch')
-    
+
     log_group_name = os.environ['LOG_GROUP_NAME']
-    
+
     try:
         # Start Log Insights query for deadlock detection
         query_response = logs_client.start_query(
@@ -295,22 +309,22 @@ def handler(event, context):
                 | sort @timestamp desc
             '''
         )
-        
+
         query_id = query_response['queryId']
-        
+
         # Wait for query to complete
         import time
         time.sleep(10)
-        
+
         results = logs_client.get_query_results(queryId=query_id)
-        
+
         deadlock_count = 0
         if results['results']:
             for result in results['results']:
                 for field in result:
                     if field['field'] == 'deadlock_count':
                         deadlock_count += int(field['value'])
-        
+
         # Send custom metric to CloudWatch
         cloudwatch.put_metric_data(
             Namespace='Custom/Aurora/PostgreSQL',
@@ -329,7 +343,7 @@ def handler(event, context):
                 }
             ]
         )
-        
+
         # If deadlocks detected, create additional analysis
         if deadlock_count > 0:
             detailed_query = logs_client.start_query(
@@ -344,10 +358,10 @@ def handler(event, context):
                     | limit 10
                 '''
             )
-            
+
             print(f"Deadlocks detected: {deadlock_count}")
             print(f"Detailed analysis query ID: {detailed_query['queryId']}")
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps({
@@ -355,7 +369,7 @@ def handler(event, context):
                 'query_id': query_id
             })
         }
-        
+
     except Exception as e:
         print(f"Error analyzing logs: {str(e)}")
         return {
@@ -405,9 +419,9 @@ def handler(event, context):
         deadlockAnalysisRule.addTarget(new eventsTargets.LambdaFunction(deadlockAnalysisFunction));
 
         // Note: CloudWatch Log Insights queries can be created manually in the console
-        // Query for deadlock analysis: 
+        // Query for deadlock analysis:
         // fields @timestamp, @message | filter @message like /deadlock/i | filter @message like /ERROR/i or @message like /FATAL/i | sort @timestamp desc | limit 50
-        
+
         // Query for lock contention analysis:
         // fields @timestamp, @message | filter @message like /lock/i and (@message like /wait/i or @message like /timeout/i) | filter @message like /ERROR/i or @message like /WARNING/i | stats count() by bin(5m) | sort @timestamp desc
 
@@ -603,7 +617,7 @@ def handler(event, context):
     """
     cluster_name = os.environ.get('CLUSTER_NAME', 'genai-demo-cluster')
     log_group = os.environ.get('LOG_GROUP_NAME')
-    
+
     try:
         # Query CloudWatch Logs Insights for restart events
         query = """
@@ -613,25 +627,25 @@ def handler(event, context):
         | sort @timestamp desc
         | limit 20
         """
-        
+
         end_time = datetime.now()
         start_time = end_time - timedelta(minutes=15)
-        
+
         query_response = logs_client.start_query(
             logGroupName=log_group,
             startTime=int(start_time.timestamp()),
             endTime=int(end_time.timestamp()),
             queryString=query
         )
-        
+
         query_id = query_response['queryId']
-        
+
         # Wait for query to complete (simplified for demo)
         import time
         time.sleep(2)
-        
+
         results = logs_client.get_query_results(queryId=query_id)
-        
+
         # Analyze restart patterns
         restart_analysis = {
             'timestamp': datetime.now().isoformat(),
@@ -639,21 +653,21 @@ def handler(event, context):
             'restart_events': len(results.get('results', [])),
             'analysis': []
         }
-        
+
         for result in results.get('results', []):
             event_data = {field['field']: field['value'] for field in result}
-            
+
             # Determine root cause
             log_message = event_data.get('log', '')
             root_cause = 'Unknown'
-            
+
             if 'OOMKilled' in log_message:
                 root_cause = 'Out of Memory - Container exceeded memory limits'
             elif 'CrashLoopBackOff' in log_message:
                 root_cause = 'Application crash - Check application logs for errors'
             elif 'Exception' in log_message or 'Error' in log_message:
                 root_cause = 'Application error - Review error logs and stack traces'
-            
+
             restart_analysis['analysis'].append({
                 'pod': event_data.get('kubernetes.pod_name', 'unknown'),
                 'namespace': event_data.get('kubernetes.namespace_name', 'default'),
@@ -662,7 +676,7 @@ def handler(event, context):
                 'root_cause': root_cause,
                 'log_snippet': log_message[:200]
             })
-        
+
         # Publish custom metric for restart analysis
         cloudwatch.put_metric_data(
             Namespace='ContainerInsights/Analysis',
@@ -678,14 +692,14 @@ def handler(event, context):
                 }
             ]
         )
-        
+
         print(json.dumps(restart_analysis, indent=2))
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps(restart_analysis)
         }
-        
+
     except Exception as e:
         print(f"Error analyzing container restarts: {str(e)}")
         return {
@@ -735,9 +749,12 @@ def handler(event, context):
      * Configure X-Ray distributed tracing integration
      */
     private configureXRayTracing(environment: string): void {
-        // Create IAM role for X-Ray daemon
+        // Create IAM role for X-Ray daemon (used by EKS pods)
         this.xrayRole = new iam.Role(this, 'XRayRole', {
-            assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
+            assumedBy: new iam.CompositePrincipal(
+                new iam.ServicePrincipal('ec2.amazonaws.com'),
+                new iam.ServicePrincipal('lambda.amazonaws.com'),
+            ),
             managedPolicies: [
                 iam.ManagedPolicy.fromAwsManagedPolicyName('AWSXRayDaemonWriteAccess'),
             ],
@@ -756,20 +773,18 @@ def handler(event, context):
             resources: ['*'],
         }));
 
-        // Create X-Ray sampling rule for the application
-        const samplingRule = new lambda.CfnFunction(this, 'XRaySamplingRuleFunction', {
-            runtime: 'python3.9',
+        // Create X-Ray sampling rule using L2 Lambda Function
+        const samplingRuleFunction = new lambda.Function(this, 'XRaySamplingRuleFunction', {
+            runtime: lambda.Runtime.PYTHON_3_9,
             handler: 'index.handler',
-            code: {
-                zipFile: `
+            code: lambda.Code.fromInline(`
 import boto3
 import json
 
 def handler(event, context):
     xray = boto3.client('xray')
-    
+
     try:
-        # Create sampling rule for GenAI Demo application
         response = xray.create_sampling_rule(
             SamplingRule={
                 'RuleName': 'GenAIDemoSamplingRule',
@@ -800,10 +815,9 @@ def handler(event, context):
                 'statusCode': 500,
                 'body': json.dumps(f'Error: {str(e)}')
             }
-                `,
-            },
-            role: this.xrayRole.roleArn,
-            timeout: 60,
+`),
+            timeout: cdk.Duration.seconds(60),
+            role: this.xrayRole,
         });
     }
 
@@ -879,6 +893,34 @@ def handler(event, context):
         });
 
         // Output Prometheus workspace details
+        new cdk.CfnOutput(this, 'PrometheusWorkspaceId', {
+            value: prometheusWorkspace.getAtt('WorkspaceId').toString(),
+            exportName: `${environment}-PrometheusWorkspaceId`,
+        });
+
+        new cdk.CfnOutput(this, 'PrometheusEndpoint', {
+            value: prometheusWorkspace.getAtt('PrometheusEndpoint').toString(),
+            exportName: `${environment}-PrometheusEndpoint`,
+        });
+    }
+
+    /**
+     * Set up only Prometheus workspace (for regions without Grafana support)
+     */
+    private setupPrometheusOnly(environment: string): void {
+        // Create Prometheus workspace for KEDA metrics
+        const prometheusWorkspace = new cdk.CfnResource(this, 'PrometheusWorkspace', {
+            type: 'AWS::APS::Workspace',
+            properties: {
+                Alias: `genai-demo-${environment}-prometheus`,
+                Tags: [
+                    { Key: 'Environment', Value: environment },
+                    { Key: 'Project', Value: 'genai-demo' },
+                    { Key: 'Component', Value: 'Monitoring' },
+                ],
+            },
+        });
+
         new cdk.CfnOutput(this, 'PrometheusWorkspaceId', {
             value: prometheusWorkspace.getAtt('WorkspaceId').toString(),
             exportName: `${environment}-PrometheusWorkspaceId`,
@@ -1001,10 +1043,11 @@ def handler(event, context):
             })
         );
 
-        // Grafana Dashboard Link
-        this.dashboard.addWidgets(
-            new cloudwatch.TextWidget({
-                markdown: `## Amazon Managed Grafana
+        // Grafana Dashboard Link (only if Grafana is available)
+        if (this.grafanaWorkspace) {
+            this.dashboard.addWidgets(
+                new cloudwatch.TextWidget({
+                    markdown: `## Amazon Managed Grafana
 
 **Workspace**: [Open Grafana Dashboard](https://g-${this.grafanaWorkspace.attrId}.grafana-workspace.${this.region}.amazonaws.com/)
 
@@ -1019,10 +1062,11 @@ def handler(event, context):
 - Application Performance
 - Thread Pool Monitoring
 - Distributed Tracing Analysis`,
-                width: 12,
-                height: 6,
-            })
-        );
+                    width: 12,
+                    height: 6,
+                })
+            );
+        }
 
         // JVM and Application Metrics
         this.dashboard.addWidgets(
@@ -1128,15 +1172,17 @@ def handler(event, context):
             exportName: `${environment}-XRayServiceMapURL`,
         });
 
-        new cdk.CfnOutput(this, 'GrafanaWorkspaceId', {
-            value: this.grafanaWorkspace.attrId,
-            exportName: `${environment}-GrafanaWorkspaceId`,
-        });
+        if (this.grafanaWorkspace) {
+            new cdk.CfnOutput(this, 'GrafanaWorkspaceId', {
+                value: this.grafanaWorkspace.attrId,
+                exportName: `${environment}-GrafanaWorkspaceId`,
+            });
 
-        new cdk.CfnOutput(this, 'GrafanaWorkspaceURL', {
-            value: `https://g-${this.grafanaWorkspace.attrId}.grafana-workspace.${this.region}.amazonaws.com/`,
-            exportName: `${environment}-GrafanaWorkspaceURL`,
-        });
+            new cdk.CfnOutput(this, 'GrafanaWorkspaceURL', {
+                value: `https://g-${this.grafanaWorkspace.attrId}.grafana-workspace.${this.region}.amazonaws.com/`,
+                exportName: `${environment}-GrafanaWorkspaceURL`,
+            });
+        }
 
         new cdk.CfnOutput(this, 'ContainerInsightsRoleArn', {
             value: this.containerInsightsRole.roleArn,
@@ -1320,17 +1366,17 @@ def handler(event, context):
     Detect idle resources in EKS clusters
     """
     cloudwatch = boto3.client('cloudwatch')
-    
+
     idle_resources = []
-    
+
     try:
         cluster_names = event.get('clusterNames', [])
-        
+
         for cluster_name in cluster_names:
             # Analyze node utilization
             node_analysis = analyze_node_utilization(cloudwatch, cluster_name)
             idle_resources.extend(node_analysis)
-        
+
         # Publish idle resource metrics
         if idle_resources:
             cloudwatch.put_metric_data(
@@ -1344,7 +1390,7 @@ def handler(event, context):
                     }
                 ]
             )
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps({
@@ -1352,7 +1398,7 @@ def handler(event, context):
                 'totalIdleCount': len(idle_resources)
             })
         }
-        
+
     except Exception as e:
         print(f"Error in idle resource detection: {str(e)}")
         return {
@@ -1363,7 +1409,7 @@ def handler(event, context):
 def analyze_node_utilization(cloudwatch, cluster_name: str) -> List[Dict[str, Any]]:
     """Analyze node utilization to detect idle nodes"""
     idle_nodes = []
-    
+
     # Get node CPU utilization over the last 24 hours
     cpu_response = cloudwatch.get_metric_statistics(
         Namespace='ContainerInsights',
@@ -1376,10 +1422,10 @@ def analyze_node_utilization(cloudwatch, cluster_name: str) -> List[Dict[str, An
         Period=3600,
         Statistics=['Average']
     )
-    
+
     if cpu_response['Datapoints']:
         avg_cpu = sum(dp['Average'] for dp in cpu_response['Datapoints']) / len(cpu_response['Datapoints'])
-        
+
         if avg_cpu < 10:  # Less than 10% CPU utilization
             idle_nodes.append({
                 'type': 'IDLE_NODE',
@@ -1390,7 +1436,7 @@ def analyze_node_utilization(cloudwatch, cluster_name: str) -> List[Dict[str, An
                 'potential_savings': 'Up to 80% cost reduction',
                 'idle_duration': '24+ hours'
             })
-    
+
     return idle_nodes
             `),
             timeout: cdk.Duration.minutes(5),
@@ -1732,10 +1778,10 @@ def handler(event, context):
     logs_client = boto3.client('logs')
     cloudwatch = boto3.client('cloudwatch')
     rds_client = boto3.client('rds')
-    
+
     log_group_name = '/aws/rds/cluster/genai-demo-${environment}-primary-aurora/postgresql'
     db_instance_id = os.environ['DB_INSTANCE_ID']
-    
+
     try:
         # Query CloudWatch Logs for slow queries
         query_response = logs_client.start_query(
@@ -1751,19 +1797,19 @@ def handler(event, context):
                 | sort @timestamp desc
             '''
         )
-        
+
         query_id = query_response['queryId']
-        
+
         # Wait for query to complete
         import time
         time.sleep(10)
-        
+
         results = logs_client.get_query_results(queryId=query_id)
-        
+
         slow_query_count = 0
         avg_duration = 0
         max_duration = 0
-        
+
         if results['results']:
             for result in results['results']:
                 for field in result:
@@ -1773,7 +1819,7 @@ def handler(event, context):
                         avg_duration = max(avg_duration, float(field['value']))
                     elif field['field'] == 'max_duration':
                         max_duration = max(max_duration, float(field['value']))
-        
+
         # Publish custom metrics to CloudWatch
         cloudwatch.put_metric_data(
             Namespace='Custom/RDS/PerformanceInsights',
@@ -1810,11 +1856,11 @@ def handler(event, context):
                 }
             ]
         )
-        
+
         # Generate optimization recommendations if slow queries detected
         if slow_query_count > 10:
             recommendations = generate_optimization_recommendations(slow_query_count, avg_duration, max_duration)
-            
+
             # Publish recommendations to CloudWatch Logs
             logs_client.put_log_events(
                 logGroupName='/aws/lambda/slow-query-analysis',
@@ -1834,7 +1880,7 @@ def handler(event, context):
                     }
                 ]
             )
-        
+
         return {
             'statusCode': 200,
             'body': json.dumps({
@@ -1843,7 +1889,7 @@ def handler(event, context):
                 'max_duration': max_duration
             })
         }
-        
+
     except Exception as e:
         print(f'Error analyzing slow queries: {str(e)}')
         return {
@@ -1853,7 +1899,7 @@ def handler(event, context):
 
 def generate_optimization_recommendations(count, avg_duration, max_duration):
     recommendations = []
-    
+
     if count > 50:
         recommendations.append({
             'priority': 'HIGH',
@@ -1861,7 +1907,7 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
             'recommendation': 'High volume of slow queries detected. Review and optimize top SQL queries using Performance Insights.',
             'action': 'Analyze top SQL queries in Performance Insights console and add appropriate indexes.'
         })
-    
+
     if avg_duration > 5000:
         recommendations.append({
             'priority': 'HIGH',
@@ -1869,7 +1915,7 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
             'recommendation': 'Average query duration exceeds 5 seconds. Consider query optimization and caching.',
             'action': 'Implement query result caching using Redis and optimize complex JOINs.'
         })
-    
+
     if max_duration > 30000:
         recommendations.append({
             'priority': 'CRITICAL',
@@ -1877,14 +1923,14 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
             'recommendation': 'Queries exceeding 30 seconds detected. Risk of connection timeout.',
             'action': 'Implement query timeout limits and break down complex queries into smaller operations.'
         })
-    
+
     recommendations.append({
         'priority': 'MEDIUM',
         'category': 'Connection Pool',
         'recommendation': 'Review connection pool configuration for optimal performance.',
         'action': 'Verify HikariCP settings: maximumPoolSize=20, minimumIdle=5, connectionTimeout=20000ms'
     })
-    
+
     return recommendations
             `),
             timeout: cdk.Duration.minutes(5),
@@ -2016,7 +2062,7 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
     /**
      * Add Lambda Insights intelligent monitoring
      * Requirements: 13.7, 13.8, 13.9
-     * 
+     *
      * Provides:
      * - Execution metrics collection (13.7)
      * - Cold start pattern analysis (13.8)
@@ -2046,14 +2092,14 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
     /**
      * Add Application Insights frontend monitoring with Real User Monitoring (RUM)
      * Requirements: 13.10, 13.11, 13.12
-     * 
+     *
      * Provides:
      * - Real User Monitoring (RUM) for frontend applications (13.10)
      * - JavaScript error tracking with context collection (13.11)
      * - Core Web Vitals performance monitoring (13.12)
      */
     private addApplicationInsightsRumMonitoring(environment: string): void {
-        // Consumer Frontend RUM (Angular)
+        // Consumer Frontend RUM (Next.js 15)
         const consumerRum = new ApplicationInsightsRum(this, 'ConsumerRum', {
             appMonitorName: `genai-demo-consumer-${environment}`,
             domain: environment === 'production' ? 'consumer.genai-demo.com' : `consumer-${environment}.genai-demo.com`,
@@ -2063,12 +2109,12 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
             tags: {
                 Environment: environment,
                 Service: 'consumer-frontend',
-                Framework: 'Angular',
+                Framework: 'NextJS',
                 ManagedBy: 'CDK',
             },
         });
 
-        // CMC Management Frontend RUM (Next.js)
+        // CMC Management Frontend RUM (Next.js 16)
         const cmcRum = new ApplicationInsightsRum(this, 'CmcRum', {
             appMonitorName: `genai-demo-cmc-${environment}`,
             domain: environment === 'production' ? 'cmc.genai-demo.com' : `cmc-${environment}.genai-demo.com`,
@@ -2086,7 +2132,7 @@ def generate_optimization_recommendations(count, avg_duration, max_duration):
         // Add RUM metrics to dashboard
         this.dashboard.addWidgets(
             new cloudwatch.TextWidget({
-                markdown: `## Application Insights - Real User Monitoring (RUM)\n\n**Consumer Frontend (Angular)**: ${consumerRum.appMonitor.name}\n**CMC Frontend (Next.js)**: ${cmcRum.appMonitor.name}\n\n### Key Metrics:\n- Page Load Performance\n- JavaScript Errors\n- Core Web Vitals (LCP, FID, CLS)\n- HTTP Request Tracking`,
+                markdown: `## Application Insights - Real User Monitoring (RUM)\n\n**Consumer Frontend (Next.js 15)**: ${consumerRum.appMonitor.name}\n**CMC Frontend (Next.js 16)**: ${cmcRum.appMonitor.name}\n\n### Key Metrics:\n- Page Load Performance\n- JavaScript Errors\n- Core Web Vitals (LCP, FID, CLS)\n- HTTP Request Tracking`,
                 width: 24,
                 height: 3,
             }),
