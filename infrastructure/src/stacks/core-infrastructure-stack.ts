@@ -269,11 +269,14 @@ export class CoreInfrastructureStack extends cdk.Stack {
         });
 
         // Create HTTPS listener for production (if certificates are available)
-        if (environment === 'production') {
+        // Note: kimkao.io domain is disabled, so HTTPS is temporarily disabled
+        // TODO: Re-enable when new domain and certificate are available
+        const certificateArn = this.node.tryGetContext('certificateArn');
+        if (environment === 'production' && certificateArn) {
             const httpsListener = this.loadBalancer.addListener('HttpsListener', {
                 port: 443,
                 protocol: elbv2.ApplicationProtocol.HTTPS,
-                // certificateArns: [certificateArn], // Would be provided in production
+                certificates: [elbv2.ListenerCertificate.fromArn(certificateArn)],
                 defaultAction: elbv2.ListenerAction.redirect({
                     protocol: 'HTTPS',
                     port: '443',

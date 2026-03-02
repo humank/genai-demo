@@ -197,8 +197,8 @@ export class RdsStack extends cdk.Stack {
         cdk.Tags.of(globalCluster).add('Project', projectName);
         cdk.Tags.of(globalCluster).add('DatabaseType', 'Aurora-Global');
         cdk.Tags.of(globalCluster).add('Architecture', 'active-active');
-        cdk.Tags.of(globalCluster).add('RPO-Target', '<1s');
-        cdk.Tags.of(globalCluster).add('RTO-Target', '<2min');
+        cdk.Tags.of(globalCluster).add('RPO-Target', '1s'); // Fixed: removed < symbol
+        cdk.Tags.of(globalCluster).add('RTO-Target', '2min'); // Fixed: removed < symbol
 
         return globalCluster;
     }
@@ -399,11 +399,19 @@ export class RdsStack extends cdk.Stack {
     }
 
     private createDatabaseSecret(projectName: string, environment: string): secretsmanager.Secret {
+        const secretName = `${projectName}/${environment}/database/credentials`;
+        
+        // For production, import existing secret to avoid recreation
+        // For other environments, create new secret
+        if (environment === 'production') {
+            return secretsmanager.Secret.fromSecretNameV2(this, 'DatabaseSecret', secretName) as secretsmanager.Secret;
+        }
+        
         // Use AWS managed Secrets Manager key for encryption
         const secretsManagerKey = kms.Alias.fromAliasName(this, 'SecretsManagerKey', 'alias/aws/secretsmanager');
 
         const secret = new secretsmanager.Secret(this, 'DatabaseSecret', {
-            secretName: `${projectName}/${environment}/database/credentials`,
+            secretName: secretName,
             description: `Database credentials for ${projectName} ${environment}`,
             generateSecretString: {
                 secretStringTemplate: JSON.stringify({
@@ -416,9 +424,7 @@ export class RdsStack extends cdk.Stack {
                 passwordLength: 32
             },
             encryptionKey: secretsManagerKey,
-            removalPolicy: environment === 'production'
-                ? cdk.RemovalPolicy.RETAIN
-                : cdk.RemovalPolicy.DESTROY
+            removalPolicy: cdk.RemovalPolicy.DESTROY
         });
 
         cdk.Tags.of(secret).add('Name', `${projectName}-${environment}-db-secret`);

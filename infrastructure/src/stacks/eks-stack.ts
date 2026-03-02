@@ -62,8 +62,9 @@ export class EKSStack extends cdk.Stack {
         // Note: Application service account is created in EKS IRSA Stack
         // this.createApplicationServiceAccount(projectName, environment, region);
 
+        // KEDA and cross-region features disabled for initial production deployment
         // Install KEDA for event-driven autoscaling with cross-region support
-        this.installKEDA(environment);
+        // this.installKEDA(environment);
 
         // Configure Cluster Autoscaler with cross-region awareness
         this.configureClusterAutoscaler(projectName, environment);
@@ -71,7 +72,8 @@ export class EKSStack extends cdk.Stack {
         // Cross-region features (Istio, service mesh, intelligent routing) are only
         // enabled for staging/production environments. Development doesn't need them
         // and they require CRDs that must be installed in a specific order.
-        const enableCrossRegion = environment !== 'development';
+        // Disabled for initial production deployment
+        const enableCrossRegion = false; // environment !== 'development';
         if (enableCrossRegion) {
             // Configure cross-region service mesh networking
             this.configureCrossRegionNetworking(projectName, environment);
@@ -126,12 +128,29 @@ export class EKSStack extends cdk.Stack {
             ],
         });
 
-        // Create CloudWatch log group for EKS
-        const logGroup = new logs.LogGroup(this, 'EKSClusterLogGroup', {
-            logGroupName: `/aws/eks/${projectName}-${environment}-${region || 'ap-east-2'}/cluster`,
-            retention: logs.RetentionDays.ONE_WEEK,
-            removalPolicy: cdk.RemovalPolicy.DESTROY,
-        });
+        // Create CloudWatch log group for EKS - import if exists for production
+        let logGroup: logs.ILogGroup;
+        const logGroupName = `/aws/eks/${projectName}-${environment}-${region || 'ap-east-2'}/cluster`;
+        
+        if (environment === 'production') {
+            // Try to import existing log group for production
+            try {
+                logGroup = logs.LogGroup.fromLogGroupName(this, 'EKSClusterLogGroup', logGroupName);
+            } catch (error) {
+                // If import fails, create new one
+                logGroup = new logs.LogGroup(this, 'EKSClusterLogGroup', {
+                    logGroupName: logGroupName,
+                    retention: logs.RetentionDays.ONE_WEEK,
+                    removalPolicy: cdk.RemovalPolicy.DESTROY,
+                });
+            }
+        } else {
+            logGroup = new logs.LogGroup(this, 'EKSClusterLogGroup', {
+                logGroupName: logGroupName,
+                retention: logs.RetentionDays.ONE_WEEK,
+                removalPolicy: cdk.RemovalPolicy.DESTROY,
+            });
+        }
 
         // Create kubectl layer for EKS cluster management
         const kubectlLayer = new KubectlV28Layer(this, 'KubectlLayer');
@@ -156,8 +175,8 @@ export class EKSStack extends cdk.Stack {
             // Default capacity - we'll use managed node groups instead
             defaultCapacity: 0,
 
-            // Enable endpoint access
-            endpointAccess: eks.EndpointAccess.PRIVATE,
+            // Enable endpoint access - PUBLIC_AND_PRIVATE for easier management
+            endpointAccess: eks.EndpointAccess.PUBLIC_AND_PRIVATE,
         });
 
         return cluster;
@@ -233,13 +252,19 @@ export class EKSStack extends cdk.Stack {
         const minNodes = envConfig?.['eks-min-nodes'] || 1;
         const maxNodes = envConfig?.['eks-max-nodes'] || 3;
         const desiredNodes = minNodes;
+        const instanceTypeStr = envConfig?.['eks-node-type'] || 't3.medium';
+        const instanceType = new ec2.InstanceType(instanceTypeStr);
+        
+        // Determine AMI type based on instance architecture
+        const isArmInstance = instanceTypeStr.startsWith('m6g') || instanceTypeStr.startsWith('t4g') || 
+                             instanceTypeStr.startsWith('c6g') || instanceTypeStr.startsWith('r6g');
+        const amiType = isArmInstance ? eks.NodegroupAmiType.AL2_ARM_64 : eks.NodegroupAmiType.AL2_X86_64;
 
         // Create optimized node group with traffic pattern-based scaling configuration
         const nodeGroup = this.cluster.addNodegroupCapacity('ManagedNodeGroup', {
             nodegroupName: `${projectName}-${environment}-nodes-${this.region}`,
-            instanceTypes: [
-                new ec2.InstanceType(envConfig?.['eks-node-type'] || 't3.medium'),
-            ],
+            instanceTypes: [instanceType],
+            amiType: amiType,
             minSize: minNodes,
             maxSize: maxNodes,
             desiredSize: desiredNodes,
@@ -249,7 +274,6 @@ export class EKSStack extends cdk.Stack {
             },
             nodeRole: nodeGroupRole,
             subnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS },
-            amiType: eks.NodegroupAmiType.AL2_X86_64,
             // Mixed capacity types for cost optimization
             capacityType: eks.CapacityType.ON_DEMAND,
             // Enhanced tagging for intelligent scaling
@@ -1497,35 +1521,35 @@ data:
         });
 
         // Create ServiceMonitor for Prometheus monitoring
-        // (requires Prometheus Operator CRDs — skip for development)
-        if (environment !== 'development') {
-            this.cluster.addManifest('ClusterAutoscalerServiceMonitor', {
-                apiVersion: 'monitoring.coreos.com/v1',
-                kind: 'ServiceMonitor',
-                metadata: {
-                    name: 'cluster-autoscaler',
-                    namespace: 'kube-system',
-                    labels: {
-                        app: 'cluster-autoscaler',
-                        'cross-region': 'enabled',
-                    },
-                },
-                spec: {
-                    selector: {
-                        matchLabels: {
-                            app: 'cluster-autoscaler',
-                        },
-                    },
-                    endpoints: [
-                        {
-                            port: 'http',
-                            interval: '30s',
-                            path: '/metrics',
-                        },
-                    ],
-                },
-            });
-        }
+        // (requires Prometheus Operator CRDs — disabled for initial deployment)
+        // if (environment !== 'development') {
+        //     this.cluster.addManifest('ClusterAutoscalerServiceMonitor', {
+        //         apiVersion: 'monitoring.coreos.com/v1',
+        //         kind: 'ServiceMonitor',
+        //         metadata: {
+        //             name: 'cluster-autoscaler',
+        //             namespace: 'kube-system',
+        //             labels: {
+        //                 app: 'cluster-autoscaler',
+        //                 'cross-region': 'enabled',
+        //             },
+        //         },
+        //         spec: {
+        //             selector: {
+        //                 matchLabels: {
+        //                     app: 'cluster-autoscaler',
+        //                 },
+        //             },
+        //             endpoints: [
+        //                 {
+        //                     port: 'http',
+        //                     interval: '30s',
+        //                     path: '/metrics',
+        //                 },
+        //             },
+        //         },
+        //     });
+        // }
 
         // Create Service for Cluster Autoscaler metrics
         this.cluster.addManifest('ClusterAutoscalerService', {

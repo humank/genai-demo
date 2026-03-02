@@ -24,57 +24,68 @@ export class FrontendStack extends cdk.Stack {
 
         const { environment, projectName } = props;
 
-        // Consumer Frontend ECR Repository
-        this.consumerRepo = new ecr.Repository(this, 'ConsumerFrontendRepo', {
-            repositoryName: `${projectName}/consumer-frontend`,
-            removalPolicy: environment === 'production'
-                ? cdk.RemovalPolicy.RETAIN
-                : cdk.RemovalPolicy.DESTROY,
-            emptyOnDelete: environment !== 'production',
-            imageScanOnPush: true,
-            imageTagMutability: ecr.TagMutability.MUTABLE,
-            lifecycleRules: [
-                {
-                    description: '保留最近 20 個映像',
-                    maxImageCount: 20,
-                    rulePriority: 1,
-                    tagStatus: ecr.TagStatus.ANY,
-                },
-            ],
-        });
+        // For production, import existing ECR repositories (RETAIN policy)
+        if (environment === 'production') {
+            this.consumerRepo = ecr.Repository.fromRepositoryName(
+                this,
+                'ConsumerFrontendRepo',
+                `${projectName}/consumer-frontend`
+            ) as ecr.Repository;
 
-        // CMC Frontend ECR Repository
-        this.cmcRepo = new ecr.Repository(this, 'CmcFrontendRepo', {
-            repositoryName: `${projectName}/cmc-frontend`,
-            removalPolicy: environment === 'production'
-                ? cdk.RemovalPolicy.RETAIN
-                : cdk.RemovalPolicy.DESTROY,
-            emptyOnDelete: environment !== 'production',
-            imageScanOnPush: true,
-            imageTagMutability: ecr.TagMutability.MUTABLE,
-            lifecycleRules: [
-                {
-                    description: '保留最近 20 個映像',
-                    maxImageCount: 20,
-                    rulePriority: 1,
-                    tagStatus: ecr.TagStatus.ANY,
-                },
-            ],
-        });
+            this.cmcRepo = ecr.Repository.fromRepositoryName(
+                this,
+                'CmcFrontendRepo',
+                `${projectName}/cmc-frontend`
+            ) as ecr.Repository;
+        } else {
+            // Consumer Frontend ECR Repository
+            this.consumerRepo = new ecr.Repository(this, 'ConsumerFrontendRepo', {
+                repositoryName: `${projectName}/consumer-frontend`,
+                removalPolicy: cdk.RemovalPolicy.DESTROY,
+                emptyOnDelete: true,
+                imageScanOnPush: true,
+                imageTagMutability: ecr.TagMutability.MUTABLE,
+                lifecycleRules: [
+                    {
+                        description: '保留最近 20 個映像',
+                        maxImageCount: 20,
+                        rulePriority: 1,
+                        tagStatus: ecr.TagStatus.ANY,
+                    },
+                ],
+            });
 
-        // 允許 EKS 節點角色拉取映像
-        const eksPullPolicy = new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-                'ecr:GetDownloadUrlForLayer',
-                'ecr:BatchGetImage',
-                'ecr:BatchCheckLayerAvailability',
-            ],
-            principals: [new iam.ServicePrincipal('eks.amazonaws.com')],
-        });
+            // CMC Frontend ECR Repository
+            this.cmcRepo = new ecr.Repository(this, 'CmcFrontendRepo', {
+                repositoryName: `${projectName}/cmc-frontend`,
+                removalPolicy: cdk.RemovalPolicy.DESTROY,
+                emptyOnDelete: true,
+                imageScanOnPush: true,
+                imageTagMutability: ecr.TagMutability.MUTABLE,
+                lifecycleRules: [
+                    {
+                        description: '保留最近 20 個映像',
+                        maxImageCount: 20,
+                        rulePriority: 1,
+                        tagStatus: ecr.TagStatus.ANY,
+                    },
+                ],
+            });
 
-        this.consumerRepo.addToResourcePolicy(eksPullPolicy);
-        this.cmcRepo.addToResourcePolicy(eksPullPolicy);
+            // 允許 EKS 節點角色拉取映像
+            const eksPullPolicy = new iam.PolicyStatement({
+                effect: iam.Effect.ALLOW,
+                actions: [
+                    'ecr:GetDownloadUrlForLayer',
+                    'ecr:BatchGetImage',
+                    'ecr:BatchCheckLayerAvailability',
+                ],
+                principals: [new iam.ServicePrincipal('eks.amazonaws.com')],
+            });
+
+            this.consumerRepo.addToResourcePolicy(eksPullPolicy);
+            this.cmcRepo.addToResourcePolicy(eksPullPolicy);
+        }
 
         // Tags
         cdk.Tags.of(this).add('Component', 'Frontend');

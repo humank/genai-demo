@@ -350,6 +350,13 @@ def lambda_handler(event, context):
 
         // Create AWS Config rules for compliance monitoring (production only — requires Config recorder)
         if (environment === 'production') {
+            // Grant Config permission to invoke the Lambda function
+            this.complianceMonitoringFunction.addPermission('ConfigInvokePermission', {
+                principal: new iam.ServicePrincipal('config.amazonaws.com'),
+                action: 'lambda:InvokeFunction',
+                sourceAccount: cdk.Stack.of(this).account,
+            });
+
             this.securityConfigRule = new config.CfnConfigRule(this, 'SecurityComplianceRule', {
                 configRuleName: `${projectName}-${environment}-security-compliance`,
                 description: `Security compliance rule for ${complianceStandards.join(', ')} standards`,
@@ -365,6 +372,9 @@ def lambda_handler(event, context):
                     ]
                 }
             });
+
+            // Ensure Lambda permission is created before Config Rule
+            this.securityConfigRule.node.addDependency(this.complianceMonitoringFunction);
         }
 
         // Configure GDPR privacy protection if required

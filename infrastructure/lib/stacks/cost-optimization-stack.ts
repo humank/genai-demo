@@ -390,7 +390,7 @@ def estimate_savings(instance_class):
     current_cost = pricing_map.get(instance_class, 0)
     # Assume 30% savings from downsizing
     return current_cost * 0.3
-`),
+        `),
         timeout: cdk.Duration.minutes(5),
         environment: {
           SNS_TOPIC_ARN: props.alertTopic.topicArn,

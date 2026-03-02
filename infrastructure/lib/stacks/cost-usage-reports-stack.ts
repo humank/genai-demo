@@ -354,13 +354,13 @@ def send_anomaly_notification(anomalies, root_causes, budget_risk):
     message = f"""
 Cost Anomaly Detection Alert
 
-Anomalies Detected: {{len(anomalies)}}
-Budget Risk Level: {{budget_risk['risk_level']}}
-Projected Monthly Cost: ${{budget_risk['projected_monthly_cost']}}
-Budget Limit: ${{budget_risk['budget_limit']}}
+Anomalies Detected: {len(anomalies)}
+Budget Risk Level: {budget_risk['risk_level']}
+Projected Monthly Cost: ${budget_risk['projected_monthly_cost']}
+Budget Limit: ${budget_risk['budget_limit']}
 
 Root Causes:
-{{json.dumps(root_causes, indent=2)}}
+{json.dumps(root_causes, indent=2)}
 
 Action Required:
 - Review cost breakdown in CloudWatch dashboard

@@ -72,7 +72,7 @@
       "rds-storage": 100,
       "rds-multi-az": true,
       "msk": {
-        "broker-instance-type": "kafka.m5.large",
+        "broker-instance-type": "kafka.m7g.large",
         "number-of-brokers": 3,
         "storage-size": 100
       },
@@ -103,7 +103,7 @@
       "rds-storage": 100,
       "rds-multi-az": true,
       "msk": {
-        "broker-instance-type": "kafka.m5.large",
+        "broker-instance-type": "kafka.m7g.large",
         "number-of-brokers": 3,
         "storage-size": 100
       },
