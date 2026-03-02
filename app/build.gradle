@@ -199,7 +199,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.1'
 
     // Kotlin reflection for SpringDoc (required by SpringDoc 2.x) - 更新版本
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.3.0'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.3.10'
 
 
 
