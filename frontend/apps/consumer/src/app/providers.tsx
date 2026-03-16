@@ -3,6 +3,7 @@
 import { ApiServicesProvider, createApiClient } from '@repo/api-client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
+import { ObservabilityProvider } from '@/lib/providers/ObservabilityProvider'
 
 const apiClient = createApiClient({
     baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api',
@@ -37,7 +38,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <ApiServicesProvider client={apiClient}>
-                {children}
+                <ObservabilityProvider>
+                    {children}
+                </ObservabilityProvider>
             </ApiServicesProvider>
         </QueryClientProvider>
     )

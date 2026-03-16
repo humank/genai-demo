@@ -1,0 +1,81 @@
+// agents 模組 build.gradle
+// AI Agents 子模組 - 基於 AWS Bedrock AgentCore 的智能代理系統
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+// 這是一個 library 模組，不需要生成可執行 jar
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
+    // 依賴主應用模組 (app) 的 Domain Services
+    implementation project(':app')
+    
+    // AWS SDK for Bedrock (AgentCore)
+    implementation platform('software.amazon.awssdk:bom:2.25.0')
+    implementation 'software.amazon.awssdk:bedrockruntime'
+    implementation 'software.amazon.awssdk:bedrockagentruntime'
+    
+    // JSON Processing
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    
+    // Lombok (optional, for reducing boilerplate)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.assertj:assertj-core'
+}
+
+test {
+    useJUnitPlatform()
+    
+    testLogging {
+        events "passed", "skipped", "failed"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+}
+
+// 確保 agents 模組的源碼目錄結構正確
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
+        }
+    }
+}

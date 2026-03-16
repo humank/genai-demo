@@ -1,0 +1,56 @@
+# AI Agents 模組配置
+# 此配置文件定義 Agent 相關的設定
+
+# AgentCore 配置
+agent:
+  core:
+    # AWS Region for Bedrock
+    region: ${AWS_REGION:us-east-1}
+    
+    # 模型配置
+    model:
+      id: ${BEDROCK_MODEL_ID:anthropic.claude-3-sonnet-20240229-v1:0}
+      max-tokens: 4096
+      temperature: 0.7
+    
+    # Memory 配置
+    memory:
+      # 對話歷史保留數量
+      max-history-size: 50
+      # 記憶過期時間 (分鐘)
+      expiration-minutes: 60
+    
+    # Gateway 配置
+    gateway:
+      # 請求超時 (秒)
+      timeout-seconds: 30
+      # 最大重試次數
+      max-retries: 3
+
+# 智能客服 Agent 配置
+customer-service-agent:
+  enabled: true
+  # System Prompt
+  system-prompt: |
+    你是一個專業的電商客服助手。你的職責是：
+    1. 幫助客戶查詢訂單狀態
+    2. 處理退款和退貨請求
+    3. 回答產品相關問題
+    4. 處理客戶投訴
+    
+    請保持專業、友善的態度，並盡可能提供準確的資訊。
+    如果遇到無法處理的問題，請建議客戶聯繫人工客服。
+  
+  # 可用工具
+  tools:
+    - order-query
+    - order-status-update
+    - refund-request
+    - customer-info
+    - notification-send
+
+# 日誌配置
+logging:
+  level:
+    solid.humank.genaidemo.agents: DEBUG
+    software.amazon.awssdk: INFO

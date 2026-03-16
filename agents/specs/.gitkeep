@@ -1,0 +1,13 @@
+# Kiro Specs 目錄
+
+此目錄用於存放 Agent 相關的 Kiro Specs。
+
+## 規劃中的 Specs
+
+- [ ] customer-service-agent-spec - 智能客服 Agent 實作規格
+- [ ] order-processing-agent-spec - 訂單處理助手 Agent 實作規格
+- [ ] promotion-recommendation-agent-spec - 促銷推薦 Agent 實作規格
+
+## 使用方式
+
+使用 Kiro IDE 的 Spec 功能來建立和管理這些規格文件。

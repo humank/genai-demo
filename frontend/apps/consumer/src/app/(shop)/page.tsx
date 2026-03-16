@@ -1,6 +1,7 @@
 import { CategoryGrid } from '@/components/home/CategoryGrid'
 import { FeaturedProducts } from '@/components/home/FeaturedProducts'
 import { HeroBanner } from '@/components/home/HeroBanner'
+import { Newsletter } from '@/components/home/Newsletter'
 import { PromotionSection } from '@/components/home/PromotionSection'
 import { Suspense } from 'react'
 import { HomeSkeleton } from './loading'
@@ -18,6 +19,7 @@ export default function HomePage() {
             <Suspense fallback={null}>
                 <PromotionSection />
             </Suspense>
+            <Newsletter />
         </>
     )
 }

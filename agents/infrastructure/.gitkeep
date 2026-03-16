@@ -1,0 +1,28 @@
+# Agent 基礎設施目錄
+
+此目錄用於存放 Agent 部署相關的基礎設施代碼 (CDK/Terraform)。
+
+## 規劃結構
+
+```
+infrastructure/
+├── cdk/                    # AWS CDK 代碼
+│   ├── lib/
+│   │   ├── agent-stack.ts  # Agent 部署 Stack
+│   │   ├── memory-stack.ts # Memory 存儲 Stack
+│   │   └── gateway-stack.ts # Gateway 配置 Stack
+│   ├── bin/
+│   │   └── app.ts
+│   ├── package.json
+│   └── cdk.json
+├── terraform/              # Terraform 代碼 (備選)
+└── scripts/                # 部署腳本
+    ├── deploy.sh
+    └── destroy.sh
+```
+
+## 部署環境
+
+- Development: 本地開發環境
+- Staging: 測試環境
+- Production: 生產環境

@@ -233,6 +233,34 @@ Turborepo 會自動快取建置產物。如需清除快取：
 pnpm turbo clean
 ```
 
+## 遷移狀態
+
+本 Monorepo 是從兩個獨立前端專案遷移而來：
+
+| 來源 | 目標 | 狀態 |
+|------|------|------|
+| `cmc-frontend/` (Next.js 14 + React 18) | `apps/cmc/` (Next.js 16 + React 19) | ✅ 完成 |
+| `consumer-frontend/` (Angular 20 + PrimeNG) | `apps/consumer/` (Next.js 15 + React 19) | ✅ 完成（部分功能待補） |
+
+### 遷移完成項目
+
+- ✅ Monorepo 骨架（Turborepo + pnpm workspace）
+- ✅ `@repo/config`：共用 TypeScript、Tailwind、ESLint 設定
+- ✅ `@repo/ui`：20 個 shadcn/ui + Radix UI 共用元件
+- ✅ `@repo/api-client`：統一 API 客戶端（11 services、11 hooks、9 type 模組）
+- ✅ CMC 管理後台：所有頁面遷移 + 新增 Payments 頁面與 Recharts 圖表
+- ✅ Consumer 消費者應用：重寫為 Next.js，新增 Cart、Checkout、Orders 頁面
+- ✅ Consumer 可觀測性：WebVitals、ErrorTracking、UserBehaviorAnalytics（React hooks）
+- ✅ Consumer 互動效果：ScrollReveal、Parallax、ImageZoom、ProductHover（React hooks）
+- ✅ Consumer Newsletter 訂閱功能
+- ✅ E2E 測試骨架（Playwright）
+- ✅ Docker 多階段建置（Dockerfile.cmc、Dockerfile.consumer）
+- ✅ 部署腳本（deploy-frontend.sh）
+
+### 待清理
+
+舊版目錄 `cmc-frontend/` 和 `consumer-frontend/` 已從 repo 中移除。
+
 ---
 
-**最後更新**: 2026-02-21
+**最後更新**: 2026-03-16

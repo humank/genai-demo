@@ -1,0 +1,22 @@
+# Agent 實作代碼目錄
+
+此目錄用於存放 Agent 實作代碼。
+
+## 規劃結構
+
+```
+src/
+├── customer-service/       # 智能客服 Agent
+│   ├── agent.py           # Agent 定義
+│   ├── tools/             # Tool 實作
+│   └── prompts/           # Prompt 模板
+├── order-processing/       # 訂單處理助手 Agent
+├── promotion-recommendation/ # 促銷推薦 Agent
+├── operations-monitoring/  # 運維監控 Agent
+├── seller-assistant/       # 賣家助手 Agent
+├── review-analysis/        # 評價分析 Agent
+└── shared/                 # 共用工具和配置
+    ├── clients/           # 服務客戶端
+    ├── utils/             # 工具函數
+    └── config/            # 配置管理
+```

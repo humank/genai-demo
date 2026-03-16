@@ -1,6 +1,6 @@
 ---
 inclusion: always
-last_updated: 2026-02-21
+last_updated: 2026-03-16
 ---
 
 # Development Guide
@@ -478,5 +478,5 @@ node scripts/check-links-advanced.js --internal-only
 
 ---
 
-**Last Updated**: 2026-02-21
+**Last Updated**: 2026-03-16
 **Owner**: Development Team

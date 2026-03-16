@@ -31,61 +31,43 @@ updates:
     reviewers:
       - "humank"
 
-  # NPM dependencies - CMC Frontend
+  # NPM dependencies - Frontend Monorepo
   - package-ecosystem: "npm"
-    directory: "/cmc-frontend"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
     groups:
+      react-dependencies:
+        patterns:
+          - "react*"
+          - "next"
+          - "@tanstack/*"
+        update-types:
+          - "patch"
+      ui-dependencies:
+        patterns:
+          - "@radix-ui/*"
+          - "tailwindcss*"
+          - "lucide-react"
+        update-types:
+          - "minor"
+          - "patch"
       development-dependencies:
         patterns:
           - "@types/*"
           - "eslint*"
           - "prettier*"
           - "@playwright/*"
-        update-types:
-          - "minor"
-          - "patch"
-      react-dependencies:
-        patterns:
-          - "react*"
-          - "@tanstack/*"
-        update-types:
-          - "patch"
-    labels:
-      - "dependencies"
-      - "frontend"
-      - "cmc"
-    reviewers:
-      - "humank"
-
-  # NPM dependencies - Consumer Frontend
-  - package-ecosystem: "npm"
-    directory: "/consumer-frontend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 10
-    groups:
-      angular-dependencies:
-        patterns:
-          - "@angular/*"
-        update-types:
-          - "patch"
-      development-dependencies:
-        patterns:
-          - "@types/*"
           - "typescript"
-          - "jasmine*"
+          - "turbo"
         update-types:
           - "minor"
           - "patch"
     labels:
       - "dependencies"
       - "frontend"
-      - "consumer"
     reviewers:
       - "humank"
 
@@ -159,21 +141,9 @@ updates:
     reviewers:
       - "humank"
 
+  # Docker dependencies - Frontend Monorepo
   - package-ecosystem: "docker"
-    directory: "/cmc-frontend"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "docker"
-      - "frontend"
-    reviewers:
-      - "humank"
-
-  - package-ecosystem: "docker"
-    directory: "/consumer-frontend"
+    directory: "/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
