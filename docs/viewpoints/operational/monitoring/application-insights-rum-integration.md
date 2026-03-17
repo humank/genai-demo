@@ -265,7 +265,7 @@ export function ProductCard({ product }: { product: Product }) {
 
 ## CMC Frontend Integration (Next.js 16)
 
-> **注意**: CMC 前端已從獨立的 `cmc-frontend/` 目錄（Next.js 14 + React 18）遷移至 `frontend/apps/cmc/`（Next.js 16 + React 19）Monorepo 架構。
+> **注意**: CMC 前端位於 `frontend/apps/cmc/`（Next.js 16 + React 19），屬於 Turborepo Monorepo 架構。
 
 ### Step 1: Create RUM Utility
 

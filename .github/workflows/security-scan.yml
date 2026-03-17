@@ -73,8 +73,7 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: |
-            cmc-frontend/package-lock.json
-            consumer-frontend/package-lock.json
+            frontend/pnpm-lock.yaml
             infrastructure/package-lock.json
       
       - name: Install OWASP Dependency Check
@@ -94,14 +93,9 @@ jobs:
       
       - name: Run Node.js dependency scans
         run: |
-          # CMC Frontend
-          cd cmc-frontend
-          npm audit --audit-level=high --json > ../cmc-frontend-audit.json || true
-          cd ..
-          
-          # Consumer Frontend
-          cd consumer-frontend
-          npm audit --audit-level=high --json > ../consumer-frontend-audit.json || true
+          # Frontend Monorepo
+          cd frontend
+          npx pnpm audit --audit-level=high > ../frontend-audit.txt || true
           cd ..
           
           # Infrastructure
@@ -176,7 +170,7 @@ jobs:
     
     strategy:
       matrix:
-        dockerfile: [Dockerfile, cmc-frontend/Dockerfile, consumer-frontend/Dockerfile]
+        dockerfile: [Dockerfile, frontend/Dockerfile.cmc, frontend/Dockerfile.consumer]
     
     steps:
       - name: Checkout code

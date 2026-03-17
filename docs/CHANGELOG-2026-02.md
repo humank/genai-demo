@@ -6,11 +6,11 @@
 
 #### 前端架構遷移
 
-原本分散的前端應用（`cmc-frontend/` 使用 Next.js 14 + React 18、`consumer-frontend/` 使用 Angular 18）已整合遷移至統一的 Turborepo + pnpm Monorepo 架構，位於 `frontend/` 目錄。
+原本分散的前端應用（`cmc-frontend/` 使用 Next.js 14 + React 18、`consumer-frontend/` 使用 Angular 20）已整合遷移至統一的 Turborepo + pnpm Monorepo 架構，位於 `frontend/` 目錄。舊版目錄已於 2026-03-16 從 repo 中移除。
 
 **遷移前**:
-- `cmc-frontend/` — Next.js 14 + React 18
-- `consumer-frontend/` — Angular 18
+- `cmc-frontend/` — Next.js 14 + React 18（已移除）
+- `consumer-frontend/` — Angular 20 + PrimeNG（已移除）
 
 **遷移後**:
 - `frontend/apps/cmc/` — Next.js 16 + React 19

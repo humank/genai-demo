@@ -12,10 +12,10 @@
 /Dockerfile @backend-team @devops-team
 
 # Frontend code
-/cmc-frontend/ @frontend-team @genai-demo-team
-/consumer-frontend/ @frontend-team @genai-demo-team
-/cmc-frontend/Dockerfile @frontend-team @devops-team
-/consumer-frontend/Dockerfile @frontend-team @devops-team
+/frontend/ @frontend-team @genai-demo-team
+/frontend/Dockerfile.cmc @frontend-team @devops-team
+/frontend/Dockerfile.consumer @frontend-team @devops-team
+/deploy-frontend.sh @frontend-team @devops-team
 
 # Infrastructure code
 /infrastructure/ @devops-team @genai-demo-team

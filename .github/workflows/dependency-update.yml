@@ -189,9 +189,9 @@ jobs:
           echo "Current: $CURRENT_JAVA_IMAGE" >> docker-updates.md
           
           # Check Node.js base images
-          for dockerfile in cmc-frontend/Dockerfile consumer-frontend/Dockerfile; do
+          for dockerfile in frontend/Dockerfile.cmc frontend/Dockerfile.consumer; do
             if [[ -f "$dockerfile" ]]; then
-              CURRENT_NODE_IMAGE=$(grep "FROM.*node:18" "$dockerfile" | head -1 | cut -d' ' -f2)
+              CURRENT_NODE_IMAGE=$(grep "FROM.*node:" "$dockerfile" | head -1 | cut -d' ' -f2)
               echo "### Node.js Base Image ($dockerfile)" >> docker-updates.md
               echo "Current: $CURRENT_NODE_IMAGE" >> docker-updates.md
             fi

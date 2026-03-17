@@ -18,8 +18,8 @@ The implementation follows a systematic approach that preserves all meaningful c
 |-----------|------------|----------|---------------------|
 | Backend API | Java 21 + Spring Boot 3.4.5 | `app/` | ✅ Documented in `docs/development/` |
 | Infrastructure | TypeScript CDK (40+ stacks) | `infrastructure/` | ⚠️ Partial - needs stack documentation |
-| CMC Frontend | Next.js 14 + React 18 | `cmc-frontend/` | ❌ Missing |
-| Consumer Frontend | Angular 18 | `consumer-frontend/` | ❌ Missing |
+| CMC Frontend | Next.js 16 + React 19 | `frontend/apps/cmc/` | ✅ Documented in `frontend/README.md` |
+| Consumer Frontend | Next.js 15 + React 19 | `frontend/apps/consumer/` | ✅ Documented in `frontend/README.md` |
 | E2E Tests | Python + pytest | `e2e-tests/` | ✅ Has README.md |
 | Scripts | Python + Bash | `scripts/` | ⚠️ Partial |
 

@@ -112,8 +112,7 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: |
-            cmc-frontend/package-lock.json
-            consumer-frontend/package-lock.json
+            frontend/pnpm-lock.yaml
             infrastructure/package-lock.json
       
       - name: Run backend tests
@@ -122,18 +121,11 @@ jobs:
       
       - name: Run frontend tests
         run: |
-          # CMC Frontend
-          cd cmc-frontend
-          npm ci
-          npm run test:ci
-          npm run build
-          cd ..
-          
-          # Consumer Frontend
-          cd consumer-frontend
-          npm ci
-          npm run test:ci
-          npm run build
+          cd frontend
+          corepack enable && corepack prepare pnpm@9.15.9 --activate
+          pnpm install --frozen-lockfile
+          pnpm type-check
+          pnpm build
           cd ..
       
       - name: Run infrastructure tests
@@ -151,8 +143,6 @@ jobs:
           name: release-test-results
           path: |
             app/build/reports/
-            cmc-frontend/coverage/
-            consumer-frontend/coverage/
             infrastructure/coverage/
           retention-days: 90
 
@@ -203,8 +193,7 @@ jobs:
           node-version: '18'
           cache: 'npm'
           cache-dependency-path: |
-            cmc-frontend/package-lock.json
-            consumer-frontend/package-lock.json
+            frontend/pnpm-lock.yaml
       
       - name: Build backend JAR
         run: |
@@ -216,18 +205,16 @@ jobs:
       
       - name: Build frontend applications
         run: |
-          # Build CMC Frontend
-          cd cmc-frontend
-          npm ci
-          npm run build
-          tar -czf ../release-artifacts/genai-demo-cmc-frontend-${{ needs.validate-release.outputs.version }}.tar.gz dist/
-          cd ..
+          cd frontend
+          corepack enable && corepack prepare pnpm@9.15.9 --activate
+          pnpm install --frozen-lockfile
+          pnpm build
           
-          # Build Consumer Frontend
-          cd consumer-frontend
-          npm ci
-          npm run build
-          tar -czf ../release-artifacts/genai-demo-consumer-frontend-${{ needs.validate-release.outputs.version }}.tar.gz dist/
+          # Package CMC
+          tar -czf ../release-artifacts/genai-demo-cmc-frontend-${{ needs.validate-release.outputs.version }}.tar.gz apps/cmc/.next/
+          
+          # Package Consumer
+          tar -czf ../release-artifacts/genai-demo-consumer-frontend-${{ needs.validate-release.outputs.version }}.tar.gz apps/consumer/.next/
           cd ..
       
       - name: Generate checksums
@@ -258,12 +245,12 @@ jobs:
             context: .
             ecr-repo: genai-demo/backend
           - component: cmc-frontend
-            dockerfile: cmc-frontend/Dockerfile
-            context: cmc-frontend
+            dockerfile: frontend/Dockerfile.cmc
+            context: frontend
             ecr-repo: genai-demo/cmc-frontend
           - component: consumer-frontend
-            dockerfile: consumer-frontend/Dockerfile
-            context: consumer-frontend
+            dockerfile: frontend/Dockerfile.consumer
+            context: frontend
             ecr-repo: genai-demo/consumer-frontend
     
     steps:

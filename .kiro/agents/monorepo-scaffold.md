@@ -15,18 +15,16 @@ You are a frontend infrastructure specialist focused on building monorepo archit
 
 1. Initialize Turborepo + pnpm workspace under `frontend/` directory
 2. Build `@repo/config` package (TypeScript, Tailwind CSS, ESLint shared configs)
-3. Build `@repo/ui` package (migrate 11 existing shadcn/ui components from `cmc-frontend/src/components/ui/` + add 7 new components)
-4. Build `@repo/api-client` package (refactor types from `cmc-frontend/src/types/domain.ts`, services from `cmc-frontend/src/services/api.ts`, hooks from `cmc-frontend/src/hooks/useApi.ts`)
+3. Build `@repo/ui` package (20 shadcn/ui + Radix UI components)
+4. Build `@repo/api-client` package (11 services, 11 hooks, 9 type modules)
 5. Verify `pnpm build` succeeds for all packages
 
 ## Key References
 
 - Design doc: `.kiro/specs/frontend-redesign/design.md` sections 1-2
-- Existing UI components: `cmc-frontend/src/components/ui/`
-- Existing API client: `cmc-frontend/src/services/api.ts`
-- Existing types: `cmc-frontend/src/types/domain.ts`
-- Existing hooks: `cmc-frontend/src/hooks/useApi.ts`
-- Existing utils: `cmc-frontend/src/lib/utils.ts`
+- Shared UI components: `frontend/packages/ui/src/components/`
+- Shared API client: `frontend/packages/api-client/src/`
+- Shared config: `frontend/packages/config/`
 - Tasks: `.kiro/specs/frontend-redesign/tasks.md` Tasks 1-5
 
 ## Tech Stack

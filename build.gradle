@@ -1,8 +1,9 @@
 // 根目錄 build.gradle - 多模組項目配置
 // 這個項目包含：
 // - app: Spring Boot Java 後端應用
-// - cmc-frontend: Next.js 管理前端 (CMC = Content Management Console)
-// - consumer-frontend: Angular 消費者前端
+// - frontend: 前端 Monorepo (Turborepo + pnpm)
+//   - apps/cmc: CMC 管理後台 (Next.js 16 + React 19)
+//   - apps/consumer: Consumer 消費者應用 (Next.js 15 + React 19)
 // - infrastructure: AWS CDK 基礎設施即代碼
 
 plugins {
@@ -55,9 +56,7 @@ tasks.register('buildAll') {
     doLast {
         println "✅ 所有模組構建完成"
         println "  - Java 後端: app"
-        println "  - 前端模組需要單獨使用 npm/yarn 構建"
-        println "    - CMC Frontend: cd cmc-frontend && npm run build"
-        println "    - Consumer Frontend: cd consumer-frontend && npm run build"
+        println "  - 前端 Monorepo: cd frontend && pnpm build"
         println "  - 基礎設施: cd infrastructure && npm run build"
     }
 }
@@ -71,8 +70,7 @@ tasks.register('testAll') {
     doLast {
         println "✅ 所有 Java 測試完成"
         println "  前端測試需要單獨運行："
-        println "    - CMC Frontend: cd cmc-frontend && npm test"
-        println "    - Consumer Frontend: cd consumer-frontend && npm test"
+        println "    - Frontend: cd frontend && pnpm test"
         println "    - Infrastructure: cd infrastructure && npm test"
     }
 }
@@ -86,8 +84,7 @@ tasks.register('cleanAll') {
     doLast {
         println "✅ Java 模組清理完成"
         println "  前端清理需要單獨運行："
-        println "    - rm -rf cmc-frontend/node_modules cmc-frontend/.next"
-        println "    - rm -rf consumer-frontend/node_modules consumer-frontend/dist"
+        println "    - cd frontend && pnpm turbo clean"
         println "    - rm -rf infrastructure/node_modules infrastructure/cdk.out"
     }
 }
@@ -103,8 +100,8 @@ tasks.register('devStart') {
         println "🚀 啟動開發環境..."
         println "  後端將在 http://localhost:8080 啟動"
         println "  前端需要單獨啟動："
-        println "    - CMC Frontend: cd cmc-frontend && npm run dev (http://localhost:3000)"
-        println "    - Consumer Frontend: cd consumer-frontend && npm start (http://localhost:4200)"
+        println "    - Frontend: cd frontend && pnpm dev"
+        println "      CMC: http://localhost:3002 | Consumer: http://localhost:3000"
     }
 }
 
@@ -123,15 +120,12 @@ tasks.register('projectInfo') {
         │   ├── src/test/java/      # 測試代碼 (單元測試 + 集成測試)
         │   └── build.gradle        # Java 構建配置
         │
-        ├── cmc-frontend/           # 管理前端 (Next.js + TypeScript)
-        │   ├── src/                # React 組件和頁面
-        │   ├── package.json        # Node.js 依賴
-        │   └── next.config.js      # Next.js 配置
-        │
-        ├── consumer-frontend/      # 消費者前端 (Angular + TypeScript)
-        │   ├── src/                # Angular 組件和服務
-        │   ├── package.json        # Node.js 依賴
-        │   └── angular.json        # Angular 配置
+        ├── frontend/               # 前端 Monorepo (Turborepo + pnpm)
+        │   ├── apps/cmc/          # CMC 管理後台 (Next.js 16 + React 19)
+        │   ├── apps/consumer/     # Consumer 消費者應用 (Next.js 15 + React 19)
+        │   ├── packages/ui/       # @repo/ui 共用 UI 元件
+        │   ├── packages/api-client/ # @repo/api-client 共用 API 客戶端
+        │   └── packages/config/   # @repo/config 共用設定
         │
         ├── infrastructure/         # AWS CDK 基礎設施 (TypeScript)
         │   ├── lib/                # CDK 堆疊定義
@@ -143,8 +137,7 @@ tasks.register('projectInfo') {
         🛠️  開發命令:
         - ./gradlew :app:bootRun           # 啟動後端
         - ./gradlew :app:test              # 運行後端測試
-        - cd cmc-frontend && npm run dev   # 啟動管理前端
-        - cd consumer-frontend && npm start # 啟動消費者前端
+        - cd frontend && pnpm dev          # 啟動前端 (CMC + Consumer)
         - cd infrastructure && cdk deploy  # 部署基礎設施
 
         📚 更多信息請查看各模組的 README.md 文件

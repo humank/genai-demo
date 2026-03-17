@@ -6,10 +6,9 @@
   "when": {
     "type": "fileEdited",
     "patterns": [
-      "**/cmc-frontend/src/components/**/*.tsx",
-      "**/cmc-frontend/src/components/**/*.jsx",
-      "**/consumer-frontend/src/app/**/*.ts",
-      "**/consumer-frontend/src/app/**/*.component.ts"
+      "**/frontend/apps/cmc/src/components/**/*.tsx",
+      "**/frontend/apps/consumer/src/components/**/*.tsx",
+      "**/frontend/packages/ui/src/components/**/*.tsx"
     ]
   },
   "then": {

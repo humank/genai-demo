@@ -930,8 +930,6 @@ All tests are automated with AWS Fault Injection Simulator and Chaos Mesh, with 
 │   ├── test/                   # 103 infrastructure tests
 │   └── docs/                   # Infrastructure documentation
 │
-├── cmc-frontend/               # (已移除) 原 CMC 前端，已遷移至 frontend/apps/cmc/
-├── consumer-frontend/          # (已移除) 原 Consumer 前端，已遷移至 frontend/apps/consumer/
 │
 ├── frontend/                   # 🆕 前端 Monorepo (Turborepo + pnpm)
 │   ├── apps/cmc/              # CMC 管理後台 (Next.js 16 + React 19)
