@@ -23,7 +23,7 @@
         "@radix-ui/react-toast": "^1.2.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.0",
-        "lucide-react": "^0.468.0",
+        "lucide-react": "^0.577.0",
         "tailwind-merge": "^2.6.0"
     },
     "devDependencies": {
