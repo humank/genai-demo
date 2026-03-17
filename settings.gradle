@@ -4,5 +4,5 @@ rootProject.name = 'genai-demo'
 include 'app'
 include 'agents'
 
-// 注意：前端模組 (cmc-frontend, consumer-frontend) 和基礎設施模組 (infrastructure) 
-// 使用各自的包管理器 (npm/yarn) 和構建工具，不包含在 Gradle 構建中
+// 注意：前端 Monorepo (frontend/) 使用 Turborepo + pnpm，基礎設施模組 (infrastructure/) 使用 npm
+// 兩者不包含在 Gradle 構建中
