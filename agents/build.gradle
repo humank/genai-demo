@@ -30,7 +30,7 @@ dependencies {
     implementation project(':app')
     
     // AWS SDK for Bedrock (AgentCore)
-    implementation platform('software.amazon.awssdk:bom:2.25.0')
+    implementation platform('software.amazon.awssdk:bom:2.42.23')
     implementation 'software.amazon.awssdk:bedrockruntime'
     implementation 'software.amazon.awssdk:bedrockagentruntime'
     
