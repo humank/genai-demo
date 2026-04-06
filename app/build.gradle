@@ -155,17 +155,17 @@ dependencies {
     implementation 'io.opentelemetry.semconv:opentelemetry-semconv:1.39.0'
 
     // AWS X-Ray support for production
-    implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.20.0') {
+    implementation('com.amazonaws:aws-xray-recorder-sdk-core:2.21.0') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
-    implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.20.0') {
+    implementation('com.amazonaws:aws-xray-recorder-sdk-spring:2.21.0') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.httpcomponents', module: 'httpcore'
     }
 
     // AWS SDK v2 for analytics and security
-    implementation platform('software.amazon.awssdk:bom:2.41.34')
+    implementation platform('software.amazon.awssdk:bom:2.42.23')
     implementation 'software.amazon.awssdk:firehose'
     implementation 'software.amazon.awssdk:secretsmanager'
     implementation 'software.amazon.awssdk:cloudwatch'
