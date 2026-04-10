@@ -18,7 +18,7 @@
         "@repo/ui": "workspace:*",
         "@tanstack/react-query": "^5.90.15",
         "@tanstack/react-query-devtools": "^5.91.2",
-        "axios": "^1.13.2",
+        "axios": "^1.15.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "date-fns": "^3.6.0",
