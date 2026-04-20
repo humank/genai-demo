@@ -49,7 +49,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.4.0",
     "@typescript-eslint/eslint-plugin": "^8.53.0",
-    "@typescript-eslint/parser": "^8.56.1",
+    "@typescript-eslint/parser": "^8.59.0",
     "aws-cdk": "^2.1100.3",
     "cdk-nag": "^2.37.55",
     "eslint": "^10.0.3",
