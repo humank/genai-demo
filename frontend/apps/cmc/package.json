@@ -29,7 +29,7 @@
         "react-hook-form": "^7.69.0",
         "react-hot-toast": "^2.4.1",
         "recharts": "^3.7.0",
-        "tailwind-merge": "^3.4.0",
+        "tailwind-merge": "^3.5.0",
         "tailwindcss-animate": "^1.0.7",
         "zod": "^4.2.1",
         "zustand": "^5.0.12"
