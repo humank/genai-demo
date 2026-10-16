@@ -1,5 +1,5 @@
 # ---- Base ----
-FROM node:20-alpine AS base
+FROM node:26-alpine AS base
 RUN corepack enable && corepack prepare pnpm@9.15.9 --activate
 WORKDIR /app
 
@@ -29,7 +29,7 @@ RUN pnpm --filter @repo/api-client build 2>/dev/null || true
 RUN pnpm --filter @repo/cmc build
 
 # ---- Runner ----
-FROM node:20-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
